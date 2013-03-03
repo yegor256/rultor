@@ -1,0 +1,209 @@
+<?xml version="1.0"?>
+<!--
+ * Copyright (c) 2009-2013, fazend.com
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met: 1) Redistributions of source code must retain the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer. 2) Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3) Neither the name of the fazend.com nor
+ * the names of its contributors may be used to endorse or promote
+ * products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+ * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.fazend</groupId>
+        <artifactId>fazend</artifactId>
+        <version>2.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>fazend-web</artifactId>
+    <packaging>war</packaging>
+    <name>fazend-web</name>
+    <properties>
+        <rexsl.version>0.4.6</rexsl.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.rexsl</groupId>
+            <artifactId>rexsl-standalone</artifactId>
+            <version>${rexsl.version}</version>
+            <classifier>bin</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.rexsl</groupId>
+            <artifactId>rexsl-core</artifactId>
+            <version>${rexsl.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.rexsl</groupId>
+            <artifactId>rexsl-page</artifactId>
+            <version>${rexsl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rexsl</groupId>
+            <artifactId>rexsl-page</artifactId>
+            <version>${rexsl.version}</version>
+            <classifier>mock</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.rexsl</groupId>
+            <artifactId>rexsl-test</artifactId>
+            <version>${rexsl.version}</version>
+        </dependency>
+        <dependency>
+            <!-- JAX-RS API -->
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>1.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <!-- JAX-RS implementation -->
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-core</artifactId>
+            <version>1.16</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <!-- JAXB 2.0 API -->
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jsr173_api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <!-- Wrapper aroung SLF4J -->
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-log</artifactId>
+        </dependency>
+        <dependency>
+            <!-- Static reader of META-INF/MANIFEST.MF files -->
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-manifests</artifactId>
+        </dependency>
+        <dependency>
+            <!-- Forward all calls to SLF4J to LOG4J. -->
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <!-- Use LOG4J logging facility for all loggings. -->
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <!-- Javax Servlet API 2.4. -->
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <configuration>
+                        <warSourceExcludes>js/**, css/**, xsl/**</warSourceExcludes>
+                        <archive>
+                            <manifestEntries>
+                                <Example-Version>${project.version}</Example-Version>
+                                <Example-Revision>${buildNumber}</Example-Revision>
+                                <Example-Date>${maven.build.timestamp}</Example-Date>
+                            </manifestEntries>
+                            <manifest>
+                                <mainClass>com.rexsl.standalone.RexslMain</mainClass>
+                            </manifest>
+                        </archive>
+                        <overlays>
+                            <overlay>
+                                <groupId>com.rexsl</groupId>
+                                <artifactId>rexsl-standalone</artifactId>
+                                <classifier>bin</classifier>
+                                <type>jar</type>
+                            </overlay>
+                        </overlays>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>com.rexsl</groupId>
+                <artifactId>rexsl-maven-plugin</artifactId>
+                <version>${rexsl.version}</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <log4j.configuration>file:${basedir}/src/test/resources/log4j.properties</log4j.configuration>
+                    </systemPropertyVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                            <goal>package</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.jcabi</groupId>
+                        <artifactId>jcabi-aspects</artifactId>
+                        <version>${jcabi.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>com.jcabi</groupId>
+                <artifactId>jcabi-heroku-maven-plugin</artifactId>
+                <version>${jcabi.version}</version>
+                <executions>
+                    <execution>
+                        <id>deploy-to-heroku</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                        <configuration>
+                            <name>fazend-web</name>
+                            <artifacts>
+                                <artifact>${project.groupId}:${project.artifactId}:war::${project.version}</artifact>
+                            </artifacts>
+                            <procfile>web: java -Xmx256m -jar ./${artfactId}.war ${PORT}</procfile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

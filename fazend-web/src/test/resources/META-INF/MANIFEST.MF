@@ -1,0 +1,3 @@
+Fazend-Version: 1.0-SNAPSHOT
+Fazend-Revision: 12345
+Fazend-Date: 9-Dec-2012
