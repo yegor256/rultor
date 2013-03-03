@@ -49,6 +49,10 @@ textarea {
     text-decoration: none;
 }
 
+body {
+    padding: 2em;
+}
+
 /* bottom right label about deployed version */
 #version {
     font-size: 0.9em;
