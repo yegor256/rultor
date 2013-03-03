@@ -29,12 +29,8 @@
  */
 package com.fazend.web.rexsl.scripts
 
-import com.jcabi.manifests.Manifests
 import com.rexsl.test.RestTester
-import javax.ws.rs.core.HttpHeaders
-import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.UriBuilder
-import org.hamcrest.Matchers
 
 [
     '/',

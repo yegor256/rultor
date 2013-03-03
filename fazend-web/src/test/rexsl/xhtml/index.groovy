@@ -31,7 +31,6 @@ package com.fazend.web.rexsl.xhtml
 
 import com.rexsl.test.XhtmlMatchers
 import org.hamcrest.MatcherAssert
-import org.hamcrest.Matchers
 
 MatcherAssert.assertThat(
     rexsl.document,

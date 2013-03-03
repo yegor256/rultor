@@ -102,6 +102,7 @@
             <!-- Wrapper aroung SLF4J -->
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-log</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <!-- Static reader of META-INF/MANIFEST.MF files -->
