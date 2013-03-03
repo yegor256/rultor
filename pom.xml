@@ -43,4 +43,51 @@
     <modules>
         <module>fazend-web</module>
     </modules>
+    <description>Fazend.com, Lightweight Integration Platform (as a Service)</description>
+    <url>http://www.fazend.com</url>
+    <inceptionYear>2009</inceptionYear>
+    <organization>
+        <name>Fazend Inc.</name>
+        <url>http://www.fazend.com</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>BSD</name>
+            <url>http://maven.fazend.com/LICENSE.txt</url>
+            <distribution>site</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>1</id>
+            <name>Yegor Bugayenko</name>
+            <email>yegor@fazend.com</email>
+            <organization>Fazend Inc.</organization>
+            <organizationUrl>http://www.fazend.com</organizationUrl>
+            <roles>
+                <role>Architect</role>
+                <role>Developer</role>
+            </roles>
+            <timezone>-7</timezone>
+        </developer>
+    </developers>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/yegor256/fazend/issues</url>
+    </issueManagement>
+    <scm>
+        <connection>scm:git:git@github.com:yegor256/fazend.git</connection>
+        <developerConnection>scm:git:git@github.com:yegor256/fazend.git</developerConnection>
+        <url>https://github.com/yegor256/fazend</url>
+    </scm>
+    <ciManagement>
+        <system>jenkins</system>
+        <url>http://ci.fazend.com:8080/job/fazend/</url>
+    </ciManagement>
+    <distributionManagement>
+        <site>
+            <id>maven.fazend.com</id>
+            <url>s3://maven.fazend.com/</url>
+        </site>
+    </distributionManagement>
 </project>
