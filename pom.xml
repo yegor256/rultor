@@ -61,9 +61,9 @@
         <developer>
             <id>1</id>
             <name>Yegor Bugayenko</name>
-            <email>yegor@fazend.com</email>
-            <organization>Fazend Inc.</organization>
-            <organizationUrl>http://www.fazend.com</organizationUrl>
+            <email>yegor@tpc2.com</email>
+            <organization>TPC2</organization>
+            <organizationUrl>http://www.tpc2.com</organizationUrl>
             <roles>
                 <role>Architect</role>
                 <role>Developer</role>
