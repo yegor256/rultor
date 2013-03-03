@@ -132,15 +132,21 @@
     <build>
         <pluginManagement>
             <plugins>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
                 <plugin>
                     <artifactId>maven-war-plugin</artifactId>
                     <configuration>
                         <warSourceExcludes>js/**, css/**, xsl/**</warSourceExcludes>
                         <archive>
                             <manifestEntries>
-                                <Example-Version>${project.version}</Example-Version>
-                                <Example-Revision>${buildNumber}</Example-Revision>
-                                <Example-Date>${maven.build.timestamp}</Example-Date>
+                                <Fazend-Version>${project.version}</Fazend-Version>
+                                <Fazend-Revision>${buildNumber}</Fazend-Revision>
+                                <Fazend-Date>${maven.build.timestamp}</Fazend-Date>
                             </manifestEntries>
                             <manifest>
                                 <mainClass>com.rexsl.standalone.RexslMain</mainClass>
@@ -187,7 +193,8 @@
             <plugin>
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-heroku-maven-plugin</artifactId>
-                <version>${jcabi.version}</version>
+                <version>1.0-SNAPSHOT</version>
+                <!-- <version>${jcabi.version}</version> -->
                 <executions>
                     <execution>
                         <id>deploy-to-heroku</id>
@@ -200,7 +207,7 @@
                             <artifacts>
                                 <artifact>${project.groupId}:${project.artifactId}:war::${project.version}</artifact>
                             </artifacts>
-                            <procfile>web: java -Xmx256m -jar ./${artfactId}.war ${PORT}</procfile>
+                            <procfile>web: java -Xmx256m -jar ./${project.artifactId}.war ${PORT}</procfile>
                         </configuration>
                     </execution>
                 </executions>
