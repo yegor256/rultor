@@ -193,8 +193,7 @@
             <plugin>
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-heroku-maven-plugin</artifactId>
-                <version>1.0-SNAPSHOT</version>
-                <!-- <version>${jcabi.version}</version> -->
+                <version>${jcabi.version}</version>
                 <executions>
                     <execution>
                         <id>deploy-to-heroku</id>
