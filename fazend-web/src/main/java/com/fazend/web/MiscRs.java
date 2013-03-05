@@ -30,51 +30,49 @@
 package com.fazend.web;
 
 import com.jcabi.aspects.Loggable;
-import com.rexsl.page.PageBuilder;
-import java.net.HttpURLConnection;
+import com.jcabi.manifests.Manifests;
+import java.io.IOException;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import org.apache.commons.io.IOUtils;
 
 /**
- * Error-catching resource.
+ * Miscellaneous.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 2.0
  */
-@Path("/error")
-public final class ErrorRs extends BaseRs {
+@Path("/misc")
+public final class MiscRs extends BaseRs {
 
     /**
-     * Show errror, on GET.
+     * Show entrance page.
      * @return The JAX-RS response
      */
     @GET
-    @Path("/")
+    @Path("/version")
+    @Produces(MediaType.TEXT_PLAIN)
     @Loggable(Loggable.DEBUG)
-    public Response get() {
-        return new PageBuilder()
-            .stylesheet("/xsl/error.xsl")
-            .build(BasePage.class)
-            .init(this)
-            .render()
-            .status(HttpURLConnection.HTTP_NOT_FOUND)
-            .build();
+    public String version() {
+        return Manifests.read("Fazend-Revision");
     }
 
     /**
-     * Show errror, on POST.
+     * Show license.
      * @return The JAX-RS response
+     * @throws IOException If fails with I/O
      */
-    @POST
-    @Path("/")
+    @GET
+    @Path("/LICENSE.txt")
+    @Produces(MediaType.TEXT_PLAIN)
     @Loggable(Loggable.DEBUG)
-    public Response post() {
-        return Response.status(Response.Status.SEE_OTHER).location(
-            this.uriInfo().getBaseUriBuilder().clone().path("/error").build()
-        ).build();
+    public String license() throws IOException {
+        return IOUtils.toString(
+            this.getClass().getResourceAsStream("/LICENSE.txt")
+        );
     }
 
 }

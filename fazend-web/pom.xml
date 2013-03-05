@@ -73,21 +73,18 @@
             <version>${rexsl.version}</version>
         </dependency>
         <dependency>
-            <!-- JAX-RS API -->
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
             <version>1.1.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <!-- JAX-RS implementation -->
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-core</artifactId>
             <version>1.16</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <!-- JAXB 2.0 API -->
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.0</version>
@@ -99,13 +96,15 @@
             </exclusions>
         </dependency>
         <dependency>
-            <!-- Wrapper aroung SLF4J -->
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-log</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <!-- Static reader of META-INF/MANIFEST.MF files -->
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-urn</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-manifests</artifactId>
         </dependency>
@@ -128,19 +127,16 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <!-- Forward all calls to SLF4J to LOG4J. -->
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <!-- Use LOG4J logging facility for all loggings. -->
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <!-- Javax Servlet API 2.4. -->
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.4</version>
@@ -159,6 +155,15 @@
                                 <Fazend-Version>${project.version}</Fazend-Version>
                                 <Fazend-Revision>${buildNumber}</Fazend-Revision>
                                 <Fazend-Date>${maven.build.timestamp}</Fazend-Date>
+                                <Fazend-FbId>${fb.id}</Fazend-FbId>
+                                <Fazend-FbSecret>${fb.secret}</Fazend-FbSecret>
+                                <Fazend-GoogleId>${google.id}</Fazend-GoogleId>
+                                <Fazend-GoogleSecret>${google.secret}</Fazend-GoogleSecret>
+                                <Fazend-SecurityKey>${security.key}</Fazend-SecurityKey>
+                                <Fazend-SecuritySalt>${security.salt}</Fazend-SecuritySalt>
+                                <Fazend-AwsDynamoKey>${dynamo.key}</Fazend-AwsDynamoKey>
+                                <Fazend-AwsDynamoSecret>${dynamo.secret}</Fazend-AwsDynamoSecret>
+                                <Fazend-AwsDynamoTable>${dynamo.prefix}</Fazend-AwsDynamoTable>
                             </manifestEntries>
                             <manifest>
                                 <mainClass>com.rexsl.standalone.RexslMain</mainClass>

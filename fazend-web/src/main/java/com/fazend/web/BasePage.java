@@ -29,6 +29,7 @@
  */
 package com.fazend.web;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import com.rexsl.page.JaxbBundle;
 import javax.ws.rs.core.HttpHeaders;
@@ -45,7 +46,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * by means of {@link com.rexsl.page.PageBuilder}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: BasePage.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id$
+ * @since 2.0
  */
 @XmlRootElement(name = "page")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -55,6 +57,7 @@ public class BasePage extends com.rexsl.page.BasePage<BasePage, BaseRs> {
      * Render it.
      * @return JAX-RS response
      */
+    @Loggable(Loggable.DEBUG)
     public final Response.ResponseBuilder render() {
         final Response.ResponseBuilder builder = Response.ok();
         this.append(

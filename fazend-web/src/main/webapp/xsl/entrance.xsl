@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2009-2013, fazend.com
  * All rights reserved.
  *
@@ -26,55 +27,39 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.fazend.web;
-
-import com.jcabi.aspects.Loggable;
-import com.rexsl.page.PageBuilder;
-import java.net.HttpURLConnection;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-
-/**
- * Error-catching resource.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 2.0
- */
-@Path("/error")
-public final class ErrorRs extends BaseRs {
-
-    /**
-     * Show errror, on GET.
-     * @return The JAX-RS response
-     */
-    @GET
-    @Path("/")
-    @Loggable(Loggable.DEBUG)
-    public Response get() {
-        return new PageBuilder()
-            .stylesheet("/xsl/error.xsl")
-            .build(BasePage.class)
-            .init(this)
-            .render()
-            .status(HttpURLConnection.HTTP_NOT_FOUND)
-            .build();
-    }
-
-    /**
-     * Show errror, on POST.
-     * @return The JAX-RS response
-     */
-    @POST
-    @Path("/")
-    @Loggable(Loggable.DEBUG)
-    public Response post() {
-        return Response.status(Response.Status.SEE_OTHER).location(
-            this.uriInfo().getBaseUriBuilder().clone().path("/error").build()
-        ).build();
-    }
-
-}
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+    <xsl:output method="xml" omit-xml-declaration="yes"/>
+    <xsl:include href="/xsl/layout.xsl"/>
+    <xsl:template name="head">
+        <title>
+            <xsl:text>login</xsl:text>
+        </title>
+    </xsl:template>
+    <xsl:template name="content">
+        <p>
+            <xsl:text>To start, login using one of your accounts at:</xsl:text>
+        </p>
+        <p>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='facebook-auth']/@href"/>
+                </xsl:attribute>
+                <img class="icon" src="http://img.fazend.com/icons/facebook.png" alt="facebook icon"/>
+            </a>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='google-auth']/@href"/>
+                </xsl:attribute>
+                <img class="icon" src="http://img.fazend.com/icons/google.png" alt="google icon"/>
+            </a>
+        </p>
+        <h1>
+            <xsl:text>Lightweight Integration Platform as a Service</xsl:text>
+        </h1>
+        <p>
+            <xsl:text>Fazend.com is a cloud platform that integrates software
+                development resources, artifacts, and people.</xsl:text>
+        </p>
+    </xsl:template>
+</xsl:stylesheet>

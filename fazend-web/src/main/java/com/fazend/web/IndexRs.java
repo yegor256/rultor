@@ -29,6 +29,7 @@
  */
 package com.fazend.web;
 
+import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.PageBuilder;
 import javax.ws.rs.GET;
@@ -39,7 +40,8 @@ import javax.ws.rs.core.Response;
  * Index resource, front page of the website.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: IndexRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id$
+ * @since 2.0
  */
 @Path("/")
 public final class IndexRs extends BaseRs {
@@ -51,6 +53,7 @@ public final class IndexRs extends BaseRs {
      */
     @GET
     @Path("/")
+    @Loggable(Loggable.DEBUG)
     public Response index() throws Exception {
         return new PageBuilder()
             .stylesheet("/xsl/index.xsl")

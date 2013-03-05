@@ -5,7 +5,7 @@
         <link href="/css/screen.css?${buildNumber}"
             rel="stylesheet" type="text/css"></link>
         <link rel="icon" type="image/gif"
-            href="http://img.rexsl.com/favicon.gif?${buildNumber}"/>
+            href="http://img.fazend.com/favicon.ico?${buildNumber}"/>
     </head>
     <body>
         <div id="content">

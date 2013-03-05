@@ -47,15 +47,47 @@
                 </link>
                 <link rel="icon" type="image/gif">
                     <xsl:attribute name="href">
-                        <xsl:text>http://img.fazend.com/favicon.gif</xsl:text>
+                        <xsl:text>http://img.fazend.com/favicon.ico</xsl:text>
                     </xsl:attribute>
                 </link>
                 <xsl:call-template name="head"/>
+                <script type="text/javascript"><![CDATA[
+                  var _gaq = _gaq || [];
+                  _gaq.push(['_setAccount', 'UA-1963507-10']);
+                  _gaq.push(['_trackPageview']);
+                  (function() {
+                    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                  })();
+                ]]></script>
             </head>
             <body>
                 <xsl:apply-templates select="version"/>
                 <div id="content">
+                    <xsl:apply-templates select="user"/>
+                    <xsl:apply-templates select="flash"/>
                     <xsl:call-template name="content"/>
+                    <p style="border-top: 1px solid #ccc; margin-top: 2em; padding-top: 1em;">
+                        <xsl:text>fazend.com is an open source project, hosted at </xsl:text>
+                        <a href="https://github.com/yegor256/fazend">
+                            <xsl:text>github</xsl:text>
+                        </a>
+                        <xsl:text>. The service is absolutely free of charge, since it is sponsored by </xsl:text>
+                        <a href="http://www.tpc2.com/">
+                            <xsl:text>tpc2.com</xsl:text>
+                        </a>
+                        <xsl:text>. See also terms of use, privacy policy and license agreement at </xsl:text>
+                        <a href="/misc/LICENSE.txt">
+                            <xsl:text>LICENSE.txt</xsl:text>
+                        </a>
+                        <xsl:text>.</xsl:text>
+                        <xsl:text> This website is using </xsl:text>
+                        <a href="http://www.rexsl.com/">
+                            <xsl:text>ReXSL</xsl:text>
+                        </a>
+                        <xsl:text>, Java RESTful development framework.</xsl:text>
+                    </p>
                 </div>
             </body>
         </html>
