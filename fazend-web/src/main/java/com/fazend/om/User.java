@@ -44,7 +44,8 @@ public interface User {
 
     /**
      * URN of it.
+     * @return Identifier of it
      */
-    URN urn();
+    URN identifier();
 
 }
