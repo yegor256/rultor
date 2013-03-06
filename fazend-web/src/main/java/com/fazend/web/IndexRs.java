@@ -32,6 +32,7 @@ package com.fazend.web;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.PageBuilder;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -54,6 +55,7 @@ public final class IndexRs extends BaseRs {
     @GET
     @Path("/")
     @Loggable(Loggable.DEBUG)
+    @NotNull
     public Response index() throws Exception {
         return new PageBuilder()
             .stylesheet("/xsl/index.xsl")

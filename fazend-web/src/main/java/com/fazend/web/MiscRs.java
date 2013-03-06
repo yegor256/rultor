@@ -32,6 +32,7 @@ package com.fazend.web;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import java.io.IOException;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -56,6 +57,7 @@ public final class MiscRs extends BaseRs {
     @Path("/version")
     @Produces(MediaType.TEXT_PLAIN)
     @Loggable(Loggable.DEBUG)
+    @NotNull
     public String version() {
         return Manifests.read("Fazend-Revision");
     }
@@ -69,6 +71,7 @@ public final class MiscRs extends BaseRs {
     @Path("/LICENSE.txt")
     @Produces(MediaType.TEXT_PLAIN)
     @Loggable(Loggable.DEBUG)
+    @NotNull
     public String license() throws IOException {
         return IOUtils.toString(
             this.getClass().getResourceAsStream("/LICENSE.txt")

@@ -32,6 +32,7 @@ package com.fazend.web;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import com.rexsl.page.JaxbBundle;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -58,6 +59,7 @@ public class BasePage extends com.rexsl.page.BasePage<BasePage, BaseRs> {
      * @return JAX-RS response
      */
     @Loggable(Loggable.DEBUG)
+    @NotNull
     public final Response.ResponseBuilder render() {
         final Response.ResponseBuilder builder = Response.ok();
         this.append(
