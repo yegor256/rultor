@@ -33,7 +33,7 @@
     <parent>
         <groupId>com.jcabi</groupId>
         <artifactId>parent</artifactId>
-        <version>0.7.11</version>
+        <version>0.7.13</version>
     </parent>
     <groupId>com.fazend</groupId>
     <artifactId>fazend</artifactId>
