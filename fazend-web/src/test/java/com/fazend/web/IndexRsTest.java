@@ -34,8 +34,10 @@ import com.rexsl.page.UriInfoMocker;
 import com.rexsl.test.JaxbConverter;
 import com.rexsl.test.XhtmlMatchers;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link IndexRs}.
@@ -53,6 +55,7 @@ public final class IndexRsTest {
         final IndexRs res = new IndexRs();
         res.setUriInfo(new UriInfoMocker().mock());
         res.setHttpHeaders(new HttpHeadersMocker().mock());
+        res.setSecurityContext(Mockito.mock(SecurityContext.class));
         final Response response = res.index();
         MatcherAssert.assertThat(
             JaxbConverter.the(response.getEntity()),
