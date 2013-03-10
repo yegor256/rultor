@@ -31,6 +31,7 @@ package com.fazend.om;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
+import javax.validation.constraints.NotNull;
 
 /**
  * User.
@@ -46,6 +47,7 @@ public interface User {
      * URN of it.
      * @return Identifier of it
      */
+    @NotNull
     URN identifier();
 
 }

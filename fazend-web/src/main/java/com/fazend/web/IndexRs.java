@@ -55,7 +55,6 @@ public final class IndexRs extends BaseRs {
     @GET
     @Path("/")
     @Loggable(Loggable.DEBUG)
-    @NotNull
     public Response index() throws Exception {
         return new PageBuilder()
             .stylesheet("/xsl/index.xsl")

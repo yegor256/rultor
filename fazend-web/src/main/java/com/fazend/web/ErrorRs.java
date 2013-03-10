@@ -32,7 +32,6 @@ package com.fazend.web;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.PageBuilder;
 import java.net.HttpURLConnection;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -55,7 +54,6 @@ public final class ErrorRs extends BaseRs {
     @GET
     @Path("/")
     @Loggable(Loggable.DEBUG)
-    @NotNull
     public Response get() {
         return new PageBuilder()
             .stylesheet("/xsl/error.xsl")
@@ -73,7 +71,6 @@ public final class ErrorRs extends BaseRs {
     @POST
     @Path("/")
     @Loggable(Loggable.DEBUG)
-    @NotNull
     public Response post() {
         return Response.status(Response.Status.SEE_OTHER).location(
             this.uriInfo().getBaseUriBuilder().clone().path("/error").build()
