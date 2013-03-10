@@ -57,7 +57,7 @@ public final class IndexRs extends BaseRs {
     public Response index() throws Exception {
         return new PageBuilder()
             .stylesheet("/xsl/index.xsl")
-            .build(BasePage.class)
+            .build(EmptyPage.class)
             .init(this)
             .append(new JaxbBundle("message", "Hello, world!"))
             .render()

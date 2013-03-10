@@ -39,7 +39,7 @@
     <packaging>war</packaging>
     <name>fazend-web</name>
     <properties>
-        <rexsl.version>0.4.7</rexsl.version>
+        <rexsl.version>1.0-SNAPSHOT</rexsl.version>
     </properties>
     <dependencies>
         <dependency>
