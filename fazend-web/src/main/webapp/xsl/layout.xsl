@@ -140,13 +140,13 @@
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
                 </xsl:attribute>
-                <img class="icon" src="http://img.fazend.com/icons/facebook.png" alt="facebook icon"/>
+                <img class="auth-icon" src="http://img.fazend.com/icons/facebook.png" alt="facebook icon"/>
             </a>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
                 </xsl:attribute>
-                <img class="icon" src="http://img.fazend.com/icons/google.png" alt="google icon"/>
+                <img class="auth-icon" src="http://img.fazend.com/icons/google.png" alt="google icon"/>
             </a>
         </p>
     </xsl:template>
