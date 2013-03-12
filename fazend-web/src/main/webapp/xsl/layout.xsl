@@ -66,7 +66,7 @@
                 <xsl:apply-templates select="version"/>
                 <div id="content">
                     <p>
-                        <a>
+                        <a alt="fazend logo">
                             <xsl:attribute name="href">
                                 <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
                             </xsl:attribute>
