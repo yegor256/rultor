@@ -76,7 +76,7 @@
                     <xsl:apply-templates select="flash"/>
                     <xsl:choose>
                         <xsl:when test="/page/identity">
-                            <xsl:apply-templates select="user"/>
+                            <xsl:apply-templates select="identity"/>
                             <xsl:call-template name="content"/>
                         </xsl:when>
                         <xsl:otherwise>
@@ -138,6 +138,41 @@
             </xsl:attribute>
             <xsl:value-of select="message"/>
         </div>
+    </xsl:template>
+    <xsl:template match="identity">
+        <p>
+            <img style="width: 25px; height: 25px;">
+                <xsl:attribute name="src">
+                    <xsl:value-of select="photo"/>
+                </xsl:attribute>
+                <xsl:attribute name="alt">
+                    <xsl:value-of select="name"/>
+                </xsl:attribute>
+            </img>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="name"/>
+            <img style="margin-left: 0.5em;" alt="account type">
+                <xsl:attribute name="src">
+                    <xsl:text>http://img.fazend.com/icons/</xsl:text>
+                    <xsl:choose>
+                        <xsl:when test="starts-with(urn, 'urn:facebook:')">
+                            <xsl:text>facebook</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="starts-with(urn, 'urn:google:')">
+                            <xsl:text>google</xsl:text>
+                        </xsl:when>
+                    </xsl:choose>
+                    <xsl:text>-small.png</xsl:text>
+                </xsl:attribute>
+            </img>
+            <xsl:text> </xsl:text>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='logout']/@href"/>
+                </xsl:attribute>
+                <xsl:text>logout</xsl:text>
+            </a>
+        </p>
     </xsl:template>
     <xsl:template name="login">
         <p>
