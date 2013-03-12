@@ -40,5 +40,5 @@ import javax.ws.rs.core.UriBuilder
     RestTester.start(UriBuilder.fromUri(rexsl.home).path(it))
         .get('hits non-found page')
         .assertStatus(HttpURLConnection.HTTP_NOT_FOUND)
-        .assertXPath('//xhtml:h1[contains(.,"Page not found")]')
+        .assertXPath('//xhtml:title[contains(.,"page not found")]')
 }

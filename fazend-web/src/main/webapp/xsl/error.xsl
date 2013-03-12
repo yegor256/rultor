@@ -33,7 +33,7 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
-            <xsl:text>error</xsl:text>
+            <xsl:text>page not found</xsl:text>
         </title>
     </xsl:template>
     <xsl:template name="content">
