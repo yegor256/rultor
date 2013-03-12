@@ -168,7 +168,7 @@
             <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='logout']/@href"/>
+                    <xsl:value-of select="/page/links/link[@rel='auth-logout']/@href"/>
                 </xsl:attribute>
                 <xsl:text>logout</xsl:text>
             </a>
