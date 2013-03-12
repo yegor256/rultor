@@ -67,7 +67,14 @@
                 <div id="content">
                     <xsl:apply-templates select="user"/>
                     <xsl:apply-templates select="flash"/>
-                    <xsl:call-template name="content"/>
+                    <xsl:choose>
+                        <xsl:when test="/page/identity">
+                            <xsl:call-template name="content"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:call-template name="login"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
                     <p style="border-top: 1px solid #ccc; margin-top: 2em; padding-top: 1em;">
                         <xsl:text>fazend.com is an open source project, hosted at </xsl:text>
                         <a href="https://github.com/yegor256/fazend">
@@ -115,5 +122,32 @@
                 <xsl:with-param name="millis" select="/page/millis"/>
             </xsl:call-template>
         </div>
+    </xsl:template>
+    <xsl:template match="flash">
+        <div id="flash">
+            <xsl:attribute name="class">
+                <xsl:value-of select="level"/>
+            </xsl:attribute>
+            <xsl:value-of select="message"/>
+        </div>
+    </xsl:template>
+    <xsl:template name="login">
+        <p>
+            <xsl:text>To start, login using one of your accounts at:</xsl:text>
+        </p>
+        <p>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
+                </xsl:attribute>
+                <img class="icon" src="http://img.fazend.com/icons/facebook.png" alt="facebook icon"/>
+            </a>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
+                </xsl:attribute>
+                <img class="icon" src="http://img.fazend.com/icons/google.png" alt="google icon"/>
+            </a>
+        </p>
     </xsl:template>
 </xsl:stylesheet>

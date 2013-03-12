@@ -34,6 +34,10 @@ import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
 import com.rexsl.page.Resource;
+import com.rexsl.page.auth.AuthInset;
+import com.rexsl.page.auth.Facebook;
+import com.rexsl.page.auth.Google;
+import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
 import javax.ws.rs.core.HttpHeaders;
@@ -48,7 +52,7 @@ import javax.ws.rs.core.Response;
  * @since 2.0
  */
 @Resource.Forwarded
-@Inset.Default({ LinksInset.class })
+@Inset.Default({ LinksInset.class, FlashInset.class })
 public class BaseRs extends BaseResource {
 
     /**
@@ -56,7 +60,7 @@ public class BaseRs extends BaseResource {
      * @return The inset
      */
     @Inset.Runtime
-    public Inset insetVersion() {
+    public final Inset insetVersion() {
         return new VersionInset(
             Manifests.read("Fazend-Version"),
             Manifests.read("Fazend-Revision"),
@@ -69,7 +73,7 @@ public class BaseRs extends BaseResource {
      * @return The inset
      */
     @Inset.Runtime
-    public Inset insetSupplementary() {
+    public final Inset insetSupplementary() {
         return new Inset() {
             @Override
             public void render(final BasePage<?, ?> page,
@@ -78,6 +82,18 @@ public class BaseRs extends BaseResource {
                 builder.header(HttpHeaders.VARY, "Cookie");
             }
         };
+    }
+
+    /**
+     * Authentication inset.
+     * @return The inset
+     */
+    @Inset.Runtime
+    public final AuthInset auth() {
+        // @checkstyle LineLength (3 lines)
+        return new AuthInset(this, Manifests.read("Fazend-SecurityKey"), Manifests.read("Fazend-SecuritySalt"))
+            .with(new Facebook(this, Manifests.read("Fazend-FbId"), Manifests.read("Fazend-FbSecret")))
+            .with(new Google(this, Manifests.read("Fazend-GoogleId"), Manifests.read("Fazend-GoogleSecret")));
     }
 
 }
