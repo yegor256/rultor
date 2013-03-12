@@ -65,10 +65,18 @@
             <body>
                 <xsl:apply-templates select="version"/>
                 <div id="content">
-                    <xsl:apply-templates select="user"/>
+                    <p>
+                        <a>
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
+                            </xsl:attribute>
+                            <img src="http://img.fazend.com/logo.png"/>
+                        </a>
+                    </p>
                     <xsl:apply-templates select="flash"/>
                     <xsl:choose>
                         <xsl:when test="/page/identity">
+                            <xsl:apply-templates select="user"/>
                             <xsl:call-template name="content"/>
                         </xsl:when>
                         <xsl:otherwise>
