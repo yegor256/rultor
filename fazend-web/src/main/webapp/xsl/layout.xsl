@@ -66,11 +66,11 @@
                 <xsl:apply-templates select="version"/>
                 <div id="content">
                     <p>
-                        <a alt="fazend logo">
+                        <a>
                             <xsl:attribute name="href">
                                 <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
                             </xsl:attribute>
-                            <img src="http://img.fazend.com/logo.png"/>
+                            <img src="http://img.fazend.com/logo.png" alt="fazend logo"/>
                         </a>
                     </p>
                     <xsl:apply-templates select="flash"/>
