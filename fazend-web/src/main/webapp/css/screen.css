@@ -60,8 +60,7 @@ a {
 
     /* any link with a mouse over it */
     a:hover {
-        color: white;
-        background-color: #2276A4;
+        text-decoration: underline;
     }
 
 /* any paragraph */
