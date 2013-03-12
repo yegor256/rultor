@@ -71,7 +71,7 @@ public final class MiscRs extends BaseRs {
     @Loggable(Loggable.DEBUG)
     public String license() throws IOException {
         return IOUtils.toString(
-            this.getClass().getResourceAsStream("/LICENSE.txt")
+            this.getClass().getResourceAsStream("LICENSE.txt")
         );
     }
 
