@@ -43,11 +43,13 @@
                 <link rel="stylesheet" type="text/css" media="all">
                     <xsl:attribute name="href">
                         <xsl:text>/css/screen.css?</xsl:text>
+                        <xsl:value-of select="/page/version/revision"/>
                     </xsl:attribute>
                 </link>
                 <link rel="icon" type="image/gif">
                     <xsl:attribute name="href">
-                        <xsl:text>http://img.fazend.com/favicon.ico</xsl:text>
+                        <xsl:text>http://img.fazend.com/favicon.ico?</xsl:text>
+                        <xsl:value-of select="/page/version/revision"/>
                     </xsl:attribute>
                 </link>
                 <xsl:call-template name="head"/>
@@ -70,7 +72,12 @@
                             <xsl:attribute name="href">
                                 <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
                             </xsl:attribute>
-                            <img src="http://img.fazend.com/logo.png" alt="fazend logo"/>
+                            <img alt="fazend logo">
+                                <xsl:attribute name="src">
+                                    <xsl:text>http://img.fazend.com/logo.png?</xsl:text>
+                                    <xsl:value-of select="/page/version/revision"/>
+                                </xsl:attribute>
+                            </img>
                         </a>
                     </p>
                     <xsl:apply-templates select="flash"/>
