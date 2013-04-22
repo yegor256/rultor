@@ -41,6 +41,12 @@
     <properties>
         <rexsl.version>0.4.8</rexsl.version>
     </properties>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>cloudbees-public-release</id>
+            <url>http://repository-cloudbees.forge.cloudbees.com/public-release</url>
+        </pluginRepository>
+    </pluginRepositories>
     <dependencies>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -69,13 +75,6 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.rexsl</groupId>
-            <artifactId>rexsl-standalone</artifactId>
-            <version>${rexsl.version}</version>
-            <classifier>bin</classifier>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.rexsl</groupId>
@@ -179,18 +178,7 @@
                                 <Fazend-AwsDynamoSecret>${dynamo.secret}</Fazend-AwsDynamoSecret>
                                 <Fazend-AwsDynamoTable>${dynamo.prefix}</Fazend-AwsDynamoTable>
                             </manifestEntries>
-                            <manifest>
-                                <mainClass>com.rexsl.standalone.RexslMain</mainClass>
-                            </manifest>
                         </archive>
-                        <overlays>
-                            <overlay>
-                                <groupId>com.rexsl</groupId>
-                                <artifactId>rexsl-standalone</artifactId>
-                                <classifier>bin</classifier>
-                                <type>jar</type>
-                            </overlay>
-                        </overlays>
                     </configuration>
                 </plugin>
             </plugins>
@@ -222,23 +210,22 @@
                 </dependencies>
             </plugin>
             <plugin>
-                <groupId>com.jcabi</groupId>
-                <artifactId>jcabi-heroku-maven-plugin</artifactId>
-                <version>${jcabi.version}</version>
+                <groupId>com.cloudbees</groupId>
+                <artifactId>bees-maven-plugin</artifactId>
+                <version>1.3.2</version>
+                <configuration>
+                    <appid>${bees.appId}</appid>
+                    <apikey>${bees.apikey}</apikey>
+                    <secret>${bees.secret}</secret>
+                    <message>${buildNumber}</message>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>deploy-to-heroku</id>
+                        <id>deploy-to-production</id>
                         <phase>deploy</phase>
                         <goals>
                             <goal>deploy</goal>
                         </goals>
-                        <configuration>
-                            <name>fazend-web</name>
-                            <artifacts>
-                                <artifact>${project.groupId}:${project.artifactId}:war::${project.version}</artifact>
-                            </artifacts>
-                            <procfile>web: java -Xmx256m -jar ./${project.artifactId}.war ${PORT}</procfile>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
