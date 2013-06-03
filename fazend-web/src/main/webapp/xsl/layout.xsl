@@ -40,6 +40,8 @@
                 <meta name="description" content="Lightweight Integration Platform as a Service"/>
                 <meta name="keywords" content="IPaaS, continuous integration, continuous delivery"/>
                 <meta name="author" content="fazend.com"/>
+                <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet"/>
+                <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet" />
                 <link rel="stylesheet" type="text/css" media="all">
                     <xsl:attribute name="href">
                         <xsl:text>/css/screen.css?</xsl:text>
@@ -54,32 +56,20 @@
                 </link>
                 <xsl:call-template name="head"/>
                 <script type="text/javascript"><![CDATA[
-                  var _gaq = _gaq || [];
-                  _gaq.push(['_setAccount', 'UA-1963507-10']);
-                  _gaq.push(['_trackPageview']);
-                  (function() {
+                var _gaq = _gaq || [];
+                _gaq.push(['_setAccount', 'UA-1963507-10']);
+                _gaq.push(['_trackPageview']);
+                (function() {
                     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
                     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
                     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-                  })();
+                })();
                 ]]></script>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             </head>
             <body>
                 <xsl:apply-templates select="version"/>
-                <div id="content">
-                    <p>
-                        <a>
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
-                            </xsl:attribute>
-                            <img alt="fazend logo">
-                                <xsl:attribute name="src">
-                                    <xsl:text>http://img.fazend.com/logo.png?</xsl:text>
-                                    <xsl:value-of select="/page/version/revision"/>
-                                </xsl:attribute>
-                            </img>
-                        </a>
-                    </p>
+                <div class="container-fluid">
                     <xsl:apply-templates select="flash"/>
                     <xsl:choose>
                         <xsl:when test="/page/identity">
@@ -90,26 +80,7 @@
                             <xsl:call-template name="login"/>
                         </xsl:otherwise>
                     </xsl:choose>
-                    <p style="border-top: 1px solid #ccc; margin-top: 2em; padding-top: 1em;">
-                        <xsl:text>fazend.com is an open source project, hosted at </xsl:text>
-                        <a href="https://github.com/yegor256/fazend">
-                            <xsl:text>github</xsl:text>
-                        </a>
-                        <xsl:text>. The service is absolutely free of charge, since it is sponsored by </xsl:text>
-                        <a href="http://www.tpc2.com/">
-                            <xsl:text>tpc2.com</xsl:text>
-                        </a>
-                        <xsl:text>. See also terms of use, privacy policy and license agreement at </xsl:text>
-                        <a href="/misc/LICENSE.txt">
-                            <xsl:text>LICENSE.txt</xsl:text>
-                        </a>
-                        <xsl:text>.</xsl:text>
-                        <xsl:text> This website is using </xsl:text>
-                        <a href="http://www.rexsl.com/">
-                            <xsl:text>ReXSL</xsl:text>
-                        </a>
-                        <xsl:text>, Java RESTful development framework.</xsl:text>
-                    </p>
+                    <xsl:call-template name="bottom"/>
                 </div>
             </body>
         </html>
@@ -131,6 +102,14 @@
         <div id="version">
             <xsl:value-of select="name"/>
             <xsl:text> </xsl:text>
+            <a title="see commit in Github">
+                <xsl:attribute name="href">
+                    <xsl:text>https://github.com/yegor256/bibrarian/commit/</xsl:text>
+                    <xsl:value-of select="revision"/>
+                </xsl:attribute>
+                <i class="icon-github"><xsl:comment>github icon</xsl:comment></i>
+            </a>
+            <xsl:text> </xsl:text>
             <xsl:value-of select="revision"/>
             <xsl:text> </xsl:text>
             <xsl:call-template name="millis">
@@ -139,9 +118,20 @@
         </div>
     </xsl:template>
     <xsl:template match="flash">
-        <div id="flash">
+        <div>
             <xsl:attribute name="class">
-                <xsl:value-of select="level"/>
+                <xsl:text>alert </xsl:text>
+                <xsl:choose>
+                    <xsl:when test="level = 'INFO'">
+                        <xsl:text>alert-success</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="level = 'WARNING'">
+                        <xsl:text>alert-info</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="level = 'ERROR'">
+                        <xsl:text>alert-error</xsl:text>
+                    </xsl:when>
+                </xsl:choose>
             </xsl:attribute>
             <xsl:value-of select="message"/>
         </div>
@@ -183,21 +173,42 @@
     </xsl:template>
     <xsl:template name="login">
         <p>
-            <xsl:text>To start, login using one of your accounts at:</xsl:text>
-        </p>
-        <p>
+            <xsl:text>To start, login using one of your accounts at: </xsl:text>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
                 </xsl:attribute>
-                <img class="auth-icon" src="http://img.fazend.com/icons/facebook.png" alt="facebook icon"/>
+                <i class="icon-facebook-sign icon-2x"><xsl:comment>facebook sign</xsl:comment></i>
             </a>
+            <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
                 </xsl:attribute>
-                <img class="auth-icon" src="http://img.fazend.com/icons/google.png" alt="google icon"/>
+                <i class="icon-google-plus-sign icon-2x"><xsl:comment>google plus sign</xsl:comment></i>
             </a>
         </p>
+    </xsl:template>
+    <xsl:template name="bottom">
+        <div id="bottom">
+            <xsl:text>fazend.com is an open source project, hosted at </xsl:text>
+            <a href="https://github.com/yegor256/fazend">
+                <xsl:text>github</xsl:text>
+            </a>
+            <xsl:text>. The service is absolutely free of charge, since it is sponsored by </xsl:text>
+            <a href="http://www.tpc2.com/">
+                <xsl:text>tpc2.com</xsl:text>
+            </a>
+            <xsl:text>. See also terms of use, privacy policy and license agreement at </xsl:text>
+            <a href="/misc/LICENSE.txt">
+                <xsl:text>LICENSE.txt</xsl:text>
+            </a>
+            <xsl:text>.</xsl:text>
+            <xsl:text> This website is using </xsl:text>
+            <a href="http://www.rexsl.com/">
+                <xsl:text>ReXSL</xsl:text>
+            </a>
+            <xsl:text>, Java RESTful development framework.</xsl:text>
+        </div>
     </xsl:template>
 </xsl:stylesheet>

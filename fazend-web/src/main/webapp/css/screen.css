@@ -28,144 +28,16 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* all elements */
-a,
-img,
-body,
-input,
-h1,
-h2,
-h3,
-textarea {
-    font-family: verdana, arial, helvetica, clean, sans-serif;
-    font-size: 12px;
-    font-variant: normal;
-    font-stretch: normal;
-    font-weight: normal;
-    color: black;
-    padding: 0;
-    margin: 0;
-    border: 0;
-    text-decoration: none;
-}
-
-body {
-    padding: 2em;
-}
-
-/* any link */
-a {
-    color: #2276A4;
-}
-
-    /* any link with a mouse over it */
-    a:hover {
-        text-decoration: underline;
-    }
-
-/* any paragraph */
-p {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-}
-
-/* headers */
-h1 {
-    color: #2276A4;
-    font-size: 170%;
-    margin: 1.5em 0 1em 0;
-}
-
-/* any list */
-ul {
-}
-
-    ul li {
-        padding-left: 13px;
-        list-style-type: none;
-        background-image: url('http://img.fazend.com/bullet.png');
-        background-repeat: no-repeat;
-        background-position: 0 .5em;
-        margin-bottom: 0.5em;
-    }
-
-/* fixed font */
-.tt,
-.fixed,
-pre {
-    font-family: 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
-    background-color: #f3f3f1;
-}
-
-/* inline fixed text */
-.tt {
-    padding-left: 0.4em;
-    padding-right: 0.4em;
-}
-
-/* fixed font blocks */
-pre {
-    padding: 1em;
-    width: 55em;
-}
-
-/* any input field */
-input {
-    border: solid 1px #666;
-    background-color: white;
-    padding: 2px;
-}
-
-    /* any submit button */
-    input.submit {
-        display: block;
-        cursor: pointer;
-        background-image: url('http://img.fazend.com/submit.png');
-        border: 0;
-        width: 60px;
-        height: 22px;
-        margin-top: 0.5em;
-    }
-
-label {
-    margin-top: 0.2em;
-    margin-bottom: 0.2em;
-    display: block;
-}
-
-#content {
-    padding: 2em;
-}
-
-/* top flash message */
-#flash {
-    padding: 0.4em 0.8em;
-}
-
-    #flash.INFO {
-        color: green;
-        background-color: #dfd;
-        border: 1px solid green;
-    }
-
-    #flash.WARNING {
-        color: red;
-        background-color: #fdd;
-        border: 1px solid red;
-    }
-
 /* bottom right label about deployed version */
 #version {
-    font-size: 0.9em;
+    font-size: 0.8em;
     position: fixed;
     right: 0;
     bottom: 0;
-    padding: 0.4em 0.8em;
+    padding: .2em .8em;
     background-color: #e4e5e3;
-    color: gray;
 }
 
-/* authentication icon */
-img.auth-icon {
-    margin-right: 0.5em;
+#bottom {
+    font-size: 0.9em;
 }
