@@ -104,7 +104,7 @@
             <xsl:text> </xsl:text>
             <a title="see commit in Github">
                 <xsl:attribute name="href">
-                    <xsl:text>https://github.com/yegor256/bibrarian/commit/</xsl:text>
+                    <xsl:text>https://github.com/yegor256/fazend/commit/</xsl:text>
                     <xsl:value-of select="revision"/>
                 </xsl:attribute>
                 <i class="icon-github"><xsl:comment>github icon</xsl:comment></i>
@@ -134,6 +134,13 @@
                 </xsl:choose>
             </xsl:attribute>
             <xsl:value-of select="message"/>
+            <xsl:if test="msec &gt; 0">
+                <xsl:text> (in </xsl:text>
+                <xsl:call-template name="millis">
+                    <xsl:with-param name="millis" select="msec"/>
+                </xsl:call-template>
+                <xsl:text>)</xsl:text>
+            </xsl:if>
         </div>
     </xsl:template>
     <xsl:template match="identity">
