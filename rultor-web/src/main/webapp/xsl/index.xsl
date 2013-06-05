@@ -28,29 +28,17 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<project xmlns="http://maven.apache.org/DECORATION/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0     http://maven.apache.org/xsd/decoration-1.0.0.xsd" name="rultor">
-    <skin>
-        <groupId>com.jcabi</groupId>
-        <artifactId>jcabi-maven-skin</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </skin>
-    <googleAnalyticsAccountId>UA-1963507-10</googleAnalyticsAccountId>
-    <bannerLeft>
-        <name>rultor.com</name>
-        <src>http://img.rultor.com/logo.png</src>
-        <href>http://maven.rultor.com/</href>
-    </bannerLeft>
-    <body>
-        <head>
-            <link href="http://img.rultor.com/favicon.ico" rel="shortcut icon"/>
-        </head>
-        <breadcrumbs>
-            <item name="rultor.com" href="http://maven.rultor.com"/>
-        </breadcrumbs>
-        <menu name="Overview">
-            <item name="Introduction" href="./index.html"/>
-        </menu>
-        <menu ref="modules"/>
-        <menu ref="reports"/>
-    </body>
-</project>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+    <xsl:output method="xml" omit-xml-declaration="yes"/>
+    <xsl:include href="/xsl/layout.xsl"/>
+    <xsl:template name="head">
+        <title>
+            <xsl:text>index</xsl:text>
+        </title>
+    </xsl:template>
+    <xsl:template name="content">
+        <p>
+            <xsl:value-of select="/page/message"/>
+        </p>
+    </xsl:template>
+</xsl:stylesheet>

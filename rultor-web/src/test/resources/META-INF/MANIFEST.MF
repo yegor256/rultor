@@ -1,0 +1,11 @@
+Fazend-FbId: 1234567
+Fazend-FbSecret: 1234567
+Fazend-GoogleId: 1234567
+Fazend-GoogleSecret: 1234567
+Fazend-GithubId: 1234567
+Fazend-GithubSecret: 1234567
+Fazend-SecurityKey: key
+Fazend-SecuritySalt: key
+Fazend-Version: 1.0-SNAPSHOT
+Fazend-Revision: 12345
+Fazend-Date: 9-Dec-2012

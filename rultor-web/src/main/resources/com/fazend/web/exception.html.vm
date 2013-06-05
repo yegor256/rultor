@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Internal application error</title>
+        <link href="/css/screen.css?${buildNumber}"
+            rel="stylesheet" type="text/css"></link>
+        <link rel="icon" type="image/gif"
+            href="http://img.rultor.com/favicon.ico?${buildNumber}"/>
+    </head>
+    <body>
+        <div id="content">
+            <p>
+                <a href="http://www.rultor.com/">
+                    <img src="http://img.rultor.com/logo.png?${buildNumber}"/>
+                </a>
+            </p>
+            <p>
+                <b style="color: red;">
+                    Internal application error (${buildNumber}).
+                </b>
+            </p>
+            <pre style="display:none;">${text}</pre>
+        </div>
+    </body>
+</html>

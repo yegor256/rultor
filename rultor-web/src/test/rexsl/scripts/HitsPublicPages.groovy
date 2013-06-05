@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -27,30 +26,20 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<project xmlns="http://maven.apache.org/DECORATION/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0     http://maven.apache.org/xsd/decoration-1.0.0.xsd" name="rultor">
-    <skin>
-        <groupId>com.jcabi</groupId>
-        <artifactId>jcabi-maven-skin</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </skin>
-    <googleAnalyticsAccountId>UA-1963507-10</googleAnalyticsAccountId>
-    <bannerLeft>
-        <name>rultor.com</name>
-        <src>http://img.rultor.com/logo.png</src>
-        <href>http://maven.rultor.com/</href>
-    </bannerLeft>
-    <body>
-        <head>
-            <link href="http://img.rultor.com/favicon.ico" rel="shortcut icon"/>
-        </head>
-        <breadcrumbs>
-            <item name="rultor.com" href="http://maven.rultor.com"/>
-        </breadcrumbs>
-        <menu name="Overview">
-            <item name="Introduction" href="./index.html"/>
-        </menu>
-        <menu ref="modules"/>
-        <menu ref="reports"/>
-    </body>
-</project>
+ */
+package com.rultor.web.rexsl.scripts
+
+import com.rexsl.test.RestTester
+import javax.ws.rs.core.UriBuilder
+
+[
+    '/',
+    '/robots.txt',
+    '/xsl/layout.xsl',
+    '/xsl/index.xsl',
+    '/css/screen.css',
+].each {
+    RestTester.start(UriBuilder.fromUri(rexsl.home).path(it))
+        .get('hits existing page')
+        .assertStatus(HttpURLConnection.HTTP_OK)
+}
