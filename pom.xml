@@ -90,6 +90,12 @@
             <url>s3://maven.rultor.com/</url>
         </site>
     </distributionManagement>
+    <repositories>
+        <repository>
+            <id>repo.rultor.com</id>
+            <url>s3://repo.rultor.com/snapshot</url>
+        </repository>
+    </repositories>
     <properties>
         <jcabi.version>1.0-SNAPSHOT</jcabi.version>
         <rexsl.version>1.0-SNAPSHOT</rexsl.version>
