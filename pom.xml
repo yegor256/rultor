@@ -85,6 +85,14 @@
         <url>http://ci.rultor.com:8080/job/rultor/</url>
     </ciManagement>
     <distributionManagement>
+        <snapshotRepository>
+            <id>repo.rultor.com</id>
+            <url>s3://repo.rultor.com/snapshot</url>
+        </snapshotRepository>
+        <repository>
+            <id>repo.rultor.com</id>
+            <url>s3://repo.rultor.com/release</url>
+        </repository>
         <site>
             <id>maven.rultor.com</id>
             <url>s3://maven.rultor.com/</url>
