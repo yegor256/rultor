@@ -33,7 +33,7 @@
     <parent>
         <groupId>com.rultor</groupId>
         <artifactId>rultor</artifactId>
-        <version>2.0-SNAPSHOT</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>rultor-web</artifactId>
     <packaging>war</packaging>
@@ -179,9 +179,9 @@
                                 <Rultor-GithubSecret>${github.secret}</Rultor-GithubSecret>
                                 <Rultor-SecurityKey>${security.key}</Rultor-SecurityKey>
                                 <Rultor-SecuritySalt>${security.salt}</Rultor-SecuritySalt>
-                                <Rultor-AwsDynamoKey>${dynamo.key}</Rultor-AwsDynamoKey>
-                                <Rultor-AwsDynamoSecret>${dynamo.secret}</Rultor-AwsDynamoSecret>
-                                <Rultor-AwsDynamoTable>${dynamo.prefix}</Rultor-AwsDynamoTable>
+                                <Rultor-DynamoKey>${dynamo.key}</Rultor-DynamoKey>
+                                <Rultor-DynamoSecret>${dynamo.secret}</Rultor-DynamoSecret>
+                                <Rultor-DynamoTable>${dynamo.prefix}</Rultor-DynamoTable>
                             </manifestEntries>
                         </archive>
                     </configuration>
