@@ -27,11 +27,69 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.life;
+
+import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.ScheduleWithFixedDelay;
+import com.rultor.om.Unit;
+import com.rultor.om.User;
+import com.rultor.om.Users;
+import com.rultor.queue.Queue;
+import java.io.Closeable;
+import java.util.concurrent.TimeUnit;
+import lombok.EqualsAndHashCode;
 
 /**
- * Front end, tests.
+ * Quartz.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
  * @since 1.0
  */
-package com.rultor.web;
+@Loggable(Loggable.INFO)
+@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.MINUTES)
+@EqualsAndHashCode(of = { "users", "queue" })
+@SuppressWarnings("PMD.DoNotUseThreads")
+final class Quartz implements Runnable, Closeable {
+
+    /**
+     * Users.
+     */
+    private final transient Users users;
+
+    /**
+     * Queue.
+     */
+    private final transient Queue queue;
+
+    /**
+     * Public ctor.
+     * @param usr Users
+     * @param que Queue
+     */
+    protected Quartz(final Users usr, final Queue que) {
+        this.users = usr;
+        this.queue = que;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void run() {
+        for (User user : this.users.everybody()) {
+            for (Unit unit : user.units().values()) {
+                this.queue.push(unit.spec());
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        // nothing to do
+    }
+
+}

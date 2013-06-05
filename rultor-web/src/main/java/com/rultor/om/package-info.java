@@ -33,6 +33,6 @@
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 2.0
+ * @since 1.0
  */
 package com.rultor.om;

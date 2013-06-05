@@ -27,11 +27,41 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.web;
+
+import com.jcabi.aspects.Loggable;
+import com.rexsl.page.BaseResource;
+import com.rexsl.page.inset.FlashInset;
+import java.util.logging.Level;
+import javax.validation.ConstraintViolationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
- * Front end, tests.
+ * Maps constraint violations to JAX-RS responses.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * <p>The class is mutable and NOT thread-safe.
+ *
+ * @author Yegor Bugayenko (yegor@tpc.com)
+ * @version $Id$
  * @since 1.0
  */
-package com.rultor.web;
+@Provider
+@Loggable(Loggable.DEBUG)
+public final class ConstraintsMapper extends BaseResource
+    implements ExceptionMapper<ConstraintViolationException> {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Response toResponse(final ConstraintViolationException violation) {
+        return FlashInset.forward(
+            this.uriInfo().getRequestUri(),
+            violation.getMessage(),
+            Level.WARNING
+        ).getResponse();
+    }
+
+}

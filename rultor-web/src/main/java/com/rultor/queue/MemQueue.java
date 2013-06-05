@@ -27,11 +27,46 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.queue;
+
+import com.jcabi.aspects.Loggable;
+import com.rultor.om.Spec;
+import java.util.concurrent.LinkedBlockingQueue;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Front end, tests.
+ * Simple queue in memory.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
  * @since 1.0
  */
-package com.rultor.web;
+@Loggable(Loggable.INFO)
+@ToString
+@EqualsAndHashCode(of = "list")
+public final class MemQueue implements Queue {
+
+    /**
+     * Queue of them.
+     */
+    private final transient java.util.Queue<Spec> list =
+        new LinkedBlockingQueue<Spec>();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void push(final Spec spec) {
+        this.list.add(spec);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spec pull() throws InterruptedException {
+        return this.list.poll();
+    }
+
+}

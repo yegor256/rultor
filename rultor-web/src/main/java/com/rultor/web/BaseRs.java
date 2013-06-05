@@ -41,6 +41,8 @@ import com.rexsl.page.auth.Google;
 import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
+import com.rultor.om.User;
+import com.rultor.om.Users;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -50,11 +52,20 @@ import javax.ws.rs.core.Response;
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 2.0
+ * @since 1.0
  */
 @Resource.Forwarded
-@Inset.Default({ LinksInset.class, FlashInset.class })
+@Inset.Default(LinksInset.class)
 public class BaseRs extends BaseResource {
+
+    /**
+     * Flash.
+     * @return The inset with flash
+     */
+    @Inset.Runtime
+    public final FlashInset flash() {
+        return new FlashInset(this);
+    }
 
     /**
      * Inset with a version of the product.
@@ -96,6 +107,20 @@ public class BaseRs extends BaseResource {
             .with(new Facebook(this, Manifests.read("Rultor-FbId"), Manifests.read("Rultor-FbSecret")))
             .with(new Github(this, Manifests.read("Rultor-GithubId"), Manifests.read("Rultor-GithubSecret")))
             .with(new Google(this, Manifests.read("Rultor-GoogleId"), Manifests.read("Rultor-GoogleSecret")));
+    }
+
+    /**
+     * Get all users.
+     * @return Cycles
+     */
+    protected final User user() {
+        final Users users = Users.class.cast(
+            this.servletContext().getAttribute(Users.class.getName())
+        );
+        if (users == null) {
+            throw new IllegalStateException("USERS is not initialized");
+        }
+        return users.fetch(this.auth().identity().urn());
     }
 
 }

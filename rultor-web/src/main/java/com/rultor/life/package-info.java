@@ -29,9 +29,10 @@
  */
 
 /**
- * Front end, tests.
+ * Quartz.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
  * @since 1.0
  */
-package com.rultor.web;
+package com.rultor.life;

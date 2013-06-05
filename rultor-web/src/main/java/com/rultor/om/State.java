@@ -27,11 +27,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.om;
+
+import javax.validation.constraints.NotNull;
 
 /**
- * Front end, tests.
+ * Mutable state.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
  * @since 1.0
  */
-package com.rultor.web;
+public interface State {
+
+    /**
+     * Get value by key.
+     * @param key The key
+     * @return Value
+     */
+    @NotNull
+    String get(@NotNull String key);
+
+    /**
+     * Set if absent, don't touch if already present.
+     * @param key The key
+     * @param value The value
+     * @return TRUE if it was actually saved
+     */
+    @NotNull
+    boolean checkAndSet(@NotNull String key, @NotNull String value);
+
+}

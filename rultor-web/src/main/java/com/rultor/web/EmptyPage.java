@@ -41,7 +41,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 2.0
+ * @since 1.0
  */
 @XmlRootElement(name = "page")
 @XmlAccessorType(XmlAccessType.NONE)

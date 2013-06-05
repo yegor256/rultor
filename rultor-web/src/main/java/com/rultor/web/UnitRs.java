@@ -27,11 +27,44 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.web;
+
+import com.jcabi.aspects.Loggable;
+import com.rexsl.page.PageBuilder;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
 
 /**
- * Front end, tests.
+ * Pulses.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
  * @since 1.0
  */
-package com.rultor.web;
+@Path("/u")
+public final class UnitRs extends BaseRs {
+
+    /**
+     * Query param.
+     */
+    public static final String QUERY_NAME = "name";
+
+    /**
+     * Get entrance page JAX-RS response.
+     * @return The JAX-RS response
+     * @throws Exception If some problem inside
+     */
+    @GET
+    @Path("/")
+    @Loggable(Loggable.DEBUG)
+    public Response index() throws Exception {
+        return new PageBuilder()
+            .stylesheet("/xsl/unit.xsl")
+            .build(EmptyPage.class)
+            .init(this)
+            .render()
+            .build();
+    }
+
+}

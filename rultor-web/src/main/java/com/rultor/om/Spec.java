@@ -27,11 +27,24 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.om;
+
+import com.jcabi.aspects.Immutable;
 
 /**
- * Front end, tests.
+ * Unit specification.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
  * @since 1.0
  */
-package com.rultor.web;
+@Immutable
+public interface Spec {
+
+    /**
+     * Convert it to a human readable form.
+     * @return The text
+     */
+    String asText();
+
+}

@@ -27,11 +27,31 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.queue;
+
+import com.rultor.om.Spec;
+import javax.validation.constraints.NotNull;
 
 /**
- * Front end, tests.
+ * Queue.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
  * @since 1.0
  */
-package com.rultor.web;
+public interface Queue {
+
+    /**
+     * Push new spec into it.
+     * @param spec The spec to push
+     */
+    void push(@NotNull Spec spec);
+
+    /**
+     * Pull the next available spec (waits until it is available).
+     * @return The spec available
+     * @throws InterruptedException If interrupted while waiting
+     */
+    Spec pull() throws InterruptedException;
+
+}

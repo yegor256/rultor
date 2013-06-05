@@ -27,11 +27,38 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.om;
+
+import com.jcabi.aspects.Immutable;
+import java.io.InputStream;
+import java.util.Date;
 
 /**
- * Front end, tests.
+ * Pulse.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
  * @since 1.0
  */
-package com.rultor.web;
+@Immutable
+public interface Pulse {
+
+    /**
+     * When started.
+     * @return When
+     */
+    Date started();
+
+    /**
+     * Exact spec, which was used.
+     * @return Spec
+     */
+    Spec spec();
+
+    /**
+     * Read it.
+     * @return Stream to read from
+     */
+    InputStream read();
+
+}

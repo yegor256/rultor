@@ -27,52 +27,68 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor.life;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
-import java.io.IOException;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import com.rultor.om.Repo;
+import com.rultor.om.Users;
+import com.rultor.queue.MemQueue;
+import com.rultor.queue.Queue;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import org.apache.commons.io.IOUtils;
 
 /**
- * Miscellaneous.
+ * Lifespan.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Path("/misc")
-public final class MiscRs extends BaseRs {
+@Loggable(Loggable.INFO)
+public final class Lifespan implements ServletContextListener {
 
     /**
-     * Show entrance page.
-     * @return The JAX-RS response
+     * Conveyer.
      */
-    @GET
-    @Path("/version")
-    @Produces(MediaType.TEXT_PLAIN)
-    @Loggable(Loggable.DEBUG)
-    public String version() {
-        return Manifests.read("Rultor-Revision");
+    private transient Conveyer conveyer;
+
+    /**
+     * Quartz the works.
+     */
+    private transient Quartz quartz;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void contextInitialized(final ServletContextEvent event) {
+        try {
+            Manifests.append(event.getServletContext());
+        } catch (java.io.IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+        final Users users = new DynamoUsers(
+            Manifests.read("Woquo-DynamoKey"),
+            Manifests.read("Woquo-DynamoSecret"),
+            Manifests.read("Woquo-DynamoTable")
+        );
+        final Repo repo = new ClasspathRepo();
+        event.getServletContext().setAttribute(Users.class.getName(), users);
+        event.getServletContext().setAttribute(Repo.class.getName(), repo);
+        final Queue queue = new MemQueue();
+        this.quartz = new Quartz(users, queue);
+        this.conveyer = new Conveyer(queue, repo);
+        this.conveyer.start();
     }
 
     /**
-     * Show license.
-     * @return The JAX-RS response
-     * @throws IOException If fails with I/O
+     * {@inheritDoc}
      */
-    @GET
-    @Path("/LICENSE.txt")
-    @Produces(MediaType.TEXT_PLAIN)
-    @Loggable(Loggable.DEBUG)
-    public String license() throws IOException {
-        return IOUtils.toString(
-            this.getClass().getResourceAsStream("LICENSE.txt")
-        );
+    @Override
+    public void contextDestroyed(final ServletContextEvent event) {
+        IOUtils.closeQuietly(this.quartz);
+        IOUtils.closeQuietly(this.conveyer);
     }
 
 }

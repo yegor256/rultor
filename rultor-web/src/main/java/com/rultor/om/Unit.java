@@ -27,11 +27,45 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.om;
+
+import com.jcabi.aspects.Immutable;
+import com.jcabi.urn.URN;
+import javax.validation.constraints.NotNull;
 
 /**
- * Front end, tests.
+ * Unit.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
  * @since 1.0
  */
-package com.rultor.web;
+@Immutable
+public interface Unit {
+
+    /**
+     * URN of the unit.
+     * @return The URN of it
+     */
+    URN urn();
+
+    /**
+     * All pulses (starting from the most recent).
+     * @return Collection of them
+     */
+    Iterable<Pulse> pulses();
+
+    /**
+     * Save specification.
+     * @param spec Specification to save
+     */
+    void spec(@NotNull Spec spec);
+
+    /**
+     * Get specification.
+     * @return Specification
+     */
+    @NotNull
+    Spec spec();
+
+}

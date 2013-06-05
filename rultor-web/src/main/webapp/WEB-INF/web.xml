@@ -47,6 +47,9 @@
         <servlet-name>default</servlet-name>
         <url-pattern>/js/*</url-pattern>
     </servlet-mapping>
+    <listener>
+        <listener-class>com.rultor.life.Lifespan</listener-class>
+    </listener>
     <servlet>
         <servlet-name>ExceptionTrap</servlet-name>
         <servlet-class>com.rexsl.core.ExceptionTrap</servlet-class>

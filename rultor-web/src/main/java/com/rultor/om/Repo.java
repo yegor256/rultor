@@ -27,11 +27,26 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.om;
+
+import com.jcabi.aspects.Immutable;
+import javax.validation.constraints.NotNull;
 
 /**
- * Front end, tests.
+ * Repository of classes.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
  * @since 1.0
  */
-package com.rultor.web;
+@Immutable
+public interface Repo {
+
+    /**
+     * Make an instance from a spec.
+     * @param spec Spect
+     * @return The instance
+     */
+    Instance make(@NotNull Spec spec);
+
+}

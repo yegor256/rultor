@@ -27,11 +27,25 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.om;
+
+import com.jcabi.aspects.Immutable;
+import javax.validation.constraints.NotNull;
 
 /**
- * Front end, tests.
+ * Instance.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
  * @since 1.0
  */
-package com.rultor.web;
+@Immutable
+public interface Instance {
+
+    /**
+     * Pulse it.
+     * @param state Persistent storage of keys and values
+     */
+    void pulse(@NotNull State state);
+
+}

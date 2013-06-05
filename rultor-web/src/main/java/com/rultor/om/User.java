@@ -30,7 +30,7 @@
 package com.rultor.om;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
+import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -38,16 +38,24 @@ import javax.validation.constraints.NotNull;
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 2.0
+ * @since 1.0
  */
 @Immutable
 public interface User {
 
     /**
-     * URN of it.
-     * @return Identifier of it
+     * All his units.
+     * @return Collection of units
      */
     @NotNull
-    URN identifier();
+    Map<String, Unit> units();
+
+    /**
+     * Create new unit with a given name.
+     * @param name Unique name of the unit
+     * @return The unit just created
+     */
+    @NotNull
+    Unit create(@NotNull String name);
 
 }
