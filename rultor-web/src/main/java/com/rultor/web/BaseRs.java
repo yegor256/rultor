@@ -41,8 +41,9 @@ import com.rexsl.page.auth.Google;
 import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
-import com.rultor.om.User;
-import com.rultor.om.Users;
+import com.rultor.repo.Repo;
+import com.rultor.users.User;
+import com.rultor.users.Users;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -121,6 +122,20 @@ public class BaseRs extends BaseResource {
             throw new IllegalStateException("USERS is not initialized");
         }
         return users.fetch(this.auth().identity().urn());
+    }
+
+    /**
+     * Get repo.
+     * @return Repo
+     */
+    protected final Repo repo() {
+        final Repo repo = Repo.class.cast(
+            this.servletContext().getAttribute(Repo.class.getName())
+        );
+        if (repo == null) {
+            throw new IllegalStateException("REPO is not initialized");
+        }
+        return repo;
     }
 
 }

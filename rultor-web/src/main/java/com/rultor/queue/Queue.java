@@ -29,7 +29,7 @@
  */
 package com.rultor.queue;
 
-import com.rultor.om.Spec;
+import com.rultor.users.Spec;
 import javax.validation.constraints.NotNull;
 
 /**

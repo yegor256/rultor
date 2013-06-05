@@ -27,46 +27,39 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.queue;
+package com.rultor.users;
 
-import com.jcabi.aspects.Loggable;
 import com.rultor.users.Spec;
-import java.util.concurrent.LinkedBlockingQueue;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.jcabi.aspects.Immutable;
+import java.io.InputStream;
+import java.util.Date;
 
 /**
- * Simple queue in memory.
+ * Pulse.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Loggable(Loggable.INFO)
-@ToString
-@EqualsAndHashCode(of = "list")
-public final class MemQueue implements Queue {
+@Immutable
+public interface Pulse {
 
     /**
-     * Queue of them.
+     * When started.
+     * @return When
      */
-    private final transient java.util.Queue<Spec> list =
-        new LinkedBlockingQueue<Spec>();
+    Date started();
 
     /**
-     * {@inheritDoc}
+     * Exact spec, which was used.
+     * @return Spec
      */
-    @Override
-    public void push(final Spec spec) {
-        this.list.add(spec);
-    }
+    Spec spec();
 
     /**
-     * {@inheritDoc}
+     * Read it.
+     * @return Stream to read from
      */
-    @Override
-    public Spec pull() throws InterruptedException {
-        return this.list.poll();
-    }
+    InputStream read();
 
 }

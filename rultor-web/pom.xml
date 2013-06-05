@@ -184,7 +184,7 @@
                                 <Rultor-SecuritySalt>${security.salt}</Rultor-SecuritySalt>
                                 <Rultor-DynamoKey>${dynamo.key}</Rultor-DynamoKey>
                                 <Rultor-DynamoSecret>${dynamo.secret}</Rultor-DynamoSecret>
-                                <Rultor-DynamoTable>${dynamo.prefix}</Rultor-DynamoTable>
+                                <Rultor-DynamoPrefix>${dynamo.prefix}</Rultor-DynamoPrefix>
                             </manifestEntries>
                         </archive>
                     </configuration>

@@ -27,38 +27,47 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.om;
+package com.rultor.users;
 
 import com.jcabi.aspects.Immutable;
-import java.io.InputStream;
-import java.util.Date;
+import com.jcabi.urn.URN;
+import java.util.Collection;
 
 /**
- * Pulse.
+ * All users in Dynamo DB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Pulse {
+public final class DynamoUsers implements Users {
 
     /**
-     * When started.
-     * @return When
+     * Public ctor.
+     * @param key AWS key
+     * @param secret AWS secret
+     * @param prefix Prefix for AWS DynamoDB tables
      */
-    Date started();
+    public DynamoUsers(final String key, final String secret,
+        final String prefix) {
+        // todo
+    }
 
     /**
-     * Exact spec, which was used.
-     * @return Spec
+     * {@inheritDoc}
      */
-    Spec spec();
+    @Override
+    public Collection<User> everybody() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
-     * Read it.
-     * @return Stream to read from
+     * {@inheritDoc}
      */
-    InputStream read();
+    @Override
+    public User fetch(final URN urn) {
+        throw new UnsupportedOperationException();
+    }
 
 }

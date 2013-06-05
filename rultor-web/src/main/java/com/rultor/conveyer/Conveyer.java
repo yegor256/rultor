@@ -27,16 +27,16 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.life;
+package com.rultor.conveyer;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseThreads;
-import com.rultor.om.Instance;
-import com.rultor.om.Repo;
-import com.rultor.om.Spec;
-import com.rultor.om.State;
+import com.rultor.users.Spec;
 import com.rultor.queue.Queue;
+import com.rultor.repo.Instance;
+import com.rultor.repo.Repo;
+import com.rultor.repo.State;
 import java.io.Closeable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -52,7 +52,7 @@ import lombok.EqualsAndHashCode;
  */
 @Loggable(Loggable.INFO)
 @EqualsAndHashCode(of = { "queue", "repo" })
-final class Conveyer implements Closeable {
+public final class Conveyer implements Closeable {
 
     /**
      * In how many threads consume.
@@ -88,7 +88,7 @@ final class Conveyer implements Closeable {
      * @param que The queue of specs
      * @param rep Repo
      */
-    protected Conveyer(final Queue que, final Repo rep) {
+    public Conveyer(final Queue que, final Repo rep) {
         this.queue = que;
         this.repo = rep;
     }

@@ -27,36 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.om;
-
-import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
-import java.util.Collection;
-import javax.validation.constraints.NotNull;
 
 /**
- * All users.
+ * Quartz.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Users {
-
-    /**
-     * Get everybody.
-     * @return All users
-     */
-    @NotNull
-    Collection<User> everybody();
-
-    /**
-     * Get the user.
-     * @param urn His URN
-     * @return The user
-     */
-    @NotNull
-    User fetch(@NotNull URN urn);
-
-}
+package com.rultor.conveyer;

@@ -27,46 +27,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.queue;
+package com.rultor.repo;
 
-import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Immutable;
 import com.rultor.users.Spec;
-import java.util.concurrent.LinkedBlockingQueue;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import javax.validation.constraints.NotNull;
 
 /**
- * Simple queue in memory.
+ * Repository of classes.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Loggable(Loggable.INFO)
-@ToString
-@EqualsAndHashCode(of = "list")
-public final class MemQueue implements Queue {
+@Immutable
+public interface Repo {
 
     /**
-     * Queue of them.
+     * Make a spec from text.
+     * @param text Text
+     * @return The spec
      */
-    private final transient java.util.Queue<Spec> list =
-        new LinkedBlockingQueue<Spec>();
+    Spec make(@NotNull String text);
 
     /**
-     * {@inheritDoc}
+     * Make an instance from a spec.
+     * @param spec Spect
+     * @return The instance
      */
-    @Override
-    public void push(final Spec spec) {
-        this.list.add(spec);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Spec pull() throws InterruptedException {
-        return this.list.poll();
-    }
+    Instance make(@NotNull Spec spec);
 
 }

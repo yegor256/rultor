@@ -27,16 +27,24 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.life;
+package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.manifests.Manifests;
-import com.rultor.om.Repo;
-import com.rultor.om.Users;
+import com.rultor.conveyer.Conveyer;
 import com.rultor.queue.MemQueue;
 import com.rultor.queue.Queue;
+import com.rultor.repo.ClasspathRepo;
+import com.rultor.repo.Repo;
+import com.rultor.users.DynamoUsers;
+import com.rultor.users.Unit;
+import com.rultor.users.User;
+import com.rultor.users.Users;
+import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -71,13 +79,13 @@ public final class Lifespan implements ServletContextListener {
         final Users users = new DynamoUsers(
             Manifests.read("Woquo-DynamoKey"),
             Manifests.read("Woquo-DynamoSecret"),
-            Manifests.read("Woquo-DynamoTable")
+            Manifests.read("Woquo-DynamoPrefix")
         );
         final Repo repo = new ClasspathRepo();
         event.getServletContext().setAttribute(Users.class.getName(), users);
         event.getServletContext().setAttribute(Repo.class.getName(), repo);
         final Queue queue = new MemQueue();
-        this.quartz = new Quartz(users, queue);
+        this.quartz = new Lifespan.Quartz(users, queue);
         this.conveyer = new Conveyer(queue, repo);
         this.conveyer.start();
     }
@@ -87,8 +95,45 @@ public final class Lifespan implements ServletContextListener {
      */
     @Override
     public void contextDestroyed(final ServletContextEvent event) {
-        IOUtils.closeQuietly(this.quartz);
         IOUtils.closeQuietly(this.conveyer);
+    }
+
+    /**
+     * Every minute feeds all specs to queue.
+     */
+    @Loggable(Loggable.INFO)
+    @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.MINUTES)
+    @EqualsAndHashCode(of = { "users", "queue" })
+    @SuppressWarnings("PMD.DoNotUseThreads")
+    private static final class Quartz implements Runnable {
+        /**
+         * Users.
+         */
+        private final transient Users users;
+        /**
+         * Queue.
+         */
+        private final transient Queue queue;
+        /**
+         * Public ctor.
+         * @param usr Users
+         * @param que Queue
+         */
+        protected Quartz(final Users usr, final Queue que) {
+            this.users = usr;
+            this.queue = que;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void run() {
+            for (User user : this.users.everybody()) {
+                for (Unit unit : user.units().values()) {
+                    this.queue.push(unit.spec());
+                }
+            }
+        }
     }
 
 }

@@ -27,24 +27,35 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.om;
+package com.rultor.users;
 
 import com.jcabi.aspects.Immutable;
+import java.util.Map;
+import javax.validation.constraints.NotNull;
 
 /**
- * Unit specification.
+ * User.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Spec {
+public interface User {
 
     /**
-     * Convert it to a human readable form.
-     * @return The text
+     * All his units.
+     * @return Collection of units
      */
-    String asText();
+    @NotNull
+    Map<String, Unit> units();
+
+    /**
+     * Create new unit with a given name.
+     * @param name Unique name of the unit
+     * @return The unit just created
+     */
+    @NotNull
+    Unit create(@NotNull String name);
 
 }

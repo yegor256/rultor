@@ -34,7 +34,7 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.auth.Identity;
-import com.rultor.om.Unit;
+import com.rultor.users.Unit;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.ws.rs.FormParam;
@@ -123,7 +123,7 @@ public final class IndexRs extends BaseRs {
         if (unit == null) {
             unit = this.user().create(name);
         }
-        unit.spec(new Spec.Simple(spec));
+        unit.spec(this.repo().make(spec));
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()
                 .clone()

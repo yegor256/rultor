@@ -27,51 +27,45 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.life;
+package com.rultor.users;
 
-import com.jcabi.aspects.Loggable;
-import com.rultor.om.State;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.apache.commons.lang3.Validate;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.urn.URN;
+import javax.validation.constraints.NotNull;
 
 /**
- * State in memory.
+ * Unit.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Loggable(Loggable.INFO)
-@ToString
-@EqualsAndHashCode(of = "map")
-final class MemState implements State {
+@Immutable
+public interface Unit {
 
     /**
-     * Map of values.
+     * URN of the unit.
+     * @return The URN of it
      */
-    private final transient ConcurrentMap<String, String> map =
-        new ConcurrentHashMap<String, String>(0);
+    URN urn();
 
     /**
-     * {@inheritDoc}
+     * All pulses (starting from the most recent).
+     * @return Collection of them
      */
-    @Override
-    public String get(final String key) {
-        final String value = this.map.get(key);
-        Validate.notNull(value, "key %s is absent in state", key);
-        return value;
-    }
+    Iterable<Pulse> pulses();
 
     /**
-     * {@inheritDoc}
+     * Save specification.
+     * @param spec Specification to save
      */
-    @Override
-    public boolean checkAndSet(final String key, final String value) {
-        final String before = this.map.putIfAbsent(key, value);
-        return !value.equals(before);
-    }
+    void spec(@NotNull Spec spec);
+
+    /**
+     * Get specification.
+     * @return Specification
+     */
+    @NotNull
+    Spec spec();
 
 }

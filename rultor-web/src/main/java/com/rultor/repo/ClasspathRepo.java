@@ -27,45 +27,35 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.om;
+package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
-import javax.validation.constraints.NotNull;
+import com.rultor.users.Spec;
 
 /**
- * Unit.
+ * Repo on classpath.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Unit {
+public final class ClasspathRepo implements Repo {
 
     /**
-     * URN of the unit.
-     * @return The URN of it
+     * {@inheritDoc}
      */
-    URN urn();
+    @Override
+    public Instance make(final Spec spec) {
+        throw new UnsupportedOperationException();
+    }
 
     /**
-     * All pulses (starting from the most recent).
-     * @return Collection of them
+     * {@inheritDoc}
      */
-    Iterable<Pulse> pulses();
-
-    /**
-     * Save specification.
-     * @param spec Specification to save
-     */
-    void spec(@NotNull Spec spec);
-
-    /**
-     * Get specification.
-     * @return Specification
-     */
-    @NotNull
-    Spec spec();
+    @Override
+    public Spec make(final String text) {
+        throw new UnsupportedOperationException();
+    }
 
 }

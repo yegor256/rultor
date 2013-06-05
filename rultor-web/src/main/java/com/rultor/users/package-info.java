@@ -29,10 +29,10 @@
  */
 
 /**
- * Quartz.
+ * Users in Dynamo DB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-package com.rultor.life;
+package com.rultor.users;
