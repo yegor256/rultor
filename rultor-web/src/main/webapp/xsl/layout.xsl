@@ -99,7 +99,7 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="version">
-        <div id="version">
+        <div id="version" class="hidden-phone">
             <xsl:value-of select="name"/>
             <xsl:text> </xsl:text>
             <a title="see commit in Github">
@@ -193,7 +193,7 @@
                         <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
                     </xsl:attribute>
                     <i class="icon-facebook-sign"><xsl:comment>facebook sign</xsl:comment></i>
-                    <xsl:text> Facebook</xsl:text>
+                    <span class="hidden-phone"><xsl:text> Facebook</xsl:text></span>
                 </a>
             </li>
             <li>
@@ -202,7 +202,7 @@
                         <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
                     </xsl:attribute>
                     <i class="icon-google-plus-sign"><xsl:comment>google plus sign</xsl:comment></i>
-                    <xsl:text> Google</xsl:text>
+                    <span class="hidden-phone"><xsl:text> Google</xsl:text></span>
                 </a>
             </li>
             <li>
@@ -211,13 +211,13 @@
                         <xsl:value-of select="/page/links/link[@rel='auth-github']/@href"/>
                     </xsl:attribute>
                     <i class="icon-github-sign"><xsl:comment>github sign</xsl:comment></i>
-                    <xsl:text> Github</xsl:text>
+                    <span class="hidden-phone"><xsl:text> Github</xsl:text></span>
                 </a>
             </li>
         </ul>
     </xsl:template>
     <xsl:template name="bottom">
-        <div id="bottom">
+        <div id="bottom" class="hidden-phone">
             <xsl:text>rultor.com is an open source project, hosted at </xsl:text>
             <a href="https://github.com/yegor256/rultor">
                 <xsl:text>github</xsl:text>
