@@ -155,26 +155,30 @@
             </img>
             <xsl:text> </xsl:text>
             <xsl:value-of select="name"/>
-            <img style="margin-left: 0.5em;" alt="account type">
-                <xsl:attribute name="src">
-                    <xsl:text>http://img.rultor.com/icons/</xsl:text>
+            <xsl:text> </xsl:text>
+            <i>
+                <xsl:attribute name="class">
+                    <xsl:text>icon-</xsl:text>
                     <xsl:choose>
                         <xsl:when test="starts-with(urn, 'urn:facebook:')">
-                            <xsl:text>facebook</xsl:text>
+                            <xsl:text>facebook-sign</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="starts-with(urn, 'urn:github:')">
+                            <xsl:text>github-sign</xsl:text>
                         </xsl:when>
                         <xsl:when test="starts-with(urn, 'urn:google:')">
-                            <xsl:text>google</xsl:text>
+                            <xsl:text>google-plus-sign</xsl:text>
                         </xsl:when>
                     </xsl:choose>
-                    <xsl:text>-small.png</xsl:text>
                 </xsl:attribute>
-            </img>
+                <xsl:comment>authenticated</xsl:comment>
+            </i>
             <xsl:text> </xsl:text>
-            <a>
+            <a title="log out">
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-logout']/@href"/>
                 </xsl:attribute>
-                <xsl:text>logout</xsl:text>
+                <i class="icon-signout"><xsl:comment>signout icon</xsl:comment></i>
             </a>
         </p>
     </xsl:template>
