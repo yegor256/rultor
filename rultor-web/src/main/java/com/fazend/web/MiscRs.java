@@ -57,7 +57,7 @@ public final class MiscRs extends BaseRs {
     @Produces(MediaType.TEXT_PLAIN)
     @Loggable(Loggable.DEBUG)
     public String version() {
-        return Manifests.read("Fazend-Revision");
+        return Manifests.read("Rultor-Revision");
     }
 
     /**

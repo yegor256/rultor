@@ -168,20 +168,20 @@
                         <warSourceExcludes>js/**, css/**, xsl/**</warSourceExcludes>
                         <archive>
                             <manifestEntries>
-                                <Fazend-Version>${project.version}</Fazend-Version>
-                                <Fazend-Revision>${buildNumber}</Fazend-Revision>
-                                <Fazend-Date>${maven.build.timestamp}</Fazend-Date>
-                                <Fazend-FbId>${fb.id}</Fazend-FbId>
-                                <Fazend-FbSecret>${fb.secret}</Fazend-FbSecret>
-                                <Fazend-GoogleId>${google.id}</Fazend-GoogleId>
-                                <Fazend-GoogleSecret>${google.secret}</Fazend-GoogleSecret>
-                                <Fazend-GithubId>${github.id}</Fazend-GithubId>
-                                <Fazend-GithubSecret>${github.secret}</Fazend-GithubSecret>
-                                <Fazend-SecurityKey>${security.key}</Fazend-SecurityKey>
-                                <Fazend-SecuritySalt>${security.salt}</Fazend-SecuritySalt>
-                                <Fazend-AwsDynamoKey>${dynamo.key}</Fazend-AwsDynamoKey>
-                                <Fazend-AwsDynamoSecret>${dynamo.secret}</Fazend-AwsDynamoSecret>
-                                <Fazend-AwsDynamoTable>${dynamo.prefix}</Fazend-AwsDynamoTable>
+                                <Rultor-Version>${project.version}</Rultor-Version>
+                                <Rultor-Revision>${buildNumber}</Rultor-Revision>
+                                <Rultor-Date>${maven.build.timestamp}</Rultor-Date>
+                                <Rultor-FbId>${fb.id}</Rultor-FbId>
+                                <Rultor-FbSecret>${fb.secret}</Rultor-FbSecret>
+                                <Rultor-GoogleId>${google.id}</Rultor-GoogleId>
+                                <Rultor-GoogleSecret>${google.secret}</Rultor-GoogleSecret>
+                                <Rultor-GithubId>${github.id}</Rultor-GithubId>
+                                <Rultor-GithubSecret>${github.secret}</Rultor-GithubSecret>
+                                <Rultor-SecurityKey>${security.key}</Rultor-SecurityKey>
+                                <Rultor-SecuritySalt>${security.salt}</Rultor-SecuritySalt>
+                                <Rultor-AwsDynamoKey>${dynamo.key}</Rultor-AwsDynamoKey>
+                                <Rultor-AwsDynamoSecret>${dynamo.secret}</Rultor-AwsDynamoSecret>
+                                <Rultor-AwsDynamoTable>${dynamo.prefix}</Rultor-AwsDynamoTable>
                             </manifestEntries>
                         </archive>
                     </configuration>

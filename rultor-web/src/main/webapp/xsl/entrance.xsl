@@ -58,7 +58,7 @@
             <xsl:text>Lightweight Integration Platform as a Service</xsl:text>
         </h1>
         <p>
-            <xsl:text>Fazend.com is a cloud platform that integrates software
+            <xsl:text>Rultor.com is a cloud platform that integrates software
                 development resources, artifacts, and people.</xsl:text>
         </p>
     </xsl:template>

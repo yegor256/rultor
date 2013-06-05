@@ -43,11 +43,11 @@
     <modules>
         <module>rultor-web</module>
     </modules>
-    <description>Fazend.com, Lightweight Integration Platform (as a Service)</description>
+    <description>Rultor.com, Lightweight Integration Platform (as a Service)</description>
     <url>http://www.rultor.com</url>
     <inceptionYear>2009</inceptionYear>
     <organization>
-        <name>Fazend Inc.</name>
+        <name>Rultor Inc.</name>
         <url>http://www.rultor.com</url>
     </organization>
     <licenses>

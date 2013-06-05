@@ -63,9 +63,9 @@ public class BaseRs extends BaseResource {
     @Inset.Runtime
     public final Inset insetVersion() {
         return new VersionInset(
-            Manifests.read("Fazend-Version"),
-            Manifests.read("Fazend-Revision"),
-            Manifests.read("Fazend-Date")
+            Manifests.read("Rultor-Version"),
+            Manifests.read("Rultor-Revision"),
+            Manifests.read("Rultor-Date")
         );
     }
 
@@ -92,10 +92,10 @@ public class BaseRs extends BaseResource {
     @Inset.Runtime
     public final AuthInset auth() {
         // @checkstyle LineLength (3 lines)
-        return new AuthInset(this, Manifests.read("Fazend-SecurityKey"), Manifests.read("Fazend-SecuritySalt"))
-            .with(new Facebook(this, Manifests.read("Fazend-FbId"), Manifests.read("Fazend-FbSecret")))
-            .with(new Github(this, Manifests.read("Fazend-GithubId"), Manifests.read("Fazend-GithubSecret")))
-            .with(new Google(this, Manifests.read("Fazend-GoogleId"), Manifests.read("Fazend-GoogleSecret")));
+        return new AuthInset(this, Manifests.read("Rultor-SecurityKey"), Manifests.read("Rultor-SecuritySalt"))
+            .with(new Facebook(this, Manifests.read("Rultor-FbId"), Manifests.read("Rultor-FbSecret")))
+            .with(new Github(this, Manifests.read("Rultor-GithubId"), Manifests.read("Rultor-GithubSecret")))
+            .with(new Google(this, Manifests.read("Rultor-GoogleId"), Manifests.read("Rultor-GoogleSecret")));
     }
 
 }
