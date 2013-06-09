@@ -75,7 +75,12 @@
                             <xsl:attribute name="href">
                                 <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
                             </xsl:attribute>
-                            <xsl:text>(logo stays here)</xsl:text>
+                            <img alt="rultor.com logo" style="width: 150px; height: 46px;">
+                                <xsl:attribute name="href">
+                                    <xsl:text>http://img.rultor.com/logo.png?</xsl:text>
+                                    <xsl:value-of select="/page/version/revision"/>
+                                </xsl:attribute>
+                            </img>
                         </a>
                     </p>
                     <xsl:apply-templates select="flash"/>

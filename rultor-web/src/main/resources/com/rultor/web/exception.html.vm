@@ -11,7 +11,8 @@
         <div class="container-fluid">
             <p>
                 <a href="http://www.rultor.com/">
-                    <img src="http://img.rultor.com/logo.png?${buildNumber}"/>
+                    <img src="http://img.rultor.com/logo.png?${buildNumber}"
+                        style="width: 150px; height: 46px;" alt="rultor.com logo"/>
                 </a>
             </p>
             <p>
