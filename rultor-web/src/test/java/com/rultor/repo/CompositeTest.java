@@ -29,64 +29,33 @@
  */
 package com.rultor.repo;
 
-import com.rultor.users.Spec;
-import java.util.concurrent.atomic.AtomicLong;
+import com.jcabi.aspects.Tv;
+import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link ClasspathRepo}.
+ * Test case for {@link Composite}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: IndexRsTest.java 2344 2013-01-13 18:28:44Z guard $
  */
-public final class ClasspathRepoTest {
+public final class CompositeTest {
 
     /**
-     * ClasspathRepo can make a spec.
+     * Composite can make an instance.
      * @throws Exception If some problem inside
      */
     @Test
-    public void makesSpecFromText() throws Exception {
-        final Repo repo = new ClasspathRepo();
-        final String text = "com.rultor.repo.ClasspathRepoTest$Foo(55)";
-        final Spec spec = repo.make(text);
+    public void makesInstance() throws Exception {
+        final Variable var = new Composite(
+            "java.lang.Integer",
+            Arrays.<Variable>asList(new Constant<Integer>(Tv.TEN))
+        );
         MatcherAssert.assertThat(
-            spec.asText(),
-            Matchers.equalTo(text)
+            var.instantiate(),
+            Matchers.<Object>equalTo(Tv.TEN)
         );
-    }
-
-    /**
-     * ClasspathRepo can make an instance.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void makesInstanceFromSpec() throws Exception {
-        final Repo repo = new ClasspathRepo();
-        final Spec spec = repo.make(
-            "com.rultor.repo.ClasspathRepoTest$Foo(2)"
-        );
-        Foo.COUNTER.set(0);
-        final Instance instance = repo.make(spec);
-        MatcherAssert.assertThat(Foo.COUNTER.get(), Matchers.equalTo(2L));
-    }
-
-    /**
-     * Test class.
-     */
-    public static final class Foo {
-        /**
-         * Static counter.
-         */
-        public static final AtomicLong COUNTER = new AtomicLong();
-        /**
-         * Public ctor.
-         * @param number The number
-         */
-        public Foo(final long number) {
-            Foo.COUNTER.addAndGet(number);
-        }
     }
 
 }

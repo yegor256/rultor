@@ -87,11 +87,19 @@ variable returns [Variable ret]
     TEXT
     { $ret = new Constant<String>($TEXT.text); }
     |
+    BOOLEAN
+    { $ret = new Constant<Boolean>($BOOLEAN.text.equals("true")); }
+    |
     INTEGER
     { $ret = new Constant<Long>(Long.valueOf($INTEGER.text)); }
     |
     DOUBLE
     { $ret = new Constant<Double>(Double.valueOf($DOUBLE.text)); }
+    ;
+
+BOOLEAN
+    :
+    'true' | 'false'
     ;
 
 TYPE

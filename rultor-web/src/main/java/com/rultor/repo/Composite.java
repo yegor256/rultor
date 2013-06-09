@@ -30,6 +30,7 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 /**
@@ -67,7 +68,32 @@ final class Composite implements Variable {
      */
     @Override
     public Object instantiate() throws Repo.InstantiationException {
-        throw new UnsupportedOperationException();
+        final Object[] args = new Object[this.vars.length];
+        final Class<?>[] types = new Class<?>[this.vars.length];
+        for (int idx = 0; idx < this.vars.length; ++idx) {
+            final Object object = this.vars[idx].instantiate();
+            args[idx] = object;
+            types[idx] = Composite.typeOf(object);
+        }
+        try {
+            return Class.forName(this.type)
+                .getConstructor(types)
+                .newInstance(args);
+        } catch (ClassNotFoundException ex) {
+            throw new Repo.InstantiationException(ex);
+        } catch (NoSuchMethodException ex) {
+            throw new Repo.InstantiationException(ex);
+        } catch (SecurityException ex) {
+            throw new Repo.InstantiationException(ex);
+        } catch (InstantiationException ex) {
+            throw new Repo.InstantiationException(ex);
+        } catch (IllegalAccessException ex) {
+            throw new Repo.InstantiationException(ex);
+        } catch (IllegalArgumentException ex) {
+            throw new Repo.InstantiationException(ex);
+        } catch (InvocationTargetException ex) {
+            throw new Repo.InstantiationException(ex);
+        }
     }
 
     /**
@@ -85,6 +111,25 @@ final class Composite implements Variable {
         }
         text.append(')');
         return text.toString();
+    }
+
+    /**
+     * Get type of object.
+     * @param object The object
+     * @return Its type
+     */
+    private static Class<?> typeOf(final Object object) {
+        Class<?> cls = object.getClass();
+        if (cls.equals(Integer.class)) {
+            cls = int.class;
+        } else if (cls.equals(Long.class)) {
+            cls = long.class;
+        } else if (cls.equals(Boolean.class)) {
+            cls = boolean.class;
+        } else if (cls.equals(Double.class)) {
+            cls = double.class;
+        }
+        return cls;
     }
 
 }

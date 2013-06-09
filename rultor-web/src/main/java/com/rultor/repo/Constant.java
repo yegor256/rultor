@@ -59,7 +59,7 @@ final class Constant<T> implements Variable {
      */
     @Override
     public Object instantiate() throws Repo.InstantiationException {
-        throw new UnsupportedOperationException();
+        return this.value;
     }
 
     /**
