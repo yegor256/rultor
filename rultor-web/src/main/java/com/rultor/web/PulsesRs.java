@@ -30,9 +30,16 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
+import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rultor.users.Pulse;
+import com.rultor.users.Stage;
+import com.rultor.users.Unit;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -51,6 +58,20 @@ public final class PulsesRs extends BaseRs {
     public static final String QUERY_NAME = "name";
 
     /**
+     * Unit name.
+     */
+    private transient String name;
+
+    /**
+     * Inject it from query.
+     * @param unit Unit name
+     */
+    @QueryParam(PulsesRs.QUERY_NAME)
+    public void setName(@NotNull final String unit) {
+        this.name = unit;
+    }
+
+    /**
      * Get entrance page JAX-RS response.
      * @return The JAX-RS response
      * @throws Exception If some problem inside
@@ -63,8 +84,97 @@ public final class PulsesRs extends BaseRs {
             .stylesheet("/xsl/pulses.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .append(this.pulses())
             .render()
             .build();
+    }
+
+    /**
+     * Get unit.
+     * @return The unit
+     */
+    private Unit unit() {
+        return this.user().units().get(this.name);
+    }
+
+    /**
+     * All pulses of the unit.
+     * @return Collection of JAXB units
+     */
+    private JaxbBundle pulses() {
+        return new JaxbBundle("pulses").add(
+            new JaxbBundle.Group<Pulse>(this.unit().pulses()) {
+                @Override
+                public JaxbBundle bundle(final Pulse pulse) {
+                    return PulsesRs.this.pulse(pulse);
+                }
+            }
+        );
+    }
+
+    /**
+     * Convert pulse to JaxbBundle.
+     * @param pulse Pulse to convert
+     * @return Bundle
+     */
+    private JaxbBundle pulse(final Pulse pulse) {
+        return new JaxbBundle("pulse")
+            .add("started", pulse.started().toString())
+            .up()
+            .add("spec", pulse.spec().asText())
+            .up()
+            .add("stages")
+            .add(
+                new JaxbBundle.Group<Stage>(pulse.stages()) {
+                    @Override
+                    public JaxbBundle bundle(final Stage stage) {
+                        return PulsesRs.this.stage(pulse, stage);
+                    }
+                }
+            )
+            .up()
+            .link(
+                new Link(
+                    "see",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(PulseRs.class)
+                        .path(PulseRs.class, "index")
+                        .queryParam(PulseRs.QUERY_NAME, "{n}")
+                        .queryParam(PulseRs.QUERY_DATE, "{d}")
+                        .build(this.name, pulse.started().getTime())
+                )
+            );
+    }
+
+    /**
+     * Convert stage to JaxbBundle.
+     * @param pulse Pulse
+     * @param stage Stage to convert
+     * @return Bundle
+     */
+    private JaxbBundle stage(final Pulse pulse, final Stage stage) {
+        return new JaxbBundle("stage")
+            .add("result", stage.result().toString())
+            .up()
+            .add("msec", Long.toString(stage.stop() - stage.start()))
+            .up()
+            .add("output", stage.output())
+            .up()
+            .link(
+                new Link(
+                    "see",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(PulseRs.class)
+                        .path(PulseRs.class, "index")
+                        .queryParam(PulseRs.QUERY_NAME, "{n}")
+                        .queryParam(PulseRs.QUERY_DATE, "{d}")
+                        .queryParam(PulseRs.QUERY_START, stage.start())
+                        .queryParam(PulseRs.QUERY_STOP, stage.stop())
+                        .build(this.name, pulse.started().getTime())
+                )
+            );
     }
 
 }

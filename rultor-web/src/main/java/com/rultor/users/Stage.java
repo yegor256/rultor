@@ -70,10 +70,16 @@ public interface Stage {
     Result result();
 
     /**
-     * How many milliseconds it took or is planning to take.
-     * @return Seconds
+     * When started or is planning to start.
+     * @return Milliseconds from the beginning of the pulse
      */
-    int msec();
+    long start();
+
+    /**
+     * When stopped or is planning to stop.
+     * @return Milliseconds from the beginning of the pulse
+     */
+    long stop();
 
     /**
      * Output to show to the user (one line).
