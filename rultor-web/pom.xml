@@ -60,6 +60,10 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr-runtime</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-dynamo</artifactId>
             <version>${jcabi.version}</version>

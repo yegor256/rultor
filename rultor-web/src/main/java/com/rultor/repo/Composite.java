@@ -30,79 +30,61 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.rultor.users.Spec;
-import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CharStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.TokenStream;
+import java.util.Collection;
 
 /**
- * Repo on classpath.
+ * Composite.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@ToString
-@EqualsAndHashCode
-@Loggable(Loggable.DEBUG)
-public final class ClasspathRepo implements Repo {
+final class Composite implements Variable {
+
+    /**
+     * Type name.
+     */
+    private final transient String type;
+
+    /**
+     * Type name.
+     */
+    private final transient Variable[] vars;
+
+    /**
+     * Public ctor.
+     * @param name Name of type
+     * @param args Arguments
+     */
+    protected Composite(final String name, final Collection<Variable> args) {
+        this.type = name;
+        this.vars = args.toArray(new Variable[args.size()]);
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull
-    public Instance make(@NotNull final Spec spec)
-        throws Repo.InstantiationException {
-        Object object;
-        try {
-            object = this.var(spec.asText()).instantiate();
-        } catch (Repo.InvalidSyntaxException ex) {
-            throw new Repo.InstantiationException(ex);
-        }
-        return new Instance() {
-            @Override
-            public void pulse(State state) {
-                //object;
+    public Object instantiate() throws Repo.InstantiationException {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String asText() {
+        final StringBuilder text = new StringBuilder();
+        text.append(this.type).append('(');
+        for (int idx = 0; idx < this.vars.length; ++idx) {
+            if (idx > 0) {
+                text.append(", ");
             }
-        };
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull
-    public Spec make(@NotNull final String text)
-        throws Repo.InvalidSyntaxException {
-        return this.var(text);
-    }
-
-    /**
-     * Text to variable.
-     * @param text Text
-     * @return Variable
-     */
-    private Variable var(final String text) throws Repo.InvalidSyntaxException {
-        final CharStream input = new ANTLRStringStream(text);
-        final SpecLexer lexer = new SpecLexer(input);
-        final TokenStream tokens = new CommonTokenStream(lexer);
-        final SpecParser parser = new SpecParser(tokens);
-        Variable var;
-        try {
-            var = parser.spec();
-        } catch (org.antlr.runtime.RecognitionException ex) {
-            throw new Repo.InvalidSyntaxException(ex);
-        } catch (IllegalArgumentException ex) {
-            throw new InvalidSyntaxException(ex);
+            text.append(this.vars[idx].asText());
         }
-        return var;
+        text.append(')');
+        return text.toString();
     }
 
 }

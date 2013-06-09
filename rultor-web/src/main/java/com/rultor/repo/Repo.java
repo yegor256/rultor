@@ -58,6 +58,22 @@ public interface Repo {
         public InvalidSyntaxException(final String cause) {
             super(cause);
         }
+        /**
+         * Public ctor.
+         * @param cause Cause of it
+         */
+        public InvalidSyntaxException(final Exception cause) {
+            super(cause);
+        }
+        /**
+         * Public ctor.
+         * @param cause Cause of it
+         * @param origin Original exception
+         */
+        public InvalidSyntaxException(final String cause,
+            final Exception origin) {
+            super(cause, origin);
+        }
     }
 
     /**
@@ -73,6 +89,13 @@ public interface Repo {
          * @param cause Cause of it
          */
         public InstantiationException(final String cause) {
+            super(cause);
+        }
+        /**
+         * Public ctor.
+         * @param cause Cause of it
+         */
+        public InstantiationException(final Exception cause) {
             super(cause);
         }
     }
