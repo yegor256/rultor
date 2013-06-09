@@ -29,17 +29,23 @@
  */
 package com.rultor.users;
 
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Single user in Dynamo DB.
@@ -49,6 +55,9 @@ import javax.validation.constraints.NotNull;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(of = { "region", "name" })
+@Loggable(Loggable.DEBUG)
 final class DynamoUser implements User {
 
     /**
@@ -76,6 +85,7 @@ final class DynamoUser implements User {
      */
     @Override
     @NotNull
+    @Cacheable
     public Map<String, Unit> units() {
         final ConcurrentMap<String, Unit> units =
             new ConcurrentHashMap<String, Unit>(0);
@@ -84,7 +94,7 @@ final class DynamoUser implements User {
         for (Item item : items) {
             final String unit = item.get(DynamoUnit.KEY_NAME).getS();
             if (!units.containsKey(unit)) {
-                units.put(unit, this.create(unit));
+                units.put(unit, this.unit(unit));
             }
         }
         return Collections.unmodifiableMap(units);
@@ -95,7 +105,36 @@ final class DynamoUser implements User {
      */
     @Override
     @NotNull
+    @Cacheable.FlushBefore
     public Unit create(@NotNull final String unit) {
+        return this.unit(unit);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Cacheable.FlushBefore
+    public void remove(@NotNull final String unit) {
+        final Iterator<Item> items = this.region.table("units").frame()
+            .where(DynamoUnit.KEY_OWNER, Conditions.equalTo(this.name))
+            .where(DynamoUnit.KEY_NAME, Conditions.equalTo(unit))
+            .iterator();
+        if (!items.hasNext()) {
+            throw new NoSuchElementException(
+                String.format("unit '%s' not found", unit)
+            );
+        }
+        items.next();
+        items.remove();
+    }
+
+    /**
+     * Make a unit using the name.
+     * @param unit Name of the unit
+     * @return The unit
+     */
+    private Unit unit(final String unit) {
         return new DynamoUnit(this.region, this.name, unit);
     }
 

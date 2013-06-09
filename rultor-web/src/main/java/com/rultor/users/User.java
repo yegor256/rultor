@@ -58,4 +58,10 @@ public interface User {
     @NotNull
     Unit create(@NotNull String name);
 
+    /**
+     * Remove unit with a given name.
+     * @param name Unique name of the unit
+     */
+    void remove(@NotNull String name);
+
 }

@@ -30,6 +30,7 @@
 package com.rultor.users;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
@@ -38,6 +39,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * All users in Dynamo DB.
@@ -47,6 +50,9 @@ import java.util.concurrent.ConcurrentMap;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(of = "region")
+@Loggable(Loggable.DEBUG)
 public final class DynamoUsers implements Users {
 
     /**

@@ -109,7 +109,7 @@ public final class UnitRs extends BaseRs {
     @Path("/remove")
     public Response remove(@QueryParam(UnitRs.QUERY_NAME)
         @NotNull final String name) throws Exception {
-        this.user().units().remove(name);
+        this.user().remove(name);
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()
                 .clone()

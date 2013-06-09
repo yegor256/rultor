@@ -69,14 +69,6 @@
                     </a>
                 </li>
                 <li>
-                    <a title="start">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='play']/@href"/>
-                        </xsl:attribute>
-                        <i class="icon-play"><xsl:comment>play</xsl:comment></i>
-                    </a>
-                </li>
-                <li>
                     <a title="pulses">
                         <xsl:attribute name="href">
                             <xsl:value-of select="links/link[@rel='pulses']/@href"/>

@@ -30,7 +30,11 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.rultor.users.Spec;
+import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Repo on classpath.
@@ -40,13 +44,17 @@ import com.rultor.users.Spec;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode
+@Loggable(Loggable.DEBUG)
 public final class ClasspathRepo implements Repo {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Instance make(final Spec spec) {
+    @NotNull
+    public Instance make(@NotNull final Spec spec) {
         throw new UnsupportedOperationException();
     }
 
@@ -54,13 +62,9 @@ public final class ClasspathRepo implements Repo {
      * {@inheritDoc}
      */
     @Override
-    public Spec make(final String text) {
-        return new Spec() {
-            @Override
-            public String asText() {
-                return text;
-            }
-        };
+    @NotNull
+    public Spec make(@NotNull final String text) {
+        return new Spec.Simple(text);
     }
 
 }

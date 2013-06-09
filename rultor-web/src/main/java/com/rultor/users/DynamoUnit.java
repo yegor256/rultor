@@ -30,7 +30,9 @@
 package com.rultor.users;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
@@ -39,6 +41,8 @@ import com.jcabi.dynamo.Table;
 import com.jcabi.urn.URN;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Single unit in Dynamo DB.
@@ -48,6 +52,9 @@ import javax.validation.constraints.NotNull;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(of = { "region", "owner", "name" })
+@Loggable(Loggable.DEBUG)
 final class DynamoUnit implements Unit {
 
     /**
@@ -98,13 +105,14 @@ final class DynamoUnit implements Unit {
     @Override
     @NotNull
     public Iterable<Pulse> pulses() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
+    @Cacheable.FlushBefore
     public void spec(@NotNull final Spec spec) {
         this.item().put(
             DynamoUnit.FIELD_SPEC,
@@ -117,13 +125,9 @@ final class DynamoUnit implements Unit {
      */
     @Override
     @NotNull
+    @Cacheable
     public Spec spec() {
-        return new Spec() {
-            @Override
-            public String asText() {
-                return DynamoUnit.this.item().get(DynamoUnit.FIELD_SPEC).getS();
-            }
-        };
+        return new Spec.Simple(this.item().get(DynamoUnit.FIELD_SPEC).getS());
     }
 
     /**

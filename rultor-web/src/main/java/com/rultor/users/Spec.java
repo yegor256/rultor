@@ -30,6 +30,9 @@
 package com.rultor.users;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Unit specification.
@@ -46,5 +49,33 @@ public interface Spec {
      * @return The text
      */
     String asText();
+
+    /**
+     * Simple.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "text")
+    @Loggable(Loggable.DEBUG)
+    final class Simple implements Spec {
+        /**
+         * The text.
+         */
+        private final transient String text;
+        /**
+         * Public ctor.
+         * @param spec The text
+         */
+        public Simple(final String spec) {
+            this.text = spec;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String asText() {
+            return this.text;
+        }
+    }
 
 }
