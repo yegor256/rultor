@@ -27,47 +27,16 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.web.rexsl.xhtml
 
-import com.jcabi.aspects.Immutable;
+import com.rexsl.test.XhtmlMatchers
+import org.hamcrest.MatcherAssert
 
-/**
- * Constant.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- */
-@Immutable
-final class Constant<T> implements Variable {
-
-    /**
-     * The value.
-     */
-    private final transient T value;
-
-    /**
-     * Public ctor.
-     * @param val Value
-     */
-    protected Constant(final T val) {
-        this.value = val;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object instantiate() {
-        return this.value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String asText() {
-        return this.value.toString();
-    }
-
-}
+MatcherAssert.assertThat(
+    rexsl.document,
+    XhtmlMatchers.hasXPaths(
+        '//xhtml:div[@id="version"]',
+        '//xhtml:div[@id="version" and contains(.,"123")]',
+        '//xhtml:div[@id="version" and contains(.,"16ms")]'
+    )
+)

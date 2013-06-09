@@ -110,8 +110,11 @@ public final class IndexRs extends BaseRs {
         return new JaxbBundle("unit")
             .add("name", name)
             .up()
+            .add("spec", unit.spec().asText())
+            .up()
             .link(
                 new Link(
+                    // @checkstyle MultipleStringLiterals (1 line)
                     "remove",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()

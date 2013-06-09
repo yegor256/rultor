@@ -54,6 +54,7 @@ import lombok.ToString;
 @Loggable(Loggable.INFO)
 @ToString
 @EqualsAndHashCode(of = { "queue", "repo" })
+@SuppressWarnings("PMD.DoNotUseThreads")
 public final class Conveyer implements Closeable, Callable<Void> {
 
     /**
@@ -123,15 +124,23 @@ public final class Conveyer implements Closeable, Callable<Void> {
         while (true) {
             final Spec spec = this.queue.pull();
             final Instance instance = this.repo.make(spec);
-            this.executor.submit(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        instance.pulse(Conveyer.this.state);
-                    }
-                }
-            );
+            this.submit(instance);
         }
+    }
+
+    /**
+     * Submit an instance.
+     * @param instance The instance
+     */
+    private void submit(final Instance instance) {
+        this.executor.submit(
+            new Runnable() {
+                @Override
+                public void run() {
+                    instance.pulse(Conveyer.this.state);
+                }
+            }
+        );
     }
 
 }

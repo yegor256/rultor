@@ -49,6 +49,7 @@ import javax.ws.rs.core.Response;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Path("/u")
 @Loggable(Loggable.DEBUG)
@@ -67,8 +68,8 @@ public final class UnitRs extends BaseRs {
      */
     @GET
     @Path("/")
-    public Response edit(@QueryParam("name") @NotNull final String name)
-        throws Exception {
+    public Response edit(@QueryParam(UnitRs.QUERY_NAME) @NotNull
+        final String name) throws Exception {
         final Unit unit = this.user().units().get(name);
         if (unit == null) {
             throw this.flash().redirect(
@@ -149,7 +150,7 @@ public final class UnitRs extends BaseRs {
      */
     @POST
     @Path("/save")
-    public Response save(@FormParam("name") final String name,
+    public Response save(@FormParam(UnitRs.QUERY_NAME) final String name,
         @NotNull @FormParam("spec") final String spec) throws Exception {
         Unit unit = this.user().units().get(name);
         if (unit == null) {

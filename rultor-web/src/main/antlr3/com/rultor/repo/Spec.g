@@ -85,7 +85,7 @@ variable returns [Variable ret]
     { $ret = new Reference($NAME.text); }
     |
     TEXT
-    { $ret = new Constant<String>($TEXT.text); }
+    { $ret = new Text($TEXT.text); }
     |
     BOOLEAN
     { $ret = new Constant<Boolean>($BOOLEAN.text.equals("true")); }

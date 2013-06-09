@@ -89,7 +89,7 @@ final class DynamoUser implements User {
     public Map<String, Unit> units() {
         final ConcurrentMap<String, Unit> units =
             new ConcurrentHashMap<String, Unit>(0);
-        final Collection<Item> items = this.region.table("units")
+        final Collection<Item> items = this.region.table(DynamoUnit.TABLE)
             .frame().where(DynamoUnit.KEY_OWNER, Conditions.equalTo(this.name));
         for (Item item : items) {
             final String unit = item.get(DynamoUnit.KEY_NAME).getS();
@@ -116,7 +116,7 @@ final class DynamoUser implements User {
     @Override
     @Cacheable.FlushBefore
     public void remove(@NotNull final String unit) {
-        final Iterator<Item> items = this.region.table("units").frame()
+        final Iterator<Item> items = this.region.table(DynamoUnit.TABLE).frame()
             .where(DynamoUnit.KEY_OWNER, Conditions.equalTo(this.name))
             .where(DynamoUnit.KEY_NAME, Conditions.equalTo(unit))
             .iterator();

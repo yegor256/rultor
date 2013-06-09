@@ -67,9 +67,12 @@ public final class ClasspathRepoTest {
         final Spec spec = repo.make(
             "com.rultor.repo.ClasspathRepoTest$Foo(2)"
         );
-        Foo.COUNTER.set(0);
-        final Instance instance = repo.make(spec);
-        MatcherAssert.assertThat(Foo.COUNTER.get(), Matchers.equalTo(2L));
+        ClasspathRepoTest.Foo.COUNTER.set(0);
+        repo.make(spec);
+        MatcherAssert.assertThat(
+            ClasspathRepoTest.Foo.COUNTER.get(),
+            Matchers.equalTo(2L)
+        );
     }
 
     /**
@@ -85,7 +88,7 @@ public final class ClasspathRepoTest {
          * @param number The number
          */
         public Foo(final long number) {
-            Foo.COUNTER.addAndGet(number);
+            ClasspathRepoTest.Foo.COUNTER.addAndGet(number);
         }
     }
 

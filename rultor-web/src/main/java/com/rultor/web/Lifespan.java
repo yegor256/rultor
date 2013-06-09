@@ -40,6 +40,8 @@ import com.rultor.users.DynamoUsers;
 import com.rultor.users.Unit;
 import com.rultor.users.User;
 import com.rultor.users.Users;
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -94,6 +96,7 @@ public final class Lifespan implements ServletContextListener {
      */
     @Override
     public void contextDestroyed(final ServletContextEvent event) {
+        IOUtils.closeQuietly(this.quartz);
         IOUtils.closeQuietly(this.conveyer);
     }
 
@@ -104,7 +107,7 @@ public final class Lifespan implements ServletContextListener {
     @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.MINUTES)
     @EqualsAndHashCode(of = { "users", "queue" })
     @SuppressWarnings("PMD.DoNotUseThreads")
-    private static final class Quartz implements Runnable {
+    private static final class Quartz implements Runnable, Closeable {
         /**
          * Users.
          */
@@ -132,6 +135,13 @@ public final class Lifespan implements ServletContextListener {
                     this.queue.push(unit.spec());
                 }
             }
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void close() throws IOException {
+            // nothing to do
         }
     }
 

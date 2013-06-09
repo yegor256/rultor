@@ -139,7 +139,6 @@ public final class PulsesRs extends BaseRs {
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(PulseRs.class)
-                        .path(PulseRs.class, "index")
                         .queryParam(PulseRs.QUERY_NAME, "{n}")
                         .queryParam(PulseRs.QUERY_DATE, "{d}")
                         .build(this.name, pulse.started().getTime())
@@ -163,13 +162,12 @@ public final class PulsesRs extends BaseRs {
             .up()
             .link(
                 new Link(
-                    "see",
+                    "log",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(PulseRs.class)
-                        .path(PulseRs.class, "index")
-                        .queryParam(PulseRs.QUERY_NAME, "{n}")
-                        .queryParam(PulseRs.QUERY_DATE, "{d}")
+                        .queryParam(PulseRs.QUERY_NAME, "{x}")
+                        .queryParam(PulseRs.QUERY_DATE, "{y}")
                         .queryParam(PulseRs.QUERY_START, stage.start())
                         .queryParam(PulseRs.QUERY_STOP, stage.stop())
                         .build(this.name, pulse.started().getTime())

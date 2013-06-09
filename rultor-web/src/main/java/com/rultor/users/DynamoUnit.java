@@ -58,6 +58,11 @@ import lombok.ToString;
 final class DynamoUnit implements Unit {
 
     /**
+     * Dynamo DB table name.
+     */
+    public static final String TABLE = "units";
+
+    /**
      * Dynamo DB table column.
      */
     public static final String KEY_OWNER = "owner";
@@ -135,7 +140,7 @@ final class DynamoUnit implements Unit {
      * @return The item
      */
     private Item item() {
-        final Table table = this.region.table("units");
+        final Table table = this.region.table(DynamoUnit.TABLE);
         final Iterator<Item> items =  table.frame()
             .where(DynamoUnit.KEY_OWNER, Conditions.equalTo(this.owner))
             .where(DynamoUnit.KEY_NAME, Conditions.equalTo(this.name))

@@ -59,6 +59,7 @@ import javax.ws.rs.core.Response;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Resource.Forwarded
 @Loggable(Loggable.DEBUG)
@@ -82,6 +83,7 @@ public class BaseRs extends BaseResource {
     public final Inset insetVersion() {
         return new VersionInset(
             Manifests.read("Rultor-Version"),
+            // @checkstyle MultipleStringLiterals (1 line)
             Manifests.read("Rultor-Revision"),
             Manifests.read("Rultor-Date")
         );

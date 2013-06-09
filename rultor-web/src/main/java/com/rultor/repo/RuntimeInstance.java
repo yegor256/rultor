@@ -29,77 +29,62 @@
  */
 package com.rultor.repo;
 
-import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.users.Spec;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CharStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.TokenStream;
 
 /**
- * Repo on classpath.
+ * Runtime instance.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Immutable
 @ToString
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-public final class ClasspathRepo implements Repo {
+final class RuntimeInstance implements Instance {
 
     /**
-     * {@inheritDoc}
+     * Object to pulse.
      */
-    @Override
-    @NotNull
-    public Instance make(@NotNull final Spec spec)
-        throws Repo.InstantiationException {
-        Object object;
-        try {
-            object = this.var(spec.asText()).instantiate();
-        } catch (Repo.InvalidSyntaxException ex) {
-            throw new Repo.InstantiationException(ex);
-        }
-        return new RuntimeInstance(object);
+    private final transient Object object;
+
+    /**
+     * Public ctor.
+     * @param obj Object
+     */
+    protected RuntimeInstance(final Object obj) {
+        this.object = obj;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull
-    public Spec make(@NotNull final String text)
-        throws Repo.InvalidSyntaxException {
-        return this.var(text);
-    }
-
-    /**
-     * Text to variable.
-     * @param text Text
-     * @return Variable
-     * @throws Repo.InvalidSyntaxException If fails
-     */
-    private Variable var(final String text) throws Repo.InvalidSyntaxException {
-        final CharStream input = new ANTLRStringStream(text);
-        final SpecLexer lexer = new SpecLexer(input);
-        final TokenStream tokens = new CommonTokenStream(lexer);
-        final SpecParser parser = new SpecParser(tokens);
-        Variable var;
-        try {
-            var = parser.spec();
-        } catch (org.antlr.runtime.RecognitionException ex) {
-            throw new Repo.InvalidSyntaxException(ex);
-        } catch (IllegalArgumentException ex) {
-            throw new InvalidSyntaxException(ex);
+    public void pulse(@NotNull final State state) {
+        final Class<?> type = this.object.getClass();
+        Method method = null;
+        for (Method mtd : type.getDeclaredMethods()) {
+            if ("pulse".equals(mtd.getName())
+                && mtd.getParameterTypes().length == 1
+                && mtd.getParameterTypes()[0].equals(State.class)) {
+                method = mtd;
+                break;
+            }
         }
-        return var;
+        if (method != null) {
+            try {
+                method.invoke(this.object, state);
+            } catch (IllegalAccessException ex) {
+                throw new IllegalArgumentException(ex);
+            } catch (InvocationTargetException ex) {
+                throw new IllegalArgumentException(ex);
+            }
+        }
     }
 
 }

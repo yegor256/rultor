@@ -118,7 +118,7 @@
                     <xsl:when test="links/link[@rel='see']">
                         <a title="see log">
                             <xsl:attribute name="href">
-                                <xsl:value-of select="links/link[@rel='see']/@href"/>
+                                <xsl:value-of select="links/link[@rel='log']/@href"/>
                             </xsl:attribute>
                             <xsl:value-of select="output"/>
                         </a>

@@ -133,6 +133,10 @@ public final class PulseRs extends BaseRs {
     @GET
     @Path("/")
     public Response index() throws Exception {
+        assert this.date != null;
+        assert this.start != null;
+        assert this.stop != null;
+        this.pulse();
         return null;
     }
 
