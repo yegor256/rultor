@@ -44,17 +44,53 @@ import javax.validation.constraints.NotNull;
 public interface Repo {
 
     /**
+     * Invalid syntax of spec.
+     */
+    final class InvalidSyntaxException extends Exception {
+        /**
+         * Serialization marker.
+         */
+        private static final long serialVersionUID = 0x65740abe34528092L;
+        /**
+         * Public ctor.
+         * @param cause Cause of it
+         */
+        public InvalidSyntaxException(final String cause) {
+            super(cause);
+        }
+    }
+
+    /**
+     * Spec can't be instantiated.
+     */
+    final class InstantiationException extends Exception {
+        /**
+         * Serialization marker.
+         */
+        private static final long serialVersionUID = 0x65f40afe34528092L;
+        /**
+         * Public ctor.
+         * @param cause Cause of it
+         */
+        public InstantiationException(final String cause) {
+            super(cause);
+        }
+    }
+
+    /**
      * Make a spec from text.
      * @param text Text
      * @return The spec
+     * @throws Repo.InvalidSyntaxException If incorrect syntax
      */
-    Spec make(@NotNull String text);
+    Spec make(@NotNull String text) throws Repo.InvalidSyntaxException;
 
     /**
      * Make an instance from a spec.
      * @param spec Spect
      * @return The instance
+     * @throws Repo.InstantiationException If can't instantiate
      */
-    Instance make(@NotNull Spec spec);
+    Instance make(@NotNull Spec spec) throws Repo.InstantiationException;
 
 }

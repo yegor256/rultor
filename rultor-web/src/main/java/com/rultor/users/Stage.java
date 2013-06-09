@@ -27,38 +27,58 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.users;
 
-/* bottom right label about deployed version */
-#version {
-    font-size: 0.8em;
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    padding: .2em .8em;
-    background-color: #e4e5e3;
+import com.jcabi.aspects.Immutable;
+
+/**
+ * Stage of a pulse.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+@Immutable
+public interface Stage {
+
+    /**
+     * Result of a stage.
+     */
+    enum Result {
+        /**
+         * Still running.
+         */
+        RUNNING,
+        /**
+         * Waiting.
+         */
+        WAITING,
+        /**
+         * Success.
+         */
+        SUCCESS,
+        /**
+         * Failure.
+         */
+        FAILURE;
+    };
+
+    /**
+     * Result of the stage.
+     * @return Result
+     */
+    Result result();
+
+    /**
+     * How many milliseconds it took or is planning to take.
+     * @return Seconds
+     */
+    int msec();
+
+    /**
+     * Output to show to the user (one line).
+     * @return Output
+     */
+    String output();
+
 }
-
-#bottom {
-    border-top: 1px solid gray;
-    margin-top: 3em;
-    font-size: 0.9em;
-    line-height: 1.2em;
-    width: 30%;
-}
-
-textarea.spec {
-    font-family: 'Consolas', 'Lucida Console', monospace;
-}
-
-div.pulse-details {
-    font-size: 0.85em;
-    margin-left: 2em;
-}
-    div.pulse-details table {
-       width: 0;
-    }
-        div.pulse-details table td {
-            border: 0;
-            padding: 0em .3em;
-        }
-

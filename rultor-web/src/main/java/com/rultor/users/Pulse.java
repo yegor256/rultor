@@ -29,9 +29,9 @@
  */
 package com.rultor.users;
 
-import com.rultor.users.Spec;
 import com.jcabi.aspects.Immutable;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -49,6 +49,12 @@ public interface Pulse {
      * @return When
      */
     Date started();
+
+    /**
+     * Stages.
+     * @return Collection of them
+     */
+    Collection<Stage> stages();
 
     /**
      * Exact spec, which was used.

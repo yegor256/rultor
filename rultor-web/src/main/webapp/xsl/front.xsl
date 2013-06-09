@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -26,39 +27,21 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/* bottom right label about deployed version */
-#version {
-    font-size: 0.8em;
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    padding: .2em .8em;
-    background-color: #e4e5e3;
-}
-
-#bottom {
-    border-top: 1px solid gray;
-    margin-top: 3em;
-    font-size: 0.9em;
-    line-height: 1.2em;
-    width: 30%;
-}
-
-textarea.spec {
-    font-family: 'Consolas', 'Lucida Console', monospace;
-}
-
-div.pulse-details {
-    font-size: 0.85em;
-    margin-left: 2em;
-}
-    div.pulse-details table {
-       width: 0;
-    }
-        div.pulse-details table td {
-            border: 0;
-            padding: 0em .3em;
-        }
-
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+    <xsl:output method="xml" omit-xml-declaration="yes"/>
+    <xsl:include href="/xsl/layout.xsl"/>
+    <xsl:template name="head">
+        <title>
+            <xsl:text>index</xsl:text>
+        </title>
+    </xsl:template>
+    <xsl:template name="content">
+        <p>
+            <xsl:text>
+                Rultor.com is a lightweight integration platform
+                for sofware development teams.
+            </xsl:text>
+        </p>
+    </xsl:template>
+</xsl:stylesheet>

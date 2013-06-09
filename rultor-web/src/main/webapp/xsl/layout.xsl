@@ -70,6 +70,14 @@
             <body>
                 <xsl:apply-templates select="version"/>
                 <div class="container-fluid">
+                    <p>
+                        <a>
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
+                            </xsl:attribute>
+                            <xsl:text>(logo stays here)</xsl:text>
+                        </a>
+                    </p>
                     <xsl:apply-templates select="flash"/>
                     <xsl:choose>
                         <xsl:when test="/page/identity">

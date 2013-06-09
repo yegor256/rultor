@@ -60,7 +60,6 @@ public final class IndexRsTest {
         MatcherAssert.assertThat(
             JaxbConverter.the(response.getEntity()),
             XhtmlMatchers.hasXPaths(
-                "/page/message[.='Hello, world!']",
                 "/page/version[name='1.0-SNAPSHOT']"
             )
         );

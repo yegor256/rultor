@@ -37,10 +37,12 @@ import com.rexsl.page.auth.Identity;
 import com.rultor.users.Unit;
 import java.util.Map;
 import java.util.logging.Level;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -108,6 +110,47 @@ public final class IndexRs extends BaseRs {
     }
 
     /**
+     * Edit existing unit (front page).
+     * @param name Name of the unit
+     * @return The JAX-RS response
+     * @throws Exception If some problem inside
+     */
+    @GET
+    @Path("/edit")
+    @Loggable(Loggable.DEBUG)
+    public Response edit(@QueryParam("name") @NotNull final String name)
+        throws Exception {
+        final Unit unit = this.user().units().get(name);
+        if (unit == null) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUriBuilder()
+                    .clone()
+                    .path(IndexRs.class)
+                    .build(),
+                String.format(
+                    "Unit '%s' not found",
+                    name
+                ),
+                Level.SEVERE
+            );
+        }
+        return new PageBuilder()
+            .stylesheet("/xsl/add.xsl")
+            .build(EmptyPage.class)
+            .init(this)
+            .link(new Link("save", "./save"))
+            .append(
+                new JaxbBundle("unit")
+                    .add("name", name)
+                    .up()
+                    .add("spec", unit.spec().asText())
+                    .up()
+            )
+            .render()
+            .build();
+    }
+
+    /**
      * Save new or existing unit unit.
      * @param name Name of it
      * @param spec Spec to save
@@ -118,8 +161,8 @@ public final class IndexRs extends BaseRs {
     @Path("/save")
     @Loggable(Loggable.DEBUG)
     public Response save(@FormParam("name") final String name,
-        @FormParam("spec") final String spec) throws Exception {
-        Unit unit = this.user().units().get(spec);
+        @NotNull @FormParam("spec") final String spec) throws Exception {
+        Unit unit = this.user().units().get(name);
         if (unit == null) {
             unit = this.user().create(name);
         }
@@ -130,7 +173,7 @@ public final class IndexRs extends BaseRs {
                 .path(IndexRs.class)
                 .build(),
             String.format(
-                "Unit '%d' successfully saved/updated",
+                "Unit '%s' successfully saved/updated",
                 name
             ),
             Level.INFO
@@ -166,8 +209,6 @@ public final class IndexRs extends BaseRs {
         return new JaxbBundle("unit")
             .add("name", name)
             .up()
-            .add("urn", unit.urn().toString())
-            .up()
             .link(
                 new Link(
                     "remove",
@@ -197,8 +238,8 @@ public final class IndexRs extends BaseRs {
                         .clone()
                         .path(PulsesRs.class)
                         .path(PulsesRs.class, "front")
-                        .queryParam(PulsesRs.QUERY_URN, "{n7}")
-                        .build(unit.urn())
+                        .queryParam(PulsesRs.QUERY_NAME, "{n7}")
+                        .build(name)
                 )
             );
     }

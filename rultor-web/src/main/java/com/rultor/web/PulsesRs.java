@@ -48,7 +48,7 @@ public final class PulsesRs extends BaseRs {
     /**
      * Query param.
      */
-    public static final String QUERY_URN = "urn";
+    public static final String QUERY_NAME = "name";
 
     /**
      * Get entrance page JAX-RS response.

@@ -30,7 +30,6 @@
 package com.rultor.users;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -42,12 +41,6 @@ import javax.validation.constraints.NotNull;
  */
 @Immutable
 public interface Unit {
-
-    /**
-     * URN of the unit.
-     * @return The URN of it
-     */
-    URN urn();
 
     /**
      * All pulses (starting from the most recent).

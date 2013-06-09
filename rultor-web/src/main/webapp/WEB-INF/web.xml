@@ -48,7 +48,7 @@
         <url-pattern>/js/*</url-pattern>
     </servlet-mapping>
     <listener>
-        <listener-class>com.rultor.life.Lifespan</listener-class>
+        <listener-class>com.rultor.web.Lifespan</listener-class>
     </listener>
     <servlet>
         <servlet-name>ExceptionTrap</servlet-name>

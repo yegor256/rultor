@@ -77,9 +77,9 @@ public final class Lifespan implements ServletContextListener {
             throw new IllegalStateException(ex);
         }
         final Users users = new DynamoUsers(
-            Manifests.read("Woquo-DynamoKey"),
-            Manifests.read("Woquo-DynamoSecret"),
-            Manifests.read("Woquo-DynamoPrefix")
+            Manifests.read("Rultor-DynamoKey"),
+            Manifests.read("Rultor-DynamoSecret"),
+            Manifests.read("Rultor-DynamoPrefix")
         );
         final Repo repo = new ClasspathRepo();
         event.getServletContext().setAttribute(Users.class.getName(), users);
