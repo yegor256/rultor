@@ -30,6 +30,7 @@
 package com.rultor.repo;
 
 import com.rultor.users.Spec;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -48,7 +49,7 @@ public final class ClasspathRepoTest {
     @Test
     public void makesSpecFromText() throws Exception {
         final Repo repo = new ClasspathRepo();
-        final String text = "com.rultor.repo.ClasspathRepoTest$Foo('test')";
+        final String text = "com.rultor.repo.ClasspathRepoTest$Foo(55)";
         final Spec spec = repo.make(text);
         MatcherAssert.assertThat(
             spec.asText(),
@@ -64,10 +65,29 @@ public final class ClasspathRepoTest {
     public void makesInstanceFromSpec() throws Exception {
         final Repo repo = new ClasspathRepo();
         final Spec spec = repo.make(
-            "com.rultor.repo.ClasspathRepoTest$Foo('alpha')"
+            "com.rultor.repo.ClasspathRepoTest$Foo(2)"
         );
         final Instance instance = repo.make(spec);
+        Foo.COUNTER.set(0);
         instance.pulse(new State.Memory());
+        MatcherAssert.assertThat(Foo.COUNTER.get(), Matchers.equalTo(2));
+    }
+
+    /**
+     * Test class.
+     */
+    private static final class Foo {
+        /**
+         * Static counter.
+         */
+        public static final AtomicInteger COUNTER = new AtomicInteger();
+        /**
+         * Public ctor.
+         * @param number The number
+         */
+        protected Foo(final int number) {
+            Foo.COUNTER.addAndGet(number);
+        }
     }
 
 }

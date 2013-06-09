@@ -73,7 +73,7 @@
                 </li>
             </ul>
             <div class="pulse-details">
-                <xsl:if test="stages/stage">
+                <xsl:if test="count(stages/stage) &gt; 1">
                     <table class="table table-condensed">
                         <colgroup>
                             <col style="width: 2em;"/>

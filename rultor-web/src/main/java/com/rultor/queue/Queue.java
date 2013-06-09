@@ -56,6 +56,7 @@ public interface Queue {
      * @return The spec available
      * @throws InterruptedException If interrupted while waiting
      */
+    @NotNull
     Spec pull() throws InterruptedException;
 
     /**
