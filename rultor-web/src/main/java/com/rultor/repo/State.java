@@ -29,7 +29,13 @@
  */
 package com.rultor.repo;
 
+import com.jcabi.aspects.Loggable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Mutable state.
@@ -56,5 +62,36 @@ public interface State {
      */
     @NotNull
     boolean checkAndSet(@NotNull String key, @NotNull String value);
+
+    /**
+     * In memory state.
+     */
+    @Loggable(Loggable.INFO)
+    @ToString
+    @EqualsAndHashCode(of = "map")
+    final class Memory implements State {
+        /**
+         * Map of values.
+         */
+        private final transient ConcurrentMap<String, String> map =
+            new ConcurrentHashMap<String, String>(0);
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String get(final String key) {
+            final String value = this.map.get(key);
+            Validate.notNull(value, "key %s is absent in state", key);
+            return value;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean checkAndSet(final String key, final String value) {
+            final String before = this.map.putIfAbsent(key, value);
+            return !value.equals(before);
+        }
+    }
 
 }

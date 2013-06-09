@@ -29,8 +29,12 @@
  */
 package com.rultor.queue;
 
+import com.jcabi.aspects.Loggable;
 import com.rultor.users.Spec;
+import java.util.concurrent.LinkedBlockingQueue;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Queue.
@@ -53,5 +57,33 @@ public interface Queue {
      * @throws InterruptedException If interrupted while waiting
      */
     Spec pull() throws InterruptedException;
+
+    /**
+     * In memory.
+     */
+    @Loggable(Loggable.INFO)
+    @ToString
+    @EqualsAndHashCode(of = "list")
+    final class Memory implements Queue {
+        /**
+         * Queue of them.
+         */
+        private final transient java.util.Queue<Spec> list =
+            new LinkedBlockingQueue<Spec>();
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void push(final Spec spec) {
+            this.list.add(spec);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Spec pull() throws InterruptedException {
+            return this.list.poll();
+        }
+    }
 
 }

@@ -75,7 +75,7 @@ public final class Conveyer implements Closeable, Callable<Void> {
     /**
      * State to use for everybody.
      */
-    private final transient State state = new MemState();
+    private final transient State state = new State.Memory();
 
     /**
      * Consumer of new specs from Queue.

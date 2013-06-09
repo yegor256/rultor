@@ -27,51 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer;
-
-import com.jcabi.aspects.Loggable;
-import com.rultor.repo.State;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.apache.commons.lang3.Validate;
 
 /**
- * State in memory.
+ * Repository implementation, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Loggable(Loggable.INFO)
-@ToString
-@EqualsAndHashCode(of = "map")
-final class MemState implements State {
-
-    /**
-     * Map of values.
-     */
-    private final transient ConcurrentMap<String, String> map =
-        new ConcurrentHashMap<String, String>(0);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String get(final String key) {
-        final String value = this.map.get(key);
-        Validate.notNull(value, "key %s is absent in state", key);
-        return value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean checkAndSet(final String key, final String value) {
-        final String before = this.map.putIfAbsent(key, value);
-        return !value.equals(before);
-    }
-
-}
+package com.rultor.repo;

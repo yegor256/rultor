@@ -33,7 +33,6 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.manifests.Manifests;
 import com.rultor.conveyer.Conveyer;
-import com.rultor.queue.MemQueue;
 import com.rultor.queue.Queue;
 import com.rultor.repo.ClasspathRepo;
 import com.rultor.repo.Repo;
@@ -84,7 +83,7 @@ public final class Lifespan implements ServletContextListener {
         final Repo repo = new ClasspathRepo();
         event.getServletContext().setAttribute(Users.class.getName(), users);
         event.getServletContext().setAttribute(Repo.class.getName(), repo);
-        final Queue queue = new MemQueue();
+        final Queue queue = new Queue.Memory();
         this.quartz = new Lifespan.Quartz(users, queue);
         this.conveyer = new Conveyer(queue, repo);
         this.conveyer.start();

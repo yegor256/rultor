@@ -27,46 +27,47 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.queue;
+package com.rultor.repo;
 
-import com.jcabi.aspects.Loggable;
 import com.rultor.users.Spec;
-import java.util.concurrent.LinkedBlockingQueue;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Simple queue in memory.
- *
+ * Test case for {@link ClasspathRepo}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
+ * @version $Id: IndexRsTest.java 2344 2013-01-13 18:28:44Z guard $
  */
-@Loggable(Loggable.INFO)
-@ToString
-@EqualsAndHashCode(of = "list")
-public final class MemQueue implements Queue {
+public final class ClasspathRepoTest {
 
     /**
-     * Queue of them.
+     * ClasspathRepo can make a spec.
+     * @throws Exception If some problem inside
      */
-    private final transient java.util.Queue<Spec> list =
-        new LinkedBlockingQueue<Spec>();
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void push(final Spec spec) {
-        this.list.add(spec);
+    @Test
+    public void makesSpecFromText() throws Exception {
+        final Repo repo = new ClasspathRepo();
+        final String text = "com.rultor.repo.ClasspathRepoTest$Foo('test')";
+        final Spec spec = repo.make(text);
+        MatcherAssert.assertThat(
+            spec.asText(),
+            Matchers.equalTo(text)
+        );
     }
 
     /**
-     * {@inheritDoc}
+     * ClasspathRepo can make an instance.
+     * @throws Exception If some problem inside
      */
-    @Override
-    public Spec pull() throws InterruptedException {
-        return this.list.poll();
+    @Test
+    public void makesInstanceFromSpec() throws Exception {
+        final Repo repo = new ClasspathRepo();
+        final Spec spec = repo.make(
+            "com.rultor.repo.ClasspathRepoTest$Foo('alpha')"
+        );
+        final Instance instance = repo.make(spec);
+        instance.pulse(new State.Memory());
     }
 
 }

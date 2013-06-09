@@ -50,7 +50,7 @@
                     </xsl:attribute>
                 </input>
                 <label for="spec"><xsl:text>Specification</xsl:text></label>
-                <textarea name="spec" rows="6" class="spec"><xsl:value-of select="/page/unit/spec"/></textarea>
+                <textarea name="spec" rows="18" class="input-block-level spec"><xsl:value-of select="/page/unit/spec"/></textarea>
                 <label><xsl:comment>for the submit button below</xsl:comment></label>
                 <button type="submit" class="btn">
                     <xsl:text>Save</xsl:text>
