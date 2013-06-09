@@ -31,10 +31,13 @@ package com.rultor.users;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.Table;
 import com.jcabi.urn.URN;
+import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -128,11 +131,22 @@ final class DynamoUnit implements Unit {
      * @return The item
      */
     private Item item() {
-        return this.region.table("units").frame()
+        final Table table = this.region.table("units");
+        final Iterator<Item> items =  table.frame()
             .where(DynamoUnit.KEY_OWNER, Conditions.equalTo(this.owner))
             .where(DynamoUnit.KEY_NAME, Conditions.equalTo(this.name))
-            .iterator()
-            .next();
+            .iterator();
+        Item item;
+        if (items.hasNext()) {
+            item = items.next();
+        } else {
+            item = table.put(
+                new Attributes()
+                    .with(DynamoUnit.KEY_OWNER, this.owner)
+                    .with(DynamoUnit.KEY_NAME, this.name)
+            );
+        }
+        return item;
     }
 
 }

@@ -55,7 +55,12 @@ public final class ClasspathRepo implements Repo {
      */
     @Override
     public Spec make(final String text) {
-        throw new UnsupportedOperationException();
+        return new Spec() {
+            @Override
+            public String asText() {
+                return text;
+            }
+        };
     }
 
 }

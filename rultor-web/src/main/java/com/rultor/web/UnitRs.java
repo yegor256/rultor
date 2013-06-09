@@ -51,6 +51,7 @@ import javax.ws.rs.core.Response;
  * @since 1.0
  */
 @Path("/u")
+@Loggable(Loggable.DEBUG)
 public final class UnitRs extends BaseRs {
 
     /**
@@ -66,7 +67,6 @@ public final class UnitRs extends BaseRs {
      */
     @GET
     @Path("/")
-    @Loggable(Loggable.DEBUG)
     public Response edit(@QueryParam("name") @NotNull final String name)
         throws Exception {
         final Unit unit = this.user().units().get(name);
@@ -100,13 +100,36 @@ public final class UnitRs extends BaseRs {
     }
 
     /**
+     * Remove unit by name.
+     * @param name Name of the unit to remove
+     * @return The JAX-RS response
+     * @throws Exception If some problem inside
+     */
+    @GET
+    @Path("/remove")
+    public Response remove(@QueryParam(UnitRs.QUERY_NAME)
+        @NotNull final String name) throws Exception {
+        this.user().units().remove(name);
+        throw this.flash().redirect(
+            this.uriInfo().getBaseUriBuilder()
+                .clone()
+                .path(IndexRs.class)
+                .build(),
+            String.format(
+                "Unit '%s' successfully removed",
+                name
+            ),
+            Level.INFO
+        );
+    }
+
+    /**
      * Add new unit (front page).
      * @return The JAX-RS response
      * @throws Exception If some problem inside
      */
     @GET
     @Path("/add")
-    @Loggable(Loggable.DEBUG)
     public Response add() throws Exception {
         return new PageBuilder()
             .stylesheet("/xsl/add.xsl")
@@ -126,7 +149,6 @@ public final class UnitRs extends BaseRs {
      */
     @POST
     @Path("/save")
-    @Loggable(Loggable.DEBUG)
     public Response save(@FormParam("name") final String name,
         @NotNull @FormParam("spec") final String spec) throws Exception {
         Unit unit = this.user().units().get(name);

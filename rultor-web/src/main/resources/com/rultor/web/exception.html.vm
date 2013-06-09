@@ -2,24 +2,36 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Internal application error</title>
-        <link href="/css/screen.css?${buildNumber}"
-            rel="stylesheet" type="text/css"></link>
-        <link rel="icon" type="image/gif"
-            href="http://img.rultor.com/favicon.ico?${buildNumber}"/>
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet"/>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet" />
+        <link href="/css/screen.css?${buildNumber}" rel="stylesheet" type="text/css"></link>
+        <link rel="icon" type="image/gif" href="http://img.rultor.com/favicon.ico?${buildNumber}"/>
     </head>
     <body>
-        <div id="content">
+        <div class="container-fluid">
             <p>
                 <a href="http://www.rultor.com/">
                     <img src="http://img.rultor.com/logo.png?${buildNumber}"/>
                 </a>
             </p>
             <p>
-                <b style="color: red;">
-                    Internal application error (${buildNumber}).
-                </b>
+                Revision: <code>${buildNumber}</code>
             </p>
-            <pre style="display:none;">${text}</pre>
+            <p>
+                Something went terribly wrong. The system can't
+                serve your request at the moment. We've been already
+                notified about this situation and will start working
+                on it really soon. In the meantime, please get back
+                to the site and try to do the same operation again.
+                Maybe it will work, you know :)
+            </p>
+            <p>
+                The text below is
+                <a href="http://en.wikipedia.org/wiki/Stack_trace">a stacktrace</a>
+                of the <a href="http://en.wikipedia.org/wiki/Exception_handling">runtime exception</a>
+                thrown by JVM:
+            </p>
+            <pre>${text}</pre>
         </div>
     </body>
 </html>

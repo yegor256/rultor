@@ -46,6 +46,7 @@ import javax.ws.rs.core.Response;
  * @since 1.0
  */
 @Path("/pls")
+@Loggable(Loggable.DEBUG)
 public final class PulseRs extends BaseRs {
 
     /**
@@ -131,7 +132,6 @@ public final class PulseRs extends BaseRs {
      */
     @GET
     @Path("/")
-    @Loggable(Loggable.DEBUG)
     public Response index() throws Exception {
         return null;
     }

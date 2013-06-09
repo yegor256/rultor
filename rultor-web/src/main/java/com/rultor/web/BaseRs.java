@@ -29,6 +29,7 @@
  */
 package com.rultor.web;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.rexsl.page.BasePage;
@@ -60,6 +61,7 @@ import javax.ws.rs.core.Response;
  * @since 1.0
  */
 @Resource.Forwarded
+@Loggable(Loggable.DEBUG)
 @Inset.Default(LinksInset.class)
 public class BaseRs extends BaseResource {
 

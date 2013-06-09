@@ -48,12 +48,8 @@ import javax.ws.rs.core.Response;
  * @since 1.0
  */
 @Path("/")
+@Loggable(Loggable.DEBUG)
 public final class IndexRs extends BaseRs {
-
-    /**
-     * Query param.
-     */
-    public static final String QUERY_NAME = "name";
 
     /**
      * Get entrance page JAX-RS response.
@@ -62,7 +58,6 @@ public final class IndexRs extends BaseRs {
      */
     @GET
     @Path("/")
-    @Loggable(Loggable.DEBUG)
     public Response index() throws Exception {
         final Identity self = this.auth().identity();
         Response response;
@@ -120,9 +115,9 @@ public final class IndexRs extends BaseRs {
                     "remove",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
-                        .path(IndexRs.class)
-                        .path(IndexRs.class, "remove")
-                        .queryParam(IndexRs.QUERY_NAME, "{n1}")
+                        .path(UnitRs.class)
+                        .path(UnitRs.class, "remove")
+                        .queryParam(UnitRs.QUERY_NAME, "{n1}")
                         .build(name)
                 )
             )

@@ -50,6 +50,7 @@ import javax.ws.rs.core.Response;
  * @since 1.0
  */
 @Path("/ps")
+@Loggable(Loggable.DEBUG)
 public final class PulsesRs extends BaseRs {
 
     /**
@@ -78,7 +79,6 @@ public final class PulsesRs extends BaseRs {
      */
     @GET
     @Path("/")
-    @Loggable(Loggable.DEBUG)
     public Response index() throws Exception {
         return new PageBuilder()
             .stylesheet("/xsl/pulses.xsl")
