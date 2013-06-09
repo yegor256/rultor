@@ -30,6 +30,7 @@
 package com.rultor.web;
 
 import com.jcabi.manifests.Manifests;
+import com.jcabi.urn.URN;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
@@ -38,12 +39,15 @@ import com.rexsl.page.auth.AuthInset;
 import com.rexsl.page.auth.Facebook;
 import com.rexsl.page.auth.Github;
 import com.rexsl.page.auth.Google;
+import com.rexsl.page.auth.Identity;
+import com.rexsl.page.auth.Provider;
 import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
 import com.rultor.repo.Repo;
 import com.rultor.users.User;
 import com.rultor.users.Users;
+import java.net.URI;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -104,10 +108,23 @@ public class BaseRs extends BaseResource {
     @Inset.Runtime
     public final AuthInset auth() {
         // @checkstyle LineLength (4 lines)
-        return new AuthInset(this, Manifests.read("Rultor-SecurityKey"), Manifests.read("Rultor-SecuritySalt"))
+        final AuthInset auth = new AuthInset(this, Manifests.read("Rultor-SecurityKey"), Manifests.read("Rultor-SecuritySalt"))
             .with(new Facebook(this, Manifests.read("Rultor-FbId"), Manifests.read("Rultor-FbSecret")))
             .with(new Github(this, Manifests.read("Rultor-GithubId"), Manifests.read("Rultor-GithubSecret")))
             .with(new Google(this, Manifests.read("Rultor-GoogleId"), Manifests.read("Rultor-GoogleSecret")));
+        if (Manifests.read("Rultor-DynamoKey").matches("[A-Z0-9]{20}")
+            && "12345".equals(Manifests.read("Rultor-Revision"))) {
+            auth.with(
+                new Provider.Always(
+                    new Identity.Simple(
+                        URN.create("urn:facebook:1"),
+                        "localhost",
+                        URI.create("http://img.rultor.com/localhost.png")
+                    )
+                )
+            );
+        }
+        return auth;
     }
 
     /**

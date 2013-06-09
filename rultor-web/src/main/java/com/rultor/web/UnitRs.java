@@ -30,9 +30,17 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
+import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rultor.users.Unit;
+import java.util.logging.Level;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -51,20 +59,92 @@ public final class UnitRs extends BaseRs {
     public static final String QUERY_NAME = "name";
 
     /**
-     * Get entrance page JAX-RS response.
+     * View and edit existing unit (front page).
+     * @param name Name of the unit
      * @return The JAX-RS response
      * @throws Exception If some problem inside
      */
     @GET
     @Path("/")
     @Loggable(Loggable.DEBUG)
-    public Response index() throws Exception {
+    public Response edit(@QueryParam("name") @NotNull final String name)
+        throws Exception {
+        final Unit unit = this.user().units().get(name);
+        if (unit == null) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUriBuilder()
+                    .clone()
+                    .path(IndexRs.class)
+                    .build(),
+                String.format(
+                    "Unit '%s' not found",
+                    name
+                ),
+                Level.SEVERE
+            );
+        }
         return new PageBuilder()
-            .stylesheet("/xsl/unit.xsl")
+            .stylesheet("/xsl/add.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .link(new Link("save", "./save"))
+            .append(
+                new JaxbBundle("unit")
+                    .add("name", name)
+                    .up()
+                    .add("spec", unit.spec().asText())
+                    .up()
+            )
             .render()
             .build();
+    }
+
+    /**
+     * Add new unit (front page).
+     * @return The JAX-RS response
+     * @throws Exception If some problem inside
+     */
+    @GET
+    @Path("/add")
+    @Loggable(Loggable.DEBUG)
+    public Response add() throws Exception {
+        return new PageBuilder()
+            .stylesheet("/xsl/add.xsl")
+            .build(EmptyPage.class)
+            .init(this)
+            .link(new Link("save", "/u/save"))
+            .render()
+            .build();
+    }
+
+    /**
+     * Save new or existing unit unit.
+     * @param name Name of it
+     * @param spec Spec to save
+     * @return The JAX-RS response
+     * @throws Exception If some problem inside
+     */
+    @POST
+    @Path("/save")
+    @Loggable(Loggable.DEBUG)
+    public Response save(@FormParam("name") final String name,
+        @NotNull @FormParam("spec") final String spec) throws Exception {
+        Unit unit = this.user().units().get(name);
+        if (unit == null) {
+            unit = this.user().create(name);
+        }
+        unit.spec(this.repo().make(spec));
+        throw this.flash().redirect(
+            this.uriInfo().getBaseUriBuilder()
+                .clone()
+                .path(IndexRs.class)
+                .build(),
+            String.format(
+                "Unit '%s' successfully saved/updated",
+                name
+            ),
+            Level.INFO
+        );
     }
 
 }

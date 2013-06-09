@@ -36,13 +36,8 @@ import com.rexsl.page.PageBuilder;
 import com.rexsl.page.auth.Identity;
 import com.rultor.users.Unit;
 import java.util.Map;
-import java.util.logging.Level;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -84,100 +79,11 @@ public final class IndexRs extends BaseRs {
                 .build(EmptyPage.class)
                 .init(this)
                 .append(this.mine())
-                .link(new Link("add", "./add"))
+                .link(new Link("add", "/u/add"))
                 .render()
                 .build();
         }
         return response;
-    }
-
-    /**
-     * Add new unit (front page).
-     * @return The JAX-RS response
-     * @throws Exception If some problem inside
-     */
-    @GET
-    @Path("/add")
-    @Loggable(Loggable.DEBUG)
-    public Response add() throws Exception {
-        return new PageBuilder()
-            .stylesheet("/xsl/add.xsl")
-            .build(EmptyPage.class)
-            .init(this)
-            .link(new Link("save", "./save"))
-            .render()
-            .build();
-    }
-
-    /**
-     * Edit existing unit (front page).
-     * @param name Name of the unit
-     * @return The JAX-RS response
-     * @throws Exception If some problem inside
-     */
-    @GET
-    @Path("/edit")
-    @Loggable(Loggable.DEBUG)
-    public Response edit(@QueryParam("name") @NotNull final String name)
-        throws Exception {
-        final Unit unit = this.user().units().get(name);
-        if (unit == null) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUriBuilder()
-                    .clone()
-                    .path(IndexRs.class)
-                    .build(),
-                String.format(
-                    "Unit '%s' not found",
-                    name
-                ),
-                Level.SEVERE
-            );
-        }
-        return new PageBuilder()
-            .stylesheet("/xsl/add.xsl")
-            .build(EmptyPage.class)
-            .init(this)
-            .link(new Link("save", "./save"))
-            .append(
-                new JaxbBundle("unit")
-                    .add("name", name)
-                    .up()
-                    .add("spec", unit.spec().asText())
-                    .up()
-            )
-            .render()
-            .build();
-    }
-
-    /**
-     * Save new or existing unit unit.
-     * @param name Name of it
-     * @param spec Spec to save
-     * @return The JAX-RS response
-     * @throws Exception If some problem inside
-     */
-    @POST
-    @Path("/save")
-    @Loggable(Loggable.DEBUG)
-    public Response save(@FormParam("name") final String name,
-        @NotNull @FormParam("spec") final String spec) throws Exception {
-        Unit unit = this.user().units().get(name);
-        if (unit == null) {
-            unit = this.user().create(name);
-        }
-        unit.spec(this.repo().make(spec));
-        throw this.flash().redirect(
-            this.uriInfo().getBaseUriBuilder()
-                .clone()
-                .path(IndexRs.class)
-                .build(),
-            String.format(
-                "Unit '%s' successfully saved/updated",
-                name
-            ),
-            Level.INFO
-        );
     }
 
     /**
@@ -226,7 +132,6 @@ public final class IndexRs extends BaseRs {
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(UnitRs.class)
-                        .path(UnitRs.class, "edit")
                         .queryParam(UnitRs.QUERY_NAME, "{n2}")
                         .build(name)
                 )
@@ -237,7 +142,6 @@ public final class IndexRs extends BaseRs {
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(PulsesRs.class)
-                        .path(PulsesRs.class, "front")
                         .queryParam(PulsesRs.QUERY_NAME, "{n7}")
                         .build(name)
                 )

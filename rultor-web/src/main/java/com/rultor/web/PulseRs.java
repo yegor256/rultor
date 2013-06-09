@@ -45,7 +45,7 @@ import javax.ws.rs.core.Response;
  * @version $Id$
  * @since 1.0
  */
-@Path("/ps")
+@Path("/pls")
 public final class PulseRs extends BaseRs {
 
     /**
