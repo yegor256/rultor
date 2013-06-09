@@ -76,7 +76,7 @@
                                 <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
                             </xsl:attribute>
                             <img alt="rultor.com logo" style="width: 150px; height: 46px;">
-                                <xsl:attribute name="href">
+                                <xsl:attribute name="src">
                                     <xsl:text>http://img.rultor.com/logo.png?</xsl:text>
                                     <xsl:value-of select="/page/version/revision"/>
                                 </xsl:attribute>

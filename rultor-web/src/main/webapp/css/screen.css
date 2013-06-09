@@ -28,6 +28,10 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+div.container-fluid {
+    padding: 2em;
+}
+
 /* bottom right label about deployed version */
 #version {
     font-size: 0.8em;
