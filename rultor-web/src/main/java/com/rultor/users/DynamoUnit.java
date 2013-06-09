@@ -29,25 +29,38 @@
  */
 package com.rultor.users;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.dynamo.Credentials;
+import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import javax.validation.constraints.NotNull;
 
 /**
- * All users in Dynamo DB.
+ * Single unit in Dynamo DB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public final class DynamoUsers implements Users {
+final class DynamoUnit implements Unit {
+
+    /**
+     * Dynamo DB table column.
+     */
+    public static final String KEY_OWNER = "owner";
+
+    /**
+     * Dynamo DB table column.
+     */
+    public static final String KEY_NAME = "name";
+
+    /**
+     * Dynamo DB table column.
+     */
+    private static final String FIELD_SPEC = "spec";
 
     /**
      * Dynamo.
@@ -55,16 +68,44 @@ public final class DynamoUsers implements Users {
     private final transient Region region;
 
     /**
-     * Public ctor.
-     * @param key AWS key
-     * @param secret AWS secret
-     * @param prefix Prefix for AWS DynamoDB tables
+     * URN of the user.
      */
-    public DynamoUsers(final String key, final String secret,
-        final String prefix) {
-        this.region = new Region.Prefixed(
-            new Region.Simple(new Credentials.Simple(key, secret)),
-            prefix
+    private final transient URN owner;
+
+    /**
+     * Name of the unit.
+     */
+    private final transient String name;
+
+    /**
+     * Public ctor.
+     * @param reg Region in Dynamo
+     * @param urn URN of the user/owner
+     * @param label Name of it
+     */
+    protected DynamoUnit(final Region reg, final URN urn, final String label) {
+        this.region = reg;
+        this.owner = urn;
+        this.name = label;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NotNull
+    public Iterable<Pulse> pulses() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void spec(@NotNull final Spec spec) {
+        this.item().put(
+            DynamoUnit.FIELD_SPEC,
+            new AttributeValue(spec.asText())
         );
     }
 
@@ -72,24 +113,26 @@ public final class DynamoUsers implements Users {
      * {@inheritDoc}
      */
     @Override
-    public Collection<User> everybody() {
-        final ConcurrentMap<URN, User> users =
-            new ConcurrentHashMap<URN, User>(0);
-        for (Item item : this.region.table("units").frame()) {
-            final URN urn = URN.create(item.get(DynamoUnit.KEY_OWNER).getS());
-            if (!users.containsKey(urn)) {
-                users.put(urn, this.fetch(urn));
+    @NotNull
+    public Spec spec() {
+        return new Spec() {
+            @Override
+            public String asText() {
+                return DynamoUnit.this.item().get(DynamoUnit.FIELD_SPEC).getS();
             }
-        }
-        return Collections.unmodifiableCollection(users.values());
+        };
     }
 
     /**
-     * {@inheritDoc}
+     * Fetch dynamo item.
+     * @return The item
      */
-    @Override
-    public User fetch(final URN urn) {
-        return new DynamoUser(this.region, urn);
+    private Item item() {
+        return this.region.table("units").frame()
+            .where(DynamoUnit.KEY_OWNER, Conditions.equalTo(this.owner))
+            .where(DynamoUnit.KEY_NAME, Conditions.equalTo(this.name))
+            .iterator()
+            .next();
     }
 
 }

@@ -30,24 +30,26 @@
 package com.rultor.users;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.dynamo.Credentials;
+import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import javax.validation.constraints.NotNull;
 
 /**
- * All users in Dynamo DB.
+ * Single user in Dynamo DB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public final class DynamoUsers implements Users {
+final class DynamoUser implements User {
 
     /**
      * Dynamo.
@@ -55,41 +57,46 @@ public final class DynamoUsers implements Users {
     private final transient Region region;
 
     /**
-     * Public ctor.
-     * @param key AWS key
-     * @param secret AWS secret
-     * @param prefix Prefix for AWS DynamoDB tables
+     * URN of the user.
      */
-    public DynamoUsers(final String key, final String secret,
-        final String prefix) {
-        this.region = new Region.Prefixed(
-            new Region.Simple(new Credentials.Simple(key, secret)),
-            prefix
-        );
+    private final transient URN name;
+
+    /**
+     * Public ctor.
+     * @param reg Region in Dynamo
+     * @param urn URN of the user
+     */
+    protected DynamoUser(final Region reg, final URN urn) {
+        this.region = reg;
+        this.name = urn;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Collection<User> everybody() {
-        final ConcurrentMap<URN, User> users =
-            new ConcurrentHashMap<URN, User>(0);
-        for (Item item : this.region.table("units").frame()) {
-            final URN urn = URN.create(item.get(DynamoUnit.KEY_OWNER).getS());
-            if (!users.containsKey(urn)) {
-                users.put(urn, this.fetch(urn));
+    @NotNull
+    public Map<String, Unit> units() {
+        final ConcurrentMap<String, Unit> units =
+            new ConcurrentHashMap<String, Unit>(0);
+        final Collection<Item> items = this.region.table("units")
+            .frame().where(DynamoUnit.KEY_OWNER, Conditions.equalTo(this.name));
+        for (Item item : items) {
+            final String unit = item.get(DynamoUnit.KEY_NAME).getS();
+            if (!units.containsKey(unit)) {
+                units.put(unit, this.create(unit));
             }
         }
-        return Collections.unmodifiableCollection(users.values());
+        return Collections.unmodifiableMap(units);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public User fetch(final URN urn) {
-        return new DynamoUser(this.region, urn);
+    @NotNull
+    public Unit create(@NotNull final String unit) {
+        return new DynamoUnit(this.region, this.name, unit);
     }
 
 }
