@@ -42,6 +42,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Execution conveyer.
@@ -51,14 +52,15 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Loggable(Loggable.INFO)
+@ToString
 @EqualsAndHashCode(of = { "queue", "repo" })
-public final class Conveyer implements Closeable {
+public final class Conveyer implements Closeable, Callable<Void> {
 
     /**
-     * In how many threads consume.
+     * In how many threads we run instances.
      */
     private static final int THREADS =
-        Runtime.getRuntime().availableProcessors() * Tv.FOUR;
+        Runtime.getRuntime().availableProcessors() * Tv.TEN;
 
     /**
      * Queue.
@@ -76,12 +78,16 @@ public final class Conveyer implements Closeable {
     private final transient State state = new MemState();
 
     /**
-     * Executor.
+     * Consumer of new specs from Queue.
      */
-    private final transient ExecutorService svc = Executors.newFixedThreadPool(
-        Conveyer.THREADS,
-        new VerboseThreads(Conveyer.class)
-    );
+    private final transient ExecutorService consumer =
+        Executors.newSingleThreadExecutor(new VerboseThreads(Conveyer.class));
+
+    /**
+     * Executor of instances.
+     */
+    private final transient ExecutorService executor =
+        Executors.newCachedThreadPool(new VerboseThreads(Conveyer.class));
 
     /**
      * Public ctor.
@@ -97,18 +103,7 @@ public final class Conveyer implements Closeable {
      * Start it.
      */
     public void start() {
-        final Callable<Void> callable = new Callable<Void>() {
-            @Override
-            public Void call() throws Exception {
-                final Spec spec = Conveyer.this.queue.pull();
-                final Instance instance = Conveyer.this.repo.make(spec);
-                instance.pulse(state);
-                return null;
-            }
-        };
-        for (int thread = 0; thread < Conveyer.THREADS; ++thread) {
-            this.svc.submit(callable);
-        }
+        this.consumer.submit(this);
     }
 
     /**
@@ -116,7 +111,27 @@ public final class Conveyer implements Closeable {
      */
     @Override
     public void close() {
-        this.svc.shutdown();
+        this.consumer.shutdown();
+        this.executor.shutdown();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Void call() throws Exception {
+        while (true) {
+            final Spec spec = this.queue.pull();
+            final Instance instance = this.repo.make(spec);
+            this.executor.submit(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        instance.pulse(Conveyer.this.state);
+                    }
+                }
+            );
+        }
     }
 
 }
