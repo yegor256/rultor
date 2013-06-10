@@ -37,8 +37,8 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -80,7 +80,7 @@ public final class DynamoUsers implements Users {
     @Override
     public Collection<User> everybody() {
         final ConcurrentMap<URN, User> users =
-            new ConcurrentHashMap<URN, User>(0);
+            new ConcurrentSkipListMap<URN, User>();
         for (Item item : this.region.table("units").frame()) {
             final URN urn = URN.create(item.get(DynamoUnit.KEY_OWNER).getS());
             if (!users.containsKey(urn)) {

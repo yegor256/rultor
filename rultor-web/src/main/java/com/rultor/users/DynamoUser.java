@@ -41,8 +41,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -88,7 +88,7 @@ final class DynamoUser implements User {
     @Cacheable
     public Map<String, Unit> units() {
         final ConcurrentMap<String, Unit> units =
-            new ConcurrentHashMap<String, Unit>(0);
+            new ConcurrentSkipListMap<String, Unit>();
         final Collection<Item> items = this.region.table(DynamoUnit.TABLE)
             .frame().where(DynamoUnit.KEY_OWNER, Conditions.equalTo(this.name));
         for (Item item : items) {
