@@ -49,12 +49,18 @@ public final class ClasspathRepoTest {
     @Test
     public void makesSpecFromText() throws Exception {
         final Repo repo = new ClasspathRepo();
-        final String text = "com.rultor.repo.ClasspathRepoTest$Foo(55)";
-        final Spec spec = repo.make(text);
-        MatcherAssert.assertThat(
-            spec.asText(),
-            Matchers.equalTo(text)
-        );
+        final String[] texts = new String[] {
+            "com.rultor.repo.ClasspathRepoTest$Foo(55)",
+            "java.lang.String( 'te   \n st' )",
+            "java.lang.Integer ( 123 )",
+            "com.rultor.repo.ClasspathRepoTest$Foo (55\n)",
+        };
+        for (String text : texts) {
+            MatcherAssert.assertThat(
+                repo.make(text).asText(),
+                Matchers.equalTo(repo.make(text).asText())
+            );
+        }
     }
 
     /**
@@ -68,10 +74,15 @@ public final class ClasspathRepoTest {
             "com.rultor.repo.ClasspathRepoTest$Foo(2)"
         );
         ClasspathRepoTest.Foo.COUNTER.set(0);
-        repo.make(spec);
+        final Instance instance = repo.make(spec);
         MatcherAssert.assertThat(
             ClasspathRepoTest.Foo.COUNTER.get(),
             Matchers.equalTo(2L)
+        );
+        instance.pulse(new State.Memory());
+        MatcherAssert.assertThat(
+            ClasspathRepoTest.Foo.COUNTER.get(),
+            Matchers.equalTo(-1L)
         );
     }
 
@@ -89,6 +100,13 @@ public final class ClasspathRepoTest {
          */
         public Foo(final long number) {
             ClasspathRepoTest.Foo.COUNTER.addAndGet(number);
+        }
+        /**
+         * Pulse it.
+         * @param state State
+         */
+        public void pulse(final State state) {
+            ClasspathRepoTest.Foo.COUNTER.set(-1);
         }
     }
 
