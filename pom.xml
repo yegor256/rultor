@@ -41,6 +41,7 @@
     <packaging>pom</packaging>
     <name>rultor</name>
     <modules>
+        <module>rultor-base</module>
         <module>rultor-web</module>
     </modules>
     <description>Rultor.com, Lightweight Integration Platform (as a Service)</description>
