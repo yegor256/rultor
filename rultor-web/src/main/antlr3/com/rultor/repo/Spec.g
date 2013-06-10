@@ -65,12 +65,14 @@ composite returns [Composite ret]
     :
     TYPE
     '('
-    first=variable
-    { vars.add($first.ret); }
     (
-        ','
-        next=variable
-        { vars.add($next.ret); }
+        first=variable
+        { vars.add($first.ret); }
+        (
+            ','
+            next=variable
+            { vars.add($next.ret); }
+        )*
     )*
     ')'
     { $ret = new Composite($TYPE.text, vars); }
