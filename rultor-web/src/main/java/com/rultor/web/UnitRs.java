@@ -33,6 +33,8 @@ import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rultor.repo.Repo;
+import com.rultor.users.Spec;
 import com.rultor.users.Unit;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -144,19 +146,29 @@ public final class UnitRs extends BaseRs {
     /**
      * Save new or existing unit unit.
      * @param name Name of it
-     * @param spec Spec to save
+     * @param text Spec to save
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @POST
     @Path("/save")
     public Response save(@FormParam(UnitRs.QUERY_NAME) final String name,
-        @NotNull @FormParam("spec") final String spec) throws Exception {
+        @NotNull @FormParam("spec") final String text) {
         Unit unit = this.user().units().get(name);
         if (unit == null) {
             unit = this.user().create(name);
         }
-        unit.spec(this.repo().make(spec));
+        final Spec spec;
+        try {
+            spec = this.repo().make(text);
+        } catch (Repo.InvalidSyntaxException ex) {
+            throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
+        }
+        try {
+            this.repo().make(spec);
+        } catch (Repo.InstantiationException ex) {
+            throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
+        }
+        unit.spec(spec);
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()
                 .clone()

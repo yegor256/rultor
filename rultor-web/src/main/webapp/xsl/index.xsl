@@ -37,13 +37,13 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <h1>Units</h1>
+        <h1>Registered Units</h1>
         <p>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='add']/@href"/>
                 </xsl:attribute>
-                <xsl:text>add new unit</xsl:text>
+                <xsl:text>Register new unit</xsl:text>
             </a>
         </p>
         <xsl:if test="units/unit">

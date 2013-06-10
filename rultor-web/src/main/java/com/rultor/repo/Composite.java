@@ -83,13 +83,9 @@ final class Composite implements Variable {
             throw new Repo.InstantiationException(ex);
         } catch (NoSuchMethodException ex) {
             throw new Repo.InstantiationException(ex);
-        } catch (SecurityException ex) {
-            throw new Repo.InstantiationException(ex);
         } catch (InstantiationException ex) {
             throw new Repo.InstantiationException(ex);
         } catch (IllegalAccessException ex) {
-            throw new Repo.InstantiationException(ex);
-        } catch (IllegalArgumentException ex) {
             throw new Repo.InstantiationException(ex);
         } catch (InvocationTargetException ex) {
             throw new Repo.InstantiationException(ex);
