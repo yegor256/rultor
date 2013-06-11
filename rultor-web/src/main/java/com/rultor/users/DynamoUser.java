@@ -85,6 +85,15 @@ final class DynamoUser implements User {
      */
     @Override
     @NotNull
+    public URN urn() {
+        return this.name;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NotNull
     @Cacheable
     public Map<String, Unit> units() {
         final ConcurrentMap<String, Unit> units =

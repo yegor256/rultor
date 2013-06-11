@@ -33,6 +33,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseThreads;
 import com.rultor.queue.Queue;
+import com.rultor.queue.Work;
 import com.rultor.repo.Instance;
 import com.rultor.repo.Repo;
 import com.rultor.repo.State;
@@ -122,7 +123,8 @@ public final class Conveyer implements Closeable, Callable<Void> {
     @Override
     public Void call() throws Exception {
         while (true) {
-            final Spec spec = this.queue.pull();
+            final Work work = this.queue.pull();
+            final Spec spec = work.spec();
             final Instance instance = this.repo.make(spec);
             this.submit(instance);
         }

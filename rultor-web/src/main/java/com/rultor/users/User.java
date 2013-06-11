@@ -30,6 +30,7 @@
 package com.rultor.users;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.urn.URN;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
 
@@ -42,6 +43,13 @@ import javax.validation.constraints.NotNull;
  */
 @Immutable
 public interface User {
+
+    /**
+     * His URN.
+     * @return URN
+     */
+    @NotNull
+    URN urn();
 
     /**
      * All his units.

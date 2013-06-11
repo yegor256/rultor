@@ -34,6 +34,7 @@ import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.manifests.Manifests;
 import com.rultor.conveyer.Conveyer;
 import com.rultor.queue.Queue;
+import com.rultor.queue.Work;
 import com.rultor.repo.ClasspathRepo;
 import com.rultor.repo.Repo;
 import com.rultor.users.DynamoUsers;
@@ -42,6 +43,7 @@ import com.rultor.users.User;
 import com.rultor.users.Users;
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -129,10 +131,17 @@ public final class Lifespan implements ServletContextListener {
          * {@inheritDoc}
          */
         @Override
+        @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
         public void run() {
             for (User user : this.users.everybody()) {
-                for (Unit unit : user.units().values()) {
-                    this.queue.push(unit.spec());
+                for (Map.Entry<String, Unit> entry : user.units().entrySet()) {
+                    this.queue.push(
+                        new Work.Simple(
+                            user.urn(),
+                            entry.getKey(),
+                            entry.getValue().spec()
+                        )
+                    );
                 }
             }
         }

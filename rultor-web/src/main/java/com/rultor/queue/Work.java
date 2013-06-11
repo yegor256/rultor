@@ -30,59 +30,92 @@
 package com.rultor.queue;
 
 import com.jcabi.aspects.Loggable;
-import java.util.concurrent.LinkedBlockingQueue;
+import com.jcabi.urn.URN;
+import com.rultor.users.Spec;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Queue.
+ * Work to do.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-public interface Queue {
+public interface Work {
 
     /**
-     * Push new work into it.
-     * @param work The work to do
-     */
-    void push(@NotNull Work work);
-
-    /**
-     * Pull the next available work (waits until it is available).
-     * @return The work available
-     * @throws InterruptedException If interrupted while waiting
+     * Owner of this work.
+     * @return The owner
      */
     @NotNull
-    Work pull() throws InterruptedException;
+    URN owner();
 
     /**
-     * In memory.
+     * Name of the work (unique for the user).
+     * @return The name
+     */
+    @NotNull
+    String name();
+
+    /**
+     * Spec to run.
+     * @return The spec
+     */
+    @NotNull
+    Spec spec();
+
+    /**
+     * Simple implementation.
      */
     @Loggable(Loggable.INFO)
     @ToString
-    @EqualsAndHashCode(of = "list")
-    final class Memory implements Queue {
+    @EqualsAndHashCode(of = { "urn", "label", "desc" })
+    final class Simple implements Work {
         /**
-         * Queue of them.
+         * Owner of it.
          */
-        private final transient java.util.Queue<Work> list =
-            new LinkedBlockingQueue<Work>();
+        private final transient URN urn;
         /**
-         * {@inheritDoc}
+         * Name of it.
          */
-        @Override
-        public void push(final Work work) {
-            this.list.add(work);
+        private final transient String label;
+        /**
+         * Spec of it.
+         */
+        private final transient Spec desc;
+        /**
+         * Public ctor.
+         * @param owner Owner
+         * @param name Name
+         * @param spec Spec
+         */
+        public Simple(final URN owner, final String name, final Spec spec) {
+            this.urn = owner;
+            this.label = name;
+            this.desc = spec;
         }
         /**
          * {@inheritDoc}
          */
         @Override
-        public Work pull() throws InterruptedException {
-            return this.list.poll();
+        public URN owner() {
+            return this.urn;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String name() {
+            return this.label;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Spec spec() {
+            return this.desc;
         }
     }
 
