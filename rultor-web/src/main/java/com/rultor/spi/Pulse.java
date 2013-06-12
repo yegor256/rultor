@@ -31,6 +31,7 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Date;
@@ -71,8 +72,9 @@ public interface Pulse {
     /**
      * Read it.
      * @return Stream to read from
+     * @throws IOException If fails
      */
-    InputStream read();
+    InputStream read() throws IOException;
 
     /**
      * Signal in the pulse.
@@ -82,7 +84,7 @@ public interface Pulse {
          * Pattern to match.
          */
         private static final Pattern PATTERN = Pattern.compile(
-            "RULTOR:(\\d+):([a-z]{1,32}):([\\p{ASCII}&&[^\\p{Cntrl}]]*)"
+            ".*RULTOR:(\\d+):([a-z]{1,32}):([\\p{ASCII}&&[^\\p{Cntrl}]]*)"
         );
         /**
          * Key.
@@ -150,7 +152,8 @@ public interface Pulse {
                     )
                 );
             }
-            if (Integer.parseInt(mtr.group(1)) != mtr.group(3).length()) {
+            if (Integer.parseInt(mtr.group(1))
+                != mtr.group(Tv.THREE).length()) {
                 throw new IllegalArgumentException(
                     String.format(
                         "matcher counter mismatch in '%s', use exists() first",
@@ -159,8 +162,8 @@ public interface Pulse {
                 );
             }
             return new Pulse.Signal(
-                mtr.group(Tv.THREE),
-                StringEscapeUtils.unescapeJava(mtr.group(Tv.FOUR))
+                mtr.group(2),
+                StringEscapeUtils.unescapeJava(mtr.group(Tv.THREE))
             );
         }
         /**
@@ -172,7 +175,7 @@ public interface Pulse {
             final Matcher matcher = Pulse.Signal.PATTERN.matcher(text);
             return matcher.matches()
                 && Integer.parseInt(matcher.group(1))
-                == matcher.group(3).length();
+                == matcher.group(Tv.THREE).length();
         }
     }
 

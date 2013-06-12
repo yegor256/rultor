@@ -35,7 +35,11 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stage;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
@@ -53,16 +57,6 @@ import lombok.ToString;
 @EqualsAndHashCode(of = { "cache", "key" })
 @Loggable(Loggable.DEBUG)
 final class S3Pulse implements Pulse {
-
-    /**
-     * Meta key.
-     */
-    public static final String META_STARTED = "started";
-
-    /**
-     * Meta key.
-     */
-    public static final String META_SPEC = "spec";
 
     /**
      * Cache.
@@ -90,7 +84,11 @@ final class S3Pulse implements Pulse {
     @Override
     @Cacheable
     public Date started() {
-        throw new UnsupportedOperationException();
+        try {
+            return new Date(Long.parseLong(this.find("started")));
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**
@@ -98,7 +96,7 @@ final class S3Pulse implements Pulse {
      */
     @Override
     public Collection<Stage> stages() {
-        throw new UnsupportedOperationException();
+        return new ArrayList<Stage>(0);
     }
 
     /**
@@ -107,15 +105,49 @@ final class S3Pulse implements Pulse {
     @Override
     @Cacheable
     public Spec spec() {
-        throw new UnsupportedOperationException();
+        try {
+            return new Spec.Simple(this.find("spec"));
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public InputStream read() {
-        throw new UnsupportedOperationException();
+    public InputStream read() throws IOException {
+        return this.cache.read(this.key);
+    }
+
+    /**
+     * Find this signal in the stream.
+     * @param key Signal key
+     * @return Found value
+     */
+    private String find(final String key) throws IOException {
+        final BufferedReader reader =
+            new BufferedReader(new InputStreamReader(this.read()));
+        String value = null;
+        while (true) {
+            final String line = reader.readLine();
+            if (line == null) {
+                break;
+            }
+            if (Pulse.Signal.exists(line)) {
+                final Pulse.Signal signal = Pulse.Signal.valueOf(line);
+                if (signal.key().equals(key)) {
+                    value = signal.value();
+                    break;
+                }
+            }
+        }
+        if (value == null) {
+            throw new IllegalStateException(
+                String.format("signal '%s' not found", key)
+            );
+        }
+        return value;
     }
 
 }

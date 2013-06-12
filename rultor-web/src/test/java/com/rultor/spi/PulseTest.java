@@ -48,8 +48,16 @@ public final class PulseTest {
     public void makesString() throws Exception {
         final String key = "test";
         final String value = "\u20ac\n\tfast\ttest\r\u0433";
+        final String encoded = String.format(
+            "some \u20ac prefixed text %s",
+            new Pulse.Signal(key, value).toString()
+        );
         MatcherAssert.assertThat(
-            Pulse.Signal.valueOf(new Pulse.Signal(key, value).toString()).key(),
+            Pulse.Signal.exists(encoded),
+            Matchers.is(true)
+        );
+        MatcherAssert.assertThat(
+            Pulse.Signal.valueOf(encoded).key(),
             Matchers.equalTo(key)
         );
     }

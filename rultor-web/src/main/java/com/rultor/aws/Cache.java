@@ -81,8 +81,9 @@ final class Cache implements Flushable {
      * Read the entire object.
      * @param key S3 key of the object to read
      * @return Input stream
+     * @throws IOException If fails
      */
-    public InputStream read(final String key) {
+    public InputStream read(final String key) throws IOException {
         throw new UnsupportedOperationException();
     }
 
