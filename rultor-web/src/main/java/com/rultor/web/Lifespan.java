@@ -82,16 +82,16 @@ public final class Lifespan implements ServletContextListener {
         } catch (java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }
+        final String key = Manifests.read("Rultor-AwsKey");
+        final String secret = Manifests.read("Rultor-AwsSecret");
         final Region region = new Region.Prefixed(
-            new Region.Simple(
-                new Credentials.Simple(
-                    Manifests.read("Rultor-DynamoKey"),
-                    Manifests.read("Rultor-DynamoSecret")
-                )
-            ),
+            new Region.Simple(new Credentials.Simple(key, secret)),
             Manifests.read("Rultor-DynamoPrefix")
         );
-        final S3Log log = new S3Log(region);
+        final S3Log log = new S3Log(
+            key, secret,
+            Manifests.read("Rultor-S3Bucket")
+        );
         final Users users = new DynamoUsers(region, log);
         final Repo repo = new ClasspathRepo();
         event.getServletContext().setAttribute(Users.class.getName(), users);

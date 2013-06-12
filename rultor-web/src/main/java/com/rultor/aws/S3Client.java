@@ -29,74 +29,54 @@
  */
 package com.rultor.aws;
 
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.urn.URN;
-import com.rultor.spi.Conveyer;
-import com.rultor.spi.Pulse;
-import com.rultor.spi.Work;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * Logs in temp files.
+ * S3 client.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = "client")
-@Loggable(Loggable.DEBUG)
-public final class S3Log implements Conveyer.Log {
+interface S3Client {
 
     /**
-     * S3 client.
+     * Get AWS S3 client.
+     * @return Get it
      */
-    private final transient S3Client client;
+    AmazonS3 get();
 
     /**
-     * Bucket name.
+     * Simple client.
      */
-    private final transient String bucket;
-
-    /**
-     * Public ctor.
-     * @param key AWS key
-     * @param secret AWS secret
-     * @param bkt Bucket name
-     */
-    public S3Log(final String key, final String secret, final String bkt) {
-        this(new S3Client.Simple(key, secret), bkt);
-    }
-
-    /**
-     * Public ctor.
-     * @param clnt Client
-     * @param bkt Bucket name
-     */
-    protected S3Log(final S3Client clnt, final String bkt) {
-        this.client = clnt;
-        this.bucket = bkt;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void push(final Work work, final Conveyer.Line line) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Get pulses.
-     * @param owner Owner
-     * @param unit Unit name
-     * @return All pulses of this unit
-     */
-    public Iterable<Pulse> pulses(final URN owner, final String unit) {
-        return null;
+    final class Simple implements S3Client {
+        /**
+         * Key.
+         */
+        private final transient String key;
+        /**
+         * Secret.
+         */
+        private final transient String secret;
+        /**
+         * Public ctor.
+         * @param akey AWS key
+         * @param scrt AWS secret
+         */
+        public Simple(final String akey, final String scrt) {
+            this.key = akey;
+            this.secret = scrt;
+        }
+        @Override
+        public AmazonS3 get() {
+            return new AmazonS3Client(
+                new BasicAWSCredentials(this.key, this.secret)
+            );
+        }
     }
 
 }
