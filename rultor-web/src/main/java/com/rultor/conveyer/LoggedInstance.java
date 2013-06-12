@@ -30,12 +30,16 @@
 package com.rultor.conveyer;
 
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Work;
+import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
+import com.rultor.spi.Pulse;
 import com.rultor.spi.State;
+import com.rultor.spi.Work;
+import java.util.Date;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
  * Logged instance.
@@ -68,7 +72,7 @@ final class LoggedInstance implements Instance {
      * Public ctor.
      * @param instance Original one
      * @param wrk Work
-     * @parma appr Appender
+     * @param appr Appender
      */
     protected LoggedInstance(final Instance instance, final Work wrk,
         final ConveyerAppender appr) {
@@ -84,11 +88,27 @@ final class LoggedInstance implements Instance {
     public void pulse(@NotNull final State state) {
         final ThreadGroup group = Thread.currentThread().getThreadGroup();
         this.appender.register(group, this.work);
+        this.meta(
+            "started",
+            DateFormatUtils.formatUTC(new Date(), "yyyy-MM-dd'T'HH:mm'Z'")
+        );
+        this.meta("owner", this.work.owner().toString());
+        this.meta("unit", this.work.name());
+        this.meta("spec", this.work.spec().toString());
         try {
             this.origin.pulse(state);
         } finally {
             this.appender.unregister(group);
         }
+    }
+
+    /**
+     * Log meta information.
+     * @param name Name of the key
+     * @param value Value of it
+     */
+    private void meta(final String name, final String value) {
+        Logger.info(this, "%s", new Pulse.Signal(name, value).toString());
     }
 
 }

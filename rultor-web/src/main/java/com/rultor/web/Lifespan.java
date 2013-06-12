@@ -73,6 +73,11 @@ public final class Lifespan implements ServletContextListener {
     private transient Quartz quartz;
 
     /**
+     * Log.
+     */
+    private transient S3Log log;
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -88,17 +93,17 @@ public final class Lifespan implements ServletContextListener {
             new Region.Simple(new Credentials.Simple(key, secret)),
             Manifests.read("Rultor-DynamoPrefix")
         );
-        final S3Log log = new S3Log(
+        this.log = new S3Log(
             key, secret,
             Manifests.read("Rultor-S3Bucket")
         );
-        final Users users = new DynamoUsers(region, log);
+        final Users users = new DynamoUsers(region, this.log);
         final Repo repo = new ClasspathRepo();
         event.getServletContext().setAttribute(Users.class.getName(), users);
         event.getServletContext().setAttribute(Repo.class.getName(), repo);
         final Queue queue = new Queue.Memory();
         this.quartz = new Lifespan.Quartz(users, queue);
-        this.conveyer = new SimpleConveyer(queue, repo, log);
+        this.conveyer = new SimpleConveyer(queue, repo, this.log);
         this.conveyer.start();
     }
 
@@ -109,6 +114,7 @@ public final class Lifespan implements ServletContextListener {
     public void contextDestroyed(final ServletContextEvent event) {
         IOUtils.closeQuietly(this.quartz);
         IOUtils.closeQuietly(this.conveyer);
+        IOUtils.closeQuietly(this.log);
     }
 
     /**

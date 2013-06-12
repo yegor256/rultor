@@ -43,6 +43,7 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import java.util.Iterator;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -119,7 +120,7 @@ final class DynamoUnit implements Unit {
      */
     @Override
     @NotNull
-    public Iterable<Pulse> pulses() {
+    public List<Pulse> pulses() {
         return this.log.pulses(this.owner, this.name);
     }
 

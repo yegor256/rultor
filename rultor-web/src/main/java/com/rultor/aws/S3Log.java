@@ -29,27 +29,45 @@
  */
 package com.rultor.aws;
 
-import com.jcabi.aspects.Immutable;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Conveyer;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Work;
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Logs in temp files.
+ * Log files in Amazon S3.
+ *
+ * <p>Every log is stored as a plain text object in Amazon S3, named as
+ * <code>owner/unit/year/month/day/uid.txt</code>, where all
+ * time values are in numbers. For example:
+ * <code>urn:facebook:5463/nighly-build/3987/00/75/7843.txt</code>. In this
+ * example: 3987 is year 2013, reverted towards 5000, 00 is December (12 minus
+ * 12), 75 is 25 (100 minus 25), and 7843 is millisTime of pulse start.
+ *
+ * <p>Every TXT object in S3 contains a JSON meta data in the first line,
+ * and the rest of file contains plain text log lines.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
 @ToString
-@EqualsAndHashCode(of = "client")
+@EqualsAndHashCode(of = { "client", "bucket" })
 @Loggable(Loggable.DEBUG)
-public final class S3Log implements Conveyer.Log {
+public final class S3Log implements Conveyer.Log, Closeable {
 
     /**
      * S3 client.
@@ -60,6 +78,11 @@ public final class S3Log implements Conveyer.Log {
      * Bucket name.
      */
     private final transient String bucket;
+
+    /**
+     * All cached objects.
+     */
+    private final transient Cache cache;
 
     /**
      * Public ctor.
@@ -79,6 +102,7 @@ public final class S3Log implements Conveyer.Log {
     protected S3Log(final S3Client clnt, final String bkt) {
         this.client = clnt;
         this.bucket = bkt;
+        this.cache = new Cache(this.client, this.bucket);
     }
 
     /**
@@ -86,7 +110,17 @@ public final class S3Log implements Conveyer.Log {
      */
     @Override
     public void push(final Work work, final Conveyer.Line line) {
-        throw new UnsupportedOperationException();
+        final String key = this.key(work.owner(), work.name());
+        this.cache.append(
+            key,
+            String.format(
+                "%tM:%<tS %5s %s %s",
+                new Date(),
+                line.level(),
+                line.logger(),
+                line.message()
+            )
+        );
     }
 
     /**
@@ -95,8 +129,39 @@ public final class S3Log implements Conveyer.Log {
      * @param unit Unit name
      * @return All pulses of this unit
      */
-    public Iterable<Pulse> pulses(final URN owner, final String unit) {
-        return null;
+    public List<Pulse> pulses(final URN owner, final String unit) {
+        final AmazonS3 aws = this.client.get();
+        final List<Pulse> pulses = new LinkedList<Pulse>();
+        final ListObjectsRequest request = new ListObjectsRequest()
+            .withBucketName(this.bucket)
+            .withMaxKeys(Tv.TWENTY)
+            .withPrefix(this.key(owner, unit));
+        final ObjectListing listing = aws.listObjects(request);
+        for (S3ObjectSummary sum : listing.getObjectSummaries()) {
+            pulses.add(new S3Pulse(this.cache, sum.getKey()));
+        }
+        if (listing.isTruncated()) {
+            throw new IllegalStateException("too many pulses");
+        }
+        return pulses;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() throws IOException {
+        this.cache.flush();
+    }
+
+    /**
+     * Make S3 key.
+     * @param owner Owner
+     * @param unit Unit name
+     * @return S3 key
+     */
+    private String key(final URN owner, final String unit) {
+        return String.format("%s/%s/", owner, unit);
     }
 
 }

@@ -47,11 +47,11 @@ import lombok.ToString;
 public interface Work {
 
     /**
-     * Unique ID of the work.
-     * @return The ID
+     * When started, in milliseconds.
+     * @return Milliseconds
      */
     @NotNull
-    String uid();
+    long started();
 
     /**
      * Owner of this work.
@@ -83,6 +83,10 @@ public interface Work {
     @Immutable
     final class Simple implements Work {
         /**
+         * When started.
+         */
+        private final transient long time = System.currentTimeMillis();
+        /**
          * Owner of it.
          */
         private final transient URN urn;
@@ -110,8 +114,8 @@ public interface Work {
          * {@inheritDoc}
          */
         @Override
-        public String uid() {
-            throw new UnsupportedOperationException();
+        public long started() {
+            return this.time;
         }
         /**
          * {@inheritDoc}

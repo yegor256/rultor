@@ -30,6 +30,7 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -47,7 +48,7 @@ public interface Unit {
      * @return Collection of them
      */
     @NotNull
-    Iterable<Pulse> pulses();
+    List<Pulse> pulses();
 
     /**
      * Save specification.

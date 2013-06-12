@@ -30,9 +30,15 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.validation.constraints.NotNull;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Pulse.
@@ -67,5 +73,107 @@ public interface Pulse {
      * @return Stream to read from
      */
     InputStream read();
+
+    /**
+     * Signal in the pulse.
+     */
+    final class Signal {
+        /**
+         * Pattern to match.
+         */
+        private static final Pattern PATTERN = Pattern.compile(
+            "RULTOR:(\\d+):([a-z]{1,32}):([\\p{ASCII}&&[^\\p{Cntrl}]]*)"
+        );
+        /**
+         * Key.
+         */
+        private final transient String left;
+        /**
+         * Value.
+         */
+        private final transient String right;
+        /**
+         * Public ctor.
+         * @param name Key
+         * @param val Value
+         */
+        public Signal(@NotNull final String name, @NotNull final String val) {
+            Validate.matchesPattern(
+                name, "[a-z]{1,32}",
+                "invalid key '%s', must be [a-z]{1,32}", name
+            );
+            this.left = name;
+            this.right = val;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            final String escaped = StringEscapeUtils.escapeJava(this.right);
+            return new StringBuilder()
+                .append("RULTOR")
+                .append(':')
+                .append(escaped.length())
+                .append(':')
+                .append(this.left)
+                .append(':')
+                .append(escaped)
+                .toString();
+        }
+        /**
+         * Key.
+         * @return The key
+         */
+        public String key() {
+            return this.left;
+        }
+        /**
+         * Value.
+         * @return The value
+         */
+        public String value() {
+            return this.right;
+        }
+        /**
+         * Parse it from the string.
+         * @param text Text to parse
+         * @return Signal, if parsed
+         */
+        public static Signal valueOf(final String text) {
+            final Matcher mtr = Pulse.Signal.PATTERN.matcher(text);
+            if (!mtr.matches()) {
+                throw new IllegalArgumentException(
+                    String.format(
+                        "signal not found in '%s', use exists() first",
+                        text
+                    )
+                );
+            }
+            if (Integer.parseInt(mtr.group(1)) != mtr.group(3).length()) {
+                throw new IllegalArgumentException(
+                    String.format(
+                        "matcher counter mismatch in '%s', use exists() first",
+                        text
+                    )
+                );
+            }
+            return new Pulse.Signal(
+                mtr.group(Tv.THREE),
+                StringEscapeUtils.unescapeJava(mtr.group(Tv.FOUR))
+            );
+        }
+        /**
+         * Whether the text contains a signal.
+         * @param text Text to parse
+         * @return TRUE if signal is present
+         */
+        public static boolean exists(final String text) {
+            final Matcher matcher = Pulse.Signal.PATTERN.matcher(text);
+            return matcher.matches()
+                && Integer.parseInt(matcher.group(1))
+                == matcher.group(3).length();
+        }
+    }
 
 }
