@@ -27,68 +27,38 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.users;
+package com.rultor.conveyer;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Item;
-import com.jcabi.dynamo.Region;
+import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.rultor.queue.Work;
+import com.rultor.users.Spec;
+import java.util.logging.Level;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * All users in Dynamo DB.
- *
+ * Test case for {@link ConveyerAppender}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
+ * @version $Id: IndexRsTest.java 2344 2013-01-13 18:28:44Z guard $
  */
-@Immutable
-@ToString
-@EqualsAndHashCode(of = "region")
-@Loggable(Loggable.DEBUG)
-public final class DynamoUsers implements Users {
+public final class ConveyerAppenderTest {
 
     /**
-     * Dynamo.
+     * ConveyerAppender can log slf4j messages.
+     * @throws Exception If some problem inside
      */
-    private final transient Region region;
-
-    /**
-     * Public ctor.
-     * @param reg AWS region
-     */
-    public DynamoUsers(final Region reg) {
-        this.region = reg;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Collection<User> everybody() {
-        final ConcurrentMap<URN, User> users =
-            new ConcurrentSkipListMap<URN, User>();
-        for (Item item : this.region.table("units").frame()) {
-            final URN urn = URN.create(item.get(DynamoUnit.KEY_OWNER).getS());
-            if (!users.containsKey(urn)) {
-                users.put(urn, this.fetch(urn));
-            }
-        }
-        return Collections.unmodifiableCollection(users.values());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public User fetch(final URN urn) {
-        return new DynamoUser(this.region, urn);
+    @Test
+    public void logsMessages() throws Exception {
+        final Log log = Mockito.mock(Log.class);
+        final ConveyerAppender appender = new ConveyerAppender(log);
+        final Work work = new Work.Simple(
+            new URN("urn:facebook:1"), "test work", new Spec.Simple("a()")
+        );
+        appender.register(Thread.currentThread().getThreadGroup(), work);
+        final String text = "test message to see in log";
+        Logger.info(this, text);
+        Mockito.verify(log).push(work, Level.INFO, text);
     }
 
 }

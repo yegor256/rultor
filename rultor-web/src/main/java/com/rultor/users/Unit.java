@@ -46,6 +46,7 @@ public interface Unit {
      * All pulses (starting from the most recent).
      * @return Collection of them
      */
+    @NotNull
     Iterable<Pulse> pulses();
 
     /**

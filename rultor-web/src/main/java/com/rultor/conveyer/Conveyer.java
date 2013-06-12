@@ -44,9 +44,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.log4j.Logger;
 
 /**
- * Execution conveyer.
+ * Horizontally scalable execution conveyer.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -75,9 +76,19 @@ public final class Conveyer implements Closeable, Callable<Void> {
     private final transient Repo repo;
 
     /**
+     * Log.
+     */
+    private final transient Log log;
+
+    /**
      * State to use for everybody.
      */
     private final transient State state = new State.Memory();
+
+    /**
+     * Log appender.
+     */
+    private final transient ConveyerAppender appender;
 
     /**
      * Consumer of new specs from Queue.
@@ -95,10 +106,14 @@ public final class Conveyer implements Closeable, Callable<Void> {
      * Public ctor.
      * @param que The queue of specs
      * @param rep Repo
+     * @param alog Log
      */
-    public Conveyer(final Queue que, final Repo rep) {
+    public Conveyer(final Queue que, final Repo rep, final Log alog) {
         this.queue = que;
         this.repo = rep;
+        this.log = alog;
+        this.appender = new ConveyerAppender(this.log);
+        Logger.getLogger("").addAppender(this.appender);
     }
 
     /**
@@ -113,6 +128,8 @@ public final class Conveyer implements Closeable, Callable<Void> {
      */
     @Override
     public void close() {
+        Logger.getLogger("").removeAppender(this.appender);
+        this.appender.close();
         this.consumer.shutdown();
         this.executor.shutdown();
     }
@@ -126,20 +143,23 @@ public final class Conveyer implements Closeable, Callable<Void> {
             final Work work = this.queue.pull();
             final Spec spec = work.spec();
             final Instance instance = this.repo.make(spec);
-            this.submit(instance);
+            this.submit(instance, work);
         }
     }
 
     /**
      * Submit an instance.
      * @param instance The instance
+     * @param work Work
      */
-    private void submit(final Instance instance) {
+    private void submit(final Instance instance, final Work work) {
         this.executor.submit(
             new Runnable() {
                 @Override
                 public void run() {
-                    instance.pulse(Conveyer.this.state);
+                    new LoggedInstance(
+                        instance, work, Conveyer.this.appender
+                    ).pulse(Conveyer.this.state);
                 }
             }
         );

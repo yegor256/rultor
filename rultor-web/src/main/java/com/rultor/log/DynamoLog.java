@@ -27,22 +27,19 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.users;
+package com.rultor.log;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
-import com.jcabi.urn.URN;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
+import com.rultor.conveyer.Log;
+import com.rultor.queue.Work;
+import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * All users in Dynamo DB.
+ * Log in Dynamo DB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -52,7 +49,12 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "region")
 @Loggable(Loggable.DEBUG)
-public final class DynamoUsers implements Users {
+public final class DynamoLog implements Log {
+
+    /**
+     * Dynamo DB table name.
+     */
+    public static final String TABLE = "units";
 
     /**
      * Dynamo.
@@ -61,9 +63,9 @@ public final class DynamoUsers implements Users {
 
     /**
      * Public ctor.
-     * @param reg AWS region
+     * @param reg Region in Dynamo
      */
-    public DynamoUsers(final Region reg) {
+    public DynamoLog(final Region reg) {
         this.region = reg;
     }
 
@@ -71,24 +73,8 @@ public final class DynamoUsers implements Users {
      * {@inheritDoc}
      */
     @Override
-    public Collection<User> everybody() {
-        final ConcurrentMap<URN, User> users =
-            new ConcurrentSkipListMap<URN, User>();
-        for (Item item : this.region.table("units").frame()) {
-            final URN urn = URN.create(item.get(DynamoUnit.KEY_OWNER).getS());
-            if (!users.containsKey(urn)) {
-                users.put(urn, this.fetch(urn));
-            }
-        }
-        return Collections.unmodifiableCollection(users.values());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public User fetch(final URN urn) {
-        return new DynamoUser(this.region, urn);
+    public void push(final Work work, final Level level, final String text) {
+        throw new UnsupportedOperationException();
     }
 
 }

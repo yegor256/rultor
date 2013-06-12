@@ -27,110 +27,67 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.queue;
+package com.rultor.conveyer;
 
 import com.jcabi.aspects.Loggable;
-import com.jcabi.urn.URN;
-import com.rultor.users.Spec;
+import com.rultor.queue.Work;
+import com.rultor.repo.Instance;
+import com.rultor.repo.State;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Work to do.
+ * Logged instance.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-public interface Work {
+@ToString
+@EqualsAndHashCode(of = "origin")
+@Loggable(Loggable.DEBUG)
+final class LoggedInstance implements Instance {
 
     /**
-     * Unique ID of the work.
-     * @return The ID
+     * Origin instance.
      */
-    @NotNull
-    String uid();
+    private final transient Instance origin;
 
     /**
-     * Owner of this work.
-     * @return The owner
+     * Work we're doing.
      */
-    @NotNull
-    URN owner();
+    private final transient Work work;
 
     /**
-     * Name of the work (unique for the user).
-     * @return The name
+     * Log appender.
      */
-    @NotNull
-    String name();
+    private final transient ConveyerAppender appender;
 
     /**
-     * Spec to run.
-     * @return The spec
+     * Public ctor.
+     * @param instance Original one
+     * @param wrk Work
+     * @parma appr Appender
      */
-    @NotNull
-    Spec spec();
+    protected LoggedInstance(final Instance instance, final Work wrk,
+        final ConveyerAppender appr) {
+        this.origin = instance;
+        this.work = wrk;
+        this.appender = appr;
+    }
 
     /**
-     * Simple implementation.
+     * {@inheritDoc}
      */
-    @Loggable(Loggable.INFO)
-    @ToString
-    @EqualsAndHashCode(of = { "urn", "label", "desc" })
-    final class Simple implements Work {
-        /**
-         * Owner of it.
-         */
-        private final transient URN urn;
-        /**
-         * Name of it.
-         */
-        private final transient String label;
-        /**
-         * Spec of it.
-         */
-        private final transient Spec desc;
-        /**
-         * Public ctor.
-         * @param owner Owner
-         * @param name Name
-         * @param spec Spec
-         */
-        public Simple(@NotNull final URN owner, @NotNull final String name,
-            @NotNull final Spec spec) {
-            this.urn = owner;
-            this.label = name;
-            this.desc = spec;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String uid() {
-            throw new UnsupportedOperationException();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public URN owner() {
-            return this.urn;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String name() {
-            return this.label;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Spec spec() {
-            return this.desc;
+    @Override
+    public void pulse(@NotNull final State state) {
+        final ThreadGroup group = Thread.currentThread().getThreadGroup();
+        this.appender.register(group, this.work);
+        try {
+            this.origin.pulse(state);
+        } finally {
+            this.appender.unregister(group);
         }
     }
 

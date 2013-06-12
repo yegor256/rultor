@@ -31,8 +31,11 @@ package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
+import com.jcabi.dynamo.Credentials;
+import com.jcabi.dynamo.Region;
 import com.jcabi.manifests.Manifests;
 import com.rultor.conveyer.Conveyer;
+import com.rultor.log.DynamoLog;
 import com.rultor.queue.Queue;
 import com.rultor.queue.Work;
 import com.rultor.repo.ClasspathRepo;
@@ -79,17 +82,22 @@ public final class Lifespan implements ServletContextListener {
         } catch (java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }
-        final Users users = new DynamoUsers(
-            Manifests.read("Rultor-DynamoKey"),
-            Manifests.read("Rultor-DynamoSecret"),
+        final Region region = new Region.Prefixed(
+            new Region.Simple(
+                new Credentials.Simple(
+                    Manifests.read("Rultor-DynamoKey"),
+                    Manifests.read("Rultor-DynamoSecret")
+                )
+            ),
             Manifests.read("Rultor-DynamoPrefix")
         );
+        final Users users = new DynamoUsers(region);
         final Repo repo = new ClasspathRepo();
         event.getServletContext().setAttribute(Users.class.getName(), users);
         event.getServletContext().setAttribute(Repo.class.getName(), repo);
         final Queue queue = new Queue.Memory();
         this.quartz = new Lifespan.Quartz(users, queue);
-        this.conveyer = new Conveyer(queue, repo);
+        this.conveyer = new Conveyer(queue, repo, new DynamoLog(region));
         this.conveyer.start();
     }
 
