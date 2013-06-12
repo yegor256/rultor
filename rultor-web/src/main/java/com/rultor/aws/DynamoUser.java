@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.users;
+package com.rultor.aws;
 
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
@@ -36,6 +36,8 @@ import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Unit;
+import com.rultor.spi.User;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -66,6 +68,11 @@ final class DynamoUser implements User {
     private final transient Region region;
 
     /**
+     * S3 Log.
+     */
+    private final transient S3Log log;
+
+    /**
      * URN of the user.
      */
     private final transient URN name;
@@ -73,10 +80,12 @@ final class DynamoUser implements User {
     /**
      * Public ctor.
      * @param reg Region in Dynamo
+     * @param slg S3 Log
      * @param urn URN of the user
      */
-    protected DynamoUser(final Region reg, final URN urn) {
+    protected DynamoUser(final Region reg, final S3Log slg, final URN urn) {
         this.region = reg;
+        this.log = slg;
         this.name = urn;
     }
 
@@ -144,7 +153,7 @@ final class DynamoUser implements User {
      * @return The unit
      */
     private Unit unit(final String unit) {
-        return new DynamoUnit(this.region, this.name, unit);
+        return new DynamoUnit(this.region, this.log, this.name, unit);
     }
 
 }

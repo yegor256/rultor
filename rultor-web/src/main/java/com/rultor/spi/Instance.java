@@ -27,64 +27,25 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.users;
+package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import javax.validation.constraints.NotNull;
 
 /**
- * Stage of a pulse.
+ * Instance.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Stage {
+public interface Instance {
 
     /**
-     * Result of a stage.
+     * Pulse it.
+     * @param state Persistent storage of keys and values
      */
-    enum Result {
-        /**
-         * Still running.
-         */
-        RUNNING,
-        /**
-         * Waiting.
-         */
-        WAITING,
-        /**
-         * Success.
-         */
-        SUCCESS,
-        /**
-         * Failure.
-         */
-        FAILURE;
-    };
-
-    /**
-     * Result of the stage.
-     * @return Result
-     */
-    Result result();
-
-    /**
-     * When started or is planning to start.
-     * @return Milliseconds from the beginning of the pulse
-     */
-    long start();
-
-    /**
-     * When stopped or is planning to stop.
-     * @return Milliseconds from the beginning of the pulse
-     */
-    long stop();
-
-    /**
-     * Output to show to the user (one line).
-     * @return Output
-     */
-    String output();
+    void pulse(@NotNull State state);
 
 }

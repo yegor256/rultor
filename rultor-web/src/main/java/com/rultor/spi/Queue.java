@@ -27,45 +27,63 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.users;
+package com.rultor.spi;
 
-import com.jcabi.aspects.Immutable;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.Date;
+import com.jcabi.aspects.Loggable;
+import java.util.concurrent.LinkedBlockingQueue;
+import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Pulse.
+ * Queue.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Pulse {
+public interface Queue {
 
     /**
-     * When started.
-     * @return When
+     * Push new work into it.
+     * @param work The work to do
      */
-    Date started();
+    void push(@NotNull Work work);
 
     /**
-     * Stages.
-     * @return Collection of them
+     * Pull the next available work (waits until it is available).
+     * @return The work available
+     * @throws InterruptedException If interrupted while waiting
      */
-    Collection<Stage> stages();
+    @NotNull
+    Work pull() throws InterruptedException;
 
     /**
-     * Exact spec, which was used.
-     * @return Spec
+     * In memory.
      */
-    Spec spec();
-
-    /**
-     * Read it.
-     * @return Stream to read from
-     */
-    InputStream read();
+    @Loggable(Loggable.INFO)
+    @ToString
+    @EqualsAndHashCode(of = "list")
+    final class Memory implements Queue {
+        /**
+         * Queue of them.
+         */
+        private final transient java.util.Queue<Work> list =
+            new LinkedBlockingQueue<Work>();
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void push(final Work work) {
+            this.list.add(work);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Work pull() throws InterruptedException {
+            return this.list.poll();
+        }
+    }
 
 }

@@ -27,29 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer;
-
-import com.jcabi.aspects.Immutable;
-import com.rultor.queue.Work;
-import java.util.logging.Level;
-import javax.validation.constraints.NotNull;
 
 /**
- * Consumer of logs.
+ * Users in Dynamo DB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Log {
-
-    /**
-     * Consume new log line.
-     * @param work Work that produces this line
-     * @param level Level of log line
-     * @param text Text of the message
-     */
-    void push(@NotNull Work work, @NotNull Level level, @NotNull String text);
-
-}
+package com.rultor.aws;

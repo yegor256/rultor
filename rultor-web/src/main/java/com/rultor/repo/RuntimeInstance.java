@@ -30,6 +30,8 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Instance;
+import com.rultor.spi.State;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import javax.validation.constraints.NotNull;

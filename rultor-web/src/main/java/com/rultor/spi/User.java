@@ -27,25 +27,49 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.urn.URN;
+import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 /**
- * Instance.
+ * User.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Instance {
+public interface User {
 
     /**
-     * Pulse it.
-     * @param state Persistent storage of keys and values
+     * His URN.
+     * @return URN
      */
-    void pulse(@NotNull State state);
+    @NotNull
+    URN urn();
+
+    /**
+     * All his units.
+     * @return Collection of units
+     */
+    @NotNull
+    Map<String, Unit> units();
+
+    /**
+     * Create new unit with a given name.
+     * @param name Unique name of the unit
+     * @return The unit just created
+     */
+    @NotNull
+    Unit create(@NotNull String name);
+
+    /**
+     * Remove unit with a given name.
+     * @param name Unique name of the unit
+     */
+    void remove(@NotNull String name);
 
 }

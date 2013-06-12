@@ -34,16 +34,16 @@ import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.manifests.Manifests;
-import com.rultor.conveyer.Conveyer;
-import com.rultor.log.DynamoLog;
-import com.rultor.queue.Queue;
-import com.rultor.queue.Work;
+import com.rultor.aws.DynamoUsers;
+import com.rultor.aws.S3Log;
+import com.rultor.conveyer.SimpleConveyer;
 import com.rultor.repo.ClasspathRepo;
-import com.rultor.repo.Repo;
-import com.rultor.users.DynamoUsers;
-import com.rultor.users.Unit;
-import com.rultor.users.User;
-import com.rultor.users.Users;
+import com.rultor.spi.Queue;
+import com.rultor.spi.Repo;
+import com.rultor.spi.Unit;
+import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import com.rultor.spi.Work;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Map;
@@ -63,9 +63,9 @@ import org.apache.commons.io.IOUtils;
 public final class Lifespan implements ServletContextListener {
 
     /**
-     * Conveyer.
+     * SimpleConveyer.
      */
-    private transient Conveyer conveyer;
+    private transient SimpleConveyer conveyer;
 
     /**
      * Quartz the works.
@@ -91,13 +91,14 @@ public final class Lifespan implements ServletContextListener {
             ),
             Manifests.read("Rultor-DynamoPrefix")
         );
-        final Users users = new DynamoUsers(region);
+        final S3Log log = new S3Log(region);
+        final Users users = new DynamoUsers(region, log);
         final Repo repo = new ClasspathRepo();
         event.getServletContext().setAttribute(Users.class.getName(), users);
         event.getServletContext().setAttribute(Repo.class.getName(), repo);
         final Queue queue = new Queue.Memory();
         this.quartz = new Lifespan.Quartz(users, queue);
-        this.conveyer = new Conveyer(queue, repo, new DynamoLog(region));
+        this.conveyer = new SimpleConveyer(queue, repo, log);
         this.conveyer.start();
     }
 

@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.users;
+package com.rultor.aws;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.aspects.Cacheable;
@@ -39,6 +39,9 @@ import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.Table;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Pulse;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Unit;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -83,6 +86,11 @@ final class DynamoUnit implements Unit {
     private final transient Region region;
 
     /**
+     * S3 Log.
+     */
+    private final transient S3Log log;
+
+    /**
      * URN of the user.
      */
     private final transient URN owner;
@@ -98,8 +106,10 @@ final class DynamoUnit implements Unit {
      * @param urn URN of the user/owner
      * @param label Name of it
      */
-    protected DynamoUnit(final Region reg, final URN urn, final String label) {
+    protected DynamoUnit(final Region reg, final S3Log slg,
+        final URN urn, final String label) {
         this.region = reg;
+        this.log = slg;
         this.owner = urn;
         this.name = label;
     }
@@ -110,7 +120,7 @@ final class DynamoUnit implements Unit {
     @Override
     @NotNull
     public Iterable<Pulse> pulses() {
-        throw new UnsupportedOperationException();
+        return this.log.pulses(this.owner, this.name);
     }
 
     /**

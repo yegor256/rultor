@@ -27,71 +27,65 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.aws;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import javax.validation.constraints.NotNull;
+import com.jcabi.dynamo.Region;
+import com.jcabi.urn.URN;
+import com.rultor.spi.Conveyer;
+import com.rultor.spi.Pulse;
+import com.rultor.spi.Work;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.Validate;
 
 /**
- * Mutable state.
+ * Logs in temp files.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-public interface State {
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "region")
+@Loggable(Loggable.DEBUG)
+public final class S3Log implements Conveyer.Log {
 
     /**
-     * Get value by key.
-     * @param key The key
-     * @return Value
+     * Dynamo DB table name.
      */
-    @NotNull
-    String get(@NotNull String key);
+    public static final String TABLE = "log";
 
     /**
-     * Set if absent, don't touch if already present.
-     * @param key The key
-     * @param value The value
-     * @return TRUE if it was actually saved
+     * Dynamo.
      */
-    @NotNull
-    boolean checkAndSet(@NotNull String key, @NotNull String value);
+    private final transient Region region;
 
     /**
-     * In memory state.
+     * Public ctor.
+     * @param reg Region in Dynamo
      */
-    @Loggable(Loggable.INFO)
-    @ToString
-    @EqualsAndHashCode(of = "map")
-    final class Memory implements State {
-        /**
-         * Map of values.
-         */
-        private final transient ConcurrentMap<String, String> map =
-            new ConcurrentHashMap<String, String>(0);
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String get(final String key) {
-            final String value = this.map.get(key);
-            Validate.notNull(value, "key %s is absent in state", key);
-            return value;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public boolean checkAndSet(final String key, final String value) {
-            final String before = this.map.putIfAbsent(key, value);
-            return !value.equals(before);
-        }
+    public S3Log(final Region reg) {
+        this.region = reg;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void push(final Work work, final Conveyer.Line line) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Get pulses.
+     * @param owner Owner
+     * @param unit Unit name
+     * @return All pulses of this unit
+     */
+    public Iterable<Pulse> pulses(final URN owner, final String unit) {
+        return null;
     }
 
 }

@@ -27,54 +27,45 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.log;
+package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Region;
-import com.rultor.conveyer.Log;
-import com.rultor.queue.Work;
-import java.util.logging.Level;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Date;
 
 /**
- * Log in Dynamo DB.
+ * Pulse.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = "region")
-@Loggable(Loggable.DEBUG)
-public final class DynamoLog implements Log {
+public interface Pulse {
 
     /**
-     * Dynamo DB table name.
+     * When started.
+     * @return When
      */
-    public static final String TABLE = "units";
+    Date started();
 
     /**
-     * Dynamo.
+     * Stages.
+     * @return Collection of them
      */
-    private final transient Region region;
+    Collection<Stage> stages();
 
     /**
-     * Public ctor.
-     * @param reg Region in Dynamo
+     * Exact spec, which was used.
+     * @return Spec
      */
-    public DynamoLog(final Region reg) {
-        this.region = reg;
-    }
+    Spec spec();
 
     /**
-     * {@inheritDoc}
+     * Read it.
+     * @return Stream to read from
      */
-    @Override
-    public void push(final Work work, final Level level, final String text) {
-        throw new UnsupportedOperationException();
-    }
+    InputStream read();
 
 }

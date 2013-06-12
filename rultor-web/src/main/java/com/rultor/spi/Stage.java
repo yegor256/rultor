@@ -27,68 +27,64 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.users;
+package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Item;
-import com.jcabi.dynamo.Region;
-import com.jcabi.urn.URN;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * All users in Dynamo DB.
+ * Stage of a pulse.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = "region")
-@Loggable(Loggable.DEBUG)
-public final class DynamoUsers implements Users {
+public interface Stage {
 
     /**
-     * Dynamo.
+     * Result of a stage.
      */
-    private final transient Region region;
+    enum Result {
+        /**
+         * Still running.
+         */
+        RUNNING,
+        /**
+         * Waiting.
+         */
+        WAITING,
+        /**
+         * Success.
+         */
+        SUCCESS,
+        /**
+         * Failure.
+         */
+        FAILURE;
+    };
 
     /**
-     * Public ctor.
-     * @param reg AWS region
+     * Result of the stage.
+     * @return Result
      */
-    public DynamoUsers(final Region reg) {
-        this.region = reg;
-    }
+    Result result();
 
     /**
-     * {@inheritDoc}
+     * When started or is planning to start.
+     * @return Milliseconds from the beginning of the pulse
      */
-    @Override
-    public Collection<User> everybody() {
-        final ConcurrentMap<URN, User> users =
-            new ConcurrentSkipListMap<URN, User>();
-        for (Item item : this.region.table("units").frame()) {
-            final URN urn = URN.create(item.get(DynamoUnit.KEY_OWNER).getS());
-            if (!users.containsKey(urn)) {
-                users.put(urn, this.fetch(urn));
-            }
-        }
-        return Collections.unmodifiableCollection(users.values());
-    }
+    long start();
 
     /**
-     * {@inheritDoc}
+     * When stopped or is planning to stop.
+     * @return Milliseconds from the beginning of the pulse
      */
-    @Override
-    public User fetch(final URN urn) {
-        return new DynamoUser(this.region, urn);
-    }
+    long stop();
+
+    /**
+     * Output to show to the user (one line).
+     * @return Output
+     */
+    String output();
 
 }

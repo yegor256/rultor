@@ -30,6 +30,7 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
+import com.rultor.spi.Repo;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 

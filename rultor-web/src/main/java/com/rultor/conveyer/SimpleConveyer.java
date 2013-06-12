@@ -32,12 +32,13 @@ package com.rultor.conveyer;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseThreads;
-import com.rultor.queue.Queue;
-import com.rultor.queue.Work;
-import com.rultor.repo.Instance;
-import com.rultor.repo.Repo;
-import com.rultor.repo.State;
-import com.rultor.users.Spec;
+import com.rultor.spi.Conveyer.Log;
+import com.rultor.spi.Instance;
+import com.rultor.spi.Queue;
+import com.rultor.spi.Repo;
+import com.rultor.spi.Spec;
+import com.rultor.spi.State;
+import com.rultor.spi.Work;
 import java.io.Closeable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -57,7 +58,7 @@ import org.apache.log4j.Logger;
 @ToString
 @EqualsAndHashCode(of = { "queue", "repo" })
 @SuppressWarnings("PMD.DoNotUseThreads")
-public final class Conveyer implements Closeable, Callable<Void> {
+public final class SimpleConveyer implements Closeable, Callable<Void> {
 
     /**
      * In how many threads we run instances.
@@ -94,13 +95,17 @@ public final class Conveyer implements Closeable, Callable<Void> {
      * Consumer of new specs from Queue.
      */
     private final transient ExecutorService consumer =
-        Executors.newSingleThreadExecutor(new VerboseThreads(Conveyer.class));
+        Executors.newSingleThreadExecutor(
+            new VerboseThreads(SimpleConveyer.class)
+        );
 
     /**
      * Executor of instances.
      */
     private final transient ExecutorService executor =
-        Executors.newCachedThreadPool(new VerboseThreads(Conveyer.class));
+        Executors.newCachedThreadPool(
+            new VerboseThreads(SimpleConveyer.class)
+        );
 
     /**
      * Public ctor.
@@ -108,7 +113,7 @@ public final class Conveyer implements Closeable, Callable<Void> {
      * @param rep Repo
      * @param alog Log
      */
-    public Conveyer(final Queue que, final Repo rep, final Log alog) {
+    public SimpleConveyer(final Queue que, final Repo rep, final Log alog) {
         this.queue = que;
         this.repo = rep;
         this.log = alog;
@@ -158,8 +163,8 @@ public final class Conveyer implements Closeable, Callable<Void> {
                 @Override
                 public void run() {
                     new LoggedInstance(
-                        instance, work, Conveyer.this.appender
-                    ).pulse(Conveyer.this.state);
+                        instance, work, SimpleConveyer.this.appender
+                    ).pulse(SimpleConveyer.this.state);
                 }
             }
         );

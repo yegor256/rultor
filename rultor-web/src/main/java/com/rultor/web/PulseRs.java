@@ -30,7 +30,7 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
-import com.rultor.users.Pulse;
+import com.rultor.spi.Pulse;
 import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;

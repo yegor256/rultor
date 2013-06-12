@@ -30,7 +30,8 @@
 package com.rultor.conveyer;
 
 import com.google.common.collect.ImmutableMap;
-import com.rultor.queue.Work;
+import com.rultor.spi.Conveyer;
+import com.rultor.spi.Work;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import lombok.EqualsAndHashCode;
@@ -69,7 +70,7 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
     /**
      * Destination of logs.
      */
-    private final transient Log log;
+    private final transient Conveyer.Log log;
 
     /**
      * Destination of logs.
@@ -81,7 +82,7 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
      * Public ctor.
      * @param alog Logs
      */
-    protected ConveyerAppender(final Log alog) {
+    protected ConveyerAppender(final Conveyer.Log alog) {
         this.log = alog;
     }
 
@@ -111,8 +112,11 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
         if (work != null) {
             this.log.push(
                 work,
-                ConveyerAppender.LEVELS.get(event.getLevel()),
-                this.layout.format(event)
+                new Conveyer.Line.Simple(
+                    event.getLogger().getName(),
+                    ConveyerAppender.LEVELS.get(event.getLevel()),
+                    this.layout.format(event)
+                )
             );
         }
     }

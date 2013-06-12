@@ -30,9 +30,9 @@
 package com.rultor.conveyer;
 
 import com.jcabi.aspects.Loggable;
-import com.rultor.queue.Work;
-import com.rultor.repo.Instance;
-import com.rultor.repo.State;
+import com.rultor.spi.Work;
+import com.rultor.spi.Instance;
+import com.rultor.spi.State;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

@@ -27,111 +27,77 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.queue;
+package com.rultor.aws;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Item;
+import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
-import com.rultor.users.Spec;
-import javax.validation.constraints.NotNull;
+import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Work to do.
+ * All users in Dynamo DB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-public interface Work {
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "region")
+@Loggable(Loggable.DEBUG)
+public final class DynamoUsers implements Users {
 
     /**
-     * Unique ID of the work.
-     * @return The ID
+     * Dynamo.
      */
-    @NotNull
-    String uid();
+    private final transient Region region;
 
     /**
-     * Owner of this work.
-     * @return The owner
+     * S3 Log.
      */
-    @NotNull
-    URN owner();
+    private final transient S3Log log;
 
     /**
-     * Name of the work (unique for the user).
-     * @return The name
+     * Public ctor.
+     * @param reg AWS region
+     * @param slg S3 Log
      */
-    @NotNull
-    String name();
+    public DynamoUsers(final Region reg, final S3Log slg) {
+        this.region = reg;
+        this.log = slg;
+    }
 
     /**
-     * Spec to run.
-     * @return The spec
+     * {@inheritDoc}
      */
-    @NotNull
-    Spec spec();
+    @Override
+    public Collection<User> everybody() {
+        final ConcurrentMap<URN, User> users =
+            new ConcurrentSkipListMap<URN, User>();
+        for (Item item : this.region.table("units").frame()) {
+            final URN urn = URN.create(item.get(DynamoUnit.KEY_OWNER).getS());
+            if (!users.containsKey(urn)) {
+                users.put(urn, this.fetch(urn));
+            }
+        }
+        return Collections.unmodifiableCollection(users.values());
+    }
 
     /**
-     * Simple implementation.
+     * {@inheritDoc}
      */
-    @Loggable(Loggable.INFO)
-    @ToString
-    @EqualsAndHashCode(of = { "urn", "label", "desc" })
-    final class Simple implements Work {
-        /**
-         * Owner of it.
-         */
-        private final transient URN urn;
-        /**
-         * Name of it.
-         */
-        private final transient String label;
-        /**
-         * Spec of it.
-         */
-        private final transient Spec desc;
-        /**
-         * Public ctor.
-         * @param owner Owner
-         * @param name Name
-         * @param spec Spec
-         */
-        public Simple(@NotNull final URN owner, @NotNull final String name,
-            @NotNull final Spec spec) {
-            this.urn = owner;
-            this.label = name;
-            this.desc = spec;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String uid() {
-            throw new UnsupportedOperationException();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public URN owner() {
-            return this.urn;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String name() {
-            return this.label;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Spec spec() {
-            return this.desc;
-        }
+    @Override
+    public User fetch(final URN urn) {
+        return new DynamoUser(this.region, this.log, urn);
     }
 
 }

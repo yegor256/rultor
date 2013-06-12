@@ -31,8 +31,9 @@ package com.rultor.conveyer;
 
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
-import com.rultor.queue.Work;
-import com.rultor.users.Spec;
+import com.rultor.spi.Conveyer;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Work;
 import java.util.logging.Level;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -50,7 +51,7 @@ public final class ConveyerAppenderTest {
      */
     @Test
     public void logsMessages() throws Exception {
-        final Log log = Mockito.mock(Log.class);
+        final Conveyer.Log log = Mockito.mock(Conveyer.Log.class);
         final ConveyerAppender appender = new ConveyerAppender(log);
         final Work work = new Work.Simple(
             new URN("urn:facebook:1"), "test work", new Spec.Simple("a()")
@@ -58,7 +59,12 @@ public final class ConveyerAppenderTest {
         appender.register(Thread.currentThread().getThreadGroup(), work);
         final String text = "test message to see in log";
         Logger.info(this, text);
-        Mockito.verify(log).push(work, Level.INFO, text);
+        Mockito.verify(log).push(
+            work,
+            new Conveyer.Line.Simple(
+                this.getClass().getName(), Level.INFO, text
+            )
+        );
     }
 
 }

@@ -31,7 +31,9 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.users.Spec;
+import com.rultor.spi.Instance;
+import com.rultor.spi.Repo;
+import com.rultor.spi.Spec;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
