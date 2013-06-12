@@ -90,7 +90,7 @@ public interface Conveyer extends Closeable {
         /**
          * Simple.
          */
-        @Loggable(Loggable.INFO)
+        @Loggable(Loggable.DEBUG)
         @ToString
         @EqualsAndHashCode(of = { "who", "lvl", "msg" })
         @Immutable

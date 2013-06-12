@@ -29,12 +29,14 @@
  */
 package com.rultor.conveyer;
 
-import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Conveyer;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Work;
 import java.util.logging.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.spi.LoggingEvent;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -53,12 +55,21 @@ public final class ConveyerAppenderTest {
     public void logsMessages() throws Exception {
         final Conveyer.Log log = Mockito.mock(Conveyer.Log.class);
         final ConveyerAppender appender = new ConveyerAppender(log);
+        appender.setLayout(new PatternLayout("%m"));
         final Work work = new Work.Simple(
             new URN("urn:facebook:1"), "test work", new Spec.Simple("a()")
         );
         appender.register(Thread.currentThread().getThreadGroup(), work);
         final String text = "test message to see in log";
-        Logger.info(this, text);
+        appender.append(
+            new LoggingEvent(
+                "",
+                Logger.getLogger(this.getClass()),
+                org.apache.log4j.Level.INFO,
+                text,
+                new IllegalArgumentException()
+            )
+        );
         Mockito.verify(log).push(
             work,
             new Conveyer.Line.Simple(
