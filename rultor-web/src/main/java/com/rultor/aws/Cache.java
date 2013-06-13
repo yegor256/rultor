@@ -73,6 +73,11 @@ final class Cache implements Flushable {
     private transient ByteArrayOutputStream data;
 
     /**
+     * Is it dirty and needs flushing?
+     */
+    private transient boolean dirty;
+
+    /**
      * Public ctor.
      * @param akey S3 key
      */
@@ -87,8 +92,11 @@ final class Cache implements Flushable {
      */
     public void append(final Conveyer.Line line) throws IOException {
         final PrintWriter writer = new PrintWriter(this.stream());
-        writer.append(line.toString()).append(CharUtils.LF);
-        writer.flush();
+        synchronized (this.key) {
+            writer.append(line.toString()).append(CharUtils.LF);
+            writer.flush();
+            this.dirty = true;
+        }
     }
 
     /**
@@ -106,7 +114,7 @@ final class Cache implements Flushable {
     @Override
     public void flush() throws IOException {
         synchronized (this.key) {
-            if (this.data != null) {
+            if (this.data != null && this.dirty) {
                 final S3Client client = this.key.client();
                 final AmazonS3 aws = client.get();
                 final ObjectMetadata meta = new ObjectMetadata();
@@ -126,6 +134,7 @@ final class Cache implements Flushable {
                         this.data.size(),
                         result.getETag()
                     );
+                    this.dirty = false;
                 } catch (AmazonS3Exception ex) {
                     throw new IOException(
                         String.format(
