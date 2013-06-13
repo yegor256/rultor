@@ -217,9 +217,11 @@
                                 <Rultor-GithubSecret>${github.secret}</Rultor-GithubSecret>
                                 <Rultor-SecurityKey>${security.key}</Rultor-SecurityKey>
                                 <Rultor-SecuritySalt>${security.salt}</Rultor-SecuritySalt>
-                                <Rultor-AwsKey>${aws.key}</Rultor-AwsKey>
-                                <Rultor-AwsSecret>${aws.secret}</Rultor-AwsSecret>
+                                <Rultor-DynamoKey>${dynamo.key}</Rultor-DynamoKey>
+                                <Rultor-DynamoSecret>${dynamo.secret}</Rultor-DynamoSecret>
                                 <Rultor-DynamoPrefix>${dynamo.prefix}</Rultor-DynamoPrefix>
+                                <Rultor-S3Key>${s3.key}</Rultor-S3Key>
+                                <Rultor-S3Secret>${s3.secret}</Rultor-S3Secret>
                                 <Rultor-S3Bucket>${s3.bucket}</Rultor-S3Bucket>
                             </manifestEntries>
                         </archive>

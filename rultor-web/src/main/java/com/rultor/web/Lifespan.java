@@ -88,8 +88,8 @@ public final class Lifespan implements ServletContextListener {
         } catch (java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }
-        final String key = Manifests.read("Rultor-AwsKey");
-        final String secret = Manifests.read("Rultor-AwsSecret");
+        final String key = Manifests.read("Rultor-S3Key");
+        final String secret = Manifests.read("Rultor-S3Secret");
         final Region region = new Region.Prefixed(
             new Region.Simple(new Credentials.Simple(key, secret)),
             Manifests.read("Rultor-DynamoPrefix")
