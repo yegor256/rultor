@@ -48,6 +48,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 /**
  * Horizontally scalable execution conveyer.
@@ -121,6 +122,7 @@ public final class SimpleConveyer
         this.repo = rep;
         this.appender = new ConveyerAppender(log);
         this.appender.setThreshold(Level.DEBUG);
+        this.appender.setLayout(new PatternLayout("%m"));
         Logger.getRootLogger().addAppender(this.appender);
     }
 
