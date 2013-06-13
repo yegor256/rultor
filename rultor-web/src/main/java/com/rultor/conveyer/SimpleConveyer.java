@@ -120,8 +120,8 @@ public final class SimpleConveyer
         this.queue = que;
         this.repo = rep;
         this.appender = new ConveyerAppender(log);
-        this.appender.setThreshold(Level.ALL);
-        Logger.getLogger("").addAppender(this.appender);
+        this.appender.setThreshold(Level.DEBUG);
+        Logger.getRootLogger().addAppender(this.appender);
     }
 
     /**
@@ -137,7 +137,7 @@ public final class SimpleConveyer
      */
     @Override
     public void close() {
-        Logger.getLogger("").removeAppender(this.appender);
+        Logger.getRootLogger().removeAppender(this.appender);
         this.appender.close();
         this.consumer.shutdown();
         this.executor.shutdown();
