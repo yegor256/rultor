@@ -94,7 +94,7 @@ final class LoggedInstance implements Instance {
             this.meta("spec", this.work.spec());
             this.repo.make(this.work.spec()).pulse(state);
         } catch (Repo.InstantiationException ex) {
-            throw new IllegalArgumentException(ex);
+            Logger.error(this, "%[exception]s", ex);
         } finally {
             this.appender.unregister(group);
         }

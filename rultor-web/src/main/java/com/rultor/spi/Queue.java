@@ -63,7 +63,7 @@ public interface Queue {
     /**
      * In memory.
      */
-    @Loggable(Loggable.INFO)
+    @Loggable(Loggable.DEBUG)
     @ToString
     @EqualsAndHashCode(of = "list")
     final class Memory implements Queue {
@@ -83,6 +83,7 @@ public interface Queue {
          * {@inheritDoc}
          */
         @Override
+        @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
         public Work pull() throws InterruptedException {
             return this.list.poll(Long.MAX_VALUE, TimeUnit.DAYS);
         }
