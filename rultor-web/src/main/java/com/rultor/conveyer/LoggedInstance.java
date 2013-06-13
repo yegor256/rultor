@@ -94,6 +94,7 @@ final class LoggedInstance implements Instance {
             this.meta("unit", this.work.unit());
             this.meta("spec", this.work.spec().asText());
             this.repo.make(this.work.spec()).pulse(state);
+            this.meta("status", "SUCCESS");
         } catch (Repo.InstantiationException ex) {
             Logger.error(this, "%[exception]s", ex);
         } finally {

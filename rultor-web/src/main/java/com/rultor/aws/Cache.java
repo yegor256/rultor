@@ -35,6 +35,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Conveyer;
 import java.io.ByteArrayInputStream;
@@ -122,19 +123,21 @@ final class Cache implements Flushable {
                 meta.setContentLength(this.data.size());
                 meta.setContentType(MediaType.TEXT_PLAIN);
                 try {
-                    final PutObjectResult result = aws.putObject(
-                        client.bucket(),
-                        this.key.toString(),
-                        this.read(), meta
-                    );
-                    Logger.info(
-                        this,
-                        "'%s' saved to S3, size=%d, etag=%s",
-                        this.key,
-                        this.data.size(),
-                        result.getETag()
-                    );
-                    this.dirty = false;
+                    if (this.data.size() > Tv.THOUSAND) {
+                        final PutObjectResult result = aws.putObject(
+                            client.bucket(),
+                            this.key.toString(),
+                            new ByteArrayInputStream(this.data.toByteArray()),
+                            meta
+                        );
+                        Logger.info(
+                            this,
+                            "'%s' saved to S3, size=%d, etag=%s",
+                            this.key,
+                            this.data.size(),
+                            result.getETag()
+                        );
+                    }
                 } catch (AmazonS3Exception ex) {
                     throw new IOException(
                         String.format(
@@ -146,6 +149,7 @@ final class Cache implements Flushable {
                         ex
                     );
                 }
+                this.dirty = false;
             }
         }
     }
