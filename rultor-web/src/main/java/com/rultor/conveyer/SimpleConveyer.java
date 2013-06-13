@@ -32,6 +32,7 @@ package com.rultor.conveyer;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseThreads;
+import com.rultor.spi.Conveyer;
 import com.rultor.spi.Conveyer.Log;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
@@ -57,7 +58,8 @@ import org.apache.log4j.Logger;
 @ToString
 @EqualsAndHashCode(of = { "queue", "repo" })
 @SuppressWarnings("PMD.DoNotUseThreads")
-public final class SimpleConveyer implements Closeable, Callable<Void> {
+public final class SimpleConveyer
+    implements Conveyer, Closeable, Callable<Void> {
 
     /**
      * In how many threads we run instances.
@@ -116,8 +118,9 @@ public final class SimpleConveyer implements Closeable, Callable<Void> {
     }
 
     /**
-     * Start it.
+     * {@inheritDoc}
      */
+    @Override
     public void start() {
         this.consumer.submit(this);
     }
