@@ -33,6 +33,9 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * S3 client.
@@ -53,6 +56,10 @@ interface S3Client {
     /**
      * Simple client.
      */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = { "key", "secret" })
+    @Loggable(Loggable.DEBUG)
     final class Simple implements S3Client {
         /**
          * Key.

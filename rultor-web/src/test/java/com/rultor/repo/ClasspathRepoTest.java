@@ -29,10 +29,10 @@
  */
 package com.rultor.repo;
 
-import com.rultor.spi.Repo;
 import com.rultor.spi.Instance;
-import com.rultor.spi.State;
+import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
+import com.rultor.spi.State;
 import java.util.concurrent.atomic.AtomicLong;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;

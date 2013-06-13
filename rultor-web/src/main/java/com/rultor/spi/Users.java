@@ -31,7 +31,10 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -43,6 +46,38 @@ import javax.validation.constraints.NotNull;
  */
 @Immutable
 public interface Users {
+
+    /**
+     * Empty users, mostly for tests.
+     * @checkstyle AnonInnerLength (50 lines)
+     */
+    Users EMPTY = new Users() {
+        @Override
+        public Collection<User> everybody() {
+            return new ArrayList<User>(0);
+        }
+        @Override
+        public User fetch(final URN urn) {
+            return new User() {
+                @Override
+                public URN urn() {
+                    return urn;
+                }
+                @Override
+                public Map<String, Unit> units() {
+                    return new ConcurrentHashMap<String, Unit>(0);
+                }
+                @Override
+                public Unit create(final String name) {
+                    throw new UnsupportedOperationException();
+                }
+                @Override
+                public void remove(final String name) {
+                    throw new UnsupportedOperationException();
+                }
+            };
+        }
+    };
 
     /**
      * Get everybody.

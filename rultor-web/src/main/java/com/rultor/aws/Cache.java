@@ -30,6 +30,7 @@
 package com.rultor.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
@@ -78,7 +79,7 @@ final class Cache implements Flushable {
     /**
      * Data.
      */
-    private transient ByteArrayOutputStream data = null;
+    private transient ByteArrayOutputStream data;
 
     /**
      * Public ctor.
@@ -122,16 +123,28 @@ final class Cache implements Flushable {
                 meta.setContentEncoding(CharEncoding.UTF_8);
                 meta.setContentLength(this.data.size());
                 meta.setContentType(MediaType.TEXT_PLAIN);
-                final PutObjectResult result = aws.putObject(
-                    this.bucket, this.key, this.read(), meta
-                );
-                Logger.info(
-                    this,
-                    "'%s' saved to S3, size=%d, etag=%s",
-                    this.key,
-                    this.data.size(),
-                    result.getETag()
-                );
+                try {
+                    final PutObjectResult result = aws.putObject(
+                        this.bucket, this.key, this.read(), meta
+                    );
+                    Logger.info(
+                        this,
+                        "'%s' saved to S3, size=%d, etag=%s",
+                        this.key,
+                        this.data.size(),
+                        result.getETag()
+                    );
+                } catch (AmazonS3Exception ex) {
+                    throw new IOException(
+                        String.format(
+                            "failed to flush %s to %s: %s",
+                            this.key,
+                            this.bucket,
+                            ex
+                        ),
+                        ex
+                    );
+                }
             }
         }
     }
@@ -146,15 +159,31 @@ final class Cache implements Flushable {
             if (this.data == null) {
                 this.data = new ByteArrayOutputStream();
                 final AmazonS3 aws = this.client.get();
-                final S3Object object = aws.getObject(this.bucket, this.key);
-                IOUtils.copy(object.getObjectContent(), this.data);
-                Logger.info(
-                    this,
-                    "'%s' loaded from S3, size=%d, etag=%s",
-                    this.key,
-                    this.data.size(),
-                    object.getObjectMetadata().getETag()
-                );
+                try {
+                    if (!aws.listObjects(this.bucket, this.key)
+                        .getObjectSummaries().isEmpty()) {
+                        final S3Object object =
+                            aws.getObject(this.bucket, this.key);
+                        IOUtils.copy(object.getObjectContent(), this.data);
+                        Logger.info(
+                            this,
+                            "'%s' loaded from S3, size=%d, etag=%s",
+                            this.key,
+                            this.data.size(),
+                            object.getObjectMetadata().getETag()
+                        );
+                    }
+                } catch (AmazonS3Exception ex) {
+                    throw new IOException(
+                        String.format(
+                            "failed to read %s from %s: %s",
+                            this.key,
+                            this.bucket,
+                            ex
+                        ),
+                        ex
+                    );
+                }
             }
             return this.data;
         }

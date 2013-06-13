@@ -35,15 +35,18 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Conveyer;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Work;
-import java.io.Closeable;
+import java.io.Flushable;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -53,9 +56,10 @@ import lombok.ToString;
  * <p>Every log is stored as a plain text object in Amazon S3, named as
  * <code>owner/unit/year/month/day/uid.txt</code>, where all
  * time values are in numbers. For example:
- * <code>urn:facebook:5463/nighly-build/3987/00/75/7843.txt</code>. In this
- * example: 3987 is year 2013, reverted towards 5000, 00 is December (12 minus
- * 12), 75 is 25 (100 minus 25), and 7843 is millisTime of pulse start.
+ * <code>urn:facebook:5463/nighly-build/8987/88/74/7843.txt</code>. In this
+ * example: 8987 is year 2013, reverted towards 9999, 88 is December (99 minus
+ * 11), 74 is 25 (99 minus 25), and 7843 is Long.MAX_VALUE minus millisTime
+ * of pulse start.
  *
  * <p>Every TXT object in S3 contains a JSON meta data in the first line,
  * and the rest of file contains plain text log lines.
@@ -67,7 +71,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "client", "bucket" })
 @Loggable(Loggable.DEBUG)
-public final class S3Log implements Conveyer.Log, Closeable {
+public final class S3Log implements Conveyer.Log, Flushable {
 
     /**
      * S3 client.
@@ -92,6 +96,7 @@ public final class S3Log implements Conveyer.Log, Closeable {
      */
     public S3Log(final String key, final String secret, final String bkt) {
         this(new S3Client.Simple(key, secret), bkt);
+        Logger.info(S3Log.class, "S3Log with key=%s, bucket=%s", key, bkt);
     }
 
     /**
@@ -110,7 +115,17 @@ public final class S3Log implements Conveyer.Log, Closeable {
      */
     @Override
     public void push(final Work work, final Conveyer.Line line) {
-        final String key = this.key(work.owner(), work.name());
+        final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        cal.setTimeInMillis(work.started());
+        final String key = String.format(
+            "%s/%s/%d/%d/%d/%s.txt",
+            work.owner(), work.name(),
+            // @checkstyle MagicNumber (3 lines)
+            9999 - cal.get(Calendar.YEAR),
+            99 - cal.get(Calendar.MONTH),
+            99 - cal.get(Calendar.DAY_OF_MONTH),
+            Long.MAX_VALUE - work.started()
+        );
         try {
             this.cache.get(key).append(
                 String.format(
@@ -138,7 +153,7 @@ public final class S3Log implements Conveyer.Log, Closeable {
         final ListObjectsRequest request = new ListObjectsRequest()
             .withBucketName(this.bucket)
             .withMaxKeys(Tv.TWENTY)
-            .withPrefix(this.key(owner, unit));
+            .withPrefix(String.format("%s/%s/", owner, unit));
         final ObjectListing listing = aws.listObjects(request);
         for (S3ObjectSummary sum : listing.getObjectSummaries()) {
             pulses.add(new S3Pulse(this.cache, sum.getKey()));
@@ -153,18 +168,8 @@ public final class S3Log implements Conveyer.Log, Closeable {
      * {@inheritDoc}
      */
     @Override
-    public void close() throws IOException {
+    public void flush() throws IOException {
         this.cache.flush();
-    }
-
-    /**
-     * Make S3 key.
-     * @param owner Owner
-     * @param unit Unit name
-     * @return S3 key
-     */
-    private String key(final URN owner, final String unit) {
-        return String.format("%s/%s/", owner, unit);
     }
 
 }

@@ -58,6 +58,7 @@ public final class ClasspathRepo implements Repo {
 
     /**
      * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
     @NotNull
@@ -74,6 +75,7 @@ public final class ClasspathRepo implements Repo {
 
     /**
      * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
     @NotNull
@@ -87,6 +89,7 @@ public final class ClasspathRepo implements Repo {
      * @param text Text
      * @return Variable
      * @throws Repo.InvalidSyntaxException If fails
+     * @checkstyle RedundantThrows (5 lines)
      */
     private Variable var(final String text) throws Repo.InvalidSyntaxException {
         final CharStream input = new ANTLRStringStream(text);

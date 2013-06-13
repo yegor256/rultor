@@ -108,7 +108,9 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
      */
     @Override
     protected void append(final LoggingEvent event) {
-        final Work work = this.works.get(Thread.currentThread().getThreadGroup());
+        final Work work = this.works.get(
+            Thread.currentThread().getThreadGroup()
+        );
         if (work != null) {
             this.log.push(
                 work,

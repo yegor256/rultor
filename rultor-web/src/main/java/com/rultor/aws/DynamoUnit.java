@@ -104,8 +104,10 @@ final class DynamoUnit implements Unit {
     /**
      * Public ctor.
      * @param reg Region in Dynamo
+     * @param slg S3Log
      * @param urn URN of the user/owner
      * @param label Name of it
+     * @checkstyle ParameterNumber (5 lines)
      */
     protected DynamoUnit(final Region reg, final S3Log slg,
         final URN urn, final String label) {

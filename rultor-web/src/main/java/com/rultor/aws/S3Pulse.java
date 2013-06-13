@@ -70,8 +70,8 @@ final class S3Pulse implements Pulse {
 
     /**
      * Public ctor.
-     * @param clnt Client
-     * @param bkt Bucket name
+     * @param cch Caches
+     * @param akey S3 key
      */
     protected S3Pulse(final Caches cch, final String akey) {
         this.cache = cch;
@@ -122,10 +122,11 @@ final class S3Pulse implements Pulse {
 
     /**
      * Find this signal in the stream.
-     * @param key Signal key
+     * @param name Signal name
      * @return Found value
+     * @throws IOException If fails
      */
-    private String find(final String key) throws IOException {
+    private String find(final String name) throws IOException {
         final BufferedReader reader =
             new BufferedReader(new InputStreamReader(this.read()));
         String value = null;
@@ -136,7 +137,7 @@ final class S3Pulse implements Pulse {
             }
             if (Pulse.Signal.exists(line)) {
                 final Pulse.Signal signal = Pulse.Signal.valueOf(line);
-                if (signal.key().equals(key)) {
+                if (signal.key().equals(name)) {
                     value = signal.value();
                     break;
                 }
@@ -144,7 +145,7 @@ final class S3Pulse implements Pulse {
         }
         if (value == null) {
             throw new IllegalStateException(
-                String.format("signal '%s' not found", key)
+                String.format("signal '%s' not found", name)
             );
         }
         return value;

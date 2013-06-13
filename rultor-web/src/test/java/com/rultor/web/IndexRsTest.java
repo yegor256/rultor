@@ -30,9 +30,11 @@
 package com.rultor.web;
 
 import com.rexsl.page.HttpHeadersMocker;
+import com.rexsl.page.ServletContextMocker;
 import com.rexsl.page.UriInfoMocker;
 import com.rexsl.test.JaxbConverter;
 import com.rexsl.test.XhtmlMatchers;
+import com.rultor.spi.Users;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.hamcrest.MatcherAssert;
@@ -56,6 +58,11 @@ public final class IndexRsTest {
         res.setUriInfo(new UriInfoMocker().mock());
         res.setHttpHeaders(new HttpHeadersMocker().mock());
         res.setSecurityContext(Mockito.mock(SecurityContext.class));
+        res.setServletContext(
+            new ServletContextMocker()
+                .withAttribute(Users.class.getName(), Users.EMPTY)
+                .mock()
+        );
         final Response response = res.index();
         MatcherAssert.assertThat(
             JaxbConverter.the(response.getEntity()),

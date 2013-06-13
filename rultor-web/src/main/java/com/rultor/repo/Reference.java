@@ -30,7 +30,6 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
-import com.rultor.spi.Repo;
 
 /**
  * Reference.
@@ -59,7 +58,7 @@ final class Reference implements Variable {
      * {@inheritDoc}
      */
     @Override
-    public Object instantiate() throws Repo.InstantiationException {
+    public Object instantiate() {
         throw new UnsupportedOperationException();
     }
 

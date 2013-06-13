@@ -174,8 +174,8 @@ public interface Pulse {
         public static boolean exists(final String text) {
             final Matcher matcher = Pulse.Signal.PATTERN.matcher(text);
             return matcher.matches()
-                && Integer.parseInt(matcher.group(1))
-                == matcher.group(Tv.THREE).length();
+                && Integer.parseInt(matcher.group(1)) ==
+                matcher.group(Tv.THREE).length();
         }
     }
 

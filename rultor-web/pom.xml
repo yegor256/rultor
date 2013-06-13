@@ -184,6 +184,19 @@
                     </configuration>
                 </plugin>
                 <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <failsafe.s3.key>${failsafe.s3.key}</failsafe.s3.key>
+                            <failsafe.s3.secret>${failsafe.s3.secret}</failsafe.s3.secret>
+                            <failsafe.s3.bucket>${failsafe.s3.bucket}</failsafe.s3.bucket>
+                            <failsafe.dynamo.key>${failsafe.dynamo.key}</failsafe.dynamo.key>
+                            <failsafe.dynamo.secret>${failsafe.dynamo.secret}</failsafe.dynamo.secret>
+                            <failsafe.dynamo.prefix>${failsafe.dynamo.prefix}</failsafe.dynamo.prefix>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <artifactId>maven-war-plugin</artifactId>
                     <configuration>
                         <warSourceExcludes>js/**, css/**, xsl/**</warSourceExcludes>
@@ -211,6 +224,17 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>com.rexsl</groupId>
                 <artifactId>rexsl-maven-plugin</artifactId>

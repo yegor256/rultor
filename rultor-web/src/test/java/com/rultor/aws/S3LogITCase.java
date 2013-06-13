@@ -29,6 +29,19 @@
  */
 package com.rultor.aws;
 
+import com.jcabi.urn.URN;
+import com.rultor.spi.Conveyer;
+import com.rultor.spi.Pulse;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Work;
+import java.util.List;
+import java.util.logging.Level;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -39,11 +52,50 @@ import org.junit.Test;
 public final class S3LogITCase {
 
     /**
+     * Log to work with.
+     */
+    private transient S3Log log;
+
+    /**
+     * We're online.
+     */
+    @Before
+    public void weAreOnline() {
+        final String key = System.getProperty("failsafe.s3.key");
+        Assume.assumeNotNull(key);
+        this.log = new S3Log(
+            key,
+            System.getProperty("failsafe.s3.secret"),
+            System.getProperty("failsafe.s3.bucket")
+        );
+    }
+
+    /**
      * S3Log can log.
      * @throws Exception If some problem inside
      */
     @Test
     public void logsMessages() throws Exception {
+        final Spec spec = new Spec.Simple("java.lang.Integer(5)");
+        final String unit = "some-test-unit";
+        final URN owner = new URN("urn:facebook:1");
+        final Work work = new Work.Simple(owner, unit, spec);
+        final String msg = "some test log message \u20ac";
+        this.log.push(
+            work,
+            new Conveyer.Line.Simple(
+                this.getClass().getName(),
+                Level.INFO,
+                msg
+            )
+        );
+        final List<Pulse> pulses = this.log.pulses(owner, unit);
+        MatcherAssert.assertThat(pulses, Matchers.not(Matchers.empty()));
+        final Pulse pulse = pulses.get(0);
+        MatcherAssert.assertThat(
+            IOUtils.toString(pulse.read(), CharEncoding.UTF_8),
+            Matchers.containsString(msg)
+        );
     }
 
 }

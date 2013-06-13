@@ -94,7 +94,7 @@ public interface Conveyer extends Closeable {
         @ToString
         @EqualsAndHashCode(of = { "who", "lvl", "msg" })
         @Immutable
-        final class Simple implements Line {
+        final class Simple implements Conveyer.Line {
             /**
              * Logger.
              */

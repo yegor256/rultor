@@ -29,6 +29,7 @@
  */
 package com.rultor.web;
 
+import com.google.common.io.Flushables;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.dynamo.Credentials;
@@ -58,6 +59,7 @@ import org.apache.commons.io.IOUtils;
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Loggable(Loggable.INFO)
 public final class Lifespan implements ServletContextListener {
@@ -114,7 +116,7 @@ public final class Lifespan implements ServletContextListener {
     public void contextDestroyed(final ServletContextEvent event) {
         IOUtils.closeQuietly(this.quartz);
         IOUtils.closeQuietly(this.conveyer);
-        IOUtils.closeQuietly(this.log);
+        Flushables.flushQuietly(this.log);
     }
 
     /**

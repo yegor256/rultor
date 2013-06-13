@@ -46,7 +46,7 @@ public interface Variable extends Spec {
     /**
      * Make an instance of it.
      * @return The object
-     * @throws Repo.InstantiationException If can't instantiate
+     * @throws com.rultor.spi.Repo.InstantiationException If can't instantiate
      */
     Object instantiate() throws Repo.InstantiationException;
 

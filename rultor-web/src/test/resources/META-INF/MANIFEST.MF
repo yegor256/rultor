@@ -12,3 +12,6 @@ Rultor-Date: 9-Dec-2012
 Rultor-DynamoKey: ${failsafe.dynamo.key}
 Rultor-DynamoSecret: ${failsafe.dynamo.secret}
 Rultor-DynamoPrefix: ${failsafe.dynamo.prefix}
+Rultor-AwsKey: ${failsafe.s3.key}
+Rultor-AwsSecret: ${failsafe.s3.secret}
+Rultor-S3Bucket: ${failsafe.s3.bucket}

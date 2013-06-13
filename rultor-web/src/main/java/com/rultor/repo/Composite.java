@@ -66,6 +66,7 @@ final class Composite implements Variable {
 
     /**
      * {@inheritDoc}
+     * @checkstyle RedundantThrows (3 lines)
      */
     @Override
     public Object instantiate() throws Repo.InstantiationException {
