@@ -99,7 +99,9 @@ final class Cache implements Flushable {
      * @throws IOException If fails
      */
     public void append(final String line) throws IOException {
-        new PrintWriter(this.stream()).append(CharUtils.LF).append(line);
+        final PrintWriter writer = new PrintWriter(this.stream());
+        writer.append(line).append(CharUtils.LF);
+        writer.flush();
     }
 
     /**

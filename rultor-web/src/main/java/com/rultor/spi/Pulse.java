@@ -176,10 +176,10 @@ public interface Pulse {
          * @return TRUE if signal is present
          */
         public static boolean exists(final String text) {
-            final Matcher matcher = Pulse.Signal.PATTERN.matcher(text);
-            return matcher.matches()
-                && Integer.parseInt(matcher.group(1)) ==
-                matcher.group(Tv.THREE).length();
+            final Matcher mtr = Pulse.Signal.PATTERN.matcher(text);
+            return mtr.matches() && Integer.parseInt(
+                mtr.group(1)
+            ) == mtr.group(Tv.THREE).length();
         }
     }
 
