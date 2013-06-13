@@ -74,7 +74,7 @@ final class Cache implements Flushable {
     /**
      * S3 key.
      */
-    private final transient String key;
+    private final transient Key key;
 
     /**
      * Data.
@@ -87,7 +87,7 @@ final class Cache implements Flushable {
      * @param bkt Bucket name
      * @param akey S3 key
      */
-    protected Cache(final S3Client clnt, final String bkt, final String akey) {
+    protected Cache(final S3Client clnt, final String bkt, final Key akey) {
         this.client = clnt;
         this.bucket = bkt;
         this.key = akey;
@@ -125,7 +125,7 @@ final class Cache implements Flushable {
                 meta.setContentType(MediaType.TEXT_PLAIN);
                 try {
                     final PutObjectResult result = aws.putObject(
-                        this.bucket, this.key, this.read(), meta
+                        this.bucket, this.key.toString(), this.read(), meta
                     );
                     Logger.info(
                         this,
@@ -160,10 +160,10 @@ final class Cache implements Flushable {
                 this.data = new ByteArrayOutputStream();
                 final AmazonS3 aws = this.client.get();
                 try {
-                    if (!aws.listObjects(this.bucket, this.key)
+                    if (!aws.listObjects(this.bucket, this.key.toString())
                         .getObjectSummaries().isEmpty()) {
                         final S3Object object =
-                            aws.getObject(this.bucket, this.key);
+                            aws.getObject(this.bucket, this.key.toString());
                         IOUtils.copy(object.getObjectContent(), this.data);
                         Logger.info(
                             this,

@@ -62,8 +62,8 @@ final class Caches implements Flushable {
     /**
      * All objects.
      */
-    private final transient ConcurrentMap<String, Cache> all =
-        new ConcurrentHashMap<String, Cache>(0);
+    private final transient ConcurrentMap<Key, Cache> all =
+        new ConcurrentHashMap<Key, Cache>(0);
 
     /**
      * Public ctor.
@@ -80,7 +80,7 @@ final class Caches implements Flushable {
      * @param key S3 key
      * @return Cache
      */
-    public Cache get(final String key) {
+    public Cache get(final Key key) {
         this.all.putIfAbsent(key, new Cache(this.client, this.bucket, key));
         return this.all.get(key);
     }

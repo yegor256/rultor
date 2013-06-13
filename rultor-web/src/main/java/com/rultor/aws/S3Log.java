@@ -9,7 +9,7 @@
  * disclaimer. 2) Redistributions in binary form must reproduce the above
  * copyright notice, this list of conditions and the following
  * disclaimer in the documentation and/or other materials provided
- * with the distribution. 3) Neither the name of the rultor.com nor
+ * with the distribution. 3) Neither the unit of the rultor.com nor
  * the names of its contributors may be used to endorse or promote
  * products derived from this software without specific prior written
  * permission.
@@ -42,11 +42,9 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Work;
 import java.io.Flushable;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TimeZone;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -79,20 +77,20 @@ public final class S3Log implements Conveyer.Log, Flushable {
     private final transient S3Client client;
 
     /**
-     * Bucket name.
+     * Bucket unit.
      */
     private final transient String bucket;
 
     /**
      * All cached objects.
      */
-    private final transient Caches cache;
+    private final transient Caches caches;
 
     /**
      * Public ctor.
      * @param key AWS key
      * @param secret AWS secret
-     * @param bkt Bucket name
+     * @param bkt Bucket unit
      */
     public S3Log(final String key, final String secret, final String bkt) {
         this(new S3Client.Simple(key, secret), bkt);
@@ -102,12 +100,12 @@ public final class S3Log implements Conveyer.Log, Flushable {
     /**
      * Public ctor.
      * @param clnt Client
-     * @param bkt Bucket name
+     * @param bkt Bucket unit
      */
     protected S3Log(final S3Client clnt, final String bkt) {
         this.client = clnt;
         this.bucket = bkt;
-        this.cache = new Caches(this.client, this.bucket);
+        this.caches = new Caches(this.client, this.bucket);
     }
 
     /**
@@ -115,19 +113,8 @@ public final class S3Log implements Conveyer.Log, Flushable {
      */
     @Override
     public void push(final Work work, final Conveyer.Line line) {
-        final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        cal.setTimeInMillis(work.started());
-        final String key = String.format(
-            "%s/%s/%d/%d/%d/%s.txt",
-            work.owner(), work.name(),
-            // @checkstyle MagicNumber (3 lines)
-            9999 - cal.get(Calendar.YEAR),
-            99 - cal.get(Calendar.MONTH),
-            99 - cal.get(Calendar.DAY_OF_MONTH),
-            Long.MAX_VALUE - work.started()
-        );
         try {
-            this.cache.get(key).append(
+            this.caches.get(new Key(work)).append(
                 String.format(
                     "%tM:%<tS %5s %s %s",
                     new Date(),
@@ -144,7 +131,7 @@ public final class S3Log implements Conveyer.Log, Flushable {
     /**
      * Get pulses.
      * @param owner Owner
-     * @param unit Unit name
+     * @param unit Unit unit
      * @return All pulses of this unit
      */
     public List<Pulse> pulses(final URN owner, final String unit) {
@@ -156,7 +143,7 @@ public final class S3Log implements Conveyer.Log, Flushable {
             .withPrefix(String.format("%s/%s/", owner, unit));
         final ObjectListing listing = aws.listObjects(request);
         for (S3ObjectSummary sum : listing.getObjectSummaries()) {
-            pulses.add(new S3Pulse(this.cache, sum.getKey()));
+            pulses.add(new S3Pulse(this.caches, Key.valueOf(sum.getKey())));
         }
         if (listing.isTruncated()) {
             throw new IllegalStateException("too many pulses");
@@ -169,7 +156,7 @@ public final class S3Log implements Conveyer.Log, Flushable {
      */
     @Override
     public void flush() throws IOException {
-        this.cache.flush();
+        this.caches.flush();
     }
 
 }

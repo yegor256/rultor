@@ -66,14 +66,14 @@ final class S3Pulse implements Pulse {
     /**
      * S3 key.
      */
-    private final transient String key;
+    private final transient Key key;
 
     /**
      * Public ctor.
      * @param cch Caches
      * @param akey S3 key
      */
-    protected S3Pulse(final Caches cch, final String akey) {
+    protected S3Pulse(final Caches cch, final Key akey) {
         this.cache = cch;
         this.key = akey;
     }

@@ -9,7 +9,7 @@
  * disclaimer. 2) Redistributions in binary form must reproduce the above
  * copyright notice, this list of conditions and the following
  * disclaimer in the documentation and/or other materials provided
- * with the distribution. 3) Neither the name of the rultor.com nor
+ * with the distribution. 3) Neither the unit of the rultor.com nor
  * the names of its contributors may be used to endorse or promote
  * products derived from this software without specific prior written
  * permission.
@@ -62,10 +62,10 @@ public interface Work {
 
     /**
      * Name of the work (unique for the user).
-     * @return The name
+     * @return The unit
      */
     @NotNull
-    String name();
+    String unit();
 
     /**
      * Spec to run.
@@ -101,7 +101,7 @@ public interface Work {
         /**
          * Public ctor.
          * @param owner Owner
-         * @param name Name
+         * @param unit Name
          * @param spec Spec
          */
         public Simple(@NotNull final URN owner, @NotNull final String name,
@@ -128,7 +128,7 @@ public interface Work {
          * {@inheritDoc}
          */
         @Override
-        public String name() {
+        public String unit() {
             return this.label;
         }
         /**
