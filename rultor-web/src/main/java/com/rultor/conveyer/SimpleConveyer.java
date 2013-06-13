@@ -33,10 +33,8 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseThreads;
 import com.rultor.spi.Conveyer.Log;
-import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
 import com.rultor.spi.State;
 import com.rultor.spi.Work;
 import java.io.Closeable;
@@ -139,26 +137,25 @@ public final class SimpleConveyer implements Closeable, Callable<Void> {
     @Override
     public Void call() throws Exception {
         while (true) {
-            final Work work = this.queue.pull();
-            final Spec spec = work.spec();
-            final Instance instance = this.repo.make(spec);
-            this.submit(instance, work);
+            this.submit(this.queue.pull());
         }
     }
 
     /**
-     * Submit an instance.
-     * @param instance The instance
+     * Submit work for execution in the threaded executor.
      * @param work Work
      */
-    private void submit(final Instance instance, final Work work) {
+    private void submit(final Work work) {
         this.executor.submit(
-            new Runnable() {
+            new Callable<Void>() {
                 @Override
-                public void run() {
+                public Void call() throws Exception {
                     new LoggedInstance(
-                        instance, work, SimpleConveyer.this.appender
+                        SimpleConveyer.this.repo,
+                        work,
+                        SimpleConveyer.this.appender
                     ).pulse(SimpleConveyer.this.state);
+                    return null;
                 }
             }
         );

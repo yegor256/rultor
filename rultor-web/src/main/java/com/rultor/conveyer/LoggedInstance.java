@@ -33,6 +33,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Repo;
 import com.rultor.spi.State;
 import com.rultor.spi.Work;
 import javax.validation.constraints.NotNull;
@@ -47,14 +48,14 @@ import lombok.ToString;
  * @since 1.0
  */
 @ToString
-@EqualsAndHashCode(of = "origin")
+@EqualsAndHashCode(of = { "repo", "work", "appender" })
 @Loggable(Loggable.DEBUG)
 final class LoggedInstance implements Instance {
 
     /**
-     * Origin instance.
+     * Repo.
      */
-    private final transient Instance origin;
+    private final transient Repo repo;
 
     /**
      * Work we're doing.
@@ -68,13 +69,13 @@ final class LoggedInstance implements Instance {
 
     /**
      * Public ctor.
-     * @param instance Original one
+     * @param rpo Repo
      * @param wrk Work
      * @param appr Appender
      */
-    protected LoggedInstance(final Instance instance, final Work wrk,
+    protected LoggedInstance(final Repo rpo, final Work wrk,
         final ConveyerAppender appr) {
-        this.origin = instance;
+        this.repo = rpo;
         this.work = wrk;
         this.appender = appr;
     }
@@ -86,12 +87,14 @@ final class LoggedInstance implements Instance {
     public void pulse(@NotNull final State state) {
         final ThreadGroup group = Thread.currentThread().getThreadGroup();
         this.appender.register(group, this.work);
-        this.meta("started", System.currentTimeMillis());
-        this.meta("owner", this.work.owner());
-        this.meta("unit", this.work.unit());
-        this.meta("spec", this.work.spec());
         try {
-            this.origin.pulse(state);
+            this.meta("started", System.currentTimeMillis());
+            this.meta("owner", this.work.owner());
+            this.meta("unit", this.work.unit());
+            this.meta("spec", this.work.spec());
+            this.repo.make(this.work.spec()).pulse(state);
+        } catch (Repo.InstantiationException ex) {
+            throw new IllegalArgumentException(ex);
         } finally {
             this.appender.unregister(group);
         }

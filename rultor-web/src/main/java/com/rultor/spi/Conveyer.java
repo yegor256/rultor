@@ -38,7 +38,7 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
- * Conveyer.
+ * Mutable and thread-safe conveyer.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -72,9 +72,9 @@ public interface Conveyer extends Closeable {
         /**
          * Simple.
          */
+        @Immutable
         @Loggable(Loggable.DEBUG)
         @EqualsAndHashCode(of = { "who", "lvl", "msg" })
-        @Immutable
         final class Simple implements Conveyer.Line {
             /**
              * Logger.
