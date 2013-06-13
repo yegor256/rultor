@@ -78,7 +78,14 @@ final class S3Pulse implements Pulse {
     @Cacheable
     public Date started() {
         try {
-            return new Date(Long.parseLong(this.find("started")));
+            return new Date(
+                Long.parseLong(
+                    this.find(
+                        "started",
+                        Long.toString(System.currentTimeMillis())
+                    )
+                )
+            );
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
@@ -99,7 +106,7 @@ final class S3Pulse implements Pulse {
     @Cacheable
     public Spec spec() {
         try {
-            return new Spec.Simple(this.find("spec"));
+            return new Spec.Simple(this.find("spec", "java.lang.Integer(0)"));
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
@@ -116,10 +123,12 @@ final class S3Pulse implements Pulse {
     /**
      * Find this signal in the stream.
      * @param name Signal name
+     * @param def Default value, if not found
      * @return Found value
      * @throws IOException If fails
      */
-    private String find(final String name) throws IOException {
+    private String find(final String name, final String def)
+        throws IOException {
         final BufferedReader reader =
             new BufferedReader(new InputStreamReader(this.read()));
         String value = null;
@@ -137,9 +146,7 @@ final class S3Pulse implements Pulse {
             }
         }
         if (value == null) {
-            throw new IllegalStateException(
-                String.format("signal '%s' not found", name)
-            );
+            value = def;
         }
         return value;
     }
