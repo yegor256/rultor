@@ -55,7 +55,7 @@ public interface Conveyer extends Closeable {
      * Log it accepts.
      */
     @Immutable
-    public interface Log {
+    interface Log {
         /**
          * Consume new log line.
          * @param work Work that produces this line

@@ -77,11 +77,6 @@ public final class SimpleConveyer implements Closeable, Callable<Void> {
     private final transient Repo repo;
 
     /**
-     * Log.
-     */
-    private final transient Log log;
-
-    /**
      * State to use for everybody.
      */
     private final transient State state = new State.Memory();
@@ -111,13 +106,12 @@ public final class SimpleConveyer implements Closeable, Callable<Void> {
      * Public ctor.
      * @param que The queue of specs
      * @param rep Repo
-     * @param alog Log
+     * @param log Log
      */
-    public SimpleConveyer(final Queue que, final Repo rep, final Log alog) {
+    public SimpleConveyer(final Queue que, final Repo rep, final Log log) {
         this.queue = que;
         this.repo = rep;
-        this.log = alog;
-        this.appender = new ConveyerAppender(this.log);
+        this.appender = new ConveyerAppender(log);
         Logger.getLogger("").addAppender(this.appender);
     }
 

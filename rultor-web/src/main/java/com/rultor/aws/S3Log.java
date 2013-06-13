@@ -33,7 +33,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.google.common.io.Flushables;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
@@ -48,6 +50,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -73,7 +76,10 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "client", "bucket" })
 @Loggable(Loggable.DEBUG)
-public final class S3Log implements Conveyer.Log, Flushable, Closeable {
+@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.MINUTES)
+@SuppressWarnings("PMD.DoNotUseThreads")
+public final class S3Log implements
+    Conveyer.Log, Flushable, Closeable, Runnable {
 
     /**
      * S3 client.
@@ -138,6 +144,7 @@ public final class S3Log implements Conveyer.Log, Flushable, Closeable {
      * @param unit Unit unit
      * @return All pulses of this unit
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public List<Pulse> pulses(final URN owner, final String unit) {
         final List<Pulse> pulses = new LinkedList<Pulse>();
         final Collection<Key> keys = new TreeSet<Key>();
@@ -163,6 +170,14 @@ public final class S3Log implements Conveyer.Log, Flushable, Closeable {
     @Override
     public void flush() throws IOException {
         this.caches.flush();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void run() {
+        Flushables.flushQuietly(this);
     }
 
     /**

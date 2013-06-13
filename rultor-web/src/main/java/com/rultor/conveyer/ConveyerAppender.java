@@ -83,6 +83,7 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
      * @param alog Logs
      */
     protected ConveyerAppender(final Conveyer.Log alog) {
+        super();
         this.log = alog;
     }
 
