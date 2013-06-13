@@ -38,7 +38,6 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * S3 key.
@@ -47,16 +46,15 @@ import lombok.ToString;
  * @version $Id$
  * @since 1.0
  */
-@ToString
 @EqualsAndHashCode(of = { "owner", "unit", "date" })
 @Loggable(Loggable.DEBUG)
-final class Key {
+final class Key implements Comparable<Key> {
 
     /**
      * Pattern to parse.
      */
     private static final Pattern PATTERN = Pattern.compile(
-        "(urn:[a-z]+:\\d+)/(\\w+)/\\d{4}/\\d{2}/\\d{2}/\\d+\\.txt"
+        "(urn:[a-z]+:\\d+)/([\\-\\w]+)/\\d{4}/\\d{2}/\\d{2}/(\\d+)\\.txt"
     );
 
     /**
@@ -130,6 +128,14 @@ final class Key {
             matcher.group(2),
             Long.MAX_VALUE - Long.parseLong(matcher.group(Tv.THREE))
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int compareTo(final Key key) {
+        return Long.compare(key.date, this.date);
     }
 
 }

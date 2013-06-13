@@ -29,79 +29,52 @@
  */
 package com.rultor.aws;
 
-import com.jcabi.aspects.Loggable;
-import java.io.Flushable;
-import java.io.IOException;
-import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.jcabi.urn.URN;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * In-memory cache of S3 objects.
- *
+ * Test case for {@link Key}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@ToString
-@EqualsAndHashCode(of = { "client", "bucket" })
-@Loggable(Loggable.DEBUG)
-final class Caches implements Flushable {
+public final class KeyTest {
 
     /**
-     * S3 client.
+     * Key can make a string.
+     * @throws Exception If some problem inside
      */
-    private final transient S3Client client;
-
-    /**
-     * Bucket name.
-     */
-    private final transient String bucket;
-
-    /**
-     * All objects.
-     */
-    private final transient ConcurrentMap<Key, Cache> all =
-        new ConcurrentSkipListMap<Key, Cache>();
-
-    /**
-     * Public ctor.
-     * @param clnt Client
-     * @param bkt Bucket name
-     */
-    protected Caches(final S3Client clnt, final String bkt) {
-        this.client = clnt;
-        this.bucket = bkt;
+    @Test
+    public void makesString() throws Exception {
+        final URN owner = new URN("urn:facebook:1");
+        final String unit = "some-test-unit";
+        final long date = System.currentTimeMillis();
+        MatcherAssert.assertThat(
+            new Key(owner, unit, date),
+            Matchers.hasToString(
+                Matchers.startsWith("urn:facebook:1/some-test-unit/")
+            )
+        );
+        MatcherAssert.assertThat(
+            Key.valueOf(new Key(owner, unit, date).toString()),
+            Matchers.equalTo(new Key(owner, unit, date))
+        );
     }
 
     /**
-     * Get cache by key.
-     * @param key S3 key
-     * @return Cache
+     * Key can compare in the right order.
+     * @throws Exception If some problem inside
      */
-    public Cache get(final Key key) {
-        this.all.putIfAbsent(key, new Cache(this.client, this.bucket, key));
-        return this.all.get(key);
-    }
-
-    /**
-     * Get a list of all keys available at the moment.
-     * @return All keys
-     */
-    public Set<Key> keys() {
-        return this.all.keySet();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void flush() throws IOException {
-        for (Cache cache : this.all.values()) {
-            cache.flush();
-        }
+    @Test
+    public void comparesWithOtherKey() throws Exception {
+        final URN owner = new URN("urn:facebook:22");
+        final String unit = "some-test-iii";
+        final long date = System.currentTimeMillis();
+        MatcherAssert.assertThat(
+            new Key(owner, unit, date),
+            Matchers.lessThan(new Key(owner, unit, date - 1))
+        );
     }
 
 }

@@ -42,6 +42,7 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Work;
 import java.io.Flushable;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -135,18 +136,9 @@ public final class S3Log implements Conveyer.Log, Flushable {
      * @return All pulses of this unit
      */
     public List<Pulse> pulses(final URN owner, final String unit) {
-        final AmazonS3 aws = this.client.get();
         final List<Pulse> pulses = new LinkedList<Pulse>();
-        final ListObjectsRequest request = new ListObjectsRequest()
-            .withBucketName(this.bucket)
-            .withMaxKeys(Tv.TWENTY)
-            .withPrefix(String.format("%s/%s/", owner, unit));
-        final ObjectListing listing = aws.listObjects(request);
-        for (S3ObjectSummary sum : listing.getObjectSummaries()) {
-            pulses.add(new S3Pulse(this.caches, Key.valueOf(sum.getKey())));
-        }
-        if (listing.isTruncated()) {
-            throw new IllegalStateException("too many pulses");
+        for (Key key : this.fetch(owner, unit)) {
+            pulses.add(new S3Pulse(this.caches, key));
         }
         return pulses;
     }
@@ -157,6 +149,26 @@ public final class S3Log implements Conveyer.Log, Flushable {
     @Override
     public void flush() throws IOException {
         this.caches.flush();
+    }
+
+    /**
+     * Get all keys from S3.
+     * @param owner Owner
+     * @param unit Unit unit
+     * @return All keys
+     */
+    private Collection<Key> fetch(final URN owner, final String unit) {
+        final AmazonS3 aws = this.client.get();
+        final ListObjectsRequest request = new ListObjectsRequest()
+            .withBucketName(this.bucket)
+            .withMaxKeys(Tv.TWENTY)
+            .withPrefix(String.format("%s/%s/", owner, unit));
+        final ObjectListing listing = aws.listObjects(request);
+        final Collection<Key> keys = new LinkedList<Key>();
+        for (S3ObjectSummary sum : listing.getObjectSummaries()) {
+            keys.add(Key.valueOf(sum.getKey()));
+        }
+        return keys;
     }
 
 }
