@@ -36,6 +36,8 @@ import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Unit;
+import java.util.List;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -59,9 +61,24 @@ public final class PulsesRs extends BaseRs {
     public static final String QUERY_NAME = "name";
 
     /**
+     * Query param.
+     */
+    public static final String QUERY_PAGE = "p";
+
+    /**
+     * Page size.
+     */
+    private static final int PAGE_SIZE = 20;
+
+    /**
      * Unit name.
      */
     private transient String name;
+
+    /**
+     * Page number.
+     */
+    private transient int page;
 
     /**
      * Inject it from query.
@@ -70,6 +87,19 @@ public final class PulsesRs extends BaseRs {
     @QueryParam(PulsesRs.QUERY_NAME)
     public void setName(@NotNull final String unit) {
         this.name = unit;
+    }
+
+    /**
+     * Inject it from query.
+     * @param num Page number
+     */
+    @QueryParam(PulsesRs.QUERY_PAGE)
+    public void setPage(final String num) {
+        if (num == null) {
+            this.page = 0;
+        } else {
+            this.page = Integer.parseInt(num);
+        }
     }
 
     /**
@@ -103,8 +133,24 @@ public final class PulsesRs extends BaseRs {
      * @return Collection of JAXB units
      */
     private JaxbBundle pulses() {
+        final List<Pulse> pulses = this.unit().pulses();
+        final int from = this.page * PulsesRs.PAGE_SIZE;
+        if (from >= pulses.size()) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                String.format(
+                    "Page #%d is out of boundary",
+                    this.page
+                ),
+                Level.SEVERE
+            );
+        }
+        int till = (this.page + 1) * PulsesRs.PAGE_SIZE;
+        if (till >= pulses.size()) {
+            till = pulses.size();
+        }
         return new JaxbBundle("pulses").add(
-            new JaxbBundle.Group<Pulse>(this.unit().pulses()) {
+            new JaxbBundle.Group<Pulse>(pulses.subList(from, till)) {
                 @Override
                 public JaxbBundle bundle(final Pulse pulse) {
                     return PulsesRs.this.pulse(pulse);
