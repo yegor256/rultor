@@ -124,7 +124,7 @@ TEXT :
 
 INTEGER
     :
-    DIGIT+
+    ( '-' | '+' )? DIGIT+
     ;
 
 DOUBLE

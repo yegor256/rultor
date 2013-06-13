@@ -37,6 +37,7 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Unit;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -149,11 +150,12 @@ public final class PulsesRs extends BaseRs {
         if (till >= pulses.size()) {
             till = pulses.size();
         }
+        final AtomicInteger pos = new AtomicInteger(from);
         return new JaxbBundle("pulses").add(
             new JaxbBundle.Group<Pulse>(pulses.subList(from, till)) {
                 @Override
                 public JaxbBundle bundle(final Pulse pulse) {
-                    return PulsesRs.this.pulse(pulse);
+                    return PulsesRs.this.pulse(pos.getAndIncrement(), pulse);
                 }
             }
         );
@@ -161,10 +163,11 @@ public final class PulsesRs extends BaseRs {
 
     /**
      * Convert pulse to JaxbBundle.
+     * @param pos Position
      * @param pulse Pulse to convert
      * @return Bundle
      */
-    private JaxbBundle pulse(final Pulse pulse) {
+    private JaxbBundle pulse(final int pos, final Pulse pulse) {
         return new JaxbBundle("pulse")
             .add("started", pulse.started().toString())
             .up()
@@ -188,7 +191,8 @@ public final class PulsesRs extends BaseRs {
                         .path(PulseRs.class)
                         .queryParam(PulseRs.QUERY_NAME, "{n}")
                         .queryParam(PulseRs.QUERY_DATE, "{d}")
-                        .build(this.name, pulse.started().getTime())
+                        .queryParam(PulseRs.QUERY_POSITION, "{p}")
+                        .build(this.name, pulse.started().getTime(), pos)
                 )
             );
     }
