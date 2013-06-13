@@ -27,35 +27,33 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.life;
 
-import com.jcabi.aspects.Tv;
-import java.util.Arrays;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
+import com.rexsl.page.ServletContextMocker;
+import javax.servlet.ServletContextEvent;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Test case for {@link Composite}.
+ * Test case for {@link Lifespan}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class CompositeTest {
+public final class LifespanTest {
 
     /**
-     * Composite can make an instance.
+     * Lifespan can start and stop.
      * @throws Exception If some problem inside
      */
     @Test
-    public void makesInstance() throws Exception {
-        final Variable var = new Composite(
-            "java.lang.Integer",
-            Arrays.<Variable>asList(new Constant<Integer>(Tv.TEN))
-        );
-        MatcherAssert.assertThat(
-            var.instantiate(),
-            Matchers.<Object>equalTo(Tv.TEN)
-        );
+    public void startsAndStops() throws Exception {
+        final Lifespan life = new Lifespan();
+        final ServletContextEvent event =
+            Mockito.mock(ServletContextEvent.class);
+        Mockito.doReturn(new ServletContextMocker().mock())
+            .when(event).getServletContext();
+        life.contextInitialized(event);
+        life.contextDestroyed(event);
     }
 
 }

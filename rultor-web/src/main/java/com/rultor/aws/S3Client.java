@@ -27,47 +27,86 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.aws;
 
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Reference.
+ * S3 client.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-final class Reference implements Variable {
+public interface S3Client {
 
     /**
-     * The name.
+     * Get AWS S3 client.
+     * @return Get it
      */
-    private final transient String name;
+    AmazonS3 get();
 
     /**
-     * Public ctor.
-     * @param ref Reference
+     * Bucket name.
+     * @return Name of it
      */
-    protected Reference(final String ref) {
-        this.name = ref;
-    }
+    String bucket();
 
     /**
-     * {@inheritDoc}
+     * Simple client.
      */
-    @Override
-    public Object instantiate() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String asText() {
-        return this.name;
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = { "key", "secret", "bkt" })
+    @Loggable(Loggable.DEBUG)
+    final class Simple implements S3Client {
+        /**
+         * Key.
+         */
+        private final transient String key;
+        /**
+         * Secret.
+         */
+        private final transient String secret;
+        /**
+         * Bucket name.
+         */
+        private final transient String bkt;
+        /**
+         * Public ctor.
+         * @param akey AWS key
+         * @param scrt AWS secret
+         * @param bucket S3 bucket
+         */
+        public Simple(final String akey, final String scrt,
+            final String bucket) {
+            this.key = akey;
+            this.secret = scrt;
+            this.bkt = bucket;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public AmazonS3 get() {
+            return new AmazonS3Client(
+                new BasicAWSCredentials(this.key, this.secret)
+            );
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String bucket() {
+            return this.bkt;
+        }
     }
 
 }

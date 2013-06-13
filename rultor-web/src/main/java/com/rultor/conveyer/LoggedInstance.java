@@ -27,40 +27,58 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.conveyer;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
+import com.rultor.spi.Pulse;
+import com.rultor.spi.Repo;
 import com.rultor.spi.State;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import com.rultor.spi.Work;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Runtime instance.
+ * Logged instance.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = { "repo", "work", "appender" })
 @Loggable(Loggable.DEBUG)
-final class RuntimeInstance implements Instance {
+@SuppressWarnings("PMD.DoNotUseThreads")
+final class LoggedInstance implements Instance {
 
     /**
-     * Object to pulse.
+     * Repo.
      */
-    private final transient Object object;
+    private final transient Repo repo;
+
+    /**
+     * Work we're doing.
+     */
+    private final transient Work work;
+
+    /**
+     * Log appender.
+     */
+    private final transient ConveyerAppender appender;
 
     /**
      * Public ctor.
-     * @param obj Object
+     * @param rpo Repo
+     * @param wrk Work
+     * @param appr Appender
      */
-    protected RuntimeInstance(final Object obj) {
-        this.object = obj;
+    protected LoggedInstance(final Repo rpo, final Work wrk,
+        final ConveyerAppender appr) {
+        this.repo = rpo;
+        this.work = wrk;
+        this.appender = appr;
     }
 
     /**
@@ -68,25 +86,33 @@ final class RuntimeInstance implements Instance {
      */
     @Override
     public void pulse(@NotNull final State state) {
-        final Class<?> type = this.object.getClass();
-        Method method = null;
-        for (Method mtd : type.getDeclaredMethods()) {
-            if ("pulse".equals(mtd.getName())
-                && mtd.getParameterTypes().length == 1
-                && mtd.getParameterTypes()[0].equals(State.class)) {
-                method = mtd;
-                break;
-            }
+        final Thread thread = Thread.currentThread();
+        this.appender.register(thread, this.work);
+        try {
+            this.meta("started", System.currentTimeMillis());
+            this.meta("owner", this.work.owner());
+            this.meta("unit", this.work.unit());
+            this.meta("spec", this.work.spec().asText());
+            this.repo.make(this.work.spec()).pulse(state);
+            this.meta("status", "SUCCESS");
+        } catch (Repo.InstantiationException ex) {
+            Logger.error(this, "%[exception]s", ex);
+        } finally {
+            this.appender.unregister(thread);
         }
-        if (method != null) {
-            try {
-                method.invoke(this.object, state);
-            } catch (IllegalAccessException ex) {
-                throw new IllegalArgumentException(ex);
-            } catch (InvocationTargetException ex) {
-                throw new IllegalArgumentException(ex);
-            }
-        }
+    }
+
+    /**
+     * Log meta information.
+     * @param name Name of the key
+     * @param value Value of it
+     */
+    private void meta(final String name, final Object value) {
+        Logger.info(
+            this,
+            "%s",
+            new Pulse.Signal(name, value.toString()).toString()
+        );
     }
 
 }

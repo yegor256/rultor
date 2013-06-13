@@ -27,64 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.queue;
-
-import com.jcabi.aspects.Loggable;
-import com.rultor.users.Spec;
-import java.util.concurrent.LinkedBlockingQueue;
-import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * Queue.
+ * AWS interacting classes, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-public interface Queue {
-
-    /**
-     * Push new spec into it.
-     * @param spec The spec to push
-     */
-    void push(@NotNull Spec spec);
-
-    /**
-     * Pull the next available spec (waits until it is available).
-     * @return The spec available
-     * @throws InterruptedException If interrupted while waiting
-     */
-    @NotNull
-    Spec pull() throws InterruptedException;
-
-    /**
-     * In memory.
-     */
-    @Loggable(Loggable.INFO)
-    @ToString
-    @EqualsAndHashCode(of = "list")
-    final class Memory implements Queue {
-        /**
-         * Queue of them.
-         */
-        private final transient java.util.Queue<Spec> list =
-            new LinkedBlockingQueue<Spec>();
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void push(final Spec spec) {
-            this.list.add(spec);
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Spec pull() throws InterruptedException {
-            return this.list.poll();
-        }
-    }
-
-}
+package com.rultor.aws;

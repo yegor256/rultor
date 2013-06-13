@@ -27,70 +27,116 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.spi;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import com.jcabi.urn.URN;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.Validate;
 
 /**
- * Mutable state.
+ * Work to do.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-public interface State {
+@Immutable
+public interface Work {
 
     /**
-     * Get value by key.
-     * @param key The key
-     * @return Value
+     * When started, in milliseconds.
+     * @return Milliseconds
      */
     @NotNull
-    String get(@NotNull String key);
+    long started();
 
     /**
-     * Set if absent, don't touch if already present.
-     * @param key The key
-     * @param value The value
-     * @return TRUE if it was actually saved
+     * Owner of this work.
+     * @return The owner
      */
     @NotNull
-    boolean checkAndSet(@NotNull String key, @NotNull String value);
+    URN owner();
 
     /**
-     * In memory state.
+     * Name of the work (unique for the user).
+     * @return The unit
      */
-    @Loggable(Loggable.INFO)
+    @NotNull
+    String unit();
+
+    /**
+     * Spec to run.
+     * @return The spec
+     */
+    @NotNull
+    Spec spec();
+
+    /**
+     * Simple implementation.
+     */
+    @Loggable(Loggable.DEBUG)
     @ToString
-    @EqualsAndHashCode(of = "map")
-    final class Memory implements State {
+    @EqualsAndHashCode(of = { "urn", "label", "desc" })
+    @Immutable
+    final class Simple implements Work {
         /**
-         * Map of values.
+         * When started.
          */
-        private final transient ConcurrentMap<String, String> map =
-            new ConcurrentHashMap<String, String>(0);
+        private final transient long time = System.currentTimeMillis();
         /**
-         * {@inheritDoc}
+         * Owner of it.
          */
-        @Override
-        public String get(final String key) {
-            final String value = this.map.get(key);
-            Validate.notNull(value, "key %s is absent in state", key);
-            return value;
+        private final transient URN urn;
+        /**
+         * Name of it.
+         */
+        private final transient String label;
+        /**
+         * Spec of it.
+         */
+        private final transient Spec desc;
+        /**
+         * Public ctor.
+         * @param owner Owner
+         * @param name Name
+         * @param spec Spec
+         */
+        public Simple(@NotNull final URN owner, @NotNull final String name,
+            @NotNull final Spec spec) {
+            this.urn = owner;
+            this.label = name;
+            this.desc = spec;
         }
         /**
          * {@inheritDoc}
          */
         @Override
-        public boolean checkAndSet(final String key, final String value) {
-            final String before = this.map.putIfAbsent(key, value);
-            return !value.equals(before);
+        public long started() {
+            return this.time;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public URN owner() {
+            return this.urn;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String unit() {
+            return this.label;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Spec spec() {
+            return this.desc;
         }
     }
 

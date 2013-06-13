@@ -27,36 +27,40 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.users;
+package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
-import java.util.Collection;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 
 /**
- * All users.
+ * Unit.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Users {
+public interface Unit {
 
     /**
-     * Get everybody.
-     * @return All users
+     * All pulses (starting from the most recent).
+     * @return Collection of them
      */
     @NotNull
-    Collection<User> everybody();
+    List<Pulse> pulses();
 
     /**
-     * Get the user.
-     * @param urn His URN
-     * @return The user
+     * Save specification.
+     * @param spec Specification to save
+     */
+    void spec(@NotNull Spec spec);
+
+    /**
+     * Get specification.
+     * @return Specification
      */
     @NotNull
-    User fetch(@NotNull URN urn);
+    Spec spec();
 
 }

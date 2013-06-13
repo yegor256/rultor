@@ -27,35 +27,49 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.spi;
 
-import com.jcabi.aspects.Tv;
-import java.util.Arrays;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.urn.URN;
+import java.util.Map;
+import javax.validation.constraints.NotNull;
 
 /**
- * Test case for {@link Composite}.
+ * User.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class CompositeTest {
+@Immutable
+public interface User {
 
     /**
-     * Composite can make an instance.
-     * @throws Exception If some problem inside
+     * His URN.
+     * @return URN
      */
-    @Test
-    public void makesInstance() throws Exception {
-        final Variable var = new Composite(
-            "java.lang.Integer",
-            Arrays.<Variable>asList(new Constant<Integer>(Tv.TEN))
-        );
-        MatcherAssert.assertThat(
-            var.instantiate(),
-            Matchers.<Object>equalTo(Tv.TEN)
-        );
-    }
+    @NotNull
+    URN urn();
+
+    /**
+     * All his units.
+     * @return Collection of units
+     */
+    @NotNull
+    Map<String, Unit> units();
+
+    /**
+     * Create new unit with a given name.
+     * @param name Unique name of the unit
+     * @return The unit just created
+     */
+    @NotNull
+    Unit create(@NotNull String name);
+
+    /**
+     * Remove unit with a given name.
+     * @param name Unique name of the unit
+     */
+    void remove(@NotNull String name);
 
 }

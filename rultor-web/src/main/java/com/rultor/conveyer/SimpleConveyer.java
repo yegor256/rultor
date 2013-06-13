@@ -29,23 +29,29 @@
  */
 package com.rultor.conveyer;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseThreads;
-import com.rultor.queue.Queue;
-import com.rultor.repo.Instance;
-import com.rultor.repo.Repo;
-import com.rultor.repo.State;
-import com.rultor.users.Spec;
+import com.rultor.spi.Conveyer;
+import com.rultor.spi.Conveyer.Log;
+import com.rultor.spi.Queue;
+import com.rultor.spi.Repo;
+import com.rultor.spi.State;
+import com.rultor.spi.Work;
 import java.io.Closeable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 /**
- * Execution conveyer.
+ * Horizontally scalable execution conveyer.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -55,7 +61,8 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "queue", "repo" })
 @SuppressWarnings("PMD.DoNotUseThreads")
-public final class Conveyer implements Closeable, Callable<Void> {
+public final class SimpleConveyer
+    implements Conveyer, Closeable, Callable<Void> {
 
     /**
      * In how many threads we run instances.
@@ -79,30 +86,50 @@ public final class Conveyer implements Closeable, Callable<Void> {
     private final transient State state = new State.Memory();
 
     /**
+     * Log appender.
+     */
+    private final transient ConveyerAppender appender;
+
+    /**
+     * Counter of executed jobs.
+     */
+    private transient Counter counter;
+
+    /**
      * Consumer of new specs from Queue.
      */
     private final transient ExecutorService consumer =
-        Executors.newSingleThreadExecutor(new VerboseThreads(Conveyer.class));
+        Executors.newSingleThreadExecutor(
+            new VerboseThreads(SimpleConveyer.class)
+        );
 
     /**
      * Executor of instances.
      */
     private final transient ExecutorService executor =
-        Executors.newCachedThreadPool(new VerboseThreads(Conveyer.class));
+        Executors.newCachedThreadPool(
+            new VerboseThreads(SimpleConveyer.class)
+        );
 
     /**
      * Public ctor.
      * @param que The queue of specs
      * @param rep Repo
+     * @param log Log
      */
-    public Conveyer(final Queue que, final Repo rep) {
+    public SimpleConveyer(final Queue que, final Repo rep, final Log log) {
         this.queue = que;
         this.repo = rep;
+        this.appender = new ConveyerAppender(log);
+        this.appender.setThreshold(Level.DEBUG);
+        this.appender.setLayout(new PatternLayout("%m"));
+        Logger.getRootLogger().addAppender(this.appender);
     }
 
     /**
-     * Start it.
+     * {@inheritDoc}
      */
+    @Override
     public void start() {
         this.consumer.submit(this);
     }
@@ -112,6 +139,8 @@ public final class Conveyer implements Closeable, Callable<Void> {
      */
     @Override
     public void close() {
+        Logger.getRootLogger().removeAppender(this.appender);
+        this.appender.close();
         this.consumer.shutdown();
         this.executor.shutdown();
     }
@@ -120,24 +149,39 @@ public final class Conveyer implements Closeable, Callable<Void> {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.INFO, limit = Integer.MAX_VALUE)
     public Void call() throws Exception {
         while (true) {
-            final Spec spec = this.queue.pull();
-            final Instance instance = this.repo.make(spec);
-            this.submit(instance);
+            this.submit(this.queue.pull());
         }
     }
 
     /**
-     * Submit an instance.
-     * @param instance The instance
+     * {@inheritDoc}
      */
-    private void submit(final Instance instance) {
+    @Override
+    public void register(final MetricRegistry registry) {
+        this.counter = registry.counter(
+            MetricRegistry.name(this.getClass(), "done-jobs")
+        );
+    }
+
+    /**
+     * Submit work for execution in the threaded executor.
+     * @param work Work
+     */
+    private void submit(final Work work) {
         this.executor.submit(
-            new Runnable() {
+            new Callable<Void>() {
                 @Override
-                public void run() {
-                    instance.pulse(Conveyer.this.state);
+                public Void call() throws Exception {
+                    new LoggedInstance(
+                        SimpleConveyer.this.repo,
+                        work,
+                        SimpleConveyer.this.appender
+                    ).pulse(SimpleConveyer.this.state);
+                    SimpleConveyer.this.counter.inc();
+                    return null;
                 }
             }
         );

@@ -27,12 +27,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.aws;
+
+import com.jcabi.dynamo.Region;
+import com.jcabi.urn.URN;
+import com.rultor.spi.User;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Users in Dynamo DB.
- *
+ * Test case for {@link AwsUser}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-package com.rultor.users;
+public final class AwsUserTest {
+
+    /**
+     * AwsUser can have a name.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void hasName() throws Exception {
+        final S3Client client = Mockito.mock(S3Client.class);
+        final Region region = Mockito.mock(Region.class);
+        final URN urn = new URN("urn:facebook:444");
+        final User user = new AwsUser(region, client, urn);
+        MatcherAssert.assertThat(user.urn(), Matchers.equalTo(urn));
+    }
+
+}

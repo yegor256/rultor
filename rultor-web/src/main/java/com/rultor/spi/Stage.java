@@ -27,35 +27,64 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.spi;
 
-import com.jcabi.aspects.Tv;
-import java.util.Arrays;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import com.jcabi.aspects.Immutable;
 
 /**
- * Test case for {@link Composite}.
+ * Stage of a pulse.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class CompositeTest {
+@Immutable
+public interface Stage {
 
     /**
-     * Composite can make an instance.
-     * @throws Exception If some problem inside
+     * Result of a stage.
      */
-    @Test
-    public void makesInstance() throws Exception {
-        final Variable var = new Composite(
-            "java.lang.Integer",
-            Arrays.<Variable>asList(new Constant<Integer>(Tv.TEN))
-        );
-        MatcherAssert.assertThat(
-            var.instantiate(),
-            Matchers.<Object>equalTo(Tv.TEN)
-        );
-    }
+    enum Result {
+        /**
+         * Still running.
+         */
+        RUNNING,
+        /**
+         * Waiting.
+         */
+        WAITING,
+        /**
+         * Success.
+         */
+        SUCCESS,
+        /**
+         * Failure.
+         */
+        FAILURE;
+    };
+
+    /**
+     * Result of the stage.
+     * @return Result
+     */
+    Result result();
+
+    /**
+     * When started or is planning to start.
+     * @return Milliseconds from the beginning of the pulse
+     */
+    long start();
+
+    /**
+     * When stopped or is planning to stop.
+     * @return Milliseconds from the beginning of the pulse
+     */
+    long stop();
+
+    /**
+     * Output to show to the user (one line).
+     * @return Output
+     */
+    String output();
 
 }

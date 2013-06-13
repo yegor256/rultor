@@ -27,35 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
-
-import com.jcabi.aspects.Tv;
-import java.util.Arrays;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
 
 /**
- * Test case for {@link Composite}.
+ * Service Programming Interface (SPI), tests.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class CompositeTest {
-
-    /**
-     * Composite can make an instance.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void makesInstance() throws Exception {
-        final Variable var = new Composite(
-            "java.lang.Integer",
-            Arrays.<Variable>asList(new Constant<Integer>(Tv.TEN))
-        );
-        MatcherAssert.assertThat(
-            var.instantiate(),
-            Matchers.<Object>equalTo(Tv.TEN)
-        );
-    }
-
-}
+package com.rultor.spi;

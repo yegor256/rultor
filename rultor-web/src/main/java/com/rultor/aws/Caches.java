@@ -27,62 +27,76 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.aws;
 
+import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
-import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Instance;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
-import javax.validation.constraints.NotNull;
+import com.jcabi.urn.URN;
+import com.rultor.spi.Metricable;
+import java.io.Flushable;
+import java.io.IOException;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CharStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.TokenStream;
 
 /**
- * Repo on classpath.
+ * Mutable and thread-safe in-memory cache of S3 objects (singleton).
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Immutable
 @ToString
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-public final class ClasspathRepo implements Repo {
+final class Caches implements Flushable, Metricable {
 
     /**
-     * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
+     * Instance of the singleton.
      */
-    @Override
-    @NotNull
-    public Instance make(@NotNull final Spec spec)
-        throws Repo.InstantiationException {
-        Object object;
-        try {
-            object = this.var(spec.asText()).instantiate();
-        } catch (Repo.InvalidSyntaxException ex) {
-            throw new Repo.InstantiationException(ex);
-        }
-        return new RuntimeInstance(object);
+    public static final Caches INSTANCE = new Caches();
+
+    /**
+     * All objects.
+     */
+    private final transient ConcurrentMap<Key, Cache> all =
+        new ConcurrentSkipListMap<Key, Cache>();
+
+    /**
+     * Private ctor.
+     */
+    private Caches() {
+        // it's a singleton
     }
 
     /**
-     * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
+     * Get cache by key.
+     * @param key S3 key
+     * @return Cache
      */
-    @Override
-    @NotNull
-    public Spec make(@NotNull final String text)
-        throws Repo.InvalidSyntaxException {
-        return this.var(text);
+    public Cache get(final Key key) {
+        this.all.putIfAbsent(key, new Cache(key));
+        return this.all.get(key);
+    }
+
+    /**
+     * Get a list of all keys available at the moment.
+     * @param owner Owner
+     * @param unit Unit
+     * @return All keys
+     */
+    public SortedSet<Key> keys(final URN owner, final String unit) {
+        final SortedSet<Key> keys = new TreeSet<Key>();
+        for (Key key : this.all.keySet()) {
+            if (key.belongsTo(owner, unit)) {
+                keys.add(key);
+            }
+        }
+        return keys;
     }
 
     /**
@@ -90,30 +104,25 @@ public final class ClasspathRepo implements Repo {
      */
     @Override
     public void register(final MetricRegistry registry) {
-        // nothing to do
+        registry.register(
+            MetricRegistry.name(this.getClass(), "keys-total"),
+            new Gauge<Integer>() {
+                @Override
+                public Integer getValue() {
+                    return Caches.this.all.size();
+                }
+            }
+        );
     }
 
     /**
-     * Text to variable.
-     * @param text Text
-     * @return Variable
-     * @throws Repo.InvalidSyntaxException If fails
-     * @checkstyle RedundantThrows (5 lines)
+     * {@inheritDoc}
      */
-    private Variable var(final String text) throws Repo.InvalidSyntaxException {
-        final CharStream input = new ANTLRStringStream(text);
-        final SpecLexer lexer = new SpecLexer(input);
-        final TokenStream tokens = new CommonTokenStream(lexer);
-        final SpecParser parser = new SpecParser(tokens);
-        Variable var;
-        try {
-            var = parser.spec();
-        } catch (org.antlr.runtime.RecognitionException ex) {
-            throw new Repo.InvalidSyntaxException(ex);
-        } catch (IllegalArgumentException ex) {
-            throw new InvalidSyntaxException(ex);
+    @Override
+    public void flush() throws IOException {
+        for (Cache cache : this.all.values()) {
+            cache.flush();
         }
-        return var;
     }
 
 }

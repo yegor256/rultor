@@ -27,35 +27,22 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.web.rexsl.scripts
 
-import com.jcabi.aspects.Tv;
-import java.util.Arrays;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import com.rexsl.test.RestTester
+import javax.ws.rs.core.HttpHeaders
+import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.UriBuilder
 
-/**
- * Test case for {@link Composite}.
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- */
-public final class CompositeTest {
-
-    /**
-     * Composite can make an instance.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void makesInstance() throws Exception {
-        final Variable var = new Composite(
-            "java.lang.Integer",
-            Arrays.<Variable>asList(new Constant<Integer>(Tv.TEN))
-        );
-        MatcherAssert.assertThat(
-            var.instantiate(),
-            Matchers.<Object>equalTo(Tv.TEN)
-        );
-    }
-
+[
+    '/metrics',
+    '/metrics/metrics',
+    '/metrics/ping',
+    '/metrics/threads',
+    '/metrics/healthcheck',
+].each {
+    RestTester.start(UriBuilder.fromUri(rexsl.home).path(it))
+        .header(HttpHeaders.ACCEPT, MediaType.TEXT_HTML)
+        .get('reading metrics')
+        .assertStatus(HttpURLConnection.HTTP_OK)
 }

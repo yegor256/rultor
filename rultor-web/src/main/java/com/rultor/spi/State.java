@@ -27,35 +27,71 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.spi;
 
-import com.jcabi.aspects.Tv;
-import java.util.Arrays;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import com.jcabi.aspects.Loggable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.apache.commons.lang3.Validate;
 
 /**
- * Test case for {@link Composite}.
+ * Mutable state.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class CompositeTest {
+public interface State {
 
     /**
-     * Composite can make an instance.
-     * @throws Exception If some problem inside
+     * Get value by key.
+     * @param key The key
+     * @return Value
      */
-    @Test
-    public void makesInstance() throws Exception {
-        final Variable var = new Composite(
-            "java.lang.Integer",
-            Arrays.<Variable>asList(new Constant<Integer>(Tv.TEN))
-        );
-        MatcherAssert.assertThat(
-            var.instantiate(),
-            Matchers.<Object>equalTo(Tv.TEN)
-        );
+    @NotNull
+    String get(@NotNull String key);
+
+    /**
+     * Set if absent, don't touch if already present.
+     * @param key The key
+     * @param value The value
+     * @return TRUE if it was actually saved
+     */
+    @NotNull
+    boolean checkAndSet(@NotNull String key, @NotNull String value);
+
+    /**
+     * In memory state.
+     */
+    @Loggable(Loggable.INFO)
+    @ToString
+    @EqualsAndHashCode(of = "map")
+    final class Memory implements State {
+        /**
+         * Map of values.
+         */
+        private final transient ConcurrentMap<String, String> map =
+            new ConcurrentHashMap<String, String>(0);
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String get(final String key) {
+            final String value = this.map.get(key);
+            Validate.notNull(value, "key %s is absent in state", key);
+            return value;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean checkAndSet(final String key, final String value) {
+            final String before = this.map.putIfAbsent(key, value);
+            return !value.equals(before);
+        }
     }
 
 }

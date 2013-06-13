@@ -27,10 +27,15 @@
                 Maybe it will work, you know :)
             </p>
             <p>
-                The text below is
-                <a href="http://en.wikipedia.org/wiki/Stack_trace">a stacktrace</a>
+                The text below is a detailed description of your
+                <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP request</a>
+                and a
+                <a href="http://en.wikipedia.org/wiki/Stack_trace">stacktrace</a>
                 of the <a href="http://en.wikipedia.org/wiki/Exception_handling">runtime exception</a>
-                thrown by JVM:
+                thrown by
+                <a href="http://en.wikipedia.org/wiki/Java_virtual_machine">JVM</a>.
+                If you want to help us, please post this text as a new issue to
+                <a href="https://github.com/yegor256/rultor/issues/new">Github</a>.
             </p>
             <pre>${text}</pre>
         </div>

@@ -27,41 +27,36 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.users;
+package com.rultor.conveyer;
 
-import com.jcabi.aspects.Immutable;
-import java.util.Map;
-import javax.validation.constraints.NotNull;
+import com.rultor.spi.Conveyer;
+import com.rultor.spi.Queue;
+import com.rultor.spi.Repo;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * User.
- *
+ * Test case for {@link SimpleConveyer}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-public interface User {
+public final class SimpleConveyerTest {
 
     /**
-     * All his units.
-     * @return Collection of units
+     * SimpleConveyer can start and stop.
+     * @throws Exception If some problem inside
      */
-    @NotNull
-    Map<String, Unit> units();
-
-    /**
-     * Create new unit with a given name.
-     * @param name Unique name of the unit
-     * @return The unit just created
-     */
-    @NotNull
-    Unit create(@NotNull String name);
-
-    /**
-     * Remove unit with a given name.
-     * @param name Unique name of the unit
-     */
-    void remove(@NotNull String name);
+    @Test
+    public void startsAndStops() throws Exception {
+        final Queue queue = new Queue.Memory();
+        final Repo repo = Mockito.mock(Repo.class);
+        final Conveyer.Log log = Mockito.mock(Conveyer.Log.class);
+        final Conveyer conveyer = new SimpleConveyer(queue, repo, log);
+        try {
+            conveyer.start();
+        } finally {
+            conveyer.close();
+        }
+    }
 
 }

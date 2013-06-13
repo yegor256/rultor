@@ -27,66 +27,96 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.aws;
 
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.MetricRegistry;
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Instance;
-import com.rultor.spi.State;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import javax.validation.constraints.NotNull;
+import com.jcabi.dynamo.Item;
+import com.jcabi.dynamo.Region;
+import com.jcabi.urn.URN;
+import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Runtime instance.
+ * All users in Dynamo DB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
+@Immutable
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "region")
 @Loggable(Loggable.DEBUG)
-final class RuntimeInstance implements Instance {
+public final class AwsUsers implements Users {
 
     /**
-     * Object to pulse.
+     * Dynamo.
      */
-    private final transient Object object;
+    private final transient Region region;
+
+    /**
+     * S3 client.
+     */
+    private final transient S3Client client;
 
     /**
      * Public ctor.
-     * @param obj Object
+     * @param reg AWS region
+     * @param clnt S3 Client
      */
-    protected RuntimeInstance(final Object obj) {
-        this.object = obj;
+    public AwsUsers(final Region reg, final S3Client clnt) {
+        this.region = reg;
+        this.client = clnt;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void pulse(@NotNull final State state) {
-        final Class<?> type = this.object.getClass();
-        Method method = null;
-        for (Method mtd : type.getDeclaredMethods()) {
-            if ("pulse".equals(mtd.getName())
-                && mtd.getParameterTypes().length == 1
-                && mtd.getParameterTypes()[0].equals(State.class)) {
-                method = mtd;
-                break;
+    public Collection<User> everybody() {
+        final ConcurrentMap<URN, User> users =
+            new ConcurrentSkipListMap<URN, User>();
+        for (Item item : this.region.table("units").frame()) {
+            final URN urn = URN.create(item.get(AwsUnit.KEY_OWNER).getS());
+            if (!users.containsKey(urn)) {
+                users.put(urn, this.fetch(urn));
             }
         }
-        if (method != null) {
-            try {
-                method.invoke(this.object, state);
-            } catch (IllegalAccessException ex) {
-                throw new IllegalArgumentException(ex);
-            } catch (InvocationTargetException ex) {
-                throw new IllegalArgumentException(ex);
+        return Collections.unmodifiableCollection(users.values());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public User fetch(final URN urn) {
+        return new AwsUser(this.region, this.client, urn);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void register(final MetricRegistry registry) {
+        registry.register(
+            MetricRegistry.name(this.getClass(), "users-total"),
+            new Gauge<Integer>() {
+                @Override
+                public Integer getValue() {
+                    return AwsUsers.this.everybody().size();
+                }
             }
-        }
+        );
+        Caches.INSTANCE.register(registry);
     }
 
 }

@@ -27,34 +27,54 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.conveyer;
 
-import com.jcabi.aspects.Tv;
-import java.util.Arrays;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
+import com.jcabi.urn.URN;
+import com.rultor.spi.Conveyer;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Work;
+import java.util.logging.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.spi.LoggingEvent;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Test case for {@link Composite}.
+ * Test case for {@link ConveyerAppender}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class CompositeTest {
+public final class ConveyerAppenderTest {
 
     /**
-     * Composite can make an instance.
+     * ConveyerAppender can log slf4j messages.
      * @throws Exception If some problem inside
      */
     @Test
-    public void makesInstance() throws Exception {
-        final Variable var = new Composite(
-            "java.lang.Integer",
-            Arrays.<Variable>asList(new Constant<Integer>(Tv.TEN))
+    public void logsMessages() throws Exception {
+        final Conveyer.Log log = Mockito.mock(Conveyer.Log.class);
+        final ConveyerAppender appender = new ConveyerAppender(log);
+        appender.setLayout(new PatternLayout("%m"));
+        final Work work = new Work.Simple(
+            new URN("urn:facebook:1"), "test work", new Spec.Simple("a()")
         );
-        MatcherAssert.assertThat(
-            var.instantiate(),
-            Matchers.<Object>equalTo(Tv.TEN)
+        appender.register(Thread.currentThread(), work);
+        final String text = "test message to see in log";
+        appender.append(
+            new LoggingEvent(
+                "",
+                Logger.getLogger(this.getClass()),
+                org.apache.log4j.Level.INFO,
+                text,
+                new IllegalArgumentException()
+            )
+        );
+        Mockito.verify(log).push(
+            work,
+            new Conveyer.Line.Simple(
+                this.getClass().getName(), Level.INFO, text
+            )
         );
     }
 

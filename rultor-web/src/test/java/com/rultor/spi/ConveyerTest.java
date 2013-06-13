@@ -27,34 +27,32 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.spi;
 
-import com.jcabi.aspects.Tv;
-import java.util.Arrays;
+import java.util.logging.Level;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link Composite}.
+ * Test case for {@link Conveyer}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class CompositeTest {
+public final class ConveyerTest {
 
     /**
-     * Composite can make an instance.
+     * Conveyer.Line.Simple can build a string.
      * @throws Exception If some problem inside
      */
     @Test
-    public void makesInstance() throws Exception {
-        final Variable var = new Composite(
-            "java.lang.Integer",
-            Arrays.<Variable>asList(new Constant<Integer>(Tv.TEN))
+    public void makesString() throws Exception {
+        final Conveyer.Line line = new Conveyer.Line.Simple(
+            "test", Level.INFO, "msg"
         );
         MatcherAssert.assertThat(
-            var.instantiate(),
-            Matchers.<Object>equalTo(Tv.TEN)
+            line,
+            Matchers.hasToString(Matchers.endsWith(" INFO test msg"))
         );
     }
 

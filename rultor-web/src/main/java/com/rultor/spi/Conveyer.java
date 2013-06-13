@@ -27,64 +27,91 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.spi;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Instance;
-import com.rultor.spi.State;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.io.Closeable;
+import java.util.Date;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * Runtime instance.
+ * Mutable and thread-safe conveyer.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@ToString
-@EqualsAndHashCode
-@Loggable(Loggable.DEBUG)
-final class RuntimeInstance implements Instance {
+public interface Conveyer extends Closeable, Metricable {
 
     /**
-     * Object to pulse.
+     * Start it.
      */
-    private final transient Object object;
+    void start();
 
     /**
-     * Public ctor.
-     * @param obj Object
+     * Log it accepts.
      */
-    protected RuntimeInstance(final Object obj) {
-        this.object = obj;
+    @Immutable
+    interface Log {
+        /**
+         * Consume new log line.
+         * @param work Work that produces this line
+         * @param line Log line
+         */
+        void push(@NotNull Work work, @NotNull Line line);
     }
 
     /**
-     * {@inheritDoc}
+     * One line in logs.
      */
-    @Override
-    public void pulse(@NotNull final State state) {
-        final Class<?> type = this.object.getClass();
-        Method method = null;
-        for (Method mtd : type.getDeclaredMethods()) {
-            if ("pulse".equals(mtd.getName())
-                && mtd.getParameterTypes().length == 1
-                && mtd.getParameterTypes()[0].equals(State.class)) {
-                method = mtd;
-                break;
+    @Immutable
+    interface Line {
+        /**
+         * Simple.
+         */
+        @Immutable
+        @Loggable(Loggable.DEBUG)
+        @EqualsAndHashCode(of = { "who", "lvl", "msg" })
+        final class Simple implements Conveyer.Line {
+            /**
+             * Logger.
+             */
+            private final transient String who;
+            /**
+             * Level.
+             */
+            private final transient String lvl;
+            /**
+             * Message.
+             */
+            private final transient String msg;
+            /**
+             * Public ctor.
+             * @param logger Logger
+             * @param level The level
+             * @param message The message
+             */
+            public Simple(final String logger, final Level level,
+                final String message) {
+                this.who = logger;
+                this.lvl = level.toString();
+                this.msg = message;
             }
-        }
-        if (method != null) {
-            try {
-                method.invoke(this.object, state);
-            } catch (IllegalAccessException ex) {
-                throw new IllegalArgumentException(ex);
-            } catch (InvocationTargetException ex) {
-                throw new IllegalArgumentException(ex);
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public String toString() {
+                return String.format(
+                    "%tM:%<tS %s %s %s",
+                    new Date(),
+                    this.lvl,
+                    this.who,
+                    this.msg
+                );
             }
         }
     }

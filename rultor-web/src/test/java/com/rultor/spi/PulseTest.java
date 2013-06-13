@@ -27,12 +27,39 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.spi;
+
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Queue.
- *
+ * Test case for {@link Pulse}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-package com.rultor.queue;
+public final class PulseTest {
+
+    /**
+     * Pulse.Signal can make a string.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void makesString() throws Exception {
+        final String key = "test";
+        final String value = "\u20ac\n\tfast\ttest\r\u0433";
+        final String encoded = String.format(
+            "some \u20ac prefixed text %s",
+            new Pulse.Signal(key, value).toString()
+        );
+        MatcherAssert.assertThat(
+            Pulse.Signal.exists(encoded),
+            Matchers.is(true)
+        );
+        MatcherAssert.assertThat(
+            Pulse.Signal.valueOf(encoded).key(),
+            Matchers.equalTo(key)
+        );
+    }
+
+}

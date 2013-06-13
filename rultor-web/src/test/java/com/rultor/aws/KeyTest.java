@@ -27,55 +27,57 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.users;
+package com.rultor.aws;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.jcabi.urn.URN;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Unit specification.
- *
+ * Test case for {@link Key}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-public interface Spec {
+public final class KeyTest {
 
     /**
-     * Convert it to a human readable form.
-     * @return The text
+     * Key can make a string.
+     * @throws Exception If some problem inside
      */
-    String asText();
+    @Test
+    public void makesString() throws Exception {
+        final URN owner = new URN("urn:facebook:1");
+        final String unit = "some-test-unit";
+        final long date = System.currentTimeMillis();
+        final S3Client client = Mockito.mock(S3Client.class);
+        MatcherAssert.assertThat(
+            new Key(client, owner, unit, date),
+            Matchers.hasToString(
+                Matchers.startsWith("urn:facebook:1/some-test-unit/")
+            )
+        );
+        MatcherAssert.assertThat(
+            Key.valueOf(client, new Key(client, owner, unit, date).toString()),
+            Matchers.equalTo(new Key(client, owner, unit, date))
+        );
+    }
 
     /**
-     * Simple.
+     * Key can compare in the right order.
+     * @throws Exception If some problem inside
      */
-    @Immutable
-    @ToString
-    @EqualsAndHashCode(of = "text")
-    @Loggable(Loggable.DEBUG)
-    final class Simple implements Spec {
-        /**
-         * The text.
-         */
-        private final transient String text;
-        /**
-         * Public ctor.
-         * @param spec The text
-         */
-        public Simple(final String spec) {
-            this.text = spec;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String asText() {
-            return this.text;
-        }
+    @Test
+    public void comparesWithOtherKey() throws Exception {
+        final URN owner = new URN("urn:facebook:22");
+        final String unit = "some-test-iii";
+        final long date = System.currentTimeMillis();
+        final S3Client client = Mockito.mock(S3Client.class);
+        MatcherAssert.assertThat(
+            new Key(client, owner, unit, date),
+            Matchers.lessThan(new Key(client, owner, unit, date - 1))
+        );
     }
 
 }

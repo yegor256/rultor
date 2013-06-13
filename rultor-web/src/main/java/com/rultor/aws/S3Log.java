@@ -27,38 +27,82 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.users;
+package com.rultor.aws;
 
-import com.jcabi.aspects.Immutable;
-import javax.validation.constraints.NotNull;
+import com.google.common.io.Flushables;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.ScheduleWithFixedDelay;
+import com.rultor.spi.Conveyer;
+import com.rultor.spi.Work;
+import java.io.Closeable;
+import java.io.Flushable;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Unit.
+ * Log files in Amazon S3.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Unit {
+@ToString
+@EqualsAndHashCode(of = "client")
+@Loggable(Loggable.DEBUG)
+@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.MINUTES)
+@SuppressWarnings("PMD.DoNotUseThreads")
+public final class S3Log implements
+    Conveyer.Log, Flushable, Closeable, Runnable {
 
     /**
-     * All pulses (starting from the most recent).
-     * @return Collection of them
+     * S3 client.
      */
-    Iterable<Pulse> pulses();
+    private final transient S3Client client;
 
     /**
-     * Save specification.
-     * @param spec Specification to save
+     * Public ctor.
+     * @param clnt Client
      */
-    void spec(@NotNull Spec spec);
+    public S3Log(final S3Client clnt) {
+        this.client = clnt;
+    }
 
     /**
-     * Get specification.
-     * @return Specification
+     * {@inheritDoc}
      */
-    @NotNull
-    Spec spec();
+    @Override
+    public void push(final Work work, final Conveyer.Line line) {
+        try {
+            Caches.INSTANCE.get(new Key(this.client, work)).append(line);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() throws IOException {
+        this.flush();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void flush() throws IOException {
+        Caches.INSTANCE.flush();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void run() {
+        Flushables.flushQuietly(this);
+    }
 
 }

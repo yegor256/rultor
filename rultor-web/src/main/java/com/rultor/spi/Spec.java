@@ -27,75 +27,55 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.users;
+package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Credentials;
-import com.jcabi.dynamo.Item;
-import com.jcabi.dynamo.Region;
-import com.jcabi.urn.URN;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * All users in Dynamo DB.
+ * Unit specification.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = "region")
-@Loggable(Loggable.DEBUG)
-public final class DynamoUsers implements Users {
+public interface Spec {
 
     /**
-     * Dynamo.
+     * Convert it to a human readable form.
+     * @return The text
      */
-    private final transient Region region;
+    String asText();
 
     /**
-     * Public ctor.
-     * @param key AWS key
-     * @param secret AWS secret
-     * @param prefix Prefix for AWS DynamoDB tables
+     * Simple.
      */
-    public DynamoUsers(final String key, final String secret,
-        final String prefix) {
-        this.region = new Region.Prefixed(
-            new Region.Simple(new Credentials.Simple(key, secret)),
-            prefix
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Collection<User> everybody() {
-        final ConcurrentMap<URN, User> users =
-            new ConcurrentSkipListMap<URN, User>();
-        for (Item item : this.region.table("units").frame()) {
-            final URN urn = URN.create(item.get(DynamoUnit.KEY_OWNER).getS());
-            if (!users.containsKey(urn)) {
-                users.put(urn, this.fetch(urn));
-            }
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "text")
+    @Loggable(Loggable.DEBUG)
+    final class Simple implements Spec {
+        /**
+         * The text.
+         */
+        private final transient String text;
+        /**
+         * Public ctor.
+         * @param spec The text
+         */
+        public Simple(final String spec) {
+            this.text = spec;
         }
-        return Collections.unmodifiableCollection(users.values());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public User fetch(final URN urn) {
-        return new DynamoUser(this.region, urn);
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String asText() {
+            return this.text;
+        }
     }
 
 }

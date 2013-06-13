@@ -38,6 +38,9 @@
     <artifactId>rultor-web</artifactId>
     <packaging>war</packaging>
     <name>rultor-web</name>
+    <properties>
+        <metrics.version>3.0.0</metrics.version>
+    </properties>
     <pluginRepositories>
         <pluginRepository>
             <id>cloudbees-public-release</id>
@@ -67,6 +70,11 @@
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr-runtime</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -150,6 +158,10 @@
             <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-urn</artifactId>
         </dependency>
@@ -163,9 +175,24 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <scope>runtime</scope>
+            <groupId>com.codahale.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <version>${metrics.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codahale.metrics</groupId>
+            <artifactId>metrics-servlets</artifactId>
+            <version>${metrics.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codahale.metrics</groupId>
+            <artifactId>metrics-healthchecks</artifactId>
+            <version>${metrics.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codahale.metrics</groupId>
+            <artifactId>metrics-jvm</artifactId>
+            <version>${metrics.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -181,6 +208,19 @@
                     <artifactId>maven-deploy-plugin</artifactId>
                     <configuration>
                         <skip>true</skip>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <failsafe.s3.key>${failsafe.s3.key}</failsafe.s3.key>
+                            <failsafe.s3.secret>${failsafe.s3.secret}</failsafe.s3.secret>
+                            <failsafe.s3.bucket>${failsafe.s3.bucket}</failsafe.s3.bucket>
+                            <failsafe.dynamo.key>${failsafe.dynamo.key}</failsafe.dynamo.key>
+                            <failsafe.dynamo.secret>${failsafe.dynamo.secret}</failsafe.dynamo.secret>
+                            <failsafe.dynamo.prefix>${failsafe.dynamo.prefix}</failsafe.dynamo.prefix>
+                        </systemPropertyVariables>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -203,6 +243,9 @@
                                 <Rultor-DynamoKey>${dynamo.key}</Rultor-DynamoKey>
                                 <Rultor-DynamoSecret>${dynamo.secret}</Rultor-DynamoSecret>
                                 <Rultor-DynamoPrefix>${dynamo.prefix}</Rultor-DynamoPrefix>
+                                <Rultor-S3Key>${s3.key}</Rultor-S3Key>
+                                <Rultor-S3Secret>${s3.secret}</Rultor-S3Secret>
+                                <Rultor-S3Bucket>${s3.bucket}</Rultor-S3Bucket>
                             </manifestEntries>
                         </archive>
                     </configuration>
@@ -210,6 +253,17 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>com.rexsl</groupId>
                 <artifactId>rexsl-maven-plugin</artifactId>

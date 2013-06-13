@@ -30,12 +30,16 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
-import com.rultor.users.Pulse;
+import com.rultor.spi.Pulse;
 import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -62,6 +66,11 @@ public final class PulseRs extends BaseRs {
     /**
      * Query param.
      */
+    public static final String QUERY_POSITION = "p";
+
+    /**
+     * Query param.
+     */
     public static final String QUERY_START = "start";
 
     /**
@@ -78,6 +87,11 @@ public final class PulseRs extends BaseRs {
      * Pulse date.
      */
     private transient Date date;
+
+    /**
+     * Pulse position in list.
+     */
+    private transient int position;
 
     /**
      * Start.
@@ -109,11 +123,24 @@ public final class PulseRs extends BaseRs {
 
     /**
      * Inject it from query.
+     * @param pos Pulse position in list
+     */
+    @QueryParam(PulseRs.QUERY_POSITION)
+    public void setPosition(@NotNull final String pos) {
+        this.position = Integer.parseInt(pos);
+    }
+
+    /**
+     * Inject it from query.
      * @param time Pulse time
      */
     @QueryParam(PulseRs.QUERY_START)
-    public void setStart(@NotNull final String time) {
-        this.start = Long.parseLong(time);
+    public void setStart(final String time) {
+        if (time == null) {
+            this.start = 0L;
+        } else {
+            this.start = Long.parseLong(time);
+        }
     }
 
     /**
@@ -121,8 +148,12 @@ public final class PulseRs extends BaseRs {
      * @param time Pulse time
      */
     @QueryParam(PulseRs.QUERY_STOP)
-    public void setStop(@NotNull final String time) {
-        this.stop = Long.parseLong(time);
+    public void setStop(final String time) {
+        if (time == null) {
+            this.stop = Long.MAX_VALUE;
+        } else {
+            this.stop = Long.parseLong(time);
+        }
     }
 
     /**
@@ -132,12 +163,11 @@ public final class PulseRs extends BaseRs {
      */
     @GET
     @Path("/")
+    @Produces(MediaType.TEXT_PLAIN)
     public Response index() throws Exception {
-        assert this.date != null;
         assert this.start != null;
         assert this.stop != null;
-        this.pulse();
-        return null;
+        return Response.ok().entity(this.pulse().read()).build();
     }
 
     /**
@@ -145,7 +175,30 @@ public final class PulseRs extends BaseRs {
      * @return The pulse
      */
     private Pulse pulse() {
-        return this.user().units().get(this.name).pulses().iterator().next();
+        final List<Pulse> pulses = this.user().units().get(this.name).pulses();
+        if (this.position > pulses.size()) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                String.format(
+                    "Pulse #%d is out of boundary",
+                    this.position
+                ),
+                Level.SEVERE
+            );
+        }
+        final Pulse pulse = pulses.get(this.position);
+        if (!pulse.started().equals(this.date)) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUriBuilder()
+                    .clone()
+                    .path(PulsesRs.class)
+                    .queryParam(PulsesRs.QUERY_NAME, "{x}")
+                    .build(this.name),
+                "The list was refreshed, try again",
+                Level.INFO
+            );
+        }
+        return pulse;
     }
 
 }

@@ -29,7 +29,10 @@
  */
 package com.rultor.repo;
 
-import com.rultor.users.Spec;
+import com.rultor.spi.Instance;
+import com.rultor.spi.Repo;
+import com.rultor.spi.Spec;
+import com.rultor.spi.State;
 import java.util.concurrent.atomic.AtomicLong;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -38,7 +41,7 @@ import org.junit.Test;
 /**
  * Test case for {@link ClasspathRepo}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: IndexRsTest.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id$
  */
 public final class ClasspathRepoTest {
 

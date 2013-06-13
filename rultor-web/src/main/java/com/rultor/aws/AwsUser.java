@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.users;
+package com.rultor.aws;
 
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
@@ -36,6 +36,8 @@ import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Unit;
+import com.rultor.spi.User;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -58,12 +60,17 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "region", "name" })
 @Loggable(Loggable.DEBUG)
-final class DynamoUser implements User {
+final class AwsUser implements User {
 
     /**
      * Dynamo.
      */
     private final transient Region region;
+
+    /**
+     * S3 client.
+     */
+    private final transient S3Client client;
 
     /**
      * URN of the user.
@@ -73,11 +80,22 @@ final class DynamoUser implements User {
     /**
      * Public ctor.
      * @param reg Region in Dynamo
+     * @param clnt S3 client
      * @param urn URN of the user
      */
-    protected DynamoUser(final Region reg, final URN urn) {
+    protected AwsUser(final Region reg, final S3Client clnt, final URN urn) {
         this.region = reg;
+        this.client = clnt;
         this.name = urn;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NotNull
+    public URN urn() {
+        return this.name;
     }
 
     /**
@@ -89,10 +107,10 @@ final class DynamoUser implements User {
     public Map<String, Unit> units() {
         final ConcurrentMap<String, Unit> units =
             new ConcurrentSkipListMap<String, Unit>();
-        final Collection<Item> items = this.region.table(DynamoUnit.TABLE)
-            .frame().where(DynamoUnit.KEY_OWNER, Conditions.equalTo(this.name));
+        final Collection<Item> items = this.region.table(AwsUnit.TABLE)
+            .frame().where(AwsUnit.KEY_OWNER, Conditions.equalTo(this.name));
         for (Item item : items) {
-            final String unit = item.get(DynamoUnit.KEY_NAME).getS();
+            final String unit = item.get(AwsUnit.KEY_NAME).getS();
             if (!units.containsKey(unit)) {
                 units.put(unit, this.unit(unit));
             }
@@ -116,9 +134,9 @@ final class DynamoUser implements User {
     @Override
     @Cacheable.FlushBefore
     public void remove(@NotNull final String unit) {
-        final Iterator<Item> items = this.region.table(DynamoUnit.TABLE).frame()
-            .where(DynamoUnit.KEY_OWNER, Conditions.equalTo(this.name))
-            .where(DynamoUnit.KEY_NAME, Conditions.equalTo(unit))
+        final Iterator<Item> items = this.region.table(AwsUnit.TABLE).frame()
+            .where(AwsUnit.KEY_OWNER, Conditions.equalTo(this.name))
+            .where(AwsUnit.KEY_NAME, Conditions.equalTo(unit))
             .iterator();
         if (!items.hasNext()) {
             throw new NoSuchElementException(
@@ -135,7 +153,7 @@ final class DynamoUser implements User {
      * @return The unit
      */
     private Unit unit(final String unit) {
-        return new DynamoUnit(this.region, this.name, unit);
+        return new AwsUnit(this.region, this.client, this.name, unit);
     }
 
 }

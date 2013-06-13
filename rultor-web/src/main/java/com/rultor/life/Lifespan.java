@@ -27,22 +27,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor.life;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
+import com.jcabi.dynamo.Credentials;
+import com.jcabi.dynamo.Region;
 import com.jcabi.manifests.Manifests;
-import com.rultor.conveyer.Conveyer;
-import com.rultor.queue.Queue;
+import com.rultor.aws.AwsUsers;
+import com.rultor.aws.S3Client;
+import com.rultor.aws.S3Log;
+import com.rultor.conveyer.SimpleConveyer;
 import com.rultor.repo.ClasspathRepo;
-import com.rultor.repo.Repo;
-import com.rultor.users.DynamoUsers;
-import com.rultor.users.Unit;
-import com.rultor.users.User;
-import com.rultor.users.Users;
+import com.rultor.spi.Conveyer;
+import com.rultor.spi.Queue;
+import com.rultor.spi.Repo;
+import com.rultor.spi.Unit;
+import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import com.rultor.spi.Work;
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import lombok.EqualsAndHashCode;
@@ -53,19 +61,25 @@ import org.apache.commons.io.IOUtils;
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Loggable(Loggable.INFO)
 public final class Lifespan implements ServletContextListener {
 
     /**
-     * Conveyer.
+     * SimpleConveyer.
      */
-    private transient Conveyer conveyer;
+    private transient SimpleConveyer conveyer;
 
     /**
      * Quartz the works.
      */
     private transient Quartz quartz;
+
+    /**
+     * S3 log.
+     */
+    private transient S3Log log;
 
     /**
      * {@inheritDoc}
@@ -77,18 +91,31 @@ public final class Lifespan implements ServletContextListener {
         } catch (java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }
-        final Users users = new DynamoUsers(
-            Manifests.read("Rultor-DynamoKey"),
-            Manifests.read("Rultor-DynamoSecret"),
+        final Region region = new Region.Prefixed(
+            new Region.Simple(
+                new Credentials.Simple(
+                    Manifests.read("Rultor-DynamoKey"),
+                    Manifests.read("Rultor-DynamoSecret")
+                )
+            ),
             Manifests.read("Rultor-DynamoPrefix")
         );
+        final S3Client client = new S3Client.Simple(
+            Manifests.read("Rultor-S3Key"),
+            Manifests.read("Rultor-S3Secret"),
+            Manifests.read("Rultor-S3Bucket")
+        );
+        final Users users = new AwsUsers(region, client);
         final Repo repo = new ClasspathRepo();
-        event.getServletContext().setAttribute(Users.class.getName(), users);
-        event.getServletContext().setAttribute(Repo.class.getName(), repo);
+        final ServletContext context = event.getServletContext();
         final Queue queue = new Queue.Memory();
         this.quartz = new Lifespan.Quartz(users, queue);
-        this.conveyer = new Conveyer(queue, repo);
+        this.log = new S3Log(client);
+        this.conveyer = new SimpleConveyer(queue, repo, this.log);
         this.conveyer.start();
+        context.setAttribute(Users.class.getName(), users);
+        context.setAttribute(Repo.class.getName(), repo);
+        context.setAttribute(Conveyer.class.getName(), this.conveyer);
     }
 
     /**
@@ -98,6 +125,7 @@ public final class Lifespan implements ServletContextListener {
     public void contextDestroyed(final ServletContextEvent event) {
         IOUtils.closeQuietly(this.quartz);
         IOUtils.closeQuietly(this.conveyer);
+        IOUtils.closeQuietly(this.log);
     }
 
     /**
@@ -129,10 +157,17 @@ public final class Lifespan implements ServletContextListener {
          * {@inheritDoc}
          */
         @Override
+        @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
         public void run() {
             for (User user : this.users.everybody()) {
-                for (Unit unit : user.units().values()) {
-                    this.queue.push(unit.spec());
+                for (Map.Entry<String, Unit> entry : user.units().entrySet()) {
+                    this.queue.push(
+                        new Work.Simple(
+                            user.urn(),
+                            entry.getKey(),
+                            entry.getValue().spec()
+                        )
+                    );
                 }
             }
         }

@@ -27,65 +27,82 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.spi;
 
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Instance;
-import com.rultor.spi.State;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Runtime instance.
+ * Queue.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@ToString
-@EqualsAndHashCode
-@Loggable(Loggable.DEBUG)
-final class RuntimeInstance implements Instance {
+public interface Queue extends Metricable {
 
     /**
-     * Object to pulse.
+     * Push new work into it.
+     * @param work The work to do
      */
-    private final transient Object object;
+    void push(@NotNull Work work);
 
     /**
-     * Public ctor.
-     * @param obj Object
+     * Pull the next available work (waits until it is available).
+     * @return The work available
+     * @throws InterruptedException If interrupted while waiting
      */
-    protected RuntimeInstance(final Object obj) {
-        this.object = obj;
-    }
+    @NotNull
+    Work pull() throws InterruptedException;
 
     /**
-     * {@inheritDoc}
+     * In memory.
      */
-    @Override
-    public void pulse(@NotNull final State state) {
-        final Class<?> type = this.object.getClass();
-        Method method = null;
-        for (Method mtd : type.getDeclaredMethods()) {
-            if ("pulse".equals(mtd.getName())
-                && mtd.getParameterTypes().length == 1
-                && mtd.getParameterTypes()[0].equals(State.class)) {
-                method = mtd;
-                break;
-            }
+    @Loggable(Loggable.DEBUG)
+    @ToString
+    @EqualsAndHashCode(of = "list")
+    final class Memory implements Queue {
+        /**
+         * Queue of them.
+         */
+        private final transient BlockingQueue<Work> list =
+            new LinkedBlockingQueue<Work>();
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void push(final Work work) {
+            this.list.add(work);
         }
-        if (method != null) {
-            try {
-                method.invoke(this.object, state);
-            } catch (IllegalAccessException ex) {
-                throw new IllegalArgumentException(ex);
-            } catch (InvocationTargetException ex) {
-                throw new IllegalArgumentException(ex);
-            }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+        public Work pull() throws InterruptedException {
+            return this.list.poll(Long.MAX_VALUE, TimeUnit.DAYS);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void register(final MetricRegistry registry) {
+            registry.register(
+                MetricRegistry.name(this.getClass(), "queue", "size"),
+                new Gauge<Integer>() {
+                    @Override
+                    public Integer getValue() {
+                        return Queue.Memory.this.list.size();
+                    }
+                }
+            );
         }
     }
 

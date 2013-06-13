@@ -27,25 +27,76 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.spi;
 
+import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.urn.URN;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.validation.constraints.NotNull;
 
 /**
- * Instance.
+ * All users.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Instance {
+public interface Users extends Metricable {
 
     /**
-     * Pulse it.
-     * @param state Persistent storage of keys and values
+     * Empty users, mostly for tests.
+     * @checkstyle AnonInnerLength (50 lines)
      */
-    void pulse(@NotNull State state);
+    Users EMPTY = new Users() {
+        @Override
+        public Collection<User> everybody() {
+            return new ArrayList<User>(0);
+        }
+        @Override
+        public User fetch(final URN urn) {
+            return new User() {
+                @Override
+                public URN urn() {
+                    return urn;
+                }
+                @Override
+                public Map<String, Unit> units() {
+                    return new ConcurrentHashMap<String, Unit>(0);
+                }
+                @Override
+                public Unit create(final String name) {
+                    throw new UnsupportedOperationException();
+                }
+                @Override
+                public void remove(final String name) {
+                    throw new UnsupportedOperationException();
+                }
+            };
+        }
+        @Override
+        public void register(final MetricRegistry registry) {
+            throw new UnsupportedOperationException();
+        }
+    };
+
+    /**
+     * Get everybody.
+     * @return All users
+     */
+    @NotNull
+    Collection<User> everybody();
+
+    /**
+     * Get the user.
+     * @param urn His URN
+     * @return The user
+     */
+    @NotNull
+    User fetch(@NotNull URN urn);
 
 }

@@ -34,7 +34,7 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.auth.Identity;
-import com.rultor.users.Unit;
+import com.rultor.spi.Unit;
 import java.util.Map;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
