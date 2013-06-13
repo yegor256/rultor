@@ -44,6 +44,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
  * Pulses.
@@ -169,9 +170,12 @@ public final class PulsesRs extends BaseRs {
      */
     private JaxbBundle pulse(final int pos, final Pulse pulse) {
         return new JaxbBundle("pulse")
-            .add("started", pulse.started().toString())
-            .up()
             .add("spec", pulse.spec().asText())
+            .up()
+            .add(
+                "started",
+                DateFormatUtils.ISO_DATETIME_FORMAT.format(pulse.started())
+            )
             .up()
             .add("stages")
             .add(
