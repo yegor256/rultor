@@ -51,26 +51,16 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharUtils;
 
 /**
- * In-memory cache of a single S3 object.
+ * Mutable and thread-safe in-memory cache of a single S3 object.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @ToString
-@EqualsAndHashCode(of = { "client", "bucket", "key" })
+@EqualsAndHashCode(of = "key")
 @Loggable(Loggable.DEBUG)
 final class Cache implements Flushable {
-
-    /**
-     * S3 client.
-     */
-    private final transient S3Client client;
-
-    /**
-     * Bucket name.
-     */
-    private final transient String bucket;
 
     /**
      * S3 key.
@@ -84,13 +74,9 @@ final class Cache implements Flushable {
 
     /**
      * Public ctor.
-     * @param clnt Client
-     * @param bkt Bucket name
      * @param akey S3 key
      */
-    protected Cache(final S3Client clnt, final String bkt, final Key akey) {
-        this.client = clnt;
-        this.bucket = bkt;
+    protected Cache(final Key akey) {
         this.key = akey;
     }
 
@@ -119,16 +105,19 @@ final class Cache implements Flushable {
      */
     @Override
     public void flush() throws IOException {
-        synchronized (this.bucket) {
+        synchronized (this.key) {
             if (this.data != null) {
-                final AmazonS3 aws = this.client.get();
+                final S3Client client = this.key.client();
+                final AmazonS3 aws = client.get();
                 final ObjectMetadata meta = new ObjectMetadata();
                 meta.setContentEncoding(CharEncoding.UTF_8);
                 meta.setContentLength(this.data.size());
                 meta.setContentType(MediaType.TEXT_PLAIN);
                 try {
                     final PutObjectResult result = aws.putObject(
-                        this.bucket, this.key.toString(), this.read(), meta
+                        client.bucket(),
+                        this.key.toString(),
+                        this.read(), meta
                     );
                     Logger.info(
                         this,
@@ -142,7 +131,7 @@ final class Cache implements Flushable {
                         String.format(
                             "failed to flush %s to %s: %s",
                             this.key,
-                            this.bucket,
+                            client.bucket(),
                             ex
                         ),
                         ex
@@ -158,15 +147,16 @@ final class Cache implements Flushable {
      * @throws IOException If fails
      */
     private ByteArrayOutputStream stream() throws IOException {
-        synchronized (this.bucket) {
+        synchronized (this.key) {
             if (this.data == null) {
                 this.data = new ByteArrayOutputStream();
-                final AmazonS3 aws = this.client.get();
+                final S3Client client = this.key.client();
+                final AmazonS3 aws = client.get();
                 try {
-                    if (!aws.listObjects(this.bucket, this.key.toString())
+                    if (!aws.listObjects(client.bucket(), this.key.toString())
                         .getObjectSummaries().isEmpty()) {
                         final S3Object object =
-                            aws.getObject(this.bucket, this.key.toString());
+                            aws.getObject(client.bucket(), this.key.toString());
                         IOUtils.copy(object.getObjectContent(), this.data);
                         Logger.info(
                             this,
@@ -181,7 +171,7 @@ final class Cache implements Flushable {
                         String.format(
                             "failed to read %s from %s: %s",
                             this.key,
-                            this.bucket,
+                            client.bucket(),
                             ex
                         ),
                         ex

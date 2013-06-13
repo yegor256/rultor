@@ -50,6 +50,7 @@ import org.apache.commons.lang3.Validate;
  * @version $Id$
  * @since 1.0
  */
+@Immutable
 public interface Pulse {
 
     /**

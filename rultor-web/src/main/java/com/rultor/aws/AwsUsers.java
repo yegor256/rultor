@@ -29,6 +29,7 @@
  */
 package com.rultor.aws;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
@@ -49,10 +50,11 @@ import lombok.ToString;
  * @version $Id$
  * @since 1.0
  */
+@Immutable
 @ToString
 @EqualsAndHashCode(of = "region")
 @Loggable(Loggable.DEBUG)
-public final class DynamoUsers implements Users {
+public final class AwsUsers implements Users {
 
     /**
      * Dynamo.
@@ -60,18 +62,18 @@ public final class DynamoUsers implements Users {
     private final transient Region region;
 
     /**
-     * S3 Log.
+     * S3 client.
      */
-    private final transient S3Log log;
+    private final transient S3Client client;
 
     /**
      * Public ctor.
      * @param reg AWS region
-     * @param slg S3 Log
+     * @param clnt S3 Client
      */
-    public DynamoUsers(final Region reg, final S3Log slg) {
+    public AwsUsers(final Region reg, final S3Client clnt) {
         this.region = reg;
-        this.log = slg;
+        this.client = clnt;
     }
 
     /**
@@ -82,7 +84,7 @@ public final class DynamoUsers implements Users {
         final ConcurrentMap<URN, User> users =
             new ConcurrentSkipListMap<URN, User>();
         for (Item item : this.region.table("units").frame()) {
-            final URN urn = URN.create(item.get(DynamoUnit.KEY_OWNER).getS());
+            final URN urn = URN.create(item.get(AwsUnit.KEY_OWNER).getS());
             if (!users.containsKey(urn)) {
                 users.put(urn, this.fetch(urn));
             }
@@ -95,7 +97,7 @@ public final class DynamoUsers implements Users {
      */
     @Override
     public User fetch(final URN urn) {
-        return new DynamoUser(this.region, this.log, urn);
+        return new AwsUser(this.region, this.client, urn);
     }
 
 }

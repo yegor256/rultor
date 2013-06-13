@@ -42,6 +42,14 @@ import lombok.EqualsAndHashCode;
 /**
  * S3 key.
  *
+ * <p>Every log is stored as a plain text object in Amazon S3, named as
+ * <code>owner/unit/year/month/day/uid.txt</code>, where all
+ * time values are in numbers. For example:
+ * <code>urn:facebook:5463/nighly-build/8987/88/74/7843.txt</code>. In this
+ * example: 8987 is year 2013, reverted towards 9999, 88 is December (99 minus
+ * 11), 74 is 25 (99 minus 25), and 7843 is Long.MAX_VALUE minus millisTime
+ * of pulse start.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
@@ -56,6 +64,11 @@ final class Key implements Comparable<Key> {
     private static final Pattern PATTERN = Pattern.compile(
         "(urn:[a-z]+:\\d+)/([\\-\\w]+)/\\d{4}/\\d{2}/\\d{2}/(\\d+)\\.txt"
     );
+
+    /**
+     * S3 client.
+     */
+    private final transient S3Client clnt;
 
     /**
      * Owner.
@@ -74,19 +87,24 @@ final class Key implements Comparable<Key> {
 
     /**
      * Public ctor.
+     * @param client S3 client
      * @param work The work
      */
-    protected Key(final Work work) {
-        this(work.owner(), work.unit(), work.started());
+    protected Key(final S3Client client, final Work work) {
+        this(client, work.owner(), work.unit(), work.started());
     }
 
     /**
      * Private ctor.
+     * @param client S3 client
      * @param urn Owner
      * @param name Unit name
      * @param when Date
+     * @checkstyle ParameterNumber (4 lines)
      */
-    protected Key(final URN urn, final String name, final long when) {
+    protected Key(final S3Client client, final URN urn,
+        final String name, final long when) {
+        this.clnt = client;
         this.owner = urn;
         this.unit = name;
         this.date = when;
@@ -113,10 +131,11 @@ final class Key implements Comparable<Key> {
 
     /**
      * Parse it back.
+     * @param client S3 client
      * @param text The text to parse
      * @return Key found
      */
-    public static Key valueOf(final String text) {
+    public static Key valueOf(final S3Client client, final String text) {
         final Matcher matcher = Key.PATTERN.matcher(text);
         if (!matcher.matches()) {
             throw new IllegalArgumentException(
@@ -124,6 +143,7 @@ final class Key implements Comparable<Key> {
             );
         }
         return new Key(
+            client,
             URN.create(matcher.group(1)),
             matcher.group(2),
             Long.MAX_VALUE - Long.parseLong(matcher.group(Tv.THREE))
@@ -136,6 +156,14 @@ final class Key implements Comparable<Key> {
     @Override
     public int compareTo(final Key key) {
         return Long.compare(key.date, this.date);
+    }
+
+    /**
+     * Get client.
+     * @return S3 client
+     */
+    public S3Client client() {
+        return this.clnt;
     }
 
     /**

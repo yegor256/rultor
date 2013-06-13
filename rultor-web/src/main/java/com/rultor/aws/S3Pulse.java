@@ -30,6 +30,7 @@
 package com.rultor.aws;
 
 import com.jcabi.aspects.Cacheable;
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
@@ -51,15 +52,11 @@ import lombok.ToString;
  * @version $Id$
  * @since 1.0
  */
+@Immutable
 @ToString
-@EqualsAndHashCode(of = { "cache", "key" })
+@EqualsAndHashCode(of = "key")
 @Loggable(Loggable.DEBUG)
 final class S3Pulse implements Pulse {
-
-    /**
-     * Caches.
-     */
-    private final transient Caches cache;
 
     /**
      * S3 key.
@@ -68,11 +65,9 @@ final class S3Pulse implements Pulse {
 
     /**
      * Public ctor.
-     * @param cch Caches
      * @param akey S3 key
      */
-    protected S3Pulse(final Caches cch, final Key akey) {
-        this.cache = cch;
+    protected S3Pulse(final Key akey) {
         this.key = akey;
     }
 
@@ -115,7 +110,7 @@ final class S3Pulse implements Pulse {
      */
     @Override
     public InputStream read() throws IOException {
-        return this.cache.get(this.key).read();
+        return Caches.INSTANCE.get(this.key).read();
     }
 
     /**

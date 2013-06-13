@@ -38,23 +38,22 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test case for {@link DynamoUser}.
+ * Test case for {@link AwsUser}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class DynamoUserTest {
+public final class AwsUserTest {
 
     /**
-     * DynamoUser can have a name.
+     * AwsUser can have a name.
      * @throws Exception If some problem inside
      */
     @Test
     public void hasName() throws Exception {
         final S3Client client = Mockito.mock(S3Client.class);
-        final S3Log log = new S3Log(client, "bucket");
         final Region region = Mockito.mock(Region.class);
         final URN urn = new URN("urn:facebook:444");
-        final User user = new DynamoUser(region, log, urn);
+        final User user = new AwsUser(region, client, urn);
         MatcherAssert.assertThat(user.urn(), Matchers.equalTo(urn));
     }
 

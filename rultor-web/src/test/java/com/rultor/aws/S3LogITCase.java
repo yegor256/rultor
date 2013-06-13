@@ -29,6 +29,7 @@
  */
 package com.rultor.aws;
 
+import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Conveyer;
 import com.rultor.spi.Pulse;
@@ -40,10 +41,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Integration case for {@link S3Log}.
@@ -53,9 +54,9 @@ import org.junit.Test;
 public final class S3LogITCase {
 
     /**
-     * Log to work with.
+     * S3Client to work with.
      */
-    private transient S3Log log;
+    private transient S3Client client;
 
     /**
      * We're online.
@@ -64,7 +65,7 @@ public final class S3LogITCase {
     public void weAreOnline() {
         final String key = System.getProperty("failsafe.s3.key");
         if (key != null) {
-            this.log = new S3Log(
+            this.client = new S3Client.Simple(
                 key,
                 System.getProperty("failsafe.s3.secret"),
                 System.getProperty("failsafe.s3.bucket")
@@ -73,27 +74,18 @@ public final class S3LogITCase {
     }
 
     /**
-     * Close it, if necessary.
-     * @throws Exception If some problem inside
-     */
-    @After
-    public void close() throws Exception {
-        IOUtils.closeQuietly(this.log);
-    }
-
-    /**
      * S3Log can log.
      * @throws Exception If some problem inside
      */
     @Test
     public void logsMessages() throws Exception {
-        Assume.assumeNotNull(this.log);
+        Assume.assumeNotNull(this.client);
         final Spec spec = new Spec.Simple("java.lang.Integer(5)");
         final String unit = "some-test-unit";
         final URN owner = new URN("urn:facebook:1");
         final Work work = new Work.Simple(owner, unit, spec);
         final String msg = "some test log message \u20ac";
-        this.log.push(
+        new S3Log(this.client).push(
             work,
             new Conveyer.Line.Simple(
                 this.getClass().getName(),
@@ -101,7 +93,9 @@ public final class S3LogITCase {
                 msg
             )
         );
-        final List<Pulse> pulses = this.log.pulses(owner, unit);
+        final Region region = Mockito.mock(Region.class);
+        final List<Pulse> pulses =
+            new AwsUnit(region, this.client, owner, unit).pulses();
         MatcherAssert.assertThat(pulses, Matchers.not(Matchers.empty()));
         final Pulse pulse = pulses.get(0);
         MatcherAssert.assertThat(

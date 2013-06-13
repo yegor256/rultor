@@ -30,9 +30,14 @@
 package com.rultor.aws;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
@@ -42,8 +47,11 @@ import com.jcabi.urn.URN;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeSet;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -59,7 +67,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "region", "owner", "name" })
 @Loggable(Loggable.DEBUG)
-final class DynamoUnit implements Unit {
+final class AwsUnit implements Unit {
 
     /**
      * Dynamo DB table name.
@@ -82,14 +90,14 @@ final class DynamoUnit implements Unit {
     private static final String FIELD_SPEC = "spec";
 
     /**
-     * Dynamo.
+     * Dynamo DB region.
      */
     private final transient Region region;
 
     /**
-     * S3 Log.
+     * S3 client.
      */
-    private final transient S3Log log;
+    private final transient S3Client client;
 
     /**
      * URN of the user.
@@ -104,15 +112,15 @@ final class DynamoUnit implements Unit {
     /**
      * Public ctor.
      * @param reg Region in Dynamo
-     * @param slg S3Log
+     * @param clnt S3 client
      * @param urn URN of the user/owner
      * @param label Name of it
-     * @checkstyle ParameterNumber (5 lines)
+     * @checkstyle ParameterNumber (4 lines)
      */
-    protected DynamoUnit(final Region reg, final S3Log slg,
+    protected AwsUnit(final Region reg, final S3Client clnt,
         final URN urn, final String label) {
         this.region = reg;
-        this.log = slg;
+        this.client = clnt;
         this.owner = urn;
         this.name = label;
     }
@@ -122,8 +130,16 @@ final class DynamoUnit implements Unit {
      */
     @Override
     @NotNull
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public List<Pulse> pulses() {
-        return this.log.pulses(this.owner, this.name);
+        final List<Pulse> pulses = new LinkedList<Pulse>();
+        final Collection<Key> keys = new TreeSet<Key>();
+        keys.addAll(this.fetch());
+        keys.addAll(Caches.INSTANCE.keys(this.owner, this.name));
+        for (Key key : keys) {
+            pulses.add(new S3Pulse(key));
+        }
+        return pulses;
     }
 
     /**
@@ -133,7 +149,7 @@ final class DynamoUnit implements Unit {
     @Cacheable.FlushBefore
     public void spec(@NotNull final Spec spec) {
         this.item().put(
-            DynamoUnit.FIELD_SPEC,
+            AwsUnit.FIELD_SPEC,
             new AttributeValue(spec.asText())
         );
     }
@@ -145,7 +161,7 @@ final class DynamoUnit implements Unit {
     @NotNull
     @Cacheable
     public Spec spec() {
-        return new Spec.Simple(this.item().get(DynamoUnit.FIELD_SPEC).getS());
+        return new Spec.Simple(this.item().get(AwsUnit.FIELD_SPEC).getS());
     }
 
     /**
@@ -153,10 +169,10 @@ final class DynamoUnit implements Unit {
      * @return The item
      */
     private Item item() {
-        final Table table = this.region.table(DynamoUnit.TABLE);
+        final Table table = this.region.table(AwsUnit.TABLE);
         final Iterator<Item> items =  table.frame()
-            .where(DynamoUnit.KEY_OWNER, Conditions.equalTo(this.owner))
-            .where(DynamoUnit.KEY_NAME, Conditions.equalTo(this.name))
+            .where(AwsUnit.KEY_OWNER, Conditions.equalTo(this.owner))
+            .where(AwsUnit.KEY_NAME, Conditions.equalTo(this.name))
             .iterator();
         Item item;
         if (items.hasNext()) {
@@ -164,11 +180,29 @@ final class DynamoUnit implements Unit {
         } else {
             item = table.put(
                 new Attributes()
-                    .with(DynamoUnit.KEY_OWNER, this.owner)
-                    .with(DynamoUnit.KEY_NAME, this.name)
+                    .with(AwsUnit.KEY_OWNER, this.owner)
+                    .with(AwsUnit.KEY_NAME, this.name)
             );
         }
         return item;
+    }
+
+    /**
+     * Get all keys from S3.
+     * @return All keys
+     */
+    private Collection<Key> fetch() {
+        final AmazonS3 aws = this.client.get();
+        final ListObjectsRequest request = new ListObjectsRequest()
+            .withBucketName(this.client.bucket())
+            .withMaxKeys(Tv.TWENTY)
+            .withPrefix(String.format("%s/%s/", this.owner, this.name));
+        final ObjectListing listing = aws.listObjects(request);
+        final Collection<Key> keys = new LinkedList<Key>();
+        for (S3ObjectSummary sum : listing.getObjectSummaries()) {
+            keys.add(Key.valueOf(this.client, sum.getKey()));
+        }
+        return keys;
     }
 
 }

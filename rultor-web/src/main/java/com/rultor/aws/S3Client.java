@@ -45,7 +45,7 @@ import lombok.ToString;
  * @since 1.0
  */
 @Immutable
-interface S3Client {
+public interface S3Client {
 
     /**
      * Get AWS S3 client.
@@ -54,11 +54,17 @@ interface S3Client {
     AmazonS3 get();
 
     /**
+     * Bucket name.
+     * @return Name of it
+     */
+    String bucket();
+
+    /**
      * Simple client.
      */
     @Immutable
     @ToString
-    @EqualsAndHashCode(of = { "key", "secret" })
+    @EqualsAndHashCode(of = { "key", "secret", "bkt" })
     @Loggable(Loggable.DEBUG)
     final class Simple implements S3Client {
         /**
@@ -70,19 +76,36 @@ interface S3Client {
          */
         private final transient String secret;
         /**
+         * Bucket name.
+         */
+        private final transient String bkt;
+        /**
          * Public ctor.
          * @param akey AWS key
          * @param scrt AWS secret
+         * @param bucket S3 bucket
          */
-        public Simple(final String akey, final String scrt) {
+        public Simple(final String akey, final String scrt,
+            final String bucket) {
             this.key = akey;
             this.secret = scrt;
+            this.bkt = bucket;
         }
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public AmazonS3 get() {
             return new AmazonS3Client(
                 new BasicAWSCredentials(this.key, this.secret)
             );
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String bucket() {
+            return this.bkt;
         }
     }
 

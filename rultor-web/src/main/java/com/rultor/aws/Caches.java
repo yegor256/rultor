@@ -41,26 +41,21 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * In-memory cache of S3 objects.
+ * Mutable and thread-safe in-memory cache of S3 objects (singleton).
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @ToString
-@EqualsAndHashCode(of = { "client", "bucket" })
+@EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
 final class Caches implements Flushable {
 
     /**
-     * S3 client.
+     * Instance of the singleton.
      */
-    private final transient S3Client client;
-
-    /**
-     * Bucket name.
-     */
-    private final transient String bucket;
+    public static final Caches INSTANCE = new Caches();
 
     /**
      * All objects.
@@ -69,13 +64,10 @@ final class Caches implements Flushable {
         new ConcurrentSkipListMap<Key, Cache>();
 
     /**
-     * Public ctor.
-     * @param clnt Client
-     * @param bkt Bucket name
+     * Private ctor.
      */
-    protected Caches(final S3Client clnt, final String bkt) {
-        this.client = clnt;
-        this.bucket = bkt;
+    private Caches() {
+        // it's a singleton
     }
 
     /**
@@ -84,7 +76,7 @@ final class Caches implements Flushable {
      * @return Cache
      */
     public Cache get(final Key key) {
-        this.all.putIfAbsent(key, new Cache(this.client, this.bucket, key));
+        this.all.putIfAbsent(key, new Cache(key));
         return this.all.get(key);
     }
 

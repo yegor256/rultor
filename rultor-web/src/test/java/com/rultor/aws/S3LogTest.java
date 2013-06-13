@@ -57,7 +57,7 @@ public final class S3LogTest {
         final Work work = new Work.Simple(owner, unit, spec);
         final String msg = "some test log message \u20ac";
         final S3Client client = Mockito.mock(S3Client.class);
-        final S3Log log = new S3Log(client, "bucket");
+        final S3Log log = new S3Log(client);
         log.push(
             work,
             new Conveyer.Line.Simple(

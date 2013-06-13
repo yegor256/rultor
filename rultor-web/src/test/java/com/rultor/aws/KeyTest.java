@@ -33,6 +33,7 @@ import com.jcabi.urn.URN;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link Key}.
@@ -50,15 +51,16 @@ public final class KeyTest {
         final URN owner = new URN("urn:facebook:1");
         final String unit = "some-test-unit";
         final long date = System.currentTimeMillis();
+        final S3Client client = Mockito.mock(S3Client.class);
         MatcherAssert.assertThat(
-            new Key(owner, unit, date),
+            new Key(client, owner, unit, date),
             Matchers.hasToString(
                 Matchers.startsWith("urn:facebook:1/some-test-unit/")
             )
         );
         MatcherAssert.assertThat(
-            Key.valueOf(new Key(owner, unit, date).toString()),
-            Matchers.equalTo(new Key(owner, unit, date))
+            Key.valueOf(client, new Key(client, owner, unit, date).toString()),
+            Matchers.equalTo(new Key(client, owner, unit, date))
         );
     }
 
@@ -71,9 +73,10 @@ public final class KeyTest {
         final URN owner = new URN("urn:facebook:22");
         final String unit = "some-test-iii";
         final long date = System.currentTimeMillis();
+        final S3Client client = Mockito.mock(S3Client.class);
         MatcherAssert.assertThat(
-            new Key(owner, unit, date),
-            Matchers.lessThan(new Key(owner, unit, date - 1))
+            new Key(client, owner, unit, date),
+            Matchers.lessThan(new Key(client, owner, unit, date - 1))
         );
     }
 

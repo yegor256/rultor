@@ -34,7 +34,8 @@ import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.manifests.Manifests;
-import com.rultor.aws.DynamoUsers;
+import com.rultor.aws.AwsUsers;
+import com.rultor.aws.S3Client;
 import com.rultor.aws.S3Log;
 import com.rultor.conveyer.SimpleConveyer;
 import com.rultor.repo.ClasspathRepo;
@@ -74,7 +75,7 @@ public final class Lifespan implements ServletContextListener {
     private transient Quartz quartz;
 
     /**
-     * Log.
+     * S3 log.
      */
     private transient S3Log log;
 
@@ -88,22 +89,27 @@ public final class Lifespan implements ServletContextListener {
         } catch (java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }
-        final String key = Manifests.read("Rultor-S3Key");
-        final String secret = Manifests.read("Rultor-S3Secret");
         final Region region = new Region.Prefixed(
-            new Region.Simple(new Credentials.Simple(key, secret)),
+            new Region.Simple(
+                new Credentials.Simple(
+                    Manifests.read("Rultor-DynamoKey"),
+                    Manifests.read("Rultor-DynamoSecret")
+                )
+            ),
             Manifests.read("Rultor-DynamoPrefix")
         );
-        this.log = new S3Log(
-            key, secret,
+        final S3Client client = new S3Client.Simple(
+            Manifests.read("Rultor-S3Key"),
+            Manifests.read("Rultor-S3Secret"),
             Manifests.read("Rultor-S3Bucket")
         );
-        final Users users = new DynamoUsers(region, this.log);
+        final Users users = new AwsUsers(region, client);
         final Repo repo = new ClasspathRepo();
         event.getServletContext().setAttribute(Users.class.getName(), users);
         event.getServletContext().setAttribute(Repo.class.getName(), repo);
         final Queue queue = new Queue.Memory();
         this.quartz = new Lifespan.Quartz(users, queue);
+        this.log = new S3Log(client);
         this.conveyer = new SimpleConveyer(queue, repo, this.log);
         this.conveyer.start();
     }
