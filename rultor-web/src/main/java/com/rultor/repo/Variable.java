@@ -28,7 +28,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package com.rultor.repo;
- 
+
 import com.jcabi.aspects.Immutable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;

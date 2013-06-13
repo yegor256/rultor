@@ -36,7 +36,7 @@ import org.junit.Test;
 /**
  * Test case for {@link Pulse}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: IndexRsTest.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id$
  */
 public final class PulseTest {
 
