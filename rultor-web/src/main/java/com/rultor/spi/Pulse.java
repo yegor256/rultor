@@ -30,6 +30,7 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,17 +39,17 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.Validate;
 
 /**
- * Pulse.
+ * Pulse (mutable and thread-safe).
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
 public interface Pulse {
 
     /**
@@ -79,6 +80,9 @@ public interface Pulse {
     /**
      * Signal in the pulse.
      */
+    @Immutable
+    @EqualsAndHashCode(of = { "left", "right" })
+    @Loggable(Loggable.DEBUG)
     final class Signal {
         /**
          * Pattern to match.

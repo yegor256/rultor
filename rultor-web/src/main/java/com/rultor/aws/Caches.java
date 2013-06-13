@@ -30,9 +30,11 @@
 package com.rultor.aws;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
 import java.io.Flushable;
 import java.io.IOException;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import lombok.EqualsAndHashCode;
@@ -88,10 +90,18 @@ final class Caches implements Flushable {
 
     /**
      * Get a list of all keys available at the moment.
+     * @param owner Owner
+     * @param unit Unit
      * @return All keys
      */
-    public Set<Key> keys() {
-        return this.all.keySet();
+    public SortedSet<Key> keys(final URN owner, final String unit) {
+        final SortedSet<Key> keys = new TreeSet<Key>();
+        for (Key key : this.all.keySet()) {
+            if (key.belongsTo(owner, unit)) {
+                keys.add(key);
+            }
+        }
+        return keys;
     }
 
     /**

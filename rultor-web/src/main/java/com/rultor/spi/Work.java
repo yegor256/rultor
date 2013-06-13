@@ -101,7 +101,7 @@ public interface Work {
         /**
          * Public ctor.
          * @param owner Owner
-         * @param unit Name
+         * @param name Name
          * @param spec Spec
          */
         public Simple(@NotNull final URN owner, @NotNull final String name,

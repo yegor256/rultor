@@ -9,7 +9,7 @@
  * disclaimer. 2) Redistributions in binary form must reproduce the above
  * copyright notice, this list of conditions and the following
  * disclaimer in the documentation and/or other materials provided
- * with the distribution. 3) Neither the unit of the rultor.com nor
+ * with the distribution. 3) Neither the name of the rultor.com nor
  * the names of its contributors may be used to endorse or promote
  * products derived from this software without specific prior written
  * permission.
@@ -136,6 +136,16 @@ final class Key implements Comparable<Key> {
     @Override
     public int compareTo(final Key key) {
         return Long.compare(key.date, this.date);
+    }
+
+    /**
+     * Belongs to this user/unit?
+     * @param urn URN of the owner
+     * @param name Name of the unit
+     * @return TRUE if belongs
+     */
+    public boolean belongsTo(final URN urn, final String name) {
+        return this.owner.equals(urn) && this.unit.equals(name);
     }
 
 }

@@ -30,7 +30,6 @@
 package com.rultor.aws;
 
 import com.jcabi.aspects.Cacheable;
-import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
@@ -52,7 +51,6 @@ import lombok.ToString;
  * @version $Id$
  * @since 1.0
  */
-@Immutable
 @ToString
 @EqualsAndHashCode(of = { "cache", "key" })
 @Loggable(Loggable.DEBUG)

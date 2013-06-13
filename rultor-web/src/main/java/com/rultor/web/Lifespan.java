@@ -9,7 +9,7 @@
  * disclaimer. 2) Redistributions in binary form must reproduce the above
  * copyright notice, this list of conditions and the following
  * disclaimer in the documentation and/or other materials provided
- * with the distribution. 3) Neither the unit of the rultor.com nor
+ * with the distribution. 3) Neither the name of the rultor.com nor
  * the names of its contributors may be used to endorse or promote
  * products derived from this software without specific prior written
  * permission.
@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.google.common.io.Flushables;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.dynamo.Credentials;
@@ -116,7 +115,7 @@ public final class Lifespan implements ServletContextListener {
     public void contextDestroyed(final ServletContextEvent event) {
         IOUtils.closeQuietly(this.quartz);
         IOUtils.closeQuietly(this.conveyer);
-        Flushables.flushQuietly(this.log);
+        IOUtils.closeQuietly(this.log);
     }
 
     /**

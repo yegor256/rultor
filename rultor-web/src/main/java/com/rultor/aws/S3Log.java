@@ -9,7 +9,7 @@
  * disclaimer. 2) Redistributions in binary form must reproduce the above
  * copyright notice, this list of conditions and the following
  * disclaimer in the documentation and/or other materials provided
- * with the distribution. 3) Neither the unit of the rultor.com nor
+ * with the distribution. 3) Neither the name of the rultor.com nor
  * the names of its contributors may be used to endorse or promote
  * products derived from this software without specific prior written
  * permission.
@@ -40,12 +40,14 @@ import com.jcabi.urn.URN;
 import com.rultor.spi.Conveyer;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Work;
+import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeSet;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -66,11 +68,12 @@ import lombok.ToString;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @ToString
 @EqualsAndHashCode(of = { "client", "bucket" })
 @Loggable(Loggable.DEBUG)
-public final class S3Log implements Conveyer.Log, Flushable {
+public final class S3Log implements Conveyer.Log, Flushable, Closeable {
 
     /**
      * S3 client.
@@ -137,10 +140,21 @@ public final class S3Log implements Conveyer.Log, Flushable {
      */
     public List<Pulse> pulses(final URN owner, final String unit) {
         final List<Pulse> pulses = new LinkedList<Pulse>();
-        for (Key key : this.fetch(owner, unit)) {
+        final Collection<Key> keys = new TreeSet<Key>();
+        keys.addAll(this.fetch(owner, unit));
+        keys.addAll(this.caches.keys(owner, unit));
+        for (Key key : keys) {
             pulses.add(new S3Pulse(this.caches, key));
         }
         return pulses;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() throws IOException {
+        this.flush();
     }
 
     /**

@@ -9,7 +9,7 @@
  * disclaimer. 2) Redistributions in binary form must reproduce the above
  * copyright notice, this list of conditions and the following
  * disclaimer in the documentation and/or other materials provided
- * with the distribution. 3) Neither the unit of the rultor.com nor
+ * with the distribution. 3) Neither the name of the rultor.com nor
  * the names of its contributors may be used to endorse or promote
  * products derived from this software without specific prior written
  * permission.
@@ -40,6 +40,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,6 +69,16 @@ public final class S3LogITCase {
             System.getProperty("failsafe.s3.secret"),
             System.getProperty("failsafe.s3.bucket")
         );
+    }
+
+    /**
+     * Close it, if necessary.
+     * @throws Exception If some problem inside
+     */
+    @After
+    public void close() throws Exception {
+        Assume.assumeNotNull(this.log);
+        this.log.close();
     }
 
     /**
