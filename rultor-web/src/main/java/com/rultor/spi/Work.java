@@ -77,7 +77,7 @@ public interface Work {
     /**
      * Simple implementation.
      */
-    @Loggable(Loggable.INFO)
+    @Loggable(Loggable.DEBUG)
     @ToString
     @EqualsAndHashCode(of = { "urn", "label", "desc" })
     @Immutable

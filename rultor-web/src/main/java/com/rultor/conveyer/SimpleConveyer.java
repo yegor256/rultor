@@ -43,6 +43,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -110,6 +111,7 @@ public final class SimpleConveyer implements Closeable, Callable<Void> {
         this.queue = que;
         this.repo = rep;
         this.appender = new ConveyerAppender(log);
+        this.appender.setThreshold(Level.ALL);
         Logger.getLogger("").addAppender(this.appender);
     }
 
@@ -135,6 +137,7 @@ public final class SimpleConveyer implements Closeable, Callable<Void> {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.INFO, limit = Integer.MAX_VALUE)
     public Void call() throws Exception {
         while (true) {
             this.submit(this.queue.pull());
