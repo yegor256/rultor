@@ -32,10 +32,10 @@ package com.rultor.spi;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.io.Closeable;
+import java.util.Date;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Conveyer.
@@ -70,28 +70,9 @@ public interface Conveyer extends Closeable {
     @Immutable
     interface Line {
         /**
-         * Logger.
-         * @return Who is sending it
-         */
-        @NotNull
-        String logger();
-        /**
-         * Level.
-         * @return Level
-         */
-        @NotNull
-        Level level();
-        /**
-         * Message.
-         * @return The message
-         */
-        @NotNull
-        String message();
-        /**
          * Simple.
          */
         @Loggable(Loggable.DEBUG)
-        @ToString
         @EqualsAndHashCode(of = { "who", "lvl", "msg" })
         @Immutable
         final class Simple implements Conveyer.Line {
@@ -102,7 +83,7 @@ public interface Conveyer extends Closeable {
             /**
              * Level.
              */
-            private final transient Level lvl;
+            private final transient String lvl;
             /**
              * Message.
              */
@@ -116,29 +97,21 @@ public interface Conveyer extends Closeable {
             public Simple(final String logger, final Level level,
                 final String message) {
                 this.who = logger;
-                this.lvl = level;
+                this.lvl = level.toString();
                 this.msg = message;
             }
             /**
              * {@inheritDoc}
              */
             @Override
-            public String logger() {
-                return this.who;
-            }
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public Level level() {
-                return this.lvl;
-            }
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public String message() {
-                return this.msg;
+            public String toString() {
+                return String.format(
+                    "%tM:%<tS %5s %s %s",
+                    new Date(),
+                    this.lvl,
+                    this.who,
+                    this.msg
+                );
             }
         }
     }

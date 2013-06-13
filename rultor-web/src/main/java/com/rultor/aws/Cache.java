@@ -36,6 +36,7 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
+import com.rultor.spi.Conveyer;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Flushable;
@@ -98,9 +99,9 @@ final class Cache implements Flushable {
      * @param line Line to add
      * @throws IOException If fails
      */
-    public void append(final String line) throws IOException {
+    public void append(final Conveyer.Line line) throws IOException {
         final PrintWriter writer = new PrintWriter(this.stream());
-        writer.append(line).append(CharUtils.LF);
+        writer.append(line.toString()).append(CharUtils.LF);
         writer.flush();
     }
 

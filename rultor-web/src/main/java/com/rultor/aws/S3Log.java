@@ -46,7 +46,6 @@ import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
@@ -124,15 +123,7 @@ public final class S3Log implements
     @Override
     public void push(final Work work, final Conveyer.Line line) {
         try {
-            this.caches.get(new Key(work)).append(
-                String.format(
-                    "%tM:%<tS %5s %s %s",
-                    new Date(),
-                    line.level(),
-                    line.logger(),
-                    line.message()
-                )
-            );
+            this.caches.get(new Key(work)).append(line);
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
