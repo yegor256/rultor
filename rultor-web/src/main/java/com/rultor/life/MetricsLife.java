@@ -30,7 +30,6 @@
 package com.rultor.life;
 
 import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.Slf4jReporter;
 import com.codahale.metrics.health.HealthCheck;
 import com.codahale.metrics.health.HealthCheckRegistry;
 import com.codahale.metrics.jvm.BufferPoolMetricSet;
@@ -43,12 +42,10 @@ import com.codahale.metrics.servlets.MetricsServlet;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Metricable;
 import java.util.Enumeration;
-import java.util.concurrent.TimeUnit;
 import javax.management.MBeanServerFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import org.slf4j.LoggerFactory;
 
 /**
  * Metrics Framework Lifespan.
@@ -116,12 +113,6 @@ public final class MetricsLife implements ServletContextListener {
             new BufferPoolMetricSet(MBeanServerFactory.createMBeanServer())
         );
         this.metrics.register("descriptors", new FileDescriptorRatioGauge());
-        Slf4jReporter.forRegistry(this.metrics)
-            .outputTo(LoggerFactory.getLogger(this.getClass().getName()))
-            .convertRatesTo(TimeUnit.SECONDS)
-            .convertDurationsTo(TimeUnit.MILLISECONDS)
-            .build()
-            .start(1, TimeUnit.MINUTES);
     }
 
     /**
