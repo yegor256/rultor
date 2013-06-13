@@ -82,7 +82,7 @@ public final class S3Log implements Conveyer.Log, Closeable {
     /**
      * All cached objects.
      */
-    private final transient Cache cache;
+    private final transient Caches cache;
 
     /**
      * Public ctor.
@@ -102,7 +102,7 @@ public final class S3Log implements Conveyer.Log, Closeable {
     protected S3Log(final S3Client clnt, final String bkt) {
         this.client = clnt;
         this.bucket = bkt;
-        this.cache = new Cache(this.client, this.bucket);
+        this.cache = new Caches(this.client, this.bucket);
     }
 
     /**
@@ -111,16 +111,19 @@ public final class S3Log implements Conveyer.Log, Closeable {
     @Override
     public void push(final Work work, final Conveyer.Line line) {
         final String key = this.key(work.owner(), work.name());
-        this.cache.append(
-            key,
-            String.format(
-                "%tM:%<tS %5s %s %s",
-                new Date(),
-                line.level(),
-                line.logger(),
-                line.message()
-            )
-        );
+        try {
+            this.cache.get(key).append(
+                String.format(
+                    "%tM:%<tS %5s %s %s",
+                    new Date(),
+                    line.level(),
+                    line.logger(),
+                    line.message()
+                )
+            );
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**

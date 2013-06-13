@@ -27,12 +27,72 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.aws;
+
+import com.jcabi.aspects.Loggable;
+import java.io.Flushable;
+import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * AWS interacting classes.
+ * In-memory cache of S3 objects.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-package com.rultor.aws;
+@ToString
+@EqualsAndHashCode(of = { "client", "bucket" })
+@Loggable(Loggable.DEBUG)
+final class Caches implements Flushable {
+
+    /**
+     * S3 client.
+     */
+    private final transient S3Client client;
+
+    /**
+     * Bucket name.
+     */
+    private final transient String bucket;
+
+    /**
+     * All objects.
+     */
+    private final transient ConcurrentMap<String, Cache> all =
+        new ConcurrentHashMap<String, Cache>(0);
+
+    /**
+     * Public ctor.
+     * @param clnt Client
+     * @param bkt Bucket name
+     */
+    protected Caches(final S3Client clnt, final String bkt) {
+        this.client = clnt;
+        this.bucket = bkt;
+    }
+
+    /**
+     * Get cache by key.
+     * @param key S3 key
+     * @return Cache
+     */
+    public Cache get(final String key) {
+        this.all.putIfAbsent(key, new Cache(this.client, this.bucket, key));
+        return this.all.get(key);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void flush() throws IOException {
+        for (Cache cache : this.all.values()) {
+            cache.flush();
+        }
+    }
+
+}

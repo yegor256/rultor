@@ -59,9 +59,9 @@ import lombok.ToString;
 final class S3Pulse implements Pulse {
 
     /**
-     * Cache.
+     * Caches.
      */
-    private final transient Cache cache;
+    private final transient Caches cache;
 
     /**
      * S3 key.
@@ -73,7 +73,7 @@ final class S3Pulse implements Pulse {
      * @param clnt Client
      * @param bkt Bucket name
      */
-    protected S3Pulse(final Cache cch, final String akey) {
+    protected S3Pulse(final Caches cch, final String akey) {
         this.cache = cch;
         this.key = akey;
     }
@@ -117,7 +117,7 @@ final class S3Pulse implements Pulse {
      */
     @Override
     public InputStream read() throws IOException {
-        return this.cache.read(this.key);
+        return this.cache.get(this.key).read();
     }
 
     /**

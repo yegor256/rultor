@@ -27,12 +27,23 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.aws;
+
+import org.junit.Test;
 
 /**
- * AWS interacting classes.
- *
+ * Integration case for {@link S3Log}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
+ * @version $Id: IndexRsTest.java 2344 2013-01-13 18:28:44Z guard $
  */
-package com.rultor.aws;
+public final class S3LogITCase {
+
+    /**
+     * S3Log can log.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void logsMessages() throws Exception {
+    }
+
+}
