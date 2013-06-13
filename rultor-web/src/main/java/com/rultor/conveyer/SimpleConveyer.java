@@ -29,6 +29,8 @@
  */
 package com.rultor.conveyer;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseThreads;
@@ -86,6 +88,11 @@ public final class SimpleConveyer
      * Log appender.
      */
     private final transient ConveyerAppender appender;
+
+    /**
+     * Counter of executed jobs.
+     */
+    private transient Counter counter;
 
     /**
      * Consumer of new specs from Queue.
@@ -148,6 +155,16 @@ public final class SimpleConveyer
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void register(final MetricRegistry registry) {
+        this.counter = registry.counter(
+            MetricRegistry.name(this.getClass(), "done-jobs")
+        );
+    }
+
+    /**
      * Submit work for execution in the threaded executor.
      * @param work Work
      */
@@ -161,6 +178,7 @@ public final class SimpleConveyer
                         work,
                         SimpleConveyer.this.appender
                     ).pulse(SimpleConveyer.this.state);
+                    SimpleConveyer.this.counter.inc();
                     return null;
                 }
             }

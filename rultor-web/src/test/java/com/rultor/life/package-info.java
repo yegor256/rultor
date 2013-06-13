@@ -27,33 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
-
-import com.rexsl.page.ServletContextMocker;
-import javax.servlet.ServletContextEvent;
-import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
- * Test case for {@link Lifespan}.
+ * Life cycle of the entire product, tests.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class LifespanTest {
-
-    /**
-     * Lifespan can start and stop.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void startsAndStops() throws Exception {
-        final Lifespan life = new Lifespan();
-        final ServletContextEvent event =
-            Mockito.mock(ServletContextEvent.class);
-        Mockito.doReturn(new ServletContextMocker().mock())
-            .when(event).getServletContext();
-        life.contextInitialized(event);
-        life.contextDestroyed(event);
-    }
-
-}
+package com.rultor.life;

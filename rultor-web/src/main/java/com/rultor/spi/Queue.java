@@ -29,6 +29,8 @@
  */
 package com.rultor.spi;
 
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Loggable;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -44,7 +46,7 @@ import lombok.ToString;
  * @version $Id$
  * @since 1.0
  */
-public interface Queue {
+public interface Queue extends Metricable {
 
     /**
      * Push new work into it.
@@ -86,6 +88,21 @@ public interface Queue {
         @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
         public Work pull() throws InterruptedException {
             return this.list.poll(Long.MAX_VALUE, TimeUnit.DAYS);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void register(final MetricRegistry registry) {
+            registry.register(
+                MetricRegistry.name(this.getClass(), "queue", "size"),
+                new Gauge<Integer>() {
+                    @Override
+                    public Integer getValue() {
+                        return Queue.Memory.this.list.size();
+                    }
+                }
+            );
         }
     }
 

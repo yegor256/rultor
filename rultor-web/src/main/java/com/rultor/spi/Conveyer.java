@@ -44,7 +44,7 @@ import lombok.EqualsAndHashCode;
  * @version $Id$
  * @since 1.0
  */
-public interface Conveyer extends Closeable {
+public interface Conveyer extends Closeable, Metricable {
 
     /**
      * Start it.

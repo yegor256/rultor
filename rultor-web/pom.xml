@@ -38,6 +38,9 @@
     <artifactId>rultor-web</artifactId>
     <packaging>war</packaging>
     <name>rultor-web</name>
+    <properties>
+        <metrics.version>3.0.0</metrics.version>
+    </properties>
     <pluginRepositories>
         <pluginRepository>
             <id>cloudbees-public-release</id>
@@ -170,6 +173,16 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.codahale.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <version>${metrics.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codahale.metrics</groupId>
+            <artifactId>metrics-servlets</artifactId>
+            <version>${metrics.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>

@@ -29,8 +29,11 @@
  */
 package com.rultor.aws;
 
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Metricable;
 import java.io.Flushable;
 import java.io.IOException;
 import java.util.SortedSet;
@@ -50,7 +53,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-final class Caches implements Flushable {
+final class Caches implements Flushable, Metricable {
 
     /**
      * Instance of the singleton.
@@ -94,6 +97,22 @@ final class Caches implements Flushable {
             }
         }
         return keys;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void register(final MetricRegistry registry) {
+        registry.register(
+            MetricRegistry.name(this.getClass(), "keys-total"),
+            new Gauge<Integer>() {
+                @Override
+                public Integer getValue() {
+                    return Caches.this.all.size();
+                }
+            }
+        );
     }
 
     /**

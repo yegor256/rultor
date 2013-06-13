@@ -29,6 +29,8 @@
  */
 package com.rultor.aws;
 
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Item;
@@ -98,6 +100,23 @@ public final class AwsUsers implements Users {
     @Override
     public User fetch(final URN urn) {
         return new AwsUser(this.region, this.client, urn);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void register(final MetricRegistry registry) {
+        registry.register(
+            MetricRegistry.name(this.getClass(), "users-total"),
+            new Gauge<Integer>() {
+                @Override
+                public Integer getValue() {
+                    return AwsUsers.this.everybody().size();
+                }
+            }
+        );
+        Caches.INSTANCE.register(registry);
     }
 
 }

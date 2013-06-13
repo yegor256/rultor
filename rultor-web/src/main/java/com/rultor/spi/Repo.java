@@ -40,7 +40,7 @@ import javax.validation.constraints.NotNull;
  * @since 1.0
  */
 @Immutable
-public interface Repo {
+public interface Repo extends Metricable {
 
     /**
      * Invalid syntax of spec.

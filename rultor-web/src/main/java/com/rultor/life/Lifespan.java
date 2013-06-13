@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor.life;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
@@ -39,6 +39,7 @@ import com.rultor.aws.S3Client;
 import com.rultor.aws.S3Log;
 import com.rultor.conveyer.SimpleConveyer;
 import com.rultor.repo.ClasspathRepo;
+import com.rultor.spi.Conveyer;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Unit;
@@ -49,6 +50,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import lombok.EqualsAndHashCode;
@@ -105,13 +107,15 @@ public final class Lifespan implements ServletContextListener {
         );
         final Users users = new AwsUsers(region, client);
         final Repo repo = new ClasspathRepo();
-        event.getServletContext().setAttribute(Users.class.getName(), users);
-        event.getServletContext().setAttribute(Repo.class.getName(), repo);
+        final ServletContext context = event.getServletContext();
         final Queue queue = new Queue.Memory();
         this.quartz = new Lifespan.Quartz(users, queue);
         this.log = new S3Log(client);
         this.conveyer = new SimpleConveyer(queue, repo, this.log);
         this.conveyer.start();
+        context.setAttribute(Users.class.getName(), users);
+        context.setAttribute(Repo.class.getName(), repo);
+        context.setAttribute(Conveyer.class.getName(), this.conveyer);
     }
 
     /**

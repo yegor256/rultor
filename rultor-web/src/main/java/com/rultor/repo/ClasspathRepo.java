@@ -29,6 +29,7 @@
  */
 package com.rultor.repo;
 
+import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Instance;
@@ -82,6 +83,14 @@ public final class ClasspathRepo implements Repo {
     public Spec make(@NotNull final String text)
         throws Repo.InvalidSyntaxException {
         return this.var(text);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void register(final MetricRegistry registry) {
+        // nothing to do
     }
 
     /**
