@@ -84,6 +84,7 @@ public final class PulsesRs extends BaseRs {
             .stylesheet("/xsl/pulses.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .append(new JaxbBundle("unit", this.name))
             .append(this.pulses())
             .render()
             .build();
