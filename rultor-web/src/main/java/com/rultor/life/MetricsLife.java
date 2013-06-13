@@ -33,12 +33,18 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Slf4jReporter;
 import com.codahale.metrics.health.HealthCheck;
 import com.codahale.metrics.health.HealthCheckRegistry;
+import com.codahale.metrics.jvm.BufferPoolMetricSet;
+import com.codahale.metrics.jvm.FileDescriptorRatioGauge;
+import com.codahale.metrics.jvm.GarbageCollectorMetricSet;
+import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
+import com.codahale.metrics.jvm.ThreadStatesGaugeSet;
 import com.codahale.metrics.servlets.HealthCheckServlet;
 import com.codahale.metrics.servlets.MetricsServlet;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Metricable;
 import java.util.Enumeration;
 import java.util.concurrent.TimeUnit;
+import javax.management.MBeanServerFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -103,6 +109,13 @@ public final class MetricsLife implements ServletContextListener {
                 Metricable.class.cast(object).register(this.metrics);
             }
         }
+        this.metrics.registerAll(new GarbageCollectorMetricSet());
+        this.metrics.registerAll(new ThreadStatesGaugeSet());
+        this.metrics.registerAll(new MemoryUsageGaugeSet());
+        this.metrics.registerAll(
+            new BufferPoolMetricSet(MBeanServerFactory.createMBeanServer())
+        );
+        this.metrics.register("descriptors", new FileDescriptorRatioGauge());
         Slf4jReporter.forRegistry(this.metrics)
             .outputTo(LoggerFactory.getLogger(this.getClass().getName()))
             .convertRatesTo(TimeUnit.SECONDS)

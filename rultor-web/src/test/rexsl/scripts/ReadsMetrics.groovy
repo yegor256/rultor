@@ -34,8 +34,15 @@ import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.UriBuilder
 
-RestTester.start(UriBuilder.fromUri(rexsl.home).path('/metrics'))
-    .header(HttpHeaders.ACCEPT, MediaType.TEXT_HTML)
-    .get('reading metrics')
-    .assertStatus(HttpURLConnection.HTTP_OK)
-    .assertXPath('/html')
+[
+    '/metrics',
+    '/metrics/metrics',
+    '/metrics/ping',
+    '/metrics/threads',
+    '/metrics/healthcheck',
+].each {
+    RestTester.start(UriBuilder.fromUri(rexsl.home).path(it))
+        .header(HttpHeaders.ACCEPT, MediaType.TEXT_HTML)
+        .get('reading metrics')
+        .assertStatus(HttpURLConnection.HTTP_OK)
+}
