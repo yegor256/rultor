@@ -63,12 +63,13 @@ public final class S3LogITCase {
     @Before
     public void weAreOnline() {
         final String key = System.getProperty("failsafe.s3.key");
-        Assume.assumeNotNull(key);
-        this.log = new S3Log(
-            key,
-            System.getProperty("failsafe.s3.secret"),
-            System.getProperty("failsafe.s3.bucket")
-        );
+        if (key != null) {
+            this.log = new S3Log(
+                key,
+                System.getProperty("failsafe.s3.secret"),
+                System.getProperty("failsafe.s3.bucket")
+            );
+        }
     }
 
     /**
@@ -77,8 +78,7 @@ public final class S3LogITCase {
      */
     @After
     public void close() throws Exception {
-        Assume.assumeNotNull(this.log);
-        this.log.close();
+        IOUtils.closeQuietly(this.log);
     }
 
     /**
@@ -87,6 +87,7 @@ public final class S3LogITCase {
      */
     @Test
     public void logsMessages() throws Exception {
+        Assume.assumeNotNull(this.log);
         final Spec spec = new Spec.Simple("java.lang.Integer(5)");
         final String unit = "some-test-unit";
         final URN owner = new URN("urn:facebook:1");

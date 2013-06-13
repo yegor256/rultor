@@ -30,7 +30,9 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Loggable;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -68,7 +70,7 @@ public interface Queue {
         /**
          * Queue of them.
          */
-        private final transient java.util.Queue<Work> list =
+        private final transient BlockingQueue<Work> list =
             new LinkedBlockingQueue<Work>();
         /**
          * {@inheritDoc}
@@ -82,7 +84,7 @@ public interface Queue {
          */
         @Override
         public Work pull() throws InterruptedException {
-            return this.list.poll();
+            return this.list.poll(Long.MAX_VALUE, TimeUnit.DAYS);
         }
     }
 

@@ -29,7 +29,6 @@
  */
 package com.rultor.spi;
 
-import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,7 +43,6 @@ import javax.validation.constraints.NotNull;
  * @version $Id$
  * @since 1.0
  */
-@Immutable
 public interface Users {
 
     /**

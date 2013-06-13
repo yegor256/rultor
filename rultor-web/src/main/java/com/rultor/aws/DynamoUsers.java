@@ -29,7 +29,6 @@
  */
 package com.rultor.aws;
 
-import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
@@ -50,7 +49,6 @@ import lombok.ToString;
  * @version $Id$
  * @since 1.0
  */
-@Immutable
 @ToString
 @EqualsAndHashCode(of = "region")
 @Loggable(Loggable.DEBUG)
