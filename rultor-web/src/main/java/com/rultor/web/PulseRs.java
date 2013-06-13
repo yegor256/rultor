@@ -112,8 +112,12 @@ public final class PulseRs extends BaseRs {
      * @param time Pulse time
      */
     @QueryParam(PulseRs.QUERY_START)
-    public void setStart(@NotNull final String time) {
-        this.start = Long.parseLong(time);
+    public void setStart(final String time) {
+        if (time == null) {
+            this.start = 0L;
+        } else {
+            this.start = Long.parseLong(time);
+        }
     }
 
     /**
@@ -121,8 +125,12 @@ public final class PulseRs extends BaseRs {
      * @param time Pulse time
      */
     @QueryParam(PulseRs.QUERY_STOP)
-    public void setStop(@NotNull final String time) {
-        this.stop = Long.parseLong(time);
+    public void setStop(final String time) {
+        if (time == null) {
+            this.stop = Long.MAX_VALUE;
+        } else {
+            this.stop = Long.parseLong(time);
+        }
     }
 
     /**

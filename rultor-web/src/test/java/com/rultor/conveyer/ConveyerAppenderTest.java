@@ -59,7 +59,7 @@ public final class ConveyerAppenderTest {
         final Work work = new Work.Simple(
             new URN("urn:facebook:1"), "test work", new Spec.Simple("a()")
         );
-        appender.register(Thread.currentThread().getThreadGroup(), work);
+        appender.register(Thread.currentThread(), work);
         final String text = "test message to see in log";
         appender.append(
             new LoggingEvent(

@@ -50,6 +50,7 @@ import org.apache.log4j.spi.LoggingEvent;
  */
 @ToString
 @EqualsAndHashCode(callSuper = false)
+@SuppressWarnings("PMD.DoNotUseThreads")
 final class ConveyerAppender extends AppenderSkeleton implements Appender {
 
     /**
@@ -75,8 +76,8 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
     /**
      * Destination of logs.
      */
-    private final transient ConcurrentMap<ThreadGroup, Work> works =
-        new ConcurrentHashMap<ThreadGroup, Work>(0);
+    private final transient ConcurrentMap<Thread, Work> works =
+        new ConcurrentHashMap<Thread, Work>(0);
 
     /**
      * Public ctor.
@@ -89,19 +90,19 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
 
     /**
      * Register this thread group for the given work.
-     * @param group Thread group
+     * @param thread Thread
      * @param work The work to attach to
      */
-    public void register(final ThreadGroup group, final Work work) {
-        this.works.put(group, work);
+    public void register(final Thread thread, final Work work) {
+        this.works.put(thread, work);
     }
 
     /**
      * Unregister this thread group.
-     * @param group Thread group
+     * @param thread Thread group
      */
-    public void unregister(final ThreadGroup group) {
-        this.works.remove(group);
+    public void unregister(final Thread thread) {
+        this.works.remove(thread);
     }
 
     /**
@@ -109,9 +110,7 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
      */
     @Override
     protected void append(final LoggingEvent event) {
-        final Work work = this.works.get(
-            Thread.currentThread().getThreadGroup()
-        );
+        final Work work = this.works.get(Thread.currentThread());
         if (work != null) {
             this.log.push(
                 work,

@@ -50,6 +50,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "repo", "work", "appender" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.DoNotUseThreads")
 final class LoggedInstance implements Instance {
 
     /**
@@ -85,8 +86,8 @@ final class LoggedInstance implements Instance {
      */
     @Override
     public void pulse(@NotNull final State state) {
-        final ThreadGroup group = Thread.currentThread().getThreadGroup();
-        this.appender.register(group, this.work);
+        final Thread thread = Thread.currentThread();
+        this.appender.register(thread, this.work);
         try {
             this.meta("started", System.currentTimeMillis());
             this.meta("owner", this.work.owner());
@@ -96,7 +97,7 @@ final class LoggedInstance implements Instance {
         } catch (Repo.InstantiationException ex) {
             Logger.error(this, "%[exception]s", ex);
         } finally {
-            this.appender.unregister(group);
+            this.appender.unregister(thread);
         }
     }
 
