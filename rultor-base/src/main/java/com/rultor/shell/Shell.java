@@ -27,79 +27,33 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.ci;
+package com.rultor.shell;
 
 import com.jcabi.aspects.Immutable;
-import com.rultor.board.Billboard;
-import com.rultor.shell.Shell;
-import com.rultor.shell.Shells;
-import com.rultor.spi.Pulseable;
-import com.rultor.spi.State;
-import com.rultor.spi.Work;
-import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.InputStream;
+import java.io.OutputStream;
 import javax.validation.constraints.NotNull;
-import org.apache.commons.io.IOUtils;
 
 /**
- * Build.
+ * Shell.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public final class Build implements Pulseable {
+public interface Shell extends Closeable {
 
     /**
-     * Shells.
+     * Exec one command.
+     * @param command Command to execute
+     * @param stdin Input stream
+     * @param stdout Output stream
+     * @param stderr Error output stream
+     * @return Exit code
      */
-    private final transient Shells shells;
-
-    /**
-     * Script to execute.
-     */
-    private final transient String script;
-
-    /**
-     * Where to notify about success/failure.
-     */
-    private final transient Billboard board;
-
-    /**
-     * Public ctor.
-     * @param shls Shells
-     * @param scrt Script to run there
-     * @param brd The board where to announce
-     */
-    public Build(final Shells shls, final String scrt,
-        final Billboard brd) {
-        this.shells = shls;
-        this.script = scrt;
-        this.board = brd;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void pulse(@NotNull final Work work, @NotNull final State state) {
-        final Shell shell = this.shells.acquire();
-        int code;
-        try {
-            code = shell.exec(
-                this.script,
-                IOUtils.toInputStream(""),
-                new ByteArrayOutputStream(),
-                new ByteArrayOutputStream()
-            );
-        } finally {
-            IOUtils.closeQuietly(shell);
-        }
-        if (code == 0) {
-            this.board.announce("SUCCESS");
-        } else {
-            this.board.announce("FAILURE");
-        }
-    }
+    int exec(@NotNull String command, @NotNull InputStream stdin,
+        @NotNull OutputStream stdout, @NotNull OutputStream stderr);
 
 }
