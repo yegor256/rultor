@@ -51,6 +51,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
  * @see <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html">Crontab specification</a>
  */
 @Immutable
+@SuppressWarnings({ "PMD.NPathComplexity", "PMD.CyclomaticComplexity" })
 public final class Crontab implements Pulseable {
 
     /**
