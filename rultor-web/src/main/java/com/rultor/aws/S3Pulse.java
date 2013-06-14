@@ -117,7 +117,7 @@ final class S3Pulse implements Pulse {
      */
     @Override
     public InputStream read() throws IOException {
-        return Caches.INSTANCE.get(this.key).read();
+        return Caches.INSTANCE.read(this.key);
     }
 
     /**

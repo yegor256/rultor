@@ -44,6 +44,9 @@ import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -69,14 +72,20 @@ final class Cache implements Flushable {
     private final transient Key key;
 
     /**
-     * Data.
+     * When was is touched last time (in milliseconds)?
      */
-    private transient ByteArrayOutputStream data;
+    private final transient AtomicLong touched =
+        new AtomicLong(System.currentTimeMillis());
 
     /**
      * Is it dirty and needs flushing?
      */
-    private transient boolean dirty;
+    private final transient AtomicBoolean dirty = new AtomicBoolean();
+
+    /**
+     * Data.
+     */
+    private transient ByteArrayOutputStream data;
 
     /**
      * Public ctor.
@@ -92,11 +101,11 @@ final class Cache implements Flushable {
      * @throws IOException If fails
      */
     public void append(final Conveyer.Line line) throws IOException {
-        final PrintWriter writer = new PrintWriter(this.stream());
         synchronized (this.key) {
+            final PrintWriter writer = new PrintWriter(this.stream());
             writer.append(line.toString()).append(CharUtils.LF);
             writer.flush();
-            this.dirty = true;
+            this.dirty.set(true);
         }
     }
 
@@ -115,7 +124,7 @@ final class Cache implements Flushable {
     @Override
     public void flush() throws IOException {
         synchronized (this.key) {
-            if (this.data != null && this.dirty) {
+            if (this.data != null && this.dirty.get()) {
                 final S3Client client = this.key.client();
                 final AmazonS3 aws = client.get();
                 final ObjectMetadata meta = new ObjectMetadata();
@@ -123,7 +132,7 @@ final class Cache implements Flushable {
                 meta.setContentLength(this.data.size());
                 meta.setContentType(MediaType.TEXT_PLAIN);
                 try {
-                    if (this.data.size() > Tv.THOUSAND) {
+                    if (this.valuable()) {
                         final PutObjectResult result = aws.putObject(
                             client.bucket(),
                             this.key.toString(),
@@ -149,7 +158,7 @@ final class Cache implements Flushable {
                         ex
                     );
                 }
-                this.dirty = false;
+                this.dirty.set(false);
             }
         }
     }
@@ -191,8 +200,27 @@ final class Cache implements Flushable {
                     );
                 }
             }
+            this.touched.set(System.currentTimeMillis());
             return this.data;
         }
+    }
+
+    /**
+     * Is it expired?
+     * @return TRUE if it is not required in memory any more
+     */
+    public boolean expired() {
+        final long mins = (System.currentTimeMillis() - this.touched.get())
+            / TimeUnit.MINUTES.toMillis(1);
+        return !this.dirty.get() && mins > Tv.TWENTY;
+    }
+
+    /**
+     * Is it a valuable log?
+     * @return TRUE if it is valuable and should be persisted
+     */
+    private boolean valuable() {
+        return this.data.size() > Tv.THOUSAND;
     }
 
 }

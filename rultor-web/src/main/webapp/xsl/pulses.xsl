@@ -38,6 +38,12 @@
     </xsl:template>
     <xsl:template name="content">
         <h1><xsl:value-of select="/page/unit"/></h1>
+        <p>
+            <xsl:text>
+                Very short and thus non-important pulses are
+                removed automatically in 20 minutes.
+            </xsl:text>
+        </p>
         <xsl:if test="pulses/pulse">
             <ul class="nav">
                 <xsl:apply-templates select="pulses/pulse"/>

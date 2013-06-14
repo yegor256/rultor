@@ -31,15 +31,22 @@ package com.rultor.aws;
 
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
+import com.google.common.io.Flushables;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Conveyer;
 import com.rultor.spi.Metricable;
 import java.io.Flushable;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -53,7 +60,20 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-final class Caches implements Flushable, Metricable {
+@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.MINUTES)
+@SuppressWarnings("PMD.DoNotUseThreads")
+final class Caches implements Flushable, Metricable, Runnable {
+
+    /**
+     * Total number of available parallel permits.
+     *
+     * <p>This is how many parallel threads can get access to this class. The
+     * number is used in order to enable flushing. When flushing is happening
+     * we should disable all IO operations with the class. To do so,
+     * {@link Semaphore} is used, and it requires a limited number of
+     * permits on construction.
+     */
+    public static final int PERMITS = 10;
 
     /**
      * Instance of the singleton.
@@ -67,6 +87,12 @@ final class Caches implements Flushable, Metricable {
         new ConcurrentSkipListMap<Key, Cache>();
 
     /**
+     * Semaphore to enable all-in-one-step flushing.
+     */
+    private final transient Semaphore semaphore =
+        new Semaphore(Caches.PERMITS, true);
+
+    /**
      * Private ctor.
      */
     private Caches() {
@@ -74,13 +100,44 @@ final class Caches implements Flushable, Metricable {
     }
 
     /**
-     * Get cache by key.
-     * @param key S3 key
-     * @return Cache
+     * Append new line to an object.
+     * @param key Key to append to
+     * @param line Line to add
+     * @throws IOException If fails
      */
-    public Cache get(final Key key) {
-        this.all.putIfAbsent(key, new Cache(key));
-        return this.all.get(key);
+    public void append(final Key key,
+        final Conveyer.Line line) throws IOException {
+        try {
+            try {
+                this.semaphore.acquire();
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                throw new IOException(ex);
+            }
+            this.get(key).append(line);
+        } finally {
+            this.semaphore.release();
+        }
+    }
+
+    /**
+     * Read the entire object.
+     * @param key Which stream to read
+     * @return Input stream
+     * @throws IOException If fails
+     */
+    public InputStream read(final Key key) throws IOException {
+        try {
+            try {
+                this.semaphore.acquire();
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                throw new IOException(ex);
+            }
+            return this.get(key).read();
+        } finally {
+            this.semaphore.release();
+        }
     }
 
     /**
@@ -122,6 +179,46 @@ final class Caches implements Flushable, Metricable {
     public void flush() throws IOException {
         for (Cache cache : this.all.values()) {
             cache.flush();
+        }
+        try {
+            try {
+                this.semaphore.acquire(Caches.PERMITS);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                throw new IOException(ex);
+            }
+            this.clean();
+        } finally {
+            this.semaphore.release(Caches.PERMITS);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void run() {
+        Flushables.flushQuietly(this);
+    }
+
+    /**
+     * Get cache by key.
+     * @param key S3 key
+     * @return Cache
+     */
+    private Cache get(final Key key) {
+        this.all.putIfAbsent(key, new Cache(key));
+        return this.all.get(key);
+    }
+
+    /**
+     * Remove expired elements.
+     */
+    private void clean() {
+        for (Map.Entry<Key, Cache> entry : this.all.entrySet()) {
+            if (entry.getValue().expired()) {
+                this.all.remove(entry.getKey());
+            }
         }
     }
 

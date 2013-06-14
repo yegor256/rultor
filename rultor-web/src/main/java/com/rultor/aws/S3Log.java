@@ -29,15 +29,11 @@
  */
 package com.rultor.aws;
 
-import com.google.common.io.Flushables;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.rultor.spi.Conveyer;
 import com.rultor.spi.Work;
 import java.io.Closeable;
-import java.io.Flushable;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -51,10 +47,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "client")
 @Loggable(Loggable.DEBUG)
-@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.MINUTES)
-@SuppressWarnings("PMD.DoNotUseThreads")
-public final class S3Log implements
-    Conveyer.Log, Flushable, Closeable, Runnable {
+public final class S3Log implements Conveyer.Log, Closeable {
 
     /**
      * S3 client.
@@ -75,7 +68,7 @@ public final class S3Log implements
     @Override
     public void push(final Work work, final Conveyer.Line line) {
         try {
-            Caches.INSTANCE.get(new Key(this.client, work)).append(line);
+            Caches.INSTANCE.append(new Key(this.client, work), line);
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
@@ -86,23 +79,7 @@ public final class S3Log implements
      */
     @Override
     public void close() throws IOException {
-        this.flush();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void flush() throws IOException {
         Caches.INSTANCE.flush();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void run() {
-        Flushables.flushQuietly(this);
     }
 
 }
