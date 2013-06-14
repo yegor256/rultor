@@ -38,7 +38,7 @@ import lombok.ToString;
 import org.apache.commons.lang3.Validate;
 
 /**
- * Mutable state.
+ * Unit-specific mutable state.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$

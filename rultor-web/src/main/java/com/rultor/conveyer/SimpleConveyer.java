@@ -177,14 +177,38 @@ public final class SimpleConveyer
                 public Void call() throws Exception {
                     new LoggedInstance(
                         SimpleConveyer.this.repo,
-                        work,
                         SimpleConveyer.this.appender
-                    ).pulse(SimpleConveyer.this.state);
+                    ).pulse(work, SimpleConveyer.this.substate(work));
                     SimpleConveyer.this.counter.inc();
                     return null;
                 }
             }
         );
+    }
+
+    /**
+     * Create sub-state.
+     * @param work Work
+     * @return Steate for this particular work
+     */
+    private State substate(final Work work) {
+        return new State() {
+            @Override
+            public String get(final String key) {
+                return SimpleConveyer.this.state.get(this.prefixed(key));
+            }
+            @Override
+            public boolean checkAndSet(final String key, final String value) {
+                return SimpleConveyer.this.state.checkAndSet(
+                    this.prefixed(key), value
+                );
+            }
+            private String prefixed(final String key) {
+                return String.format(
+                    "%s/%s/%s", work.owner(), work.unit(), key
+                );
+            }
+        };
     }
 
 }

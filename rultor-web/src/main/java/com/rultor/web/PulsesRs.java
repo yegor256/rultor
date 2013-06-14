@@ -174,7 +174,9 @@ public final class PulsesRs extends BaseRs {
             .up()
             .add(
                 "started",
-                DateFormatUtils.ISO_DATETIME_FORMAT.format(pulse.started())
+                DateFormatUtils.formatUTC(
+                    pulse.started(), "yyyy-MM-dd'T'HH:mm'Z'"
+                )
             )
             .up()
             .add("stages")

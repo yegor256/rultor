@@ -44,8 +44,9 @@ public interface Pulseable {
 
     /**
      * Pulse.
+     * @param work The work we're doing now
      * @param state State
      */
-    void pulse(@NotNull State state);
+    void pulse(@NotNull Work work, @NotNull State state);
 
 }

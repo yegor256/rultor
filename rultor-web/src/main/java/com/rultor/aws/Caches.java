@@ -214,6 +214,7 @@ final class Caches implements Flushable, Metricable, Runnable {
     /**
      * Remove expired elements.
      */
+    @Loggable(Loggable.INFO)
     private void clean() {
         for (Map.Entry<Key, Cache> entry : this.all.entrySet()) {
             if (entry.getValue().expired()) {

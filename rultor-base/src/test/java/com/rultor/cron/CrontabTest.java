@@ -27,26 +27,53 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.cron;
 
-import com.jcabi.aspects.Immutable;
-import javax.validation.constraints.NotNull;
+import com.jcabi.urn.URN;
+import com.rultor.spi.Pulseable;
+import com.rultor.spi.Spec;
+import com.rultor.spi.State;
+import com.rultor.spi.Work;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Instance.
- *
+ * Test case for {@link Crontab}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-public interface Instance {
+public final class CrontabTest {
 
     /**
-     * Pulse it.
-     * @param work Work we're doing
-     * @param state Persistent storage of keys and values
+     * Crontab can parse input text.
+     * @throws Exception If some problem inside
      */
-    void pulse(@NotNull Work work, @NotNull State state);
+    @Test
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    public void parsesValidText() throws Exception {
+        final String[] texts = new String[] {
+            "* * * * *",
+            "4 * * * *",
+            "* 4 * * *",
+            "* * 4 * *",
+            "* * * 4 *",
+            "* * * * 4",
+            "@daily",
+            "@monthly",
+            "@annually",
+            "59 23 31 12 6",
+        };
+        final Work work = new Work.Simple(
+            new URN("urn:facebook:55"), "unit-name", new Spec.Simple("")
+        );
+        final Pulseable origin = Mockito.mock(Pulseable.class);
+        for (String text : texts) {
+            final State state = new State.Memory();
+            final Crontab crontab = new Crontab(text, origin);
+            crontab.pulse(work, state);
+            crontab.pulse(work, state);
+            Mockito.verify(origin, Mockito.times(1)).pulse(work, state);
+        }
+    }
 
 }

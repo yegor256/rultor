@@ -27,26 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
-
-import com.jcabi.aspects.Immutable;
-import javax.validation.constraints.NotNull;
 
 /**
- * Instance.
+ * Cron helpers, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Instance {
-
-    /**
-     * Pulse it.
-     * @param work Work we're doing
-     * @param state Persistent storage of keys and values
-     */
-    void pulse(@NotNull Work work, @NotNull State state);
-
-}
+package com.rultor.cron;

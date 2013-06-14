@@ -33,10 +33,12 @@ import com.rultor.spi.Instance;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.State;
+import com.rultor.spi.Work;
 import java.util.concurrent.atomic.AtomicLong;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link ClasspathRepo}.
@@ -83,7 +85,8 @@ public final class ClasspathRepoTest {
             ClasspathRepoTest.Foo.COUNTER.get(),
             Matchers.equalTo(2L)
         );
-        instance.pulse(new State.Memory());
+        final Work work = Mockito.mock(Work.class);
+        instance.pulse(work, new State.Memory());
         MatcherAssert.assertThat(
             ClasspathRepoTest.Foo.COUNTER.get(),
             Matchers.equalTo(-1L)

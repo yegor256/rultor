@@ -48,7 +48,7 @@ import lombok.ToString;
  * @since 1.0
  */
 @ToString
-@EqualsAndHashCode(of = { "repo", "work", "appender" })
+@EqualsAndHashCode(of = { "repo", "appender" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
 final class LoggedInstance implements Instance {
@@ -57,11 +57,6 @@ final class LoggedInstance implements Instance {
      * Repo.
      */
     private final transient Repo repo;
-
-    /**
-     * Work we're doing.
-     */
-    private final transient Work work;
 
     /**
      * Log appender.
@@ -74,10 +69,8 @@ final class LoggedInstance implements Instance {
      * @param wrk Work
      * @param appr Appender
      */
-    protected LoggedInstance(final Repo rpo, final Work wrk,
-        final ConveyerAppender appr) {
+    protected LoggedInstance(final Repo rpo, final ConveyerAppender appr) {
         this.repo = rpo;
-        this.work = wrk;
         this.appender = appr;
     }
 
@@ -85,15 +78,15 @@ final class LoggedInstance implements Instance {
      * {@inheritDoc}
      */
     @Override
-    public void pulse(@NotNull final State state) {
+    public void pulse(@NotNull final Work work, @NotNull final State state) {
         final Thread thread = Thread.currentThread();
-        this.appender.register(thread, this.work);
+        this.appender.register(thread, work);
         try {
             this.meta("started", System.currentTimeMillis());
-            this.meta("owner", this.work.owner());
-            this.meta("unit", this.work.unit());
-            this.meta("spec", this.work.spec().asText());
-            this.repo.make(this.work.spec()).pulse(state);
+            this.meta("owner", work.owner());
+            this.meta("unit", work.unit());
+            this.meta("spec", work.spec().asText());
+            this.repo.make(work.spec()).pulse(work, state);
             this.meta("status", "SUCCESS");
         } catch (Repo.InstantiationException ex) {
             Logger.error(this, "%[exception]s", ex);
