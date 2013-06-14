@@ -30,12 +30,19 @@
 package com.rultor.env.ec2;
 
 import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
+import com.amazonaws.services.ec2.model.DescribeInstancesResult;
+import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.InstanceState;
 import com.amazonaws.services.ec2.model.InstanceStateChange;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.rultor.env.Environment;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Amazon EC2 environment.
@@ -71,13 +78,47 @@ final class EC2Environment implements Environment {
      * {@inheritDoc}
      */
     @Override
-    public int exec(final String script) {
+    public InetAddress address() {
         final AmazonEC2 aws = this.client.get();
+        InetAddress address = null;
         try {
-            return 0;
+            while (true) {
+                final DescribeInstancesResult result = aws.describeInstances(
+                    new DescribeInstancesRequest()
+                        .withInstanceIds(this.name)
+                );
+                final Instance instance =
+                    result.getReservations().get(0).getInstances().get(0);
+                final InstanceState state = instance.getState();
+                Logger.info(
+                    this,
+                    "instance %s/%s is in '%s' state (code=%d)",
+                    instance.getInstanceId(),
+                    instance.getPlacement().getAvailabilityZone(),
+                    state.getName(),
+                    state.getCode()
+                );
+                if ("running".equals(state.getName())) {
+                    try {
+                        address = InetAddress.getByName(
+                            instance.getPublicIpAddress()
+                        );
+                    } catch (UnknownHostException ex) {
+                        throw new IllegalStateException(ex);
+                    }
+                    break;
+                }
+                try {
+                    TimeUnit.MINUTES.sleep(1);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                    throw new IllegalStateException(ex);
+                }
+            }
         } finally {
             aws.shutdown();
         }
+        return address;
     }
 
     /**

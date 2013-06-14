@@ -30,6 +30,7 @@
 package com.rultor.env;
 
 import com.jcabi.aspects.Immutable;
+import javax.validation.constraints.NotNull;
 
 /**
  * Environments.
@@ -45,6 +46,7 @@ public interface Environments {
      * Get new environment.
      * @return Environment
      */
+    @NotNull
     Environment acquire();
 
 }

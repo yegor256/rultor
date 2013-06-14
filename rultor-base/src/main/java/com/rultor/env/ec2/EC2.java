@@ -30,11 +30,7 @@
 package com.rultor.env.ec2;
 
 import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
-import com.amazonaws.services.ec2.model.DescribeInstanceStatusResult;
 import com.amazonaws.services.ec2.model.Instance;
-import com.amazonaws.services.ec2.model.InstanceState;
-import com.amazonaws.services.ec2.model.InstanceStatus;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.jcabi.aspects.Immutable;
@@ -42,7 +38,6 @@ import com.jcabi.log.Logger;
 import com.rultor.env.Environment;
 import com.rultor.env.Environments;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Amazon EC2 environments.
@@ -65,6 +60,11 @@ public final class EC2 implements Environments {
     private final transient String ami;
 
     /**
+     * EC2 security group.
+     */
+    private final transient String group;
+
+    /**
      * EC2 client.
      */
     private final transient EC2Client client;
@@ -73,23 +73,27 @@ public final class EC2 implements Environments {
      * Public ctor.
      * @param tpe Instance type, for example "t1.micro"
      * @param image AMI name
+     * @param grp Security group
      * @param akey AWS key
      * @param scrt AWS secret
      */
-    public EC2(final String tpe, final String image,
+    public EC2(final String tpe, final String image, final String grp,
         final String akey, final String scrt) {
-        this(tpe, image, new EC2Client.Simple(akey, scrt));
+        this(tpe, image, grp, new EC2Client.Simple(akey, scrt));
     }
 
     /**
      * Public ctor.
      * @param tpe Instance type, for example "t1.micro"
      * @param image AMI name
+     * @param grp Security group
      * @param clnt EC2 client
      */
-    public EC2(final String tpe, final String image, final EC2Client clnt) {
+    public EC2(final String tpe, final String image, final String grp,
+        final EC2Client clnt) {
         this.type = tpe;
         this.ami = image;
+        this.group = grp;
         this.client = clnt;
     }
 
@@ -104,6 +108,7 @@ public final class EC2 implements Environments {
                 new RunInstancesRequest()
                     .withInstanceType(this.type)
                     .withImageId(this.ami)
+                    .withSecurityGroups(this.group)
                     .withMinCount(1)
                     .withMaxCount(1)
             );
@@ -121,50 +126,10 @@ public final class EC2 implements Environments {
                 instance.getInstanceId(),
                 instance.getPublicIpAddress()
             );
-            return new EC2Environment(
-                this.whenReady(aws, instance.getInstanceId()),
-                this.client
-            );
+            return new EC2Environment(instance.getInstanceId(), this.client);
         } finally {
             aws.shutdown();
         }
-    }
-
-    /**
-     * Return instanceId when ready.
-     * @param aws EC2 gateway
-     * @param name InstancID
-     * @return The same ID
-     */
-    private String whenReady(final AmazonEC2 aws, final String name) {
-        while (true) {
-            final DescribeInstanceStatusResult result =
-                aws.describeInstanceStatus(
-                    new DescribeInstanceStatusRequest()
-                        .withInstanceIds(name)
-                        .withMaxResults(1)
-                );
-            final InstanceStatus status = result.getInstanceStatuses().get(0);
-            final InstanceState state = status.getInstanceState();
-            Logger.info(
-                this,
-                "instance %s/%s is in '%s' state (code=%d)",
-                status.getInstanceId(),
-                status.getAvailabilityZone(),
-                state.getName(),
-                state.getCode()
-            );
-            if ("running".equals(state.getName())) {
-                break;
-            }
-            try {
-                TimeUnit.MINUTES.sleep(1);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                throw new IllegalStateException(ex);
-            }
-        }
-        return name;
     }
 
 }

@@ -31,6 +31,7 @@ package com.rultor.env;
 
 import com.jcabi.aspects.Immutable;
 import java.io.Closeable;
+import java.net.InetAddress;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -44,10 +45,10 @@ import javax.validation.constraints.NotNull;
 public interface Environment extends Closeable {
 
     /**
-     * Execute this script.
-     * @param script The script to execute (BASH or CMD)
-     * @return Exit code (normally zero)
+     * Get IP address of it.
+     * @return IP address of it
      */
-    int exec(@NotNull String script);
+    @NotNull
+    InetAddress address();
 
 }
