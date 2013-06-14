@@ -72,7 +72,10 @@ public final class ErrorRs extends BaseRs {
     @Path("/")
     public Response post() {
         return Response.status(Response.Status.SEE_OTHER).location(
-            this.uriInfo().getBaseUriBuilder().clone().path("/error").build()
+            this.uriInfo().getBaseUriBuilder()
+                .clone()
+                .path(ErrorRs.class)
+                .build()
         ).build();
     }
 
