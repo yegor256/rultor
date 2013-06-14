@@ -41,6 +41,7 @@
     <packaging>pom</packaging>
     <name>rultor</name>
     <modules>
+        <module>rultor-spi</module>
         <module>rultor-base</module>
         <module>rultor-web</module>
     </modules>
@@ -110,6 +111,7 @@
         <rexsl.version>1.0-SNAPSHOT</rexsl.version>
         <jersey.version>1.17.1</jersey.version>
         <github.global.server>github</github.global.server>
+        <metrics.version>3.0.0</metrics.version>
     </properties>
     <build>
         <plugins>

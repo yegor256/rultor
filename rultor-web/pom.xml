@@ -38,9 +38,6 @@
     <artifactId>rultor-web</artifactId>
     <packaging>war</packaging>
     <name>rultor-web</name>
-    <properties>
-        <metrics.version>3.0.0</metrics.version>
-    </properties>
     <pluginRepositories>
         <pluginRepository>
             <id>cloudbees-public-release</id>
@@ -48,6 +45,17 @@
         </pluginRepository>
     </pluginRepositories>
     <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>rultor-spi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>rultor-base</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>

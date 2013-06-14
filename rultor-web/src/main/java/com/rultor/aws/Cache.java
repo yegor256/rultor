@@ -212,7 +212,7 @@ final class Cache implements Flushable {
     public boolean expired() {
         final long mins = (System.currentTimeMillis() - this.touched.get())
             / TimeUnit.MINUTES.toMillis(1);
-        return !this.dirty.get() && mins > Tv.TWENTY;
+        return !this.dirty.get() && (mins > Tv.TWENTY || !this.valuable());
     }
 
     /**

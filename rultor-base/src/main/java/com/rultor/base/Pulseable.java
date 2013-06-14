@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -27,30 +26,27 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.rultor</groupId>
-        <artifactId>rultor</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
-    <artifactId>rultor-base</artifactId>
-    <packaging>jar</packaging>
-    <name>rultor-base</name>
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>rultor-spi</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-aspects</artifactId>
-        </dependency>
-    </dependencies>
-</project>
+ */
+package com.rultor.base;
+
+import com.jcabi.aspects.Immutable;
+import com.rultor.spi.State;
+import javax.validation.constraints.NotNull;
+
+/**
+ * Object that is ready to receive a pulse.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+@Immutable
+public interface Pulseable {
+
+    /**
+     * Pulse.
+     * @param state State
+     */
+    void pulse(@NotNull State state);
+
+}
