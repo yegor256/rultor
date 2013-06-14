@@ -27,49 +27,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.cron;
 
-import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Instance;
+import com.jcabi.aspects.Immutable;
 import com.rultor.spi.Pulseable;
 import com.rultor.spi.State;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * Runtime instance.
+ * Sends pulses through only on certain time moments.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@ToString
-@EqualsAndHashCode
-@Loggable(Loggable.DEBUG)
-final class RuntimeInstance implements Instance {
-
-    /**
-     * Object to pulse.
-     */
-    private final transient Object object;
-
-    /**
-     * Public ctor.
-     * @param obj Object
-     */
-    protected RuntimeInstance(final Object obj) {
-        this.object = obj;
-    }
+@Immutable
+public final class Crontab implements Pulseable {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void pulse(@NotNull final State state) {
-        if (this.object instanceof Pulseable) {
-            Pulseable.class.cast(this.object).pulse(state);
-        }
+        throw new UnsupportedOperationException();
     }
 
 }
