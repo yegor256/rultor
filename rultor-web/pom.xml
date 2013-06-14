@@ -73,7 +73,6 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk</artifactId>
-            <version>1.4.3</version>
         </dependency>
         <dependency>
             <groupId>org.antlr</groupId>

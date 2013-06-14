@@ -27,72 +27,80 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.cron;
+package com.rultor.env.ec2;
 
+import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.model.InstanceStateChange;
+import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
+import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 import com.jcabi.aspects.Immutable;
-import com.rultor.board.Billboard;
+import com.jcabi.log.Logger;
 import com.rultor.env.Environment;
-import com.rultor.env.Environments;
-import com.rultor.spi.Pulseable;
-import com.rultor.spi.State;
-import com.rultor.spi.Work;
-import javax.validation.constraints.NotNull;
-import org.apache.commons.io.IOUtils;
 
 /**
- * Build.
+ * Amazon EC2 environment.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public final class Build implements Pulseable {
+final class EC2Environment implements Environment {
 
     /**
-     * Environments.
+     * Instance ID.
      */
-    private final transient Environments envs;
+    private final transient String name;
 
     /**
-     * Script to execute.
+     * EC2 client.
      */
-    private final transient String script;
-
-    /**
-     * Where to notify about success/failure.
-     */
-    private final transient Billboard board;
+    private final transient EC2Client client;
 
     /**
      * Public ctor.
-     * @param environs Environments
-     * @param scrt Script to run there
-     * @param brd The board where to announce
+     * @param instance Instance ID
+     * @param clnt EC2 client
      */
-    public Build(final Environments environs, final String scrt,
-        final Billboard brd) {
-        this.envs = environs;
-        this.script = scrt;
-        this.board = brd;
+    protected EC2Environment(final String instance, final EC2Client clnt) {
+        this.name = instance;
+        this.client = clnt;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void pulse(@NotNull final Work work, @NotNull final State state) {
-        final Environment env = this.envs.acquire();
-        int code;
+    public int exec(final String script) {
+        final AmazonEC2 aws = this.client.get();
         try {
-            code = env.exec(this.script);
+            return 0;
         } finally {
-            IOUtils.closeQuietly(env);
+            aws.shutdown();
         }
-        if (code == 0) {
-            this.board.announce("SUCCESS");
-        } else {
-            this.board.announce("FAILURE");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        final AmazonEC2 aws = this.client.get();
+        try {
+            final TerminateInstancesResult result = aws.terminateInstances(
+                new TerminateInstancesRequest()
+                    .withInstanceIds(this.name)
+            );
+            final InstanceStateChange change =
+                result.getTerminatingInstances().get(0);
+            Logger.info(
+                this,
+                "instance %s terminated, state=%s",
+                change.getInstanceId(),
+                change.getCurrentState().getName()
+            );
+        } finally {
+            aws.shutdown();
         }
     }
 

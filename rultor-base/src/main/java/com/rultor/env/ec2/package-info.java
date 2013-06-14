@@ -27,60 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.env;
-
-import com.jcabi.aspects.Immutable;
 
 /**
- * Amazon EC2 environments.
+ * Amazon EC2 Environments.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public final class EC2 implements Environments {
-
-    /**
-     * Type of EC2 instance.
-     */
-    private final transient String type;
-
-    /**
-     * Name of AMI.
-     */
-    private final transient String ami;
-
-    /**
-     * AWS key.
-     */
-    private final transient String key;
-
-    /**
-     * AWS secret.
-     */
-    private final transient String secret;
-
-    /**
-     * Public ctor.
-     * @param tpe Instance type, for example "t1.micro"
-     * @param image AMI name
-     * @param akey AWS key
-     * @param scrt AWS secret
-     */
-    public EC2(final String tpe, final String image, final String akey, final String scrt) {
-        this.type = tpe;
-        this.ami = image;
-        this.key = akey;
-        this.secret = scrt;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Environment acquire() {
-        throw new UnsupportedOperationException();
-    }
-
-}
+package com.rultor.env.ec2;

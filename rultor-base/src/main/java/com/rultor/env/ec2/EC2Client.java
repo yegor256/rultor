@@ -27,72 +27,65 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.cron;
+package com.rultor.env.ec2;
 
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.jcabi.aspects.Immutable;
-import com.rultor.board.Billboard;
-import com.rultor.env.Environment;
-import com.rultor.env.Environments;
-import com.rultor.spi.Pulseable;
-import com.rultor.spi.State;
-import com.rultor.spi.Work;
-import javax.validation.constraints.NotNull;
-import org.apache.commons.io.IOUtils;
+import com.jcabi.aspects.Loggable;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Build.
+ * EC2 client.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public final class Build implements Pulseable {
+public interface EC2Client {
 
     /**
-     * Environments.
+     * Get AWS EC2 client.
+     * @return Get it
      */
-    private final transient Environments envs;
+    AmazonEC2 get();
 
     /**
-     * Script to execute.
+     * Simple client.
      */
-    private final transient String script;
-
-    /**
-     * Where to notify about success/failure.
-     */
-    private final transient Billboard board;
-
-    /**
-     * Public ctor.
-     * @param environs Environments
-     * @param scrt Script to run there
-     * @param brd The board where to announce
-     */
-    public Build(final Environments environs, final String scrt,
-        final Billboard brd) {
-        this.envs = environs;
-        this.script = scrt;
-        this.board = brd;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void pulse(@NotNull final Work work, @NotNull final State state) {
-        final Environment env = this.envs.acquire();
-        int code;
-        try {
-            code = env.exec(this.script);
-        } finally {
-            IOUtils.closeQuietly(env);
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = { "key", "secret" })
+    @Loggable(Loggable.DEBUG)
+    final class Simple implements EC2Client {
+        /**
+         * Key.
+         */
+        private final transient String key;
+        /**
+         * Secret.
+         */
+        private final transient String secret;
+        /**
+         * Public ctor.
+         * @param akey AWS key
+         * @param scrt AWS secret
+         */
+        public Simple(final String akey, final String scrt) {
+            this.key = akey;
+            this.secret = scrt;
         }
-        if (code == 0) {
-            this.board.announce("SUCCESS");
-        } else {
-            this.board.announce("FAILURE");
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public AmazonEC2 get() {
+            return new AmazonEC2Client(
+                new BasicAWSCredentials(this.key, this.secret)
+            );
         }
     }
 
