@@ -41,8 +41,8 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.env.Environment;
+import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -84,7 +84,7 @@ final class EC2Environment implements Environment {
      * {@inheritDoc}
      */
     @Override
-    public InetAddress address() {
+    public InetAddress address() throws IOException {
         final AmazonEC2 aws = this.client.get();
         InetAddress address = null;
         try {
@@ -105,13 +105,9 @@ final class EC2Environment implements Environment {
                     state.getCode()
                 );
                 if ("running".equals(state.getName())) {
-                    try {
-                        address = InetAddress.getByName(
-                            instance.getPublicIpAddress()
-                        );
-                    } catch (UnknownHostException ex) {
-                        throw new IllegalStateException(ex);
-                    }
+                    address = InetAddress.getByName(
+                        instance.getPublicIpAddress()
+                    );
                     break;
                 }
                 try {
@@ -131,7 +127,7 @@ final class EC2Environment implements Environment {
      * {@inheritDoc}
      */
     @Override
-    public void close() {
+    public void close() throws IOException {
         final AmazonEC2 aws = this.client.get();
         try {
             final TerminateInstancesResult result = aws.terminateInstances(

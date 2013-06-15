@@ -31,6 +31,7 @@ package com.rultor.shell;
 
 import com.jcabi.aspects.Immutable;
 import java.io.Closeable;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import javax.validation.constraints.NotNull;
@@ -52,8 +53,10 @@ public interface Shell extends Closeable {
      * @param stdout Output stream
      * @param stderr Error output stream
      * @return Exit code
+     * @throws IOException If fails
      */
     int exec(@NotNull String command, @NotNull InputStream stdin,
-        @NotNull OutputStream stdout, @NotNull OutputStream stderr);
+        @NotNull OutputStream stdout, @NotNull OutputStream stderr)
+        throws IOException;
 
 }

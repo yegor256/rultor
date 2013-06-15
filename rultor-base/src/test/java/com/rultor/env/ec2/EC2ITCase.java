@@ -27,96 +27,66 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.ci;
+package com.rultor.env.ec2;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.rultor.board.Billboard;
+import com.rultor.env.Environments;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
-import com.rultor.spi.Pulseable;
-import com.rultor.spi.State;
-import com.rultor.spi.Work;
+import com.rultor.shell.ssh.SSHServers;
 import java.io.ByteArrayOutputStream;
-import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.IOUtils;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Assume;
+import org.junit.Test;
 
 /**
- * Build.
- *
+ * Integration case for {@link EC}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-@ToString
-@EqualsAndHashCode(of = { "shells", "script", "board" })
-@Loggable(Loggable.DEBUG)
-public final class Build implements Pulseable {
+public final class EC2ITCase {
 
     /**
-     * Shells.
+     * EC2 can make environments.
+     * @throws Exception If some problem inside
      */
-    private final transient Shells shells;
-
-    /**
-     * Script to execute.
-     */
-    private final transient String script;
-
-    /**
-     * Where to notify about success/failure.
-     */
-    private final transient Billboard board;
-
-    /**
-     * Public ctor.
-     * @param shls Shells
-     * @param scrt Script to run there
-     * @param brd The board where to announce
-     */
-    public Build(final Shells shls, final String scrt,
-        final Billboard brd) {
-        this.shells = shls;
-        this.script = scrt;
-        this.board = brd;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void pulse(@NotNull final Work work, @NotNull final State state)
-        throws Exception {
-        final Shell shell = this.shells.acquire();
+    @Test
+    public void makesInstanceAndConnectsToIt() throws Exception {
+        final String priv = System.getProperty("failsafe.ec2.priv");
+        Assume.assumeNotNull(priv);
+        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
+        final Environments envs = new EC2(
+            "t1.micro",
+            "ami-82fa58eb",
+            "rultor-test",
+            System.getProperty("failsafe.ec2.key"),
+            System.getProperty("failsafe.ec2.secret")
+        );
+        final Shells shells = new SSHServers(envs, "ubuntu", priv);
+        final Shell shell = shells.acquire();
         int code;
         try {
             code = shell.exec(
-                this.script,
+                "who am i",
                 IOUtils.toInputStream(""),
-                new ByteArrayOutputStream(),
-                new ByteArrayOutputStream()
+                stdout,
+                stderr
             );
         } finally {
-            IOUtils.closeQuietly(shell);
+            shell.close();
         }
-        if (code == 0) {
-            this.board.announce(
-                String.format(
-                    "%s completed successfully",
-                    work.unit()
-                )
-            );
-        } else {
-            this.board.announce(
-                String.format(
-                    "%s failed",
-                    work.unit()
-                )
-            );
-        }
+        MatcherAssert.assertThat(code, Matchers.equalTo(0));
+        MatcherAssert.assertThat(
+            stdout.toString(CharEncoding.UTF_8),
+            Matchers.equalTo("ubuntu\n")
+        );
+        MatcherAssert.assertThat(
+            stderr.toString(CharEncoding.UTF_8),
+            Matchers.equalTo("")
+        );
     }
 
 }

@@ -31,6 +31,7 @@ package com.rultor.env;
 
 import com.jcabi.aspects.Immutable;
 import java.io.Closeable;
+import java.io.IOException;
 import java.net.InetAddress;
 import javax.validation.constraints.NotNull;
 
@@ -47,8 +48,9 @@ public interface Environment extends Closeable {
     /**
      * Get IP address of it.
      * @return IP address of it
+     * @throws IOException If fails
      */
     @NotNull
-    InetAddress address();
+    InetAddress address() throws IOException;
 
 }

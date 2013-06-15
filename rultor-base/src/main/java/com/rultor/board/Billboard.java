@@ -30,6 +30,7 @@
 package com.rultor.board;
 
 import com.jcabi.aspects.Immutable;
+import java.io.IOException;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -45,7 +46,8 @@ public interface Billboard {
     /**
      * Announce.
      * @param text The text to announce
+     * @throws IOException If fails
      */
-    void announce(@NotNull String text);
+    void announce(@NotNull String text) throws IOException;
 
 }

@@ -126,7 +126,8 @@ public final class Crontab implements Pulseable {
      * {@inheritDoc}
      */
     @Override
-    public void pulse(@NotNull final Work work, @NotNull final State state) {
+    public void pulse(@NotNull final Work work, @NotNull final State state)
+        throws Exception {
         final String key = DateFormatUtils.formatUTC(
             this.next(), "yyyy-MM-dd'T'HH:mm'Z'"
         );

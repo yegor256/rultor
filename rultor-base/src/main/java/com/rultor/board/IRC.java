@@ -31,6 +31,7 @@ package com.rultor.board;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -79,7 +80,7 @@ public final class IRC implements Billboard {
      * {@inheritDoc}
      */
     @Override
-    public void announce(@NotNull final String text) {
+    public void announce(@NotNull final String text) throws IOException {
         throw new UnsupportedOperationException();
     }
 

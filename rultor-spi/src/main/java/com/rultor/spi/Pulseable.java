@@ -46,7 +46,8 @@ public interface Pulseable {
      * Pulse.
      * @param work The work we're doing now
      * @param state State
+     * @throws Exception If something fails
      */
-    void pulse(@NotNull Work work, @NotNull State state);
+    void pulse(@NotNull Work work, @NotNull State state) throws Exception;
 
 }

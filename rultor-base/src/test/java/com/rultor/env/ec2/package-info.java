@@ -27,28 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.shell;
-
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
-import javax.validation.constraints.NotNull;
 
 /**
- * Shells.
+ * Amazon EC2 Environments, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Shells {
-
-    /**
-     * Get new shell.
-     * @return Shell
-     * @throws IOException If fails
-     */
-    @NotNull
-    Shell acquire() throws IOException;
-
-}
+package com.rultor.env.ec2;

@@ -88,7 +88,7 @@ public final class SSHServer implements Shell {
     public int exec(@NotNull final String command,
         @NotNull final InputStream stdin,
         @NotNull final OutputStream stdout,
-        @NotNull final OutputStream stderr) {
+        @NotNull final OutputStream stderr) throws IOException {
         return new SSHChannel(this.env.address(), this.login, this.key)
             .exec(command, stdin, stdout, stderr);
     }

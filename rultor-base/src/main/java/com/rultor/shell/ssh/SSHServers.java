@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.env.Environments;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
+import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -82,7 +83,7 @@ public final class SSHServers implements Shells {
      * {@inheritDoc}
      */
     @Override
-    public Shell acquire() {
+    public Shell acquire() throws IOException {
         return new SSHServer(envs.acquire(), this.login, this.key);
     }
 

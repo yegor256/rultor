@@ -38,6 +38,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.env.Environment;
 import com.rultor.env.Environments;
+import java.io.IOException;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -107,7 +108,7 @@ public final class EC2 implements Environments {
      * {@inheritDoc}
      */
     @Override
-    public Environment acquire() {
+    public Environment acquire() throws IOException {
         final AmazonEC2 aws = this.client.get();
         try {
             final RunInstancesResult result = aws.runInstances(
