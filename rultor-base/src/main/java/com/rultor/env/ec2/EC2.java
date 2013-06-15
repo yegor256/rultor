@@ -34,10 +34,13 @@ import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.env.Environment;
 import com.rultor.env.Environments;
 import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Amazon EC2 environments.
@@ -47,6 +50,9 @@ import java.util.List;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(of = { "type", "ami", "group", "client" })
+@Loggable(Loggable.DEBUG)
 public final class EC2 implements Environments {
 
     /**

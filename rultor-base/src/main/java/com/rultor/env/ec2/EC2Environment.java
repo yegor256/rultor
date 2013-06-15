@@ -38,11 +38,14 @@ import com.amazonaws.services.ec2.model.InstanceStateChange;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.env.Environment;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Amazon EC2 environment.
@@ -52,6 +55,9 @@ import java.util.concurrent.TimeUnit;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(of = { "name", "client" })
+@Loggable(Loggable.DEBUG)
 final class EC2Environment implements Environment {
 
     /**

@@ -27,17 +27,21 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.board;
+package com.rultor.shell.ssh;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
+import com.rultor.shell.Shell;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Transmits all announcements to log.
+ * Single SSH Channel.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -45,16 +49,55 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = { "addr", "login", "key" })
 @Loggable(Loggable.DEBUG)
-public final class Echo implements Billboard {
+public final class SSHChannel implements Shell {
+
+    /**
+     * IP address of the server.
+     */
+    private final transient InetAddress addr;
+
+    /**
+     * User name.
+     */
+    private final transient String login;
+
+    /**
+     * Private SSH key.
+     */
+    private final transient String key;
+
+    /**
+     * Public ctor.
+     * @param adr IP address
+     * @param user Login
+     * @param priv Private SSH key
+     */
+    public SSHChannel(final InetAddress adr, final String user,
+        final String priv) {
+        this.addr = adr;
+        this.login = user;
+        this.key = priv;
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void announce(@NotNull final String text) {
-        Logger.info(this, "%s", text);
+    public int exec(@NotNull final String command,
+        @NotNull final InputStream stdin,
+        @NotNull final OutputStream stdout,
+        @NotNull final OutputStream stderr) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() throws IOException {
+        // nothing to do
     }
 
 }

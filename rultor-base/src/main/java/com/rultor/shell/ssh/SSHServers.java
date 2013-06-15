@@ -27,17 +27,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.board;
+package com.rultor.shell.ssh;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
-import javax.validation.constraints.NotNull;
+import com.rultor.env.Environments;
+import com.rultor.shell.Shell;
+import com.rultor.shell.Shells;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Transmits all announcements to log.
+ * SSH Servers.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -45,16 +46,45 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = { "envs", "key" })
 @Loggable(Loggable.DEBUG)
-public final class Echo implements Billboard {
+public final class SSHServers implements Shells {
+
+    /**
+     * Environments.
+     */
+    private final transient Environments envs;
+
+    /**
+     * User name.
+     */
+    private final transient String login;
+
+    /**
+     * Private SSH key.
+     */
+    private final transient String key;
+
+    /**
+     * Public ctor.
+     * @param environs Environments
+     * @param user Login
+     * @param priv Private SSH key
+     */
+    public SSHServers(final Environments environs, final String user,
+        final String priv) {
+        this.envs = environs;
+        this.login = user;
+        this.key = priv;
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void announce(@NotNull final String text) {
-        Logger.info(this, "%s", text);
+    public Shell acquire() {
+        return new SSHServer(envs.acquire(), this.login, this.key);
     }
+
 
 }

@@ -31,6 +31,7 @@ package com.rultor.cron;
 
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rultor.spi.Pulseable;
 import com.rultor.spi.State;
@@ -39,6 +40,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
@@ -51,6 +54,11 @@ import org.apache.commons.lang3.time.DateFormatUtils;
  * @see <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html">Crontab specification</a>
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(
+    of = { "origin", "minute", "hour", "day", "month", "weekday" }
+)
+@Loggable(Loggable.DEBUG)
 @SuppressWarnings({ "PMD.NPathComplexity", "PMD.CyclomaticComplexity" })
 public final class Crontab implements Pulseable {
 

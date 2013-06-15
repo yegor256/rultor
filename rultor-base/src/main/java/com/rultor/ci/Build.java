@@ -30,6 +30,7 @@
 package com.rultor.ci;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.rultor.board.Billboard;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
@@ -38,6 +39,8 @@ import com.rultor.spi.State;
 import com.rultor.spi.Work;
 import java.io.ByteArrayOutputStream;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -48,6 +51,9 @@ import org.apache.commons.io.IOUtils;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(of = { "shells", "script", "board" })
+@Loggable(Loggable.DEBUG)
 public final class Build implements Pulseable {
 
     /**
@@ -96,9 +102,19 @@ public final class Build implements Pulseable {
             IOUtils.closeQuietly(shell);
         }
         if (code == 0) {
-            this.board.announce("SUCCESS");
+            this.board.announce(
+                String.format(
+                    "%s completed successfully",
+                    work.unit()
+                )
+            );
         } else {
-            this.board.announce("FAILURE");
+            this.board.announce(
+                String.format(
+                    "%s failed",
+                    work.unit()
+                )
+            );
         }
     }
 
