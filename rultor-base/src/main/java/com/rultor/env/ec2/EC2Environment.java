@@ -39,6 +39,7 @@ import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.env.Environment;
 import java.io.IOException;
@@ -110,8 +111,17 @@ final class EC2Environment implements Environment {
                     );
                     break;
                 }
+                if (!"pending".equals(state.getName())) {
+                    throw new IllegalStateException(
+                        String.format(
+                            "instance %s is in invalid state '%s'",
+                            instance.getInstanceId(),
+                            state.getName()
+                        )
+                    );
+                }
                 try {
-                    TimeUnit.MINUTES.sleep(1);
+                    TimeUnit.SECONDS.sleep(Tv.FIFTEEN);
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
                     throw new IllegalStateException(ex);

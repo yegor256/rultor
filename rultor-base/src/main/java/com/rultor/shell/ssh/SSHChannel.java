@@ -65,7 +65,7 @@ public final class SSHChannel implements Shell {
     /**
      * IP address of the server.
      */
-    private final transient InetAddress addr;
+    private final transient String addr;
 
     /**
      * User name.
@@ -85,7 +85,7 @@ public final class SSHChannel implements Shell {
      */
     public SSHChannel(final InetAddress adr, final String user,
         final String priv) {
-        this.addr = adr;
+        this.addr = adr.getHostAddress();
         this.login = user;
         this.key = priv;
     }
@@ -168,7 +168,7 @@ public final class SSHChannel implements Shell {
             );
             final JSch jsch = new JSch();
             jsch.addIdentity(this.keyFile().getAbsolutePath());
-            return jsch.getSession(this.login, "localhost");
+            return jsch.getSession(this.login, this.addr);
         } catch (com.jcraft.jsch.JSchException ex) {
             throw new IOException(ex);
         }
@@ -180,7 +180,7 @@ public final class SSHChannel implements Shell {
      * @throws IOException If some IO problem inside
      */
     private File keyFile() throws IOException {
-        final File file = File.createTempFile("netbout-ebs", ".pem");
+        final File file = File.createTempFile("ec2", ".pem");
         FileUtils.write(file, this.key, CharEncoding.UTF_8);
         FileUtils.forceDeleteOnExit(file);
         return file;

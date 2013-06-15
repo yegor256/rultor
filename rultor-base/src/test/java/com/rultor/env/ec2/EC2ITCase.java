@@ -62,6 +62,7 @@ public final class EC2ITCase {
             "t1.micro",
             "ami-82fa58eb",
             "rultor-test",
+            "rultor-test",
             System.getProperty("failsafe.ec2.key"),
             System.getProperty("failsafe.ec2.secret")
         );

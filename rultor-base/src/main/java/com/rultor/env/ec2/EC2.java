@@ -72,6 +72,11 @@ public final class EC2 implements Environments {
     private final transient String group;
 
     /**
+     * EC2 key pair.
+     */
+    private final transient String pair;
+
+    /**
      * EC2 client.
      */
     private final transient EC2Client client;
@@ -81,12 +86,13 @@ public final class EC2 implements Environments {
      * @param tpe Instance type, for example "t1.micro"
      * @param image AMI name
      * @param grp Security group
+     * @param par Key pair
      * @param akey AWS key
      * @param scrt AWS secret
      */
     public EC2(final String tpe, final String image, final String grp,
-        final String akey, final String scrt) {
-        this(tpe, image, grp, new EC2Client.Simple(akey, scrt));
+        final String par, final String akey, final String scrt) {
+        this(tpe, image, grp, par, new EC2Client.Simple(akey, scrt));
     }
 
     /**
@@ -94,13 +100,15 @@ public final class EC2 implements Environments {
      * @param tpe Instance type, for example "t1.micro"
      * @param image AMI name
      * @param grp Security group
+     * @param par Key pair
      * @param clnt EC2 client
      */
     public EC2(final String tpe, final String image, final String grp,
-        final EC2Client clnt) {
+        final String par, final EC2Client clnt) {
         this.type = tpe;
         this.ami = image;
         this.group = grp;
+        this.pair = par;
         this.client = clnt;
     }
 
@@ -116,6 +124,7 @@ public final class EC2 implements Environments {
                     .withInstanceType(this.type)
                     .withImageId(this.ami)
                     .withSecurityGroups(this.group)
+                    .withKeyName(this.pair)
                     .withMinCount(1)
                     .withMaxCount(1)
             );
