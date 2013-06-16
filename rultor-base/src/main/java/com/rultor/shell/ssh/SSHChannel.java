@@ -60,6 +60,11 @@ import lombok.ToString;
 public final class SSHChannel implements Shell {
 
     /**
+     * SSH port to use.
+     */
+    private static final int PORT = 22;
+
+    /**
      * IP address of the server.
      */
     private final transient String addr;
@@ -98,18 +103,24 @@ public final class SSHChannel implements Shell {
         try {
             final Session session = this.session();
             session.connect();
-            final ChannelExec exec = ChannelExec.class.cast(
-                session.openChannel("exec")
-            );
-            exec.setCommand(command);
-            exec.connect();
-            exec.setErrStream(stderr);
-            exec.setOutputStream(stdout);
-            exec.setInputStream(stdin);
-            final int code = this.code(exec);
-            exec.disconnect();
-            session.disconnect();
-            return code;
+            try {
+                final ChannelExec exec = ChannelExec.class.cast(
+                    session.openChannel("exec")
+                );
+                exec.setErrStream(stderr, false);
+                exec.setOutputStream(stdout, false);
+//                exec.setOutputStream(System.out);
+                exec.setInputStream(stdin, false);
+                exec.setCommand(command);
+                exec.connect();
+                try {
+                    return this.code(exec);
+                } finally {
+                    exec.disconnect();
+                }
+            } finally {
+                session.disconnect();
+            }
         } catch (JSchException ex) {
             throw new IOException(ex);
         }
@@ -165,7 +176,7 @@ public final class SSHChannel implements Shell {
             );
             final JSch jsch = new JSch();
             jsch.addIdentity(this.key.asFile().getAbsolutePath());
-            return jsch.getSession(this.login, this.addr);
+            return jsch.getSession(this.login, this.addr, SSHChannel.PORT);
         } catch (com.jcraft.jsch.JSchException ex) {
             throw new IOException(ex);
         }

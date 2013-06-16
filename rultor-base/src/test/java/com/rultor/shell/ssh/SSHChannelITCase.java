@@ -27,71 +27,54 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.env.ec2;
+package com.rultor.shell.ssh;
 
-import com.rultor.env.Environments;
-import com.rultor.shell.Shell;
-import com.rultor.shell.Shells;
-import com.rultor.shell.ssh.PrivateKey;
-import com.rultor.shell.ssh.SSHServers;
 import java.io.ByteArrayOutputStream;
+import java.net.InetAddress;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Assume;
 import org.junit.Test;
 
 /**
- * Integration case for {@link EC}.
+ * Integration case for {@link SSHChannel}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class EC2ITCase {
+public final class SSHChannelITCase {
 
     /**
-     * EC2 can make environments.
+     * EC2 can execute bash scripts remotely (to enable the test you should
+     * get a real IP address of a running EC2 environment, created with
+     * rultor-test key pair and in rultor-test security group).
      * @throws Exception If some problem inside
      */
     @Test
+    @org.junit.Ignore
     public void makesInstanceAndConnectsToIt() throws Exception {
-        final String key = System.getProperty("failsafe.ec2.key");
-        Assume.assumeNotNull(key);
-        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
-        final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
-        final Environments envs = new EC2(
-            "t1.micro",
-            "ami-82fa58eb",
-            "rultor-test",
-            "rultor-test",
-            key,
-            System.getProperty("failsafe.ec2.secret")
-        );
-        final Shells shells = new SSHServers(
-            envs,
+        final String host = "67.202.55.156";
+        final SSHChannel channel = new SSHChannel(
+            InetAddress.getByName(host),
             "ubuntu",
             new PrivateKey(System.getProperty("failsafe.ec2.priv"))
         );
-        final Shell shell = shells.acquire();
-        int code;
-        try {
-            code = shell.exec(
-                "who am i",
-                IOUtils.toInputStream(""),
-                stdout,
-                stderr
-            );
-        } finally {
-//            shell.close();
-        }
-        MatcherAssert.assertThat(code, Matchers.equalTo(0));
-        MatcherAssert.assertThat(
-            stdout.toString(CharEncoding.UTF_8),
-            Matchers.equalTo("ubuntu\n")
+        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
+        final int code = channel.exec(
+            "#!/bin/bash\nfor i in '1 2 3 4'\ndo\necho $i\ndone",
+            IOUtils.toInputStream(""),
+            stdout,
+            stderr
         );
+        MatcherAssert.assertThat(code, Matchers.equalTo(0));
         MatcherAssert.assertThat(
             stderr.toString(CharEncoding.UTF_8),
             Matchers.equalTo("")
+        );
+        MatcherAssert.assertThat(
+            stdout.toString(CharEncoding.UTF_8),
+            Matchers.equalTo("1 2 3 4\n")
         );
     }
 
