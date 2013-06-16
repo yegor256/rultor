@@ -192,6 +192,7 @@ public final class SimpleConveyer
      * @return Steate for this particular work
      */
     private State substate(final Work work) {
+        // @checkstyle AnonInnerLength (50 lines)
         return new State() {
             @Override
             public String get(final String key) {
@@ -202,6 +203,10 @@ public final class SimpleConveyer
                 return SimpleConveyer.this.state.checkAndSet(
                     this.prefixed(key), value
                 );
+            }
+            @Override
+            public boolean has(final String key) {
+                return SimpleConveyer.this.state.has(this.prefixed(key));
             }
             private String prefixed(final String key) {
                 return String.format(
