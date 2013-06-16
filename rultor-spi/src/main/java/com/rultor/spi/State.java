@@ -47,12 +47,19 @@ import org.apache.commons.lang3.Validate;
 public interface State {
 
     /**
-     * Get value by key.
+     * Get value by key (runtime exception if it's absent).
      * @param key The key
      * @return Value
      */
     @NotNull
     String get(@NotNull String key);
+
+    /**
+     * Does it have this key?
+     * @param key The key
+     * @return TRUE if key exists
+     */
+    boolean has(@NotNull String key);
 
     /**
      * Set if absent, don't touch if already present.
@@ -83,6 +90,13 @@ public interface State {
             final String value = this.map.get(key);
             Validate.notNull(value, "key %s is absent in state", key);
             return value;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean has(final String key) {
+            return this.map.containsKey(key);
         }
         /**
          * {@inheritDoc}
