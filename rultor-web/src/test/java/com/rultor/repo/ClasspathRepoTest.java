@@ -30,6 +30,7 @@
 package com.rultor.repo;
 
 import com.rultor.spi.Instance;
+import com.rultor.spi.Pulseable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.State;
@@ -96,7 +97,7 @@ public final class ClasspathRepoTest {
     /**
      * Test class.
      */
-    public static final class Foo {
+    public static final class Foo implements Pulseable {
         /**
          * Static counter.
          */
@@ -109,10 +110,10 @@ public final class ClasspathRepoTest {
             ClasspathRepoTest.Foo.COUNTER.addAndGet(number);
         }
         /**
-         * Pulse it.
-         * @param state State
+         * {@inheritDoc}
          */
-        public void pulse(final State state) {
+        @Override
+        public void pulse(final Work work, final State state) {
             ClasspathRepoTest.Foo.COUNTER.set(-1);
         }
     }

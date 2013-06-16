@@ -66,7 +66,6 @@ final class LoggedInstance implements Instance {
     /**
      * Public ctor.
      * @param rpo Repo
-     * @param wrk Work
      * @param appr Appender
      */
     protected LoggedInstance(final Repo rpo, final ConveyerAppender appr) {
