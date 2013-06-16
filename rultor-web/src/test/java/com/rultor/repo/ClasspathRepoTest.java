@@ -61,7 +61,7 @@ public final class ClasspathRepoTest {
             "java.lang.Integer ( 123 )",
             "com.rultor.repo.ClasspathRepoTest$Foo (55\n)",
             "com.first(com.second(com.third(), com.forth()))",
-            "text\nsome\t\r\nunformatted\ttext\t\u20ac\u0433",
+            "java.lang.String:\nsome\t\r\nunformatted\ttext\t\u20ac\u0433",
         };
         for (String text : texts) {
             MatcherAssert.assertThat(
@@ -77,10 +77,15 @@ public final class ClasspathRepoTest {
      */
     @Test
     public void makesSpecFromPlainText() throws Exception {
+        final String text = "java.lang.String:\ns\n\nnome\t\t\rued\ntext\u20ac";
         final Repo repo = new ClasspathRepo();
         MatcherAssert.assertThat(
-            repo.make(repo.make("text\nsome unformatted text\u20ac")),
-            Matchers.instanceOf(String.class)
+            repo.make(repo.make(text)),
+            Matchers.notNullValue()
+        );
+        MatcherAssert.assertThat(
+            repo.make(text).asText(),
+            Matchers.equalTo(text)
         );
     }
 

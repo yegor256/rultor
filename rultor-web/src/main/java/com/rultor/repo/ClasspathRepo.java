@@ -67,7 +67,7 @@ public final class ClasspathRepo implements Repo {
         throws Repo.InstantiationException {
         Object object;
         try {
-            object = this.var(spec.asText()).instantiate();
+            object = this.variable(spec.asText()).instantiate();
         } catch (Repo.InvalidSyntaxException ex) {
             throw new Repo.InstantiationException(ex);
         }
@@ -82,7 +82,7 @@ public final class ClasspathRepo implements Repo {
     @NotNull
     public Spec make(@NotNull final String text)
         throws Repo.InvalidSyntaxException {
-        return this.var(text);
+        return this.variable(text);
     }
 
     /**
@@ -94,13 +94,32 @@ public final class ClasspathRepo implements Repo {
     }
 
     /**
-     * Text to variable.
+     * Turn text to variable.
      * @param text Text
      * @return Variable
      * @throws Repo.InvalidSyntaxException If fails
      * @checkstyle RedundantThrows (5 lines)
      */
-    private Variable var(final String text) throws Repo.InvalidSyntaxException {
+    private Variable variable(final String text)
+        throws Repo.InvalidSyntaxException {
+        Variable var;
+        if (text.startsWith(BigText.PREFIX)) {
+            var = new BigText(text.substring(BigText.PREFIX.length()));
+        } else {
+            var = this.parse(text);
+        }
+        return var;
+    }
+
+    /**
+     * Parse text to variable.
+     * @param text Text
+     * @return Variable
+     * @throws Repo.InvalidSyntaxException If fails
+     * @checkstyle RedundantThrows (5 lines)
+     */
+    private Variable parse(final String text)
+        throws Repo.InvalidSyntaxException {
         final CharStream input = new ANTLRStringStream(text);
         final SpecLexer lexer = new SpecLexer(input);
         final TokenStream tokens = new CommonTokenStream(lexer);
