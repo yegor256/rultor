@@ -61,6 +61,7 @@ public final class ClasspathRepoTest {
             "java.lang.Integer ( 123 )",
             "com.rultor.repo.ClasspathRepoTest$Foo (55\n)",
             "com.first(com.second(com.third(), com.forth()))",
+            "text\nsome\t\r\nunformatted\ttext\t\u20ac\u0433",
         };
         for (String text : texts) {
             MatcherAssert.assertThat(
