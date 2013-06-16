@@ -46,7 +46,8 @@ public interface Instance {
      * Pulse it.
      * @param work Work we're doing
      * @param state Persistent storage of keys and values
+     * @throws Exception If something goes wrong inside
      */
-    void pulse(@NotNull Work work, @NotNull State state);
+    void pulse(@NotNull Work work, @NotNull State state) throws Exception;
 
 }

@@ -27,51 +27,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.shell.ssh;
 
-import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Instance;
-import com.rultor.spi.Pulseable;
-import com.rultor.spi.State;
-import com.rultor.spi.Work;
-import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import java.io.File;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Runtime instance.
- *
+ * Test case for {@link PrivateKey}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@ToString
-@EqualsAndHashCode
-@Loggable(Loggable.DEBUG)
-final class RuntimeInstance implements Instance {
+public final class PrivateKeyTest {
 
     /**
-     * Object to pulse.
+     * PrivateKey can parse input text.
+     * @throws Exception If some problem inside
      */
-    private final transient Object object;
-
-    /**
-     * Public ctor.
-     * @param obj Object
-     */
-    protected RuntimeInstance(final Object obj) {
-        this.object = obj;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void pulse(@NotNull final Work work, @NotNull final State state)
-        throws Exception {
-        if (this.object instanceof Pulseable) {
-            Pulseable.class.cast(this.object).pulse(work, state);
-        }
+    @Test
+    public void parsesValidText() throws Exception {
+        final PrivateKey key = new PrivateKey(
+            "\n\t\t-----BEGIN RSA PRIVATE KEY-----\n"
+            + "\t\tMIIEowIBAAKCAQEA2Df07r59ThOErTDr\n\n"
+            + "\t\t-----END RSA PRIVATE KEY-----\n\n"
+        );
+        final File file = key.asFile();
+        MatcherAssert.assertThat(file.exists(), Matchers.is(true));
+        MatcherAssert.assertThat(file.length(), Matchers.greaterThan(0L));
     }
 
 }

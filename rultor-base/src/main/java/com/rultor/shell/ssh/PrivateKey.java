@@ -37,9 +37,10 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.Validate;
 
 /**
- * Private Key for SSH.
+ * RSA Private Key (for SSH).
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -61,7 +62,7 @@ public final class PrivateKey {
      * @param txt Text
      */
     public PrivateKey(final String txt) {
-        this.text = txt;
+        this.text = PrivateKey.normalize(txt);
     }
 
     /**
@@ -74,6 +75,27 @@ public final class PrivateKey {
         FileUtils.write(file, this.text, CharEncoding.UTF_8);
         FileUtils.forceDeleteOnExit(file);
         return file;
+    }
+
+    /**
+     * Normalize key, if possible.
+     * @param raw Raw text
+     * @return Normalized text
+     */
+    private static String normalize(final String raw) {
+        String text = raw.replaceAll("\r", "")
+            .replaceAll("\n\\s+", "\n")
+            .replaceAll("\n{2,}", "\n")
+            .trim();
+        Validate.isTrue(
+            text.startsWith("-----BEGIN RSA PRIVATE KEY-----"),
+            "Invalid start of an RSA private key"
+        );
+        Validate.isTrue(
+            text.endsWith("-----END RSA PRIVATE KEY-----"),
+            "Invalid end of an RSA private key"
+        );
+        return text;
     }
 
 }

@@ -27,51 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
-
-import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Instance;
-import com.rultor.spi.Pulseable;
-import com.rultor.spi.State;
-import com.rultor.spi.Work;
-import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * Runtime instance.
+ * SSH shells, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@ToString
-@EqualsAndHashCode
-@Loggable(Loggable.DEBUG)
-final class RuntimeInstance implements Instance {
-
-    /**
-     * Object to pulse.
-     */
-    private final transient Object object;
-
-    /**
-     * Public ctor.
-     * @param obj Object
-     */
-    protected RuntimeInstance(final Object obj) {
-        this.object = obj;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void pulse(@NotNull final Work work, @NotNull final State state)
-        throws Exception {
-        if (this.object instanceof Pulseable) {
-            Pulseable.class.cast(this.object).pulse(work, state);
-        }
-    }
-
-}
+package com.rultor.shell.ssh;

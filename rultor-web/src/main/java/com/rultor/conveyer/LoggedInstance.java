@@ -78,7 +78,8 @@ final class LoggedInstance implements Instance {
      * {@inheritDoc}
      */
     @Override
-    public void pulse(@NotNull final Work work, @NotNull final State state) {
+    public void pulse(@NotNull final Work work, @NotNull final State state)
+        throws Exception {
         final Thread thread = Thread.currentThread();
         this.appender.register(thread, work);
         try {
