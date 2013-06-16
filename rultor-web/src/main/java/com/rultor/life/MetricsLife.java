@@ -54,7 +54,7 @@ import javax.servlet.ServletContextListener;
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Loggable(Loggable.INFO)
+@Loggable(Loggable.DEBUG)
 public final class MetricsLife implements ServletContextListener {
 
     /**

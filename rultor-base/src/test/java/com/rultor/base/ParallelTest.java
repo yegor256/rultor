@@ -52,6 +52,7 @@ import org.mockito.stubbing.Answer;
  * Test case for {@link Parallel}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class ParallelTest {
 
@@ -97,6 +98,7 @@ public final class ParallelTest {
             svc.submit(callable);
         }
         start.countDown();
+        svc.shutdown();
         MatcherAssert.assertThat(
             svc.awaitTermination(Tv.FIVE, TimeUnit.SECONDS),
             Matchers.is(true)

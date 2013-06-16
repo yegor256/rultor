@@ -91,6 +91,7 @@ public final class Parallel implements Pulseable {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("PMD.ReturnFromFinallyBlock")
     public void pulse(@NotNull final Work work, @NotNull final State state)
         throws Exception {
         final int active = this.safety(
@@ -98,7 +99,7 @@ public final class Parallel implements Pulseable {
             new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {
-                    final int active = Parallel.active(state) + 1;
+                    final int active = Parallel.running(state) + 1;
                     if (active <= Parallel.this.maximum) {
                         assert state.checkAndSet(
                             Parallel.ACTIVE, Integer.toString(active)
@@ -119,7 +120,7 @@ public final class Parallel implements Pulseable {
                         public Void call() throws Exception {
                             assert state.checkAndSet(
                                 Parallel.ACTIVE,
-                                Integer.toString(Parallel.active(state) - 1)
+                                Integer.toString(Parallel.running(state) - 1)
                             );
                             return null;
                         }
@@ -134,13 +135,15 @@ public final class Parallel implements Pulseable {
      * @param state State
      * @param callable Callable to call
      * @return Result
+     * @param <T> Type of result
+     * @throws Exception If something goes wrong
      */
     private <T> T safety(final State state, final Callable<T> callable)
         throws Exception {
         while (!state.checkAndSet(Parallel.BUSY, "on")) {
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MICROSECONDS.sleep(1);
         }
-        T result = callable.call();
+        final T result = callable.call();
         assert state.checkAndSet(Parallel.BUSY, "off");
         return result;
     }
@@ -150,7 +153,7 @@ public final class Parallel implements Pulseable {
      * @param state State
      * @return Active threads count
      */
-    private static int active(final State state) {
+    private static int running(final State state) {
         int active;
         if (state.has(Parallel.ACTIVE)) {
             active = Integer.parseInt(state.get(Parallel.ACTIVE));

@@ -73,7 +73,7 @@ public interface State {
     /**
      * In memory state.
      */
-    @Loggable(Loggable.INFO)
+    @Loggable(Loggable.DEBUG)
     @ToString
     @EqualsAndHashCode(of = "map")
     final class Memory implements State {
@@ -103,8 +103,7 @@ public interface State {
          */
         @Override
         public boolean checkAndSet(final String key, final String value) {
-            final String before = this.map.putIfAbsent(key, value);
-            return !value.equals(before);
+            return !value.equals(this.map.put(key, value));
         }
     }
 
