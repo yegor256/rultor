@@ -72,6 +72,19 @@ public final class ClasspathRepoTest {
     }
 
     /**
+     * ClasspathRepo can make a plain text spec.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void makesSpecFromPlainText() throws Exception {
+        final Repo repo = new ClasspathRepo();
+        MatcherAssert.assertThat(
+            repo.make(repo.make("text\nsome unformatted text\u20ac")),
+            Matchers.instanceOf(String.class)
+        );
+    }
+
+    /**
      * ClasspathRepo can make an instance.
      * @throws Exception If some problem inside
      */
