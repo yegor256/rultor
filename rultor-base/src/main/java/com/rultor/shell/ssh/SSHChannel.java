@@ -37,7 +37,6 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.rultor.shell.Shell;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,8 +45,6 @@ import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.codec.CharEncoding;
-import org.apache.commons.io.FileUtils;
 
 /**
  * Single SSH Channel.
@@ -75,7 +72,7 @@ public final class SSHChannel implements Shell {
     /**
      * Private SSH key.
      */
-    private final transient String key;
+    private final transient PrivateKey key;
 
     /**
      * Public ctor.
@@ -84,7 +81,7 @@ public final class SSHChannel implements Shell {
      * @param priv Private SSH key
      */
     public SSHChannel(final InetAddress adr, final String user,
-        final String priv) {
+        final PrivateKey priv) {
         this.addr = adr.getHostAddress();
         this.login = user;
         this.key = priv;
@@ -167,23 +164,11 @@ public final class SSHChannel implements Shell {
                 }
             );
             final JSch jsch = new JSch();
-            jsch.addIdentity(this.keyFile().getAbsolutePath());
+            jsch.addIdentity(this.key.asFile().getAbsolutePath());
             return jsch.getSession(this.login, this.addr);
         } catch (com.jcraft.jsch.JSchException ex) {
             throw new IOException(ex);
         }
-    }
-
-    /**
-     * Get file with secret key.
-     * @return The file
-     * @throws IOException If some IO problem inside
-     */
-    private File keyFile() throws IOException {
-        final File file = File.createTempFile("ec2", ".pem");
-        FileUtils.write(file, this.key, CharEncoding.UTF_8);
-        FileUtils.forceDeleteOnExit(file);
-        return file;
     }
 
 }

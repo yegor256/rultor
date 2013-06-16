@@ -32,6 +32,7 @@ package com.rultor.env.ec2;
 import com.rultor.env.Environments;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
+import com.rultor.shell.ssh.PrivateKey;
 import com.rultor.shell.ssh.SSHServers;
 import java.io.ByteArrayOutputStream;
 import org.apache.commons.codec.CharEncoding;
@@ -54,8 +55,8 @@ public final class EC2ITCase {
      */
     @Test
     public void makesInstanceAndConnectsToIt() throws Exception {
-        final String priv = System.getProperty("failsafe.ec2.priv");
-        Assume.assumeNotNull(priv);
+        final String key = System.getProperty("failsafe.ec2.key");
+        Assume.assumeNotNull(key);
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
         final Environments envs = new EC2(
@@ -63,10 +64,14 @@ public final class EC2ITCase {
             "ami-82fa58eb",
             "rultor-test",
             "rultor-test",
-            System.getProperty("failsafe.ec2.key"),
+            key,
             System.getProperty("failsafe.ec2.secret")
         );
-        final Shells shells = new SSHServers(envs, "ubuntu", priv);
+        final Shells shells = new SSHServers(
+            envs,
+            "ubuntu",
+            new PrivateKey(System.getProperty("failsafe.ec2.priv"))
+        );
         final Shell shell = shells.acquire();
         int code;
         try {

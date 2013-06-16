@@ -31,17 +31,15 @@ package com.rultor.shell.ssh;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.env.Environment;
-import com.rultor.shell.Shell;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.codec.CharEncoding;
+import org.apache.commons.io.FileUtils;
 
 /**
- * Single SSH Server.
+ * Private Key for SSH.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -49,56 +47,33 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "env", "key" })
+@EqualsAndHashCode(of = "text")
 @Loggable(Loggable.DEBUG)
-public final class SSHServer implements Shell {
+public final class PrivateKey {
 
     /**
-     * Environment.
+     * Content.
      */
-    private final transient Environment env;
-
-    /**
-     * User name.
-     */
-    private final transient String login;
-
-    /**
-     * Private SSH key.
-     */
-    private final transient PrivateKey key;
+    private final transient String text;
 
     /**
      * Public ctor.
-     * @param environ Environment
-     * @param user Login
-     * @param priv Private SSH key
+     * @param txt Text
      */
-    public SSHServer(final Environment environ, final String user,
-        final PrivateKey priv) {
-        this.env = environ;
-        this.login = user;
-        this.key = priv;
+    public PrivateKey(final String txt) {
+        this.text = txt;
     }
 
     /**
-     * {@inheritDoc}
+     * Get file with private key.
+     * @return The file
+     * @throws IOException If some IO problem inside
      */
-    @Override
-    public int exec(@NotNull final String command,
-        @NotNull final InputStream stdin,
-        @NotNull final OutputStream stdout,
-        @NotNull final OutputStream stderr) throws IOException {
-        return new SSHChannel(this.env.address(), this.login, this.key)
-            .exec(command, stdin, stdout, stderr);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void close() throws IOException {
-        this.env.close();
+    public File asFile() throws IOException {
+        final File file = File.createTempFile("delete-me-", ".pem");
+        FileUtils.write(file, this.text, CharEncoding.UTF_8);
+        FileUtils.forceDeleteOnExit(file);
+        return file;
     }
 
 }

@@ -64,7 +64,7 @@ public final class SSHServers implements Shells {
     /**
      * Private SSH key.
      */
-    private final transient String key;
+    private final transient PrivateKey key;
 
     /**
      * Public ctor.
@@ -73,7 +73,7 @@ public final class SSHServers implements Shells {
      * @param priv Private SSH key
      */
     public SSHServers(final Environments environs, final String user,
-        final String priv) {
+        final PrivateKey priv) {
         this.envs = environs;
         this.login = user;
         this.key = priv;
