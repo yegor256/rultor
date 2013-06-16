@@ -81,6 +81,9 @@ public final class IRC implements Billboard {
      */
     @Override
     public void announce(@NotNull final String text) throws IOException {
+        assert this.host != null;
+        assert this.port != 0;
+        assert this.channel != null;
         throw new UnsupportedOperationException();
     }
 

@@ -48,6 +48,7 @@ public final class PrivateKeyTest {
     @Test
     public void parsesValidText() throws Exception {
         final PrivateKey key = new PrivateKey(
+            // @checkstyle StringLiteralsConcatenation (3 lines)
             "\n\t\t-----BEGIN RSA PRIVATE KEY-----\n"
             + "\t\tMIIEowIBAAKCAQEA2Df07r59ThOErTDr\n\n"
             + "\t\t-----END RSA PRIVATE KEY-----\n\n"

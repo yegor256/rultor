@@ -121,6 +121,7 @@ public final class SSHChannel implements Shell {
 
     /**
      * {@inheritDoc}
+     * @checkstyle ParameterNumber (6 lines)
      */
     @Override
     public int exec(@NotNull final String command,
@@ -131,19 +132,15 @@ public final class SSHChannel implements Shell {
             final Session session = this.session();
             this.connect(session);
             try {
-                final ChannelExec exec = ChannelExec.class.cast(
+                final ChannelExec channel = ChannelExec.class.cast(
                     session.openChannel("exec")
                 );
-                exec.setErrStream(stderr, false);
-                exec.setOutputStream(stdout, false);
-                exec.setInputStream(stdin, false);
-                exec.setCommand(command);
-                exec.connect();
-                try {
-                    return this.code(exec);
-                } finally {
-                    exec.disconnect();
-                }
+                channel.setErrStream(stderr, false);
+                channel.setOutputStream(stdout, false);
+                channel.setInputStream(stdin, false);
+                channel.setCommand(command);
+                channel.connect();
+                return this.exec(channel);
             } finally {
                 session.disconnect();
             }
@@ -161,8 +158,10 @@ public final class SSHChannel implements Shell {
     }
 
     /**
-     * Connect.
+     * Try to connect this session to a real server.
+     * @param session The session to connect
      * @throws JSchException If fails
+     * @checkstyle RedundantThrows (10 lines)
      */
     @RetryOnFailure(
         attempts = Tv.THREE,
@@ -172,6 +171,20 @@ public final class SSHChannel implements Shell {
     )
     private void connect(final Session session) throws JSchException {
         session.connect();
+    }
+
+    /**
+     * Exec this channel and return its exit code.
+     * @param channel The channel to exec
+     * @return Exit code (zero in case of success)
+     * @throws IOException If fails
+     */
+    private int exec(final ChannelExec channel) throws IOException {
+        try {
+            return this.code(channel);
+        } finally {
+            channel.disconnect();
+        }
     }
 
     /**

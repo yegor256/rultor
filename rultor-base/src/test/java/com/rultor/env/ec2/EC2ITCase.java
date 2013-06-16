@@ -50,6 +50,17 @@ import org.junit.Test;
 public final class EC2ITCase {
 
     /**
+     * EC2 security group.
+     * @checkstyle MultipleStringLiterals (2 lines)
+     */
+    private static final String GROUP = "rultor-test";
+
+    /**
+     * EC2 key pair name.
+     */
+    private static final String PAIR = "rultor-test";
+
+    /**
      * EC2 can make environments.
      * @throws Exception If some problem inside
      */
@@ -62,8 +73,8 @@ public final class EC2ITCase {
         final Environments envs = new EC2(
             "t1.micro",
             "ami-82fa58eb",
-            "rultor-test",
-            "rultor-test",
+            EC2ITCase.GROUP,
+            EC2ITCase.PAIR,
             key,
             System.getProperty("failsafe.ec2.secret")
         );

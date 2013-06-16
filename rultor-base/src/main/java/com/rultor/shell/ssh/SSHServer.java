@@ -83,6 +83,7 @@ public final class SSHServer implements Shell {
 
     /**
      * {@inheritDoc}
+     * @checkstyle ParameterNumber (6 lines)
      */
     @Override
     public int exec(@NotNull final String command,

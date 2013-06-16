@@ -53,7 +53,7 @@ public final class SSHChannelITCase {
     @Test
     @org.junit.Ignore
     public void makesInstanceAndConnectsToIt() throws Exception {
-        final String host = "67.202.55.156";
+        final String host = "-- IP address goes here --";
         final SSHChannel channel = new SSHChannel(
             InetAddress.getByName(host),
             "ubuntu",

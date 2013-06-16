@@ -88,12 +88,12 @@ final class EC2Environment implements Environment {
     public InetAddress address() throws IOException {
         final AmazonEC2 aws = this.client.get();
         InetAddress address = null;
+        final DescribeInstancesRequest request = new DescribeInstancesRequest()
+            .withInstanceIds(this.name);
         try {
             while (true) {
-                final DescribeInstancesResult result = aws.describeInstances(
-                    new DescribeInstancesRequest()
-                        .withInstanceIds(this.name)
-                );
+                final DescribeInstancesResult result =
+                    aws.describeInstances(request);
                 final Instance instance =
                     result.getReservations().get(0).getInstances().get(0);
                 final InstanceState state = instance.getState();

@@ -54,6 +54,7 @@ public interface Shell extends Closeable {
      * @param stderr Error output stream
      * @return Exit code
      * @throws IOException If fails
+     * @checkstyle ParameterNumber (5 lines)
      */
     int exec(@NotNull String command, @NotNull InputStream stdin,
         @NotNull OutputStream stdout, @NotNull OutputStream stderr)

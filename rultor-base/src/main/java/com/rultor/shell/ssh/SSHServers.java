@@ -84,8 +84,7 @@ public final class SSHServers implements Shells {
      */
     @Override
     public Shell acquire() throws IOException {
-        return new SSHServer(envs.acquire(), this.login, this.key);
+        return new SSHServer(this.envs.acquire(), this.login, this.key);
     }
-
 
 }

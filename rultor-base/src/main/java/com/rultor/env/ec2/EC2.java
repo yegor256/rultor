@@ -89,6 +89,7 @@ public final class EC2 implements Environments {
      * @param par Key pair
      * @param akey AWS key
      * @param scrt AWS secret
+     * @checkstyle ParameterNumber (5 lines)
      */
     public EC2(final String tpe, final String image, final String grp,
         final String par, final String akey, final String scrt) {
@@ -102,6 +103,7 @@ public final class EC2 implements Environments {
      * @param grp Security group
      * @param par Key pair
      * @param clnt EC2 client
+     * @checkstyle ParameterNumber (5 lines)
      */
     public EC2(final String tpe, final String image, final String grp,
         final String par, final EC2Client clnt) {

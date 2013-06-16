@@ -83,9 +83,8 @@ public final class PrivateKey {
      * @return Normalized text
      */
     private static String normalize(final String raw) {
-        String text = raw.replaceAll("\r", "")
-            .replaceAll("\n\\s+", "\n")
-            .replaceAll("\n{2,}", "\n")
+        final String text = raw.replaceAll("\r", "")
+            .replaceAll("\n\\s+|\n{2,}", "\n")
             .trim();
         Validate.isTrue(
             text.startsWith("-----BEGIN RSA PRIVATE KEY-----"),
