@@ -138,9 +138,10 @@ public final class EC2 implements Environments {
             final Instance instance = instances.get(0);
             Logger.info(
                 this,
-                "instance %s/%s created",
+                "instance %s created, key=%s, platform=%s",
                 instance.getInstanceId(),
-                instance.getPublicIpAddress()
+                instance.getKeyName(),
+                instance.getPlatform()
             );
             return new EC2Environment(instance.getInstanceId(), this.client);
         } finally {

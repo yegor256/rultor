@@ -76,18 +76,18 @@ public final class EC2ITCase {
         int code;
         try {
             code = shell.exec(
-                "who am i",
+                "#!/bin/bash\nfor i in '1 2 3 4'\ndo\necho $i\ndone",
                 IOUtils.toInputStream(""),
                 stdout,
                 stderr
             );
         } finally {
-//            shell.close();
+            shell.close();
         }
         MatcherAssert.assertThat(code, Matchers.equalTo(0));
         MatcherAssert.assertThat(
             stdout.toString(CharEncoding.UTF_8),
-            Matchers.equalTo("ubuntu\n")
+            Matchers.equalTo("1 2 3 4\n")
         );
         MatcherAssert.assertThat(
             stderr.toString(CharEncoding.UTF_8),

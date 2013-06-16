@@ -106,8 +106,11 @@ final class EC2Environment implements Environment {
                     state.getCode()
                 );
                 if ("running".equals(state.getName())) {
-                    address = InetAddress.getByName(
-                        instance.getPublicIpAddress()
+                    address = InetAddress.getByAddress(
+                        instance.getPublicDnsName(),
+                        InetAddress.getByName(
+                            instance.getPublicIpAddress()
+                        ).getAddress()
                     );
                     break;
                 }

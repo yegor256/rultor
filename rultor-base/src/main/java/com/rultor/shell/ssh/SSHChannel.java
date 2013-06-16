@@ -31,6 +31,8 @@ package com.rultor.shell.ssh;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -45,6 +47,7 @@ import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Single SSH Channel.
@@ -63,6 +66,23 @@ public final class SSHChannel implements Shell {
      * SSH port to use.
      */
     private static final int PORT = 22;
+
+    /**
+     * Logger to use for all channels.
+     */
+    private static final com.jcraft.jsch.Logger LOGGER =
+        new com.jcraft.jsch.Logger() {
+            @Override
+            public boolean isEnabled(final int level) {
+                return level == com.jcraft.jsch.Logger.WARN
+                    || level == com.jcraft.jsch.Logger.FATAL
+                    || level == com.jcraft.jsch.Logger.ERROR;
+            }
+            @Override
+            public void log(final int level, final String msg) {
+                Logger.info(SSHChannel.class, "%s", msg);
+            }
+        };
 
     /**
      * IP address of the server.
@@ -88,7 +108,14 @@ public final class SSHChannel implements Shell {
     public SSHChannel(final InetAddress adr, final String user,
         final PrivateKey priv) {
         this.addr = adr.getHostAddress();
+        Validate.matchesPattern(
+            this.addr,
+            "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}",
+            "Invalid IP address of the server '%s'",
+            this.addr
+        );
         this.login = user;
+        Validate.notEmpty(this.login, "user name can't be empty");
         this.key = priv;
     }
 
@@ -102,14 +129,13 @@ public final class SSHChannel implements Shell {
         @NotNull final OutputStream stderr) throws IOException {
         try {
             final Session session = this.session();
-            session.connect();
+            this.connect(session);
             try {
                 final ChannelExec exec = ChannelExec.class.cast(
                     session.openChannel("exec")
                 );
                 exec.setErrStream(stderr, false);
                 exec.setOutputStream(stdout, false);
-//                exec.setOutputStream(System.out);
                 exec.setInputStream(stdin, false);
                 exec.setCommand(command);
                 exec.connect();
@@ -132,6 +158,20 @@ public final class SSHChannel implements Shell {
     @Override
     public void close() throws IOException {
         // nothing to do
+    }
+
+    /**
+     * Connect.
+     * @throws JSchException If fails
+     */
+    @RetryOnFailure(
+        attempts = Tv.THREE,
+        delay = Tv.FIFTEEN,
+        unit = TimeUnit.SECONDS,
+        verbose = false
+    )
+    private void connect(final Session session) throws JSchException {
+        session.connect();
     }
 
     /**
@@ -160,24 +200,16 @@ public final class SSHChannel implements Shell {
     private Session session() throws IOException {
         try {
             JSch.setConfig("StrictHostKeyChecking", "no");
-            JSch.setLogger(
-                new com.jcraft.jsch.Logger() {
-                    @Override
-                    public boolean isEnabled(final int level) {
-                        return level == com.jcraft.jsch.Logger.WARN
-                            || level == com.jcraft.jsch.Logger.FATAL
-                            || level == com.jcraft.jsch.Logger.ERROR;
-                    }
-                    @Override
-                    public void log(final int level, final String msg) {
-                        Logger.info(SSHChannel.class, "%s", msg);
-                    }
-                }
-            );
+            JSch.setLogger(SSHChannel.LOGGER);
             final JSch jsch = new JSch();
             jsch.addIdentity(this.key.asFile().getAbsolutePath());
+            Logger.info(
+                this,
+                "Opening SSH session to %s@%s:%s...",
+                this.login, this.addr, SSHChannel.PORT
+            );
             return jsch.getSession(this.login, this.addr, SSHChannel.PORT);
-        } catch (com.jcraft.jsch.JSchException ex) {
+        } catch (JSchException ex) {
             throw new IOException(ex);
         }
     }
