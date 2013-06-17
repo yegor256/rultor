@@ -61,7 +61,7 @@ public final class RestUser implements User {
     /**
      * Authentication cookie.
      */
-    public static final String COOKIE = "X-Rultor-Auth";
+    public static final String AUTH_HEADER = "X-Rultor-Auth";
 
     /**
      * Home URI.
@@ -102,7 +102,7 @@ public final class RestUser implements User {
         return URN.create(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
-                .header(RestUser.COOKIE, this.cookie)
+                .header(RestUser.AUTH_HEADER, this.cookie)
                 .get("read identity URN from home page")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .assertXPath("/page/identity")
@@ -127,7 +127,7 @@ public final class RestUser implements User {
         return new RestUnit(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(RestUser.COOKIE, this.cookie)
+                .header(RestUser.AUTH_HEADER, this.cookie)
                 .get("read front page to get ADD link")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .rel("/page/links/link[@rel='add']/@href")
@@ -161,7 +161,7 @@ public final class RestUser implements User {
     public void remove(final String name) {
         RestTester.start(UriBuilder.fromUri(this.home))
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-            .header(RestUser.COOKIE, this.cookie)
+            .header(RestUser.AUTH_HEADER, this.cookie)
             .get("read list of units to delete one")
             .assertStatus(HttpURLConnection.HTTP_OK)
             .assertXPath("/page/units")

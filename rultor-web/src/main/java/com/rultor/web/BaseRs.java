@@ -52,7 +52,7 @@ import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import java.io.IOException;
 import java.net.URI;
-import javax.ws.rs.core.Cookie;
+import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -181,12 +181,12 @@ public class BaseRs extends BaseResource {
          */
         @Override
         public Identity identity() throws IOException {
-            final Cookie cookie = BaseRs.this.httpHeaders()
-                .getCookies().get(RestUser.COOKIE);
+            final List<String> headers = BaseRs.this.httpHeaders()
+                .getRequestHeader(RestUser.AUTH_HEADER);
             Identity identity = Identity.ANONYMOUS;
-            if (cookie != null) {
+            if (headers != null && !headers.isEmpty()) {
                 identity = new Identity.Simple(
-                    URN.create(cookie.getValue()), "", URI.create("#")
+                    URN.create(headers.get(0)), "", URI.create("#")
                 );
             }
             return identity;

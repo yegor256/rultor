@@ -96,7 +96,7 @@ public final class RestUnits implements Map<String, Unit> {
     public boolean isEmpty() {
         return RestTester.start(UriBuilder.fromUri(this.home))
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-            .header(RestUser.COOKIE, this.cookie)
+            .header(RestUser.AUTH_HEADER, this.cookie)
             .get("home page with all units")
             .assertStatus(HttpURLConnection.HTTP_OK)
             .xpath("/page/units/unit")
@@ -112,7 +112,7 @@ public final class RestUnits implements Map<String, Unit> {
         if (key instanceof String) {
             contains ^= RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(RestUser.COOKIE, this.cookie)
+                .header(RestUser.AUTH_HEADER, this.cookie)
                 .get("home page with specific unit")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .xpath(String.format("/page/units/unit[name='%s']", key))
@@ -137,7 +137,7 @@ public final class RestUnits implements Map<String, Unit> {
         return new RestUnit(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(RestUser.COOKIE, this.cookie)
+                .header(RestUser.AUTH_HEADER, this.cookie)
                 .get("home page with specific units")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .xpath(
@@ -167,7 +167,7 @@ public final class RestUnits implements Map<String, Unit> {
     public Unit remove(final Object key) {
         RestTester.start(UriBuilder.fromUri(this.home))
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-            .header(RestUser.COOKIE, this.cookie)
+            .header(RestUser.AUTH_HEADER, this.cookie)
             .get("home page with specific units to remove it")
             .assertStatus(HttpURLConnection.HTTP_OK)
             .rel(

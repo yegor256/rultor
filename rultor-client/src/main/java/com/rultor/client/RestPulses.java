@@ -167,7 +167,7 @@ final class RestPulses implements SortedMap<Date, Pulse> {
     public boolean isEmpty() {
         return RestTester.start(UriBuilder.fromUri(this.home))
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-            .header(RestUser.COOKIE, this.cookie)
+            .header(RestUser.AUTH_HEADER, this.cookie)
             .get("home page with all pulses")
             .assertStatus(HttpURLConnection.HTTP_OK)
             .xpath("/page/pulses/pulse")
