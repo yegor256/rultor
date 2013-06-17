@@ -30,10 +30,12 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Tv;
+import com.rultor.spi.User;
 import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link Composite}.
@@ -53,7 +55,7 @@ public final class CompositeTest {
             Arrays.<Variable>asList(new Constant<Integer>(Tv.TEN))
         );
         MatcherAssert.assertThat(
-            var.instantiate(),
+            var.instantiate(Mockito.mock(User.class)),
             Matchers.<Object>equalTo(Tv.TEN)
         );
     }

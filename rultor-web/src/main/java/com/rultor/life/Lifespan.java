@@ -111,7 +111,7 @@ public final class Lifespan implements ServletContextListener {
         final Queue queue = new Queue.Memory();
         this.quartz = new Lifespan.Quartz(users, queue);
         this.log = new S3Log(client);
-        this.conveyer = new SimpleConveyer(queue, repo, this.log);
+        this.conveyer = new SimpleConveyer(queue, repo, users, this.log);
         this.conveyer.start();
         context.setAttribute(Users.class.getName(), users);
         context.setAttribute(Repo.class.getName(), repo);

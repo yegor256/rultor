@@ -35,6 +35,7 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
+import com.rultor.spi.User;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -63,11 +64,11 @@ public final class ClasspathRepo implements Repo {
      */
     @Override
     @NotNull
-    public Instance make(@NotNull final Spec spec)
+    public Instance make(@NotNull final User user, @NotNull final Spec spec)
         throws Repo.InstantiationException {
         Object object;
         try {
-            object = this.variable(spec.asText()).instantiate();
+            object = this.variable(spec.asText()).instantiate(user);
         } catch (Repo.InvalidSyntaxException ex) {
             throw new Repo.InstantiationException(ex);
         }

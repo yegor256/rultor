@@ -30,6 +30,7 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
+import com.rultor.spi.User;
 
 /**
  * Constant.
@@ -58,7 +59,7 @@ final class Constant<T> implements Variable {
      * {@inheritDoc}
      */
     @Override
-    public Object instantiate() {
+    public Object instantiate(final User user) {
         return this.value;
     }
 

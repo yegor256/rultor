@@ -39,6 +39,7 @@ import com.rultor.spi.Conveyer.Log;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.State;
+import com.rultor.spi.Users;
 import com.rultor.spi.Work;
 import java.io.Closeable;
 import java.util.concurrent.Callable;
@@ -81,6 +82,11 @@ public final class SimpleConveyer
     private final transient Repo repo;
 
     /**
+     * Users.
+     */
+    private final transient Users users;
+
+    /**
      * State to use for everybody.
      */
     private final transient State state = new State.Memory();
@@ -115,11 +121,15 @@ public final class SimpleConveyer
      * Public ctor.
      * @param que The queue of specs
      * @param rep Repo
+     * @param usrs Users
      * @param log Log
+     * @checkstyle ParameterNumber (4 lines)
      */
-    public SimpleConveyer(final Queue que, final Repo rep, final Log log) {
+    public SimpleConveyer(final Queue que, final Repo rep, final Users usrs,
+        final Log log) {
         this.queue = que;
         this.repo = rep;
+        this.users = usrs;
         this.appender = new ConveyerAppender(log);
         this.appender.setThreshold(Level.DEBUG);
         this.appender.setLayout(new PatternLayout("%m"));
@@ -177,6 +187,7 @@ public final class SimpleConveyer
                 public Void call() throws Exception {
                     new LoggedInstance(
                         SimpleConveyer.this.repo,
+                        SimpleConveyer.this.users.fetch(work.owner()),
                         SimpleConveyer.this.appender
                     ).pulse(work, SimpleConveyer.this.substate(work));
                     SimpleConveyer.this.counter.inc();

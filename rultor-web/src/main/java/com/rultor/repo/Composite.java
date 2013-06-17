@@ -31,6 +31,7 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.rultor.spi.Repo;
+import com.rultor.spi.User;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
@@ -66,14 +67,15 @@ final class Composite implements Variable {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (3 lines)
+     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public Object instantiate() throws Repo.InstantiationException {
+    public Object instantiate(final User user)
+        throws Repo.InstantiationException {
         final Object[] args = new Object[this.vars.length];
         final Class<?>[] types = new Class<?>[this.vars.length];
         for (int idx = 0; idx < this.vars.length; ++idx) {
-            final Object object = this.vars[idx].instantiate();
+            final Object object = this.vars[idx].instantiate(user);
             args[idx] = object;
             types[idx] = Composite.typeOf(object);
         }

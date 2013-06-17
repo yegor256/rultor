@@ -32,6 +32,7 @@ package com.rultor.conveyer;
 import com.rultor.spi.Conveyer;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Users;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -50,8 +51,9 @@ public final class SimpleConveyerTest {
     public void startsAndStops() throws Exception {
         final Queue queue = new Queue.Memory();
         final Repo repo = Mockito.mock(Repo.class);
+        final Users users = Mockito.mock(Users.class);
         final Conveyer.Log log = Mockito.mock(Conveyer.Log.class);
-        final Conveyer conveyer = new SimpleConveyer(queue, repo, log);
+        final Conveyer conveyer = new SimpleConveyer(queue, repo, users, log);
         try {
             conveyer.start();
         } finally {

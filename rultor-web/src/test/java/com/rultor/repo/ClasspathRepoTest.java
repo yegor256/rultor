@@ -34,6 +34,7 @@ import com.rultor.spi.Pulseable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.State;
+import com.rultor.spi.User;
 import com.rultor.spi.Work;
 import java.util.concurrent.atomic.AtomicLong;
 import org.hamcrest.MatcherAssert;
@@ -80,7 +81,7 @@ public final class ClasspathRepoTest {
         final String text = "java.lang.String:\ns\n\nnome\t\t\rued\ntext\u20ac";
         final Repo repo = new ClasspathRepo();
         MatcherAssert.assertThat(
-            repo.make(repo.make(text)),
+            repo.make(Mockito.mock(User.class), repo.make(text)),
             Matchers.notNullValue()
         );
         MatcherAssert.assertThat(
@@ -100,7 +101,7 @@ public final class ClasspathRepoTest {
             "com.rultor.repo.ClasspathRepoTest$Foo(2)"
         );
         ClasspathRepoTest.Foo.COUNTER.set(0);
-        final Instance instance = repo.make(spec);
+        final Instance instance = repo.make(Mockito.mock(User.class), spec);
         MatcherAssert.assertThat(
             ClasspathRepoTest.Foo.COUNTER.get(),
             Matchers.equalTo(2L)

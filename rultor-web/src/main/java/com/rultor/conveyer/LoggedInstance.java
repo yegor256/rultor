@@ -35,6 +35,7 @@ import com.rultor.spi.Instance;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
 import com.rultor.spi.State;
+import com.rultor.spi.User;
 import com.rultor.spi.Work;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -59,6 +60,11 @@ final class LoggedInstance implements Instance {
     private final transient Repo repo;
 
     /**
+     * Owner of the instance.
+     */
+    private final transient User user;
+
+    /**
      * Log appender.
      */
     private final transient ConveyerAppender appender;
@@ -66,10 +72,13 @@ final class LoggedInstance implements Instance {
     /**
      * Public ctor.
      * @param rpo Repo
+     * @param owner Owner of this instance
      * @param appr Appender
      */
-    protected LoggedInstance(final Repo rpo, final ConveyerAppender appr) {
+    protected LoggedInstance(final Repo rpo, final User owner,
+        final ConveyerAppender appr) {
         this.repo = rpo;
+        this.user = owner;
         this.appender = appr;
     }
 
@@ -86,7 +95,7 @@ final class LoggedInstance implements Instance {
             this.meta("owner", work.owner());
             this.meta("unit", work.unit());
             this.meta("spec", work.spec().asText());
-            this.repo.make(work.spec()).pulse(work, state);
+            this.repo.make(this.user, work.spec()).pulse(work, state);
             this.meta("status", "SUCCESS");
         } catch (Repo.InstantiationException ex) {
             Logger.error(this, "%[exception]s", ex);

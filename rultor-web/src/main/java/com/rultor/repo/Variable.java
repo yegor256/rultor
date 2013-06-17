@@ -32,6 +32,7 @@ package com.rultor.repo;
 import com.jcabi.aspects.Immutable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
+import com.rultor.spi.User;
 
 /**
  * Variable.
@@ -41,14 +42,15 @@ import com.rultor.spi.Spec;
  * @since 1.0
  */
 @Immutable
-public interface Variable extends Spec {
+interface Variable extends Spec {
 
     /**
      * Make an instance of it.
+     * @param user Owner of the spec
      * @return The object
      * @throws Repo.InstantiationException If can't instantiate
      * @checkstyle RedundantThrows (3 lines)
      */
-    Object instantiate() throws Repo.InstantiationException;
+    Object instantiate(User user) throws Repo.InstantiationException;
 
 }

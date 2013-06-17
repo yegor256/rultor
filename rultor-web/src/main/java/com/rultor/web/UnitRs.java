@@ -164,7 +164,7 @@ public final class UnitRs extends BaseRs {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
         try {
-            this.repo().make(spec);
+            this.repo().make(this.user(), spec);
         } catch (Repo.InstantiationException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }

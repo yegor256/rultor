@@ -30,6 +30,7 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
+import com.rultor.spi.User;
 
 /**
  * Reference.
@@ -58,7 +59,7 @@ final class Reference implements Variable {
      * {@inheritDoc}
      */
     @Override
-    public Object instantiate() {
+    public Object instantiate(final User user) {
         throw new UnsupportedOperationException();
     }
 

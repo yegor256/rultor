@@ -30,6 +30,7 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
+import com.rultor.spi.User;
 
 /**
  * Big text, without any formatting.
@@ -63,7 +64,7 @@ final class BigText implements Variable {
      * {@inheritDoc}
      */
     @Override
-    public String instantiate() {
+    public String instantiate(final User user) {
         return this.value;
     }
 

@@ -30,6 +30,7 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
+import com.rultor.spi.User;
 
 /**
  * Text constant.
@@ -58,7 +59,7 @@ final class Text implements Variable {
      * {@inheritDoc}
      */
     @Override
-    public String instantiate() {
+    public String instantiate(final User user) {
         return this.value;
     }
 

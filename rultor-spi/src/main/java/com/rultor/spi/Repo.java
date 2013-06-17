@@ -109,10 +109,12 @@ public interface Repo extends Metricable {
 
     /**
      * Make an instance from a spec.
+     * @param user Owner of this spec
      * @param spec Spect
      * @return The instance
      * @throws Repo.InstantiationException If can't instantiate
      */
-    Instance make(@NotNull Spec spec) throws Repo.InstantiationException;
+    Instance make(@NotNull User user, @NotNull Spec spec)
+        throws Repo.InstantiationException;
 
 }
