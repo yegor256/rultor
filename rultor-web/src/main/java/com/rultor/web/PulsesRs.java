@@ -36,9 +36,9 @@ import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Unit;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
+import java.util.Date;
+import java.util.Map;
+import java.util.SortedMap;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -53,7 +53,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
  * @version $Id$
  * @since 1.0
  */
-@Path("/ps")
+@Path("/pulses")
 @Loggable(Loggable.DEBUG)
 public final class PulsesRs extends BaseRs {
 
@@ -65,12 +65,12 @@ public final class PulsesRs extends BaseRs {
     /**
      * Query param.
      */
-    public static final String QUERY_PAGE = "p";
+    public static final String QUERY_SINCE = "since";
 
     /**
-     * Page size.
+     * Maximum number of pulses to show.
      */
-    private static final int PAGE_SIZE = 20;
+    private static final int MAX = 20;
 
     /**
      * Unit name.
@@ -78,9 +78,9 @@ public final class PulsesRs extends BaseRs {
     private transient String name;
 
     /**
-     * Page number.
+     * Since (date).
      */
-    private transient int page;
+    private transient Date since;
 
     /**
      * Inject it from query.
@@ -93,14 +93,14 @@ public final class PulsesRs extends BaseRs {
 
     /**
      * Inject it from query.
-     * @param num Page number
+     * @param time Since what time
      */
-    @QueryParam(PulsesRs.QUERY_PAGE)
-    public void setPage(final String num) {
-        if (num == null) {
-            this.page = 0;
+    @QueryParam(PulsesRs.QUERY_SINCE)
+    public void setSince(final String time) {
+        if (time == null) {
+            this.since = new Date(Long.MAX_VALUE);
         } else {
-            this.page = Integer.parseInt(num);
+            this.since = new Date(Long.parseLong(time));
         }
     }
 
@@ -135,28 +135,13 @@ public final class PulsesRs extends BaseRs {
      * @return Collection of JAXB units
      */
     private JaxbBundle pulses() {
-        final List<Pulse> pulses = this.unit().pulses();
-        final int from = this.page * PulsesRs.PAGE_SIZE;
-        if (from >= pulses.size()) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                String.format(
-                    "Page #%d is out of boundary",
-                    this.page
-                ),
-                Level.SEVERE
-            );
-        }
-        int till = (this.page + 1) * PulsesRs.PAGE_SIZE;
-        if (till >= pulses.size()) {
-            till = pulses.size();
-        }
-        final AtomicInteger pos = new AtomicInteger(from);
+        final SortedMap<Date, Pulse> pulses =
+            this.unit().pulses().tailMap(this.since);
         return new JaxbBundle("pulses").add(
-            new JaxbBundle.Group<Pulse>(pulses.subList(from, till)) {
+            new JaxbBundle.Group<Map.Entry<Date, Pulse>>(pulses.entrySet()) {
                 @Override
-                public JaxbBundle bundle(final Pulse pulse) {
-                    return PulsesRs.this.pulse(pos.getAndIncrement(), pulse);
+                public JaxbBundle bundle(final Map.Entry<Date, Pulse> ent) {
+                    return PulsesRs.this.pulse(ent.getKey(), ent.getValue());
                 }
             }
         );
@@ -164,19 +149,17 @@ public final class PulsesRs extends BaseRs {
 
     /**
      * Convert pulse to JaxbBundle.
-     * @param pos Position
+     * @param date Date of it
      * @param pulse Pulse to convert
      * @return Bundle
      */
-    private JaxbBundle pulse(final int pos, final Pulse pulse) {
+    private JaxbBundle pulse(final Date date, final Pulse pulse) {
         return new JaxbBundle("pulse")
             .add("spec", pulse.spec().asText())
             .up()
             .add(
-                "started",
-                DateFormatUtils.formatUTC(
-                    pulse.started(), "yyyy-MM-dd'T'HH:mm'Z'"
-                )
+                "date",
+                DateFormatUtils.formatUTC(date, "yyyy-MM-dd'T'HH:mm'Z'")
             )
             .up()
             .add("stages")
@@ -184,7 +167,7 @@ public final class PulsesRs extends BaseRs {
                 new JaxbBundle.Group<Stage>(pulse.stages()) {
                     @Override
                     public JaxbBundle bundle(final Stage stage) {
-                        return PulsesRs.this.stage(pulse, stage);
+                        return PulsesRs.this.stage(pulse, date, stage);
                     }
                 }
             )
@@ -197,8 +180,7 @@ public final class PulsesRs extends BaseRs {
                         .path(PulseRs.class)
                         .queryParam(PulseRs.QUERY_NAME, "{n}")
                         .queryParam(PulseRs.QUERY_DATE, "{d}")
-                        .queryParam(PulseRs.QUERY_POSITION, "{p}")
-                        .build(this.name, pulse.started().getTime(), pos)
+                        .build(this.name, date.getTime())
                 )
             );
     }
@@ -206,10 +188,12 @@ public final class PulsesRs extends BaseRs {
     /**
      * Convert stage to JaxbBundle.
      * @param pulse Pulse
+     * @param date Date of it
      * @param stage Stage to convert
      * @return Bundle
      */
-    private JaxbBundle stage(final Pulse pulse, final Stage stage) {
+    private JaxbBundle stage(final Pulse pulse, final Date date,
+        final Stage stage) {
         return new JaxbBundle("stage")
             .add("result", stage.result().toString())
             .up()
@@ -227,7 +211,7 @@ public final class PulsesRs extends BaseRs {
                         .queryParam(PulseRs.QUERY_DATE, "{y}")
                         .queryParam(PulseRs.QUERY_START, stage.start())
                         .queryParam(PulseRs.QUERY_STOP, stage.stop())
-                        .build(this.name, pulse.started().getTime())
+                        .build(this.name, date.getTime())
                 )
             );
     }

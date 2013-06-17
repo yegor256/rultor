@@ -34,6 +34,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Work;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,13 +49,14 @@ import lombok.EqualsAndHashCode;
  * <code>urn:facebook:5463/nighly-build/8987/88/74/7843.txt</code>. In this
  * example: 8987 is year 2013, reverted towards 9999, 88 is December (99 minus
  * 11), 74 is 25 (99 minus 25), and 7843 is Long.MAX_VALUE minus millisTime
- * of pulse start.
+ * of pulse start. Such a reverted mechanism is required in order to
+ * utilize native sorting provided by Amazon S3.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@EqualsAndHashCode(of = { "owner", "unit", "date" })
+@EqualsAndHashCode(of = { "owner", "unit", "when" })
 @Loggable(Loggable.DEBUG)
 final class Key implements Comparable<Key> {
 
@@ -83,7 +85,7 @@ final class Key implements Comparable<Key> {
     /**
      * Date.
      */
-    private final transient long date;
+    private final transient long when;
 
     /**
      * Public ctor.
@@ -99,15 +101,15 @@ final class Key implements Comparable<Key> {
      * @param client S3 client
      * @param urn Owner
      * @param name Unit name
-     * @param when Date
+     * @param date Date
      * @checkstyle ParameterNumber (4 lines)
      */
     protected Key(final S3Client client, final URN urn,
-        final String name, final long when) {
+        final String name, final long date) {
         this.clnt = client;
         this.owner = urn;
         this.unit = name;
-        this.date = when;
+        this.when = date;
     }
 
     /**
@@ -116,7 +118,7 @@ final class Key implements Comparable<Key> {
     @Override
     public String toString() {
         final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        cal.setTimeInMillis(this.date);
+        cal.setTimeInMillis(this.when);
         return String.format(
             "%s/%s/%d/%d/%d/%s.txt",
             this.owner,
@@ -125,7 +127,7 @@ final class Key implements Comparable<Key> {
             9999 - cal.get(Calendar.YEAR),
             99 - cal.get(Calendar.MONTH),
             99 - cal.get(Calendar.DAY_OF_MONTH),
-            Long.MAX_VALUE - this.date
+            Long.MAX_VALUE - this.when
         );
     }
 
@@ -155,7 +157,7 @@ final class Key implements Comparable<Key> {
      */
     @Override
     public int compareTo(final Key key) {
-        return Long.compare(key.date, this.date);
+        return Long.compare(key.when, this.when);
     }
 
     /**
@@ -164,6 +166,14 @@ final class Key implements Comparable<Key> {
      */
     public S3Client client() {
         return this.clnt;
+    }
+
+    /**
+     * Get date.
+     * @return S3 client
+     */
+    public Date date() {
+        return new Date(this.when);
     }
 
     /**

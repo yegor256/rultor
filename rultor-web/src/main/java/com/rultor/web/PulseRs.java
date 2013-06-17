@@ -30,10 +30,10 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
+import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Pulse;
 import java.util.Date;
-import java.util.List;
-import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -66,11 +66,6 @@ public final class PulseRs extends BaseRs {
     /**
      * Query param.
      */
-    public static final String QUERY_POSITION = "p";
-
-    /**
-     * Query param.
-     */
     public static final String QUERY_START = "start";
 
     /**
@@ -87,21 +82,6 @@ public final class PulseRs extends BaseRs {
      * Pulse date.
      */
     private transient Date date;
-
-    /**
-     * Pulse position in list.
-     */
-    private transient int position;
-
-    /**
-     * Start.
-     */
-    private transient Long start;
-
-    /**
-     * Stop.
-     */
-    private transient Long stop;
 
     /**
      * Inject it from query.
@@ -122,41 +102,6 @@ public final class PulseRs extends BaseRs {
     }
 
     /**
-     * Inject it from query.
-     * @param pos Pulse position in list
-     */
-    @QueryParam(PulseRs.QUERY_POSITION)
-    public void setPosition(@NotNull final String pos) {
-        this.position = Integer.parseInt(pos);
-    }
-
-    /**
-     * Inject it from query.
-     * @param time Pulse time
-     */
-    @QueryParam(PulseRs.QUERY_START)
-    public void setStart(final String time) {
-        if (time == null) {
-            this.start = 0L;
-        } else {
-            this.start = Long.parseLong(time);
-        }
-    }
-
-    /**
-     * Inject it from query.
-     * @param time Pulse time
-     */
-    @QueryParam(PulseRs.QUERY_STOP)
-    public void setStop(final String time) {
-        if (time == null) {
-            this.stop = Long.MAX_VALUE;
-        } else {
-            this.stop = Long.parseLong(time);
-        }
-    }
-
-    /**
      * Get entrance page JAX-RS response.
      * @return The JAX-RS response
      * @throws Exception If some problem inside
@@ -165,8 +110,33 @@ public final class PulseRs extends BaseRs {
     @Path("/")
     @Produces(MediaType.TEXT_PLAIN)
     public Response index() throws Exception {
-        assert this.start != null;
-        assert this.stop != null;
+        return new PageBuilder()
+            .stylesheet("/xsl/pulse.xsl")
+            .build(EmptyPage.class)
+            .init(this)
+            .append(new JaxbBundle("unit", this.name))
+            .append(
+                new JaxbBundle(
+                    "pulse",
+                    Long.toString(this.date.getTime())
+                )
+            )
+            .render()
+            .build();
+    }
+
+    /**
+     * Get stream.
+     * @param start Start moment to render
+     * @param stop Stop moment to render
+     * @return The JAX-RS response
+     * @throws Exception If some problem inside
+     */
+    @GET
+    @Path("/stream")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response stream(@QueryParam(PulseRs.QUERY_START) final String start,
+        @QueryParam(PulseRs.QUERY_STOP) final String stop) throws Exception {
         return Response.ok().entity(this.pulse().read()).build();
     }
 
@@ -175,30 +145,7 @@ public final class PulseRs extends BaseRs {
      * @return The pulse
      */
     private Pulse pulse() {
-        final List<Pulse> pulses = this.user().units().get(this.name).pulses();
-        if (this.position > pulses.size()) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                String.format(
-                    "Pulse #%d is out of boundary",
-                    this.position
-                ),
-                Level.SEVERE
-            );
-        }
-        final Pulse pulse = pulses.get(this.position);
-        if (!pulse.started().equals(this.date)) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUriBuilder()
-                    .clone()
-                    .path(PulsesRs.class)
-                    .queryParam(PulsesRs.QUERY_NAME, "{x}")
-                    .build(this.name),
-                "The list was refreshed, try again",
-                Level.INFO
-            );
-        }
-        return pulse;
+        return this.user().units().get(this.name).pulses().get(this.date);
     }
 
 }

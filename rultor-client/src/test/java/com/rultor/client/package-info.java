@@ -27,41 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
-
-import com.jcabi.aspects.Immutable;
-import java.util.Date;
-import java.util.SortedMap;
-import javax.validation.constraints.NotNull;
 
 /**
- * Unit.
+ * RESTful HTTP Client, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Unit {
-
-    /**
-     * All pulses (starting from the most recent).
-     * @return Sorted map of them
-     */
-    @NotNull
-    SortedMap<Date, Pulse> pulses();
-
-    /**
-     * Save specification.
-     * @param spec Specification to save
-     */
-    void spec(@NotNull Spec spec);
-
-    /**
-     * Get specification.
-     * @return Specification
-     */
-    @NotNull
-    Spec spec();
-
-}
+package com.rultor.client;

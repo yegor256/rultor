@@ -48,10 +48,13 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.SortedMap;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -62,6 +65,7 @@ import lombok.ToString;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @ToString
@@ -131,15 +135,16 @@ final class AwsUnit implements Unit {
     @Override
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public List<Pulse> pulses() {
-        final List<Pulse> pulses = new LinkedList<Pulse>();
+    public SortedMap<Date, Pulse> pulses() {
+        final SortedMap<Date, Pulse> pulses =
+            new ConcurrentSkipListMap<Date, Pulse>();
         final Collection<Key> keys = new TreeSet<Key>();
         keys.addAll(this.fetch());
         keys.addAll(Caches.INSTANCE.keys(this.owner, this.name));
         for (Key key : keys) {
-            pulses.add(new S3Pulse(key));
+            pulses.put(key.date(), new S3Pulse(key));
         }
-        return pulses;
+        return Collections.unmodifiableSortedMap(pulses);
     }
 
     /**

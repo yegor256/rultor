@@ -35,7 +35,8 @@ import com.rultor.spi.Conveyer;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Work;
-import java.util.List;
+import java.util.Date;
+import java.util.SortedMap;
 import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
@@ -94,10 +95,12 @@ public final class S3LogITCase {
             )
         );
         final Region region = Mockito.mock(Region.class);
-        final List<Pulse> pulses =
+        final SortedMap<Date, Pulse> pulses =
             new AwsUnit(region, this.client, owner, unit).pulses();
-        MatcherAssert.assertThat(pulses, Matchers.not(Matchers.empty()));
-        final Pulse pulse = pulses.get(0);
+        MatcherAssert.assertThat(
+            pulses.values(), Matchers.not(Matchers.empty())
+        );
+        final Pulse pulse = pulses.values().iterator().next();
         MatcherAssert.assertThat(
             IOUtils.toString(pulse.read(), CharEncoding.UTF_8),
             Matchers.containsString(msg)

@@ -27,23 +27,28 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.aws;
+package com.rultor.client;
 
-import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rexsl.test.RestTester;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.net.HttpURLConnection;
 import java.util.Collection;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.codec.CharEncoding;
+import org.apache.commons.io.IOUtils;
 
 /**
- * Pulse in Amazon S3.
+ * RESTful Pulse.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -51,34 +56,28 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "key")
+@EqualsAndHashCode(of = { "home", "cookie" })
 @Loggable(Loggable.DEBUG)
-final class S3Pulse implements Pulse {
+final class RestPulse implements Pulse {
 
     /**
-     * S3 key.
+     * Home URI.
      */
-    private final transient Key key;
+    private final transient String home;
 
     /**
-     * Protocol.
+     * Authentication cookie.
      */
-    private final transient Protocol protocol;
+    private final transient String cookie;
 
     /**
      * Public ctor.
-     * @param akey S3 key
+     * @param uri URI of home page
+     * @param auth Authentication cookie
      */
-    protected S3Pulse(final Key akey) {
-        this.key = akey;
-        this.protocol = new Protocol(
-            new Protocol.Source() {
-                @Override
-                public InputStream stream() throws IOException {
-                    return S3Pulse.this.read();
-                }
-            }
-        );
+    protected RestPulse(final String uri, final String auth) {
+        this.home = uri;
+        this.cookie = auth;
     }
 
     /**
@@ -86,22 +85,22 @@ final class S3Pulse implements Pulse {
      */
     @Override
     public Collection<Stage> stages() {
-        return new ArrayList<Stage>(0);
+        throw new UnsupportedOperationException();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Cacheable
     public Spec spec() {
-        try {
-            return new Spec.Simple(
-                this.protocol.find("spec", "java.lang.Long(0)")
-            );
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+        return new Spec.Simple(
+            RestTester.start(UriBuilder.fromUri(this.home))
+                .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .get("home page with spec")
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .xpath("/page/spec/text()")
+                .get(0)
+       );
     }
 
     /**
@@ -109,7 +108,18 @@ final class S3Pulse implements Pulse {
      */
     @Override
     public InputStream read() throws IOException {
-        return Caches.INSTANCE.read(this.key);
+        return IOUtils.toInputStream(
+            RestTester.start(UriBuilder.fromUri(this.home))
+                .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .get("home page")
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .rel("/page/links/link[@rel='stream']/@href")
+                .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                .get("real stream")
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .getBody(),
+            CharEncoding.UTF_8
+       );
     }
 
 }

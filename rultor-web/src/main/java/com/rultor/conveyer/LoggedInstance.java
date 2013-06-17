@@ -91,9 +91,6 @@ final class LoggedInstance implements Instance {
         final Thread thread = Thread.currentThread();
         this.appender.register(thread, work);
         try {
-            this.meta("started", System.currentTimeMillis());
-            this.meta("owner", work.owner());
-            this.meta("unit", work.unit());
             this.meta("spec", work.spec().asText());
             this.repo.make(this.user, work.spec()).pulse(work, state);
             this.meta("status", "SUCCESS");

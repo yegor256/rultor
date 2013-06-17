@@ -53,7 +53,7 @@ import javax.ws.rs.core.Response;
  * @since 1.0
  * @checkstyle MultipleStringLiterals (500 lines)
  */
-@Path("/u")
+@Path("/unit")
 @Loggable(Loggable.DEBUG)
 public final class UnitRs extends BaseRs {
 

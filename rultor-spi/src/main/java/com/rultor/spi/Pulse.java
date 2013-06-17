@@ -35,7 +35,6 @@ import com.jcabi.aspects.Tv;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
@@ -44,7 +43,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.Validate;
 
 /**
- * Pulse (mutable and thread-safe).
+ * Pulse.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -52,12 +51,6 @@ import org.apache.commons.lang3.Validate;
  */
 @Immutable
 public interface Pulse {
-
-    /**
-     * When started.
-     * @return When
-     */
-    Date started();
 
     /**
      * Stages.

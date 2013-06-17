@@ -27,52 +27,24 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.aws;
+package com.rultor.client;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectResult;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.jcabi.urn.URN;
-import com.rultor.spi.Pulse;
-import java.io.InputStream;
-import java.util.ArrayList;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
- * Test case for {@link S3Pulse}.
+ * Test case for {@link RestPulse}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class S3PulseTest {
+public final class RestPulseTest {
 
     /**
-     * S3Pulse can read an empty log.
+     * RestPulse can work.
      * @throws Exception If some problem inside
      */
     @Test
-    public void gracefullyHandlesEmptyStream() throws Exception {
-        final AmazonS3 aws = Mockito.mock(AmazonS3.class);
-        final ObjectListing listing = Mockito.mock(ObjectListing.class);
-        Mockito.doReturn(new ArrayList<S3ObjectSummary>(0))
-            .when(listing).getObjectSummaries();
-        Mockito.doReturn(listing).when(aws)
-            .listObjects(Mockito.anyString(), Mockito.anyString());
-        Mockito.doReturn(new PutObjectResult()).when(aws).putObject(
-            Mockito.anyString(), Mockito.anyString(),
-            Mockito.any(InputStream.class),
-            Mockito.any(ObjectMetadata.class)
-        );
-        final S3Client client = Mockito.mock(S3Client.class);
-        Mockito.doReturn(aws).when(client).get();
-        final URN urn = new URN("urn:facebook:1");
-        final Key key = new Key(client, urn, "", 1L);
-        final Pulse pulse = new S3Pulse(key);
-        MatcherAssert.assertThat(pulse.spec(), Matchers.notNullValue());
+    public void works() throws Exception {
+        // todo
     }
 
 }
