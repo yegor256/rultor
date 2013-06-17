@@ -29,28 +29,31 @@
  */
 package com.rultor.repo;
 
-import com.jcabi.aspects.Immutable;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
 import com.rultor.spi.User;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Variable.
- *
+ * Test case for {@link Text}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-interface Variable<T> extends Spec {
+public final class TextTest {
 
     /**
-     * Make an instance of it.
-     * @param user Owner of the spec
-     * @return The object
-     * @throws Repo.InstantiationException If can't instantiate
-     * @checkstyle RedundantThrows (3 lines)
+     * Text can make an instance.
+     * @throws Exception If some problem inside
      */
-    T instantiate(User user) throws Repo.InstantiationException;
+    @Test
+    public void makesInstance() throws Exception {
+        final String text = "some \u20ac \"' test";
+        final Variable<String> var = new Text(text);
+        MatcherAssert.assertThat(
+            var.instantiate(Mockito.mock(User.class)),
+            Matchers.equalTo(text)
+        );
+    }
 
 }

@@ -29,14 +29,12 @@
  */
 package com.rultor.env.ec2;
 
-import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
-import com.amazonaws.services.ec2.model.DescribeInstancesResult;
-import com.amazonaws.services.ec2.model.Instance;
-import com.amazonaws.services.ec2.model.InstanceState;
-import com.amazonaws.services.ec2.model.InstanceStateChange;
-import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
-import com.amazonaws.services.ec2.model.TerminateInstancesResult;
+import com.amazonaws.services.cloudformation.AmazonCloudFormation;
+import com.amazonaws.services.cloudformation.model.DeleteStackRequest;
+import com.amazonaws.services.cloudformation.model.DescribeStacksRequest;
+import com.amazonaws.services.cloudformation.model.DescribeStacksResult;
+import com.amazonaws.services.cloudformation.model.Output;
+import com.amazonaws.services.cloudformation.model.Stack;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
@@ -44,12 +42,13 @@ import com.jcabi.log.Logger;
 import com.rultor.env.Environment;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Amazon EC2 environment.
+ * CloudFormation stack.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -59,25 +58,25 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "name", "client" })
 @Loggable(Loggable.DEBUG)
-final class EC2Environment implements Environment {
+final class CFStack implements Environment {
 
     /**
-     * Instance ID.
+     * Stack ID.
      */
     private final transient String name;
 
     /**
      * EC2 client.
      */
-    private final transient EC2Client client;
+    private final transient CFClient client;
 
     /**
      * Public ctor.
-     * @param instance Instance ID
+     * @param stack Stack ID
      * @param clnt EC2 client
      */
-    protected EC2Environment(final String instance, final EC2Client clnt) {
-        this.name = instance;
+    protected CFStack(final String stack, final CFClient clnt) {
+        this.name = stack;
         this.client = clnt;
     }
 
@@ -86,38 +85,29 @@ final class EC2Environment implements Environment {
      */
     @Override
     public InetAddress address() throws IOException {
-        final AmazonEC2 aws = this.client.get();
-        final DescribeInstancesRequest request = new DescribeInstancesRequest()
-            .withInstanceIds(this.name);
+        final AmazonCloudFormation aws = this.client.get();
+        final DescribeStacksRequest request = new DescribeStacksRequest()
+            .withStackName(this.name);
         try {
             while (true) {
-                final DescribeInstancesResult result =
-                    aws.describeInstances(request);
-                final Instance instance =
-                    result.getReservations().get(0).getInstances().get(0);
-                final InstanceState state = instance.getState();
+                final DescribeStacksResult result = aws.describeStacks(request);
+                final Stack stack = result.getStacks().get(0);
                 Logger.info(
                     this,
-                    "instance %s/%s is in '%s' state (code=%d)",
-                    instance.getInstanceId(),
-                    instance.getPlacement().getAvailabilityZone(),
-                    state.getName(),
-                    state.getCode()
+                    "stack %s is in '%s' status: %s",
+                    stack.getStackId(),
+                    stack.getStackStatus(),
+                    stack.getStackStatusReason()
                 );
-                if ("running".equals(state.getName())) {
-                    return InetAddress.getByAddress(
-                        instance.getPublicDnsName(),
-                        InetAddress.getByName(
-                            instance.getPublicIpAddress()
-                        ).getAddress()
-                    );
+                if ("CREATE_COMPLETE".equals(stack.getStackStatus())) {
+                    return CFStack.address(stack);
                 }
-                if (!"pending".equals(state.getName())) {
+                if (!"CREATE_IN_PROGRESS".equals(stack.getStackStatus())) {
                     throw new IllegalStateException(
                         String.format(
-                            "instance %s is in invalid state '%s'",
-                            instance.getInstanceId(),
-                            state.getName()
+                            "stack %s is in invalid state '%s'",
+                            stack.getStackId(),
+                            stack.getStackStatus()
                         )
                     );
                 }
@@ -138,23 +128,40 @@ final class EC2Environment implements Environment {
      */
     @Override
     public void close() throws IOException {
-        final AmazonEC2 aws = this.client.get();
+        final AmazonCloudFormation aws = this.client.get();
         try {
-            final TerminateInstancesResult result = aws.terminateInstances(
-                new TerminateInstancesRequest()
-                    .withInstanceIds(this.name)
-            );
-            final InstanceStateChange change =
-                result.getTerminatingInstances().get(0);
+            aws.deleteStack(new DeleteStackRequest().withStackName(this.name));
             Logger.info(
                 this,
-                "instance %s terminated, state=%s",
-                change.getInstanceId(),
-                change.getCurrentState().getName()
+                "Stack %s sent for deletion",
+                this.name
             );
         } finally {
             aws.shutdown();
         }
+    }
+
+    /**
+     * Get address from stack.
+     * @param stack Stack
+     * @return IP address of the server
+     * @throws IOException If fails
+     */
+    private static InetAddress address(final Stack stack) throws IOException {
+        InetAddress address = null;
+        for (Output output : stack.getOutputs()) {
+            if ("ip".equals(output.getOutputKey()
+                .toLowerCase(Locale.ENGLISH))) {
+                address = InetAddress.getByName(output.getOutputValue());
+                break;
+            }
+        }
+        if (address == null) {
+            throw new IllegalArgumentException(
+                "no IP output from the stack"
+            );
+        }
+        return address;
     }
 
 }

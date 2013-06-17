@@ -27,72 +27,86 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.aws;
 
-import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Instance;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
-import com.rultor.spi.User;
-import javax.validation.constraints.NotNull;
+import com.rultor.spi.Pulse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Repo on classpath.
+ * Text protocol.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "src")
 @Loggable(Loggable.DEBUG)
-public final class ClasspathRepo implements Repo {
+final class Protocol {
 
     /**
-     * Grammar to use.
+     * Source.
      */
-    private final transient Grammar grammar = new AntlrGrammar();
+    @Immutable
+    public interface Source {
+        /**
+         * Get input stream.
+         * @return Stream
+         * @throws IOException If fails
+         */
+        InputStream stream() throws IOException;
+    }
 
     /**
-     * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
+     * Stream source.
      */
-    @Override
-    @NotNull
-    public Instance make(@NotNull final User user, @NotNull final Spec spec)
-        throws Repo.InstantiationException {
-        Object object;
-        try {
-            object = this.grammar.parse(spec.asText()).instantiate(user);
-        } catch (Repo.InvalidSyntaxException ex) {
-            throw new Repo.InstantiationException(ex);
+    private final transient Protocol.Source src;
+
+    /**
+     * Public ctor.
+     * @param source Source
+     */
+    protected Protocol(final Protocol.Source source) {
+        this.src = source;
+    }
+
+    /**
+     * Find this signal in the stream.
+     * @param name Signal name
+     * @param def Default value, if not found
+     * @return Found value
+     * @throws IOException If fails
+     */
+    public String find(final String name, final String def)
+        throws IOException {
+        final BufferedReader reader =
+            new BufferedReader(new InputStreamReader(this.src.stream()));
+        String value = null;
+        while (true) {
+            final String line = reader.readLine();
+            if (line == null) {
+                break;
+            }
+            if (Pulse.Signal.exists(line)) {
+                final Pulse.Signal signal = Pulse.Signal.valueOf(line);
+                if (signal.key().equals(name)) {
+                    value = signal.value();
+                    break;
+                }
+            }
         }
-        return new RuntimeInstance(object);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
-     */
-    @Override
-    @NotNull
-    public Spec make(@NotNull final String text)
-        throws Repo.InvalidSyntaxException {
-        return this.grammar.parse(text);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void register(final MetricRegistry registry) {
-        // nothing to do
+        if (value == null) {
+            value = def;
+        }
+        return value;
     }
 
 }

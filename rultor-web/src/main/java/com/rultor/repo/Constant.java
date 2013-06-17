@@ -30,7 +30,12 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.rultor.spi.User;
+import java.text.DecimalFormat;
+import java.util.Locale;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Constant.
@@ -40,7 +45,10 @@ import com.rultor.spi.User;
  * @since 1.0
  */
 @Immutable
-final class Constant<T> implements Variable {
+@ToString
+@EqualsAndHashCode(of = "value")
+@Loggable(Loggable.DEBUG)
+final class Constant<T> implements Variable<Object> {
 
     /**
      * The value.
@@ -68,7 +76,17 @@ final class Constant<T> implements Variable {
      */
     @Override
     public String asText() {
-        return this.value.toString();
+        String text;
+        if (this.value instanceof Long) {
+            text = String.format("%dL", this.value);
+        } else if (this.value instanceof Double) {
+            text = new DecimalFormat("#.0####").format(this.value);
+        } else if (this.value instanceof Boolean) {
+            text = this.value.toString().toUpperCase(Locale.ENGLISH);
+        } else {
+            text = this.value.toString();
+        }
+        return text;
     }
 
 }

@@ -30,7 +30,13 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Repo;
+import com.rultor.spi.Unit;
 import com.rultor.spi.User;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Reference.
@@ -40,7 +46,15 @@ import com.rultor.spi.User;
  * @since 1.0
  */
 @Immutable
-final class Reference implements Variable {
+@ToString
+@EqualsAndHashCode(of = { "grammar", "name" })
+@Loggable(Loggable.DEBUG)
+final class Reference implements Variable<Object> {
+
+    /**
+     * Grammar where to look for vars.
+     */
+    private final transient Grammar grammar;
 
     /**
      * The name.
@@ -49,18 +63,33 @@ final class Reference implements Variable {
 
     /**
      * Public ctor.
+     * @param grm Grammar to use
      * @param ref Reference
      */
-    protected Reference(final String ref) {
+    protected Reference(final Grammar grm, final String ref) {
+        Validate.matchesPattern(ref, "[-_\\w]+");
+        this.grammar = grm;
         this.name = ref;
     }
 
     /**
      * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public Object instantiate(final User user) {
-        throw new UnsupportedOperationException();
+    public Object instantiate(final User user)
+        throws Repo.InstantiationException {
+        final Unit unit = user.units().get(this.name);
+        if (unit == null) {
+            throw new Repo.InstantiationException(
+                String.format("unit '%s' not found in your account", this.name)
+            );
+        }
+        try {
+            return this.grammar.parse(unit.spec().asText()).instantiate(user);
+        } catch (Repo.InvalidSyntaxException ex) {
+            throw new Repo.InstantiationException(ex);
+        }
     }
 
     /**

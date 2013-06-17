@@ -60,6 +60,9 @@ public final class ClasspathRepoTest {
             "com.rultor.repo.ClasspathRepoTest$Foo(55)",
             "java.lang.String( 'te   \n st' )",
             "java.lang.Integer ( 123 )",
+            "java.lang.Long(-44L)",
+            "foo.SomeClass(1, FALSE, TRUE, 8L, 'test')",
+            "java.lang.Double(-44.66)",
             "com.rultor.repo.ClasspathRepoTest$Foo (55\n)",
             "com.first(com.second(com.third(), com.forth()))",
             "java.lang.String:\nsome\t\r\nunformatted\ttext\t\u20ac\u0433",
@@ -98,7 +101,7 @@ public final class ClasspathRepoTest {
     public void makesInstanceFromSpec() throws Exception {
         final Repo repo = new ClasspathRepo();
         final Spec spec = repo.make(
-            "com.rultor.repo.ClasspathRepoTest$Foo(2)"
+            "com.rultor.repo.ClasspathRepoTest$Foo(2L)"
         );
         ClasspathRepoTest.Foo.COUNTER.set(0);
         final Instance instance = repo.make(Mockito.mock(User.class), spec);

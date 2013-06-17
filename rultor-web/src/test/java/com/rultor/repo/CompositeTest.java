@@ -50,13 +50,43 @@ public final class CompositeTest {
      */
     @Test
     public void makesInstance() throws Exception {
-        final Variable var = new Composite(
+        final Variable<Object> var = new Composite(
             "java.lang.Integer",
-            Arrays.<Variable>asList(new Constant<Integer>(Tv.TEN))
+            Arrays.<Variable<?>>asList(new Constant<Integer>(Tv.TEN))
         );
         MatcherAssert.assertThat(
             var.instantiate(Mockito.mock(User.class)),
             Matchers.<Object>equalTo(Tv.TEN)
+        );
+    }
+
+    /**
+     * Composite can make a text.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void makesText() throws Exception {
+        final Variable<Object> var = new Composite(
+            "com.rultor.SomeClass",
+            Arrays.<Variable<?>>asList(
+                new Constant<Long>((long) Tv.TEN),
+                new Text("some text\nline two"),
+                new Composite(
+                    "com.rultor.SomeOtherClass",
+                    Arrays.<Variable<?>>asList()
+                )
+            )
+        );
+        MatcherAssert.assertThat(
+            var.asText(),
+            Matchers.equalTo(
+                // @checkstyle StringLiteralsConcatenation (5 lines)
+                "com.rultor.SomeClass(\n"
+                + "  10L,\n"
+                + "  \"some text\\nline two\",\n"
+                + "  com.rultor.SomeOtherClass()\n"
+                + ")"
+            )
         );
     }
 

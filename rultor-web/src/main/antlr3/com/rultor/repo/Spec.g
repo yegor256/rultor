@@ -33,6 +33,7 @@ grammar Spec;
     package com.rultor.repo;
     import java.util.Collection;
     import java.util.LinkedList;
+    import org.apache.commons.lang3.StringEscapeUtils;
 }
 
 @lexer::header {
@@ -47,13 +48,17 @@ grammar Spec;
 }
 
 @parser::members {
+    private transient Grammar grammar;
+    public void setGrammar(final Grammar grm) {
+        this.grammar = grm;
+    }
     @Override
     public void emitErrorMessage(String msg) {
         throw new IllegalArgumentException(msg);
     }
 }
 
-spec returns [Variable ret]
+spec returns [Variable<?> ret]
     :
     composite
     { $ret = $composite.ret; }
@@ -61,7 +66,7 @@ spec returns [Variable ret]
     ;
 
 composite returns [Composite ret]
-    @init { final Collection<Variable> vars = new LinkedList<Variable>(); }
+    @init { final Collection<Variable<?>> vars = new LinkedList<Variable<?>>(); }
     :
     TYPE
     '('
@@ -78,22 +83,25 @@ composite returns [Composite ret]
     { $ret = new Composite($TYPE.text, vars); }
     ;
 
-variable returns [Variable ret]
+variable returns [Variable<?> ret]
     :
     composite
     { $ret = $composite.ret; }
     |
     NAME
-    { $ret = new Reference($NAME.text); }
+    { $ret = new Reference(this.grammar, $NAME.text); }
     |
     TEXT
-    { $ret = new Text($TEXT.text); }
+    { $ret = new Text(StringEscapeUtils.unescapeJava($TEXT.text)); }
     |
     BOOLEAN
-    { $ret = new Constant<Boolean>($BOOLEAN.text.equals("true")); }
+    { $ret = new Constant<Boolean>(new Boolean($BOOLEAN.text.equals("true"))); }
     |
     INTEGER
-    { $ret = new Constant<Long>(Long.valueOf($INTEGER.text)); }
+    { $ret = new Constant<Integer>(Integer.valueOf($INTEGER.text)); }
+    |
+    LONG
+    { $ret = new Constant<Long>(Long.valueOf($LONG.text.substring(0, $LONG.text.length() - 1))); }
     |
     DOUBLE
     { $ret = new Constant<Double>(Double.valueOf($DOUBLE.text)); }
@@ -101,7 +109,7 @@ variable returns [Variable ret]
 
 BOOLEAN
     :
-    'true' | 'false'
+    'TRUE' | 'FALSE'
     ;
 
 TYPE
@@ -127,9 +135,14 @@ INTEGER
     ( '-' | '+' )? DIGIT+
     ;
 
+LONG
+    :
+    ( '-' | '+' )? DIGIT+ ('L' | 'l')
+    ;
+
 DOUBLE
     :
-    DIGIT+ '.' DIGIT+
+    ( '-' | '+' )? DIGIT+ '.' DIGIT+
     ;
 
 fragment LETTER

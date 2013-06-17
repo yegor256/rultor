@@ -30,7 +30,10 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.rultor.spi.User;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Big text, without any formatting.
@@ -40,7 +43,10 @@ import com.rultor.spi.User;
  * @since 1.0
  */
 @Immutable
-final class BigText implements Variable {
+@ToString
+@EqualsAndHashCode(of = "value")
+@Loggable(Loggable.DEBUG)
+final class BigText implements Variable<String> {
 
     /**
      * Prefix.

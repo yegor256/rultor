@@ -29,28 +29,41 @@
  */
 package com.rultor.repo;
 
-import com.jcabi.aspects.Immutable;
-import com.rultor.spi.Repo;
+import com.google.common.collect.ImmutableMap;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Unit;
 import com.rultor.spi.User;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Variable.
- *
+ * Test case for {@link Reference}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-interface Variable<T> extends Spec {
+public final class ReferenceTest {
 
     /**
-     * Make an instance of it.
-     * @param user Owner of the spec
-     * @return The object
-     * @throws Repo.InstantiationException If can't instantiate
-     * @checkstyle RedundantThrows (3 lines)
+     * Reference can make an instance.
+     * @throws Exception If some problem inside
      */
-    T instantiate(User user) throws Repo.InstantiationException;
+    @Test
+    public void makesInstance() throws Exception {
+        final String name = "some-ref-name";
+        final Unit unit = Mockito.mock(Unit.class);
+        final Spec spec = new Spec.Simple("java.lang.Long(1L)");
+        Mockito.doReturn(spec).when(unit).spec();
+        final User user = Mockito.mock(User.class);
+        final ImmutableMap<String, Unit> units =
+            new ImmutableMap.Builder<String, Unit>().put(name, unit).build();
+        Mockito.doReturn(units).when(user).units();
+        final Variable<Object> var = new Reference(new AntlrGrammar(), name);
+        MatcherAssert.assertThat(
+            var.instantiate(user),
+            Matchers.<Object>equalTo(1L)
+        );
+    }
 
 }

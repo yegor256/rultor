@@ -27,30 +27,66 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.env.ec2;
 
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.cloudformation.AmazonCloudFormation;
+import com.amazonaws.services.cloudformation.AmazonCloudFormationClient;
 import com.jcabi.aspects.Immutable;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
-import com.rultor.spi.User;
+import com.jcabi.aspects.Loggable;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Variable.
+ * CF client.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-interface Variable<T> extends Spec {
+public interface CFClient {
 
     /**
-     * Make an instance of it.
-     * @param user Owner of the spec
-     * @return The object
-     * @throws Repo.InstantiationException If can't instantiate
-     * @checkstyle RedundantThrows (3 lines)
+     * Get AWS CF client.
+     * @return Get it
      */
-    T instantiate(User user) throws Repo.InstantiationException;
+    AmazonCloudFormation get();
+
+    /**
+     * Simple client.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = { "key", "secret" })
+    @Loggable(Loggable.DEBUG)
+    final class Simple implements CFClient {
+        /**
+         * Key.
+         */
+        private final transient String key;
+        /**
+         * Secret.
+         */
+        private final transient String secret;
+        /**
+         * Public ctor.
+         * @param akey AWS key
+         * @param scrt AWS secret
+         */
+        public Simple(final String akey, final String scrt) {
+            this.key = akey;
+            this.secret = scrt;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public AmazonCloudFormation get() {
+            return new AmazonCloudFormationClient(
+                new BasicAWSCredentials(this.key, this.secret)
+            );
+        }
+    }
 
 }

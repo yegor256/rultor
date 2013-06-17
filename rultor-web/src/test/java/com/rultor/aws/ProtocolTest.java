@@ -27,30 +27,46 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.aws;
 
-import com.jcabi.aspects.Immutable;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
-import com.rultor.spi.User;
+import com.rultor.spi.Pulse;
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.commons.io.IOUtils;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Variable.
- *
+ * Test case for {@link Protocol}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-interface Variable<T> extends Spec {
+public final class ProtocolTest {
 
     /**
-     * Make an instance of it.
-     * @param user Owner of the spec
-     * @return The object
-     * @throws Repo.InstantiationException If can't instantiate
-     * @checkstyle RedundantThrows (3 lines)
+     * Protocol can parse text.
+     * @throws Exception If some problem inside
      */
-    T instantiate(User user) throws Repo.InstantiationException;
+    @Test
+    public void parsesText() throws Exception {
+        final String key = "hi";
+        final String value = "\u20ac\t\n\n";
+        // @checkstyle StringLiteralsConcatenation (4 lines)
+        final String text = "10:51 INFO some first line\n"
+            + "10:55 INFO " + new Pulse.Signal(key, value) + "\n"
+            + "10:57 DEBUG some other line";
+        MatcherAssert.assertThat(
+            new Protocol(
+                new Protocol.Source() {
+                    @Override
+                    public InputStream stream() throws IOException {
+                        return IOUtils.toInputStream(text);
+                    }
+                }
+            ).find(key, ""),
+            Matchers.equalTo(value)
+        );
+    }
 
 }

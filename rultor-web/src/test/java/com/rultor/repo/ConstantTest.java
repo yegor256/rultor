@@ -29,28 +29,39 @@
  */
 package com.rultor.repo;
 
-import com.jcabi.aspects.Immutable;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
-import com.rultor.spi.User;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Variable.
- *
+ * Test case for {@link Constant}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-interface Variable<T> extends Spec {
+public final class ConstantTest {
 
     /**
-     * Make an instance of it.
-     * @param user Owner of the spec
-     * @return The object
-     * @throws Repo.InstantiationException If can't instantiate
-     * @checkstyle RedundantThrows (3 lines)
+     * Constant can make a text.
+     * @throws Exception If some problem inside
      */
-    T instantiate(User user) throws Repo.InstantiationException;
+    @Test
+    public void makesTest() throws Exception {
+        MatcherAssert.assertThat(
+            new Constant<Integer>(2).asText(),
+            Matchers.equalTo("2")
+        );
+        MatcherAssert.assertThat(
+            new Constant<Double>(1.0d).asText(),
+            Matchers.equalTo("1.0")
+        );
+        MatcherAssert.assertThat(
+            new Constant<Long>(1L).asText(),
+            Matchers.equalTo("1L")
+        );
+        MatcherAssert.assertThat(
+            new Constant<Boolean>(true).asText(),
+            Matchers.equalTo("TRUE")
+        );
+    }
 
 }

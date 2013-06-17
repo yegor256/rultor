@@ -30,10 +30,20 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rultor.spi.Repo;
 import com.rultor.spi.User;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.apache.commons.lang3.CharUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Composite.
@@ -43,7 +53,20 @@ import java.util.Collection;
  * @since 1.0
  */
 @Immutable
-final class Composite implements Variable {
+@ToString
+@EqualsAndHashCode(of = { "type", "vars" })
+@Loggable(Loggable.DEBUG)
+final class Composite implements Variable<Object> {
+
+    /**
+     * Indentation.
+     */
+    private static final String INDENT = "  ";
+
+    /**
+     * EOL.
+     */
+    private static final String EOL = "\n";
 
     /**
      * Type name.
@@ -60,9 +83,9 @@ final class Composite implements Variable {
      * @param name Name of type
      * @param args Arguments
      */
-    protected Composite(final String name, final Collection<Variable> args) {
+    protected Composite(final String name, final Collection<Variable<?>> args) {
         this.type = name;
-        this.vars = args.toArray(new Variable[args.size()]);
+        this.vars = args.toArray(new Variable<?>[args.size()]);
     }
 
     /**
@@ -77,15 +100,11 @@ final class Composite implements Variable {
         for (int idx = 0; idx < this.vars.length; ++idx) {
             final Object object = this.vars[idx].instantiate(user);
             args[idx] = object;
-            types[idx] = Composite.typeOf(object);
+            types[idx] = object.getClass();
         }
         try {
-            return Class.forName(this.type)
-                .getConstructor(types)
-                .newInstance(args);
+            return this.ctor(types).newInstance(args);
         } catch (ClassNotFoundException ex) {
-            throw new Repo.InstantiationException(ex);
-        } catch (NoSuchMethodException ex) {
             throw new Repo.InstantiationException(ex);
         } catch (InstantiationException ex) {
             throw new Repo.InstantiationException(ex);
@@ -103,33 +122,101 @@ final class Composite implements Variable {
     public String asText() {
         final StringBuilder text = new StringBuilder();
         text.append(this.type).append('(');
-        for (int idx = 0; idx < this.vars.length; ++idx) {
-            if (idx > 0) {
-                text.append(", ");
+        final List<String> kids = new ArrayList<String>(this.vars.length);
+        for (Variable<?> var : this.vars) {
+            kids.add(var.asText());
+        }
+        final String line = StringUtils.join(kids, ", ");
+        if (line.length() < Tv.FIFTY && !line.contains(Composite.EOL)) {
+            text.append(line);
+        } else {
+            final String shift = new StringBuilder()
+                .append(CharUtils.LF).append(Composite.INDENT).toString();
+            int idx;
+            for (idx = 0; idx < kids.size(); ++idx) {
+                if (idx > 0) {
+                    text.append(',');
+                }
+                text.append(shift)
+                    .append(kids.get(idx).replace(Composite.EOL, shift));
             }
-            text.append(this.vars[idx].asText());
+            if (idx > 0) {
+                text.append(CharUtils.LF);
+            }
         }
         text.append(')');
         return text.toString();
     }
 
     /**
-     * Get type of object.
-     * @param object The object
-     * @return Its type
+     * Find the best matching constructor.
+     * @param types Types
+     * @return The ctor
+     * @throws ClassNotFoundException If class not found
      */
-    private static Class<?> typeOf(final Object object) {
-        Class<?> cls = object.getClass();
-        if (cls.equals(Integer.class)) {
-            cls = int.class;
-        } else if (cls.equals(Long.class)) {
-            cls = long.class;
-        } else if (cls.equals(Boolean.class)) {
-            cls = boolean.class;
-        } else if (cls.equals(Double.class)) {
-            cls = double.class;
+    private Constructor<?> ctor(final Class<?>[] types)
+        throws ClassNotFoundException {
+        final Class<?> cls = Class.forName(this.type);
+        Constructor<?> ctor = null;
+        for (Constructor<?> opt : cls.getConstructors()) {
+            if (Composite.inherit(opt.getParameterTypes(), types)) {
+                ctor = opt;
+                break;
+            }
         }
-        return cls;
+        if (ctor == null) {
+            throw new IllegalArgumentException(
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    "can't find constructor %s%s, available alternatives are: %s",
+                    this.type,
+                    Arrays.asList(types),
+                    Arrays.asList(cls.getConstructors())
+                )
+            );
+        }
+        return ctor;
+    }
+
+    /**
+     * Right set of types inherits types from the left.
+     * @param parents Supposedly parent types
+     * @param kids Child types
+     * @return TRUE if they match
+     */
+    private static boolean inherit(final Class<?>[] parents,
+        final Class<?>[] kids) {
+        boolean match;
+        if (parents.length == kids.length) {
+            match = true;
+            for (int idx = 0; idx < parents.length; ++idx) {
+                if (!Composite.box(parents[idx])
+                    .isAssignableFrom(Composite.box(kids[idx]))) {
+                    match = false;
+                    break;
+                }
+            }
+        } else {
+            match = false;
+        }
+        return match;
+    }
+
+    /**
+     * Auto-box the type.
+     * @param type Type to auto-box
+     * @return Non-scalar type
+     */
+    private static Class<?> box(final Class<?> type) {
+        Class<?> out;
+        if (int.class.equals(type)) {
+            out = Integer.class;
+        } else if (long.class.equals(type)) {
+            out = Long.class;
+        } else {
+            out = type;
+        }
+        return out;
     }
 
 }

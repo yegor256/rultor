@@ -30,7 +30,11 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.rultor.spi.User;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * Text constant.
@@ -40,7 +44,10 @@ import com.rultor.spi.User;
  * @since 1.0
  */
 @Immutable
-final class Text implements Variable {
+@ToString
+@EqualsAndHashCode(of = "value")
+@Loggable(Loggable.DEBUG)
+final class Text implements Variable<String> {
 
     /**
      * The value.
@@ -68,7 +75,10 @@ final class Text implements Variable {
      */
     @Override
     public String asText() {
-        return String.format("\"%s\"", this.value);
+        return String.format(
+            "\"%s\"",
+            StringEscapeUtils.escapeJava(this.value)
+        );
     }
 
 }

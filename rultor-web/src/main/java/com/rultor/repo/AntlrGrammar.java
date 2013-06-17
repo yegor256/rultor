@@ -29,19 +29,19 @@
  */
 package com.rultor.repo;
 
-import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Instance;
 import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
-import com.rultor.spi.User;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.antlr.runtime.ANTLRStringStream;
+import org.antlr.runtime.CharStream;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.TokenStream;
 
 /**
- * Repo on classpath.
+ * Grammar in ANTLR.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -52,12 +52,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-public final class ClasspathRepo implements Repo {
-
-    /**
-     * Grammar to use.
-     */
-    private final transient Grammar grammar = new AntlrGrammar();
+final class AntlrGrammar implements Grammar {
 
     /**
      * {@inheritDoc}
@@ -65,34 +60,40 @@ public final class ClasspathRepo implements Repo {
      */
     @Override
     @NotNull
-    public Instance make(@NotNull final User user, @NotNull final Spec spec)
-        throws Repo.InstantiationException {
-        Object object;
-        try {
-            object = this.grammar.parse(spec.asText()).instantiate(user);
-        } catch (Repo.InvalidSyntaxException ex) {
-            throw new Repo.InstantiationException(ex);
-        }
-        return new RuntimeInstance(object);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
-     */
-    @Override
-    @NotNull
-    public Spec make(@NotNull final String text)
+    public Variable<?> parse(final String text)
         throws Repo.InvalidSyntaxException {
-        return this.grammar.parse(text);
+        Variable<?> var;
+        if (text.startsWith(BigText.PREFIX)) {
+            var = new BigText(text.substring(BigText.PREFIX.length()));
+        } else {
+            var = this.antlr(text);
+        }
+        return var;
     }
 
     /**
-     * {@inheritDoc}
+     * Parse text to variable.
+     * @param text Text
+     * @return Variable
+     * @throws Repo.InvalidSyntaxException If fails
+     * @checkstyle RedundantThrows (5 lines)
      */
-    @Override
-    public void register(final MetricRegistry registry) {
-        // nothing to do
+    private Variable<?> antlr(final String text)
+        throws Repo.InvalidSyntaxException {
+        final CharStream input = new ANTLRStringStream(text);
+        final SpecLexer lexer = new SpecLexer(input);
+        final TokenStream tokens = new CommonTokenStream(lexer);
+        final SpecParser parser = new SpecParser(tokens);
+        parser.setGrammar(this);
+        Variable<?> var;
+        try {
+            var = parser.spec();
+        } catch (org.antlr.runtime.RecognitionException ex) {
+            throw new Repo.InvalidSyntaxException(ex);
+        } catch (IllegalArgumentException ex) {
+            throw new Repo.InvalidSyntaxException(ex);
+        }
+        return var;
     }
 
 }

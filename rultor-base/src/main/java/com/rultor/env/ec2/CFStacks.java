@@ -27,30 +27,77 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.env.ec2;
 
+import com.amazonaws.services.cloudformation.AmazonCloudFormation;
+import com.amazonaws.services.cloudformation.model.CreateStackRequest;
+import com.amazonaws.services.cloudformation.model.CreateStackResult;
 import com.jcabi.aspects.Immutable;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
-import com.rultor.spi.User;
+import com.jcabi.aspects.Loggable;
+import com.rultor.env.Environment;
+import com.rultor.env.Environments;
+import java.io.IOException;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Variable.
+ * CloudFormation Stacks.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-interface Variable<T> extends Spec {
+@ToString
+@EqualsAndHashCode(of = { "type", "ami", "group", "client" })
+@Loggable(Loggable.DEBUG)
+public final class CFStacks implements Environments {
 
     /**
-     * Make an instance of it.
-     * @param user Owner of the spec
-     * @return The object
-     * @throws Repo.InstantiationException If can't instantiate
-     * @checkstyle RedundantThrows (3 lines)
+     * Template.
      */
-    T instantiate(User user) throws Repo.InstantiationException;
+    private final transient String template;
+
+    /**
+     * CF client.
+     */
+    private final transient CFClient client;
+
+    /**
+     * Public ctor.
+     * @param tmpl Template
+     * @param akey AWS key
+     * @param scrt AWS secret
+     */
+    public CFStacks(final String tmpl, final String akey, final String scrt) {
+        this(tmpl, new CFClient.Simple(akey, scrt));
+    }
+
+    /**
+     * Public ctor.
+     * @param tmpl Template
+     * @param clnt CF client
+     */
+    public CFStacks(final String tmpl, final CFClient clnt) {
+        this.template = tmpl;
+        this.client = clnt;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Environment acquire() throws IOException {
+        final AmazonCloudFormation aws = this.client.get();
+        try {
+            final CreateStackResult result = aws.createStack(
+                new CreateStackRequest()
+                    .withTemplateBody(this.template)
+            );
+            return new CFStack(result.getStackId(), this.client);
+        } finally {
+            aws.shutdown();
+        }
+    }
 
 }

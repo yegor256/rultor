@@ -31,26 +31,24 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
-import com.rultor.spi.User;
 
 /**
- * Variable.
+ * Grammar.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-interface Variable<T> extends Spec {
+interface Grammar {
 
     /**
-     * Make an instance of it.
-     * @param user Owner of the spec
-     * @return The object
-     * @throws Repo.InstantiationException If can't instantiate
+     * Convert text to variable.
+     * @param text Text to convert
+     * @return The variable
+     * @throws Repo.InvalidSyntaxException If fails
      * @checkstyle RedundantThrows (3 lines)
      */
-    T instantiate(User user) throws Repo.InstantiationException;
+    Variable<?> parse(String text) throws Repo.InvalidSyntaxException;
 
 }

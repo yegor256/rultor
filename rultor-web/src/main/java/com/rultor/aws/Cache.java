@@ -60,6 +60,7 @@ import org.apache.commons.lang3.CharUtils;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @ToString
 @EqualsAndHashCode(of = "key")
@@ -208,8 +209,9 @@ final class Cache implements Flushable {
     /**
      * Is it expired?
      * @return TRUE if it is not required in memory any more
+     * @throws IOException If fails
      */
-    public boolean expired() {
+    public boolean expired() throws IOException {
         final long mins = (System.currentTimeMillis() - this.touched.get())
             / TimeUnit.MINUTES.toMillis(1);
         return !this.dirty.get() && (mins > Tv.TWENTY || !this.valuable());
@@ -218,9 +220,20 @@ final class Cache implements Flushable {
     /**
      * Is it a valuable log?
      * @return TRUE if it is valuable and should be persisted
+     * @throws IOException If fails
      */
-    private boolean valuable() {
-        return this.data.size() > Tv.THOUSAND;
+    private boolean valuable() throws IOException {
+        final Protocol protocol = new Protocol(
+            new Protocol.Source() {
+                @Override
+                public InputStream stream() throws IOException {
+                    return new ByteArrayInputStream(
+                        Cache.this.data.toByteArray()
+                    );
+                }
+            }
+        );
+        return !protocol.find("stage", "").isEmpty();
     }
 
 }
