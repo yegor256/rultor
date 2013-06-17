@@ -37,6 +37,7 @@ import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import java.net.HttpURLConnection;
 import java.util.Map;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
@@ -57,6 +58,11 @@ import lombok.ToString;
 public final class RestUser implements User {
 
     /**
+     * Authentication cookie.
+     */
+    public static final String COOKIE = "auth";
+
+    /**
      * Home URI.
      */
     private final transient String home;
@@ -71,7 +77,7 @@ public final class RestUser implements User {
      * @param urn User unique name in the system
      * @param key Secret authentication key
      */
-    public RestUser(final URN urn, final String key) {
+    public RestUser(@NotNull final URN urn, @NotNull final String key) {
         this.home = "http://www.rultor.com";
         this.cookie = String.format("%s %s", urn, key);
     }
@@ -84,7 +90,7 @@ public final class RestUser implements User {
         return URN.create(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
-                .header("auth", this.cookie)
+                .header(RestUser.COOKIE, this.cookie)
                 .get("read identity URN from home page")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .assertXPath("/page/identity")
@@ -109,7 +115,7 @@ public final class RestUser implements User {
         return new RestUnit(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
-                .header("auth", this.cookie)
+                .header(RestUser.COOKIE, this.cookie)
                 .get("read front page to get ADD link")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .rel("/page/links/link[@rel='add']/@href")
@@ -117,12 +123,20 @@ public final class RestUser implements User {
                 .get("read adding form")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .rel("/page/links/link[@rel='save']/@href")
-                .post(String.format("name=%s&spec=java.lang.Integer(1)", name), "save skeleton")
+                .post(
+                    String.format("name=%s&spec=java.lang.Integer(1)", name),
+                    "save skeleton"
+                )
                 .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
                 .follow()
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
                 .get("read home page again, with unit in it")
-                .xpath(String.format("//unit[name='%s']/links/link[@rel='edit']/@href", name))
+                .xpath(
+                    String.format(
+                        "//unit[name='%s']/links/link[@rel='edit']/@href",
+                        name
+                    )
+                )
                 .get(0),
             this.cookie
         );
@@ -135,11 +149,16 @@ public final class RestUser implements User {
     public void remove(final String name) {
         RestTester.start(UriBuilder.fromUri(this.home))
             .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
-            .header("auth", this.cookie)
+            .header(RestUser.COOKIE, this.cookie)
             .get("read list of units to delete one")
             .assertStatus(HttpURLConnection.HTTP_OK)
             .assertXPath("/page/units")
-            .rel(String.format("//unit[name='%s']/links/link[@rel='remove']/@href", name))
+            .rel(
+                String.format(
+                    "//unit[name='%s']/links/link[@rel='remove']/@href",
+                    name
+                )
+            )
             .get("delete selected unit")
             .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
     }

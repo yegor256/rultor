@@ -96,11 +96,12 @@ final class RestPulse implements Pulse {
         return new Spec.Simple(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(RestUser.COOKIE, this.cookie)
                 .get("home page with spec")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .xpath("/page/spec/text()")
                 .get(0)
-       );
+        );
     }
 
     /**
@@ -111,6 +112,7 @@ final class RestPulse implements Pulse {
         return IOUtils.toInputStream(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(RestUser.COOKIE, this.cookie)
                 .get("home page")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .rel("/page/links/link[@rel='stream']/@href")
@@ -119,7 +121,7 @@ final class RestPulse implements Pulse {
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .getBody(),
             CharEncoding.UTF_8
-       );
+        );
     }
 
 }

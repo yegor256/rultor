@@ -31,13 +31,18 @@ package com.rultor.client;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rexsl.test.RestTester;
 import com.rultor.spi.Pulse;
+import java.net.HttpURLConnection;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -52,6 +57,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "home", "cookie" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.TooManyMethods")
 final class RestPulses implements SortedMap<Date, Pulse> {
 
     /**
@@ -94,7 +100,7 @@ final class RestPulses implements SortedMap<Date, Pulse> {
      * {@inheritDoc}
      */
     @Override
-    public SortedMap<Date, Pulse> subMap(Date fromKey, Date toKey) {
+    public SortedMap<Date, Pulse> subMap(final Date from, final Date till) {
         throw new UnsupportedOperationException();
     }
 
@@ -102,7 +108,7 @@ final class RestPulses implements SortedMap<Date, Pulse> {
      * {@inheritDoc}
      */
     @Override
-    public SortedMap<Date, Pulse> headMap(Date toKey) {
+    public SortedMap<Date, Pulse> headMap(final Date till) {
         throw new UnsupportedOperationException();
     }
 
@@ -110,7 +116,7 @@ final class RestPulses implements SortedMap<Date, Pulse> {
      * {@inheritDoc}
      */
     @Override
-    public SortedMap<Date, Pulse> tailMap(Date fromKey) {
+    public SortedMap<Date, Pulse> tailMap(final Date from) {
         throw new UnsupportedOperationException();
     }
 
@@ -159,6 +165,20 @@ final class RestPulses implements SortedMap<Date, Pulse> {
      */
     @Override
     public boolean isEmpty() {
+        return RestTester.start(UriBuilder.fromUri(this.home))
+            .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+            .header(RestUser.COOKIE, this.cookie)
+            .get("home page with all pulses")
+            .assertStatus(HttpURLConnection.HTTP_OK)
+            .xpath("/page/pulses/pulse")
+            .isEmpty();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean containsKey(final Object key) {
         throw new UnsupportedOperationException();
     }
 
@@ -166,7 +186,7 @@ final class RestPulses implements SortedMap<Date, Pulse> {
      * {@inheritDoc}
      */
     @Override
-    public boolean containsKey(Object key) {
+    public boolean containsValue(final Object value) {
         throw new UnsupportedOperationException();
     }
 
@@ -174,7 +194,7 @@ final class RestPulses implements SortedMap<Date, Pulse> {
      * {@inheritDoc}
      */
     @Override
-    public boolean containsValue(Object value) {
+    public Pulse get(final Object key) {
         throw new UnsupportedOperationException();
     }
 
@@ -182,7 +202,7 @@ final class RestPulses implements SortedMap<Date, Pulse> {
      * {@inheritDoc}
      */
     @Override
-    public Pulse get(Object key) {
+    public Pulse put(final Date key, final Pulse value) {
         throw new UnsupportedOperationException();
     }
 
@@ -190,7 +210,7 @@ final class RestPulses implements SortedMap<Date, Pulse> {
      * {@inheritDoc}
      */
     @Override
-    public Pulse put(Date key, Pulse value) {
+    public Pulse remove(final Object key) {
         throw new UnsupportedOperationException();
     }
 
@@ -198,15 +218,7 @@ final class RestPulses implements SortedMap<Date, Pulse> {
      * {@inheritDoc}
      */
     @Override
-    public Pulse remove(Object key) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void putAll(Map<? extends Date, ? extends Pulse> m) {
+    public void putAll(final Map<? extends Date, ? extends Pulse> map) {
         throw new UnsupportedOperationException();
     }
 

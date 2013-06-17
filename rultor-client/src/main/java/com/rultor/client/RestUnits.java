@@ -58,6 +58,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "home", "cookie" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.TooManyMethods")
 public final class RestUnits implements Map<String, Unit> {
 
     /**
@@ -95,6 +96,7 @@ public final class RestUnits implements Map<String, Unit> {
     public boolean isEmpty() {
         return RestTester.start(UriBuilder.fromUri(this.home))
             .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+            .header(RestUser.COOKIE, this.cookie)
             .get("home page with all units")
             .assertStatus(HttpURLConnection.HTTP_OK)
             .xpath("/page/units/unit")
@@ -108,9 +110,10 @@ public final class RestUnits implements Map<String, Unit> {
     public boolean containsKey(final Object key) {
         boolean contains = false;
         if (key instanceof String) {
-            contains = !RestTester.start(UriBuilder.fromUri(this.home))
+            contains ^= RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
-                .get("home page with specific units")
+                .header(RestUser.COOKIE, this.cookie)
+                .get("home page with specific unit")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .xpath(String.format("/page/units/unit[name='%s']", key))
                 .isEmpty();
@@ -134,9 +137,16 @@ public final class RestUnits implements Map<String, Unit> {
         return new RestUnit(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(RestUser.COOKIE, this.cookie)
                 .get("home page with specific units")
                 .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath(String.format("/page/units/unit[name='%s']/links/link[@rel='edit']/@href", key))
+                .xpath(
+                    String.format(
+                        // @checkstyle LineLength (1 line)
+                        "/page/units/unit[name='%s']/links/link[@rel='edit']/@href",
+                        key
+                    )
+                )
                 .get(0),
             this.cookie
         );
@@ -157,9 +167,16 @@ public final class RestUnits implements Map<String, Unit> {
     public Unit remove(final Object key) {
         RestTester.start(UriBuilder.fromUri(this.home))
             .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+            .header(RestUser.COOKIE, this.cookie)
             .get("home page with specific units to remove it")
             .assertStatus(HttpURLConnection.HTTP_OK)
-            .rel(String.format("/page/units/unit[name='%s']/links/link[@rel='remove']/@href", key))
+            .rel(
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    "/page/units/unit[name='%s']/links/link[@rel='remove']/@href",
+                    key
+                )
+            )
             .get("remove the unit")
             .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
         return new Unit() {
@@ -168,7 +185,7 @@ public final class RestUnits implements Map<String, Unit> {
                 throw new UnsupportedOperationException();
             }
             @Override
-            public void spec(Spec spec) {
+            public void spec(final Spec spec) {
                 throw new UnsupportedOperationException();
             }
             @Override

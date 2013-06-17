@@ -88,6 +88,7 @@ final class RestUnit implements Unit {
         return new RestPulses(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(RestUser.COOKIE, this.cookie)
                 .get("home page with links")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .xpath("/page/links/link[@rel='pulses']/@href")
@@ -104,6 +105,7 @@ final class RestUnit implements Unit {
         try {
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(RestUser.COOKIE, this.cookie)
                 .get("home page with save link")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .rel("/page/links/link[@rel='save']/@href")
@@ -128,6 +130,7 @@ final class RestUnit implements Unit {
         return new Spec.Simple(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(RestUser.COOKIE, this.cookie)
                 .get("home page with spec")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .xpath("/page/unit/spec/text()")
