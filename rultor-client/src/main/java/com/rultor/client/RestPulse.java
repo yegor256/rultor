@@ -95,7 +95,7 @@ final class RestPulse implements Pulse {
     public Spec spec() {
         return new Spec.Simple(
             RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(RestUser.COOKIE, this.cookie)
                 .get("home page with spec")
                 .assertStatus(HttpURLConnection.HTTP_OK)
@@ -111,7 +111,7 @@ final class RestPulse implements Pulse {
     public InputStream read() throws IOException {
         return IOUtils.toInputStream(
             RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(RestUser.COOKIE, this.cookie)
                 .get("home page")
                 .assertStatus(HttpURLConnection.HTTP_OK)

@@ -82,7 +82,7 @@ public final class RestUser implements User {
     public RestUser(@NotNull final URI entry,
         @NotNull final URN urn, @NotNull final String key) {
         this.home = entry.toString();
-        this.cookie = String.format("%s %s", urn, key);
+        this.cookie = String.format("%s%s", urn, key);
     }
 
     /**
@@ -126,12 +126,12 @@ public final class RestUser implements User {
     public Unit create(final String name) {
         return new RestUnit(
             RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(RestUser.COOKIE, this.cookie)
                 .get("read front page to get ADD link")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .rel("/page/links/link[@rel='add']/@href")
-                .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .get("read adding form")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .rel("/page/links/link[@rel='save']/@href")
@@ -141,7 +141,7 @@ public final class RestUser implements User {
                 )
                 .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
                 .follow()
-                .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .get("read home page again, with unit in it")
                 .xpath(
                     String.format(
@@ -160,7 +160,7 @@ public final class RestUser implements User {
     @Override
     public void remove(final String name) {
         RestTester.start(UriBuilder.fromUri(this.home))
-            .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
             .header(RestUser.COOKIE, this.cookie)
             .get("read list of units to delete one")
             .assertStatus(HttpURLConnection.HTTP_OK)

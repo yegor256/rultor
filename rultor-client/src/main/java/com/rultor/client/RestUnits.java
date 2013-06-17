@@ -95,7 +95,7 @@ public final class RestUnits implements Map<String, Unit> {
     @Override
     public boolean isEmpty() {
         return RestTester.start(UriBuilder.fromUri(this.home))
-            .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
             .header(RestUser.COOKIE, this.cookie)
             .get("home page with all units")
             .assertStatus(HttpURLConnection.HTTP_OK)
@@ -111,7 +111,7 @@ public final class RestUnits implements Map<String, Unit> {
         boolean contains = false;
         if (key instanceof String) {
             contains ^= RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(RestUser.COOKIE, this.cookie)
                 .get("home page with specific unit")
                 .assertStatus(HttpURLConnection.HTTP_OK)
@@ -136,7 +136,7 @@ public final class RestUnits implements Map<String, Unit> {
     public Unit get(final Object key) {
         return new RestUnit(
             RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(RestUser.COOKIE, this.cookie)
                 .get("home page with specific units")
                 .assertStatus(HttpURLConnection.HTTP_OK)
@@ -166,7 +166,7 @@ public final class RestUnits implements Map<String, Unit> {
     @Override
     public Unit remove(final Object key) {
         RestTester.start(UriBuilder.fromUri(this.home))
-            .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
             .header(RestUser.COOKIE, this.cookie)
             .get("home page with specific units to remove it")
             .assertStatus(HttpURLConnection.HTTP_OK)

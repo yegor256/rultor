@@ -87,7 +87,7 @@ final class RestUnit implements Unit {
     public SortedMap<Date, Pulse> pulses() {
         return new RestPulses(
             RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(RestUser.COOKIE, this.cookie)
                 .get("home page with links")
                 .assertStatus(HttpURLConnection.HTTP_OK)
@@ -104,7 +104,7 @@ final class RestUnit implements Unit {
     public void spec(final Spec spec) {
         try {
             RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(RestUser.COOKIE, this.cookie)
                 .get("home page with save link")
                 .assertStatus(HttpURLConnection.HTTP_OK)
@@ -129,7 +129,7 @@ final class RestUnit implements Unit {
     public Spec spec() {
         return new Spec.Simple(
             RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(RestUser.COOKIE, this.cookie)
                 .get("home page with spec")
                 .assertStatus(HttpURLConnection.HTTP_OK)

@@ -132,26 +132,7 @@ public class BaseRs extends BaseResource {
                 )
             );
         }
-        auth.with(
-            new Provider() {
-                @Override
-                public Link link() {
-                    return new Link("cookie-auth", "/");
-                }
-                @Override
-                public Identity identity() throws IOException {
-                    final Cookie cookie = BaseRs.this.httpHeaders()
-                        .getCookies().get(RestUser.COOKIE);
-                    Identity identity = Identity.ANONYMOUS;
-                    if (cookie != null) {
-                        identity = new Identity.Simple(
-                            URN.create(cookie.getValue()), "", URI.create("#")
-                        );
-                    }
-                    return identity;
-                }
-            }
-        );
+        auth.with(new BaseRs.ApiAuth());
         return auth;
     }
 
@@ -181,6 +162,35 @@ public class BaseRs extends BaseResource {
             throw new IllegalStateException("REPO is not initialized");
         }
         return repo;
+    }
+
+    /**
+     * Authentication for API calls.
+     */
+    @Loggable(Loggable.DEBUG)
+    private final class ApiAuth implements Provider {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Link link() {
+            return new Link("cookie-auth", "/");
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Identity identity() throws IOException {
+            final Cookie cookie = BaseRs.this.httpHeaders()
+                .getCookies().get(RestUser.COOKIE);
+            Identity identity = Identity.ANONYMOUS;
+            if (cookie != null) {
+                identity = new Identity.Simple(
+                    URN.create(cookie.getValue()), "", URI.create("#")
+                );
+            }
+            return identity;
+        }
     }
 
 }
