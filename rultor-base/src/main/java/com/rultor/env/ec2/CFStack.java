@@ -150,8 +150,9 @@ final class CFStack implements Environment {
     private static InetAddress address(final Stack stack) throws IOException {
         InetAddress address = null;
         for (Output output : stack.getOutputs()) {
-            if ("ip".equals(output.getOutputKey()
-                .toLowerCase(Locale.ENGLISH))) {
+            final String name = output.getOutputKey()
+                .toLowerCase(Locale.ENGLISH);
+            if ("ip".equals(name)) {
                 address = InetAddress.getByName(output.getOutputValue());
                 break;
             }

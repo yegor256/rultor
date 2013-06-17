@@ -49,7 +49,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "type", "ami", "group", "client" })
+@EqualsAndHashCode(of = { "template", "client" })
 @Loggable(Loggable.DEBUG)
 public final class CFStacks implements Environments {
 
