@@ -35,7 +35,7 @@ import com.rultor.spi.Spec
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 
-def user = new RestUser(new URN("urn:facebook:1"), "");
+def user = new RestUser(rexsl.home, new URN("urn:facebook:1"), "");
 def name = "sample-unit";
 user.create(name);
 def unit = user.units().get(name);

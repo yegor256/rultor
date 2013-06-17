@@ -35,6 +35,7 @@ import com.jcabi.urn.URN;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
+import com.rexsl.page.Link;
 import com.rexsl.page.Resource;
 import com.rexsl.page.auth.AuthInset;
 import com.rexsl.page.auth.Facebook;
@@ -45,10 +46,13 @@ import com.rexsl.page.auth.Provider;
 import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
+import com.rultor.client.RestUser;
 import com.rultor.spi.Repo;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import java.io.IOException;
 import java.net.URI;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -128,6 +132,26 @@ public class BaseRs extends BaseResource {
                 )
             );
         }
+        auth.with(
+            new Provider() {
+                @Override
+                public Link link() {
+                    return new Link("cookie-auth", "/");
+                }
+                @Override
+                public Identity identity() throws IOException {
+                    final Cookie cookie = BaseRs.this.httpHeaders()
+                        .getCookies().get(RestUser.COOKIE);
+                    Identity identity = Identity.ANONYMOUS;
+                    if (cookie != null) {
+                        identity = new Identity.Simple(
+                            URN.create(cookie.getValue()), "", URI.create("#")
+                        );
+                    }
+                    return identity;
+                }
+            }
+        );
         return auth;
     }
 

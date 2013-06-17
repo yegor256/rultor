@@ -36,6 +36,7 @@ import com.rexsl.test.RestTester;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
@@ -60,7 +61,7 @@ public final class RestUser implements User {
     /**
      * Authentication cookie.
      */
-    public static final String COOKIE = "auth";
+    public static final String COOKIE = "X-Rultor-Auth";
 
     /**
      * Home URI.
@@ -73,13 +74,24 @@ public final class RestUser implements User {
     private final transient String cookie;
 
     /**
+     * Public ctor, with custom entry point.
+     * @param entry Entry point (URI)
+     * @param urn User unique name in the system
+     * @param key Secret authentication key
+     */
+    public RestUser(@NotNull final URI entry,
+        @NotNull final URN urn, @NotNull final String key) {
+        this.home = entry.toString();
+        this.cookie = String.format("%s %s", urn, key);
+    }
+
+    /**
      * Public ctor.
      * @param urn User unique name in the system
      * @param key Secret authentication key
      */
     public RestUser(@NotNull final URN urn, @NotNull final String key) {
-        this.home = "http://www.rultor.com";
-        this.cookie = String.format("%s %s", urn, key);
+        this(URI.create("http://www.rultor.com"), urn, key);
     }
 
     /**
