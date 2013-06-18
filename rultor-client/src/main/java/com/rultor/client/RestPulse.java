@@ -56,7 +56,7 @@ import org.apache.commons.io.IOUtils;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "home", "cookie" })
+@EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
 final class RestPulse implements Pulse {
 
@@ -66,18 +66,18 @@ final class RestPulse implements Pulse {
     private final transient String home;
 
     /**
-     * Authentication cookie.
+     * Authentication token.
      */
-    private final transient String cookie;
+    private final transient String token;
 
     /**
      * Public ctor.
      * @param uri URI of home page
-     * @param auth Authentication cookie
+     * @param auth Authentication token
      */
     protected RestPulse(final String uri, final String auth) {
         this.home = uri;
-        this.cookie = auth;
+        this.token = auth;
     }
 
     /**
@@ -96,7 +96,7 @@ final class RestPulse implements Pulse {
         return new Spec.Simple(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(RestUser.COOKIE, this.cookie)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
                 .get("home page with spec")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .xpath("/page/spec/text()")
@@ -112,7 +112,7 @@ final class RestPulse implements Pulse {
         return IOUtils.toInputStream(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(RestUser.COOKIE, this.cookie)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
                 .get("home page")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .rel("/page/links/link[@rel='stream']/@href")

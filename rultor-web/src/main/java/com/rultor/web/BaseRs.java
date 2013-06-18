@@ -35,24 +35,21 @@ import com.jcabi.urn.URN;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
-import com.rexsl.page.Link;
 import com.rexsl.page.Resource;
 import com.rexsl.page.auth.AuthInset;
 import com.rexsl.page.auth.Facebook;
 import com.rexsl.page.auth.Github;
 import com.rexsl.page.auth.Google;
+import com.rexsl.page.auth.HttpBasic;
 import com.rexsl.page.auth.Identity;
 import com.rexsl.page.auth.Provider;
 import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
-import com.rultor.client.RestUser;
 import com.rultor.spi.Repo;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
-import java.io.IOException;
 import java.net.URI;
-import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -69,6 +66,15 @@ import javax.ws.rs.core.Response;
 @Loggable(Loggable.DEBUG)
 @Inset.Default(LinksInset.class)
 public class BaseRs extends BaseResource {
+
+    /**
+     * Tester's identity.
+     */
+    private static final Identity TESTER = new Identity.Simple(
+        URN.create("urn:facebook:1"),
+        "Mr. Tester",
+        URI.create("http://img.rultor.com/localhost.png")
+    );
 
     /**
      * Flash.
@@ -120,19 +126,24 @@ public class BaseRs extends BaseResource {
             .with(new Facebook(this, Manifests.read("Rultor-FbId"), Manifests.read("Rultor-FbSecret")))
             .with(new Github(this, Manifests.read("Rultor-GithubId"), Manifests.read("Rultor-GithubSecret")))
             .with(new Google(this, Manifests.read("Rultor-GoogleId"), Manifests.read("Rultor-GoogleSecret")));
-        if (Manifests.read("Rultor-DynamoKey").matches("[A-Z0-9]{20}")
-            && "12345".equals(Manifests.read("Rultor-Revision"))) {
-            auth.with(
-                new Provider.Always(
-                    new Identity.Simple(
-                        URN.create("urn:facebook:1"),
-                        "localhost",
-                        URI.create("http://img.rultor.com/localhost.png")
-                    )
-                )
-            );
+        if (BaseRs.testing()) {
+            auth.with(new Provider.Always(BaseRs.TESTER));
         }
-        auth.with(new BaseRs.ApiAuth());
+        auth.with(
+            new HttpBasic(
+                this,
+                new HttpBasic.Vault() {
+                    @Override
+                    public Identity authenticate(String user, String password) {
+                        Identity identity = Identity.ANONYMOUS;
+                        if (BaseRs.testing()) {
+                            identity = BaseRs.TESTER;
+                        }
+                        return identity;
+                    }
+                }
+            )
+        );
         return auth;
     }
 
@@ -165,32 +176,11 @@ public class BaseRs extends BaseResource {
     }
 
     /**
-     * Authentication for API calls.
+     * We're testing.
      */
-    @Loggable(Loggable.DEBUG)
-    private final class ApiAuth implements Provider {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Link link() {
-            return new Link("cookie-auth", "/");
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Identity identity() throws IOException {
-            final Cookie cookie = BaseRs.this.httpHeaders()
-                .getCookies().get(RestUser.COOKIE);
-            Identity identity = Identity.ANONYMOUS;
-            if (cookie != null) {
-                identity = new Identity.Simple(
-                    URN.create(cookie.getValue()), "", URI.create("#")
-                );
-            }
-            return identity;
-        }
+    private static boolean testing() {
+        return Manifests.read("Rultor-DynamoKey").matches("[A-Z0-9]{20}")
+            && "12345".equals(Manifests.read("Rultor-Revision"));
     }
 
 }

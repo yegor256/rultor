@@ -35,8 +35,10 @@ import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
@@ -44,6 +46,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.codec.Charsets;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
  * RESTful User.
@@ -54,14 +59,9 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "home", "cookie" })
+@EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
 public final class RestUser implements User {
-
-    /**
-     * Authentication cookie.
-     */
-    public static final String COOKIE = "X-Rultor-Auth";
 
     /**
      * Home URI.
@@ -69,9 +69,9 @@ public final class RestUser implements User {
     private final transient String home;
 
     /**
-     * Authentication cookie.
+     * Authentication token.
      */
-    private final transient String cookie;
+    private final transient String token;
 
     /**
      * Public ctor, with custom entry point.
@@ -82,7 +82,20 @@ public final class RestUser implements User {
     public RestUser(@NotNull final URI entry,
         @NotNull final URN urn, @NotNull final String key) {
         this.home = entry.toString();
-        this.cookie = String.format("%s%s", urn, key);
+        try {
+            this.token = String.format(
+                "Basic %s",
+                Base64.encodeBase64String(
+                    String.format(
+                        "%s:%s",
+                        URLEncoder.encode(urn.toString(), CharEncoding.UTF_8),
+                        URLEncoder.encode(key, CharEncoding.UTF_8)
+                    ).getBytes(Charsets.UTF_8)
+                )
+            );
+        } catch (UnsupportedEncodingException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**
@@ -102,7 +115,7 @@ public final class RestUser implements User {
         return URN.create(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
-                .header(RestUser.COOKIE, this.cookie)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
                 .get("read identity URN from home page")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .assertXPath("/page/identity")
@@ -116,7 +129,7 @@ public final class RestUser implements User {
      */
     @Override
     public Map<String, Unit> units() {
-        return new RestUnits(this.home, this.cookie);
+        return new RestUnits(this.home, this.token);
     }
 
     /**
@@ -127,7 +140,7 @@ public final class RestUser implements User {
         return new RestUnit(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(RestUser.COOKIE, this.cookie)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
                 .get("read front page to get ADD link")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .rel("/page/links/link[@rel='add']/@href")
@@ -150,7 +163,7 @@ public final class RestUser implements User {
                     )
                 )
                 .get(0),
-            this.cookie
+            this.token
         );
     }
 
@@ -161,7 +174,7 @@ public final class RestUser implements User {
     public void remove(final String name) {
         RestTester.start(UriBuilder.fromUri(this.home))
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-            .header(RestUser.COOKIE, this.cookie)
+            .header(HttpHeaders.AUTHORIZATION, this.token)
             .get("read list of units to delete one")
             .assertStatus(HttpURLConnection.HTTP_OK)
             .assertXPath("/page/units")
