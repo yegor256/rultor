@@ -27,54 +27,89 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor.life;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Credentials;
+import com.jcabi.dynamo.Region;
 import com.jcabi.manifests.Manifests;
-import com.jcabi.urn.URN;
-import com.rexsl.page.auth.HttpBasic;
-import com.rexsl.page.auth.Identity;
-import java.net.URI;
-import org.apache.commons.codec.digest.DigestUtils;
+import com.rultor.aws.AwsUsers;
+import com.rultor.aws.S3Client;
+import com.rultor.aws.S3Log;
+import com.rultor.repo.ClasspathRepo;
+import com.rultor.spi.Conveyer;
+import com.rultor.spi.Queue;
+import com.rultor.spi.Repo;
+import com.rultor.spi.Users;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * HTTP Basic Authentication keys.
+ * Production profile.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Loggable(Loggable.DEBUG)
-public final class AuthKeys implements HttpBasic.Vault {
+@Immutable
+@ToString
+@EqualsAndHashCode
+@Loggable(Loggable.INFO)
+final class Production implements Profile {
 
     /**
-     * Encryption key.
+     * Dynamo region.
      */
-    private final transient String key = Manifests.read("Rultor-SecurityKey");
+    private final transient Region region = new Region.Prefixed(
+        new Region.Simple(
+            new Credentials.Simple(
+                Manifests.read("Rultor-DynamoKey"),
+                Manifests.read("Rultor-DynamoSecret")
+            )
+        ),
+        Manifests.read("Rultor-DynamoPrefix")
+    );
+
+    /**
+     * S3 client.
+     */
+    private final transient S3Client client = new S3Client.Simple(
+        Manifests.read("Rultor-S3Key"),
+        Manifests.read("Rultor-S3Secret"),
+        Manifests.read("Rultor-S3Bucket")
+    );
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Identity authenticate(final String user, final String password) {
-        Identity identity = new Identity.Simple(
-            URN.create(user), "", URI.create("#")
-        );
-        if (!this.make(identity).equals(password)) {
-            identity = Identity.ANONYMOUS;
-        }
-        return identity;
+    public Repo repo() {
+        return new ClasspathRepo();
     }
 
     /**
-     * Make authentication key/password.
-     * @param identity Identity to make key for
-     * @return Key
+     * {@inheritDoc}
      */
-    public String make(final Identity identity) {
-        return DigestUtils.md5Hex(
-            String.format("%s-%s", identity.urn(), this.key)
-        );
+    @Override
+    public Users users() {
+        return new AwsUsers(this.region, this.client);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Queue queue() {
+        return new Queue.Memory();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Conveyer.Log log() {
+        return new S3Log(this.client);
     }
 
 }

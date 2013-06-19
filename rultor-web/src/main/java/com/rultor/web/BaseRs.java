@@ -68,8 +68,7 @@ public class BaseRs extends BaseResource {
     /**
      * Authentication keys.
      */
-    private static final AuthKeys KEYS =
-        new AuthKeys(Manifests.read("Rultor-SecurityKey"));
+    private static final AuthKeys KEYS = new AuthKeys();
 
     /**
      * Flash.

@@ -31,14 +31,8 @@ package com.rultor.life;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
-import com.jcabi.dynamo.Credentials;
-import com.jcabi.dynamo.Region;
 import com.jcabi.manifests.Manifests;
-import com.rultor.aws.AwsUsers;
-import com.rultor.aws.S3Client;
-import com.rultor.aws.S3Log;
 import com.rultor.conveyer.SimpleConveyer;
-import com.rultor.repo.ClasspathRepo;
 import com.rultor.spi.Conveyer;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
@@ -67,9 +61,9 @@ import org.apache.commons.io.IOUtils;
 public final class Lifespan implements ServletContextListener {
 
     /**
-     * SimpleConveyer.
+     * Conveyer.
      */
-    private transient SimpleConveyer conveyer;
+    private transient Conveyer conveyer;
 
     /**
      * Quartz the works.
@@ -79,7 +73,7 @@ public final class Lifespan implements ServletContextListener {
     /**
      * S3 log.
      */
-    private transient S3Log log;
+    private transient Conveyer.Log log;
 
     /**
      * {@inheritDoc}
@@ -91,26 +85,18 @@ public final class Lifespan implements ServletContextListener {
         } catch (java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }
-        final Region region = new Region.Prefixed(
-            new Region.Simple(
-                new Credentials.Simple(
-                    Manifests.read("Rultor-DynamoKey"),
-                    Manifests.read("Rultor-DynamoSecret")
-                )
-            ),
-            Manifests.read("Rultor-DynamoPrefix")
-        );
-        final S3Client client = new S3Client.Simple(
-            Manifests.read("Rultor-S3Key"),
-            Manifests.read("Rultor-S3Secret"),
-            Manifests.read("Rultor-S3Bucket")
-        );
-        final Users users = new AwsUsers(region, client);
-        final Repo repo = new ClasspathRepo();
         final ServletContext context = event.getServletContext();
-        final Queue queue = new Queue.Memory();
+        final Profile profile;
+        if (Manifests.read("Rultor-DynamoKey").matches("[A-Z0-9]{20}")) {
+            profile = new Production();
+        } else {
+            profile = new Testing();
+        }
+        final Users users = profile.users();
+        final Queue queue = profile.queue();
+        final Repo repo = profile.repo();
         this.quartz = new Lifespan.Quartz(users, queue);
-        this.log = new S3Log(client);
+        this.log = profile.log();
         this.conveyer = new SimpleConveyer(queue, repo, users, this.log);
         this.conveyer.start();
         context.setAttribute(Users.class.getName(), users);

@@ -54,6 +54,7 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>rultor-client</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -170,6 +171,10 @@
             <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
@@ -251,7 +256,6 @@
                                 <Rultor-GithubId>${github.id}</Rultor-GithubId>
                                 <Rultor-GithubSecret>${github.secret}</Rultor-GithubSecret>
                                 <Rultor-SecurityKey>${security.key}</Rultor-SecurityKey>
-                                <Rultor-SecuritySalt>${security.salt}</Rultor-SecuritySalt>
                                 <Rultor-DynamoKey>${dynamo.key}</Rultor-DynamoKey>
                                 <Rultor-DynamoSecret>${dynamo.secret}</Rultor-DynamoSecret>
                                 <Rultor-DynamoPrefix>${dynamo.prefix}</Rultor-DynamoPrefix>
