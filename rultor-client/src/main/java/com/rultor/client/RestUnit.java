@@ -89,7 +89,7 @@ final class RestUnit implements Unit {
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("home page with links")
+                .get("#pulses()")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .xpath("/page/links/link[@rel='pulses']/@href")
                 .get(0),
@@ -106,11 +106,11 @@ final class RestUnit implements Unit {
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("home page with save link")
+                .get(String.format("preparing for #spec(%s)", spec))
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .rel("/page/links/link[@rel='save']/@href")
                 .post(
-                    "save spec",
+                    String.format("#spec(%s)", spec),
                     String.format(
                         "spec=%s",
                         URLEncoder.encode(spec.asText(), CharEncoding.UTF_8)
@@ -131,7 +131,7 @@ final class RestUnit implements Unit {
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("home page with spec")
+                .get("#spec()")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .xpath("/page/unit/spec/text()")
                 .get(0)

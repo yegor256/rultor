@@ -177,6 +177,7 @@ public class BaseRs extends BaseResource {
 
     /**
      * We're testing.
+     * @return TRUE if we're currently running an integration test
      */
     private static boolean testing() {
         return Manifests.read("Rultor-DynamoKey").matches("[A-Z0-9]{20}")

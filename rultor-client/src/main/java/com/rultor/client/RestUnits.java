@@ -97,9 +97,9 @@ public final class RestUnits implements Map<String, Unit> {
         return RestTester.start(UriBuilder.fromUri(this.home))
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
             .header(HttpHeaders.AUTHORIZATION, this.token)
-            .get("home page with all units")
+            .get("#isEmpty()")
             .assertStatus(HttpURLConnection.HTTP_OK)
-            .xpath("/page/units/unit")
+            .nodes("/page/units/unit")
             .isEmpty();
     }
 
@@ -113,9 +113,9 @@ public final class RestUnits implements Map<String, Unit> {
             contains ^= RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("home page with specific unit")
+                .get(String.format("#containsKey(%s)", key))
                 .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath(String.format("/page/units/unit[name='%s']", key))
+                .nodes(String.format("/page/units/unit[name='%s']", key))
                 .isEmpty();
         }
         return contains;
@@ -135,12 +135,12 @@ public final class RestUnits implements Map<String, Unit> {
     @Override
     public Unit get(final Object key) {
         Unit unit = null;
-        if (this.containsKey(String.class.cast(key))) {
+        if (this.containsKey(key.toString())) {
             unit = new RestUnit(
                 RestTester.start(UriBuilder.fromUri(this.home))
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                     .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .get("home page with specific units")
+                    .get(String.format("#get(%s)", key))
                     .assertStatus(HttpURLConnection.HTTP_OK)
                     .xpath(
                         String.format(
@@ -172,7 +172,7 @@ public final class RestUnits implements Map<String, Unit> {
         RestTester.start(UriBuilder.fromUri(this.home))
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
             .header(HttpHeaders.AUTHORIZATION, this.token)
-            .get("home page with specific units to remove it")
+            .get(String.format("preparing to #remove(%s)", key))
             .assertStatus(HttpURLConnection.HTTP_OK)
             .rel(
                 String.format(
@@ -181,7 +181,7 @@ public final class RestUnits implements Map<String, Unit> {
                     key
                 )
             )
-            .get("remove the unit")
+            .get(String.format("#remove(%s)", key))
             .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
         return new Unit() {
             @Override

@@ -170,7 +170,7 @@ final class RestPulses implements SortedMap<Date, Pulse> {
             .header(HttpHeaders.AUTHORIZATION, this.token)
             .get("home page with all pulses")
             .assertStatus(HttpURLConnection.HTTP_OK)
-            .xpath("/page/pulses/pulse")
+            .nodes("/page/pulses/pulse")
             .isEmpty();
     }
 

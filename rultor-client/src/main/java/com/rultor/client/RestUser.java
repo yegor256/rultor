@@ -116,7 +116,7 @@ public final class RestUser implements User {
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("read identity URN from home page")
+                .get("#urn()")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .assertXPath("/page/identity")
                 .xpath("/page/identity/urn/text()")
@@ -137,21 +137,31 @@ public final class RestUser implements User {
      */
     @Override
     public Unit create(final String name) {
-        return new RestUnit(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("read front page to get CREATE link")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .rel("/page/links/link[@rel='create']/@href")
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .post("save skeleton", String.format("name=%s", name))
-                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
-                .follow()
-                .uri()
-                .toString(),
-            this.token
-        );
+        try {
+            return new RestUnit(
+                RestTester.start(UriBuilder.fromUri(this.home))
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .header(HttpHeaders.AUTHORIZATION, this.token)
+                    .get(String.format("preparing to #create(%s)", name))
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .rel("/page/links/link[@rel='create']/@href")
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .post(
+                        String.format("#create(%s)"),
+                        String.format(
+                            "name=%s",
+                            URLEncoder.encode(name, CharEncoding.UTF_8)
+                        )
+                    )
+                    .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
+                    .follow()
+                    .uri()
+                    .toString(),
+                this.token
+            );
+        } catch (UnsupportedEncodingException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**
@@ -162,7 +172,7 @@ public final class RestUser implements User {
         RestTester.start(UriBuilder.fromUri(this.home))
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
             .header(HttpHeaders.AUTHORIZATION, this.token)
-            .get("read list of units to delete one")
+            .get(String.format("preparing for #remove(%s)", name))
             .assertStatus(HttpURLConnection.HTTP_OK)
             .assertXPath("/page/units")
             .rel(
@@ -171,7 +181,7 @@ public final class RestUser implements User {
                     name
                 )
             )
-            .get("delete selected unit")
+            .get(String.format("#remove(%s)", name))
             .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
     }
 

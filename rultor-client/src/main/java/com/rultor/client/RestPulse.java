@@ -97,7 +97,7 @@ final class RestPulse implements Pulse {
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("home page with spec")
+                .get("#spec()")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .xpath("/page/spec/text()")
                 .get(0)
@@ -113,11 +113,11 @@ final class RestPulse implements Pulse {
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("home page")
+                .get("preparing for #read()")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .rel("/page/links/link[@rel='stream']/@href")
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-                .get("real stream")
+                .get("#read()")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .getBody(),
             CharEncoding.UTF_8
