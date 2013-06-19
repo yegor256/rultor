@@ -59,7 +59,8 @@ public interface User {
     Map<String, Unit> units();
 
     /**
-     * Create new unit with a given name.
+     * Create new unit with a given name (runtime exception if it
+     * already exists).
      * @param name Unique name of the unit
      * @return The unit just created
      */

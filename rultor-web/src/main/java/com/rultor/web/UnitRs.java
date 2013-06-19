@@ -63,39 +63,44 @@ public final class UnitRs extends BaseRs {
     public static final String QUERY_NAME = "name";
 
     /**
-     * View and edit existing unit (front page).
-     * @param name Name of the unit
+     * Unit name.
+     */
+    private transient String name;
+
+    /**
+     * Inject it from query.
+     * @param unit Unit name (or NULL)
+     */
+    @QueryParam(PulsesRs.QUERY_NAME)
+    public void setName(@NotNull final String unit) {
+        this.name = unit;
+    }
+    /**
+     * View an existing unit or an empty one.
      * @return The JAX-RS response
      * @throws Exception If some problem inside
      */
     @GET
     @Path("/")
-    public Response edit(@QueryParam(UnitRs.QUERY_NAME) @NotNull
-        final String name) throws Exception {
-        final Unit unit = this.user().units().get(name);
-        if (unit == null) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUriBuilder()
-                    .clone()
-                    .path(IndexRs.class)
-                    .build(),
-                String.format(
-                    "Unit '%s' not found",
-                    name
-                ),
-                Level.SEVERE
-            );
-        }
+    public Response index() throws Exception {
         return new PageBuilder()
-            .stylesheet("/xsl/add.xsl")
+            .stylesheet("/xsl/unit.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .link(new Link("save", "./save"))
+            .link(
+                new Link(
+                    "save",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(UnitRs.class)
+                        .path(UnitRs.class, "save")
+                )
+            )
             .append(
                 new JaxbBundle("unit")
-                    .add("name", name)
+                    .add("name", this.name)
                     .up()
-                    .add("spec", unit.spec().asText())
+                    .add("spec", this.unit().spec().asText())
                     .up()
             )
             .render()
@@ -104,59 +109,31 @@ public final class UnitRs extends BaseRs {
 
     /**
      * Remove unit by name.
-     * @param name Name of the unit to remove
      * @return The JAX-RS response
      * @throws Exception If some problem inside
      */
     @GET
     @Path("/remove")
-    public Response remove(@QueryParam(UnitRs.QUERY_NAME)
-        @NotNull final String name) throws Exception {
-        this.user().remove(name);
+    public Response remove() throws Exception {
+        this.user().remove(this.name);
         throw this.flash().redirect(
-            this.uriInfo().getBaseUriBuilder()
-                .clone()
-                .path(IndexRs.class)
-                .build(),
+            this.uriInfo().getBaseUri(),
             String.format(
                 "Unit '%s' successfully removed",
-                name
+                this.name
             ),
             Level.INFO
         );
     }
 
     /**
-     * Add new unit (front page).
-     * @return The JAX-RS response
-     * @throws Exception If some problem inside
-     */
-    @GET
-    @Path("/add")
-    public Response add() throws Exception {
-        return new PageBuilder()
-            .stylesheet("/xsl/add.xsl")
-            .build(EmptyPage.class)
-            .init(this)
-            .link(new Link("save", "/u/save"))
-            .render()
-            .build();
-    }
-
-    /**
      * Save new or existing unit unit.
-     * @param name Name of it
      * @param text Spec to save
      * @return The JAX-RS response
      */
     @POST
-    @Path("/save")
-    public Response save(@FormParam(UnitRs.QUERY_NAME) final String name,
-        @NotNull @FormParam("spec") final String text) {
-        Unit unit = this.user().units().get(name);
-        if (unit == null) {
-            unit = this.user().create(name);
-        }
+    @Path("/")
+    public Response save(@NotNull @FormParam("spec") final String text) {
         final Spec spec;
         try {
             spec = this.repo().make(text);
@@ -168,18 +145,34 @@ public final class UnitRs extends BaseRs {
         } catch (Repo.InstantiationException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
-        unit.spec(spec);
+        this.unit().spec(spec);
         throw this.flash().redirect(
-            this.uriInfo().getBaseUriBuilder()
-                .clone()
-                .path(IndexRs.class)
-                .build(),
+            this.uriInfo().getRequestUri(),
             String.format(
                 "Unit '%s' successfully saved/updated",
-                name
+                this.name
             ),
             Level.INFO
         );
+    }
+
+    /**
+     * Get Unit.
+     * @return Unit
+     */
+    private Unit unit() {
+        final Unit unit = this.user().units().get(this.name);
+        if (unit == null) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                String.format(
+                    "Unit '%s' doesn't exist",
+                    this.name
+                ),
+                Level.SEVERE
+            );
+        }
+        return unit;
     }
 
 }

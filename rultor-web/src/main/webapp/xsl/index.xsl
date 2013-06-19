@@ -37,14 +37,23 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <h1>Registered Units</h1>
+        <h1>Units</h1>
+        <form method="post">
+            <xsl:attribute name="action">
+                <xsl:value-of select="/page/links/link[@rel='create']/@href"/>
+            </xsl:attribute>
+            <fieldset>
+                <legend>Register new unit</legend>
+                <label for="name"><xsl:text>Unique Unit Name</xsl:text></label>
+                <input name="name" id="name" type="text" class="input-large" />
+                <label><xsl:comment>for the submit button below</xsl:comment></label>
+                <button type="submit" class="btn">
+                    <xsl:text>Create</xsl:text>
+                </button>
+            </fieldset>
+        </form>
         <p>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='add']/@href"/>
-                </xsl:attribute>
-                <xsl:text>Register new unit</xsl:text>
-            </a>
+            <xsl:text>Registered Units:</xsl:text>
         </p>
         <xsl:if test="units/unit">
             <ul class="nav">

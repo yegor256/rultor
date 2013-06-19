@@ -122,7 +122,7 @@ public class BaseRs extends BaseResource {
     @Inset.Runtime
     public final AuthInset auth() {
         // @checkstyle LineLength (4 lines)
-        final AuthInset auth = new AuthInset(this, Manifests.read("Rultor-SecurityKey"), Manifests.read("Rultor-SecuritySalt"))
+        final AuthInset auth = new AuthInset(this, Manifests.read("Rultor-SecurityKey"))
             .with(new Facebook(this, Manifests.read("Rultor-FbId"), Manifests.read("Rultor-FbSecret")))
             .with(new Github(this, Manifests.read("Rultor-GithubId"), Manifests.read("Rultor-GithubSecret")))
             .with(new Google(this, Manifests.read("Rultor-GoogleId"), Manifests.read("Rultor-GoogleSecret")));

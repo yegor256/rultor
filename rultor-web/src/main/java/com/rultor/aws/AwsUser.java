@@ -36,6 +36,7 @@ import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import java.util.Collection;
@@ -58,7 +59,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "region", "name" })
+@EqualsAndHashCode(of = { "region", "client", "name" })
 @Loggable(Loggable.DEBUG)
 final class AwsUser implements User {
 
@@ -124,8 +125,15 @@ final class AwsUser implements User {
     @Override
     @NotNull
     @Cacheable.FlushBefore
-    public Unit create(@NotNull final String unit) {
-        return this.unit(unit);
+    public Unit create(@NotNull final String unt) {
+        if (this.units().containsKey(unt)) {
+            throw new IllegalArgumentException(
+                String.format("Unit '%s' already exists", unt)
+            );
+        }
+        final Unit unit = this.unit(unt);
+        unit.spec(new Spec.Simple());
+        return unit;
     }
 
     /**

@@ -110,11 +110,11 @@ final class RestUnit implements Unit {
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .rel("/page/links/link[@rel='save']/@href")
                 .post(
+                    "save spec",
                     String.format(
                         "spec=%s",
                         URLEncoder.encode(spec.asText(), CharEncoding.UTF_8)
-                    ),
-                    "save spec"
+                    )
                 )
                 .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
         } catch (UnsupportedEncodingException ex) {

@@ -36,7 +36,11 @@ import com.rexsl.page.PageBuilder;
 import com.rexsl.page.auth.Identity;
 import com.rultor.spi.Unit;
 import java.util.Map;
+import java.util.logging.Level;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
@@ -74,11 +78,34 @@ public final class IndexRs extends BaseRs {
                 .build(EmptyPage.class)
                 .init(this)
                 .append(this.mine())
-                .link(new Link("add", "/u/add"))
+                .link(new Link("create", "./create"))
                 .render()
                 .build();
         }
         return response;
+    }
+
+    /**
+     * Create new empty unit.
+     * @param name Name of the unit to create
+     * @return The JAX-RS response
+     */
+    @POST
+    @Path("/create")
+    public Response create(@NotNull @FormParam("name") final String name) {
+        this.user().create(name);
+        throw this.flash().redirect(
+            this.uriInfo().getBaseUriBuilder()
+                .clone()
+                .path(UnitRs.class)
+                .queryParam(UnitRs.QUERY_NAME, "{unit}")
+                .build(name),
+            String.format(
+                "Unit '%s' successfully created",
+                name
+            ),
+            Level.INFO
+        );
     }
 
     /**
@@ -109,8 +136,6 @@ public final class IndexRs extends BaseRs {
     private JaxbBundle unit(final String name, final Unit unit) {
         return new JaxbBundle("unit")
             .add("name", name)
-            .up()
-            .add("spec", unit.spec().asText())
             .up()
             .link(
                 new Link(

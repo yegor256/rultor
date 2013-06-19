@@ -29,6 +29,7 @@
  */
 package com.rultor.cron;
 
+import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Pulseable;
 import com.rultor.spi.Spec;
@@ -66,12 +67,13 @@ public final class CrontabTest {
         final Work work = new Work.Simple(
             new URN("urn:facebook:55"), "unit-name", new Spec.Simple("")
         );
-        final Pulseable origin = Mockito.mock(Pulseable.class);
         for (String text : texts) {
+            final Pulseable origin = Mockito.mock(Pulseable.class);
             final State state = new State.Memory();
             final Crontab crontab = new Crontab(text, origin);
-            crontab.pulse(work, state);
-            crontab.pulse(work, state);
+            for (int attempt = 0; attempt < Tv.TEN; ++attempt) {
+                crontab.pulse(work, state);
+            }
             Mockito.verify(origin, Mockito.times(1)).pulse(work, state);
         }
     }

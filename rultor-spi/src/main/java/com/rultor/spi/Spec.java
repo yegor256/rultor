@@ -64,6 +64,12 @@ public interface Spec {
         private final transient String text;
         /**
          * Public ctor.
+         */
+        public Simple() {
+            this("java.lang.Integer(0)");
+        }
+        /**
+         * Public ctor.
          * @param spec The text
          */
         public Simple(final String spec) {

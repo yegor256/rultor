@@ -141,28 +141,15 @@ public final class RestUser implements User {
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("read front page to get ADD link")
+                .get("read front page to get CREATE link")
                 .assertStatus(HttpURLConnection.HTTP_OK)
-                .rel("/page/links/link[@rel='add']/@href")
+                .rel("/page/links/link[@rel='create']/@href")
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .get("read adding form")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .rel("/page/links/link[@rel='save']/@href")
-                .post(
-                    String.format("name=%s&spec=java.lang.Integer(1)", name),
-                    "save skeleton"
-                )
+                .post("save skeleton", String.format("name=%s", name))
                 .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
                 .follow()
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .get("read home page again, with unit in it")
-                .xpath(
-                    String.format(
-                        "//unit[name='%s']/links/link[@rel='edit']/@href",
-                        name
-                    )
-                )
-                .get(0),
+                .uri()
+                .toString(),
             this.token
         );
     }

@@ -43,14 +43,14 @@
     <links>
         <link href="/xml/index.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
-        <link href="/xml/add.xml" rel="add" type="text/xml"/>
+        <link href="/xml/index.xml" rel="create" type="text/xml"/>
     </links>
     <millis>16</millis>
     <units>
         <unit>
             <name>git-rultor</name>
             <links>
-                <link href="/xml/add.xml" rel="edit" type="text/xml"/>
+                <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
                 <link href="/xml/pulses.xml" rel="pulses" type="text/xml"/>
                 <link href="/xml/index.xml" rel="remove" type="text/xml"/>
             </links>
@@ -58,7 +58,7 @@
         <unit>
             <name>nightly-build-rultor</name>
             <links>
-                <link href="/xml/add.xml" rel="edit" type="text/xml"/>
+                <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
                 <link href="/xml/pulses.xml" rel="pulses" type="text/xml"/>
                 <link href="/xml/index.xml" rel="remove" type="text/xml"/>
             </links>

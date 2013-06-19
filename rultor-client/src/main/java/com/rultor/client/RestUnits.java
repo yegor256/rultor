@@ -134,22 +134,26 @@ public final class RestUnits implements Map<String, Unit> {
      */
     @Override
     public Unit get(final Object key) {
-        return new RestUnit(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("home page with specific units")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath(
-                    String.format(
-                        // @checkstyle LineLength (1 line)
-                        "/page/units/unit[name='%s']/links/link[@rel='edit']/@href",
-                        key
+        Unit unit = null;
+        if (this.containsKey(String.class.cast(key))) {
+            unit = new RestUnit(
+                RestTester.start(UriBuilder.fromUri(this.home))
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .header(HttpHeaders.AUTHORIZATION, this.token)
+                    .get("home page with specific units")
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .xpath(
+                        String.format(
+                            // @checkstyle LineLength (1 line)
+                            "/page/units/unit[name='%s']/links/link[@rel='edit']/@href",
+                            key
+                        )
                     )
-                )
-                .get(0),
-            this.token
-        );
+                    .get(0),
+                this.token
+            );
+        }
+        return unit;
     }
 
     /**
