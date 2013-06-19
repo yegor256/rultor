@@ -42,6 +42,7 @@ import java.util.SortedMap;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -53,14 +54,9 @@ import org.apache.commons.lang3.time.DateFormatUtils;
  * @version $Id$
  * @since 1.0
  */
-@Path("/pulses")
+@Path("/pulses/{unit:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
 public final class PulsesRs extends BaseRs {
-
-    /**
-     * Query param.
-     */
-    public static final String QUERY_NAME = "name";
 
     /**
      * Query param.
@@ -86,7 +82,7 @@ public final class PulsesRs extends BaseRs {
      * Inject it from query.
      * @param unit Unit name
      */
-    @QueryParam(PulsesRs.QUERY_NAME)
+    @PathParam("unit")
     public void setName(@NotNull final String unit) {
         this.name = unit;
     }
@@ -178,8 +174,6 @@ public final class PulsesRs extends BaseRs {
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(PulseRs.class)
-                        .queryParam(PulseRs.QUERY_NAME, "{n}")
-                        .queryParam(PulseRs.QUERY_DATE, "{d}")
                         .build(this.name, date.getTime())
                 )
             );
@@ -207,8 +201,6 @@ public final class PulsesRs extends BaseRs {
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(PulseRs.class)
-                        .queryParam(PulseRs.QUERY_NAME, "{x}")
-                        .queryParam(PulseRs.QUERY_DATE, "{y}")
                         .queryParam(PulseRs.QUERY_START, stage.start())
                         .queryParam(PulseRs.QUERY_STOP, stage.stop())
                         .build(this.name, date.getTime())

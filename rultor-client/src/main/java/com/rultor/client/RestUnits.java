@@ -108,17 +108,13 @@ public final class RestUnits implements Map<String, Unit> {
      */
     @Override
     public boolean containsKey(final Object key) {
-        boolean contains = false;
-        if (key instanceof String) {
-            contains ^= RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get(String.format("#containsKey(%s)", key))
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .nodes(String.format("/page/units/unit[name='%s']", key))
-                .isEmpty();
-        }
-        return contains;
+        return !RestTester.start(UriBuilder.fromUri(this.home))
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+            .header(HttpHeaders.AUTHORIZATION, this.token)
+            .get(String.format("#containsKey(%s)", key))
+            .assertStatus(HttpURLConnection.HTTP_OK)
+            .nodes(String.format("/page/units/unit[name='%s']", key))
+            .isEmpty();
     }
 
     /**

@@ -42,7 +42,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -53,14 +53,9 @@ import javax.ws.rs.core.Response;
  * @since 1.0
  * @checkstyle MultipleStringLiterals (500 lines)
  */
-@Path("/unit")
+@Path("/unit/{name:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
 public final class UnitRs extends BaseRs {
-
-    /**
-     * Query param.
-     */
-    public static final String QUERY_NAME = "name";
 
     /**
      * Unit name.
@@ -71,7 +66,7 @@ public final class UnitRs extends BaseRs {
      * Inject it from query.
      * @param unit Unit name (or NULL)
      */
-    @QueryParam(PulsesRs.QUERY_NAME)
+    @PathParam("name")
     public void setName(@NotNull final String unit) {
         this.name = unit;
     }
@@ -94,6 +89,17 @@ public final class UnitRs extends BaseRs {
                         .clone()
                         .path(UnitRs.class)
                         .path(UnitRs.class, "save")
+                        .build(this.name)
+                )
+            )
+            .link(
+                new Link(
+                    "remove",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(UnitRs.class)
+                        .path(UnitRs.class, "remove")
+                        .build(this.name)
                 )
             )
             .append(

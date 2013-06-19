@@ -147,7 +147,7 @@ public final class RestUser implements User {
                     .rel("/page/links/link[@rel='create']/@href")
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                     .post(
-                        String.format("#create(%s)"),
+                        String.format("#create(%s)", name),
                         String.format(
                             "name=%s",
                             URLEncoder.encode(name, CharEncoding.UTF_8)

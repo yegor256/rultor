@@ -37,6 +37,7 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -49,19 +50,9 @@ import javax.ws.rs.core.Response;
  * @version $Id$
  * @since 1.0
  */
-@Path("/pls")
+@Path("/pulse/{name:[\\w\\-]+}/{date:\\d+}")
 @Loggable(Loggable.DEBUG)
 public final class PulseRs extends BaseRs {
-
-    /**
-     * Query param.
-     */
-    public static final String QUERY_NAME = "name";
-
-    /**
-     * Query param.
-     */
-    public static final String QUERY_DATE = "date";
 
     /**
      * Query param.
@@ -87,7 +78,7 @@ public final class PulseRs extends BaseRs {
      * Inject it from query.
      * @param unit Unit name
      */
-    @QueryParam(PulseRs.QUERY_NAME)
+    @PathParam("name")
     public void setName(@NotNull final String unit) {
         this.name = unit;
     }
@@ -96,7 +87,7 @@ public final class PulseRs extends BaseRs {
      * Inject it from query.
      * @param time Pulse time
      */
-    @QueryParam(PulseRs.QUERY_DATE)
+    @PathParam("date")
     public void setDate(@NotNull final String time) {
         this.date = new Date(Long.parseLong(time));
     }

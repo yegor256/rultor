@@ -34,8 +34,6 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.auth.Identity;
-import com.rultor.spi.Unit;
-import java.util.Map;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
@@ -98,7 +96,6 @@ public final class IndexRs extends BaseRs {
             this.uriInfo().getBaseUriBuilder()
                 .clone()
                 .path(UnitRs.class)
-                .queryParam(UnitRs.QUERY_NAME, "{unit}")
                 .build(name),
             String.format(
                 "Unit '%s' successfully created",
@@ -114,14 +111,10 @@ public final class IndexRs extends BaseRs {
      */
     private JaxbBundle mine() {
         return new JaxbBundle("units").add(
-            new JaxbBundle.Group<Map.Entry<String, Unit>>(
-                this.user().units().entrySet()) {
+            new JaxbBundle.Group<String>(this.user().units().keySet()) {
                 @Override
-                public JaxbBundle bundle(
-                    final Map.Entry<String, Unit> entry) {
-                    return IndexRs.this.unit(
-                        entry.getKey(), entry.getValue()
-                    );
+                public JaxbBundle bundle(final String name) {
+                    return IndexRs.this.unit(name);
                 }
             }
         );
@@ -130,10 +123,9 @@ public final class IndexRs extends BaseRs {
     /**
      * Convert unit to JaxbBundle.
      * @param name Name of it
-     * @param unit The unit
      * @return Bundle
      */
-    private JaxbBundle unit(final String name, final Unit unit) {
+    private JaxbBundle unit(final String name) {
         return new JaxbBundle("unit")
             .add("name", name)
             .up()
@@ -145,7 +137,6 @@ public final class IndexRs extends BaseRs {
                         .clone()
                         .path(UnitRs.class)
                         .path(UnitRs.class, "remove")
-                        .queryParam(UnitRs.QUERY_NAME, "{n1}")
                         .build(name)
                 )
             )
@@ -155,7 +146,6 @@ public final class IndexRs extends BaseRs {
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(UnitRs.class)
-                        .queryParam(UnitRs.QUERY_NAME, "{n2}")
                         .build(name)
                 )
             )
@@ -165,7 +155,6 @@ public final class IndexRs extends BaseRs {
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(PulsesRs.class)
-                        .queryParam(PulsesRs.QUERY_NAME, "{n7}")
                         .build(name)
                 )
             );
