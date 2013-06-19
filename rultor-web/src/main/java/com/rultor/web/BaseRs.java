@@ -134,7 +134,8 @@ public class BaseRs extends BaseResource {
                 this,
                 new HttpBasic.Vault() {
                     @Override
-                    public Identity authenticate(String user, String password) {
+                    public Identity authenticate(final String user,
+                        final String password) {
                         Identity identity = Identity.ANONYMOUS;
                         if (BaseRs.testing()) {
                             identity = BaseRs.TESTER;

@@ -213,6 +213,10 @@ final class Composite implements Variable<Object> {
             out = Integer.class;
         } else if (long.class.equals(type)) {
             out = Long.class;
+        } else if (double.class.equals(type)) {
+            out = Double.class;
+        } else if (boolean.class.equals(type)) {
+            out = Boolean.class;
         } else {
             out = type;
         }

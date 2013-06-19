@@ -76,6 +76,25 @@ public final class ClasspathRepoTest {
     }
 
     /**
+     * ClasspathRepo can make a simple instance.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void makesInstanceFromSimpleSpec() throws Exception {
+        final Repo repo = new ClasspathRepo();
+        final String[] texts = new String[] {
+            "java.lang.Double(-1.5)",
+            "java.lang.Boolean(TRUE)",
+            "java.lang.String:\nsome\u20actext\n\t",
+        };
+        for (String text : texts) {
+            final Spec spec = repo.make(text);
+            final Instance instance = repo.make(Mockito.mock(User.class), spec);
+            MatcherAssert.assertThat(instance, Matchers.notNullValue());
+        }
+    }
+
+    /**
      * ClasspathRepo can make a plain text spec.
      * @throws Exception If some problem inside
      */
