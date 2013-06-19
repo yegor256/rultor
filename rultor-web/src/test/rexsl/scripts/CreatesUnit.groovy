@@ -35,13 +35,13 @@ import com.rultor.spi.Spec
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 
-def user = new RestUser(rexsl.home, new URN("urn:facebook:1"), "");
-def name = "sample-unit";
-def unit = user.units().get(name);
+def user = new RestUser(rexsl.home, new URN('urn:facebook:1'), '')
+def name = 'sample-unit'
+def unit = user.units().get(name)
 if (unit == null) {
-    unit = user.create(name);
+    unit = user.create(name)
 }
-def spec = "java.lang.Double(-55.0)";
-unit.spec(new Spec.Simple(spec));
-MatcherAssert.assertThat(unit.spec().asText(), Matchers.equalTo(spec));
-user.remove(name);
+def spec = 'java.lang.Double(-55.0)'
+unit.spec(new Spec.Simple(spec))
+MatcherAssert.assertThat(unit.spec().asText(), Matchers.equalTo(spec))
+user.remove(name)

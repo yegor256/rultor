@@ -163,7 +163,7 @@ public final class PulsesRs extends BaseRs {
                 new JaxbBundle.Group<Stage>(pulse.stages()) {
                     @Override
                     public JaxbBundle bundle(final Stage stage) {
-                        return PulsesRs.this.stage(pulse, date, stage);
+                        return PulsesRs.this.stage(date, stage);
                     }
                 }
             )
@@ -181,13 +181,11 @@ public final class PulsesRs extends BaseRs {
 
     /**
      * Convert stage to JaxbBundle.
-     * @param pulse Pulse
      * @param date Date of it
      * @param stage Stage to convert
      * @return Bundle
      */
-    private JaxbBundle stage(final Pulse pulse, final Date date,
-        final Stage stage) {
+    private JaxbBundle stage(final Date date, final Stage stage) {
         return new JaxbBundle("stage")
             .add("result", stage.result().toString())
             .up()

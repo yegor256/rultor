@@ -124,7 +124,7 @@ final class AwsUser implements User {
      */
     @Override
     @NotNull
-    @Cacheable.FlushBefore
+    @Cacheable.FlushAfter
     public Unit create(@NotNull final String unt) {
         if (this.units().containsKey(unt)) {
             throw new IllegalArgumentException(
@@ -140,7 +140,7 @@ final class AwsUser implements User {
      * {@inheritDoc}
      */
     @Override
-    @Cacheable.FlushBefore
+    @Cacheable.FlushAfter
     public void remove(@NotNull final String unit) {
         final Iterator<Item> items = this.region.table(AwsUnit.TABLE).frame()
             .where(AwsUnit.KEY_OWNER, Conditions.equalTo(this.name))
