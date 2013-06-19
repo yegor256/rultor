@@ -95,7 +95,7 @@ variable returns [Variable<?> ret]
     { $ret = new Text(StringEscapeUtils.unescapeJava($TEXT.text)); }
     |
     BOOLEAN
-    { $ret = new Constant<Boolean>(new Boolean($BOOLEAN.text.equals("true"))); }
+    { $ret = new Constant<Boolean>(new Boolean($BOOLEAN.text.equals("TRUE"))); }
     |
     INTEGER
     { $ret = new Constant<Integer>(Integer.valueOf($INTEGER.text)); }

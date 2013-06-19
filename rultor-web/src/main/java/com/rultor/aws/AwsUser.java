@@ -47,6 +47,7 @@ import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -125,7 +126,7 @@ final class AwsUser implements User {
     @Override
     @NotNull
     @Cacheable.FlushAfter
-    public Unit create(@NotNull final String unt) {
+    public Unit create(@NotNull @Pattern(regexp = "[-a-z]+") final String unt) {
         if (this.units().containsKey(unt)) {
             throw new IllegalArgumentException(
                 String.format("Unit '%s' already exists", unt)
