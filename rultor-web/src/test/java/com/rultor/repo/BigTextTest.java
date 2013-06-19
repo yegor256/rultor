@@ -27,34 +27,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web.rexsl.scripts
+package com.rultor.repo;
 
-import com.jcabi.manifests.Manifests
-import com.jcabi.urn.URN
-import com.rexsl.page.auth.Identity
-import com.rultor.client.RestUser
-import com.rultor.spi.Spec
-import com.rultor.web.AuthKeys
-import org.hamcrest.MatcherAssert
-import org.hamcrest.Matchers
+import com.rultor.spi.User;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 
-Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
-def identity = new Identity.Simple(new URN('urn:test:1'), '', new URI('#'))
-def key = new AuthKeys().make(identity)
-def user = new RestUser(rexsl.home, identity.urn(), key)
-MatcherAssert.assertThat(user.urn(), Matchers.equalTo(identity.urn()))
+/**
+ * Test case for {@link BigText}.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ */
+public final class BigTextTest {
 
-def name = 'sample-unit'
-def unit = user.units().get(name)
-if (unit == null) {
-    unit = user.create(name)
+    /**
+     * BigText can make an instance.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void makesInstance() throws Exception {
+        final String value = "some \u20ac \"' test";
+        final String text = String.format("java.lang.String:  \r\n%s", value);
+        final Variable<String> var = new BigText(text);
+        MatcherAssert.assertThat(
+            var.instantiate(Mockito.mock(User.class)),
+            Matchers.equalTo(value)
+        );
+    }
+
 }
-
-[
-    'java.lang.Double(-55.0)',
-    'java.lang.String:\nsome \u20ac text',
-].each { spec ->
-    unit.spec(new Spec.Simple(spec))
-    MatcherAssert.assertThat(unit.spec().asText(), Matchers.equalTo(spec))
-}
-user.remove(name)
