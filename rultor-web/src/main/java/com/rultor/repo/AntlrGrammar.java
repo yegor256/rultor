@@ -63,8 +63,8 @@ final class AntlrGrammar implements Grammar {
     public Variable<?> parse(final String text)
         throws Repo.InvalidSyntaxException {
         Variable<?> var;
-        if (text.startsWith(BigText.PREFIX)) {
-            var = new BigText(text.substring(BigText.PREFIX.length()));
+        if (BigText.matches(text)) {
+            var = new BigText(text);
         } else {
             var = this.antlr(text);
         }

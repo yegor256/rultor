@@ -51,10 +51,10 @@ if (unit == null) {
 }
 
 [
-    'java.lang.Double(-55.0)',
-    'java.lang.String:\nsome \u20ac text',
-].each { spec ->
-    unit.spec(new Spec.Simple(spec))
-    MatcherAssert.assertThat(unit.spec().asText(), Matchers.equalTo(spec))
+    'java.lang.Double ( -55.0 )': 'java.lang.Double(-55.0)',
+    'java.lang.String: \r\ns \n\n\t\r\u20ac t': 'java.lang.String:\ns \n\n\t\r\u20ac t',
+].each {
+    unit.spec(new Spec.Simple(it.key))
+    MatcherAssert.assertThat(unit.spec().asText(), Matchers.equalTo(it.value))
 }
 user.remove(name)

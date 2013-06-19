@@ -32,8 +32,11 @@ package com.rultor.repo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.User;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Big text, without any formatting.
@@ -49,9 +52,11 @@ import lombok.ToString;
 final class BigText implements Variable<String> {
 
     /**
-     * Prefix.
+     * Pattern to match.
      */
-    public static final String PREFIX = "java.lang.String:\n";
+    private static final Pattern PTN = Pattern.compile(
+        "java.lang.String:\\s*\n(.*)", Pattern.MULTILINE | Pattern.DOTALL
+    );
 
     /**
      * The value.
@@ -60,10 +65,12 @@ final class BigText implements Variable<String> {
 
     /**
      * Public ctor.
-     * @param val Value
+     * @param text Text to parse and encapsulate
      */
-    protected BigText(final String val) {
-        this.value = val;
+    protected BigText(final String text) {
+        final Matcher matcher = BigText.PTN.matcher(text);
+        Validate.isTrue(matcher.matches(), "invalid input '%s'", text);
+        this.value = matcher.group(1);
     }
 
     /**
@@ -79,7 +86,17 @@ final class BigText implements Variable<String> {
      */
     @Override
     public String asText() {
-        return new StringBuilder(BigText.PREFIX).append(this.value).toString();
+        return new StringBuilder("java.lang.String:\n")
+            .append(this.value).toString();
+    }
+
+    /**
+     * Text looks like big text?
+     * @param text The text
+     * @return TRUE if it looks like one
+     */
+    public static boolean matches(final String text) {
+        return BigText.PTN.matcher(text).matches();
     }
 
 }
