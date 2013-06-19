@@ -31,10 +31,10 @@ package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
-import com.jcabi.urn.URN;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
+import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Resource;
 import com.rexsl.page.auth.AuthInset;
 import com.rexsl.page.auth.Facebook;
@@ -42,14 +42,12 @@ import com.rexsl.page.auth.Github;
 import com.rexsl.page.auth.Google;
 import com.rexsl.page.auth.HttpBasic;
 import com.rexsl.page.auth.Identity;
-import com.rexsl.page.auth.Provider;
 import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
 import com.rultor.spi.Repo;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
-import java.net.URI;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -68,13 +66,10 @@ import javax.ws.rs.core.Response;
 public class BaseRs extends BaseResource {
 
     /**
-     * Tester's identity.
+     * Authentication keys.
      */
-    private static final Identity TESTER = new Identity.Simple(
-        URN.create("urn:facebook:1"),
-        "Mr. Tester",
-        URI.create("http://img.rultor.com/localhost.png")
-    );
+    private static final AuthKeys KEYS =
+        new AuthKeys(Manifests.read("Rultor-SecurityKey"));
 
     /**
      * Flash.
@@ -116,36 +111,37 @@ public class BaseRs extends BaseResource {
     }
 
     /**
+     * Authentication key inset.
+     * @return The inset
+     */
+    @Inset.Runtime
+    public final Inset insetAuthKey() {
+        return new Inset() {
+            @Override
+            public void render(final BasePage<?, ?> page,
+                final Response.ResponseBuilder builder) {
+                final Identity identity = BaseRs.this.auth().identity();
+                if (!identity.equals(Identity.ANONYMOUS)) {
+                    page.append(
+                        new JaxbBundle("api-key", BaseRs.KEYS.make(identity))
+                    );
+                }
+            }
+        };
+    }
+
+    /**
      * Authentication inset.
      * @return The inset
      */
     @Inset.Runtime
     public final AuthInset auth() {
         // @checkstyle LineLength (4 lines)
-        final AuthInset auth = new AuthInset(this, Manifests.read("Rultor-SecurityKey"))
+        return new AuthInset(this, Manifests.read("Rultor-SecurityKey"))
             .with(new Facebook(this, Manifests.read("Rultor-FbId"), Manifests.read("Rultor-FbSecret")))
             .with(new Github(this, Manifests.read("Rultor-GithubId"), Manifests.read("Rultor-GithubSecret")))
-            .with(new Google(this, Manifests.read("Rultor-GoogleId"), Manifests.read("Rultor-GoogleSecret")));
-        if (BaseRs.testing()) {
-            auth.with(new Provider.Always(BaseRs.TESTER));
-        }
-        auth.with(
-            new HttpBasic(
-                this,
-                new HttpBasic.Vault() {
-                    @Override
-                    public Identity authenticate(final String user,
-                        final String password) {
-                        Identity identity = Identity.ANONYMOUS;
-                        if (BaseRs.testing()) {
-                            identity = BaseRs.TESTER;
-                        }
-                        return identity;
-                    }
-                }
-            )
-        );
-        return auth;
+            .with(new Google(this, Manifests.read("Rultor-GoogleId"), Manifests.read("Rultor-GoogleSecret")))
+            .with(new HttpBasic(this, BaseRs.KEYS));
     }
 
     /**
@@ -174,15 +170,6 @@ public class BaseRs extends BaseResource {
             throw new IllegalStateException("REPO is not initialized");
         }
         return repo;
-    }
-
-    /**
-     * We're testing.
-     * @return TRUE if we're currently running an integration test
-     */
-    private static boolean testing() {
-        return Manifests.read("Rultor-DynamoKey").matches("[A-Z0-9]{20}")
-            && "12345".equals(Manifests.read("Rultor-Revision"));
     }
 
 }

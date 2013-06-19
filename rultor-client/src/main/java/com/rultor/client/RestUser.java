@@ -114,7 +114,7 @@ public final class RestUser implements User {
     public URN urn() {
         return URN.create(
             RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
                 .get("#urn()")
                 .assertStatus(HttpURLConnection.HTTP_OK)

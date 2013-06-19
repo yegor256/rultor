@@ -27,31 +27,61 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web.rexsl.scripts
+package com.rultor.web;
 
-import com.jcabi.manifests.Manifests
-import com.jcabi.urn.URN
-import com.rexsl.page.auth.AuthInset
-import com.rexsl.page.auth.Identity
-import com.rultor.client.RestUser
-import com.rultor.spi.Spec
-import com.rultor.web.AuthKeys
-import org.hamcrest.MatcherAssert
-import org.hamcrest.Matchers
+import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
+import com.rexsl.page.auth.HttpBasic;
+import com.rexsl.page.auth.Identity;
+import java.net.URI;
+import org.apache.commons.codec.digest.DigestUtils;
 
-Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
-def identity = new Identity.Simple(new URN('urn:test:1'), '', new URI('#'))
-def key = new AuthKeys(Manifests.read('Rultor-SecurityKey')).make(identity)
-def user = new RestUser(rexsl.home, identity.urn(), key)
-MatcherAssert.assertThat(user.urn(), Matchers.equalTo(identity.urn()))
+/**
+ * HTTP Basic Authentication keys.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+@Loggable(Loggable.DEBUG)
+public final class AuthKeys implements HttpBasic.Vault {
 
-def name = 'sample-unit'
-def unit = user.units().get(name)
-if (unit == null) {
-    unit = user.create(name)
+    /**
+     * Encryption key.
+     */
+    private final transient String key;
+
+    /**
+     * Public ctor.
+     * @param secret Encryption key
+     */
+    public AuthKeys(final String secret) {
+        this.key = secret;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Identity authenticate(final String user, final String password) {
+        Identity identity = new Identity.Simple(
+            URN.create(user), "", URI.create("#")
+        );
+        if (!this.make(identity).equals(password)) {
+            identity = Identity.ANONYMOUS;
+        }
+        return identity;
+    }
+
+    /**
+     * Make authentication key/password.
+     * @param identity Identity to make key for
+     * @return Key
+     */
+    public String make(final Identity identity) {
+        return DigestUtils.md5Hex(
+            String.format("%s-%s", identity.urn(), this.key)
+        );
+    }
+
 }
-
-def spec = 'java.lang.Double(-55.0)'
-unit.spec(new Spec.Simple(spec))
-MatcherAssert.assertThat(unit.spec().asText(), Matchers.equalTo(spec))
-user.remove(name)
