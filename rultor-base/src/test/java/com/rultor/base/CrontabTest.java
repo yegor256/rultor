@@ -27,14 +27,15 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.cron;
+package com.rultor.base;
 
-import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Pulseable;
 import com.rultor.spi.Spec;
 import com.rultor.spi.State;
 import com.rultor.spi.Work;
+import java.util.Calendar;
+import java.util.TimeZone;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -71,11 +72,32 @@ public final class CrontabTest {
             final Pulseable origin = Mockito.mock(Pulseable.class);
             final State state = new State.Memory();
             final Crontab crontab = new Crontab(text, origin);
-            for (int attempt = 0; attempt < Tv.TEN; ++attempt) {
-                crontab.pulse(work, state);
-            }
-            Mockito.verify(origin, Mockito.times(1)).pulse(work, state);
+            crontab.pulse(work, state);
         }
+    }
+
+    /**
+     * Crontab can pass through only at certain time moment and only once.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    public void passesThroughOnlyWhenAllowed() throws Exception {
+        final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        final String text = String.format(
+            "* %d %d %d *",
+            cal.get(Calendar.HOUR_OF_DAY),
+            cal.get(Calendar.DAY_OF_MONTH),
+            cal.get(Calendar.MONTH)
+        );
+        final Work work = new Work.Simple(
+            new URN("urn:facebook:66"), "unit-name-2", new Spec.Simple("")
+        );
+        final Pulseable origin = Mockito.mock(Pulseable.class);
+        final State state = new State.Memory();
+        final Crontab crontab = new Crontab(text, origin);
+        crontab.pulse(work, state);
+        Mockito.verify(origin, Mockito.times(1)).pulse(work, state);
     }
 
 }

@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.cron;
+package com.rultor.base;
 
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
