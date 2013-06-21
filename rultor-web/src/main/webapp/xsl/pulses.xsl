@@ -57,7 +57,12 @@
                     <xsl:apply-templates select="stages/stage[@final='true']/result"/>
                 </li>
                 <li>
-                    <xsl:value-of select="started"/>
+                    <a title="see details">
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="links/link[@rel='see']/@href"/>
+                            </xsl:attribute>
+                        <xsl:value-of select="date"/>
+                    </a>
                 </li>
                 <xsl:if test="links/link[@rel='stop']">
                     <li>
@@ -72,7 +77,7 @@
                 <li>
                     <a title="see full log">
                         <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='see']/@href"/>
+                            <xsl:value-of select="links/link[@rel='stream']/@href"/>
                         </xsl:attribute>
                         <i class="icon-file-alt"><xsl:comment>see full log</xsl:comment></i>
                     </a>

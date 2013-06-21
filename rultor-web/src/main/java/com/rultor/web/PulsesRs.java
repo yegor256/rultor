@@ -176,6 +176,17 @@ public final class PulsesRs extends BaseRs {
                         .path(PulseRs.class)
                         .build(this.name, date.getTime())
                 )
+            )
+            .link(
+                new Link(
+                    // @checkstyle MultipleStringLiterals (1 line)
+                    "stream",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(PulseRs.class)
+                        .path(PulseRs.class, "stream")
+                        .build(this.name, date.getTime())
+                )
             );
     }
 
