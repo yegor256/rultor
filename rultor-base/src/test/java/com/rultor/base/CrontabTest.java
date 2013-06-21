@@ -122,26 +122,4 @@ public final class CrontabTest {
         Mockito.verify(origin, Mockito.times(0)).pulse(work);
     }
 
-    /**
-     * Crontab can block when not allowed.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void blocksWhenNotAllowed() throws Exception {
-        final String text = String.format(
-            "* %d %d %d   *   ",
-            this.today.get(Calendar.HOUR_OF_DAY) + 1,
-            this.today.get(Calendar.DAY_OF_MONTH) + 1,
-            this.today.get(Calendar.MONTH) + 1
-        );
-        final Work work = new Work.Simple(
-            new URN("urn:facebook:77"), "unit-name-6", new Spec.Simple("")
-        );
-        final Pulseable origin = Mockito.mock(Pulseable.class);
-        final State state = new State.Memory();
-        final Crontab crontab = new Crontab(text, origin);
-        crontab.pulse(work, state);
-        Mockito.verify(origin, Mockito.times(0)).pulse(work, state);
-    }
-
 }
