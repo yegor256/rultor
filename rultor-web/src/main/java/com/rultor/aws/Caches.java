@@ -187,7 +187,11 @@ final class Caches implements Flushable, Metricable, Runnable {
                 Thread.currentThread().interrupt();
                 throw new IOException(ex);
             }
-            this.clean();
+            for (Map.Entry<Key, Cache> entry : this.all.entrySet()) {
+                if (entry.getValue().expired()) {
+                    this.all.remove(entry.getKey());
+                }
+            }
         } finally {
             this.semaphore.release(Caches.PERMITS);
         }
@@ -209,19 +213,6 @@ final class Caches implements Flushable, Metricable, Runnable {
     private Cache get(final Key key) {
         this.all.putIfAbsent(key, new Cache(key));
         return this.all.get(key);
-    }
-
-    /**
-     * Remove expired elements.
-     * @throws IOException If fails
-     */
-    @Loggable(Loggable.INFO)
-    private void clean() throws IOException {
-        for (Map.Entry<Key, Cache> entry : this.all.entrySet()) {
-            if (entry.getValue().expired()) {
-                this.all.remove(entry.getKey());
-            }
-        }
     }
 
 }

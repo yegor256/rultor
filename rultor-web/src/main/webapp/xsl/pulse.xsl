@@ -40,7 +40,7 @@
         <h1>
             <xsl:value-of select="/page/unit"/>
             <xsl:text>/</xsl:text>
-            <xsl:value-of select="/page/unit"/>
+            <xsl:value-of select="/page/pulse"/>
         </h1>
         <div class="pulse-details">
             <xsl:if test="count(stages/stage) &gt; 1">
