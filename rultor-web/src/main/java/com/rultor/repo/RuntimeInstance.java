@@ -78,12 +78,13 @@ final class RuntimeInstance implements Instance {
      */
     @Override
     public String face() {
-        final StringBuilder text = new StringBuilder();
-        text.append(this.object.getClass().getName());
+        final String text;
         if (this.object instanceof Visible) {
-            text.append(": ").append(Visible.class.cast(this.object).face());
+            text = Visible.class.cast(this.object).face();
+        } else {
+            text  = this.object.getClass().getName();
         }
-        return text.toString();
+        return text;
     }
 
 }

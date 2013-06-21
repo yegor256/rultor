@@ -38,6 +38,7 @@ import com.rultor.spi.Instance;
 import com.rultor.spi.Work;
 import java.util.Calendar;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -294,7 +295,9 @@ public final class Crontab implements Instance {
                 }
                 @Override
                 public long lag(final Calendar calendar) {
-                    return this.lag(calendar.get(Calendar.MINUTE));
+                    return this.lag(
+                        calendar.get(Calendar.MINUTE)
+                    ) * TimeUnit.MINUTES.toMillis(1);
                 }
             },
             new Crontab.AbstractGate(parts[1]) {
@@ -304,7 +307,9 @@ public final class Crontab implements Instance {
                 }
                 @Override
                 public long lag(final Calendar calendar) {
-                    return this.lag(calendar.get(Calendar.HOUR_OF_DAY));
+                    return this.lag(
+                        calendar.get(Calendar.HOUR_OF_DAY)
+                    ) * TimeUnit.HOURS.toMillis(1);
                 }
             },
             new Crontab.AbstractGate(parts[2]) {
@@ -316,7 +321,9 @@ public final class Crontab implements Instance {
                 }
                 @Override
                 public long lag(final Calendar calendar) {
-                    return this.lag(calendar.get(Calendar.DAY_OF_MONTH) + 1);
+                    return this.lag(
+                        calendar.get(Calendar.DAY_OF_MONTH) + 1
+                    ) * TimeUnit.DAYS.toMillis(1);
                 }
             },
             new Crontab.AbstractGate(parts[Tv.THREE]) {
@@ -326,7 +333,9 @@ public final class Crontab implements Instance {
                 }
                 @Override
                 public long lag(final Calendar calendar) {
-                    return this.lag(calendar.get(Calendar.MONTH) + 1);
+                    return this.lag(
+                        calendar.get(Calendar.MONTH) + 1
+                    ) * Tv.THIRTY * TimeUnit.DAYS.toMillis(1);
                 }
             },
             new Crontab.AbstractGate(parts[Tv.FOUR]) {
@@ -336,7 +345,9 @@ public final class Crontab implements Instance {
                 }
                 @Override
                 public long lag(final Calendar calendar) {
-                    return this.lag(calendar.get(Calendar.DAY_OF_WEEK));
+                    return this.lag(
+                        calendar.get(Calendar.DAY_OF_WEEK)
+                    ) * TimeUnit.DAYS.toMillis(1);
                 }
             },
         };

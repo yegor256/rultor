@@ -129,7 +129,7 @@ public final class Build implements Instance {
     @Override
     public String face() {
         return Logger.format(
-            "shell script '%[text]s' through '%s'",
+            "shell script \"%[text]s\" through %s",
             this.script,
             this.shells.face()
         );

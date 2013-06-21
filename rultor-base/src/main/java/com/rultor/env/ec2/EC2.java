@@ -157,7 +157,7 @@ public final class EC2 implements Environments {
     @Override
     public String face() {
         return Logger.format(
-            "EC2 %s instance with '%s' AMI",
+            "EC2 %s instance with %s",
             this.type,
             this.ami
         );

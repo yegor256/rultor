@@ -94,7 +94,7 @@ public final class SSHServers implements Shells {
     @Override
     public String face() {
         return Logger.format(
-            "SSH as '%s' at %s",
+            "SSH as \"%s\" at %s",
             this.login,
             this.envs.face()
         );

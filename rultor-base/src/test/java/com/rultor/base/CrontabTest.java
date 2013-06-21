@@ -35,6 +35,8 @@ import com.rultor.spi.Spec;
 import com.rultor.spi.Work;
 import java.util.Calendar;
 import java.util.TimeZone;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -120,6 +122,24 @@ public final class CrontabTest {
         final Crontab crontab = new Crontab(text, origin);
         crontab.pulse(work);
         Mockito.verify(origin, Mockito.times(0)).pulse(work);
+    }
+
+    /**
+     * Crontab can calculate lag correctly.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void calculatesLagCorrectly() throws Exception {
+        final String text = String.format(
+            "* %d * * *",
+            this.today.get(Calendar.HOUR_OF_DAY) + 1
+        );
+        final Instance origin = Mockito.mock(Instance.class);
+        final Crontab crontab = new Crontab(text, origin);
+        MatcherAssert.assertThat(
+            crontab.face(),
+            Matchers.equalTo("null in 60min")
+        );
     }
 
 }
