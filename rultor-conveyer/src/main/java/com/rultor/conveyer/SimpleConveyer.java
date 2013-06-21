@@ -169,6 +169,7 @@ public final class SimpleConveyer
         this.counter = registry.counter(
             MetricRegistry.name(this.getClass(), "done-jobs")
         );
+        this.instantary.register(registry);
     }
 
     /**

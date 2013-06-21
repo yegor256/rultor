@@ -32,6 +32,7 @@ package com.rultor.spi;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -78,6 +79,14 @@ public interface Pulse {
     @EqualsAndHashCode(of = { "left", "right" })
     @Loggable(Loggable.DEBUG)
     final class Signal {
+        /**
+         * Signal key, which explains the spec being executed.
+         */
+        public static final String SPEC = "spec";
+        /**
+         * Signal key, which marks the stage finished.
+         */
+        public static final String STAGE = "stage";
         /**
          * Pattern to match.
          */
@@ -174,6 +183,20 @@ public interface Pulse {
             return mtr.matches() && Integer.parseInt(
                 mtr.group(1)
             ) == mtr.group(Tv.THREE).length();
+        }
+        /**
+         * Convenient utility method to log stage finish.
+         * @param fmt Format
+         * @param args Optional arguments
+         */
+        public static void stage(final String fmt, final Object... args) {
+            Logger.info(
+                Pulse.class,
+                new Pulse.Signal(
+                    Pulse.Signal.STAGE,
+                    Logger.format(fmt, args)
+                ).toString()
+            );
         }
     }
 

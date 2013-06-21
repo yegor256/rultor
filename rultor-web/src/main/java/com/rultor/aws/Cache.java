@@ -38,6 +38,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Conveyer;
+import com.rultor.spi.Pulse;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Flushable;
@@ -233,7 +234,7 @@ final class Cache implements Flushable {
                 }
             }
         );
-        return !protocol.find("stage", "").isEmpty();
+        return !protocol.find(Pulse.Signal.STAGE, "").isEmpty();
     }
 
 }

@@ -30,6 +30,7 @@
 package com.rultor.conveyer;
 
 import com.rultor.spi.Instance;
+import com.rultor.spi.Metricable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.User;
@@ -41,7 +42,7 @@ import com.rultor.spi.User;
  * @version $Id$
  * @since 1.0
  */
-interface Instantary {
+interface Instantary extends Metricable {
 
     /**
      * Get an instance for the user, name, and specification.

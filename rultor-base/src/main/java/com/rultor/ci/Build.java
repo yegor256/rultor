@@ -35,6 +35,7 @@ import com.rultor.board.Billboard;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
 import com.rultor.spi.Instance;
+import com.rultor.spi.Pulse;
 import com.rultor.spi.Work;
 import java.io.ByteArrayOutputStream;
 import javax.validation.constraints.NotNull;
@@ -89,6 +90,7 @@ public final class Build implements Instance {
     @Override
     public void pulse(@NotNull final Work work) throws Exception {
         final Shell shell = this.shells.acquire();
+        Pulse.Signal.stage("Shell %[type]s acquired: %s", shell, shell);
         int code;
         try {
             code = shell.exec(
@@ -97,6 +99,7 @@ public final class Build implements Instance {
                 new ByteArrayOutputStream(),
                 new ByteArrayOutputStream()
             );
+            Pulse.Signal.stage("Script executed through the shell");
         } finally {
             IOUtils.closeQuietly(shell);
         }
@@ -107,6 +110,7 @@ public final class Build implements Instance {
                     work.unit()
                 )
             );
+            Pulse.Signal.stage("Announces success through board");
         } else {
             this.board.announce(
                 String.format(
@@ -114,6 +118,7 @@ public final class Build implements Instance {
                     work.unit()
                 )
             );
+            Pulse.Signal.stage("Announces failure through board");
         }
     }
 

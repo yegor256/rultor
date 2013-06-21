@@ -29,6 +29,8 @@
  */
 package com.rultor.conveyer;
 
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Instance;
@@ -48,7 +50,7 @@ import lombok.ToString;
  * @version $Id$
  * @since 1.0
  */
-@Loggable(Loggable.INFO)
+@Loggable(Loggable.DEBUG)
 @ToString
 @EqualsAndHashCode(of = { "instances", "repo" })
 final class SimpleInstantary implements Instantary {
@@ -92,10 +94,26 @@ final class SimpleInstantary implements Instantary {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void register(final MetricRegistry registry) {
+        registry.register(
+            MetricRegistry.name(this.getClass(), "instances-total"),
+            new Gauge<Integer>() {
+                @Override
+                public Integer getValue() {
+                    return SimpleInstantary.this.instances.size();
+                }
+            }
+        );
+    }
+
+    /**
      * Specd instance.
      */
     @Immutable
-    @Loggable(Loggable.INFO)
+    @Loggable(Loggable.DEBUG)
     @ToString
     @EqualsAndHashCode(of = { "origin", "spec" })
     private static final class SpecdInstance implements Instance {

@@ -81,9 +81,9 @@ final class LoggableInstance implements Instance {
         final Thread thread = Thread.currentThread();
         this.appender.register(thread, work);
         try {
-            this.meta("spec", work.spec().asText());
+            this.meta(Pulse.Signal.SPEC, work.spec().asText());
             this.origin.pulse(work);
-            this.meta("status", "SUCCESS");
+            this.meta(Pulse.Signal.STAGE, "SUCCESS");
         } catch (Repo.InstantiationException ex) {
             Logger.error(this, "%[exception]s", ex);
         } finally {
@@ -99,7 +99,6 @@ final class LoggableInstance implements Instance {
     private void meta(final String name, final Object value) {
         Logger.info(
             this,
-            "%s",
             new Pulse.Signal(name, value.toString()).toString()
         );
     }
