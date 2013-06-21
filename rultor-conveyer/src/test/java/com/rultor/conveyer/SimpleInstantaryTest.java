@@ -27,27 +27,46 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.conveyer;
 
-import com.jcabi.aspects.Immutable;
-import javax.validation.constraints.NotNull;
+import com.rultor.spi.Instance;
+import com.rultor.spi.Repo;
+import com.rultor.spi.Spec;
+import com.rultor.spi.User;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Object that is ready to receive a pulse.
- *
+ * Test case for {@link SimpleInstantary}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-public interface Pulseable {
+public final class SimpleInstantaryTest {
 
     /**
-     * Pulse.
-     * @param work The work we're doing now
-     * @param state State
-     * @throws Exception If something fails
+     * SimpleInstantary can return instances.
+     * @throws Exception If some problem inside
      */
-    void pulse(@NotNull Work work, @NotNull State state) throws Exception;
+    @Test
+    public void returnsInstancesFromRepo() throws Exception {
+        final Repo repo = Mockito.mock(Repo.class);
+        final Instantary instantary = new SimpleInstantary(repo);
+        final User user = Mockito.mock(User.class);
+        final Spec spec = Mockito.mock(Spec.class);
+        final String name = "some-unit-name";
+        final Instance origin = Mockito.mock(Instance.class);
+        Mockito.doReturn(origin).when(repo).make(user, spec);
+        final Instance instance = instantary.get(user, name, spec);
+        MatcherAssert.assertThat(
+            instance,
+            Matchers.equalTo(instantary.get(user, name, spec))
+        );
+        final Spec second = Mockito.mock(Spec.class);
+        instantary.get(user, name, second);
+        Mockito.verify(repo, Mockito.times(1)).make(user, spec);
+        Mockito.verify(repo, Mockito.times(1)).make(user, second);
+    }
 
 }

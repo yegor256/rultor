@@ -32,9 +32,8 @@ package com.rultor.base;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseThreads;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Pulseable;
+import com.rultor.spi.Instance;
 import com.rultor.spi.Spec;
-import com.rultor.spi.State;
 import com.rultor.spi.Work;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -62,7 +61,7 @@ public final class ParallelTest {
      */
     @Test
     public void enablesFixedNumberOfParallelThreads() throws Exception {
-        final Pulseable origin = Mockito.mock(Pulseable.class);
+        final Instance origin = Mockito.mock(Instance.class);
         Mockito.doAnswer(
             new Answer<Void>() {
                 @Override
@@ -72,11 +71,10 @@ public final class ParallelTest {
                     return null;
                 }
             }
-        ).when(origin).pulse(Mockito.any(Work.class), Mockito.any(State.class));
+        ).when(origin).pulse(Mockito.any(Work.class));
         final Work work = new Work.Simple(
             new URN("urn:facebook:55"), "unit-name", new Spec.Simple("")
         );
-        final State state = new State.Memory();
         final int threads = 10;
         final int maximum = 3;
         final Parallel parallel = new Parallel(maximum, origin);
@@ -89,7 +87,7 @@ public final class ParallelTest {
             @Override
             public Void call() throws Exception {
                 start.await();
-                parallel.pulse(work, state);
+                parallel.pulse(work);
                 done.countDown();
                 return null;
             }
@@ -104,7 +102,7 @@ public final class ParallelTest {
             Matchers.is(true)
         );
         MatcherAssert.assertThat(done.getCount(), Matchers.equalTo(0L));
-        Mockito.verify(origin, Mockito.times(maximum)).pulse(work, state);
+        Mockito.verify(origin, Mockito.times(maximum)).pulse(work);
     }
 
 }

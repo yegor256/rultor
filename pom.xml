@@ -42,6 +42,7 @@
     <name>rultor</name>
     <modules>
         <module>rultor-base</module>
+        <module>rultor-conveyer</module>
         <module>rultor-client</module>
         <module>rultor-spi</module>
         <module>rultor-web</module>

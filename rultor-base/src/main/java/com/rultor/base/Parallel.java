@@ -29,13 +29,11 @@
  */
 package com.rultor.base;
 
-import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Pulseable;
-import com.rultor.spi.State;
+import com.rultor.spi.Instance;
 import com.rultor.spi.Work;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -47,30 +45,22 @@ import lombok.ToString;
  * @version $Id$
  * @since 1.0
  */
-@Immutable
 @ToString
-@EqualsAndHashCode(of = { "origin", "maximum" })
+@EqualsAndHashCode(of = { "origin", "active", "maximum" })
 @Loggable(Loggable.DEBUG)
-public final class Parallel implements Pulseable {
+@SuppressWarnings("PMD.DoNotUseThreads")
+public final class Parallel implements Instance {
 
     /**
-     * Are we busy right now trying to calculate something?
+     * Threads running now.
      */
-    private static final String BUSY = String.format(
-        "%s.busy", Parallel.class.getCanonicalName()
-    );
-
-    /**
-     * How many active threads are running now (key in State).
-     */
-    private static final String ACTIVE = String.format(
-        "%s.active", Parallel.class.getCanonicalName()
-    );
+    private final transient Set<Thread> active =
+        new CopyOnWriteArraySet<Thread>();
 
     /**
      * Origin.
      */
-    private final transient Pulseable origin;
+    private final transient Instance origin;
 
     /**
      * Maximum.
@@ -80,10 +70,10 @@ public final class Parallel implements Pulseable {
     /**
      * Public ctor.
      * @param max Maximum
-     * @param pls Original pulseable
+     * @param instance Original instance
      */
-    public Parallel(final int max, final Pulseable pls) {
-        this.origin = pls;
+    public Parallel(final int max, final Instance instance) {
+        this.origin = instance;
         this.maximum = max;
     }
 
@@ -91,76 +81,15 @@ public final class Parallel implements Pulseable {
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("PMD.ReturnFromFinallyBlock")
-    public void pulse(@NotNull final Work work, @NotNull final State state)
-        throws Exception {
-        final int active = this.safety(
-            state,
-            new Callable<Integer>() {
-                @Override
-                public Integer call() throws Exception {
-                    final int active = Parallel.running(state) + 1;
-                    if (active <= Parallel.this.maximum) {
-                        assert state.checkAndSet(
-                            Parallel.ACTIVE, Integer.toString(active)
-                        );
-                    }
-                    return active;
-                }
+    public void pulse(@NotNull final Work work) throws Exception {
+        this.active.add(Thread.currentThread());
+        try {
+            if (this.active.size() <= this.maximum) {
+                this.origin.pulse(work);
             }
-        );
-        if (active <= Parallel.this.maximum) {
-            try {
-                this.origin.pulse(work, state);
-            } finally {
-                this.safety(
-                    state,
-                    new Callable<Void>() {
-                        @Override
-                        public Void call() throws Exception {
-                            assert state.checkAndSet(
-                                Parallel.ACTIVE,
-                                Integer.toString(Parallel.running(state) - 1)
-                            );
-                            return null;
-                        }
-                    }
-                );
-            }
+        } finally {
+            this.active.remove(Thread.currentThread());
         }
-    }
-
-    /**
-     * Call this callable safely.
-     * @param state State
-     * @param callable Callable to call
-     * @return Result
-     * @param <T> Type of result
-     * @throws Exception If something goes wrong
-     */
-    private <T> T safety(final State state, final Callable<T> callable)
-        throws Exception {
-        while (!state.checkAndSet(Parallel.BUSY, "on")) {
-            TimeUnit.MICROSECONDS.sleep(1);
-        }
-        final T result = callable.call();
-        assert state.checkAndSet(Parallel.BUSY, "off");
-        return result;
-    }
-
-    /**
-     * Fetch the number of active running threads.
-     * @param state State
-     * @return Active threads count
-     */
-    private static int running(final State state) {
-        int active;
-        if (state.has(Parallel.ACTIVE)) {
-            active = Integer.parseInt(state.get(Parallel.ACTIVE));
-        } else {
-            active = 0;
-        }
-        return active;
     }
 
 }

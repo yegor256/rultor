@@ -31,8 +31,6 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Pulseable;
-import com.rultor.spi.State;
 import com.rultor.spi.Work;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -67,10 +65,10 @@ final class RuntimeInstance implements Instance {
      * {@inheritDoc}
      */
     @Override
-    public void pulse(@NotNull final Work work, @NotNull final State state)
+    public void pulse(@NotNull final Work work)
         throws Exception {
-        if (this.object instanceof Pulseable) {
-            Pulseable.class.cast(this.object).pulse(work, state);
+        if (this.object instanceof Instance) {
+            Instance.class.cast(this.object).pulse(work);
         }
     }
 

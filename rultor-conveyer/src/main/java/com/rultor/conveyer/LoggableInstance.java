@@ -34,35 +34,28 @@ import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
-import com.rultor.spi.State;
-import com.rultor.spi.User;
 import com.rultor.spi.Work;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Logged instance.
+ * Loggable instance.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @ToString
-@EqualsAndHashCode(of = { "repo", "appender" })
+@EqualsAndHashCode(of = { "origin", "appender" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
-final class LoggedInstance implements Instance {
+final class LoggableInstance implements Instance {
 
     /**
-     * Repo.
+     * Instance.
      */
-    private final transient Repo repo;
-
-    /**
-     * Owner of the instance.
-     */
-    private final transient User user;
+    private final transient Instance origin;
 
     /**
      * Log appender.
@@ -71,14 +64,12 @@ final class LoggedInstance implements Instance {
 
     /**
      * Public ctor.
-     * @param rpo Repo
-     * @param owner Owner of this instance
+     * @param instance Origin
      * @param appr Appender
      */
-    protected LoggedInstance(final Repo rpo, final User owner,
+    protected LoggableInstance(final Instance instance,
         final ConveyerAppender appr) {
-        this.repo = rpo;
-        this.user = owner;
+        this.origin = instance;
         this.appender = appr;
     }
 
@@ -86,13 +77,12 @@ final class LoggedInstance implements Instance {
      * {@inheritDoc}
      */
     @Override
-    public void pulse(@NotNull final Work work, @NotNull final State state)
-        throws Exception {
+    public void pulse(@NotNull final Work work) throws Exception {
         final Thread thread = Thread.currentThread();
         this.appender.register(thread, work);
         try {
             this.meta("spec", work.spec().asText());
-            this.repo.make(this.user, work.spec()).pulse(work, state);
+            this.origin.pulse(work);
             this.meta("status", "SUCCESS");
         } catch (Repo.InstantiationException ex) {
             Logger.error(this, "%[exception]s", ex);

@@ -34,8 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.board.Billboard;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
-import com.rultor.spi.Pulseable;
-import com.rultor.spi.State;
+import com.rultor.spi.Instance;
 import com.rultor.spi.Work;
 import java.io.ByteArrayOutputStream;
 import javax.validation.constraints.NotNull;
@@ -54,7 +53,7 @@ import org.apache.commons.io.IOUtils;
 @ToString
 @EqualsAndHashCode(of = { "shells", "script", "board" })
 @Loggable(Loggable.DEBUG)
-public final class Build implements Pulseable {
+public final class Build implements Instance {
 
     /**
      * Shells.
@@ -88,8 +87,7 @@ public final class Build implements Pulseable {
      * {@inheritDoc}
      */
     @Override
-    public void pulse(@NotNull final Work work, @NotNull final State state)
-        throws Exception {
+    public void pulse(@NotNull final Work work) throws Exception {
         final Shell shell = this.shells.acquire();
         int code;
         try {

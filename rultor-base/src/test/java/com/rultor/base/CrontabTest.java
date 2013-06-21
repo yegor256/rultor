@@ -30,9 +30,8 @@
 package com.rultor.base;
 
 import com.jcabi.urn.URN;
-import com.rultor.spi.Pulseable;
+import com.rultor.spi.Instance;
 import com.rultor.spi.Spec;
-import com.rultor.spi.State;
 import com.rultor.spi.Work;
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -47,6 +46,12 @@ import org.mockito.Mockito;
 public final class CrontabTest {
 
     /**
+     * Today.
+     */
+    private final transient Calendar today =
+        Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+
+    /**
      * Crontab can parse input text.
      * @throws Exception If some problem inside
      */
@@ -54,11 +59,11 @@ public final class CrontabTest {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void parsesValidText() throws Exception {
         final String[] texts = new String[] {
-            "* * * * *",
-            "4 * * * *",
+            "* * * 3-7 *",
+            "4 2,4,5 */4 * *",
             "* 4 * * *",
-            "* * 4 * *",
-            "* * * 4 *",
+            "* * 4 */2 *",
+            "* 2,3,4,5-8 * 4 *",
             "* * * * 4",
             "@daily",
             "@monthly",
@@ -69,10 +74,9 @@ public final class CrontabTest {
             new URN("urn:facebook:55"), "unit-name", new Spec.Simple("")
         );
         for (String text : texts) {
-            final Pulseable origin = Mockito.mock(Pulseable.class);
-            final State state = new State.Memory();
+            final Instance origin = Mockito.mock(Instance.class);
             final Crontab crontab = new Crontab(text, origin);
-            crontab.pulse(work, state);
+            crontab.pulse(work);
         }
     }
 
@@ -81,23 +85,41 @@ public final class CrontabTest {
      * @throws Exception If some problem inside
      */
     @Test
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void passesThroughOnlyWhenAllowed() throws Exception {
-        final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         final String text = String.format(
             "* %d %d %d *",
-            cal.get(Calendar.HOUR_OF_DAY),
-            cal.get(Calendar.DAY_OF_MONTH),
-            cal.get(Calendar.MONTH)
+            this.today.get(Calendar.HOUR_OF_DAY),
+            this.today.get(Calendar.DAY_OF_MONTH) + 1,
+            this.today.get(Calendar.MONTH) + 1
         );
         final Work work = new Work.Simple(
             new URN("urn:facebook:66"), "unit-name-2", new Spec.Simple("")
         );
-        final Pulseable origin = Mockito.mock(Pulseable.class);
-        final State state = new State.Memory();
+        final Instance origin = Mockito.mock(Instance.class);
         final Crontab crontab = new Crontab(text, origin);
-        crontab.pulse(work, state);
-        Mockito.verify(origin, Mockito.times(1)).pulse(work, state);
+        crontab.pulse(work);
+        Mockito.verify(origin, Mockito.times(1)).pulse(work);
+    }
+
+    /**
+     * Crontab can block when not allowed.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void blocksWhenNotAllowed() throws Exception {
+        final String text = String.format(
+            "* %d %d %d   *   ",
+            this.today.get(Calendar.HOUR_OF_DAY) + 1,
+            this.today.get(Calendar.DAY_OF_MONTH) + 1,
+            this.today.get(Calendar.MONTH) + 1
+        );
+        final Work work = new Work.Simple(
+            new URN("urn:facebook:77"), "unit-name-6", new Spec.Simple("")
+        );
+        final Instance origin = Mockito.mock(Instance.class);
+        final Crontab crontab = new Crontab(text, origin);
+        crontab.pulse(work);
+        Mockito.verify(origin, Mockito.times(0)).pulse(work);
     }
 
 }

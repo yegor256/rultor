@@ -29,20 +29,19 @@
  */
 package com.rultor.base;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.rultor.spi.Pulseable;
-import com.rultor.spi.State;
+import com.rultor.spi.Instance;
 import com.rultor.spi.Work;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
  * Sends pulses through, only on certain time moments.
@@ -53,14 +52,12 @@ import org.apache.commons.lang3.time.DateFormatUtils;
  * @see <a href="https://en.wikipedia.org/wiki/Cron">Cron in Wikipedia</a>
  * @see <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html">Crontab specification</a>
  */
-@Immutable
 @ToString
-@EqualsAndHashCode(
-    of = { "origin", "minute", "hour", "day", "month", "weekday" }
-)
+@Immutable
+@EqualsAndHashCode(of = { "origin", "gates" })
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings({ "PMD.NPathComplexity", "PMD.CyclomaticComplexity" })
-public final class Crontab implements Pulseable {
+@SuppressWarnings("PMD.TooManyMethods")
+public final class Crontab implements Instance {
 
     /**
      * Pre-defined definitions.
@@ -80,101 +77,134 @@ public final class Crontab implements Pulseable {
     /**
      * Origin.
      */
-    private final transient Pulseable origin;
+    private final transient Instance origin;
 
     /**
-     * Minute.
+     * All gates.
      */
-    private final transient int minute;
-
-    /**
-     * Hour.
-     */
-    private final transient int hour;
-
-    /**
-     * Day.
-     */
-    private final transient int day;
-
-    /**
-     * Month.
-     */
-    private final transient int month;
-
-    /**
-     * Weekday.
-     */
-    private final transient int weekday;
+    private final transient Gate[] gates;
 
     /**
      * Public ctor.
      * @param text Mask to use
-     * @param pls Original pulseable
+     * @param instance Original instance
      */
-    public Crontab(final String text, final Pulseable pls) {
-        this.origin = pls;
-        final int[] parts = Crontab.split(text);
-        this.minute = parts[0];
-        this.hour = parts[1];
-        this.day = parts[2];
-        this.month = parts[Tv.THREE] - 1;
-        this.weekday = parts[Tv.FOUR];
+    public Crontab(final String text, final Instance instance) {
+        this.origin = instance;
+        this.gates = Crontab.split(text);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void pulse(@NotNull final Work work, @NotNull final State state)
-        throws Exception {
-        final String key = DateFormatUtils.formatUTC(
-            this.next(), "yyyy-MM-dd'T'HH:mm'Z'"
-        );
-        if (state.checkAndSet(key, "passed")) {
-            this.origin.pulse(work, state);
+    public void pulse(@NotNull final Work work) throws Exception {
+        final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        boolean pass = true;
+        for (Gate gate : this.gates) {
+            if (!gate.pass(cal)) {
+                pass = false;
+                break;
+            }
+        }
+        if (pass) {
+            this.origin.pulse(work);
         }
     }
 
     /**
-     * Make next execution date.
-     * @return Date when we should execute next
-     * @checkstyle CyclomaticComplexity (50 lines)
-     * @checkstyle NPathComplexity (50 lines)
+     * Gate condition.
      */
-    private Date next() {
-        final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        if (this.month >= 0) {
-            if (cal.get(Calendar.MONTH) > this.month) {
-                cal.add(Calendar.YEAR, -1);
+    @Immutable
+    private interface Gate {
+        /**
+         * Pass or not.
+         * @param calendar Calendar to check
+         * @return TRUE if it's a good time to go through
+         */
+        boolean pass(Calendar calendar);
+    }
+
+    /**
+     * Abstract gate.
+     */
+    @ToString
+    @Immutable
+    @EqualsAndHashCode(of = "alternatives")
+    @Loggable(Loggable.DEBUG)
+    private abstract static class AbstractGate implements Crontab.Gate {
+        /**
+         * All alternatives.
+         */
+        private final transient Predicate<Integer>[] alternatives;
+        /**
+         * Public ctor.
+         * @param text Text spec
+         */
+        @SuppressWarnings("unchecked")
+        protected AbstractGate(final String text) {
+            final String[] parts = text.split(",");
+            this.alternatives =
+                (Predicate<Integer>[]) new Predicate<?>[parts.length];
+            for (int idx = 0; idx < parts.length; ++idx) {
+                this.alternatives[idx] = Crontab.AbstractGate.parse(parts[idx]);
             }
-            cal.set(Calendar.MONTH, this.month);
         }
-        if (this.day >= 0) {
-            if (cal.get(Calendar.DAY_OF_MONTH) > this.day) {
-                cal.add(Calendar.MONTH, -1);
+        /**
+         * Matches the number?
+         * @param input Input number
+         * @return TRUE if matches
+         */
+        protected boolean matches(final int input) {
+            boolean matches = false;
+            for (Predicate<Integer> alternative : this.alternatives) {
+                if (alternative.apply(input)) {
+                    matches = true;
+                    break;
+                }
             }
-            cal.set(Calendar.DAY_OF_MONTH, this.day);
+            return matches;
         }
-        if (this.hour >= 0) {
-            if (cal.get(Calendar.HOUR_OF_DAY) > this.hour) {
-                cal.add(Calendar.DAY_OF_MONTH, -1);
+        /**
+         * Parse text into alternative.
+         * @param part The text to parse
+         * @return Predicate
+         */
+        private static Predicate<Integer> parse(final String part) {
+            final Predicate<Integer> alternative;
+            if (part.matches("\\d+")) {
+                alternative = new Predicate<Integer>() {
+                    @Override
+                    public boolean apply(final Integer num) {
+                        return num.equals(Integer.valueOf(part));
+                    }
+                };
+            } else if (part.matches("\\d+-\\d+")) {
+                final String[] numbers = part.split("-");
+                alternative = new Predicate<Integer>() {
+                    @Override
+                    public boolean apply(final Integer num) {
+                        return num >= Integer.valueOf(numbers[0])
+                            || num <= Integer.valueOf(numbers[1]);
+                    }
+                };
+            } else if (part.matches("\\*/\\d+")) {
+                final String[] sectors = part.split("/");
+                alternative = new Predicate<Integer>() {
+                    @Override
+                    public boolean apply(final Integer num) {
+                        return num / Integer.valueOf(sectors[1]) == 0;
+                    }
+                };
+            } else if ("*".equals(part)) {
+                alternative = Predicates.<Integer>alwaysTrue();
+            } else {
+                throw new IllegalArgumentException(
+                    String.format("invalid crontab sector '%s'", part)
+                );
             }
-            cal.set(Calendar.HOUR_OF_DAY, this.hour);
+            return alternative;
         }
-        if (this.minute >= 0) {
-            if (cal.get(Calendar.MINUTE) > this.minute) {
-                cal.add(Calendar.HOUR_OF_DAY, -1);
-            }
-            cal.set(Calendar.MINUTE, this.minute);
-        }
-        if (this.weekday >= 0) {
-            if (cal.get(Calendar.DAY_OF_WEEK) > this.weekday) {
-                cal.add(Calendar.WEEK_OF_YEAR, -1);
-            }
-            cal.set(Calendar.DAY_OF_WEEK, this.weekday);
-        }
-        return cal.getTime();
     }
 
     /**
@@ -182,7 +212,7 @@ public final class Crontab implements Pulseable {
      * @param text Text to split
      * @return Five parts, numbers
      */
-    private static int[] split(final String text) {
+    private static Crontab.Gate[] split(final String text) {
         String src = text;
         if (Crontab.DEFS.containsKey(src)) {
             src = Crontab.DEFS.get(src);
@@ -193,23 +223,40 @@ public final class Crontab implements Pulseable {
                 String.format("invalid crontab definition '%s'", text)
             );
         }
-        final int[] numbers = new int[parts.length];
-        for (int idx = 0; idx < parts.length; ++idx) {
-            if ("*".equals(parts[idx])) {
-                numbers[idx] = -1;
-            } else if (parts[idx].matches("\\d+")) {
-                numbers[idx] = Integer.parseInt(parts[idx]);
-            } else {
-                throw new IllegalArgumentException(
-                    String.format(
-                        "invalid crontab part #%d in '%s'",
-                        idx,
-                        parts[idx]
-                    )
-                );
-            }
-        }
-        return numbers;
+        return new Crontab.Gate[] {
+            new Crontab.AbstractGate(parts[0]) {
+                @Override
+                public boolean pass(final Calendar calendar) {
+                    return this.matches(calendar.get(Calendar.MINUTE));
+                }
+            },
+            new Crontab.AbstractGate(parts[1]) {
+                @Override
+                public boolean pass(final Calendar calendar) {
+                    return this.matches(calendar.get(Calendar.HOUR_OF_DAY));
+                }
+            },
+            new Crontab.AbstractGate(parts[2]) {
+                @Override
+                public boolean pass(final Calendar calendar) {
+                    return this.matches(
+                        calendar.get(Calendar.DAY_OF_MONTH) + 1
+                    );
+                }
+            },
+            new Crontab.AbstractGate(parts[Tv.THREE]) {
+                @Override
+                public boolean pass(final Calendar calendar) {
+                    return this.matches(calendar.get(Calendar.MONTH) + 1);
+                }
+            },
+            new Crontab.AbstractGate(parts[Tv.FOUR]) {
+                @Override
+                public boolean pass(final Calendar calendar) {
+                    return this.matches(calendar.get(Calendar.DAY_OF_WEEK));
+                }
+            },
+        };
     }
 
 }

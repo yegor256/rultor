@@ -30,10 +30,8 @@
 package com.rultor.repo;
 
 import com.rultor.spi.Instance;
-import com.rultor.spi.Pulseable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
-import com.rultor.spi.State;
 import com.rultor.spi.User;
 import com.rultor.spi.Work;
 import java.util.concurrent.atomic.AtomicLong;
@@ -89,8 +87,8 @@ public final class ClasspathRepoTest {
         };
         for (String text : texts) {
             final Spec spec = repo.make(text);
-            final Instance instance = repo.make(Mockito.mock(User.class), spec);
-            MatcherAssert.assertThat(instance, Matchers.notNullValue());
+            final Instance obj = repo.make(Mockito.mock(User.class), spec);
+            MatcherAssert.assertThat(obj, Matchers.notNullValue());
         }
     }
 
@@ -129,7 +127,7 @@ public final class ClasspathRepoTest {
             Matchers.equalTo(2L)
         );
         final Work work = Mockito.mock(Work.class);
-        instance.pulse(work, new State.Memory());
+        instance.pulse(work);
         MatcherAssert.assertThat(
             ClasspathRepoTest.Foo.COUNTER.get(),
             Matchers.equalTo(-1L)
@@ -139,7 +137,7 @@ public final class ClasspathRepoTest {
     /**
      * Test class.
      */
-    public static final class Foo implements Pulseable {
+    public static final class Foo implements Instance {
         /**
          * Static counter.
          */
@@ -155,7 +153,7 @@ public final class ClasspathRepoTest {
          * {@inheritDoc}
          */
         @Override
-        public void pulse(final Work work, final State state) {
+        public void pulse(final Work work) {
             ClasspathRepoTest.Foo.COUNTER.set(-1);
         }
     }

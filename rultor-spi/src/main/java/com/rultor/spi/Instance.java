@@ -33,7 +33,7 @@ import com.jcabi.aspects.Immutable;
 import javax.validation.constraints.NotNull;
 
 /**
- * Instance.
+ * Object that is ready to receive a pulse.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -43,11 +43,10 @@ import javax.validation.constraints.NotNull;
 public interface Instance {
 
     /**
-     * Pulse it.
-     * @param work Work we're doing
-     * @param state Persistent storage of keys and values
-     * @throws Exception If something goes wrong inside
+     * Pulse.
+     * @param work The work we're doing now
+     * @throws Exception If something fails
      */
-    void pulse(@NotNull Work work, @NotNull State state) throws Exception;
+    void pulse(@NotNull Work work) throws Exception;
 
 }

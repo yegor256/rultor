@@ -36,9 +36,9 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseThreads;
 import com.rultor.spi.Conveyer;
 import com.rultor.spi.Conveyer.Log;
+import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
-import com.rultor.spi.State;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
 import java.io.Closeable;
@@ -60,7 +60,7 @@ import org.apache.log4j.PatternLayout;
  */
 @Loggable(Loggable.INFO)
 @ToString
-@EqualsAndHashCode(of = { "queue", "repo" })
+@EqualsAndHashCode(of = { "queue", "instantary" })
 @SuppressWarnings("PMD.DoNotUseThreads")
 public final class SimpleConveyer
     implements Conveyer, Closeable, Callable<Void> {
@@ -77,19 +77,14 @@ public final class SimpleConveyer
     private final transient Queue queue;
 
     /**
-     * Repository.
+     * Instantary.
      */
-    private final transient Repo repo;
+    private final transient Instantary instantary;
 
     /**
      * Users.
      */
     private final transient Users users;
-
-    /**
-     * State to use for everybody.
-     */
-    private final transient State state = new State.Memory();
 
     /**
      * Log appender.
@@ -128,7 +123,7 @@ public final class SimpleConveyer
     public SimpleConveyer(final Queue que, final Repo rep, final Users usrs,
         final Log log) {
         this.queue = que;
-        this.repo = rep;
+        this.instantary = new SimpleInstantary(rep);
         this.users = usrs;
         this.appender = new ConveyerAppender(log);
         this.appender.setThreshold(Level.DEBUG);
@@ -185,46 +180,19 @@ public final class SimpleConveyer
             new Callable<Void>() {
                 @Override
                 public Void call() throws Exception {
-                    new LoggedInstance(
-                        SimpleConveyer.this.repo,
-                        SimpleConveyer.this.users.fetch(work.owner()),
+                    final Instance unit = new LoggableInstance(
+                        SimpleConveyer.this.instantary.get(
+                            SimpleConveyer.this.users.fetch(work.owner()),
+                            work.unit(), work.spec()
+                        ),
                         SimpleConveyer.this.appender
-                    ).pulse(work, SimpleConveyer.this.substate(work));
+                    );
+                    unit.pulse(work);
                     SimpleConveyer.this.counter.inc();
                     return null;
                 }
             }
         );
-    }
-
-    /**
-     * Create sub-state.
-     * @param work Work
-     * @return Steate for this particular work
-     */
-    private State substate(final Work work) {
-        // @checkstyle AnonInnerLength (50 lines)
-        return new State() {
-            @Override
-            public String get(final String key) {
-                return SimpleConveyer.this.state.get(this.prefixed(key));
-            }
-            @Override
-            public boolean checkAndSet(final String key, final String value) {
-                return SimpleConveyer.this.state.checkAndSet(
-                    this.prefixed(key), value
-                );
-            }
-            @Override
-            public boolean has(final String key) {
-                return SimpleConveyer.this.state.has(this.prefixed(key));
-            }
-            private String prefixed(final String key) {
-                return String.format(
-                    "%s/%s/%s", work.owner(), work.unit(), key
-                );
-            }
-        };
     }
 
 }

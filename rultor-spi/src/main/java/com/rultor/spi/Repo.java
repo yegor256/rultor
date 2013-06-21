@@ -29,7 +29,6 @@
  */
 package com.rultor.spi;
 
-import com.jcabi.aspects.Immutable;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -39,7 +38,6 @@ import javax.validation.constraints.NotNull;
  * @version $Id$
  * @since 1.0
  */
-@Immutable
 public interface Repo extends Metricable {
 
     /**

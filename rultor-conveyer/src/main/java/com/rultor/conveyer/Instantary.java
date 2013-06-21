@@ -27,43 +27,32 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.conveyer;
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import com.rultor.spi.Instance;
+import com.rultor.spi.Repo;
+import com.rultor.spi.Spec;
+import com.rultor.spi.User;
 
 /**
- * Test case for {@link State}.
+ * Storage of instances.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class StateTest {
+interface Instantary {
 
     /**
-     * State.Memory can set and get.
-     * @throws Exception If some problem inside
+     * Get an instance for the user, name, and specification.
+     * @param user User
+     * @param name Name of the unit
+     * @param spec Specification of it
+     * @return The instance
+     * @throws Repo.InstantiationException If can't instantiate
+     * @checkstyle RedundantThrows (5 lines)
      */
-    @Test
-    public void setsAndGets() throws Exception {
-        final String key = "test";
-        final String value = "\u20ac\n\tfast\ttest\r\u0433";
-        final State state = new State.Memory();
-        MatcherAssert.assertThat(state.has(key), Matchers.is(false));
-        MatcherAssert.assertThat(
-            state.checkAndSet(key, value),
-            Matchers.is(true)
-        );
-        MatcherAssert.assertThat(state.get(key), Matchers.equalTo(value));
-        MatcherAssert.assertThat(
-            state.checkAndSet(key, value), Matchers.is(false)
-        );
-        MatcherAssert.assertThat(
-            state.checkAndSet(key, "something else"), Matchers.is(true)
-        );
-        MatcherAssert.assertThat(
-            state.get(key), Matchers.not(Matchers.equalTo(value))
-        );
-    }
+    Instance get(User user, String name, Spec spec)
+        throws Repo.InstantiationException;
 
 }
