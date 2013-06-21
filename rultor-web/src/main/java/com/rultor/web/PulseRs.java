@@ -42,6 +42,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharUtils;
 
 /**
  * Single pulse.
@@ -126,9 +128,17 @@ public final class PulseRs extends BaseRs {
     @GET
     @Path("/stream")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response stream(@QueryParam(PulseRs.QUERY_START) final String start,
+    public String stream(@QueryParam(PulseRs.QUERY_START) final String start,
         @QueryParam(PulseRs.QUERY_STOP) final String stop) throws Exception {
-        return Response.ok().entity(this.pulse().read()).build();
+        return new StringBuilder()
+            .append("start: ")
+            .append(start)
+            .append(CharUtils.LF)
+            .append("stop: ")
+            .append(stop)
+            .append(CharUtils.LF)
+            .append(IOUtils.toString(this.pulse().read()))
+            .toString();
     }
 
     /**
