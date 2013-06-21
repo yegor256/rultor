@@ -49,6 +49,7 @@
     <units>
         <unit>
             <name>git-rultor</name>
+            <face>some text to show</face>
             <links>
                 <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
                 <link href="/xml/pulses.xml" rel="pulses" type="text/xml"/>
@@ -57,6 +58,7 @@
         </unit>
         <unit>
             <name>nightly-build-rultor</name>
+            <face>some text to show</face>
             <links>
                 <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
                 <link href="/xml/pulses.xml" rel="pulses" type="text/xml"/>

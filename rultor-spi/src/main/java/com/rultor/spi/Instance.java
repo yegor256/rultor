@@ -40,7 +40,7 @@ import javax.validation.constraints.NotNull;
  * @since 1.0
  */
 @Immutable
-public interface Instance {
+public interface Instance extends Visible {
 
     /**
      * Pulse.

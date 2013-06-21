@@ -31,6 +31,7 @@ package com.rultor.ci;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import com.rultor.board.Billboard;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
@@ -120,6 +121,18 @@ public final class Build implements Instance {
             );
             Pulse.Signal.stage("Announces failure through board");
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String face() {
+        return Logger.format(
+            "shell script '%[text]s' through '%s'",
+            this.script,
+            this.shells.face()
+        );
     }
 
 }

@@ -34,6 +34,9 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.auth.Identity;
+import com.rultor.spi.Repo;
+import com.rultor.spi.Unit;
+import java.util.Map;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
@@ -111,10 +114,11 @@ public final class IndexRs extends BaseRs {
      */
     private JaxbBundle mine() {
         return new JaxbBundle("units").add(
-            new JaxbBundle.Group<String>(this.user().units().keySet()) {
+            new JaxbBundle.Group<Map.Entry<String, Unit>>(
+                this.user().units().entrySet()) {
                 @Override
-                public JaxbBundle bundle(final String name) {
-                    return IndexRs.this.unit(name);
+                public JaxbBundle bundle(final Map.Entry<String, Unit> entry) {
+                    return IndexRs.this.unit(entry.getKey(), entry.getValue());
                 }
             }
         );
@@ -123,11 +127,20 @@ public final class IndexRs extends BaseRs {
     /**
      * Convert unit to JaxbBundle.
      * @param name Name of it
+     * @param unit The unit
      * @return Bundle
      */
-    private JaxbBundle unit(final String name) {
+    private JaxbBundle unit(final String name, final Unit unit) {
+        String face;
+        try {
+            face = this.repo().make(this.user(), unit.spec()).face();
+        } catch (Repo.InstantiationException ex) {
+            face = ex.getMessage();
+        }
         return new JaxbBundle("unit")
             .add("name", name)
+            .up()
+            .add("face", face)
             .up()
             .link(
                 new Link(

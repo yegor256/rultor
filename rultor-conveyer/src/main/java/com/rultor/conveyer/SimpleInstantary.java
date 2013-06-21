@@ -149,6 +149,13 @@ final class SimpleInstantary implements Instantary {
         public void pulse(final Work work) throws Exception {
             this.origin.pulse(work);
         }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String face() {
+            return this.origin.face();
+        }
     }
 
 }

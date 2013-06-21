@@ -27,63 +27,21 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
-
-import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Instance;
-import com.rultor.spi.Visible;
-import com.rultor.spi.Work;
-import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+package com.rultor.spi;
 
 /**
- * Runtime instance.
+ * Object that can be visible to end-user.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@ToString
-@EqualsAndHashCode
-@Loggable(Loggable.DEBUG)
-final class RuntimeInstance implements Instance {
+public interface Visible {
 
     /**
-     * Object to pulse.
+     * Show its face.
+     * @return String Face of it
      */
-    private final transient Object object;
-
-    /**
-     * Public ctor.
-     * @param obj Object
-     */
-    protected RuntimeInstance(final Object obj) {
-        this.object = obj;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void pulse(@NotNull final Work work)
-        throws Exception {
-        if (this.object instanceof Instance) {
-            Instance.class.cast(this.object).pulse(work);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String face() {
-        final StringBuilder text = new StringBuilder();
-        text.append(this.object.getClass().getName());
-        if (this.object instanceof Visible) {
-            text.append(": ").append(Visible.class.cast(this.object).face());
-        }
-        return text.toString();
-    }
+    String face();
 
 }

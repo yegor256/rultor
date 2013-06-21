@@ -29,12 +29,11 @@
  */
 package com.rultor.base;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Work;
 import java.util.Calendar;
@@ -56,7 +55,7 @@ import lombok.ToString;
 @Immutable
 @EqualsAndHashCode(of = { "origin", "gates" })
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({ "PMD.TooManyMethods", "PMD.CyclomaticComplexity" })
 public final class Crontab implements Instance {
 
     /**
@@ -82,7 +81,7 @@ public final class Crontab implements Instance {
     /**
      * All gates.
      */
-    private final transient Gate[] gates;
+    private final transient Crontab.Gate<Calendar>[] gates;
 
     /**
      * Public ctor.
@@ -99,10 +98,10 @@ public final class Crontab implements Instance {
      */
     @Override
     public void pulse(@NotNull final Work work) throws Exception {
-        final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        final Calendar today = Crontab.today();
         boolean pass = true;
-        for (Gate gate : this.gates) {
-            if (!gate.pass(cal)) {
+        for (Crontab.Gate<Calendar> gate : this.gates) {
+            if (!gate.pass(today)) {
                 pass = false;
                 break;
             }
@@ -113,16 +112,35 @@ public final class Crontab implements Instance {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String face() {
+        final Calendar today = Crontab.today();
+        long lag = 0;
+        for (Crontab.Gate<Calendar> gate : this.gates) {
+            lag += gate.lag(today);
+        }
+        return Logger.format("%s in %[ms]s", this.origin.face(), lag);
+    }
+
+    /**
      * Gate condition.
      */
     @Immutable
-    private interface Gate {
+    private interface Gate<T> {
         /**
          * Pass or not.
          * @param calendar Calendar to check
          * @return TRUE if it's a good time to go through
          */
-        boolean pass(Calendar calendar);
+        boolean pass(T calendar);
+        /**
+         * How many milliseconds to wait before the next opportunity.
+         * @param calendar Calendar to check
+         * @return Lag in milliseconds
+         */
+        long lag(T calendar);
     }
 
     /**
@@ -132,11 +150,12 @@ public final class Crontab implements Instance {
     @Immutable
     @EqualsAndHashCode(of = "alternatives")
     @Loggable(Loggable.DEBUG)
-    private abstract static class AbstractGate implements Crontab.Gate {
+    private abstract static class AbstractGate
+        implements Crontab.Gate<Calendar> {
         /**
          * All alternatives.
          */
-        private final transient Predicate<Integer>[] alternatives;
+        private final transient Crontab.Gate<Integer>[] alternatives;
         /**
          * Public ctor.
          * @param text Text spec
@@ -145,7 +164,7 @@ public final class Crontab implements Instance {
         protected AbstractGate(final String text) {
             final String[] parts = text.split(",");
             this.alternatives =
-                (Predicate<Integer>[]) new Predicate<?>[parts.length];
+                (Crontab.Gate<Integer>[]) new Crontab.Gate<?>[parts.length];
             for (int idx = 0; idx < parts.length; ++idx) {
                 this.alternatives[idx] = Crontab.AbstractGate.parse(parts[idx]);
             }
@@ -157,8 +176,8 @@ public final class Crontab implements Instance {
          */
         protected boolean matches(final int input) {
             boolean matches = false;
-            for (Predicate<Integer> alternative : this.alternatives) {
-                if (alternative.apply(input)) {
+            for (Crontab.Gate<Integer> alternative : this.alternatives) {
+                if (alternative.pass(input)) {
                     matches = true;
                     break;
                 }
@@ -166,38 +185,81 @@ public final class Crontab implements Instance {
             return matches;
         }
         /**
+         * Calculate the lag.
+         * @param input Input number
+         * @return Lag in milliseconds
+         */
+        protected long lag(final int input) {
+            long lag = Long.MAX_VALUE;
+            for (Crontab.Gate<Integer> alternative : this.alternatives) {
+                lag = Math.min(lag, alternative.lag(input));
+            }
+            return lag;
+        }
+        /**
          * Parse text into alternative.
          * @param part The text to parse
-         * @return Predicate
+         * @return Crontab.Gate
          */
-        private static Predicate<Integer> parse(final String part) {
-            final Predicate<Integer> alternative;
+        private static Crontab.Gate<Integer> parse(final String part) {
+            final Crontab.Gate<Integer> alternative;
             if (part.matches("\\d+")) {
-                alternative = new Predicate<Integer>() {
+                alternative = new Crontab.Gate<Integer>() {
                     @Override
-                    public boolean apply(final Integer num) {
+                    public boolean pass(final Integer num) {
                         return num.equals(Integer.valueOf(part));
+                    }
+                    @Override
+                    public long lag(final Integer num) {
+                        return Math.abs(num - Integer.valueOf(part));
                     }
                 };
             } else if (part.matches("\\d+-\\d+")) {
                 final String[] numbers = part.split("-");
-                alternative = new Predicate<Integer>() {
+                final int left = Integer.valueOf(numbers[0]);
+                final int right = Integer.valueOf(numbers[1]);
+                alternative = new Crontab.Gate<Integer>() {
                     @Override
-                    public boolean apply(final Integer num) {
-                        return num >= Integer.valueOf(numbers[0])
-                            || num <= Integer.valueOf(numbers[1]);
+                    public boolean pass(final Integer num) {
+                        return num >= left || num <= right;
+                    }
+                    @Override
+                    public long lag(final Integer num) {
+                        long lag = 0;
+                        if (!this.pass(num)) {
+                            lag = Math.abs(num - left);
+                        }
+                        return lag;
                     }
                 };
             } else if (part.matches("\\*/\\d+")) {
                 final String[] sectors = part.split("/");
-                alternative = new Predicate<Integer>() {
+                final int div = Integer.valueOf(sectors[1]);
+                alternative = new Crontab.Gate<Integer>() {
                     @Override
-                    public boolean apply(final Integer num) {
-                        return num / Integer.valueOf(sectors[1]) == 0;
+                    public boolean pass(final Integer num) {
+                        return num / div == 0;
+                    }
+                    @Override
+                    public long lag(final Integer num) {
+                        long lag = 0;
+                        if (!this.pass(num)) {
+                            lag = Math.abs(num - div);
+                        }
+                        return lag;
                     }
                 };
             } else if ("*".equals(part)) {
-                alternative = Predicates.<Integer>alwaysTrue();
+                alternative = new Crontab.Gate<Integer>() {
+                    @Override
+                    public boolean pass(final Integer num) {
+                        return true;
+                    }
+                    @Override
+                    public long lag(final Integer num) {
+                        return 0L;
+                    }
+                };
             } else {
                 throw new IllegalArgumentException(
                     String.format("invalid crontab sector '%s'", part)
@@ -212,7 +274,8 @@ public final class Crontab implements Instance {
      * @param text Text to split
      * @return Five parts, numbers
      */
-    private static Crontab.Gate[] split(final String text) {
+    @SuppressWarnings("unchecked")
+    private static Crontab.Gate<Calendar>[] split(final String text) {
         String src = text;
         if (Crontab.DEFS.containsKey(src)) {
             src = Crontab.DEFS.get(src);
@@ -223,17 +286,25 @@ public final class Crontab implements Instance {
                 String.format("invalid crontab definition '%s'", text)
             );
         }
-        return new Crontab.Gate[] {
+        return (Crontab.Gate<Calendar>[]) new Crontab.Gate<?>[] {
             new Crontab.AbstractGate(parts[0]) {
                 @Override
                 public boolean pass(final Calendar calendar) {
                     return this.matches(calendar.get(Calendar.MINUTE));
+                }
+                @Override
+                public long lag(final Calendar calendar) {
+                    return this.lag(calendar.get(Calendar.MINUTE));
                 }
             },
             new Crontab.AbstractGate(parts[1]) {
                 @Override
                 public boolean pass(final Calendar calendar) {
                     return this.matches(calendar.get(Calendar.HOUR_OF_DAY));
+                }
+                @Override
+                public long lag(final Calendar calendar) {
+                    return this.lag(calendar.get(Calendar.HOUR_OF_DAY));
                 }
             },
             new Crontab.AbstractGate(parts[2]) {
@@ -243,11 +314,19 @@ public final class Crontab implements Instance {
                         calendar.get(Calendar.DAY_OF_MONTH) + 1
                     );
                 }
+                @Override
+                public long lag(final Calendar calendar) {
+                    return this.lag(calendar.get(Calendar.DAY_OF_MONTH) + 1);
+                }
             },
             new Crontab.AbstractGate(parts[Tv.THREE]) {
                 @Override
                 public boolean pass(final Calendar calendar) {
                     return this.matches(calendar.get(Calendar.MONTH) + 1);
+                }
+                @Override
+                public long lag(final Calendar calendar) {
+                    return this.lag(calendar.get(Calendar.MONTH) + 1);
                 }
             },
             new Crontab.AbstractGate(parts[Tv.FOUR]) {
@@ -255,8 +334,20 @@ public final class Crontab implements Instance {
                 public boolean pass(final Calendar calendar) {
                     return this.matches(calendar.get(Calendar.DAY_OF_WEEK));
                 }
+                @Override
+                public long lag(final Calendar calendar) {
+                    return this.lag(calendar.get(Calendar.DAY_OF_WEEK));
+                }
             },
         };
+    }
+
+    /**
+     * Today moment.
+     * @return Calendar or today
+     */
+    private static Calendar today() {
+        return Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     }
 
 }

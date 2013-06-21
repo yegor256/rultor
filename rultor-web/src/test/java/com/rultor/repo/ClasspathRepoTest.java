@@ -156,6 +156,13 @@ public final class ClasspathRepoTest {
         public void pulse(final Work work) {
             ClasspathRepoTest.Foo.COUNTER.set(-1);
         }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String face() {
+            return ClasspathRepoTest.Foo.COUNTER.toString();
+        }
     }
 
 }

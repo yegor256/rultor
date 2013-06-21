@@ -151,4 +151,16 @@ public final class EC2 implements Environments {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String face() {
+        return Logger.format(
+            "EC2 %s instance with '%s' AMI",
+            this.type,
+            this.ami
+        );
+    }
+
 }

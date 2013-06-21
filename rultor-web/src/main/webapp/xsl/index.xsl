@@ -94,6 +94,9 @@
                         <i class="icon-remove"><xsl:comment>remove</xsl:comment></i>
                     </a>
                 </li>
+                <li>
+                    <xsl:value-of select="face"/>
+                </li>
             </ul>
         </li>
     </xsl:template>

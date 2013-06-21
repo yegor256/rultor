@@ -30,6 +30,7 @@
 package com.rultor.base;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Work;
 import java.util.Set;
@@ -90,6 +91,18 @@ public final class Parallel implements Instance {
         } finally {
             this.active.remove(Thread.currentThread());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String face() {
+        return Logger.format(
+            "%s in %d thread(s)",
+            this.origin.face(),
+            this.maximum
+        );
     }
 
 }

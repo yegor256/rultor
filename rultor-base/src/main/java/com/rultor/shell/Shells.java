@@ -30,6 +30,7 @@
 package com.rultor.shell;
 
 import com.jcabi.aspects.Immutable;
+import com.rultor.spi.Visible;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
 
@@ -41,7 +42,7 @@ import javax.validation.constraints.NotNull;
  * @since 1.0
  */
 @Immutable
-public interface Shells {
+public interface Shells extends Visible {
 
     /**
      * Get new shell.
