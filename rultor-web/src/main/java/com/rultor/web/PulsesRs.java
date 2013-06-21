@@ -94,7 +94,7 @@ public final class PulsesRs extends BaseRs {
     @QueryParam(PulsesRs.QUERY_SINCE)
     public void setSince(final String time) {
         if (time == null) {
-            this.since = new Date(Long.MAX_VALUE);
+            this.since = new Date(0);
         } else {
             this.since = new Date(Long.parseLong(time));
         }
