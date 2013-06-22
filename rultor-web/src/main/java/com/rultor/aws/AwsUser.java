@@ -126,7 +126,10 @@ final class AwsUser implements User {
     @Override
     @NotNull
     @Cacheable.FlushAfter
-    public Unit create(@NotNull @Pattern(regexp = "[-a-z]+") final String unt) {
+    public Unit create(@NotNull @Pattern(
+        regexp = "[-a-z0-9]+",
+        message = "Only numbers, letters, and dashes are allowed")
+        final String unt) {
         if (this.units().containsKey(unt)) {
             throw new IllegalArgumentException(
                 String.format("Unit '%s' already exists", unt)

@@ -130,14 +130,16 @@ final class Protocol {
             }
             if (Pulse.Signal.exists(line)) {
                 final Pulse.Signal signal = Pulse.Signal.valueOf(line);
-                stages.add(
-                    new Stage.Simple(
-                        Stage.Result.SUCCESS,
-                        0,
-                        0,
-                        signal.value()
-                    )
-                );
+                if (signal.key().equals(Pulse.Signal.STAGE)) {
+                    stages.add(
+                        new Stage.Simple(
+                            Stage.Result.SUCCESS,
+                            0,
+                            0,
+                            signal.value()
+                        )
+                    );
+                }
             }
         }
         return Collections.unmodifiableCollection(stages);

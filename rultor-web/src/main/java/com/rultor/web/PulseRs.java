@@ -31,8 +31,10 @@ package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Stage;
 import com.rultor.spi.Unit;
 import java.util.Date;
 import java.util.logging.Level;
@@ -46,6 +48,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
  * Single pulse.
@@ -122,6 +125,24 @@ public final class PulseRs extends BaseRs {
                     this.pulse().spec().asText()
                 )
             )
+            .append(
+                new JaxbBundle(
+                    "date",
+                    DateFormatUtils.formatUTC(
+                        this.date, "yyyy-MM-dd'T'HH:mm'Z'"
+                    )
+                )
+            )
+            .append(
+                new JaxbBundle("stages").add(
+                    new JaxbBundle.Group<Stage>(this.pulse().stages()) {
+                        @Override
+                        public JaxbBundle bundle(final Stage stage) {
+                            return PulseRs.this.stage(stage);
+                        }
+                    }
+                )
+            )
             .render()
             .build();
     }
@@ -177,6 +198,32 @@ public final class PulseRs extends BaseRs {
             );
         }
         return pulse;
+    }
+
+    /**
+     * Convert stage to JaxbBundle.
+     * @param stage Stage to convert
+     * @return Bundle
+     */
+    private JaxbBundle stage(final Stage stage) {
+        return new JaxbBundle("stage")
+            .add("result", stage.result().toString())
+            .up()
+            .add("msec", Long.toString(stage.stop() - stage.start()))
+            .up()
+            .add("output", stage.output())
+            .up()
+            .link(
+                new Link(
+                    "log",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(PulseRs.class)
+                        .queryParam(PulseRs.QUERY_START, stage.start())
+                        .queryParam(PulseRs.QUERY_STOP, stage.stop())
+                        .build(this.name, this.date.getTime())
+                )
+            );
     }
 
 }

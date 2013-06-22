@@ -38,10 +38,15 @@
     </xsl:template>
     <xsl:template name="content">
         <h1>
-            <xsl:value-of select="/page/unit"/>
-            <xsl:text>/</xsl:text>
             <xsl:value-of select="/page/pulse"/>
         </h1>
+        <p>
+            <xsl:text>Unit: </xsl:text>
+            <xsl:value-of select="/page/unit"/>
+            <br/>
+            <xsl:text>Date: </xsl:text>
+            <xsl:value-of select="/page/date"/>
+        </p>
         <div class="pulse-details">
             <xsl:if test="count(stages/stage) &gt; 1">
                 <table class="table table-condensed">
