@@ -37,8 +37,8 @@ import com.rultor.spi.Spec;
 import com.rultor.spi.Stage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -86,7 +86,11 @@ final class S3Pulse implements Pulse {
      */
     @Override
     public Collection<Stage> stages() {
-        return new ArrayList<Stage>(0);
+        try {
+            return Collections.unmodifiableCollection(this.protocol.stages());
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**
@@ -97,7 +101,7 @@ final class S3Pulse implements Pulse {
     public Spec spec() {
         try {
             return new Spec.Simple(
-                this.protocol.find("spec", "java.lang.Long(0)")
+                this.protocol.find(Pulse.Signal.SPEC, "java.lang.Long(0)")
             );
         } catch (IOException ex) {
             throw new IllegalStateException(ex);

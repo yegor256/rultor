@@ -47,6 +47,7 @@
     <millis>16</millis>
     <unit>nightly-build</unit>
     <pulse>464738182</pulse>
+    <spec>something...</spec>
     <stages>
         <stage>
             <result>SUCCESS</result>

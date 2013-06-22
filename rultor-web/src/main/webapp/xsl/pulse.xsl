@@ -56,6 +56,7 @@
                 </table>
             </xsl:if>
         </div>
+        <pre><xsl:value-of select="spec"/></pre>
     </xsl:template>
     <xsl:template match="stage">
         <tr>

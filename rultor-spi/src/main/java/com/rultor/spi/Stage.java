@@ -30,6 +30,9 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Stage of a pulse.
@@ -86,5 +89,74 @@ public interface Stage {
      * @return Output
      */
     String output();
+
+    /**
+     * Simple implementation.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = { "rslt", "begin", "end", "text" })
+    @Loggable(Loggable.DEBUG)
+    final class Simple implements Stage {
+        /**
+         * Result.
+         */
+        private final transient Result rslt;
+        /**
+         * Start moment, in milliseconds from start.
+         */
+        private final transient long begin;
+        /**
+         * Stop moment, in milliseconds from start.
+         */
+        private final transient long end;
+        /**
+         * Result.
+         */
+        private final transient String text;
+        /**
+         * Public ctor.
+         * @param result Result
+         * @param start Start moment, in milliseconds from start
+         * @param stop Stop moment, in milliseconds from start
+         * @param output Text output
+         * @checkstyle ParameterNumber (5 lines)
+         */
+        public Simple(final Stage.Result result, final long start,
+            final long stop, final String output) {
+            this.rslt = result;
+            this.begin = start;
+            this.end = stop;
+            this.text = output;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Result result() {
+            return this.rslt;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public long start() {
+            return this.begin;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public long stop() {
+            return this.end;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String output() {
+            return this.text;
+        }
+    }
 
 }

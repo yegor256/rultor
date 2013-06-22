@@ -34,7 +34,6 @@ import com.jcabi.aspects.Loggable;
 import java.io.File;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.Validate;
@@ -47,7 +46,6 @@ import org.apache.commons.lang3.Validate;
  * @since 1.0
  */
 @Immutable
-@ToString
 @EqualsAndHashCode(of = "text")
 @Loggable(Loggable.DEBUG)
 public final class PrivateKey {
@@ -63,6 +61,14 @@ public final class PrivateKey {
      */
     public PrivateKey(final String txt) {
         this.text = PrivateKey.normalize(txt);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format("%d characters", this.text.length());
     }
 
     /**

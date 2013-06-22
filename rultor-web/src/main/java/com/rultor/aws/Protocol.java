@@ -32,10 +32,14 @@ package com.rultor.aws;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Stage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -107,6 +111,36 @@ final class Protocol {
             value = def;
         }
         return value;
+    }
+
+    /**
+     * Find all stages.
+     * @return Stages found
+     * @throws IOException If IO problem inside
+     */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    public Collection<Stage> stages() throws IOException {
+        final Collection<Stage> stages = new LinkedList<Stage>();
+        final BufferedReader reader =
+            new BufferedReader(new InputStreamReader(this.src.stream()));
+        while (true) {
+            final String line = reader.readLine();
+            if (line == null) {
+                break;
+            }
+            if (Pulse.Signal.exists(line)) {
+                final Pulse.Signal signal = Pulse.Signal.valueOf(line);
+                stages.add(
+                    new Stage.Simple(
+                        Stage.Result.SUCCESS,
+                        0,
+                        0,
+                        signal.value()
+                    )
+                );
+            }
+        }
+        return Collections.unmodifiableCollection(stages);
     }
 
 }

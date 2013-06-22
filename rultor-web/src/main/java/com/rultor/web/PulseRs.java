@@ -116,6 +116,12 @@ public final class PulseRs extends BaseRs {
                     Long.toString(this.date.getTime())
                 )
             )
+            .append(
+                new JaxbBundle(
+                    "spec",
+                    this.pulse().spec().asText()
+                )
+            )
             .render()
             .build();
     }
@@ -159,8 +165,14 @@ public final class PulseRs extends BaseRs {
         final Pulse pulse = unit.pulses().get(this.date);
         if (pulse == null) {
             throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                String.format("Pulse '%d' doesn't exist", this.date.getTime()),
+                this.uriInfo().getBaseUriBuilder()
+                    .clone()
+                    .path(PulsesRs.class)
+                    .build(this.name),
+                String.format(
+                    "Pulse '%d' doesn't exist any more",
+                    this.date.getTime()
+                ),
                 Level.SEVERE
             );
         }

@@ -54,6 +54,10 @@ public final class ConveyerTest {
             line,
             Matchers.hasToString(Matchers.endsWith(" INFO test msg"))
         );
+        MatcherAssert.assertThat(
+            line.toString().matches("\\d{2}:\\d{2}:\\d{2} INFO test msg"),
+            Matchers.is(true)
+        );
     }
 
 }

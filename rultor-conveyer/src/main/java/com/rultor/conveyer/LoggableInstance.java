@@ -33,7 +33,6 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Pulse;
-import com.rultor.spi.Repo;
 import com.rultor.spi.Work;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -77,6 +76,7 @@ final class LoggableInstance implements Instance {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void pulse(@NotNull final Work work) throws Exception {
         final Thread thread = Thread.currentThread();
         this.appender.register(thread, work);
@@ -88,8 +88,13 @@ final class LoggableInstance implements Instance {
                 ).toString()
             );
             this.origin.pulse(work);
-        } catch (Repo.InstantiationException ex) {
-            Logger.error(this, "%[exception]s", ex);
+            // @checkstyle IllegalCatch (1 line)
+        } catch (Exception ex) {
+            Logger.info(
+                this,
+                new Pulse.Signal(Pulse.Signal.STAGE, "FAILURE").toString()
+            );
+            throw ex;
         } finally {
             this.appender.unregister(thread);
         }

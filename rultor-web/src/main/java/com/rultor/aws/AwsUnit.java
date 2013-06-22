@@ -200,7 +200,7 @@ final class AwsUnit implements Unit {
         final AmazonS3 aws = this.client.get();
         final ListObjectsRequest request = new ListObjectsRequest()
             .withBucketName(this.client.bucket())
-            .withMaxKeys(Tv.TWENTY)
+            .withMaxKeys(Tv.TEN)
             .withPrefix(String.format("%s/%s/", this.owner, this.name));
         final ObjectListing listing = aws.listObjects(request);
         final Collection<Key> keys = new LinkedList<Key>();

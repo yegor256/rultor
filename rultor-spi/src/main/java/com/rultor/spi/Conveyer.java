@@ -106,7 +106,7 @@ public interface Conveyer extends Closeable, Metricable {
             @Override
             public String toString() {
                 return String.format(
-                    "%tM:%<tS %s %s %s",
+                    "%tH:%<tM:%<tS %s %s %s",
                     new Date(),
                     this.lvl,
                     this.who,
