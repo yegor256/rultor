@@ -170,7 +170,7 @@ public interface Pulse {
             }
             return new Pulse.Signal(
                 mtr.group(2),
-                StringEscapeUtils.unescapeJava(mtr.group(Tv.THREE))
+                StringEscapeUtils.unescapeJava(mtr.group(Tv.THREE).trim())
             );
         }
         /**

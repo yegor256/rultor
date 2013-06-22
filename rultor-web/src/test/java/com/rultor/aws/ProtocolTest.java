@@ -30,6 +30,7 @@
 package com.rultor.aws;
 
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Stage;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
@@ -41,6 +42,7 @@ import org.junit.Test;
  * Test case for {@link Protocol}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 public final class ProtocolTest {
 
@@ -66,6 +68,33 @@ public final class ProtocolTest {
                 }
             ).find(key, ""),
             Matchers.equalTo(value)
+        );
+    }
+
+    /**
+     * Protocol can find stages.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void findsStages() throws Exception {
+        // @checkstyle StringLiteralsConcatenation (4 lines)
+        final String text = "11:51 INFO some text \u20ac\n"
+            + "11:55 INFO " + new Pulse.Signal(Pulse.Signal.STAGE, "a ") + "\n"
+            + "11:57 DEBUG some other text line\n"
+            + "11:55 DEBUG " + new Pulse.Signal(Pulse.Signal.STAGE, "b ");
+        MatcherAssert.assertThat(
+            new Protocol(
+                new Protocol.Source() {
+                    @Override
+                    public InputStream stream() throws IOException {
+                        return IOUtils.toInputStream(text);
+                    }
+                }
+            ).stages(),
+            Matchers.<Stage>hasItems(
+                new Stage.Simple(Stage.Result.SUCCESS, 0, 0, "a"),
+                new Stage.Simple(Stage.Result.SUCCESS, 0, 0, "b")
+            )
         );
     }
 
