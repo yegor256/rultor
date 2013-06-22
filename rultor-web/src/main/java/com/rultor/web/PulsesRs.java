@@ -39,6 +39,7 @@ import com.rultor.spi.Unit;
 import java.util.Date;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -94,7 +95,7 @@ public final class PulsesRs extends BaseRs {
     @QueryParam(PulsesRs.QUERY_SINCE)
     public void setSince(final String time) {
         if (time == null) {
-            this.since = new Date(0);
+            this.since = new Date(Long.MAX_VALUE);
         } else {
             this.since = new Date(Long.parseLong(time));
         }
@@ -123,7 +124,15 @@ public final class PulsesRs extends BaseRs {
      * @return The unit
      */
     private Unit unit() {
-        return this.user().units().get(this.name);
+        final Unit unit = this.user().units().get(this.name);
+        if (unit == null) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                String.format("Unit '%s' doesn't exist", this.name),
+                Level.SEVERE
+            );
+        }
+        return unit;
     }
 
     /**

@@ -137,7 +137,7 @@ final class AwsUnit implements Unit {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public SortedMap<Date, Pulse> pulses() {
         final SortedMap<Date, Pulse> pulses =
-            new ConcurrentSkipListMap<Date, Pulse>();
+            new ConcurrentSkipListMap<Date, Pulse>(Collections.reverseOrder());
         final Collection<Key> keys = new TreeSet<Key>();
         keys.addAll(this.fetch());
         keys.addAll(Caches.INSTANCE.keys(this.owner, this.name));

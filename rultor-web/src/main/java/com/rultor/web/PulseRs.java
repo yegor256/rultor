@@ -33,7 +33,9 @@ import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Unit;
 import java.util.Date;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -146,7 +148,23 @@ public final class PulseRs extends BaseRs {
      * @return The pulse
      */
     private Pulse pulse() {
-        return this.user().units().get(this.name).pulses().get(this.date);
+        final Unit unit = this.user().units().get(this.name);
+        if (unit == null) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                String.format("Unit '%s' doesn't exist", this.name),
+                Level.SEVERE
+            );
+        }
+        final Pulse pulse = unit.pulses().get(this.date);
+        if (pulse == null) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                String.format("Pulse '%d' doesn't exist", this.date.getTime()),
+                Level.SEVERE
+            );
+        }
+        return pulse;
     }
 
 }
