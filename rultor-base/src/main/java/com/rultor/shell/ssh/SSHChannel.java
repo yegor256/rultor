@@ -138,7 +138,8 @@ public final class SSHChannel implements Shell {
         @NotNull final OutputStream stderr) throws IOException {
         try {
             final Session session = this.session();
-            session.setTimeout(0);
+            session.setServerAliveInterval((int) TimeUnit.MINUTES.toMillis(1));
+            session.setServerAliveCountMax(Tv.TEN);
             this.connect(session);
             try {
                 final ChannelExec channel = ChannelExec.class.cast(
@@ -221,9 +222,6 @@ public final class SSHChannel implements Shell {
      */
     private Session session() throws IOException {
         try {
-            JSch.setConfig("BatchMode", "yes");
-            JSch.setConfig("ConnectionAttempts", "5");
-            JSch.setConfig("ConnectTimeout", "86400");
             JSch.setConfig("StrictHostKeyChecking", "no");
             JSch.setLogger(SSHChannel.LOGGER);
             final JSch jsch = new JSch();
