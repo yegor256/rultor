@@ -88,12 +88,7 @@ public final class S3LogITCase {
         final String msg = "some test log message \u20ac";
         new S3Log(this.client).push(
             work,
-            new Conveyer.Line.Simple(
-                0,
-                this.getClass().getName(),
-                Level.INFO,
-                msg
-            )
+            new Conveyer.Line.Simple(0, Level.INFO, msg)
         );
         final Region region = Mockito.mock(Region.class);
         final SortedMap<Date, Pulse> pulses =

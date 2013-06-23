@@ -60,12 +60,7 @@ public final class S3LogTest {
         final S3Log log = new S3Log(client);
         log.push(
             work,
-            new Conveyer.Line.Simple(
-                0,
-                this.getClass().getName(),
-                Level.INFO,
-                msg
-            )
+            new Conveyer.Line.Simple(0, Level.INFO, msg)
         );
     }
 

@@ -66,7 +66,7 @@ public final class CacheTest {
         Mockito.doReturn(aws).when(client).get();
         final Key key = new Key(client, new URN("urn:facebook:5"), "test", 1);
         final Cache cache = new Cache(key);
-        cache.append(new Conveyer.Line.Simple(1, "foo", Level.INFO, "msg"));
+        cache.append(new Conveyer.Line.Simple(1, Level.INFO, "msg"));
         cache.flush();
         MatcherAssert.assertThat(
             IOUtils.toString(cache.read(), CharEncoding.UTF_8),

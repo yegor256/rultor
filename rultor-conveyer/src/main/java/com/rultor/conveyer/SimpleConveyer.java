@@ -45,6 +45,8 @@ import java.io.Closeable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicLong;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.log4j.Level;
@@ -57,6 +59,7 @@ import org.apache.log4j.PatternLayout;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Loggable(Loggable.INFO)
 @ToString
@@ -109,7 +112,18 @@ public final class SimpleConveyer
      */
     private final transient ExecutorService executor =
         Executors.newCachedThreadPool(
-            new VerboseThreads(SimpleConveyer.class)
+            new ThreadFactory() {
+                private final transient AtomicLong group = new AtomicLong();
+                @Override
+                public Thread newThread(final Runnable runnable) {
+                    return new Thread(
+                        new ThreadGroup(
+                            Long.toString(this.group.incrementAndGet())
+                        ),
+                        runnable
+                    );
+                }
+            }
         );
 
     /**

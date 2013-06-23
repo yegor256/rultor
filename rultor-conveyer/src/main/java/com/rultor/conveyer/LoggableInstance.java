@@ -76,8 +76,7 @@ final class LoggableInstance implements Instance {
     @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void pulse(@NotNull final Work work) throws Exception {
-        final Thread thread = Thread.currentThread();
-        this.appender.register(thread, work);
+        this.appender.register(work);
         try {
             Logger.info(
                 this,
@@ -94,7 +93,7 @@ final class LoggableInstance implements Instance {
             );
             throw ex;
         } finally {
-            this.appender.unregister(thread);
+            this.appender.unregister();
         }
     }
 

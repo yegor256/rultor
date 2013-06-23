@@ -79,7 +79,7 @@ public interface Work {
      */
     @Loggable(Loggable.DEBUG)
     @ToString
-    @EqualsAndHashCode(of = { "urn", "label", "desc" })
+    @EqualsAndHashCode(of = { "time", "urn", "label", "desc" })
     @Immutable
     final class Simple implements Work {
         /**

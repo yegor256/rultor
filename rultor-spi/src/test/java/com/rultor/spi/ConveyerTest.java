@@ -52,11 +52,11 @@ public final class ConveyerTest {
     public void makesString() throws Exception {
         final long msec = Math.abs(new Random().nextLong());
         final Conveyer.Line line = new Conveyer.Line.Simple(
-            msec, "test", Level.INFO, "msg"
+            msec, Level.INFO, "msg"
         );
         MatcherAssert.assertThat(
             line,
-            Matchers.hasToString(Matchers.endsWith(" INFO test msg"))
+            Matchers.hasToString(Matchers.endsWith(" INFO msg"))
         );
         MatcherAssert.assertThat(
             Conveyer.Line.Simple.has(line.toString()),
@@ -85,7 +85,7 @@ public final class ConveyerTest {
                 .build();
         for (Map.Entry<Long, String> entry : map.entrySet()) {
             final Conveyer.Line line = new Conveyer.Line.Simple(
-                entry.getKey(), "foo", Level.INFO, "text msg"
+                entry.getKey(), Level.INFO, "text msg"
             );
             MatcherAssert.assertThat(
                 line.toString().trim(),

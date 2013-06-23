@@ -36,6 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Appender;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
@@ -76,8 +77,8 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
     /**
      * Destination of logs.
      */
-    private final transient ConcurrentMap<Thread, Work> works =
-        new ConcurrentHashMap<Thread, Work>(0);
+    private final transient ConcurrentMap<ThreadGroup, Work> works =
+        new ConcurrentHashMap<ThreadGroup, Work>(0);
 
     /**
      * Public ctor.
@@ -90,19 +91,29 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
 
     /**
      * Register this thread group for the given work.
-     * @param thread Thread
      * @param work The work to attach to
      */
-    public void register(final Thread thread, final Work work) {
-        this.works.put(thread, work);
+    public void register(final Work work) {
+        final ThreadGroup group = Thread.currentThread().getThreadGroup();
+        Validate.validState(
+            !this.works.containsKey(group),
+            "group %s is already registered to %s",
+            group, this.works.get(group)
+        );
+        this.works.put(group, work);
     }
 
     /**
-     * Unregister this thread group.
-     * @param thread Thread group
+     * Unregister the current thread group.
      */
-    public void unregister(final Thread thread) {
-        this.works.remove(thread);
+    public void unregister() {
+        final ThreadGroup group = Thread.currentThread().getThreadGroup();
+        Validate.validState(
+            this.works.containsKey(group),
+            "group %s is not registered",
+            group
+        );
+        this.works.remove(group);
     }
 
     /**
@@ -110,13 +121,13 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
      */
     @Override
     protected void append(final LoggingEvent event) {
-        final Work work = this.works.get(this.thread());
+        final ThreadGroup group = Thread.currentThread().getThreadGroup();
+        final Work work = this.works.get(group);
         if (work != null) {
             this.log.push(
                 work,
                 new Conveyer.Line.Simple(
                     System.currentTimeMillis() - work.started(),
-                    event.getLogger().getName(),
                     ConveyerAppender.LEVELS.get(event.getLevel()),
                     this.layout.format(event)
                 )
@@ -138,14 +149,6 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
     @Override
     public boolean requiresLayout() {
         return true;
-    }
-
-    /**
-     * Trying to detect the current thread.
-     * @return Thread
-     */
-    private Thread thread() {
-        return Thread.currentThread();
     }
 
 }

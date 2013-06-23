@@ -37,6 +37,7 @@ import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.spi.LoggingEvent;
+import org.hamcrest.CustomMatcher;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -44,7 +45,9 @@ import org.mockito.Mockito;
  * Test case for {@link ConveyerAppender}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
+@SuppressWarnings("PMD.DoNotUseThreads")
 public final class ConveyerAppenderTest {
 
     /**
@@ -57,23 +60,39 @@ public final class ConveyerAppenderTest {
         final ConveyerAppender appender = new ConveyerAppender(log);
         appender.setLayout(new PatternLayout("%m"));
         final Work work = new Work.Simple(
-            new URN("urn:facebook:1"), "test work", new Spec.Simple("a()")
+            new URN("urn:facebook:1"), "test", new Spec.Simple()
         );
-        appender.register(Thread.currentThread(), work);
+        appender.register(work);
         final String text = "test message to see in log";
-        appender.append(
-            new LoggingEvent(
-                "",
-                Logger.getLogger(this.getClass()),
-                org.apache.log4j.Level.INFO,
-                text,
-                new IllegalArgumentException()
-            )
-        );
+        final Thread publisher = new Thread() {
+            @Override
+            public void run() {
+                appender.append(
+                    new LoggingEvent(
+                        "",
+                        Logger.getLogger(this.getClass()),
+                        org.apache.log4j.Level.INFO,
+                        text,
+                        new IllegalArgumentException()
+                    )
+                );
+            }
+        };
+        publisher.start();
+        publisher.join();
+        appender.unregister();
         Mockito.verify(log).push(
-            work,
-            new Conveyer.Line.Simple(
-                0, this.getClass().getName(), Level.INFO, text
+            Mockito.eq(work),
+            Mockito.argThat(
+                new CustomMatcher<Conveyer.Line>("expected log line") {
+                    @Override
+                    public boolean matches(final Object obj) {
+                        final Conveyer.Line line =
+                            Conveyer.Line.class.cast(obj);
+                        return line.level().equals(Level.INFO)
+                            && line.toString().endsWith(text);
+                    }
+                }
             )
         );
     }

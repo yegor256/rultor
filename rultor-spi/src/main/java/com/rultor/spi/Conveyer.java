@@ -88,22 +88,18 @@ public interface Conveyer extends Closeable, Metricable {
          */
         @Immutable
         @Loggable(Loggable.DEBUG)
-        @EqualsAndHashCode(of = { "who", "lvl", "msg" })
+        @EqualsAndHashCode(of = { "when", "lvl", "msg" })
         final class Simple implements Conveyer.Line {
             /**
              * Pattern to parse it.
              */
             private static final Pattern PTN = Pattern.compile(
-                "\\s*(\\d+):(\\d{2})\\s+([A-Z]+) ([\\w\\$\\.]+) (.*)"
+                "\\s*(\\d+):(\\d{2})\\s+([A-Z]+) (.*)"
             );
             /**
              * Milliseconds from log start.
              */
             private final transient long when;
-            /**
-             * Logger.
-             */
-            private final transient String who;
             /**
              * Level.
              */
@@ -115,15 +111,13 @@ public interface Conveyer extends Closeable, Metricable {
             /**
              * Public ctor.
              * @param msec When it's happening, msec from start
-             * @param logger Logger
              * @param level The level
              * @param message The message
              * @checkstyle ParameterNumber (4 lines)
              */
-            public Simple(final long msec, final String logger,
-                final Level level, final String message) {
+            public Simple(final long msec, final Level level,
+                final String message) {
                 this.when = msec;
-                this.who = logger;
                 this.lvl = level.toString();
                 this.msg = message;
             }
@@ -133,12 +127,11 @@ public interface Conveyer extends Closeable, Metricable {
             @Override
             public String toString() {
                 return String.format(
-                    "%3d:%02d %s %s %s",
+                    "%3d:%02d %s %s",
                     this.when / DateUtils.MILLIS_PER_MINUTE,
                     (this.when % DateUtils.MILLIS_PER_MINUTE)
                         / DateUtils.MILLIS_PER_SECOND,
                     this.lvl,
-                    this.who,
                     this.msg
                 );
             }
@@ -179,9 +172,8 @@ public interface Conveyer extends Closeable, Metricable {
                     + Long.parseLong(
                         matcher.group(2)
                     ) * DateUtils.MILLIS_PER_SECOND,
-                    matcher.group(Tv.FOUR),
                     Level.parse(matcher.group(Tv.THREE)),
-                    matcher.group(Tv.FIVE)
+                    matcher.group(Tv.FOUR)
                 );
             }
         }
