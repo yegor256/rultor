@@ -160,8 +160,6 @@ public final class PulsesRs extends BaseRs {
      */
     private JaxbBundle pulse(final Date date, final Pulse pulse) {
         return new JaxbBundle("pulse")
-            .add("spec", pulse.spec().asText())
-            .up()
             .add(
                 "date",
                 DateFormatUtils.formatUTC(date, "yyyy-MM-dd'T'HH:mm'Z'")

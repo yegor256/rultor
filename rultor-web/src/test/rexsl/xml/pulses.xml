@@ -49,11 +49,6 @@
     <pulses>
         <pulse>
             <date>2012-08-23T13:25:33Z</date>
-            <spec>nightly-build(
-    git,
-    ec2,
-    "ant"
-)</spec>
             <stages>
                 <stage>
                     <result>SUCCESS</result>
@@ -93,7 +88,6 @@
         </pulse>
         <pulse>
             <date>2012-08-22T13:21:23Z</date>
-            <spec>nightly-build(git, ec2, "ant")</spec>
             <stages>
                 <stage>
                     <result>SUCCESS</result>
@@ -135,7 +129,6 @@
         </pulse>
         <pulse>
             <date>2012-08-21T13:27:09Z</date>
-            <spec>nightly-build(git, ec2, "ant")</spec>
             <stages>
                 <stage>
                     <result>SUCCESS</result>

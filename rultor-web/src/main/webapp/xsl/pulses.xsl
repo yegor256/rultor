@@ -96,7 +96,6 @@
                         </tbody>
                     </table>
                 </xsl:if>
-                <pre><xsl:value-of select="spec"/></pre>
             </div>
         </li>
     </xsl:template>
