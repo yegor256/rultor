@@ -51,6 +51,11 @@
                             <xsl:text> uneditable-input</xsl:text>
                         </xsl:if>
                     </xsl:attribute>
+                    <xsl:if test="/page/unit/name">
+                        <xsl:attribute name="disabled">
+                            <xsl:text>disabled</xsl:text>
+                        </xsl:attribute>
+                    </xsl:if>
                     <xsl:attribute name="value">
                         <xsl:value-of select="/page/unit/name"/>
                     </xsl:attribute>

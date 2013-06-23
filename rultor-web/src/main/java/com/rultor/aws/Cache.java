@@ -34,6 +34,7 @@ import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
+import com.google.common.io.CountingInputStream;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
@@ -123,26 +124,28 @@ final class Cache implements Flushable {
     @Override
     public void flush() throws IOException {
         synchronized (this.key) {
-            if (this.data != null && !this.lines.isEmpty()) {
+            if (!this.lines.isEmpty()) {
                 final S3Client client = this.key.client();
                 final AmazonS3 aws = client.get();
                 final ObjectMetadata meta = new ObjectMetadata();
                 meta.setContentEncoding(CharEncoding.UTF_8);
                 meta.setContentLength(this.data.size());
                 meta.setContentType(MediaType.TEXT_PLAIN);
+                final CountingInputStream stream =
+                    new CountingInputStream(this.read());
                 try {
                     if (this.valuable()) {
                         final PutObjectResult result = aws.putObject(
                             client.bucket(),
                             this.key.toString(),
-                            this.read(),
+                            stream,
                             meta
                         );
                         Logger.info(
                             this,
-                            "'%s' saved to S3, size=%d, etag=%s",
+                            "'%s' saved %d byte(s) to S3, etag=%s",
                             this.key,
-                            this.data.size(),
+                            stream.getCount(),
                             result.getETag()
                         );
                     }
