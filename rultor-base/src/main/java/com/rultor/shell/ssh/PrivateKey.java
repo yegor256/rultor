@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.io.File;
 import java.io.IOException;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.FileUtils;
@@ -59,7 +60,7 @@ public final class PrivateKey {
      * Public ctor.
      * @param txt Text
      */
-    public PrivateKey(final String txt) {
+    public PrivateKey(@NotNull final String txt) {
         this.text = PrivateKey.normalize(txt);
     }
 

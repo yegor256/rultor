@@ -103,6 +103,7 @@ public final class Build implements Instance {
         } finally {
             IOUtils.closeQuietly(shell);
         }
+        Logger.info(this, "shell closed with #%d exit code", code);
         if (code == 0) {
             this.board.announce(
                 String.format(

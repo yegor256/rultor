@@ -35,6 +35,7 @@ import com.rultor.env.Environments;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
 import java.io.IOException;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -70,8 +71,8 @@ public final class SSHServers implements Shells {
      * @param user Login
      * @param priv Private SSH key
      */
-    public SSHServers(final Environments environs, final String user,
-        final PrivateKey priv) {
+    public SSHServers(@NotNull final Environments environs,
+        @NotNull final String user, @NotNull final PrivateKey priv) {
         this.envs = environs;
         this.login = user;
         this.key = priv;

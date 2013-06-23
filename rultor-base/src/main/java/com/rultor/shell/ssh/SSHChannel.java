@@ -76,7 +76,7 @@ public final class SSHChannel implements Shell {
             }
             @Override
             public void log(final int level, final String msg) {
-                Logger.info(SSHChannel.class, "%s", msg);
+                Logger.info(SSHChannel.class, msg);
             }
         };
 
@@ -101,8 +101,8 @@ public final class SSHChannel implements Shell {
      * @param user Login
      * @param priv Private SSH key
      */
-    public SSHChannel(final InetAddress adr, final String user,
-        final PrivateKey priv) {
+    public SSHChannel(@NotNull final InetAddress adr,
+        @NotNull final String user, @NotNull final PrivateKey priv) {
         this.addr = adr.getHostAddress();
         Validate.matchesPattern(
             this.addr,
@@ -144,7 +144,7 @@ public final class SSHChannel implements Shell {
                     session.openChannel("exec")
                 );
                 channel.setErrStream(stderr, false);
-                channel.setOutputStream(stdout);
+                channel.setOutputStream(stdout, false);
                 channel.setInputStream(stdin);
                 channel.setCommand(command);
                 channel.connect();

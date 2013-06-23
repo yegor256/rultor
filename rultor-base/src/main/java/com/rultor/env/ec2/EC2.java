@@ -40,6 +40,7 @@ import com.rultor.env.Environment;
 import com.rultor.env.Environments;
 import java.io.IOException;
 import java.util.List;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -89,8 +90,9 @@ public final class EC2 implements Environments {
      * @param scrt AWS secret
      * @checkstyle ParameterNumber (5 lines)
      */
-    public EC2(final String tpe, final String image, final String grp,
-        final String par, final String akey, final String scrt) {
+    public EC2(@NotNull final String tpe, @NotNull final String image,
+        @NotNull final String grp, @NotNull final String par,
+        @NotNull final String akey, @NotNull final String scrt) {
         this(tpe, image, grp, par, new EC2Client.Simple(akey, scrt));
     }
 
@@ -103,8 +105,9 @@ public final class EC2 implements Environments {
      * @param clnt EC2 client
      * @checkstyle ParameterNumber (5 lines)
      */
-    public EC2(final String tpe, final String image, final String grp,
-        final String par, final EC2Client clnt) {
+    public EC2(@NotNull final String tpe, @NotNull final String image,
+        @NotNull final String grp, @NotNull final String par,
+        @NotNull final EC2Client clnt) {
         this.type = tpe;
         this.ami = image;
         this.group = grp;

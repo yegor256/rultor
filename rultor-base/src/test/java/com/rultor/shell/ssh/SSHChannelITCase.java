@@ -29,10 +29,13 @@
  */
 package com.rultor.shell.ssh;
 
+import com.jcabi.log.Logger;
 import java.io.ByteArrayOutputStream;
 import java.net.InetAddress;
+import java.util.logging.Level;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.TeeOutputStream;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -53,7 +56,7 @@ public final class SSHChannelITCase {
     @Test
     @org.junit.Ignore
     public void makesInstanceAndConnectsToIt() throws Exception {
-        final String host = "-- IP address goes here --";
+        final String host = "ec2-54-234-247-79.compute-1.amazonaws.com";
         final SSHChannel channel = new SSHChannel(
             InetAddress.getByName(host),
             "ubuntu",
@@ -64,8 +67,8 @@ public final class SSHChannelITCase {
         final int code = channel.exec(
             "#!/bin/bash\nfor i in '1 2 3 4'\ndo\necho $i\ndone",
             IOUtils.toInputStream(""),
-            stdout,
-            stderr
+            new TeeOutputStream(stdout, Logger.stream(Level.INFO, this)),
+            new TeeOutputStream(stderr, Logger.stream(Level.SEVERE, this))
         );
         MatcherAssert.assertThat(code, Matchers.equalTo(0));
         MatcherAssert.assertThat(
