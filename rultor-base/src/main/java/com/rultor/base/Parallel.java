@@ -86,6 +86,12 @@ public final class Parallel implements Instance {
         try {
             if (this.active.size() <= this.maximum) {
                 this.origin.pulse(work);
+            } else {
+                Logger.info(
+                    this,
+                    "%d thread(s) running already, which is the maximum",
+                    this.maximum
+                );
             }
         } finally {
             this.active.remove(Thread.currentThread());

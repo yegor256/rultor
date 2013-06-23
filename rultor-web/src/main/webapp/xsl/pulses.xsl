@@ -41,7 +41,7 @@
         <p>
             <xsl:text>
                 Very short and thus non-important pulses are
-                removed automatically in 20 minutes.
+                removed automatically in five minutes.
             </xsl:text>
         </p>
         <xsl:if test="pulses/pulse">

@@ -109,6 +109,12 @@ public final class Crontab implements Instance {
         }
         if (pass) {
             this.origin.pulse(work);
+        } else {
+            Logger.info(
+                this,
+                "Not the right moment, see you again in %[ms]s",
+                this.lag()
+            );
         }
     }
 
@@ -117,12 +123,20 @@ public final class Crontab implements Instance {
      */
     @Override
     public String toString() {
+        return Logger.format("%s in %[ms]s", this.origin, this.lag());
+    }
+
+    /**
+     * Lag in msec.
+     * @return Msec
+     */
+    private long lag() {
         final Calendar today = Crontab.today();
         long lag = 0;
         for (Crontab.Gate<Calendar> gate : this.gates) {
             lag += gate.lag(today);
         }
-        return Logger.format("%s in %[ms]s", this.origin, lag);
+        return lag;
     }
 
     /**
