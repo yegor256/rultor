@@ -35,7 +35,6 @@ import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * EC2 client.
@@ -57,7 +56,6 @@ public interface EC2Client {
      * Simple client.
      */
     @Immutable
-    @ToString
     @EqualsAndHashCode(of = { "key", "secret" })
     @Loggable(Loggable.DEBUG)
     final class Simple implements EC2Client {
@@ -77,6 +75,13 @@ public interface EC2Client {
         public Simple(final String akey, final String scrt) {
             this.key = akey;
             this.secret = scrt;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return this.key;
         }
         /**
          * {@inheritDoc}

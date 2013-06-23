@@ -35,7 +35,6 @@ import com.amazonaws.services.cloudformation.AmazonCloudFormationClient;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * CF client.
@@ -57,7 +56,6 @@ public interface CFClient {
      * Simple client.
      */
     @Immutable
-    @ToString
     @EqualsAndHashCode(of = { "key", "secret" })
     @Loggable(Loggable.DEBUG)
     final class Simple implements CFClient {
@@ -77,6 +75,13 @@ public interface CFClient {
         public Simple(final String akey, final String scrt) {
             this.key = akey;
             this.secret = scrt;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return this.key;
         }
         /**
          * {@inheritDoc}
