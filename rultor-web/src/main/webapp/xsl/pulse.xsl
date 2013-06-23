@@ -47,8 +47,17 @@
             <xsl:text>Date: </xsl:text>
             <xsl:value-of select="/page/date"/>
         </p>
+        <p>
+            <xsl:text>See </xsl:text>
+            <a title="see log">
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='stream']/@href"/>
+                </xsl:attribute>
+                <xsl:text>full log</xsl:text>
+            </a>
+        </p>
         <div class="pulse-details">
-            <xsl:if test="count(stages/stage) &gt; 1">
+            <xsl:if test="count(/page/stages/stage) &gt; 0">
                 <table class="table table-condensed">
                     <colgroup>
                         <col style="width: 2em;"/>
@@ -56,7 +65,7 @@
                         <col style="width: 18em;"/>
                     </colgroup>
                     <tbody>
-                        <xsl:apply-templates select="stages/stage"/>
+                        <xsl:apply-templates select="/page/stages/stage"/>
                     </tbody>
                 </table>
             </xsl:if>

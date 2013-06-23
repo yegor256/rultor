@@ -56,6 +56,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Path("/pulse/{name:[\\w\\-]+}/{date:\\d+}")
 @Loggable(Loggable.DEBUG)
@@ -143,6 +144,16 @@ public final class PulseRs extends BaseRs {
                     }
                 )
             )
+            .link(
+                new Link(
+                    "stream",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(PulseRs.class)
+                        .path(PulseRs.class, "stream")
+                        .build(this.name, this.date.getTime())
+                )
+            )
             .render()
             .build();
     }
@@ -219,6 +230,7 @@ public final class PulseRs extends BaseRs {
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(PulseRs.class)
+                        .path(PulseRs.class, "stream")
                         .queryParam(PulseRs.QUERY_START, stage.start())
                         .queryParam(PulseRs.QUERY_STOP, stage.stop())
                         .build(this.name, this.date.getTime())

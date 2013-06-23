@@ -43,6 +43,7 @@
     <links>
         <link href="/xml/index.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
+        <link href="/xml/index.xml" rel="stream" type="text/xml"/>
     </links>
     <millis>16</millis>
     <unit>nightly-build</unit>
