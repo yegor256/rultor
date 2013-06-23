@@ -14,3 +14,6 @@ Rultor-DynamoPrefix: ${failsafe.dynamo.prefix}
 Rultor-S3Key: ${failsafe.s3.key}
 Rultor-S3Secret: ${failsafe.s3.secret}
 Rultor-S3Bucket: ${failsafe.s3.bucket}
+Rultor-SQSKey: ${failsafe.sqs.key}
+Rultor-SQSSecret: ${failsafe.sqs.secret}
+Rultor-SQSUrl: ${failsafe.sqs.url}

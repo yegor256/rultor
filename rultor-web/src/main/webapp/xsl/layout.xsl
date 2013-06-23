@@ -101,6 +101,10 @@
     <xsl:template name="millis">
         <xsl:param name="millis" as="xs:integer"/>
         <xsl:choose>
+            <xsl:when test="$millis &gt; 60000">
+                <xsl:value-of select="format-number($millis div 60000, '0')"/>
+                <xsl:text>min</xsl:text>
+            </xsl:when>
             <xsl:when test="$millis &gt; 1000">
                 <xsl:value-of select="format-number($millis div 1000, '0.0')"/>
                 <xsl:text>s</xsl:text>

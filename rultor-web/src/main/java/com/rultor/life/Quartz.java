@@ -29,98 +29,77 @@
  */
 package com.rultor.life;
 
-import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Credentials;
-import com.jcabi.dynamo.Region;
-import com.jcabi.manifests.Manifests;
-import com.rultor.aws.AwsUsers;
-import com.rultor.aws.S3Client;
-import com.rultor.aws.S3Log;
-import com.rultor.aws.SQSClient;
-import com.rultor.aws.SQSQueue;
-import com.rultor.repo.ClasspathRepo;
-import com.rultor.spi.Conveyer;
+import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.rultor.spi.Queue;
-import com.rultor.spi.Repo;
+import com.rultor.spi.Unit;
+import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import com.rultor.spi.Work;
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * Production profile.
+ * Quartz that pushes works to the queue.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Immutable
-@ToString
-@EqualsAndHashCode
-@Loggable(Loggable.INFO)
-final class Production implements Profile {
+@Loggable(Loggable.DEBUG)
+@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.MINUTES)
+@EqualsAndHashCode(of = { "users", "queue" })
+@SuppressWarnings("PMD.DoNotUseThreads")
+final class Quartz implements Runnable, Closeable {
 
     /**
-     * Dynamo region.
+     * Users.
      */
-    private final transient Region region = new Region.Prefixed(
-        new Region.Simple(
-            new Credentials.Simple(
-                Manifests.read("Rultor-DynamoKey"),
-                Manifests.read("Rultor-DynamoSecret")
-            )
-        ),
-        Manifests.read("Rultor-DynamoPrefix")
-    );
+    private final transient Users users;
 
     /**
-     * S3 client.
+     * Queue.
      */
-    private final transient S3Client client = new S3Client.Simple(
-        Manifests.read("Rultor-S3Key"),
-        Manifests.read("Rultor-S3Secret"),
-        Manifests.read("Rultor-S3Bucket")
-    );
+    private final transient Queue queue;
 
     /**
-     * SQS client.
+     * Public ctor.
+     * @param usr Users
+     * @param que Queue
      */
-    private final transient SQSClient sqs = new SQSClient.Simple(
-        Manifests.read("Rultor-SQSKey"),
-        Manifests.read("Rultor-SQSSecret"),
-        Manifests.read("Rultor-SQSUrl")
-    );
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Repo repo() {
-        return new ClasspathRepo();
+    protected Quartz(final Users usr, final Queue que) {
+        this.users = usr;
+        this.queue = que;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Users users() {
-        return new AwsUsers(this.region, this.client);
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    public void run() {
+        for (User user : this.users.everybody()) {
+            for (Map.Entry<String, Unit> entry : user.units().entrySet()) {
+                this.queue.push(
+                    new Work.Simple(
+                        user.urn(),
+                        entry.getKey(),
+                        entry.getValue().spec()
+                    )
+                );
+            }
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Queue queue() {
-        return new SQSQueue(this.sqs);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Conveyer.Log log() {
-        return new S3Log(this.client);
+    public void close() throws IOException {
+        // nothing to do
     }
 
 }

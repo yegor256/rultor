@@ -30,24 +30,15 @@
 package com.rultor.life;
 
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.manifests.Manifests;
 import com.rultor.conveyer.SimpleConveyer;
 import com.rultor.spi.Conveyer;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
-import com.rultor.spi.Unit;
-import com.rultor.spi.User;
 import com.rultor.spi.Users;
-import com.rultor.spi.Work;
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -95,7 +86,7 @@ public final class Lifespan implements ServletContextListener {
         final Users users = profile.users();
         final Queue queue = profile.queue();
         final Repo repo = profile.repo();
-        this.quartz = new Lifespan.Quartz(users, queue);
+        this.quartz = new Quartz(users, queue);
         this.log = profile.log();
         this.conveyer = new SimpleConveyer(queue, repo, users, this.log);
         this.conveyer.start();
@@ -112,58 +103,6 @@ public final class Lifespan implements ServletContextListener {
         IOUtils.closeQuietly(this.quartz);
         IOUtils.closeQuietly(this.conveyer);
         IOUtils.closeQuietly(this.log);
-    }
-
-    /**
-     * Every minute feeds all specs to queue.
-     */
-    @Loggable(Loggable.INFO)
-    @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.MINUTES)
-    @EqualsAndHashCode(of = { "users", "queue" })
-    @SuppressWarnings("PMD.DoNotUseThreads")
-    private static final class Quartz implements Runnable, Closeable {
-        /**
-         * Users.
-         */
-        private final transient Users users;
-        /**
-         * Queue.
-         */
-        private final transient Queue queue;
-        /**
-         * Public ctor.
-         * @param usr Users
-         * @param que Queue
-         */
-        protected Quartz(final Users usr, final Queue que) {
-            this.users = usr;
-            this.queue = que;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-        public void run() {
-            for (User user : this.users.everybody()) {
-                for (Map.Entry<String, Unit> entry : user.units().entrySet()) {
-                    this.queue.push(
-                        new Work.Simple(
-                            user.urn(),
-                            entry.getKey(),
-                            entry.getValue().spec()
-                        )
-                    );
-                }
-            }
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void close() throws IOException {
-            // nothing to do
-        }
     }
 
 }
