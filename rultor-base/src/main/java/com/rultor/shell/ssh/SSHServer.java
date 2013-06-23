@@ -36,6 +36,7 @@ import com.rultor.shell.Shell;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
@@ -95,6 +96,7 @@ public final class SSHServer implements Shell {
      * @checkstyle ParameterNumber (6 lines)
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, limit = 1, unit = TimeUnit.HOURS)
     public int exec(@NotNull final String command,
         @NotNull final InputStream stdin,
         @NotNull final OutputStream stdout,

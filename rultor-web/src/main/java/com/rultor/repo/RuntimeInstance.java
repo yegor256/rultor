@@ -63,6 +63,7 @@ final class RuntimeInstance implements Instance {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse(@NotNull final Work work)
         throws Exception {
         if (this.object instanceof Instance) {

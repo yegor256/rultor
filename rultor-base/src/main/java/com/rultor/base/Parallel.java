@@ -80,6 +80,7 @@ public final class Parallel implements Instance {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse(@NotNull final Work work) throws Exception {
         this.active.add(Thread.currentThread());
         try {

@@ -97,6 +97,7 @@ public final class Crontab implements Instance {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse(@NotNull final Work work) throws Exception {
         final Calendar today = Crontab.today();
         boolean pass = true;

@@ -40,6 +40,7 @@ import com.rultor.spi.User;
 import com.rultor.spi.Work;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -145,6 +146,7 @@ final class SimpleInstantary implements Instantary {
          * {@inheritDoc}
          */
         @Override
+        @Loggable(value = Loggable.DEBUG, limit = 1, unit = TimeUnit.HOURS)
         public void pulse(final Work work) throws Exception {
             this.origin.pulse(work);
         }

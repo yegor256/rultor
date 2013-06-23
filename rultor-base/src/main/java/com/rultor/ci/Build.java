@@ -38,7 +38,7 @@ import com.rultor.shell.Shells;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Work;
-import java.io.ByteArrayOutputStream;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
@@ -87,6 +87,7 @@ public final class Build implements Instance {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse(@NotNull final Work work) throws Exception {
         final Shell shell = this.shells.acquire();
         Pulse.Signal.stage("Acquired %s", shell);
@@ -95,8 +96,8 @@ public final class Build implements Instance {
             code = shell.exec(
                 this.script,
                 IOUtils.toInputStream(""),
-                new ByteArrayOutputStream(),
-                new ByteArrayOutputStream()
+                Logger.stream(Level.INFO, this),
+                Logger.stream(Level.SEVERE, this)
             );
             Pulse.Signal.stage("Executed %s", this.script);
         } finally {
@@ -117,7 +118,16 @@ public final class Build implements Instance {
                     work.unit()
                 )
             );
-            Pulse.Signal.stage("Announced failure through %s", this.board);
+            Logger.error(
+                this,
+                new Pulse.Signal(
+                    Pulse.Signal.STAGE,
+                    String.format(
+                        "Announced failure through %s",
+                        this.board
+                    )
+                ).toString()
+            );
         }
     }
 

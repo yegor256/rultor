@@ -43,10 +43,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.io.output.TeeOutputStream;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -133,6 +131,7 @@ public final class SSHChannel implements Shell {
      * @checkstyle ParameterNumber (6 lines)
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, limit = 1, unit = TimeUnit.HOURS)
     public int exec(@NotNull final String command,
         @NotNull final InputStream stdin,
         @NotNull final OutputStream stdout,
@@ -144,16 +143,8 @@ public final class SSHChannel implements Shell {
                 final ChannelExec channel = ChannelExec.class.cast(
                     session.openChannel("exec")
                 );
-                channel.setErrStream(
-                    new TeeOutputStream(
-                        stderr, Logger.stream(Level.SEVERE, this)
-                    ), false
-                );
-                channel.setOutputStream(
-                    new TeeOutputStream(
-                        stdout, Logger.stream(Level.INFO, this)
-                    ), false
-                );
+                channel.setErrStream(stderr, false);
+                channel.setOutputStream(stdout);
                 channel.setInputStream(stdin);
                 channel.setCommand(command);
                 channel.connect();
