@@ -162,6 +162,17 @@ final class Cache implements Flushable {
     }
 
     /**
+     * Is it expired (called from {@link Caches})?
+     * @return TRUE if it is not required in memory any more
+     * @throws IOException If fails
+     */
+    public boolean expired() throws IOException {
+        final long mins = (System.currentTimeMillis() - this.touched.get())
+            / TimeUnit.MINUTES.toMillis(1);
+        return mins > Tv.TWENTY || !this.valuable();
+    }
+
+    /**
      * Get stream.
      * @return Stream with data
      * @throws IOException If fails
@@ -211,17 +222,6 @@ final class Cache implements Flushable {
     }
 
     /**
-     * Is it expired?
-     * @return TRUE if it is not required in memory any more
-     * @throws IOException If fails
-     */
-    public boolean expired() throws IOException {
-        final long mins = (System.currentTimeMillis() - this.touched.get())
-            / TimeUnit.MINUTES.toMillis(1);
-        return this.lines.isEmpty() && (mins > Tv.TWENTY || !this.valuable());
-    }
-
-    /**
      * Is it a valuable log?
      * @return TRUE if it is valuable and should be persisted
      * @throws IOException If fails
@@ -231,9 +231,7 @@ final class Cache implements Flushable {
             new Protocol.Source() {
                 @Override
                 public InputStream stream() throws IOException {
-                    return new ByteArrayInputStream(
-                        Cache.this.data.toByteArray()
-                    );
+                    return Cache.this.read();
                 }
             }
         );
