@@ -160,11 +160,6 @@ public final class PulsesRs extends BaseRs {
      */
     private JaxbBundle pulse(final Date date, final Pulse pulse) {
         return new JaxbBundle("pulse")
-            .add(
-                "date",
-                DateFormatUtils.formatUTC(date, "yyyy-MM-dd'T'HH:mm'Z'")
-            )
-            .up()
             .add("stages")
             .add(
                 new JaxbBundle.Group<Stage>(pulse.stages()) {
@@ -173,6 +168,11 @@ public final class PulsesRs extends BaseRs {
                         return PulsesRs.this.stage(date, stage);
                     }
                 }
+            )
+            .up()
+            .add(
+                "date",
+                DateFormatUtils.formatUTC(date, "yyyy-MM-dd'T'HH:mm'Z'")
             )
             .up()
             .link(
