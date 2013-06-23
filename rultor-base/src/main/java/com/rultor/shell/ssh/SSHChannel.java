@@ -44,9 +44,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.io.output.TeeOutputStream;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -135,9 +137,17 @@ public final class SSHChannel implements Shell {
                 final ChannelExec channel = ChannelExec.class.cast(
                     session.openChannel("exec")
                 );
-                channel.setErrStream(stderr, false);
-                channel.setOutputStream(stdout, false);
-                channel.setInputStream(stdin, false);
+                channel.setErrStream(
+                    new TeeOutputStream(
+                        stderr, Logger.stream(Level.SEVERE, this)
+                    ), false
+                );
+                channel.setOutputStream(
+                    new TeeOutputStream(
+                        stdout, Logger.stream(Level.INFO, this)
+                    ), false
+                );
+                channel.setInputStream(stdin);
                 channel.setCommand(command);
                 channel.connect();
                 return this.exec(channel);
