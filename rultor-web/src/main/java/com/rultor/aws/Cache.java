@@ -129,7 +129,6 @@ final class Cache implements Flushable {
                 final AmazonS3 aws = client.get();
                 final ObjectMetadata meta = new ObjectMetadata();
                 meta.setContentEncoding(CharEncoding.UTF_8);
-                meta.setContentLength(this.data.size());
                 meta.setContentType(MediaType.TEXT_PLAIN);
                 final CountingInputStream stream =
                     new CountingInputStream(this.read());
@@ -211,15 +210,18 @@ final class Cache implements Flushable {
                         ex
                     );
                 }
+                this.touched.set(System.currentTimeMillis());
             }
-            this.touched.set(System.currentTimeMillis());
-            final PrintWriter writer = new PrintWriter(this.data);
-            for (String line : this.lines) {
-                writer.append(line).append(CharUtils.LF);
+            if (!this.lines.isEmpty()) {
+                final PrintWriter writer = new PrintWriter(this.data);
+                for (String line : this.lines) {
+                    writer.append(line).append(CharUtils.LF);
+                }
+                writer.flush();
+                writer.close();
+                this.lines.clear();
+                this.touched.set(System.currentTimeMillis());
             }
-            writer.flush();
-            writer.close();
-            this.lines.clear();
             return this.data;
         }
     }
