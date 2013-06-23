@@ -138,6 +138,7 @@ public final class SSHChannel implements Shell {
         @NotNull final OutputStream stderr) throws IOException {
         try {
             final Session session = this.session();
+            session.setTimeout(0);
             this.connect(session);
             try {
                 final ChannelExec channel = ChannelExec.class.cast(
