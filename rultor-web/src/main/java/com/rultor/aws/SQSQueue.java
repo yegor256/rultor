@@ -129,6 +129,7 @@ public final class SQSQueue implements Queue {
      */
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public Work pull() throws InterruptedException {
         final AmazonSQS aws = this.client.get();
         try {

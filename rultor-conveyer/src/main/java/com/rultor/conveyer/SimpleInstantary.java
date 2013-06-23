@@ -114,7 +114,6 @@ final class SimpleInstantary implements Instantary {
      */
     @Immutable
     @Loggable(Loggable.DEBUG)
-    @ToString
     @EqualsAndHashCode(of = { "origin", "spec" })
     private static final class SpecdInstance implements Instance {
         /**
@@ -153,8 +152,8 @@ final class SimpleInstantary implements Instantary {
          * {@inheritDoc}
          */
         @Override
-        public String face() {
-            return this.origin.face();
+        public String toString() {
+            return this.origin.toString();
         }
     }
 

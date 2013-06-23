@@ -41,7 +41,6 @@ import com.rultor.spi.Work;
 import java.io.ByteArrayOutputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -52,7 +51,6 @@ import org.apache.commons.io.IOUtils;
  * @since 1.0
  */
 @Immutable
-@ToString
 @EqualsAndHashCode(of = { "shells", "script", "board" })
 @Loggable(Loggable.DEBUG)
 public final class Build implements Instance {
@@ -127,11 +125,11 @@ public final class Build implements Instance {
      * {@inheritDoc}
      */
     @Override
-    public String face() {
+    public String toString() {
         return Logger.format(
             "shell script \"%[text]s\" through %s",
             this.script,
-            this.shells.face()
+            this.shells
         );
     }
 

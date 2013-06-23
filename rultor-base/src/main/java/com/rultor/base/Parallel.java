@@ -37,7 +37,6 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Enables certain amount of parallel pulses.
@@ -46,7 +45,6 @@ import lombok.ToString;
  * @version $Id$
  * @since 1.0
  */
-@ToString
 @EqualsAndHashCode(of = { "origin", "active", "maximum" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
@@ -97,10 +95,10 @@ public final class Parallel implements Instance {
      * {@inheritDoc}
      */
     @Override
-    public String face() {
+    public String toString() {
         return Logger.format(
             "%s in %d thread(s)",
-            this.origin.face(),
+            this.origin,
             this.maximum
         );
     }

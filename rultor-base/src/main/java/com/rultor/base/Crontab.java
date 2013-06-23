@@ -52,7 +52,6 @@ import lombok.ToString;
  * @see <a href="https://en.wikipedia.org/wiki/Cron">Cron in Wikipedia</a>
  * @see <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html">Crontab specification</a>
  */
-@ToString
 @Immutable
 @EqualsAndHashCode(of = { "origin", "gates" })
 @Loggable(Loggable.DEBUG)
@@ -116,13 +115,13 @@ public final class Crontab implements Instance {
      * {@inheritDoc}
      */
     @Override
-    public String face() {
+    public String toString() {
         final Calendar today = Crontab.today();
         long lag = 0;
         for (Crontab.Gate<Calendar> gate : this.gates) {
             lag += gate.lag(today);
         }
-        return Logger.format("%s in %[ms]s", this.origin.face(), lag);
+        return Logger.format("%s in %[ms]s", this.origin, lag);
     }
 
     /**

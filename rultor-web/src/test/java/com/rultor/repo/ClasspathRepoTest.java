@@ -160,7 +160,7 @@ public final class ClasspathRepoTest {
          * {@inheritDoc}
          */
         @Override
-        public String face() {
+        public String toString() {
             return ClasspathRepoTest.Foo.COUNTER.toString();
         }
     }

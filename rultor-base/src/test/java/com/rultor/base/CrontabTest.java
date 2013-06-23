@@ -137,8 +137,8 @@ public final class CrontabTest {
         final Instance origin = Mockito.mock(Instance.class);
         final Crontab crontab = new Crontab(text, origin);
         MatcherAssert.assertThat(
-            crontab.face(),
-            Matchers.equalTo("null in 1hr")
+            crontab.toString(),
+            Matchers.endsWith(" in 1hr")
         );
     }
 

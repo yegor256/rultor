@@ -109,12 +109,4 @@ public final class CFStacks implements Environments {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String face() {
-        return "EC2 instance through CloudFormation";
-    }
-
 }

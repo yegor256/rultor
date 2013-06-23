@@ -36,7 +36,6 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Work;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Loggable instance.
@@ -45,7 +44,6 @@ import lombok.ToString;
  * @version $Id$
  * @since 1.0
  */
-@ToString
 @EqualsAndHashCode(of = { "origin", "appender" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
@@ -104,8 +102,8 @@ final class LoggableInstance implements Instance {
      * {@inheritDoc}
      */
     @Override
-    public String face() {
-        return this.origin.face();
+    public String toString() {
+        return this.origin.toString();
     }
 
 }

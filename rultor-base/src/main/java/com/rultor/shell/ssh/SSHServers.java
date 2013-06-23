@@ -31,7 +31,6 @@ package com.rultor.shell.ssh;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
 import com.rultor.env.Environments;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
@@ -95,18 +94,6 @@ public final class SSHServers implements Shells {
     @Override
     public Shell acquire() throws IOException {
         return new SSHServer(this.envs.acquire(), this.login, this.key);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String face() {
-        return Logger.format(
-            "SSH as \"%s\" at %s",
-            this.login,
-            this.envs.face()
-        );
     }
 
 }

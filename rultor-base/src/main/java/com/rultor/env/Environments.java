@@ -30,7 +30,6 @@
 package com.rultor.env;
 
 import com.jcabi.aspects.Immutable;
-import com.rultor.spi.Visible;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
 
@@ -42,7 +41,7 @@ import javax.validation.constraints.NotNull;
  * @since 1.0
  */
 @Immutable
-public interface Environments extends Visible {
+public interface Environments {
 
     /**
      * Get new environment.

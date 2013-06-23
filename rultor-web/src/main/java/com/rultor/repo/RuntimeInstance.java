@@ -31,11 +31,9 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Visible;
 import com.rultor.spi.Work;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Runtime instance.
@@ -44,7 +42,6 @@ import lombok.ToString;
  * @version $Id$
  * @since 1.0
  */
-@ToString
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
 final class RuntimeInstance implements Instance {
@@ -77,12 +74,15 @@ final class RuntimeInstance implements Instance {
      * {@inheritDoc}
      */
     @Override
-    public String face() {
+    public String toString() {
         final String text;
-        if (this.object instanceof Visible) {
-            text = Visible.class.cast(this.object).face();
+        if (this.object instanceof String) {
+            text = String.format(
+                "%d characters of plain text",
+                this.object.toString().length()
+            );
         } else {
-            text  = this.object.getClass().getName();
+            text = this.object.toString();
         }
         return text;
     }
