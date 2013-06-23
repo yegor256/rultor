@@ -115,6 +115,7 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
             this.log.push(
                 work,
                 new Conveyer.Line.Simple(
+                    System.currentTimeMillis() - work.started(),
                     event.getLogger().getName(),
                     ConveyerAppender.LEVELS.get(event.getLevel()),
                     this.layout.format(event)

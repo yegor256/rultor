@@ -45,6 +45,12 @@
                 <legend>Add/Edit Unit</legend>
                 <label for="name"><xsl:text>Unique Unit Name</xsl:text></label>
                 <input name="name" id="name" type="text" class="input-large">
+                    <xsl:attribute name="class">
+                        <xsl:text>input-large</xsl:text>
+                        <xsl:if test="/page/unit/name">
+                            <xsl:text> uneditable-input</xsl:text>
+                        </xsl:if>
+                    </xsl:attribute>
                     <xsl:attribute name="value">
                         <xsl:value-of select="/page/unit/name"/>
                     </xsl:attribute>

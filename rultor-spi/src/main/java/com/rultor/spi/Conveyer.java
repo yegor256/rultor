@@ -31,11 +31,15 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import java.io.Closeable;
-import java.util.Date;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.time.DateUtils;
 
 /**
  * Mutable and thread-safe conveyer.
@@ -70,12 +74,32 @@ public interface Conveyer extends Closeable, Metricable {
     @Immutable
     interface Line {
         /**
+         * Milliseconds from log start.
+         * @return Msec
+         */
+        long msec();
+        /**
+         * Log level of the line.
+         * @return Level
+         */
+        Level level();
+        /**
          * Simple.
          */
         @Immutable
         @Loggable(Loggable.DEBUG)
         @EqualsAndHashCode(of = { "who", "lvl", "msg" })
         final class Simple implements Conveyer.Line {
+            /**
+             * Pattern to parse it.
+             */
+            private static final Pattern PTN = Pattern.compile(
+                "\\s*(\\d+):(\\d{2})\\s+([A-Z]+) ([\\w\\$\\.]+) (.*)"
+            );
+            /**
+             * Milliseconds from log start.
+             */
+            private final transient long when;
             /**
              * Logger.
              */
@@ -90,12 +114,15 @@ public interface Conveyer extends Closeable, Metricable {
             private final transient String msg;
             /**
              * Public ctor.
+             * @param msec When it's happening, msec from start
              * @param logger Logger
              * @param level The level
              * @param message The message
+             * @checkstyle ParameterNumber (4 lines)
              */
-            public Simple(final String logger, final Level level,
-                final String message) {
+            public Simple(final long msec, final String logger,
+                final Level level, final String message) {
+                this.when = msec;
                 this.who = logger;
                 this.lvl = level.toString();
                 this.msg = message;
@@ -106,11 +133,55 @@ public interface Conveyer extends Closeable, Metricable {
             @Override
             public String toString() {
                 return String.format(
-                    "%tH:%<tM:%<tS %s %s %s",
-                    new Date(),
+                    "%3d:%02d %s %s %s",
+                    this.when / DateUtils.MILLIS_PER_MINUTE,
+                    (this.when % DateUtils.MILLIS_PER_MINUTE)
+                        / DateUtils.MILLIS_PER_SECOND,
                     this.lvl,
                     this.who,
                     this.msg
+                );
+            }
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public long msec() {
+                return this.when;
+            }
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public Level level() {
+                return Level.parse(this.lvl);
+            }
+            /**
+             * The text has a line inside.
+             * @param text Text to try
+             * @return TRUE if it's a line
+             */
+            public static boolean has(final String text) {
+                return Conveyer.Line.Simple.PTN.matcher(text).matches();
+            }
+            /**
+             * Parse it back to live (or runtime exception if not found).
+             * @param text Text to parse
+             * @return Line, if possible to get it from there
+             */
+            public static Conveyer.Line parse(final String text) {
+                final Matcher matcher = Conveyer.Line.Simple.PTN.matcher(text);
+                Validate.isTrue(matcher.matches(), "invalid line '%s'", text);
+                return new Conveyer.Line.Simple(
+                    Long.parseLong(
+                        matcher.group(1)
+                    ) * DateUtils.MILLIS_PER_MINUTE
+                    + Long.parseLong(
+                        matcher.group(2)
+                    ) * DateUtils.MILLIS_PER_SECOND,
+                    matcher.group(Tv.FOUR),
+                    Level.parse(matcher.group(Tv.THREE)),
+                    matcher.group(Tv.FIVE)
                 );
             }
         }

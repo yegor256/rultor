@@ -61,6 +61,7 @@ public final class S3LogTest {
         log.push(
             work,
             new Conveyer.Line.Simple(
+                0,
                 this.getClass().getName(),
                 Level.INFO,
                 msg

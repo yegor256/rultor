@@ -55,9 +55,9 @@ public final class ProtocolTest {
         final String key = "hi";
         final String value = "\u20ac\t\n\n";
         // @checkstyle StringLiteralsConcatenation (4 lines)
-        final String text = "10:51 INFO some first line\n"
-            + "10:55 INFO " + new Pulse.Signal(key, value) + "\n"
-            + "10:57 DEBUG some other line";
+        final String text = "10:51 INFO Foo some first line"
+            + "\n10:55 INFO Foo " + new Pulse.Signal(key, value)
+            + "\n10:57 WARNING Foo some other line";
         MatcherAssert.assertThat(
             new Protocol(
                 new Protocol.Source() {
@@ -78,10 +78,10 @@ public final class ProtocolTest {
     @Test
     public void findsStages() throws Exception {
         // @checkstyle StringLiteralsConcatenation (4 lines)
-        final String text = "11:51 INFO some text \u20ac\n"
-            + "11:55 INFO " + new Pulse.Signal(Pulse.Signal.STAGE, "a ") + "\n"
-            + "11:57 DEBUG some other text line\n"
-            + "11:55 DEBUG " + new Pulse.Signal(Pulse.Signal.STAGE, "b ");
+        final String text = "11:51 INFO Bar some text \u20ac"
+            + "\n11:55 INFO Bar " + new Pulse.Signal(Pulse.Signal.STAGE, "a ")
+            + "\n11:57 SEVERE Bar some other text line"
+            + "\n11:55 SEVERE B " + new Pulse.Signal(Pulse.Signal.STAGE, "b ");
         MatcherAssert.assertThat(
             new Protocol(
                 new Protocol.Source() {
@@ -92,8 +92,9 @@ public final class ProtocolTest {
                 }
             ).stages(),
             Matchers.<Stage>hasItems(
-                new Stage.Simple(Stage.Result.SUCCESS, 0, 0, "a"),
-                new Stage.Simple(Stage.Result.SUCCESS, 0, 0, "b")
+                // @checkstyle MagicNumber (2 lines)
+                new Stage.Simple(Stage.Result.SUCCESS, 0, 715000, "a"),
+                new Stage.Simple(Stage.Result.FAILURE, 0, 715000, "b")
             )
         );
     }

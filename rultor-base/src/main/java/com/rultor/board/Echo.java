@@ -34,7 +34,6 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Transmits all announcements to log.
@@ -44,10 +43,17 @@ import lombok.ToString;
  * @since 1.0
  */
 @Immutable
-@ToString
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
 public final class Echo implements Billboard {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "console ECHO";
+    }
 
     /**
      * {@inheritDoc}

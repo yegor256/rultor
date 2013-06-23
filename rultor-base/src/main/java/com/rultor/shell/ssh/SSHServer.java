@@ -38,7 +38,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Single SSH Server.
@@ -48,7 +47,6 @@ import lombok.ToString;
  * @since 1.0
  */
 @Immutable
-@ToString
 @EqualsAndHashCode(of = { "env", "key" })
 @Loggable(Loggable.DEBUG)
 public final class SSHServer implements Shell {
@@ -79,6 +77,17 @@ public final class SSHServer implements Shell {
         this.env = environ;
         this.login = user;
         this.key = priv;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format(
+            "SSH as %s at %s with %s",
+            this.login, this.env, this.key
+        );
     }
 
     /**

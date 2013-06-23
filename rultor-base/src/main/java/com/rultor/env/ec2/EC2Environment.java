@@ -46,7 +46,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Amazon EC2 environment.
@@ -56,7 +55,6 @@ import lombok.ToString;
  * @since 1.0
  */
 @Immutable
-@ToString
 @EqualsAndHashCode(of = { "name", "client" })
 @Loggable(Loggable.DEBUG)
 final class EC2Environment implements Environment {
@@ -79,6 +77,17 @@ final class EC2Environment implements Environment {
     protected EC2Environment(final String instance, final EC2Client clnt) {
         this.name = instance;
         this.client = clnt;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format(
+            "EC2 %s instance accessed with %s",
+            this.name, this.client
+        );
     }
 
     /**

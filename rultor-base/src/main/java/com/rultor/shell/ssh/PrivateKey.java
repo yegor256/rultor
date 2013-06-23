@@ -68,7 +68,7 @@ public final class PrivateKey {
      */
     @Override
     public String toString() {
-        return String.format("%d characters", this.text.length());
+        return String.format("RSA-key-%d-characters", this.text.length());
     }
 
     /**

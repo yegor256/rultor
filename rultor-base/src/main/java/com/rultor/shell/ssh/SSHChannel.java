@@ -29,7 +29,6 @@
  */
 package com.rultor.shell.ssh;
 
-import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
@@ -47,7 +46,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.io.output.TeeOutputStream;
 import org.apache.commons.lang3.Validate;
 
@@ -58,8 +56,6 @@ import org.apache.commons.lang3.Validate;
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-@ToString
 @EqualsAndHashCode(of = { "addr", "login", "key" })
 @Loggable(Loggable.DEBUG)
 public final class SSHChannel implements Shell {
@@ -119,6 +115,17 @@ public final class SSHChannel implements Shell {
         this.login = user;
         Validate.notEmpty(this.login, "user name can't be empty");
         this.key = priv;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format(
+            "SSH as %s to %s with %s",
+            this.login, this.addr, this.key
+        );
     }
 
     /**

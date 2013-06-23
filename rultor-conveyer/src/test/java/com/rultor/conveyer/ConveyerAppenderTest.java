@@ -73,7 +73,7 @@ public final class ConveyerAppenderTest {
         Mockito.verify(log).push(
             work,
             new Conveyer.Line.Simple(
-                this.getClass().getName(), Level.INFO, text
+                0, this.getClass().getName(), Level.INFO, text
             )
         );
     }

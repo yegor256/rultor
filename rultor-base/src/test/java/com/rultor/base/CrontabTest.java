@@ -138,7 +138,7 @@ public final class CrontabTest {
         final Crontab crontab = new Crontab(text, origin);
         MatcherAssert.assertThat(
             crontab.face(),
-            Matchers.equalTo("null in 60min")
+            Matchers.equalTo("null in 1hr")
         );
     }
 

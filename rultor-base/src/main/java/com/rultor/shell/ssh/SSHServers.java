@@ -37,7 +37,6 @@ import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * SSH Servers.
@@ -47,7 +46,6 @@ import lombok.ToString;
  * @since 1.0
  */
 @Immutable
-@ToString
 @EqualsAndHashCode(of = { "envs", "key" })
 @Loggable(Loggable.DEBUG)
 public final class SSHServers implements Shells {
@@ -78,6 +76,17 @@ public final class SSHServers implements Shells {
         this.envs = environs;
         this.login = user;
         this.key = priv;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format(
+            "SSH servers as %s in %s with %s",
+            this.login, this.envs, this.key
+        );
     }
 
     /**

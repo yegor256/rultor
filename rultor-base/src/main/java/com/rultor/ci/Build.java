@@ -91,7 +91,7 @@ public final class Build implements Instance {
     @Override
     public void pulse(@NotNull final Work work) throws Exception {
         final Shell shell = this.shells.acquire();
-        Pulse.Signal.stage("Shell %[type]s acquired: %s", shell, shell);
+        Pulse.Signal.stage("Acquired %s", shell);
         int code;
         try {
             code = shell.exec(
@@ -100,7 +100,7 @@ public final class Build implements Instance {
                 new ByteArrayOutputStream(),
                 new ByteArrayOutputStream()
             );
-            Pulse.Signal.stage("Script executed through the shell");
+            Pulse.Signal.stage("Executed %s", this.script);
         } finally {
             IOUtils.closeQuietly(shell);
         }
@@ -111,7 +111,7 @@ public final class Build implements Instance {
                     work.unit()
                 )
             );
-            Pulse.Signal.stage("Announces success through board");
+            Pulse.Signal.stage("Announced success through %s", this.board);
         } else {
             this.board.announce(
                 String.format(
@@ -119,7 +119,7 @@ public final class Build implements Instance {
                     work.unit()
                 )
             );
-            Pulse.Signal.stage("Announces failure through board");
+            Pulse.Signal.stage("Announced failure through %s", this.board);
         }
     }
 

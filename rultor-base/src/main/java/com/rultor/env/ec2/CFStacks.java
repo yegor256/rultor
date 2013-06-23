@@ -38,7 +38,6 @@ import com.rultor.env.Environment;
 import com.rultor.env.Environments;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * CloudFormation Stacks.
@@ -48,7 +47,6 @@ import lombok.ToString;
  * @since 1.0
  */
 @Immutable
-@ToString
 @EqualsAndHashCode(of = { "template", "client" })
 @Loggable(Loggable.DEBUG)
 public final class CFStacks implements Environments {
@@ -81,6 +79,17 @@ public final class CFStacks implements Environments {
     public CFStacks(final String tmpl, final CFClient clnt) {
         this.template = tmpl;
         this.client = clnt;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format(
+            "CloudFormation stacks accessed with %s",
+            this.client
+        );
     }
 
     /**

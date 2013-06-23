@@ -81,7 +81,7 @@ public interface CFClient {
          */
         @Override
         public String toString() {
-            return this.key;
+            return String.format("KEY=%s", this.key);
         }
         /**
          * {@inheritDoc}

@@ -31,6 +31,7 @@ package com.rultor.aws;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Conveyer;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stage;
 import java.io.BufferedReader;
@@ -40,6 +41,7 @@ import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -124,25 +126,41 @@ final class Protocol {
         final BufferedReader reader =
             new BufferedReader(new InputStreamReader(this.src.stream()));
         while (true) {
-            final String line = reader.readLine();
-            if (line == null) {
+            final String txt = reader.readLine();
+            if (txt == null) {
                 break;
             }
-            if (Pulse.Signal.exists(line)) {
-                final Pulse.Signal signal = Pulse.Signal.valueOf(line);
+            if (Pulse.Signal.exists(txt)) {
+                final Conveyer.Line line = Conveyer.Line.Simple.parse(txt);
+                final Pulse.Signal signal = Pulse.Signal.valueOf(txt);
                 if (signal.key().equals(Pulse.Signal.STAGE)) {
-                    stages.add(
-                        new Stage.Simple(
-                            Stage.Result.SUCCESS,
-                            0,
-                            0,
-                            signal.value()
-                        )
-                    );
+                    stages.add(Protocol.toStage(line, signal));
                 }
             }
         }
         return Collections.unmodifiableCollection(stages);
+    }
+
+    /**
+     * Convert signal and line to stage.
+     * @param line Line
+     * @param signal Signal
+     * @return The stage
+     */
+    private static Stage toStage(final Conveyer.Line line,
+        final Pulse.Signal signal) {
+        Stage.Result result;
+        if (line.level().equals(Level.SEVERE)) {
+            result = Stage.Result.FAILURE;
+        } else {
+            result = Stage.Result.SUCCESS;
+        }
+        return new Stage.Simple(
+            result,
+            0,
+            line.msec(),
+            signal.value()
+        );
     }
 
 }

@@ -29,6 +29,9 @@
  */
 package com.rultor.spi;
 
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -47,17 +50,52 @@ public final class ConveyerTest {
      */
     @Test
     public void makesString() throws Exception {
+        final long msec = Math.abs(new Random().nextLong());
         final Conveyer.Line line = new Conveyer.Line.Simple(
-            "test", Level.INFO, "msg"
+            msec, "test", Level.INFO, "msg"
         );
         MatcherAssert.assertThat(
             line,
             Matchers.hasToString(Matchers.endsWith(" INFO test msg"))
         );
         MatcherAssert.assertThat(
-            line.toString().matches("\\d{2}:\\d{2}:\\d{2} INFO test msg"),
+            Conveyer.Line.Simple.has(line.toString()),
             Matchers.is(true)
         );
+        MatcherAssert.assertThat(
+            Conveyer.Line.Simple.parse(line.toString()).level(),
+            Matchers.equalTo(Level.INFO)
+        );
+    }
+
+    /**
+     * Conveyer.Line.Simple can build dates correctly.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    public void buildsDatesCorrectly() throws Exception {
+        final ImmutableMap<Long, String> map =
+            new ImmutableMap.Builder<Long, String>()
+                // @checkstyle MagicNumber (4 lines)
+                .put(61000L, "1:01")
+                .put(1000L, "0:01")
+                .put(185000L, "3:05")
+                .put(24005000L, "400:05")
+                .build();
+        for (Map.Entry<Long, String> entry : map.entrySet()) {
+            final Conveyer.Line line = new Conveyer.Line.Simple(
+                entry.getKey(), "foo", Level.INFO, "text msg"
+            );
+            MatcherAssert.assertThat(
+                line.toString().trim(),
+                Matchers.startsWith(entry.getValue())
+            );
+            MatcherAssert.assertThat(
+                Conveyer.Line.Simple.parse(line.toString()).msec(),
+                Matchers.equalTo(entry.getKey())
+            );
+        }
     }
 
 }

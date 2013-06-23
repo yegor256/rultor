@@ -46,8 +46,6 @@ div.container-fluid {
     border-top: 1px solid gray;
     margin-top: 3em;
     font-size: 0.9em;
-    line-height: 1.2em;
-    width: 30%;
 }
 
 textarea.spec {
@@ -56,10 +54,8 @@ textarea.spec {
 
 div.pulse-details {
     font-size: 0.85em;
-    margin-left: 2em;
 }
     div.pulse-details table {
-       width: 0;
     }
         div.pulse-details table td {
             border: 0;

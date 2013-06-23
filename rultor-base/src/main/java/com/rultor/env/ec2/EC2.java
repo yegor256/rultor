@@ -41,7 +41,6 @@ import com.rultor.env.Environments;
 import java.io.IOException;
 import java.util.List;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Amazon EC2 environments.
@@ -51,7 +50,6 @@ import lombok.ToString;
  * @since 1.0
  */
 @Immutable
-@ToString
 @EqualsAndHashCode(of = { "type", "ami", "group", "client" })
 @Loggable(Loggable.DEBUG)
 public final class EC2 implements Environments {
@@ -112,6 +110,18 @@ public final class EC2 implements Environments {
         this.group = grp;
         this.pair = par;
         this.client = clnt;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format(
+            // @checkstyle LineLength (1 line)
+            "EC2 %s/%s instances in %s security group with %s key pair accessed with %s",
+            this.type, this.ami, this.group, this.pair, this.client
+        );
     }
 
     /**

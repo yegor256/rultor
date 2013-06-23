@@ -89,6 +89,7 @@ public final class S3LogITCase {
         new S3Log(this.client).push(
             work,
             new Conveyer.Line.Simple(
+                0,
                 this.getClass().getName(),
                 Level.INFO,
                 msg
