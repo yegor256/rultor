@@ -130,7 +130,7 @@ final class Protocol {
             if (txt == null) {
                 break;
             }
-            if (Pulse.Signal.exists(txt)) {
+            if (Pulse.Signal.exists(txt) && Conveyer.Line.Simple.has(txt)) {
                 final Conveyer.Line line = Conveyer.Line.Simple.parse(txt);
                 final Pulse.Signal signal = Pulse.Signal.valueOf(txt);
                 if (signal.key().equals(Pulse.Signal.STAGE)) {
