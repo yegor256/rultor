@@ -72,7 +72,7 @@ public final class CacheTest {
             IOUtils.toString(cache.read(), CharEncoding.UTF_8),
             Matchers.endsWith("0:00 INFO foo msg\n")
         );
-        MatcherAssert.assertThat(cache.expired(), Matchers.equalTo(true));
+        MatcherAssert.assertThat(cache.expired(), Matchers.equalTo(false));
     }
 
 }
