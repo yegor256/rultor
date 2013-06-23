@@ -110,7 +110,7 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
      */
     @Override
     protected void append(final LoggingEvent event) {
-        final Work work = this.works.get(Thread.currentThread());
+        final Work work = this.works.get(this.thread());
         if (work != null) {
             this.log.push(
                 work,
@@ -138,6 +138,14 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
     @Override
     public boolean requiresLayout() {
         return true;
+    }
+
+    /**
+     * Trying to detect the current thread.
+     * @return Thread
+     */
+    private Thread thread() {
+        return Thread.currentThread();
     }
 
 }
