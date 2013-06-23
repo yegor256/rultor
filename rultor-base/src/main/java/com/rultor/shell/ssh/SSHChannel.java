@@ -221,6 +221,9 @@ public final class SSHChannel implements Shell {
      */
     private Session session() throws IOException {
         try {
+            JSch.setConfig("BatchMode", "yes");
+            JSch.setConfig("ConnectionAttempts", "5");
+            JSch.setConfig("ConnectTimeout", "86400");
             JSch.setConfig("StrictHostKeyChecking", "no");
             JSch.setLogger(SSHChannel.LOGGER);
             final JSch jsch = new JSch();
