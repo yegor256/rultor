@@ -49,6 +49,7 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
@@ -82,6 +83,11 @@ final class Cache implements Flushable {
         new AtomicLong(System.currentTimeMillis());
 
     /**
+     * TRUE if this content is NOT synchronized with S3 and need to be flushed.
+     */
+    private final transient AtomicBoolean dirty = new AtomicBoolean();
+
+    /**
      * New lines.
      */
     private final transient Collection<String> lines =
@@ -106,6 +112,8 @@ final class Cache implements Flushable {
      * @throws IOException If fails
      */
     public void append(final Conveyer.Line line) throws IOException {
+        this.touched.set(System.currentTimeMillis());
+        this.dirty.set(true);
         this.lines.add(line.toString());
     }
 
@@ -115,6 +123,7 @@ final class Cache implements Flushable {
      * @throws IOException If fails
      */
     public InputStream read() throws IOException {
+        this.touched.set(System.currentTimeMillis());
         return new ByteArrayInputStream(this.stream().toByteArray());
     }
 
@@ -123,8 +132,8 @@ final class Cache implements Flushable {
      */
     @Override
     public void flush() throws IOException {
-        synchronized (this.key) {
-            if (!this.lines.isEmpty()) {
+        synchronized (this.dirty) {
+            if (this.dirty.get() && this.valuable()) {
                 final S3Client client = this.key.client();
                 final AmazonS3 aws = client.get();
                 final ObjectMetadata meta = new ObjectMetadata();
@@ -133,21 +142,19 @@ final class Cache implements Flushable {
                 final CountingInputStream stream =
                     new CountingInputStream(this.read());
                 try {
-                    if (this.valuable()) {
-                        final PutObjectResult result = aws.putObject(
-                            client.bucket(),
-                            this.key.toString(),
-                            stream,
-                            meta
-                        );
-                        Logger.info(
-                            this,
-                            "'%s' saved %d byte(s) to S3, etag=%s",
-                            this.key,
-                            stream.getCount(),
-                            result.getETag()
-                        );
-                    }
+                    final PutObjectResult result = aws.putObject(
+                        client.bucket(),
+                        this.key.toString(),
+                        stream,
+                        meta
+                    );
+                    Logger.info(
+                        this,
+                        "'%s' saved %d byte(s) to S3, etag=%s",
+                        this.key,
+                        stream.getCount(),
+                        result.getETag()
+                    );
                 } catch (AmazonS3Exception ex) {
                     throw new IOException(
                         String.format(
@@ -159,6 +166,7 @@ final class Cache implements Flushable {
                         ex
                     );
                 }
+                this.dirty.set(false);
             }
         }
     }
@@ -175,12 +183,29 @@ final class Cache implements Flushable {
     }
 
     /**
+     * Is it a valuable log?
+     * @return TRUE if it is valuable and should be persisted
+     * @throws IOException If fails
+     */
+    private boolean valuable() throws IOException {
+        final Protocol protocol = new Protocol(
+            new Protocol.Source() {
+                @Override
+                public InputStream stream() throws IOException {
+                    return Cache.this.read();
+                }
+            }
+        );
+        return !protocol.find(Pulse.Signal.STAGE, "").isEmpty();
+    }
+
+    /**
      * Get stream.
      * @return Stream with data
      * @throws IOException If fails
      */
     private ByteArrayOutputStream stream() throws IOException {
-        synchronized (this.key) {
+        synchronized (this.dirty) {
             if (this.data == null) {
                 this.data = new ByteArrayOutputStream();
                 final S3Client client = this.key.client();
@@ -210,7 +235,6 @@ final class Cache implements Flushable {
                         ex
                     );
                 }
-                this.touched.set(System.currentTimeMillis());
             }
             if (!this.lines.isEmpty()) {
                 final PrintWriter writer = new PrintWriter(this.data);
@@ -220,27 +244,9 @@ final class Cache implements Flushable {
                 writer.flush();
                 writer.close();
                 this.lines.clear();
-                this.touched.set(System.currentTimeMillis());
             }
             return this.data;
         }
-    }
-
-    /**
-     * Is it a valuable log?
-     * @return TRUE if it is valuable and should be persisted
-     * @throws IOException If fails
-     */
-    private boolean valuable() throws IOException {
-        final Protocol protocol = new Protocol(
-            new Protocol.Source() {
-                @Override
-                public InputStream stream() throws IOException {
-                    return Cache.this.read();
-                }
-            }
-        );
-        return !protocol.find(Pulse.Signal.STAGE, "").isEmpty();
     }
 
 }

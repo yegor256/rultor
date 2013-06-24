@@ -31,9 +31,13 @@ package com.rultor.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Conveyer;
+import com.rultor.spi.Pulse;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
@@ -73,6 +77,45 @@ public final class CacheTest {
             Matchers.endsWith("0:00 INFO msg\n")
         );
         MatcherAssert.assertThat(cache.expired(), Matchers.equalTo(false));
+    }
+
+    /**
+     * Cache can save log data to S3.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void savesLogStreamToAmazon() throws Exception {
+        final AmazonS3 aws = Mockito.mock(AmazonS3.class);
+        final ObjectListing listing = Mockito.mock(ObjectListing.class);
+        Mockito.doReturn(new ArrayList<S3ObjectSummary>(0))
+            .when(listing).getObjectSummaries();
+        Mockito.doReturn(listing).when(aws)
+            .listObjects(Mockito.anyString(), Mockito.anyString());
+        Mockito.doReturn(new PutObjectResult()).when(aws).putObject(
+            Mockito.anyString(),
+            Mockito.anyString(),
+            Mockito.any(InputStream.class),
+            Mockito.any(ObjectMetadata.class)
+        );
+        final S3Client client = Mockito.mock(S3Client.class);
+        Mockito.doReturn(aws).when(client).get();
+        final Key key = new Key(client, new URN("urn:facebook:7"), "tes", 1);
+        final Cache cache = new Cache(key);
+        cache.append(
+            new Conveyer.Line.Simple(
+                1,
+                Level.INFO,
+                new Pulse.Signal(Pulse.Signal.STAGE, "a").toString()
+            )
+        );
+        MatcherAssert.assertThat(cache.expired(), Matchers.equalTo(false));
+        cache.flush();
+        Mockito.verify(aws).putObject(
+            Mockito.anyString(),
+            Mockito.anyString(),
+            Mockito.any(InputStream.class),
+            Mockito.any(ObjectMetadata.class)
+        );
     }
 
 }
