@@ -43,6 +43,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.Validate;
@@ -70,13 +71,19 @@ public final class SSHChannel implements Shell {
         new com.jcraft.jsch.Logger() {
             @Override
             public boolean isEnabled(final int level) {
-                return level == com.jcraft.jsch.Logger.WARN
-                    || level == com.jcraft.jsch.Logger.FATAL
-                    || level == com.jcraft.jsch.Logger.ERROR;
+                return level >= com.jcraft.jsch.Logger.INFO;
             }
             @Override
             public void log(final int level, final String msg) {
-                Logger.info(SSHChannel.class, msg);
+                Level jul;
+                if (level >= com.jcraft.jsch.Logger.ERROR) {
+                    jul = Level.SEVERE;
+                } else if (level >= com.jcraft.jsch.Logger.WARN) {
+                    jul = Level.WARNING;
+                } else {
+                    jul = Level.INFO;
+                }
+                Logger.log(jul, SSHChannel.class, msg);
             }
         };
 

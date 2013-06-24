@@ -153,7 +153,9 @@ public final class EC2 implements Environments {
             final Instance instance = instances.get(0);
             Logger.info(
                 this,
-                "instance %s created, key=%s, platform=%s",
+                "instance %s created, type=%s, ami=%s, key=%s, platform=%s",
+                this.type,
+                this.ami,
                 instance.getInstanceId(),
                 instance.getKeyName(),
                 instance.getPlatform()
