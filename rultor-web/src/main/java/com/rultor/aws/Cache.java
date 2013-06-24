@@ -36,7 +36,6 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.google.common.io.CountingInputStream;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Conveyer;
 import com.rultor.spi.Pulse;
@@ -48,7 +47,6 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.ws.rs.core.MediaType;
@@ -124,7 +122,7 @@ final class Cache implements Flushable {
      */
     public InputStream read() throws IOException {
         this.touched.set(System.currentTimeMillis());
-        return new ByteArrayInputStream(this.stream().toByteArray());
+        return this.stream();
     }
 
     /**
@@ -136,11 +134,12 @@ final class Cache implements Flushable {
             if (this.dirty.get() && this.valuable()) {
                 final S3Client client = this.key.client();
                 final AmazonS3 aws = client.get();
+                final CountingInputStream stream =
+                    new CountingInputStream(this.stream());
                 final ObjectMetadata meta = new ObjectMetadata();
                 meta.setContentEncoding(CharEncoding.UTF_8);
                 meta.setContentType(MediaType.TEXT_PLAIN);
-                final CountingInputStream stream =
-                    new CountingInputStream(this.read());
+                meta.setContentLength(this.data.size());
                 try {
                     final PutObjectResult result = aws.putObject(
                         client.bucket(),
@@ -172,14 +171,12 @@ final class Cache implements Flushable {
     }
 
     /**
-     * Is it expired (called from {@link Caches})?
-     * @return TRUE if it is not required in memory any more
+     * Age of the it in milliseconds.
+     * @return Millis
      * @throws IOException If fails
      */
-    public boolean expired() throws IOException {
-        final long mins = (System.currentTimeMillis() - this.touched.get())
-            / TimeUnit.MINUTES.toMillis(1);
-        return mins > Tv.THIRTY || (mins > Tv.FIVE && !this.valuable());
+    public long age() throws IOException {
+        return System.currentTimeMillis() - this.touched.get();
     }
 
     /**
@@ -187,12 +184,12 @@ final class Cache implements Flushable {
      * @return TRUE if it is valuable and should be persisted
      * @throws IOException If fails
      */
-    private boolean valuable() throws IOException {
+    public boolean valuable() throws IOException {
         final Protocol protocol = new Protocol(
             new Protocol.Source() {
                 @Override
                 public InputStream stream() throws IOException {
-                    return Cache.this.read();
+                    return Cache.this.stream();
                 }
             }
         );
@@ -204,7 +201,7 @@ final class Cache implements Flushable {
      * @return Stream with data
      * @throws IOException If fails
      */
-    private ByteArrayOutputStream stream() throws IOException {
+    private InputStream stream() throws IOException {
         synchronized (this.dirty) {
             if (this.data == null) {
                 this.data = new ByteArrayOutputStream();
@@ -245,7 +242,7 @@ final class Cache implements Flushable {
                 writer.close();
                 this.lines.clear();
             }
-            return this.data;
+            return new ByteArrayInputStream(this.data.toByteArray());
         }
     }
 

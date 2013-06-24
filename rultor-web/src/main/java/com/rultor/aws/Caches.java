@@ -34,6 +34,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.common.io.Flushables;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
+import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Conveyer;
 import com.rultor.spi.Metricable;
@@ -188,7 +189,7 @@ final class Caches implements Flushable, Metricable, Runnable {
                 throw new IOException(ex);
             }
             for (Map.Entry<Key, Cache> entry : this.all.entrySet()) {
-                if (entry.getValue().expired()) {
+                if (this.expired(entry.getValue())) {
                     this.all.remove(entry.getKey());
                 }
             }
@@ -213,6 +214,17 @@ final class Caches implements Flushable, Metricable, Runnable {
     private Cache get(final Key key) {
         this.all.putIfAbsent(key, new Cache(key));
         return this.all.get(key);
+    }
+
+    /**
+     * This cache is expired and should be removed?
+     * @param cache The cache
+     * @return TRUE if expired
+     * @throws IOException If IO exception happens
+     */
+    private boolean expired(final Cache cache) throws IOException {
+        final long mins = cache.age() / TimeUnit.MINUTES.toMillis(1);
+        return mins > Tv.THIRTY || (mins > Tv.FIVE && !cache.valuable());
     }
 
 }

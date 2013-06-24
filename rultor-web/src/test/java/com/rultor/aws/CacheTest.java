@@ -76,7 +76,7 @@ public final class CacheTest {
             IOUtils.toString(cache.read(), CharEncoding.UTF_8),
             Matchers.endsWith("0:00 INFO msg\n")
         );
-        MatcherAssert.assertThat(cache.expired(), Matchers.equalTo(false));
+        MatcherAssert.assertThat(cache.age(), Matchers.greaterThan(0L));
     }
 
     /**
@@ -108,7 +108,7 @@ public final class CacheTest {
                 new Pulse.Signal(Pulse.Signal.STAGE, "a").toString()
             )
         );
-        MatcherAssert.assertThat(cache.expired(), Matchers.equalTo(false));
+        MatcherAssert.assertThat(cache.age(), Matchers.greaterThan(0L));
         cache.flush();
         Mockito.verify(aws).putObject(
             Mockito.anyString(),
