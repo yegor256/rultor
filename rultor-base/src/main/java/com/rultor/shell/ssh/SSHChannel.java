@@ -150,7 +150,7 @@ public final class SSHChannel implements Shell {
                 channel.setInputStream(stdin);
                 channel.setCommand(command);
                 channel.connect();
-                return this.exec(channel);
+                return this.exec(channel, session);
             } finally {
                 session.disconnect();
             }
@@ -186,12 +186,14 @@ public final class SSHChannel implements Shell {
     /**
      * Exec this channel and return its exit code.
      * @param channel The channel to exec
+     * @param session The session
      * @return Exit code (zero in case of success)
      * @throws IOException If fails
      */
-    private int exec(final ChannelExec channel) throws IOException {
+    private int exec(final ChannelExec channel, final Session session)
+        throws IOException {
         try {
-            return this.code(channel);
+            return this.code(channel, session);
         } finally {
             channel.disconnect();
         }
@@ -200,11 +202,20 @@ public final class SSHChannel implements Shell {
     /**
      * Wait until it's done and return its code.
      * @param exec The channel
+     * @param session The session
      * @return The exit code
      * @throws IOException If some IO problem inside
      */
-    private int code(final ChannelExec exec) throws IOException {
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    private int code(final ChannelExec exec, final Session session)
+        throws IOException {
         while (!exec.isClosed()) {
+            try {
+                session.sendKeepAliveMsg();
+            // @checkstyle IllegalCatch (1 line)
+            } catch (Exception ex) {
+                throw new IOException(ex);
+            }
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException ex) {

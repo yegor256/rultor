@@ -65,6 +65,14 @@ public final class Server implements Environments {
      * {@inheritDoc}
      */
     @Override
+    public String toString() {
+        return this.host;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Environment acquire() throws IOException {
         return new Environment() {
             @Override

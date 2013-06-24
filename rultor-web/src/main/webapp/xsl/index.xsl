@@ -52,10 +52,10 @@
                 </button>
             </fieldset>
         </form>
-        <p>
-            <xsl:text>Registered Units:</xsl:text>
-        </p>
         <xsl:if test="units/unit">
+            <p>
+                <xsl:text>Registered Units:</xsl:text>
+            </p>
             <table class="table table-bordered">
                 <colgroup>
                     <col style="width: 12em;"/>
