@@ -121,7 +121,6 @@ final class Cache implements Flushable {
      * @throws IOException If fails
      */
     public InputStream read() throws IOException {
-        this.touched.set(System.currentTimeMillis());
         return this.stream();
     }
 

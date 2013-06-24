@@ -138,8 +138,10 @@ public final class SSHChannel implements Shell {
         @NotNull final OutputStream stderr) throws IOException {
         try {
             final Session session = this.session();
-            session.setServerAliveInterval((int) TimeUnit.MINUTES.toMillis(1));
-            session.setServerAliveCountMax(Tv.TEN);
+            session.setServerAliveInterval(
+                (int) TimeUnit.SECONDS.toMillis(Tv.TWENTY)
+            );
+            session.setServerAliveCountMax(Tv.MILLION);
             this.connect(session);
             try {
                 final ChannelExec channel = ChannelExec.class.cast(
