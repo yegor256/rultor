@@ -56,48 +56,59 @@
             <xsl:text>Registered Units:</xsl:text>
         </p>
         <xsl:if test="units/unit">
-            <ul class="nav">
-                <xsl:apply-templates select="units/unit"/>
-            </ul>
+            <table class="table table-bordered">
+                <colgroup>
+                    <col style="width: 12em;"/>
+                    <col/>
+                    <col style="width: 7em;"/>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Identifier</th>
+                        <th>Description</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <xsl:apply-templates select="units/unit"/>
+                </tbody>
+            </table>
         </xsl:if>
     </xsl:template>
     <xsl:template match="unit">
-        <li>
-            <ul class="inline btn-group-vertical">
-                <li>
-                    <xsl:text>&#xAB;</xsl:text>
+        <tr>
+            <td>
+                <a title="edit">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="links/link[@rel='edit']/@href"/>
+                    </xsl:attribute>
                     <xsl:value-of select="name"/>
-                    <xsl:text>&#xBB;</xsl:text>
-                </li>
-                <li>
-                    <a title="edit">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='edit']/@href"/>
-                        </xsl:attribute>
-                        <i class="icon-edit"><xsl:comment>edit</xsl:comment></i>
-                    </a>
-                </li>
-                <li>
-                    <a title="pulses">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='pulses']/@href"/>
-                        </xsl:attribute>
-                        <i class="icon-file-alt"><xsl:comment>pulses</xsl:comment></i>
-                    </a>
-                </li>
-                <li>
-                    <a onclick="return confirm('Are you sure?');"
-                        title="delete this unit">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='remove']/@href"/>
-                        </xsl:attribute>
-                        <i class="icon-remove"><xsl:comment>remove</xsl:comment></i>
-                    </a>
-                </li>
-                <li>
-                    <xsl:value-of select="face"/>
-                </li>
-            </ul>
-        </li>
+                </a>
+            </td>
+            <td>
+                <xsl:value-of select="face"/>
+            </td>
+            <td>
+                <ul class="inline btn-group-vertical">
+                    <li>
+                        <a title="pulses">
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="links/link[@rel='pulses']/@href"/>
+                            </xsl:attribute>
+                            <i class="icon-file-alt"><xsl:comment>pulses</xsl:comment></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a onclick="return confirm('Are you sure?');"
+                            title="delete this unit">
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="links/link[@rel='remove']/@href"/>
+                            </xsl:attribute>
+                            <i class="icon-remove"><xsl:comment>remove</xsl:comment></i>
+                        </a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
     </xsl:template>
 </xsl:stylesheet>
