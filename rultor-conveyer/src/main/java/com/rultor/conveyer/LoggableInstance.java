@@ -31,6 +31,7 @@ package com.rultor.conveyer;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
+import com.jcabi.manifests.Manifests;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Work;
@@ -78,6 +79,13 @@ final class LoggableInstance implements Instance {
     public void pulse(@NotNull final Work work) throws Exception {
         this.appender.register(work);
         try {
+            Logger.info(
+                this,
+                "www.rultor.com %s %s %s",
+                Manifests.read("Rultor-Version"),
+                Manifests.read("Rultor-Revision"),
+                Manifests.read("Rultor-Date")
+            );
             Logger.info(
                 this,
                 new Pulse.Signal(
