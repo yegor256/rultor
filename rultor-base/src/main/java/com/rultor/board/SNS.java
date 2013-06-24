@@ -85,7 +85,7 @@ public final class SNS implements Billboard {
     @Override
     public String toString() {
         return String.format(
-            "SNS topic %s accesses with %s",
+            "SNS topic %s accessed with %s",
             this.topic, this.client
         );
     }
