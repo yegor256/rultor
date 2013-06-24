@@ -145,9 +145,7 @@ public final class SSHChannel implements Shell {
         @NotNull final OutputStream stderr) throws IOException {
         try {
             final Session session = this.session();
-            session.setServerAliveInterval(
-                (int) TimeUnit.SECONDS.toMillis(Tv.TWENTY)
-            );
+            session.setServerAliveInterval((int) TimeUnit.SECONDS.toMillis(1));
             session.setServerAliveCountMax(Tv.MILLION);
             this.connect(session);
             try {
