@@ -27,86 +27,70 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.env.ec2;
+package com.rultor.aws;
 
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.cloudformation.AmazonCloudFormation;
-import com.amazonaws.services.cloudformation.model.CreateStackRequest;
-import com.amazonaws.services.cloudformation.model.CreateStackResult;
+import com.amazonaws.services.cloudformation.AmazonCloudFormationClient;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.aws.CFClient;
-import com.rultor.env.Environment;
-import com.rultor.env.Environments;
-import java.io.IOException;
 import lombok.EqualsAndHashCode;
 
 /**
- * CloudFormation Stacks.
+ * CF client.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "template", "client" })
-@Loggable(Loggable.DEBUG)
-public final class CFStacks implements Environments {
+public interface CFClient {
 
     /**
-     * Template.
+     * Get AWS CF client.
+     * @return Get it
      */
-    private final transient String template;
+    AmazonCloudFormation get();
 
     /**
-     * CF client.
+     * Simple client.
      */
-    private final transient CFClient client;
-
-    /**
-     * Public ctor.
-     * @param tmpl Template
-     * @param akey AWS key
-     * @param scrt AWS secret
-     */
-    public CFStacks(final String tmpl, final String akey, final String scrt) {
-        this(tmpl, new CFClient.Simple(akey, scrt));
-    }
-
-    /**
-     * Public ctor.
-     * @param tmpl Template
-     * @param clnt CF client
-     */
-    public CFStacks(final String tmpl, final CFClient clnt) {
-        this.template = tmpl;
-        this.client = clnt;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "CloudFormation stacks accessed with %s",
-            this.client
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Environment acquire() throws IOException {
-        final AmazonCloudFormation aws = this.client.get();
-        try {
-            final CreateStackResult result = aws.createStack(
-                new CreateStackRequest()
-                    .withTemplateBody(this.template)
+    @Immutable
+    @EqualsAndHashCode(of = { "key", "secret" })
+    @Loggable(Loggable.DEBUG)
+    final class Simple implements CFClient {
+        /**
+         * Key.
+         */
+        private final transient String key;
+        /**
+         * Secret.
+         */
+        private final transient String secret;
+        /**
+         * Public ctor.
+         * @param akey AWS key
+         * @param scrt AWS secret
+         */
+        public Simple(final String akey, final String scrt) {
+            this.key = akey;
+            this.secret = scrt;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return String.format("KEY=%s", this.key);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public AmazonCloudFormation get() {
+            return new AmazonCloudFormationClient(
+                new BasicAWSCredentials(this.key, this.secret)
             );
-            return new CFStack(result.getStackId(), this.client);
-        } finally {
-            aws.shutdown();
         }
     }
 

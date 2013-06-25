@@ -32,7 +32,11 @@ package com.rultor.base;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseThreads;
 import com.rultor.spi.Instance;
+import com.rultor.stateful.Lineup;
+import com.rultor.stateful.Notepad;
+import java.util.Collection;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -55,6 +59,7 @@ public final class ParallelTest {
     /**
      * Parallel can enable certain amount of parallel threads.
      * @throws Exception If some problem inside
+     * @checkstyle ExecutableStatementCount (200 lines)
      */
     @Test
     public void enablesFixedNumberOfParallelThreads() throws Exception {
@@ -69,9 +74,40 @@ public final class ParallelTest {
                 }
             }
         ).when(origin).pulse();
+        final Collection<String> active = new CopyOnWriteArrayList<String>();
+        final Notepad notepad = Mockito.mock(Notepad.class);
+        Mockito.doAnswer(
+            new Answer<Integer>() {
+                @Override
+                public Integer answer(final InvocationOnMock inv) {
+                    return active.size();
+                }
+            }
+        ).when(notepad).size();
+        Mockito.doAnswer(
+            new Answer<Boolean>() {
+                @Override
+                public Boolean answer(final InvocationOnMock inv) {
+                    return active.add(inv.getArguments()[0].toString());
+                }
+            }
+        ).when(notepad).add(Mockito.anyString());
+        Mockito.doAnswer(
+            new Answer<Boolean>() {
+                @Override
+                public Boolean answer(final InvocationOnMock inv) {
+                    return active.remove(inv.getArguments()[0].toString());
+                }
+            }
+        ).when(notepad).remove(Mockito.anyString());
         final int threads = 10;
         final int maximum = 3;
-        final Parallel parallel = new Parallel(maximum, origin);
+        final Parallel parallel = new Parallel(
+            maximum,
+            new Lineup.Asynchronous(),
+            notepad,
+            origin
+        );
         final ExecutorService svc = Executors.newFixedThreadPool(
             threads, new VerboseThreads()
         );
@@ -96,7 +132,7 @@ public final class ParallelTest {
             Matchers.is(true)
         );
         MatcherAssert.assertThat(done.getCount(), Matchers.equalTo(0L));
-        Mockito.verify(origin, Mockito.times(maximum)).pulse();
+        Mockito.verify(origin, Mockito.atMost(maximum)).pulse();
     }
 
 }

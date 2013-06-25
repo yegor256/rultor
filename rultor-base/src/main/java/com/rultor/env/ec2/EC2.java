@@ -36,6 +36,7 @@ import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
+import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
 import com.rultor.env.Environments;
 import java.io.IOException;

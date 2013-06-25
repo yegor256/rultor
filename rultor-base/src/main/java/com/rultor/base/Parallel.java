@@ -29,11 +29,15 @@
  */
 package com.rultor.base;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
+import com.rultor.stateful.Lineup;
+import com.rultor.stateful.Notepad;
+import java.io.StringWriter;
+import javax.json.Json;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -43,21 +47,26 @@ import lombok.EqualsAndHashCode;
  * @version $Id$
  * @since 1.0
  */
-@EqualsAndHashCode(of = { "origin", "active", "maximum" })
+@Immutable
+@EqualsAndHashCode(of = { "origin", "lineup", "maximum" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
 public final class Parallel implements Instance {
 
     /**
-     * Threads running now.
-     */
-    private final transient Set<Thread> active =
-        new CopyOnWriteArraySet<Thread>();
-
-    /**
      * Origin.
      */
     private final transient Instance origin;
+
+    /**
+     * List of active threads.
+     */
+    private final transient Notepad active;
+
+    /**
+     * Lineup.
+     */
+    private final transient Lineup lineup;
 
     /**
      * Maximum.
@@ -67,11 +76,17 @@ public final class Parallel implements Instance {
     /**
      * Public ctor.
      * @param max Maximum
+     * @param lnp Lineup
+     * @param atv List of active threads
      * @param instance Original instance
+     * @checkstyle ParameterNumber (5 lines)
      */
-    public Parallel(final int max, final Instance instance) {
+    public Parallel(final int max, @NotNull final Lineup lnp,
+        @NotNull final Notepad atv, @NotNull final Instance instance) {
         this.origin = instance;
+        this.lineup = lnp;
         this.maximum = max;
+        this.active = atv;
     }
 
     /**
@@ -80,7 +95,15 @@ public final class Parallel implements Instance {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
-        this.active.add(Thread.currentThread());
+        final String key = this.key();
+        this.lineup.exec(
+            new Runnable() {
+                @Override
+                public void run() {
+                    Parallel.this.active.add(key);
+                }
+            }
+        );
         try {
             if (this.active.size() <= this.maximum) {
                 this.origin.pulse();
@@ -92,7 +115,14 @@ public final class Parallel implements Instance {
                 );
             }
         } finally {
-            this.active.remove(Thread.currentThread());
+            this.lineup.exec(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        Parallel.this.active.remove(key);
+                    }
+                }
+            );
         }
     }
 
@@ -102,10 +132,28 @@ public final class Parallel implements Instance {
     @Override
     public String toString() {
         return Logger.format(
-            "%s in %d thread(s)",
+            "%s in %d thread(s) synchronized by %s and persisted by %s",
             this.origin,
-            this.maximum
+            this.maximum,
+            this.lineup,
+            this.active
         );
+    }
+
+    /**
+     * Make a nice unique name from the current thread.
+     * @return Key of the thread
+     */
+    private String key() {
+        final Thread thread = Thread.currentThread();
+        final StringWriter writer = new StringWriter();
+        Json.createGenerator(writer).writeStartObject()
+            .write("thread", thread.getName())
+            .write("id", thread.getId())
+            .write("group", thread.getThreadGroup().getName())
+            .writeEnd()
+            .close();
+        return writer.toString();
     }
 
 }
