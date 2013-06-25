@@ -159,9 +159,7 @@ final class Composite implements Variable<Object> {
         try {
             cls = Class.forName(this.type);
         } catch (ClassNotFoundException ex) {
-            throw new Repo.InstantiationException(
-                String.format("class %s not found", this.type)
-            );
+            throw new Repo.InstantiationException(ex);
         }
         Constructor<?> ctor = null;
         for (Constructor<?> opt : cls.getConstructors()) {
