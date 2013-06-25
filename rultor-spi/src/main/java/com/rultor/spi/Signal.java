@@ -76,7 +76,8 @@ public final class Signal {
      * Pattern to match.
      */
     private static final Pattern PATTERN = Pattern.compile(
-        ".*RULTOR:(\\d+):([a-zA-Z]{1,32}):([\\p{ASCII}&&[^\\p{Cntrl}]]*)"
+        // @checkstyle LineLength (1 line)
+        ".*RULTOR:(\\d+):(SPEC|START|SUCCESS|FAILURE):([\\p{ASCII}&&[^\\p{Cntrl}]]*)"
     );
 
     /**
