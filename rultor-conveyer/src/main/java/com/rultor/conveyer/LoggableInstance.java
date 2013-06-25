@@ -35,7 +35,6 @@ import com.jcabi.manifests.Manifests;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Work;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -45,7 +44,7 @@ import lombok.EqualsAndHashCode;
  * @version $Id$
  * @since 1.0
  */
-@EqualsAndHashCode(of = { "origin", "appender" })
+@EqualsAndHashCode(of = { "origin", "appender", "work" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
 final class LoggableInstance implements Instance {
@@ -61,14 +60,21 @@ final class LoggableInstance implements Instance {
     private final transient ConveyerAppender appender;
 
     /**
+     * Work we're doing.
+     */
+    private final transient Work work;
+
+    /**
      * Public ctor.
      * @param instance Origin
      * @param appr Appender
+     * @param wrk Work
      */
     protected LoggableInstance(final Instance instance,
-        final ConveyerAppender appr) {
+        final ConveyerAppender appr, final Work wrk) {
         this.origin = instance;
         this.appender = appr;
+        this.work = wrk;
     }
 
     /**
@@ -76,8 +82,8 @@ final class LoggableInstance implements Instance {
      */
     @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    public void pulse(@NotNull final Work work) throws Exception {
-        this.appender.register(work);
+    public void pulse() throws Exception {
+        this.appender.register(this.work);
         try {
             Logger.info(
                 this,
@@ -89,10 +95,10 @@ final class LoggableInstance implements Instance {
             Logger.info(
                 this,
                 new Pulse.Signal(
-                    Pulse.Signal.SPEC, work.spec().asText()
+                    Pulse.Signal.SPEC, this.work.spec().asText()
                 ).toString()
             );
-            this.origin.pulse(work);
+            this.origin.pulse();
             // @checkstyle IllegalCatch (1 line)
         } catch (Exception ex) {
             Logger.info(

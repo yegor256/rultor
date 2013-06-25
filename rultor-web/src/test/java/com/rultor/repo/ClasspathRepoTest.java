@@ -33,7 +33,6 @@ import com.rultor.spi.Instance;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.User;
-import com.rultor.spi.Work;
 import java.util.concurrent.atomic.AtomicLong;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -126,8 +125,7 @@ public final class ClasspathRepoTest {
             ClasspathRepoTest.Foo.COUNTER.get(),
             Matchers.equalTo(2L)
         );
-        final Work work = Mockito.mock(Work.class);
-        instance.pulse(work);
+        instance.pulse();
         MatcherAssert.assertThat(
             ClasspathRepoTest.Foo.COUNTER.get(),
             Matchers.equalTo(-1L)
@@ -153,7 +151,7 @@ public final class ClasspathRepoTest {
          * {@inheritDoc}
          */
         @Override
-        public void pulse(final Work work) {
+        public void pulse() {
             ClasspathRepoTest.Foo.COUNTER.set(-1);
         }
         /**

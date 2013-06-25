@@ -37,7 +37,6 @@ import com.rultor.spi.Instance;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.User;
-import com.rultor.spi.Work;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
@@ -147,8 +146,8 @@ final class SimpleInstantary implements Instantary {
          */
         @Override
         @Loggable(value = Loggable.DEBUG, limit = 1, unit = TimeUnit.HOURS)
-        public void pulse(final Work work) throws Exception {
-            this.origin.pulse(work);
+        public void pulse() throws Exception {
+            this.origin.pulse();
         }
         /**
          * {@inheritDoc}

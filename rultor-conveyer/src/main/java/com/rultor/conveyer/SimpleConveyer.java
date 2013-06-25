@@ -47,6 +47,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.log4j.Level;
@@ -134,8 +135,8 @@ public final class SimpleConveyer
      * @param log Log
      * @checkstyle ParameterNumber (4 lines)
      */
-    public SimpleConveyer(final Queue que, final Repo rep, final Users usrs,
-        final Log log) {
+    public SimpleConveyer(@NotNull final Queue que, @NotNull final Repo rep,
+        @NotNull final Users usrs, @NotNull final Log log) {
         this.queue = que;
         this.instantary = new SimpleInstantary(rep);
         this.users = usrs;
@@ -179,7 +180,7 @@ public final class SimpleConveyer
      * {@inheritDoc}
      */
     @Override
-    public void register(final MetricRegistry registry) {
+    public void register(@NotNull final MetricRegistry registry) {
         this.counter = registry.counter(
             MetricRegistry.name(this.getClass(), "done-jobs")
         );
@@ -200,9 +201,10 @@ public final class SimpleConveyer
                             SimpleConveyer.this.users.fetch(work.owner()),
                             work.unit(), work.spec()
                         ),
-                        SimpleConveyer.this.appender
+                        SimpleConveyer.this.appender,
+                        work
                     );
-                    unit.pulse(work);
+                    unit.pulse();
                     SimpleConveyer.this.counter.inc();
                     return null;
                 }

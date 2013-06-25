@@ -75,10 +75,6 @@
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-urn</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jcabi</groupId>
             <artifactId>jcabi-aspects</artifactId>
         </dependency>
     </dependencies>

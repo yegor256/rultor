@@ -32,10 +32,8 @@ package com.rultor.base;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Work;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -81,11 +79,11 @@ public final class Parallel implements Instance {
      */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    public void pulse(@NotNull final Work work) throws Exception {
+    public void pulse() throws Exception {
         this.active.add(Thread.currentThread());
         try {
             if (this.active.size() <= this.maximum) {
-                this.origin.pulse(work);
+                this.origin.pulse();
             } else {
                 Logger.info(
                     this,

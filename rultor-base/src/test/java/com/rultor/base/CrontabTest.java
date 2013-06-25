@@ -29,10 +29,7 @@
  */
 package com.rultor.base;
 
-import com.jcabi.urn.URN;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Work;
 import java.util.Calendar;
 import java.util.TimeZone;
 import org.hamcrest.MatcherAssert;
@@ -72,13 +69,10 @@ public final class CrontabTest {
             "@annually",
             "59 23 31 12 6",
         };
-        final Work work = new Work.Simple(
-            new URN("urn:facebook:55"), "unit-name", new Spec.Simple("")
-        );
         for (String text : texts) {
             final Instance origin = Mockito.mock(Instance.class);
             final Crontab crontab = new Crontab(text, origin);
-            crontab.pulse(work);
+            crontab.pulse();
         }
     }
 
@@ -94,13 +88,10 @@ public final class CrontabTest {
             this.today.get(Calendar.DAY_OF_MONTH) + 1,
             this.today.get(Calendar.MONTH) + 1
         );
-        final Work work = new Work.Simple(
-            new URN("urn:facebook:66"), "unit-name-2", new Spec.Simple("")
-        );
         final Instance origin = Mockito.mock(Instance.class);
         final Crontab crontab = new Crontab(text, origin);
-        crontab.pulse(work);
-        Mockito.verify(origin, Mockito.times(1)).pulse(work);
+        crontab.pulse();
+        Mockito.verify(origin, Mockito.times(1)).pulse();
     }
 
     /**
@@ -115,13 +106,10 @@ public final class CrontabTest {
             this.today.get(Calendar.DAY_OF_MONTH) + 1,
             this.today.get(Calendar.MONTH) + 1
         );
-        final Work work = new Work.Simple(
-            new URN("urn:facebook:77"), "unit-name-6", new Spec.Simple("")
-        );
         final Instance origin = Mockito.mock(Instance.class);
         final Crontab crontab = new Crontab(text, origin);
-        crontab.pulse(work);
-        Mockito.verify(origin, Mockito.times(0)).pulse(work);
+        crontab.pulse();
+        Mockito.verify(origin, Mockito.times(0)).pulse();
     }
 
     /**

@@ -31,10 +31,7 @@ package com.rultor.base;
 
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseThreads;
-import com.jcabi.urn.URN;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Work;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -71,10 +68,7 @@ public final class ParallelTest {
                     return null;
                 }
             }
-        ).when(origin).pulse(Mockito.any(Work.class));
-        final Work work = new Work.Simple(
-            new URN("urn:facebook:55"), "unit-name", new Spec.Simple("")
-        );
+        ).when(origin).pulse();
         final int threads = 10;
         final int maximum = 3;
         final Parallel parallel = new Parallel(maximum, origin);
@@ -87,7 +81,7 @@ public final class ParallelTest {
             @Override
             public Void call() throws Exception {
                 start.await();
-                parallel.pulse(work);
+                parallel.pulse();
                 done.countDown();
                 return null;
             }
@@ -102,7 +96,7 @@ public final class ParallelTest {
             Matchers.is(true)
         );
         MatcherAssert.assertThat(done.getCount(), Matchers.equalTo(0L));
-        Mockito.verify(origin, Mockito.times(maximum)).pulse(work);
+        Mockito.verify(origin, Mockito.times(maximum)).pulse();
     }
 
 }

@@ -37,9 +37,7 @@ import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Pulse;
-import com.rultor.spi.Work;
 import java.util.logging.Level;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
 
@@ -88,7 +86,7 @@ public final class Build implements Instance {
      */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    public void pulse(@NotNull final Work work) throws Exception {
+    public void pulse() throws Exception {
         final Shell shell = this.shells.acquire();
         Pulse.Signal.stage("Acquired %s", shell);
         int code;
@@ -105,20 +103,10 @@ public final class Build implements Instance {
         }
         Logger.info(this, "shell closed with #%d exit code", code);
         if (code == 0) {
-            this.board.announce(
-                String.format(
-                    "%s completed successfully",
-                    work.unit()
-                )
-            );
+            this.board.announce("completed successfully");
             Pulse.Signal.stage("Announced success through %s", this.board);
         } else {
-            this.board.announce(
-                String.format(
-                    "%s failed",
-                    work.unit()
-                )
-            );
+            this.board.announce("failed");
             Logger.error(
                 this,
                 new Pulse.Signal(

@@ -30,7 +30,6 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import javax.validation.constraints.NotNull;
 
 /**
  * Object that is ready to receive a pulse.
@@ -44,9 +43,8 @@ public interface Instance {
 
     /**
      * Pulse.
-     * @param work The work we're doing now
      * @throws Exception If something fails
      */
-    void pulse(@NotNull Work work) throws Exception;
+    void pulse() throws Exception;
 
 }

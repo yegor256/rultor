@@ -35,11 +35,9 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Work;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -98,7 +96,7 @@ public final class Crontab implements Instance {
      */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    public void pulse(@NotNull final Work work) throws Exception {
+    public void pulse() throws Exception {
         final Calendar today = Crontab.today();
         boolean pass = true;
         for (Crontab.Gate<Calendar> gate : this.gates) {
@@ -108,7 +106,7 @@ public final class Crontab implements Instance {
             }
         }
         if (pass) {
-            this.origin.pulse(work);
+            this.origin.pulse();
         } else {
             Logger.info(
                 this,
