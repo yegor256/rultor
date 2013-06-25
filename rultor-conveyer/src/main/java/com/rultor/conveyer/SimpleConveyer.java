@@ -81,9 +81,9 @@ public final class SimpleConveyer
     private final transient Queue queue;
 
     /**
-     * Instantary.
+     * Repo.
      */
-    private final transient Instantary instantary;
+    private final transient Repo repo;
 
     /**
      * Users.
@@ -138,7 +138,7 @@ public final class SimpleConveyer
     public SimpleConveyer(@NotNull final Queue que, @NotNull final Repo rep,
         @NotNull final Users usrs, @NotNull final Log log) {
         this.queue = que;
-        this.instantary = new SimpleInstantary(rep);
+        this.repo = rep;
         this.users = usrs;
         this.appender = new ConveyerAppender(log);
         this.appender.setThreshold(Level.DEBUG);
@@ -184,7 +184,6 @@ public final class SimpleConveyer
         this.counter = registry.counter(
             MetricRegistry.name(this.getClass(), "done-jobs")
         );
-        this.instantary.register(registry);
     }
 
     /**
@@ -197,9 +196,9 @@ public final class SimpleConveyer
                 @Override
                 public Void call() throws Exception {
                     final Instance unit = new LoggableInstance(
-                        SimpleConveyer.this.instantary.get(
+                        SimpleConveyer.this.repo.make(
                             SimpleConveyer.this.users.fetch(work.owner()),
-                            work.unit(), work.spec()
+                            work.spec()
                         ),
                         SimpleConveyer.this.appender,
                         work
