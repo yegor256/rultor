@@ -32,7 +32,7 @@ package com.rultor.aws;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Conveyer;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Signal;
 import com.rultor.spi.Stage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -41,7 +41,8 @@ import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.logging.Level;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -86,12 +87,12 @@ final class Protocol {
 
     /**
      * Find this signal in the stream.
-     * @param name Signal name
+     * @param mnemo Signal name
      * @param def Default value, if not found
      * @return Found value
      * @throws IOException If fails
      */
-    public String find(final String name, final String def)
+    public String find(final Signal.Mnemo mnemo, final String def)
         throws IOException {
         final BufferedReader reader =
             new BufferedReader(new InputStreamReader(this.src.stream()));
@@ -101,9 +102,9 @@ final class Protocol {
             if (line == null) {
                 break;
             }
-            if (Pulse.Signal.exists(line)) {
-                final Pulse.Signal signal = Pulse.Signal.valueOf(line);
-                if (signal.key().equals(name)) {
+            if (Signal.exists(line)) {
+                final Signal signal = Signal.valueOf(line);
+                if (signal.key().equals(mnemo)) {
                     value = signal.value();
                     break;
                 }
@@ -125,16 +126,25 @@ final class Protocol {
         final Collection<Stage> stages = new LinkedList<Stage>();
         final BufferedReader reader =
             new BufferedReader(new InputStreamReader(this.src.stream()));
+        final ConcurrentMap<String, Long> starts =
+            new ConcurrentHashMap<String, Long>(0);
         while (true) {
             final String txt = reader.readLine();
             if (txt == null) {
                 break;
             }
-            if (Pulse.Signal.exists(txt) && Conveyer.Line.Simple.has(txt)) {
+            if (Signal.exists(txt) && Conveyer.Line.Simple.has(txt)) {
                 final Conveyer.Line line = Conveyer.Line.Simple.parse(txt);
-                final Pulse.Signal signal = Pulse.Signal.valueOf(txt);
-                if (signal.key().equals(Pulse.Signal.STAGE)) {
-                    stages.add(Protocol.toStage(line, signal));
+                final Signal signal = Signal.valueOf(txt);
+                if (signal.key().equals(Signal.Mnemo.START)) {
+                    starts.put(signal.value(), line.msec());
+                } else if (signal.key().equals(Signal.Mnemo.SUCCESS)
+                    || signal.key().equals(Signal.Mnemo.FAILURE)) {
+                    stages.add(
+                        Protocol.toStage(
+                            line, signal, starts.get(signal.value())
+                        )
+                    );
                 }
             }
         }
@@ -145,19 +155,24 @@ final class Protocol {
      * Convert signal and line to stage.
      * @param line Line
      * @param signal Signal
+     * @param start When started or NULL if unknown
      * @return The stage
      */
     private static Stage toStage(final Conveyer.Line line,
-        final Pulse.Signal signal) {
+        final Signal signal, final Long start) {
         Stage.Result result;
-        if (line.level().equals(Level.SEVERE)) {
-            result = Stage.Result.FAILURE;
-        } else {
+        if (signal.key().equals(Signal.Mnemo.SUCCESS)) {
             result = Stage.Result.SUCCESS;
+        } else {
+            result = Stage.Result.FAILURE;
+        }
+        long begin = 0;
+        if (start != null) {
+            begin = start;
         }
         return new Stage.Simple(
             result,
-            0,
+            begin,
             line.msec(),
             signal.value()
         );

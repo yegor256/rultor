@@ -81,7 +81,7 @@ public interface EC2Client {
          */
         @Override
         public String toString() {
-            return String.format("KEY=%s", this.key);
+            return String.format("AmazonEC2/%s", this.key);
         }
         /**
          * {@inheritDoc}

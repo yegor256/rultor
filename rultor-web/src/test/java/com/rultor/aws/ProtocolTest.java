@@ -29,7 +29,7 @@
  */
 package com.rultor.aws;
 
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Signal;
 import com.rultor.spi.Stage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,11 +52,10 @@ public final class ProtocolTest {
      */
     @Test
     public void parsesText() throws Exception {
-        final String key = "hi";
         final String value = "\u20ac\t\n\n";
         // @checkstyle StringLiteralsConcatenation (4 lines)
         final String text = "10:51 INFO Foo some first line"
-            + "\n10:55 INFO Foo " + new Pulse.Signal(key, value)
+            + "\n10:55 INFO Foo " + new Signal(Signal.Mnemo.START, value)
             + "\n10:57 WARNING Foo some other line";
         MatcherAssert.assertThat(
             new Protocol(
@@ -66,7 +65,7 @@ public final class ProtocolTest {
                         return IOUtils.toInputStream(text);
                     }
                 }
-            ).find(key, ""),
+            ).find(Signal.Mnemo.START, ""),
             Matchers.equalTo(value)
         );
     }
@@ -79,9 +78,9 @@ public final class ProtocolTest {
     public void findsStages() throws Exception {
         // @checkstyle StringLiteralsConcatenation (4 lines)
         final String text = "11:51 INFO Bar some text \u20ac"
-            + "\n11:55 INFO Bar " + new Pulse.Signal(Pulse.Signal.STAGE, "a ")
+            + "\n11:55 INFO Bar " + new Signal(Signal.Mnemo.SUCCESS, "a ")
             + "\n11:57 SEVERE Bar some other text line"
-            + "\n11:55 SEVERE B " + new Pulse.Signal(Pulse.Signal.STAGE, "b ");
+            + "\n11:55 INFO B " + new Signal(Signal.Mnemo.FAILURE, "b ");
         MatcherAssert.assertThat(
             new Protocol(
                 new Protocol.Source() {

@@ -34,7 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Signal;
 import com.rultor.spi.Work;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.Validate;
@@ -99,19 +99,11 @@ final class LoggableInstance implements Instance {
                 Manifests.read("Rultor-Revision"),
                 Manifests.read("Rultor-Date")
             );
-            Logger.info(
-                this,
-                new Pulse.Signal(
-                    Pulse.Signal.SPEC, this.work.spec().asText()
-                ).toString()
-            );
+            Signal.log(Signal.Mnemo.SPEC, this.work.spec().asText());
             this.origin.pulse();
             // @checkstyle IllegalCatch (1 line)
         } catch (Exception ex) {
-            Logger.info(
-                this,
-                new Pulse.Signal(Pulse.Signal.STAGE, "FAILURE").toString()
-            );
+            Signal.log(Signal.Mnemo.FAILURE, ex.getMessage());
             throw ex;
         } finally {
             this.appender.unregister();

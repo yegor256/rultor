@@ -36,7 +36,7 @@ import com.rultor.board.Billboard;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Signal;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
@@ -83,40 +83,34 @@ public final class Build implements Instance {
 
     /**
      * {@inheritDoc}
+     * @checkstyle MultipleStringLiterals (100 lines)
      */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
+        Signal.log(Signal.Mnemo.START, "Acquiring shell");
         final Shell shell = this.shells.acquire();
-        Pulse.Signal.stage("Acquired %s", shell);
+        Signal.log(Signal.Mnemo.SUCCESS, "Acquiring shell");
         int code;
         try {
+            Signal.log(Signal.Mnemo.START, "Executing script");
             code = shell.exec(
                 this.script,
                 IOUtils.toInputStream(""),
                 Logger.stream(Level.INFO, this),
                 Logger.stream(Level.SEVERE, this)
             );
-            Pulse.Signal.stage("Executed %s", this.script);
         } finally {
             IOUtils.closeQuietly(shell);
         }
-        Logger.info(this, "shell closed with #%d exit code", code);
         if (code == 0) {
+            Signal.log(Signal.Mnemo.SUCCESS, "Executing script");
             this.board.announce("completed successfully");
-            Pulse.Signal.stage("Announced success through %s", this.board);
+            Signal.log(Signal.Mnemo.SUCCESS, "Announced success");
         } else {
+            Signal.log(Signal.Mnemo.FAILURE, "Executing script");
             this.board.announce("failed");
-            Logger.error(
-                this,
-                new Pulse.Signal(
-                    Pulse.Signal.STAGE,
-                    String.format(
-                        "Announced failure through %s",
-                        this.board
-                    )
-                ).toString()
-            );
+            Signal.log(Signal.Mnemo.SUCCESS, "Announced failure");
         }
     }
 

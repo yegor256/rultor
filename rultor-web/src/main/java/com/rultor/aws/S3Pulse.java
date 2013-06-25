@@ -33,6 +33,7 @@ import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Signal;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stage;
 import java.io.IOException;
@@ -101,7 +102,7 @@ final class S3Pulse implements Pulse {
     public Spec spec() {
         try {
             return new Spec.Simple(
-                this.protocol.find(Pulse.Signal.SPEC, "java.lang.Long(0)")
+                this.protocol.find(Signal.Mnemo.SPEC, "java.lang.Long(0)")
             );
         } catch (IOException ex) {
             throw new IllegalStateException(ex);

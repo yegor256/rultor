@@ -36,7 +36,7 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Conveyer;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Signal;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -106,7 +106,7 @@ public final class CacheTest {
             new Conveyer.Line.Simple(
                 1,
                 Level.INFO,
-                new Pulse.Signal(Pulse.Signal.STAGE, "a").toString()
+                new Signal(Signal.Mnemo.START, "a").toString()
             )
         );
         TimeUnit.MILLISECONDS.sleep(2);

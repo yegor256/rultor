@@ -35,7 +35,6 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * S3 client.
@@ -63,7 +62,6 @@ public interface S3Client {
      * Simple client.
      */
     @Immutable
-    @ToString
     @EqualsAndHashCode(of = { "key", "secret", "bkt" })
     @Loggable(Loggable.DEBUG)
     final class Simple implements S3Client {
@@ -90,6 +88,13 @@ public interface S3Client {
             this.key = akey;
             this.secret = scrt;
             this.bkt = bucket;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return String.format("AmazonS3/%s/%s", this.key, this.bkt);
         }
         /**
          * {@inheritDoc}

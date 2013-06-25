@@ -34,31 +34,30 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link Pulse}.
+ * Test case for {@link Signal}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class PulseTest {
+public final class SignalTest {
 
     /**
-     * Pulse.Signal can make a string.
+     * Signal can make a string.
      * @throws Exception If some problem inside
      */
     @Test
     public void makesString() throws Exception {
-        final String key = "test";
         final String value = "\u20ac\n\tfast\ttest\r\u0433";
         final String encoded = String.format(
             "some \u20ac prefixed text %s",
-            new Pulse.Signal(key, value).toString()
+            new Signal(Signal.Mnemo.SUCCESS, value).toString()
         );
         MatcherAssert.assertThat(
-            Pulse.Signal.exists(encoded),
+            Signal.exists(encoded),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(
-            Pulse.Signal.valueOf(encoded).key(),
-            Matchers.equalTo(key)
+            Signal.valueOf(encoded).key(),
+            Matchers.equalTo(Signal.Mnemo.SUCCESS)
         );
     }
 

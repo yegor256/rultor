@@ -35,7 +35,6 @@ import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Amazon SQS client.
@@ -63,7 +62,6 @@ public interface SQSClient {
      * Simple client.
      */
     @Immutable
-    @ToString
     @EqualsAndHashCode(of = { "key", "secret", "queue" })
     @Loggable(Loggable.DEBUG)
     final class Simple implements SQSClient {
@@ -90,6 +88,13 @@ public interface SQSClient {
             this.key = akey;
             this.secret = scrt;
             this.queue = url;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return String.format("AmazonSQS/%s/%s", this.key, this.queue);
         }
         /**
          * {@inheritDoc}
