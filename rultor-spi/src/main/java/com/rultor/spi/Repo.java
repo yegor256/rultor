@@ -95,6 +95,14 @@ public interface Repo extends Metricable {
         public InstantiationException(final Exception cause) {
             super(cause);
         }
+        /**
+         * Public ctor.
+         * @param msg Message
+         * @param cause Cause of it
+         */
+        public InstantiationException(final String msg, final Exception cause) {
+            super(msg, cause);
+        }
     }
 
     /**

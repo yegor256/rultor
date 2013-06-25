@@ -102,14 +102,21 @@ final class Composite implements Variable<Object> {
             args[idx] = object;
             types[idx] = object.getClass();
         }
+        final Constructor<?> ctor = this.ctor(types);
         try {
-            return this.ctor(types).newInstance(args);
+            return ctor.newInstance(args);
         } catch (InstantiationException ex) {
-            throw new Repo.InstantiationException(ex);
+            throw new Repo.InstantiationException(
+                String.format("failed to instantiate with %s", ctor), ex
+            );
         } catch (IllegalAccessException ex) {
-            throw new Repo.InstantiationException(ex);
+            throw new Repo.InstantiationException(
+                String.format("failed to access %s", ctor), ex
+            );
         } catch (InvocationTargetException ex) {
-            throw new Repo.InstantiationException(ex);
+            throw new Repo.InstantiationException(
+                String.format("failed to invoke %s", ctor), ex
+            );
         }
     }
 
