@@ -39,6 +39,7 @@ import com.rultor.spi.Conveyer;
 import com.rultor.spi.Pulse;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
@@ -108,6 +109,7 @@ public final class CacheTest {
                 new Pulse.Signal(Pulse.Signal.STAGE, "a").toString()
             )
         );
+        TimeUnit.MILLISECONDS.sleep(2);
         MatcherAssert.assertThat(cache.age(), Matchers.greaterThan(0L));
         cache.flush();
         Mockito.verify(aws).putObject(

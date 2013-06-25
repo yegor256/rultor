@@ -41,6 +41,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
+import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
 import java.io.IOException;
 import java.net.InetAddress;

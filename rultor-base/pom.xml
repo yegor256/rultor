@@ -70,6 +70,18 @@
             <version>0.1.45</version>
         </dependency>
         <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.json</groupId>
+            <artifactId>javax.json-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-log</artifactId>
         </dependency>
@@ -85,6 +97,9 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
                         <systemPropertyVariables>
+                            <failsafe.s3.key>${failsafe.s3.key}</failsafe.s3.key>
+                            <failsafe.s3.secret>${failsafe.s3.secret}</failsafe.s3.secret>
+                            <failsafe.s3.bucket>${failsafe.s3.bucket}</failsafe.s3.bucket>
                             <failsafe.ec2.key>${failsafe.ec2.key}</failsafe.ec2.key>
                             <failsafe.ec2.secret>${failsafe.ec2.secret}</failsafe.ec2.secret>
                             <failsafe.ec2.priv>${failsafe.ec2.priv}</failsafe.ec2.priv>

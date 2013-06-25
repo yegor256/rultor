@@ -27,71 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.env.ec2;
-
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.cloudformation.AmazonCloudFormation;
-import com.amazonaws.services.cloudformation.AmazonCloudFormationClient;
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import lombok.EqualsAndHashCode;
 
 /**
- * CF client.
+ * Amazon AWS common classes and interfaces.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface CFClient {
-
-    /**
-     * Get AWS CF client.
-     * @return Get it
-     */
-    AmazonCloudFormation get();
-
-    /**
-     * Simple client.
-     */
-    @Immutable
-    @EqualsAndHashCode(of = { "key", "secret" })
-    @Loggable(Loggable.DEBUG)
-    final class Simple implements CFClient {
-        /**
-         * Key.
-         */
-        private final transient String key;
-        /**
-         * Secret.
-         */
-        private final transient String secret;
-        /**
-         * Public ctor.
-         * @param akey AWS key
-         * @param scrt AWS secret
-         */
-        public Simple(final String akey, final String scrt) {
-            this.key = akey;
-            this.secret = scrt;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString() {
-            return String.format("KEY=%s", this.key);
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public AmazonCloudFormation get() {
-            return new AmazonCloudFormationClient(
-                new BasicAWSCredentials(this.key, this.secret)
-            );
-        }
-    }
-
-}
+package com.rultor.aws;

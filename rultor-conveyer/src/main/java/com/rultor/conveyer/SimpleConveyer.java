@@ -64,7 +64,7 @@ import org.apache.log4j.PatternLayout;
  */
 @Loggable(Loggable.INFO)
 @ToString
-@EqualsAndHashCode(of = { "queue", "instantary" })
+@EqualsAndHashCode(of = "queue")
 @SuppressWarnings("PMD.DoNotUseThreads")
 public final class SimpleConveyer
     implements Conveyer, Closeable, Callable<Void> {

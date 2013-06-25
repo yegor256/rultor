@@ -65,6 +65,7 @@ public final class EC2ITCase {
      * @throws Exception If some problem inside
      */
     @Test
+    @org.junit.Ignore
     public void makesInstanceAndConnectsToIt() throws Exception {
         final String key = System.getProperty("failsafe.ec2.key");
         Assume.assumeNotNull(key);

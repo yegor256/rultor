@@ -104,8 +104,6 @@ final class Composite implements Variable<Object> {
         }
         try {
             return this.ctor(types).newInstance(args);
-        } catch (ClassNotFoundException ex) {
-            throw new Repo.InstantiationException(ex);
         } catch (InstantiationException ex) {
             throw new Repo.InstantiationException(ex);
         } catch (IllegalAccessException ex) {
@@ -152,11 +150,19 @@ final class Composite implements Variable<Object> {
      * Find the best matching constructor.
      * @param types Types
      * @return The ctor
-     * @throws ClassNotFoundException If class not found
+     * @throws Repo.InstantiationException If can't get it
+     * @checkstyle RedundantThrows (5 lines)
      */
     private Constructor<?> ctor(final Class<?>[] types)
-        throws ClassNotFoundException {
-        final Class<?> cls = Class.forName(this.type);
+        throws Repo.InstantiationException {
+        final Class<?> cls;
+        try {
+            cls = Class.forName(this.type);
+        } catch (ClassNotFoundException ex) {
+            throw new Repo.InstantiationException(
+                String.format("class %s not found", this.type)
+            );
+        }
         Constructor<?> ctor = null;
         for (Constructor<?> opt : cls.getConstructors()) {
             if (Composite.inherit(opt.getParameterTypes(), types)) {
@@ -165,7 +171,7 @@ final class Composite implements Variable<Object> {
             }
         }
         if (ctor == null) {
-            throw new IllegalArgumentException(
+            throw new Repo.InstantiationException(
                 String.format(
                     // @checkstyle LineLength (1 line)
                     "can't find constructor %s%s, available alternatives are: %s",
