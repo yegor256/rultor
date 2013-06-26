@@ -31,12 +31,21 @@ package com.rultor.scm.git;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
-import com.rultor.shell.Shell;
+import com.rultor.shell.Terminal;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
  * Git.
@@ -46,14 +55,27 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "shell", "name" })
+@EqualsAndHashCode(of = { "terminal", "name" })
 @Loggable(Loggable.DEBUG)
 public final class GitBranch implements Branch {
 
     /**
-     * Shell to use.
+     * Pattern for every log line.
      */
-    private final transient Shell shell;
+    private static final Pattern LINE = Pattern.compile(
+        // @checkstyle LineLength (1 line)
+        "([a-f0-9]{40}) ([\\w\\-@\\.]+) (\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2} \\+\\d{4}) (.*)"
+    );
+
+    /**
+     * Terminal to use.
+     */
+    private final transient Terminal terminal;
+
+    /**
+     * Directory.
+     */
+    private final transient String dir;
 
     /**
      * Branch name.
@@ -62,11 +84,14 @@ public final class GitBranch implements Branch {
 
     /**
      * Public ctor.
-     * @param shl Shell to use for checkout
+     * @param term Terminal to use for checkout
+     * @param folder Directory with data
      * @param branch Name of the branch
      */
-    public GitBranch(@NotNull final Shell shl, @NotNull final String branch) {
-        this.shell = shl;
+    public GitBranch(@NotNull final Terminal term, @NotNull final String folder,
+        @NotNull final String branch) {
+        this.terminal = term;
+        this.dir = folder;
         this.name = branch;
     }
 
@@ -75,7 +100,10 @@ public final class GitBranch implements Branch {
      */
     @Override
     public String toString() {
-        return String.format("Git branch '%s' at %s", this.name, this.shell);
+        return String.format(
+            "Git branch '%s' at %s in %s",
+            this.name, this.dir, this.terminal
+        );
     }
 
     /**
@@ -83,7 +111,38 @@ public final class GitBranch implements Branch {
      */
     @Override
     public Iterable<Commit> log() throws IOException {
-        throw new UnsupportedOperationException();
+        final String stdout = this.terminal.exec(
+            "git log --pretty=format:'%H %ae %cd %s' --date=iso8601"
+        );
+        final String[] lines = stdout.split("\n");
+        final Collection<Commit> commits = new ArrayList<Commit>(lines.length);
+        for (String line : lines) {
+            commits.add(GitBranch.toCommit(line));
+        }
+        return commits;
+    }
+
+    /**
+     * Convert one log line to commit.
+     * @param line The line to convert
+     * @return Commit
+     */
+    private static Commit toCommit(final String line) {
+        final Matcher matcher = GitBranch.LINE.matcher(line);
+        Validate.isTrue(matcher.matches(), "invalid line from Git: %s", line);
+        try {
+            return new Commit.Simple(
+                matcher.group(1),
+                Date.class.cast(
+                    DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.parseObject(
+                        matcher.group(2)
+                    )
+                ),
+                matcher.group(Tv.THREE)
+            );
+        } catch (ParseException ex) {
+            throw new IllegalArgumentException(ex);
+        }
     }
 
 }

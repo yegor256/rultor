@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.scm.Branch;
 import com.rultor.scm.SCM;
 import com.rultor.shell.Shell;
+import com.rultor.shell.Terminal;
 import com.rultor.shell.ssh.PrivateKey;
 import java.io.IOException;
 import java.net.URL;
@@ -48,19 +49,24 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "shell", "url", "key" })
+@EqualsAndHashCode(of = { "terminal", "url", "key" })
 @Loggable(Loggable.DEBUG)
 public final class Git implements SCM {
 
     /**
-     * Shell to use.
+     * Terminal to use.
      */
-    private final transient Shell shell;
+    private final transient Terminal terminal;
 
     /**
      * Git URL.
      */
     private final transient String url;
+
+    /**
+     * Directory to use in terminal.
+     */
+    private final transient String dir;
 
     /**
      * Private key to use.
@@ -71,12 +77,15 @@ public final class Git implements SCM {
      * Public ctor.
      * @param shl Shell to use for checkout
      * @param addr URL of git repository
+     * @param folder Directory to use for clone
      * @param priv Private key to use locally
+     * @checkstyle ParameterNumber (5 lines)
      */
     public Git(@NotNull final Shell shl, @NotNull final URL addr,
-        @NotNull final PrivateKey priv) {
-        this.shell = shl;
+        @NotNull final String folder, @NotNull final PrivateKey priv) {
+        this.terminal = new Terminal(shl);
         this.url = addr.toString();
+        this.dir = folder;
         this.key = priv;
     }
 
@@ -86,9 +95,10 @@ public final class Git implements SCM {
     @Override
     public String toString() {
         return String.format(
-            "Git repository at '%s' cloned to %s with %s",
+            "Git repository at '%s' cloned to %s at %s accessed through %s",
             this.url,
-            this.shell,
+            this.dir,
+            this.terminal,
             this.key
         );
     }
@@ -98,8 +108,27 @@ public final class Git implements SCM {
      */
     @Override
     public Branch checkout(final String name) throws IOException {
-        this.shell.exec(name, null, null, null);
-        return new GitBranch(this.shell, name);
+        this.terminal.exec(
+            // @checkstyle LineLength (1 line)
+            "TMP=`mktemp rultor` && cat > '$TMP' && mkdir -p ~/.ssh && mv '$TMP' ~/.ssh/id_rsa",
+            this.key.asText()
+        );
+        this.terminal.exec(
+            String.format(
+                "if [ ! -d %s ]; then git clone %s %1$s; fi",
+                Terminal.escape(this.dir),
+                Terminal.escape(this.url)
+            )
+        );
+        this.terminal.exec(
+            String.format(
+                // @checkstyle LineLength (1 line)
+                "cd %s && git reset --hard && git clean -f -d && git checkout %s",
+                Terminal.escape(this.dir),
+                Terminal.escape(name)
+            )
+        );
+        return new GitBranch(this.terminal, this.dir, name);
     }
 
 }

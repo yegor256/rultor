@@ -33,10 +33,12 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -70,6 +72,23 @@ public final class PrivateKey {
     @Override
     public String toString() {
         return String.format("RSA-key-%d-characters", this.text.length());
+    }
+
+    /**
+     * Get it as a text.
+     * @return The text
+     */
+    public String asText() {
+        return this.text;
+    }
+
+    /**
+     * Get it as an input stream.
+     * @return The stream
+     * @throws IOException If some IO problem inside
+     */
+    public InputStream asInputStream() throws IOException {
+        return IOUtils.toInputStream(this.text, CharEncoding.UTF_8);
     }
 
     /**
