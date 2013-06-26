@@ -92,7 +92,7 @@
                 <stage>
                     <result>SUCCESS</result>
                     <msec>13530</msec>
-                    <output>Git repository cloned</output>
+                    <output>Git repository cloned successfully into https://github.com/yegor256/rultor.git</output>
                     <links>
                         <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
                     </links>

@@ -83,13 +83,13 @@
                     </a>
                 </li>
             </ul>
-            <div class="pulse-details">
+            <div>
                 <xsl:if test="count(stages/stage) &gt; 0">
                     <table class="table table-condensed">
                         <colgroup>
                             <col style="width: 2em;"/>
                             <col style="width: 5em;"/>
-                            <col style="width: 18em;"/>
+                            <col/>
                         </colgroup>
                         <tbody>
                             <xsl:apply-templates select="stages/stage"/>

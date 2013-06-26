@@ -69,6 +69,11 @@
             </head>
             <body>
                 <xsl:apply-templates select="version"/>
+                <a href="https://github.com/yegor256/rultor">
+                    <img style="position: absolute; top: 0; right: 0; border: 0; width: 110px; height: 110px;"
+                        src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
+                        alt="Fork me on GitHub" />
+                </a>
                 <div class="container-fluid">
                     <p>
                         <a>

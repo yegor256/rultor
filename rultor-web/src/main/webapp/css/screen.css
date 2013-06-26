@@ -52,12 +52,3 @@ textarea.spec {
     font-family: 'Consolas', 'Lucida Console', monospace;
 }
 
-div.pulse-details {
-}
-    div.pulse-details table {
-    }
-        div.pulse-details table td {
-            border: 0;
-            padding: 0em .3em;
-        }
-
