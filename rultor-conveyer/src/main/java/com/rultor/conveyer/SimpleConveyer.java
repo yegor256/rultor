@@ -33,6 +33,7 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
 import com.rultor.spi.Conveyer;
 import com.rultor.spi.Conveyer.Log;
@@ -116,7 +117,7 @@ public final class SimpleConveyer
                         new ThreadGroup(
                             Long.toString(this.group.incrementAndGet())
                         ),
-                        runnable
+                        new VerboseRunnable(runnable, false, true)
                     );
                 }
             }
