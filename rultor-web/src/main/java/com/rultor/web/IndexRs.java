@@ -138,7 +138,6 @@ public final class IndexRs extends BaseRs {
         }
         return new JaxbBundle("unit")
             .attr("error", error)
-            .up()
             .add("name", name)
             .up()
             .add("face", face)
