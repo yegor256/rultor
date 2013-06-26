@@ -162,6 +162,8 @@
     </xsl:template>
     <xsl:template match="identity">
         <p>
+            <code><xsl:value-of select="urn"/></code>
+            <xsl:text> </xsl:text>
             <img style="width: 25px; height: 25px;">
                 <xsl:attribute name="src">
                     <xsl:value-of select="photo"/>

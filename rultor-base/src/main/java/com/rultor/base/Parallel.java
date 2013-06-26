@@ -95,6 +95,30 @@ public final class Parallel implements Instance {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
+        if (this.maximum > 0) {
+            this.pass();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return Logger.format(
+            "%s in %d thread(s) synchronized by %s and persisted by %s",
+            this.origin,
+            this.maximum,
+            this.lineup,
+            this.active
+        );
+    }
+
+    /**
+     * Pass through.
+     * @throws Exception If fails
+     */
+    private void pass() throws Exception {
         final String key = this.key();
         this.lineup.exec(
             new Runnable() {
@@ -124,20 +148,6 @@ public final class Parallel implements Instance {
                 }
             );
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "%s in %d thread(s) synchronized by %s and persisted by %s",
-            this.origin,
-            this.maximum,
-            this.lineup,
-            this.active
-        );
     }
 
     /**

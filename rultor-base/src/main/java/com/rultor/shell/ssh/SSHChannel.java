@@ -71,7 +71,7 @@ public final class SSHChannel implements Shell {
         new com.jcraft.jsch.Logger() {
             @Override
             public boolean isEnabled(final int level) {
-                return level >= com.jcraft.jsch.Logger.INFO;
+                return level >= com.jcraft.jsch.Logger.WARN;
             }
             @Override
             public void log(final int level, final String msg) {

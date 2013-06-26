@@ -71,6 +71,14 @@ public final class Checkout implements Branch {
      * {@inheritDoc}
      */
     @Override
+    public String toString() {
+        return String.format("branch %s at %s", this.name, this.scm);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Iterable<Commit> log() throws IOException {
         return this.scm.checkout(this.name).log();
     }

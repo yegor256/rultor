@@ -77,7 +77,7 @@
     </xsl:template>
     <xsl:template match="unit">
         <tr>
-            <xsl:if test="type = ''">
+            <xsl:if test="@error != ''">
                 <xsl:attribute name="class">
                     <xsl:text>error</xsl:text>
                 </xsl:attribute>
@@ -91,10 +91,6 @@
                 </a>
             </td>
             <td>
-                <xsl:if test="type != ''">
-                    <code><xsl:value-of select="type"/></code>
-                    <xsl:text> </xsl:text>
-                </xsl:if>
                 <xsl:value-of select="face"/>
             </td>
             <td>
