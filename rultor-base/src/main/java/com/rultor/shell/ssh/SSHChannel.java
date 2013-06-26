@@ -154,7 +154,7 @@ public final class SSHChannel implements Shell {
                 );
                 channel.setErrStream(stderr, false);
                 channel.setOutputStream(stdout, false);
-                channel.setInputStream(stdin);
+                channel.setInputStream(stdin, false);
                 channel.setCommand(command);
                 channel.connect();
                 return this.exec(channel, session);

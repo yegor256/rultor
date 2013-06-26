@@ -122,7 +122,7 @@ public final class Git implements SCM {
         this.terminal.exec(
             String.format(
                 // @checkstyle LineLength (1 line)
-                "cd %s && git reset --hard && git clean -f -d && git checkout %s",
+                "cd %s && git remote update -p && git reset --hard && git clean -f -d && git checkout %s",
                 Terminal.escape(this.dir),
                 Terminal.escape(name)
             )

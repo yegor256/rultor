@@ -29,39 +29,34 @@
  */
 package com.rultor.ci;
 
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.board.Billboard;
-import com.rultor.shell.Shell;
-import com.rultor.shell.Shells;
+import com.rultor.shell.Batch;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Signal;
-import java.util.logging.Level;
+import java.io.ByteArrayOutputStream;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.io.IOUtils;
 
 /**
- * Build.
+ * Neutral Build.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "shells", "script", "board" })
+@EqualsAndHashCode(of = { "batch", "board" })
 @Loggable(Loggable.DEBUG)
-public final class Build implements Instance {
+public final class NeutralBuild implements Instance {
 
     /**
-     * Shells.
+     * Batch to execute.
      */
-    private final transient Shells shells;
-
-    /**
-     * Script to execute.
-     */
-    private final transient String script;
+    private final transient Batch batch;
 
     /**
      * Where to notify about success/failure.
@@ -70,45 +65,30 @@ public final class Build implements Instance {
 
     /**
      * Public ctor.
-     * @param shls Shells
-     * @param scrt Script to run there
+     * @param btch Batch to use
      * @param brd The board where to announce
      */
-    public Build(final Shells shls, final String scrt,
-        final Billboard brd) {
-        this.shells = shls;
-        this.script = scrt;
+    public NeutralBuild(@NotNull final Batch btch,
+        @NotNull final Billboard brd) {
+        this.batch = btch;
         this.board = brd;
     }
 
     /**
      * {@inheritDoc}
-     * @checkstyle MultipleStringLiterals (100 lines)
      */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
-        Signal.log(Signal.Mnemo.START, "Acquiring shell");
-        final Shell shell = this.shells.acquire();
-        Signal.log(Signal.Mnemo.SUCCESS, "Acquiring shell");
-        int code;
-        try {
-            Signal.log(Signal.Mnemo.START, "Executing script");
-            code = shell.exec(
-                this.script,
-                IOUtils.toInputStream(""),
-                Logger.stream(Level.INFO, this),
-                Logger.stream(Level.SEVERE, this)
-            );
-        } finally {
-            IOUtils.closeQuietly(shell);
-        }
+        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        final int code = this.batch.exec(
+            new ImmutableMap.Builder<String, Object>().build(),
+            stdout
+        );
         if (code == 0) {
-            Signal.log(Signal.Mnemo.SUCCESS, "Executing script");
             this.board.announce("completed successfully");
             Signal.log(Signal.Mnemo.SUCCESS, "Announced success");
         } else {
-            Signal.log(Signal.Mnemo.FAILURE, "Executing script");
             this.board.announce("failed");
             Signal.log(Signal.Mnemo.SUCCESS, "Announced failure");
         }
@@ -120,9 +100,9 @@ public final class Build implements Instance {
     @Override
     public String toString() {
         return Logger.format(
-            "shell script \"%[text]s\" through %s",
-            this.script,
-            this.shells
+            "neutral %s announced through %s",
+            this.batch,
+            this.board
         );
     }
 
