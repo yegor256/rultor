@@ -68,4 +68,55 @@ public interface Commit {
     @NotNull
     String author() throws IOException;
 
+    /**
+     * Simple implementation.
+     */
+    final class Simple implements Commit {
+        /**
+         * Name of commit.
+         */
+        private final transient String label;
+        /**
+         * Date of commit.
+         */
+        private final transient long when;
+        /**
+         * Author of commit.
+         */
+        private final transient String who;
+        /**
+         * Public ctor.
+         * @param name Name of it
+         * @param date When it happened
+         * @param author Author of commit
+         */
+        public Simple(@NotNull final String name, @NotNull final Date date,
+            @NotNull final String author) {
+            this.label = name;
+            this.when = date.getTime();
+            this.who = author;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String name() throws IOException {
+            return this.label;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Date date() throws IOException {
+            return new Date(this.when);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String author() throws IOException {
+            return this.who;
+        }
+    }
+
 }

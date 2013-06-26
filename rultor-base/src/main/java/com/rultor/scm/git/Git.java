@@ -48,7 +48,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "shells", "url", "key" })
+@EqualsAndHashCode(of = { "shell", "url", "key" })
 @Loggable(Loggable.DEBUG)
 public final class Git implements SCM {
 
