@@ -29,10 +29,16 @@
  */
 package com.rultor.conveyer;
 
+import com.jcabi.urn.URN;
 import com.rultor.spi.Conveyer;
+import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Spec;
+import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import com.rultor.spi.Work;
+import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -49,16 +55,27 @@ public final class SimpleConveyerTest {
      */
     @Test
     public void startsAndStops() throws Exception {
-        final Queue queue = new Queue.Memory();
+        final Queue queue = Mockito.mock(Queue.class);
+        final URN owner = new URN("urn:facebook:1");
+        Mockito.doReturn(
+            new Work.Simple(owner, "unit", new Spec.Simple())
+        ).when(queue).pull();
         final Repo repo = Mockito.mock(Repo.class);
+        final Instance instance = Mockito.mock(Instance.class);
+        Mockito.doReturn(instance).when(repo)
+            .make(Mockito.any(User.class), Mockito.any(Spec.class));
         final Users users = Mockito.mock(Users.class);
         final Conveyer.Log log = Mockito.mock(Conveyer.Log.class);
         final Conveyer conveyer = new SimpleConveyer(queue, repo, users, log);
         try {
             conveyer.start();
+            TimeUnit.MILLISECONDS.sleep(1);
         } finally {
             conveyer.close();
         }
+        Mockito.verify(users).fetch(owner);
+        Mockito.verify(queue).pull();
+        Mockito.verify(instance).pulse();
     }
 
 }

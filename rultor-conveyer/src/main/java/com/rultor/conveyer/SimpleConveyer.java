@@ -191,7 +191,7 @@ public final class SimpleConveyer
             new Callable<Void>() {
                 @Override
                 public Void call() throws Exception {
-                    final Instance unit = new LoggableInstance(
+                    final Instance instance = new LoggableInstance(
                         SimpleConveyer.this.repo.make(
                             SimpleConveyer.this.users.fetch(work.owner()),
                             work.spec()
@@ -199,7 +199,7 @@ public final class SimpleConveyer
                         SimpleConveyer.this.appender,
                         work
                     );
-                    unit.pulse();
+                    instance.pulse();
                     SimpleConveyer.this.counter.inc();
                     return null;
                 }
