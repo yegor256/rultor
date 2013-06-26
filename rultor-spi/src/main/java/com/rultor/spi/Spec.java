@@ -66,7 +66,7 @@ public interface Spec {
          * Public ctor.
          */
         public Simple() {
-            this("java.lang.Integer(0)");
+            this("com.rultor.base.Empty()");
         }
         /**
          * Public ctor.

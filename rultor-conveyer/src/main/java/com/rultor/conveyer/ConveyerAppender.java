@@ -34,6 +34,7 @@ import com.rultor.spi.Conveyer;
 import com.rultor.spi.Work;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.Validate;
@@ -73,6 +74,11 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
      * Destination of logs.
      */
     private final transient Conveyer.Log log;
+
+    /**
+     * This thread is currently logging, all other logs are forbidden.
+     */
+    private final transient AtomicBoolean busy = new AtomicBoolean();
 
     /**
      * Destination of logs.
@@ -121,17 +127,20 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
      */
     @Override
     protected void append(final LoggingEvent event) {
-        final ThreadGroup group = Thread.currentThread().getThreadGroup();
-        final Work work = this.works.get(group);
-        if (work != null) {
-            this.log.push(
-                work,
-                new Conveyer.Line.Simple(
-                    System.currentTimeMillis() - work.started(),
-                    ConveyerAppender.LEVELS.get(event.getLevel()),
-                    this.layout.format(event)
-                )
-            );
+        if (this.busy.compareAndSet(false, true)) {
+            final ThreadGroup group = Thread.currentThread().getThreadGroup();
+            final Work work = this.works.get(group);
+            if (work != null) {
+                this.log.push(
+                    work,
+                    new Conveyer.Line.Simple(
+                        System.currentTimeMillis() - work.started(),
+                        ConveyerAppender.LEVELS.get(event.getLevel()),
+                        this.layout.format(event)
+                    )
+                );
+            }
+            this.busy.set(false);
         }
     }
 

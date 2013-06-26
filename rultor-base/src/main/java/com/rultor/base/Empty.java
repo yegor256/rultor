@@ -27,46 +27,32 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.base;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
 import lombok.EqualsAndHashCode;
 
 /**
- * Runtime instance.
+ * Empty instance.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
+@Immutable
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-final class RuntimeInstance implements Instance {
-
-    /**
-     * Object to pulse.
-     */
-    private final transient Object object;
-
-    /**
-     * Public ctor.
-     * @param obj Object
-     * @todo #34 Would be nice to check objects for their immutability
-     */
-    protected RuntimeInstance(final Object obj) {
-        this.object = obj;
-    }
+public final class Empty implements Instance {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
-        if (this.object instanceof Instance) {
-            Instance.class.cast(this.object).pulse();
-        }
+        Logger.info(this, "nothing to do");
     }
 
     /**
@@ -74,16 +60,7 @@ final class RuntimeInstance implements Instance {
      */
     @Override
     public String toString() {
-        final String text;
-        if (this.object instanceof String) {
-            text = String.format(
-                "%d characters of plain text",
-                this.object.toString().length()
-            );
-        } else {
-            text = this.object.toString();
-        }
-        return text;
+        return "Empty instance";
     }
 
 }
