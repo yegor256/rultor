@@ -70,12 +70,6 @@ public final class SimpleConveyer
     implements Conveyer, Closeable, Callable<Void> {
 
     /**
-     * In how many threads we run instances.
-     */
-    private static final int THREADS =
-        Runtime.getRuntime().availableProcessors() * Tv.TEN;
-
-    /**
      * Queue.
      */
     private final transient Queue queue;
@@ -112,7 +106,8 @@ public final class SimpleConveyer
      * Executor of instances.
      */
     private final transient ExecutorService executor =
-        Executors.newCachedThreadPool(
+        Executors.newFixedThreadPool(
+            Runtime.getRuntime().availableProcessors() * Tv.TEN,
             new ThreadFactory() {
                 private final transient AtomicLong group = new AtomicLong();
                 @Override
