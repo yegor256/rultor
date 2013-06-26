@@ -44,6 +44,8 @@ import lombok.EqualsAndHashCode;
 /**
  * Git.
  *
+ * <p>It is assumed that BASH is installed inside that shell.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
@@ -108,11 +110,8 @@ public final class Git implements SCM {
      */
     @Override
     public Branch checkout(final String name) throws IOException {
-        this.terminal.exec(
-            // @checkstyle LineLength (1 line)
-            "TMP=`mktemp rultor` && cat > '$TMP' && mkdir -p ~/.ssh && mv '$TMP' ~/.ssh/id_rsa",
-            this.key.asText()
-        );
+        this.terminal.exec("mkdir -p ~/.ssh");
+        this.terminal.exec("cat > ~/.ssh/id_rsa", this.key.asText());
         this.terminal.exec(
             String.format(
                 "if [ ! -d %s ]; then git clone %s %1$s; fi",
