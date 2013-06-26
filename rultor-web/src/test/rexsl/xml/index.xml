@@ -47,7 +47,7 @@
     </links>
     <millis>16</millis>
     <units>
-        <unit>
+        <unit status="ok">
             <name>git-rultor</name>
             <face>some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, </face>
             <links>
@@ -56,7 +56,7 @@
                 <link href="/xml/index.xml" rel="remove" type="text/xml"/>
             </links>
         </unit>
-        <unit>
+        <unit status="failure">
             <name>nightly-build-rultor</name>
             <face>some text to show</face>
             <links>

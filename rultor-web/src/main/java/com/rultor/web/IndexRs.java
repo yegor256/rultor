@@ -129,12 +129,15 @@ public final class IndexRs extends BaseRs {
      */
     private JaxbBundle unit(final String name, final Unit unit) {
         String face;
+        String status = "ok";
         try {
             face = this.repo().make(this.user(), unit.spec()).toString();
         } catch (Repo.InstantiationException ex) {
             face = ex.getMessage();
+            status = "failure";
         }
         return new JaxbBundle("unit")
+            .attr("status", status)
             .add("name", name)
             .up()
             .add("face", face)

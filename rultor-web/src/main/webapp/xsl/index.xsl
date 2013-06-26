@@ -64,9 +64,14 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th>Identifier</th>
-                        <th>Description</th>
-                        <th>Options</th>
+                        <xsl:if test="@status != 'ok'">
+                            <xsl:attribute name="class">
+                                <xsl:text>error</xsl:text>
+                            </xsl:attribute>
+                        </xsl:if>
+                        <th><xsl:text>Identifier</xsl:text></th>
+                        <th><xsl:text>Description</xsl:text></th>
+                        <th><xsl:text>Options</xsl:text></th>
                     </tr>
                 </thead>
                 <tbody>

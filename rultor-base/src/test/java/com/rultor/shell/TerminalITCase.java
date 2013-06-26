@@ -52,7 +52,7 @@ public final class TerminalITCase {
         final Terminal terminal = new Terminal(new ShellMocker.Bash(dir));
         final String stdin = "some \u20ac\n\n\t text";
         final String stdout = terminal.exec(
-            "TMP=`mktemp -t rultor` && cat > $TMP && cat $TMP && rm $TMP",
+            "TMP=`mktemp rultor.XXXX` && cat > $TMP && cat $TMP && rm $TMP",
             stdin
         );
         MatcherAssert.assertThat(
