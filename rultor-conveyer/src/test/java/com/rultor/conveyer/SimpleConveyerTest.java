@@ -38,9 +38,15 @@ import com.rultor.spi.Spec;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link SimpleConveyer}.
@@ -57,25 +63,47 @@ public final class SimpleConveyerTest {
     public void startsAndStops() throws Exception {
         final Queue queue = Mockito.mock(Queue.class);
         final URN owner = new URN("urn:facebook:1");
-        Mockito.doReturn(
-            new Work.Simple(owner, "unit", new Spec.Simple())
+        final AtomicBoolean pulled = new AtomicBoolean();
+        Mockito.doAnswer(
+            new Answer<Work>() {
+                @Override
+                public Work answer(final InvocationOnMock inv)
+                    throws Exception {
+                    if (pulled.get()) {
+                        TimeUnit.DAYS.sleep(1);
+                    }
+                    pulled.set(true);
+                    return new Work.Simple(owner, "unit", new Spec.Simple());
+                }
+            }
         ).when(queue).pull();
         final Repo repo = Mockito.mock(Repo.class);
         final Instance instance = Mockito.mock(Instance.class);
-        Mockito.doReturn(instance).when(repo)
-            .make(Mockito.any(User.class), Mockito.any(Spec.class));
+        final CountDownLatch made = new CountDownLatch(1);
+        Mockito.doAnswer(
+            new Answer<Instance>() {
+                @Override
+                public Instance answer(final InvocationOnMock invocation)
+                    throws Exception {
+                    made.countDown();
+                    return instance;
+                }
+            }
+        ).when(repo).make(Mockito.any(User.class), Mockito.any(Spec.class));
         final Users users = Mockito.mock(Users.class);
         final Conveyer.Log log = Mockito.mock(Conveyer.Log.class);
         final Conveyer conveyer = new SimpleConveyer(queue, repo, users, log);
         try {
             conveyer.start();
-            TimeUnit.MILLISECONDS.sleep(1);
+            MatcherAssert.assertThat(
+                made.await(2, TimeUnit.SECONDS), Matchers.is(true)
+            );
         } finally {
             conveyer.close();
         }
-        Mockito.verify(users).fetch(owner);
-        Mockito.verify(queue).pull();
-        Mockito.verify(instance).pulse();
+        Mockito.verify(queue, Mockito.atLeast(1)).pull();
+        Mockito.verify(users, Mockito.atLeast(1)).fetch(owner);
+        Mockito.verify(instance, Mockito.atLeast(1)).pulse();
     }
 
 }

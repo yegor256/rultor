@@ -29,9 +29,11 @@
  */
 package com.rultor.repo;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Instance;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Runtime instance.
@@ -54,6 +56,11 @@ final class RuntimeInstance implements Instance {
      * @param obj Object
      */
     protected RuntimeInstance(final Object obj) {
+        Validate.isTrue(
+            obj.getClass().isAnnotationPresent(Immutable.class),
+            "Object of type %s is not immutable, but it should be",
+            obj.getClass()
+        );
         this.object = obj;
     }
 

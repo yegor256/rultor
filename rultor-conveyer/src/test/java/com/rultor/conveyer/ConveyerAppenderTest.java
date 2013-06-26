@@ -97,4 +97,36 @@ public final class ConveyerAppenderTest {
         );
     }
 
+    /**
+     * ConveyerAppender can log slf4j messages in the same thread.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void logsMessagesInSameThread() throws Exception {
+        final Conveyer.Log log = Mockito.mock(Conveyer.Log.class);
+        final ConveyerAppender appender = new ConveyerAppender(log);
+        appender.setLayout(new PatternLayout(" %m"));
+        Logger.getRootLogger().addAppender(appender);
+        final Work work = new Work.Simple(
+            new URN("urn:facebook:44"), "test again", new Spec.Simple()
+        );
+        appender.register(work);
+        appender.append(
+            new LoggingEvent(
+                "",
+                Logger.getLogger(this.getClass()),
+                org.apache.log4j.Level.INFO,
+                "some text to log",
+                new IllegalArgumentException()
+            )
+        );
+        Logger.getRootLogger().removeAppender(appender);
+        appender.unregister();
+        appender.close();
+        Mockito.verify(log).push(
+            Mockito.eq(work),
+            Mockito.any(Conveyer.Line.class)
+        );
+    }
+
 }

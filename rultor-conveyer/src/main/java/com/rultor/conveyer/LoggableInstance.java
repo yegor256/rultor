@@ -29,7 +29,6 @@
  */
 package com.rultor.conveyer;
 
-import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
@@ -37,7 +36,6 @@ import com.rultor.spi.Instance;
 import com.rultor.spi.Signal;
 import com.rultor.spi.Work;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.Validate;
 
 /**
  * Loggable instance.
@@ -74,11 +72,6 @@ final class LoggableInstance implements Instance {
      */
     protected LoggableInstance(final Instance instance,
         final ConveyerAppender appr, final Work wrk) {
-        Validate.isTrue(
-            instance.getClass().isAnnotationPresent(Immutable.class),
-            "Instance of type %s is not immutable, but it should be",
-            instance.getClass()
-        );
         this.origin = instance;
         this.appender = appr;
         this.work = wrk;

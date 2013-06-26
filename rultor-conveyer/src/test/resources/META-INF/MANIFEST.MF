@@ -1,0 +1,3 @@
+Rultor-Version: 1.0-SNAPSHOT
+Rultor-Revision: 12345
+Rultor-Date: 9-Dec-2012

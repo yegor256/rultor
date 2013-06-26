@@ -43,10 +43,12 @@ import com.rultor.spi.Repo;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
 import java.io.Closeable;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -117,7 +119,7 @@ public final class SimpleConveyer
                         new ThreadGroup(
                             Long.toString(this.group.incrementAndGet())
                         ),
-                        new VerboseRunnable(runnable, false, true)
+                        runnable
                     );
                 }
             }
@@ -154,11 +156,23 @@ public final class SimpleConveyer
      * {@inheritDoc}
      */
     @Override
-    public void close() {
+    public void close() throws IOException {
+        this.consumer.shutdown();
+        try {
+            this.consumer.awaitTermination(1, TimeUnit.SECONDS);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new IOException(ex);
+        }
+        this.executor.shutdown();
+        try {
+            this.executor.awaitTermination(1, TimeUnit.SECONDS);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new IOException(ex);
+        }
         Logger.getRootLogger().removeAppender(this.appender);
         this.appender.close();
-        this.consumer.shutdown();
-        this.executor.shutdown();
     }
 
     /**
@@ -168,7 +182,7 @@ public final class SimpleConveyer
     @Loggable(value = Loggable.INFO, limit = Integer.MAX_VALUE)
     public Void call() throws Exception {
         while (true) {
-            this.submit(this.queue.pull());
+            this.process(this.queue.pull());
         }
     }
 
@@ -183,27 +197,30 @@ public final class SimpleConveyer
     }
 
     /**
-     * Submit work for execution in the threaded executor.
+     * Process this work in the threaded executor.
      * @param work Work
      */
-    private void submit(final Work work) {
+    private void process(final Work work) {
         this.executor.submit(
-            new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                    final Instance instance = new LoggableInstance(
-                        SimpleConveyer.this.repo.make(
-                            SimpleConveyer.this.users.fetch(work.owner()),
-                            work.spec()
-                        ),
-                        SimpleConveyer.this.appender,
-                        work
-                    );
-                    instance.pulse();
-                    SimpleConveyer.this.counter.inc();
-                    return null;
-                }
-            }
+            new VerboseRunnable(
+                new Callable<Void>() {
+                    @Override
+                    public Void call() throws Exception {
+                        final Instance instance = new LoggableInstance(
+                            SimpleConveyer.this.repo.make(
+                                SimpleConveyer.this.users.fetch(work.owner()),
+                                work.spec()
+                            ),
+                            SimpleConveyer.this.appender,
+                            work
+                        );
+                        instance.pulse();
+                        SimpleConveyer.this.counter.inc();
+                        return null;
+                    }
+                },
+                true, false
+            )
         );
     }
 
