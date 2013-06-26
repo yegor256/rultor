@@ -77,7 +77,7 @@
     </xsl:template>
     <xsl:template match="unit">
         <tr>
-            <xsl:if test="type == ''">
+            <xsl:if test="type = ''">
                 <xsl:attribute name="class">
                     <xsl:text>error</xsl:text>
                 </xsl:attribute>
