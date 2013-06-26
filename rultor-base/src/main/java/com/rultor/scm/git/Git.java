@@ -80,6 +80,23 @@ public final class Git implements SCM {
      * @param shl Shell to use for checkout
      * @param addr URL of git repository
      * @param folder Directory to use for clone
+     * @checkstyle ParameterNumber (5 lines)
+     */
+    public Git(@NotNull final Shell shl, @NotNull final URL addr,
+        @NotNull final String folder) {
+        this(
+            shl, addr, folder,
+            new PrivateKey(
+                "-----BEGIN RSA PRIVATE KEY-----\n-----END RSA PRIVATE KEY-----"
+            )
+        );
+    }
+
+    /**
+     * Public ctor.
+     * @param shl Shell to use for checkout
+     * @param addr URL of git repository
+     * @param folder Directory to use for clone
      * @param priv Private key to use locally
      * @checkstyle ParameterNumber (5 lines)
      */
@@ -110,22 +127,28 @@ public final class Git implements SCM {
      */
     @Override
     public Branch checkout(final String name) throws IOException {
-        this.terminal.exec("mkdir -p ~/.ssh");
-        this.terminal.exec("cat > ~/.ssh/id_rsa", this.key.asText());
         this.terminal.exec(
-            String.format(
-                "if [ ! -d %s ]; then git clone %s %1$s; fi",
-                Terminal.escape(this.dir),
-                Terminal.escape(this.url)
-            )
-        );
-        this.terminal.exec(
-            String.format(
+            new StringBuilder()
+                .append("DIR=`pwd`/")
+                .append(Terminal.escape(this.dir))
+                .append(" && URL=")
+                .append(Terminal.escape(this.url))
+                .append(" && BRANCH=")
+                .append(Terminal.escape(name))
+                .append(" && mkdir -p \"$DIR\"")
+                .append(" && ( cat > \"$DIR/id_rsa\" )")
                 // @checkstyle LineLength (1 line)
-                "cd %s && git remote update -p && git reset --hard && git clean -f -d && git checkout %s",
-                Terminal.escape(this.dir),
-                Terminal.escape(name)
-            )
+                .append(" && ( echo \"set -x && git -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i \\\"$DIR/id_rsa\\\" $@\" > \"$DIR/git-ssh.sh\" )")
+                .append(" && GIT_SSH=$DIR/git-ssh.sh")
+                // @checkstyle LineLength (1 line)
+                .append(" && if [ ! -d $DIR/repo ]; then git clone $URL $DIR/repo; fi")
+                .append(" && cd $DIR/repo")
+                .append(" && git remote update -p")
+                .append(" && git reset --hard")
+                .append(" && git clean -f -d")
+                .append(" && git checkout $BRANCH")
+                .toString(),
+            this.key.asText()
         );
         return new GitBranch(this.terminal, this.dir, name);
     }

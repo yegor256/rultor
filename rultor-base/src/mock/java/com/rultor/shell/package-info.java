@@ -27,38 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.shell;
-
-import com.google.common.io.Files;
-import java.io.File;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
 
 /**
- * Integration case for {@link Terminal}.
+ * Shells, tests.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class TerminalITCase {
-
-    /**
-     * Terminal can execute simple commands.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void executesSimpleCommands() throws Exception {
-        final File dir = Files.createTempDir();
-        final Terminal terminal = new Terminal(new ShellMocker.Bash(dir));
-        final String stdin = "some \u20ac\n\n\t text";
-        final String stdout = terminal.exec(
-            "TMP=`mktemp -t rultor` && cat > $TMP && cat $TMP && rm $TMP",
-            stdin
-        );
-        MatcherAssert.assertThat(
-            stdout,
-            Matchers.equalTo(stdin)
-        );
-    }
-
-}
+package com.rultor.shell;

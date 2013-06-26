@@ -37,15 +37,15 @@ import com.rultor.scm.Commit;
 import com.rultor.shell.Terminal;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
  * Git.
@@ -112,14 +112,36 @@ public final class GitBranch implements Branch {
     @Override
     public Iterable<Commit> log() throws IOException {
         final String stdout = this.terminal.exec(
-            "git log --pretty=format:'%H %ae %cd %s' --date=iso8601"
+            new StringBuilder()
+                .append("DIR=`pwd`/")
+                .append(Terminal.escape(this.dir))
+                .append(" && cd \"$DIR/repo\"")
+                .append(" && GIT_SSH=\"$DIR/git-ssh.sh\"")
+                // @checkstyle LineLength (1 line)
+                .append(" && git log --pretty=format:'%H %ae %cd %s' --date=iso8601")
+                .toString()
         );
-        final String[] lines = stdout.split("\n");
-        final Collection<Commit> commits = new ArrayList<Commit>(lines.length);
-        for (String line : lines) {
-            commits.add(GitBranch.toCommit(line));
-        }
-        return commits;
+        final Iterable<String> lines = Arrays.asList(stdout.split("\n"));
+        return new Iterable<Commit>() {
+            @Override
+            public Iterator<Commit> iterator() {
+                final Iterator<String> iterator = lines.iterator();
+                return new Iterator<Commit>() {
+                    @Override
+                    public boolean hasNext() {
+                        return iterator.hasNext();
+                    }
+                    @Override
+                    public Commit next() {
+                        return GitBranch.toCommit(iterator.next());
+                    }
+                    @Override
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+        };
     }
 
     /**
@@ -130,18 +152,23 @@ public final class GitBranch implements Branch {
     private static Commit toCommit(final String line) {
         final Matcher matcher = GitBranch.LINE.matcher(line);
         Validate.isTrue(matcher.matches(), "invalid line from Git: %s", line);
+        final SimpleDateFormat fmt = new SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss X", Locale.ENGLISH
+        );
         try {
             return new Commit.Simple(
                 matcher.group(1),
-                Date.class.cast(
-                    DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.parseObject(
-                        matcher.group(2)
-                    )
-                ),
-                matcher.group(Tv.THREE)
+                fmt.parse(matcher.group(Tv.THREE)),
+                matcher.group(2)
             );
         } catch (ParseException ex) {
-            throw new IllegalArgumentException(ex);
+            throw new IllegalArgumentException(
+                String.format(
+                    "failed to parse date '%s'",
+                    matcher.group(Tv.THREE)
+                ),
+                ex
+            );
         }
     }
 

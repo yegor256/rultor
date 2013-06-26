@@ -27,37 +27,43 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.shell;
+package com.rultor.scm.git;
 
 import com.google.common.io.Files;
+import com.rultor.scm.Branch;
+import com.rultor.scm.Commit;
+import com.rultor.scm.SCM;
+import com.rultor.shell.ShellMocker;
 import java.io.File;
+import java.net.URL;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Integration case for {@link Terminal}.
+ * Integration case for {@link Git}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class TerminalITCase {
+public final class GitITCase {
 
     /**
-     * Terminal can execute simple commands.
+     * Git can execute return a branch.
      * @throws Exception If some problem inside
      */
     @Test
-    public void executesSimpleCommands() throws Exception {
+    public void manipulatesBranches() throws Exception {
         final File dir = Files.createTempDir();
-        final Terminal terminal = new Terminal(new ShellMocker.Bash(dir));
-        final String stdin = "some \u20ac\n\n\t text";
-        final String stdout = terminal.exec(
-            "TMP=`mktemp -t rultor` && cat > $TMP && cat $TMP && rm $TMP",
-            stdin
+        final SCM git = new Git(
+            new ShellMocker.Bash(dir),
+            new URL("https://github.com/yegor256/rultor.git"),
+            "rultor"
         );
+        final Branch branch = git.checkout("master");
+        final Commit head = branch.log().iterator().next();
         MatcherAssert.assertThat(
-            stdout,
-            Matchers.equalTo(stdin)
+            head.name().matches("[a-f0-9]{40}"),
+            Matchers.is(true)
         );
     }
 
