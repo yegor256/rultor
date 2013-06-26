@@ -47,7 +47,8 @@
     </links>
     <millis>16</millis>
     <units>
-        <unit status="ok">
+        <unit>
+            <type>java.lang.String</type>
             <name>git-rultor</name>
             <face>some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, </face>
             <links>
@@ -56,7 +57,8 @@
                 <link href="/xml/index.xml" rel="remove" type="text/xml"/>
             </links>
         </unit>
-        <unit status="failure">
+        <unit>
+            <type></type>
             <name>nightly-build-rultor</name>
             <face>some text to show</face>
             <links>
