@@ -72,6 +72,7 @@ public final class Shallow implements Shell {
 
     /**
      * {@inheritDoc}
+     * @checkstyle ParameterNumber (5 lines)
      */
     @Override
     public int exec(final String command, final InputStream stdin,
