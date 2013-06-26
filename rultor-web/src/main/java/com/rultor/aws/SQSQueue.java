@@ -31,11 +31,14 @@ package com.rultor.aws;
 
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
+import com.amazonaws.services.sqs.model.GetQueueAttributesRequest;
+import com.amazonaws.services.sqs.model.GetQueueAttributesResult;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.amazonaws.services.sqs.model.SendMessageResult;
+import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -165,7 +168,34 @@ public final class SQSQueue implements Queue {
      */
     @Override
     public void register(final MetricRegistry registry) {
-        // nothing to do yet
+        registry.register(
+            MetricRegistry.name(this.getClass(), "queue-size"),
+            new Gauge<Integer>() {
+                @Override
+                public Integer getValue() {
+                    return SQSQueue.this.size();
+                }
+            }
+        );
+    }
+
+    /**
+     * Approximate size of the queue.
+     * @return Size of it
+     */
+    private int size() {
+        final AmazonSQS aws = this.client.get();
+        try {
+            final String name = "ApproximateNumberOfMessages";
+            final GetQueueAttributesResult result = aws.getQueueAttributes(
+                new GetQueueAttributesRequest()
+                    .withAttributeNames(name)
+                    .withQueueUrl(this.client.url())
+            );
+            return Integer.parseInt(result.getAttributes().get(name));
+        } finally {
+            aws.shutdown();
+        }
     }
 
     /**
