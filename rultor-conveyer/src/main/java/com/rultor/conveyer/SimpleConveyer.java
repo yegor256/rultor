@@ -33,6 +33,7 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
 import com.rultor.spi.Conveyer;
 import com.rultor.spi.Conveyer.Log;
@@ -42,10 +43,12 @@ import com.rultor.spi.Repo;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
 import java.io.Closeable;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -68,12 +71,6 @@ import org.apache.log4j.PatternLayout;
 @SuppressWarnings("PMD.DoNotUseThreads")
 public final class SimpleConveyer
     implements Conveyer, Closeable, Callable<Void> {
-
-    /**
-     * In how many threads we run instances.
-     */
-    private static final int THREADS =
-        Runtime.getRuntime().availableProcessors() * Tv.TEN;
 
     /**
      * Queue.
@@ -112,7 +109,8 @@ public final class SimpleConveyer
      * Executor of instances.
      */
     private final transient ExecutorService executor =
-        Executors.newCachedThreadPool(
+        Executors.newFixedThreadPool(
+            Runtime.getRuntime().availableProcessors() * Tv.TEN,
             new ThreadFactory() {
                 private final transient AtomicLong group = new AtomicLong();
                 @Override
@@ -158,11 +156,23 @@ public final class SimpleConveyer
      * {@inheritDoc}
      */
     @Override
-    public void close() {
+    public void close() throws IOException {
+        this.consumer.shutdown();
+        try {
+            this.consumer.awaitTermination(1, TimeUnit.SECONDS);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new IOException(ex);
+        }
+        this.executor.shutdown();
+        try {
+            this.executor.awaitTermination(1, TimeUnit.SECONDS);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new IOException(ex);
+        }
         Logger.getRootLogger().removeAppender(this.appender);
         this.appender.close();
-        this.consumer.shutdown();
-        this.executor.shutdown();
     }
 
     /**
@@ -172,7 +182,7 @@ public final class SimpleConveyer
     @Loggable(value = Loggable.INFO, limit = Integer.MAX_VALUE)
     public Void call() throws Exception {
         while (true) {
-            this.submit(this.queue.pull());
+            this.process(this.queue.pull());
         }
     }
 
@@ -187,27 +197,30 @@ public final class SimpleConveyer
     }
 
     /**
-     * Submit work for execution in the threaded executor.
+     * Process this work in the threaded executor.
      * @param work Work
      */
-    private void submit(final Work work) {
+    private void process(final Work work) {
         this.executor.submit(
-            new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                    final Instance unit = new LoggableInstance(
-                        SimpleConveyer.this.repo.make(
-                            SimpleConveyer.this.users.fetch(work.owner()),
-                            work.spec()
-                        ),
-                        SimpleConveyer.this.appender,
-                        work
-                    );
-                    unit.pulse();
-                    SimpleConveyer.this.counter.inc();
-                    return null;
-                }
-            }
+            new VerboseRunnable(
+                new Callable<Void>() {
+                    @Override
+                    public Void call() throws Exception {
+                        final Instance instance = new LoggableInstance(
+                            SimpleConveyer.this.repo.make(
+                                SimpleConveyer.this.users.fetch(work.owner()),
+                                work.spec()
+                            ),
+                            SimpleConveyer.this.appender,
+                            work
+                        );
+                        instance.pulse();
+                        SimpleConveyer.this.counter.inc();
+                        return null;
+                    }
+                },
+                true, false
+            )
         );
     }
 

@@ -52,6 +52,7 @@ final class RuntimeInstance implements Instance {
     /**
      * Public ctor.
      * @param obj Object
+     * @todo #34 Would be nice to check objects for their immutability
      */
     protected RuntimeInstance(final Object obj) {
         this.object = obj;

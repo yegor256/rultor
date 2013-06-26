@@ -27,80 +27,32 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer;
+package com.rultor.base;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
-import com.jcabi.manifests.Manifests;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Signal;
-import com.rultor.spi.Work;
 import lombok.EqualsAndHashCode;
 
 /**
- * Loggable instance.
+ * Empty instance.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@EqualsAndHashCode(of = { "origin", "appender", "work" })
+@Immutable
+@EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.DoNotUseThreads")
-final class LoggableInstance implements Instance {
-
-    /**
-     * Instance.
-     */
-    private final transient Instance origin;
-
-    /**
-     * Log appender.
-     */
-    private final transient ConveyerAppender appender;
-
-    /**
-     * Work we're doing.
-     */
-    private final transient Work work;
-
-    /**
-     * Public ctor.
-     * @param instance Origin
-     * @param appr Appender
-     * @param wrk Work
-     */
-    protected LoggableInstance(final Instance instance,
-        final ConveyerAppender appr, final Work wrk) {
-        this.origin = instance;
-        this.appender = appr;
-        this.work = wrk;
-    }
+public final class Empty implements Instance {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void pulse() throws Exception {
-        this.appender.register(this.work);
-        try {
-            Logger.info(
-                this,
-                "www.rultor.com %s %s %s",
-                Manifests.read("Rultor-Version"),
-                Manifests.read("Rultor-Revision"),
-                Manifests.read("Rultor-Date")
-            );
-            Signal.log(Signal.Mnemo.SPEC, this.work.spec().asText());
-            this.origin.pulse();
-            // @checkstyle IllegalCatch (1 line)
-        } catch (Exception ex) {
-            Signal.log(Signal.Mnemo.FAILURE, ex.getMessage());
-            throw ex;
-        } finally {
-            this.appender.unregister();
-        }
+        Logger.info(this, "nothing to do");
     }
 
     /**
@@ -108,7 +60,7 @@ final class LoggableInstance implements Instance {
      */
     @Override
     public String toString() {
-        return this.origin.toString();
+        return "Empty instance";
     }
 
 }
