@@ -103,7 +103,13 @@ public final class OnCommit implements Instance {
         final Iterator<Commit> commits = this.branch.log().iterator();
         if (commits.hasNext()) {
             final Commit head = commits.next();
-            if (!this.notepad.contains(head.name())) {
+            if (this.notepad.contains(head.name())) {
+                Signal.log(
+                    Signal.Mnemo.SUCCESS,
+                    "HEAD was already seen (%s by %s on %s)",
+                    head.name(), head.author(), head.date()
+                );
+            } else {
                 this.notepad.add(head.name());
                 Signal.log(
                     Signal.Mnemo.SUCCESS,
