@@ -34,6 +34,7 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.auth.Identity;
+import com.rultor.spi.Instance;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Unit;
 import java.util.Map;
@@ -131,8 +132,10 @@ public final class IndexRs extends BaseRs {
         String face;
         String type = "";
         try {
-            face = this.repo().make(this.user(), unit.spec()).toString();
-            type = face.getClass().getName();
+            final Instance instance =
+                this.repo().make(this.user(), unit.spec());
+            face = instance.toString();
+            type = instance.getClass().getName();
         } catch (Repo.InstantiationException ex) {
             face = ex.getMessage();
         }
