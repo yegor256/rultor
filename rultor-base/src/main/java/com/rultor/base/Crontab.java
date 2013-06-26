@@ -35,6 +35,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
+import com.rultor.spi.Signal;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -106,6 +107,7 @@ public final class Crontab implements Instance {
             }
         }
         if (pass) {
+            Signal.log(Signal.Mnemo.SUCCESS, "Crontab allows execution");
             this.origin.pulse();
         } else {
             Logger.info(

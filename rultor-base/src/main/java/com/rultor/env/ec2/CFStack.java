@@ -41,6 +41,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.CFClient;
 import com.rultor.env.Environment;
+import com.rultor.spi.Signal;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Locale;
@@ -110,6 +111,11 @@ final class CFStack implements Environment {
                     stack.getStackStatusReason()
                 );
                 if ("CREATE_COMPLETE".equals(stack.getStackStatus())) {
+                    Signal.log(
+                        Signal.Mnemo.SUCCESS,
+                        "CloudFormation server is ready at stack %s",
+                        stack.getStackId()
+                    );
                     return CFStack.address(stack);
                 }
                 if (!"CREATE_IN_PROGRESS".equals(stack.getStackStatus())) {

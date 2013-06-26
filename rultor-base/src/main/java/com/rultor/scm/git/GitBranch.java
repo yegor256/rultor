@@ -35,6 +35,7 @@ import com.jcabi.aspects.Tv;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
 import com.rultor.shell.Terminal;
+import com.rultor.spi.Signal;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -120,6 +121,11 @@ public final class GitBranch implements Branch {
                 // @checkstyle LineLength (1 line)
                 .append(" && git log --pretty=format:'%H %ae %cd %s' --date=iso8601")
                 .toString()
+        );
+        Signal.log(
+            Signal.Mnemo.SUCCESS,
+            "Git log in branch %s retrieved",
+            this.name
         );
         final Iterable<String> lines = Arrays.asList(stdout.split("\n"));
         return new Iterable<Commit>() {

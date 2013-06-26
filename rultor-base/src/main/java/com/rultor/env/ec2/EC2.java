@@ -35,10 +35,10 @@ import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
 import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
 import com.rultor.env.Environments;
+import com.rultor.spi.Signal;
 import java.io.IOException;
 import java.util.List;
 import javax.validation.constraints.NotNull;
@@ -152,9 +152,9 @@ public final class EC2 implements Environments {
                 );
             }
             final Instance instance = instances.get(0);
-            Logger.info(
-                this,
-                "instance %s created, type=%s, ami=%s, key=%s, platform=%s",
+            Signal.log(
+                Signal.Mnemo.SUCCESS,
+                "EC2 instance %s created, type=%s, ami=%s, key=%s, platform=%s",
                 this.type,
                 this.ami,
                 instance.getInstanceId(),

@@ -36,6 +36,7 @@ import com.rultor.scm.SCM;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Terminal;
 import com.rultor.shell.ssh.PrivateKey;
+import com.rultor.spi.Signal;
 import java.io.IOException;
 import java.net.URL;
 import javax.validation.constraints.NotNull;
@@ -149,6 +150,11 @@ public final class Git implements SCM {
                 .append(" && git checkout $BRANCH")
                 .toString(),
             this.key.asText()
+        );
+        Signal.log(
+            Signal.Mnemo.SUCCESS,
+            "Git branch %s checked out",
+            name
         );
         return new GitBranch(this.terminal, this.dir, name);
     }

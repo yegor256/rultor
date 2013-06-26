@@ -192,7 +192,9 @@ final class Cache implements Flushable {
                 }
             }
         );
-        return !protocol.find(Signal.Mnemo.START, "").isEmpty();
+        return !protocol.find(Signal.Mnemo.START, "").isEmpty()
+            || !protocol.find(Signal.Mnemo.SUCCESS, "").isEmpty()
+            || !protocol.find(Signal.Mnemo.FAILURE, "").isEmpty();
     }
 
     /**

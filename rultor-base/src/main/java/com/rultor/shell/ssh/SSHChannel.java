@@ -181,8 +181,8 @@ public final class SSHChannel implements Shell {
      * @checkstyle RedundantThrows (10 lines)
      */
     @RetryOnFailure(
-        attempts = Tv.THREE,
-        delay = Tv.FIFTEEN,
+        attempts = Tv.TEN,
+        delay = Tv.THIRTY,
         unit = TimeUnit.SECONDS,
         verbose = false
     )

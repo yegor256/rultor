@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
+import com.rultor.spi.Signal;
 import com.rultor.stateful.Lineup;
 import com.rultor.stateful.Notepad;
 import java.io.StringWriter;
@@ -130,6 +131,12 @@ public final class Parallel implements Instance {
         );
         try {
             if (this.active.size() <= this.maximum) {
+                Signal.log(
+                    Signal.Mnemo.SUCCESS,
+                    "Parallel thread #%d execution allowed, maximum is %d",
+                    this.active.size(),
+                    this.maximum
+                );
                 this.origin.pulse();
             } else {
                 Logger.info(

@@ -43,6 +43,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
+import com.rultor.spi.Signal;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
@@ -115,6 +116,11 @@ final class EC2Environment implements Environment {
                     state.getCode()
                 );
                 if ("running".equals(state.getName())) {
+                    Signal.log(
+                        Signal.Mnemo.SUCCESS,
+                        "EC2 instance %s is ready",
+                        instance.getInstanceId()
+                    );
                     return InetAddress.getByAddress(
                         instance.getPublicDnsName(),
                         InetAddress.getByName(
