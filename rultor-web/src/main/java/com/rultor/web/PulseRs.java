@@ -36,7 +36,6 @@ import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Unit;
-import java.util.Date;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -80,7 +79,7 @@ public final class PulseRs extends BaseRs {
     /**
      * Pulse date.
      */
-    private transient Date date;
+    private transient long date;
 
     /**
      * Inject it from query.
@@ -97,7 +96,7 @@ public final class PulseRs extends BaseRs {
      */
     @PathParam("date")
     public void setDate(@NotNull final String time) {
-        this.date = new Date(Long.parseLong(time));
+        this.date = Long.parseLong(time);
     }
 
     /**
@@ -117,7 +116,7 @@ public final class PulseRs extends BaseRs {
             .append(
                 new JaxbBundle(
                     "pulse",
-                    Long.toString(this.date.getTime())
+                    Long.toString(this.date)
                 )
             )
             .append(
@@ -151,7 +150,7 @@ public final class PulseRs extends BaseRs {
                         .clone()
                         .path(PulseRs.class)
                         .path(PulseRs.class, "stream")
-                        .build(this.name, this.date.getTime())
+                        .build(this.name, this.date)
                 )
             )
             .render()
@@ -194,21 +193,7 @@ public final class PulseRs extends BaseRs {
                 Level.SEVERE
             );
         }
-        final Pulse pulse = unit.pulses().get(this.date);
-        if (pulse == null) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUriBuilder()
-                    .clone()
-                    .path(PulsesRs.class)
-                    .build(this.name),
-                String.format(
-                    "Pulse '%d' doesn't exist any more",
-                    this.date.getTime()
-                ),
-                Level.SEVERE
-            );
-        }
-        return pulse;
+        return new Pulse(this.date, unit.drain());
     }
 
     /**
@@ -237,7 +222,7 @@ public final class PulseRs extends BaseRs {
                         .path(PulseRs.class, "stream")
                         .queryParam(PulseRs.QUERY_START, stage.start())
                         .queryParam(PulseRs.QUERY_STOP, stage.stop())
-                        .build(this.name, this.date.getTime())
+                        .build(this.name, this.date)
                 )
             );
     }

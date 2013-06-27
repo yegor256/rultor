@@ -29,30 +29,26 @@
  */
 package com.rultor.life;
 
-import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rultor.repo.ClasspathRepo;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulse;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
-import com.rultor.spi.Work;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Date;
+import java.io.InputStream;
 import java.util.Map;
-import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Testing profile.
@@ -86,42 +82,8 @@ final class Testing implements Profile {
             private final ConcurrentMap<URN, User> all =
                 new ConcurrentHashMap<URN, User>(0);
             @Override
-            public Collection<User> everybody() {
-                return this.all.values();
-            }
-            @Override
-            public User fetch(final URN urn) {
-                this.all.putIfAbsent(
-                    urn,
-                    new User() {
-                        private final ConcurrentMap<String, Unit> mine =
-                            new ConcurrentHashMap<String, Unit>(0);
-                        @Override
-                        public URN urn() {
-                            return urn;
-                        }
-                        @Override
-                        public Map<String, Unit> units() {
-                            return this.mine;
-                        }
-                        @Override
-                        public Unit create(final String name) {
-                            this.mine.putIfAbsent(
-                                name, new Testing.MemoryUnit(name)
-                            );
-                            return this.mine.get(name);
-                        }
-                        @Override
-                        public void remove(final String name) {
-                            this.mine.remove(name);
-                        }
-                    }
-                );
-                return this.all.get(urn);
-            }
-            @Override
-            public void register(final MetricRegistry registry) {
-                assert registry != null;
+            public Map<URN, User> everybody() {
+                return this.all;
             }
         };
     }
@@ -157,10 +119,6 @@ final class Testing implements Profile {
             Testing.MemoryUnit.SPECS.put(this.name, new Spec.Simple());
         }
         @Override
-        public SortedMap<Date, Pulse> pulses() {
-            return new ConcurrentSkipListMap<Date, Pulse>();
-        }
-        @Override
         public void spec(final Spec spec) {
             Testing.MemoryUnit.SPECS.put(this.name, spec);
         }
@@ -172,12 +130,17 @@ final class Testing implements Profile {
         public Drain drain() {
             return new Drain() {
                 @Override
-                public void push(final Work work, final Drain.Line line) {
-                    assert true;
+                public SortedSet<Long> pulses() {
+                    return new TreeSet<Long>();
                 }
                 @Override
-                public void close() throws IOException {
-                    assert true;
+                public void write(final long date,
+                    final Iterable<String> lines) {
+                    // nothing
+                }
+                @Override
+                public InputStream read(final long date) {
+                    return IOUtils.toInputStream("");
                 }
             };
         }

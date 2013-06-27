@@ -36,9 +36,8 @@ import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Unit;
-import java.util.Date;
-import java.util.Map;
-import java.util.SortedMap;
+import java.io.IOException;
+import java.util.SortedSet;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -49,7 +48,7 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
- * Pulses.
+ * Drain of a unit.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -57,7 +56,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
  */
 @Path("/pulses/{unit:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
-public final class PulsesRs extends BaseRs {
+public final class DrainRs extends BaseRs {
 
     /**
      * Query param.
@@ -77,7 +76,7 @@ public final class PulsesRs extends BaseRs {
     /**
      * Since (date).
      */
-    private transient Date since;
+    private transient Long since;
 
     /**
      * Inject it from query.
@@ -92,12 +91,12 @@ public final class PulsesRs extends BaseRs {
      * Inject it from query.
      * @param time Since what time
      */
-    @QueryParam(PulsesRs.QUERY_SINCE)
+    @QueryParam(DrainRs.QUERY_SINCE)
     public void setSince(final String time) {
         if (time == null) {
-            this.since = new Date(Long.MAX_VALUE);
+            this.since = Long.MAX_VALUE;
         } else {
-            this.since = new Date(Long.parseLong(time));
+            this.since = Long.parseLong(time);
         }
     }
 
@@ -110,7 +109,7 @@ public final class PulsesRs extends BaseRs {
     @Path("/")
     public Response index() throws Exception {
         return new PageBuilder()
-            .stylesheet("/xsl/pulses.xsl")
+            .stylesheet("/xsl/drain.xsl")
             .build(EmptyPage.class)
             .init(this)
             .append(new JaxbBundle("unit", this.name))
@@ -140,13 +139,17 @@ public final class PulsesRs extends BaseRs {
      * @return Collection of JAXB units
      */
     private JaxbBundle pulses() {
-        final SortedMap<Date, Pulse> pulses =
-            this.unit().pulses().tailMap(this.since);
+        final SortedSet<Long> pulses =
+            this.unit().drain().pulses().tailSet(this.since);
         return new JaxbBundle("pulses").add(
-            new JaxbBundle.Group<Map.Entry<Date, Pulse>>(pulses.entrySet()) {
+            new JaxbBundle.Group<Long>(pulses) {
                 @Override
-                public JaxbBundle bundle(final Map.Entry<Date, Pulse> ent) {
-                    return PulsesRs.this.pulse(ent.getKey(), ent.getValue());
+                public JaxbBundle bundle(final Long date) {
+                    try {
+                        return DrainRs.this.pulse(date);
+                    } catch (IOException ex) {
+                        throw new IllegalStateException(ex);
+                    }
                 }
             }
         );
@@ -155,17 +158,18 @@ public final class PulsesRs extends BaseRs {
     /**
      * Convert pulse to JaxbBundle.
      * @param date Date of it
-     * @param pulse Pulse to convert
      * @return Bundle
+     * @throws IOException If IO error
      */
-    private JaxbBundle pulse(final Date date, final Pulse pulse) {
+    private JaxbBundle pulse(final Long date) throws IOException {
+        final Pulse pulse = new Pulse(date, this.unit().drain());
         return new JaxbBundle("pulse")
             .add("stages")
             .add(
                 new JaxbBundle.Group<Stage>(pulse.stages()) {
                     @Override
                     public JaxbBundle bundle(final Stage stage) {
-                        return PulsesRs.this.stage(date, stage);
+                        return DrainRs.this.stage(date, stage);
                     }
                 }
             )
@@ -181,7 +185,7 @@ public final class PulsesRs extends BaseRs {
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(PulseRs.class)
-                        .build(this.name, date.getTime())
+                        .build(this.name, date)
                 )
             )
             .link(
@@ -192,7 +196,7 @@ public final class PulsesRs extends BaseRs {
                         .clone()
                         .path(PulseRs.class)
                         .path(PulseRs.class, "stream")
-                        .build(this.name, date.getTime())
+                        .build(this.name, date)
                 )
             );
     }
@@ -203,7 +207,7 @@ public final class PulsesRs extends BaseRs {
      * @param stage Stage to convert
      * @return Bundle
      */
-    private JaxbBundle stage(final Date date, final Stage stage) {
+    private JaxbBundle stage(final Long date, final Stage stage) {
         return new JaxbBundle("stage")
             .add("result", stage.result().toString())
             .up()
@@ -223,7 +227,7 @@ public final class PulsesRs extends BaseRs {
                         .path(PulseRs.class)
                         .queryParam(PulseRs.QUERY_START, stage.start())
                         .queryParam(PulseRs.QUERY_STOP, stage.stop())
-                        .build(this.name, date.getTime())
+                        .build(this.name, date)
                 )
             );
     }

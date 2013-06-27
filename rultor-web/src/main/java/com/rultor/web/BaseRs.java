@@ -144,8 +144,8 @@ public class BaseRs extends BaseResource {
     }
 
     /**
-     * Get all users.
-     * @return Cycles
+     * Get currently logged in user.
+     * @return The user
      */
     protected final User user() {
         final Users users = Users.class.cast(
@@ -154,7 +154,7 @@ public class BaseRs extends BaseResource {
         if (users == null) {
             throw new IllegalStateException("USERS is not initialized");
         }
-        return users.fetch(this.auth().identity().urn());
+        return users.everybody().get(this.auth().identity().urn());
     }
 
     /**

@@ -94,7 +94,7 @@ public final class IndexRs extends BaseRs {
     @POST
     @Path("/create")
     public Response create(@NotNull @FormParam("name") final String name) {
-        this.user().create(name);
+        this.user().units().put(name, null);
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()
                 .clone()
@@ -167,7 +167,7 @@ public final class IndexRs extends BaseRs {
                     "pulses",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
-                        .path(PulsesRs.class)
+                        .path(DrainRs.class)
                         .build(name)
                 )
             );

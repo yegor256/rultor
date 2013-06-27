@@ -81,7 +81,7 @@ final class Quartz implements Runnable, Closeable {
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void run() {
-        for (User user : this.users.everybody()) {
+        for (User user : this.users.everybody().values()) {
             for (Map.Entry<String, Unit> entry : user.units().entrySet()) {
                 this.queue.push(
                     new Work.Simple(

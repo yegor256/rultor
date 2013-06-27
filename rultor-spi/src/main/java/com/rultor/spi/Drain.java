@@ -33,7 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import java.io.InputStream;
-import java.util.Iterator;
+import java.util.SortedSet;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,10 +53,10 @@ import org.apache.commons.lang3.time.DateUtils;
 public interface Drain {
 
     /**
-     * Iterate all available pulses.
+     * Iterate all available pulses, in reverse order (the latest one on top).
      * @return List of them
      */
-    Iterator<Long> pulses();
+    SortedSet<Long> pulses();
 
     /**
      * Write a line to it, related to the dated pulse.
