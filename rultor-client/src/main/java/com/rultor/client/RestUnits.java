@@ -33,23 +33,23 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
- * RESTful User.
+ * RESTful collection of units.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -158,7 +158,31 @@ public final class RestUnits implements Map<String, Unit> {
      */
     @Override
     public Unit put(final String key, final Unit value) {
-        throw new UnsupportedOperationException();
+        try {
+            return new RestUnit(
+                RestTester.start(UriBuilder.fromUri(this.home))
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .header(HttpHeaders.AUTHORIZATION, this.token)
+                    .get(String.format("preparing to #create(%s)", key))
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .rel("/page/links/link[@rel='create']/@href")
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .post(
+                        String.format("#create(%s)", key),
+                        String.format(
+                            "name=%s",
+                            URLEncoder.encode(key, CharEncoding.UTF_8)
+                        )
+                    )
+                    .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
+                    .follow()
+                    .uri()
+                    .toString(),
+                this.token
+            );
+        } catch (UnsupportedEncodingException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**
@@ -181,10 +205,6 @@ public final class RestUnits implements Map<String, Unit> {
             .get(String.format("#remove(%s)", key))
             .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
         return new Unit() {
-            @Override
-            public SortedMap<Date, Pulse> pulses() {
-                throw new UnsupportedOperationException();
-            }
             @Override
             public void spec(final Spec spec) {
                 throw new UnsupportedOperationException();

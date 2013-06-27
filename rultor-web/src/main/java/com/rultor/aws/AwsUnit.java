@@ -44,8 +44,11 @@ import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.SortedSet;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -152,7 +155,7 @@ final class AwsUnit implements Unit {
      */
     @Override
     public Drain drain() throws Repo.InstantiationException {
-        return Drain.class.cast(
+        final Drain drain = Drain.class.cast(
             this.repo.make(
                 new User() {
                     @Override
@@ -167,6 +170,27 @@ final class AwsUnit implements Unit {
                 new Spec.Simple(this.item().get(AwsUnit.FIELD_DRAIN).getS())
             )
         );
+        return new Drain() {
+            @Override
+            public SortedSet<Long> pulses() throws IOException {
+                return drain.pulses();
+            }
+            @Override
+            public void append(final long date, final Iterable<String> lines)
+                throws IOException {
+                Buffers.INSTANCE
+                    .get(AwsUnit.this.owner, AwsUnit.this.name, date)
+                    .through(drain)
+                    .append(lines);
+            }
+            @Override
+            public InputStream read(final long date) throws IOException {
+                return Buffers.INSTANCE
+                    .get(AwsUnit.this.owner, AwsUnit.this.name, date)
+                    .through(drain)
+                    .read();
+            }
+        };
     }
 
     /**

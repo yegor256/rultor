@@ -29,7 +29,6 @@
  */
 package com.rultor.aws;
 
-import com.rultor.drain.s3.Key;
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.io.Flushables;
@@ -37,23 +36,19 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Conveyer;
 import com.rultor.spi.Metricable;
 import java.io.Flushable;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Mutable and thread-safe in-memory cache of S3 objects (singleton).
+ * Buffers.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -64,7 +59,7 @@ import lombok.ToString;
 @Loggable(Loggable.DEBUG)
 @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.MINUTES)
 @SuppressWarnings("PMD.DoNotUseThreads")
-final class Caches implements Flushable, Metricable, Runnable {
+final class Buffers implements Flushable, Metricable, Runnable {
 
     /**
      * Total number of available parallel permits.
@@ -78,84 +73,46 @@ final class Caches implements Flushable, Metricable, Runnable {
     public static final int PERMITS = 10;
 
     /**
-     * Instance of the singleton.
+     * Singleton instance.
      */
-    public static final Caches INSTANCE = new Caches();
-
-    /**
-     * All objects.
-     */
-    private final transient ConcurrentMap<Key, Cache> all =
-        new ConcurrentSkipListMap<Key, Cache>();
+    public static final Buffers INSTANCE = new Buffers();
 
     /**
      * Semaphore to enable all-in-one-step flushing.
      */
     private final transient Semaphore semaphore =
-        new Semaphore(Caches.PERMITS, true);
+        new Semaphore(Buffers.PERMITS, true);
+
+    /**
+     * All registered buffers.
+     */
+    private final transient ConcurrentMap<String, Buffer> all =
+        new ConcurrentHashMap<String, Buffer>(0);
 
     /**
      * Private ctor.
      */
-    private Caches() {
-        // it's a singleton
+    private Buffers() {
+        // intentionally empty
     }
 
     /**
-     * Append new line to an object.
-     * @param key Key to append to
-     * @param line Line to add
-     * @throws IOException If fails
+     * Get a buffer.
+     * @param owner Owner of it
+     * @param unit Unit name
+     * @param date When pulse started
+     * @return The buffer
      */
-    public void append(final Key key,
-        final Conveyer.Line line) throws IOException {
-        try {
-            try {
-                this.semaphore.acquire();
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                throw new IOException(ex);
+    public Buffer get(final URN owner, final String unit, final long date) {
+        final String key = String.format("%s %s %s", owner, unit, date);
+        synchronized (this.all) {
+            Buffer buffer = this.all.get(key);
+            if (buffer == null) {
+                buffer = new Buffer();
+                this.all.put(key, buffer);
             }
-            this.get(key).append(line);
-        } finally {
-            this.semaphore.release();
+            return buffer;
         }
-    }
-
-    /**
-     * Read the entire object.
-     * @param key Which stream to read
-     * @return Input stream
-     * @throws IOException If fails
-     */
-    public InputStream read(final Key key) throws IOException {
-        try {
-            try {
-                this.semaphore.acquire();
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                throw new IOException(ex);
-            }
-            return this.get(key).read();
-        } finally {
-            this.semaphore.release();
-        }
-    }
-
-    /**
-     * Get a list of all keys available at the moment.
-     * @param owner Owner
-     * @param unit Unit
-     * @return All keys
-     */
-    public SortedSet<Key> keys(final URN owner, final String unit) {
-        final SortedSet<Key> keys = new TreeSet<Key>();
-        for (Key key : this.all.keySet()) {
-            if (key.belongsTo(owner, unit)) {
-                keys.add(key);
-            }
-        }
-        return keys;
     }
 
     /**
@@ -164,11 +121,11 @@ final class Caches implements Flushable, Metricable, Runnable {
     @Override
     public void register(final MetricRegistry registry) {
         registry.register(
-            MetricRegistry.name(this.getClass(), "keys-total"),
+            MetricRegistry.name(this.getClass(), "buffers-total"),
             new Gauge<Integer>() {
                 @Override
                 public Integer getValue() {
-                    return Caches.this.all.size();
+                    return Buffers.this.all.size();
                 }
             }
         );
@@ -179,17 +136,11 @@ final class Caches implements Flushable, Metricable, Runnable {
      */
     @Override
     public void flush() throws IOException {
-        for (Cache cache : this.all.values()) {
-            cache.flush();
+        for (Buffer buffer : this.all.values()) {
+            buffer.flush();
         }
         try {
-            try {
-                this.semaphore.acquire(Caches.PERMITS);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                throw new IOException(ex);
-            }
-            for (Map.Entry<Key, Cache> entry : this.all.entrySet()) {
+            for (Map.Entry<String, Buffer> entry : this.all.entrySet()) {
                 if (this.expired(entry.getValue())) {
                     this.all.remove(entry.getKey());
                 }
@@ -208,24 +159,14 @@ final class Caches implements Flushable, Metricable, Runnable {
     }
 
     /**
-     * Get cache by key.
-     * @param key S3 key
-     * @return Cache
-     */
-    private Cache get(final Key key) {
-        this.all.putIfAbsent(key, new Cache(key));
-        return this.all.get(key);
-    }
-
-    /**
-     * This cache is expired and should be removed?
-     * @param cache The cache
+     * This buffer is expired and should be removed?
+     * @param buffer The buffer
      * @return TRUE if expired
      * @throws IOException If IO exception happens
      */
-    private boolean expired(final Cache cache) throws IOException {
-        final long mins = cache.age() / TimeUnit.MINUTES.toMillis(1);
-        return mins > Tv.THIRTY || (mins > Tv.FIVE && !cache.valuable());
+    private boolean expired(final Buffer buffer) throws IOException {
+        final long mins = buffer.age() / TimeUnit.MINUTES.toMillis(1);
+        return mins > Tv.THIRTY || (mins > Tv.FIVE && !buffer.valuable());
     }
 
 }

@@ -29,51 +29,30 @@
  */
 package com.rultor.aws;
 
-import com.rultor.drain.s3.Key;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectResult;
-import com.amazonaws.services.s3.model.S3Object;
-import com.google.common.io.CountingInputStream;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
-import com.rultor.spi.Conveyer;
-import com.rultor.spi.Signal;
-import java.io.ByteArrayInputStream;
+import com.rultor.spi.Drain;
 import java.io.ByteArrayOutputStream;
-import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
-import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharUtils;
 
 /**
- * Mutable and thread-safe in-memory cache of a single S3 object.
+ * Buffer.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @ToString
-@EqualsAndHashCode(of = "key")
+@EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-final class Cache implements Flushable {
-
-    /**
-     * S3 key.
-     */
-    private final transient Key key;
+final class Buffer {
 
     /**
      * When was is touched last time (in milliseconds)?
@@ -82,7 +61,8 @@ final class Cache implements Flushable {
         new AtomicLong(System.currentTimeMillis());
 
     /**
-     * TRUE if this content is NOT synchronized with S3 and need to be flushed.
+     * TRUE if this content is NOT synchronized with the underlying
+     * drain and need to be flushed.
      */
     private final transient AtomicBoolean dirty = new AtomicBoolean();
 
@@ -98,22 +78,33 @@ final class Cache implements Flushable {
     private transient ByteArrayOutputStream data;
 
     /**
-     * Public ctor.
-     * @param akey S3 key
+     * Drain to send data through.
      */
-    protected Cache(final Key akey) {
-        this.key = akey;
+    private transient Drain drain;
+
+    /**
+     * Send data to this drain and read from it.
+     * @param drn The drain
+     * @return This object
+     * @throws IOException If fails
+     */
+    public Buffer through(final Drain drn) throws IOException {
+        if (!this.drain.equals(drn)) {
+            this.flush();
+            this.drain = drn;
+        }
+        return this;
     }
 
     /**
      * Append new line to an object.
-     * @param line Line to add
+     * @param tail Lines to append
      * @throws IOException If fails
      */
-    public void append(final Conveyer.Line line) throws IOException {
+    public void append(final Iterable<String> tail) throws IOException {
         this.touched.set(System.currentTimeMillis());
         this.dirty.set(true);
-        this.lines.add(line.toString());
+        this.lines.addAll(lines);
     }
 
     /**
@@ -207,33 +198,7 @@ final class Cache implements Flushable {
         synchronized (this.dirty) {
             if (this.data == null) {
                 this.data = new ByteArrayOutputStream();
-                final S3Client client = this.key.client();
-                final AmazonS3 aws = client.get();
-                try {
-                    if (!aws.listObjects(client.bucket(), this.key.toString())
-                        .getObjectSummaries().isEmpty()) {
-                        final S3Object object =
-                            aws.getObject(client.bucket(), this.key.toString());
-                        IOUtils.copy(object.getObjectContent(), this.data);
-                        Logger.info(
-                            this,
-                            "'%s' loaded from S3, size=%d, etag=%s",
-                            this.key,
-                            this.data.size(),
-                            object.getObjectMetadata().getETag()
-                        );
-                    }
-                } catch (AmazonS3Exception ex) {
-                    throw new IOException(
-                        String.format(
-                            "failed to read %s from %s: %s",
-                            this.key,
-                            client.bucket(),
-                            ex
-                        ),
-                        ex
-                    );
-                }
+                IOUtils.copy(this.drain.read(this.date), this.data);
             }
             if (!this.lines.isEmpty()) {
                 final PrintWriter writer = new PrintWriter(this.data);

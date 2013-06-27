@@ -31,24 +31,15 @@ package com.rultor.client;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.test.RestTester;
-import com.rultor.spi.Pulse;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Stage;
+import com.rultor.spi.Drain;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.util.Collection;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
+import java.util.SortedSet;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.codec.CharEncoding;
-import org.apache.commons.io.IOUtils;
 
 /**
- * RESTful Pulse.
+ * RESTful Drain.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -58,7 +49,8 @@ import org.apache.commons.io.IOUtils;
 @ToString
 @EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
-final class RestPulse implements Pulse {
+@SuppressWarnings("PMD.TooManyMethods")
+final class RestDrain implements Drain {
 
     /**
      * Home URI.
@@ -75,7 +67,7 @@ final class RestPulse implements Pulse {
      * @param uri URI of home page
      * @param auth Authentication token
      */
-    protected RestPulse(final String uri, final String auth) {
+    protected RestDrain(final String uri, final String auth) {
         this.home = uri;
         this.token = auth;
     }
@@ -84,7 +76,7 @@ final class RestPulse implements Pulse {
      * {@inheritDoc}
      */
     @Override
-    public Collection<Stage> stages() {
+    public SortedSet<Long> pulses() throws IOException {
         throw new UnsupportedOperationException();
     }
 
@@ -92,36 +84,18 @@ final class RestPulse implements Pulse {
      * {@inheritDoc}
      */
     @Override
-    public Spec spec() {
-        return new Spec.Simple(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("#spec()")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath("/page/spec/text()")
-                .get(0)
-        );
+    public void append(final long date,
+        final Iterable<String> lines) throws IOException {
+        throw new UnsupportedOperationException();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public InputStream read() throws IOException {
-        return IOUtils.toInputStream(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("preparing for #read()")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .rel("/page/links/link[@rel='stream']/@href")
-                .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-                .get("#read()")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .getBody(),
-            CharEncoding.UTF_8
-        );
+    public InputStream read(final long date) throws IOException {
+        throw new UnsupportedOperationException();
     }
+
 
 }

@@ -110,7 +110,7 @@ public final class AwsUsers implements Users, Metricable {
                 }
             }
         );
-        Caches.INSTANCE.register(registry);
+        Buffers.INSTANCE.register(registry);
     }
 
     /**

@@ -34,6 +34,7 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Repo;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Unit;
 import java.util.logging.Level;
@@ -193,7 +194,11 @@ public final class PulseRs extends BaseRs {
                 Level.SEVERE
             );
         }
-        return new Pulse(this.date, unit.drain());
+        try {
+            return new Pulse(this.date, unit.drain());
+        } catch (Repo.InstantiationException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**

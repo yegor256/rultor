@@ -33,14 +33,11 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.SortedMap;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
@@ -85,8 +82,8 @@ final class RestUnit implements Unit {
      * {@inheritDoc}
      */
     @Override
-    public SortedMap<Date, Pulse> pulses() {
-        return new RestPulses(
+    public Drain drain() {
+        return new RestDrain(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
@@ -137,14 +134,6 @@ final class RestUnit implements Unit {
                 .xpath("/page/unit/spec/text()")
                 .get(0)
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Drain drain() {
-        throw new UnsupportedOperationException();
     }
 
 }

@@ -34,9 +34,11 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Repo;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Unit;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.SortedSet;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -137,20 +139,16 @@ public final class DrainRs extends BaseRs {
     /**
      * All pulses of the unit.
      * @return Collection of JAXB units
-     * @throws IOException If fails
+     * @throws Exception If fails
      */
-    private JaxbBundle pulses() throws IOException {
+    private JaxbBundle pulses() throws Exception {
         final SortedSet<Long> pulses =
             this.unit().drain().pulses().tailSet(this.since);
         return new JaxbBundle("pulses").add(
             new JaxbBundle.Group<Long>(pulses) {
                 @Override
                 public JaxbBundle bundle(final Long date) {
-                    try {
-                        return DrainRs.this.pulse(date);
-                    } catch (IOException ex) {
-                        throw new IllegalStateException(ex);
-                    }
+                    return DrainRs.this.pulse(date);
                 }
             }
         );
@@ -160,14 +158,24 @@ public final class DrainRs extends BaseRs {
      * Convert pulse to JaxbBundle.
      * @param date Date of it
      * @return Bundle
-     * @throws IOException If IO error
      */
-    private JaxbBundle pulse(final Long date) throws IOException {
-        final Pulse pulse = new Pulse(date, this.unit().drain());
+    private JaxbBundle pulse(final Long date) {
+        final Pulse pulse;
+        try {
+            pulse = new Pulse(date, this.unit().drain());
+        } catch (Repo.InstantiationException ex) {
+            throw new IllegalStateException(ex);
+        }
+        final Collection<Stage> stages;
+        try {
+            stages = pulse.stages();
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
         return new JaxbBundle("pulse")
             .add("stages")
             .add(
-                new JaxbBundle.Group<Stage>(pulse.stages()) {
+                new JaxbBundle.Group<Stage>(stages) {
                     @Override
                     public JaxbBundle bundle(final Stage stage) {
                         return DrainRs.this.stage(date, stage);
