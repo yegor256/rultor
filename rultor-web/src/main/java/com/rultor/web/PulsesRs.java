@@ -67,7 +67,7 @@ public final class PulsesRs extends BaseRs {
     /**
      * Maximum number of pulses to show.
      */
-    private static final int MAX = 20;
+    private static final int MAX = 10;
 
     /**
      * Unit name.
