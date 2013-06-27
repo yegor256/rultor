@@ -94,6 +94,11 @@
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-aspects</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>sc-light-jdk15on</artifactId>
+            <version>1.47.0.2</version>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>

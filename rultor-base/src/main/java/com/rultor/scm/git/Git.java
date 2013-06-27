@@ -88,7 +88,10 @@ public final class Git implements SCM {
         this(
             shl, addr, folder,
             new PrivateKey(
-                "-----BEGIN RSA PRIVATE KEY-----\n-----END RSA PRIVATE KEY-----"
+                // @checkstyle StringLiteralsConcatenation (50 lines)
+                "-----BEGIN RSA PRIVATE KEY-----\n"
+                + "000000000000000000000000000000\n"
+                + "-----END RSA PRIVATE KEY-----"
             )
         );
     }

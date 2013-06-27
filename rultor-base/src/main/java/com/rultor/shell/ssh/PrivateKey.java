@@ -34,12 +34,15 @@ import com.jcabi.aspects.Loggable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
+import org.spongycastle.util.io.pem.PemObject;
+import org.spongycastle.util.io.pem.PemReader;
 
 /**
  * RSA Private Key (for SSH).
@@ -64,6 +67,7 @@ public final class PrivateKey {
      */
     public PrivateKey(@NotNull final String txt) {
         this.text = PrivateKey.normalize(txt);
+        this.toString();
     }
 
     /**
@@ -71,7 +75,17 @@ public final class PrivateKey {
      */
     @Override
     public String toString() {
-        return String.format("RSA-key-%d-characters", this.text.length());
+        final PemObject pem;
+        try {
+            pem = new PemReader(new StringReader(this.text)).readPemObject();
+        } catch (IOException ex) {
+            throw new IllegalArgumentException(ex);
+        }
+        return String.format(
+            "[%s %d bytes]",
+            pem.getType(),
+            pem.getContent().length
+        );
     }
 
     /**
