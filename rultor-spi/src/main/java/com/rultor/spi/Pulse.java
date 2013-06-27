@@ -30,9 +30,17 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import lombok.EqualsAndHashCode;
 
 /**
  * Pulse.
@@ -42,25 +50,138 @@ import java.util.Collection;
  * @since 1.0
  */
 @Immutable
-public interface Pulse {
+@EqualsAndHashCode(of = { "date", "drain" })
+@Loggable(Loggable.DEBUG)
+public final class Pulse {
+
+    /**
+     * Date of start.
+     */
+    private final transient long date;
+
+    /**
+     * Drain.
+     */
+    private final transient Drain drain;
+
+    /**
+     * Public ctor.
+     * @param time When was it started
+     * @param drn Drain
+     */
+    public Pulse(final long time, final Drain drn) {
+        this.date = time;
+        this.drain = drn;
+    }
 
     /**
      * Stages.
      * @return Collection of them
+     * @throws IOException If IO error
      */
-    Collection<Stage> stages();
+    public Collection<Stage> stages() throws IOException {
+        final Collection<Stage> stages = new LinkedList<Stage>();
+        final BufferedReader reader =
+            new BufferedReader(new InputStreamReader(this.read()));
+        final ConcurrentMap<String, Long> starts =
+            new ConcurrentHashMap<String, Long>(0);
+        while (true) {
+            final String txt = reader.readLine();
+            if (txt == null) {
+                break;
+            }
+            if (Signal.exists(txt) && Drain.Line.Simple.has(txt)) {
+                final Drain.Line line = Drain.Line.Simple.parse(txt);
+                final Signal signal = Signal.valueOf(txt);
+                if (signal.key().equals(Signal.Mnemo.START)) {
+                    starts.put(signal.value(), line.msec());
+                } else if (signal.key().equals(Signal.Mnemo.SUCCESS)
+                    || signal.key().equals(Signal.Mnemo.FAILURE)) {
+                    stages.add(
+                        Pulse.toStage(
+                            line, signal, starts.get(signal.value())
+                        )
+                    );
+                }
+            }
+        }
+        return Collections.unmodifiableCollection(stages);
+    }
 
     /**
      * Exact spec, which was used.
      * @return Spec
+     * @throws IOException If IO error
      */
-    Spec spec();
+    public Spec spec() throws IOException {
+        return new Spec.Simple(this.find(Signal.Mnemo.SPEC, ""));
+    }
 
     /**
      * Read it.
      * @return Stream to read from
      * @throws IOException If fails
      */
-    InputStream read() throws IOException;
+    public InputStream read() throws IOException {
+        return this.drain.read(this.date);
+    }
+
+    /**
+     * Find this signal in the stream.
+     * @param mnemo Signal name
+     * @param def Default value, if not found
+     * @return Found value
+     * @throws IOException If fails
+     */
+    private String find(final Signal.Mnemo mnemo, final String def)
+        throws IOException {
+        final BufferedReader reader =
+            new BufferedReader(new InputStreamReader(this.read()));
+        String value = null;
+        while (true) {
+            final String line = reader.readLine();
+            if (line == null) {
+                break;
+            }
+            if (Signal.exists(line)) {
+                final Signal signal = Signal.valueOf(line);
+                if (signal.key().equals(mnemo)) {
+                    value = signal.value();
+                    break;
+                }
+            }
+        }
+        if (value == null) {
+            value = def;
+        }
+        return value;
+    }
+
+    /**
+     * Convert signal and line to stage.
+     * @param line Line
+     * @param signal Signal
+     * @param start When started or NULL if unknown
+     * @return The stage
+     */
+    private static Stage toStage(final Drain.Line line,
+        final Signal signal, final Long start) {
+        Stage.Result result;
+        if (signal.key().equals(Signal.Mnemo.SUCCESS)) {
+            result = Stage.Result.SUCCESS;
+        } else {
+            result = Stage.Result.FAILURE;
+        }
+        long begin = 0;
+        if (start != null) {
+            begin = start;
+        }
+        return new Stage.Simple(
+            result,
+            begin,
+            line.msec(),
+            signal.value()
+        );
+    }
 
 }

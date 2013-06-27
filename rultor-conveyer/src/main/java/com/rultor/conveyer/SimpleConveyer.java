@@ -193,7 +193,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
         Work work;
         try {
             work = this.queue.pull();
-            final User owner = this.users.fetch(work.owner());
+            final User owner = this.users.everybody().get(work.owner());
             final Instance instance = new LoggableInstance(
                 this.repo.make(owner, work.spec()),
                 this.appender,

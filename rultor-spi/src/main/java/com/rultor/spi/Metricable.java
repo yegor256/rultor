@@ -30,6 +30,7 @@
 package com.rultor.spi;
 
 import com.codahale.metrics.MetricRegistry;
+import javax.validation.constraints.NotNull;
 
 /**
  * Reports some metrics.
@@ -44,6 +45,6 @@ public interface Metricable {
      * Register itself in Metrics Registry.
      * @param registry The registry
      */
-    void register(MetricRegistry registry);
+    void register(@NotNull MetricRegistry registry);
 
 }

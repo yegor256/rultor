@@ -40,7 +40,7 @@ import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- * Signal in the pulse.
+ * Signal in the drain.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0

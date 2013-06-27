@@ -32,11 +32,11 @@ package com.rultor.spi;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import java.io.Closeable;
+import java.io.InputStream;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.time.DateUtils;
@@ -49,14 +49,28 @@ import org.apache.commons.lang3.time.DateUtils;
  * @since 1.0
  */
 @Immutable
-public interface Drain extends Closeable {
+@SuppressWarnings("PMD.TooManyMethods")
+public interface Drain {
 
     /**
-     * Consume new log line.
-     * @param work Work that produces this line
-     * @param line Log line
+     * Iterate all available pulses.
+     * @return List of them
      */
-    void push(@NotNull Work work, @NotNull Drain.Line line);
+    Iterator<Long> pulses();
+
+    /**
+     * Write a line to it, related to the dated pulse.
+     * @param date When this pulse was started
+     * @param lines Lines to write
+     */
+    void write(long date, Iterable<String> lines);
+
+    /**
+     * Read the pulse by date of start.
+     * @param date When this pulse was started
+     * @return The input stream with data
+     */
+    InputStream read(long date);
 
     /**
      * One line in the drain.

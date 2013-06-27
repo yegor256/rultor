@@ -109,7 +109,11 @@ public final class SimpleConveyerTest {
         final Drain drain = Mockito.mock(Drain.class);
         Mockito.doReturn(drain).when(unit).drain();
         final Users users = Mockito.mock(Users.class);
-        Mockito.doReturn(user).when(users).fetch(owner);
+        Mockito.doReturn(
+            new ImmutableMap.Builder<URN, User>()
+                .put(owner, user)
+                .build()
+        ).when(users).everybody();
         final SimpleConveyer conveyer = new SimpleConveyer(queue, repo, users);
         try {
             conveyer.start();
@@ -121,7 +125,7 @@ public final class SimpleConveyerTest {
             conveyer.close();
         }
         Mockito.verify(queue, Mockito.atLeast(1)).pull();
-        Mockito.verify(users, Mockito.atLeast(1)).fetch(owner);
+        Mockito.verify(users, Mockito.atLeast(1)).everybody();
         Mockito.verify(instance, Mockito.atLeast(1)).pulse();
     }
 

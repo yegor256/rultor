@@ -31,6 +31,7 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -48,6 +49,7 @@ public interface Spec {
      * Convert it to a human readable form.
      * @return The text
      */
+    @NotNull
     String asText();
 
     /**

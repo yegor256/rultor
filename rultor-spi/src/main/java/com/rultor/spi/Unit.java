@@ -30,8 +30,6 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import java.util.Date;
-import java.util.SortedMap;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -45,11 +43,11 @@ import javax.validation.constraints.NotNull;
 public interface Unit {
 
     /**
-     * All pulses (starting from the most recent).
-     * @return Sorted map of them
+     * Create and return a new drain.
+     * @return The drain to put logs into
      */
     @NotNull
-    SortedMap<Date, Pulse> pulses();
+    Drain drain();
 
     /**
      * Save specification.
@@ -63,12 +61,5 @@ public interface Unit {
      */
     @NotNull
     Spec spec();
-
-    /**
-     * Create and return a new drain.
-     * @return The drain to put logs into
-     */
-    @NotNull
-    Drain drain();
 
 }

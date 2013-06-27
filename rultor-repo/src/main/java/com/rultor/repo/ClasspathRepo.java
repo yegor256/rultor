@@ -33,6 +33,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Instance;
+import com.rultor.spi.Metricable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.User;
@@ -52,7 +53,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-public final class ClasspathRepo implements Repo {
+public final class ClasspathRepo implements Repo, Metricable {
 
     /**
      * Grammar to use.
@@ -91,7 +92,7 @@ public final class ClasspathRepo implements Repo {
      * {@inheritDoc}
      */
     @Override
-    public void register(final MetricRegistry registry) {
+    public void register(@NotNull final MetricRegistry registry) {
         // nothing to do
     }
 

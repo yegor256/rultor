@@ -52,25 +52,11 @@ public interface User {
     URN urn();
 
     /**
-     * All his units.
+     * All his units, {@code get()}, {@code put()}, and
+     * {@code remove()} should be supported.
      * @return Collection of units
      */
     @NotNull
     Map<String, Unit> units();
-
-    /**
-     * Create new unit with a given name (runtime exception if it
-     * already exists).
-     * @param name Unique name of the unit
-     * @return The unit just created
-     */
-    @NotNull
-    Unit create(@NotNull String name);
-
-    /**
-     * Remove unit with a given name.
-     * @param name Unique name of the unit
-     */
-    void remove(@NotNull String name);
 
 }

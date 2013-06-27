@@ -95,7 +95,7 @@ final class LoggableInstance implements Instance {
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void pulse() throws Exception {
         final Drain drain = this.unit.drain();
-        this.appender.register(this.work, drain);
+        this.appender.register(this.work.started(), drain);
         try {
             Logger.info(this, "log started on %s", new Date());
             Logger.info(
@@ -113,7 +113,6 @@ final class LoggableInstance implements Instance {
             throw ex;
         } finally {
             this.appender.unregister();
-            drain.close();
         }
     }
 

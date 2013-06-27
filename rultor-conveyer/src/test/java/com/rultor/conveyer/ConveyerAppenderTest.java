@@ -33,11 +33,10 @@ import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Work;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.spi.LoggingEvent;
-import org.hamcrest.CustomMatcher;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -62,7 +61,7 @@ public final class ConveyerAppenderTest {
         final Work work = new Work.Simple(
             new URN("urn:facebook:1"), "test", new Spec.Simple()
         );
-        appender.register(work, drain);
+        appender.register(work.started(), drain);
         final String text = "test message to see in log";
         final Thread publisher = new Thread() {
             @Override
@@ -81,18 +80,14 @@ public final class ConveyerAppenderTest {
         publisher.start();
         publisher.join();
         appender.unregister();
-        Mockito.verify(drain).push(
-            Mockito.eq(work),
+        Mockito.verify(drain).write(
+            Mockito.eq(work.started()),
             Mockito.argThat(
-                new CustomMatcher<Drain.Line>("expected log line") {
-                    @Override
-                    public boolean matches(final Object obj) {
-                        final Drain.Line line =
-                            Drain.Line.class.cast(obj);
-                        return line.level().equals(Level.INFO)
-                            && line.toString().endsWith(text);
-                    }
-                }
+                Matchers.everyItem(
+                    Matchers.equalTo(
+                        "  0:00 INFO test message to see in log"
+                    )
+                )
             )
         );
     }
@@ -102,6 +97,7 @@ public final class ConveyerAppenderTest {
      * @throws Exception If some problem inside
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void logsMessagesInSameThread() throws Exception {
         final Drain drain = Mockito.mock(Drain.class);
         final ConveyerAppender appender = new ConveyerAppender();
@@ -110,7 +106,7 @@ public final class ConveyerAppenderTest {
         final Work work = new Work.Simple(
             new URN("urn:facebook:44"), "test again", new Spec.Simple()
         );
-        appender.register(work, drain);
+        appender.register(work.started(), drain);
         appender.append(
             new LoggingEvent(
                 "",
@@ -123,9 +119,9 @@ public final class ConveyerAppenderTest {
         Logger.getRootLogger().removeAppender(appender);
         appender.unregister();
         appender.close();
-        Mockito.verify(drain).push(
-            Mockito.eq(work),
-            Mockito.any(Drain.Line.class)
+        Mockito.verify(drain).write(
+            Mockito.eq(work.started()),
+            (Iterable<String>) Mockito.any(Object.class)
         );
     }
 
