@@ -93,6 +93,7 @@ public final class Lifespan implements ServletContextListener {
         context.setAttribute(Users.class.getName(), users);
         context.setAttribute(Repo.class.getName(), repo);
         context.setAttribute(Conveyer.class.getName(), this.conveyer);
+        context.setAttribute(Queue.class.getName(), queue);
     }
 
     /**

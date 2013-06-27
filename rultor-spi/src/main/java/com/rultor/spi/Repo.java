@@ -29,6 +29,8 @@
  */
 package com.rultor.spi;
 
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -38,11 +40,13 @@ import javax.validation.constraints.NotNull;
  * @version $Id$
  * @since 1.0
  */
+@Immutable
 public interface Repo extends Metricable {
 
     /**
      * Invalid syntax of spec.
      */
+    @Loggable.Quiet
     final class InvalidSyntaxException extends Exception {
         /**
          * Serialization marker.
@@ -76,6 +80,7 @@ public interface Repo extends Metricable {
     /**
      * Spec can't be instantiated.
      */
+    @Loggable.Quiet
     final class InstantiationException extends Exception {
         /**
          * Serialization marker.
@@ -111,6 +116,7 @@ public interface Repo extends Metricable {
      * @return The spec
      * @throws Repo.InvalidSyntaxException If incorrect syntax
      */
+    @NotNull
     Spec make(@NotNull String text) throws Repo.InvalidSyntaxException;
 
     /**
@@ -120,6 +126,7 @@ public interface Repo extends Metricable {
      * @return The instance
      * @throws Repo.InstantiationException If can't instantiate
      */
+    @NotNull
     Instance make(@NotNull User user, @NotNull Spec spec)
         throws Repo.InstantiationException;
 
