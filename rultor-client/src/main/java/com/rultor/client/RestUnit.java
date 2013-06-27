@@ -32,6 +32,7 @@ package com.rultor.client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
+import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
@@ -136,6 +137,14 @@ final class RestUnit implements Unit {
                 .xpath("/page/unit/spec/text()")
                 .get(0)
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Drain drain() {
+        throw new UnsupportedOperationException();
     }
 
 }

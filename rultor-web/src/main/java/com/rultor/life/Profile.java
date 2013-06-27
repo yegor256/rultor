@@ -29,7 +29,6 @@
  */
 package com.rultor.life;
 
-import com.rultor.spi.Conveyer;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Users;
@@ -60,11 +59,5 @@ interface Profile {
      * @return Queue
      */
     Queue queue();
-
-    /**
-     * Log.
-     * @return Log
-     */
-    Conveyer.Log log();
 
 }

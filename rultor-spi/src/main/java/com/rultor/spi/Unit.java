@@ -64,4 +64,11 @@ public interface Unit {
     @NotNull
     Spec spec();
 
+    /**
+     * Create and return a new drain.
+     * @return The drain to put logs into
+     */
+    @NotNull
+    Drain drain();
+
 }

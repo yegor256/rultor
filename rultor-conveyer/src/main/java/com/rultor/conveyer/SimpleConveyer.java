@@ -34,19 +34,17 @@ import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseRunnable;
-import com.jcabi.log.VerboseThreads;
-import com.rultor.spi.Conveyer;
-import com.rultor.spi.Conveyer.Log;
 import com.rultor.spi.Instance;
+import com.rultor.spi.Metricable;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
+import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -69,8 +67,7 @@ import org.apache.log4j.PatternLayout;
 @ToString
 @EqualsAndHashCode(of = "queue")
 @SuppressWarnings("PMD.DoNotUseThreads")
-public final class SimpleConveyer
-    implements Conveyer, Closeable, Callable<Void> {
+public final class SimpleConveyer implements Closeable, Metricable {
 
     /**
      * Queue.
@@ -98,18 +95,10 @@ public final class SimpleConveyer
     private transient Counter counter;
 
     /**
-     * Consumer of new specs from Queue.
+     * Consumer and executer of new specs from Queue.
      */
-    private final transient ExecutorService consumer =
-        Executors.newSingleThreadExecutor(
-            new VerboseThreads(SimpleConveyer.class)
-        );
-
-    /**
-     * Executor of instances.
-     */
-    private final transient ExecutorService executor =
-        Executors.newFixedThreadPool(
+    private final transient ScheduledExecutorService svc =
+        Executors.newScheduledThreadPool(
             Runtime.getRuntime().availableProcessors() * Tv.TEN,
             new ThreadFactory() {
                 private final transient AtomicLong group = new AtomicLong();
@@ -119,7 +108,8 @@ public final class SimpleConveyer
                         new ThreadGroup(
                             Long.toString(this.group.incrementAndGet())
                         ),
-                        runnable
+                        runnable,
+                        String.format("conveyer-%d", this.group.get())
                     );
                 }
             }
@@ -130,26 +120,35 @@ public final class SimpleConveyer
      * @param que The queue of specs
      * @param rep Repo
      * @param usrs Users
-     * @param log Log
      * @checkstyle ParameterNumber (4 lines)
      */
     public SimpleConveyer(@NotNull final Queue que, @NotNull final Repo rep,
-        @NotNull final Users usrs, @NotNull final Log log) {
+        @NotNull final Users usrs) {
         this.queue = que;
         this.repo = rep;
         this.users = usrs;
-        this.appender = new ConveyerAppender(log);
+        this.appender = new ConveyerAppender();
         this.appender.setThreshold(Level.DEBUG);
         this.appender.setLayout(new PatternLayout("%m"));
         Logger.getRootLogger().addAppender(this.appender);
     }
 
     /**
-     * {@inheritDoc}
+     * Start the conveyer.
      */
-    @Override
     public void start() {
-        this.consumer.submit(this);
+        this.svc.scheduleWithFixedDelay(
+            new VerboseRunnable(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        SimpleConveyer.this.process();
+                    }
+                },
+                true, false
+            ),
+            0, 1, TimeUnit.MICROSECONDS
+        );
     }
 
     /**
@@ -157,33 +156,23 @@ public final class SimpleConveyer
      */
     @Override
     public void close() throws IOException {
-        this.consumer.shutdown();
         try {
-            this.consumer.awaitTermination(1, TimeUnit.SECONDS);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            throw new IOException(ex);
-        }
-        this.executor.shutdown();
-        try {
-            this.executor.awaitTermination(1, TimeUnit.SECONDS);
+            while (true) {
+                this.svc.shutdownNow();
+                if (this.svc.awaitTermination(1, TimeUnit.SECONDS)) {
+                    break;
+                }
+                TimeUnit.SECONDS.sleep(Tv.FIVE);
+                com.jcabi.log.Logger.info(
+                    this, "waiting for threads termination"
+                );
+            }
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
             throw new IOException(ex);
         }
         Logger.getRootLogger().removeAppender(this.appender);
         this.appender.close();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Loggable(value = Loggable.INFO, limit = Integer.MAX_VALUE)
-    public Void call() throws Exception {
-        while (true) {
-            this.process(this.queue.pull());
-        }
     }
 
     /**
@@ -197,31 +186,32 @@ public final class SimpleConveyer
     }
 
     /**
-     * Process this work in the threaded executor.
-     * @param work Work
+     * Process the next work from the queue.
      */
-    private void process(final Work work) {
-        this.executor.submit(
-            new VerboseRunnable(
-                new Callable<Void>() {
-                    @Override
-                    public Void call() throws Exception {
-                        final Instance instance = new LoggableInstance(
-                            SimpleConveyer.this.repo.make(
-                                SimpleConveyer.this.users.fetch(work.owner()),
-                                work.spec()
-                            ),
-                            SimpleConveyer.this.appender,
-                            work
-                        );
-                        instance.pulse();
-                        SimpleConveyer.this.counter.inc();
-                        return null;
-                    }
-                },
-                true, false
-            )
-        );
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    private void process() {
+        Work work;
+        try {
+            work = this.queue.pull();
+            final User owner = this.users.fetch(work.owner());
+            final Instance instance = new LoggableInstance(
+                this.repo.make(owner, work.spec()),
+                this.appender,
+                work,
+                owner.units().get(work.unit())
+            );
+            instance.pulse();
+            if (this.counter != null) {
+                this.counter.inc();
+            }
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        } catch (Repo.InstantiationException ex) {
+            throw new IllegalStateException(ex);
+        // @checkstyle IllegalCatch (1 line)
+        } catch (Exception ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
 }

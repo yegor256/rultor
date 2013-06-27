@@ -29,12 +29,14 @@
  */
 package com.rultor.conveyer;
 
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Conveyer;
+import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
@@ -52,28 +54,35 @@ import org.mockito.stubbing.Answer;
  * Test case for {@link SimpleConveyer}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class SimpleConveyerTest {
 
     /**
      * SimpleConveyer can start and stop.
      * @throws Exception If some problem inside
+     * @checkstyle ExecutableStatementCount (100 lines)
      */
     @Test
     public void startsAndStops() throws Exception {
         final Queue queue = Mockito.mock(Queue.class);
         final URN owner = new URN("urn:facebook:1");
+        final String name = "unit-name";
         final AtomicBoolean pulled = new AtomicBoolean();
         Mockito.doAnswer(
             new Answer<Work>() {
                 @Override
-                public Work answer(final InvocationOnMock inv)
-                    throws Exception {
+                public Work answer(final InvocationOnMock inv) {
                     if (pulled.get()) {
-                        TimeUnit.DAYS.sleep(1);
+                        try {
+                            TimeUnit.DAYS.sleep(1);
+                        } catch (InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                            throw new IllegalStateException(ex);
+                        }
                     }
                     pulled.set(true);
-                    return new Work.Simple(owner, "unit", new Spec.Simple());
+                    return new Work.Simple(owner, name, new Spec.Simple());
                 }
             }
         ).when(queue).pull();
@@ -90,15 +99,25 @@ public final class SimpleConveyerTest {
                 }
             }
         ).when(repo).make(Mockito.any(User.class), Mockito.any(Spec.class));
+        final User user = Mockito.mock(User.class);
+        final Unit unit = Mockito.mock(Unit.class);
+        Mockito.doReturn(
+            new ImmutableMap.Builder<String, Unit>()
+                .put(name, unit)
+                .build()
+        ).when(user).units();
+        final Drain drain = Mockito.mock(Drain.class);
+        Mockito.doReturn(drain).when(unit).drain();
         final Users users = Mockito.mock(Users.class);
-        final Conveyer.Log log = Mockito.mock(Conveyer.Log.class);
-        final Conveyer conveyer = new SimpleConveyer(queue, repo, users, log);
+        Mockito.doReturn(user).when(users).fetch(owner);
+        final SimpleConveyer conveyer = new SimpleConveyer(queue, repo, users);
         try {
             conveyer.start();
             MatcherAssert.assertThat(
                 made.await(2, TimeUnit.SECONDS), Matchers.is(true)
             );
         } finally {
+            TimeUnit.SECONDS.sleep(1);
             conveyer.close();
         }
         Mockito.verify(queue, Mockito.atLeast(1)).pull();

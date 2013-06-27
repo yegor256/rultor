@@ -32,8 +32,10 @@ package com.rultor.conveyer;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
+import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Signal;
+import com.rultor.spi.Unit;
 import com.rultor.spi.Work;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
@@ -66,16 +68,24 @@ final class LoggableInstance implements Instance {
     private final transient Work work;
 
     /**
+     * Which unit we're working in.
+     */
+    private final transient Unit unit;
+
+    /**
      * Public ctor.
      * @param instance Origin
      * @param appr Appender
      * @param wrk Work
+     * @param unt Unit
+     * @checkstyle ParameterNumber (5 lines)
      */
     protected LoggableInstance(final Instance instance,
-        final ConveyerAppender appr, final Work wrk) {
+        final ConveyerAppender appr, final Work wrk, final Unit unt) {
         this.origin = instance;
         this.appender = appr;
         this.work = wrk;
+        this.unit = unt;
     }
 
     /**
@@ -84,7 +94,8 @@ final class LoggableInstance implements Instance {
     @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void pulse() throws Exception {
-        this.appender.register(this.work);
+        final Drain drain = this.unit.drain();
+        this.appender.register(this.work, drain);
         try {
             Logger.info(this, "log started on %s", new Date());
             Logger.info(
@@ -102,6 +113,7 @@ final class LoggableInstance implements Instance {
             throw ex;
         } finally {
             this.appender.unregister();
+            drain.close();
         }
     }
 

@@ -36,11 +36,9 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.manifests.Manifests;
 import com.rultor.aws.AwsUsers;
 import com.rultor.aws.S3Client;
-import com.rultor.aws.S3Log;
 import com.rultor.aws.SQSClient;
 import com.rultor.aws.SQSQueue;
 import com.rultor.repo.ClasspathRepo;
-import com.rultor.spi.Conveyer;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Users;
@@ -113,14 +111,6 @@ final class Production implements Profile {
     @Override
     public Queue queue() {
         return new SQSQueue(this.sqs);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Conveyer.Log log() {
-        return new S3Log(this.client);
     }
 
 }

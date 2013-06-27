@@ -42,34 +42,24 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.time.DateUtils;
 
 /**
- * Mutable and thread-safe conveyer.
+ * Drain of a unit.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-public interface Conveyer extends Closeable, Metricable {
+@Immutable
+public interface Drain extends Closeable {
 
     /**
-     * Start it.
+     * Consume new log line.
+     * @param work Work that produces this line
+     * @param line Log line
      */
-    void start();
+    void push(@NotNull Work work, @NotNull Drain.Line line);
 
     /**
-     * Log it accepts.
-     */
-    @Immutable
-    interface Log extends Closeable {
-        /**
-         * Consume new log line.
-         * @param work Work that produces this line
-         * @param line Log line
-         */
-        void push(@NotNull Work work, @NotNull Line line);
-    }
-
-    /**
-     * One line in logs.
+     * One line in the drain.
      */
     @Immutable
     interface Line {
@@ -89,7 +79,7 @@ public interface Conveyer extends Closeable, Metricable {
         @Immutable
         @Loggable(Loggable.DEBUG)
         @EqualsAndHashCode(of = { "when", "lvl", "msg" })
-        final class Simple implements Conveyer.Line {
+        final class Simple implements Drain.Line {
             /**
              * Pattern to parse it.
              */
@@ -155,17 +145,17 @@ public interface Conveyer extends Closeable, Metricable {
              * @return TRUE if it's a line
              */
             public static boolean has(final String text) {
-                return Conveyer.Line.Simple.PTN.matcher(text).matches();
+                return Drain.Line.Simple.PTN.matcher(text).matches();
             }
             /**
              * Parse it back to live (or runtime exception if not found).
              * @param text Text to parse
              * @return Line, if possible to get it from there
              */
-            public static Conveyer.Line parse(final String text) {
-                final Matcher matcher = Conveyer.Line.Simple.PTN.matcher(text);
+            public static Drain.Line parse(final String text) {
+                final Matcher matcher = Drain.Line.Simple.PTN.matcher(text);
                 Validate.isTrue(matcher.matches(), "invalid line '%s'", text);
-                return new Conveyer.Line.Simple(
+                return new Drain.Line.Simple(
                     Long.parseLong(
                         matcher.group(1)
                     ) * DateUtils.MILLIS_PER_MINUTE

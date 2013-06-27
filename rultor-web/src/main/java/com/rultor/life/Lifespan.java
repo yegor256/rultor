@@ -32,7 +32,6 @@ package com.rultor.life;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import com.rultor.conveyer.SimpleConveyer;
-import com.rultor.spi.Conveyer;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Users;
@@ -54,17 +53,12 @@ public final class Lifespan implements ServletContextListener {
     /**
      * Conveyer.
      */
-    private transient Conveyer conveyer;
+    private transient SimpleConveyer conveyer;
 
     /**
      * Quartz the works.
      */
     private transient Quartz quartz;
-
-    /**
-     * S3 log.
-     */
-    private transient Conveyer.Log log;
 
     /**
      * {@inheritDoc}
@@ -87,12 +81,11 @@ public final class Lifespan implements ServletContextListener {
         final Queue queue = profile.queue();
         final Repo repo = profile.repo();
         this.quartz = new Quartz(users, queue);
-        this.log = profile.log();
-        this.conveyer = new SimpleConveyer(queue, repo, users, this.log);
+        this.conveyer = new SimpleConveyer(queue, repo, users);
         this.conveyer.start();
         context.setAttribute(Users.class.getName(), users);
         context.setAttribute(Repo.class.getName(), repo);
-        context.setAttribute(Conveyer.class.getName(), this.conveyer);
+        context.setAttribute(SimpleConveyer.class.getName(), this.conveyer);
         context.setAttribute(Queue.class.getName(), queue);
     }
 
@@ -103,7 +96,6 @@ public final class Lifespan implements ServletContextListener {
     public void contextDestroyed(final ServletContextEvent event) {
         IOUtils.closeQuietly(this.quartz);
         IOUtils.closeQuietly(this.conveyer);
-        IOUtils.closeQuietly(this.log);
     }
 
 }

@@ -32,10 +32,9 @@ package com.rultor.life;
 import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.repo.ClasspathRepo;
-import com.rultor.spi.Conveyer;
+import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
@@ -136,23 +135,6 @@ final class Testing implements Profile {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Conveyer.Log log() {
-        return new Conveyer.Log() {
-            @Override
-            public void push(final Work work, final Conveyer.Line line) {
-                Logger.info(this, "%s %s", work, line);
-            }
-            @Override
-            public void close() throws IOException {
-                assert this != null;
-            }
-        };
-    }
-
-    /**
      * In-memory unit.
      */
     @Immutable
@@ -185,6 +167,19 @@ final class Testing implements Profile {
         @Override
         public Spec spec() {
             return Testing.MemoryUnit.SPECS.get(this.name);
+        }
+        @Override
+        public Drain drain() {
+            return new Drain() {
+                @Override
+                public void push(final Work work, final Drain.Line line) {
+                    assert true;
+                }
+                @Override
+                public void close() throws IOException {
+                    assert true;
+                }
+            };
         }
     }
 

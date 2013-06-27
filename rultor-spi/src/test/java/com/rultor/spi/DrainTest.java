@@ -38,20 +38,20 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link Conveyer}.
+ * Test case for {@link Drain}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class ConveyerTest {
+public final class DrainTest {
 
     /**
-     * Conveyer.Line.Simple can build a string.
+     * Drain.Line.Simple can build a string.
      * @throws Exception If some problem inside
      */
     @Test
     public void makesString() throws Exception {
         final long msec = Math.abs(new Random().nextLong());
-        final Conveyer.Line line = new Conveyer.Line.Simple(
+        final Drain.Line line = new Drain.Line.Simple(
             msec, Level.INFO, "msg"
         );
         MatcherAssert.assertThat(
@@ -59,17 +59,17 @@ public final class ConveyerTest {
             Matchers.hasToString(Matchers.endsWith(" INFO msg"))
         );
         MatcherAssert.assertThat(
-            Conveyer.Line.Simple.has(line.toString()),
+            Drain.Line.Simple.has(line.toString()),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(
-            Conveyer.Line.Simple.parse(line.toString()).level(),
+            Drain.Line.Simple.parse(line.toString()).level(),
             Matchers.equalTo(Level.INFO)
         );
     }
 
     /**
-     * Conveyer.Line.Simple can build dates correctly.
+     * Drain.Line.Simple can build dates correctly.
      * @throws Exception If some problem inside
      */
     @Test
@@ -84,7 +84,7 @@ public final class ConveyerTest {
                 .put(24005000L, "400:05")
                 .build();
         for (Map.Entry<Long, String> entry : map.entrySet()) {
-            final Conveyer.Line line = new Conveyer.Line.Simple(
+            final Drain.Line line = new Drain.Line.Simple(
                 entry.getKey(), Level.INFO, "text msg"
             );
             MatcherAssert.assertThat(
@@ -92,7 +92,7 @@ public final class ConveyerTest {
                 Matchers.startsWith(entry.getValue())
             );
             MatcherAssert.assertThat(
-                Conveyer.Line.Simple.parse(line.toString()).msec(),
+                Drain.Line.Simple.parse(line.toString()).msec(),
                 Matchers.equalTo(entry.getKey())
             );
         }
