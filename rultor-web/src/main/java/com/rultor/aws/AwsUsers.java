@@ -37,6 +37,7 @@ import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Metricable;
+import com.rultor.spi.Repo;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import java.util.Collections;
@@ -65,11 +66,18 @@ public final class AwsUsers implements Users, Metricable {
     private final transient Region region;
 
     /**
+     * Repo to create drains.
+     */
+    private final transient Repo repo;
+
+    /**
      * Public ctor.
      * @param reg AWS region
+     * @param rep Repo
      */
-    public AwsUsers(final Region reg) {
+    public AwsUsers(final Region reg, final Repo rep) {
         this.region = reg;
+        this.repo = rep;
     }
 
     /**
@@ -111,7 +119,7 @@ public final class AwsUsers implements Users, Metricable {
      * @return The user
      */
     private User fetch(final URN urn) {
-        return new AwsUser(this.region, urn);
+        return new AwsUser(this.region, this.repo, urn);
     }
 
 }

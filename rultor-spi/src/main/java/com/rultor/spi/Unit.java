@@ -45,9 +45,10 @@ public interface Unit {
     /**
      * Create and return a new drain.
      * @return The drain to put logs into
+     * @throws Repo.InstantiationException If can't instantiate
      */
     @NotNull
-    Drain drain();
+    Drain drain() throws Repo.InstantiationException;
 
     /**
      * Save specification.

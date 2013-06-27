@@ -127,7 +127,7 @@ public interface Repo {
      * @throws Repo.InstantiationException If can't instantiate
      */
     @NotNull
-    Instance make(@NotNull User user, @NotNull Spec spec)
+    Object make(@NotNull User user, @NotNull Spec spec)
         throws Repo.InstantiationException;
 
 }

@@ -32,7 +32,6 @@ package com.rultor.repo;
 import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Instance;
 import com.rultor.spi.Metricable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
@@ -66,7 +65,7 @@ public final class ClasspathRepo implements Repo, Metricable {
      */
     @Override
     @NotNull
-    public Instance make(@NotNull final User user, @NotNull final Spec spec)
+    public Object make(@NotNull final User user, @NotNull final Spec spec)
         throws Repo.InstantiationException {
         Object object;
         try {
@@ -74,7 +73,7 @@ public final class ClasspathRepo implements Repo, Metricable {
         } catch (Repo.InvalidSyntaxException ex) {
             throw new Repo.InstantiationException(ex);
         }
-        return new RuntimeInstance(object);
+        return object;
     }
 
     /**

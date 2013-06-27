@@ -86,7 +86,7 @@ public final class ClasspathRepoTest {
         };
         for (String text : texts) {
             final Spec spec = repo.make(text);
-            final Instance obj = repo.make(Mockito.mock(User.class), spec);
+            final Object obj = repo.make(Mockito.mock(User.class), spec);
             MatcherAssert.assertThat(obj, Matchers.notNullValue());
         }
     }
@@ -120,12 +120,12 @@ public final class ClasspathRepoTest {
             "com.rultor.repo.ClasspathRepoTest$Foo(2L)"
         );
         ClasspathRepoTest.Foo.COUNTER.set(0);
-        final Instance instance = repo.make(Mockito.mock(User.class), spec);
+        final Object instance = repo.make(Mockito.mock(User.class), spec);
         MatcherAssert.assertThat(
             ClasspathRepoTest.Foo.COUNTER.get(),
             Matchers.equalTo(2L)
         );
-        instance.pulse();
+        Instance.class.cast(instance).pulse();
         MatcherAssert.assertThat(
             ClasspathRepoTest.Foo.COUNTER.get(),
             Matchers.equalTo(-1L)

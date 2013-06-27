@@ -40,9 +40,12 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.Table;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
+import com.rultor.spi.User;
 import java.util.Iterator;
+import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -82,9 +85,19 @@ final class AwsUnit implements Unit {
     private static final String FIELD_SPEC = "spec";
 
     /**
+     * Dynamo DB table column.
+     */
+    private static final String FIELD_DRAIN = "drain";
+
+    /**
      * Dynamo DB region.
      */
     private final transient Region region;
+
+    /**
+     * Repo to create drains.
+     */
+    private final transient Repo repo;
 
     /**
      * URN of the user.
@@ -99,12 +112,15 @@ final class AwsUnit implements Unit {
     /**
      * Public ctor.
      * @param reg Region in Dynamo
+     * @param rep Repo
      * @param urn URN of the user/owner
      * @param label Name of it
      * @checkstyle ParameterNumber (4 lines)
      */
-    protected AwsUnit(final Region reg, final URN urn, final String label) {
+    protected AwsUnit(final Region reg, final Repo rep,
+        final URN urn, final String label) {
         this.region = reg;
+        this.repo = rep;
         this.owner = urn;
         this.name = label;
     }
@@ -135,8 +151,22 @@ final class AwsUnit implements Unit {
      * {@inheritDoc}
      */
     @Override
-    public Drain drain() {
-        throw new UnsupportedOperationException();
+    public Drain drain() throws Repo.InstantiationException {
+        return Drain.class.cast(
+            this.repo.make(
+                new User() {
+                    @Override
+                    public URN urn() {
+                        throw new UnsupportedOperationException();
+                    }
+                    @Override
+                    public Map<String, Unit> units() {
+                        throw new UnsupportedOperationException();
+                    }
+                },
+                new Spec.Simple(this.item().get(AwsUnit.FIELD_DRAIN).getS())
+            )
+        );
     }
 
     /**

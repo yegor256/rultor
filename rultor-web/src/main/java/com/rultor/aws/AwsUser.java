@@ -36,6 +36,7 @@ import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
@@ -72,6 +73,11 @@ final class AwsUser implements User {
     private final transient Region region;
 
     /**
+     * Repo to create drains.
+     */
+    private final transient Repo repo;
+
+    /**
      * URN of the user.
      */
     private final transient URN name;
@@ -79,10 +85,12 @@ final class AwsUser implements User {
     /**
      * Public ctor.
      * @param reg Region in Dynamo
+     * @param rep Repo
      * @param urn URN of the user
      */
-    protected AwsUser(final Region reg, final URN urn) {
+    protected AwsUser(final Region reg, final Repo rep, final URN urn) {
         this.region = reg;
+        this.repo = rep;
         this.name = urn;
     }
 
@@ -164,7 +172,7 @@ final class AwsUser implements User {
      * @return The unit
      */
     private Unit unit(final String unit) {
-        return new AwsUnit(this.region, this.name, unit);
+        return new AwsUnit(this.region, this.repo, this.name, unit);
     }
 
     /**

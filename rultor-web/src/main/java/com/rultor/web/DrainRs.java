@@ -137,8 +137,9 @@ public final class DrainRs extends BaseRs {
     /**
      * All pulses of the unit.
      * @return Collection of JAXB units
+     * @throws IOException If fails
      */
-    private JaxbBundle pulses() {
+    private JaxbBundle pulses() throws IOException {
         final SortedSet<Long> pulses =
             this.unit().drain().pulses().tailSet(this.since);
         return new JaxbBundle("pulses").add(
