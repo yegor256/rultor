@@ -27,41 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.aws;
-
-import com.jcabi.urn.URN;
-import com.rultor.spi.Conveyer;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Work;
-import java.util.logging.Level;
-import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
- * Test case for {@link S3Log}.
+ * Drain in S3 bucket.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class S3LogTest {
-
-    /**
-     * S3Log can log (the test is not finished).
-     * @throws Exception If some problem inside
-     */
-    @Test
-    @org.junit.Ignore
-    public void logsMessages() throws Exception {
-        final Spec spec = new Spec.Simple("java.lang.Integer(5)");
-        final String unit = "some-test-unit";
-        final URN owner = new URN("urn:facebook:1");
-        final Work work = new Work.Simple(owner, unit, spec);
-        final String msg = "some test log message \u20ac";
-        final S3Client client = Mockito.mock(S3Client.class);
-        final S3Log log = new S3Log(client);
-        log.push(
-            work,
-            new Conveyer.Line.Simple(0, Level.INFO, msg)
-        );
-    }
-
-}
+package com.rultor.drain.s3;

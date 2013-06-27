@@ -29,6 +29,7 @@
  */
 package com.rultor.aws;
 
+import com.rultor.drain.s3.Key;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ObjectMetadata;

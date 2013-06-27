@@ -27,59 +27,47 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.aws;
+package com.rultor.drain.s3;
 
-import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Conveyer;
-import com.rultor.spi.Work;
-import java.io.Closeable;
-import java.io.IOException;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Log files in Amazon S3.
- *
+ * Test case for {@link Key}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@ToString
-@EqualsAndHashCode(of = "client")
-@Loggable(Loggable.DEBUG)
-public final class S3Log implements Conveyer.Log, Closeable {
+public final class KeyTest {
 
     /**
-     * S3 client.
+     * Key can make a string.
+     * @throws Exception If some problem inside
      */
-    private final transient S3Client client;
-
-    /**
-     * Public ctor.
-     * @param clnt Client
-     */
-    public S3Log(final S3Client clnt) {
-        this.client = clnt;
+    @Test
+    public void makesString() throws Exception {
+        final long date = 854384894302L;
+        MatcherAssert.assertThat(
+            new Key(date),
+            Matchers.hasToString("8002/99/72/9223371182469881505.txt")
+        );
+        MatcherAssert.assertThat(
+            Key.valueOf(new Key(date).toString()),
+            Matchers.equalTo(new Key(date))
+        );
     }
 
     /**
-     * {@inheritDoc}
+     * Key can compare in the right order.
+     * @throws Exception If some problem inside
      */
-    @Override
-    public void push(final Work work, final Conveyer.Line line) {
-        try {
-            Caches.INSTANCE.append(new Key(this.client, work), line);
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void close() throws IOException {
-        Caches.INSTANCE.flush();
+    @Test
+    public void comparesWithOtherKey() throws Exception {
+        final long date = System.currentTimeMillis();
+        MatcherAssert.assertThat(
+            new Key(date),
+            Matchers.lessThan(new Key(date - 1))
+        );
     }
 
 }

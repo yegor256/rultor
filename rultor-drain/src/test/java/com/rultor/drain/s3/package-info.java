@@ -27,57 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.aws;
-
-import com.jcabi.urn.URN;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
- * Test case for {@link Key}.
+ * Drain in S3 bucket, tests.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class KeyTest {
-
-    /**
-     * Key can make a string.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void makesString() throws Exception {
-        final URN owner = new URN("urn:facebook:1");
-        final String unit = "some-test-unit";
-        final long date = System.currentTimeMillis();
-        final S3Client client = Mockito.mock(S3Client.class);
-        MatcherAssert.assertThat(
-            new Key(client, owner, unit, date),
-            Matchers.hasToString(
-                Matchers.startsWith("urn:facebook:1/some-test-unit/")
-            )
-        );
-        MatcherAssert.assertThat(
-            Key.valueOf(client, new Key(client, owner, unit, date).toString()),
-            Matchers.equalTo(new Key(client, owner, unit, date))
-        );
-    }
-
-    /**
-     * Key can compare in the right order.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void comparesWithOtherKey() throws Exception {
-        final URN owner = new URN("urn:facebook:22");
-        final String unit = "some-test-iii";
-        final long date = System.currentTimeMillis();
-        final S3Client client = Mockito.mock(S3Client.class);
-        MatcherAssert.assertThat(
-            new Key(client, owner, unit, date),
-            Matchers.lessThan(new Key(client, owner, unit, date - 1))
-        );
-    }
-
-}
+package com.rultor.drain.s3;

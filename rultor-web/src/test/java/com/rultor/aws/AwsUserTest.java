@@ -50,10 +50,9 @@ public final class AwsUserTest {
      */
     @Test
     public void hasName() throws Exception {
-        final S3Client client = Mockito.mock(S3Client.class);
         final Region region = Mockito.mock(Region.class);
         final URN urn = new URN("urn:facebook:444");
-        final User user = new AwsUser(region, client, urn);
+        final User user = new AwsUser(region, urn);
         MatcherAssert.assertThat(user.urn(), Matchers.equalTo(urn));
     }
 

@@ -39,11 +39,13 @@ import com.jcabi.urn.URN;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
+import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import javax.validation.constraints.NotNull;
@@ -60,7 +62,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "region", "client", "name" })
+@EqualsAndHashCode(of = { "region", "name" })
 @Loggable(Loggable.DEBUG)
 final class AwsUser implements User {
 
@@ -70,11 +72,6 @@ final class AwsUser implements User {
     private final transient Region region;
 
     /**
-     * S3 client.
-     */
-    private final transient S3Client client;
-
-    /**
      * URN of the user.
      */
     private final transient URN name;
@@ -82,12 +79,10 @@ final class AwsUser implements User {
     /**
      * Public ctor.
      * @param reg Region in Dynamo
-     * @param clnt S3 client
      * @param urn URN of the user
      */
-    protected AwsUser(final Region reg, final S3Client clnt, final URN urn) {
+    protected AwsUser(final Region reg, final URN urn) {
         this.region = reg;
-        this.client = clnt;
         this.name = urn;
     }
 
@@ -105,28 +100,32 @@ final class AwsUser implements User {
      */
     @Override
     @NotNull
-    @Cacheable
     public Map<String, Unit> units() {
-        final ConcurrentMap<String, Unit> units =
-            new ConcurrentSkipListMap<String, Unit>();
-        final Collection<Item> items = this.region.table(AwsUnit.TABLE)
-            .frame().where(AwsUnit.KEY_OWNER, Conditions.equalTo(this.name));
-        for (Item item : items) {
-            final String unit = item.get(AwsUnit.KEY_NAME).getS();
-            if (!units.containsKey(unit)) {
-                units.put(unit, this.unit(unit));
+        return new AbstractMap<String, Unit>() {
+            @Override
+            public Set<Map.Entry<String, Unit>> entrySet() {
+                return AwsUser.this.fetch().entrySet();
             }
-        }
-        return Collections.unmodifiableMap(units);
+            @Override
+            public Unit remove(final Object name) {
+                AwsUser.this.remove(name.toString());
+                return null;
+            }
+            @Override
+            public Unit put(final String name, final Unit unit) {
+                AwsUser.this.create(name);
+                return null;
+            }
+        };
     }
 
     /**
-     * {@inheritDoc}
+     * Create a new unit.
+     * @param unt Name of it
+     * @return The unit created
      */
-    @Override
-    @NotNull
     @Cacheable.FlushAfter
-    public Unit create(@NotNull @Pattern(
+    private Unit create(@NotNull @Pattern(
         regexp = "[-a-z0-9]+",
         message = "Only numbers, letters, and dashes are allowed")
         final String unt) {
@@ -141,11 +140,11 @@ final class AwsUser implements User {
     }
 
     /**
-     * {@inheritDoc}
+     * Remove this unit.
+     * @param unit Name of it
      */
-    @Override
     @Cacheable.FlushAfter
-    public void remove(@NotNull final String unit) {
+    private void remove(@NotNull final String unit) {
         final Iterator<Item> items = this.region.table(AwsUnit.TABLE).frame()
             .where(AwsUnit.KEY_OWNER, Conditions.equalTo(this.name))
             .where(AwsUnit.KEY_NAME, Conditions.equalTo(unit))
@@ -165,7 +164,26 @@ final class AwsUser implements User {
      * @return The unit
      */
     private Unit unit(final String unit) {
-        return new AwsUnit(this.region, this.client, this.name, unit);
+        return new AwsUnit(this.region, this.name, unit);
+    }
+
+    /**
+     * Fetch all units.
+     * @return Map of them
+     */
+    @Cacheable
+    private Map<String, Unit> fetch() {
+        final ConcurrentMap<String, Unit> units =
+            new ConcurrentSkipListMap<String, Unit>();
+        final Collection<Item> items = this.region.table(AwsUnit.TABLE)
+            .frame().where(AwsUnit.KEY_OWNER, Conditions.equalTo(this.name));
+        for (Item item : items) {
+            final String unit = item.get(AwsUnit.KEY_NAME).getS();
+            if (!units.containsKey(unit)) {
+                units.put(unit, this.unit(unit));
+            }
+        }
+        return Collections.unmodifiableMap(units);
     }
 
 }

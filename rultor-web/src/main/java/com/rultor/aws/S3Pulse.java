@@ -29,6 +29,7 @@
  */
 package com.rultor.aws;
 
+import com.rultor.drain.s3.Key;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;

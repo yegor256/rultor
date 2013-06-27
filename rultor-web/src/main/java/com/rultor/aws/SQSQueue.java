@@ -45,6 +45,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Metricable;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Work;
@@ -70,7 +71,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "client")
 @Loggable(Loggable.DEBUG)
-public final class SQSQueue implements Queue {
+public final class SQSQueue implements Queue, Metricable {
 
     /**
      * JSON key.

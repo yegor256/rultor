@@ -36,10 +36,11 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Metricable;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import lombok.EqualsAndHashCode;
@@ -56,7 +57,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "region")
 @Loggable(Loggable.DEBUG)
-public final class AwsUsers implements Users {
+public final class AwsUsers implements Users, Metricable {
 
     /**
      * Dynamo.
@@ -64,25 +65,18 @@ public final class AwsUsers implements Users {
     private final transient Region region;
 
     /**
-     * S3 client.
-     */
-    private final transient S3Client client;
-
-    /**
      * Public ctor.
      * @param reg AWS region
-     * @param clnt S3 Client
      */
-    public AwsUsers(final Region reg, final S3Client clnt) {
+    public AwsUsers(final Region reg) {
         this.region = reg;
-        this.client = clnt;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Collection<User> everybody() {
+    public Map<URN, User> everybody() {
         final ConcurrentMap<URN, User> users =
             new ConcurrentSkipListMap<URN, User>();
         for (Item item : this.region.table("units").frame()) {
@@ -91,15 +85,7 @@ public final class AwsUsers implements Users {
                 users.put(urn, this.fetch(urn));
             }
         }
-        return Collections.unmodifiableCollection(users.values());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public User fetch(final URN urn) {
-        return new AwsUser(this.region, this.client, urn);
+        return Collections.unmodifiableMap(users);
     }
 
     /**
@@ -117,6 +103,15 @@ public final class AwsUsers implements Users {
             }
         );
         Caches.INSTANCE.register(registry);
+    }
+
+    /**
+     * Make user by URN.
+     * @param urn The URN
+     * @return The user
+     */
+    private User fetch(final URN urn) {
+        return new AwsUser(this.region, urn);
     }
 
 }

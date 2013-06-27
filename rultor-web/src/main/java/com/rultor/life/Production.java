@@ -35,7 +35,6 @@ import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.manifests.Manifests;
 import com.rultor.aws.AwsUsers;
-import com.rultor.aws.S3Client;
 import com.rultor.aws.SQSClient;
 import com.rultor.aws.SQSQueue;
 import com.rultor.repo.ClasspathRepo;
@@ -72,15 +71,6 @@ final class Production implements Profile {
     );
 
     /**
-     * S3 client.
-     */
-    private final transient S3Client client = new S3Client.Simple(
-        Manifests.read("Rultor-S3Key"),
-        Manifests.read("Rultor-S3Secret"),
-        Manifests.read("Rultor-S3Bucket")
-    );
-
-    /**
      * SQS client.
      */
     private final transient SQSClient sqs = new SQSClient.Simple(
@@ -102,7 +92,7 @@ final class Production implements Profile {
      */
     @Override
     public Users users() {
-        return new AwsUsers(this.region, this.client);
+        return new AwsUsers(this.region);
     }
 
     /**

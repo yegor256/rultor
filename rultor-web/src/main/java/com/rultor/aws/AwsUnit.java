@@ -30,31 +30,19 @@
 package com.rultor.aws;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ListObjectsRequest;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.Table;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Drain;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.SortedMap;
-import java.util.TreeSet;
-import java.util.concurrent.ConcurrentSkipListMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -99,11 +87,6 @@ final class AwsUnit implements Unit {
     private final transient Region region;
 
     /**
-     * S3 client.
-     */
-    private final transient S3Client client;
-
-    /**
      * URN of the user.
      */
     private final transient URN owner;
@@ -116,35 +99,14 @@ final class AwsUnit implements Unit {
     /**
      * Public ctor.
      * @param reg Region in Dynamo
-     * @param clnt S3 client
      * @param urn URN of the user/owner
      * @param label Name of it
      * @checkstyle ParameterNumber (4 lines)
      */
-    protected AwsUnit(final Region reg, final S3Client clnt,
-        final URN urn, final String label) {
+    protected AwsUnit(final Region reg, final URN urn, final String label) {
         this.region = reg;
-        this.client = clnt;
         this.owner = urn;
         this.name = label;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public SortedMap<Date, Pulse> pulses() {
-        final SortedMap<Date, Pulse> pulses =
-            new ConcurrentSkipListMap<Date, Pulse>(Collections.reverseOrder());
-        final Collection<Key> keys = new TreeSet<Key>();
-        keys.addAll(this.fetch());
-        keys.addAll(Caches.INSTANCE.keys(this.owner, this.name));
-        for (Key key : keys) {
-            pulses.put(key.date(), new S3Pulse(key));
-        }
-        return Collections.unmodifiableSortedMap(pulses);
     }
 
     /**
@@ -170,6 +132,14 @@ final class AwsUnit implements Unit {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Drain drain() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * Fetch dynamo item.
      * @return The item
      */
@@ -190,24 +160,6 @@ final class AwsUnit implements Unit {
             );
         }
         return item;
-    }
-
-    /**
-     * Get all keys from S3.
-     * @return All keys
-     */
-    private Collection<Key> fetch() {
-        final AmazonS3 aws = this.client.get();
-        final ListObjectsRequest request = new ListObjectsRequest()
-            .withBucketName(this.client.bucket())
-            .withMaxKeys(Tv.TEN)
-            .withPrefix(String.format("%s/%s/", this.owner, this.name));
-        final ObjectListing listing = aws.listObjects(request);
-        final Collection<Key> keys = new LinkedList<Key>();
-        for (S3ObjectSummary sum : listing.getObjectSummaries()) {
-            keys.add(Key.valueOf(this.client, sum.getKey()));
-        }
-        return keys;
     }
 
 }

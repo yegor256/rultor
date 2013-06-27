@@ -31,6 +31,7 @@ package com.rultor.conveyer;
 
 import com.google.common.collect.ImmutableMap;
 import com.rultor.spi.Drain;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -137,16 +138,20 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
             final ThreadGroup group = Thread.currentThread().getThreadGroup();
             final Long date = this.groups.get(group);
             if (date != null) {
-                this.drains.get(date).write(
-                    date,
-                    Arrays.asList(
-                        new Drain.Line.Simple(
-                            System.currentTimeMillis() - date,
-                            ConveyerAppender.LEVELS.get(event.getLevel()),
-                            this.layout.format(event)
-                        ).toString()
-                    )
-                );
+                try {
+                    this.drains.get(date).append(
+                        date,
+                        Arrays.asList(
+                            new Drain.Line.Simple(
+                                System.currentTimeMillis() - date,
+                                ConveyerAppender.LEVELS.get(event.getLevel()),
+                                this.layout.format(event)
+                            ).toString()
+                        )
+                    );
+                } catch (IOException ex) {
+                    throw new IllegalStateException(ex);
+                }
             }
             this.busy.set(false);
         }

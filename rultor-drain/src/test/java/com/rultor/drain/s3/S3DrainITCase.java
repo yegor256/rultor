@@ -27,17 +27,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.aws;
+package com.rultor.drain.s3;
 
-import com.jcabi.dynamo.Region;
-import com.jcabi.urn.URN;
-import com.rultor.spi.Conveyer;
-import com.rultor.spi.Pulse;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Work;
-import java.util.Date;
-import java.util.SortedMap;
-import java.util.logging.Level;
+import com.jcabi.aspects.Tv;
+import com.rultor.aws.S3Client;
+import com.rultor.spi.Drain;
+import java.util.Arrays;
+import java.util.SortedSet;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
@@ -45,14 +41,13 @@ import org.hamcrest.Matchers;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
- * Integration case for {@link S3Log}.
+ * Integration case for {@link S3Drain}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class S3LogITCase {
+public final class S3DrainITCase {
 
     /**
      * S3Client to work with.
@@ -75,30 +70,20 @@ public final class S3LogITCase {
     }
 
     /**
-     * S3Log can log.
+     * S3Drain can log.
      * @throws Exception If some problem inside
      */
     @Test
     public void logsMessages() throws Exception {
         Assume.assumeNotNull(this.client);
-        final Spec spec = new Spec.Simple("java.lang.Integer(5)");
-        final String unit = "some-test-unit";
-        final URN owner = new URN("urn:facebook:1");
-        final Work work = new Work.Simple(owner, unit, spec);
         final String msg = "some test log message \u20ac";
-        new S3Log(this.client).push(
-            work,
-            new Conveyer.Line.Simple(0, Level.INFO, msg)
-        );
-        final Region region = Mockito.mock(Region.class);
-        final SortedMap<Date, Pulse> pulses =
-            new AwsUnit(region, this.client, owner, unit).pulses();
+        final long date = Tv.MILLION;
+        final Drain drain = new S3Drain(this.client, "S3DrainITCase/");
+        drain.append(date, Arrays.asList(msg));
+        final SortedSet<Long> names = drain.pulses();
+        MatcherAssert.assertThat(names, Matchers.hasItem(date));
         MatcherAssert.assertThat(
-            pulses.values(), Matchers.not(Matchers.empty())
-        );
-        final Pulse pulse = pulses.values().iterator().next();
-        MatcherAssert.assertThat(
-            IOUtils.toString(pulse.read(), CharEncoding.UTF_8),
+            IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
             Matchers.containsString(msg)
         );
     }

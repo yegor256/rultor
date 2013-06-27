@@ -27,51 +27,24 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.aws;
+package com.rultor.spi;
 
-import com.rultor.spi.Signal;
-import com.rultor.spi.Stage;
-import java.io.IOException;
-import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Test case for {@link Protocol}.
+ * Test case for {@link Pulse}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle MultipleStringLiterals (500 lines)
  */
-public final class ProtocolTest {
+public final class PulseTest {
 
     /**
-     * Protocol can parse text.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void parsesText() throws Exception {
-        final String value = "\u20ac\t\n\n";
-        // @checkstyle StringLiteralsConcatenation (4 lines)
-        final String text = "10:51 INFO Foo some first line"
-            + "\n10:55 INFO Foo " + new Signal(Signal.Mnemo.START, value)
-            + "\n10:57 WARNING Foo some other line";
-        MatcherAssert.assertThat(
-            new Protocol(
-                new Protocol.Source() {
-                    @Override
-                    public InputStream stream() throws IOException {
-                        return IOUtils.toInputStream(text);
-                    }
-                }
-            ).find(Signal.Mnemo.START, ""),
-            Matchers.equalTo(value)
-        );
-    }
-
-    /**
-     * Protocol can find stages.
+     * Pulse can find stages.
      * @throws Exception If some problem inside
      */
     @Test
@@ -81,14 +54,12 @@ public final class ProtocolTest {
             + "\n11:55 INFO Bar " + new Signal(Signal.Mnemo.SUCCESS, "a ")
             + "\n11:57 SEVERE Bar some other text line"
             + "\n11:55 INFO B " + new Signal(Signal.Mnemo.FAILURE, "b ");
+        final Drain drain = Mockito.mock(Drain.class);
+        Mockito.doReturn(IOUtils.toInputStream(text))
+            .when(drain).read(Mockito.anyLong());
         MatcherAssert.assertThat(
-            new Protocol(
-                new Protocol.Source() {
-                    @Override
-                    public InputStream stream() throws IOException {
-                        return IOUtils.toInputStream(text);
-                    }
-                }
+            new Pulse(
+                1, drain
             ).stages(),
             Matchers.<Stage>hasItems(
                 // @checkstyle MagicNumber (2 lines)

@@ -134,7 +134,7 @@ final class Testing implements Profile {
                     return new TreeSet<Long>();
                 }
                 @Override
-                public void write(final long date,
+                public void append(final long date,
                     final Iterable<String> lines) {
                     // nothing
                 }

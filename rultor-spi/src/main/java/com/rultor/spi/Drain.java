@@ -32,6 +32,7 @@ package com.rultor.spi;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.SortedSet;
 import java.util.logging.Level;
@@ -55,22 +56,25 @@ public interface Drain {
     /**
      * Iterate all available pulses, in reverse order (the latest one on top).
      * @return List of them
+     * @throws IOException If some IO problem inside
      */
-    SortedSet<Long> pulses();
+    SortedSet<Long> pulses() throws IOException;
 
     /**
-     * Write a line to it, related to the dated pulse.
+     * Append a few lines to the pulse related to the given date.
      * @param date When this pulse was started
-     * @param lines Lines to write
+     * @param lines Lines to append
+     * @throws IOException If some IO problem inside
      */
-    void write(long date, Iterable<String> lines);
+    void append(long date, Iterable<String> lines) throws IOException;
 
     /**
      * Read the pulse by date of start.
      * @param date When this pulse was started
      * @return The input stream with data
+     * @throws IOException If some IO problem inside
      */
-    InputStream read(long date);
+    InputStream read(long date) throws IOException;
 
     /**
      * One line in the drain.

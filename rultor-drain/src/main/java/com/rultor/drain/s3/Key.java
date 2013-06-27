@@ -27,12 +27,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.aws;
+package com.rultor.drain.s3;
 
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
-import com.jcabi.urn.URN;
-import com.rultor.spi.Work;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -56,7 +53,7 @@ import lombok.EqualsAndHashCode;
  * @version $Id$
  * @since 1.0
  */
-@EqualsAndHashCode(of = { "owner", "unit", "when" })
+@EqualsAndHashCode(of = "when")
 @Loggable(Loggable.DEBUG)
 final class Key implements Comparable<Key> {
 
@@ -64,23 +61,8 @@ final class Key implements Comparable<Key> {
      * Pattern to parse.
      */
     private static final Pattern PATTERN = Pattern.compile(
-        "(urn:[a-z]+:\\d+)/([\\-\\w]+)/\\d{4}/\\d{2}/\\d{2}/(\\d+)\\.txt"
+        "\\d{4}/\\d{2}/\\d{2}/(\\d+)\\.txt"
     );
-
-    /**
-     * S3 client.
-     */
-    private final transient S3Client clnt;
-
-    /**
-     * Owner.
-     */
-    private final transient URN owner;
-
-    /**
-     * Unit.
-     */
-    private final transient String unit;
 
     /**
      * Date.
@@ -88,27 +70,10 @@ final class Key implements Comparable<Key> {
     private final transient long when;
 
     /**
-     * Public ctor.
-     * @param client S3 client
-     * @param work The work
-     */
-    protected Key(final S3Client client, final Work work) {
-        this(client, work.owner(), work.unit(), work.started());
-    }
-
-    /**
      * Private ctor.
-     * @param client S3 client
-     * @param urn Owner
-     * @param name Unit name
      * @param date Date
-     * @checkstyle ParameterNumber (4 lines)
      */
-    protected Key(final S3Client client, final URN urn,
-        final String name, final long date) {
-        this.clnt = client;
-        this.owner = urn;
-        this.unit = name;
+    protected Key(final long date) {
         this.when = date;
     }
 
@@ -120,9 +85,7 @@ final class Key implements Comparable<Key> {
         final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         cal.setTimeInMillis(this.when);
         return String.format(
-            "%s/%s/%d/%d/%d/%s.txt",
-            this.owner,
-            this.unit,
+            "%d/%d/%d/%s.txt",
             // @checkstyle MagicNumber (3 lines)
             9999 - cal.get(Calendar.YEAR),
             99 - cal.get(Calendar.MONTH),
@@ -133,23 +96,17 @@ final class Key implements Comparable<Key> {
 
     /**
      * Parse it back.
-     * @param client S3 client
      * @param text The text to parse
      * @return Key found
      */
-    public static Key valueOf(final S3Client client, final String text) {
+    public static Key valueOf(final String text) {
         final Matcher matcher = Key.PATTERN.matcher(text);
         if (!matcher.matches()) {
             throw new IllegalArgumentException(
                 String.format("invalid key '%s'", text)
             );
         }
-        return new Key(
-            client,
-            URN.create(matcher.group(1)),
-            matcher.group(2),
-            Long.MAX_VALUE - Long.parseLong(matcher.group(Tv.THREE))
-        );
+        return new Key(Long.MAX_VALUE - Long.parseLong(matcher.group(1)));
     }
 
     /**
@@ -161,29 +118,11 @@ final class Key implements Comparable<Key> {
     }
 
     /**
-     * Get client.
-     * @return S3 client
-     */
-    public S3Client client() {
-        return this.clnt;
-    }
-
-    /**
      * Get date.
      * @return S3 client
      */
     public Date date() {
         return new Date(this.when);
-    }
-
-    /**
-     * Belongs to this user/unit?
-     * @param urn URN of the owner
-     * @param name Name of the unit
-     * @return TRUE if belongs
-     */
-    public boolean belongsTo(final URN urn, final String name) {
-        return this.owner.equals(urn) && this.unit.equals(name);
     }
 
 }

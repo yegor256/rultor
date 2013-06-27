@@ -80,7 +80,7 @@ public final class ConveyerAppenderTest {
         publisher.start();
         publisher.join();
         appender.unregister();
-        Mockito.verify(drain).write(
+        Mockito.verify(drain).append(
             Mockito.eq(work.started()),
             Mockito.argThat(
                 Matchers.everyItem(
@@ -119,7 +119,7 @@ public final class ConveyerAppenderTest {
         Logger.getRootLogger().removeAppender(appender);
         appender.unregister();
         appender.close();
-        Mockito.verify(drain).write(
+        Mockito.verify(drain).append(
             Mockito.eq(work.started()),
             (Iterable<String>) Mockito.any(Object.class)
         );

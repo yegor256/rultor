@@ -29,6 +29,7 @@
  */
 package com.rultor.aws;
 
+import com.rultor.drain.s3.Key;
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.io.Flushables;
