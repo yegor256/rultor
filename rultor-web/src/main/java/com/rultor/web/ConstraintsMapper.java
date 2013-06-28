@@ -57,9 +57,13 @@ public final class ConstraintsMapper extends BaseResource
      */
     @Override
     public Response toResponse(final ConstraintViolationException violation) {
+        String msg = violation.getMessage();
+        if (msg == null) {
+            msg = "undisclosed constraint violation (internal problem)";
+        }
         return FlashInset.forward(
             this.uriInfo().getRequestUri(),
-            violation.getMessage(),
+            msg,
             Level.WARNING
         ).getResponse();
     }

@@ -37,11 +37,12 @@ import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Metricable;
-import com.rultor.spi.Repo;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import lombok.EqualsAndHashCode;
@@ -66,18 +67,11 @@ public final class AwsUsers implements Users, Metricable {
     private final transient Region region;
 
     /**
-     * Repo to create drains.
-     */
-    private final transient Repo repo;
-
-    /**
      * Public ctor.
      * @param reg AWS region
-     * @param rep Repo
      */
-    public AwsUsers(final Region reg, final Repo rep) {
+    public AwsUsers(final Region reg) {
         this.region = reg;
-        this.repo = rep;
     }
 
     /**
@@ -85,15 +79,16 @@ public final class AwsUsers implements Users, Metricable {
      */
     @Override
     public Map<URN, User> everybody() {
-        final ConcurrentMap<URN, User> users =
-            new ConcurrentSkipListMap<URN, User>();
-        for (Item item : this.region.table("units").frame()) {
-            final URN urn = URN.create(item.get(AwsUnit.KEY_OWNER).getS());
-            if (!users.containsKey(urn)) {
-                users.put(urn, this.fetch(urn));
+        return new AbstractMap<URN, User>() {
+            @Override
+            public Set<Map.Entry<URN, User>> entrySet() {
+                return AwsUsers.this.fetch().entrySet();
             }
-        }
-        return Collections.unmodifiableMap(users);
+            @Override
+            public User get(final Object urn) {
+                return AwsUsers.this.fetch(URN.create(urn.toString()));
+            }
+        };
     }
 
     /**
@@ -110,7 +105,6 @@ public final class AwsUsers implements Users, Metricable {
                 }
             }
         );
-        Buffers.INSTANCE.register(registry);
     }
 
     /**
@@ -119,7 +113,23 @@ public final class AwsUsers implements Users, Metricable {
      * @return The user
      */
     private User fetch(final URN urn) {
-        return new AwsUser(this.region, this.repo, urn);
+        return new AwsUser(this.region, urn);
+    }
+
+    /**
+     * Fetch everybody.
+     * @return Everybody
+     */
+    private Map<URN, User> fetch() {
+        final ConcurrentMap<URN, User> users =
+            new ConcurrentSkipListMap<URN, User>();
+        for (Item item : this.region.table("units").frame()) {
+            final URN urn = URN.create(item.get(AwsUnit.KEY_OWNER).getS());
+            if (!users.containsKey(urn)) {
+                users.put(urn, this.fetch(urn));
+            }
+        }
+        return Collections.unmodifiableMap(users);
     }
 
 }

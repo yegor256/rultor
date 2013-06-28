@@ -43,18 +43,11 @@ import javax.validation.constraints.NotNull;
 public interface Unit {
 
     /**
-     * Create and return a new drain.
-     * @return The drain to put logs into
-     * @throws Repo.InstantiationException If can't instantiate
-     */
-    @NotNull
-    Drain drain() throws Repo.InstantiationException;
-
-    /**
      * Save specification.
      * @param spec Specification to save
+     * @param drain Drain to save
      */
-    void spec(@NotNull Spec spec);
+    void update(@NotNull Spec spec, @NotNull Spec drain);
 
     /**
      * Get specification.
@@ -62,5 +55,39 @@ public interface Unit {
      */
     @NotNull
     Spec spec();
+
+    /**
+     * Get specification of the drain.
+     * @return Specification
+     */
+    @NotNull
+    Spec drain();
+
+    /**
+     * Always empty Unit.
+     */
+    final class Empty implements Unit {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void update(final Spec spec, final Spec drain) {
+            assert spec != null;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Spec spec() {
+            return new Spec.Simple();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Spec drain() {
+            return new Spec.Simple();
+        }
+    }
 
 }

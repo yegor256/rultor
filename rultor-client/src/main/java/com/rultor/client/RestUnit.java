@@ -32,7 +32,6 @@ package com.rultor.client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
-import com.rultor.spi.Drain;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import java.io.UnsupportedEncodingException;
@@ -82,24 +81,7 @@ final class RestUnit implements Unit {
      * {@inheritDoc}
      */
     @Override
-    public Drain drain() {
-        return new RestDrain(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("#pulses()")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath("/page/links/link[@rel='pulses']/@href")
-                .get(0),
-            this.token
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void spec(final Spec spec) {
+    public void update(final Spec spec, final Spec drain) {
         try {
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
@@ -110,8 +92,9 @@ final class RestUnit implements Unit {
                 .post(
                     String.format("#spec(%s)", spec),
                     String.format(
-                        "spec=%s",
-                        URLEncoder.encode(spec.asText(), CharEncoding.UTF_8)
+                        "spec=%s&drain=%s",
+                        URLEncoder.encode(spec.asText(), CharEncoding.UTF_8),
+                        URLEncoder.encode(drain.asText(), CharEncoding.UTF_8)
                     )
                 )
                 .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
@@ -132,6 +115,22 @@ final class RestUnit implements Unit {
                 .get("#spec()")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .xpath("/page/unit/spec/text()")
+                .get(0)
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spec drain() {
+        return new Spec.Simple(
+            RestTester.start(UriBuilder.fromUri(this.home))
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
+                .get("#drain()")
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .xpath("/page/unit/drain/text()")
                 .get(0)
         );
     }

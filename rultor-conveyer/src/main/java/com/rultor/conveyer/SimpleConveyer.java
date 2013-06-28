@@ -34,15 +34,18 @@ import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseRunnable;
+import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Metricable;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Spec;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
@@ -139,10 +142,11 @@ public final class SimpleConveyer implements Closeable, Metricable {
     public void start() {
         this.svc.scheduleWithFixedDelay(
             new VerboseRunnable(
-                new Runnable() {
+                new Callable<Void>() {
                     @Override
-                    public void run() {
+                    public Void call() throws Exception {
                         SimpleConveyer.this.process();
+                        return null;
                     }
                 },
                 true, false
@@ -187,34 +191,42 @@ public final class SimpleConveyer implements Closeable, Metricable {
 
     /**
      * Process the next work from the queue.
+     * @throws Exception If fails
      */
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    private void process() {
-        Work work;
-        try {
-            work = this.queue.pull();
-            final User owner = this.users.everybody().get(work.owner());
-            final Object object = this.repo.make(owner, work.spec());
-            if (object instanceof Instance) {
-                final Instance instance = new LoggableInstance(
-                    Instance.class.cast(object),
-                    this.appender,
-                    work,
-                    owner.units().get(work.unit())
-                );
-                instance.pulse();
-                if (this.counter != null) {
-                    this.counter.inc();
-                }
+    private void process() throws Exception {
+        final Work work = this.queue.pull();
+        final User owner = this.users.everybody().get(work.owner());
+        final Object object = this.repo.make(owner, work.spec());
+        if (object instanceof Instance) {
+            final Instance instance = new LoggableInstance(
+                Instance.class.cast(object),
+                this.appender,
+                work,
+                this.drain(owner, owner.units().get(work.unit()).drain())
+            );
+            instance.pulse();
+            if (this.counter != null) {
+                this.counter.inc();
             }
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        } catch (Repo.InstantiationException ex) {
-            throw new IllegalStateException(ex);
-        // @checkstyle IllegalCatch (1 line)
-        } catch (Exception ex) {
-            throw new IllegalStateException(ex);
         }
+    }
+
+    /**
+     * Make a drain.
+     * @param owner Owner of the drain
+     * @param spec Specification of it
+     * @return The drain
+     * @throws Exception If fails
+     */
+    private Drain drain(final User owner, final Spec spec) throws Exception {
+        final Object object = this.repo.make(owner, spec);
+        if (!(object instanceof Drain)) {
+            throw new IllegalArgumentException(
+                String.format("it is not a drain: %s", spec.asText())
+            );
+        }
+        return Drain.class.cast(object);
     }
 
 }

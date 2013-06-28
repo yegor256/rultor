@@ -92,7 +92,7 @@ final class Production implements Profile {
      */
     @Override
     public Users users() {
-        return new AwsUsers(this.region, this.repo());
+        return new AwsUsers(this.region);
     }
 
     /**

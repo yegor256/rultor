@@ -27,49 +27,52 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.client;
+package com.rultor.drain.tmp;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Drain;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.SortedSet;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * RESTful Drain.
+ * Buffered with a help of {@code /tmp} directory.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "home", "token" })
+@EqualsAndHashCode(of = { "dir", "origin" })
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.TooManyMethods")
-final class RestDrain implements Drain {
+public final class BufferedDrain implements Drain {
 
     /**
-     * Home URI.
+     * Directory name.
      */
-    private final transient String home;
+    private final transient String dir;
 
     /**
-     * Authentication token.
+     * Original drain.
      */
-    private final transient String token;
+    private final transient Drain origin;
 
     /**
      * Public ctor.
-     * @param uri URI of home page
-     * @param auth Authentication token
+     * @param folder Folder where to keep all files
+     * @param drain Original drain
      */
-    protected RestDrain(final String uri, final String auth) {
-        this.home = uri;
-        this.token = auth;
+    protected BufferedDrain(@NotNull final File folder,
+        @NotNull final Drain drain) {
+        this.dir = folder.getAbsolutePath();
+        this.origin = drain;
     }
 
     /**
@@ -77,16 +80,16 @@ final class RestDrain implements Drain {
      */
     @Override
     public SortedSet<Long> pulses() throws IOException {
-        throw new UnsupportedOperationException();
+        return this.origin.pulses();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void append(final long date,
-        final Iterable<String> lines) throws IOException {
-        throw new UnsupportedOperationException();
+    public void append(final long date, final Iterable<String> lines)
+        throws IOException {
+        this.origin.append(date, lines);
     }
 
     /**
@@ -94,8 +97,7 @@ final class RestDrain implements Drain {
      */
     @Override
     public InputStream read(final long date) throws IOException {
-        throw new UnsupportedOperationException();
+        return this.origin.read(date);
     }
-
 
 }

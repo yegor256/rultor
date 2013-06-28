@@ -33,8 +33,8 @@ import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
-import com.rultor.spi.Repo;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Unit;
 import java.io.IOException;
@@ -142,13 +142,15 @@ public final class DrainRs extends BaseRs {
      * @throws Exception If fails
      */
     private JaxbBundle pulses() throws Exception {
-        final SortedSet<Long> pulses =
-            this.unit().drain().pulses().tailSet(this.since);
+        final Drain drain = Drain.class.cast(
+            this.repo().make(this.user(), this.unit().drain())
+        );
+        final SortedSet<Long> pulses = drain.pulses().tailSet(this.since);
         return new JaxbBundle("pulses").add(
             new JaxbBundle.Group<Long>(pulses) {
                 @Override
                 public JaxbBundle bundle(final Long date) {
-                    return DrainRs.this.pulse(date);
+                    return DrainRs.this.pulse(drain, date);
                 }
             }
         );
@@ -156,16 +158,12 @@ public final class DrainRs extends BaseRs {
 
     /**
      * Convert pulse to JaxbBundle.
+     * @param drain Drain we're in
      * @param date Date of it
      * @return Bundle
      */
-    private JaxbBundle pulse(final Long date) {
-        final Pulse pulse;
-        try {
-            pulse = new Pulse(date, this.unit().drain());
-        } catch (Repo.InstantiationException ex) {
-            throw new IllegalStateException(ex);
-        }
+    private JaxbBundle pulse(final Drain drain, final Long date) {
+        final Pulse pulse = new Pulse(date, drain);
         final Collection<Stage> stages;
         try {
             stages = pulse.stages();

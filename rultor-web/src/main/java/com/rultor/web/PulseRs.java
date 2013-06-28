@@ -33,8 +33,8 @@ import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
-import com.rultor.spi.Repo;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Unit;
 import java.util.logging.Level;
@@ -184,8 +184,9 @@ public final class PulseRs extends BaseRs {
     /**
      * Get pulse.
      * @return The pulse
+     * @throws Exception If fails
      */
-    private Pulse pulse() {
+    private Pulse pulse() throws Exception {
         final Unit unit = this.user().units().get(this.name);
         if (unit == null) {
             throw this.flash().redirect(
@@ -194,11 +195,10 @@ public final class PulseRs extends BaseRs {
                 Level.SEVERE
             );
         }
-        try {
-            return new Pulse(this.date, unit.drain());
-        } catch (Repo.InstantiationException ex) {
-            throw new IllegalStateException(ex);
-        }
+        return new Pulse(
+            this.date,
+            Drain.class.cast(this.repo().make(this.user(), unit.drain()))
+        );
     }
 
     /**

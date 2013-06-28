@@ -32,7 +32,6 @@ package com.rultor.client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
-import com.rultor.spi.Drain;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import java.io.UnsupportedEncodingException;
@@ -206,7 +205,7 @@ public final class RestUnits implements Map<String, Unit> {
             .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
         return new Unit() {
             @Override
-            public void spec(final Spec spec) {
+            public void update(final Spec spec, final Spec drain) {
                 throw new UnsupportedOperationException();
             }
             @Override
@@ -214,7 +213,7 @@ public final class RestUnits implements Map<String, Unit> {
                 throw new UnsupportedOperationException();
             }
             @Override
-            public Drain drain() {
+            public Spec drain() {
                 throw new UnsupportedOperationException();
             }
         };

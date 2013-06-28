@@ -105,7 +105,7 @@ public final class Batch {
                 this.compile(args),
                 IOUtils.toInputStream(""),
                 new TeeOutputStream(stdout, Logger.stream(Level.INFO, this)),
-                new TeeOutputStream(stderr, Logger.stream(Level.SEVERE, this))
+                new TeeOutputStream(stderr, Logger.stream(Level.WARNING, this))
             );
             IOUtils.copy(
                 new ByteArrayInputStream(stdout.toByteArray()), output

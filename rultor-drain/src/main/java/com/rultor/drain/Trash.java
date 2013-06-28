@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -27,36 +26,56 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<?xml-stylesheet type='text/xsl' href='/xsl/unit.xsl'?>
-<page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
-    <identity>
-        <urn>urn:facebook:1</urn>
-        <name>Jeff Lebowski</name>
-        <photo>http://images.sodahead.com/polls/002320349/200261278_The_Big_Lebowski___Jeff_Bridges_answer_9_xlarge.jpeg</photo>
-    </identity>
-    <version>
-        <name>1.0-SNAPSHOT</name>
-        <revision>123</revision>
-        <date>22-Aug-2012</date>
-    </version>
-    <links>
-        <link href="/xml/index.xml" rel="self" type="text/xml"/>
-        <link href="/xml/index.xml" rel="home" type="text/xml"/>
-        <link href="/xml/add.xml" rel="save" type="text/xml"/>
-    </links>
-    <millis>1869</millis>
-    <unit>
-        <name>nightly-build</name>
-        <spec>com.rultor.ci.NightlyBuild(
-    git,
-    ec2,
-    "ant"
-)</spec>
-        <drain>com.rultor.ci.NightlyBuild(
-    git,
-    ec2,
-    "ant"
-)</drain>
-    </unit>
-</page>
+ */
+package com.rultor.drain;
+
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Drain;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+/**
+ * Throw-away drain.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ */
+@Immutable
+@ToString
+@EqualsAndHashCode
+@Loggable(Loggable.DEBUG)
+public final class Trash implements Drain {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SortedSet<Long> pulses() throws IOException {
+        return new TreeSet<Long>();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void append(final long date, final Iterable<String> lines)
+        throws IOException {
+        // nothing to do
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InputStream read(final long date) throws IOException {
+        throw new IllegalArgumentException("there are no pulses");
+    }
+
+}

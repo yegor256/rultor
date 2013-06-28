@@ -47,14 +47,15 @@ MatcherAssert.assertThat(user.urn(), Matchers.equalTo(identity.urn()))
 def name = 'sample-unit'
 def unit = user.units().get(name)
 if (unit == null) {
-    unit = user.create(name)
+    user.units().put(name, null)
+    unit = user.units().get(name)
 }
 
 [
     'java.lang.Double ( -55.0 )': 'java.lang.Double(-55.0)',
     'java.lang.String: \r\ns \n\n\t\r\u20ac t': 'java.lang.String:\ns \n\n\t\r\u20ac t',
 ].each {
-    unit.spec(new Spec.Simple(it.key))
+    unit.update(new Spec.Simple(it.key), new Spec.Simple('com.rultor.drain.Trash()'))
     MatcherAssert.assertThat(unit.spec().asText(), Matchers.equalTo(it.value))
 }
-user.remove(name)
+user.units().remove(name)

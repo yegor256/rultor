@@ -33,22 +33,20 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rultor.repo.ClasspathRepo;
-import com.rultor.spi.Drain;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
-import java.io.InputStream;
+import java.util.AbstractMap;
 import java.util.Map;
-import java.util.SortedSet;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.io.IOUtils;
 
 /**
  * Testing profile.
@@ -65,6 +63,24 @@ import org.apache.commons.io.IOUtils;
 final class Testing implements Profile {
 
     /**
+     * All units.
+     */
+    private static final ConcurrentMap<String, Unit> UNITS =
+        new ConcurrentHashMap<String, Unit>(0);
+
+    /**
+     * All specs.
+     */
+    private static final ConcurrentMap<String, Spec> SPECS =
+        new ConcurrentHashMap<String, Spec>(0);
+
+    /**
+     * All drains.
+     */
+    private static final ConcurrentMap<String, Spec> DRAINS =
+        new ConcurrentHashMap<String, Spec>(0);
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -79,11 +95,20 @@ final class Testing implements Profile {
     public Users users() {
         // @checkstyle AnonInnerLength (100 lines)
         return new Users() {
-            private final ConcurrentMap<URN, User> all =
-                new ConcurrentHashMap<URN, User>(0);
             @Override
             public Map<URN, User> everybody() {
-                return this.all;
+                return new AbstractMap<URN, User>() {
+                    @Override
+                    public Set<Map.Entry<URN, User>> entrySet() {
+                        return new TreeSet<Map.Entry<URN, User>>();
+                    }
+                    @Override
+                    public User get(final Object urn) {
+                        return new Testing.MemoryUser(
+                            URN.create(urn.toString())
+                        );
+                    }
+                };
             }
         };
     }
@@ -97,15 +122,51 @@ final class Testing implements Profile {
     }
 
     /**
+     * In-memory user.
+     */
+    @Immutable
+    private static final class MemoryUser implements User {
+        /**
+         * URN of the user.
+         */
+        private final transient URN name;
+        /**
+         * Public ctor.
+         * @param urn Name of it
+         */
+        protected MemoryUser(final URN urn) {
+            this.name = urn;
+        }
+        @Override
+        public URN urn() {
+            return URN.create(this.name.toString());
+        }
+        @Override
+        public Map<String, Unit> units() {
+            return new AbstractMap<String, Unit>() {
+                @Override
+                public Set<Map.Entry<String, Unit>> entrySet() {
+                    return Testing.UNITS.entrySet();
+                }
+                @Override
+                public Unit get(final Object unit) {
+                    return new Testing.MemoryUnit(unit.toString());
+                }
+                @Override
+                public Unit put(final String txt, final Unit unit) {
+                    Testing.SPECS.put(txt, new Spec.Simple());
+                    Testing.DRAINS.put(txt, new Spec.Simple());
+                    return Testing.UNITS.put(txt, unit);
+                }
+            };
+        }
+    }
+
+    /**
      * In-memory unit.
      */
     @Immutable
     private static final class MemoryUnit implements Unit {
-        /**
-         * All specs.
-         */
-        private static final ConcurrentMap<String, Spec> SPECS =
-            new ConcurrentHashMap<String, Spec>(0);
         /**
          * Name of the unit.
          */
@@ -116,33 +177,19 @@ final class Testing implements Profile {
          */
         protected MemoryUnit(final String unit) {
             this.name = unit;
-            Testing.MemoryUnit.SPECS.put(this.name, new Spec.Simple());
         }
         @Override
-        public void spec(final Spec spec) {
-            Testing.MemoryUnit.SPECS.put(this.name, spec);
+        public void update(final Spec spec, final Spec drain) {
+            Testing.SPECS.put(this.name, spec);
+            Testing.DRAINS.put(this.name, drain);
         }
         @Override
         public Spec spec() {
-            return Testing.MemoryUnit.SPECS.get(this.name);
+            return Testing.SPECS.get(this.name);
         }
         @Override
-        public Drain drain() {
-            return new Drain() {
-                @Override
-                public SortedSet<Long> pulses() {
-                    return new TreeSet<Long>();
-                }
-                @Override
-                public void append(final long date,
-                    final Iterable<String> lines) {
-                    // nothing
-                }
-                @Override
-                public InputStream read(final long date) {
-                    return IOUtils.toInputStream("");
-                }
-            };
+        public Spec drain() {
+            return Testing.DRAINS.get(this.name);
         }
     }
 

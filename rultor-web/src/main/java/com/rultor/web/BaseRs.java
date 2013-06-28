@@ -48,6 +48,7 @@ import com.rexsl.page.inset.VersionInset;
 import com.rultor.spi.Repo;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -147,28 +148,31 @@ public class BaseRs extends BaseResource {
      * Get currently logged in user.
      * @return The user
      */
+    @NotNull(message = "User can't be NULL")
     protected final User user() {
-        final Users users = Users.class.cast(
+        return this.users().everybody().get(this.auth().identity().urn());
+    }
+
+    /**
+     * Get all users.
+     * @return The users
+     */
+    @NotNull(message = "USERS is not injected into servlet context")
+    protected final Users users() {
+        return Users.class.cast(
             this.servletContext().getAttribute(Users.class.getName())
         );
-        if (users == null) {
-            throw new IllegalStateException("USERS is not initialized");
-        }
-        return users.everybody().get(this.auth().identity().urn());
     }
 
     /**
      * Get repo.
      * @return Repo
      */
+    @NotNull(message = "REPO is not injected into servlet context")
     protected final Repo repo() {
-        final Repo repo = Repo.class.cast(
+        return Repo.class.cast(
             this.servletContext().getAttribute(Repo.class.getName())
         );
-        if (repo == null) {
-            throw new IllegalStateException("REPO is not initialized");
-        }
-        return repo;
     }
 
 }

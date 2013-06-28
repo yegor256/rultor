@@ -131,24 +131,15 @@ public final class UnitRs extends BaseRs {
 
     /**
      * Save new or existing unit unit.
-     * @param text Spec to save
+     * @param spec Spec to save
+     * @param drain Drain to save
      * @return The JAX-RS response
      */
     @POST
     @Path("/")
-    public Response save(@NotNull @FormParam("spec") final String text) {
-        final Spec spec;
-        try {
-            spec = this.repo().make(text);
-        } catch (Repo.InvalidSyntaxException ex) {
-            throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
-        }
-        try {
-            this.repo().make(this.user(), spec);
-        } catch (Repo.InstantiationException ex) {
-            throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
-        }
-        this.unit().spec(spec);
+    public Response save(@NotNull @FormParam("spec") final String spec,
+        @NotNull @FormParam("drain") final String drain) {
+        this.unit().update(this.parse(spec), this.parse(drain));
         throw this.flash().redirect(
             this.uriInfo().getRequestUri(),
             String.format("Unit '%s' successfully saved/updated", this.name),
@@ -170,6 +161,26 @@ public final class UnitRs extends BaseRs {
             );
         }
         return unit;
+    }
+
+    /**
+     * Make a spec from text.
+     * @param text Text
+     * @return Spec
+     */
+    private Spec parse(final String text) {
+        final Spec spec;
+        try {
+            spec = this.repo().make(text);
+        } catch (Repo.InvalidSyntaxException ex) {
+            throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
+        }
+        try {
+            this.repo().make(this.user(), spec);
+        } catch (Repo.InstantiationException ex) {
+            throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
+        }
+        return spec;
     }
 
 }

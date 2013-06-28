@@ -61,7 +61,9 @@
                     </xsl:attribute>
                 </input>
                 <label for="spec"><xsl:text>Specification</xsl:text></label>
-                <textarea name="spec" id="spec" rows="18" class="input-block-level spec"><xsl:value-of select="/page/unit/spec"/></textarea>
+                <textarea name="spec" id="spec" rows="10" class="input-block-level spec"><xsl:value-of select="/page/unit/spec"/></textarea>
+                <label for="drain"><xsl:text>Drain</xsl:text></label>
+                <textarea name="drain" id="drain" rows="6" class="input-block-level spec"><xsl:value-of select="/page/unit/drain"/></textarea>
                 <label><xsl:comment>for the submit button below</xsl:comment></label>
                 <button type="submit" class="btn">
                     <xsl:text>Save</xsl:text>

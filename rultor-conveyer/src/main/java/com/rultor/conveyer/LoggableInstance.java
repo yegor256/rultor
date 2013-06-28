@@ -35,7 +35,6 @@ import com.jcabi.manifests.Manifests;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Signal;
-import com.rultor.spi.Unit;
 import com.rultor.spi.Work;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
@@ -68,24 +67,24 @@ final class LoggableInstance implements Instance {
     private final transient Work work;
 
     /**
-     * Which unit we're working in.
+     * Drain to log into.
      */
-    private final transient Unit unit;
+    private final transient Drain drain;
 
     /**
      * Public ctor.
      * @param instance Origin
      * @param appr Appender
      * @param wrk Work
-     * @param unt Unit
+     * @param drn Drain to use
      * @checkstyle ParameterNumber (5 lines)
      */
     protected LoggableInstance(final Instance instance,
-        final ConveyerAppender appr, final Work wrk, final Unit unt) {
+        final ConveyerAppender appr, final Work wrk, final Drain drn) {
         this.origin = instance;
         this.appender = appr;
         this.work = wrk;
-        this.unit = unt;
+        this.drain = drn;
     }
 
     /**
@@ -94,8 +93,7 @@ final class LoggableInstance implements Instance {
     @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void pulse() throws Exception {
-        final Drain drain = this.unit.drain();
-        this.appender.register(this.work.started(), drain);
+        this.appender.register(this.work.started(), this.drain);
         try {
             Logger.info(this, "log started on %s", new Date());
             Logger.info(

@@ -39,16 +39,9 @@ import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.Table;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Drain;
-import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
-import com.rultor.spi.User;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.SortedSet;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -98,11 +91,6 @@ final class AwsUnit implements Unit {
     private final transient Region region;
 
     /**
-     * Repo to create drains.
-     */
-    private final transient Repo repo;
-
-    /**
      * URN of the user.
      */
     private final transient URN owner;
@@ -115,15 +103,11 @@ final class AwsUnit implements Unit {
     /**
      * Public ctor.
      * @param reg Region in Dynamo
-     * @param rep Repo
      * @param urn URN of the user/owner
      * @param label Name of it
-     * @checkstyle ParameterNumber (4 lines)
      */
-    protected AwsUnit(final Region reg, final Repo rep,
-        final URN urn, final String label) {
+    protected AwsUnit(final Region reg, final URN urn, final String label) {
         this.region = reg;
-        this.repo = rep;
         this.owner = urn;
         this.name = label;
     }
@@ -133,7 +117,11 @@ final class AwsUnit implements Unit {
      */
     @Override
     @Cacheable.FlushBefore
-    public void spec(@NotNull final Spec spec) {
+    public void update(@NotNull final Spec spec, @NotNull final Spec drain) {
+        this.item().put(
+            AwsUnit.FIELD_SPEC,
+            new AttributeValue(spec.asText())
+        );
         this.item().put(
             AwsUnit.FIELD_SPEC,
             new AttributeValue(spec.asText())
@@ -154,43 +142,9 @@ final class AwsUnit implements Unit {
      * {@inheritDoc}
      */
     @Override
-    public Drain drain() throws Repo.InstantiationException {
-        final Drain drain = Drain.class.cast(
-            this.repo.make(
-                new User() {
-                    @Override
-                    public URN urn() {
-                        throw new UnsupportedOperationException();
-                    }
-                    @Override
-                    public Map<String, Unit> units() {
-                        throw new UnsupportedOperationException();
-                    }
-                },
-                new Spec.Simple(this.item().get(AwsUnit.FIELD_DRAIN).getS())
-            )
-        );
-        return new Drain() {
-            @Override
-            public SortedSet<Long> pulses() throws IOException {
-                return drain.pulses();
-            }
-            @Override
-            public void append(final long date, final Iterable<String> lines)
-                throws IOException {
-                Buffers.INSTANCE
-                    .get(AwsUnit.this.owner, AwsUnit.this.name, date)
-                    .through(drain)
-                    .append(lines);
-            }
-            @Override
-            public InputStream read(final long date) throws IOException {
-                return Buffers.INSTANCE
-                    .get(AwsUnit.this.owner, AwsUnit.this.name, date)
-                    .through(drain)
-                    .read();
-            }
-        };
+    @Cacheable
+    public Spec drain() {
+        return new Spec.Simple(this.item().get(AwsUnit.FIELD_DRAIN).getS());
     }
 
     /**

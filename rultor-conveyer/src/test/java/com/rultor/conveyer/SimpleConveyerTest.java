@@ -98,7 +98,9 @@ public final class SimpleConveyerTest {
                     return instance;
                 }
             }
-        ).when(repo).make(Mockito.any(User.class), Mockito.any(Spec.class));
+        ).doReturn(Mockito.mock(Drain.class))
+            .when(repo)
+            .make(Mockito.any(User.class), Mockito.any(Spec.class));
         final User user = Mockito.mock(User.class);
         final Unit unit = Mockito.mock(Unit.class);
         Mockito.doReturn(
@@ -106,8 +108,7 @@ public final class SimpleConveyerTest {
                 .put(name, unit)
                 .build()
         ).when(user).units();
-        final Drain drain = Mockito.mock(Drain.class);
-        Mockito.doReturn(drain).when(unit).drain();
+        Mockito.doReturn(new Spec.Simple()).when(unit).drain();
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(
             new ImmutableMap.Builder<URN, User>()
