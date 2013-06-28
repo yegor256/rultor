@@ -164,7 +164,7 @@ public final class IndexRs extends BaseRs {
             )
             .link(
                 new Link(
-                    "pulses",
+                    "drain",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(DrainRs.class)

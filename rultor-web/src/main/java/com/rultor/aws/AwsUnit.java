@@ -123,7 +123,7 @@ final class AwsUnit implements Unit {
             new AttributeValue(spec.asText())
         );
         this.item().put(
-            AwsUnit.FIELD_SPEC,
+            AwsUnit.FIELD_DRAIN,
             new AttributeValue(spec.asText())
         );
     }

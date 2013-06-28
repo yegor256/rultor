@@ -33,33 +33,20 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
-            <xsl:text>add/edit</xsl:text>
+            <xsl:value-of select="/page/unit/name"/>
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <h2>
+            <xsl:text>Edit &quot;</xsl:text>
+            <xsl:value-of select="/page/unit/name"/>
+            <xsl:text>&quot;</xsl:text>
+        </h2>
         <form method="post">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
             </xsl:attribute>
             <fieldset>
-                <legend>Add/Edit Unit</legend>
-                <label for="name"><xsl:text>Unique Unit Name</xsl:text></label>
-                <input name="name" id="name" type="text" class="input-large">
-                    <xsl:attribute name="class">
-                        <xsl:text>input-large</xsl:text>
-                        <xsl:if test="/page/unit/name">
-                            <xsl:text> uneditable-input</xsl:text>
-                        </xsl:if>
-                    </xsl:attribute>
-                    <xsl:if test="/page/unit/name">
-                        <xsl:attribute name="disabled">
-                            <xsl:text>disabled</xsl:text>
-                        </xsl:attribute>
-                    </xsl:if>
-                    <xsl:attribute name="value">
-                        <xsl:value-of select="/page/unit/name"/>
-                    </xsl:attribute>
-                </input>
                 <label for="spec"><xsl:text>Specification</xsl:text></label>
                 <textarea name="spec" id="spec" rows="10" class="input-block-level spec"><xsl:value-of select="/page/unit/spec"/></textarea>
                 <label for="drain"><xsl:text>Drain</xsl:text></label>

@@ -37,7 +37,7 @@ import javax.ws.rs.core.UriBuilder
     '/robots.txt',
     '/xsl/layout.xsl',
     '/xsl/index.xsl',
-    '/css/screen.css',
+    '/css/main.css',
 ].each {
     RestTester.start(UriBuilder.fromUri(rexsl.home).path(it))
         .get('hits existing page')

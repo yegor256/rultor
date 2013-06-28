@@ -37,83 +37,59 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <h1>Units</h1>
-        <form method="post">
+        <h2>
+            <xsl:text>Management Units</xsl:text>
+        </h2>
+        <form method="post" class="form-inline">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='create']/@href"/>
             </xsl:attribute>
-            <fieldset>
-                <legend>Register new unit</legend>
-                <label for="name"><xsl:text>Unique Unit Name</xsl:text></label>
-                <input name="name" id="name" type="text" class="input-large" />
-                <label><xsl:comment>for the submit button below</xsl:comment></label>
+            <div class="input-append">
+                <input name="name" type="text" class="input-large" />
                 <button type="submit" class="btn">
                     <xsl:text>Create</xsl:text>
                 </button>
-            </fieldset>
+            </div>
         </form>
         <xsl:if test="units/unit">
-            <p>
-                <xsl:text>Registered Units:</xsl:text>
-            </p>
-            <table class="table table-bordered">
-                <colgroup>
-                    <col style="width: 12em;"/>
-                    <col/>
-                    <col style="width: 7em;"/>
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th><xsl:text>Identifier</xsl:text></th>
-                        <th><xsl:text>Description</xsl:text></th>
-                        <th><xsl:text>Options</xsl:text></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <xsl:apply-templates select="units/unit"/>
-                </tbody>
-            </table>
+            <xsl:apply-templates select="units/unit"/>
         </xsl:if>
     </xsl:template>
     <xsl:template match="unit">
-        <tr>
-            <xsl:if test="@error != ''">
-                <xsl:attribute name="class">
-                    <xsl:text>error</xsl:text>
-                </xsl:attribute>
-            </xsl:if>
-            <td>
+        <ul class="inline btn-group-vertical">
+            <li>
+                <xsl:if test="@error != ''">
+                    <xsl:attribute name="class">
+                        <xsl:text>error</xsl:text>
+                    </xsl:attribute>
+                </xsl:if>
                 <a title="edit">
                     <xsl:attribute name="href">
                         <xsl:value-of select="links/link[@rel='edit']/@href"/>
                     </xsl:attribute>
                     <xsl:value-of select="name"/>
                 </a>
-            </td>
-            <td>
-                <xsl:value-of select="face"/>
-            </td>
-            <td>
-                <ul class="inline btn-group-vertical">
-                    <li>
-                        <a title="pulses">
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="links/link[@rel='pulses']/@href"/>
-                            </xsl:attribute>
-                            <i class="icon-file-alt"><xsl:comment>pulses</xsl:comment></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a onclick="return confirm('Are you sure?');"
-                            title="delete this unit">
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="links/link[@rel='remove']/@href"/>
-                            </xsl:attribute>
-                            <i class="icon-remove"><xsl:comment>remove</xsl:comment></i>
-                        </a>
-                    </li>
-                </ul>
-            </td>
-        </tr>
+            </li>
+            <li>
+                <a title="drain">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="links/link[@rel='drain']/@href"/>
+                    </xsl:attribute>
+                    <i class="icon-file-alt"><xsl:comment>drain</xsl:comment></i>
+                </a>
+            </li>
+            <li>
+                <a onclick="return confirm('Are you sure?');"
+                    title="delete this unit">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="links/link[@rel='remove']/@href"/>
+                    </xsl:attribute>
+                    <i class="icon-remove"><xsl:comment>remove</xsl:comment></i>
+                </a>
+            </li>
+        </ul>
+        <p style="padding-left: 3em;">
+            <xsl:value-of select="face"/>
+        </p>
     </xsl:template>
 </xsl:stylesheet>

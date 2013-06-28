@@ -28,27 +28,13 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-div.container-fluid {
-    padding: 2em;
+@font-face {
+    font-family: 'Quadon-Regular';
+    src: url('http://img.rultor.com/fonts/quadon-regular.eot');
+    src: url('http://img.rultor.com/fonts/quadon-regular.eot?#iefix') format('embedded-opentype');
+    src: url('http://img.rultor.com/fonts/quadon-regular.woff') format('woff');
+    src: url('http://img.rultor.com/fonts/quadon-regular.ttf') format('truetype');
 }
 
-/* bottom right label about deployed version */
-#version {
-    font-size: 0.8em;
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    padding: .2em .8em;
-    background-color: #e4e5e3;
-}
-
-#bottom {
-    border-top: 1px solid gray;
-    margin-top: 3em;
-    font-size: 0.9em;
-}
-
-textarea.spec {
-    font-family: 'Consolas', 'Lucida Console', monospace;
-}
-
+@import "variables.less";
+@import "bootstrap.less";

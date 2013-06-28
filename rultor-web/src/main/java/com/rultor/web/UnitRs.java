@@ -108,6 +108,8 @@ public final class UnitRs extends BaseRs {
                     .up()
                     .add("spec", this.unit().spec().asText())
                     .up()
+                    .add("drain", this.unit().drain().asText())
+                    .up()
             )
             .render()
             .build();

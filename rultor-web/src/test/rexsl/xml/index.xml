@@ -53,7 +53,7 @@
             <face>some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, </face>
             <links>
                 <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
-                <link href="/xml/pulses.xml" rel="pulses" type="text/xml"/>
+                <link href="/xml/drain.xml" rel="drain" type="text/xml"/>
                 <link href="/xml/index.xml" rel="remove" type="text/xml"/>
             </links>
         </unit>
@@ -63,7 +63,7 @@
             <face>some text to show</face>
             <links>
                 <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
-                <link href="/xml/pulses.xml" rel="pulses" type="text/xml"/>
+                <link href="/xml/drain.xml" rel="drain" type="text/xml"/>
                 <link href="/xml/index.xml" rel="remove" type="text/xml"/>
             </links>
         </unit>

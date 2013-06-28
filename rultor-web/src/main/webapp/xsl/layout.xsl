@@ -40,11 +40,10 @@
                 <meta name="description" content="Lightweight Integration Platform as a Service"/>
                 <meta name="keywords" content="IPaaS, continuous integration, continuous delivery"/>
                 <meta name="author" content="rultor.com"/>
-                <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet"/>
                 <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet" />
                 <link rel="stylesheet" type="text/css" media="all">
                     <xsl:attribute name="href">
-                        <xsl:text>/css/screen.css?</xsl:text>
+                        <xsl:text>/css/main.css?</xsl:text>
                         <xsl:value-of select="/page/version/revision"/>
                     </xsl:attribute>
                 </link>
@@ -68,37 +67,41 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             </head>
             <body>
-                <xsl:apply-templates select="version"/>
                 <a href="https://github.com/yegor256/rultor">
                     <img style="position: absolute; top: 0; right: 0; border: 0; width: 110px; height: 110px;"
                         src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
                         alt="Fork me on GitHub" />
                 </a>
                 <div class="container-fluid">
-                    <p>
-                        <a>
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
-                            </xsl:attribute>
-                            <img alt="rultor.com logo" style="width: 150px; height: 46px;">
-                                <xsl:attribute name="src">
-                                    <xsl:text>http://img.rultor.com/logo.png?</xsl:text>
-                                    <xsl:value-of select="/page/version/revision"/>
+                    <ul class="inline" style="padding-top: 1em;">
+                        <li class="hidden-phone">
+                            <a>
+                                <xsl:attribute name="href">
+                                    <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
                                 </xsl:attribute>
-                            </img>
-                        </a>
-                    </p>
+                                <xsl:text>R</xsl:text>
+                            </a>
+                        </li>
+                        <li class="hidden-phone">
+                            <a>
+                                <xsl:attribute name="href">
+                                    <xsl:value-of select="/page/links/link[@rel='about']/@href"/>
+                                </xsl:attribute>
+                                <xsl:text>how it works?</xsl:text>
+                            </a>
+                        </li>
+                        <xsl:apply-templates select="version"/>
+                        <xsl:apply-templates select="identity"/>
+                    </ul>
                     <xsl:apply-templates select="flash"/>
                     <xsl:choose>
                         <xsl:when test="/page/identity">
-                            <xsl:apply-templates select="identity"/>
                             <xsl:call-template name="content"/>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:call-template name="login"/>
                         </xsl:otherwise>
                     </xsl:choose>
-                    <xsl:call-template name="bottom"/>
                 </div>
             </body>
         </html>
@@ -121,9 +124,10 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="version">
-        <div id="version" class="hidden-phone">
+        <li>
             <xsl:value-of select="name"/>
-            <xsl:text> </xsl:text>
+        </li>
+        <li class="hidden-phone">
             <a title="see commit in Github">
                 <xsl:attribute name="href">
                     <xsl:text>https://github.com/yegor256/rultor/commit/</xsl:text>
@@ -133,14 +137,15 @@
             </a>
             <xsl:text> </xsl:text>
             <xsl:value-of select="revision"/>
-            <xsl:text> </xsl:text>
+        </li>
+        <li class="hidden-phone">
             <xsl:call-template name="millis">
                 <xsl:with-param name="millis" select="/page/millis"/>
             </xsl:call-template>
-        </div>
+        </li>
     </xsl:template>
     <xsl:template match="flash">
-        <div>
+        <p>
             <xsl:attribute name="class">
                 <xsl:text>alert </xsl:text>
                 <xsl:choose>
@@ -163,12 +168,13 @@
                 </xsl:call-template>
                 <xsl:text>)</xsl:text>
             </xsl:if>
-        </div>
+        </p>
     </xsl:template>
     <xsl:template match="identity">
-        <p>
+        <li class="hidden-phone">
             <code><xsl:value-of select="urn"/></code>
-            <xsl:text> </xsl:text>
+        </li>
+        <li class="hidden-phone">
             <img style="width: 25px; height: 25px;">
                 <xsl:attribute name="src">
                     <xsl:value-of select="photo"/>
@@ -177,9 +183,11 @@
                     <xsl:value-of select="name"/>
                 </xsl:attribute>
             </img>
-            <xsl:text> </xsl:text>
+        </li>
+        <li>
             <xsl:value-of select="name"/>
-            <xsl:text> </xsl:text>
+        </li>
+        <li>
             <i>
                 <xsl:attribute name="class">
                     <xsl:text>icon-</xsl:text>
@@ -197,14 +205,15 @@
                 </xsl:attribute>
                 <xsl:comment>authenticated</xsl:comment>
             </i>
-            <xsl:text> </xsl:text>
+        </li>
+        <li>
             <a title="log out">
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-logout']/@href"/>
                 </xsl:attribute>
                 <i class="icon-signout"><xsl:comment>signout icon</xsl:comment></i>
             </a>
-        </p>
+        </li>
     </xsl:template>
     <xsl:template name="login">
         <p>
@@ -239,27 +248,5 @@
                 </a>
             </li>
         </ul>
-    </xsl:template>
-    <xsl:template name="bottom">
-        <div id="bottom" class="hidden-phone">
-            <xsl:text>rultor.com is an open source project, hosted at </xsl:text>
-            <a href="https://github.com/yegor256/rultor">
-                <xsl:text>github</xsl:text>
-            </a>
-            <xsl:text>. The service is absolutely free of charge, since it is sponsored by </xsl:text>
-            <a href="http://www.tpc2.com/">
-                <xsl:text>tpc2.com</xsl:text>
-            </a>
-            <xsl:text>. See also terms of use, privacy policy and license agreement at </xsl:text>
-            <a href="/misc/LICENSE.txt">
-                <xsl:text>LICENSE.txt</xsl:text>
-            </a>
-            <xsl:text>.</xsl:text>
-            <xsl:text> This website is using </xsl:text>
-            <a href="http://www.rexsl.com/">
-                <xsl:text>ReXSL</xsl:text>
-            </a>
-            <xsl:text>, Java RESTful development framework.</xsl:text>
-        </div>
     </xsl:template>
 </xsl:stylesheet>
