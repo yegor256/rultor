@@ -29,16 +29,30 @@
  */
 package com.rultor.drain.tmp;
 
+import com.google.common.base.Charsets;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Drain;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.SequenceInputStream;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.SortedSet;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Buffered with a help of {@code /tmp} directory.
@@ -52,7 +66,18 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "dir", "origin" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.DoNotUseThreads")
 public final class BufferedDrain implements Drain {
+
+    /**
+     * How often to flush, in milliseconds.
+     */
+    private final transient long maximum;
+
+    /**
+     * How long to keep them alive locally.
+     */
+    private final transient long lifetime;
 
     /**
      * Directory name.
@@ -66,11 +91,16 @@ public final class BufferedDrain implements Drain {
 
     /**
      * Public ctor.
+     * @param max How often should be flush, in milliseconds
+     * @param age Maximum age of file locally
      * @param folder Folder where to keep all files
      * @param drain Original drain
+     * @checkstyle ParameterNumber (5 lines)
      */
-    protected BufferedDrain(@NotNull final File folder,
-        @NotNull final Drain drain) {
+    protected BufferedDrain(final long max, final long age,
+        @NotNull final File folder, @NotNull final Drain drain) {
+        this.maximum = max;
+        this.lifetime = age;
         this.dir = folder.getAbsolutePath();
         this.origin = drain;
     }
@@ -89,7 +119,15 @@ public final class BufferedDrain implements Drain {
     @Override
     public void append(final long date, final Iterable<String> lines)
         throws IOException {
-        this.origin.append(date, lines);
+        final PrintWriter out = new PrintWriter(
+            new BufferedWriter(new FileWriter(this.extra(date), true))
+        );
+        for (String line : lines) {
+            out.println(line);
+        }
+        out.close();
+        this.watch(date, this.maximum);
+        this.watch(date, this.lifetime);
     }
 
     /**
@@ -97,7 +135,122 @@ public final class BufferedDrain implements Drain {
      */
     @Override
     public InputStream read(final long date) throws IOException {
-        return this.origin.read(date);
+        final File body = this.body(date);
+        final File extra = this.extra(date);
+        synchronized (this.dir) {
+            if (!body.exists()) {
+                IOUtils.copyLarge(
+                    this.origin.read(date),
+                    new FileOutputStream(body)
+                );
+            }
+            FileUtils.touch(extra);
+            this.watch(date, this.maximum);
+            this.watch(date, this.lifetime);
+            return new SequenceInputStream(
+                new FileInputStream(body),
+                new FileInputStream(extra)
+            );
+        }
+    }
+
+    /**
+     * File is too old.
+     * @param file The file
+     * @param msec Maximum age in msec
+     * @return TRUE if too old
+     */
+    private boolean expired(final File file, final long msec) {
+        return System.currentTimeMillis() - file.lastModified() > msec;
+    }
+
+    /**
+     * Take a look at this file in some time.
+     * @param date Pulse date
+     * @param delay In how many milliseconds to do this checking
+     * @throws IOException If IO error
+     */
+    private void watch(final long date, final long delay) throws IOException {
+        new Thread(
+            new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(delay);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                        throw new IllegalStateException(ex);
+                    }
+                    try {
+                        BufferedDrain.this.clean(date);
+                    } catch (IOException ex) {
+                        throw new IllegalStateException(ex);
+                    }
+                }
+            }
+        ).start();
+    }
+
+    /**
+     * Clean files if expired.
+     * @param date Pulse date
+     * @throws IOException If IO error
+     */
+    private void clean(final long date) throws IOException {
+        final File body = this.body(date);
+        final File extra = this.extra(date);
+        synchronized (this.dir) {
+            if (extra.exists() && this.expired(body, this.maximum)) {
+                this.flush(date);
+            }
+            if (this.expired(body, this.lifetime)) {
+                body.delete();
+            }
+        }
+    }
+
+    /**
+     * Flush all accumulated lines to the origin drain.
+     * @param date Date of the pulse
+     * @throws IOException If IO problem inside
+     */
+    private void flush(final long date) throws IOException {
+        final File extra = this.extra(date);
+        final BufferedReader reader = new BufferedReader(
+            new InputStreamReader(new FileInputStream(extra), Charsets.UTF_8)
+        );
+        final Collection<String> buffered = new LinkedList<String>();
+        while (true) {
+            final String line = reader.readLine();
+            if (line == null) {
+                break;
+            }
+            buffered.add(line);
+        }
+        this.origin.append(date, buffered);
+        IOUtils.copyLarge(
+            new FileInputStream(extra),
+            new FileOutputStream(this.body(date))
+        );
+        extra.delete();
+    }
+
+    /**
+     * File with body.
+     * @param date Date of pulse
+     * @return File with body
+     */
+    private File body(final long date) {
+        return new File(new File(this.dir), String.format("%d.body", date));
+    }
+
+    /**
+     * File with lines.
+     * @param date Date of pulse
+     * @return File with lines
+     */
+    private File extra(final long date) {
+        return new File(new File(this.dir), String.format("%d.extra", date));
     }
 
 }
