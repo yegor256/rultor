@@ -64,6 +64,10 @@ public final class DirectoryDrainTest {
         );
         drain.append(date, Arrays.asList(first, second));
         MatcherAssert.assertThat(
+            drain.pulses(),
+            Matchers.hasItem(date)
+        );
+        MatcherAssert.assertThat(
             IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
             Matchers.containsString(first)
         );
