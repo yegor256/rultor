@@ -119,12 +119,15 @@ final class AwsUnit implements Unit {
     @Cacheable.FlushBefore
     public void update(@NotNull final Spec spec, @NotNull final Spec drain) {
         this.item().put(
-            AwsUnit.FIELD_SPEC,
-            new AttributeValue(spec.asText())
-        );
-        this.item().put(
-            AwsUnit.FIELD_DRAIN,
-            new AttributeValue(drain.asText())
+            new Attributes()
+                .with(
+                    AwsUnit.FIELD_SPEC,
+                    new AttributeValue(spec.asText())
+                )
+                .with(
+                    AwsUnit.FIELD_DRAIN,
+                    new AttributeValue(drain.asText())
+                )
         );
     }
 
