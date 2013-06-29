@@ -107,15 +107,15 @@ final class Composite implements Variable<Object> {
             return ctor.newInstance(args);
         } catch (InstantiationException ex) {
             throw new Repo.InstantiationException(
-                String.format("failed to instantiate with %s", ctor), ex
+                String.format("failed to instantiate with %s: %s", ctor, ex), ex
             );
         } catch (IllegalAccessException ex) {
             throw new Repo.InstantiationException(
-                String.format("failed to access %s", ctor), ex
+                String.format("failed to access %s: %s", ctor, ex), ex
             );
         } catch (InvocationTargetException ex) {
             throw new Repo.InstantiationException(
-                String.format("failed to invoke %s", ctor), ex
+                String.format("failed to invoke %s: %s", ctor, ex), ex
             );
         }
     }
