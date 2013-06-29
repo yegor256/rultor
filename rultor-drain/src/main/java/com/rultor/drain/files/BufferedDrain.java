@@ -32,6 +32,7 @@ package com.rultor.drain.files;
 import com.google.common.base.Charsets;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -108,7 +109,7 @@ public final class BufferedDrain implements Drain {
      */
     @Override
     public String toString() {
-        return String.format(
+        return Logger.format(
             // @checkstyle LineLength (1 line)
             "%s buffered at `%s` with %[ms]s flush interval and %[ms]s lifetime",
             this.origin,

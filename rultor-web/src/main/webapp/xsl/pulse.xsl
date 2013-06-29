@@ -33,29 +33,28 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
-            <xsl:text>pulse</xsl:text>
+            <xsl:value-of select="/page/pulse"/>
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <h1>
-            <xsl:value-of select="/page/pulse"/>
-        </h1>
-        <p>
-            <xsl:text>Unit: </xsl:text>
-            <xsl:value-of select="/page/unit"/>
-            <br/>
-            <xsl:text>Date: </xsl:text>
-            <xsl:value-of select="/page/date"/>
-        </p>
-        <p>
-            <xsl:text>See </xsl:text>
-            <a title="see log">
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='stream']/@href"/>
-                </xsl:attribute>
-                <xsl:text>full log</xsl:text>
-            </a>
-        </p>
+        <div>
+            <ul class="inline">
+                <li>
+                    <code><xsl:value-of select="/page/unit"/></code>
+                </li>
+                <li>
+                    <xsl:value-of select="/page/date"/>
+                </li>
+                <li>
+                    <a title="see log">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="/page/links/link[@rel='stream']/@href"/>
+                        </xsl:attribute>
+                        <xsl:text>full log</xsl:text>
+                    </a>
+                </li>
+            </ul>
+        </div>
         <div class="pulse-details">
             <xsl:if test="count(/page/stages/stage) &gt; 0">
                 <table class="table table-condensed">
