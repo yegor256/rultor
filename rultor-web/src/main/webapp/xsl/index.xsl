@@ -66,11 +66,6 @@
     <xsl:template match="unit">
         <ul class="inline btn-group-vertical">
             <li>
-                <xsl:if test="@error != ''">
-                    <xsl:attribute name="class">
-                        <xsl:text>error</xsl:text>
-                    </xsl:attribute>
-                </xsl:if>
                 <a title="edit">
                     <xsl:attribute name="href">
                         <xsl:value-of select="links/link[@rel='edit']/@href"/>
@@ -78,6 +73,13 @@
                     <xsl:value-of select="name"/>
                 </a>
             </li>
+            <xsl:if test="spec/type">
+                <li>
+                    <code>
+                        <xsl:value-of select="spec/type"/>
+                    </code>
+                </li>
+            </xsl:if>
             <li>
                 <a title="drain">
                     <xsl:attribute name="href">
@@ -96,8 +98,27 @@
                 </a>
             </li>
         </ul>
-        <p style="padding-left: 3em;">
-            <xsl:value-of select="face" disable-output-escaping="yes"/>
-        </p>
+        <xsl:if test="spec/type != 'java.lang.String'">
+            <p style="padding-left: 3em;">
+                <xsl:call-template name="face">
+                    <xsl:with-param name="object" select="spec"/>
+                </xsl:call-template>
+                <xsl:text>; drained through </xsl:text>
+                <xsl:call-template name="face">
+                    <xsl:with-param name="object" select="drain"/>
+                </xsl:call-template>
+            </p>
+        </xsl:if>
+    </xsl:template>
+    <xsl:template name="face">
+        <xsl:param name="object"/>
+        <xsl:choose>
+            <xsl:when test="$object/face">
+                <xsl:value-of select="$object/face" disable-output-escaping="yes"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <code class="alert-error"><xsl:value-of select="$object/exception"/></code>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 </xsl:stylesheet>

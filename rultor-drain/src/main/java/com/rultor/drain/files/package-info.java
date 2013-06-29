@@ -29,10 +29,10 @@
  */
 
 /**
- * Drains based on temporary files in {@code /tmp} directory.
+ * Drains based on files directory.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-package com.rultor.drain.tmp;
+package com.rultor.drain.files;

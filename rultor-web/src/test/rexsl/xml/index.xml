@@ -52,10 +52,16 @@
     </links>
     <millis>16</millis>
     <units>
-        <unit error="true">
-            <type>java.lang.String</type>
+        <unit>
             <name>git-rultor</name>
-            <face>some very long text to show, some very &lt;code&gt;long text&lt;/code&gt; to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, </face>
+            <spec>
+                <type>com.rultor.Something</type>
+                <face>some very long text to show, some very &lt;code&gt;long text&lt;/code&gt; to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, </face>
+            </spec>
+            <drain>
+                <type>java.lang.String</type>
+                <face>some very long text to show, some very &lt;code&gt;long text&lt;/code&gt; to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, </face>
+            </drain>
             <links>
                 <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
                 <link href="/xml/drain.xml" rel="drain" type="text/xml"/>
@@ -63,9 +69,14 @@
             </links>
         </unit>
         <unit>
-            <type></type>
             <name>nightly-build-rultor</name>
-            <face>some text to show</face>
+            <spec>
+                <exception>invalid text somewhere</exception>
+            </spec>
+            <drain>
+                <type>java.lang.String</type>
+                <face>some text</face>
+            </drain>
             <links>
                 <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
                 <link href="/xml/drain.xml" rel="drain" type="text/xml"/>

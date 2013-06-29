@@ -31,6 +31,7 @@ package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
+import com.jcabi.urn.URN;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
@@ -42,12 +43,15 @@ import com.rexsl.page.auth.Github;
 import com.rexsl.page.auth.Google;
 import com.rexsl.page.auth.HttpBasic;
 import com.rexsl.page.auth.Identity;
+import com.rexsl.page.auth.Provider;
 import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
 import com.rultor.spi.Repo;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import java.io.IOException;
+import java.net.URI;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -64,6 +68,7 @@ import javax.ws.rs.core.Response;
 @Resource.Forwarded
 @Loggable(Loggable.DEBUG)
 @Inset.Default(LinksInset.class)
+@SuppressWarnings("PMD.TooManyMethods")
 public class BaseRs extends BaseResource {
 
     /**
@@ -141,6 +146,24 @@ public class BaseRs extends BaseResource {
             .with(new Facebook(this, Manifests.read("Rultor-FbId"), Manifests.read("Rultor-FbSecret")))
             .with(new Github(this, Manifests.read("Rultor-GithubId"), Manifests.read("Rultor-GithubSecret")))
             .with(new Google(this, Manifests.read("Rultor-GoogleId"), Manifests.read("Rultor-GoogleSecret")))
+            .with(
+                new Provider() {
+                    @Override
+                    public Identity identity() throws IOException {
+                        Identity identity;
+                        if ("12345".equals(Manifests.read("Rultor-Revision"))) {
+                            identity = new Identity.Simple(
+                                URN.create("urn:facebook:1"),
+                                "Local Host",
+                                URI.create("#")
+                            );
+                        } else {
+                            identity = Identity.ANONYMOUS;
+                        }
+                        return identity;
+                    }
+                }
+            )
             .with(new HttpBasic(this, BaseRs.KEYS));
     }
 

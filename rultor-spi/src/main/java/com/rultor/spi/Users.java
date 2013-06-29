@@ -32,7 +32,6 @@ package com.rultor.spi;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -44,17 +43,6 @@ import javax.validation.constraints.NotNull;
  */
 @Immutable
 public interface Users {
-
-    /**
-     * Empty users, mostly for tests.
-     * @checkstyle AnonInnerLength (50 lines)
-     */
-    Users EMPTY = new Users() {
-        @Override
-        public Map<URN, User> everybody() {
-            return new ConcurrentHashMap<URN, User>(0);
-        }
-    };
 
     /**
      * Get everybody.

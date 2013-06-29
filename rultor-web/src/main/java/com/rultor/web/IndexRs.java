@@ -35,6 +35,7 @@ import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.auth.Identity;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import java.util.Map;
 import java.util.logging.Level;
@@ -52,6 +53,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Path("/")
 @Loggable(Loggable.DEBUG)
@@ -129,22 +131,11 @@ public final class IndexRs extends BaseRs {
      * @return Bundle
      */
     private JaxbBundle unit(final String name, final Unit unit) {
-        String face;
-        String error = "";
-        try {
-            face = StringEscapeUtils.escapeHtml4(
-                this.repo().make(this.user(), unit.spec()).toString()
-            ).replaceAll("`([^`]+)`", "<code>$1</code>");
-        } catch (Repo.InstantiationException ex) {
-            face = ex.getMessage();
-            error = "yes";
-        }
         return new JaxbBundle("unit")
-            .attr("error", error)
             .add("name", name)
             .up()
-            .add("face", face)
-            .up()
+            .add(this.face("spec", unit.spec()))
+            .add(this.face("drain", unit.drain()))
             .link(
                 new Link(
                     // @checkstyle MultipleStringLiterals (1 line)
@@ -174,6 +165,30 @@ public final class IndexRs extends BaseRs {
                         .build(name)
                 )
             );
+    }
+
+    /**
+     * Get face from spec.
+     * @param name Name of it
+     * @param spec The Spec
+     * @return Bundle
+     */
+    private JaxbBundle face(final String name, final Spec spec) {
+        JaxbBundle bundle = new JaxbBundle(name)
+            .add("spec", spec.asText())
+            .up();
+        try {
+            final Object object = this.repo().make(this.user(), spec);
+            bundle = bundle.add(
+                "face",
+                StringEscapeUtils.escapeHtml4(
+                    object.toString()
+                ).replaceAll("`([^`]+)`", "<code>$1</code>")
+            ).up().add("type", object.getClass().getName());
+        } catch (Repo.InstantiationException ex) {
+            bundle = bundle.add("exception", ex.getMessage());
+        }
+        return bundle.up();
     }
 
 }

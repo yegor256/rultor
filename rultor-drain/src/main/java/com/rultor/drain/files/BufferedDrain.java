@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.drain.tmp;
+package com.rultor.drain.files;
 
 import com.google.common.base.Charsets;
 import com.jcabi.aspects.Immutable;
@@ -55,7 +55,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 /**
- * Buffered with a help of {@code /tmp} directory.
+ * Buffered with a help of files.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -66,7 +66,7 @@ import org.apache.commons.io.IOUtils;
 @ToString
 @EqualsAndHashCode(of = { "dir", "origin" })
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.DoNotUseThreads")
+@SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.TooManyMethods" })
 public final class BufferedDrain implements Drain {
 
     /**
@@ -241,7 +241,7 @@ public final class BufferedDrain implements Drain {
      * @return File with body
      */
     private File body(final long date) {
-        return new File(new File(this.dir), String.format("%d.body", date));
+        return this.file(date, "body");
     }
 
     /**
@@ -250,7 +250,19 @@ public final class BufferedDrain implements Drain {
      * @return File with lines
      */
     private File extra(final long date) {
-        return new File(new File(this.dir), String.format("%d.extra", date));
+        return this.file(date, "extra");
+    }
+
+    /**
+     * File.
+     * @param date Date of pulse
+     * @param ext Extension
+     * @return File
+     */
+    private File file(final long date, final String ext) {
+        final File folder = new File(this.dir);
+        folder.mkdirs();
+        return new File(folder, String.format("%d.%s", date, ext));
     }
 
 }

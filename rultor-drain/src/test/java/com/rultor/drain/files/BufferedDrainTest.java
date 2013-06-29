@@ -27,57 +27,56 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor.drain.files;
 
-import com.jcabi.urn.URN;
-import com.rexsl.page.HttpHeadersMocker;
-import com.rexsl.page.ServletContextMocker;
-import com.rexsl.page.UriInfoMocker;
-import com.rexsl.test.JaxbConverter;
-import com.rexsl.test.XhtmlMatchers;
-import com.rultor.spi.User;
-import com.rultor.spi.Users;
-import java.util.concurrent.ConcurrentMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import com.google.common.io.Files;
+import com.jcabi.aspects.Tv;
+import com.rultor.spi.Drain;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test case for {@link IndexRs}.
+ * Test case for {@link BufferedDrain}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class IndexRsTest {
+public final class BufferedDrainTest {
 
     /**
-     * IndexRs can render front page.
+     * BufferedDrain can log and buffer.
      * @throws Exception If some problem inside
      */
     @Test
-    @SuppressWarnings("unchecked")
-    public void rendersFrontPage() throws Exception {
-        final IndexRs res = new IndexRs();
-        res.setUriInfo(new UriInfoMocker().mock());
-        res.setHttpHeaders(new HttpHeadersMocker().mock());
-        res.setSecurityContext(Mockito.mock(SecurityContext.class));
-        final User user = Mockito.mock(User.class);
-        final ConcurrentMap<URN, User> map = Mockito.mock(ConcurrentMap.class);
-        Mockito.doReturn(user).when(map).get(Mockito.any(URN.class));
-        final Users users = Mockito.mock(Users.class);
-        Mockito.doReturn(map).when(users).everybody();
-        res.setServletContext(
-            new ServletContextMocker().withAttribute(
-                Users.class.getName(), users
-            ).mock()
+    public void logsAndBuffers() throws Exception {
+        final File dir = Files.createTempDir();
+        final Drain origin = Mockito.mock(Drain.class);
+        Mockito.doReturn(IOUtils.toInputStream(""))
+            .when(origin).read(Mockito.anyLong());
+        final Drain drain = new BufferedDrain(
+            TimeUnit.SECONDS.toMillis(1),
+            TimeUnit.SECONDS.toMillis(Tv.FIVE),
+            new File(dir, "a/b/c"),
+            origin
         );
-        final Response response = res.index();
+        final long date = new Random().nextLong();
+        final String first = "some \t\u20ac\tfdsfs";
+        final String second = "somefffffds900-4932%^&$%^&#%@^&!\u20ac\tfdsfs";
         MatcherAssert.assertThat(
-            JaxbConverter.the(response.getEntity()),
-            XhtmlMatchers.hasXPaths(
-                "/page/version[name='1.0-SNAPSHOT']"
-            )
+            IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
+            Matchers.equalTo("")
+        );
+        drain.append(date, Arrays.asList(first, second));
+        MatcherAssert.assertThat(
+            IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
+            Matchers.containsString(first)
         );
     }
 

@@ -39,7 +39,7 @@ import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 
 Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
-def identity = new Identity.Simple(new URN('urn:test:1'), '', new URI('#'))
+def identity = new Identity.Simple(new URN('urn:facebook:1'), '', new URI('#'))
 def key = new AuthKeys().make(identity)
 def user = new RestUser(rexsl.home, identity.urn(), key)
 MatcherAssert.assertThat(user.urn(), Matchers.equalTo(identity.urn()))

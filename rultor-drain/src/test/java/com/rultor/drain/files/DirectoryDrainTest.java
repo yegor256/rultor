@@ -27,12 +27,46 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.drain.files;
+
+import com.google.common.io.Files;
+import com.rultor.spi.Drain;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Random;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Drains based on temporary files in {@code /tmp} directory, tests.
- *
+ * Test case for {@link DirectoryDrain}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-package com.rultor.drain.tmp;
+public final class DirectoryDrainTest {
+
+    /**
+     * DirectoryDrain can log and read.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void logsAndReads() throws Exception {
+        final File dir = Files.createTempDir();
+        final Drain drain = new DirectoryDrain(new File(dir, "temp/a/c"));
+        final long date = new Random().nextLong();
+        final String first = "some \t\u20ac\tfdsfs";
+        final String second = "somefffffds900-4932%^&$%^&#%@^&!\u20ac\tfdsfs";
+        MatcherAssert.assertThat(
+            IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
+            Matchers.equalTo("")
+        );
+        drain.append(date, Arrays.asList(first, second));
+        MatcherAssert.assertThat(
+            IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
+            Matchers.containsString(first)
+        );
+    }
+
+}
