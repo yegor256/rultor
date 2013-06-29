@@ -195,13 +195,15 @@ public final class S3Lineup implements Lineup {
         final ObjectListing listing =
             aws.listObjects(this.client.bucket(), this.key);
         final boolean exists = !listing.getObjectSummaries().isEmpty();
-        Logger.info(
-            this,
-            "S3 object '%s/%s' exists: %B",
-            this.client.bucket(),
-            this.key,
-            exists
-        );
+        if (exists) {
+            Logger.info(
+                this,
+                "S3 object '%s/%s' exists: %s",
+                this.client.bucket(),
+                this.key,
+                this.load()
+            );
+        }
         return exists;
     }
 
