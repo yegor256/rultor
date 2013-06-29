@@ -123,7 +123,7 @@ final class AwsUnit implements Unit {
                 .with(
                     AwsUnit.FIELD_SPEC,
                     new AttributeValue(spec.asText())
-                )
+            )
                 .with(
                     AwsUnit.FIELD_DRAIN,
                     new AttributeValue(drain.asText())
