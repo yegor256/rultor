@@ -88,7 +88,7 @@ public final class S3Drain implements Drain {
      */
     public S3Drain(@NotNull final S3Client clnt, @NotNull final String pfx) {
         this.client = clnt;
-        Validate.matchesPattern(pfx, "[\\w\\-\\.]+/");
+        Validate.matchesPattern(pfx, "([^/]+/)+");
         this.prefix = pfx;
     }
 
