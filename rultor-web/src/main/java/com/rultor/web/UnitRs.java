@@ -33,10 +33,12 @@ import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rexsl.page.inset.FlashInset;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
+import java.net.HttpURLConnection;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
@@ -71,6 +73,7 @@ public final class UnitRs extends BaseRs {
     public void setName(@NotNull final String unit) {
         this.name = unit;
     }
+
     /**
      * View an existing unit or an empty one.
      * @return The JAX-RS response
@@ -79,30 +82,7 @@ public final class UnitRs extends BaseRs {
     @GET
     @Path("/")
     public Response index() throws Exception {
-        return new PageBuilder()
-            .stylesheet("/xsl/unit.xsl")
-            .build(EmptyPage.class)
-            .init(this)
-            .link(
-                new Link(
-                    "save",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(UnitRs.class)
-                        .path(UnitRs.class, "save")
-                        .build(this.name)
-                )
-            )
-            .link(
-                new Link(
-                    "remove",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(UnitRs.class)
-                        .path(UnitRs.class, "remove")
-                        .build(this.name)
-                )
-            )
+        return this.head()
             .append(
                 new JaxbBundle("unit")
                     .add("name", this.name)
@@ -142,10 +122,27 @@ public final class UnitRs extends BaseRs {
     @Path("/")
     public Response save(@NotNull @FormParam("spec") final String spec,
         @NotNull @FormParam("drain") final String drain) {
-        this.unit().update(
-            this.parse(spec, Object.class),
-            this.parse(drain, Drain.class)
-        );
+        try {
+            this.unit().update(
+                this.parse(spec, Object.class),
+                this.parse(drain, Drain.class)
+            );
+        } catch (IllegalArgumentException ex) {
+            return this.head()
+                .append(FlashInset.bundle(Level.SEVERE, ex.getMessage(), 0L))
+                .append(
+                    new JaxbBundle("unit")
+                        .add("name", this.name)
+                        .up()
+                        .add("spec", spec)
+                        .up()
+                        .add("drain", drain)
+                        .up()
+                )
+                .render()
+                .status(HttpURLConnection.HTTP_BAD_REQUEST)
+                .build();
+        }
         throw this.flash().redirect(
             this.uriInfo().getRequestUri(),
             String.format("Unit '%s' successfully saved/updated", this.name),
@@ -180,26 +177,55 @@ public final class UnitRs extends BaseRs {
         try {
             spec = this.repo().make(text);
         } catch (Repo.InvalidSyntaxException ex) {
-            throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
+            throw new IllegalArgumentException(ex);
         }
         final Object object;
         try {
             object = this.repo().make(this.user(), spec);
         } catch (Repo.InstantiationException ex) {
-            throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
+            throw new IllegalArgumentException(ex);
         }
         if (!type.isAssignableFrom(object.getClass())) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
+            throw new IllegalArgumentException(
                 String.format(
                     "%s expected while %s provided",
                     type.getName(),
                     object.getClass().getName()
-                ),
-                Level.SEVERE
+                )
             );
         }
         return spec;
+    }
+
+    /**
+     * Make a head of the page.
+     * @return The page
+     */
+    private EmptyPage head() {
+        return new PageBuilder()
+            .stylesheet("/xsl/unit.xsl")
+            .build(EmptyPage.class)
+            .init(this)
+            .link(
+                new Link(
+                    "save",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(UnitRs.class)
+                        .path(UnitRs.class, "save")
+                        .build(this.name)
+                )
+            )
+            .link(
+                new Link(
+                    "remove",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(UnitRs.class)
+                        .path(UnitRs.class, "remove")
+                        .build(this.name)
+                )
+            );
     }
 
 }
