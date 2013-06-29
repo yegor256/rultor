@@ -180,11 +180,11 @@ public final class S3Drain implements Drain {
     public InputStream read(final long date) throws IOException {
         final String key = this.key(date);
         final AmazonS3 aws = this.client.get();
-        InputStream stream;
+        String content;
         try {
             if (aws.listObjects(this.client.bucket(), key)
                 .getObjectSummaries().isEmpty()) {
-                stream = IOUtils.toInputStream("");
+                content = "";
             } else {
                 final S3Object object =
                     aws.getObject(this.client.bucket(), key);
@@ -195,7 +195,9 @@ public final class S3Drain implements Drain {
                     object.getObjectMetadata().getContentLength(),
                     object.getObjectMetadata().getETag()
                 );
-                stream = object.getObjectContent();
+                final InputStream stream = object.getObjectContent();
+                content = IOUtils.toString(stream, CharEncoding.UTF_8);
+                stream.close();
             }
         } catch (AmazonS3Exception ex) {
             throw new IOException(
@@ -208,7 +210,7 @@ public final class S3Drain implements Drain {
                 ex
             );
         }
-        return stream;
+        return IOUtils.toInputStream(content);
     }
 
     /**
