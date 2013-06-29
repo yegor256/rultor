@@ -139,11 +139,10 @@ final class AwsUnit implements Unit {
     @Cacheable
     public Spec spec() {
         Spec spec;
-        final AttributeValue val = this.item().get(AwsUnit.FIELD_SPEC);
-        if (val == null) {
-            spec = new Spec.Simple();
+        if (this.item().has(AwsUnit.FIELD_SPEC)) {
+            spec = new Spec.Simple(this.item().get(AwsUnit.FIELD_SPEC).getS());
         } else {
-            spec = new Spec.Simple(val.getS());
+            spec = new Spec.Simple();
         }
         return spec;
     }
@@ -155,11 +154,10 @@ final class AwsUnit implements Unit {
     @Cacheable
     public Spec drain() {
         Spec spec;
-        final AttributeValue val = this.item().get(AwsUnit.FIELD_DRAIN);
-        if (val == null) {
-            spec = new Spec.Simple("com.rultor.drain.Trash()");
+        if (this.item().has(AwsUnit.FIELD_DRAIN)) {
+            spec = new Spec.Simple(this.item().get(AwsUnit.FIELD_DRAIN).getS());
         } else {
-            spec = new Spec.Simple(val.getS());
+            spec = new Spec.Simple("com.rultor.drain.Trash()");
         }
         return spec;
     }
