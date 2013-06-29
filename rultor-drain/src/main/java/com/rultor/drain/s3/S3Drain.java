@@ -139,13 +139,13 @@ public final class S3Drain implements Drain {
         long size;
         if (aws.listObjects(this.client.bucket(), key)
             .getObjectSummaries().isEmpty()) {
+            body = IOUtils.toInputStream("");
+            size = 0;
+        } else {
             final S3Object object =
                 aws.getObject(this.client.bucket(), key);
             body = object.getObjectContent();
             size = object.getObjectMetadata().getContentLength();
-        } else {
-            body = IOUtils.toInputStream("");
-            size = 0;
         }
         final byte[] suffix = StringUtils.join(lines, "\n")
             .getBytes(CharEncoding.UTF_8);
