@@ -35,6 +35,7 @@ import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Repo;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Unit;
 import java.util.logging.Level;
@@ -197,7 +198,9 @@ public final class PulseRs extends BaseRs {
         }
         return new Pulse(
             this.date,
-            Drain.class.cast(this.repo().make(this.user(), unit.drain()))
+            Drain.class.cast(
+                new Repo.Cached(this.repo(), this.user(), unit.drain()).get()
+            )
         );
     }
 

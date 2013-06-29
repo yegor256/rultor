@@ -176,7 +176,8 @@ public final class IndexRs extends BaseRs {
     private JaxbBundle face(final String name, final Spec spec) {
         JaxbBundle bundle = new JaxbBundle(name);
         try {
-            final Object object = this.repo().make(this.user(), spec);
+            final Object object =
+                new Repo.Cached(this.repo(), this.user(), spec).get();
             bundle = bundle.add(
                 "face",
                 StringEscapeUtils.escapeHtml4(

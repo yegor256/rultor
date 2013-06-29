@@ -29,9 +29,13 @@
  */
 package com.rultor.spi;
 
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Repository of classes.
@@ -129,5 +133,48 @@ public interface Repo {
     @NotNull
     Object make(@NotNull User user, @NotNull Spec spec)
         throws Repo.InstantiationException;
+
+    /**
+     * Cached repo.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = { "repo", "user", "spec" })
+    @Loggable(Loggable.DEBUG)
+    final class Cached {
+        /**
+         * Original repo.
+         */
+        private final transient Repo repo;
+        /**
+         * User.
+         */
+        private final transient User user;
+        /**
+         * Spec.
+         */
+        private final transient Spec spec;
+        /**
+         * Public ctor.
+         * @param rep Repo
+         * @param usr User
+         * @param spc Spec
+         */
+        public Cached(@NotNull final Repo rep, @NotNull final User usr,
+            @NotNull final Spec spc) {
+            this.repo = rep;
+            this.user = usr;
+            this.spec = spc;
+        }
+        /**
+         * Get an object.
+         * @return The object or exception if fails
+         * @throws Repo.InstantiationException If fails
+         */
+        @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
+        public Object get() throws Repo.InstantiationException {
+            return this.repo.make(this.user, this.spec);
+        }
+    }
 
 }

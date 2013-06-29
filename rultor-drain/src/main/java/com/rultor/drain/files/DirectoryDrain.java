@@ -91,16 +91,19 @@ public final class DirectoryDrain implements Drain {
      */
     @Override
     public SortedSet<Long> pulses() throws IOException {
-        final Collection<File> files = FileUtils.listFiles(
-            new File(this.dir), new String[] {"log"}, false
-        );
         final SortedSet<Long> numbers = new TreeSet<Long>();
-        for (File file : files) {
-            numbers.add(
-                Long.valueOf(
-                    FilenameUtils.getBaseName(file.getAbsolutePath())
-                )
+        final File folder = new File(this.dir);
+        if (folder.exists()) {
+            final Collection<File> files = FileUtils.listFiles(
+                folder, new String[] {"log"}, false
             );
+            for (File file : files) {
+                numbers.add(
+                    Long.valueOf(
+                        FilenameUtils.getBaseName(file.getAbsolutePath())
+                    )
+                );
+            }
         }
         return numbers;
     }

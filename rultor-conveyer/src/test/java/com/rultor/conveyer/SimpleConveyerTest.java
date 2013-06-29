@@ -68,6 +68,8 @@ public final class SimpleConveyerTest {
         final Queue queue = Mockito.mock(Queue.class);
         final URN owner = new URN("urn:facebook:1");
         final String name = "unit-name";
+        final Spec spec = new Spec.Simple();
+        final Spec drain = new Spec.Simple("com.rultor.drain.Trash()");
         final AtomicBoolean pulled = new AtomicBoolean();
         Mockito.doAnswer(
             new Answer<Work>() {
@@ -82,7 +84,7 @@ public final class SimpleConveyerTest {
                         }
                     }
                     pulled.set(true);
-                    return new Work.Simple(owner, name, new Spec.Simple());
+                    return new Work.Simple(owner, name, spec);
                 }
             }
         ).when(queue).pull();
@@ -98,9 +100,9 @@ public final class SimpleConveyerTest {
                     return instance;
                 }
             }
-        ).doReturn(Mockito.mock(Drain.class))
-            .when(repo)
-            .make(Mockito.any(User.class), Mockito.any(Spec.class));
+        ).when(repo).make(Mockito.any(User.class), Mockito.eq(spec));
+        Mockito.doReturn(Mockito.mock(Drain.class))
+            .when(repo).make(Mockito.any(User.class), Mockito.eq(drain));
         final User user = Mockito.mock(User.class);
         final Unit unit = Mockito.mock(Unit.class);
         Mockito.doReturn(
@@ -108,7 +110,7 @@ public final class SimpleConveyerTest {
                 .put(name, unit)
                 .build()
         ).when(user).units();
-        Mockito.doReturn(new Spec.Simple()).when(unit).drain();
+        Mockito.doReturn(drain).when(unit).drain();
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(
             new ImmutableMap.Builder<URN, User>()

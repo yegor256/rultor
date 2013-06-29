@@ -181,7 +181,7 @@ public final class UnitRs extends BaseRs {
         }
         final Object object;
         try {
-            object = this.repo().make(this.user(), spec);
+            object = new Repo.Cached(this.repo(), this.user(), spec).get();
         } catch (Repo.InstantiationException ex) {
             throw new IllegalArgumentException(ex);
         }
