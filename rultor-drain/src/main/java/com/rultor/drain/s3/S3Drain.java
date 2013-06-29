@@ -37,13 +37,13 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.google.common.io.CountingInputStream;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.S3Client;
 import com.rultor.spi.Drain;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
@@ -135,29 +135,40 @@ public final class S3Drain implements Drain {
         throws IOException {
         final String key = this.key(date);
         final AmazonS3 aws = this.client.get();
-        final CountingInputStream stream = new CountingInputStream(
-            new SequenceInputStream(
-                this.read(date),
-                IOUtils.toInputStream(
-                    StringUtils.join(lines, "\n"), CharEncoding.UTF_8
-                )
-            )
-        );
+        final InputStream body;
+        long size;
+        if (aws.listObjects(this.client.bucket(), key)
+            .getObjectSummaries().isEmpty()) {
+            final S3Object object =
+                aws.getObject(this.client.bucket(), key);
+            body = object.getObjectContent();
+            size = object.getObjectMetadata().getContentLength();
+        } else {
+            body = IOUtils.toInputStream("");
+            size = 0;
+        }
+        final byte[] suffix = StringUtils.join(lines, "\n")
+            .getBytes(CharEncoding.UTF_8);
+        size += suffix.length;
         final ObjectMetadata meta = new ObjectMetadata();
         meta.setContentEncoding(CharEncoding.UTF_8);
         meta.setContentType(MediaType.TEXT_PLAIN);
+        meta.setContentLength(size);
         try {
             final PutObjectResult result = aws.putObject(
                 this.client.bucket(),
                 key,
-                stream,
+                new SequenceInputStream(
+                    body,
+                    new ByteArrayInputStream(suffix)
+                ),
                 meta
             );
             Logger.info(
                 this,
                 "'%s' saved %d byte(s) to S3, etag=%s",
                 key,
-                stream.getCount(),
+                size,
                 result.getETag()
             );
         } catch (AmazonS3Exception ex) {

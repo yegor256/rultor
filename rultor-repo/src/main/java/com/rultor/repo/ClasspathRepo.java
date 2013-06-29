@@ -50,7 +50,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "grammar")
 @Loggable(Loggable.DEBUG)
 public final class ClasspathRepo implements Repo, Metricable {
 

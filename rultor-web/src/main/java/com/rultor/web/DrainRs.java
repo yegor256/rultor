@@ -57,7 +57,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
  * @version $Id$
  * @since 1.0
  */
-@Path("/pulses/{unit:[\\w\\-]+}")
+@Path("/drain/{unit:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
 public final class DrainRs extends BaseRs {
 
