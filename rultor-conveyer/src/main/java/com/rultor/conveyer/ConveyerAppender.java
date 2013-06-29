@@ -32,6 +32,7 @@ package com.rultor.conveyer;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Time;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -80,21 +81,21 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
     /**
      * Drain starts.
      */
-    private final transient ConcurrentMap<ThreadGroup, Long> groups =
-        new ConcurrentHashMap<ThreadGroup, Long>(0);
+    private final transient ConcurrentMap<ThreadGroup, Time> groups =
+        new ConcurrentHashMap<ThreadGroup, Time>(0);
 
     /**
      * Drains.
      */
-    private final transient ConcurrentMap<Long, Drain> drains =
-        new ConcurrentHashMap<Long, Drain>(0);
+    private final transient ConcurrentMap<Time, Drain> drains =
+        new ConcurrentHashMap<Time, Drain>(0);
 
     /**
      * Register this thread group for the given work.
      * @param date When it starts
      * @param drain Drain to log to
      */
-    public void register(@NotNull final long date, @NotNull final Drain drain) {
+    public void register(@NotNull final Time date, @NotNull final Drain drain) {
         final ThreadGroup group = Thread.currentThread().getThreadGroup();
         Validate.validState(
             !this.groups.containsKey(group),
@@ -120,7 +121,7 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
             "group %s is not registered",
             group
         );
-        final Long date = this.groups.remove(group);
+        final Time date = this.groups.remove(group);
         Validate.validState(
             this.drains.containsKey(date),
             "work %d is not registered",
@@ -141,14 +142,14 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
     protected void append(final LoggingEvent event) {
         if (this.busy.compareAndSet(false, true)) {
             final ThreadGroup group = Thread.currentThread().getThreadGroup();
-            final Long date = this.groups.get(group);
+            final Time date = this.groups.get(group);
             if (date != null) {
                 try {
                     this.drains.get(date).append(
                         date,
                         Arrays.asList(
                             new Drain.Line.Simple(
-                                System.currentTimeMillis() - date,
+                                date.delta(new Time()),
                                 ConveyerAppender.LEVELS.get(event.getLevel()),
                                 this.layout.format(event)
                             ).toString()

@@ -107,7 +107,7 @@
                 <xsl:call-template name="face">
                     <xsl:with-param name="object" select="spec"/>
                 </xsl:call-template>
-                <xsl:text>; drained through </xsl:text>
+                <xsl:text> drained to </xsl:text>
                 <xsl:call-template name="face">
                     <xsl:with-param name="object" select="drain"/>
                 </xsl:call-template>

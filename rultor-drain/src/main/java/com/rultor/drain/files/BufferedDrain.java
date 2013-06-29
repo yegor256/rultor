@@ -34,6 +34,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Time;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -123,7 +124,7 @@ public final class BufferedDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public SortedSet<Long> pulses() throws IOException {
+    public SortedSet<Time> pulses() throws IOException {
         return this.origin.pulses();
     }
 
@@ -131,7 +132,7 @@ public final class BufferedDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public void append(final long date, final Iterable<String> lines)
+    public void append(final Time date, final Iterable<String> lines)
         throws IOException {
         final PrintWriter out = new PrintWriter(
             new BufferedWriter(new FileWriter(this.extra(date), true))
@@ -148,7 +149,7 @@ public final class BufferedDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public InputStream read(final long date) throws IOException {
+    public InputStream read(final Time date) throws IOException {
         final File body = this.body(date);
         final File extra = this.extra(date);
         synchronized (this.dir) {
@@ -184,7 +185,7 @@ public final class BufferedDrain implements Drain {
      * @param delay In how many milliseconds to do this checking
      * @throws IOException If IO error
      */
-    private void watch(final long date, final long delay) throws IOException {
+    private void watch(final Time date, final long delay) throws IOException {
         new Thread(
             new Runnable() {
                 @Override
@@ -210,7 +211,7 @@ public final class BufferedDrain implements Drain {
      * @param date Pulse date
      * @throws IOException If IO error
      */
-    private void clean(final long date) throws IOException {
+    private void clean(final Time date) throws IOException {
         final File body = this.body(date);
         final File extra = this.extra(date);
         synchronized (this.dir) {
@@ -228,7 +229,7 @@ public final class BufferedDrain implements Drain {
      * @param date Date of the pulse
      * @throws IOException If IO problem inside
      */
-    private void flush(final long date) throws IOException {
+    private void flush(final Time date) throws IOException {
         final File extra = this.extra(date);
         final BufferedReader reader = new BufferedReader(
             new InputStreamReader(new FileInputStream(extra), Charsets.UTF_8)
@@ -254,7 +255,7 @@ public final class BufferedDrain implements Drain {
      * @param date Date of pulse
      * @return File with body
      */
-    private File body(final long date) {
+    private File body(final Time date) {
         return this.file(date, "body");
     }
 
@@ -263,7 +264,7 @@ public final class BufferedDrain implements Drain {
      * @param date Date of pulse
      * @return File with lines
      */
-    private File extra(final long date) {
+    private File extra(final Time date) {
         return this.file(date, "extra");
     }
 
@@ -273,10 +274,10 @@ public final class BufferedDrain implements Drain {
      * @param ext Extension
      * @return File
      */
-    private File file(final long date, final String ext) {
+    private File file(final Time date, final String ext) {
         final File folder = new File(this.dir);
         folder.mkdirs();
-        return new File(folder, String.format("%d.%s", date, ext));
+        return new File(folder, String.format("%d.%s", date.millis(), ext));
     }
 
 }

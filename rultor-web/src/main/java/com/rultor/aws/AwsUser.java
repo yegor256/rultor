@@ -48,6 +48,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
@@ -174,7 +175,7 @@ final class AwsUser implements User {
      * Fetch all units.
      * @return Map of them
      */
-    @Cacheable
+    @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
     private Map<String, Unit> fetch() {
         final ConcurrentMap<String, Unit> units =
             new ConcurrentSkipListMap<String, Unit>();

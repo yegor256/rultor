@@ -43,9 +43,11 @@
     <links>
         <link href="/xml/index.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
+        <link href="/xml/index.xml" rel="more" type="text/xml"/>
     </links>
     <millis>16</millis>
     <unit>nightly-build</unit>
+    <since>2012-08-23T13:25:33Z</since>
     <pulses>
         <pulse>
             <date>2012-08-23T13:25:33Z</date>

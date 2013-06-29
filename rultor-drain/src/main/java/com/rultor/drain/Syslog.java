@@ -32,6 +32,7 @@ package com.rultor.drain;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Time;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +40,6 @@ import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.Date;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import javax.validation.constraints.NotNull;
@@ -112,20 +112,19 @@ public final class Syslog implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public SortedSet<Long> pulses() throws IOException {
-        return new TreeSet<Long>();
+    public SortedSet<Time> pulses() throws IOException {
+        return new TreeSet<Time>();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void append(final long date, final Iterable<String> lines)
+    public void append(final Time date, final Iterable<String> lines)
         throws IOException {
-        final Date time = new Date(date);
         for (String line : lines) {
             this.send(
-                this.compose(String.format("%tF %<tT %s", time, line))
+                this.compose(String.format("%s %s", date, line))
             );
         }
     }
@@ -134,7 +133,7 @@ public final class Syslog implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public InputStream read(final long date) throws IOException {
+    public InputStream read(final Time date) throws IOException {
         throw new IllegalArgumentException("there are no pulses");
     }
 

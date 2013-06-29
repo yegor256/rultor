@@ -39,10 +39,10 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.S3Client;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Time;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -108,20 +108,19 @@ public final class S3Drain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public SortedSet<Long> pulses() {
-        final SortedSet<Long> numbers =
-            new TreeSet<Long>(Collections.reverseOrder());
+    public SortedSet<Time> pulses() {
+        final SortedSet<Time> numbers =
+            new TreeSet<Time>(Collections.reverseOrder());
         final AmazonS3 aws = this.client.get();
         final ListObjectsRequest request = new ListObjectsRequest()
             .withBucketName(this.client.bucket())
-            .withMaxKeys(Tv.TEN)
             .withPrefix(this.prefix);
         final ObjectListing listing = aws.listObjects(request);
         for (S3ObjectSummary sum : listing.getObjectSummaries()) {
             numbers.add(
                 Key.valueOf(
                     sum.getKey().substring(this.prefix.length())
-                ).date().getTime()
+                ).time()
             );
         }
         return Collections.unmodifiableSortedSet(numbers);
@@ -131,7 +130,7 @@ public final class S3Drain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public void append(final long date, final Iterable<String> lines)
+    public void append(final Time date, final Iterable<String> lines)
         throws IOException {
         final String key = this.key(date);
         final AmazonS3 aws = this.client.get();
@@ -188,7 +187,7 @@ public final class S3Drain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public InputStream read(final long date) throws IOException {
+    public InputStream read(final Time date) throws IOException {
         final String key = this.key(date);
         final AmazonS3 aws = this.client.get();
         String content;
@@ -229,7 +228,7 @@ public final class S3Drain implements Drain {
      * @param date The date
      * @return S3 object key
      */
-    private String key(final long date) {
+    private String key(final Time date) {
         return String.format("%s%s", this.prefix, new Key(date));
     }
 

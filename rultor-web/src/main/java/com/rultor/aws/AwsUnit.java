@@ -42,6 +42,7 @@ import com.jcabi.urn.URN;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -136,7 +137,7 @@ final class AwsUnit implements Unit {
      */
     @Override
     @NotNull
-    @Cacheable
+    @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
     public Spec spec() {
         Spec spec;
         if (this.item().has(AwsUnit.FIELD_SPEC)) {
@@ -151,7 +152,7 @@ final class AwsUnit implements Unit {
      * {@inheritDoc}
      */
     @Override
-    @Cacheable
+    @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
     public Spec drain() {
         Spec spec;
         if (this.item().has(AwsUnit.FIELD_DRAIN)) {

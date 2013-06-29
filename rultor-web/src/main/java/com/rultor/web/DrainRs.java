@@ -29,7 +29,9 @@
  */
 package com.rultor.web;
 
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
@@ -37,6 +39,7 @@ import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Stage;
+import com.rultor.spi.Time;
 import com.rultor.spi.Unit;
 import java.io.IOException;
 import java.util.Collection;
@@ -48,7 +51,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
  * Drain of a unit.
@@ -56,6 +58,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Path("/drain/{unit:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
@@ -67,11 +70,6 @@ public final class DrainRs extends BaseRs {
     public static final String QUERY_SINCE = "since";
 
     /**
-     * Maximum number of pulses to show.
-     */
-    private static final int MAX = 10;
-
-    /**
      * Unit name.
      */
     private transient String name;
@@ -79,7 +77,7 @@ public final class DrainRs extends BaseRs {
     /**
      * Since (date).
      */
-    private transient Long since;
+    private transient Time since;
 
     /**
      * Inject it from query.
@@ -96,10 +94,8 @@ public final class DrainRs extends BaseRs {
      */
     @QueryParam(DrainRs.QUERY_SINCE)
     public void setSince(final String time) {
-        if (time == null) {
-            this.since = Long.MAX_VALUE;
-        } else {
-            this.since = Long.parseLong(time);
+        if (time != null) {
+            this.since = new Time(Long.parseLong(time));
         }
     }
 
@@ -111,14 +107,48 @@ public final class DrainRs extends BaseRs {
     @GET
     @Path("/")
     public Response index() throws Exception {
-        return new PageBuilder()
+        EmptyPage page = new PageBuilder()
             .stylesheet("/xsl/drain.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(new JaxbBundle("unit", this.name))
-            .append(this.pulses())
-            .render()
-            .build();
+            .append(new JaxbBundle("since", this.since.toString()))
+            .append(new JaxbBundle("unit", this.name));
+        final Drain drain = Drain.class.cast(
+            new Repo.Cached(this.repo(), this.user(), this.unit().drain()).get()
+        );
+        final SortedSet<Time> pulses = drain.pulses();
+        final Iterable<Time> visible;
+        if (this.since == null) {
+            visible = Iterables.limit(pulses, Tv.TEN);
+            if (pulses.size() > Tv.TEN) {
+                page = page.link(
+                    new Link(
+                        "more",
+                        this.uriInfo()
+                            .getBaseUriBuilder()
+                            .clone()
+                            .path(DrainRs.class)
+                            .queryParam(
+                                DrainRs.QUERY_SINCE,
+                                Iterables.getLast(visible).millis()
+                            )
+                            .build(this.name)
+                    )
+                );
+            }
+        } else {
+            visible = Iterables.limit(pulses.tailSet(this.since), Tv.TWENTY);
+            page = page.link(
+                new Link(
+                    "latest",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(DrainRs.class)
+                        .build(this.name)
+                )
+            );
+        }
+        return page.append(this.pulses(drain, visible)).render().build();
     }
 
     /**
@@ -139,18 +169,17 @@ public final class DrainRs extends BaseRs {
 
     /**
      * All pulses of the unit.
+     * @param drain Drain to get data from
+     * @param pulses All pulses to show
      * @return Collection of JAXB units
      * @throws Exception If fails
      */
-    private JaxbBundle pulses() throws Exception {
-        final Drain drain = Drain.class.cast(
-            new Repo.Cached(this.repo(), this.user(), this.unit().drain()).get()
-        );
-        final SortedSet<Long> pulses = drain.pulses().tailSet(this.since);
+    private JaxbBundle pulses(final Drain drain,
+        final Iterable<Time> pulses) throws Exception {
         return new JaxbBundle("pulses").add(
-            new JaxbBundle.Group<Long>(pulses) {
+            new JaxbBundle.Group<Time>(pulses) {
                 @Override
-                public JaxbBundle bundle(final Long date) {
+                public JaxbBundle bundle(final Time date) {
                     return DrainRs.this.pulse(drain, date);
                 }
             }
@@ -163,7 +192,7 @@ public final class DrainRs extends BaseRs {
      * @param date Date of it
      * @return Bundle
      */
-    private JaxbBundle pulse(final Drain drain, final Long date) {
+    private JaxbBundle pulse(final Drain drain, final Time date) {
         final Pulse pulse = new Pulse(date, drain);
         final Collection<Stage> stages;
         try {
@@ -182,10 +211,7 @@ public final class DrainRs extends BaseRs {
                 }
             )
             .up()
-            .add(
-                "date",
-                DateFormatUtils.formatUTC(date, "yyyy-MM-dd'T'HH:mm'Z'")
-            )
+            .add("date", date.toString())
             .up()
             .link(
                 new Link(
@@ -193,7 +219,7 @@ public final class DrainRs extends BaseRs {
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(PulseRs.class)
-                        .build(this.name, date)
+                        .build(this.name, date.millis())
                 )
             )
             .link(
@@ -204,7 +230,7 @@ public final class DrainRs extends BaseRs {
                         .clone()
                         .path(PulseRs.class)
                         .path(PulseRs.class, "stream")
-                        .build(this.name, date)
+                        .build(this.name, date.millis())
                 )
             );
     }
@@ -215,7 +241,7 @@ public final class DrainRs extends BaseRs {
      * @param stage Stage to convert
      * @return Bundle
      */
-    private JaxbBundle stage(final Long date, final Stage stage) {
+    private JaxbBundle stage(final Time date, final Stage stage) {
         return new JaxbBundle("stage")
             .add("result", stage.result().toString())
             .up()
@@ -235,7 +261,7 @@ public final class DrainRs extends BaseRs {
                         .path(PulseRs.class)
                         .queryParam(PulseRs.QUERY_START, stage.start())
                         .queryParam(PulseRs.QUERY_STOP, stage.stop())
-                        .build(this.name, date)
+                        .build(this.name, date.millis())
                 )
             );
     }

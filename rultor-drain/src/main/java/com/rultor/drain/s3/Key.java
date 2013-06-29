@@ -30,8 +30,8 @@
 package com.rultor.drain.s3;
 
 import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Time;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -67,13 +67,13 @@ final class Key implements Comparable<Key> {
     /**
      * Date.
      */
-    private final transient long when;
+    private final transient Time when;
 
     /**
      * Private ctor.
      * @param date Date
      */
-    protected Key(final long date) {
+    protected Key(final Time date) {
         this.when = date;
     }
 
@@ -83,14 +83,14 @@ final class Key implements Comparable<Key> {
     @Override
     public String toString() {
         final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        cal.setTimeInMillis(this.when);
+        cal.setTimeInMillis(this.when.millis());
         return String.format(
             "%d/%d/%d/%s.txt",
             // @checkstyle MagicNumber (3 lines)
             9999 - cal.get(Calendar.YEAR),
             99 - cal.get(Calendar.MONTH),
             99 - cal.get(Calendar.DAY_OF_MONTH),
-            Long.MAX_VALUE - this.when
+            Long.MAX_VALUE - this.when.millis()
         );
     }
 
@@ -106,7 +106,9 @@ final class Key implements Comparable<Key> {
                 String.format("invalid key '%s'", text)
             );
         }
-        return new Key(Long.MAX_VALUE - Long.parseLong(matcher.group(1)));
+        return new Key(
+            new Time(Long.MAX_VALUE - Long.parseLong(matcher.group(1)))
+        );
     }
 
     /**
@@ -114,15 +116,15 @@ final class Key implements Comparable<Key> {
      */
     @Override
     public int compareTo(final Key key) {
-        return Long.compare(key.when, this.when);
+        return key.when.compareTo(this.when);
     }
 
     /**
-     * Get date.
-     * @return S3 client
+     * Get time.
+     * @return Time
      */
-    public Date date() {
-        return new Date(this.when);
+    public Time time() {
+        return this.when;
     }
 
 }

@@ -31,6 +31,7 @@ package com.rultor.drain.files;
 
 import com.google.common.io.Files;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Time;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Random;
@@ -55,7 +56,7 @@ public final class DirectoryDrainTest {
     public void logsAndReads() throws Exception {
         final File dir = Files.createTempDir();
         final Drain drain = new DirectoryDrain(new File(dir, "temp/a/c"));
-        final long date = new Random().nextLong();
+        final Time date = new Time(Math.abs(new Random().nextLong()));
         final String first = "some \t\u20ac\tfdsfs";
         final String second = "somefffffds900-4932%^&$%^&#%@^&!\u20ac\tfdsfs";
         MatcherAssert.assertThat(

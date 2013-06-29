@@ -57,7 +57,7 @@ public final class Pulse {
     /**
      * Date of start.
      */
-    private final transient long date;
+    private final transient Time date;
 
     /**
      * Drain.
@@ -69,7 +69,7 @@ public final class Pulse {
      * @param time When was it started
      * @param drn Drain
      */
-    public Pulse(final long time, final Drain drn) {
+    public Pulse(final Time time, final Drain drn) {
         this.date = time;
         this.drain = drn;
     }

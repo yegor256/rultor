@@ -51,7 +51,7 @@ public interface Work {
      * @return Milliseconds
      */
     @NotNull
-    long started();
+    Time started();
 
     /**
      * Owner of this work.
@@ -85,7 +85,7 @@ public interface Work {
         /**
          * When started.
          */
-        private final transient long time;
+        private final transient Time time;
         /**
          * Owner of it.
          */
@@ -106,7 +106,7 @@ public interface Work {
          */
         public Simple(@NotNull final URN owner, @NotNull final String name,
             @NotNull final Spec spec) {
-            this(owner, name, spec, System.currentTimeMillis());
+            this(owner, name, spec, new Time());
         }
         /**
          * Public ctor.
@@ -117,7 +117,7 @@ public interface Work {
          * @checkstyle ParameterNumber (5 lines)
          */
         public Simple(@NotNull final URN owner, @NotNull final String name,
-            @NotNull final Spec spec, final long when) {
+            @NotNull final Spec spec, final Time when) {
             this.urn = owner;
             this.label = name;
             this.desc = spec;
@@ -127,7 +127,7 @@ public interface Work {
          * {@inheritDoc}
          */
         @Override
-        public long started() {
+        public Time started() {
             return this.time;
         }
         /**

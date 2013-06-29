@@ -58,7 +58,7 @@ public interface Drain {
      * @return List of them
      * @throws IOException If some IO problem inside
      */
-    SortedSet<Long> pulses() throws IOException;
+    SortedSet<Time> pulses() throws IOException;
 
     /**
      * Append a few lines to the pulse related to the given date.
@@ -66,7 +66,7 @@ public interface Drain {
      * @param lines Lines to append
      * @throws IOException If some IO problem inside
      */
-    void append(long date, Iterable<String> lines) throws IOException;
+    void append(Time date, Iterable<String> lines) throws IOException;
 
     /**
      * Read the pulse by date of start.
@@ -74,7 +74,7 @@ public interface Drain {
      * @return The input stream with data
      * @throws IOException If some IO problem inside
      */
-    InputStream read(long date) throws IOException;
+    InputStream read(Time date) throws IOException;
 
     /**
      * One line in the drain.

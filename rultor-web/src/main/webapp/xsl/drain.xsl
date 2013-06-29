@@ -39,20 +39,37 @@
     <xsl:template name="content">
         <xsl:choose>
             <xsl:when test="/page/pulses/pulse">
+                <xsl:if test="/page/since">
+                    <div>
+                        <ul class="inline">
+                            <li>
+                                <xsl:text>Since </xsl:text>
+                                <xsl:value-of select="/page/since"/>
+                            </li>
+                            <li>
+                                <a title="back to start">
+                                    <xsl:attribute name="href">
+                                        <xsl:value-of select="links/link[@rel='latest']/@href"/>
+                                    </xsl:attribute>
+                                    <xsl:text>back to start</xsl:text>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </xsl:if>
                 <ul class="nav">
                     <xsl:apply-templates select="/page/pulses/pulse"/>
                 </ul>
-                <p>
-                    <xsl:text>
-                        Very short and thus non-important pulses are
-                        removed automatically in five minutes. Drain is
-                        explained in details in
-                    </xsl:text>
-                    <a href="http://blog.rultor.com">
-                        <xsl:text>this article</xsl:text>
+                <xsl:if test="/page/links/link[@rel='more']">
+                    <xsl:text>See </xsl:text>
+                    <a title="more">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='more']/@href"/>
+                        </xsl:attribute>
+                        <xsl:text>more</xsl:text>
                     </a>
-                    <xsl:text>.</xsl:text>
-                </p>
+                    <xsl:text> pulses.</xsl:text>
+                </xsl:if>
             </xsl:when>
             <xsl:otherwise>
                 <p>
@@ -69,9 +86,9 @@
                 </li>
                 <li>
                     <a title="see details">
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="links/link[@rel='see']/@href"/>
-                            </xsl:attribute>
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='see']/@href"/>
+                        </xsl:attribute>
                         <xsl:value-of select="date"/>
                     </a>
                 </li>

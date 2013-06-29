@@ -29,9 +29,9 @@
  */
 package com.rultor.drain.s3;
 
-import com.jcabi.aspects.Tv;
 import com.rultor.aws.S3Client;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Time;
 import java.util.Arrays;
 import java.util.SortedSet;
 import org.apache.commons.io.IOUtils;
@@ -77,10 +77,10 @@ public final class S3DrainITCase {
     public void logsMessages() throws Exception {
         Assume.assumeNotNull(this.client);
         final String msg = "some test log message \u20ac";
-        final long date = Tv.MILLION;
+        final Time date = new Time();
         final Drain drain = new S3Drain(this.client, "S3DrainITCase/");
         drain.append(date, Arrays.asList(msg));
-        final SortedSet<Long> names = drain.pulses();
+        final SortedSet<Time> names = drain.pulses();
         MatcherAssert.assertThat(names, Matchers.hasItem(date));
         MatcherAssert.assertThat(
             IOUtils.toString(drain.read(date), CharEncoding.UTF_8),

@@ -29,8 +29,8 @@
  */
 package com.rultor.drain;
 
-import com.jcabi.aspects.Tv;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Time;
 import java.util.Arrays;
 import org.junit.Test;
 
@@ -48,7 +48,7 @@ public final class SyslogITCase {
     @Test
     public void logsMessages() throws Exception {
         final String msg = "some test log message \u20ac";
-        final long date = Tv.MILLION;
+        final Time date = new Time();
         final Drain drain = new Syslog("logs.papertrailapp.com", 33152);
         drain.append(date, Arrays.asList(msg));
     }

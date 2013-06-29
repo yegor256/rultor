@@ -27,48 +27,33 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.drain.s3;
+package com.rultor.spi;
 
-import com.rultor.spi.Time;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link Key}.
+ * Test case for {@link Time}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class KeyTest {
+public final class TimeTest {
 
     /**
-     * Key can make a string.
+     * Time can print and parse.
      * @throws Exception If some problem inside
      */
     @Test
-    public void makesString() throws Exception {
-        final Time date = new Time(854384894302L);
+    public void printsAndParses() throws Exception {
+        final Time time = new Time();
         MatcherAssert.assertThat(
-            new Key(date),
-            Matchers.hasToString("8002/99/72/9223371182469881505.txt")
+            new Time(time.toString()).toString(),
+            Matchers.equalTo(time.toString())
         );
         MatcherAssert.assertThat(
-            Key.valueOf(new Key(date).toString()),
-            Matchers.equalTo(new Key(date))
-        );
-    }
-
-    /**
-     * Key can compare in the right order.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void comparesWithOtherKey() throws Exception {
-        final Time left = new Time();
-        final Time right = new Time(left.millis() + 1);
-        MatcherAssert.assertThat(
-            new Key(left),
-            Matchers.greaterThan(new Key(right))
+            new Time(time.millis()).toString(),
+            Matchers.equalTo(time.toString())
         );
     }
 

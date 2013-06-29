@@ -32,6 +32,7 @@ package com.rultor.drain.files;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Time;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -90,8 +91,9 @@ public final class DirectoryDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public SortedSet<Long> pulses() throws IOException {
-        final SortedSet<Long> numbers = new TreeSet<Long>();
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    public SortedSet<Time> pulses() throws IOException {
+        final SortedSet<Time> numbers = new TreeSet<Time>();
         final File folder = new File(this.dir);
         if (folder.exists()) {
             final Collection<File> files = FileUtils.listFiles(
@@ -99,8 +101,10 @@ public final class DirectoryDrain implements Drain {
             );
             for (File file : files) {
                 numbers.add(
-                    Long.valueOf(
-                        FilenameUtils.getBaseName(file.getAbsolutePath())
+                    new Time(
+                        Long.valueOf(
+                            FilenameUtils.getBaseName(file.getAbsolutePath())
+                        )
                     )
                 );
             }
@@ -112,7 +116,7 @@ public final class DirectoryDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public void append(final long date, final Iterable<String> lines)
+    public void append(final Time date, final Iterable<String> lines)
         throws IOException {
         final PrintWriter out = new PrintWriter(
             new BufferedWriter(new FileWriter(this.file(date), true))
@@ -127,7 +131,7 @@ public final class DirectoryDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public InputStream read(final long date) throws IOException {
+    public InputStream read(final Time date) throws IOException {
         final File file = this.file(date);
         final InputStream stream;
         if (file.exists()) {
@@ -143,10 +147,10 @@ public final class DirectoryDrain implements Drain {
      * @param date Date of pulse
      * @return File with body
      */
-    private File file(final long date) {
+    private File file(final Time date) {
         final File folder = new File(this.dir);
         folder.mkdirs();
-        return new File(folder, String.format("%d.log", date));
+        return new File(folder, String.format("%d.log", date.millis()));
     }
 
 }

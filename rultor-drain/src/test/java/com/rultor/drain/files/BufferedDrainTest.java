@@ -32,6 +32,7 @@ package com.rultor.drain.files;
 import com.google.common.io.Files;
 import com.jcabi.aspects.Tv;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Time;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Random;
@@ -59,14 +60,14 @@ public final class BufferedDrainTest {
         final File dir = Files.createTempDir();
         final Drain origin = Mockito.mock(Drain.class);
         Mockito.doReturn(IOUtils.toInputStream(""))
-            .when(origin).read(Mockito.anyLong());
+            .when(origin).read(Mockito.any(Time.class));
         final Drain drain = new BufferedDrain(
             TimeUnit.SECONDS.toMillis(1),
             TimeUnit.SECONDS.toMillis(Tv.FIVE),
             new File(dir, "a/b/c"),
             origin
         );
-        final long date = new Random().nextLong();
+        final Time date = new Time(Math.abs(new Random().nextLong()));
         final String first = "some \t\u20ac\tfdsfs";
         final String second = "somefffffds900-4932%^&$%^&#%@^&!\u20ac\tfdsfs";
         MatcherAssert.assertThat(

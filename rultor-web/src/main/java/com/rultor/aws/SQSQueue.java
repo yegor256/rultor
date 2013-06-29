@@ -48,6 +48,7 @@ import com.jcabi.urn.URN;
 import com.rultor.spi.Metricable;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Time;
 import com.rultor.spi.Work;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -71,6 +72,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "client")
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class SQSQueue implements Queue, Metricable {
 
     /**
@@ -209,7 +211,7 @@ public final class SQSQueue implements Queue, Metricable {
         final JsonGenerator generator = Json.createGenerator(writer);
         generator.writeStartObject()
             .write(SQSQueue.KEY_OWNER, work.owner().toString())
-            .write(SQSQueue.KEY_STARTED, work.started())
+            .write(SQSQueue.KEY_STARTED, work.started().toString())
             .write(SQSQueue.KEY_UNIT, work.unit())
             .write(SQSQueue.KEY_SPEC, work.spec().asText())
             .writeEnd()
@@ -229,7 +231,7 @@ public final class SQSQueue implements Queue, Metricable {
             URN.create(object.getString(SQSQueue.KEY_OWNER)),
             object.getString(SQSQueue.KEY_UNIT),
             new Spec.Simple(object.getString(SQSQueue.KEY_SPEC)),
-            object.getJsonNumber(SQSQueue.KEY_STARTED).longValue()
+            new Time(object.getString(SQSQueue.KEY_STARTED))
         );
     }
 

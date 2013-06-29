@@ -37,6 +37,7 @@ import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Stage;
+import com.rultor.spi.Time;
 import com.rultor.spi.Unit;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -49,7 +50,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
  * Single pulse.
@@ -58,6 +58,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
  * @version $Id$
  * @since 1.0
  * @checkstyle MultipleStringLiterals (500 lines)
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Path("/pulse/{name:[\\w\\-]+}/{date:\\d+}")
 @Loggable(Loggable.DEBUG)
@@ -81,7 +82,7 @@ public final class PulseRs extends BaseRs {
     /**
      * Pulse date.
      */
-    private transient long date;
+    private transient Time date;
 
     /**
      * Inject it from query.
@@ -98,7 +99,7 @@ public final class PulseRs extends BaseRs {
      */
     @PathParam("date")
     public void setDate(@NotNull final String time) {
-        this.date = Long.parseLong(time);
+        this.date = new Time(Long.parseLong(time));
     }
 
     /**
@@ -118,7 +119,7 @@ public final class PulseRs extends BaseRs {
             .append(
                 new JaxbBundle(
                     "pulse",
-                    Long.toString(this.date)
+                    Long.toString(this.date.millis())
                 )
             )
             .append(
@@ -127,14 +128,7 @@ public final class PulseRs extends BaseRs {
                     this.pulse().spec().asText()
                 )
             )
-            .append(
-                new JaxbBundle(
-                    "date",
-                    DateFormatUtils.formatUTC(
-                        this.date, "yyyy-MM-dd'T'HH:mm'Z'"
-                    )
-                )
-            )
+            .append(new JaxbBundle("date", this.date.toString()))
             .append(
                 new JaxbBundle("stages").add(
                     new JaxbBundle.Group<Stage>(this.pulse().stages()) {
@@ -152,7 +146,7 @@ public final class PulseRs extends BaseRs {
                         .clone()
                         .path(PulseRs.class)
                         .path(PulseRs.class, "stream")
-                        .build(this.name, this.date)
+                        .build(this.name, this.date.millis())
                 )
             )
             .render()
@@ -230,7 +224,7 @@ public final class PulseRs extends BaseRs {
                         .path(PulseRs.class, "stream")
                         .queryParam(PulseRs.QUERY_START, stage.start())
                         .queryParam(PulseRs.QUERY_STOP, stage.stop())
-                        .build(this.name, this.date)
+                        .build(this.name, this.date.millis())
                 )
             );
     }
