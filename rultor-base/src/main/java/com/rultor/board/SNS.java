@@ -29,18 +29,18 @@
  */
 package com.rultor.board;
 
-import com.rultor.aws.SNSClient;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rultor.aws.SNSClient;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
  * Amazon SNS.
- *
+ * 
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
