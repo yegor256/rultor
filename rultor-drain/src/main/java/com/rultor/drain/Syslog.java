@@ -32,8 +32,10 @@ package com.rultor.drain;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Drain;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -42,7 +44,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.codec.CharEncoding;
 
 /**
  * Syslog.
@@ -51,6 +52,7 @@ import org.apache.commons.codec.CharEncoding;
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @see <a href="http://tools.ietf.org/html/rfc5424">RFC 5424</a>
  */
 @Immutable
 @EqualsAndHashCode
@@ -70,19 +72,29 @@ public final class Syslog implements Drain {
     /**
      * Facility.
      */
-    private final transient String facility;
+    private final transient int priority;
 
     /**
      * Public ctor.
      * @param hst Host
      * @param prt Port
-     * @param fac Facility
+     * @param pri Priority
      */
     public Syslog(@NotNull final String hst, @NotNull final int prt,
-        @NotNull final String fac) {
+        @NotNull final int pri) {
         this.host = hst;
         this.port = prt;
-        this.facility = fac;
+        this.priority = pri;
+    }
+
+    /**
+     * Public ctor.
+     * @param hst Host
+     * @param prt Port
+     */
+    public Syslog(@NotNull final String hst, @NotNull final int prt) {
+        // @checkstyle MagicNumber (1 line)
+        this(hst, prt, 14);
     }
 
     /**
@@ -91,8 +103,8 @@ public final class Syslog implements Drain {
     @Override
     public String toString() {
         return String.format(
-            "`syslog://%s:%s` as `%s`",
-            this.host, this.port, this.facility
+            "`syslog://%s:%s`",
+            this.host, this.port
         );
     }
 
@@ -113,9 +125,7 @@ public final class Syslog implements Drain {
         final Date time = new Date(date);
         for (String line : lines) {
             this.send(
-                String.format(
-                    "%tF %<tT %s", time, line
-                ).getBytes(CharEncoding.UTF_8)
+                this.compose(String.format("%tF %<tT %s", time, line))
             );
         }
     }
@@ -143,6 +153,25 @@ public final class Syslog implements Drain {
                 this.port
             )
         );
+    }
+
+    /**
+     * Compose a packet for Syslog.
+     * @param text Text to use
+     * @return Bytes for syslog
+     */
+    private byte[] compose(final String text) {
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final PrintWriter writer = new PrintWriter(baos);
+        writer.append(String.format("<%d>1 - - - - - - ", this.priority));
+        writer.flush();
+        // @checkstyle MagicNumber (3 lines)
+        baos.write(0xEF);
+        baos.write(0xBB);
+        baos.write(0xBF);
+        writer.append(text);
+        writer.flush();
+        return baos.toByteArray();
     }
 
 }

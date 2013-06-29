@@ -49,7 +49,7 @@ public final class SyslogITCase {
     public void logsMessages() throws Exception {
         final String msg = "some test log message \u20ac";
         final long date = Tv.MILLION;
-        final Drain drain = new Syslog("logs.papertrailapp.com", 33152, "TEST");
+        final Drain drain = new Syslog("logs.papertrailapp.com", 33152);
         drain.append(date, Arrays.asList(msg));
     }
 
