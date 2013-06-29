@@ -81,14 +81,16 @@
                         </code>
                     </li>
                 </xsl:if>
-                <li>
-                    <a title="drain">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='drain']/@href"/>
-                        </xsl:attribute>
-                        <i class="icon-chevron-sign-right"><xsl:comment>drain</xsl:comment></i>
-                    </a>
-                </li>
+                <xsl:if test="drain/type != 'com.rultor.drain.Trash'">
+                    <li>
+                        <a title="drain">
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="links/link[@rel='drain']/@href"/>
+                            </xsl:attribute>
+                            <i class="icon-chevron-sign-right"><xsl:comment>drain</xsl:comment></i>
+                        </a>
+                    </li>
+                </xsl:if>
                 <li>
                     <a onclick="return confirm('Are you sure?');"
                         title="delete this unit">
