@@ -115,28 +115,13 @@ public final class DrainRs extends BaseRs {
         final Drain drain = Drain.class.cast(
             new Repo.Cached(this.repo(), this.user(), this.unit().drain()).get()
         );
-        final SortedSet<Time> pulses = drain.pulses();
+        SortedSet<Time> pulses = drain.pulses();
         final Iterable<Time> visible;
         if (this.since == null) {
             visible = Iterables.limit(pulses, Tv.TEN);
-            if (pulses.size() > Tv.TEN) {
-                page = page.link(
-                    new Link(
-                        "more",
-                        this.uriInfo()
-                            .getBaseUriBuilder()
-                            .clone()
-                            .path(DrainRs.class)
-                            .queryParam(
-                                DrainRs.QUERY_SINCE,
-                                Iterables.getLast(visible).millis()
-                            )
-                            .build(this.name)
-                    )
-                );
-            }
         } else {
-            visible = Iterables.limit(pulses.tailSet(this.since), Tv.TWENTY);
+            pulses = pulses.tailSet(this.since);
+            visible = Iterables.limit(pulses, Tv.TWENTY);
             page = page
                 .append(new JaxbBundle("since", this.since.toString()))
                 .link(
@@ -148,6 +133,22 @@ public final class DrainRs extends BaseRs {
                             .build(this.name)
                     )
                 );
+        }
+        if (pulses.size() > Iterables.size(visible)) {
+            page = page.link(
+                new Link(
+                    "more",
+                    this.uriInfo()
+                        .getBaseUriBuilder()
+                        .clone()
+                        .path(DrainRs.class)
+                        .queryParam(
+                            DrainRs.QUERY_SINCE,
+                            Iterables.getLast(visible).millis()
+                        )
+                        .build(this.name)
+                )
+            );
         }
         return page.append(this.pulses(drain, visible)).render().build();
     }
