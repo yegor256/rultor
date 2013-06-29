@@ -33,7 +33,7 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
-            <xsl:text>pulses</xsl:text>
+            <xsl:apply-templates select="/page/unit"/>
         </title>
     </xsl:template>
     <xsl:template name="content">

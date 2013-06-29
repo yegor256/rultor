@@ -92,6 +92,7 @@ final class LoggableInstance implements Instance {
      */
     @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
         this.appender.register(this.work.started(), this.drain);
         try {
