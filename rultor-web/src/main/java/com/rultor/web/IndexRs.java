@@ -44,6 +44,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * Index resource, front page of the website.
@@ -131,10 +132,9 @@ public final class IndexRs extends BaseRs {
         String face;
         String error = "";
         try {
-            face = this.repo().make(this.user(), unit.spec())
-                .toString()
-                .replaceAll("`([^`]+)`", "<code>$1</code>")
-                .replaceAll("`\\[(.*)\\]\\((.*)\\)`", "<a href='$2'>$1</a>");
+            face = StringEscapeUtils.escapeHtml4(
+                this.repo().make(this.user(), unit.spec()).toString()
+            ).replaceAll("`([^`]+)`", "<code>$1</code>");
         } catch (Repo.InstantiationException ex) {
             face = ex.getMessage();
             error = "yes";
