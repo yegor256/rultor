@@ -111,7 +111,6 @@ public final class DrainRs extends BaseRs {
             .stylesheet("/xsl/drain.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(new JaxbBundle("since", this.since.toString()))
             .append(new JaxbBundle("unit", this.name));
         final Drain drain = Drain.class.cast(
             new Repo.Cached(this.repo(), this.user(), this.unit().drain()).get()
@@ -138,15 +137,17 @@ public final class DrainRs extends BaseRs {
             }
         } else {
             visible = Iterables.limit(pulses.tailSet(this.since), Tv.TWENTY);
-            page = page.link(
-                new Link(
-                    "latest",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(DrainRs.class)
-                        .build(this.name)
-                )
-            );
+            page = page
+                .append(new JaxbBundle("since", this.since.toString()))
+                .link(
+                    new Link(
+                        "latest",
+                        this.uriInfo().getBaseUriBuilder()
+                            .clone()
+                            .path(DrainRs.class)
+                            .build(this.name)
+                    )
+                );
         }
         return page.append(this.pulses(drain, visible)).render().build();
     }
