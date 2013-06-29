@@ -50,7 +50,6 @@ import java.util.SortedSet;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -63,7 +62,6 @@ import org.apache.commons.io.IOUtils;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@ToString
 @EqualsAndHashCode(of = { "dir", "origin" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.TooManyMethods" })
@@ -97,12 +95,27 @@ public final class BufferedDrain implements Drain {
      * @param drain Original drain
      * @checkstyle ParameterNumber (5 lines)
      */
-    protected BufferedDrain(final long max, final long age,
+    public BufferedDrain(final long max, final long age,
         @NotNull final File folder, @NotNull final Drain drain) {
         this.maximum = max;
         this.lifetime = age;
         this.dir = folder.getAbsolutePath();
         this.origin = drain;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format(
+            // @checkstyle LineLength (1 line)
+            "%s buffered at `%s` with %[ms]s flush interval and %[ms]s lifetime",
+            this.origin,
+            this.dir,
+            this.maximum,
+            this.lifetime
+        );
     }
 
     /**

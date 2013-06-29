@@ -44,7 +44,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -58,7 +57,6 @@ import org.apache.commons.io.IOUtils;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@ToString
 @EqualsAndHashCode(of = "dir")
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
@@ -73,8 +71,19 @@ public final class DirectoryDrain implements Drain {
      * Public ctor.
      * @param folder Folder where to keep all files
      */
-    protected DirectoryDrain(@NotNull final File folder) {
+    public DirectoryDrain(@NotNull final File folder) {
         this.dir = folder.getAbsolutePath();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format(
+            "files in `%s` directory",
+            this.dir
+        );
     }
 
     /**

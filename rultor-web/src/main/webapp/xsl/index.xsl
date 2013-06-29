@@ -64,40 +64,42 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="unit">
-        <ul class="inline btn-group-vertical">
-            <li>
-                <a title="edit">
-                    <xsl:attribute name="href">
-                        <xsl:value-of select="links/link[@rel='edit']/@href"/>
-                    </xsl:attribute>
-                    <xsl:value-of select="name"/>
-                </a>
-            </li>
-            <xsl:if test="spec/type">
+        <div>
+            <ul class="inline btn-group-vertical">
                 <li>
-                    <code>
-                        <xsl:value-of select="spec/type"/>
-                    </code>
+                    <a title="edit">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='edit']/@href"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="name"/>
+                    </a>
                 </li>
-            </xsl:if>
-            <li>
-                <a title="drain">
-                    <xsl:attribute name="href">
-                        <xsl:value-of select="links/link[@rel='drain']/@href"/>
-                    </xsl:attribute>
-                    <i class="icon-file-alt"><xsl:comment>drain</xsl:comment></i>
-                </a>
-            </li>
-            <li>
-                <a onclick="return confirm('Are you sure?');"
-                    title="delete this unit">
-                    <xsl:attribute name="href">
-                        <xsl:value-of select="links/link[@rel='remove']/@href"/>
-                    </xsl:attribute>
-                    <i class="icon-remove"><xsl:comment>remove</xsl:comment></i>
-                </a>
-            </li>
-        </ul>
+                <xsl:if test="spec/type">
+                    <li>
+                        <code>
+                            <xsl:value-of select="spec/type"/>
+                        </code>
+                    </li>
+                </xsl:if>
+                <li>
+                    <a title="drain">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='drain']/@href"/>
+                        </xsl:attribute>
+                        <i class="icon-chevron-sign-right"><xsl:comment>drain</xsl:comment></i>
+                    </a>
+                </li>
+                <li>
+                    <a onclick="return confirm('Are you sure?');"
+                        title="delete this unit">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='remove']/@href"/>
+                        </xsl:attribute>
+                        <i class="icon-remove"><xsl:comment>remove</xsl:comment></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
         <xsl:if test="spec/type != 'java.lang.String'">
             <p style="padding-left: 3em;">
                 <xsl:call-template name="face">

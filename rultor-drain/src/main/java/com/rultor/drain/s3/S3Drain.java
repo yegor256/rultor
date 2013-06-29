@@ -53,7 +53,6 @@ import java.util.TreeSet;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -68,7 +67,6 @@ import org.apache.commons.lang3.Validate;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@ToString
 @EqualsAndHashCode(of = "client")
 @Loggable(Loggable.DEBUG)
 public final class S3Drain implements Drain {
@@ -88,10 +86,22 @@ public final class S3Drain implements Drain {
      * @param clnt S3 client
      * @param pfx S3 object prefix
      */
-    protected S3Drain(@NotNull final S3Client clnt, @NotNull final String pfx) {
+    public S3Drain(@NotNull final S3Client clnt, @NotNull final String pfx) {
         this.client = clnt;
         Validate.matchesPattern(pfx, "[\\w\\-\\.]+/");
         this.prefix = pfx;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format(
+            "`%s` at %s",
+            this.prefix,
+            this.client
+        );
     }
 
     /**

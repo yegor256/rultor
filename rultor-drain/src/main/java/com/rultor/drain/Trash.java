@@ -37,7 +37,6 @@ import java.io.InputStream;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Throw-away drain.
@@ -48,10 +47,17 @@ import lombok.ToString;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@ToString
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
 public final class Trash implements Drain {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "trash";
+    }
 
     /**
      * {@inheritDoc}
