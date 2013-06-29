@@ -90,7 +90,9 @@ final class RestUnit implements Unit {
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .rel("/page/links/link[@rel='save']/@href")
                 .post(
-                    String.format("#spec(%s)", spec),
+                    String.format(
+                        "#spec(%s, %s)", spec.asText(), drain.asText()
+                    ),
                     String.format(
                         "spec=%s&drain=%s",
                         URLEncoder.encode(spec.asText(), CharEncoding.UTF_8),

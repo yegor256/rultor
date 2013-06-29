@@ -33,6 +33,7 @@ import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rultor.spi.Drain;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
@@ -141,7 +142,10 @@ public final class UnitRs extends BaseRs {
     @Path("/")
     public Response save(@NotNull @FormParam("spec") final String spec,
         @NotNull @FormParam("drain") final String drain) {
-        this.unit().update(this.parse(spec), this.parse(drain));
+        this.unit().update(
+            this.parse(spec, Object.class),
+            this.parse(drain, Drain.class)
+        );
         throw this.flash().redirect(
             this.uriInfo().getRequestUri(),
             String.format("Unit '%s' successfully saved/updated", this.name),
@@ -168,19 +172,32 @@ public final class UnitRs extends BaseRs {
     /**
      * Make a spec from text.
      * @param text Text
+     * @param type Expected type of it
      * @return Spec
      */
-    private Spec parse(final String text) {
+    private Spec parse(final String text, final Class<?> type) {
         final Spec spec;
         try {
             spec = this.repo().make(text);
         } catch (Repo.InvalidSyntaxException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
+        final Object object;
         try {
-            this.repo().make(this.user(), spec);
+            object = this.repo().make(this.user(), spec);
         } catch (Repo.InstantiationException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
+        }
+        if (!type.isAssignableFrom(object.getClass())) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                String.format(
+                    "%s expected while %s provided",
+                    type.getName(),
+                    object.getClass().getName()
+                ),
+                Level.SEVERE
+            );
         }
         return spec;
     }
