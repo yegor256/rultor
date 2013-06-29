@@ -133,8 +133,8 @@ public final class IndexRs extends BaseRs {
         try {
             face = this.repo().make(this.user(), unit.spec())
                 .toString()
-                .replaceAll("`(.*)`", "<code>\\1</code>")
-                .replaceAll("`\\[(.*)\\]\\((.*)\\)`", "<a href='\\2'>\\1</a>");
+                .replaceAll("`([^`]+)`", "<code>$1</code>")
+                .replaceAll("`\\[(.*)\\]\\((.*)\\)`", "<a href='$2'>$1</a>");
         } catch (Repo.InstantiationException ex) {
             face = ex.getMessage();
             error = "yes";

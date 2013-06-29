@@ -72,8 +72,8 @@
                         src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
                         alt="Fork me on GitHub" />
                 </a>
-                <div class="container">
-                    <ul class="inline" style="padding-top: 3em; padding-bottom: 4em;">
+                <div class="page">
+                    <ul class="inline" style="padding-bottom: 4em;">
                         <li class="hidden-phone">
                             <a class="logo">
                                 <xsl:attribute name="href">
@@ -83,10 +83,7 @@
                             </a>
                         </li>
                         <li class="hidden-phone">
-                            <a>
-                                <xsl:attribute name="href">
-                                    <xsl:value-of select="/page/links/link[@rel='about']/@href"/>
-                                </xsl:attribute>
+                            <a href="http://blog.rultor.com/">
                                 <xsl:text>how it works?</xsl:text>
                             </a>
                         </li>
@@ -124,10 +121,10 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="version">
-        <li>
+        <li class="hidden-phone hidden-tablet">
             <xsl:value-of select="name"/>
         </li>
-        <li class="hidden-phone">
+        <li class="hidden-phone hidden-tablet">
             <a title="see commit in Github">
                 <xsl:attribute name="href">
                     <xsl:text>https://github.com/yegor256/rultor/commit/</xsl:text>
@@ -138,7 +135,7 @@
             <xsl:text> </xsl:text>
             <xsl:value-of select="revision"/>
         </li>
-        <li class="hidden-phone">
+        <li class="hidden-phone hidden-tablet">
             <xsl:call-template name="millis">
                 <xsl:with-param name="millis" select="/page/millis"/>
             </xsl:call-template>
@@ -171,10 +168,10 @@
         </p>
     </xsl:template>
     <xsl:template match="identity">
-        <li class="hidden-phone">
+        <li class="hidden-phone hidden-tablet">
             <code><xsl:value-of select="urn"/></code>
         </li>
-        <li class="hidden-phone">
+        <li class="hidden-phone hidden-tablet">
             <img style="width: 25px; height: 25px;">
                 <xsl:attribute name="src">
                     <xsl:value-of select="photo"/>
@@ -187,7 +184,7 @@
         <li>
             <xsl:value-of select="name"/>
         </li>
-        <li>
+        <li class="hidden-phone">
             <i>
                 <xsl:attribute name="class">
                     <xsl:text>icon-</xsl:text>

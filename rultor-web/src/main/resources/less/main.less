@@ -39,11 +39,15 @@
 @import "variables.less";
 @import "bootstrap.less";
 
+.page {
+    padding: 2em;
+    .clearfix();
+}
+
 .logo {
     font-size: @baseFontSize * 3;
     vertical-align: middle;
     color: @textColor;
-    margin-right: 1em;
 }
     .logo:hover {
         color: darken(@textColor, 15%);
