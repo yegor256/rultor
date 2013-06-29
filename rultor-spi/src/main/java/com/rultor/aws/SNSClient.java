@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.board;
+package com.rultor.aws;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.sns.AmazonSNS;
@@ -81,7 +81,7 @@ public interface SNSClient {
          */
         @Override
         public String toString() {
-            return String.format("KEY=%s", this.key);
+            return String.format("`%s`", this.key);
         }
         /**
          * {@inheritDoc}

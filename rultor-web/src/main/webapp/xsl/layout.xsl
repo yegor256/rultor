@@ -72,10 +72,10 @@
                         src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
                         alt="Fork me on GitHub" />
                 </a>
-                <div class="container-fluid">
-                    <ul class="inline" style="padding-top: 1em;">
+                <div class="container">
+                    <ul class="inline" style="padding-top: 3em; padding-bottom: 4em;">
                         <li class="hidden-phone">
-                            <a>
+                            <a class="logo">
                                 <xsl:attribute name="href">
                                     <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
                                 </xsl:attribute>

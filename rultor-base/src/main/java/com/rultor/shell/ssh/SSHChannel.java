@@ -128,7 +128,7 @@ public final class SSHChannel implements Shell {
     @Override
     public String toString() {
         return String.format(
-            "SSH as %s to %s with %s",
+            "SSH as `%s` to `%s` with %s",
             this.login, this.addr, this.key
         );
     }

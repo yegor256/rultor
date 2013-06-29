@@ -127,7 +127,7 @@ public final class Batch {
     @Override
     public String toString() {
         return Logger.format(
-            "batch \"%[text]s\" through %s",
+            "batch `%[text]s` through %s",
             this.script,
             this.shells
         );

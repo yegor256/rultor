@@ -66,7 +66,7 @@ public final class Server implements Environments {
      */
     @Override
     public String toString() {
-        return this.host;
+        return String.format("`%s`", this.host);
     }
 
     /**

@@ -102,7 +102,7 @@ public final class GitBranch implements Branch {
     @Override
     public String toString() {
         return String.format(
-            "Git branch '%s' at %s in %s",
+            "Git branch `%s` at `%s` in %s",
             this.name, this.dir, this.terminal
         );
     }

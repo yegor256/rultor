@@ -94,7 +94,7 @@ public interface S3Client {
          */
         @Override
         public String toString() {
-            return String.format("AmazonS3/%s/%s", this.key, this.bkt);
+            return String.format("`%s`", this.key);
         }
         /**
          * {@inheritDoc}

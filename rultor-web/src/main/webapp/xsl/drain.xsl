@@ -37,18 +37,29 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <h1><xsl:value-of select="/page/unit"/></h1>
-        <p>
-            <xsl:text>
-                Very short and thus non-important pulses are
-                removed automatically in five minutes.
-            </xsl:text>
-        </p>
-        <xsl:if test="pulses/pulse">
-            <ul class="nav">
-                <xsl:apply-templates select="pulses/pulse"/>
-            </ul>
-        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="/page/pulses/pulse">
+                <ul class="nav">
+                    <xsl:apply-templates select="/page/pulses/pulse"/>
+                </ul>
+                <p>
+                    <xsl:text>
+                        Very short and thus non-important pulses are
+                        removed automatically in five minutes. Drain is
+                        explained in details in
+                    </xsl:text>
+                    <a href="http://blog.rultor.com">
+                        <xsl:text>this article</xsl:text>
+                    </a>
+                    <xsl:text>.</xsl:text>
+                </p>
+            </xsl:when>
+            <xsl:otherwise>
+                <p>
+                    <xsl:text>Drain is empty.</xsl:text>
+                </p>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template match="pulse">
         <li>

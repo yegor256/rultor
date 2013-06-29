@@ -138,7 +138,7 @@ final class AwsUnit implements Unit {
         Spec spec;
         final AttributeValue val = this.item().get(AwsUnit.FIELD_SPEC);
         if (val == null) {
-            spec = new Spec.Simple("com.rultor.drain.Trash()");
+            spec = new Spec.Simple();
         } else {
             spec = new Spec.Simple(val.getS());
         }
@@ -151,7 +151,14 @@ final class AwsUnit implements Unit {
     @Override
     @Cacheable
     public Spec drain() {
-        return new Spec.Simple(this.item().get(AwsUnit.FIELD_DRAIN).getS());
+        Spec spec;
+        final AttributeValue val = this.item().get(AwsUnit.FIELD_DRAIN);
+        if (val == null) {
+            spec = new Spec.Simple("com.rultor.drain.Trash()");
+        } else {
+            spec = new Spec.Simple(val.getS());
+        }
+        return spec;
     }
 
     /**

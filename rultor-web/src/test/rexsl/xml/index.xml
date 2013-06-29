@@ -35,6 +35,11 @@
         <name>Jeff Lebowski</name>
         <photo>http://images.sodahead.com/polls/002320349/200261278_The_Big_Lebowski___Jeff_Bridges_answer_9_xlarge.jpeg</photo>
     </identity>
+    <flash>
+        <level>INFO</level>
+        <message>This feature works just fine</message>
+        <msec>5660</msec>
+    </flash>
     <version>
         <name>1.0-SNAPSHOT</name>
         <revision>123</revision>
@@ -47,10 +52,10 @@
     </links>
     <millis>16</millis>
     <units>
-        <unit>
+        <unit error="true">
             <type>java.lang.String</type>
             <name>git-rultor</name>
-            <face>some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, </face>
+            <face>some very long text to show, some very &lt;code&gt;long text&lt;/code&gt; to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, </face>
             <links>
                 <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
                 <link href="/xml/drain.xml" rel="drain" type="text/xml"/>

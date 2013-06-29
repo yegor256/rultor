@@ -80,7 +80,7 @@ public final class IRC implements Billboard {
     @Override
     public String toString() {
         return String.format(
-            "IRC channel %s at %s:%d",
+            "IRC channel `%s` at `%s:%d`",
             this.channel, this.host, this.port
         );
     }

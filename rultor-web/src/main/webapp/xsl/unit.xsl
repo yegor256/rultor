@@ -37,20 +37,20 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <h2>
-            <xsl:text>Edit &quot;</xsl:text>
-            <xsl:value-of select="/page/unit/name"/>
-            <xsl:text>&quot;</xsl:text>
-        </h2>
         <form method="post">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
             </xsl:attribute>
             <fieldset>
-                <label for="spec"><xsl:text>Specification</xsl:text></label>
+                <label for="spec">
+                    <xsl:text>Specification of </xsl:text>
+                    <code>
+                        <xsl:value-of select="/page/unit/name"/>
+                    </code>
+                </label>
                 <textarea name="spec" id="spec" rows="10" class="input-block-level spec"><xsl:value-of select="/page/unit/spec"/></textarea>
                 <label for="drain"><xsl:text>Drain</xsl:text></label>
-                <textarea name="drain" id="drain" rows="6" class="input-block-level spec"><xsl:value-of select="/page/unit/drain"/></textarea>
+                <textarea name="drain" id="drain" rows="4" class="input-block-level spec"><xsl:value-of select="/page/unit/drain"/></textarea>
                 <label><xsl:comment>for the submit button below</xsl:comment></label>
                 <button type="submit" class="btn">
                     <xsl:text>Save</xsl:text>

@@ -46,9 +46,11 @@ textarea {
 }
 input,
 button,
-select,
-textarea {
+select {
   font-family: @baseFontFamily; // And only set font-family here for those that need it (note the missing label element)
+}
+textarea {
+  font-family: @monoFontFamily; // And only set font-family here for those that need it (note the missing label element)
 }
 
 // Identify controls by their labels
@@ -400,6 +402,7 @@ select:focus:invalid {
 .help-block,
 .help-inline {
   color: lighten(@textColor, 15%); // lighten the text some for contrast
+  font-size: @fontSizeSmall;
 }
 
 .help-block {

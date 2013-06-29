@@ -87,7 +87,7 @@ final class EC2Environment implements Environment {
     @Override
     public String toString() {
         return String.format(
-            "EC2 %s instance accessed with %s",
+            "EC2 `%s` instance accessed with %s",
             this.name, this.client
         );
     }

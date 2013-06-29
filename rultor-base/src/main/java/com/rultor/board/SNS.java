@@ -29,6 +29,7 @@
  */
 package com.rultor.board;
 
+import com.rultor.aws.SNSClient;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.jcabi.aspects.Immutable;
@@ -85,7 +86,7 @@ public final class SNS implements Billboard {
     @Override
     public String toString() {
         return String.format(
-            "SNS topic %s accessed with %s",
+            "SNS topic `%s` accessed with %s",
             this.topic, this.client
         );
     }

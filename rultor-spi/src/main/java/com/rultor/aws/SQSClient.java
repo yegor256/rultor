@@ -94,7 +94,7 @@ public interface SQSClient {
          */
         @Override
         public String toString() {
-            return String.format("AmazonSQS/%s/%s", this.key, this.queue);
+            return String.format("`%s` to `%s`", this.key, this.queue);
         }
         /**
          * {@inheritDoc}

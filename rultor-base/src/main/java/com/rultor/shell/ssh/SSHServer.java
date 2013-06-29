@@ -86,7 +86,7 @@ public final class SSHServer implements Shell {
     @Override
     public String toString() {
         return String.format(
-            "SSH as %s at %s with %s",
+            "SSH as `%s` at %s with %s",
             this.login, this.env, this.key
         );
     }

@@ -110,8 +110,8 @@ public final class S3Notepad implements Notepad {
     @Override
     public String toString() {
         return String.format(
-            "S3 collection at %s/%s accessed with %s",
-            this.client.bucket(), this.key, this.client
+            "S3 collection at `%s` in `%s` bucket accessed with %s",
+            this.key, this.client.bucket(), this.client
         );
     }
 

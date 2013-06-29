@@ -123,7 +123,7 @@ public final class EC2 implements Environments {
     public String toString() {
         return String.format(
             // @checkstyle LineLength (1 line)
-            "EC2 %s/%s instances in %s security group with %s key pair accessed with %s",
+            "EC2 `%s` instances with `%s` in `%s` security group with `%s` key pair accessed with %s",
             this.type, this.ami, this.group, this.pair, this.client
         );
     }

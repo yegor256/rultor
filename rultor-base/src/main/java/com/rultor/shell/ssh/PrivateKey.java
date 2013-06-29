@@ -82,7 +82,7 @@ public final class PrivateKey {
             throw new IllegalArgumentException(ex);
         }
         return String.format(
-            "[%s %d bytes]",
+            "`%s/%dbytes`",
             pem.getType(),
             pem.getContent().length
         );

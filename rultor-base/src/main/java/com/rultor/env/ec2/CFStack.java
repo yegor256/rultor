@@ -86,7 +86,7 @@ final class CFStack implements Environment {
     @Override
     public String toString() {
         return String.format(
-            "CloudFormation stack %s accessed with %s",
+            "CloudFormation stack `%s` accessed with %s",
             this.name, this.client
         );
     }

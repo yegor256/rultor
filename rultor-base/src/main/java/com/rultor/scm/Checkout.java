@@ -72,7 +72,7 @@ public final class Checkout implements Branch {
      */
     @Override
     public String toString() {
-        return String.format("branch %s at %s", this.name, this.scm);
+        return String.format("branch `%s` at %s", this.name, this.scm);
     }
 
     /**

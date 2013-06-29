@@ -35,6 +35,6 @@ import org.hamcrest.MatcherAssert
 MatcherAssert.assertThat(
     rexsl.document,
     XhtmlMatchers.hasXPaths(
-        '//xhtml:div[@class="container-fluid"]'
+        '//xhtml:div[@class="container"]'
     )
 )

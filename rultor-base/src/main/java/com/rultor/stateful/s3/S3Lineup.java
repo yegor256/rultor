@@ -111,8 +111,8 @@ public final class S3Lineup implements Lineup {
     @Override
     public String toString() {
         return String.format(
-            "S3 lineup at %s/%s accessed with %s",
-            this.client.bucket(), this.key, this.client
+            "S3 lineup at `%s` in `%s` bucket accessed with %s",
+            this.key, this.client.bucket(), this.client
         );
     }
 

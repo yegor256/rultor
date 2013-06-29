@@ -118,7 +118,7 @@ public final class Git implements SCM {
     @Override
     public String toString() {
         return String.format(
-            "Git repository at '%s' cloned to %s at %s accessed through %s",
+            "Git repository at `%s` cloned to `%s` at %s accessed through %s",
             this.url,
             this.dir,
             this.terminal,

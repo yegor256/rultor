@@ -81,7 +81,7 @@ public interface CFClient {
          */
         @Override
         public String toString() {
-            return String.format("AmazonCF/%s", this.key);
+            return String.format("`%s`", this.key);
         }
         /**
          * {@inheritDoc}

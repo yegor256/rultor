@@ -37,23 +37,31 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <h2>
-            <xsl:text>Management Units</xsl:text>
-        </h2>
         <form method="post" class="form-inline">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='create']/@href"/>
             </xsl:attribute>
             <div class="input-append">
-                <input name="name" type="text" class="input-large" />
+                <input name="name" type="text" class="input-xlarge" />
                 <button type="submit" class="btn">
                     <xsl:text>Create</xsl:text>
                 </button>
             </div>
         </form>
-        <xsl:if test="units/unit">
-            <xsl:apply-templates select="units/unit"/>
-        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="/page/units/unit">
+                <xsl:apply-templates select="/page/units/unit"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <p>
+                    <xsl:text>Now create your first management unit and configure it as </xsl:text>
+                    <a href="http://blog.rultor.com">
+                        <xsl:text>this article</xsl:text>
+                    </a>
+                    <xsl:text> explains.</xsl:text>
+                </p>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template match="unit">
         <ul class="inline btn-group-vertical">
@@ -89,7 +97,7 @@
             </li>
         </ul>
         <p style="padding-left: 3em;">
-            <xsl:value-of select="face"/>
+            <xsl:value-of select="face" disable-output-escaping="yes"/>
         </p>
     </xsl:template>
 </xsl:stylesheet>
