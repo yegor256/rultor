@@ -96,7 +96,7 @@ public final class PrivateKeyTest {
             + "-----END RSA PRIVATE KEY-----"
         );
         MatcherAssert.assertThat(
-            key, Matchers.hasToString("`RSA PRIVATE KEY/1152 bytes`")
+            key, Matchers.hasToString("`RSA PRIVATE KEY/1152bytes`")
         );
     }
 
