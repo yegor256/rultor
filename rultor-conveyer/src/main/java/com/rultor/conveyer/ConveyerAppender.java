@@ -30,8 +30,8 @@
 package com.rultor.conveyer;
 
 import com.google.common.collect.ImmutableMap;
+import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -131,8 +131,13 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
 
     /**
      * {@inheritDoc}
+     *
+     * <p>We swallow exception here in order to enable normal processing
+     * of a logging event through LOG4j even when this particular drain
+     * fails (this may happen and often).
      */
     @Override
+    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     protected void append(final LoggingEvent event) {
         if (this.busy.compareAndSet(false, true)) {
             final ThreadGroup group = Thread.currentThread().getThreadGroup();
@@ -149,8 +154,9 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
                             ).toString()
                         )
                     );
-                } catch (IOException ex) {
-                    throw new IllegalStateException(ex);
+                // @checkstyle IllegalCatch (1 line)
+                } catch (Throwable ex) {
+                    Logger.warn(this, "#append(): %s", ex);
                 }
             }
             this.busy.set(false);
