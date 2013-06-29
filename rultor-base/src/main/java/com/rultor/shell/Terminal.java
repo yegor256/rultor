@@ -113,7 +113,7 @@ public final class Terminal {
             command,
             IOUtils.toInputStream(stdin, CharEncoding.UTF_8),
             new TeeOutputStream(stdout, Logger.stream(Level.INFO, this)),
-            new TeeOutputStream(stderr, Logger.stream(Level.SEVERE, this))
+            new TeeOutputStream(stderr, Logger.stream(Level.WARNING, this))
         );
         if (code != 0) {
             throw new IOException(

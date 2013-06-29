@@ -124,7 +124,7 @@ final class AwsUnit implements Unit {
         );
         this.item().put(
             AwsUnit.FIELD_DRAIN,
-            new AttributeValue(spec.asText())
+            new AttributeValue(drain.asText())
         );
     }
 
