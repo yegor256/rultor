@@ -2,22 +2,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Internal application error</title>
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet"/>
-        <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet" />
         <link href="/css/screen.css?${buildNumber}" rel="stylesheet" type="text/css"></link>
         <link rel="icon" type="image/gif" href="http://img.rultor.com/favicon.ico?${buildNumber}"/>
     </head>
     <body>
-        <div class="container-fluid">
-            <p>
-                <a href="http://www.rultor.com/">
-                    <img src="http://img.rultor.com/logo.png?${buildNumber}"
-                        style="width: 150px; height: 46px;" alt="rultor.com logo"/>
-                </a>
-            </p>
-            <p>
-                Revision: <code>${buildNumber}</code>
-            </p>
+        <div class="page">
+            <ul class="inline" style="padding-bottom: 4em;">
+                <li>
+                    <a class="logo" href="http://www.rultor.com">R</a>
+                </li>
+                <li>
+                    <code>${buildNumber}</code>
+                </li>
+                <li class="alert-error">
+                    Internal Application Error
+                </li>
+            </ul>
             <p>
                 Something went terribly wrong. The system can't
                 serve your request at the moment. We've been already

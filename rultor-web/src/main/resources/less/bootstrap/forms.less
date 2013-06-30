@@ -70,11 +70,6 @@ button,
 select {
   font-family: @baseFontFamily; // And only set font-family here for those that need it (note the missing label element)
 }
-textarea {
-  font-family: @monoFontFamily; // And only set font-family here for those that need it (note the missing label element)
-  font-size: @fontSizeSmall;
-}
-
 // Identify controls by their labels
 label {
   display: block;
@@ -111,6 +106,10 @@ input[type="color"],
   color: @gray;
   .border-radius(@inputBorderRadius);
   vertical-align: middle;
+}
+textarea {
+  font-family: @monoFontFamily; // And only set font-family here for those that need it (note the missing label element)
+  font-size: @fontSizeSmall;
 }
 
 // Reset appearance properties for textual inputs and textarea
