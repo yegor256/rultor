@@ -35,8 +35,10 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.aws.SNSClient;
 import java.io.IOException;
+import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang.CharUtils;
 
 /**
  * Amazon SNS.
@@ -95,14 +97,31 @@ public final class SNS implements Billboard {
      * {@inheritDoc}
      */
     @Override
-    public void announce(@NotNull final String text) throws IOException {
+    public void announce(@NotNull final Announcement anmt) throws IOException {
         final AmazonSNS aws = this.client.get();
         try {
+            String print = String.class.cast(anmt.args().get("print"));
+            if (print == null) {
+                final StringBuilder txt = new StringBuilder();
+                print = txt.toString();
+                for (Map.Entry<String, Object> entry : anmt.args().entrySet()) {
+                    txt.append(entry.getKey())
+                        .append(':')
+                        .append(CharUtils.LF)
+                        .append(entry.getValue())
+                        .append(CharUtils.LF)
+                        .append(CharUtils.LF);
+                }
+            }
             aws.publish(
                 new PublishRequest()
-                    .withMessage(text)
                     .withTopicArn(this.topic)
-                    .withSubject("rultor.com notification")
+                    .withMessage(print)
+                    .withSubject(
+                        String.format(
+                            "%s: %s", anmt.level(), anmt.args().get("title")
+                        )
+                    )
             );
         } finally {
             aws.shutdown();

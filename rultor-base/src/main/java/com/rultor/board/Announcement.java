@@ -29,38 +29,81 @@
  */
 package com.rultor.board;
 
-import com.jcabi.aspects.Immutable;
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
+import java.util.Map;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Transmits all announcements to log.
+ * Announcement.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-@EqualsAndHashCode
+@ToString
+@EqualsAndHashCode(of = { "lvl", "arguments" })
 @Loggable(Loggable.DEBUG)
-public final class Echo implements Billboard {
+public final class Announcement {
 
     /**
-     * {@inheritDoc}
+     * Level of announcement.
      */
-    @Override
-    public String toString() {
-        return "console ECHO";
+    private final transient Level lvl;
+
+    /**
+     * Arguments.
+     */
+    private final transient Map<String, Object> arguments;
+
+    /**
+     * Public ctor.
+     * @param level Level
+     * @param args Arguments
+     */
+    public Announcement(@NotNull final Level level,
+        @NotNull final Map<String, Object> args) {
+        this.lvl = level;
+        this.arguments = args;
     }
 
     /**
-     * {@inheritDoc}
+     * Get level.
+     * @return Level
      */
-    @Override
-    public void announce(@NotNull final Announcement anmt) {
-        Logger.info(this, anmt.toString());
+    @NotNull
+    public Level level() {
+        return this.lvl;
+    }
+
+    /**
+     * Get all arguments.
+     * @return Arguments
+     */
+    @NotNull
+    public Map<String, Object> args() {
+        return this.arguments;
+    }
+
+    /**
+     * Make a new one, with this extra argument.
+     * @param name Argument name
+     * @param value The value
+     * @return Announcement
+     */
+    @NotNull
+    public Announcement with(@NotNull final String name,
+        @NotNull final Object value) {
+        return new Announcement(
+            this.lvl,
+            new ImmutableMap.Builder<String, Object>()
+                .putAll(this.arguments)
+                .put(name, value)
+                .build()
+        );
     }
 
 }

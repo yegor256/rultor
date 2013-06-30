@@ -119,7 +119,7 @@ public final class BufferedDrain implements Drain {
         }
         return Logger.format(
             // @checkstyle LineLength (1 line)
-            "%s buffered by %d file(s) `%s` with %[ms]s flush interval and %[ms]s lifetime",
+            "%s buffered by %d file(s) in `%s` with %[ms]s flush interval and %[ms]s lifetime",
             this.origin,
             total,
             this.dir,

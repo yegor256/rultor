@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
+import com.rultor.board.Announcement;
 import com.rultor.board.Billboard;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
@@ -43,8 +44,10 @@ import com.rultor.stateful.Notepad;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
  * Build on every new commit.
@@ -143,18 +146,36 @@ public final class OnCommit implements Instance {
      */
     private void build(final Commit head) throws IOException {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
-        final int code = this.batch.exec(
+        final ImmutableMap<String, Object> args =
             new ImmutableMap.Builder<String, Object>()
                 .put("branch", this.branch)
                 .put("head", head)
-                .build(),
-            stdout
-        );
+                .build();
+        final int code = this.batch.exec(args, stdout);
         if (code == 0) {
-            this.board.announce("completed successfully");
+            this.board.announce(
+                new Announcement(
+                    Level.INFO,
+                    new ImmutableMap.Builder<String, Object>()
+                        .putAll(args)
+                        // @checkstyle MultipleStringLiterals (2 lines)
+                        .put("title", "built successfully")
+                        .put("stdout", stdout.toString(CharEncoding.UTF_8))
+                        .build()
+                )
+            );
             Signal.log(Signal.Mnemo.SUCCESS, "Announced success");
         } else {
-            this.board.announce("failed");
+            this.board.announce(
+                new Announcement(
+                    Level.SEVERE,
+                    new ImmutableMap.Builder<String, Object>()
+                        .putAll(args)
+                        .put("title", "failed to build")
+                        .put("stdout", stdout.toString(CharEncoding.UTF_8))
+                        .build()
+                )
+            );
             Signal.log(Signal.Mnemo.SUCCESS, "Announced failure");
         }
     }

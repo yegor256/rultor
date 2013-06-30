@@ -45,9 +45,9 @@ public interface Billboard {
 
     /**
      * Announce.
-     * @param text The text to announce
+     * @param anmt Announcement to deliver
      * @throws IOException If fails
      */
-    void announce(@NotNull String text) throws IOException;
+    void announce(@NotNull Announcement anmt) throws IOException;
 
 }

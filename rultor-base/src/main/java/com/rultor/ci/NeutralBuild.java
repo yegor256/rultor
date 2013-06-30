@@ -33,13 +33,16 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
+import com.rultor.board.Announcement;
 import com.rultor.board.Billboard;
 import com.rultor.shell.Batch;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Signal;
 import java.io.ByteArrayOutputStream;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
  * Neutral Build.
@@ -86,10 +89,27 @@ public final class NeutralBuild implements Instance {
             stdout
         );
         if (code == 0) {
-            this.board.announce("completed successfully");
+            this.board.announce(
+                new Announcement(
+                    Level.INFO,
+                    new ImmutableMap.Builder<String, Object>()
+                        // @checkstyle MultipleStringLiterals (2 lines)
+                        .put("title", "built successfully")
+                        .put("stdout", stdout.toString(CharEncoding.UTF_8))
+                        .build()
+                )
+            );
             Signal.log(Signal.Mnemo.SUCCESS, "Announced success");
         } else {
-            this.board.announce("failed");
+            this.board.announce(
+                new Announcement(
+                    Level.INFO,
+                    new ImmutableMap.Builder<String, Object>()
+                        .put("title", "failed to build")
+                        .put("stdout", stdout.toString(CharEncoding.UTF_8))
+                        .build()
+                )
+            );
             Signal.log(Signal.Mnemo.SUCCESS, "Announced failure");
         }
     }

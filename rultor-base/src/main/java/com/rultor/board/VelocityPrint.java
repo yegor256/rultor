@@ -31,36 +31,76 @@ package com.rultor.board;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.Validate;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.context.Context;
 
 /**
- * Transmits all announcements to log.
+ * Pre-renders announcements using Apache Velocity template.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "template")
 @Loggable(Loggable.DEBUG)
-public final class Echo implements Billboard {
+public final class VelocityPrint implements Billboard {
 
     /**
-     * {@inheritDoc}
+     * Original board.
      */
-    @Override
-    public String toString() {
-        return "console ECHO";
+    private final transient Billboard board;
+
+    /**
+     * Velocity template.
+     */
+    private final transient String template;
+
+    /**
+     * Public ctor.
+     * @param brd Original board
+     * @param tmpl Velocity template
+     */
+    public VelocityPrint(@NotNull final Billboard brd,
+        @NotNull final String tmpl) {
+        this.board = brd;
+        this.template = tmpl;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void announce(@NotNull final Announcement anmt) {
-        Logger.info(this, anmt.toString());
+    public String toString() {
+        return String.format(
+            "%s with Velocity layout",
+            this.board
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void announce(@NotNull final Announcement anmt) throws IOException {
+        final StringWriter writer = new StringWriter();
+        final Context context = new VelocityContext();
+        for (Map.Entry<String, Object> entry : anmt.args().entrySet()) {
+            context.put(entry.getKey(), entry.getValue());
+        }
+        final boolean success = Velocity.evaluate(
+            context, writer,
+            this.getClass().getName(), this.template
+        );
+        Validate.isTrue(success, "failed to compile VTL");
+        this.board.announce(anmt.with("print", writer.toString()));
     }
 
 }
