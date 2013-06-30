@@ -294,19 +294,21 @@ final class Composite implements Variable<Object> {
                 field.setModifiers(Modifier.PRIVATE | Modifier.FINAL);
                 cls.addField(field);
                 final String body = String.format(
-                    "return %s == null ? super.toString() : %<s;",
+                    "if (%s != null) return %<s;",
                     Composite.FIELD
                 );
                 if (Composite.hasToString(cls)) {
                     final CtMethod method =
                         // @checkstyle MultipleStringLiterals (1 line)
                         cls.getDeclaredMethod("toString", new CtClass[0]);
-                    method.setBody(body);
+                    method.insertBefore(body);
                 } else {
                     cls.addMethod(
                         CtMethod.make(
                             String.format(
-                                "public String toString() { %s }",
+                                // @checkstyle StringLiteralsConcatenation (5 lines)
+                                "public String toString() { "
+                                + "%s return super.toString(); }",
                                 body
                             ),
                             cls

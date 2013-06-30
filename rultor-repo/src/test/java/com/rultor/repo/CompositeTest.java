@@ -113,7 +113,7 @@ public final class CompositeTest {
                 composite.instantiate(Mockito.mock(User.class));
             MatcherAssert.assertThat(
                 object,
-                Matchers.hasToString(Matchers.startsWith(type))
+                Matchers.hasToString(Matchers.notNullValue())
             );
             final String value = "hi there!";
             object.getClass().getMethod(Composite.METHOD, String.class)
