@@ -29,12 +29,10 @@
  */
 package com.rultor.repo;
 
-import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
  * Test case for {@link BigText}.
@@ -49,12 +47,10 @@ public final class BigTextTest {
      */
     @Test
     public void makesInstance() throws Exception {
-        final String value = "some \u20ac \"' test";
-        final String text = String.format("java.lang.String:  \r\n%s", value);
-        final Variable<String> var = new BigText(text);
+        final Variable<String> var = new BigText("    some \u20ac\n \"' test ");
         MatcherAssert.assertThat(
-            var.instantiate(Mockito.mock(Users.class)),
-            Matchers.equalTo(value)
+            var.asText(),
+            Matchers.equalTo("\"\"\"\nsome \u20ac\n\"' test\n\"\"\"")
         );
     }
 

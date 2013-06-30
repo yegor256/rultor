@@ -66,9 +66,39 @@ grammar Spec;
 
 spec returns [Variable<?> ret]
     :
+    variable
+    { $ret = $variable.ret; }
+    EOF
+    ;
+
+variable returns [Variable<?> ret]
+    :
     composite
     { $ret = $composite.ret; }
-    EOF
+    |
+    NAME
+    { $ret = new Reference(this.grammar, this.owner, $NAME.text); }
+    |
+    OWNER ':' NAME
+    { $ret = new Reference(this.grammar, URN.create($OWNER.text), $NAME.text); }
+    |
+    TEXT
+    { $ret = new Text(StringEscapeUtils.unescapeJava($TEXT.text)); }
+    |
+    BIGTEXT
+    { $ret = new BigText($BIGTEXT.text); }
+    |
+    BOOLEAN
+    { $ret = new Constant<Boolean>(new Boolean($BOOLEAN.text.equals("TRUE"))); }
+    |
+    INTEGER
+    { $ret = new Constant<Integer>(Integer.valueOf($INTEGER.text)); }
+    |
+    LONG
+    { $ret = new Constant<Long>(Long.valueOf($LONG.text.substring(0, $LONG.text.length() - 1))); }
+    |
+    DOUBLE
+    { $ret = new Constant<Double>(Double.valueOf($DOUBLE.text)); }
     ;
 
 composite returns [Composite ret]
@@ -87,33 +117,6 @@ composite returns [Composite ret]
     )*
     ')'
     { $ret = new Composite($TYPE.text, vars); }
-    ;
-
-variable returns [Variable<?> ret]
-    :
-    composite
-    { $ret = $composite.ret; }
-    |
-    NAME
-    { $ret = new Reference(this.grammar, this.owner, $NAME.text); }
-    |
-    OWNER ':' NAME
-    { $ret = new Reference(this.grammar, URN.create($OWNER.text), $NAME.text); }
-    |
-    TEXT
-    { $ret = new Text(StringEscapeUtils.unescapeJava($TEXT.text)); }
-    |
-    BOOLEAN
-    { $ret = new Constant<Boolean>(new Boolean($BOOLEAN.text.equals("TRUE"))); }
-    |
-    INTEGER
-    { $ret = new Constant<Integer>(Integer.valueOf($INTEGER.text)); }
-    |
-    LONG
-    { $ret = new Constant<Long>(Long.valueOf($LONG.text.substring(0, $LONG.text.length() - 1))); }
-    |
-    DOUBLE
-    { $ret = new Constant<Double>(Double.valueOf($DOUBLE.text)); }
     ;
 
 BOOLEAN
@@ -136,12 +139,19 @@ OWNER
     'urn' ':' ('facebook'|'github'|'google') ':' DIGIT+
     ;
 
-TEXT :
+TEXT
+    :
     '"' ('\\"' | ~'"')* '"'
     { this.setText(this.getText().substring(1, this.getText().length() - 1).replace("\\\"", "\"")); }
     |
     '\'' ('\\\'' | ~'\'')* '\''
     { this.setText(this.getText().substring(1, this.getText().length() - 1).replace("\\'", "'")); }
+    ;
+
+BIGTEXT
+    :
+    '"""' ('\\"' | ~'"')+ '"""'
+    { this.setText(this.getText().substring(3, this.getText().length() - 3).replace("\\\"", "\"")); }
     ;
 
 INTEGER

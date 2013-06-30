@@ -33,11 +33,8 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.Validate;
 
 /**
  * Big text, without any formatting.
@@ -53,13 +50,6 @@ import org.apache.commons.lang3.Validate;
 final class BigText implements Variable<String> {
 
     /**
-     * Pattern to match.
-     */
-    private static final Pattern PTN = Pattern.compile(
-        "java.lang.String:\\s*\n(.*)", Pattern.MULTILINE | Pattern.DOTALL
-    );
-
-    /**
      * The value.
      */
     private final transient String value;
@@ -69,9 +59,7 @@ final class BigText implements Variable<String> {
      * @param text Text to parse and encapsulate
      */
     protected BigText(final String text) {
-        final Matcher matcher = BigText.PTN.matcher(text);
-        Validate.isTrue(matcher.matches(), "invalid input '%s'", text);
-        this.value = matcher.group(1);
+        this.value = text.replaceAll("\\s*(\n|\r)\\s*", "\n").trim();
     }
 
     /**
@@ -87,17 +75,10 @@ final class BigText implements Variable<String> {
      */
     @Override
     public String asText() {
-        return new StringBuilder("java.lang.String:\n")
-            .append(this.value).toString();
-    }
-
-    /**
-     * Text looks like big text?
-     * @param text The text
-     * @return TRUE if it looks like one
-     */
-    public static boolean matches(final String text) {
-        return BigText.PTN.matcher(text).matches();
+        return new StringBuilder("\"\"\"\n")
+            .append(this.value)
+            .append("\n\"\"\"")
+            .toString();
     }
 
 }

@@ -66,7 +66,7 @@ public final class ClasspathRepoTest {
             "java.lang.Double(-44.66)",
             "com.rultor.repo.ClasspathRepoTest$Foo (55\n)",
             "com.first(com.second(com.third(), com.forth()))",
-            "java.lang.String:\nsome\t\r\nunformatted\ttext\t\u20ac\u0433",
+            "\"\"\"\nsome\nunformatted\ttext\t\u20ac\u0433\n\"\"\"",
         };
         final User user = Mockito.mock(User.class);
         final URN urn = new URN("urn:facebook:1");
@@ -91,7 +91,7 @@ public final class ClasspathRepoTest {
         final String[] texts = new String[] {
             "java.lang.Double(-1.5)",
             "java.lang.Boolean(TRUE)",
-            "java.lang.String:\nsome\u20actext\n\t",
+            "\"\"\"\nsome\u20actext\n\t\"\"\"",
         };
         final User user = Mockito.mock(User.class);
         final URN urn = new URN("urn:facebook:2");
@@ -109,7 +109,7 @@ public final class ClasspathRepoTest {
      */
     @Test
     public void makesSpecFromPlainText() throws Exception {
-        final String text = "java.lang.String:\ns\n\nnome\t\t\rued\ntext\u20ac";
+        final String text = "\"\"\"\ns\nnome\t\tued\ntext\u20ac\n\"\"\"";
         final Repo repo = new ClasspathRepo();
         final User user = Mockito.mock(User.class);
         final URN urn = new URN("urn:facebook:5");

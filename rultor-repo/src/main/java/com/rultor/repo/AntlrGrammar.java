@@ -64,31 +64,12 @@ final class AntlrGrammar implements Grammar {
     @NotNull
     public Variable<?> parse(@NotNull final URN urn, @NotNull final String text)
         throws SpecException {
-        Variable<?> var;
-        if (BigText.matches(text)) {
-            var = new BigText(text);
-        } else {
-            var = this.antlr(urn, text);
-        }
-        return var;
-    }
-
-    /**
-     * Parse text to variable.
-     * @param owner Owner of the spec
-     * @param text Text
-     * @return Variable
-     * @throws SpecException If fails
-     * @checkstyle RedundantThrows (5 lines)
-     */
-    private Variable<?> antlr(final URN owner, final String text)
-        throws SpecException {
         final CharStream input = new ANTLRStringStream(text);
         final SpecLexer lexer = new SpecLexer(input);
         final TokenStream tokens = new CommonTokenStream(lexer);
         final SpecParser parser = new SpecParser(tokens);
         parser.setGrammar(this);
-        parser.setOwner(owner);
+        parser.setOwner(urn);
         Variable<?> var;
         try {
             var = parser.spec();
