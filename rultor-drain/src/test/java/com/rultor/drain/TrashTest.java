@@ -27,73 +27,27 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.drain.files;
+package com.rultor.drain;
 
-import com.google.common.io.Files;
-import com.jcabi.aspects.Tv;
-import com.rultor.spi.Drain;
-import com.rultor.spi.Time;
-import java.io.File;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
- * Test case for {@link BufferedDrain}.
+ * Test case for {@link Trash}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class BufferedDrainTest {
+public final class TrashTest {
 
     /**
-     * BufferedDrain can log and buffer.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void logsAndBuffers() throws Exception {
-        final File dir = Files.createTempDir();
-        final Drain origin = Mockito.mock(Drain.class);
-        Mockito.doReturn(IOUtils.toInputStream(""))
-            .when(origin).read(Mockito.any(Time.class));
-        final Drain drain = new BufferedDrain(
-            TimeUnit.SECONDS.toMillis(1),
-            TimeUnit.SECONDS.toMillis(Tv.FIVE),
-            new File(dir, "a/b/c"),
-            origin
-        );
-        final Time date = new Time(Math.abs(new Random().nextLong()));
-        final String first = "some \t\u20ac\tfdsfs";
-        final String second = "somefffffds900-4932%^&$%^&#%@^&!\u20ac\tfdsfs";
-        MatcherAssert.assertThat(
-            IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
-            Matchers.equalTo("")
-        );
-        drain.append(date, Arrays.asList(first, second));
-        MatcherAssert.assertThat(
-            IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
-            Matchers.containsString(first)
-        );
-    }
-
-    /**
-     * BufferedDrain can be converted to string.
+     * Trash can be converted to string.
      * @throws Exception If some problem inside
      */
     @Test
     public void printsItselfInString() throws Exception {
         MatcherAssert.assertThat(
-            new BufferedDrain(
-                TimeUnit.SECONDS.toMillis(1),
-                TimeUnit.SECONDS.toMillis(Tv.FIVE),
-                Files.createTempDir(),
-                Mockito.mock(Drain.class)
-            ),
+            new Trash(),
             Matchers.hasToString(Matchers.notNullValue())
         );
     }

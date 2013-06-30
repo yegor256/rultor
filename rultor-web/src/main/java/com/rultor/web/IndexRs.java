@@ -171,6 +171,7 @@ public final class IndexRs extends BaseRs {
      * @param spec The Spec
      * @return Bundle
      */
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private JaxbBundle face(final String name, final Spec spec) {
         JaxbBundle bundle = new JaxbBundle(name);
         try {
@@ -182,7 +183,8 @@ public final class IndexRs extends BaseRs {
                     object.toString()
                 ).replaceAll("`([^`]+)`", "<code>$1</code>")
             ).up().add("type", object.getClass().getName());
-        } catch (Repo.InstantiationException ex) {
+        // @checkstyle IllegalCatch (1 line)
+        } catch (Exception ex) {
             bundle = bundle.add("exception", ex.getMessage());
         }
         return bundle.up();

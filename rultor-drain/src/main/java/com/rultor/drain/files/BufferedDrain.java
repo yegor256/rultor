@@ -121,8 +121,8 @@ public final class BufferedDrain implements Drain {
             // @checkstyle LineLength (1 line)
             "%s buffered by %d file(s) `%s` with %[ms]s flush interval and %[ms]s lifetime",
             this.origin,
-            this.dir,
             total,
+            this.dir,
             this.maximum,
             this.lifetime
         );

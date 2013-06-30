@@ -40,6 +40,7 @@ import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link NoiseReductionDrain}.
@@ -95,6 +96,23 @@ public final class NoiseReductionDrainTest {
         MatcherAssert.assertThat(
             IOUtils.toString(drain.read(second), CharEncoding.UTF_8),
             Matchers.containsString(bad)
+        );
+    }
+
+    /**
+     * NoiseReductionDrain can be converted to string.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void printsItselfInString() throws Exception {
+        MatcherAssert.assertThat(
+            new NoiseReductionDrain(
+                "some regular expression",
+                1,
+                Mockito.mock(Drain.class),
+                Mockito.mock(Drain.class)
+            ),
+            Matchers.hasToString(Matchers.notNullValue())
         );
     }
 

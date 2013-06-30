@@ -78,4 +78,16 @@ public final class DirectoryDrainTest {
         );
     }
 
+    /**
+     * DirectoryDrain can be converted to string.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void printsItselfInString() throws Exception {
+        MatcherAssert.assertThat(
+            new DirectoryDrain(Files.createTempDir()),
+            Matchers.hasToString(Matchers.notNullValue())
+        );
+    }
+
 }

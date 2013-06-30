@@ -157,6 +157,7 @@ public final class Syslog implements Drain {
      * Compose a packet for Syslog.
      * @param text Text to use
      * @return Bytes for syslog
+     * @see <a href="http://tools.ietf.org/html/rfc5424">RFC 5424</a>
      */
     private byte[] compose(final String text) {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
