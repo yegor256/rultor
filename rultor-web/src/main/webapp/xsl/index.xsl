@@ -102,15 +102,17 @@
                 </li>
             </ul>
         </div>
-        <xsl:if test="spec/type != 'java.lang.String'">
+        <xsl:if test="not(spec/type) or spec/type != 'java.lang.String'">
             <p style="padding-left: 3em;">
                 <xsl:call-template name="face">
                     <xsl:with-param name="object" select="spec"/>
                 </xsl:call-template>
-                <xsl:text> drained to </xsl:text>
-                <xsl:call-template name="face">
-                    <xsl:with-param name="object" select="drain"/>
-                </xsl:call-template>
+                <xsl:if test="spec/type != 'com.rultor.drain.Trash'">
+                    <xsl:text> drained to </xsl:text>
+                    <xsl:call-template name="face">
+                        <xsl:with-param name="object" select="drain"/>
+                    </xsl:call-template>
+                </xsl:if>
             </p>
         </xsl:if>
     </xsl:template>
