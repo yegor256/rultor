@@ -29,7 +29,8 @@
  */
 package com.rultor.repo;
 
-import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import com.rultor.spi.Variable;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -52,7 +53,7 @@ public final class BigTextTest {
         final String text = String.format("java.lang.String:  \r\n%s", value);
         final Variable<String> var = new BigText(text);
         MatcherAssert.assertThat(
-            var.instantiate(Mockito.mock(User.class)),
+            var.instantiate(Mockito.mock(Users.class)),
             Matchers.equalTo(value)
         );
     }

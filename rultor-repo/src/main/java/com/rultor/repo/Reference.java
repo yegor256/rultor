@@ -31,8 +31,11 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Repo;
+import com.jcabi.urn.URN;
+import com.rultor.spi.SpecException;
 import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import com.rultor.spi.Variable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import lombok.EqualsAndHashCode;
@@ -48,7 +51,7 @@ import org.apache.commons.lang3.Validate;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "grammar", "name" })
+@EqualsAndHashCode(of = { "grammar", "owner", "name" })
 @Loggable(Loggable.DEBUG)
 final class Reference implements Variable<Object> {
 
@@ -58,6 +61,11 @@ final class Reference implements Variable<Object> {
     private final transient Grammar grammar;
 
     /**
+     * Owner of the unit.
+     */
+    private final transient URN owner;
+
+    /**
      * The name.
      */
     private final transient String name;
@@ -65,11 +73,13 @@ final class Reference implements Variable<Object> {
     /**
      * Public ctor.
      * @param grm Grammar to use
+     * @param urn Owner of the unit
      * @param ref Reference
      */
-    protected Reference(final Grammar grm, final String ref) {
+    protected Reference(final Grammar grm, final URN urn, final String ref) {
         Validate.matchesPattern(ref, "[-_\\w]+");
         this.grammar = grm;
+        this.owner = urn;
         this.name = ref;
     }
 
@@ -78,25 +88,21 @@ final class Reference implements Variable<Object> {
      * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public Object instantiate(final User user)
-        throws Repo.InstantiationException {
+    public Object instantiate(final Users users) throws SpecException {
+        final User user = users.get(this.owner);
         if (!user.units().contains(this.name)) {
-            throw new Repo.InstantiationException(
+            throw new SpecException(
                 String.format(
-                    "unit '%s' not found in your account",
-                    this.name
+                    "unit '%s' not found in '%s'",
+                    this.name, this.owner
                 )
             );
         }
-        try {
-            return this.alter(
-                this.grammar.parse(
-                    user.get(this.name).spec().asText()
-                ).instantiate(user)
-            );
-        } catch (Repo.InvalidSyntaxException ex) {
-            throw new Repo.InstantiationException(ex);
-        }
+        return this.alter(
+            this.grammar.parse(
+                user.urn(), user.get(this.name).spec().asText()
+            ).instantiate(users)
+        );
     }
 
     /**
@@ -104,28 +110,28 @@ final class Reference implements Variable<Object> {
      */
     @Override
     public String asText() {
-        return this.name;
+        return String.format("%s:%s", this.owner, this.name);
     }
 
     /**
      * Alter the object by injecting name into it.
      * @param object The object
      * @return Altered object
-     * @throws Repo.InstantiationException If some error inside
+     * @throws SpecException If some error inside
      * @checkstyle RedundantThrows (5 lines)
      */
     private Object alter(final Object object)
-        throws Repo.InstantiationException {
+        throws SpecException {
         for (Method method : object.getClass().getMethods()) {
             if (method.getName().equals(Composite.METHOD)) {
                 try {
-                    method.invoke(object, this.name);
+                    method.invoke(object, String.format("`%s`", this.name));
                 } catch (IllegalAccessException ex) {
-                    throw new Repo.InstantiationException(ex);
+                    throw new SpecException(ex);
                 } catch (SecurityException ex) {
-                    throw new Repo.InstantiationException(ex);
+                    throw new SpecException(ex);
                 } catch (InvocationTargetException ex) {
-                    throw new Repo.InstantiationException(ex);
+                    throw new SpecException(ex);
                 }
             }
         }

@@ -197,8 +197,9 @@ public final class SimpleConveyer implements Closeable, Metricable {
     private void process() throws Exception {
         final Work work = this.queue.pull();
         final User owner = this.users.get(work.owner());
-        final Object object =
-            new Repo.Cached(this.repo, owner, work.spec()).get();
+        final Object object = new Repo.Cached(
+            this.repo, owner, work.spec()
+        ).get().instantiate(this.users);
         if (object instanceof Instance) {
             final Instance instance = new LoggableInstance(
                 Instance.class.cast(object),
@@ -221,7 +222,8 @@ public final class SimpleConveyer implements Closeable, Metricable {
      * @throws Exception If fails
      */
     private Drain drain(final User owner, final Spec spec) throws Exception {
-        final Object object = new Repo.Cached(this.repo, owner, spec).get();
+        final Object object = new Repo.Cached(this.repo, owner, spec)
+            .get().instantiate(this.users);
         if (!(object instanceof Drain)) {
             throw new IllegalArgumentException(
                 String.format("it is not a drain: %s", spec.asText())

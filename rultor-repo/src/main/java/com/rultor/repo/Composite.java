@@ -32,8 +32,9 @@ package com.rultor.repo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.rultor.spi.Repo;
-import com.rultor.spi.User;
+import com.rultor.spi.SpecException;
+import com.rultor.spi.Users;
+import com.rultor.spi.Variable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -112,12 +113,11 @@ final class Composite implements Variable<Object> {
      * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public Object instantiate(final User user)
-        throws Repo.InstantiationException {
+    public Object instantiate(final Users users) throws SpecException {
         final Object[] args = new Object[this.vars.length];
         final Class<?>[] types = new Class<?>[this.vars.length];
         for (int idx = 0; idx < this.vars.length; ++idx) {
-            final Object object = this.vars[idx].instantiate(user);
+            final Object object = this.vars[idx].instantiate(users);
             args[idx] = object;
             types[idx] = object.getClass();
         }
@@ -125,7 +125,7 @@ final class Composite implements Variable<Object> {
         try {
             return ctor.newInstance(args);
         } catch (InstantiationException ex) {
-            throw new Repo.InstantiationException(
+            throw new SpecException(
                 String.format(
                     "failed to instantiate using \"%s\" constructor: %s",
                     ctor,
@@ -134,7 +134,7 @@ final class Composite implements Variable<Object> {
                 ex
             );
         } catch (IllegalAccessException ex) {
-            throw new Repo.InstantiationException(
+            throw new SpecException(
                 String.format(
                     "failed to access \"%s\": %s",
                     ctor,
@@ -143,7 +143,7 @@ final class Composite implements Variable<Object> {
                 ex
             );
         } catch (InvocationTargetException ex) {
-            throw new Repo.InstantiationException(
+            throw new SpecException(
                 String.format(
                     "failed to invoke \"%s\": %s",
                     ctor,
@@ -191,17 +191,17 @@ final class Composite implements Variable<Object> {
      * Find the best matching constructor.
      * @param types Types
      * @return The ctor
-     * @throws Repo.InstantiationException If can't get it
+     * @throws SpecException If can't get it
      * @checkstyle RedundantThrows (5 lines)
      */
     private Constructor<?> ctor(final Class<?>[] types)
-        throws Repo.InstantiationException {
+        throws SpecException {
         final Class<?> cls;
         if (this.type.startsWith("java.")) {
             try {
                 cls = Class.forName(this.type);
             } catch (ClassNotFoundException ex) {
-                throw new Repo.InstantiationException(ex);
+                throw new SpecException(ex);
             }
         } else {
             cls = Composite.load(this.type);
@@ -214,7 +214,7 @@ final class Composite implements Variable<Object> {
             }
         }
         if (ctor == null) {
-            throw new Repo.InstantiationException(
+            throw new SpecException(
                 String.format(
                     // @checkstyle LineLength (1 line)
                     "can't find constructor %s%s, available alternatives are: %s",
@@ -276,11 +276,11 @@ final class Composite implements Variable<Object> {
      * Load and alter class.
      * @param name Class name
      * @return Modified type
-     * @throws Repo.InstantiationException If can't instantiate
+     * @throws SpecException If can't instantiate
      * @checkstyle RedundantThrows (4 lines)
      */
     private static Class<?> load(final String name)
-        throws Repo.InstantiationException {
+        throws SpecException {
         final ClassPool pool = ClassPool.getDefault();
         Class<?> type;
         try {
@@ -334,7 +334,7 @@ final class Composite implements Variable<Object> {
                 cls.defrost();
             }
         } catch (NotFoundException ex) {
-            throw new Repo.InstantiationException(
+            throw new SpecException(
                 String.format(
                     "not found \"%s\"",
                     name,
@@ -343,7 +343,7 @@ final class Composite implements Variable<Object> {
                 ex
             );
         } catch (CannotCompileException ex) {
-            throw new Repo.InstantiationException(
+            throw new SpecException(
                 String.format(
                     "can't compile \"%s\"",
                     name,
@@ -352,7 +352,7 @@ final class Composite implements Variable<Object> {
                 ex
             );
         } catch (ClassNotFoundException ex) {
-            throw new Repo.InstantiationException(
+            throw new SpecException(
                 String.format(
                     "class \"%s\" not found: %s",
                     name,
@@ -387,11 +387,11 @@ final class Composite implements Variable<Object> {
      * Is it loaded already?
      * @param name Class name
      * @return TRUE if it's already loaded
-     * @throws Repo.InstantiationException If can't instantiate
+     * @throws SpecException If can't instantiate
      * @checkstyle RedundantThrows (4 lines)
      */
     private static boolean loaded(final String name)
-        throws Repo.InstantiationException {
+        throws SpecException {
         try {
             final Method method = ClassLoader.class.getDeclaredMethod(
                 "findLoadedClass", String.class

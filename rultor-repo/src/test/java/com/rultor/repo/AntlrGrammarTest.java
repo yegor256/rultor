@@ -29,6 +29,7 @@
  */
 package com.rultor.repo;
 
+import com.jcabi.urn.URN;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -56,9 +57,10 @@ public final class AntlrGrammarTest {
             "com.first(com.second(com.third(), com.forth()))",
             "java.lang.String:\nsome\t\r\nunformatted\ttext\t\u20ac\u0433",
         };
+        final URN urn = new URN("urn:facebook:1");
         for (String text : texts) {
             MatcherAssert.assertThat(
-                grammar.parse(text).asText(),
+                grammar.parse(urn, text).asText(),
                 Matchers.equalTo(text)
             );
         }

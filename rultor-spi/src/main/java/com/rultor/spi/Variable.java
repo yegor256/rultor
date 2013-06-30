@@ -27,33 +27,28 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
-import com.rultor.spi.SpecException;
-import com.rultor.spi.Variable;
 import javax.validation.constraints.NotNull;
 
 /**
- * Grammar.
+ * Variable.
  *
+ * @param <T> Type of encapsulated instance
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-interface Grammar {
+public interface Variable<T> extends Spec {
 
     /**
-     * Convert text to variable.
-     * @param owner Owner of the spec
-     * @param text Text to convert
-     * @return The variable
-     * @throws SpecException If fails
-     * @checkstyle RedundantThrows (3 lines)
+     * Make an instance of it.
+     * @param users Users
+     * @return The object
+     * @throws SpecException If can't instantiate
      */
-    @NotNull Variable<?> parse(@NotNull URN owner, @NotNull String text)
-        throws SpecException;
+    T instantiate(@NotNull Users users) throws SpecException;
 
 }

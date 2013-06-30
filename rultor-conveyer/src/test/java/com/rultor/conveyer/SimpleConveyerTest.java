@@ -38,6 +38,7 @@ import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -91,19 +92,25 @@ public final class SimpleConveyerTest {
         ).when(queue).pull();
         final Repo repo = Mockito.mock(Repo.class);
         final Instance instance = Mockito.mock(Instance.class);
+        final Variable<?> var = Mockito.mock(Variable.class);
+        Mockito.doReturn(instance).when(var)
+            .instantiate(Mockito.any(Users.class));
         final CountDownLatch made = new CountDownLatch(1);
         Mockito.doAnswer(
-            new Answer<Instance>() {
+            new Answer<Variable<?>>() {
                 @Override
-                public Instance answer(final InvocationOnMock invocation)
+                public Variable<?> answer(final InvocationOnMock invocation)
                     throws Exception {
                     made.countDown();
-                    return instance;
+                    return var;
                 }
             }
         ).when(repo).make(Mockito.any(User.class), Mockito.eq(spec));
+        final Variable<?> dvar = Mockito.mock(Variable.class);
         Mockito.doReturn(Mockito.mock(Drain.class))
-            .when(repo).make(Mockito.any(User.class), Mockito.eq(drain));
+            .when(dvar).instantiate(Mockito.any(Users.class));
+        Mockito.doReturn(dvar).when(repo)
+            .make(Mockito.any(User.class), Mockito.eq(drain));
         final User user = Mockito.mock(User.class);
         final Unit unit = Mockito.mock(Unit.class);
         Mockito.doReturn(new HashSet<String>(Arrays.asList(name)))

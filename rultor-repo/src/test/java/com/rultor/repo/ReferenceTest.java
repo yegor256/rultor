@@ -29,9 +29,12 @@
  */
 package com.rultor.repo;
 
+import com.jcabi.urn.URN;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import com.rultor.spi.Variable;
 import java.util.Arrays;
 import java.util.HashSet;
 import org.hamcrest.MatcherAssert;
@@ -60,9 +63,14 @@ public final class ReferenceTest {
         Mockito.doReturn(new HashSet<String>(Arrays.asList(name)))
             .when(user).units();
         Mockito.doReturn(unit).when(user).get(name);
-        final Variable<Object> var = new Reference(new AntlrGrammar(), name);
+        final URN urn = new URN("urn:facebook:1");
+        Mockito.doReturn(urn).when(user).urn();
+        final Variable<Object> var =
+            new Reference(new AntlrGrammar(), urn, name);
+        final Users users = Mockito.mock(Users.class);
+        Mockito.doReturn(user).when(users).get(urn);
         MatcherAssert.assertThat(
-            var.instantiate(user),
+            var.instantiate(users),
             Matchers.<Object>equalTo(1L)
         );
     }

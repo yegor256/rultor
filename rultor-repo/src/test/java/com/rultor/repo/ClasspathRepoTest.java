@@ -30,10 +30,12 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.urn.URN;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.User;
+import com.rultor.spi.Users;
 import java.util.concurrent.atomic.AtomicLong;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -45,6 +47,7 @@ import org.mockito.Mockito;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
+@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
 public final class ClasspathRepoTest {
 
     /**
@@ -65,10 +68,15 @@ public final class ClasspathRepoTest {
             "com.first(com.second(com.third(), com.forth()))",
             "java.lang.String:\nsome\t\r\nunformatted\ttext\t\u20ac\u0433",
         };
+        final User user = Mockito.mock(User.class);
+        final URN urn = new URN("urn:facebook:1");
+        Mockito.doReturn(urn).when(user).urn();
         for (String text : texts) {
             MatcherAssert.assertThat(
-                repo.make(text).asText(),
-                Matchers.equalTo(repo.make(text).asText())
+                repo.make(user, new Spec.Simple(text)).asText(),
+                Matchers.equalTo(
+                    repo.make(user, new Spec.Simple(text)).asText()
+                )
             );
         }
     }
@@ -85,9 +93,12 @@ public final class ClasspathRepoTest {
             "java.lang.Boolean(TRUE)",
             "java.lang.String:\nsome\u20actext\n\t",
         };
+        final User user = Mockito.mock(User.class);
+        final URN urn = new URN("urn:facebook:2");
+        Mockito.doReturn(urn).when(user).urn();
         for (String text : texts) {
-            final Spec spec = repo.make(text);
-            final Object obj = repo.make(Mockito.mock(User.class), spec);
+            final Spec spec = new Spec.Simple(text);
+            final Object obj = repo.make(user, spec);
             MatcherAssert.assertThat(obj, Matchers.notNullValue());
         }
     }
@@ -100,12 +111,15 @@ public final class ClasspathRepoTest {
     public void makesSpecFromPlainText() throws Exception {
         final String text = "java.lang.String:\ns\n\nnome\t\t\rued\ntext\u20ac";
         final Repo repo = new ClasspathRepo();
+        final User user = Mockito.mock(User.class);
+        final URN urn = new URN("urn:facebook:5");
+        Mockito.doReturn(urn).when(user).urn();
         MatcherAssert.assertThat(
-            repo.make(Mockito.mock(User.class), repo.make(text)),
+            repo.make(user, new Spec.Simple(text)),
             Matchers.notNullValue()
         );
         MatcherAssert.assertThat(
-            repo.make(text).asText(),
+            repo.make(user, new Spec.Simple(text)).asText(),
             Matchers.equalTo(text)
         );
     }
@@ -117,11 +131,15 @@ public final class ClasspathRepoTest {
     @Test
     public void makesInstanceFromSpec() throws Exception {
         final Repo repo = new ClasspathRepo();
-        final Spec spec = repo.make(
+        final Spec spec = new Spec.Simple(
             "com.rultor.repo.ClasspathRepoTest$Foo(2L)"
         );
         ClasspathRepoTest.Foo.COUNTER.set(0);
-        final Object instance = repo.make(Mockito.mock(User.class), spec);
+        final User user = Mockito.mock(User.class);
+        final URN urn = new URN("urn:facebook:77");
+        Mockito.doReturn(urn).when(user).urn();
+        final Users users = Mockito.mock(Users.class);
+        final Object instance = repo.make(user, spec).instantiate(users);
         MatcherAssert.assertThat(
             ClasspathRepoTest.Foo.COUNTER.get(),
             Matchers.equalTo(2L)

@@ -31,6 +31,8 @@ grammar Spec;
 
 @header {
     package com.rultor.repo;
+    import com.jcabi.urn.URN;
+    import com.rultor.spi.Variable;
     import java.util.Collection;
     import java.util.LinkedList;
     import org.apache.commons.lang3.StringEscapeUtils;
@@ -49,8 +51,12 @@ grammar Spec;
 
 @parser::members {
     private transient Grammar grammar;
+    private transient URN owner;
     public void setGrammar(final Grammar grm) {
         this.grammar = grm;
+    }
+    public void setOwner(final URN urn) {
+        this.owner = urn;
     }
     @Override
     public void emitErrorMessage(String msg) {
@@ -89,7 +95,10 @@ variable returns [Variable<?> ret]
     { $ret = $composite.ret; }
     |
     NAME
-    { $ret = new Reference(this.grammar, $NAME.text); }
+    { $ret = new Reference(this.grammar, this.owner, $NAME.text); }
+    |
+    OWNER ':' NAME
+    { $ret = new Reference(this.grammar, URN.create($OWNER.text), $NAME.text); }
     |
     TEXT
     { $ret = new Text(StringEscapeUtils.unescapeJava($TEXT.text)); }
@@ -120,6 +129,11 @@ TYPE
 NAME
     :
     LETTER (LETTER | DIGIT | '-')+
+    ;
+
+OWNER
+    :
+    'urn' ':' ('facebook'|'github'|'google') ':' DIGIT+
     ;
 
 TEXT :

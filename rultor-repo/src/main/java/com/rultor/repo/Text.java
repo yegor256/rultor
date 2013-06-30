@@ -31,7 +31,8 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import com.rultor.spi.Variable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -66,7 +67,7 @@ final class Text implements Variable<String> {
      * {@inheritDoc}
      */
     @Override
-    public String instantiate(final User user) {
+    public String instantiate(final Users users) {
         return this.value;
     }
 

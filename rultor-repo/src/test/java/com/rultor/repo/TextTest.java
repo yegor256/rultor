@@ -29,7 +29,8 @@
  */
 package com.rultor.repo;
 
-import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import com.rultor.spi.Variable;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public final class TextTest {
         final String text = "some \u20ac \"' test";
         final Variable<String> var = new Text(text);
         MatcherAssert.assertThat(
-            var.instantiate(Mockito.mock(User.class)),
+            var.instantiate(Mockito.mock(Users.class)),
             Matchers.equalTo(text)
         );
     }

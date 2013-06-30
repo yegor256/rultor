@@ -27,30 +27,48 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.spi;
 
-import com.jcabi.aspects.Immutable;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
-import com.rultor.spi.User;
+import com.jcabi.aspects.Loggable;
 
 /**
- * Variable.
+ * Repository of classes.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-interface Variable<T> extends Spec {
+@Loggable.Quiet
+public final class SpecException extends Exception {
 
     /**
-     * Make an instance of it.
-     * @param user Owner of the spec
-     * @return The object
-     * @throws Repo.InstantiationException If can't instantiate
-     * @checkstyle RedundantThrows (3 lines)
+     * Serialization marker.
      */
-    T instantiate(User user) throws Repo.InstantiationException;
+    private static final long serialVersionUID = 0x65f40afe34528092L;
+
+    /**
+     * Public ctor.
+     * @param cause Cause of it
+     */
+    public SpecException(final String cause) {
+        super(cause);
+    }
+
+    /**
+     * Public ctor.
+     * @param cause Cause of it
+     */
+    public SpecException(final Exception cause) {
+        super(cause);
+    }
+
+    /**
+     * Public ctor.
+     * @param msg Message
+     * @param cause Cause of it
+     */
+    public SpecException(final String msg, final Exception cause) {
+        super(msg, cause);
+    }
 
 }

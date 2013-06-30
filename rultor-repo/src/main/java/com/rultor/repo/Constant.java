@@ -31,7 +31,8 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import com.rultor.spi.Variable;
 import java.text.DecimalFormat;
 import java.util.Locale;
 import lombok.EqualsAndHashCode;
@@ -67,7 +68,7 @@ final class Constant<T> implements Variable<Object> {
      * {@inheritDoc}
      */
     @Override
-    public Object instantiate(final User user) {
+    public Object instantiate(final Users users) {
         return this.value;
     }
 

@@ -159,15 +159,14 @@ public final class DrainRs extends BaseRs {
      * @return The unit
      */
     private Unit unit() {
-        final Unit unit = this.user().get(this.name);
-        if (unit == null) {
+        if (!this.user().units().contains(this.name)) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 String.format("Unit '%s' doesn't exist", this.name),
                 Level.SEVERE
             );
         }
-        return unit;
+        return this.user().get(this.name);
     }
 
     /**

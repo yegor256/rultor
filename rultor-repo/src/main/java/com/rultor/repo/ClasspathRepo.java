@@ -35,7 +35,9 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Metricable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
+import com.rultor.spi.SpecException;
 import com.rultor.spi.User;
+import com.rultor.spi.Variable;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -65,26 +67,9 @@ public final class ClasspathRepo implements Repo, Metricable {
      */
     @Override
     @NotNull
-    public Object make(@NotNull final User user, @NotNull final Spec spec)
-        throws Repo.InstantiationException {
-        Object object;
-        try {
-            object = this.grammar.parse(spec.asText()).instantiate(user);
-        } catch (Repo.InvalidSyntaxException ex) {
-            throw new Repo.InstantiationException(ex);
-        }
-        return object;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
-     */
-    @Override
-    @NotNull
-    public Spec make(@NotNull final String text)
-        throws Repo.InvalidSyntaxException {
-        return this.grammar.parse(text);
+    public Variable<?> make(@NotNull final User user, @NotNull final Spec spec)
+        throws SpecException {
+        return this.grammar.parse(user.urn(), spec.asText());
     }
 
     /**

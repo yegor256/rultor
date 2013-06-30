@@ -182,14 +182,14 @@ public final class PulseRs extends BaseRs {
      * @throws Exception If fails
      */
     private Pulse pulse() throws Exception {
-        final Unit unit = this.user().get(this.name);
-        if (unit == null) {
+        if (!this.user().units().contains(this.name)) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 String.format("Unit '%s' doesn't exist", this.name),
                 Level.SEVERE
             );
         }
+        final Unit unit = this.user().get(this.name);
         return new Pulse(
             this.date,
             Drain.class.cast(

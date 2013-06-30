@@ -31,7 +31,8 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
-import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import com.rultor.spi.Variable;
 import java.util.Arrays;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -58,7 +59,7 @@ public final class CompositeTest {
             Arrays.<Variable<?>>asList(new Constant<Integer>(Tv.TEN))
         );
         MatcherAssert.assertThat(
-            var.instantiate(Mockito.mock(User.class)),
+            var.instantiate(Mockito.mock(Users.class)),
             Matchers.<Object>equalTo(Tv.TEN)
         );
     }
@@ -110,7 +111,7 @@ public final class CompositeTest {
                 Arrays.<Variable<?>>asList()
             );
             final Object object =
-                composite.instantiate(Mockito.mock(User.class));
+                composite.instantiate(Mockito.mock(Users.class));
             MatcherAssert.assertThat(
                 object,
                 Matchers.hasToString(Matchers.notNullValue())

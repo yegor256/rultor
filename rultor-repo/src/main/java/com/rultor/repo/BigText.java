@@ -31,7 +31,8 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import com.rultor.spi.Variable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
@@ -77,7 +78,7 @@ final class BigText implements Variable<String> {
      * {@inheritDoc}
      */
     @Override
-    public String instantiate(final User user) {
+    public String instantiate(final Users users) {
         return this.value;
     }
 

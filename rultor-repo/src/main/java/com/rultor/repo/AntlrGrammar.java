@@ -31,7 +31,9 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Repo;
+import com.jcabi.urn.URN;
+import com.rultor.spi.SpecException;
+import com.rultor.spi.Variable;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -60,38 +62,40 @@ final class AntlrGrammar implements Grammar {
      */
     @Override
     @NotNull
-    public Variable<?> parse(final String text)
-        throws Repo.InvalidSyntaxException {
+    public Variable<?> parse(@NotNull final URN urn, @NotNull final String text)
+        throws SpecException {
         Variable<?> var;
         if (BigText.matches(text)) {
             var = new BigText(text);
         } else {
-            var = this.antlr(text);
+            var = this.antlr(urn, text);
         }
         return var;
     }
 
     /**
      * Parse text to variable.
+     * @param owner Owner of the spec
      * @param text Text
      * @return Variable
-     * @throws Repo.InvalidSyntaxException If fails
+     * @throws SpecException If fails
      * @checkstyle RedundantThrows (5 lines)
      */
-    private Variable<?> antlr(final String text)
-        throws Repo.InvalidSyntaxException {
+    private Variable<?> antlr(final URN owner, final String text)
+        throws SpecException {
         final CharStream input = new ANTLRStringStream(text);
         final SpecLexer lexer = new SpecLexer(input);
         final TokenStream tokens = new CommonTokenStream(lexer);
         final SpecParser parser = new SpecParser(tokens);
         parser.setGrammar(this);
+        parser.setOwner(owner);
         Variable<?> var;
         try {
             var = parser.spec();
         } catch (org.antlr.runtime.RecognitionException ex) {
-            throw new Repo.InvalidSyntaxException(ex);
+            throw new SpecException(ex);
         } catch (IllegalArgumentException ex) {
-            throw new Repo.InvalidSyntaxException(ex);
+            throw new SpecException(ex);
         }
         return var;
     }

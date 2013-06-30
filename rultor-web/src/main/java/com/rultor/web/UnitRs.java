@@ -37,7 +37,9 @@ import com.rexsl.page.inset.FlashInset;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
+import com.rultor.spi.SpecException;
 import com.rultor.spi.Unit;
+import com.rultor.spi.Variable;
 import java.net.HttpURLConnection;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -155,15 +157,14 @@ public final class UnitRs extends BaseRs {
      * @return Unit
      */
     private Unit unit() {
-        final Unit unit = this.user().get(this.name);
-        if (unit == null) {
+        if (!this.user().units().contains(this.name)) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 String.format("Unit '%s' doesn't exist", this.name),
                 Level.SEVERE
             );
         }
-        return unit;
+        return this.user().get(this.name);
     }
 
     /**
@@ -173,16 +174,14 @@ public final class UnitRs extends BaseRs {
      * @return Spec
      */
     private Spec parse(final String text, final Class<?> type) {
-        final Spec spec;
-        try {
-            spec = this.repo().make(text);
-        } catch (Repo.InvalidSyntaxException ex) {
-            throw new IllegalArgumentException(ex);
-        }
+        final Variable<?> var;
         final Object object;
         try {
-            object = new Repo.Cached(this.repo(), this.user(), spec).get();
-        } catch (Repo.InstantiationException ex) {
+            var = new Repo.Cached(
+                this.repo(), this.user(), new Spec.Simple(text)
+            ).get();
+            object = var.instantiate(this.users());
+        } catch (SpecException ex) {
             throw new IllegalArgumentException(ex);
         }
         if (!type.isAssignableFrom(object.getClass())) {
@@ -194,7 +193,7 @@ public final class UnitRs extends BaseRs {
                 )
             );
         }
-        return spec;
+        return new Spec.Simple(var.asText());
     }
 
     /**

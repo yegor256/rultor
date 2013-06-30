@@ -48,91 +48,15 @@ import lombok.ToString;
 public interface Repo {
 
     /**
-     * Invalid syntax of spec.
-     */
-    @Loggable.Quiet
-    final class InvalidSyntaxException extends Exception {
-        /**
-         * Serialization marker.
-         */
-        private static final long serialVersionUID = 0x65740abe34528092L;
-        /**
-         * Public ctor.
-         * @param cause Cause of it
-         */
-        public InvalidSyntaxException(final String cause) {
-            super(cause);
-        }
-        /**
-         * Public ctor.
-         * @param cause Cause of it
-         */
-        public InvalidSyntaxException(final Exception cause) {
-            super(cause);
-        }
-        /**
-         * Public ctor.
-         * @param cause Cause of it
-         * @param origin Original exception
-         */
-        public InvalidSyntaxException(final String cause,
-            final Exception origin) {
-            super(cause, origin);
-        }
-    }
-
-    /**
-     * Spec can't be instantiated.
-     */
-    @Loggable.Quiet
-    final class InstantiationException extends Exception {
-        /**
-         * Serialization marker.
-         */
-        private static final long serialVersionUID = 0x65f40afe34528092L;
-        /**
-         * Public ctor.
-         * @param cause Cause of it
-         */
-        public InstantiationException(final String cause) {
-            super(cause);
-        }
-        /**
-         * Public ctor.
-         * @param cause Cause of it
-         */
-        public InstantiationException(final Exception cause) {
-            super(cause);
-        }
-        /**
-         * Public ctor.
-         * @param msg Message
-         * @param cause Cause of it
-         */
-        public InstantiationException(final String msg, final Exception cause) {
-            super(msg, cause);
-        }
-    }
-
-    /**
-     * Make a spec from text.
-     * @param text Text
-     * @return The spec
-     * @throws Repo.InvalidSyntaxException If incorrect syntax
-     */
-    @NotNull
-    Spec make(@NotNull String text) throws Repo.InvalidSyntaxException;
-
-    /**
      * Make an instance from a spec.
      * @param user Owner of this spec
      * @param spec Spect
      * @return The instance
-     * @throws Repo.InstantiationException If can't instantiate
+     * @throws SpecException If can't instantiate
      */
     @NotNull
-    Object make(@NotNull User user, @NotNull Spec spec)
-        throws Repo.InstantiationException;
+    Variable<?> make(@NotNull User user, @NotNull Spec spec)
+        throws SpecException;
 
     /**
      * Cached repo.
@@ -169,10 +93,10 @@ public interface Repo {
         /**
          * Get an object.
          * @return The object or exception if fails
-         * @throws Repo.InstantiationException If fails
+         * @throws SpecException If fails
          */
         @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
-        public Object get() throws Repo.InstantiationException {
+        public Variable<?> get() throws SpecException {
             return this.repo.make(this.user, this.spec);
         }
     }
