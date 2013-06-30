@@ -32,7 +32,6 @@ package com.rultor.repo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Repo;
-import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -79,14 +78,18 @@ final class Reference implements Variable<Object> {
     @Override
     public Object instantiate(final User user)
         throws Repo.InstantiationException {
-        final Unit unit = user.get(this.name);
-        if (unit == null) {
+        if (!user.units().contains(this.name)) {
             throw new Repo.InstantiationException(
-                String.format("unit '%s' not found in your account", this.name)
+                String.format(
+                    "unit '%s' not found in your account",
+                    this.name
+                )
             );
         }
         try {
-            return this.grammar.parse(unit.spec().asText()).instantiate(user);
+            return this.grammar.parse(
+                user.get(this.name).spec().asText()
+            ).instantiate(user);
         } catch (Repo.InvalidSyntaxException ex) {
             throw new Repo.InstantiationException(ex);
         }

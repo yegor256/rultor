@@ -90,4 +90,20 @@ public final class CompositeTest {
         );
     }
 
+    /**
+     * ClasspathRepo can make an instance with configurable {@code #toString()}.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void makesConfigurableInstance() throws Exception {
+        final Object object = new Composite(
+            "java.lang.Long",
+            Arrays.<Variable<?>>asList(new Constant<Long>(1L))
+        ).instantiate(Mockito.mock(User.class));
+        MatcherAssert.assertThat(object, Matchers.hasToString("1L"));
+        final String value = "hi there!";
+        object.getClass().getField("$$toString").set(object, value);
+        MatcherAssert.assertThat(object, Matchers.hasToString(value));
+    }
+
 }

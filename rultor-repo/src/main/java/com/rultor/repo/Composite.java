@@ -164,7 +164,7 @@ final class Composite implements Variable<Object> {
         throws Repo.InstantiationException {
         final Class<?> cls;
         try {
-            cls = Class.forName(this.type);
+            cls = Composite.alter(Class.forName(this.type));
         } catch (ClassNotFoundException ex) {
             throw new Repo.InstantiationException(ex);
         }
@@ -232,6 +232,15 @@ final class Composite implements Variable<Object> {
             out = type;
         }
         return out;
+    }
+
+    /**
+     * Alter the class and make it configurable.
+     * @param origin Original type
+     * @return Modified type
+     */
+    private static Class<?> alter(final Class<?> origin) {
+        return origin;
     }
 
 }
