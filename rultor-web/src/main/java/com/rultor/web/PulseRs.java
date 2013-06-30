@@ -182,7 +182,7 @@ public final class PulseRs extends BaseRs {
      * @throws Exception If fails
      */
     private Pulse pulse() throws Exception {
-        final Unit unit = this.user().units().get(this.name);
+        final Unit unit = this.user().get(this.name);
         if (unit == null) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),

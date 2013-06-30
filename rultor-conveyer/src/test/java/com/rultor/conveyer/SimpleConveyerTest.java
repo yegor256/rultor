@@ -29,7 +29,6 @@
  */
 package com.rultor.conveyer;
 
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
@@ -40,6 +39,8 @@ import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -105,18 +106,14 @@ public final class SimpleConveyerTest {
             .when(repo).make(Mockito.any(User.class), Mockito.eq(drain));
         final User user = Mockito.mock(User.class);
         final Unit unit = Mockito.mock(Unit.class);
-        Mockito.doReturn(
-            new ImmutableMap.Builder<String, Unit>()
-                .put(name, unit)
-                .build()
-        ).when(user).units();
+        Mockito.doReturn(new HashSet<String>(Arrays.asList(name)))
+            .when(user).units();
+        Mockito.doReturn(unit).when(user).get(name);
         Mockito.doReturn(drain).when(unit).drain();
         final Users users = Mockito.mock(Users.class);
-        Mockito.doReturn(
-            new ImmutableMap.Builder<URN, User>()
-                .put(owner, user)
-                .build()
-        ).when(users).everybody();
+        Mockito.doReturn(user).when(users).get(owner);
+        Mockito.doReturn(new HashSet<URN>(Arrays.asList(owner)))
+            .when(users).everybody();
         final SimpleConveyer conveyer = new SimpleConveyer(queue, repo, users);
         try {
             conveyer.start();
@@ -128,7 +125,7 @@ public final class SimpleConveyerTest {
             conveyer.close();
         }
         Mockito.verify(queue, Mockito.atLeast(1)).pull();
-        Mockito.verify(users, Mockito.atLeast(1)).everybody();
+        Mockito.verify(users, Mockito.atLeast(1)).get(owner);
         Mockito.verify(instance, Mockito.atLeast(1)).pulse();
     }
 

@@ -42,14 +42,14 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.aws.S3Client;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Time;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
-import java.util.Collections;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.HashSet;
+import java.util.Set;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
@@ -108,9 +108,8 @@ public final class S3Drain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public SortedSet<Time> pulses() {
-        final SortedSet<Time> numbers =
-            new TreeSet<Time>(Collections.reverseOrder());
+    public Pulses pulses() {
+        final Set<Time> numbers = new HashSet<Time>();
         final AmazonS3 aws = this.client.get();
         final ListObjectsRequest request = new ListObjectsRequest()
             .withBucketName(this.client.bucket())
@@ -123,7 +122,7 @@ public final class S3Drain implements Drain {
                 ).time()
             );
         }
-        return Collections.unmodifiableSortedSet(numbers);
+        return new Pulses.Array(numbers);
     }
 
     /**

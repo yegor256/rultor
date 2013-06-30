@@ -155,7 +155,7 @@ public final class UnitRs extends BaseRs {
      * @return Unit
      */
     private Unit unit() {
-        final Unit unit = this.user().units().get(this.name);
+        final Unit unit = this.user().get(this.name);
         if (unit == null) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),

@@ -45,11 +45,10 @@ def user = new RestUser(rexsl.home, identity.urn(), key)
 MatcherAssert.assertThat(user.urn(), Matchers.equalTo(identity.urn()))
 
 def name = 'sample-unit'
-def unit = user.units().get(name)
-if (unit == null) {
-    user.units().put(name, null)
-    unit = user.units().get(name)
+if (!user.units().contains(name)) {
+    user.create(name)
 }
+def unit = user.get(name)
 
 [
     'java.lang.Double ( -55.0 )': 'java.lang.Double(-55.0)',
@@ -58,4 +57,4 @@ if (unit == null) {
     unit.update(new Spec.Simple(it.key), new Spec.Simple('com.rultor.drain.Trash()'))
     MatcherAssert.assertThat(unit.spec().asText(), Matchers.equalTo(it.value))
 }
-user.units().remove(name)
+user.remove(name)

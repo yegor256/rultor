@@ -37,7 +37,6 @@ import com.rexsl.page.auth.Identity;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
-import java.util.Map;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
@@ -97,7 +96,7 @@ public final class IndexRs extends BaseRs {
     @POST
     @Path("/create")
     public Response create(@NotNull @FormParam("name") final String name) {
-        this.user().units().put(name, new Unit.Empty());
+        this.user().create(name);
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()
                 .clone()
@@ -114,11 +113,10 @@ public final class IndexRs extends BaseRs {
      */
     private JaxbBundle mine() {
         return new JaxbBundle("units").add(
-            new JaxbBundle.Group<Map.Entry<String, Unit>>(
-                this.user().units().entrySet()) {
+            new JaxbBundle.Group<String>(this.user().units()) {
                 @Override
-                public JaxbBundle bundle(final Map.Entry<String, Unit> entry) {
-                    return IndexRs.this.unit(entry.getKey(), entry.getValue());
+                public JaxbBundle bundle(final String name) {
+                    return IndexRs.this.unit(name);
                 }
             }
         );
@@ -127,10 +125,10 @@ public final class IndexRs extends BaseRs {
     /**
      * Convert unit to JaxbBundle.
      * @param name Name of it
-     * @param unit The unit
      * @return Bundle
      */
-    private JaxbBundle unit(final String name, final Unit unit) {
+    private JaxbBundle unit(final String name) {
+        final Unit unit = this.user().get(name);
         return new JaxbBundle("unit")
             .add("name", name)
             .up()

@@ -29,10 +29,11 @@
  */
 package com.rultor.repo;
 
-import com.google.common.collect.ImmutableMap;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
+import java.util.Arrays;
+import java.util.HashSet;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -56,9 +57,9 @@ public final class ReferenceTest {
         final Spec spec = new Spec.Simple("java.lang.Long(1L)");
         Mockito.doReturn(spec).when(unit).spec();
         final User user = Mockito.mock(User.class);
-        final ImmutableMap<String, Unit> units =
-            new ImmutableMap.Builder<String, Unit>().put(name, unit).build();
-        Mockito.doReturn(units).when(user).units();
+        Mockito.doReturn(new HashSet<String>(Arrays.asList(name)))
+            .when(user).units();
+        Mockito.doReturn(unit).when(user).get(name);
         final Variable<Object> var = new Reference(new AntlrGrammar(), name);
         MatcherAssert.assertThat(
             var.instantiate(user),

@@ -31,6 +31,7 @@ package com.rultor.life;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
+import com.jcabi.urn.URN;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
@@ -38,7 +39,6 @@ import com.rultor.spi.Users;
 import com.rultor.spi.Work;
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 
@@ -81,13 +81,15 @@ final class Quartz implements Runnable, Closeable {
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void run() {
-        for (User user : this.users.everybody().values()) {
-            for (Map.Entry<String, Unit> entry : user.units().entrySet()) {
+        for (URN urn : this.users.everybody()) {
+            final User user = this.users.get(urn);
+            for (String name : user.units()) {
+                final Unit unit = user.get(name);
                 this.queue.push(
                     new Work.Simple(
                         user.urn(),
-                        entry.getKey(),
-                        entry.getValue().spec()
+                        name,
+                        unit.spec()
                     )
                 );
             }

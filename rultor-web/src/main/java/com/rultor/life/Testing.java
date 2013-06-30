@@ -39,8 +39,6 @@ import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
-import java.util.AbstractMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -93,22 +91,14 @@ final class Testing implements Profile {
      */
     @Override
     public Users users() {
-        // @checkstyle AnonInnerLength (100 lines)
         return new Users() {
             @Override
-            public Map<URN, User> everybody() {
-                return new AbstractMap<URN, User>() {
-                    @Override
-                    public Set<Map.Entry<URN, User>> entrySet() {
-                        return new TreeSet<Map.Entry<URN, User>>();
-                    }
-                    @Override
-                    public User get(final Object urn) {
-                        return new Testing.MemoryUser(
-                            URN.create(urn.toString())
-                        );
-                    }
-                };
+            public Set<URN> everybody() {
+                return new TreeSet<URN>();
+            }
+            @Override
+            public User get(final URN urn) {
+                return new Testing.MemoryUser(urn);
             }
         };
     }
@@ -142,23 +132,20 @@ final class Testing implements Profile {
             return URN.create(this.name.toString());
         }
         @Override
-        public Map<String, Unit> units() {
-            return new AbstractMap<String, Unit>() {
-                @Override
-                public Set<Map.Entry<String, Unit>> entrySet() {
-                    return Testing.UNITS.entrySet();
-                }
-                @Override
-                public Unit get(final Object unit) {
-                    return new Testing.MemoryUnit(unit.toString());
-                }
-                @Override
-                public Unit put(final String txt, final Unit unit) {
-                    Testing.SPECS.put(txt, new Spec.Simple());
-                    Testing.DRAINS.put(txt, new Spec.Simple());
-                    return Testing.UNITS.put(txt, unit);
-                }
-            };
+        public Set<String> units() {
+            return Testing.UNITS.keySet();
+        }
+        @Override
+        public Unit get(final String unit) {
+            return Testing.UNITS.get(unit);
+        }
+        @Override
+        public void create(final String txt) {
+            Testing.UNITS.put(txt, new MemoryUnit(txt));
+        }
+        @Override
+        public void remove(final String txt) {
+            Testing.UNITS.remove(txt);
         }
     }
 
@@ -176,6 +163,8 @@ final class Testing implements Profile {
          * @param unit Name of it
          */
         protected MemoryUnit(final String unit) {
+            Testing.SPECS.put(unit, new Spec.Simple());
+            Testing.DRAINS.put(unit, new Spec.Simple());
             this.name = unit;
         }
         @Override

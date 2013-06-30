@@ -39,12 +39,10 @@ import com.jcabi.urn.URN;
 import com.rultor.spi.Metricable;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
-import java.util.AbstractMap;
 import java.util.Collections;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -78,17 +76,21 @@ public final class AwsUsers implements Users, Metricable {
      * {@inheritDoc}
      */
     @Override
-    public Map<URN, User> everybody() {
-        return new AbstractMap<URN, User>() {
-            @Override
-            public Set<Map.Entry<URN, User>> entrySet() {
-                return AwsUsers.this.fetch().entrySet();
-            }
-            @Override
-            public User get(final Object urn) {
-                return AwsUsers.this.fetch(URN.create(urn.toString()));
-            }
-        };
+    public Set<URN> everybody() {
+        final Set<URN> users = new HashSet<URN>(0);
+        for (Item item : this.region.table("units").frame()) {
+            users.add(URN.create(item.get(AwsUnit.KEY_OWNER).getS()));
+        }
+        return Collections.unmodifiableSet(users);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NotNull
+    @Override
+    public User get(@NotNull final URN urn) {
+        return new AwsUser(this.region, urn);
     }
 
     /**
@@ -105,31 +107,6 @@ public final class AwsUsers implements Users, Metricable {
                 }
             }
         );
-    }
-
-    /**
-     * Make user by URN.
-     * @param urn The URN
-     * @return The user
-     */
-    private User fetch(final URN urn) {
-        return new AwsUser(this.region, urn);
-    }
-
-    /**
-     * Fetch everybody.
-     * @return Everybody
-     */
-    private Map<URN, User> fetch() {
-        final ConcurrentMap<URN, User> users =
-            new ConcurrentSkipListMap<URN, User>();
-        for (Item item : this.region.table("units").frame()) {
-            final URN urn = URN.create(item.get(AwsUnit.KEY_OWNER).getS());
-            if (!users.containsKey(urn)) {
-                users.put(urn, this.fetch(urn));
-            }
-        }
-        return Collections.unmodifiableMap(users);
     }
 
 }

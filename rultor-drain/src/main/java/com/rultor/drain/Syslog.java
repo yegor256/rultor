@@ -32,6 +32,7 @@ package com.rultor.drain;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Time;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -40,8 +41,6 @@ import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
@@ -112,8 +111,8 @@ public final class Syslog implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public SortedSet<Time> pulses() throws IOException {
-        return new TreeSet<Time>();
+    public Pulses pulses() throws IOException {
+        return new Pulses.Array();
     }
 
     /**

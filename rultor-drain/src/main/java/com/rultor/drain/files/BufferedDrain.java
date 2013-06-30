@@ -34,6 +34,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Time;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -48,7 +49,6 @@ import java.io.PrintWriter;
 import java.io.SequenceInputStream;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.SortedSet;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -124,7 +124,7 @@ public final class BufferedDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public SortedSet<Time> pulses() throws IOException {
+    public Pulses pulses() throws IOException {
         return this.origin.pulses();
     }
 

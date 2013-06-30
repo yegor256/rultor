@@ -31,7 +31,7 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
-import java.util.Map;
+import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -49,6 +49,14 @@ public interface Users {
      * @return All users
      */
     @NotNull
-    Map<URN, User> everybody();
+    Set<URN> everybody();
+
+    /**
+     * Get user by URN (no exception even if it's seen for the first time).
+     * @param name URN of it
+     * @return The user
+     */
+    @NotNull
+    User get(@NotNull URN name);
 
 }

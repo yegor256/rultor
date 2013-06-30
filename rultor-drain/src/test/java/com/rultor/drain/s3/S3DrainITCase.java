@@ -31,9 +31,9 @@ package com.rultor.drain.s3;
 
 import com.rultor.aws.S3Client;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Time;
 import java.util.Arrays;
-import java.util.SortedSet;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
@@ -80,7 +80,7 @@ public final class S3DrainITCase {
         final Time date = new Time();
         final Drain drain = new S3Drain(this.client, "S3DrainITCase/");
         drain.append(date, Arrays.asList(msg));
-        final SortedSet<Time> names = drain.pulses();
+        final Pulses names = drain.pulses();
         MatcherAssert.assertThat(names, Matchers.hasItem(date));
         MatcherAssert.assertThat(
             IOUtils.toString(drain.read(date), CharEncoding.UTF_8),

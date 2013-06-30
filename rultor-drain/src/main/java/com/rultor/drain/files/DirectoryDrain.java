@@ -32,6 +32,7 @@ package com.rultor.drain.files;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Time;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -92,7 +93,7 @@ public final class DirectoryDrain implements Drain {
      */
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public SortedSet<Time> pulses() throws IOException {
+    public Pulses pulses() throws IOException {
         final SortedSet<Time> numbers = new TreeSet<Time>();
         final File folder = new File(this.dir);
         if (folder.exists()) {
@@ -109,7 +110,7 @@ public final class DirectoryDrain implements Drain {
                 );
             }
         }
-        return numbers;
+        return new Pulses.Array(numbers);
     }
 
     /**

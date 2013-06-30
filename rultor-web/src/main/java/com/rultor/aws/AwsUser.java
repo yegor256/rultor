@@ -39,15 +39,12 @@ import com.jcabi.urn.URN;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
-import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -101,54 +98,43 @@ final class AwsUser implements User {
      */
     @Override
     @NotNull
-    public Map<String, Unit> units() {
-        return new AbstractMap<String, Unit>() {
-            @Override
-            public Set<Map.Entry<String, Unit>> entrySet() {
-                return AwsUser.this.fetch().entrySet();
-            }
-            @Override
-            public Unit remove(final Object unit) {
-                AwsUser.this.remove(unit.toString());
-                return null;
-            }
-            @Override
-            public Unit put(final String txt, final Unit unit) {
-                AwsUser.this.create(txt);
-                return null;
-            }
-        };
+    @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
+    public Set<String> units() {
+        final Set<String> units = new HashSet<String>(0);
+        final Collection<Item> items = this.region.table(AwsUnit.TABLE)
+            .frame().where(AwsUnit.KEY_OWNER, Conditions.equalTo(this.name));
+        for (Item item : items) {
+            units.add(item.get(AwsUnit.KEY_NAME).getS());
+        }
+        return Collections.unmodifiableSet(units);
     }
 
     /**
-     * Create a new unit.
-     * @param unt Name of it
-     * @return The unit created
+     * {@inheritDoc}
      */
+    @Override
     @Cacheable.FlushAfter
-    private Unit create(@NotNull @Pattern(
+    public void create(@NotNull @Pattern(
         regexp = "[-a-z0-9]+",
         message = "Only numbers, letters, and dashes are allowed")
         final String unt) {
-        if (this.units().containsKey(unt)) {
+        if (this.units().contains(unt)) {
             throw new IllegalArgumentException(
                 String.format("Unit '%s' already exists", unt)
             );
         }
-        final Unit unit = this.unit(unt);
-        unit.update(
+        new AwsUnit(this.region, this.name, unt).update(
             new Spec.Simple(),
             new Spec.Simple("com.rultor.drain.Trash()")
         );
-        return unit;
     }
 
     /**
-     * Remove this unit.
-     * @param unit Name of it
+     * {@inheritDoc}
      */
+    @Override
     @Cacheable.FlushAfter
-    private void remove(@NotNull final String unit) {
+    public void remove(@NotNull final String unit) {
         final Iterator<Item> items = this.region.table(AwsUnit.TABLE).frame()
             .where(AwsUnit.KEY_OWNER, Conditions.equalTo(this.name))
             .where(AwsUnit.KEY_NAME, Conditions.equalTo(unit))
@@ -163,31 +149,16 @@ final class AwsUser implements User {
     }
 
     /**
-     * Make a unit using the name.
-     * @param unit Name of the unit
-     * @return The unit
+     * {@inheritDoc}
      */
-    private Unit unit(final String unit) {
-        return new AwsUnit(this.region, this.name, unit);
-    }
-
-    /**
-     * Fetch all units.
-     * @return Map of them
-     */
-    @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
-    private Map<String, Unit> fetch() {
-        final ConcurrentMap<String, Unit> units =
-            new ConcurrentSkipListMap<String, Unit>();
-        final Collection<Item> items = this.region.table(AwsUnit.TABLE)
-            .frame().where(AwsUnit.KEY_OWNER, Conditions.equalTo(this.name));
-        for (Item item : items) {
-            final String unit = item.get(AwsUnit.KEY_NAME).getS();
-            if (!units.containsKey(unit)) {
-                units.put(unit, this.unit(unit));
-            }
+    @Override
+    public Unit get(@NotNull final String unit) {
+        if (!this.units().contains(unit)) {
+            throw new IllegalArgumentException(
+                String.format("Unit '%s' doesn't exist", unit)
+            );
         }
-        return Collections.unmodifiableMap(units);
+        return new AwsUnit(this.region, this.name, unit);
     }
 
 }

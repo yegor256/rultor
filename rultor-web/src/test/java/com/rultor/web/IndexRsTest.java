@@ -37,7 +37,6 @@ import com.rexsl.test.JaxbConverter;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
-import java.util.concurrent.ConcurrentMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.hamcrest.MatcherAssert;
@@ -63,10 +62,8 @@ public final class IndexRsTest {
         res.setHttpHeaders(new HttpHeadersMocker().mock());
         res.setSecurityContext(Mockito.mock(SecurityContext.class));
         final User user = Mockito.mock(User.class);
-        final ConcurrentMap<URN, User> map = Mockito.mock(ConcurrentMap.class);
-        Mockito.doReturn(user).when(map).get(Mockito.any(URN.class));
         final Users users = Mockito.mock(Users.class);
-        Mockito.doReturn(map).when(users).everybody();
+        Mockito.doReturn(user).when(users).get(Mockito.any(URN.class));
         res.setServletContext(
             new ServletContextMocker().withAttribute(
                 Users.class.getName(), users

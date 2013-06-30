@@ -34,7 +34,6 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.SortedSet;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,7 +57,7 @@ public interface Drain {
      * @return List of them
      * @throws IOException If some IO problem inside
      */
-    SortedSet<Time> pulses() throws IOException;
+    Pulses pulses() throws IOException;
 
     /**
      * Append a few lines to the pulse related to the given date.

@@ -31,7 +31,7 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
-import java.util.Map;
+import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -52,11 +52,30 @@ public interface User {
     URN urn();
 
     /**
-     * All his units, {@code get()}, {@code put()}, and
-     * {@code remove()} should be supported.
+     * Names of all his units.
      * @return Collection of units
      */
     @NotNull
-    Map<String, Unit> units();
+    Set<String> units();
+
+    /**
+     * Get unit by name (runtime exception if it's absent).
+     * @param name The name of it
+     * @return The unit
+     */
+    @NotNull
+    Unit get(@NotNull String name);
+
+    /**
+     * Remove unit by name (runtime exception if it's absent).
+     * @param name The name of it
+     */
+    void remove(@NotNull String name);
+
+    /**
+     * Create empty default unit with this name.
+     * @param name The name of it
+     */
+    void create(@NotNull String name);
 
 }

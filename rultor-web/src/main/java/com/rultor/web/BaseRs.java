@@ -173,7 +173,7 @@ public class BaseRs extends BaseResource {
      */
     @NotNull(message = "User can't be NULL")
     protected final User user() {
-        return this.users().everybody().get(this.auth().identity().urn());
+        return this.users().get(this.auth().identity().urn());
     }
 
     /**

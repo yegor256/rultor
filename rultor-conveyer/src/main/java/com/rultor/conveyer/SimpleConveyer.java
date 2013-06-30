@@ -196,7 +196,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private void process() throws Exception {
         final Work work = this.queue.pull();
-        final User owner = this.users.everybody().get(work.owner());
+        final User owner = this.users.get(work.owner());
         final Object object =
             new Repo.Cached(this.repo, owner, work.spec()).get();
         if (object instanceof Instance) {
@@ -204,7 +204,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
                 Instance.class.cast(object),
                 this.appender,
                 work,
-                this.drain(owner, owner.units().get(work.unit()).drain())
+                this.drain(owner, owner.get(work.unit()).drain())
             );
             instance.pulse();
             if (this.counter != null) {

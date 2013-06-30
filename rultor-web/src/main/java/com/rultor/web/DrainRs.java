@@ -37,13 +37,13 @@ import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Time;
 import com.rultor.spi.Unit;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.SortedSet;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -115,12 +115,12 @@ public final class DrainRs extends BaseRs {
         final Drain drain = Drain.class.cast(
             new Repo.Cached(this.repo(), this.user(), this.unit().drain()).get()
         );
-        SortedSet<Time> pulses = drain.pulses();
+        Pulses pulses = drain.pulses();
         final Iterable<Time> visible;
         if (this.since == null) {
             visible = Iterables.limit(pulses, Tv.TEN);
         } else {
-            pulses = pulses.tailSet(this.since);
+            pulses = pulses.tail(this.since);
             visible = Iterables.limit(pulses, Tv.TWENTY);
             page = page
                 .append(new JaxbBundle("since", this.since.toString()))
@@ -134,7 +134,8 @@ public final class DrainRs extends BaseRs {
                     )
                 );
         }
-        if (pulses.size() > Iterables.size(visible)) {
+        final int total = Iterables.size(visible);
+        if (Iterables.size(Iterables.limit(pulses, total + 1)) > total) {
             page = page.link(
                 new Link(
                     "more",
@@ -158,7 +159,7 @@ public final class DrainRs extends BaseRs {
      * @return The unit
      */
     private Unit unit() {
-        final Unit unit = this.user().units().get(this.name);
+        final Unit unit = this.user().get(this.name);
         if (unit == null) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),

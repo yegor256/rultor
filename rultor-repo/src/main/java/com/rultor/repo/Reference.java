@@ -79,7 +79,7 @@ final class Reference implements Variable<Object> {
     @Override
     public Object instantiate(final User user)
         throws Repo.InstantiationException {
-        final Unit unit = user.units().get(this.name);
+        final Unit unit = user.get(this.name);
         if (unit == null) {
             throw new Repo.InstantiationException(
                 String.format("unit '%s' not found in your account", this.name)
