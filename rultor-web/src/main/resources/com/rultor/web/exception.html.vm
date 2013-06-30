@@ -14,7 +14,7 @@
                 <li>
                     <code>${buildNumber}</code>
                 </li>
-                <li class="alert-error">
+                <li class="text-error">
                     Internal Application Error
                 </li>
             </ul>

@@ -193,7 +193,9 @@ public final class PulseRs extends BaseRs {
         return new Pulse(
             this.date,
             Drain.class.cast(
-                new Repo.Cached(this.repo(), this.user(), unit.drain()).get()
+                new Repo.Cached(
+                    this.repo(), this.user(), unit.drain()
+                ).get().instantiate(this.users())
             )
         );
     }

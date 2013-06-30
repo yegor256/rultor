@@ -82,7 +82,14 @@
         <li>
             <ul class="inline btn-group-vertical">
                 <li>
-                    <xsl:apply-templates select="stages/stage[@final='true']/result"/>
+                    <xsl:choose>
+                        <xsl:when test="stages/stage[@final='true']">
+                            <xsl:apply-templates select="stages/stage[@final='true']/result"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <i class="icon-question-sign text-warning"><xsl:comment>unknown</xsl:comment></i>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </li>
                 <li>
                     <a title="see details">

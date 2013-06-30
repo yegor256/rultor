@@ -107,7 +107,7 @@
                 <xsl:call-template name="face">
                     <xsl:with-param name="object" select="spec"/>
                 </xsl:call-template>
-                <xsl:if test="spec/type != 'com.rultor.drain.Trash'">
+                <xsl:if test="drain/type != 'com.rultor.drain.Trash'">
                     <xsl:text> drained to </xsl:text>
                     <xsl:call-template name="face">
                         <xsl:with-param name="object" select="drain"/>
@@ -123,7 +123,7 @@
                 <xsl:value-of select="$object/face" disable-output-escaping="yes"/>
             </xsl:when>
             <xsl:otherwise>
-                <code class="alert-error"><xsl:value-of select="$object/exception"/></code>
+                <code class="text-error"><xsl:value-of select="$object/exception"/></code>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
