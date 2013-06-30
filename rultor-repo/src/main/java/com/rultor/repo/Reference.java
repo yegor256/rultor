@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.User;
+import java.lang.reflect.Field;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.Validate;
@@ -87,9 +88,11 @@ final class Reference implements Variable<Object> {
             );
         }
         try {
-            return this.grammar.parse(
-                user.get(this.name).spec().asText()
-            ).instantiate(user);
+            return this.alter(
+                this.grammar.parse(
+                    user.get(this.name).spec().asText()
+                ).instantiate(user)
+            );
         } catch (Repo.InvalidSyntaxException ex) {
             throw new Repo.InstantiationException(ex);
         }
@@ -101,6 +104,29 @@ final class Reference implements Variable<Object> {
     @Override
     public String asText() {
         return this.name;
+    }
+
+    /**
+     * Alter the object by injecting name into it.
+     * @param object The object
+     * @return Altered object
+     * @throws Repo.InstantiationException If some error inside
+     * @checkstyle RedundantThrows (5 lines)
+     */
+    private Object alter(final Object object)
+        throws Repo.InstantiationException {
+        for (Field field : object.getClass().getFields()) {
+            if (field.getName().equals(Composite.FIELD)) {
+                try {
+                    field.set(object, this.name);
+                } catch (IllegalAccessException ex) {
+                    throw new Repo.InstantiationException(ex);
+                } catch (SecurityException ex) {
+                    throw new Repo.InstantiationException(ex);
+                }
+            }
+        }
+        return object;
     }
 
 }

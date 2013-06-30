@@ -36,10 +36,18 @@ import com.rultor.spi.Repo;
 import com.rultor.spi.User;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtField;
+import javassist.CtMethod;
+import javassist.Modifier;
+import javassist.NotFoundException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.CharUtils;
@@ -57,6 +65,11 @@ import org.apache.commons.lang3.StringUtils;
 @EqualsAndHashCode(of = { "type", "vars" })
 @Loggable(Loggable.DEBUG)
 final class Composite implements Variable<Object> {
+
+    /**
+     * Supplementary field name.
+     */
+    public static final String FIELD = "__toString";
 
     /**
      * Indentation.
@@ -163,10 +176,14 @@ final class Composite implements Variable<Object> {
     private Constructor<?> ctor(final Class<?>[] types)
         throws Repo.InstantiationException {
         final Class<?> cls;
-        try {
-            cls = Composite.alter(Class.forName(this.type));
-        } catch (ClassNotFoundException ex) {
-            throw new Repo.InstantiationException(ex);
+        if (this.type.startsWith("java.")) {
+            try {
+                cls = Class.forName(this.type);
+            } catch (ClassNotFoundException ex) {
+                throw new Repo.InstantiationException(ex);
+            }
+        } else {
+            cls = Composite.load(this.type);
         }
         Constructor<?> ctor = null;
         for (Constructor<?> opt : cls.getConstructors()) {
@@ -235,12 +252,73 @@ final class Composite implements Variable<Object> {
     }
 
     /**
-     * Alter the class and make it configurable.
-     * @param origin Original type
+     * Load and alter class.
+     * @param name Class name
      * @return Modified type
+     * @throws Repo.InstantiationException If can't instantiate
+     * @checkstyle RedundantThrows (4 lines)
      */
-    private static Class<?> alter(final Class<?> origin) {
-        return origin;
+    private static Class<?> load(final String name)
+        throws Repo.InstantiationException {
+        final ClassPool pool = ClassPool.getDefault();
+        Class<?> type;
+        try {
+            final CtClass cls = pool.get(name);
+            if (Composite.loaded(name)) {
+                type = Class.forName(name);
+            } else {
+                final CtField field = new CtField(
+                    pool.get("java.lang.String"), Composite.FIELD, cls
+                );
+                field.setModifiers(Modifier.PUBLIC);
+                cls.addField(field);
+                final CtMethod method =
+                    cls.getDeclaredMethod("toString", new CtClass[0]);
+                method.setBody(
+                    String.format(
+                        "return %s == null ? super.toString() : %<s;",
+                        Composite.FIELD
+                    )
+                );
+                type = cls.toClass();
+                cls.defrost();
+            }
+        } catch (NotFoundException ex) {
+            throw new Repo.InstantiationException(ex);
+        } catch (CannotCompileException ex) {
+            throw new Repo.InstantiationException(ex);
+        } catch (ClassNotFoundException ex) {
+            throw new Repo.InstantiationException(ex);
+        }
+        return type;
+    }
+
+    /**
+     * Is it loaded already?
+     * @param name Class name
+     * @return TRUE if it's already loaded
+     * @throws Repo.InstantiationException If can't instantiate
+     * @checkstyle RedundantThrows (4 lines)
+     */
+    private static boolean loaded(final String name)
+        throws Repo.InstantiationException {
+        try {
+            final Method method = ClassLoader.class.getDeclaredMethod(
+                "findLoadedClass", String.class
+            );
+            method.setAccessible(true);
+            return method.invoke(
+                ClassLoader.getSystemClassLoader(), name
+            ) != null;
+        } catch (NoSuchMethodException ex) {
+            throw new Repo.InstantiationException(ex);
+        } catch (SecurityException ex) {
+            throw new Repo.InstantiationException(ex);
+        } catch (IllegalAccessException ex) {
+            throw new Repo.InstantiationException(ex);
+        } catch (InvocationTargetException ex) {
+            throw new Repo.InstantiationException(ex);
+        }
     }
 
 }

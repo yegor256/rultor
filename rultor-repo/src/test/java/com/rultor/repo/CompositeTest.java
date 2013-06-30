@@ -96,14 +96,29 @@ public final class CompositeTest {
      */
     @Test
     public void makesConfigurableInstance() throws Exception {
-        final Object object = new Composite(
-            "java.lang.Long",
+        final Variable<?> composite = new Composite(
+            "org.apache.commons.lang3.builder.ToStringBuilder",
             Arrays.<Variable<?>>asList(new Constant<Long>(1L))
-        ).instantiate(Mockito.mock(User.class));
-        MatcherAssert.assertThat(object, Matchers.hasToString("1L"));
-        final String value = "hi there!";
-        object.getClass().getField("$$toString").set(object, value);
-        MatcherAssert.assertThat(object, Matchers.hasToString(value));
+        );
+        for (int idx = 0; idx < 2; ++idx) {
+            final Object object =
+                composite.instantiate(Mockito.mock(User.class));
+            MatcherAssert.assertThat(
+                object,
+                Matchers.hasToString(
+                    Matchers.startsWith("org.apache.commons.lang3.")
+                )
+            );
+            final String value = "hi there!";
+            object.getClass().getField("__toString").set(object, value);
+            MatcherAssert.assertThat(object, Matchers.hasToString(value));
+            MatcherAssert.assertThat(
+                object,
+                Matchers.instanceOf(
+                    org.apache.commons.lang3.builder.ToStringBuilder.class
+                )
+            );
+        }
     }
 
 }

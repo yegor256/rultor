@@ -89,6 +89,7 @@ final class RestUnit implements Unit {
                 .get(String.format("preparing for #spec(%s)", spec))
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .rel("/page/links/link[@rel='save']/@href")
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .post(
                     String.format(
                         "#spec(%s, %s)", spec.asText(), drain.asText()
