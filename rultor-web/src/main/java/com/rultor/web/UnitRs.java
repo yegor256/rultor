@@ -106,7 +106,7 @@ public final class UnitRs extends BaseRs {
     @GET
     @Path("/remove")
     public Response remove() throws Exception {
-        this.user().units().remove(this.name);
+        this.user().remove(this.name);
         throw this.flash().redirect(
             this.uriInfo().getBaseUri(),
             String.format("Unit '%s' successfully removed", this.name),
