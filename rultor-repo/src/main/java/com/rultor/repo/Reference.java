@@ -33,7 +33,8 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.User;
-import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.Validate;
@@ -115,13 +116,15 @@ final class Reference implements Variable<Object> {
      */
     private Object alter(final Object object)
         throws Repo.InstantiationException {
-        for (Field field : object.getClass().getFields()) {
-            if (field.getName().equals(Composite.FIELD)) {
+        for (Method method : object.getClass().getMethods()) {
+            if (method.getName().equals(Composite.METHOD)) {
                 try {
-                    field.set(object, this.name);
+                    method.invoke(object, this.name);
                 } catch (IllegalAccessException ex) {
                     throw new Repo.InstantiationException(ex);
                 } catch (SecurityException ex) {
+                    throw new Repo.InstantiationException(ex);
+                } catch (InvocationTargetException ex) {
                     throw new Repo.InstantiationException(ex);
                 }
             }

@@ -52,6 +52,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Composite.
@@ -67,9 +68,14 @@ import org.apache.commons.lang3.StringUtils;
 final class Composite implements Variable<Object> {
 
     /**
+     * Supplementary method name.
+     */
+    public static final String METHOD = "__rultor_setToString";
+
+    /**
      * Supplementary field name.
      */
-    public static final String FIELD = "__toString";
+    private static final String FIELD = "__rultor_toString";
 
     /**
      * Indentation.
@@ -120,15 +126,30 @@ final class Composite implements Variable<Object> {
             return ctor.newInstance(args);
         } catch (InstantiationException ex) {
             throw new Repo.InstantiationException(
-                String.format("failed to instantiate with %s: %s", ctor, ex), ex
+                String.format(
+                    "failed to instantiate using \"%s\" constructor: %s",
+                    ctor,
+                    ExceptionUtils.getRootCauseMessage(ex)
+                ),
+                ex
             );
         } catch (IllegalAccessException ex) {
             throw new Repo.InstantiationException(
-                String.format("failed to access %s: %s", ctor, ex), ex
+                String.format(
+                    "failed to access \"%s\": %s",
+                    ctor,
+                    ExceptionUtils.getRootCauseMessage(ex)
+                ),
+                ex
             );
         } catch (InvocationTargetException ex) {
             throw new Repo.InstantiationException(
-                String.format("failed to invoke %s: %s", ctor, ex), ex
+                String.format(
+                    "failed to invoke \"%s\": %s",
+                    ctor,
+                    ExceptionUtils.getRootCauseMessage(ex)
+                ),
+                ex
             );
         }
     }
@@ -264,33 +285,100 @@ final class Composite implements Variable<Object> {
         Class<?> type;
         try {
             final CtClass cls = pool.get(name);
-            if (Composite.loaded(name)) {
+            if (Composite.loaded(name) || cls.isModified()) {
                 type = Class.forName(name);
             } else {
                 final CtField field = new CtField(
                     pool.get("java.lang.String"), Composite.FIELD, cls
                 );
-                field.setModifiers(Modifier.PUBLIC);
+                field.setModifiers(Modifier.PRIVATE | Modifier.FINAL);
                 cls.addField(field);
-                final CtMethod method =
-                    cls.getDeclaredMethod("toString", new CtClass[0]);
-                method.setBody(
-                    String.format(
-                        "return %s == null ? super.toString() : %<s;",
-                        Composite.FIELD
+                final String body = String.format(
+                    "return %s == null ? super.toString() : %<s;",
+                    Composite.FIELD
+                );
+                if (Composite.hasToString(cls)) {
+                    final CtMethod method =
+                        // @checkstyle MultipleStringLiterals (1 line)
+                        cls.getDeclaredMethod("toString", new CtClass[0]);
+                    method.setBody(body);
+                } else {
+                    cls.addMethod(
+                        CtMethod.make(
+                            String.format(
+                                "public String toString() { %s }",
+                                body
+                            ),
+                            cls
+                        )
+                    );
+                }
+                cls.addMethod(
+                    CtMethod.make(
+                        String.format(
+                            // @checkstyle StringLiteralsConcatenation (5 lines)
+                            "public void %s(String value) {"
+                            + "java.lang.reflect.Field field = "
+                            + "  this.getClass().getDeclaredField(\"%s\");"
+                            + "field.setAccessible(true);"
+                            + "field.set(this, value);}",
+                            Composite.METHOD,
+                            Composite.FIELD
+                        ),
+                        cls
                     )
                 );
                 type = cls.toClass();
                 cls.defrost();
             }
         } catch (NotFoundException ex) {
-            throw new Repo.InstantiationException(ex);
+            throw new Repo.InstantiationException(
+                String.format(
+                    "not found \"%s\"",
+                    name,
+                    ExceptionUtils.getRootCauseMessage(ex)
+                ),
+                ex
+            );
         } catch (CannotCompileException ex) {
-            throw new Repo.InstantiationException(ex);
+            throw new Repo.InstantiationException(
+                String.format(
+                    "can't compile \"%s\"",
+                    name,
+                    ExceptionUtils.getRootCauseMessage(ex)
+                ),
+                ex
+            );
         } catch (ClassNotFoundException ex) {
-            throw new Repo.InstantiationException(ex);
+            throw new Repo.InstantiationException(
+                String.format(
+                    "class \"%s\" not found: %s",
+                    name,
+                    ExceptionUtils.getRootCauseMessage(ex)
+                ), ex
+            );
         }
         return type;
+    }
+
+    /**
+     * Does it have toString() method already?
+     * @param type The type
+     * @return TRUE if it has it
+     * @throws NotFoundException If not found
+     * @checkstyle RedundantThrows (5 lines)
+     */
+    private static boolean hasToString(final CtClass type)
+        throws NotFoundException {
+        boolean has = false;
+        for (CtMethod method : type.getDeclaredMethods()) {
+            if ("toString".equals(method.getName())
+                && method.getParameterTypes().length == 0) {
+                has = true;
+                break;
+            }
+        }
+        return has;
     }
 
     /**
@@ -311,13 +399,13 @@ final class Composite implements Variable<Object> {
                 ClassLoader.getSystemClassLoader(), name
             ) != null;
         } catch (NoSuchMethodException ex) {
-            throw new Repo.InstantiationException(ex);
+            throw new IllegalStateException(ex);
         } catch (SecurityException ex) {
-            throw new Repo.InstantiationException(ex);
+            throw new IllegalStateException(ex);
         } catch (IllegalAccessException ex) {
-            throw new Repo.InstantiationException(ex);
+            throw new IllegalStateException(ex);
         } catch (InvocationTargetException ex) {
-            throw new Repo.InstantiationException(ex);
+            throw new IllegalStateException(ex);
         }
     }
 

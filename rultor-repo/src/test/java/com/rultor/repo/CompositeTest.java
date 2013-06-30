@@ -29,9 +29,12 @@
  */
 package com.rultor.repo;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.rultor.spi.User;
 import java.util.Arrays;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -95,30 +98,46 @@ public final class CompositeTest {
      * @throws Exception If some problem inside
      */
     @Test
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void makesConfigurableInstance() throws Exception {
-        final Variable<?> composite = new Composite(
-            "org.apache.commons.lang3.builder.ToStringBuilder",
-            Arrays.<Variable<?>>asList(new Constant<Long>(1L))
-        );
-        for (int idx = 0; idx < 2; ++idx) {
+        final String[] types = new String[] {
+            "com.rultor.repo.CompositeTest$Foo",
+            "com.rultor.repo.CompositeTest$Bar",
+        };
+        for (String type : types) {
+            final Variable<?> composite = new Composite(
+                type,
+                Arrays.<Variable<?>>asList()
+            );
             final Object object =
                 composite.instantiate(Mockito.mock(User.class));
             MatcherAssert.assertThat(
                 object,
-                Matchers.hasToString(
-                    Matchers.startsWith("org.apache.commons.lang3.")
-                )
+                Matchers.hasToString(Matchers.startsWith(type))
             );
             final String value = "hi there!";
-            object.getClass().getField("__toString").set(object, value);
+            object.getClass().getMethod(Composite.METHOD, String.class)
+                .invoke(object, value);
             MatcherAssert.assertThat(object, Matchers.hasToString(value));
             MatcherAssert.assertThat(
-                object,
-                Matchers.instanceOf(
-                    org.apache.commons.lang3.builder.ToStringBuilder.class
-                )
+                object, Matchers.instanceOf(Class.forName(type))
             );
         }
+    }
+
+    /**
+     * Test class.
+     */
+    public static final class Foo {
+    }
+
+    /**
+     * Test class.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode
+    public static final class Bar {
     }
 
 }

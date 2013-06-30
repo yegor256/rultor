@@ -29,6 +29,7 @@
  */
 package com.rultor.repo;
 
+import com.jcabi.aspects.Immutable;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
@@ -135,6 +136,7 @@ public final class ClasspathRepoTest {
     /**
      * Test class.
      */
+    @Immutable
     public static final class Foo implements Instance {
         /**
          * Static counter.
