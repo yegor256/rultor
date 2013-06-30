@@ -113,7 +113,9 @@ public final class DrainRs extends BaseRs {
             .init(this)
             .append(new JaxbBundle("unit", this.name));
         final Drain drain = Drain.class.cast(
-            new Repo.Cached(this.repo(), this.user(), this.unit().drain()).get()
+            new Repo.Cached(
+                this.repo(), this.user(), this.unit().drain()
+            ).get().instantiate(this.users())
         );
         Pulses pulses = drain.pulses();
         final Iterable<Time> visible;
