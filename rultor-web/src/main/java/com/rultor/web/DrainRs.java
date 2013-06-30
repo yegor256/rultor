@@ -39,6 +39,7 @@ import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Repo;
+import com.rultor.spi.SpecException;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Time;
 import com.rultor.spi.Unit;
@@ -51,6 +52,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Drain of a unit.
@@ -102,22 +104,17 @@ public final class DrainRs extends BaseRs {
     /**
      * Get entrance page JAX-RS response.
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/")
-    public Response index() throws Exception {
+    public Response index() {
         EmptyPage page = new PageBuilder()
             .stylesheet("/xsl/drain.xsl")
             .build(EmptyPage.class)
             .init(this)
             .append(new JaxbBundle("unit", this.name));
-        final Drain drain = Drain.class.cast(
-            new Repo.Cached(
-                this.repo(), this.user(), this.unit().drain()
-            ).get().instantiate(this.users())
-        );
-        Pulses pulses = drain.pulses();
+        final Drain drain = this.drain();
+        Pulses pulses = this.pulses(drain);
         final Iterable<Time> visible;
         if (this.since == null) {
             visible = Iterables.limit(pulses, Tv.TEN);
@@ -157,6 +154,51 @@ public final class DrainRs extends BaseRs {
     }
 
     /**
+     * Get drain.
+     * @return The drain
+     */
+    private Drain drain() {
+        try {
+            return Drain.class.cast(
+                new Repo.Cached(
+                    this.repo(), this.user(), this.unit().drain()
+                ).get().instantiate(this.users())
+            );
+        } catch (SpecException ex) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                String.format(
+                    "Can't render drain of \"%s\": %s",
+                    this.name,
+                    ExceptionUtils.getRootCauseMessage(ex)
+                ),
+                Level.SEVERE
+            );
+        }
+    }
+
+    /**
+     * Fetch pulses from drain.
+     * @param drain The drain
+     * @return The pulses
+     */
+    private Pulses pulses(final Drain drain) {
+        try {
+            return drain.pulses();
+        } catch (IOException ex) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                String.format(
+                    "I/O problem with the drain of \"%s\": %s",
+                    this.name,
+                    ExceptionUtils.getRootCauseMessage(ex)
+                ),
+                Level.SEVERE
+            );
+        }
+    }
+
+    /**
      * Get unit.
      * @return The unit
      */
@@ -176,10 +218,8 @@ public final class DrainRs extends BaseRs {
      * @param drain Drain to get data from
      * @param pulses All pulses to show
      * @return Collection of JAXB units
-     * @throws Exception If fails
      */
-    private JaxbBundle pulses(final Drain drain,
-        final Iterable<Time> pulses) throws Exception {
+    private JaxbBundle pulses(final Drain drain, final Iterable<Time> pulses) {
         return new JaxbBundle("pulses").add(
             new JaxbBundle.Group<Time>(pulses) {
                 @Override

@@ -63,15 +63,18 @@ public final class MiscRs extends BaseRs {
     /**
      * Show license.
      * @return The JAX-RS response
-     * @throws IOException If fails with I/O
      */
     @GET
     @Path("/LICENSE.txt")
     @Produces(MediaType.TEXT_PLAIN)
-    public String license() throws IOException {
-        return IOUtils.toString(
-            this.getClass().getResourceAsStream("LICENSE.txt")
-        );
+    public String license() {
+        try {
+            return IOUtils.toString(
+                this.getClass().getResourceAsStream("LICENSE.txt")
+            );
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
 }

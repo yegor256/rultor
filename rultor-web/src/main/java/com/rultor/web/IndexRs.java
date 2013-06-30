@@ -61,11 +61,10 @@ public final class IndexRs extends BaseRs {
     /**
      * Get entrance page JAX-RS response.
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/")
-    public Response index() throws Exception {
+    public Response index() {
         final Identity self = this.auth().identity();
         Response response;
         if (self.equals(Identity.ANONYMOUS)) {

@@ -79,11 +79,10 @@ public final class UnitRs extends BaseRs {
     /**
      * View an existing unit or an empty one.
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/")
-    public Response index() throws Exception {
+    public Response index() {
         return this.head()
             .append(
                 new JaxbBundle("unit")
@@ -101,11 +100,10 @@ public final class UnitRs extends BaseRs {
     /**
      * Remove unit by name.
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/remove")
-    public Response remove() throws Exception {
+    public Response remove() {
         this.user().remove(this.name);
         throw this.flash().redirect(
             this.uriInfo().getBaseUri(),
