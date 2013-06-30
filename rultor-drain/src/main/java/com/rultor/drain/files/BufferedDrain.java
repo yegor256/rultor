@@ -110,11 +110,19 @@ public final class BufferedDrain implements Drain {
      */
     @Override
     public String toString() {
+        final int total;
+        final File folder = new File(this.dir);
+        if (folder.exists()) {
+            total = folder.listFiles().length;
+        } else {
+            total = 0;
+        }
         return Logger.format(
             // @checkstyle LineLength (1 line)
-            "%s buffered at `%s` with %[ms]s flush interval and %[ms]s lifetime",
+            "%s buffered by %d file(s) `%s` with %[ms]s flush interval and %[ms]s lifetime",
             this.origin,
             this.dir,
+            total,
             this.maximum,
             this.lifetime
         );

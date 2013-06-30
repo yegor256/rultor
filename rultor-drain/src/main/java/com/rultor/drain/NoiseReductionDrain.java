@@ -27,31 +27,23 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.drain.files;
+package com.rultor.drain;
 
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Time;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.Iterator;
+import java.util.Scanner;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 
 /**
- * Drain of one directory.
+ * Noise reduction.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -59,22 +51,44 @@ import org.apache.commons.io.IOUtils;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@EqualsAndHashCode(of = "dir")
+@EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.DoNotUseThreads")
-public final class DirectoryDrain implements Drain {
+public final class NoiseReductionDrain implements Drain {
 
     /**
-     * Directory name.
+     * Regular expression pattern to match.
      */
-    private final transient String dir;
+    private final transient String pattern;
+
+    /**
+     * How many dirty pulses should be visible.
+     */
+    private final transient int visible;
+
+    /**
+     * Dirty pulses.
+     */
+    private final transient Drain dirty;
+
+    /**
+     * Clean pulses.
+     */
+    private final transient Drain clean;
 
     /**
      * Public ctor.
-     * @param folder Folder where to keep all files
+     * @param ptn Regular
+     * @param vsbl How many items should be visible from dirty drain
+     * @param drt Dirty drain
+     * @param cln Clean drain
+     * @checkstyle ParameterNumber (4 lines)
      */
-    public DirectoryDrain(@NotNull final File folder) {
-        this.dir = folder.getAbsolutePath();
+    public NoiseReductionDrain(@NotNull final String ptn, final int vsbl,
+        @NotNull final Drain drt, @NotNull final Drain cln) {
+        this.pattern = ptn;
+        this.visible = vsbl;
+        this.dirty = drt;
+        this.clean = cln;
     }
 
     /**
@@ -82,17 +96,12 @@ public final class DirectoryDrain implements Drain {
      */
     @Override
     public String toString() {
-        final int total;
-        final File folder = new File(this.dir);
-        if (folder.exists()) {
-            total = folder.listFiles().length;
-        } else {
-            total = 0;
-        }
         return String.format(
-            "%d file(s) in `%s` directory",
-            total,
-            this.dir
+            "%s with noise reduction by `%s` (%d visible) buffering in %s",
+            this.clean,
+            this.pattern,
+            this.visible,
+            this.dirty
         );
     }
 
@@ -100,25 +109,21 @@ public final class DirectoryDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Pulses pulses() throws IOException {
-        final SortedSet<Time> numbers = new TreeSet<Time>();
-        final File folder = new File(this.dir);
-        if (folder.exists()) {
-            final Collection<File> files = FileUtils.listFiles(
-                folder, new String[] {"log"}, false
-            );
-            for (File file : files) {
-                numbers.add(
-                    new Time(
-                        Long.valueOf(
-                            FilenameUtils.getBaseName(file.getAbsolutePath())
-                        )
-                    )
-                );
+        final Pulses drt = this.dirty.pulses();
+        final Pulses cln = this.clean.pulses();
+        return new Pulses() {
+            @Override
+            public Pulses tail(final Time head) {
+                return cln.tail(head);
             }
-        }
-        return new Pulses.Array(numbers);
+            @Override
+            public Iterator<Time> iterator() {
+                return Iterables.concat(
+                    Iterables.limit(drt, NoiseReductionDrain.this.visible), cln
+                ).iterator();
+            }
+        };
     }
 
     /**
@@ -127,13 +132,11 @@ public final class DirectoryDrain implements Drain {
     @Override
     public void append(final Time date, final Iterable<String> lines)
         throws IOException {
-        final PrintWriter out = new PrintWriter(
-            new BufferedWriter(new FileWriter(this.file(date), true))
-        );
-        for (String line : lines) {
-            out.println(line);
+        this.dirty.append(date, lines);
+        final Scanner scanner = new Scanner(this.dirty.read(date));
+        if (scanner.findWithinHorizon(this.pattern, 0) != null) {
+            this.clean.append(date, lines);
         }
-        out.close();
     }
 
     /**
@@ -141,25 +144,11 @@ public final class DirectoryDrain implements Drain {
      */
     @Override
     public InputStream read(final Time date) throws IOException {
-        final File file = this.file(date);
-        final InputStream stream;
-        if (file.exists()) {
-            stream = new FileInputStream(file);
-        } else {
-            stream = IOUtils.toInputStream("");
+        InputStream stream = this.clean.read(date);
+        if (stream.available() == 0) {
+            stream = this.dirty.read(date);
         }
         return stream;
-    }
-
-    /**
-     * File with body.
-     * @param date Date of pulse
-     * @return File with body
-     */
-    private File file(final Time date) {
-        final File folder = new File(this.dir);
-        folder.mkdirs();
-        return new File(folder, String.format("%d.log", date.millis()));
     }
 
 }

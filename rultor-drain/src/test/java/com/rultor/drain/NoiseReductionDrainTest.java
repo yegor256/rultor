@@ -27,12 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.drain.files;
+package com.rultor.drain;
 
 import com.google.common.io.Files;
+import com.rultor.drain.files.DirectoryDrain;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Time;
-import java.io.File;
 import java.util.Arrays;
 import java.util.Random;
 import org.apache.commons.io.IOUtils;
@@ -42,39 +42,59 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link DirectoryDrain}.
+ * Test case for {@link NoiseReductionDrain}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class DirectoryDrainTest {
+public final class NoiseReductionDrainTest {
 
     /**
-     * DirectoryDrain can log and read.
+     * NoiseReductionDrain can filter.
      * @throws Exception If some problem inside
      */
     @Test
-    public void logsAndReads() throws Exception {
-        final File dir = Files.createTempDir();
-        final Drain drain = new DirectoryDrain(new File(dir, "temp/a/c"));
-        final Time date = new Time(Math.abs(new Random().nextLong()));
-        final String first = "some \t\u20ac\tfdsfs";
-        final String second = "somefffffds900-4932%^&$%^&#%@^&!\u20ac\tfdsfs";
-        MatcherAssert.assertThat(
-            IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
-            Matchers.equalTo("")
+    public void filtersNoise() throws Exception {
+        final Drain dirty = new DirectoryDrain(Files.createTempDir());
+        final Drain clean = new DirectoryDrain(Files.createTempDir());
+        final Drain drain = new NoiseReductionDrain(
+            "Hello[0-9]+",
+            1,
+            dirty,
+            clean
         );
-        drain.append(date, Arrays.asList(first, second));
+        final Time first = new Time(Math.abs(new Random().nextLong()));
+        final Time second = new Time(Math.abs(new Random().nextLong()));
+        final String good = "some \t\u20ac\tfdsfs Hello878";
+        final String bad = "somefffffds900-4932%^&$%^&#%@^&!\u20ac\tfdsfs";
+        drain.append(first, Arrays.asList(bad));
+        drain.append(first, Arrays.asList(good));
+        drain.append(second, Arrays.asList(bad));
+        drain.append(second, Arrays.asList(bad));
         MatcherAssert.assertThat(
             drain.pulses(),
-            Matchers.hasItem(date)
+            Matchers.<Time>iterableWithSize(2)
         );
         MatcherAssert.assertThat(
-            IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
-            Matchers.containsString(first)
+            dirty.pulses(),
+            Matchers.allOf(
+                Matchers.<Time>iterableWithSize(2),
+                Matchers.hasItems(first, second)
+            )
         );
         MatcherAssert.assertThat(
-            IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
-            Matchers.containsString(first)
+            clean.pulses(),
+            Matchers.allOf(
+                Matchers.<Time>iterableWithSize(1),
+                Matchers.hasItem(first)
+            )
+        );
+        MatcherAssert.assertThat(
+            IOUtils.toString(drain.read(first), CharEncoding.UTF_8),
+            Matchers.containsString(good)
+        );
+        MatcherAssert.assertThat(
+            IOUtils.toString(drain.read(second), CharEncoding.UTF_8),
+            Matchers.containsString(bad)
         );
     }
 
