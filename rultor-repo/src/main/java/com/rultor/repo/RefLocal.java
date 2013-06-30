@@ -31,13 +31,15 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
+import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Big text, without any formatting.
+ * Local reference.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -45,31 +47,46 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "value")
+@EqualsAndHashCode(of = { "grammar", "owner", "name" })
 @Loggable(Loggable.DEBUG)
-final class BigText implements Variable<String> {
+final class RefLocal implements Variable<Object> {
 
     /**
-     * The value.
+     * Grammar where to look for vars.
      */
-    private final transient String value;
+    private final transient Grammar grammar;
+
+    /**
+     * Owner of the unit.
+     */
+    private final transient URN owner;
+
+    /**
+     * The name.
+     */
+    private final transient String name;
 
     /**
      * Public ctor.
-     * @param text Text to parse and encapsulate
+     * @param grm Grammar to use
+     * @param urn Owner of the unit
+     * @param ref Reference
      */
-    protected BigText(final String text) {
-        this.value = text.replace("\r", "")
-            .replaceAll("[ \t]*\n[ \t]*", "\n")
-            .trim();
+    protected RefLocal(final Grammar grm, final URN urn, final String ref) {
+        this.grammar = grm;
+        this.owner = urn;
+        this.name = ref;
     }
 
     /**
      * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public String instantiate(final Users users) {
-        return this.value;
+    public Object instantiate(final Users users) throws SpecException {
+        return new RefForeign(
+            this.grammar, this.owner, this.name
+        ).instantiate(users);
     }
 
     /**
@@ -77,10 +94,7 @@ final class BigText implements Variable<String> {
      */
     @Override
     public String asText() {
-        return new StringBuilder("\"\"\"\n")
-            .append(this.value)
-            .append("\n\"\"\"")
-            .toString();
+        return this.name;
     }
 
 }

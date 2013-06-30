@@ -43,14 +43,14 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test case for {@link Reference}.
+ * Test case for {@link RefForeign}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class ReferenceTest {
+public final class RefForeignTest {
 
     /**
-     * Reference can make an instance.
+     * RefForeign can make an instance.
      * @throws Exception If some problem inside
      */
     @Test
@@ -66,7 +66,7 @@ public final class ReferenceTest {
         final URN urn = new URN("urn:facebook:1");
         Mockito.doReturn(urn).when(user).urn();
         final Variable<Object> var =
-            new Reference(new AntlrGrammar(), urn, name);
+            new RefForeign(new AntlrGrammar(), urn, name);
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(urn);
         MatcherAssert.assertThat(

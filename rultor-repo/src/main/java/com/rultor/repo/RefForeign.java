@@ -43,7 +43,7 @@ import lombok.ToString;
 import org.apache.commons.lang3.Validate;
 
 /**
- * Reference.
+ * RefForeign.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -53,7 +53,7 @@ import org.apache.commons.lang3.Validate;
 @ToString
 @EqualsAndHashCode(of = { "grammar", "owner", "name" })
 @Loggable(Loggable.DEBUG)
-final class Reference implements Variable<Object> {
+final class RefForeign implements Variable<Object> {
 
     /**
      * Grammar where to look for vars.
@@ -74,9 +74,9 @@ final class Reference implements Variable<Object> {
      * Public ctor.
      * @param grm Grammar to use
      * @param urn Owner of the unit
-     * @param ref Reference
+     * @param ref RefForeign
      */
-    protected Reference(final Grammar grm, final URN urn, final String ref) {
+    protected RefForeign(final Grammar grm, final URN urn, final String ref) {
         Validate.matchesPattern(ref, "[-_\\w]+");
         this.grammar = grm;
         this.owner = urn;

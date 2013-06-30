@@ -47,10 +47,10 @@ public final class BigTextTest {
      */
     @Test
     public void makesInstance() throws Exception {
-        final Variable<String> var = new BigText("    some \u20ac\n \"' test ");
+        final Variable<String> var = new BigText("  some \u20ac\n\n \"' test ");
         MatcherAssert.assertThat(
             var.asText(),
-            Matchers.equalTo("\"\"\"\nsome \u20ac\n\"' test\n\"\"\"")
+            Matchers.equalTo("\"\"\"\nsome \u20ac\n\n\"' test\n\"\"\"")
         );
     }
 
