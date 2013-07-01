@@ -62,6 +62,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
  * @version $Id$
  * @since 1.0
  * @checkstyle MultipleStringLiterals (500 lines)
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Path("/drain/{unit:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
