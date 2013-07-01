@@ -41,10 +41,10 @@ import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -100,7 +100,7 @@ final class AwsUser implements User {
     @NotNull
     @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
     public Set<String> units() {
-        final Set<String> units = new HashSet<String>(0);
+        final Set<String> units = new TreeSet<String>();
         final Collection<Item> items = this.region.table(AwsUnit.TABLE)
             .frame().where(AwsUnit.KEY_OWNER, Conditions.equalTo(this.name));
         for (Item item : items) {

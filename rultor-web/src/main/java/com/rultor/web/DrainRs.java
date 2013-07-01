@@ -242,7 +242,15 @@ public final class DrainRs extends BaseRs {
         try {
             stages = pulse.stages();
         } catch (IOException ex) {
-            throw new IllegalStateException(ex);
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                String.format(
+                    "I/O problem with the stages of \"%s\": %s",
+                    date,
+                    ExceptionUtils.getRootCauseMessage(ex)
+                ),
+                Level.SEVERE
+            );
         }
         return new JaxbBundle("pulse")
             .add("stages")
