@@ -143,7 +143,7 @@ final class BucketPulses implements Pulses {
                         ).time()
                     );
                 }
-                Logger.debug(
+                Logger.info(
                     this,
                     // @checkstyle LineLength (1 line)
                     "loaded %d pulse(s) from S3 bucket '%s', marker is '%s', next marker is '%s'",

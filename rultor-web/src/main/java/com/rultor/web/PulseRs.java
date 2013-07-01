@@ -206,7 +206,12 @@ public final class PulseRs extends BaseRs {
                         this.repo(), this.user(), unit.drain()
                     ).get().instantiate(
                         this.users(),
-                        new Work.Simple(this.user().urn(), this.name)
+                        new Work.Simple(
+                            this.user().urn(),
+                            this.name,
+                            new Spec.Simple(),
+                            this.date
+                        )
                     )
                 )
             );
