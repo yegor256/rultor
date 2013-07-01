@@ -136,7 +136,7 @@ public final class DrainRs extends BaseRs {
                     )
                 );
         }
-        return page.append(this.pulses(drain, pulses.iterator(), total))
+        return page.append(this.pulses(pulses.iterator(), total))
             .render().build();
     }
 
@@ -208,13 +208,11 @@ public final class DrainRs extends BaseRs {
 
     /**
      * All pulses of the unit.
-     * @param drain Drain to get data from
      * @param pulses All pulses to show
      * @param maximum Maximum to show
      * @return Collection of JAXB units
      */
-    private JaxbBundle pulses(final Drain drain, final Iterator<Time> pulses,
-        final int maximum) {
+    private JaxbBundle pulses(final Iterator<Time> pulses, final int maximum) {
         JaxbBundle bundle = new JaxbBundle("pulses");
         int pos;
         for (pos = 0; pos < maximum; ++pos) {
