@@ -55,7 +55,8 @@ public final class AntlrGrammarTest {
             "foo.SomeClass(1, FALSE, TRUE, 8L, \"test\")",
             "java.lang.Double(-44.66)",
             "com.first(com.second(com.third(), com.forth()))",
-            "\"\"\"\nsome\nunformatted\"\ttext\t\u20ac\u0433\n\"\"\"",
+            "\"\"\"\nsome\nunformatted\ttext\t\u20ac\u0433\n\"\"\"",
+            "java.lang.String(\n  \"\"\"\n  hello\n  \"\"\"\n)",
         };
         final URN urn = new URN("urn:facebook:1");
         for (String text : texts) {

@@ -152,9 +152,8 @@ BIGTEXT
     :
     '"""'
     /* http://stackoverflow.com/questions/17395285 */
-    ( ~'"'
-        | {input.LA(2) != '"' || input.LA(3) != '"'}? '"'
-    )* '"""'
+    ('\\"' | ~'"')+
+    '"""'
     { this.setText(this.getText().substring(3, this.getText().length() - 3).replace("\\\"", "\"")); }
     ;
 
