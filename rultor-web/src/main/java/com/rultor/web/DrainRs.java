@@ -38,6 +38,7 @@ import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Time;
@@ -115,7 +116,7 @@ public final class DrainRs extends BaseRs {
             .build(EmptyPage.class)
             .init(this)
             .append(new JaxbBundle("unit", this.name));
-        final Drain drain = this.drain();
+        final Drain drain = this.drain(new Time());
         Pulses pulses = this.pulses(drain);
         final int total;
         if (this.since == null) {
@@ -141,16 +142,19 @@ public final class DrainRs extends BaseRs {
 
     /**
      * Get drain.
+     * @param time Time to use for Drain constructing
      * @return The drain
      */
-    private Drain drain() {
+    private Drain drain(final Time time) {
         try {
             return Drain.class.cast(
                 new Repo.Cached(
                     this.repo(), this.user(), this.unit().drain()
                 ).get().instantiate(
                     this.users(),
-                    new Work.Simple(this.user().urn(), this.name)
+                    new Work.Simple(
+                        this.user().urn(), this.name, new Spec.Simple(), time
+                    )
                 )
             );
         } catch (SpecException ex) {
@@ -217,7 +221,7 @@ public final class DrainRs extends BaseRs {
             if (!pulses.hasNext()) {
                 break;
             }
-            bundle = bundle.add(this.pulse(drain, pulses.next()));
+            bundle = bundle.add(this.pulse(pulses.next()));
         }
         if (pos == maximum && pulses.hasNext()) {
             bundle = bundle.link(
@@ -244,8 +248,8 @@ public final class DrainRs extends BaseRs {
      * @param date Date of it
      * @return Bundle
      */
-    private JaxbBundle pulse(final Drain drain, final Time date) {
-        final Pulse pulse = new Pulse(drain);
+    private JaxbBundle pulse(final Time date) {
+        final Pulse pulse = new Pulse(this.drain(date));
         final Collection<Stage> stages;
         try {
             stages = pulse.stages();
