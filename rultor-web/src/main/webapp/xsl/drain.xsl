@@ -49,7 +49,7 @@
                             <li>
                                 <a title="back to start">
                                     <xsl:attribute name="href">
-                                        <xsl:value-of select="links/link[@rel='latest']/@href"/>
+                                        <xsl:value-of select="//links/link[@rel='latest']/@href"/>
                                     </xsl:attribute>
                                     <xsl:text>back to start</xsl:text>
                                 </a>
@@ -60,11 +60,11 @@
                 <ul class="nav">
                     <xsl:apply-templates select="/page/pulses/pulse"/>
                 </ul>
-                <xsl:if test="/page/links/link[@rel='more']">
+                <xsl:if test="//links/link[@rel='more']">
                     <xsl:text>See </xsl:text>
                     <a title="more">
                         <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='more']/@href"/>
+                            <xsl:value-of select="//links/link[@rel='more']/@href"/>
                         </xsl:attribute>
                         <xsl:text>more</xsl:text>
                     </a>

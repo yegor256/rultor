@@ -54,15 +54,19 @@ public final class BufferedWriteTest {
      */
     @Test
     public void savesDataAndRenders() throws Exception {
+        final Time time = new Time();
         final Work work = new Work.Simple(
-            new URN("urn:facebook:11"), "test", new Spec.Simple()
+            new URN("urn:facebook:11"), "test", new Spec.Simple(), time
         );
         final Drain drain = new BufferedWrite(work, 1, new Trash());
         final String line = "some \t\u20ac\tfdsfs Hello878";
         drain.append(Arrays.asList(line));
         MatcherAssert.assertThat(
             drain.pulses(),
-            Matchers.<Time>iterableWithSize(0)
+            Matchers.allOf(
+                Matchers.<Time>iterableWithSize(1),
+                Matchers.hasItem(time)
+            )
         );
         MatcherAssert.assertThat(
             IOUtils.toString(drain.read(), CharEncoding.UTF_8),

@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rexsl.page.JaxbBundle;
@@ -46,6 +45,7 @@ import com.rultor.spi.Unit;
 import com.rultor.spi.Work;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -117,12 +117,12 @@ public final class DrainRs extends BaseRs {
             .append(new JaxbBundle("unit", this.name));
         final Drain drain = this.drain();
         Pulses pulses = this.pulses(drain);
-        final Iterable<Time> visible;
+        final int total;
         if (this.since == null) {
-            visible = Iterables.limit(pulses, Tv.TEN);
+            total = Tv.TEN;
         } else {
             pulses = pulses.tail(this.since);
-            visible = Iterables.limit(pulses, Tv.TWENTY);
+            total = Tv.TWENTY;
             page = page
                 .append(new JaxbBundle("since", this.since.toString()))
                 .link(
@@ -135,24 +135,8 @@ public final class DrainRs extends BaseRs {
                     )
                 );
         }
-        final int total = Iterables.size(visible);
-        if (Iterables.size(Iterables.limit(pulses, total + 1)) > total) {
-            page = page.link(
-                new Link(
-                    "more",
-                    this.uriInfo()
-                        .getBaseUriBuilder()
-                        .clone()
-                        .path(DrainRs.class)
-                        .queryParam(
-                            DrainRs.QUERY_SINCE,
-                            Iterables.getLast(visible).millis()
-                        )
-                        .build(this.name)
-                )
-            );
-        }
-        return page.append(this.pulses(drain, visible)).render().build();
+        return page.append(this.pulses(drain, pulses.iterator(), total))
+            .render().build();
     }
 
     /**
@@ -222,17 +206,36 @@ public final class DrainRs extends BaseRs {
      * All pulses of the unit.
      * @param drain Drain to get data from
      * @param pulses All pulses to show
+     * @param maximum Maximum to show
      * @return Collection of JAXB units
      */
-    private JaxbBundle pulses(final Drain drain, final Iterable<Time> pulses) {
-        return new JaxbBundle("pulses").add(
-            new JaxbBundle.Group<Time>(pulses) {
-                @Override
-                public JaxbBundle bundle(final Time date) {
-                    return DrainRs.this.pulse(drain, date);
-                }
+    private JaxbBundle pulses(final Drain drain, final Iterator<Time> pulses,
+        final int maximum) {
+        JaxbBundle bundle = new JaxbBundle("pulses");
+        int pos;
+        for (pos = 0; pos < maximum; ++pos) {
+            if (!pulses.hasNext()) {
+                break;
             }
-        );
+            bundle = bundle.add(this.pulse(drain, pulses.next()));
+        }
+        if (pos == maximum && pulses.hasNext()) {
+            bundle = bundle.link(
+                new Link(
+                    "more",
+                    this.uriInfo()
+                        .getBaseUriBuilder()
+                        .clone()
+                        .path(DrainRs.class)
+                        .queryParam(
+                            DrainRs.QUERY_SINCE,
+                            pulses.next().millis()
+                        )
+                        .build(this.name)
+                )
+            );
+        }
+        return bundle;
     }
 
     /**

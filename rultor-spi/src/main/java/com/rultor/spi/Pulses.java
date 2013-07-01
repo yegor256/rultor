@@ -29,12 +29,14 @@
  */
 package com.rultor.spi;
 
+import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
 import javax.validation.constraints.NotNull;
@@ -104,6 +106,60 @@ public interface Pulses extends Iterable<Time> {
         @Override
         public Iterator<Time> iterator() {
             return Arrays.asList(this.times).iterator();
+        }
+    }
+
+    /**
+     * Sequence of pulses.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode
+    @Loggable(Loggable.DEBUG)
+    final class Sequence implements Pulses {
+        /**
+         * First.
+         */
+        private final transient Pulses first;
+        /**
+         * Second.
+         */
+        private final transient Pulses second;
+        /**
+         * Public ctor.
+         * @param frst First
+         * @param scnd Second
+         */
+        public Sequence(@NotNull final Pulses frst,
+            @NotNull final Pulses scnd) {
+            this.first = frst;
+            this.second = scnd;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull
+        public Pulses tail(@NotNull final Time head) {
+            return new Pulses.Sequence(
+                this.first.tail(head), this.second.tail(head)
+            );
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @SuppressWarnings("unchecked")
+        public Iterator<Time> iterator() {
+            return Iterators.mergeSorted(
+                Arrays.asList(this.first.iterator(), this.second.iterator()),
+                new Comparator<Time>() {
+                    @Override
+                    public int compare(final Time left, final Time right) {
+                        return left.compareTo(right);
+                    }
+                }
+            );
         }
     }
 

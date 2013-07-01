@@ -155,7 +155,7 @@ public class BaseRs extends BaseResource {
                             identity = new Identity.Simple(
                                 URN.create("urn:facebook:1"),
                                 "Local Host",
-                                URI.create("#")
+                                URI.create("http://img.rultor.com/none.png")
                             );
                         } else {
                             identity = Identity.ANONYMOUS;

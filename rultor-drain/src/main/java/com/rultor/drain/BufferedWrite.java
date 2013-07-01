@@ -35,6 +35,7 @@ import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulses;
+import com.rultor.spi.Time;
 import com.rultor.spi.Work;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -124,7 +125,17 @@ public final class BufferedWrite implements Drain {
      */
     @Override
     public Pulses pulses() throws IOException {
-        return this.origin.pulses();
+        final Collection<Time> times = new LinkedList<Time>();
+        for (Work wrk : BufferedWrite.TUNNELS.keySet()) {
+            if (wrk.owner().equals(this.work.owner())
+                && wrk.unit().equals(this.work.unit())) {
+                times.add(wrk.started());
+            }
+        }
+        return new Pulses.Sequence(
+            new Pulses.Array(times),
+            this.origin.pulses()
+        );
     }
 
     /**

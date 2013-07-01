@@ -174,7 +174,13 @@ public final class ObjectDrain implements Drain {
         try {
             if (aws.listObjects(this.client.bucket(), this.key)
                 .getObjectSummaries().isEmpty()) {
-                stream = IOUtils.toInputStream("");
+                stream = IOUtils.toInputStream(
+                    String.format(
+                        "ObjectDrain: object '%s' not found in '%s'",
+                        this.key,
+                        this.client.bucket()
+                    )
+                );
             } else {
                 final S3Object object =
                     aws.getObject(this.client.bucket(), this.key);
