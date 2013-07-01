@@ -37,10 +37,12 @@ import com.rultor.spi.Pulses;
 import com.rultor.spi.Time;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
 import java.util.Iterator;
 import java.util.Scanner;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Noise reduction.
@@ -148,7 +150,19 @@ public final class NoiseReduction implements Drain {
         if (stream.available() == 0) {
             stream = this.dirty.read();
         }
-        return stream;
+        return new SequenceInputStream(
+            IOUtils.toInputStream(
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    "NoiseReduction: pattern='%s', visible=%d, dirty='%s', clean='%s'\n",
+                    this.pattern,
+                    this.visible,
+                    this.dirty,
+                    this.clean
+                )
+            ),
+            stream
+        );
     }
 
 }

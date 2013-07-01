@@ -90,7 +90,7 @@ public final class BufferedWriteTest {
             IOUtils.toString(
                 new BufferedWrite(first, 1, new Trash()).read()
             ),
-            Matchers.equalTo("first\nsecond\n")
+            Matchers.endsWith("first\nsecond\n")
         );
     }
 

@@ -214,7 +214,16 @@ public final class ObjectDrain implements Drain {
                 ex
             );
         }
-        return stream;
+        return new SequenceInputStream(
+            IOUtils.toInputStream(
+                String.format(
+                    "ObjectDrain: key='%s', client='%s'\n",
+                    this.key,
+                    this.client
+                )
+            ),
+            stream
+        );
     }
 
 }

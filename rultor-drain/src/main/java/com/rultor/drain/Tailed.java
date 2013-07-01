@@ -35,8 +35,10 @@ import com.rultor.spi.Drain;
 import com.rultor.spi.Pulses;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Drain with a trail.
@@ -105,7 +107,16 @@ public final class Tailed implements Drain {
      */
     @Override
     public InputStream read() throws IOException {
-        return this.main.read();
+        return new SequenceInputStream(
+            IOUtils.toInputStream(
+                String.format(
+                    "Tailed: main='%s', tail='%s'\n",
+                    this.main,
+                    this.tail
+                )
+            ),
+            this.main.read()
+        );
     }
 
 }

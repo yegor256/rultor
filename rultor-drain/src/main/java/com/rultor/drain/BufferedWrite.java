@@ -51,6 +51,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Buffered in memory.
@@ -142,8 +143,18 @@ public final class BufferedWrite implements Drain {
     @Override
     public InputStream read() throws IOException {
         return new SequenceInputStream(
-            this.origin.read(),
-            this.tunnel().stream()
+            IOUtils.toInputStream(
+                Logger.format(
+                    "BufferedWrite: lifetime=%[ms]s, work='%s'm, origin='%s'\n",
+                    this.lifetime,
+                    this.work,
+                    this.origin
+                )
+            ),
+            new SequenceInputStream(
+                this.origin.read(),
+                this.tunnel().stream()
+            )
         );
     }
 

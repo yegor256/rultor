@@ -38,8 +38,10 @@ import com.rultor.spi.Time;
 import com.rultor.spi.Work;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Drain shared among multiple S3 objects.
@@ -106,7 +108,16 @@ public final class BucketDrain implements Drain {
      */
     @Override
     public InputStream read() throws IOException {
-        return this.obj().read();
+        return new SequenceInputStream(
+            IOUtils.toInputStream(
+                String.format(
+                    "BucketDrain: work='%s', client='%s'\n",
+                    this.work,
+                    this.client
+                )
+            ),
+            this.obj().read()
+        );
     }
 
     /**
