@@ -156,7 +156,7 @@ public interface Pulses extends Iterable<Time> {
                 new Comparator<Time>() {
                     @Override
                     public int compare(final Time left, final Time right) {
-                        return left.compareTo(right);
+                        return right.compareTo(left);
                     }
                 }
             );

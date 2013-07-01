@@ -244,7 +244,6 @@ public final class DrainRs extends BaseRs {
 
     /**
      * Convert pulse to JaxbBundle.
-     * @param drain Drain we're in
      * @param date Date of it
      * @return Bundle
      */

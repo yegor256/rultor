@@ -176,7 +176,7 @@ public final class ObjectDrain implements Drain {
                 .getObjectSummaries().isEmpty()) {
                 stream = IOUtils.toInputStream(
                     String.format(
-                        "ObjectDrain: object '%s' not found in '%s'",
+                        "ObjectDrain: object '%s' not found in '%s'\n",
                         this.key,
                         this.client.bucket()
                     )
