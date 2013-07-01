@@ -29,10 +29,16 @@
  */
 package com.rultor.drain.s3;
 
+import com.jcabi.urn.URN;
 import com.rultor.aws.S3Client;
+import com.rultor.drain.BufferedWrite;
+import com.rultor.drain.NoiseReduction;
+import com.rultor.drain.Trash;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulses;
+import com.rultor.spi.Spec;
 import com.rultor.spi.Time;
+import com.rultor.spi.Work;
 import java.util.Arrays;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
@@ -43,11 +49,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Integration case for {@link S3Drain}.
+ * Integration case for {@link ObjectDrain}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public final class S3DrainITCase {
+public final class ObjectDrainITCase {
 
     /**
      * S3Client to work with.
@@ -70,21 +77,49 @@ public final class S3DrainITCase {
     }
 
     /**
-     * S3Drain can log.
+     * ObjectDrain can log.
      * @throws Exception If some problem inside
      */
     @Test
     public void logsMessages() throws Exception {
         Assume.assumeNotNull(this.client);
         final String msg = "some test log message \u20ac";
-        final Time date = new Time();
-        final Drain drain = new S3Drain(this.client, "S3DrainITCase/");
-        drain.append(date, Arrays.asList(msg));
+        final Drain drain = new ObjectDrain(
+            this.client, "S3DrainITCase/test.txt"
+        );
+        drain.append(Arrays.asList(msg));
         final Pulses names = drain.pulses();
-        MatcherAssert.assertThat(names, Matchers.hasItem(date));
+        MatcherAssert.assertThat(names, Matchers.<Time>iterableWithSize(0));
         MatcherAssert.assertThat(
-            IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
+            IOUtils.toString(drain.read(), CharEncoding.UTF_8),
             Matchers.containsString(msg)
+        );
+    }
+
+    /**
+     * ObjectDrain can work together with noise reduction.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void worksWithNoiseReduction() throws Exception {
+        Assume.assumeNotNull(this.client);
+        final Drain clean = new ObjectDrain(
+            this.client, "S3DrainITCase/test-2.txt"
+        );
+        clean.append(Arrays.asList("hello, how are you \u20ac?"));
+        final Work work = new Work.Simple(
+            new URN("urn:facebook:55"), "test-8", new Spec.Simple()
+        );
+        final Drain dirty = new BufferedWrite(work, 1, new Trash());
+        final Drain drain = new NoiseReduction(
+            "hello",
+            1,
+            dirty,
+            clean
+        );
+        MatcherAssert.assertThat(
+            IOUtils.toString(drain.read(), CharEncoding.UTF_8),
+            Matchers.containsString("how are you \u20ac?")
         );
     }
 

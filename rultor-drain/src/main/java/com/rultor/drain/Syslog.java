@@ -33,7 +33,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulses;
-import com.rultor.spi.Time;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -119,12 +118,10 @@ public final class Syslog implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public void append(final Time date, final Iterable<String> lines)
+    public void append(final Iterable<String> lines)
         throws IOException {
         for (String line : lines) {
-            this.send(
-                this.compose(String.format("%s %s", date, line))
-            );
+            this.send(this.compose(line));
         }
     }
 
@@ -132,7 +129,7 @@ public final class Syslog implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public InputStream read(final Time date) throws IOException {
+    public InputStream read() throws IOException {
         throw new IllegalArgumentException("there are no pulses");
     }
 

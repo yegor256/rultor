@@ -60,20 +60,18 @@ public interface Drain {
     Pulses pulses() throws IOException;
 
     /**
-     * Append a few lines to the pulse related to the given date.
-     * @param date When this pulse was started
+     * Append a few lines to the drain.
      * @param lines Lines to append
      * @throws IOException If some IO problem inside
      */
-    void append(Time date, Iterable<String> lines) throws IOException;
+    void append(Iterable<String> lines) throws IOException;
 
     /**
-     * Read the pulse by date of start.
-     * @param date When this pulse was started
+     * Read the drain.
      * @return The input stream with data
      * @throws IOException If some IO problem inside
      */
-    InputStream read(Time date) throws IOException;
+    InputStream read() throws IOException;
 
     /**
      * One line in the drain.

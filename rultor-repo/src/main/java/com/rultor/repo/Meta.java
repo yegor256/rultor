@@ -27,12 +27,67 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.repo;
+
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.rultor.spi.SpecException;
+import com.rultor.spi.Users;
+import com.rultor.spi.Variable;
+import com.rultor.spi.Work;
+import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Drains based on files directory.
+ * Meta.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-package com.rultor.drain.files;
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "value")
+@Loggable(Loggable.DEBUG)
+final class Meta implements Variable<Object> {
+
+    /**
+     * The value.
+     */
+    private final transient String value;
+
+    /**
+     * Public ctor.
+     * @param val Value
+     */
+    protected Meta(final String val) {
+        this.value = val;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
+     */
+    @Override
+    @NotNull
+    public Object instantiate(@NotNull final Users users,
+        @NotNull final Work work) throws SpecException {
+        Object object;
+        if ("work".equals(this.value)) {
+            object = work;
+        } else {
+            throw new SpecException("only $work meta is supported");
+        }
+        return object;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String asText() {
+        return String.format("$%s", this.value);
+    }
+
+}

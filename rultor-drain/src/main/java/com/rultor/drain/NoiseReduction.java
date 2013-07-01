@@ -53,7 +53,7 @@ import lombok.EqualsAndHashCode;
 @Immutable
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-public final class NoiseReductionDrain implements Drain {
+public final class NoiseReduction implements Drain {
 
     /**
      * Regular expression pattern to match.
@@ -83,7 +83,7 @@ public final class NoiseReductionDrain implements Drain {
      * @param cln Clean drain
      * @checkstyle ParameterNumber (4 lines)
      */
-    public NoiseReductionDrain(@NotNull final String ptn, final int vsbl,
+    public NoiseReduction(@NotNull final String ptn, final int vsbl,
         @NotNull final Drain drt, @NotNull final Drain cln) {
         this.pattern = ptn;
         this.visible = vsbl;
@@ -120,7 +120,7 @@ public final class NoiseReductionDrain implements Drain {
             @Override
             public Iterator<Time> iterator() {
                 return Iterables.concat(
-                    Iterables.limit(drt, NoiseReductionDrain.this.visible), cln
+                    Iterables.limit(drt, NoiseReduction.this.visible), cln
                 ).iterator();
             }
         };
@@ -130,12 +130,12 @@ public final class NoiseReductionDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public void append(final Time date, final Iterable<String> lines)
+    public void append(final Iterable<String> lines)
         throws IOException {
-        this.dirty.append(date, lines);
-        final Scanner scanner = new Scanner(this.dirty.read(date));
+        this.dirty.append(lines);
+        final Scanner scanner = new Scanner(this.dirty.read());
         if (scanner.findWithinHorizon(this.pattern, 0) != null) {
-            this.clean.append(date, lines);
+            this.clean.append(lines);
         }
     }
 
@@ -143,10 +143,10 @@ public final class NoiseReductionDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public InputStream read(final Time date) throws IOException {
-        InputStream stream = this.clean.read(date);
+    public InputStream read() throws IOException {
+        InputStream stream = this.clean.read();
         if (stream.available() == 0) {
-            stream = this.dirty.read(date);
+            stream = this.dirty.read();
         }
         return stream;
     }

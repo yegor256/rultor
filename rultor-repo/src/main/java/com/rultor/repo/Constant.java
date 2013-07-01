@@ -31,10 +31,13 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import com.rultor.spi.Work;
 import java.text.DecimalFormat;
 import java.util.Locale;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -66,9 +69,12 @@ final class Constant<T> implements Variable<Object> {
 
     /**
      * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public Object instantiate(final Users users) {
+    @NotNull
+    public Object instantiate(@NotNull final Users users,
+        @NotNull final Work work) throws SpecException {
         return this.value;
     }
 

@@ -27,74 +27,77 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.drain.files;
+package com.rultor.drain.s3;
 
-import com.google.common.io.Files;
-import com.jcabi.aspects.Tv;
+import com.jcabi.urn.URN;
+import com.rultor.aws.S3Client;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Pulses;
+import com.rultor.spi.Spec;
 import com.rultor.spi.Time;
-import java.io.File;
+import com.rultor.spi.Work;
 import java.util.Arrays;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
- * Test case for {@link BufferedDrain}.
+ * Integration case for {@link BucketDrain}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class BufferedDrainTest {
+public final class BucketDrainITCase {
 
     /**
-     * BufferedDrain can log and buffer.
-     * @throws Exception If some problem inside
+     * S3Client to work with.
      */
-    @Test
-    public void logsAndBuffers() throws Exception {
-        final File dir = Files.createTempDir();
-        final Drain origin = Mockito.mock(Drain.class);
-        Mockito.doReturn(IOUtils.toInputStream(""))
-            .when(origin).read(Mockito.any(Time.class));
-        final Drain drain = new BufferedDrain(
-            TimeUnit.SECONDS.toMillis(1),
-            TimeUnit.SECONDS.toMillis(Tv.FIVE),
-            new File(dir, "a/b/c"),
-            origin
-        );
-        final Time date = new Time(Math.abs(new Random().nextLong()));
-        final String first = "some \t\u20ac\tfdsfs";
-        final String second = "somefffffds900-4932%^&$%^&#%@^&!\u20ac\tfdsfs";
-        MatcherAssert.assertThat(
-            IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
-            Matchers.equalTo("")
-        );
-        drain.append(date, Arrays.asList(first, second));
-        MatcherAssert.assertThat(
-            IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
-            Matchers.containsString(first)
-        );
+    private transient S3Client client;
+
+    /**
+     * We're online.
+     */
+    @Before
+    public void weAreOnline() {
+        final String key = System.getProperty("failsafe.s3.key");
+        if (key != null) {
+            this.client = new S3Client.Simple(
+                key,
+                System.getProperty("failsafe.s3.secret"),
+                System.getProperty("failsafe.s3.bucket")
+            );
+        }
     }
 
     /**
-     * BufferedDrain can be converted to string.
+     * ObjectDrain can log.
      * @throws Exception If some problem inside
      */
     @Test
-    public void printsItselfInString() throws Exception {
-        MatcherAssert.assertThat(
-            new BufferedDrain(
-                TimeUnit.SECONDS.toMillis(1),
-                TimeUnit.SECONDS.toMillis(Tv.FIVE),
-                Files.createTempDir(),
-                Mockito.mock(Drain.class)
+    public void logsMessages() throws Exception {
+        Assume.assumeNotNull(this.client);
+        final String msg = "some test log message \u20ac";
+        final Time date = new Time();
+        final Drain drain = new BucketDrain(
+            new Work.Simple(
+                new URN("urn:facebook:1"),
+                "test-unit", new Spec.Simple(),
+                date
             ),
-            Matchers.hasToString(Matchers.notNullValue())
+            this.client
+        );
+        drain.append(Arrays.asList(msg));
+        final Pulses names = drain.pulses();
+        MatcherAssert.assertThat(names, Matchers.hasItem(date));
+        MatcherAssert.assertThat(
+            names, Matchers.<Time>iterableWithSize(Matchers.greaterThan(0))
+        );
+        MatcherAssert.assertThat(
+            IOUtils.toString(drain.read(), CharEncoding.UTF_8),
+            Matchers.containsString(msg)
         );
     }
 

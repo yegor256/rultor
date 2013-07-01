@@ -107,7 +107,7 @@
                 <xsl:call-template name="face">
                     <xsl:with-param name="object" select="spec"/>
                 </xsl:call-template>
-                <xsl:if test="drain/type != 'com.rultor.drain.Trash'">
+                <xsl:if test="not(drain/type) or drain/type != 'com.rultor.drain.Trash'">
                     <xsl:text> drained to </xsl:text>
                     <xsl:call-template name="face">
                         <xsl:with-param name="object" select="drain"/>

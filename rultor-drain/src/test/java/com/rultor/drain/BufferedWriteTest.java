@@ -29,89 +29,79 @@
  */
 package com.rultor.drain;
 
-import com.google.common.io.Files;
-import com.rultor.drain.files.DirectoryDrain;
+import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Spec;
 import com.rultor.spi.Time;
+import com.rultor.spi.Work;
 import java.util.Arrays;
-import java.util.Random;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
- * Test case for {@link NoiseReductionDrain}.
+ * Test case for {@link BufferedWrite}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class NoiseReductionDrainTest {
+public final class BufferedWriteTest {
 
     /**
-     * NoiseReductionDrain can filter.
+     * BufferedWrite can save and show.
      * @throws Exception If some problem inside
      */
     @Test
-    public void filtersNoise() throws Exception {
-        final Drain dirty = new DirectoryDrain(Files.createTempDir());
-        final Drain clean = new DirectoryDrain(Files.createTempDir());
-        final Drain drain = new NoiseReductionDrain(
-            "Hello[0-9]+",
-            1,
-            dirty,
-            clean
+    public void savesDataAndRenders() throws Exception {
+        final Work work = new Work.Simple(
+            new URN("urn:facebook:11"), "test", new Spec.Simple()
         );
-        final Time first = new Time(Math.abs(new Random().nextLong()));
-        final Time second = new Time(Math.abs(new Random().nextLong()));
-        final String good = "some \t\u20ac\tfdsfs Hello878";
-        final String bad = "somefffffds900-4932%^&$%^&#%@^&!\u20ac\tfdsfs";
-        drain.append(first, Arrays.asList(bad));
-        drain.append(first, Arrays.asList(good));
-        drain.append(second, Arrays.asList(bad));
-        drain.append(second, Arrays.asList(bad));
+        final Drain drain = new BufferedWrite(work, 1, new Trash());
+        final String line = "some \t\u20ac\tfdsfs Hello878";
+        drain.append(Arrays.asList(line));
         MatcherAssert.assertThat(
             drain.pulses(),
-            Matchers.<Time>iterableWithSize(2)
+            Matchers.<Time>iterableWithSize(0)
         );
         MatcherAssert.assertThat(
-            dirty.pulses(),
-            Matchers.allOf(
-                Matchers.<Time>iterableWithSize(2),
-                Matchers.hasItems(first, second)
-            )
-        );
-        MatcherAssert.assertThat(
-            clean.pulses(),
-            Matchers.allOf(
-                Matchers.<Time>iterableWithSize(1),
-                Matchers.hasItem(first)
-            )
-        );
-        MatcherAssert.assertThat(
-            IOUtils.toString(drain.read(first), CharEncoding.UTF_8),
-            Matchers.containsString(good)
-        );
-        MatcherAssert.assertThat(
-            IOUtils.toString(drain.read(second), CharEncoding.UTF_8),
-            Matchers.containsString(bad)
+            IOUtils.toString(drain.read(), CharEncoding.UTF_8),
+            Matchers.containsString(line)
         );
     }
 
     /**
-     * NoiseReductionDrain can be converted to string.
+     * BufferedWrite can manage parallel requests.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void handlesParallelWorks() throws Exception {
+        final Work first = new Work.Simple(
+            new URN("urn:facebook:8888"), "test-1", new Spec.Simple()
+        );
+        final Work second = new Work.Simple(
+            new URN("urn:facebook:999"), "test-2", new Spec.Simple()
+        );
+        new BufferedWrite(first, 1, new Trash())
+            .append(Arrays.asList("first", "second"));
+        new BufferedWrite(second, 1, new Trash())
+            .append(Arrays.asList("one more line to ANOTHER work"));
+        MatcherAssert.assertThat(
+            IOUtils.toString(
+                new BufferedWrite(first, 1, new Trash()).read()
+            ),
+            Matchers.equalTo("first\nsecond\n")
+        );
+    }
+
+    /**
+     * BufferedWrite can be converted to string.
      * @throws Exception If some problem inside
      */
     @Test
     public void printsItselfInString() throws Exception {
         MatcherAssert.assertThat(
-            new NoiseReductionDrain(
-                "some regular expression",
-                1,
-                Mockito.mock(Drain.class),
-                Mockito.mock(Drain.class)
-            ),
+            new BufferedWrite(new Work.None(), 1, new Trash()),
             Matchers.hasToString(Matchers.notNullValue())
         );
     }

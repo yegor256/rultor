@@ -35,6 +35,8 @@ import com.jcabi.urn.URN;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import com.rultor.spi.Work;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -83,10 +85,12 @@ final class RefLocal implements Variable<Object> {
      * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public Object instantiate(final Users users) throws SpecException {
+    @NotNull
+    public Object instantiate(@NotNull final Users users,
+        @NotNull final Work work) throws SpecException {
         return new RefForeign(
             this.grammar, this.owner, this.name
-        ).instantiate(users);
+        ).instantiate(users, work);
     }
 
     /**

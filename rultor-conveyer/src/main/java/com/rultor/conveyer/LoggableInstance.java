@@ -35,8 +35,8 @@ import com.jcabi.manifests.Manifests;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Signal;
+import com.rultor.spi.Time;
 import com.rultor.spi.Work;
-import java.util.Date;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -96,7 +96,7 @@ final class LoggableInstance implements Instance {
     public void pulse() throws Exception {
         this.appender.register(this.work.started(), this.drain);
         try {
-            Logger.info(this, "log started on %s", new Date());
+            Logger.info(this, "log started on %s", new Time());
             Logger.info(
                 this,
                 "www.rultor.com %s %s %s",

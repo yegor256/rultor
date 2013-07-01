@@ -36,6 +36,7 @@ import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import com.rultor.spi.Work;
 import java.util.concurrent.atomic.AtomicLong;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -139,7 +140,8 @@ public final class ClasspathRepoTest {
         final URN urn = new URN("urn:facebook:77");
         Mockito.doReturn(urn).when(user).urn();
         final Users users = Mockito.mock(Users.class);
-        final Object instance = repo.make(user, spec).instantiate(users);
+        final Object instance = repo.make(user, spec)
+            .instantiate(users, new Work.None());
         MatcherAssert.assertThat(
             ClasspathRepoTest.Foo.COUNTER.get(),
             Matchers.equalTo(2L)

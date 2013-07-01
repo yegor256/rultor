@@ -27,65 +27,72 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.drain.files;
+package com.rultor.drain;
 
-import com.google.common.io.Files;
+import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Time;
-import java.io.File;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Work;
 import java.util.Arrays;
-import java.util.Random;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Test case for {@link DirectoryDrain}.
+ * Test case for {@link NoiseReduction}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class DirectoryDrainTest {
+public final class NoiseReductionTest {
 
     /**
-     * DirectoryDrain can log and read.
+     * NoiseReduction can filter.
      * @throws Exception If some problem inside
      */
     @Test
-    public void logsAndReads() throws Exception {
-        final File dir = Files.createTempDir();
-        final Drain drain = new DirectoryDrain(new File(dir, "temp/a/c"));
-        final Time date = new Time(Math.abs(new Random().nextLong()));
-        final String first = "some \t\u20ac\tfdsfs";
-        final String second = "somefffffds900-4932%^&$%^&#%@^&!\u20ac\tfdsfs";
-        MatcherAssert.assertThat(
-            IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
-            Matchers.equalTo("")
+    public void filtersNoise() throws Exception {
+        final Work first = new Work.Simple(
+            new URN("urn:facebook:11"), "test-4", new Spec.Simple()
         );
-        drain.append(date, Arrays.asList(first, second));
+        final Work second = new Work.Simple(
+            new URN("urn:facebook:55"), "test-8", new Spec.Simple()
+        );
+        final Drain dirty = new BufferedWrite(first, 1, new Trash());
+        final Drain clean = new BufferedWrite(second, 1, new Trash());
+        final Drain drain = new NoiseReduction(
+            "Hello[0-9]+",
+            1,
+            dirty,
+            clean
+        );
+        final String bad = "somefffffds900-4932%^&$%^&#%@^&!\u20ac\tfdsfs";
+        drain.append(Arrays.asList(bad));
         MatcherAssert.assertThat(
-            drain.pulses(),
-            Matchers.hasItem(date)
+            IOUtils.toString(dirty.read(), CharEncoding.UTF_8),
+            Matchers.containsString(bad)
         );
         MatcherAssert.assertThat(
-            IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
-            Matchers.containsString(first)
-        );
-        MatcherAssert.assertThat(
-            IOUtils.toString(drain.read(date), CharEncoding.UTF_8),
-            Matchers.containsString(first)
+            IOUtils.toString(clean.read(), CharEncoding.UTF_8),
+            Matchers.not(Matchers.containsString(bad))
         );
     }
 
     /**
-     * DirectoryDrain can be converted to string.
+     * NoiseReduction can be converted to string.
      * @throws Exception If some problem inside
      */
     @Test
     public void printsItselfInString() throws Exception {
         MatcherAssert.assertThat(
-            new DirectoryDrain(Files.createTempDir()),
+            new NoiseReduction(
+                "some regular expression",
+                1,
+                Mockito.mock(Drain.class),
+                Mockito.mock(Drain.class)
+            ),
             Matchers.hasToString(Matchers.notNullValue())
         );
     }

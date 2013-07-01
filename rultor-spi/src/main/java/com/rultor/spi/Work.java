@@ -44,6 +44,7 @@ import lombok.ToString;
  * @since 1.0
  */
 @Immutable
+@SuppressWarnings("PMD.TooManyMethods")
 public interface Work {
 
     /**
@@ -75,6 +76,43 @@ public interface Work {
     Spec spec();
 
     /**
+     * No work at all.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode
+    final class None implements Work {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Time started() {
+            throw new UnsupportedOperationException();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public URN owner() {
+            throw new UnsupportedOperationException();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String unit() {
+            throw new UnsupportedOperationException();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Spec spec() {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    /**
      * Simple implementation.
      */
     @Loggable(Loggable.DEBUG)
@@ -98,6 +136,14 @@ public interface Work {
          * Spec of it.
          */
         private final transient Spec desc;
+        /**
+         * Public ctor.
+         * @param owner Owner
+         * @param name Name
+         */
+        public Simple(@NotNull final URN owner, @NotNull final String name) {
+            this(owner, name, new Spec.Simple(), new Time());
+        }
         /**
          * Public ctor.
          * @param owner Owner

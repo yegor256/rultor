@@ -43,6 +43,7 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Time;
 import com.rultor.spi.Unit;
+import com.rultor.spi.Work;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -162,7 +163,10 @@ public final class DrainRs extends BaseRs {
             return Drain.class.cast(
                 new Repo.Cached(
                     this.repo(), this.user(), this.unit().drain()
-                ).get().instantiate(this.users())
+                ).get().instantiate(
+                    this.users(),
+                    new Work.Simple(this.user().urn(), this.name)
+                )
             );
         } catch (SpecException ex) {
             throw this.flash().redirect(
@@ -237,7 +241,7 @@ public final class DrainRs extends BaseRs {
      * @return Bundle
      */
     private JaxbBundle pulse(final Drain drain, final Time date) {
-        final Pulse pulse = new Pulse(date, drain);
+        final Pulse pulse = new Pulse(drain);
         final Collection<Stage> stages;
         try {
             stages = pulse.stages();

@@ -146,10 +146,9 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
             if (date != null) {
                 try {
                     this.drains.get(date).append(
-                        date,
                         Arrays.asList(
                             new Drain.Line.Simple(
-                                date.delta(new Time()),
+                                new Time().delta(date),
                                 ConveyerAppender.LEVELS.get(event.getLevel()),
                                 this.layout.format(event)
                             ).toString()

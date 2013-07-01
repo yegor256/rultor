@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import com.rultor.spi.Work;
 import java.util.Arrays;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -59,7 +60,9 @@ public final class CompositeTest {
             Arrays.<Variable<?>>asList(new Constant<Integer>(Tv.TEN))
         );
         MatcherAssert.assertThat(
-            var.instantiate(Mockito.mock(Users.class)),
+            var.instantiate(
+                Mockito.mock(Users.class), Mockito.mock(Work.class)
+            ),
             Matchers.<Object>equalTo(Tv.TEN)
         );
     }
@@ -110,8 +113,9 @@ public final class CompositeTest {
                 type,
                 Arrays.<Variable<?>>asList()
             );
-            final Object object =
-                composite.instantiate(Mockito.mock(Users.class));
+            final Object object = composite.instantiate(
+                Mockito.mock(Users.class), Mockito.mock(Work.class)
+            );
             MatcherAssert.assertThat(
                 object,
                 Matchers.hasToString(Matchers.notNullValue())

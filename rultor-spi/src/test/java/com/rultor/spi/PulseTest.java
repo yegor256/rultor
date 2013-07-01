@@ -55,12 +55,9 @@ public final class PulseTest {
             + "\n11:57 SEVERE Bar some other text line"
             + "\n11:55 INFO B " + new Signal(Signal.Mnemo.FAILURE, "b ");
         final Drain drain = Mockito.mock(Drain.class);
-        Mockito.doReturn(IOUtils.toInputStream(text))
-            .when(drain).read(Mockito.any(Time.class));
+        Mockito.doReturn(IOUtils.toInputStream(text)).when(drain).read();
         MatcherAssert.assertThat(
-            new Pulse(
-                new Time(1), drain
-            ).stages(),
+            new Pulse(drain).stages(),
             Matchers.<Stage>hasItems(
                 // @checkstyle MagicNumber (2 lines)
                 new Stage.Simple(Stage.Result.SUCCESS, 0, 715000, "a"),

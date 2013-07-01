@@ -241,7 +241,7 @@ public final class S3Notepad implements Notepad {
             aws.listObjects(this.client.bucket(), this.key);
         final Collection<String> list = new LinkedList<String>();
         if (listing.getObjectSummaries().isEmpty()) {
-            Logger.info(
+            Logger.debug(
                 this,
                 "object '%s/%s' is absent in S3",
                 this.client.bucket(),
@@ -259,7 +259,7 @@ public final class S3Notepad implements Notepad {
             } finally {
                 IOUtils.closeQuietly(stream);
             }
-            Logger.info(
+            Logger.debug(
                 this,
                 "loaded %d char(s) from S3 object '%s/%s'",
                 content.length(),
@@ -298,7 +298,7 @@ public final class S3Notepad implements Notepad {
                 IOUtils.toInputStream(content, CharEncoding.UTF_8),
                 meta
             );
-            Logger.info(
+            Logger.debug(
                 this,
                 "saved %d char(s) to S3 object '%s/%s', etag=%s",
                 content.length(),

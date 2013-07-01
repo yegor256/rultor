@@ -140,7 +140,7 @@ public final class S3Lineup implements Lineup {
             this.save(marker);
             final String saved = this.load();
             if (saved.equals(marker)) {
-                Logger.info(
+                Logger.debug(
                     this,
                     "S3 object '%s/%s' is locked by us with '%s'",
                     this.client.bucket(),
@@ -149,7 +149,7 @@ public final class S3Lineup implements Lineup {
                 );
                 break;
             }
-            Logger.info(
+            Logger.debug(
                 this,
                 "S3 object '%s/%s' is locked by '%s', let's wait...",
                 this.client.bucket(),
@@ -196,7 +196,7 @@ public final class S3Lineup implements Lineup {
             aws.listObjects(this.client.bucket(), this.key);
         final boolean exists = !listing.getObjectSummaries().isEmpty();
         if (exists) {
-            Logger.info(
+            Logger.debug(
                 this,
                 "S3 object '%s/%s' exists: %s",
                 this.client.bucket(),
@@ -223,7 +223,7 @@ public final class S3Lineup implements Lineup {
                 IOUtils.toInputStream(content, CharEncoding.UTF_8),
                 meta
             );
-            Logger.info(
+            Logger.debug(
                 this,
                 "saved %d char(s) to S3 object '%s/%s', etag=%s",
                 content.length(),
@@ -249,7 +249,7 @@ public final class S3Lineup implements Lineup {
             final InputStream stream = object.getObjectContent();
             try {
                 content = IOUtils.toString(stream, CharEncoding.UTF_8);
-                Logger.info(
+                Logger.debug(
                     this,
                     "loaded %d char(s) from S3 object '%s/%s'",
                     content.length(),
@@ -276,7 +276,7 @@ public final class S3Lineup implements Lineup {
     private void remove() {
         final AmazonS3 aws = this.client.get();
         aws.deleteObject(this.client.bucket(), this.key);
-        Logger.info(
+        Logger.debug(
             this,
             "deleted S3 object '%s/%s'",
             this.client.bucket(),

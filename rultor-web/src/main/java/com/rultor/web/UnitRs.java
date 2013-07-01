@@ -40,6 +40,7 @@ import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Variable;
+import com.rultor.spi.Work;
 import java.net.HttpURLConnection;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -178,7 +179,7 @@ public final class UnitRs extends BaseRs {
             var = new Repo.Cached(
                 this.repo(), this.user(), new Spec.Simple(text)
             ).get();
-            object = var.instantiate(this.users());
+            object = var.instantiate(this.users(), new Work.None());
         } catch (SpecException ex) {
             throw new IllegalArgumentException(ex);
         }

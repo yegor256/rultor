@@ -31,8 +31,11 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import com.rultor.spi.Work;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -66,9 +69,12 @@ final class BigText implements Variable<String> {
 
     /**
      * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public String instantiate(final Users users) {
+    @NotNull
+    public String instantiate(@NotNull final Users users,
+        @NotNull final Work work) throws SpecException {
         return this.value;
     }
 

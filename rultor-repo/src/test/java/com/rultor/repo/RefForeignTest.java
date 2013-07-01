@@ -35,6 +35,7 @@ import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import com.rultor.spi.Work;
 import java.util.Arrays;
 import java.util.HashSet;
 import org.hamcrest.MatcherAssert;
@@ -70,7 +71,7 @@ public final class RefForeignTest {
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(urn);
         MatcherAssert.assertThat(
-            var.instantiate(users),
+            var.instantiate(users, new Work.None()),
             Matchers.<Object>equalTo(1L)
         );
     }

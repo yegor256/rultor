@@ -94,7 +94,7 @@ public final class SimpleConveyerTest {
         final Instance instance = Mockito.mock(Instance.class);
         final Variable<?> var = Mockito.mock(Variable.class);
         Mockito.doReturn(instance).when(var)
-            .instantiate(Mockito.any(Users.class));
+            .instantiate(Mockito.any(Users.class), Mockito.any(Work.class));
         final CountDownLatch made = new CountDownLatch(1);
         Mockito.doAnswer(
             new Answer<Variable<?>>() {
@@ -107,8 +107,9 @@ public final class SimpleConveyerTest {
             }
         ).when(repo).make(Mockito.any(User.class), Mockito.eq(spec));
         final Variable<?> dvar = Mockito.mock(Variable.class);
-        Mockito.doReturn(Mockito.mock(Drain.class))
-            .when(dvar).instantiate(Mockito.any(Users.class));
+        Mockito.doReturn(Mockito.mock(Drain.class)).when(dvar).instantiate(
+            Mockito.any(Users.class), Mockito.any(Work.class)
+        );
         Mockito.doReturn(dvar).when(repo)
             .make(Mockito.any(User.class), Mockito.eq(drain));
         final User user = Mockito.mock(User.class);

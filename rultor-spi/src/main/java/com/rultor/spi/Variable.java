@@ -46,9 +46,11 @@ public interface Variable<T> extends Spec {
     /**
      * Make an instance of it.
      * @param users Users
+     * @param work Work we're in at the moment
      * @return The object
      * @throws SpecException If can't instantiate
      */
-    T instantiate(@NotNull Users users) throws SpecException;
+    T instantiate(@NotNull Users users, @NotNull Work work)
+        throws SpecException;
 
 }

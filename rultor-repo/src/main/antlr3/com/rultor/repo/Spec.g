@@ -76,6 +76,9 @@ variable returns [Variable<?> ret]
     composite
     { $ret = $composite.ret; }
     |
+    META
+    { $ret = new Meta($META.text.substring(1)); }
+    |
     NAME
     { $ret = new RefLocal(this.grammar, this.owner, $NAME.text); }
     |
@@ -127,6 +130,11 @@ BOOLEAN
 TYPE
     :
     PACKAGE ('.' PACKAGE)+
+    ;
+
+META
+    :
+    '$' LETTER+
     ;
 
 NAME

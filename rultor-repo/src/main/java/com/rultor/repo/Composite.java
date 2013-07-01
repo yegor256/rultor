@@ -35,6 +35,7 @@ import com.jcabi.aspects.Tv;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import com.rultor.spi.Work;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -49,6 +50,7 @@ import javassist.CtField;
 import javassist.CtMethod;
 import javassist.Modifier;
 import javassist.NotFoundException;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.CharUtils;
@@ -113,11 +115,13 @@ final class Composite implements Variable<Object> {
      * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public Object instantiate(final Users users) throws SpecException {
+    @NotNull
+    public Object instantiate(@NotNull final Users users,
+        @NotNull final Work work) throws SpecException {
         final Object[] args = new Object[this.vars.length];
         final Class<?>[] types = new Class<?>[this.vars.length];
         for (int idx = 0; idx < this.vars.length; ++idx) {
-            final Object object = this.vars[idx].instantiate(users);
+            final Object object = this.vars[idx].instantiate(users, work);
             args[idx] = object;
             types[idx] = object.getClass();
         }

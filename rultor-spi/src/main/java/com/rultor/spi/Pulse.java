@@ -50,14 +50,9 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "date", "drain" })
+@EqualsAndHashCode(of = "drain")
 @Loggable(Loggable.DEBUG)
 public final class Pulse {
-
-    /**
-     * Date of start.
-     */
-    private final transient Time date;
 
     /**
      * Drain.
@@ -66,11 +61,9 @@ public final class Pulse {
 
     /**
      * Public ctor.
-     * @param time When was it started
      * @param drn Drain
      */
-    public Pulse(final Time time, final Drain drn) {
-        this.date = time;
+    public Pulse(final Drain drn) {
         this.drain = drn;
     }
 
@@ -123,7 +116,7 @@ public final class Pulse {
      * @throws IOException If fails
      */
     public InputStream read() throws IOException {
-        return this.drain.read(this.date);
+        return this.drain.read();
     }
 
     /**

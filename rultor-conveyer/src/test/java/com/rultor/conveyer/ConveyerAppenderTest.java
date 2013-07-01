@@ -81,7 +81,6 @@ public final class ConveyerAppenderTest {
         publisher.join();
         appender.unregister();
         Mockito.verify(drain).append(
-            Mockito.eq(work.started()),
             Mockito.argThat(
                 Matchers.everyItem(
                     Matchers.equalTo(
@@ -120,7 +119,6 @@ public final class ConveyerAppenderTest {
         appender.unregister();
         appender.close();
         Mockito.verify(drain).append(
-            Mockito.eq(work.started()),
             (Iterable<String>) Mockito.any(Object.class)
         );
     }

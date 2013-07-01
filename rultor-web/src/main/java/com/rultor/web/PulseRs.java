@@ -41,6 +41,7 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Time;
 import com.rultor.spi.Unit;
+import com.rultor.spi.Work;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -200,11 +201,13 @@ public final class PulseRs extends BaseRs {
         final Unit unit = this.user().get(this.name);
         try {
             return new Pulse(
-                this.date,
                 Drain.class.cast(
                     new Repo.Cached(
                         this.repo(), this.user(), unit.drain()
-                    ).get().instantiate(this.users())
+                    ).get().instantiate(
+                        this.users(),
+                        new Work.Simple(this.user().urn(), this.name)
+                    )
                 )
             );
         } catch (SpecException ex) {

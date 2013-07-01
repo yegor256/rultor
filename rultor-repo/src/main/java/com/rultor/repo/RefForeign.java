@@ -36,8 +36,10 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import com.rultor.spi.Work;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.Validate;
@@ -88,7 +90,9 @@ final class RefForeign implements Variable<Object> {
      * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public Object instantiate(final Users users) throws SpecException {
+    @NotNull
+    public Object instantiate(@NotNull final Users users,
+        @NotNull final Work work) throws SpecException {
         final User user = users.get(this.owner);
         if (!user.units().contains(this.name)) {
             throw new SpecException(
@@ -101,7 +105,7 @@ final class RefForeign implements Variable<Object> {
         return this.alter(
             this.grammar.parse(
                 user.urn(), user.get(this.name).spec().asText()
-            ).instantiate(users)
+            ).instantiate(users, work)
         );
     }
 

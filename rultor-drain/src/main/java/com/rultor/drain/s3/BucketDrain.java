@@ -27,64 +27,112 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.drain.s3;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.SpecException;
-import com.rultor.spi.Users;
-import com.rultor.spi.Variable;
+import com.rultor.aws.S3Client;
+import com.rultor.spi.Drain;
+import com.rultor.spi.Pulses;
+import com.rultor.spi.Time;
 import com.rultor.spi.Work;
+import java.io.IOException;
+import java.io.InputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- * Text constant.
+ * Drain shared among multiple S3 objects.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = "value")
+@EqualsAndHashCode(of = { "work", "client" })
 @Loggable(Loggable.DEBUG)
-final class Text implements Variable<String> {
+public final class BucketDrain implements Drain {
 
     /**
-     * The value.
+     * The work it is busy with at the moment.
      */
-    private final transient String value;
+    private final transient Work work;
+
+    /**
+     * S3 client.
+     */
+    private final transient S3Client client;
 
     /**
      * Public ctor.
-     * @param val Value
+     * @param clnt S3 client
+     * @param wrk Work we're in now
      */
-    protected Text(final String val) {
-        this.value = val;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
-     */
-    @Override
-    @NotNull
-    public String instantiate(@NotNull final Users users,
-        @NotNull final Work work) throws SpecException {
-        return this.value;
+    public BucketDrain(@NotNull final Work wrk, @NotNull final S3Client clnt) {
+        this.client = clnt;
+        this.work = wrk;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String asText() {
+    public String toString() {
         return String.format(
-            "\"%s\"",
-            StringEscapeUtils.escapeJava(this.value)
+            "S3 objects in %s",
+            this.client
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Pulses pulses() {
+        return new BucketPulses(this.client, this.prefix(), new Time());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void append(final Iterable<String> lines) throws IOException {
+        this.obj().append(lines);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InputStream read() throws IOException {
+        return this.obj().read();
+    }
+
+    /**
+     * Make an object drain.
+     * @return Object drain
+     */
+    private ObjectDrain obj() {
+        return new ObjectDrain(
+            this.client,
+            String.format(
+                "%s%s",
+                this.prefix(),
+                new Key(this.work.started()).toString()
+            )
+        );
+    }
+
+    /**
+     * Make a prefix.
+     * @return Prefix to use
+     */
+    private String prefix() {
+        return String.format(
+            "%s/%s/",
+            this.work.owner(),
+            this.work.unit()
         );
     }
 

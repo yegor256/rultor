@@ -27,12 +27,85 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.drain;
+
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Drain;
+import com.rultor.spi.Pulses;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 
 /**
- * Drains based on files, tests.
+ * Drain with a trail.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-package com.rultor.drain.files;
+@Immutable
+@EqualsAndHashCode
+@Loggable(Loggable.DEBUG)
+public final class Tailed implements Drain {
+
+    /**
+     * Main drain.
+     */
+    private final transient Drain main;
+
+    /**
+     * Tail drain.
+     */
+    private final transient Drain tail;
+
+    /**
+     * Public ctor.
+     * @param body Main drain
+     * @param extra Tail drain
+     */
+    public Tailed(@NotNull final Drain body, @NotNull final Drain extra) {
+        this.main = body;
+        this.tail = extra;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format(
+            "%s tailed by %s",
+            this.main, this.tail
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Pulses pulses() throws IOException {
+        return this.main.pulses();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void append(final Iterable<String> lines)
+        throws IOException {
+        this.main.append(lines);
+        this.tail.append(lines);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InputStream read() throws IOException {
+        return this.main.read();
+    }
+
+}

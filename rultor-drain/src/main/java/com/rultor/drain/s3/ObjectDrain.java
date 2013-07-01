@@ -31,25 +31,19 @@ package com.rultor.drain.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.amazonaws.services.s3.model.ListObjectsRequest;
-import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.aws.S3Client;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulses;
-import com.rultor.spi.Time;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
-import java.util.HashSet;
-import java.util.Set;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
@@ -59,7 +53,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 /**
- * Drain in S3 objects.
+ * Drain in a single S3 object.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -69,7 +63,7 @@ import org.apache.commons.lang3.Validate;
 @Immutable
 @EqualsAndHashCode(of = "client")
 @Loggable(Loggable.DEBUG)
-public final class S3Drain implements Drain {
+public final class ObjectDrain implements Drain {
 
     /**
      * S3 client.
@@ -77,19 +71,22 @@ public final class S3Drain implements Drain {
     private final transient S3Client client;
 
     /**
-     * S3 objects prefix.
+     * S3 object name.
      */
-    private final transient String prefix;
+    private final transient String key;
 
     /**
      * Public ctor.
      * @param clnt S3 client
-     * @param pfx S3 object prefix
+     * @param name S3 object name
      */
-    public S3Drain(@NotNull final S3Client clnt, @NotNull final String pfx) {
+    public ObjectDrain(@NotNull final S3Client clnt,
+        @NotNull final String name) {
         this.client = clnt;
-        Validate.matchesPattern(pfx, "([^/]+/)+");
-        this.prefix = pfx;
+        Validate.matchesPattern(
+            name, "([^/]+/)*[^/]+", "invalid S3 object name '%s'", name
+        );
+        this.key = name;
     }
 
     /**
@@ -99,7 +96,7 @@ public final class S3Drain implements Drain {
     public String toString() {
         return String.format(
             "`%s` at %s",
-            this.prefix,
+            this.key,
             this.client
         );
     }
@@ -109,39 +106,24 @@ public final class S3Drain implements Drain {
      */
     @Override
     public Pulses pulses() {
-        final Set<Time> numbers = new HashSet<Time>();
-        final AmazonS3 aws = this.client.get();
-        final ListObjectsRequest request = new ListObjectsRequest()
-            .withBucketName(this.client.bucket())
-            .withPrefix(this.prefix);
-        final ObjectListing listing = aws.listObjects(request);
-        for (S3ObjectSummary sum : listing.getObjectSummaries()) {
-            numbers.add(
-                Key.valueOf(
-                    sum.getKey().substring(this.prefix.length())
-                ).time()
-            );
-        }
-        return new Pulses.Array(numbers);
+        return new Pulses.Array();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void append(final Time date, final Iterable<String> lines)
-        throws IOException {
-        final String key = this.key(date);
+    public void append(final Iterable<String> lines) throws IOException {
         final AmazonS3 aws = this.client.get();
         final InputStream body;
         long size;
-        if (aws.listObjects(this.client.bucket(), key)
+        if (aws.listObjects(this.client.bucket(), this.key)
             .getObjectSummaries().isEmpty()) {
             body = IOUtils.toInputStream("");
             size = 0;
         } else {
             final S3Object object =
-                aws.getObject(this.client.bucket(), key);
+                aws.getObject(this.client.bucket(), this.key);
             body = object.getObjectContent();
             size = object.getObjectMetadata().getContentLength();
         }
@@ -155,7 +137,7 @@ public final class S3Drain implements Drain {
         try {
             final PutObjectResult result = aws.putObject(
                 this.client.bucket(),
-                key,
+                this.key,
                 new SequenceInputStream(
                     body,
                     new ByteArrayInputStream(suffix)
@@ -165,7 +147,7 @@ public final class S3Drain implements Drain {
             Logger.info(
                 this,
                 "'%s' saved %d byte(s) to S3, etag=%s",
-                key,
+                this.key,
                 size,
                 result.getETag()
             );
@@ -173,7 +155,7 @@ public final class S3Drain implements Drain {
             throw new IOException(
                 String.format(
                     "failed to flush %s to %s: %s",
-                    key,
+                    this.key,
                     this.client.bucket(),
                     ex
                 ),
@@ -186,49 +168,53 @@ public final class S3Drain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public InputStream read(final Time date) throws IOException {
-        final String key = this.key(date);
+    public InputStream read() throws IOException {
         final AmazonS3 aws = this.client.get();
-        String content;
+        InputStream stream;
         try {
-            if (aws.listObjects(this.client.bucket(), key)
+            if (aws.listObjects(this.client.bucket(), this.key)
                 .getObjectSummaries().isEmpty()) {
-                content = "";
+                stream = IOUtils.toInputStream("");
             } else {
                 final S3Object object =
-                    aws.getObject(this.client.bucket(), key);
+                    aws.getObject(this.client.bucket(), this.key);
                 Logger.info(
                     this,
                     "'%s' ready for loading from S3, size=%d, etag=%s",
-                    key,
+                    this.key,
                     object.getObjectMetadata().getContentLength(),
                     object.getObjectMetadata().getETag()
                 );
-                final InputStream stream = object.getObjectContent();
-                content = IOUtils.toString(stream, CharEncoding.UTF_8);
-                stream.close();
+                final InputStream ostream = object.getObjectContent();
+                stream = new InputStream() {
+                    private final transient AmazonS3 amazon = aws;
+                    @Override
+                    public int read() throws IOException {
+                        return ostream.read();
+                    }
+                    @Override
+                    public int available() throws IOException {
+                        return ostream.available();
+                    }
+                    @Override
+                    public void close() throws IOException {
+                        assert this.amazon != null;
+                        ostream.close();
+                    }
+                };
             }
         } catch (AmazonS3Exception ex) {
             throw new IOException(
                 String.format(
                     "failed to read %s from %s: %s",
-                    key,
+                    this.key,
                     this.client.bucket(),
                     ex
                 ),
                 ex
             );
         }
-        return IOUtils.toInputStream(content);
-    }
-
-    /**
-     * Make a key.
-     * @param date The date
-     * @return S3 object key
-     */
-    private String key(final Time date) {
-        return String.format("%s%s", this.prefix, new Key(date));
+        return stream;
     }
 
 }

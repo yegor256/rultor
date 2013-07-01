@@ -37,6 +37,7 @@ import com.rexsl.page.auth.Identity;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
+import com.rultor.spi.Work;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
@@ -176,7 +177,7 @@ public final class IndexRs extends BaseRs {
         try {
             final Object object = new Repo.Cached(
                 this.repo(), this.user(), spec
-            ).get().instantiate(this.users());
+            ).get().instantiate(this.users(), new Work.None());
             bundle = bundle.add(
                 "face",
                 StringEscapeUtils.escapeHtml4(
