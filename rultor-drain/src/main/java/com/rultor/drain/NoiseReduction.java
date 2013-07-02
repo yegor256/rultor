@@ -43,6 +43,7 @@ import java.util.Scanner;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Noise reduction.
@@ -146,15 +147,21 @@ public final class NoiseReduction implements Drain {
      */
     @Override
     public InputStream read() throws IOException {
-        InputStream stream = this.clean.read();
-        if (stream.available() == 0) {
+        InputStream stream;
+        String source;
+        try {
+            stream = this.clean.read();
+            source = "clean";
+        } catch (IOException ex) {
             stream = this.dirty.read();
+            source = ExceptionUtils.getRootCauseMessage(ex);
         }
         return new SequenceInputStream(
             IOUtils.toInputStream(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "NoiseReduction: pattern='%s', visible=%d, dirty='%s', clean='%s'\n",
+                    "NoiseReduction: '%s', pattern='%s', visible=%d, dirty='%s', clean='%s'\n",
+                    source,
                     this.pattern,
                     this.visible,
                     this.dirty,

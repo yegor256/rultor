@@ -29,6 +29,7 @@
  */
 package com.rultor.drain.s3;
 
+import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.aws.S3Client;
 import com.rultor.drain.BufferedWrite;
@@ -110,7 +111,7 @@ public final class ObjectDrainITCase {
         final Work work = new Work.Simple(
             new URN("urn:facebook:55"), "test-8", new Spec.Simple()
         );
-        final Drain dirty = new BufferedWrite(work, 1, new Trash());
+        final Drain dirty = new BufferedWrite(work, Tv.TEN, new Trash());
         final Drain drain = new NoiseReduction(
             "hello",
             1,

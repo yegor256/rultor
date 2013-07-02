@@ -116,7 +116,6 @@ public interface Work {
      * Simple implementation.
      */
     @Loggable(Loggable.DEBUG)
-    @ToString
     @EqualsAndHashCode(of = { "time", "urn", "label", "desc" })
     @Immutable
     final class Simple implements Work {
@@ -168,6 +167,18 @@ public interface Work {
             this.label = name;
             this.desc = spec;
             this.time = when;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return String.format(
+                "at %s in %s for %s",
+                this.time,
+                this.label,
+                this.urn
+            );
         }
         /**
          * {@inheritDoc}

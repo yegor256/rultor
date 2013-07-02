@@ -29,13 +29,9 @@
  */
 package com.rultor.drain;
 
-import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Work;
 import java.util.Arrays;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -53,15 +49,11 @@ public final class NoiseReductionTest {
      * @throws Exception If some problem inside
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void filtersNoise() throws Exception {
-        final Work first = new Work.Simple(
-            new URN("urn:facebook:11"), "test-4", new Spec.Simple()
-        );
-        final Work second = new Work.Simple(
-            new URN("urn:facebook:55"), "test-8", new Spec.Simple()
-        );
-        final Drain dirty = new BufferedWrite(first, 1, new Trash());
-        final Drain clean = new BufferedWrite(second, 1, new Trash());
+        final Drain dirty = Mockito.mock(Drain.class);
+        Mockito.doReturn(IOUtils.toInputStream("")).when(dirty).read();
+        final Drain clean = Mockito.mock(Drain.class);
         final Drain drain = new NoiseReduction(
             "Hello[0-9]+",
             1,
@@ -70,14 +62,10 @@ public final class NoiseReductionTest {
         );
         final String bad = "somefffffds900-4932%^&$%^&#%@^&!\u20ac\tfdsfs";
         drain.append(Arrays.asList(bad));
-        MatcherAssert.assertThat(
-            IOUtils.toString(dirty.read(), CharEncoding.UTF_8),
-            Matchers.containsString(bad)
-        );
-        MatcherAssert.assertThat(
-            IOUtils.toString(clean.read(), CharEncoding.UTF_8),
-            Matchers.not(Matchers.containsString(bad))
-        );
+        Mockito.verify(dirty, Mockito.times(1))
+            .append(Mockito.any(Iterable.class));
+        Mockito.verify(clean, Mockito.never())
+            .append(Mockito.any(Iterable.class));
     }
 
     /**

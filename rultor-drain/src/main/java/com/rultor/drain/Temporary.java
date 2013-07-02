@@ -35,13 +35,12 @@ import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulses;
+import com.rultor.spi.Time;
 import com.rultor.spi.Work;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.SequenceInputStream;
 import java.util.Collection;
@@ -52,10 +51,9 @@ import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.Validate;
 
 /**
- * Buffered in memory.
+ * Temporary in memory.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -63,27 +61,26 @@ import org.apache.commons.lang3.Validate;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@EqualsAndHashCode(of = { "work", "lifetime", "origin" })
+@EqualsAndHashCode(of = "work")
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.TooManyMethods" })
-public final class BufferedWrite implements Drain {
+public final class Temporary implements Drain {
+
+    /**
+     * Maximum lifetime allowed, in milliseconds.
+     */
+    private static final long LIFETIME = TimeUnit.HOURS.toMillis(2);
 
     /**
      * All in-memory buffers.
-     * @checkstyle LineLength (2 lines)
      */
-    private static final ConcurrentMap<BufferedWrite, BufferedWrite.Tunnel> TUNNELS =
-        new ConcurrentHashMap<BufferedWrite, BufferedWrite.Tunnel>(0);
+    private static final ConcurrentMap<Temporary, Temporary.Buffer> BUFFERS =
+        new ConcurrentHashMap<Temporary, Temporary.Buffer>(0);
 
     /**
-     * Flusher.
+     * Cleaner.
      */
-    private static final Runnable FLUSH = new BufferedWrite.Flush();
-
-    /**
-     * How long to keep them in buffer, in milliseconds.
-     */
-    private final transient Long lifetime;
+    private static final Runnable CLEANER = new Temporary.Cleaner();
 
     /**
      * Work we're in.
@@ -91,32 +88,27 @@ public final class BufferedWrite implements Drain {
     private final transient Work work;
 
     /**
-     * Original drain.
+     * Optional marker.
      */
-    private final transient Drain origin;
+    private final transient String marker;
 
     /**
      * Public ctor.
      * @param wrk Work we're in
-     * @param sec How often should be flush, in seconds
-     * @param drain Original drain
+     * @param mrk Optional marker
      */
-    public BufferedWrite(@NotNull final Work wrk, final long sec,
-        @NotNull final Drain drain) {
-        assert BufferedWrite.FLUSH != null;
-        Validate.isTrue(
-            sec <= TimeUnit.HOURS.toSeconds(1),
-            "maximum interval allowed is one hour, while %d second(s) provided",
-            sec
-        );
-        Validate.isTrue(
-            sec >= 2,
-            "minimum interval allowed is 2 seconds, while %d provided",
-            sec
-        );
+    public Temporary(@NotNull final Work wrk, @NotNull final String mrk) {
+        assert Temporary.CLEANER != null;
         this.work = wrk;
-        this.lifetime = TimeUnit.SECONDS.toMillis(sec);
-        this.origin = drain;
+        this.marker = mrk;
+    }
+
+    /**
+     * Public ctor.
+     * @param wrk Work we're in
+     */
+    public Temporary(@NotNull final Work wrk) {
+        this(wrk, "");
     }
 
     /**
@@ -124,11 +116,7 @@ public final class BufferedWrite implements Drain {
      */
     @Override
     public String toString() {
-        return Logger.format(
-            "%s with buffered write for %[ms]s",
-            this.origin,
-            this.lifetime
-        );
+        return "temporary in memory";
     }
 
     /**
@@ -136,7 +124,13 @@ public final class BufferedWrite implements Drain {
      */
     @Override
     public Pulses pulses() throws IOException {
-        return this.origin.pulses();
+        final Collection<Time> times = new LinkedList<Time>();
+        for (Temporary client : Temporary.BUFFERS.keySet()) {
+            if (this.similar(client)) {
+                times.add(client.work.started());
+            }
+        }
+        return new Pulses.Array(times);
     }
 
     /**
@@ -144,18 +138,9 @@ public final class BufferedWrite implements Drain {
      */
     @Override
     public void append(final Iterable<String> lines) throws IOException {
-        final BufferedWrite.Tunnel tunnel;
-        synchronized (BufferedWrite.TUNNELS) {
-            if (!BufferedWrite.TUNNELS.containsKey(this)) {
-                BufferedWrite.TUNNELS.put(
-                    this,
-                    new BufferedWrite.Tunnel()
-                );
-            }
-            tunnel = BufferedWrite.TUNNELS.get(this);
-        }
-        synchronized (this.lifetime) {
-            tunnel.send(lines);
+        final Temporary.Buffer buffer = this.buffer();
+        synchronized (buffer) {
+            buffer.append(lines);
         }
     }
 
@@ -164,23 +149,22 @@ public final class BufferedWrite implements Drain {
      */
     @Override
     public InputStream read() throws IOException {
+        final Temporary.Buffer buffer = this.buffer();
         return new SequenceInputStream(
             IOUtils.toInputStream(
                 Logger.format(
-                    "BufferedWrite: lifetime=%[ms]s, work='%s', origin='%s'\n",
-                    this.lifetime,
-                    this.work,
-                    this.origin
+                    "Temporary: work='%s'\n",
+                    this.work
                 )
             ),
-            this.origin.read()
+            buffer.read()
         );
     }
 
     /**
-     * Tunnel to the real drain.
+     * Buffer to the real drain.
      */
-    private final class Tunnel {
+    private final class Buffer {
         /**
          * When was is started.
          */
@@ -191,10 +175,10 @@ public final class BufferedWrite implements Drain {
         private final transient ByteArrayOutputStream data =
             new ByteArrayOutputStream();
         /**
-         * Send lines through.
-         * @param lines Lines to send
+         * Append lines to the buffer.
+         * @param lines Lines to append
          */
-        public void send(final Iterable<String> lines) {
+        public void append(final Iterable<String> lines) {
             final PrintWriter writer = new PrintWriter(this.data);
             for (String line : lines) {
                 writer.println(line);
@@ -203,30 +187,46 @@ public final class BufferedWrite implements Drain {
             writer.close();
         }
         /**
-         * Flush if necessary.
-         * @return TRUE if it was flushed and should be removed
-         * @throws IOException If fails
+         * Read it as a stream.
+         * @return The stream
          */
-        public boolean flush() throws IOException {
-            final boolean expired = System.currentTimeMillis() - this.start
-                > BufferedWrite.this.lifetime;
-            if (expired && this.data.size() > 0) {
-                final BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(
-                        new ByteArrayInputStream(this.data.toByteArray())
-                    )
+        public InputStream read() {
+            return new ByteArrayInputStream(this.data.toByteArray());
+        }
+        /**
+         * Expired already?
+         * @return TRUE if it is too old
+         */
+        public boolean expired() {
+            return System.currentTimeMillis() - this.start
+                > Temporary.LIFETIME;
+        }
+    }
+
+    /**
+     * This drain is similar to the one provided?
+     * @param drain Drain to compare with
+     * @return TRUE if they are similar
+     */
+    private boolean similar(final Temporary drain) {
+        return this.work.owner().equals(drain.work.owner())
+            && this.work.unit().equals(drain.work.unit())
+            && this.marker.equals(drain.marker);
+    }
+
+    /**
+     * Get buffer.
+     * @return The buffer
+     */
+    private Temporary.Buffer buffer() {
+        synchronized (Temporary.BUFFERS) {
+            if (!Temporary.BUFFERS.containsKey(this)) {
+                Temporary.BUFFERS.put(
+                    this,
+                    new Temporary.Buffer()
                 );
-                final Collection<String> lines = new LinkedList<String>();
-                while (true) {
-                    final String line = reader.readLine();
-                    if (line == null) {
-                        break;
-                    }
-                    lines.add(line);
-                }
-                BufferedWrite.this.origin.append(lines);
             }
-            return expired;
+            return Temporary.BUFFERS.get(this);
         }
     }
 
@@ -234,19 +234,12 @@ public final class BufferedWrite implements Drain {
      * Flush.
      */
     @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.SECONDS)
-    private static final class Flush implements Runnable {
+    private static final class Cleaner implements Runnable {
         @Override
         public void run() {
-            for (BufferedWrite client : BufferedWrite.TUNNELS.keySet()) {
-                synchronized (client.lifetime) {
-                    try {
-                        if (BufferedWrite.TUNNELS.get(client).flush()) {
-                            BufferedWrite.TUNNELS.remove(client);
-                        }
-                    } catch (IOException ex) {
-                        Logger.warn(this, "#run(): %s", ex);
-                        BufferedWrite.TUNNELS.remove(client);
-                    }
+            for (Temporary client : Temporary.BUFFERS.keySet()) {
+                if (Temporary.BUFFERS.get(client).expired()) {
+                    Temporary.BUFFERS.remove(client);
                 }
             }
         }

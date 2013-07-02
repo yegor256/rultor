@@ -40,6 +40,7 @@ import com.jcabi.log.Logger;
 import com.rultor.aws.S3Client;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulses;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -129,6 +130,7 @@ public final class ObjectDrain implements Drain {
         }
         final byte[] suffix = StringUtils.join(lines, "\n")
             .getBytes(CharEncoding.UTF_8);
+        Validate.isTrue(suffix.length > 0, "empty input");
         size += suffix.length;
         final ObjectMetadata meta = new ObjectMetadata();
         meta.setContentEncoding(CharEncoding.UTF_8);
@@ -174,41 +176,33 @@ public final class ObjectDrain implements Drain {
         try {
             if (aws.listObjects(this.client.bucket(), this.key)
                 .getObjectSummaries().isEmpty()) {
-                stream = IOUtils.toInputStream(
+                throw new IOException(
                     String.format(
-                        "ObjectDrain: object '%s' not found in '%s'\n",
+                        "S3 object %s not found in %s",
                         this.key,
                         this.client.bucket()
                     )
                 );
-            } else {
-                final S3Object object =
-                    aws.getObject(this.client.bucket(), this.key);
-                Logger.info(
-                    this,
-                    "'%s' ready for loading from S3, size=%d, etag=%s",
-                    this.key,
-                    object.getObjectMetadata().getContentLength(),
-                    object.getObjectMetadata().getETag()
-                );
-                final InputStream ostream = object.getObjectContent();
-                stream = new InputStream() {
-                    private final transient AmazonS3 amazon = aws;
-                    @Override
-                    public int read() throws IOException {
-                        return ostream.read();
-                    }
-                    @Override
-                    public int available() throws IOException {
-                        return ostream.available();
-                    }
-                    @Override
-                    public void close() throws IOException {
-                        assert this.amazon != null;
-                        ostream.close();
-                    }
-                };
             }
+            final S3Object object =
+                aws.getObject(this.client.bucket(), this.key);
+            Logger.info(
+                this,
+                "'%s' ready for loading from S3, size=%d, etag=%s",
+                this.key,
+                object.getObjectMetadata().getContentLength(),
+                object.getObjectMetadata().getETag()
+            );
+            stream = new SequenceInputStream(
+                IOUtils.toInputStream(
+                    String.format(
+                        "ObjectDrain: etag='%s', size=%d\n",
+                        object.getObjectMetadata().getETag(),
+                        object.getObjectMetadata().getContentLength()
+                    )
+                ),
+                new ObjectDrain.Wrap(object.getObjectContent(), aws)
+            );
         } catch (AmazonS3Exception ex) {
             throw new IOException(
                 String.format(
@@ -230,6 +224,26 @@ public final class ObjectDrain implements Drain {
             ),
             stream
         );
+    }
+
+    /**
+     * Wrap around exiting InputStream, to keep AWS object apart from
+     * garbage collector, in order not to loose HTTP connection.
+     */
+    private static final class Wrap extends BufferedInputStream {
+        /**
+         * Encapsulated AmazonS3 client.
+         */
+        private final transient AmazonS3 aws;
+        /**
+         * Public ctor.
+         * @param stream Origin input stream
+         * @param amazon AmazonS3
+         */
+        protected Wrap(final InputStream stream, final AmazonS3 amazon) {
+            super(stream);
+            this.aws = amazon;
+        }
     }
 
 }

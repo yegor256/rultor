@@ -29,71 +29,54 @@
  */
 package com.rultor.drain;
 
-import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Time;
 import com.rultor.spi.Work;
-import java.util.Arrays;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 /**
- * Test case for {@link BufferedWrite}.
+ * Test case for {@link BufferedRead}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public final class BufferedWriteTest {
+public final class BufferedReadTest {
 
     /**
-     * BufferedWrite can be converted to string.
+     * BufferedRead can save and show.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void loadsDataAndRenders() throws Exception {
+        final Time time = new Time();
+        final Work work = new Work.Simple(
+            new URN("urn:facebook:11"), "test", new Spec.Simple(), time
+        );
+        final Drain drain = Mockito.mock(Drain.class);
+        final String text = "\u20ac\n\n\n test \u0433";
+        Mockito.doReturn(IOUtils.toInputStream(text)).when(drain).read();
+        MatcherAssert.assertThat(
+            IOUtils.toString(new BufferedRead(work, 2, drain).read()),
+            Matchers.containsString(text)
+        );
+        Mockito.verify(drain).read();
+    }
+
+    /**
+     * BufferedRead can be converted to string.
      * @throws Exception If some problem inside
      */
     @Test
     public void printsItselfInString() throws Exception {
         MatcherAssert.assertThat(
-            new BufferedWrite(new Work.None(), 2, new Trash()),
+            new BufferedRead(new Work.None(), 2, new Trash()),
             Matchers.hasToString(Matchers.notNullValue())
-        );
-    }
-
-    /**
-     * BufferedWrite can send data through.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    @SuppressWarnings("unchecked")
-    public void sendsLinesThrough() throws Exception {
-        final Time time = new Time();
-        final Work work = new Work.Simple(
-            new URN("urn:facebook:8789"), "test-99", new Spec.Simple(), time
-        );
-        final Drain drain = Mockito.mock(Drain.class);
-        final String line = "some \t\u20ac\tfdsfs9980 Hello878";
-        final CountDownLatch done = new CountDownLatch(1);
-        Mockito.doAnswer(
-            new Answer<Void>() {
-                @Override
-                public Void answer(final InvocationOnMock inv) {
-                    done.countDown();
-                    return null;
-                }
-            }
-        ).when(drain).append(Mockito.any(Iterable.class));
-        new BufferedWrite(work, 2, drain).append(Arrays.asList(line));
-        done.await(Tv.FIVE, TimeUnit.SECONDS);
-        Mockito.verify(drain).append(
-            Mockito.<Iterable<String>>argThat(
-                Matchers.<String>everyItem(Matchers.equalTo(line))
-            )
         );
     }
 

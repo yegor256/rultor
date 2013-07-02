@@ -36,16 +36,11 @@ import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Work;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.SequenceInputStream;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
@@ -66,19 +61,19 @@ import org.apache.commons.lang3.Validate;
 @EqualsAndHashCode(of = { "work", "lifetime", "origin" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.TooManyMethods" })
-public final class BufferedWrite implements Drain {
+public final class BufferedRead implements Drain {
 
     /**
      * All in-memory buffers.
      * @checkstyle LineLength (2 lines)
      */
-    private static final ConcurrentMap<BufferedWrite, BufferedWrite.Tunnel> TUNNELS =
-        new ConcurrentHashMap<BufferedWrite, BufferedWrite.Tunnel>(0);
+    private static final ConcurrentMap<BufferedRead, BufferedRead.Buffer> BUFFERS =
+        new ConcurrentHashMap<BufferedRead, BufferedRead.Buffer>(0);
 
     /**
-     * Flusher.
+     * Cleaner of memory.
      */
-    private static final Runnable FLUSH = new BufferedWrite.Flush();
+    private static final Runnable CLEANER = new BufferedRead.Cleaner();
 
     /**
      * How long to keep them in buffer, in milliseconds.
@@ -98,12 +93,12 @@ public final class BufferedWrite implements Drain {
     /**
      * Public ctor.
      * @param wrk Work we're in
-     * @param sec How often should be flush, in seconds
+     * @param sec For how long to keep them in memory
      * @param drain Original drain
      */
-    public BufferedWrite(@NotNull final Work wrk, final long sec,
+    public BufferedRead(@NotNull final Work wrk, final long sec,
         @NotNull final Drain drain) {
-        assert BufferedWrite.FLUSH != null;
+        assert BufferedRead.CLEANER != null;
         Validate.isTrue(
             sec <= TimeUnit.HOURS.toSeconds(1),
             "maximum interval allowed is one hour, while %d second(s) provided",
@@ -125,7 +120,7 @@ public final class BufferedWrite implements Drain {
     @Override
     public String toString() {
         return Logger.format(
-            "%s with buffered write for %[ms]s",
+            "%s with buffered read for %[ms]s",
             this.origin,
             this.lifetime
         );
@@ -144,19 +139,7 @@ public final class BufferedWrite implements Drain {
      */
     @Override
     public void append(final Iterable<String> lines) throws IOException {
-        final BufferedWrite.Tunnel tunnel;
-        synchronized (BufferedWrite.TUNNELS) {
-            if (!BufferedWrite.TUNNELS.containsKey(this)) {
-                BufferedWrite.TUNNELS.put(
-                    this,
-                    new BufferedWrite.Tunnel()
-                );
-            }
-            tunnel = BufferedWrite.TUNNELS.get(this);
-        }
-        synchronized (this.lifetime) {
-            tunnel.send(lines);
-        }
+        this.origin.append(lines);
     }
 
     /**
@@ -164,23 +147,33 @@ public final class BufferedWrite implements Drain {
      */
     @Override
     public InputStream read() throws IOException {
+        final BufferedRead.Buffer buffer;
+        synchronized (BufferedRead.BUFFERS) {
+            if (!BufferedRead.BUFFERS.containsKey(this)) {
+                BufferedRead.BUFFERS.put(
+                    this,
+                    new BufferedRead.Buffer()
+                );
+            }
+            buffer = BufferedRead.BUFFERS.get(this);
+        }
         return new SequenceInputStream(
             IOUtils.toInputStream(
                 Logger.format(
-                    "BufferedWrite: lifetime=%[ms]s, work='%s', origin='%s'\n",
+                    "BufferedRead: lifetime=%[ms]s, work='%s', origin='%s'\n",
                     this.lifetime,
                     this.work,
                     this.origin
                 )
             ),
-            this.origin.read()
+            buffer.stream()
         );
     }
 
     /**
-     * Tunnel to the real drain.
+     * Buffer to the real drain.
      */
-    private final class Tunnel {
+    private final class Buffer {
         /**
          * When was is started.
          */
@@ -188,45 +181,30 @@ public final class BufferedWrite implements Drain {
         /**
          * Buffered data.
          */
-        private final transient ByteArrayOutputStream data =
-            new ByteArrayOutputStream();
+        private final transient byte[] data;
         /**
-         * Send lines through.
-         * @param lines Lines to send
+         * Public ctor.
+         * @throws IOException If some error with the stream
          */
-        public void send(final Iterable<String> lines) {
-            final PrintWriter writer = new PrintWriter(this.data);
-            for (String line : lines) {
-                writer.println(line);
-            }
-            writer.flush();
-            writer.close();
+        protected Buffer() throws IOException {
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            IOUtils.copyLarge(BufferedRead.this.origin.read(), baos);
+            this.data = baos.toByteArray();
         }
         /**
-         * Flush if necessary.
-         * @return TRUE if it was flushed and should be removed
-         * @throws IOException If fails
+         * Read it as a stream.
+         * @return Stream
          */
-        public boolean flush() throws IOException {
-            final boolean expired = System.currentTimeMillis() - this.start
-                > BufferedWrite.this.lifetime;
-            if (expired && this.data.size() > 0) {
-                final BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(
-                        new ByteArrayInputStream(this.data.toByteArray())
-                    )
-                );
-                final Collection<String> lines = new LinkedList<String>();
-                while (true) {
-                    final String line = reader.readLine();
-                    if (line == null) {
-                        break;
-                    }
-                    lines.add(line);
-                }
-                BufferedWrite.this.origin.append(lines);
-            }
-            return expired;
+        public InputStream stream() {
+            return new ByteArrayInputStream(this.data);
+        }
+        /**
+         * Is it too old?
+         * @return TRUE if it is too old
+         */
+        public boolean expired() {
+            return System.currentTimeMillis() - this.start
+                > BufferedRead.this.lifetime;
         }
     }
 
@@ -234,18 +212,13 @@ public final class BufferedWrite implements Drain {
      * Flush.
      */
     @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.SECONDS)
-    private static final class Flush implements Runnable {
+    private static final class Cleaner implements Runnable {
         @Override
         public void run() {
-            for (BufferedWrite client : BufferedWrite.TUNNELS.keySet()) {
+            for (BufferedRead client : BufferedRead.BUFFERS.keySet()) {
                 synchronized (client.lifetime) {
-                    try {
-                        if (BufferedWrite.TUNNELS.get(client).flush()) {
-                            BufferedWrite.TUNNELS.remove(client);
-                        }
-                    } catch (IOException ex) {
-                        Logger.warn(this, "#run(): %s", ex);
-                        BufferedWrite.TUNNELS.remove(client);
+                    if (BufferedRead.BUFFERS.get(client).expired()) {
+                        BufferedRead.BUFFERS.remove(client);
                     }
                 }
             }
