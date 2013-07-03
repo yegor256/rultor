@@ -29,7 +29,10 @@
  */
 package com.rultor.drain;
 
+import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Work;
 import java.util.Arrays;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
@@ -55,6 +58,9 @@ public final class NoiseReductionTest {
         Mockito.doReturn(IOUtils.toInputStream("")).when(dirty).read();
         final Drain clean = Mockito.mock(Drain.class);
         final Drain drain = new NoiseReduction(
+            new Work.Simple(
+                new URN("urn:facebook:1"), "test-99", new Spec.Simple()
+            ),
             "Hello[0-9]+",
             1,
             dirty,
@@ -76,6 +82,9 @@ public final class NoiseReductionTest {
     public void printsItselfInString() throws Exception {
         MatcherAssert.assertThat(
             new NoiseReduction(
+                new Work.Simple(
+                    new URN("urn:facebook:4"), "tdd", new Spec.Simple()
+                ),
                 "some regular expression",
                 1,
                 Mockito.mock(Drain.class),

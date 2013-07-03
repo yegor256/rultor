@@ -35,6 +35,7 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Time;
+import com.rultor.spi.Work;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
@@ -43,7 +44,6 @@ import java.util.Scanner;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Noise reduction.
@@ -57,6 +57,11 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
 public final class NoiseReduction implements Drain {
+
+    /**
+     * Work we're in.
+     */
+    private final transient Work work;
 
     /**
      * Regular expression pattern to match.
@@ -80,14 +85,17 @@ public final class NoiseReduction implements Drain {
 
     /**
      * Public ctor.
+     * @param wrk Work we're in
      * @param ptn Regular
      * @param vsbl How many items should be visible from dirty drain
      * @param drt Dirty drain
      * @param cln Clean drain
      * @checkstyle ParameterNumber (4 lines)
      */
-    public NoiseReduction(@NotNull final String ptn, final int vsbl,
+    public NoiseReduction(@NotNull final Work wrk,
+        @NotNull final String ptn, final int vsbl,
         @NotNull final Drain drt, @NotNull final Drain cln) {
+        this.work = wrk;
         this.pattern = ptn;
         this.visible = vsbl;
         this.dirty = drt;
@@ -110,6 +118,11 @@ public final class NoiseReduction implements Drain {
 
     /**
      * {@inheritDoc}
+     *
+     * @todo #43 This implementation leads to duplicates in resulting
+     *  iterator, which is wrong. We should filter out duplicates, but there
+     *  is no such method in Guava at the moment. See
+     *  https://code.google.com/p/guava-libraries/issues/detail?id=1464
      */
     @Override
     public Pulses pulses() throws IOException {
@@ -147,21 +160,22 @@ public final class NoiseReduction implements Drain {
      */
     @Override
     public InputStream read() throws IOException {
+        final boolean exists = Iterables.contains(
+            Iterables.limit(this.dirty.pulses(), this.visible),
+            this.work.started()
+        );
         InputStream stream;
-        String source;
-        try {
-            stream = this.clean.read();
-            source = "clean";
-        } catch (IOException ex) {
+        if (exists) {
             stream = this.dirty.read();
-            source = ExceptionUtils.getRootCauseMessage(ex);
+        } else {
+            stream = this.clean.read();
         }
         return new SequenceInputStream(
             IOUtils.toInputStream(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "NoiseReduction: '%s', pattern='%s', visible=%d, dirty='%s', clean='%s'\n",
-                    source,
+                    "NoiseReduction: exists=%B, pattern='%s', visible=%d, dirty='%s', clean='%s'\n",
+                    exists,
                     this.pattern,
                     this.visible,
                     this.dirty,

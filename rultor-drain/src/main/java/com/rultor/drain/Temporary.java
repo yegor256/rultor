@@ -138,7 +138,16 @@ public final class Temporary implements Drain {
      */
     @Override
     public void append(final Iterable<String> lines) throws IOException {
-        final Temporary.Buffer buffer = this.buffer();
+        final Temporary.Buffer buffer;
+        synchronized (Temporary.BUFFERS) {
+            if (!Temporary.BUFFERS.containsKey(this)) {
+                Temporary.BUFFERS.put(
+                    this,
+                    new Temporary.Buffer()
+                );
+            }
+            buffer = Temporary.BUFFERS.get(this);
+        }
         synchronized (buffer) {
             buffer.append(lines);
         }
@@ -149,12 +158,21 @@ public final class Temporary implements Drain {
      */
     @Override
     public InputStream read() throws IOException {
-        final Temporary.Buffer buffer = this.buffer();
+        final Temporary.Buffer buffer = Temporary.BUFFERS.get(this);
+        if (buffer == null) {
+            throw new IOException(
+                String.format(
+                    "temporary buffer is absent for '%s'",
+                    this
+                )
+            );
+        }
         return new SequenceInputStream(
             IOUtils.toInputStream(
                 Logger.format(
-                    "Temporary: work='%s'\n",
-                    this.work
+                    "Temporary: work='%s', buffer='%s'\n",
+                    this.work,
+                    buffer
                 )
             ),
             buffer.read()
@@ -174,6 +192,17 @@ public final class Temporary implements Drain {
          */
         private final transient ByteArrayOutputStream data =
             new ByteArrayOutputStream();
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return Logger.format(
+                "age=%[ms]s, size=%d",
+                System.currentTimeMillis() - this.start,
+                this.data.size()
+            );
+        }
         /**
          * Append lines to the buffer.
          * @param lines Lines to append
@@ -212,22 +241,6 @@ public final class Temporary implements Drain {
         return this.work.owner().equals(drain.work.owner())
             && this.work.unit().equals(drain.work.unit())
             && this.marker.equals(drain.marker);
-    }
-
-    /**
-     * Get buffer.
-     * @return The buffer
-     */
-    private Temporary.Buffer buffer() {
-        synchronized (Temporary.BUFFERS) {
-            if (!Temporary.BUFFERS.containsKey(this)) {
-                Temporary.BUFFERS.put(
-                    this,
-                    new Temporary.Buffer()
-                );
-            }
-            return Temporary.BUFFERS.get(this);
-        }
     }
 
     /**

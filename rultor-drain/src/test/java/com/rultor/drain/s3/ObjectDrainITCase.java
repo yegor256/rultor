@@ -113,6 +113,7 @@ public final class ObjectDrainITCase {
         );
         final Drain dirty = new BufferedWrite(work, Tv.TEN, new Trash());
         final Drain drain = new NoiseReduction(
+            work,
             "hello",
             1,
             dirty,
