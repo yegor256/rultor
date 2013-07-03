@@ -110,6 +110,9 @@
                             <failsafe.s3.key>${failsafe.s3.key}</failsafe.s3.key>
                             <failsafe.s3.secret>${failsafe.s3.secret}</failsafe.s3.secret>
                             <failsafe.s3.bucket>${failsafe.s3.bucket}</failsafe.s3.bucket>
+                            <failsafe.sdb.key>${failsafe.sdb.key}</failsafe.sdb.key>
+                            <failsafe.sdb.secret>${failsafe.sdb.secret}</failsafe.sdb.secret>
+                            <failsafe.sdb.domain>${failsafe.sdb.domain}</failsafe.sdb.domain>
                             <failsafe.ec2.key>${failsafe.ec2.key}</failsafe.ec2.key>
                             <failsafe.ec2.secret>${failsafe.ec2.secret}</failsafe.ec2.secret>
                             <failsafe.ec2.priv>${failsafe.ec2.priv}</failsafe.ec2.priv>
