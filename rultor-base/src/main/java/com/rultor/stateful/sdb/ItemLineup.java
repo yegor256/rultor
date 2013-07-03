@@ -29,7 +29,6 @@
  */
 package com.rultor.stateful.sdb;
 
-import com.amazonaws.services.simpledb.AmazonSimpleDB;
 import com.amazonaws.services.simpledb.model.DeleteAttributesRequest;
 import com.amazonaws.services.simpledb.model.GetAttributesRequest;
 import com.amazonaws.services.simpledb.model.GetAttributesResult;
@@ -179,8 +178,7 @@ public final class ItemLineup implements Lineup {
      * @return TRUE if it exists
      */
     private boolean exists() {
-        final AmazonSimpleDB aws = this.client.get();
-        final GetAttributesResult result = aws.getAttributes(
+        final GetAttributesResult result = this.client.get().getAttributes(
             new GetAttributesRequest()
                 .withConsistentRead(true)
                 .withDomainName(this.client.domain())
@@ -194,8 +192,7 @@ public final class ItemLineup implements Lineup {
      * @param content Content to save
      */
     private void save(final String content) {
-        final AmazonSimpleDB aws = this.client.get();
-        aws.putAttributes(
+        this.client.get().putAttributes(
             new PutAttributesRequest()
                 .withDomainName(this.client.domain())
                 .withItemName(this.name)
@@ -213,8 +210,7 @@ public final class ItemLineup implements Lineup {
      * @return The content loaded
      */
     private String load() {
-        final AmazonSimpleDB aws = this.client.get();
-        final GetAttributesResult result = aws.getAttributes(
+        final GetAttributesResult result = this.client.get().getAttributes(
             new GetAttributesRequest()
                 .withConsistentRead(true)
                 .withDomainName(this.client.domain())
@@ -228,8 +224,7 @@ public final class ItemLineup implements Lineup {
      * Remove object from S3.
      */
     private void remove() {
-        final AmazonSimpleDB aws = this.client.get();
-        aws.deleteAttributes(
+        this.client.get().deleteAttributes(
             new DeleteAttributesRequest()
                 .withDomainName(this.client.domain())
                 .withItemName(this.name)

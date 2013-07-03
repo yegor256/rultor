@@ -46,7 +46,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "work", "client", "prefix" })
+@EqualsAndHashCode(of = { "work", "client" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
 public final class DomainLineup implements Lineup {
