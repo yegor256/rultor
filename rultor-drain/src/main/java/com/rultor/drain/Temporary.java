@@ -108,7 +108,7 @@ public final class Temporary implements Drain {
      * @param wrk Work we're in
      */
     public Temporary(@NotNull final Work wrk) {
-        this(wrk, "");
+        this(wrk, "def");
     }
 
     /**
@@ -116,7 +116,7 @@ public final class Temporary implements Drain {
      */
     @Override
     public String toString() {
-        return "temporary in memory";
+        return String.format("temporary marked as `%s`", this.marker);
     }
 
     /**
@@ -162,15 +162,17 @@ public final class Temporary implements Drain {
         if (buffer == null) {
             throw new IOException(
                 String.format(
-                    "temporary buffer is absent for '%s'",
-                    this
+                    "temporary buffer is absent for '%s' in '%s'",
+                    this.marker,
+                    this.work
                 )
             );
         }
         return new SequenceInputStream(
             IOUtils.toInputStream(
                 Logger.format(
-                    "Temporary: work='%s', buffer='%s'\n",
+                    "Temporary: marker='%s', work='%s', buffer='%s'\n",
+                    this.marker,
                     this.work,
                     buffer
                 )

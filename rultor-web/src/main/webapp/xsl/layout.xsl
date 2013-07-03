@@ -73,7 +73,7 @@
                         alt="Fork me on GitHub" />
                 </a>
                 <div class="page">
-                    <ul class="inline" style="padding-bottom: 4em;">
+                    <ul class="inline" style="padding-bottom: 4em; padding-top: 2em;">
                         <li class="hidden-phone">
                             <a class="logo">
                                 <xsl:attribute name="href">
