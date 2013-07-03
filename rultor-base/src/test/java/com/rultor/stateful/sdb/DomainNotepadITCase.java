@@ -29,7 +29,10 @@
  */
 package com.rultor.stateful.sdb;
 
+import com.jcabi.urn.URN;
 import com.rultor.aws.SDBClient;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Work;
 import com.rultor.stateful.Notepad;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -52,7 +55,10 @@ public final class DomainNotepadITCase {
         final String key = System.getProperty("failsafe.sdb.key");
         Assume.assumeNotNull(key);
         final Notepad notepad = new DomainNotepad(
-            "S3NotepadITCase.txt",
+            new Work.Simple(
+                new URN("urn:facebook:1"),
+                "test-unit", new Spec.Simple()
+            ),
             new SDBClient.Simple(
                 key,
                 System.getProperty("failsafe.sdb.secret"),

@@ -39,6 +39,7 @@ import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.aws.SDBClient;
+import com.rultor.spi.Work;
 import com.rultor.stateful.Notepad;
 import java.util.Collection;
 import java.util.Iterator;
@@ -55,15 +56,20 @@ import org.apache.commons.codec.digest.DigestUtils;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "client", "key" })
+@EqualsAndHashCode(of = { "client", "work" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
 public final class DomainNotepad implements Notepad {
 
     /**
-     * Attribute name for the key.
+     * Attribute name for the owner.
      */
-    private static final String KEY = "key";
+    private static final String OWNER = "owner";
+
+    /**
+     * Attribute name for the unit.
+     */
+    private static final String UNIT = "unit";
 
     /**
      * Attribute name for the text.
@@ -76,18 +82,18 @@ public final class DomainNotepad implements Notepad {
     private final transient SDBClient client;
 
     /**
-     * Key column name.
+     * Work we're in.
      */
-    private final transient String key;
+    private final transient Work work;
 
     /**
      * Public ctor.
-     * @param pfx Key column name
+     * @param wrk Work
      * @param clnt Client
      */
-    public DomainNotepad(@NotNull final String pfx,
+    public DomainNotepad(@NotNull final Work wrk,
         @NotNull final SDBClient clnt) {
-        this.key = pfx;
+        this.work = wrk;
         this.client = clnt;
     }
 
@@ -97,8 +103,8 @@ public final class DomainNotepad implements Notepad {
     @Override
     public String toString() {
         return String.format(
-            "SimpleDB notepads labeled `%s` in `%s` accessed with %s",
-            this.key, this.client.domain(), this.client
+            "SimpleDB notepads in `%s` accessed with %s",
+            this.client.domain(), this.client
         );
     }
 
@@ -132,11 +138,13 @@ public final class DomainNotepad implements Notepad {
     @Override
     public Iterator<String> iterator() {
         final String query = String.format(
-            "SELECT `%s` FROM `%s` WHERE `%s` = '%s'",
+            "SELECT `%s` FROM `%s` WHERE `%s` = '%s' AND `%s` = '%s'",
             DomainNotepad.TEXT,
             this.client.domain(),
-            DomainNotepad.KEY,
-            this.key
+            DomainNotepad.OWNER,
+            this.work.owner(),
+            DomainNotepad.UNIT,
+            this.work.unit()
         );
         final SelectResult result = this.client.get().select(
             new SelectRequest()
@@ -178,12 +186,16 @@ public final class DomainNotepad implements Notepad {
                 .withItemName(this.name(line))
                 .withAttributes(
                     new ReplaceableAttribute()
-                        .withName(DomainNotepad.KEY)
-                        .withValue(this.key)
-                        .withReplace(true),
-                    new ReplaceableAttribute()
                         .withName(DomainNotepad.TEXT)
                         .withValue(line)
+                        .withReplace(true),
+                    new ReplaceableAttribute()
+                        .withName(DomainNotepad.OWNER)
+                        .withValue(this.work.owner().toString())
+                        .withReplace(true),
+                    new ReplaceableAttribute()
+                        .withName(DomainNotepad.UNIT)
+                        .withValue(this.work.unit())
                         .withReplace(true)
                 )
         );
@@ -257,7 +269,14 @@ public final class DomainNotepad implements Notepad {
      * @return The name (possibly unique)
      */
     private String name(final String text) {
-        return DigestUtils.md5Hex(String.format("%s %s", this.key, text));
+        return DigestUtils.md5Hex(
+            String.format(
+                "%s %s %s",
+                this.work.owner(),
+                this.work.unit(),
+                text
+            )
+        );
     }
 
 }
