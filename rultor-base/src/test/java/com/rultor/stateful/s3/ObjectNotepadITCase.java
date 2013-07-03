@@ -36,21 +36,21 @@ import org.junit.Assume;
 import org.junit.Test;
 
 /**
- * Integration case for {@link S3Notepad}.
+ * Integration case for {@link ObjectNotepad}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class S3NotepadITCase {
+public final class ObjectNotepadITCase {
 
     /**
-     * S3Notepad can store and retrieve lines.
+     * ObjectNotepad can store and retrieve lines.
      * @throws Exception If some problem inside
      */
     @Test
     public void storesAndRetrievesLines() throws Exception {
         final String key = System.getProperty("failsafe.s3.key");
         Assume.assumeNotNull(key);
-        final Notepad notepad = new S3Notepad(
+        final Notepad notepad = new ObjectNotepad(
             "S3NotepadITCase.txt",
             System.getProperty("failsafe.s3.bucket"),
             key,

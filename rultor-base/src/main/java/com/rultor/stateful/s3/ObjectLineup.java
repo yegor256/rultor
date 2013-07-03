@@ -65,7 +65,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 @EqualsAndHashCode(of = { "client", "key" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
-public final class S3Lineup implements Lineup {
+public final class ObjectLineup implements Lineup {
 
     /**
      * Randomizer.
@@ -87,7 +87,8 @@ public final class S3Lineup implements Lineup {
      * @param obj Object name
      * @param clnt Client
      */
-    public S3Lineup(@NotNull final String obj, @NotNull final S3Client clnt) {
+    public ObjectLineup(@NotNull final String obj,
+        @NotNull final S3Client clnt) {
         this.key = obj;
         this.client = clnt;
     }
@@ -100,7 +101,7 @@ public final class S3Lineup implements Lineup {
      * @param scrt AWS secret
      * @checkstyle ParameterNumber (5 lines)
      */
-    public S3Lineup(@NotNull final String bkt, @NotNull final String obj,
+    public ObjectLineup(@NotNull final String bkt, @NotNull final String obj,
         @NotNull final String akey, @NotNull final String scrt) {
         this(obj, new S3Client.Simple(akey, scrt, bkt));
     }
@@ -125,7 +126,7 @@ public final class S3Lineup implements Lineup {
             while (this.exists()) {
                 try {
                     TimeUnit.MILLISECONDS.sleep(
-                        S3Lineup.RAND.nextInt(Tv.TEN * Tv.THOUSAND)
+                        ObjectLineup.RAND.nextInt(Tv.TEN * Tv.THOUSAND)
                     );
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();

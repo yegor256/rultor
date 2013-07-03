@@ -64,7 +64,7 @@ import org.apache.commons.lang3.StringUtils;
 @EqualsAndHashCode(of = { "client", "key" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
-public final class S3Notepad implements Notepad {
+public final class ObjectNotepad implements Notepad {
 
     /**
      * End of line marker.
@@ -86,7 +86,8 @@ public final class S3Notepad implements Notepad {
      * @param obj Object key name
      * @param clnt Client
      */
-    public S3Notepad(@NotNull final String obj, @NotNull final S3Client clnt) {
+    public ObjectNotepad(@NotNull final String obj,
+        @NotNull final S3Client clnt) {
         this.key = obj;
         this.client = clnt;
     }
@@ -99,7 +100,7 @@ public final class S3Notepad implements Notepad {
      * @param scrt AWS secret
      * @checkstyle ParameterNumber (5 lines)
      */
-    public S3Notepad(@NotNull final String obj, @NotNull final String bkt,
+    public ObjectNotepad(@NotNull final String obj, @NotNull final String bkt,
         @NotNull final String akey, @NotNull final String scrt) {
         this(obj, new S3Client.Simple(akey, scrt, bkt));
     }
@@ -110,7 +111,7 @@ public final class S3Notepad implements Notepad {
     @Override
     public String toString() {
         return String.format(
-            "S3 collection at `%s` in `%s` bucket accessed with %s",
+            "S3 notepad at `%s` in `%s` bucket accessed with %s",
             this.key, this.client.bucket(), this.client
         );
     }
@@ -266,7 +267,7 @@ public final class S3Notepad implements Notepad {
                 this.client.bucket(),
                 this.key
             );
-            for (String line : content.split(S3Notepad.EOL)) {
+            for (String line : content.split(ObjectNotepad.EOL)) {
                 if (!line.isEmpty()) {
                     list.add(StringEscapeUtils.unescapeJava(line));
                 }
@@ -286,7 +287,7 @@ public final class S3Notepad implements Notepad {
                 escaped.add(StringEscapeUtils.escapeJava(line));
             }
         }
-        final String content = StringUtils.join(escaped, S3Notepad.EOL);
+        final String content = StringUtils.join(escaped, ObjectNotepad.EOL);
         final AmazonS3 aws = this.client.get();
         try {
             final ObjectMetadata meta = new ObjectMetadata();

@@ -46,14 +46,14 @@ import org.junit.Assume;
 import org.junit.Test;
 
 /**
- * Integration case for {@link S3Lineup}.
+ * Integration case for {@link ObjectLineup}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class S3LineupITCase {
+public final class ObjectLineupITCase {
 
     /**
-     * S3Lineup can run code in parallel.
+     * ObjectLineup can run code in parallel.
      * @throws Exception If some problem inside
      */
     @Test
@@ -61,7 +61,7 @@ public final class S3LineupITCase {
     public void runsInParallel() throws Exception {
         final String key = System.getProperty("failsafe.s3.key");
         Assume.assumeNotNull(key);
-        final Lineup lineup = new S3Lineup(
+        final Lineup lineup = new ObjectLineup(
             System.getProperty("failsafe.s3.bucket"),
             "S3LineupITCase.txt",
             key,
