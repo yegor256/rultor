@@ -67,7 +67,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             </head>
             <body>
-                <a href="https://github.com/yegor256/rultor">
+                <a href="https://github.com/yegor256/rultor" class="hidden-phone">
                     <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
                         src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
                         alt="Fork me on GitHub" />

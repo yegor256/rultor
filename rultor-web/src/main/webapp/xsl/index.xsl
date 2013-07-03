@@ -75,7 +75,7 @@
                     </a>
                 </li>
                 <xsl:if test="spec/type">
-                    <li>
+                    <li class="hidden-phone">
                         <code>
                             <xsl:value-of select="spec/type"/>
                         </code>
@@ -103,7 +103,7 @@
             </ul>
         </div>
         <xsl:if test="not(spec/type) or spec/type != 'java.lang.String'">
-            <p style="padding-left: 3em;">
+            <p style="padding-left: 3em;" class="hidden-phone">
                 <xsl:call-template name="face">
                     <xsl:with-param name="object" select="spec"/>
                 </xsl:call-template>
