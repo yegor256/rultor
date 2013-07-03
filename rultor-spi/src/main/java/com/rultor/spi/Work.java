@@ -116,7 +116,7 @@ public interface Work {
      * Simple implementation.
      */
     @Loggable(Loggable.DEBUG)
-    @EqualsAndHashCode(of = { "time", "urn", "label", "desc" })
+    @EqualsAndHashCode(of = { "time", "urn", "label" })
     @Immutable
     final class Simple implements Work {
         /**
@@ -142,6 +142,16 @@ public interface Work {
          */
         public Simple(@NotNull final URN owner, @NotNull final String name) {
             this(owner, name, new Spec.Simple(), new Time());
+        }
+        /**
+         * Public ctor.
+         * @param owner Owner
+         * @param name Name
+         * @param when Time
+         */
+        public Simple(@NotNull final URN owner, @NotNull final String name,
+            @NotNull final Time when) {
+            this(owner, name, new Spec.Simple(), when);
         }
         /**
          * Public ctor.

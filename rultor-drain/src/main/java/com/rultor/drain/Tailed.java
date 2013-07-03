@@ -49,7 +49,7 @@ import org.apache.commons.io.IOUtils;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@EqualsAndHashCode
+@EqualsAndHashCode(of = { "main", "tail" })
 @Loggable(Loggable.DEBUG)
 public final class Tailed implements Drain {
 

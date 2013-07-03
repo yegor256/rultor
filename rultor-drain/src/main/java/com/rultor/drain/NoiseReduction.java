@@ -54,7 +54,7 @@ import org.apache.commons.io.IOUtils;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@EqualsAndHashCode
+@EqualsAndHashCode(of = { "work", "pattern", "visible", "dirty", "clean" })
 @Loggable(Loggable.DEBUG)
 public final class NoiseReduction implements Drain {
 

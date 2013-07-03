@@ -56,7 +56,7 @@ import lombok.ToString;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@EqualsAndHashCode(of = { "prefix", "client" })
+@EqualsAndHashCode(of = { "prefix", "top", "client" })
 @Loggable(Loggable.DEBUG)
 @ToString
 final class BucketPulses implements Pulses {

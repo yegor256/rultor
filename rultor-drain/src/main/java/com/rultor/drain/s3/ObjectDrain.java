@@ -62,7 +62,7 @@ import org.apache.commons.lang3.Validate;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@EqualsAndHashCode(of = "client")
+@EqualsAndHashCode(of = { "client", "key" })
 @Loggable(Loggable.DEBUG)
 public final class ObjectDrain implements Drain {
 

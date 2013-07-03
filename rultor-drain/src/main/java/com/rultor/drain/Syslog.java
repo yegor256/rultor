@@ -53,7 +53,7 @@ import lombok.EqualsAndHashCode;
  * @see <a href="http://tools.ietf.org/html/rfc5424">RFC 5424</a>
  */
 @Immutable
-@EqualsAndHashCode
+@EqualsAndHashCode(of = { "host", "port", "priority" })
 @Loggable(Loggable.DEBUG)
 public final class Syslog implements Drain {
 

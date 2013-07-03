@@ -30,7 +30,6 @@
 package com.rultor.drain;
 
 import com.jcabi.urn.URN;
-import com.rultor.spi.Drain;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Time;
 import com.rultor.spi.Work;
@@ -67,14 +66,17 @@ public final class TemporaryTest {
     @Test
     public void savesAndReturnsData() throws Exception {
         final Time time = new Time();
-        final Work work = new Work.Simple(
-            new URN("urn:facebook:8789"), "test-99", new Spec.Simple(), time
-        );
+        final URN owner = new URN("urn:facebook:8789");
+        final String unit = "some-test-unit";
         final String line = "some \t\u20ac\tfdsfs9980 Hello878";
-        final Drain drain = new Temporary(work);
-        drain.append(Arrays.asList(line));
+        final Work work = new Work.Simple(
+            owner, unit, new Spec.Simple("com.test()"), time
+        );
+        new Temporary(work).append(Arrays.asList(line));
         MatcherAssert.assertThat(
-            IOUtils.toString(drain.read()),
+            IOUtils.toString(
+                new Temporary(new Work.Simple(owner, unit, time)).read()
+            ),
             Matchers.containsString(line)
         );
     }
