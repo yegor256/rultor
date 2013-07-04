@@ -83,6 +83,10 @@ public final class NeutralBuild implements Instance {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
+        Signal.log(
+            Signal.Mnemo.START,
+            "Starting to build the product"
+        );
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final int code = this.batch.exec(
             new ImmutableMap.Builder<String, Object>().build(),

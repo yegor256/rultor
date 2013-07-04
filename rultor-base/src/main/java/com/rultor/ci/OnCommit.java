@@ -145,6 +145,11 @@ public final class OnCommit implements Instance {
      * @throws IOException If some IO problem
      */
     private void build(final Commit head) throws IOException {
+        Signal.log(
+            Signal.Mnemo.START,
+            "Starting to build %s at %s",
+            this.branch, head.name()
+        );
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final ImmutableMap<String, Object> args =
             new ImmutableMap.Builder<String, Object>()
