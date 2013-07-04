@@ -32,8 +32,6 @@ package com.rultor.drain;
 import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Time;
 import com.rultor.spi.Work;
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
@@ -72,24 +70,32 @@ public final class BufferedWriteTest {
     @Test
     @SuppressWarnings("unchecked")
     public void sendsLinesThrough() throws Exception {
-        final Time time = new Time();
-        final Work work = new Work.Simple(
-            new URN("urn:facebook:8789"), "test-99", new Spec.Simple(), time
-        );
         final Drain drain = Mockito.mock(Drain.class);
+        final Drain first = new BufferedWrite(
+            new Work.Simple(new URN("urn:facebook:8"), "test-99"),
+            2, drain
+        );
+        final Drain second = new BufferedWrite(
+            new Work.Simple(new URN("urn:facebook:9"), "test-88"),
+            Tv.FIVE, Mockito.mock(Drain.class)
+        );
         final String line = "some \t\u20ac\tfdsfs9980 Hello878";
         final CountDownLatch done = new CountDownLatch(1);
         Mockito.doAnswer(
             new Answer<Void>() {
                 @Override
-                public Void answer(final InvocationOnMock inv) {
+                public Void answer(final InvocationOnMock inv)
+                    throws Exception {
+                    first.append(Arrays.asList(line));
+                    second.append(Arrays.asList(line));
                     done.countDown();
                     return null;
                 }
             }
         ).when(drain).append(Mockito.any(Iterable.class));
-        new BufferedWrite(work, 2, drain).append(Arrays.asList(line));
-        done.await(Tv.FIVE, TimeUnit.SECONDS);
+        first.append(Arrays.asList(line));
+        second.append(Arrays.asList(line));
+        assert done.await(Tv.FIVE, TimeUnit.SECONDS);
         Mockito.verify(drain).append(
             Mockito.<Iterable<String>>argThat(
                 Matchers.<String>everyItem(Matchers.equalTo(line))

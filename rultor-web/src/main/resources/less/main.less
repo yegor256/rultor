@@ -29,12 +29,12 @@
  */
 
 @font-face {
-    font-family: 'Rultor-Logo';
-    src: url('http://img.rultor.com/rultor.eot');
-    src: url('http://img.rultor.com/rultor.eot?#iefix') format('embedded-opentype'),
-        url('http://img.rultor.com/rultor.woff') format('woff'),
-        url('http://img.rultor.com/rultor.ttf') format('truetype'),
-        url('http://img.rultor.com/rultor.svg#rultor') format('svg');
+    font-family: 'Rultor-Logo-${buildNumber}';
+    src: url('http://img.rultor.com/rultor.eot?${buildNumber}');
+    src: url('http://img.rultor.com/rultor.eot?${buildNumber}#iefix') format('embedded-opentype'),
+        url('http://img.rultor.com/rultor.woff?${buildNumber}') format('woff'),
+        url('http://img.rultor.com/rultor.ttf?${buildNumber}') format('truetype'),
+        url('http://img.rultor.com/rultor.svg?${buildNumber}#rultor') format('svg');
 }
 
 @import "variables.less";
@@ -46,7 +46,7 @@
 }
 
 .logo {
-    font-family: 'Rultor-Logo';
+    font-family: 'Rultor-Logo-${buildNumber}';
     font-size: @baseFontSize * 4;
     vertical-align: middle;
     color: @textColor;
