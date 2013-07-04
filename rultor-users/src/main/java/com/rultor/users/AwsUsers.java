@@ -33,10 +33,8 @@ import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
-import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Metricable;
 import com.rultor.spi.User;
@@ -65,23 +63,6 @@ public final class AwsUsers implements Users, Metricable {
      * Dynamo.
      */
     private final transient Region region;
-
-    /**
-     * Public ctor.
-     */
-    public AwsUsers() {
-        this(
-            new Region.Prefixed(
-                new Region.Simple(
-                    new Credentials.Simple(
-                        Manifests.read("Rultor-DynamoKey"),
-                        Manifests.read("Rultor-DynamoSecret")
-                    )
-                ),
-                Manifests.read("Rultor-DynamoPrefix")
-            )
-        );
-    }
 
     /**
      * Public ctor.

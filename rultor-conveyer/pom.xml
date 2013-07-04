@@ -128,6 +128,11 @@
             <artifactId>slf4j-log4j12</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>net.sf.jopt-simple</groupId>
+            <artifactId>jopt-simple</artifactId>
+            <version>4.4</version>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>

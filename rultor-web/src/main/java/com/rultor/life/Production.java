@@ -31,6 +31,10 @@ package com.rultor.life;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Credentials;
+import com.jcabi.dynamo.Region;
+import com.jcabi.manifests.Manifests;
+import com.rultor.aws.SQSClient;
 import com.rultor.queue.SQSQueue;
 import com.rultor.repo.ClasspathRepo;
 import com.rultor.spi.Queue;
@@ -66,7 +70,17 @@ final class Production implements Profile {
      */
     @Override
     public Users users() {
-        return new AwsUsers();
+        return new AwsUsers(
+            new Region.Prefixed(
+                new Region.Simple(
+                    new Credentials.Simple(
+                        Manifests.read("Rultor-DynamoKey"),
+                        Manifests.read("Rultor-DynamoSecret")
+                    )
+                ),
+                Manifests.read("Rultor-DynamoPrefix")
+            )
+        );
     }
 
     /**
@@ -74,7 +88,13 @@ final class Production implements Profile {
      */
     @Override
     public Queue queue() {
-        return new SQSQueue();
+        return new SQSQueue(
+            new SQSClient.Simple(
+                Manifests.read("Rultor-SQSKey"),
+                Manifests.read("Rultor-SQSSecret"),
+                Manifests.read("Rultor-SQSUrl")
+            )
+        );
     }
 
 }

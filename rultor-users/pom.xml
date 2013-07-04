@@ -95,9 +95,6 @@
                                 <Rultor-Version>${project.version}</Rultor-Version>
                                 <Rultor-Revision>${buildNumber}</Rultor-Revision>
                                 <Rultor-Date>${maven.build.timestamp}</Rultor-Date>
-                                <Rultor-DynamoKey>${dynamo.key}</Rultor-DynamoKey>
-                                <Rultor-DynamoSecret>${dynamo.secret}</Rultor-DynamoSecret>
-                                <Rultor-DynamoPrefix>${dynamo.prefix}</Rultor-DynamoPrefix>
                             </manifestEntries>
                         </archive>
                     </configuration>

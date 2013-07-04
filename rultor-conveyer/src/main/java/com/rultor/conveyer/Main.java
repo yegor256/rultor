@@ -30,14 +30,19 @@
 package com.rultor.conveyer;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Credentials;
+import com.jcabi.dynamo.Region;
 import com.jcabi.manifests.Manifests;
 import com.rexsl.test.RestTester;
+import com.rultor.aws.SQSClient;
 import com.rultor.queue.SQSQueue;
 import com.rultor.repo.ClasspathRepo;
 import com.rultor.users.AwsUsers;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -66,8 +71,34 @@ public final class Main {
      * @throws Exception If something is wrong
      */
     public static void main(final String[] args) throws Exception {
+        final OptionParser parser = new OptionParser();
+        parser.accepts("dynamo-key", "DynamoDB key").withRequiredArg();
+        parser.accepts("dynamo-secret", "DynamoDB secret").withRequiredArg();
+        parser.accepts("dynamo-prefix", "DynamoDB prefix").withRequiredArg();
+        parser.accepts("sqs-key", "SQS key").withRequiredArg();
+        parser.accepts("sqs-secret", "SQS secret").withRequiredArg();
+        parser.accepts("sqs-url", "SQS URL").withRequiredArg();
+        final OptionSet options = parser.parse(args);
         final SimpleConveyer conveyer = new SimpleConveyer(
-            new SQSQueue(), new ClasspathRepo(), new AwsUsers()
+            new SQSQueue(
+                new SQSClient.Simple(
+                    options.valueOf("sqs-key").toString(),
+                    options.valueOf("sqs-secret").toString(),
+                    options.valueOf("sqs-url").toString()
+                )
+            ),
+            new ClasspathRepo(),
+            new AwsUsers(
+                new Region.Prefixed(
+                    new Region.Simple(
+                        new Credentials.Simple(
+                            options.valueOf("dynamo-key").toString(),
+                            options.valueOf("dynamo-secret").toString()
+                        )
+                    ),
+                    options.valueOf("dynamo-prefix").toString()
+                )
+            )
         );
         conveyer.start();
         while (true) {

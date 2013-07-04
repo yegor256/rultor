@@ -44,7 +44,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
-import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Metricable;
@@ -102,19 +101,6 @@ public final class SQSQueue implements Queue, Metricable {
      * SQS client.
      */
     private final transient SQSClient client;
-
-    /**
-     * Public ctor.
-     */
-    public SQSQueue() {
-        this(
-            new SQSClient.Simple(
-                Manifests.read("Rultor-SQSKey"),
-                Manifests.read("Rultor-SQSSecret"),
-                Manifests.read("Rultor-SQSUrl")
-            )
-        );
-    }
 
     /**
      * Public ctor.

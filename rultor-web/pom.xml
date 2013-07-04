@@ -249,6 +249,12 @@
                                 <Rultor-GithubId>${github.id}</Rultor-GithubId>
                                 <Rultor-GithubSecret>${github.secret}</Rultor-GithubSecret>
                                 <Rultor-SecurityKey>${security.key}</Rultor-SecurityKey>
+                                <Rultor-SQSKey>${sqs.key}</Rultor-SQSKey>
+                                <Rultor-SQSSecret>${sqs.secret}</Rultor-SQSSecret>
+                                <Rultor-SQSUrl>${sqs.url}</Rultor-SQSUrl>
+                                <Rultor-DynamoKey>${dynamo.key}</Rultor-DynamoKey>
+                                <Rultor-DynamoSecret>${dynamo.secret}</Rultor-DynamoSecret>
+                                <Rultor-DynamoPrefix>${dynamo.prefix}</Rultor-DynamoPrefix>
                             </manifestEntries>
                         </archive>
                     </configuration>

@@ -94,9 +94,6 @@
                                 <Rultor-Version>${project.version}</Rultor-Version>
                                 <Rultor-Revision>${buildNumber}</Rultor-Revision>
                                 <Rultor-Date>${maven.build.timestamp}</Rultor-Date>
-                                <Rultor-SQSKey>${sqs.key}</Rultor-SQSKey>
-                                <Rultor-SQSSecret>${sqs.secret}</Rultor-SQSSecret>
-                                <Rultor-SQSUrl>${sqs.url}</Rultor-SQSUrl>
                             </manifestEntries>
                         </archive>
                     </configuration>
