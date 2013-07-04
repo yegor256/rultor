@@ -29,6 +29,7 @@
  */
 package com.rultor.drain;
 
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
@@ -36,18 +37,13 @@ import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Work;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.SequenceInputStream;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -154,9 +150,7 @@ public final class BufferedWrite implements Drain {
             }
             tunnel = BufferedWrite.TUNNELS.get(this);
         }
-        synchronized (this.lifetime) {
-            tunnel.send(lines);
-        }
+        tunnel.send(lines);
     }
 
     /**
@@ -178,7 +172,7 @@ public final class BufferedWrite implements Drain {
     }
 
     /**
-     * Tunnel to the real drain.
+     * Thread-safe tunnel to the real drain.
      */
     private final class Tunnel {
         /**
@@ -188,19 +182,14 @@ public final class BufferedWrite implements Drain {
         /**
          * Buffered data.
          */
-        private final transient ByteArrayOutputStream data =
-            new ByteArrayOutputStream();
+        private final transient Collection<String> data =
+            new CopyOnWriteArrayList<String>();
         /**
          * Send lines through.
          * @param lines Lines to send
          */
         public void send(final Iterable<String> lines) {
-            final PrintWriter writer = new PrintWriter(this.data);
-            for (String line : lines) {
-                writer.println(line);
-            }
-            writer.flush();
-            writer.close();
+            Iterables.addAll(this.data, lines);
         }
         /**
          * Flush if necessary.
@@ -210,21 +199,9 @@ public final class BufferedWrite implements Drain {
         public boolean flush() throws IOException {
             final boolean expired = System.currentTimeMillis() - this.start
                 > BufferedWrite.this.lifetime;
-            if (expired && this.data.size() > 0) {
-                final BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(
-                        new ByteArrayInputStream(this.data.toByteArray())
-                    )
-                );
-                final Collection<String> lines = new LinkedList<String>();
-                while (true) {
-                    final String line = reader.readLine();
-                    if (line == null) {
-                        break;
-                    }
-                    lines.add(line);
-                }
-                BufferedWrite.this.origin.append(lines);
+            if (expired && !this.data.isEmpty()) {
+                BufferedWrite.this.origin.append(this.data);
+                this.data.clear();
             }
             return expired;
         }
@@ -238,15 +215,13 @@ public final class BufferedWrite implements Drain {
         @Override
         public void run() {
             for (BufferedWrite client : BufferedWrite.TUNNELS.keySet()) {
-                synchronized (client.lifetime) {
-                    try {
-                        if (BufferedWrite.TUNNELS.get(client).flush()) {
-                            BufferedWrite.TUNNELS.remove(client);
-                        }
-                    } catch (IOException ex) {
-                        Logger.warn(this, "#run(): %s", ex);
+                try {
+                    if (BufferedWrite.TUNNELS.get(client).flush()) {
                         BufferedWrite.TUNNELS.remove(client);
                     }
+                } catch (IOException ex) {
+                    Logger.warn(this, "#run(): %s", ex);
+                    BufferedWrite.TUNNELS.remove(client);
                 }
             }
         }

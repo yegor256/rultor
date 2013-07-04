@@ -148,9 +148,7 @@ public final class Temporary implements Drain {
             }
             buffer = Temporary.BUFFERS.get(this);
         }
-        synchronized (buffer) {
-            buffer.append(lines);
-        }
+        buffer.append(lines);
     }
 
     /**
@@ -182,13 +180,13 @@ public final class Temporary implements Drain {
     }
 
     /**
-     * Buffer to the real drain.
+     * Thread-safe buffer to the real drain.
      */
     private final class Buffer {
         /**
          * When was is started.
          */
-        private final transient long start = System.currentTimeMillis();
+        private final transient Long start = System.currentTimeMillis();
         /**
          * Buffered data.
          */
@@ -210,12 +208,14 @@ public final class Temporary implements Drain {
          * @param lines Lines to append
          */
         public void append(final Iterable<String> lines) {
-            final PrintWriter writer = new PrintWriter(this.data);
-            for (String line : lines) {
-                writer.println(line);
+            synchronized (this.start) {
+                final PrintWriter writer = new PrintWriter(this.data);
+                for (String line : lines) {
+                    writer.println(line);
+                }
+                writer.flush();
+                writer.close();
             }
-            writer.flush();
-            writer.close();
         }
         /**
          * Read it as a stream.

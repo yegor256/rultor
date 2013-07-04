@@ -171,7 +171,7 @@ public final class BufferedRead implements Drain {
     }
 
     /**
-     * Buffer to the real drain.
+     * Thread-safe buffer to the real drain.
      */
     private final class Buffer {
         /**
@@ -216,10 +216,8 @@ public final class BufferedRead implements Drain {
         @Override
         public void run() {
             for (BufferedRead client : BufferedRead.BUFFERS.keySet()) {
-                synchronized (client.lifetime) {
-                    if (BufferedRead.BUFFERS.get(client).expired()) {
-                        BufferedRead.BUFFERS.remove(client);
-                    }
+                if (BufferedRead.BUFFERS.get(client).expired()) {
+                    BufferedRead.BUFFERS.remove(client);
                 }
             }
         }
