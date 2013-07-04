@@ -39,6 +39,7 @@ import java.io.StringWriter;
 import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Enables certain amount of parallel pulses.
@@ -83,6 +84,7 @@ public final class Parallel implements Instance {
      */
     public Parallel(final int max, @NotNull final Lineup lnp,
         @NotNull final Notepad atv, @NotNull final Instance instance) {
+        Validate.isTrue(max >= 0, "Maximum can't be negative, %d given", max);
         this.origin = instance;
         this.lineup = lnp;
         this.maximum = max;
@@ -97,6 +99,8 @@ public final class Parallel implements Instance {
     public void pulse() throws Exception {
         if (this.maximum > 0) {
             this.pass();
+        } else {
+            Logger.info(this, "Zero threads allowed, no need to even try");
         }
     }
 

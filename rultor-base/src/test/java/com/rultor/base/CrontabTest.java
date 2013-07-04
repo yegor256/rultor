@@ -29,9 +29,12 @@
  */
 package com.rultor.base;
 
+import com.jcabi.aspects.Tv;
 import com.rultor.spi.Instance;
+import com.rultor.spi.Time;
 import java.util.Calendar;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -85,7 +88,7 @@ public final class CrontabTest {
         final String text = String.format(
             "* %d %d %d *",
             this.today.get(Calendar.HOUR_OF_DAY),
-            this.today.get(Calendar.DAY_OF_MONTH) + 1,
+            this.today.get(Calendar.DAY_OF_MONTH),
             this.today.get(Calendar.MONTH) + 1
         );
         final Instance origin = Mockito.mock(Instance.class);
@@ -118,15 +121,30 @@ public final class CrontabTest {
      */
     @Test
     public void calculatesLagCorrectly() throws Exception {
-        final String text = String.format(
-            "* %d * * *",
-            this.today.get(Calendar.HOUR_OF_DAY) + 1
-        );
-        final Instance origin = Mockito.mock(Instance.class);
-        final Crontab crontab = new Crontab(text, origin);
+        final Instance org = Mockito.mock(Instance.class);
         MatcherAssert.assertThat(
-            crontab.toString(),
-            Matchers.endsWith(" in 1hr")
+            new Crontab("* * * * *", org).lag(new Time()),
+            Matchers.equalTo(0L)
+        );
+        MatcherAssert.assertThat(
+            new Crontab("12 * * * *", org).lag(new Time("2013-05-03T10:10Z")),
+            Matchers.equalTo(TimeUnit.MINUTES.toMillis(2))
+        );
+        MatcherAssert.assertThat(
+            new Crontab("*/15 * * * *", org).lag(new Time("2013-05-04T10:13Z")),
+            Matchers.equalTo(TimeUnit.MINUTES.toMillis(2))
+        );
+        MatcherAssert.assertThat(
+            new Crontab("*/16 * * * *", org).lag(new Time("2013-05-04T10:11Z")),
+            Matchers.equalTo(TimeUnit.MINUTES.toMillis(Tv.FIVE))
+        );
+        MatcherAssert.assertThat(
+            new Crontab("0 */2 * * *", org).lag(new Time("2013-05-04T09:00Z")),
+            Matchers.equalTo(TimeUnit.HOURS.toMillis(1))
+        );
+        MatcherAssert.assertThat(
+            new Crontab("0 0 3-5 * *", org).lag(new Time("2013-05-02T00:00Z")),
+            Matchers.equalTo(TimeUnit.DAYS.toMillis(1))
         );
     }
 

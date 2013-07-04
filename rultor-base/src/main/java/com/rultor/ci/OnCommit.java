@@ -113,13 +113,18 @@ public final class OnCommit implements Instance {
                     head.name(), head.author(), head.date()
                 );
             } else {
-                this.notepad.add(head.name());
                 Signal.log(
                     Signal.Mnemo.SUCCESS,
                     "Found HEAD of SCM %s by %s on %s",
                     head.name(), head.author(), head.date()
                 );
                 this.build(head);
+                this.notepad.add(head.name());
+                Signal.log(
+                    Signal.Mnemo.SUCCESS,
+                    "HEAD %s marked as seen",
+                    head.name()
+                );
             }
         }
     }

@@ -36,6 +36,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Signal;
+import com.rultor.spi.Time;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -98,7 +99,7 @@ public final class Crontab implements Instance {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
-        final Calendar today = Crontab.today();
+        final Calendar today = Crontab.calendar(new Time());
         boolean pass = true;
         for (Crontab.Gate<Calendar> gate : this.gates) {
             if (!gate.pass(today)) {
@@ -113,7 +114,7 @@ public final class Crontab implements Instance {
             Logger.info(
                 this,
                 "Not the right moment, see you again in %[ms]s",
-                this.lag()
+                this.lag(new Time())
             );
         }
     }
@@ -123,15 +124,20 @@ public final class Crontab implements Instance {
      */
     @Override
     public String toString() {
-        return Logger.format("%s in %[ms]s", this.origin, this.lag());
+        return Logger.format("%s in %[ms]s", this.origin, this.lag(new Time()));
     }
 
     /**
-     * Lag in msec.
-     * @return Msec
+     * Lag in milliseconds (how much time left till the next execution).
+     *
+     * <p>The method is public solely for the sake of unit testing.
+     * Otherwise it's almost impossible to test the class.
+     *
+     * @param date The date to start counting from
+     * @return Milliseconds
      */
-    private long lag() {
-        final Calendar today = Crontab.today();
+    public long lag(final Time date) {
+        final Calendar today = Crontab.calendar(date);
         long lag = 0;
         for (Crontab.Gate<Calendar> gate : this.gates) {
             lag += gate.lag(today);
@@ -236,7 +242,7 @@ public final class Crontab implements Instance {
                 alternative = new Crontab.Gate<Integer>() {
                     @Override
                     public boolean pass(final Integer num) {
-                        return num >= left || num <= right;
+                        return num >= left && num <= right;
                     }
                     @Override
                     public long lag(final Integer num) {
@@ -253,13 +259,13 @@ public final class Crontab implements Instance {
                 alternative = new Crontab.Gate<Integer>() {
                     @Override
                     public boolean pass(final Integer num) {
-                        return num / div == 0;
+                        return ((double) num) / div == 0;
                     }
                     @Override
                     public long lag(final Integer num) {
                         long lag = 0;
                         if (!this.pass(num)) {
-                            lag = Math.abs(num - div);
+                            lag = ((num + div - 1) / div) * div - num;
                         }
                         return lag;
                     }
@@ -330,13 +336,13 @@ public final class Crontab implements Instance {
                 @Override
                 public boolean pass(final Calendar calendar) {
                     return this.matches(
-                        calendar.get(Calendar.DAY_OF_MONTH) + 1
+                        calendar.get(Calendar.DAY_OF_MONTH)
                     );
                 }
                 @Override
                 public long lag(final Calendar calendar) {
                     return this.lag(
-                        calendar.get(Calendar.DAY_OF_MONTH) + 1
+                        calendar.get(Calendar.DAY_OF_MONTH)
                     ) * TimeUnit.DAYS.toMillis(1);
                 }
             },
@@ -368,11 +374,14 @@ public final class Crontab implements Instance {
     }
 
     /**
-     * Today moment.
+     * Convert date to calendar.
+     * @param date Current date
      * @return Calendar or today
      */
-    private static Calendar today() {
-        return Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    private static Calendar calendar(final Time date) {
+        final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        cal.setTime(date.date());
+        return cal;
     }
 
 }
