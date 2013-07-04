@@ -45,9 +45,11 @@
         <module>rultor-conveyer</module>
         <module>rultor-client</module>
         <module>rultor-drain</module>
+        <module>rultor-queue</module>
         <module>rultor-repo</module>
         <module>rultor-spi</module>
         <module>rultor-web</module>
+        <module>rultor-users</module>
     </modules>
     <description>Rultor.com, Lightweight Integration Platform (as a Service)</description>
     <url>http://www.rultor.com</url>

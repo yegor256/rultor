@@ -29,10 +29,10 @@
  */
 
 /**
- * AWS interacting classes.
+ * AWS interacting classes, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-package com.rultor.aws;
+package com.rultor.queue;

@@ -27,9 +27,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.aws;
+package com.rultor.queue;
 
 import com.jcabi.urn.URN;
+import com.rultor.aws.SQSClient;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Work;

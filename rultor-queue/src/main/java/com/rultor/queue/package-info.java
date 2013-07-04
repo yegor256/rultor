@@ -27,54 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.life;
-
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.rultor.queue.SQSQueue;
-import com.rultor.repo.ClasspathRepo;
-import com.rultor.spi.Queue;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Users;
-import com.rultor.users.AwsUsers;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * Production profile.
+ * AWS interacting classes.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @since 1.0
  */
-@Immutable
-@ToString
-@EqualsAndHashCode
-@Loggable(Loggable.INFO)
-final class Production implements Profile {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Repo repo() {
-        return new ClasspathRepo();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Users users() {
-        return new AwsUsers();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Queue queue() {
-        return new SQSQueue();
-    }
-
-}
+package com.rultor.queue;

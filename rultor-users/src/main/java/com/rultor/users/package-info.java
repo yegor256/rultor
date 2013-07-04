@@ -29,10 +29,10 @@
  */
 
 /**
- * AWS interacting classes, tests.
+ * Users persistent in Amazon Dynamo DB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-package com.rultor.aws;
+package com.rultor.users;

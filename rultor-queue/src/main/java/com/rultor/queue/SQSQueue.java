@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.aws;
+package com.rultor.queue;
 
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
@@ -44,7 +44,9 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
+import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
+import com.rultor.aws.SQSClient;
 import com.rultor.spi.Metricable;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Spec;
@@ -57,6 +59,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.stream.JsonGenerator;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -102,9 +105,22 @@ public final class SQSQueue implements Queue, Metricable {
 
     /**
      * Public ctor.
+     */
+    public SQSQueue() {
+        this(
+            new SQSClient.Simple(
+                Manifests.read("Rultor-SQSKey"),
+                Manifests.read("Rultor-SQSSecret"),
+                Manifests.read("Rultor-SQSUrl")
+            )
+        );
+    }
+
+    /**
+     * Public ctor.
      * @param clnt S3 client
      */
-    public SQSQueue(final SQSClient clnt) {
+    public SQSQueue(@NotNull final SQSClient clnt) {
         this.client = clnt;
     }
 
@@ -112,7 +128,7 @@ public final class SQSQueue implements Queue, Metricable {
      * {@inheritDoc}
      */
     @Override
-    public void push(final Work work) {
+    public void push(@NotNull final Work work) {
         final AmazonSQS aws = this.client.get();
         try {
             final SendMessageResult result = aws.sendMessage(
@@ -134,6 +150,7 @@ public final class SQSQueue implements Queue, Metricable {
      * {@inheritDoc}
      */
     @Override
+    @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public Work pull() throws InterruptedException {
@@ -170,7 +187,7 @@ public final class SQSQueue implements Queue, Metricable {
      * {@inheritDoc}
      */
     @Override
-    public void register(final MetricRegistry registry) {
+    public void register(@NotNull final MetricRegistry registry) {
         registry.register(
             MetricRegistry.name(this.getClass(), "queue-size"),
             new Gauge<Integer>() {

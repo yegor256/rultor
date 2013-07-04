@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.aws;
+package com.rultor.users;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.aspects.Cacheable;
