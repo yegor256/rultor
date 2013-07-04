@@ -103,7 +103,6 @@ public final class SNS implements Billboard {
             String print = String.class.cast(anmt.args().get("print"));
             if (print == null) {
                 final StringBuilder txt = new StringBuilder();
-                print = txt.toString();
                 for (Map.Entry<String, Object> entry : anmt.args().entrySet()) {
                     txt.append(entry.getKey())
                         .append(':')
@@ -112,6 +111,7 @@ public final class SNS implements Billboard {
                         .append(CharUtils.LF)
                         .append(CharUtils.LF);
                 }
+                print = txt.toString();
             }
             aws.publish(
                 new PublishRequest()

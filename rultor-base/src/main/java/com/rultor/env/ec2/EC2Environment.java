@@ -162,11 +162,10 @@ final class EC2Environment implements Environment {
             );
             final InstanceStateChange change =
                 result.getTerminatingInstances().get(0);
-            Logger.info(
-                this,
-                "instance %s terminated, state=%s",
-                change.getInstanceId(),
-                change.getCurrentState().getName()
+            Signal.log(
+                Signal.Mnemo.SUCCESS,
+                "EC2 instance %s terminated",
+                change.getInstanceId()
             );
         } finally {
             aws.shutdown();

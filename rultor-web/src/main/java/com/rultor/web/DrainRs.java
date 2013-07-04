@@ -55,6 +55,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 
 /**
  * Drain of a unit.
@@ -273,6 +274,13 @@ public final class DrainRs extends BaseRs {
             )
             .up()
             .add("date", date.toString())
+            .up()
+            .add(
+                "when",
+                DurationFormatUtils.formatDurationWords(
+                    date.millis(), true, true
+                )
+            )
             .up()
             .link(
                 new Link(

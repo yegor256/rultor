@@ -381,6 +381,8 @@ public final class Crontab implements Instance {
     private static Calendar calendar(final Time date) {
         final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         cal.setTime(date.date());
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.SECOND, 0);
         return cal;
     }
 

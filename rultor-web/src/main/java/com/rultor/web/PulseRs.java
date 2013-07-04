@@ -176,7 +176,10 @@ public final class PulseRs extends BaseRs {
                 .toString();
         } catch (IOException ex) {
             throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
+                this.uriInfo().getBaseUriBuilder()
+                    .clone()
+                    .path(DrainRs.class)
+                    .build(this.name),
                 String.format(
                     "Can't read this pulse: %s",
                     ExceptionUtils.getRootCauseMessage(ex)

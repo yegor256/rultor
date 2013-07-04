@@ -99,6 +99,10 @@
                         <xsl:value-of select="date"/>
                     </a>
                 </li>
+                <li>
+                    <xsl:value-of select="when"/>
+                    <xsl:text> ago</xsl:text>
+                </li>
                 <xsl:if test="links/link[@rel='stop']">
                     <li>
                         <a title="stop">
