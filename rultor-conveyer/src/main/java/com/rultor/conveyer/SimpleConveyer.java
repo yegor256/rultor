@@ -93,7 +93,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
     private final transient ConveyerAppender appender;
 
     /**
-     * Counter of executed jobs.
+     * Counter of currently running jobs.
      */
     private transient Counter counter;
 
@@ -207,9 +207,15 @@ public final class SimpleConveyer implements Closeable, Metricable {
                 work,
                 this.drain(owner, owner.get(work.unit()).drain(), work)
             );
-            instance.pulse();
             if (this.counter != null) {
                 this.counter.inc();
+            }
+            try {
+                instance.pulse();
+            } finally {
+                if (this.counter != null) {
+                    this.counter.dec();
+                }
             }
         }
     }

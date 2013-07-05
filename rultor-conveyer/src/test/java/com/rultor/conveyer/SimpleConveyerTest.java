@@ -29,6 +29,7 @@
  */
 package com.rultor.conveyer;
 
+import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
@@ -79,7 +80,7 @@ public final class SimpleConveyerTest {
                 public Work answer(final InvocationOnMock inv) {
                     if (pulled.get()) {
                         try {
-                            TimeUnit.DAYS.sleep(1);
+                            TimeUnit.SECONDS.sleep(Tv.TEN);
                         } catch (InterruptedException ex) {
                             Thread.currentThread().interrupt();
                             throw new IllegalStateException(ex);
