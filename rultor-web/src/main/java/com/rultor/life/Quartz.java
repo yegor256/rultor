@@ -50,7 +50,7 @@ import lombok.EqualsAndHashCode;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Loggable(Loggable.DEBUG)
-@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.MINUTES)
+@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.DAYS)
 @EqualsAndHashCode(of = { "users", "queue" })
 @SuppressWarnings("PMD.DoNotUseThreads")
 final class Quartz implements Runnable, Closeable {
