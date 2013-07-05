@@ -162,7 +162,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
     public void close() throws IOException {
         try {
             while (true) {
-                this.svc.shutdownNow();
+                this.svc.shutdown();
                 if (this.svc.awaitTermination(1, TimeUnit.SECONDS)) {
                     break;
                 }
