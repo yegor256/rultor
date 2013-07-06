@@ -140,6 +140,7 @@ public final class BufferedRead implements Drain {
     @Override
     public void append(final Iterable<String> lines) throws IOException {
         this.origin.append(lines);
+        BufferedRead.BUFFERS.remove(this);
     }
 
     /**
