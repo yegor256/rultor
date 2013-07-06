@@ -45,6 +45,7 @@ import com.rultor.spi.Users;
 import com.rultor.spi.Work;
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -160,13 +161,14 @@ public final class SimpleConveyer implements Closeable, Metricable {
      */
     @Override
     public void close() throws IOException {
+        final Random rand = new Random();
         try {
             while (true) {
                 this.svc.shutdown();
                 if (this.svc.awaitTermination(1, TimeUnit.SECONDS)) {
                     break;
                 }
-                TimeUnit.MINUTES.sleep(1);
+                TimeUnit.SECONDS.sleep(rand.nextInt(Tv.HUNDRED));
                 com.jcabi.log.Logger.info(
                     this, "waiting for threads termination"
                 );
