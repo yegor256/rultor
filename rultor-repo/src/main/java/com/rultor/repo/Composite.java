@@ -341,15 +341,14 @@ final class Composite implements Variable<Object> {
             throw new SpecException(
                 String.format(
                     "not found \"%s\"",
-                    name,
-                    ExceptionUtils.getRootCauseMessage(ex)
+                    name
                 ),
                 ex
             );
         } catch (CannotCompileException ex) {
             throw new SpecException(
                 String.format(
-                    "can't compile \"%s\"",
+                    "can't compile \"%s\": %s",
                     name,
                     ExceptionUtils.getRootCauseMessage(ex)
                 ),

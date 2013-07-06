@@ -36,8 +36,6 @@ import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.rexsl.test.RestTester;
 import com.rultor.aws.SQSClient;
-import com.rultor.base.Empty;
-import com.rultor.drain.Trash;
 import com.rultor.queue.SQSQueue;
 import com.rultor.repo.ClasspathRepo;
 import com.rultor.users.AwsUsers;
@@ -138,8 +136,6 @@ public final class Main {
      */
     @Loggable(Loggable.INFO)
     private static SimpleConveyer conveyer(final OptionSet options) {
-        assert new Empty().toString() != null;
-        assert new Trash().toString() != null;
         return new SimpleConveyer(
             new SQSQueue(
                 new SQSClient.Simple(
