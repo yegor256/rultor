@@ -32,6 +32,7 @@ package com.rultor.repo;
 import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import com.rultor.spi.Metricable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
@@ -60,6 +61,17 @@ public final class ClasspathRepo implements Repo, Metricable {
      * Grammar to use.
      */
     private final transient Grammar grammar = new AntlrGrammar();
+
+    /**
+     * Public ctor.
+     */
+    public ClasspathRepo() {
+        Logger.info(
+            ClasspathRepo.class,
+            "#ClasspathRepo(): in '%s'",
+            System.getProperty("java.class.path")
+        );
+    }
 
     /**
      * {@inheritDoc}
