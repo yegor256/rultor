@@ -160,6 +160,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.INFO, limit = Integer.MAX_VALUE)
     public void close() throws IOException {
         final Random rand = new Random();
         try {

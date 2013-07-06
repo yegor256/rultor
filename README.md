@@ -1,4 +1,4 @@
-<img src="http://img.rultor.com/logo-128x128.png">
+<img src="http://img.rultor.com/logo-64x64.png">
 
 Rultor.com is a Programmable Enforcer of a Software Development Process.
 
