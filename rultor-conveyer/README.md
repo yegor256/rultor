@@ -24,12 +24,13 @@ export M2_HOME="/usr/local/share/apache-maven"
 export PATH="${M2_HOME}/bin:${PATH}"
 export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=256m"
 ARGS=`curl --silent http://169.254.169.254/latest/user-data`
-mvn test -U $ARGS
+INSTANCE=`curl --silent http://169.254.169.254/latest/meta-data/instance-id`
+KEY="..."
+SECRET="..."
+mvn test -q -U $ARGS
 if [ $? -eq 0 ]; then
-  echo "valid reboot"
-  sudo shutdown -h now
+  ec2-terminate-instances --aws-access-key $KEY --aws-secret-key $SECRET $INSTANCE
 fi
-echo "invalid termination of conveyer"
 ```
 
 Add this line to crontab:
