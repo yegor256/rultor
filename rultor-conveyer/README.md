@@ -28,7 +28,7 @@ Create AMI from this EC2 instance
 ([see how](http://docs.aws.amazon.com/AWSToolkitVS/latest/UserGuide/tkv-create-ami-from-instance.html))
 and terminate the instance.
 
-Install AWS Auto Scaling [command line tools](http://aws.amazon.com/developertools/2535).
+Install AS [command line tools](http://aws.amazon.com/developertools/2535).
 
 Create `credentials.txt` file, with production data:
 
@@ -39,11 +39,11 @@ SQS_URL="..."
 DYNAMO_PREFIX="..."
 ```
 
-Create new AWS Auto Scaling launch configuration ([more info](http://docs.aws.amazon.com/AutoScaling/latest/DeveloperGuide/US_BasicSetup.html)):
+Create new AS launch configuration ([more info](http://docs.aws.amazon.com/AutoScaling/latest/DeveloperGuide/US_BasicSetup.html)):
 
 ```
 $ as-create-launch-config rultor-conveyer-0.1.10 \
-  --image-id ami-b23a46db --instance-type t1.micro \
+  --image-id ami-XXXXXXXX --instance-type t1.micro \
   --group rultor-conveyer --monitoring-disabled \
   --user-data-file credentials.txt
 ```
@@ -51,7 +51,7 @@ $ as-create-launch-config rultor-conveyer-0.1.10 \
 Meaning of these Maven command line arguments is explained in
 `rultor-queue` and `rultor-users` modules.
 
-Create Auto Scaling group:
+Create AS group:
 
 ```
 $ as-create-auto-scaling-group rultor-conveyer \
@@ -62,7 +62,7 @@ $ as-create-auto-scaling-group rultor-conveyer \
 
 AWS should launch the first EC2 instance automatically. That's it.
 
-## How to re-configure existing Auto Scaling group
+## How to re-configure existing AS group
 
 Create a new EC2 instance from existing AMI. Connect to the new EC2 instance
 through SSH and make required changes.

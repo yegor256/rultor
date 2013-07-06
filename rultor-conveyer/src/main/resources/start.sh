@@ -1,5 +1,3 @@
-#!/bin/bash
-
 export M2_HOME="/usr/local/share/apache-maven"
 export PATH="${M2_HOME}/bin:${PATH}"
 export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=256m"
