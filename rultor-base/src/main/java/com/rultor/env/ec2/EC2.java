@@ -155,9 +155,9 @@ public final class EC2 implements Environments {
             Signal.log(
                 Signal.Mnemo.SUCCESS,
                 "EC2 instance %s created, type=%s, ami=%s, key=%s, platform=%s",
+                instance.getInstanceId(),
                 this.type,
                 this.ami,
-                instance.getInstanceId(),
                 instance.getKeyName(),
                 instance.getPlatform()
             );

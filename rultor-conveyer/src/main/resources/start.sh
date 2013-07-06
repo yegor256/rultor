@@ -15,9 +15,8 @@ curl --silent https://raw.github.com/yegor256/rultor/master/rultor-conveyer/src/
 mvn test --quiet --update-snapshots \
     "-Daws-key=${AWS_KEY}" "-Daws-secret=${AWS_SECRET}" \
     "-Dsqs-url=${SQS_URL}" "-Ddynamo-prefix=${DYNAMO_PREFIX}"
-CODE=$?
 
-if [ $CODE -eq 0 ]; then
+if [ $? -eq 0 ]; then
     ec2-terminate-instances --aws-access-key "${AWS_KEY}" \
         --aws-secret-key "${AWS_SECRET}" "${INSTANCE}"
 fi
