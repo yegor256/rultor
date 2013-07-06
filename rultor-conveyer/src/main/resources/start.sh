@@ -14,7 +14,7 @@ echo "Currently running instance is ${INSTANCE}"
 curl --silent https://raw.github.com/yegor256/rultor/master/rultor-conveyer/src/main/resources/ec2-pom.xml > pom.xml
 echo "pom.xml loaded from Github"
 
-mvn test --quiet --update-snapshots \
+mvn test --update-snapshots \
     "-Daws-key=${AWS_KEY}" "-Daws-secret=${AWS_SECRET}" \
     "-Dsqs-url=${SQS_URL}" "-Ddynamo-prefix=${DYNAMO_PREFIX}"
 CODE=$?
