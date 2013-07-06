@@ -83,6 +83,7 @@ public final class Main {
             final SimpleConveyer conveyer = Main.conveyer(options);
             conveyer.start();
             final String mine = Manifests.read("Rultor-Revision");
+            final long start = System.currentTimeMillis();
             while (true) {
                 final String base = Main.revision();
                 if (!mine.equals(base)) {
@@ -95,7 +96,12 @@ public final class Main {
                     break;
                 }
                 TimeUnit.MINUTES.sleep(1);
-                Logger.info(Main.class, "#main(): still alive in %s..", mine);
+                Logger.info(
+                    Main.class,
+                    "#main(): still alive in %s (%[ms]s already)...",
+                    mine,
+                    System.currentTimeMillis() - start
+                );
             }
             conveyer.close();
         }
