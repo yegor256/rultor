@@ -66,7 +66,7 @@ public final class ClasspathRepo implements Repo, Metricable {
      * Public ctor.
      */
     public ClasspathRepo() {
-        Logger.info(
+        Logger.debug(
             ClasspathRepo.class,
             "#ClasspathRepo(): in '%s'",
             System.getProperty("java.class.path")
