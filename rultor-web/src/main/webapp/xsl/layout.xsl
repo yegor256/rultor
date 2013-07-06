@@ -74,7 +74,7 @@
                 </a>
                 <div class="page">
                     <ul class="inline" style="padding-bottom: 4em; padding-top: 2em;">
-                        <li class="hidden-phone">
+                        <li>
                             <a class="logo">
                                 <xsl:attribute name="href">
                                     <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
