@@ -32,6 +32,7 @@ package com.rultor.conveyer;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
+import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.rexsl.test.RestTester;
 import com.rultor.aws.SQSClient;
@@ -41,6 +42,7 @@ import com.rultor.users.AwsUsers;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import lombok.EqualsAndHashCode;
@@ -73,15 +75,53 @@ public final class Main {
      * @throws Exception If something is wrong
      */
     public static void main(final String[] args) throws Exception {
-        final OptionParser parser = new OptionParser();
-        parser.accepts("dynamo-key", "DynamoDB key").withRequiredArg();
-        parser.accepts("dynamo-secret", "DynamoDB secret").withRequiredArg();
-        parser.accepts("dynamo-prefix", "DynamoDB prefix").withRequiredArg();
-        parser.accepts("sqs-key", "SQS key").withRequiredArg();
-        parser.accepts("sqs-secret", "SQS secret").withRequiredArg();
-        parser.accepts("sqs-url", "SQS URL").withRequiredArg();
+        final OptionParser parser = Main.parser();
         final OptionSet options = parser.parse(args);
-        final SimpleConveyer conveyer = new SimpleConveyer(
+        if (options.has("help")) {
+            parser.printHelpOn(Logger.stream(Level.INFO, Main.class));
+        } else {
+            final SimpleConveyer conveyer = Main.conveyer(options);
+            conveyer.start();
+            final String mine = Manifests.read("Rultor-Revision");
+            while (true) {
+                if (!mine.equals(Main.revision())) {
+                    break;
+                }
+                TimeUnit.MINUTES.sleep(1);
+            }
+            conveyer.close();
+        }
+    }
+
+    /**
+     * Build a parser.
+     * @return Parser
+     */
+    private static OptionParser parser() {
+        final OptionParser parser = new OptionParser();
+        parser.accepts("help", "detailed instructions").forHelp();
+        parser.accepts("dynamo-key", "DynamoDB key")
+            .withRequiredArg().ofType(String.class).required();
+        parser.accepts("dynamo-secret", "DynamoDB secret")
+            .withRequiredArg().ofType(String.class).required();
+        parser.accepts("dynamo-prefix", "DynamoDB prefix")
+            .withRequiredArg().ofType(String.class).required();
+        parser.accepts("sqs-key", "SQS key")
+            .withRequiredArg().ofType(String.class).required();
+        parser.accepts("sqs-secret", "SQS secret")
+            .withRequiredArg().ofType(String.class).required();
+        parser.accepts("sqs-url", "SQS URL")
+            .withRequiredArg().ofType(String.class).required();
+        return parser;
+    }
+
+    /**
+     * Create conveyer as requested in the options.
+     * @param options Options
+     * @return Conveyer
+     */
+    private static SimpleConveyer conveyer(final OptionSet options) {
+        return new SimpleConveyer(
             new SQSQueue(
                 new SQSClient.Simple(
                     options.valueOf("sqs-key").toString(),
@@ -102,14 +142,6 @@ public final class Main {
                 )
             )
         );
-        conveyer.start();
-        while (true) {
-            if (!Manifests.read("Rultor-Revision").equals(Main.revision())) {
-                break;
-            }
-            TimeUnit.MINUTES.sleep(1);
-        }
-        conveyer.close();
     }
 
     /**
