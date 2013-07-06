@@ -151,7 +151,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
                 },
                 true, false
             ),
-            0, 1, TimeUnit.MICROSECONDS
+            TimeUnit.SECONDS.toMicros(1), 1, TimeUnit.MICROSECONDS
         );
     }
 
