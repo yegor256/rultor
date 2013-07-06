@@ -41,6 +41,7 @@ import com.rultor.aws.SQSClient;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Time;
 import com.rultor.spi.Work;
+import java.util.concurrent.TimeUnit;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -105,7 +106,7 @@ public final class SQSQueueTest {
                 )
             )
         ).when(aws).receiveMessage(Mockito.any(ReceiveMessageRequest.class));
-        final Work work = queue.pull();
+        final Work work = queue.pull(1, TimeUnit.SECONDS);
         MatcherAssert.assertThat(
             work.owner(), Matchers.equalTo(new URN("urn:facebook:65"))
         );

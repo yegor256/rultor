@@ -54,11 +54,13 @@ public interface Queue {
 
     /**
      * Pull the next available work (waits until it is available).
-     * @return The work available
+     * @param limit How many time units to wait for, maximum
+     * @param unit Time unit
+     * @return The work available or Work.None
      * @throws InterruptedException If interrupted while waiting
      */
     @NotNull
-    Work pull() throws InterruptedException;
+    Work pull(int limit, TimeUnit unit) throws InterruptedException;
 
     /**
      * In memory.
@@ -84,8 +86,9 @@ public interface Queue {
          */
         @Override
         @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-        public Work pull() throws InterruptedException {
-            return this.list.poll(Long.MAX_VALUE, TimeUnit.DAYS);
+        public Work pull(final int limit, final TimeUnit unit)
+            throws InterruptedException {
+            return this.list.poll(limit, unit);
         }
     }
 

@@ -166,7 +166,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
                 if (this.svc.awaitTermination(1, TimeUnit.SECONDS)) {
                     break;
                 }
-                TimeUnit.SECONDS.sleep(Tv.FIVE);
+                TimeUnit.MINUTES.sleep(1);
                 com.jcabi.log.Logger.info(
                     this, "waiting for threads termination"
                 );
@@ -193,9 +193,28 @@ public final class SimpleConveyer implements Closeable, Metricable {
      * Process the next work from the queue.
      * @throws Exception If fails
      */
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private void process() throws Exception {
-        final Work work = this.queue.pull();
+        final Work work = this.queue.pull(1, TimeUnit.SECONDS);
+        if (!work.equals(new Work.None())) {
+            if (this.counter != null) {
+                this.counter.inc();
+            }
+            try {
+                this.process(work);
+            } finally {
+                if (this.counter != null) {
+                    this.counter.dec();
+                }
+            }
+        }
+    }
+
+    /**
+     * Process given work.
+     * @param work The work to process
+     * @throws Exception If fails
+     */
+    private void process(final Work work) throws Exception {
         final User owner = this.users.get(work.owner());
         final Object object = new Repo.Cached(
             this.repo, owner, work.spec()
@@ -207,16 +226,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
                 work,
                 this.drain(owner, owner.get(work.unit()).drain(), work)
             );
-            if (this.counter != null) {
-                this.counter.inc();
-            }
-            try {
-                instance.pulse();
-            } finally {
-                if (this.counter != null) {
-                    this.counter.dec();
-                }
-            }
+            instance.pulse();
         }
     }
 

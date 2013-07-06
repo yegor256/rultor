@@ -84,7 +84,14 @@ public final class Main {
             conveyer.start();
             final String mine = Manifests.read("Rultor-Revision");
             while (true) {
-                if (!mine.equals(Main.revision())) {
+                final String base = Main.revision();
+                if (!mine.equals(base)) {
+                    Logger.info(
+                        Main.class,
+                        "#main(): we're in %s while %s is the newest one",
+                        mine,
+                        base
+                    );
                     break;
                 }
                 TimeUnit.MINUTES.sleep(1);

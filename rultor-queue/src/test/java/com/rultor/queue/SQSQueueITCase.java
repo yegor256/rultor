@@ -34,6 +34,7 @@ import com.rultor.aws.SQSClient;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Work;
+import java.util.concurrent.TimeUnit;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -80,7 +81,10 @@ public final class SQSQueueITCase {
         final Work work = new Work.Simple(owner, unit, spec);
         final Queue queue = new SQSQueue(this.client);
         queue.push(work);
-        MatcherAssert.assertThat(queue.pull(), Matchers.equalTo(work));
+        MatcherAssert.assertThat(
+            queue.pull(1, TimeUnit.SECONDS),
+            Matchers.equalTo(work)
+        );
     }
 
 }

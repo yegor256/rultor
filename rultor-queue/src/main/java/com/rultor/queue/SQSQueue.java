@@ -139,14 +139,22 @@ public final class SQSQueue implements Queue, Metricable {
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    public Work pull() throws InterruptedException {
+    public Work pull(final int limit, final TimeUnit unit)
+        throws InterruptedException {
         final AmazonSQS aws = this.client.get();
+        Work work;
         try {
             final ReceiveMessageRequest request = new ReceiveMessageRequest()
                 .withQueueUrl(this.client.url())
                 .withMaxNumberOfMessages(1);
             ReceiveMessageResult result;
+            final long start = System.currentTimeMillis();
             while (true) {
+                final long delay = System.currentTimeMillis() - start;
+                if (delay > unit.toMillis(limit)) {
+                    work = new Work.None();
+                    break;
+                }
                 result = aws.receiveMessage(request);
                 if (!result.getMessages().isEmpty()) {
                     final Message msg = result.getMessages().get(0);
@@ -160,13 +168,15 @@ public final class SQSQueue implements Queue, Metricable {
                         "#pull(): SQS message %s received",
                         msg.getMessageId()
                     );
-                    return SQSQueue.unserialize(msg.getBody());
+                    work = SQSQueue.unserialize(msg.getBody());
+                    break;
                 }
-                TimeUnit.SECONDS.sleep(Tv.FIFTEEN);
+                TimeUnit.SECONDS.sleep(Tv.FIVE);
             }
         } finally {
             aws.shutdown();
         }
+        return work;
     }
 
     /**

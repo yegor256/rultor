@@ -29,7 +29,6 @@
  */
 package com.rultor.conveyer;
 
-import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
@@ -78,19 +77,17 @@ public final class SimpleConveyerTest {
             new Answer<Work>() {
                 @Override
                 public Work answer(final InvocationOnMock inv) {
+                    final Work work;
                     if (pulled.get()) {
-                        try {
-                            TimeUnit.SECONDS.sleep(Tv.TEN);
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                            throw new IllegalStateException(ex);
-                        }
+                        work = new Work.None();
+                    } else {
+                        pulled.set(true);
+                        work = new Work.Simple(owner, name, spec);
                     }
-                    pulled.set(true);
-                    return new Work.Simple(owner, name, spec);
+                    return work;
                 }
             }
-        ).when(queue).pull();
+        ).when(queue).pull(Mockito.anyInt(), Mockito.any(TimeUnit.class));
         final Repo repo = Mockito.mock(Repo.class);
         final Instance instance = Mockito.mock(Instance.class);
         final Variable<?> var = Mockito.mock(Variable.class);
@@ -133,7 +130,8 @@ public final class SimpleConveyerTest {
             TimeUnit.SECONDS.sleep(1);
             conveyer.close();
         }
-        Mockito.verify(queue, Mockito.atLeast(1)).pull();
+        Mockito.verify(queue, Mockito.atLeast(1))
+            .pull(Mockito.anyInt(), Mockito.any(TimeUnit.class));
         Mockito.verify(users, Mockito.atLeast(1)).get(owner);
         Mockito.verify(instance, Mockito.atLeast(1)).pulse();
     }
