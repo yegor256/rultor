@@ -1,6 +1,7 @@
-## How to configure AWS auto scaling group
+## How to configure AWS Auto Scaling group
 
-Create a new EC2 instance (Ubuntu Server 12.x) and install prerequisites there:
+Create a new [EC2 instance](http://aws.amazon.com/ec2/)
+(Ubuntu Server 12.x) and install prerequisites there:
 
 ```
 $ sudo apt-get install openjdk-7-jdk zip unzip
@@ -23,7 +24,9 @@ Add this line to crontab:
 
 Remove `/home/ubuntu/.ssh/authorized_keys` file.
 
-Create AMI from this EC2 instance and terminate the instance.
+Create AMI from this EC2 instance
+([see how](http://docs.aws.amazon.com/AWSToolkitVS/latest/UserGuide/tkv-create-ami-from-instance.html))
+and terminate the instance.
 
 Install AWS Auto Scaling [command line tools](http://aws.amazon.com/developertools/2535).
 
@@ -80,4 +83,9 @@ Delete previous launch config:
 ```
 $ as-delete-launch-config rultor-conveyer-0.1.10
 ```
+
+De-register previous AMI.
+
+Delete old EBS snapshot related to the previous AMI.
+
 
