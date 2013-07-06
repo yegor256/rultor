@@ -88,6 +88,7 @@ public final class Main {
                     break;
                 }
                 TimeUnit.MINUTES.sleep(1);
+                Logger.info(Main.class, "#main(): still alive in %s..", mine);
             }
             conveyer.close();
         }
@@ -120,6 +121,7 @@ public final class Main {
      * @param options Options
      * @return Conveyer
      */
+    @Loggable(Loggable.INFO)
     private static SimpleConveyer conveyer(final OptionSet options) {
         return new SimpleConveyer(
             new SQSQueue(
