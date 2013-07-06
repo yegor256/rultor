@@ -19,7 +19,7 @@ number provided by PapertrailApp):
 Add this line to crontab:
 
 ```
-@reboot curl --silent https://raw.github.com/yegor256/rultor/master/rultor-conveyer/src/main/resources/start.sh | cat | bash 2>&1 | logger -t rultor
+@reboot curl --silent https://raw.github.com/yegor256/rultor/master/rultor-conveyer/src/main/resources/start.sh > start.sh && bash start.sh 2>&1 | logger -t rultor
 ```
 
 Remove `/home/ubuntu/.ssh/authorized_keys` file.

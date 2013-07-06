@@ -208,6 +208,13 @@ public final class SimpleConveyer implements Closeable, Metricable {
                 if (this.counter != null) {
                     this.counter.dec();
                 }
+                com.jcabi.log.Logger.info(
+                    this,
+                    "#process(): %s %s %s",
+                    work.owner(),
+                    work.unit(),
+                    work.started()
+                );
             }
         }
     }
