@@ -32,6 +32,7 @@ package com.rultor.users;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
@@ -98,7 +99,7 @@ final class AwsUser implements User {
      */
     @Override
     @NotNull
-    @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Set<String> units() {
         final Set<String> units = new TreeSet<String>();
         final Collection<Item> items = this.region.table(AwsUnit.TABLE)

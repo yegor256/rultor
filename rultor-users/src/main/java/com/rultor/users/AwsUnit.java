@@ -33,6 +33,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
@@ -137,7 +138,7 @@ final class AwsUnit implements Unit {
      */
     @Override
     @NotNull
-    @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Spec spec() {
         Spec spec;
         if (this.item().has(AwsUnit.FIELD_SPEC)) {
@@ -152,7 +153,7 @@ final class AwsUnit implements Unit {
      * {@inheritDoc}
      */
     @Override
-    @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Spec drain() {
         Spec spec;
         if (this.item().has(AwsUnit.FIELD_DRAIN)) {

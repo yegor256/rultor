@@ -55,6 +55,9 @@
                 <button type="submit" class="btn">
                     <xsl:text>Save</xsl:text>
                 </button>
+                <span class="help-inline">
+                    <xsl:text>Takes up to five minutes to update all servers</xsl:text>
+                </span>
             </fieldset>
         </form>
     </xsl:template>
