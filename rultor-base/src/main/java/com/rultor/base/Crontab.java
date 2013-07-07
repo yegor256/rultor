@@ -295,7 +295,7 @@ public final class Crontab implements Instance {
                 alternative = new Crontab.Gate<Integer>() {
                     @Override
                     public boolean pass(final Integer num) {
-                        return ((double) num) / div == 0;
+                        return num % div == 0;
                     }
                     @Override
                     public long lag(final Integer num) {
