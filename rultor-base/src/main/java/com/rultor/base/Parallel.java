@@ -147,8 +147,9 @@ public final class Parallel implements Instance {
             } else {
                 Logger.info(
                     this,
-                    "%d thread(s) running already, which is the maximum",
-                    this.maximum
+                    "%d thread(s) running already (too many): %[list]s",
+                    this.active.size(),
+                    this.active
                 );
             }
         } finally {
