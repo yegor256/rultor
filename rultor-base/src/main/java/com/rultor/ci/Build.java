@@ -84,7 +84,7 @@ final class Build {
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public Announcement exec(@NotNull final Map<String, Object> args)
         throws IOException {
-        Signal.log(Signal.Mnemo.START, "Started to build..");
+        Signal.log(Signal.Mnemo.START, "Started to build");
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final int code = this.batch.exec(args, stdout);
         final Announcement announcement;
@@ -95,6 +95,7 @@ final class Build {
                     // @checkstyle MultipleStringLiterals (2 lines)
                     .put("title", "built successfully")
                     .put("stdout", Build.compressed(stdout))
+                    .putAll(args)
                     .build()
             );
             Signal.log(Signal.Mnemo.SUCCESS, "Announced success");
@@ -104,6 +105,7 @@ final class Build {
                 new ImmutableMap.Builder<String, Object>()
                     .put("title", "failed to build")
                     .put("stdout", Build.compressed(stdout))
+                    .putAll(args)
                     .build()
             );
             Signal.log(Signal.Mnemo.SUCCESS, "Announced failure");
