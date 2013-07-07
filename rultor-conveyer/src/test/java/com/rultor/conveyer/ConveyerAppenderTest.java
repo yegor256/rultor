@@ -29,9 +29,7 @@
  */
 package com.rultor.conveyer;
 
-import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Spec;
 import com.rultor.spi.Work;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;

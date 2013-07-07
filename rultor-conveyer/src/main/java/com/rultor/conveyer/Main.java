@@ -30,6 +30,7 @@
 package com.rultor.conveyer;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.log.Logger;
@@ -41,6 +42,8 @@ import com.rultor.repo.ClasspathRepo;
 import com.rultor.users.AwsUsers;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.security.SecureRandom;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import joptsimple.OptionParser;
@@ -60,6 +63,11 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public final class Main {
+
+    /**
+     * Random.
+     */
+    private static final Random RND = new SecureRandom();
 
     /**
      * It's a utility class.
@@ -83,7 +91,6 @@ public final class Main {
             final SimpleConveyer conveyer = Main.conveyer(options);
             conveyer.start();
             final String mine = Manifests.read("Rultor-Revision");
-            final long start = System.currentTimeMillis();
             while (true) {
                 final String base = Main.revision();
                 if (!mine.equals(base)) {
@@ -95,13 +102,7 @@ public final class Main {
                     );
                     break;
                 }
-                TimeUnit.MINUTES.sleep(1);
-                Logger.info(
-                    Main.class,
-                    "#main(): still alive in %s (%[ms]s already)...",
-                    mine,
-                    System.currentTimeMillis() - start
-                );
+                TimeUnit.SECONDS.sleep(Main.RND.nextInt(Tv.HUNDRED));
             }
             conveyer.close();
         }
