@@ -123,8 +123,9 @@ public final class Crontab implements Instance {
         } else {
             Logger.info(
                 this,
-                "Not the right moment, see you again in %[ms]s",
-                this.lag(new Time())
+                "Not the right moment \"%s\", see you again in %[ms]s",
+                Crontab.moment(this.work.started()),
+                this.lag(this.work.started())
             );
         }
     }
@@ -394,6 +395,23 @@ public final class Crontab implements Instance {
         cal.set(Calendar.MILLISECOND, 0);
         cal.set(Calendar.SECOND, 0);
         return cal;
+    }
+
+    /**
+     * Convert time into text.
+     * @param date The date
+     * @return Text in crontab format
+     */
+    private static String moment(final Time date) {
+        final Calendar cal = Crontab.calendar(date);
+        return String.format(
+            "%d %d %d %d %d",
+            cal.get(Calendar.MINUTE),
+            cal.get(Calendar.HOUR_OF_DAY),
+            cal.get(Calendar.DAY_OF_MONTH),
+            cal.get(Calendar.MONTH) + 1,
+            cal.get(Calendar.DAY_OF_WEEK)
+        );
     }
 
 }
