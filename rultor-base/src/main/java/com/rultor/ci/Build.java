@@ -30,6 +30,7 @@
 package com.rultor.ci;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
@@ -39,7 +40,6 @@ import com.rultor.spi.Signal;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -61,6 +61,11 @@ import org.apache.commons.lang3.StringUtils;
 @EqualsAndHashCode(of = "batch")
 @Loggable(Loggable.DEBUG)
 final class Build {
+
+    /**
+     * Maximum number of lines to show in the output.
+     */
+    private static final int MAX = 1000;
 
     /**
      * Batch to execute.
@@ -121,16 +126,29 @@ final class Build {
      */
     private static String compressed(final ByteArrayOutputStream stdout)
         throws IOException {
-        List<String> lines = Arrays.asList(
-            StringUtils.splitPreserveAllTokens(
-                stdout.toString(CharEncoding.UTF_8),
-                CharUtils.LF
-            )
+        final String[] lines = StringUtils.splitPreserveAllTokens(
+            stdout.toString(CharEncoding.UTF_8),
+            CharUtils.LF
         );
-        if (lines.size() > Tv.FIFTY) {
-            lines = lines.subList(lines.size() - Tv.FIFTY, lines.size() - 1);
+        final Iterable<String> data;
+        if (lines.length > Build.MAX) {
+            final int visible = (Build.MAX - Tv.THREE) / 2;
+            data = Iterables.concat(
+                Iterables.limit(Arrays.asList(lines), visible),
+                Arrays.asList(
+                    "...",
+                    String.format(
+                        "... skipped %d line(s) ...",
+                        lines.length - Build.MAX + Tv.THREE
+                    ),
+                    "... "
+                ),
+                Iterables.skip(Arrays.asList(lines), Build.MAX - visible)
+            );
+        } else {
+            data = Arrays.asList(lines);
         }
-        return StringUtils.join(lines, "\n");
+        return StringUtils.join(data, "\n");
     }
 
 }
