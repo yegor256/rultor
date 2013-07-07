@@ -132,6 +132,8 @@
                 </xsl:attribute>
                 <i class="icon-github"><xsl:comment>github icon</xsl:comment></i>
             </a>
+        </li>
+        <li>
             <code>
                 <xsl:value-of select="revision"/>
             </code>
