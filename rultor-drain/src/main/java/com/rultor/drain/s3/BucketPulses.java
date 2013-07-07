@@ -103,7 +103,8 @@ final class BucketPulses implements Pulses {
      */
     @Override
     public Iterator<Time> iterator() {
-        final String mrkr = new Key(this.top).toString();
+        final String mrkr = new StringBuilder(this.prefix)
+            .append(new Key(this.top)).toString();
         // @checkstyle AnonInnerLength (100 lines)
         return new Iterator<Time>() {
             private final transient Queue<Time> queue = new LinkedList<Time>();
