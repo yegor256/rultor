@@ -33,10 +33,9 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
+import com.rultor.spi.Work;
 import com.rultor.stateful.Lineup;
 import com.rultor.stateful.Notepad;
-import java.io.StringWriter;
-import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.Validate;
@@ -49,10 +48,15 @@ import org.apache.commons.lang3.Validate;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "origin", "lineup", "maximum" })
+@EqualsAndHashCode(of = { "work", "active", "origin", "lineup", "maximum" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
 public final class Parallel implements Instance {
+
+    /**
+     * Work we're in.
+     */
+    private final transient Work work;
 
     /**
      * Origin.
@@ -76,15 +80,18 @@ public final class Parallel implements Instance {
 
     /**
      * Public ctor.
+     * @param wrk Work we're in
      * @param max Maximum
      * @param lnp Lineup
      * @param atv List of active threads
      * @param instance Original instance
      * @checkstyle ParameterNumber (5 lines)
      */
-    public Parallel(final int max, @NotNull final Lineup lnp,
-        @NotNull final Notepad atv, @NotNull final Instance instance) {
+    public Parallel(@NotNull final Work wrk, final int max,
+        @NotNull final Lineup lnp, @NotNull final Notepad atv,
+        @NotNull final Instance instance) {
         Validate.isTrue(max >= 0, "Maximum can't be negative, %d given", max);
+        this.work = wrk;
         this.origin = instance;
         this.lineup = lnp;
         this.maximum = max;
@@ -123,7 +130,9 @@ public final class Parallel implements Instance {
      * @throws Exception If fails
      */
     private void pass() throws Exception {
-        final String key = this.key();
+        final String key = String.format(
+            "%s %s %s", this.work.owner(), this.work.unit(), this.work.started()
+        );
         this.lineup.exec(
             new Runnable() {
                 @Override
@@ -152,22 +161,6 @@ public final class Parallel implements Instance {
                 }
             );
         }
-    }
-
-    /**
-     * Make a nice unique name from the current thread.
-     * @return Key of the thread
-     */
-    private String key() {
-        final Thread thread = Thread.currentThread();
-        final StringWriter writer = new StringWriter();
-        Json.createGenerator(writer).writeStartObject()
-            .write("thread", thread.getName())
-            .write("id", thread.getId())
-            .write("group", thread.getThreadGroup().getName())
-            .writeEnd()
-            .close();
-        return writer.toString();
     }
 
 }

@@ -58,9 +58,7 @@ public final class ConveyerAppenderTest {
         final Drain drain = Mockito.mock(Drain.class);
         final ConveyerAppender appender = new ConveyerAppender();
         appender.setLayout(new PatternLayout("%m"));
-        final Work work = new Work.Simple(
-            new URN("urn:facebook:1"), "test", new Spec.Simple()
-        );
+        final Work work = new Work.Simple();
         appender.register(work.started(), drain);
         final String text = "test message to see in log";
         final Thread publisher = new Thread() {
@@ -102,9 +100,7 @@ public final class ConveyerAppenderTest {
         final ConveyerAppender appender = new ConveyerAppender();
         appender.setLayout(new PatternLayout(" %m"));
         Logger.getRootLogger().addAppender(appender);
-        final Work work = new Work.Simple(
-            new URN("urn:facebook:44"), "test again", new Spec.Simple()
-        );
+        final Work work = new Work.Simple();
         appender.register(work.started(), drain);
         appender.append(
             new LoggingEvent(

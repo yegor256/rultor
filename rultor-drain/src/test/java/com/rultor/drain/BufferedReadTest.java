@@ -29,10 +29,7 @@
  */
 package com.rultor.drain;
 
-import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Time;
 import com.rultor.spi.Work;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
@@ -54,10 +51,7 @@ public final class BufferedReadTest {
      */
     @Test
     public void loadsDataAndRenders() throws Exception {
-        final Time time = new Time();
-        final Work work = new Work.Simple(
-            new URN("urn:facebook:11"), "test", new Spec.Simple(), time
-        );
+        final Work work = new Work.Simple();
         final Drain drain = Mockito.mock(Drain.class);
         final String text = "\u20ac\n\n\n test \u0433";
         Mockito.doReturn(IOUtils.toInputStream(text)).when(drain).read();

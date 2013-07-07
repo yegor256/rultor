@@ -100,7 +100,7 @@ final class Build {
             Signal.log(Signal.Mnemo.SUCCESS, "Announced success");
         } else {
             announcement = new Announcement(
-                Level.INFO,
+                Level.SEVERE,
                 new ImmutableMap.Builder<String, Object>()
                     .put("title", "failed to build")
                     .put("stdout", Build.compressed(stdout))

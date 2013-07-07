@@ -32,6 +32,7 @@ package com.rultor.base;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseThreads;
 import com.rultor.spi.Instance;
+import com.rultor.spi.Work;
 import com.rultor.stateful.Lineup;
 import com.rultor.stateful.Notepad;
 import java.util.Collection;
@@ -103,6 +104,7 @@ public final class ParallelTest {
         final int threads = 10;
         final int maximum = 3;
         final Parallel parallel = new Parallel(
+            new Work.Simple(),
             maximum,
             new Lineup.Asynchronous(),
             notepad,

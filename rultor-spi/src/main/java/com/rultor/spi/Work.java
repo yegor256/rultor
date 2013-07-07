@@ -137,11 +137,17 @@ public interface Work {
         private final transient Spec desc;
         /**
          * Public ctor.
+         */
+        public Simple() {
+            this(URN.create("urn:facebook:1"), "test-unit");
+        }
+        /**
+         * Public ctor.
          * @param owner Owner
          * @param name Name
          */
         public Simple(@NotNull final URN owner, @NotNull final String name) {
-            this(owner, name, new Spec.Simple(), new Time());
+            this(owner, name, new Time());
         }
         /**
          * Public ctor.

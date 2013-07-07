@@ -202,6 +202,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
             if (this.counter != null) {
                 this.counter.inc();
             }
+            final long start = System.currentTimeMillis();
             try {
                 this.process(work);
             } finally {
@@ -210,10 +211,11 @@ public final class SimpleConveyer implements Closeable, Metricable {
                 }
                 com.jcabi.log.Logger.info(
                     this,
-                    "#process(): %s %s %s",
+                    "#process(): %s %s %s %[ms]s",
                     work.owner(),
                     work.unit(),
-                    work.started()
+                    work.started(),
+                    System.currentTimeMillis() - start
                 );
             }
         }

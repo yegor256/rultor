@@ -73,7 +73,10 @@ public final class DrainTest {
      * @throws Exception If some problem inside
      */
     @Test
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    @SuppressWarnings({
+        "PMD.AvoidInstantiatingObjectsInLoops",
+        "PMD.AvoidUsingHardCodedIP"
+    })
     public void buildsDatesCorrectly() throws Exception {
         final ImmutableMap<Long, String> map =
             new ImmutableMap.Builder<Long, String>()

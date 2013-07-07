@@ -30,14 +30,12 @@
 package com.rultor.drain.s3;
 
 import com.jcabi.aspects.Tv;
-import com.jcabi.urn.URN;
 import com.rultor.aws.S3Client;
 import com.rultor.drain.BufferedWrite;
 import com.rultor.drain.NoiseReduction;
 import com.rultor.drain.Trash;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulses;
-import com.rultor.spi.Spec;
 import com.rultor.spi.Time;
 import com.rultor.spi.Work;
 import java.util.Arrays;
@@ -108,9 +106,7 @@ public final class ObjectDrainITCase {
             this.client, "S3DrainITCase/test-2.txt"
         );
         clean.append(Arrays.asList("hello, how are you \u20ac?"));
-        final Work work = new Work.Simple(
-            new URN("urn:facebook:55"), "test-8", new Spec.Simple()
-        );
+        final Work work = new Work.Simple();
         final Drain dirty = new BufferedWrite(work, Tv.TEN, new Trash());
         final Drain drain = new NoiseReduction(
             work,

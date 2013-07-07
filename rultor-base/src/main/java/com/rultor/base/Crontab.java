@@ -37,9 +37,11 @@ import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Signal;
 import com.rultor.spi.Time;
+import com.rultor.spi.Work;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -74,6 +76,11 @@ public final class Crontab implements Instance {
             .build();
 
     /**
+     * Work we're in.
+     */
+    private final transient Work work;
+
+    /**
      * Origin.
      */
     private final transient Instance origin;
@@ -85,10 +92,13 @@ public final class Crontab implements Instance {
 
     /**
      * Public ctor.
+     * @param wrk Work we're in
      * @param text Mask to use
      * @param instance Original instance
      */
-    public Crontab(final String text, final Instance instance) {
+    public Crontab(@NotNull final Work wrk, @NotNull final String text,
+        @NotNull final Instance instance) {
+        this.work = wrk;
         this.origin = instance;
         this.gates = Crontab.split(text);
     }
@@ -99,7 +109,7 @@ public final class Crontab implements Instance {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
-        final Calendar today = Crontab.calendar(new Time());
+        final Calendar today = Crontab.calendar(this.work.started());
         boolean pass = true;
         for (Crontab.Gate<Calendar> gate : this.gates) {
             if (!gate.pass(today)) {
