@@ -381,7 +381,7 @@ public final class Crontab implements Instance {
                 @Override
                 public long lag(final Calendar calendar) {
                     return this.lag(
-                        calendar.get(Calendar.DAY_OF_WEEK)
+                        calendar.get(Calendar.DAY_OF_WEEK) - 1
                     ) * TimeUnit.DAYS.toMillis(1);
                 }
             },
@@ -414,7 +414,7 @@ public final class Crontab implements Instance {
             cal.get(Calendar.HOUR_OF_DAY),
             cal.get(Calendar.DAY_OF_MONTH),
             cal.get(Calendar.MONTH) + 1,
-            cal.get(Calendar.DAY_OF_WEEK)
+            cal.get(Calendar.DAY_OF_WEEK) - 1
         );
     }
 
