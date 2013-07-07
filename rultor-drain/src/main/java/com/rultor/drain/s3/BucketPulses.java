@@ -81,7 +81,7 @@ final class BucketPulses implements Pulses {
      * Public ctor.
      * @param clnt S3 client
      * @param pfx Prefix
-     * @param time Tail of the previous vector
+     * @param time Tail of the previous vector (is not visible in this iterator)
      */
     protected BucketPulses(final S3Client clnt, final String pfx,
         final Time time) {
@@ -95,7 +95,9 @@ final class BucketPulses implements Pulses {
      */
     @Override
     public Pulses tail(final Time head) {
-        return new BucketPulses(this.client, this.prefix, head);
+        return new BucketPulses(
+            this.client, this.prefix, new Time(head.millis() + 1)
+        );
     }
 
     /**

@@ -93,6 +93,7 @@ public final class BucketDrainITCase {
         drain.append(Arrays.asList(msg));
         final Pulses names = drain.pulses();
         MatcherAssert.assertThat(names, Matchers.hasItem(date));
+        MatcherAssert.assertThat(names.tail(date), Matchers.hasItem(date));
         MatcherAssert.assertThat(
             names.tail(new Time(date.millis() - TimeUnit.MINUTES.toMillis(2))),
             Matchers.not(Matchers.hasItem(date))

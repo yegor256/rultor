@@ -137,8 +137,10 @@ public final class DrainRs extends BaseRs {
                     )
                 );
         }
-        return page.append(this.pulses(pulses.iterator(), total))
-            .render().build();
+        return page
+            .append(this.pulses(pulses.iterator(), total))
+            .render()
+            .build();
     }
 
     /**
