@@ -87,7 +87,9 @@
                                 <xsl:text>how it works?</xsl:text>
                             </a>
                         </li>
-                        <xsl:apply-templates select="version"/>
+                        <code>
+                            <xsl:apply-templates select="version"/>
+                        </code>
                         <xsl:apply-templates select="identity"/>
                     </ul>
                     <xsl:apply-templates select="flash"/>

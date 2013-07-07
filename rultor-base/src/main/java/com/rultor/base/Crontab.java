@@ -43,7 +43,7 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Sends pulses through, only on certain time moments.
@@ -110,26 +110,30 @@ public final class Crontab implements Instance {
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
         final Calendar today = Crontab.calendar(this.work.started());
-        boolean pass = true;
+        Crontab.Gate<Calendar> denier = null;
         for (Crontab.Gate<Calendar> gate : this.gates) {
             if (!gate.pass(today)) {
-                pass = false;
+                denier = gate;
                 break;
             }
         }
-        if (pass) {
+        if (denier == null) {
             Signal.log(
                 Signal.Mnemo.SUCCESS,
-                "Crontab allows execution at \"%s\"",
+                "Crontab \"%s\" allows execution at \"%s\"",
+                this.asText(),
                 Crontab.moment(this.work.started())
             );
             this.origin.pulse();
         } else {
             Logger.info(
                 this,
-                "Not the right moment \"%s\", see you again in %[ms]s",
+                // @checkstyle LineLength (1 line)
+                "Not the right moment \"%s\" for \"%s\", see you again in %[ms]s (denied by %s)",
                 Crontab.moment(this.work.started()),
-                this.lag(this.work.started())
+                this.asText(),
+                this.lag(this.work.started()),
+                denier
             );
         }
     }
@@ -182,28 +186,45 @@ public final class Crontab implements Instance {
     /**
      * Abstract gate.
      */
-    @ToString
     @Immutable
     @EqualsAndHashCode(of = "alternatives")
     @Loggable(Loggable.DEBUG)
-    private abstract static class AbstractGate
+    private abstract static class AbstractBigGate
         implements Crontab.Gate<Calendar> {
+        /**
+         * Prefix to name it.
+         */
+        private final transient String prefix;
         /**
          * All alternatives.
          */
         private final transient Crontab.Gate<Integer>[] alternatives;
         /**
          * Public ctor.
+         * @param pfx Prefix for user-friendly rendering
          * @param text Text spec
          */
         @SuppressWarnings("unchecked")
-        protected AbstractGate(final String text) {
+        protected AbstractBigGate(final String pfx, final String text) {
+            this.prefix = pfx;
             final String[] parts = text.split(",");
             this.alternatives =
                 (Crontab.Gate<Integer>[]) new Crontab.Gate<?>[parts.length];
             for (int idx = 0; idx < parts.length; ++idx) {
-                this.alternatives[idx] = Crontab.AbstractGate.parse(parts[idx]);
+                this.alternatives[idx] =
+                    Crontab.AbstractBigGate.parse(parts[idx]);
             }
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return String.format(
+                "%s:%s",
+                this.prefix,
+                StringUtils.join(this.alternatives, "|")
+            );
         }
         /**
          * Matches the number?
@@ -235,7 +256,7 @@ public final class Crontab implements Instance {
         /**
          * Parse text into alternative.
          * @param part The text to parse
-         * @return Crontab.Gate
+         * @return Small gate condition
          */
         private static Crontab.Gate<Integer> parse(final String part) {
             final Crontab.Gate<Integer> alternative;
@@ -323,7 +344,7 @@ public final class Crontab implements Instance {
             );
         }
         return (Crontab.Gate<Calendar>[]) new Crontab.Gate<?>[] {
-            new Crontab.AbstractGate(parts[0]) {
+            new Crontab.AbstractBigGate("min", parts[0]) {
                 @Override
                 public boolean pass(final Calendar calendar) {
                     return this.matches(calendar.get(Calendar.MINUTE));
@@ -335,7 +356,7 @@ public final class Crontab implements Instance {
                     ) * TimeUnit.MINUTES.toMillis(1);
                 }
             },
-            new Crontab.AbstractGate(parts[1]) {
+            new Crontab.AbstractBigGate("hour", parts[1]) {
                 @Override
                 public boolean pass(final Calendar calendar) {
                     return this.matches(calendar.get(Calendar.HOUR_OF_DAY));
@@ -347,7 +368,7 @@ public final class Crontab implements Instance {
                     ) * TimeUnit.HOURS.toMillis(1);
                 }
             },
-            new Crontab.AbstractGate(parts[2]) {
+            new Crontab.AbstractBigGate("day", parts[2]) {
                 @Override
                 public boolean pass(final Calendar calendar) {
                     return this.matches(
@@ -361,7 +382,7 @@ public final class Crontab implements Instance {
                     ) * TimeUnit.DAYS.toMillis(1);
                 }
             },
-            new Crontab.AbstractGate(parts[Tv.THREE]) {
+            new Crontab.AbstractBigGate("mon", parts[Tv.THREE]) {
                 @Override
                 public boolean pass(final Calendar calendar) {
                     return this.matches(calendar.get(Calendar.MONTH) + 1);
@@ -373,7 +394,7 @@ public final class Crontab implements Instance {
                     ) * Tv.THIRTY * TimeUnit.DAYS.toMillis(1);
                 }
             },
-            new Crontab.AbstractGate(parts[Tv.FOUR]) {
+            new Crontab.AbstractBigGate("wday", parts[Tv.FOUR]) {
                 @Override
                 public boolean pass(final Calendar calendar) {
                     return this.matches(calendar.get(Calendar.DAY_OF_WEEK));
@@ -386,6 +407,14 @@ public final class Crontab implements Instance {
                 }
             },
         };
+    }
+
+    /**
+     * Convert it to text.
+     * @return The text
+     */
+    private String asText() {
+        return StringUtils.join(this.gates, " ");
     }
 
     /**
