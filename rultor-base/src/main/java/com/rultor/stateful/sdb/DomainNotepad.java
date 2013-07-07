@@ -29,7 +29,6 @@
  */
 package com.rultor.stateful.sdb;
 
-import com.amazonaws.services.simpledb.model.Attribute;
 import com.amazonaws.services.simpledb.model.DeleteAttributesRequest;
 import com.amazonaws.services.simpledb.model.Item;
 import com.amazonaws.services.simpledb.model.PutAttributesRequest;
@@ -48,7 +47,6 @@ import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.Validate;
 
 /**
  * SimpleDB notepads.
@@ -79,11 +77,6 @@ public final class DomainNotepad implements Notepad {
     private static final String ATTR_TEXT = "text";
 
     /**
-     * Attribute name for the label.
-     */
-    private static final String ATTR_LABEL = "label";
-
-    /**
      * SimpleDB client.
      */
     private final transient SDBClient client;
@@ -94,34 +87,13 @@ public final class DomainNotepad implements Notepad {
     private final transient Work work;
 
     /**
-     * Label that identifies specifically this notepad in the domain.
-     */
-    private final transient String label;
-
-    /**
      * Public ctor.
      * @param wrk Work
      * @param clnt Client
      */
     public DomainNotepad(@NotNull final Work wrk,
         @NotNull final SDBClient clnt) {
-        this(wrk, "default", clnt);
-    }
-
-    /**
-     * Public ctor.
-     * @param wrk Work
-     * @param lbl Unique label in SimpleDB domain
-     * @param clnt Client
-     */
-    public DomainNotepad(@NotNull final Work wrk, @NotNull final String lbl,
-        @NotNull final SDBClient clnt) {
         this.work = wrk;
-        Validate.matchesPattern(
-            lbl, "[a-z]{3,10}",
-            "label should contain from three to ten letters only"
-        );
-        this.label = lbl;
         this.client = clnt;
     }
 
@@ -131,8 +103,8 @@ public final class DomainNotepad implements Notepad {
     @Override
     public String toString() {
         return String.format(
-            "SimpleDB notepads labeled as `%s` in `%s` accessed with %s",
-            this.label, this.client.domain(), this.client
+            "SimpleDB notepads in `%s` accessed with %s",
+            this.client.domain(), this.client
         );
     }
 
@@ -166,12 +138,9 @@ public final class DomainNotepad implements Notepad {
     @Override
     public Iterator<String> iterator() {
         final String query = String.format(
-            // @checkstyle LineLength (1 line)
-            "SELECT `%s` FROM `%s` WHERE `%s` = '%s' AND `%s` = '%s' AND `%s` = '%s'",
+            "SELECT `%s` FROM `%s` WHERE `%s` = '%s' AND `%s` = '%s'",
             DomainNotepad.ATTR_TEXT,
             this.client.domain(),
-            DomainNotepad.ATTR_LABEL,
-            this.label,
             DomainNotepad.ATTR_OWNER,
             this.work.owner(),
             DomainNotepad.ATTR_UNIT,
@@ -217,10 +186,6 @@ public final class DomainNotepad implements Notepad {
                 .withItemName(this.name(line))
                 .withAttributes(
                     new ReplaceableAttribute()
-                        .withName(DomainNotepad.ATTR_LABEL)
-                        .withValue(this.label)
-                        .withReplace(true),
-                    new ReplaceableAttribute()
                         .withName(DomainNotepad.ATTR_TEXT)
                         .withValue(line)
                         .withReplace(true),
@@ -246,11 +211,6 @@ public final class DomainNotepad implements Notepad {
             new DeleteAttributesRequest()
                 .withDomainName(this.client.domain())
                 .withItemName(this.name(line.toString()))
-                .withAttributes(
-                    new Attribute()
-                        .withName(DomainNotepad.ATTR_LABEL)
-                        .withValue(this.label)
-                )
         );
         return true;
     }
@@ -311,8 +271,7 @@ public final class DomainNotepad implements Notepad {
     private String name(final String text) {
         return DigestUtils.md5Hex(
             String.format(
-                "%s %s %s %s",
-                this.label,
+                "%s %s %s",
                 this.work.owner(),
                 this.work.unit(),
                 text

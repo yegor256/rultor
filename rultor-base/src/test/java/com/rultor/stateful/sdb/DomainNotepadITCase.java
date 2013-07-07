@@ -85,23 +85,4 @@ public final class DomainNotepadITCase {
         notepad.clear();
     }
 
-    /**
-     * DomainNotepad can separate data between two labels.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void storesAndRetrievesLinesWithTwoLabels() throws Exception {
-        final Notepad first = new DomainNotepad(
-            new Work.Simple(), "first", this.client
-        );
-        final Notepad second = new DomainNotepad(
-            new Work.Simple(), "second", this.client
-        );
-        first.clear();
-        second.clear();
-        first.add("some line to be visible in first only");
-        MatcherAssert.assertThat(second, Matchers.empty());
-        first.clear();
-    }
-
 }
