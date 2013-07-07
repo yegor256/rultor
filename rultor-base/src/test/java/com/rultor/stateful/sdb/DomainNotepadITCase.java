@@ -35,6 +35,7 @@ import com.rultor.stateful.Notepad;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -45,20 +46,33 @@ import org.junit.Test;
 public final class DomainNotepadITCase {
 
     /**
+     * SimpleDB client.
+     */
+    private transient SDBClient client;
+
+    /**
+     * Make a notepad.
+     * @throws Exception If some problem inside
+     */
+    @Before
+    public void prepare() throws Exception {
+        final String key = System.getProperty("failsafe.sdb.key");
+        Assume.assumeNotNull(key);
+        this.client = new SDBClient.Simple(
+            key,
+            System.getProperty("failsafe.sdb.secret"),
+            System.getProperty("failsafe.sdb.domain")
+        );
+    }
+
+    /**
      * DomainNotepad can store and retrieve lines.
      * @throws Exception If some problem inside
      */
     @Test
     public void storesAndRetrievesLines() throws Exception {
-        final String key = System.getProperty("failsafe.sdb.key");
-        Assume.assumeNotNull(key);
         final Notepad notepad = new DomainNotepad(
-            new Work.Simple(),
-            new SDBClient.Simple(
-                key,
-                System.getProperty("failsafe.sdb.secret"),
-                System.getProperty("failsafe.sdb.domain")
-            )
+            new Work.Simple(), this.client
         );
         notepad.clear();
         MatcherAssert.assertThat(notepad, Matchers.empty());
@@ -69,6 +83,25 @@ public final class DomainNotepadITCase {
         MatcherAssert.assertThat(notepad, Matchers.hasSize(2));
         MatcherAssert.assertThat(notepad, Matchers.hasItem(first));
         notepad.clear();
+    }
+
+    /**
+     * DomainNotepad can separate data between two labels.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void storesAndRetrievesLinesWithTwoLabels() throws Exception {
+        final Notepad first = new DomainNotepad(
+            new Work.Simple(), "first", this.client
+        );
+        final Notepad second = new DomainNotepad(
+            new Work.Simple(), "second", this.client
+        );
+        first.clear();
+        second.clear();
+        first.add("some line to be visible in first only");
+        MatcherAssert.assertThat(second, Matchers.empty());
+        first.clear();
     }
 
 }

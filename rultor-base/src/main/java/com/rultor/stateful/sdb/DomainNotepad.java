@@ -29,6 +29,7 @@
  */
 package com.rultor.stateful.sdb;
 
+import com.amazonaws.services.simpledb.model.Attribute;
 import com.amazonaws.services.simpledb.model.DeleteAttributesRequest;
 import com.amazonaws.services.simpledb.model.Item;
 import com.amazonaws.services.simpledb.model.PutAttributesRequest;
@@ -47,6 +48,7 @@ import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.Validate;
 
 /**
  * SimpleDB notepads.
@@ -64,17 +66,22 @@ public final class DomainNotepad implements Notepad {
     /**
      * Attribute name for the owner.
      */
-    private static final String OWNER = "owner";
+    private static final String ATTR_OWNER = "owner";
 
     /**
      * Attribute name for the unit.
      */
-    private static final String UNIT = "unit";
+    private static final String ATTR_UNIT = "unit";
 
     /**
      * Attribute name for the text.
      */
-    private static final String TEXT = "text";
+    private static final String ATTR_TEXT = "text";
+
+    /**
+     * Attribute name for the label.
+     */
+    private static final String ATTR_LABEL = "label";
 
     /**
      * SimpleDB client.
@@ -87,13 +94,34 @@ public final class DomainNotepad implements Notepad {
     private final transient Work work;
 
     /**
+     * Label that identifies specifically this notepad in the domain.
+     */
+    private final transient String label;
+
+    /**
      * Public ctor.
      * @param wrk Work
      * @param clnt Client
      */
     public DomainNotepad(@NotNull final Work wrk,
         @NotNull final SDBClient clnt) {
+        this(wrk, "default", clnt);
+    }
+
+    /**
+     * Public ctor.
+     * @param wrk Work
+     * @param lbl Unique label in SimpleDB domain
+     * @param clnt Client
+     */
+    public DomainNotepad(@NotNull final Work wrk, @NotNull final String lbl,
+        @NotNull final SDBClient clnt) {
         this.work = wrk;
+        Validate.matchesPattern(
+            lbl, "[a-z]{3,10}",
+            "label should contain from three to ten letters only"
+        );
+        this.label = lbl;
         this.client = clnt;
     }
 
@@ -103,8 +131,8 @@ public final class DomainNotepad implements Notepad {
     @Override
     public String toString() {
         return String.format(
-            "SimpleDB notepads in `%s` accessed with %s",
-            this.client.domain(), this.client
+            "SimpleDB notepads labeled as `%s` in `%s` accessed with %s",
+            this.label, this.client.domain(), this.client
         );
     }
 
@@ -138,12 +166,15 @@ public final class DomainNotepad implements Notepad {
     @Override
     public Iterator<String> iterator() {
         final String query = String.format(
-            "SELECT `%s` FROM `%s` WHERE `%s` = '%s' AND `%s` = '%s'",
-            DomainNotepad.TEXT,
+            // @checkstyle LineLength (1 line)
+            "SELECT `%s` FROM `%s` WHERE `%s` = '%s' AND `%s` = '%s' AND `%s` = '%s'",
+            DomainNotepad.ATTR_TEXT,
             this.client.domain(),
-            DomainNotepad.OWNER,
+            DomainNotepad.ATTR_LABEL,
+            this.label,
+            DomainNotepad.ATTR_OWNER,
             this.work.owner(),
-            DomainNotepad.UNIT,
+            DomainNotepad.ATTR_UNIT,
             this.work.unit()
         );
         final SelectResult result = this.client.get().select(
@@ -186,15 +217,19 @@ public final class DomainNotepad implements Notepad {
                 .withItemName(this.name(line))
                 .withAttributes(
                     new ReplaceableAttribute()
-                        .withName(DomainNotepad.TEXT)
+                        .withName(DomainNotepad.ATTR_LABEL)
+                        .withValue(this.label)
+                        .withReplace(true),
+                    new ReplaceableAttribute()
+                        .withName(DomainNotepad.ATTR_TEXT)
                         .withValue(line)
                         .withReplace(true),
                     new ReplaceableAttribute()
-                        .withName(DomainNotepad.OWNER)
+                        .withName(DomainNotepad.ATTR_OWNER)
                         .withValue(this.work.owner().toString())
                         .withReplace(true),
                     new ReplaceableAttribute()
-                        .withName(DomainNotepad.UNIT)
+                        .withName(DomainNotepad.ATTR_UNIT)
                         .withValue(this.work.unit())
                         .withReplace(true)
                 )
@@ -211,6 +246,11 @@ public final class DomainNotepad implements Notepad {
             new DeleteAttributesRequest()
                 .withDomainName(this.client.domain())
                 .withItemName(this.name(line.toString()))
+                .withAttributes(
+                    new Attribute()
+                        .withName(DomainNotepad.ATTR_LABEL)
+                        .withValue(this.label)
+                )
         );
         return true;
     }
@@ -271,7 +311,8 @@ public final class DomainNotepad implements Notepad {
     private String name(final String text) {
         return DigestUtils.md5Hex(
             String.format(
-                "%s %s %s",
+                "%s %s %s %s",
+                this.label,
                 this.work.owner(),
                 this.work.unit(),
                 text
