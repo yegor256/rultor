@@ -37,6 +37,7 @@ import com.rultor.spi.Spec;
 import com.rultor.spi.Time;
 import com.rultor.spi.Work;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
@@ -93,7 +94,8 @@ public final class BucketDrainITCase {
         final Pulses names = drain.pulses();
         MatcherAssert.assertThat(names, Matchers.hasItem(date));
         MatcherAssert.assertThat(
-            names, Matchers.<Time>iterableWithSize(Matchers.greaterThan(0))
+            names.tail(new Time(date.millis() - TimeUnit.MINUTES.toMillis(2))),
+            Matchers.not(Matchers.hasItem(date))
         );
         MatcherAssert.assertThat(
             IOUtils.toString(drain.read(), CharEncoding.UTF_8),
