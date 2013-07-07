@@ -118,7 +118,11 @@ public final class Crontab implements Instance {
             }
         }
         if (pass) {
-            Signal.log(Signal.Mnemo.SUCCESS, "Crontab allows execution");
+            Signal.log(
+                Signal.Mnemo.SUCCESS,
+                "Crontab allows execution at \"%s\"",
+                Crontab.moment(this.work.started())
+            );
             this.origin.pulse();
         } else {
             Logger.info(
