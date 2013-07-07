@@ -143,7 +143,7 @@ final class Build {
                     ),
                     "... "
                 ),
-                Iterables.skip(Arrays.asList(lines), Build.MAX - visible)
+                Iterables.skip(Arrays.asList(lines), lines.length - visible)
             );
         } else {
             data = Arrays.asList(lines);
