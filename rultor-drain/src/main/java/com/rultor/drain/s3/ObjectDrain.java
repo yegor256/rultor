@@ -48,6 +48,7 @@ import java.io.SequenceInputStream;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -150,9 +151,9 @@ public final class ObjectDrain implements Drain {
             );
             Logger.info(
                 this,
-                "'%s' saved %d byte(s) to S3, etag=%s",
+                "'%s' saved %s to S3, etag=%s",
                 this.key,
-                size,
+                FileUtils.byteCountToDisplaySize(size),
                 result.getETag()
             );
         } catch (AmazonS3Exception ex) {
@@ -190,17 +191,21 @@ public final class ObjectDrain implements Drain {
                 aws.getObject(this.client.bucket(), this.key);
             Logger.info(
                 this,
-                "'%s' ready for loading from S3, size=%d, etag=%s",
+                "'%s' ready for loading from S3, size=%s, etag=%s",
                 this.key,
-                object.getObjectMetadata().getContentLength(),
+                FileUtils.byteCountToDisplaySize(
+                    object.getObjectMetadata().getContentLength()
+                ),
                 object.getObjectMetadata().getETag()
             );
             stream = new SequenceInputStream(
                 IOUtils.toInputStream(
                     String.format(
-                        "ObjectDrain: etag='%s', size=%d\n",
+                        "ObjectDrain: etag='%s', size=%s\n",
                         object.getObjectMetadata().getETag(),
-                        object.getObjectMetadata().getContentLength()
+                        FileUtils.byteCountToDisplaySize(
+                            object.getObjectMetadata().getContentLength()
+                        )
                     )
                 ),
                 new ObjectDrain.Wrap(object.getObjectContent(), aws)
