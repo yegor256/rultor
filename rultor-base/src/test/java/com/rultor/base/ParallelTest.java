@@ -35,6 +35,7 @@ import com.rultor.spi.Instance;
 import com.rultor.spi.Work;
 import com.rultor.stateful.Lineup;
 import com.rultor.stateful.Notepad;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -85,6 +86,8 @@ public final class ParallelTest {
                 }
             }
         ).when(notepad).size();
+        Mockito.doReturn(new ArrayList<String>(0).iterator())
+            .when(notepad).iterator();
         Mockito.doAnswer(
             new Answer<Boolean>() {
                 @Override
