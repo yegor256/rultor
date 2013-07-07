@@ -87,9 +87,7 @@
                                 <xsl:text>how it works?</xsl:text>
                             </a>
                         </li>
-                        <code>
-                            <xsl:apply-templates select="version"/>
-                        </code>
+                        <xsl:apply-templates select="version"/>
                         <xsl:apply-templates select="identity"/>
                     </ul>
                     <xsl:apply-templates select="flash"/>
@@ -134,8 +132,9 @@
                 </xsl:attribute>
                 <i class="icon-github"><xsl:comment>github icon</xsl:comment></i>
             </a>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="revision"/>
+            <code>
+                <xsl:value-of select="revision"/>
+            </code>
         </li>
         <li class="hidden-phone hidden-tablet">
             <xsl:call-template name="millis">
