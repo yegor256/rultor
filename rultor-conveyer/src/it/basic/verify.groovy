@@ -31,3 +31,7 @@
 def log = new File(basedir, 'build.log')
 assert log.exists()
 assert log.text.contains('com.rultor.conveyer.Main: Starting SimpleConveyer(')
+assert !log.text.contains('com.rultor.conveyer.LoggableInstance')
+assert log.text.contains('CONSOLE DRAIN: com.rultor.base.Empty: nothing to do')
+assert log.text.contains('com.rultor.conveyer.SimpleConveyer: #close():')
+

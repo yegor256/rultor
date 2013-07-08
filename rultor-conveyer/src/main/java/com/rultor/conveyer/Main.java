@@ -71,6 +71,7 @@ import org.apache.commons.io.FileUtils;
  */
 @ToString
 @EqualsAndHashCode
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class Main {
 
     /**
@@ -99,23 +100,46 @@ public final class Main {
         } else {
             final SimpleConveyer conveyer = Main.conveyer(options);
             Logger.info(Main.class, "Starting %s", conveyer);
+            final long start = System.currentTimeMillis();
             conveyer.start();
-            final String mine = Manifests.read("Rultor-Revision");
-            while (true) {
-                final String base = Main.revision();
-                if (!mine.equals(base)) {
-                    Logger.info(
-                        Main.class,
-                        "#main(): we're in %s while %s is the newest one",
-                        mine,
-                        base
-                    );
-                    break;
-                }
-                TimeUnit.SECONDS.sleep(Main.RND.nextInt(Tv.HUNDRED));
+            while (Main.alive(start, options)) {
+                TimeUnit.SECONDS.sleep(1);
             }
             conveyer.close();
         }
+    }
+
+    /**
+     * Are we still need to be alive?
+     * @param start When started
+     * @param options Command line options
+     * @return TRUE if we should still be alive
+     * @throws Exception If fails
+     */
+    private static boolean alive(final long start, final OptionSet options)
+        throws Exception {
+        boolean alive = true;
+        if (options.has("lifetime")) {
+            final long lifetime = Long.parseLong(
+                options.valueOf("lifetime").toString()
+            );
+            alive = System.currentTimeMillis() - start < lifetime;
+        } else {
+            final String mine = Manifests.read("Rultor-Revision");
+            final String base = Main.revision();
+            if (mine.equals(base)) {
+                TimeUnit.SECONDS.sleep(Main.RND.nextInt(Tv.HUNDRED));
+            } else {
+                Logger.info(
+                    Main.class,
+                    "#main(): we're in %s while %s is the newest one",
+                    mine,
+                    base
+                );
+                alive = false;
+            }
+        }
+        return alive;
     }
 
     /**
@@ -127,7 +151,7 @@ public final class Main {
         parser.accepts("help", "detailed instructions").forHelp();
         parser.accepts("spec", "Text file with work specification")
             .withRequiredArg().ofType(String.class).required();
-        parser.accepts("lifetime", "Maximum lifetime of the daemon")
+        parser.accepts("lifetime", "Maximum lifetime of the daemon, in millis")
             .withRequiredArg().ofType(String.class)
             .defaultsTo(Long.toString(Long.MAX_VALUE));
         parser.accepts("dynamo-key", "DynamoDB key")

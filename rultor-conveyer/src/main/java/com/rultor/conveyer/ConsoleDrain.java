@@ -64,7 +64,7 @@ public final class ConsoleDrain implements Drain {
     @Override
     public void append(final Iterable<String> lines) throws IOException {
         for (String line : lines) {
-            Logger.info(this, line);
+            Logger.info(this, "CONSOLE DRAIN: %s", line);
         }
     }
 

@@ -65,6 +65,7 @@
                                 <classpath/>
                                 <arg>com.rultor.conveyer.Main</arg>
                                 <arg>--spec=${project.basedir}/work.spec</arg>
+                                <arg>--lifetime=5000</arg>
                             </arguments>
                         </configuration>
                     </execution>
