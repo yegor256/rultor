@@ -132,7 +132,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
         this.repo = rep;
         this.users = usrs;
         this.appender = new ConveyerAppender();
-        this.appender.setThreshold(Level.DEBUG);
+        this.appender.setThreshold(Level.INFO);
         this.appender.setLayout(new PatternLayout("%m"));
         Logger.getRootLogger().addAppender(this.appender);
     }
