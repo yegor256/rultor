@@ -28,22 +28,6 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import "variables.less";
-@import "bootstrap.less";
-
-.page {
-    padding: 2em;
-    .clearfix();
-}
-
-.logo {
-    font-family: 'Rultor-Logo';
-    font-size: @baseFontSize * 4;
-    vertical-align: middle;
-    color: @textColor;
-    -webkit-font-smoothing: antialiased;
-}
-    .logo:hover {
-        color: darken(@textColor, 15%);
-        text-decoration: none;
-    }
+def log = new File(basedir, 'build.log')
+assert log.exists()
+assert log.text.contains('#name(): \'test\'')
