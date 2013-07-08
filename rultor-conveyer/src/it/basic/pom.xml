@@ -64,7 +64,7 @@
                                 <arg>-classpath</arg>
                                 <classpath/>
                                 <arg>com.rultor.conveyer.Main</arg>
-                                <arg>--work-file=${project.basedir}/work.txt</arg>
+                                <arg>--spec=${project.basedir}/work.spec</arg>
                             </arguments>
                         </configuration>
                     </execution>

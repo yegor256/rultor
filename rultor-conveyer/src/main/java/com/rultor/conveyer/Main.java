@@ -35,21 +35,30 @@ import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
+import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
 import com.rultor.aws.SQSClient;
 import com.rultor.queue.SQSQueue;
 import com.rultor.repo.ClasspathRepo;
+import com.rultor.spi.Queue;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Users;
+import com.rultor.spi.Work;
 import com.rultor.users.AwsUsers;
+import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.codec.CharEncoding;
+import org.apache.commons.io.FileUtils;
 
 /**
  * Main entry point to the JAR.
@@ -89,6 +98,7 @@ public final class Main {
             parser.printHelpOn(Logger.stream(Level.INFO, Main.class));
         } else {
             final SimpleConveyer conveyer = Main.conveyer(options);
+            Logger.info(Main.class, "Starting %s", conveyer);
             conveyer.start();
             final String mine = Manifests.read("Rultor-Revision");
             while (true) {
@@ -115,18 +125,23 @@ public final class Main {
     private static OptionParser parser() {
         final OptionParser parser = new OptionParser();
         parser.accepts("help", "detailed instructions").forHelp();
+        parser.accepts("spec", "Text file with work specification")
+            .withRequiredArg().ofType(String.class).required();
+        parser.accepts("lifetime", "Maximum lifetime of the daemon")
+            .withRequiredArg().ofType(String.class)
+            .defaultsTo(Long.toString(Long.MAX_VALUE));
         parser.accepts("dynamo-key", "DynamoDB key")
-            .withRequiredArg().ofType(String.class).required();
+            .withRequiredArg().ofType(String.class);
         parser.accepts("dynamo-secret", "DynamoDB secret")
-            .withRequiredArg().ofType(String.class).required();
+            .withRequiredArg().ofType(String.class);
         parser.accepts("dynamo-prefix", "DynamoDB prefix")
-            .withRequiredArg().ofType(String.class).required();
+            .withRequiredArg().ofType(String.class);
         parser.accepts("sqs-key", "SQS key")
-            .withRequiredArg().ofType(String.class).required();
+            .withRequiredArg().ofType(String.class);
         parser.accepts("sqs-secret", "SQS secret")
-            .withRequiredArg().ofType(String.class).required();
+            .withRequiredArg().ofType(String.class);
         parser.accepts("sqs-url", "SQS URL")
-            .withRequiredArg().ofType(String.class).required();
+            .withRequiredArg().ofType(String.class);
         return parser;
     }
 
@@ -134,19 +149,53 @@ public final class Main {
      * Create conveyer as requested in the options.
      * @param options Options
      * @return Conveyer
+     * @throws Exception If fails
      */
     @Loggable(Loggable.INFO)
-    private static SimpleConveyer conveyer(final OptionSet options) {
-        return new SimpleConveyer(
-            new SQSQueue(
+    private static SimpleConveyer conveyer(final OptionSet options)
+        throws Exception {
+        final Queue queue;
+        final Users users;
+        if (options.has("spec")) {
+            final Work work = new Work.Simple(
+                URN.create("urn:facebook:1"),
+                "default",
+                new Spec.Simple(
+                    FileUtils.readFileToString(
+                        new File(options.valueOf("spec").toString()),
+                        CharEncoding.UTF_8
+                    )
+                )
+            );
+            queue = new Queue() {
+                private final transient AtomicBoolean done =
+                    new AtomicBoolean();
+                @Override
+                public void push(final Work work) {
+                    throw new UnsupportedOperationException();
+                }
+                @Override
+                public Work pull(final int limit, final TimeUnit unit) {
+                    final Work pulled;
+                    if (done.compareAndSet(false, true)) {
+                        pulled = work;
+                        done.set(true);
+                    } else {
+                        pulled = new Work.None();
+                    }
+                    return pulled;
+                }
+            };
+            users = new FakeUsers(work);
+        } else {
+            queue = new SQSQueue(
                 new SQSClient.Simple(
                     options.valueOf("sqs-key").toString(),
                     options.valueOf("sqs-secret").toString(),
                     options.valueOf("sqs-url").toString()
                 )
-            ),
-            new ClasspathRepo(),
-            new AwsUsers(
+            );
+            users = new AwsUsers(
                 new Region.Prefixed(
                     new Region.Simple(
                         new Credentials.Simple(
@@ -156,8 +205,9 @@ public final class Main {
                     ),
                     options.valueOf("dynamo-prefix").toString()
                 )
-            )
-        );
+            );
+        }
+        return new SimpleConveyer(queue, new ClasspathRepo(), users);
     }
 
     /**

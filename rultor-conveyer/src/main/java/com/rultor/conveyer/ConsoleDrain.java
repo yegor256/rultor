@@ -27,7 +27,53 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.conveyer;
 
-def log = new File(basedir, 'build.log')
-assert log.exists()
-assert log.text.contains('com.rultor.conveyer.Main: Starting SimpleConveyer(')
+import com.jcabi.log.Logger;
+import com.rultor.spi.Drain;
+import com.rultor.spi.Pulses;
+import java.io.IOException;
+import java.io.InputStream;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+/**
+ * Drain to console.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @checkstyle MultipleStringLiterals (500 lines)
+ */
+@ToString
+@EqualsAndHashCode
+public final class ConsoleDrain implements Drain {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Pulses pulses() throws IOException {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void append(final Iterable<String> lines) throws IOException {
+        for (String line : lines) {
+            Logger.info(this, line);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InputStream read() throws IOException {
+        throw new UnsupportedOperationException();
+    }
+
+}
