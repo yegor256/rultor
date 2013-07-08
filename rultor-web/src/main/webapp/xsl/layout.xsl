@@ -139,7 +139,7 @@
                 <i class="icon-github"><xsl:comment>github icon</xsl:comment></i>
             </a>
         </li>
-        <li>
+        <li class="hidden-phone hidden-tablet">
             <code>
                 <xsl:value-of select="revision"/>
             </code>

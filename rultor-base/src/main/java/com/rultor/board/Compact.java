@@ -29,31 +29,32 @@
  */
 package com.rultor.board;
 
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.Validate;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.context.Context;
-import org.apache.velocity.runtime.RuntimeConstants;
 
 /**
- * Pre-renders announcements using Apache Velocity template.
+ * All variables are compacted.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "board", "template" })
+@EqualsAndHashCode(of = { "maximum", "board" })
 @Loggable(Loggable.DEBUG)
-public final class VelocityPrint implements Billboard {
+public final class Compact implements Billboard {
+
+    /**
+     * Maximum number of characters in every item.
+     */
+    private final transient int maximum;
 
     /**
      * Original board.
@@ -61,19 +62,17 @@ public final class VelocityPrint implements Billboard {
     private final transient Billboard board;
 
     /**
-     * Velocity template.
-     */
-    private final transient String template;
-
-    /**
      * Public ctor.
+     * @param max Maximum
      * @param brd Original board
-     * @param tmpl Velocity template
      */
-    public VelocityPrint(@NotNull final String tmpl,
-        @NotNull final Billboard brd) {
+    public Compact(final int max, @NotNull final Billboard brd) {
+        Validate.isTrue(
+            max > Tv.FIFTEEN,
+            "Maximum length should be more than 15"
+        );
+        this.maximum = max;
         this.board = brd;
-        this.template = tmpl;
     }
 
     /**
@@ -82,8 +81,8 @@ public final class VelocityPrint implements Billboard {
     @Override
     public String toString() {
         return String.format(
-            "%s with Velocity layout",
-            this.board
+            "%s with data of %d maximum length",
+            this.board, this.maximum
         );
     }
 
@@ -92,27 +91,37 @@ public final class VelocityPrint implements Billboard {
      */
     @Override
     public void announce(@NotNull final Announcement anmt) throws IOException {
-        final StringWriter writer = new StringWriter();
-        final Context context = new VelocityContext();
+        final ImmutableMap.Builder<String, Object> args =
+            new ImmutableMap.Builder<String, Object>();
         for (Map.Entry<String, Object> entry : anmt.args().entrySet()) {
-            context.put(entry.getKey(), entry.getValue());
+            args.put(
+                entry.getKey(),
+                this.compress(entry.getValue().toString())
+            );
         }
-        final VelocityEngine engine = new VelocityEngine();
-        engine.setProperty(
-            RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
-            "org.apache.velocity.runtime.log.Log4JLogChute"
-        );
-        engine.setProperty(
-            "runtime.log.logsystem.log4j.logger",
-            "org.apache.velocity"
-        );
-        engine.init();
-        final boolean success = Velocity.evaluate(
-            context, writer,
-            this.getClass().getName(), this.template
-        );
-        Validate.isTrue(success, "failed to compile VTL");
-        this.board.announce(anmt.with("print", writer.toString()));
+        this.board.announce(new Announcement(anmt.level(), args.build()));
+    }
+
+    /**
+     * Compressed variant of the text.
+     * @param text The text to compress
+     * @return Compressed
+     */
+    private String compress(final String text) {
+        final String output;
+        if (text.length() > this.maximum) {
+            final int visible = (this.maximum - Tv.FIFTEEN) / 2;
+            output = new StringBuilder()
+                .append(text.substring(0, visible))
+                .append(".. ")
+                .append(text.length() - visible * 2)
+                .append(" skipped ..")
+                .append(text.substring(text.length() - visible))
+                .toString();
+        } else {
+            output = text;
+        }
+        return output;
     }
 
 }

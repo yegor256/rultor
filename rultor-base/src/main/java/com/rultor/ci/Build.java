@@ -30,24 +30,19 @@
 package com.rultor.ci;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.rultor.board.Announcement;
 import com.rultor.shell.Batch;
 import com.rultor.spi.Signal;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.CharUtils;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Build.
@@ -61,11 +56,6 @@ import org.apache.commons.lang3.StringUtils;
 @EqualsAndHashCode(of = "batch")
 @Loggable(Loggable.DEBUG)
 final class Build {
-
-    /**
-     * Maximum number of lines to show in the output.
-     */
-    private static final int MAX = 1000;
 
     /**
      * Batch to execute.
@@ -99,7 +89,7 @@ final class Build {
                 new ImmutableMap.Builder<String, Object>()
                     // @checkstyle MultipleStringLiterals (2 lines)
                     .put("title", "built successfully")
-                    .put("stdout", Build.compressed(stdout))
+                    .put("stdout", stdout.toString(CharEncoding.UTF_8))
                     .putAll(args)
                     .build()
             );
@@ -109,46 +99,13 @@ final class Build {
                 Level.SEVERE,
                 new ImmutableMap.Builder<String, Object>()
                     .put("title", "failed to build")
-                    .put("stdout", Build.compressed(stdout))
+                    .put("stdout", stdout.toString(CharEncoding.UTF_8))
                     .putAll(args)
                     .build()
             );
             Signal.log(Signal.Mnemo.SUCCESS, "Announced failure");
         }
         return announcement;
-    }
-
-    /**
-     * Compressed variant of the output.
-     * @param stdout The stream
-     * @return Text of it
-     * @throws IOException If some IO problem
-     */
-    private static String compressed(final ByteArrayOutputStream stdout)
-        throws IOException {
-        final String[] lines = StringUtils.splitPreserveAllTokens(
-            stdout.toString(CharEncoding.UTF_8),
-            CharUtils.LF
-        );
-        final Iterable<String> data;
-        if (lines.length > Build.MAX) {
-            final int visible = (Build.MAX - Tv.THREE) / 2;
-            data = Iterables.concat(
-                Iterables.limit(Arrays.asList(lines), visible),
-                Arrays.asList(
-                    "...",
-                    String.format(
-                        "... skipped %d line(s) ...",
-                        lines.length - Build.MAX + Tv.THREE
-                    ),
-                    "... "
-                ),
-                Iterables.skip(Arrays.asList(lines), lines.length - visible)
-            );
-        } else {
-            data = Arrays.asList(lines);
-        }
-        return StringUtils.join(data, "\n");
     }
 
 }
