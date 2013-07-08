@@ -38,7 +38,6 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.Validate;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.runtime.RuntimeConstants;
@@ -107,7 +106,7 @@ public final class VelocityPrint implements Billboard {
             "org.apache.velocity"
         );
         engine.init();
-        final boolean success = Velocity.evaluate(
+        final boolean success = engine.evaluate(
             context, writer,
             this.getClass().getName(), this.template
         );
