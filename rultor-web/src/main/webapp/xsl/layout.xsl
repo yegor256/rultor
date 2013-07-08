@@ -41,7 +41,7 @@
                 <meta name="keywords" content="IPaaS, continuous integration, continuous delivery"/>
                 <meta name="author" content="rultor.com"/>
                 <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet" />
-                <link rel="stylesheet" />
+                <link rel="stylesheet">
                     <xsl:attribute name="href">
                         <xsl:text>//img.rultor.com/logo-font.css?</xsl:text>
                         <xsl:value-of select="/page/version/revision"/>
