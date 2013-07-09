@@ -145,9 +145,6 @@ public final class SSHChannel implements Shell {
         @NotNull final OutputStream stderr) throws IOException {
         try {
             final Session session = this.session();
-            session.setServerAliveInterval((int) TimeUnit.SECONDS.toMillis(1));
-            session.setServerAliveCountMax(Tv.MILLION);
-            this.connect(session);
             try {
                 final ChannelExec channel = ChannelExec.class.cast(
                     session.openChannel("exec")
@@ -172,22 +169,6 @@ public final class SSHChannel implements Shell {
     @Override
     public void close() throws IOException {
         // nothing to do
-    }
-
-    /**
-     * Try to connect this session to a real server.
-     * @param session The session to connect
-     * @throws JSchException If fails
-     * @checkstyle RedundantThrows (10 lines)
-     */
-    @RetryOnFailure(
-        attempts = Tv.FIVE,
-        delay = Tv.THIRTY,
-        unit = TimeUnit.SECONDS,
-        verbose = false
-    )
-    private void connect(final Session session) throws JSchException {
-        session.connect();
     }
 
     /**
@@ -234,10 +215,16 @@ public final class SSHChannel implements Shell {
     }
 
     /**
-     * Create and return a session.
+     * Create and return a session, connected.
      * @return JSch session
      * @throws IOException If some IO problem inside
      */
+    @RetryOnFailure(
+        attempts = Tv.FIVE,
+        delay = Tv.THIRTY,
+        unit = TimeUnit.SECONDS,
+        verbose = false
+    )
     private Session session() throws IOException {
         try {
             JSch.setConfig("StrictHostKeyChecking", "no");
@@ -249,7 +236,13 @@ public final class SSHChannel implements Shell {
                 "Opening SSH session to %s@%s:%s...",
                 this.login, this.addr, SSHChannel.PORT
             );
-            return jsch.getSession(this.login, this.addr, SSHChannel.PORT);
+            final Session session = jsch.getSession(
+                this.login, this.addr, SSHChannel.PORT
+            );
+            session.setServerAliveInterval((int) TimeUnit.SECONDS.toMillis(1));
+            session.setServerAliveCountMax(Tv.MILLION);
+            session.connect();
+            return session;
         } catch (JSchException ex) {
             throw new IOException(ex);
         }
