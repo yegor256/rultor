@@ -29,7 +29,6 @@
  */
 package com.rultor.conveyer;
 
-import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulses;
 import java.io.IOException;
@@ -62,9 +61,10 @@ public final class ConsoleDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("PMD.SystemPrintln")
     public void append(final Iterable<String> lines) throws IOException {
         for (String line : lines) {
-            Logger.info(this, "CONSOLE DRAIN: %s", line);
+            System.out.println(String.format("CONSOLE DRAIN: %s", line));
         }
     }
 

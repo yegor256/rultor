@@ -72,6 +72,7 @@ import org.apache.commons.io.FileUtils;
 @ToString
 @EqualsAndHashCode
 @SuppressWarnings("PMD.ExcessiveImports")
+@Loggable(Loggable.DEBUG)
 public final class Main {
 
     /**
@@ -91,7 +92,7 @@ public final class Main {
      * @param args Optional arguments
      * @throws Exception If something is wrong
      */
-    @Loggable(value = Loggable.INFO, limit = Integer.MAX_VALUE)
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public static void main(final String[] args) throws Exception {
         final OptionParser parser = Main.parser();
         final OptionSet options = parser.parse(args);
