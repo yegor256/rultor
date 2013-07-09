@@ -79,6 +79,7 @@ final class Dictionary implements Variable<Map<String, Object>> {
      * Public ctor.
      * @param vals Values
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     protected Dictionary(final Map<String, Variable<?>> vals) {
         this.map = new Object[vals.size()][];
         int idx = 0;
