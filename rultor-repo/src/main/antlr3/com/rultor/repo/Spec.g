@@ -34,9 +34,9 @@ grammar Spec;
     import com.jcabi.urn.URN;
     import com.rultor.spi.Variable;
     import java.util.Collection;
-    import java.util.HashMap;
     import java.util.LinkedList;
     import java.util.Map;
+    import java.util.TreeMap;
     import org.apache.commons.lang3.StringEscapeUtils;
 }
 
@@ -148,7 +148,7 @@ array returns [Array ret]
     ;
 
 dictionary returns [Dictionary ret]
-    @init { final Map<String, Variable<?>> map = new HashMap<String, Variable<?>>(); }
+    @init { final Map<String, Variable<?>> map = new TreeMap<String, Variable<?>>(); }
     :
     '{'
     (

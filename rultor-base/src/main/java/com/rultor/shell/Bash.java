@@ -36,6 +36,7 @@ import com.rultor.spi.Signal;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.Map;
@@ -123,7 +124,7 @@ public final class Bash implements Batch {
             for (Object[] pair : this.prerequisites) {
                 shell.exec(
                     String.format("cat > %s", pair[0]),
-                    IOUtils.toInputStream(pair[1].toString()),
+                    Bash.toInputStream(pair[1]),
                     Logger.stream(Level.INFO, this),
                     Logger.stream(Level.WARNING, this)
                 );
@@ -174,6 +175,21 @@ public final class Bash implements Batch {
         );
         Validate.isTrue(success, "failed to compile VTL");
         return writer.toString();
+    }
+
+    /**
+     * Convert it to input stream.
+     * @param object Object
+     * @return Input stream
+     */
+    private static InputStream toInputStream(final Object object) {
+        final InputStream stream;
+        if (object instanceof InputStream) {
+            stream = InputStream.class.cast(object);
+        } else {
+            stream = IOUtils.toInputStream(object.toString());
+        }
+        return stream;
     }
 
 }
