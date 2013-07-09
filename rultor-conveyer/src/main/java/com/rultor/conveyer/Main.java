@@ -119,7 +119,7 @@ public final class Main {
      */
     private static boolean alive(final long start, final OptionSet options)
         throws Exception {
-        boolean alive = true;
+        final boolean alive;
         if (options.has("lifetime")) {
             final long lifetime = Long.parseLong(
                 options.valueOf("lifetime").toString()
@@ -130,6 +130,7 @@ public final class Main {
             final String base = Main.revision();
             if (mine.equals(base)) {
                 TimeUnit.SECONDS.sleep(Main.RND.nextInt(Tv.HUNDRED));
+                alive = true;
             } else {
                 Logger.info(
                     Main.class,
@@ -151,7 +152,7 @@ public final class Main {
         final OptionParser parser = new OptionParser();
         parser.accepts("help", "detailed instructions").forHelp();
         parser.accepts("spec", "Text file with work specification")
-            .withRequiredArg().ofType(String.class).required();
+            .withRequiredArg().ofType(String.class);
         parser.accepts("lifetime", "Maximum lifetime of the daemon, in millis")
             .withRequiredArg().ofType(String.class)
             .defaultsTo(Long.toString(Long.MAX_VALUE));
