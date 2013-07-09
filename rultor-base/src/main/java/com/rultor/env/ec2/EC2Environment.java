@@ -39,6 +39,7 @@ import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.EC2Client;
@@ -96,6 +97,7 @@ final class EC2Environment implements Environment {
      * {@inheritDoc}
      */
     @Override
+    @RetryOnFailure
     public InetAddress address() throws IOException {
         final AmazonEC2 aws = this.client.get();
         final DescribeInstancesRequest request = new DescribeInstancesRequest()
