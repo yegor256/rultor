@@ -30,9 +30,12 @@
 package com.rultor.scm;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import java.io.IOException;
 import java.util.Date;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * SCM Commit.
@@ -71,6 +74,10 @@ public interface Commit {
     /**
      * Simple implementation.
      */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = { "label", "when", "who" })
+    @Loggable(Loggable.DEBUG)
     final class Simple implements Commit {
         /**
          * Name of commit.
