@@ -56,7 +56,7 @@ import org.apache.commons.lang3.StringUtils;
 @ToString
 @EqualsAndHashCode(of = "values")
 @Loggable(Loggable.DEBUG)
-final class Array implements Variable<Collection<Object>> {
+final class Array implements Variable<Iterable<Object>> {
 
     /**
      * Indentation.
@@ -87,7 +87,7 @@ final class Array implements Variable<Collection<Object>> {
      */
     @Override
     @NotNull
-    public Collection<Object> instantiate(@NotNull final Users users,
+    public Iterable<Object> instantiate(@NotNull final Users users,
         @NotNull final Work work) throws SpecException {
         final Collection<Object> objects =
             new ArrayList<Object>(this.values.length);

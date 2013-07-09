@@ -67,6 +67,7 @@ public final class ClasspathRepoTest {
             "java.lang.Double(-44.66)",
             "com.rultor.repo.ClasspathRepoTest$Foo (55\n)",
             "com.first(com.second(com.third(), com.forth()))",
+            "[com.second(com.third(), com.forth()), 4]",
             "\"\"\"\nsome\nunformatted\ttext\t\u20ac\u0433\n\"\"\"",
         };
         final User user = Mockito.mock(User.class);

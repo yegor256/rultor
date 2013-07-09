@@ -34,7 +34,6 @@ import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
 import java.util.Arrays;
-import java.util.Collection;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -53,7 +52,7 @@ public final class ArrayTest {
      */
     @Test
     public void makesInstance() throws Exception {
-        final Variable<Collection<Object>> var = new Array(
+        final Variable<Iterable<Object>> var = new Array(
             Arrays.<Variable<?>>asList(new Constant<Integer>(Tv.TEN))
         );
         MatcherAssert.assertThat(
@@ -70,7 +69,7 @@ public final class ArrayTest {
      */
     @Test
     public void makesText() throws Exception {
-        final Variable<Collection<Object>> var = new Array(
+        final Variable<Iterable<Object>> var = new Array(
             Arrays.<Variable<?>>asList(
                 new Constant<Long>((long) Tv.TEN),
                 new Text("some text\nline two"),
