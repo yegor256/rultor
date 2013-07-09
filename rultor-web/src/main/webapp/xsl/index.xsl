@@ -74,7 +74,7 @@
                         <xsl:value-of select="name"/>
                     </a>
                 </li>
-                <xsl:if test="@drainable = 'true'">
+                <xsl:if test="spec/drainable = 'true'">
                     <li>
                         <a title="drain">
                             <xsl:attribute name="href">

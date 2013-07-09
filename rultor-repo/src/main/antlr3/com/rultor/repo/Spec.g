@@ -76,6 +76,9 @@ variable returns [Variable<?> ret]
     composite
     { $ret = $composite.ret; }
     |
+    array
+    { $ret = $array.ret; }
+    |
     META
     { $ret = new Meta($META.text.substring(1)); }
     |
@@ -120,6 +123,23 @@ composite returns [Composite ret]
     )*
     ')'
     { $ret = new Composite($TYPE.text, vars); }
+    ;
+
+array returns [Array ret]
+    @init { final Collection<Variable<?>> vars = new LinkedList<Variable<?>>(); }
+    :
+    '['
+    (
+        first=variable
+        { vars.add($first.ret); }
+        (
+            ','
+            next=variable
+            { vars.add($next.ret); }
+        )*
+    )*
+    ']'
+    { $ret = new Array(vars); }
     ;
 
 BOOLEAN
