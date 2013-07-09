@@ -129,7 +129,12 @@ public final class Throttled implements Instance, Drain.Source {
      */
     @Override
     public String toString() {
-        return this.origin.toString();
+        return String.format(
+            "%s drained `%s` to %s",
+            this.origin,
+            this.level,
+            this.drn
+        );
     }
 
     /**

@@ -30,24 +30,10 @@
 package com.rultor.shell;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
-import com.rultor.spi.Signal;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.TeeOutputStream;
-import org.apache.commons.lang3.Validate;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.context.Context;
 
 /**
  * Batch.
@@ -57,29 +43,7 @@ import org.apache.velocity.context.Context;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "shells", "script" })
-@Loggable(Loggable.DEBUG)
-public final class Batch {
-
-    /**
-     * Shells.
-     */
-    private final transient Shells shells;
-
-    /**
-     * Script to execute.
-     */
-    private final transient String script;
-
-    /**
-     * Public ctor.
-     * @param shls Shells
-     * @param scrt Script to run there, Apache Velocity template
-     */
-    public Batch(final Shells shls, final String scrt) {
-        this.shells = shls;
-        this.script = scrt;
-    }
+public interface Batch {
 
     /**
      * Execute encapsulated script with this map of arguments.
@@ -92,64 +56,7 @@ public final class Batch {
      * @throws IOException If some IO problem
      * @checkstyle MultipleStringLiterals (100 lines)
      */
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    public int exec(@NotNull final Map<String, Object> args,
-        @NotNull final OutputStream output) throws IOException {
-        final Shell shell = this.shells.acquire();
-        Signal.log(Signal.Mnemo.SUCCESS, "%s acquired", shell);
-        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
-        final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
-        int code;
-        try {
-            code = shell.exec(
-                this.compile(args),
-                IOUtils.toInputStream(""),
-                new TeeOutputStream(stdout, Logger.stream(Level.INFO, this)),
-                new TeeOutputStream(stderr, Logger.stream(Level.WARNING, this))
-            );
-            IOUtils.copy(
-                new ByteArrayInputStream(stdout.toByteArray()), output
-            );
-            IOUtils.copy(
-                new ByteArrayInputStream(stderr.toByteArray()), output
-            );
-        } finally {
-            output.close();
-            shell.close();
-        }
-        Signal.log(Signal.Mnemo.SUCCESS, "Batch executed");
-        return code;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "batch `%[text]s` through %s",
-            this.script,
-            this.shells
-        );
-    }
-
-    /**
-     * Compile template using arguments.
-     * @param args Arguments
-     * @return Compiled script
-     */
-    private String compile(final Map<String, Object> args) {
-        final StringWriter writer = new StringWriter();
-        final Context context = new VelocityContext();
-        for (Map.Entry<String, Object> entry : args.entrySet()) {
-            context.put(entry.getKey(), entry.getValue());
-        }
-        final boolean success = Velocity.evaluate(
-            context, writer,
-            this.getClass().getName(), this.script
-        );
-        Validate.isTrue(success, "failed to compile VTL");
-        return writer.toString();
-    }
+    int exec(@NotNull Map<String, Object> args,
+        @NotNull OutputStream output) throws IOException;
 
 }
