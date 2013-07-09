@@ -30,13 +30,12 @@
 
 def log = new File(basedir, 'build.log')
 assert log.exists()
-assert !log.text.contains('com.rultor.conveyer.LoggableInstance')
-
 assert log.text.contains('INFO: Starting SimpleConveyer(')
-assert log.text.contains('CONSOLE DRAIN:   0:01 INFO start scheduled on ')
-assert log.text.contains('CONSOLE DRAIN:   0:01 INFO actual work started on ')
-assert log.text.contains('CONSOLE DRAIN:   0:01 INFO www.rultor.com ')
-assert log.text.contains('CONSOLE DRAIN:   0:01 INFO RULTOR:118:SPEC:com.rultor.log4j.Throttled(')
-assert log.text.contains('CONSOLE DRAIN:   0:01 INFO nothing to do')
+assert log.text.contains('CONSOLE DRAIN: ')
+assert log.text.contains('INFO start scheduled on ')
+assert log.text.contains('INFO actual work started on ')
+assert log.text.contains('INFO www.rultor.com ')
+assert log.text.contains('INFO RULTOR:118:SPEC:com.rultor.log4j.Throttled(')
+assert log.text.contains('INFO nothing to do')
 assert log.text.contains('INFO: #close():')
 
