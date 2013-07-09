@@ -48,7 +48,7 @@
                         <xsl:value-of select="/page/unit/name"/>
                     </code>
                 </label>
-                <textarea name="spec" id="spec" rows="16" class="input-block-level spec"><xsl:value-of select="/page/unit/spec"/></textarea>
+                <textarea name="spec" id="spec" rows="18" class="input-block-level spec"><xsl:value-of select="/page/unit/spec"/></textarea>
                 <label><xsl:comment>for the submit button below</xsl:comment></label>
                 <button type="submit" class="btn">
                     <xsl:text>Save</xsl:text>

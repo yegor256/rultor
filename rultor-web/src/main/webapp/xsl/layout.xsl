@@ -181,7 +181,7 @@
             <code><xsl:value-of select="urn"/></code>
         </li>
         <li class="hidden-phone hidden-tablet">
-            <img style="width: 25px; height: 25px;">
+            <img style="width: 25px; height: 25px;" class="img-rounded">
                 <xsl:attribute name="src">
                     <xsl:value-of select="photo"/>
                 </xsl:attribute>
