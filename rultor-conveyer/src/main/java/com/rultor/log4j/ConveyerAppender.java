@@ -27,20 +27,17 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer;
+package com.rultor.log4j;
 
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Time;
 import java.util.Arrays;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Appender;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
@@ -79,55 +76,31 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
     private final transient AtomicBoolean busy = new AtomicBoolean();
 
     /**
-     * Drain starts.
+     * The group we're in.
      */
-    private final transient ConcurrentMap<ThreadGroup, Time> groups =
-        new ConcurrentHashMap<ThreadGroup, Time>(0);
+    private final transient ThreadGroup group =
+        Thread.currentThread().getThreadGroup();
 
     /**
-     * Drains.
+     * When the work was started.
      */
-    private final transient ConcurrentMap<Time, Drain> drains =
-        new ConcurrentHashMap<Time, Drain>(0);
+    private final transient Time start;
 
     /**
-     * Register this thread group for the given work.
+     * Drain.
+     */
+    private final transient Drain drain;
+
+    /**
+     * Public ctor.
      * @param date When it starts
-     * @param drain Drain to log to
+     * @param drn Drain to log to
      */
-    public void register(@NotNull final Time date, @NotNull final Drain drain) {
-        final ThreadGroup group = Thread.currentThread().getThreadGroup();
-        Validate.validState(
-            !this.groups.containsKey(group),
-            "group %s is already registered to %s",
-            group, this.groups.get(group)
-        );
-        this.groups.put(group, date);
-        Validate.validState(
-            !this.drains.containsKey(date),
-            "work %d is already drained to %s",
-            date, this.drains.get(date)
-        );
-        this.drains.put(date, drain);
-    }
-
-    /**
-     * Unregister the current thread group.
-     */
-    public void unregister() {
-        final ThreadGroup group = Thread.currentThread().getThreadGroup();
-        Validate.validState(
-            this.groups.containsKey(group),
-            "group %s is not registered",
-            group
-        );
-        final Time date = this.groups.remove(group);
-        Validate.validState(
-            this.drains.containsKey(date),
-            "work %d is not registered",
-            date
-        );
-        this.drains.remove(date);
+    protected ConveyerAppender(@NotNull final Time date,
+        @NotNull final Drain drn) {
+        super();
+        this.start = date;
+        this.drain = drn;
     }
 
     /**
@@ -141,14 +114,12 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     protected void append(final LoggingEvent event) {
         if (this.busy.compareAndSet(false, true)) {
-            final ThreadGroup group = Thread.currentThread().getThreadGroup();
-            final Time date = this.groups.get(group);
-            if (date != null) {
+            if (Thread.currentThread().getThreadGroup().equals(this.group)) {
                 try {
-                    this.drains.get(date).append(
+                    this.drain.append(
                         Arrays.asList(
                             new Drain.Line.Simple(
-                                new Time().delta(date),
+                                new Time().delta(this.start),
                                 ConveyerAppender.LEVELS.get(event.getLevel()),
                                 this.layout.format(event)
                             ).toString()
@@ -168,8 +139,7 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
      */
     @Override
     public void close() {
-        this.groups.clear();
-        this.drains.clear();
+        // nothing to do
     }
 
     /**

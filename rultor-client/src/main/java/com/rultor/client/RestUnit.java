@@ -81,7 +81,7 @@ final class RestUnit implements Unit {
      * {@inheritDoc}
      */
     @Override
-    public void update(final Spec spec, final Spec drain) {
+    public void update(final Spec spec) {
         try {
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
@@ -91,13 +91,10 @@ final class RestUnit implements Unit {
                 .rel("/page/links/link[@rel='save']/@href")
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .post(
+                    String.format("#spec(%s)", spec.asText()),
                     String.format(
-                        "#spec(%s, %s)", spec.asText(), drain.asText()
-                    ),
-                    String.format(
-                        "spec=%s&drain=%s",
-                        URLEncoder.encode(spec.asText(), CharEncoding.UTF_8),
-                        URLEncoder.encode(drain.asText(), CharEncoding.UTF_8)
+                        "spec=%s",
+                        URLEncoder.encode(spec.asText(), CharEncoding.UTF_8)
                     )
                 )
                 .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
@@ -118,22 +115,6 @@ final class RestUnit implements Unit {
                 .get("#spec()")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .xpath("/page/unit/spec/text()")
-                .get(0)
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Spec drain() {
-        return new Spec.Simple(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("#drain()")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath("/page/unit/drain/text()")
                 .get(0)
         );
     }

@@ -27,52 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
-
-import com.jcabi.aspects.Immutable;
-import javax.validation.constraints.NotNull;
 
 /**
- * Unit.
+ * Instance drainable to LOG4J.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Unit {
-
-    /**
-     * Save specification.
-     * @param spec Specification to save
-     */
-    void update(@NotNull Spec spec);
-
-    /**
-     * Get specification.
-     * @return Specification
-     */
-    @NotNull
-    Spec spec();
-
-    /**
-     * Always empty Unit.
-     */
-    final class Empty implements Unit {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void update(final Spec spec) {
-            assert spec != null;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Spec spec() {
-            return new Spec.Simple();
-        }
-    }
-
-}
+package com.rultor.log4j;

@@ -204,9 +204,9 @@ public final class PulseRs extends BaseRs {
         final Unit unit = this.user().get(this.name);
         try {
             return new Pulse(
-                Drain.class.cast(
+                Drain.Source.class.cast(
                     new Repo.Cached(
-                        this.repo(), this.user(), unit.drain()
+                        this.repo(), this.user(), unit.spec()
                     ).get().instantiate(
                         this.users(),
                         new Work.Simple(
@@ -216,7 +216,7 @@ public final class PulseRs extends BaseRs {
                             this.date
                         )
                     )
-                )
+                ).drain()
             );
         } catch (SpecException ex) {
             throw this.flash().redirect(

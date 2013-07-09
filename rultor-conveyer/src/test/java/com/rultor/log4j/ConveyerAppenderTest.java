@@ -27,10 +27,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer;
+package com.rultor.log4j;
 
 import com.rultor.spi.Drain;
-import com.rultor.spi.Work;
+import com.rultor.spi.Time;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.spi.LoggingEvent;
@@ -54,10 +54,9 @@ public final class ConveyerAppenderTest {
     @Test
     public void logsMessages() throws Exception {
         final Drain drain = Mockito.mock(Drain.class);
-        final ConveyerAppender appender = new ConveyerAppender();
+        final ConveyerAppender appender =
+            new ConveyerAppender(new Time(), drain);
         appender.setLayout(new PatternLayout("%m"));
-        final Work work = new Work.Simple();
-        appender.register(work.started(), drain);
         final String text = "test message to see in log";
         final Thread publisher = new Thread() {
             @Override
@@ -75,7 +74,6 @@ public final class ConveyerAppenderTest {
         };
         publisher.start();
         publisher.join();
-        appender.unregister();
         Mockito.verify(drain).append(
             Mockito.argThat(
                 Matchers.everyItem(
@@ -95,11 +93,10 @@ public final class ConveyerAppenderTest {
     @SuppressWarnings("unchecked")
     public void logsMessagesInSameThread() throws Exception {
         final Drain drain = Mockito.mock(Drain.class);
-        final ConveyerAppender appender = new ConveyerAppender();
+        final ConveyerAppender appender =
+            new ConveyerAppender(new Time(), drain);
         appender.setLayout(new PatternLayout(" %m"));
         Logger.getRootLogger().addAppender(appender);
-        final Work work = new Work.Simple();
-        appender.register(work.started(), drain);
         appender.append(
             new LoggingEvent(
                 "",
@@ -110,7 +107,6 @@ public final class ConveyerAppenderTest {
             )
         );
         Logger.getRootLogger().removeAppender(appender);
-        appender.unregister();
         appender.close();
         Mockito.verify(drain).append(
             (Iterable<String>) Mockito.any(Object.class)

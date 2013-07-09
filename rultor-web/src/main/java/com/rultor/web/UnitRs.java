@@ -34,7 +34,6 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
-import com.rultor.spi.Drain;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
@@ -91,8 +90,6 @@ public final class UnitRs extends BaseRs {
                     .up()
                     .add("spec", this.unit().spec().asText())
                     .up()
-                    .add("drain", this.unit().drain().asText())
-                    .up()
             )
             .render()
             .build();
@@ -116,18 +113,13 @@ public final class UnitRs extends BaseRs {
     /**
      * Save new or existing unit unit.
      * @param spec Spec to save
-     * @param drain Drain to save
      * @return The JAX-RS response
      */
     @POST
     @Path("/")
-    public Response save(@NotNull @FormParam("spec") final String spec,
-        @NotNull @FormParam("drain") final String drain) {
+    public Response save(@NotNull @FormParam("spec") final String spec) {
         try {
-            this.unit().update(
-                this.parse(spec, Object.class),
-                this.parse(drain, Drain.class)
-            );
+            this.unit().update(this.parse(spec, Object.class));
         } catch (IllegalArgumentException ex) {
             return this.head()
                 .append(FlashInset.bundle(Level.SEVERE, ex.getMessage(), 0L))
@@ -136,8 +128,6 @@ public final class UnitRs extends BaseRs {
                         .add("name", this.name)
                         .up()
                         .add("spec", spec)
-                        .up()
-                        .add("drain", drain)
                         .up()
                 )
                 .render()

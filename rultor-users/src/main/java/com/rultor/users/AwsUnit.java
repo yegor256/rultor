@@ -83,11 +83,6 @@ final class AwsUnit implements Unit {
     private static final String FIELD_SPEC = "spec";
 
     /**
-     * Dynamo DB table column.
-     */
-    private static final String FIELD_DRAIN = "drain";
-
-    /**
      * Dynamo DB region.
      */
     private final transient Region region;
@@ -119,17 +114,13 @@ final class AwsUnit implements Unit {
      */
     @Override
     @Cacheable.FlushBefore
-    public void update(@NotNull final Spec spec, @NotNull final Spec drain) {
+    public void update(@NotNull final Spec spec) {
         this.item().put(
             new Attributes()
                 .with(
                     AwsUnit.FIELD_SPEC,
                     new AttributeValue(spec.asText())
             )
-                .with(
-                    AwsUnit.FIELD_DRAIN,
-                    new AttributeValue(drain.asText())
-                )
         );
     }
 
@@ -145,21 +136,6 @@ final class AwsUnit implements Unit {
             spec = new Spec.Simple(this.item().get(AwsUnit.FIELD_SPEC).getS());
         } else {
             spec = new Spec.Simple();
-        }
-        return spec;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-    public Spec drain() {
-        Spec spec;
-        if (this.item().has(AwsUnit.FIELD_DRAIN)) {
-            spec = new Spec.Simple(this.item().get(AwsUnit.FIELD_DRAIN).getS());
-        } else {
-            spec = new Spec.Simple("com.rultor.drain.Trash()");
         }
         return spec;
     }

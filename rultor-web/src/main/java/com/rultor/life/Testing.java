@@ -73,12 +73,6 @@ final class Testing implements Profile {
         new ConcurrentHashMap<String, Spec>(0);
 
     /**
-     * All drains.
-     */
-    private static final ConcurrentMap<String, Spec> DRAINS =
-        new ConcurrentHashMap<String, Spec>(0);
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -164,21 +158,15 @@ final class Testing implements Profile {
          */
         protected MemoryUnit(final String unit) {
             Testing.SPECS.put(unit, new Spec.Simple());
-            Testing.DRAINS.put(unit, new Spec.Simple());
             this.name = unit;
         }
         @Override
-        public void update(final Spec spec, final Spec drain) {
+        public void update(final Spec spec) {
             Testing.SPECS.put(this.name, spec);
-            Testing.DRAINS.put(this.name, drain);
         }
         @Override
         public Spec spec() {
             return Testing.SPECS.get(this.name);
-        }
-        @Override
-        public Spec drain() {
-            return Testing.DRAINS.get(this.name);
         }
     }
 

@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer;
+package com.rultor.log4j;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
@@ -37,19 +37,32 @@ import com.rultor.spi.Instance;
 import com.rultor.spi.Signal;
 import com.rultor.spi.Time;
 import com.rultor.spi.Work;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.log4j.Level;
+import org.apache.log4j.PatternLayout;
 
 /**
- * Loggable instance.
+ * Throttled instance.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@EqualsAndHashCode(of = { "origin", "appender", "work" })
+@EqualsAndHashCode(of = { "work", "level", "origin", "drn" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
-final class LoggableInstance implements Instance {
+public final class Throttled implements Instance, Drain.Source {
+
+    /**
+     * The work we're in.
+     */
+    private final transient Work work;
+
+    /**
+     * Log level to show.
+     */
+    private final transient Level level;
 
     /**
      * Instance.
@@ -57,46 +70,42 @@ final class LoggableInstance implements Instance {
     private final transient Instance origin;
 
     /**
-     * Log appender.
-     */
-    private final transient ConveyerAppender appender;
-
-    /**
-     * Work we're doing.
-     */
-    private final transient Work work;
-
-    /**
      * Drain to log into.
      */
-    private final transient Drain drain;
+    private final transient Drain drn;
 
     /**
      * Public ctor.
-     * @param instance Origin
-     * @param appr Appender
-     * @param wrk Work
-     * @param drn Drain to use
-     * @checkstyle ParameterNumber (5 lines)
+     * @param wrk Work we're in
+     * @param lvl Level to show and higher
+     * @param instance Original instance
+     * @param drain Drain to use
+     * @checkstyle ParameterNumber (4 lines)
      */
-    protected LoggableInstance(final Instance instance,
-        final ConveyerAppender appr, final Work wrk, final Drain drn) {
-        this.origin = instance;
-        this.appender = appr;
+    public Throttled(@NotNull final Work wrk, @NotNull final String lvl,
+        @NotNull final Instance instance, @NotNull final Drain drain) {
         this.work = wrk;
-        this.drain = drn;
+        this.level = Level.toLevel(lvl);
+        this.origin = instance;
+        this.drn = drain;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void pulse() throws Exception {
-        this.appender.register(this.work.started(), this.drain);
+        final ConveyerAppender appender = new ConveyerAppender(
+            this.work.started(), this.drn
+        );
+        appender.setThreshold(this.level);
+        appender.setLayout(new PatternLayout("%m"));
+        org.apache.log4j.Logger.getRootLogger().addAppender(appender);
         try {
-            Logger.info(this, "log started on %s", new Time());
+            Logger.info(this, "start scheduled on %s", this.work.started());
+            Logger.info(this, "actual work started on %s", new Time());
             Logger.info(
                 this,
                 "www.rultor.com %s %s %s",
@@ -111,7 +120,7 @@ final class LoggableInstance implements Instance {
             Signal.log(Signal.Mnemo.FAILURE, ex.getMessage());
             throw ex;
         } finally {
-            this.appender.unregister();
+            org.apache.log4j.Logger.getRootLogger().removeAppender(appender);
         }
     }
 
@@ -121,6 +130,14 @@ final class LoggableInstance implements Instance {
     @Override
     public String toString() {
         return this.origin.toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Drain drain() {
+        return this.drn;
     }
 
 }

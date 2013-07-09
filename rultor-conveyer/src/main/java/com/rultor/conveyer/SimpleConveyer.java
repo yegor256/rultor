@@ -34,12 +34,10 @@ import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseRunnable;
-import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Metricable;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
@@ -55,9 +53,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
 
 /**
  * Horizontally scalable execution conveyer.
@@ -87,11 +82,6 @@ public final class SimpleConveyer implements Closeable, Metricable {
      * Users.
      */
     private final transient Users users;
-
-    /**
-     * Log appender.
-     */
-    private final transient ConveyerAppender appender;
 
     /**
      * Counter of currently running jobs.
@@ -131,10 +121,6 @@ public final class SimpleConveyer implements Closeable, Metricable {
         this.queue = que;
         this.repo = rep;
         this.users = usrs;
-        this.appender = new ConveyerAppender();
-        this.appender.setThreshold(Level.INFO);
-        this.appender.setLayout(new PatternLayout("%m"));
-        Logger.getRootLogger().addAppender(this.appender);
     }
 
     /**
@@ -178,8 +164,6 @@ public final class SimpleConveyer implements Closeable, Metricable {
             Thread.currentThread().interrupt();
             throw new IOException(ex);
         }
-        Logger.getRootLogger().removeAppender(this.appender);
-        this.appender.close();
     }
 
     /**
@@ -223,34 +207,8 @@ public final class SimpleConveyer implements Closeable, Metricable {
             this.repo, owner, work.spec()
         ).get().instantiate(this.users, work);
         if (object instanceof Instance) {
-            final Instance instance = new LoggableInstance(
-                Instance.class.cast(object),
-                this.appender,
-                work,
-                this.drain(owner, owner.get(work.unit()).drain(), work)
-            );
-            instance.pulse();
+            Instance.class.cast(object).pulse();
         }
-    }
-
-    /**
-     * Make a drain.
-     * @param owner Owner of the drain
-     * @param spec Specification of it
-     * @param work The work
-     * @return The drain
-     * @throws Exception If fails
-     */
-    private Drain drain(final User owner, final Spec spec, final Work work)
-        throws Exception {
-        final Object object = new Repo.Cached(this.repo, owner, spec)
-            .get().instantiate(this.users, work);
-        if (!(object instanceof Drain)) {
-            throw new IllegalArgumentException(
-                String.format("it is not a drain: %s", spec.asText())
-            );
-        }
-        return Drain.class.cast(object);
     }
 
 }

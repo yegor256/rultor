@@ -54,7 +54,7 @@ def unit = user.get(name)
     'java.lang.Double ( -55.0 )': 'java.lang.Double(-55.0)',
     '"some text  \u20ac "  ': '"some text  \\u20AC "',
 ].each {
-    unit.update(new Spec.Simple(it.key), new Spec.Simple('com.rultor.drain.Trash()'))
+    unit.update(new Spec.Simple(it.key))
     MatcherAssert.assertThat(unit.spec().asText(), Matchers.equalTo(it.value))
 }
 user.remove(name)

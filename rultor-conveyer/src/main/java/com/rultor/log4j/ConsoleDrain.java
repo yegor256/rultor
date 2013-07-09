@@ -27,22 +27,17 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer;
+package com.rultor.log4j;
 
-import com.jcabi.urn.URN;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Unit;
-import com.rultor.spi.User;
-import com.rultor.spi.Users;
-import com.rultor.spi.Work;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import com.rultor.spi.Drain;
+import com.rultor.spi.Pulses;
+import java.io.IOException;
+import java.io.InputStream;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Fake users that always return one unit.
+ * Drain to console.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -52,26 +47,13 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode
-final class FakeUsers implements Users {
-
-    /**
-     * Work to return.
-     */
-    private final transient Work work;
-
-    /**
-     * Public ctor.
-     * @param wrk Work
-     */
-    protected FakeUsers(final Work wrk) {
-        this.work = wrk;
-    }
+public final class ConsoleDrain implements Drain {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Set<URN> everybody() {
+    public Pulses pulses() throws IOException {
         throw new UnsupportedOperationException();
     }
 
@@ -79,41 +61,19 @@ final class FakeUsers implements Users {
      * {@inheritDoc}
      */
     @Override
-    public User get(final URN name) {
-        // @checkstyle AnonInnerLength (100 lines)
-        return new User() {
-            @Override
-            public Unit get(final String name) {
-                return new Unit() {
-                    @Override
-                    public void update(final Spec spec) {
-                        throw new UnsupportedOperationException();
-                    }
-                    @Override
-                    public Spec spec() {
-                        return FakeUsers.this.work.spec();
-                    }
-                };
-            }
-            @Override
-            public URN urn() {
-                return FakeUsers.this.work.owner();
-            }
-            @Override
-            public Set<String> units() {
-                return new HashSet<String>(
-                    Arrays.asList(FakeUsers.this.work.unit())
-                );
-            }
-            @Override
-            public void remove(final String name) {
-                throw new UnsupportedOperationException();
-            }
-            @Override
-            public void create(final String name) {
-                throw new UnsupportedOperationException();
-            }
-        };
+    @SuppressWarnings("PMD.SystemPrintln")
+    public void append(final Iterable<String> lines) throws IOException {
+        for (String line : lines) {
+            System.out.println(String.format("CONSOLE DRAIN: %s", line));
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InputStream read() throws IOException {
+        throw new UnsupportedOperationException();
     }
 
 }

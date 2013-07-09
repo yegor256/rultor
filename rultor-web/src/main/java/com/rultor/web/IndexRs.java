@@ -34,6 +34,7 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.auth.Identity;
+import com.rultor.spi.Drain;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
@@ -133,7 +134,6 @@ public final class IndexRs extends BaseRs {
             .add("name", name)
             .up()
             .add(this.face("spec", unit.spec()))
-            .add(this.face("drain", unit.drain()))
             .link(
                 new Link(
                     // @checkstyle MultipleStringLiterals (1 line)
@@ -178,12 +178,20 @@ public final class IndexRs extends BaseRs {
             final Object object = new Repo.Cached(
                 this.repo(), this.user(), spec
             ).get().instantiate(this.users(), new Work.None());
-            bundle = bundle.add(
-                "face",
-                StringEscapeUtils.escapeHtml4(
-                    object.toString()
-                ).replaceAll("`([^`]+)`", "<code>$1</code>")
-            ).up().add("type", object.getClass().getName());
+            bundle = bundle
+                .add("type", object.getClass().getName())
+                .up()
+                .add(
+                    "drainable",
+                    Boolean.toString(object instanceof Drain.Source)
+                )
+                .up()
+                .add(
+                    "face",
+                    StringEscapeUtils.escapeHtml4(
+                        object.toString()
+                    ).replaceAll("`([^`]+)`", "<code>$1</code>")
+                );
         // @checkstyle IllegalCatch (1 line)
         } catch (Exception ex) {
             bundle = bundle.add("exception", ex.getMessage());

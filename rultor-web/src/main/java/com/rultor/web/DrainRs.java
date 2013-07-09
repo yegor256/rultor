@@ -150,16 +150,16 @@ public final class DrainRs extends BaseRs {
      */
     private Drain drain(final Time time) {
         try {
-            return Drain.class.cast(
+            return Drain.Source.class.cast(
                 new Repo.Cached(
-                    this.repo(), this.user(), this.unit().drain()
+                    this.repo(), this.user(), this.unit().spec()
                 ).get().instantiate(
                     this.users(),
                     new Work.Simple(
                         this.user().urn(), this.name, new Spec.Simple(), time
                     )
                 )
-            );
+            ).drain();
         } catch (SpecException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),

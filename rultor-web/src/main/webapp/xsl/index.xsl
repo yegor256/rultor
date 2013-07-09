@@ -74,14 +74,7 @@
                         <xsl:value-of select="name"/>
                     </a>
                 </li>
-                <xsl:if test="spec/type">
-                    <li class="hidden-phone">
-                        <code>
-                            <xsl:value-of select="spec/type"/>
-                        </code>
-                    </li>
-                </xsl:if>
-                <xsl:if test="drain/type != 'com.rultor.drain.Trash'">
+                <xsl:if test="@drainable = 'true'">
                     <li>
                         <a title="drain">
                             <xsl:attribute name="href">
@@ -104,27 +97,15 @@
         </div>
         <xsl:if test="not(spec/type) or spec/type != 'java.lang.String'">
             <p style="padding-left: 3em;" class="hidden-phone">
-                <xsl:call-template name="face">
-                    <xsl:with-param name="object" select="spec"/>
-                </xsl:call-template>
-                <xsl:if test="not(drain/type) or drain/type != 'com.rultor.drain.Trash'">
-                    <xsl:text> drained to </xsl:text>
-                    <xsl:call-template name="face">
-                        <xsl:with-param name="object" select="drain"/>
-                    </xsl:call-template>
-                </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="spec/face">
+                        <xsl:value-of select="spec/face" disable-output-escaping="yes"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <code class="text-error"><xsl:value-of select="spec/exception"/></code>
+                    </xsl:otherwise>
+                </xsl:choose>
             </p>
         </xsl:if>
-    </xsl:template>
-    <xsl:template name="face">
-        <xsl:param name="object"/>
-        <xsl:choose>
-            <xsl:when test="$object/face">
-                <xsl:value-of select="$object/face" disable-output-escaping="yes"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <code class="text-error"><xsl:value-of select="$object/exception"/></code>
-            </xsl:otherwise>
-        </xsl:choose>
     </xsl:template>
 </xsl:stylesheet>

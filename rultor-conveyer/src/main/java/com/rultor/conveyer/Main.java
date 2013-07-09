@@ -156,17 +156,17 @@ public final class Main {
         parser.accepts("lifetime", "Maximum lifetime of the daemon, in millis")
             .withRequiredArg().ofType(String.class)
             .defaultsTo(Long.toString(Long.MAX_VALUE));
-        parser.accepts("dynamo-key", "DynamoDB key")
+        parser.accepts("dynamo-key", "Amazon DynamoDB access key")
             .withRequiredArg().ofType(String.class);
-        parser.accepts("dynamo-secret", "DynamoDB secret")
+        parser.accepts("dynamo-secret", "Amazon DynamoDB secret key")
             .withRequiredArg().ofType(String.class);
-        parser.accepts("dynamo-prefix", "DynamoDB prefix")
+        parser.accepts("dynamo-prefix", "Amazon DynamoDB table name prefix")
             .withRequiredArg().ofType(String.class);
-        parser.accepts("sqs-key", "SQS key")
+        parser.accepts("sqs-key", "Amazon SQS access key")
             .withRequiredArg().ofType(String.class);
-        parser.accepts("sqs-secret", "SQS secret")
+        parser.accepts("sqs-secret", "Amazon SQS secret key")
             .withRequiredArg().ofType(String.class);
-        parser.accepts("sqs-url", "SQS URL")
+        parser.accepts("sqs-url", "Amazon SQS URL")
             .withRequiredArg().ofType(String.class);
         return parser;
     }

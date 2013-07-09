@@ -124,10 +124,7 @@ final class AwsUser implements User {
                 String.format("Unit '%s' already exists", unt)
             );
         }
-        new AwsUnit(this.region, this.name, unt).update(
-            new Spec.Simple(),
-            new Spec.Simple("com.rultor.drain.Trash()")
-        );
+        new AwsUnit(this.region, this.name, unt).update(new Spec.Simple());
     }
 
     /**
