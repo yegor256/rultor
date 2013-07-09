@@ -34,7 +34,9 @@ grammar Spec;
     import com.jcabi.urn.URN;
     import com.rultor.spi.Variable;
     import java.util.Collection;
+    import java.util.HashMap;
     import java.util.LinkedList;
+    import java.util.Map;
     import org.apache.commons.lang3.StringEscapeUtils;
 }
 
@@ -78,6 +80,9 @@ variable returns [Variable<?> ret]
     |
     array
     { $ret = $array.ret; }
+    |
+    dictionary
+    { $ret = $dictionary.ret; }
     |
     META
     { $ret = new Meta($META.text.substring(1)); }
@@ -140,6 +145,27 @@ array returns [Array ret]
     )*
     ']'
     { $ret = new Array(vars); }
+    ;
+
+dictionary returns [Dictionary ret]
+    @init { final Map<String, Variable<?>> map = new HashMap<String, Variable<?>>(); }
+    :
+    '{'
+    (
+        first_key=TEXT
+        ':'
+        first_value=variable
+        { map.put($first_key.text, $first_value.ret); }
+        (
+            ','
+            second_key=TEXT
+            ':'
+            second_value=variable
+            { map.put($second_key.text, $second_value.ret); }
+        )*
+    )*
+    '}'
+    { $ret = new Dictionary(map); }
     ;
 
 BOOLEAN

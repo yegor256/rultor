@@ -37,8 +37,10 @@ import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -54,9 +56,9 @@ import org.apache.commons.lang3.StringUtils;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "values")
+@EqualsAndHashCode(of = "map")
 @Loggable(Loggable.DEBUG)
-final class Array implements Variable<List<Object>> {
+final class Dictionary implements Variable<Map<String, Object>> {
 
     /**
      * Indentation.
@@ -69,16 +71,21 @@ final class Array implements Variable<List<Object>> {
     private static final String EOL = "\n";
 
     /**
-     * Values.
+     * Map of values.
      */
-    private final transient Variable<?>[] values;
+    private final transient Object[][] map;
 
     /**
      * Public ctor.
      * @param vals Values
      */
-    protected Array(final Collection<Variable<?>> vals) {
-        this.values = vals.toArray(new Variable<?>[vals.size()]);
+    protected Dictionary(final Map<String, Variable<?>> vals) {
+        this.map = new Object[vals.size()][];
+        int idx = 0;
+        for (Map.Entry<String, Variable<?>> entry : vals.entrySet()) {
+            this.map[idx] = new Object[] {entry.getKey(), entry.getValue()};
+            ++idx;
+        }
     }
 
     /**
@@ -87,12 +94,15 @@ final class Array implements Variable<List<Object>> {
      */
     @Override
     @NotNull
-    public List<Object> instantiate(@NotNull final Users users,
+    public Map<String, Object> instantiate(@NotNull final Users users,
         @NotNull final Work work) throws SpecException {
-        final List<Object> objects =
-            new ArrayList<Object>(this.values.length);
-        for (Variable<?> var : this.values) {
-            objects.add(var.instantiate(users, work));
+        final ConcurrentMap<String, Object> objects =
+            new ConcurrentHashMap<String, Object>(this.map.length);
+        for (Object[] pair : this.map) {
+            objects.put(
+                pair[0].toString(),
+                Variable.class.cast(pair[1]).instantiate(users, work)
+            );
         }
         return objects;
     }
@@ -103,30 +113,37 @@ final class Array implements Variable<List<Object>> {
     @Override
     public String asText() {
         final StringBuilder text = new StringBuilder();
-        text.append('[');
-        final List<String> kids = new ArrayList<String>(this.values.length);
-        for (Variable<?> var : this.values) {
-            kids.add(var.asText());
+        text.append('{');
+        final List<String> kids =
+            new ArrayList<String>(this.map.length);
+        for (Object[] pair : this.map) {
+            kids.add(
+                String.format(
+                    "\"%s\": %s",
+                    pair[0].toString().replace("\"", "\\\""),
+                    Variable.class.cast(pair[1]).asText()
+                )
+            );
         }
         final String line = StringUtils.join(kids, ", ");
-        if (line.length() < Tv.FIFTY && !line.contains(Array.EOL)) {
+        if (line.length() < Tv.FIFTY && !line.contains(Dictionary.EOL)) {
             text.append(line);
         } else {
             final String shift = new StringBuilder()
-                .append(CharUtils.LF).append(Array.INDENT).toString();
+                .append(CharUtils.LF).append(Dictionary.INDENT).toString();
             int idx;
             for (idx = 0; idx < kids.size(); ++idx) {
                 if (idx > 0) {
                     text.append(',');
                 }
                 text.append(shift)
-                    .append(kids.get(idx).replace(Array.EOL, shift));
+                    .append(kids.get(idx).replace(Dictionary.EOL, shift));
             }
             if (idx > 0) {
                 text.append(CharUtils.LF);
             }
         }
-        text.append(']');
+        text.append('}');
         return text.toString();
     }
 
