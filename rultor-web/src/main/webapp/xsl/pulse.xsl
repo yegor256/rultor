@@ -40,7 +40,12 @@
         <div>
             <ul class="inline">
                 <li>
-                    <code><xsl:value-of select="/page/unit"/></code>
+                    <a title="back to drain">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="/page/links/link[@rel='drain']/@href"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="/page/unit"/>
+                    </a>
                 </li>
                 <li>
                     <xsl:value-of select="/page/date"/>

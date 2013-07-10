@@ -149,6 +149,15 @@ public final class PulseRs extends BaseRs {
                         .build(this.name, this.date.millis())
                 )
             )
+            .link(
+                new Link(
+                    "drain",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(DrainRs.class)
+                        .build(this.name)
+                )
+            )
             .render()
             .build();
     }
