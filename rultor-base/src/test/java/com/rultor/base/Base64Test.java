@@ -48,7 +48,7 @@ public final class Base64Test {
     @Test
     public void decodesText() throws Exception {
         MatcherAssert.assertThat(
-            IOUtils.toString(new Base64("aGVsbG8sIHdvcmxkIQ==")),
+            IOUtils.toString(new Base64("aGVsbG8s\n  IHdvcmxkIQ==")),
             Matchers.containsString("hello, world!")
         );
     }

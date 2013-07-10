@@ -220,9 +220,9 @@ public final class SSHChannel implements Shell {
      * @throws IOException If some IO problem inside
      */
     @RetryOnFailure(
-        attempts = Tv.FIVE,
-        delay = Tv.THIRTY,
-        unit = TimeUnit.SECONDS,
+        attempts = Tv.TEN,
+        delay = 1,
+        unit = TimeUnit.MINUTES,
         verbose = false
     )
     private Session session() throws IOException {

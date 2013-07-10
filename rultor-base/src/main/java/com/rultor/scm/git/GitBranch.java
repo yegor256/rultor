@@ -36,6 +36,7 @@ import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
 import com.rultor.shell.Terminal;
 import com.rultor.spi.Signal;
+import com.rultor.spi.Time;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -164,7 +165,7 @@ public final class GitBranch implements Branch {
         try {
             return new Commit.Simple(
                 matcher.group(1),
-                fmt.parse(matcher.group(Tv.THREE)),
+                new Time(fmt.parse(matcher.group(Tv.THREE))),
                 matcher.group(2)
             );
         } catch (ParseException ex) {

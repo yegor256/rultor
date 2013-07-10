@@ -31,8 +31,8 @@ package com.rultor.scm;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Time;
 import java.io.IOException;
-import java.util.Date;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -61,7 +61,7 @@ public interface Commit {
      * @throws IOException If fails
      */
     @NotNull
-    Date date() throws IOException;
+    Time time() throws IOException;
 
     /**
      * Author of the commit.
@@ -86,7 +86,7 @@ public interface Commit {
         /**
          * Date of commit.
          */
-        private final transient long when;
+        private final transient Time when;
         /**
          * Author of commit.
          */
@@ -97,10 +97,10 @@ public interface Commit {
          * @param date When it happened
          * @param author Author of commit
          */
-        public Simple(@NotNull final String name, @NotNull final Date date,
+        public Simple(@NotNull final String name, @NotNull final Time date,
             @NotNull final String author) {
             this.label = name;
-            this.when = date.getTime();
+            this.when = date;
             this.who = author;
         }
         /**
@@ -114,8 +114,8 @@ public interface Commit {
          * {@inheritDoc}
          */
         @Override
-        public Date date() throws IOException {
-            return new Date(this.when);
+        public Time time() throws IOException {
+            return this.when;
         }
         /**
          * {@inheritDoc}
