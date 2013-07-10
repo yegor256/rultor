@@ -66,7 +66,7 @@
                     <colgroup>
                         <col style="width: 2em;"/>
                         <col style="width: 5em;"/>
-                        <col style="width: 18em;"/>
+                        <col/>
                     </colgroup>
                     <tbody>
                         <xsl:apply-templates select="/page/stages/stage"/>
