@@ -102,6 +102,7 @@ final class EC2Environment implements Environment {
         final AmazonEC2 aws = this.client.get();
         final DescribeInstancesRequest request = new DescribeInstancesRequest()
             .withInstanceIds(this.name);
+        boolean immediately = true;
         try {
             while (true) {
                 final DescribeInstancesResult result =
@@ -118,11 +119,13 @@ final class EC2Environment implements Environment {
                     state.getCode()
                 );
                 if ("running".equals(state.getName())) {
-                    Signal.log(
-                        Signal.Mnemo.SUCCESS,
-                        "EC2 instance %s is ready",
-                        instance.getInstanceId()
-                    );
+                    if (!immediately) {
+                        Signal.log(
+                            Signal.Mnemo.SUCCESS,
+                            "EC2 instance %s is ready",
+                            instance.getInstanceId()
+                        );
+                    }
                     return InetAddress.getByAddress(
                         instance.getPublicDnsName(),
                         InetAddress.getByName(
@@ -139,6 +142,7 @@ final class EC2Environment implements Environment {
                         )
                     );
                 }
+                immediately = false;
                 try {
                     TimeUnit.SECONDS.sleep(Tv.FIFTEEN);
                 } catch (InterruptedException ex) {
