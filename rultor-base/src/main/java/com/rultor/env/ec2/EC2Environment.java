@@ -173,7 +173,7 @@ final class EC2Environment implements Environment {
                 result.getTerminatingInstances().get(0);
             Signal.log(
                 Signal.Mnemo.SUCCESS,
-                "EC2 instance %s terminated, after %[ms] of activity",
+                "EC2 instance %s terminated, after %[ms]s of activity",
                 change.getInstanceId(),
                 System.currentTimeMillis() - instance.getLaunchTime().getTime()
             );
