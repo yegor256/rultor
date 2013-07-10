@@ -121,7 +121,7 @@ public final class DrainRs extends BaseRs {
         Pulses pulses = this.pulses(drain);
         final int total;
         if (this.since == null) {
-            total = Tv.TEN;
+            total = Tv.FIVE;
         } else {
             pulses = pulses.tail(this.since);
             total = Tv.TWENTY;
