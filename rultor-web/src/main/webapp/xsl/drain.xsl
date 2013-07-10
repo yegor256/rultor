@@ -118,7 +118,7 @@
                         <xsl:attribute name="href">
                             <xsl:value-of select="links/link[@rel='stream']/@href"/>
                         </xsl:attribute>
-                        <i class="icon-file-alt"><xsl:comment>see full log</xsl:comment></i>
+                        <i class="icon-tint"><xsl:comment>see full log</xsl:comment></i>
                     </a>
                 </li>
             </ul>
