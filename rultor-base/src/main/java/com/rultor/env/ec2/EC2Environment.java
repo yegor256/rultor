@@ -162,6 +162,9 @@ final class EC2Environment implements Environment {
     public void close() throws IOException {
         final AmazonEC2 aws = this.client.get();
         try {
+            final Instance instance = aws.describeInstances(
+                new DescribeInstancesRequest().withInstanceIds(this.name)
+            ).getReservations().get(0).getInstances().get(0);
             final TerminateInstancesResult result = aws.terminateInstances(
                 new TerminateInstancesRequest()
                     .withInstanceIds(this.name)
@@ -170,8 +173,9 @@ final class EC2Environment implements Environment {
                 result.getTerminatingInstances().get(0);
             Signal.log(
                 Signal.Mnemo.SUCCESS,
-                "EC2 instance %s terminated",
-                change.getInstanceId()
+                "EC2 instance %s terminated, after %[ms] of activity",
+                change.getInstanceId(),
+                System.currentTimeMillis() - instance.getLaunchTime().getTime()
             );
         } finally {
             aws.shutdown();
