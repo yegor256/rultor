@@ -106,7 +106,7 @@ public final class SES implements Billboard {
      */
     @Override
     public String toString() {
-        return String.format(
+        return Logger.format(
             "SES emails from %s to %[list]s accessed with %s",
             this.sender, Arrays.asList(this.recipients), this.client
         );

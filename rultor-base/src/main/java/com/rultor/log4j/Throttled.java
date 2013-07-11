@@ -122,7 +122,14 @@ public final class Throttled implements Instance, Drain.Source {
         );
         appender.setThreshold(this.level);
         appender.setLayout(new PatternLayout(this.pattern));
-        org.apache.log4j.Logger.getRootLogger().addAppender(appender);
+        final org.apache.log4j.Logger root =
+            org.apache.log4j.Logger.getRootLogger();
+        if (!root.isInfoEnabled()) {
+            throw new IllegalStateException(
+                "INFO logging level is not enabled in LOG4J"
+            );
+        }
+        root.addAppender(appender);
         try {
             Logger.info(this, "start scheduled on %s", this.work.started());
             Logger.info(this, "actual work started on %s", new Time());
