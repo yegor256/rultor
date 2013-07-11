@@ -35,7 +35,7 @@ assert log.text.contains('CONSOLE DRAIN: ')
 assert log.text.contains('INFO start scheduled on ')
 assert log.text.contains('INFO actual work started on ')
 assert log.text.contains('INFO www.rultor.com ')
-assert log.text.contains('INFO RULTOR:118:SPEC:com.rultor.log4j.Throttled(')
+assert log.text.contains('SPEC:com.rultor.log4j.Throttled(')
 assert log.text.contains('INFO nothing to do')
 assert log.text.contains('INFO: #close():')
 
