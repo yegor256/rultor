@@ -50,7 +50,7 @@ public final class RestrictiveTest {
      */
     @Test
     public void passesThroughWhenAllowed() throws Exception {
-        final Instance origin = Mockito.mock(Instance.class);
+        final Object origin = Mockito.mock(Object.class);
         final Work work = new Work.Simple(new URN("urn:test:3"), "test-unit");
         new Restrictive(work, Arrays.asList("urn:test:*"), origin).toString();
     }

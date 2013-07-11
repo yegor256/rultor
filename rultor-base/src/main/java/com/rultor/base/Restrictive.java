@@ -31,7 +31,6 @@ package com.rultor.base;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Instance;
 import com.rultor.spi.Proxy;
 import com.rultor.spi.Work;
 import java.util.Collection;
@@ -73,7 +72,7 @@ public final class Restrictive implements Proxy {
      * @checkstyle ParameterNumber (5 lines)
      */
     public Restrictive(@NotNull final Work wrk, final Collection<String> frnds,
-        @NotNull final Instance instance) {
+        @NotNull final Object instance) {
         this.work = wrk;
         this.origin = instance;
         this.friends = frnds.toArray(new String[frnds.size()]);
