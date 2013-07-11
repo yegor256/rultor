@@ -59,8 +59,8 @@ public interface Pulses extends Iterable<Time> {
      * @return Similar vector, that contains only pulses that are older than
      *  the provided date
      */
-    @NotNull
-    Pulses tail(@NotNull Time head);
+    @NotNull(message = "pulses are never NULL")
+    Pulses tail(@NotNull(message = "head can't be NULL") Time head);
 
     /**
      * Immutable collection, based on array.
@@ -84,7 +84,8 @@ public interface Pulses extends Iterable<Time> {
          * Public ctor.
          * @param array Array of data
          */
-        public Array(@NotNull final Collection<Time> array) {
+        public Array(@NotNull(message = "array can't be NULL")
+            final Collection<Time> array) {
             final Collection<Time> set =
                 new TreeSet<Time>(Collections.reverseOrder());
             set.addAll(array);
@@ -95,7 +96,7 @@ public interface Pulses extends Iterable<Time> {
          */
         @Override
         @NotNull
-        public Pulses tail(@NotNull final Time head) {
+        public Pulses tail(@NotNull(message = "head is NULL") final Time head) {
             return new Pulses.Array(
                 new TreeSet<Time>(Arrays.asList(this.times)).tailSet(head)
             );

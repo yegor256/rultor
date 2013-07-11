@@ -66,7 +66,8 @@ final class Build {
      * Public ctor.
      * @param btch Batch to use
      */
-    protected Build(@NotNull final Batch btch) {
+    protected Build(@NotNull(message = "batch can't be NULL")
+        final Batch btch) {
         this.batch = btch;
     }
 

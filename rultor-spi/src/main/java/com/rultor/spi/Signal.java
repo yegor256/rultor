@@ -95,7 +95,9 @@ public final class Signal {
      * @param name Key/mnemo
      * @param val Value
      */
-    public Signal(@NotNull final Signal.Mnemo name, @NotNull final String val) {
+    public Signal(@NotNull(message = "mnemo can't be NULL")
+        final Signal.Mnemo name,
+        @NotNull(message = "value can't be NULL") final String val) {
         this.mnemo = name;
         this.right = val;
     }
@@ -121,6 +123,7 @@ public final class Signal {
      * Key.
      * @return The key
      */
+    @NotNull(message = "mnemo is never NULL")
     public Signal.Mnemo key() {
         return this.mnemo;
     }
@@ -129,6 +132,7 @@ public final class Signal {
      * Value.
      * @return The value
      */
+    @NotNull(message = "value is never NULL")
     public String value() {
         return this.right;
     }

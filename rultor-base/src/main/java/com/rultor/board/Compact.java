@@ -66,7 +66,8 @@ public final class Compact implements Billboard {
      * @param max Maximum
      * @param brd Original board
      */
-    public Compact(final int max, @NotNull final Billboard brd) {
+    public Compact(final int max, @NotNull(message = "board can't be NULL")
+        final Billboard brd) {
         Validate.isTrue(
             max > Tv.FIFTEEN,
             "Maximum length should be more than 15"

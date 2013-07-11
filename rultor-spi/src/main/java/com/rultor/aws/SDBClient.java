@@ -34,6 +34,7 @@ import com.amazonaws.services.simpledb.AmazonSimpleDB;
 import com.amazonaws.services.simpledb.AmazonSimpleDBClient;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -83,8 +84,8 @@ public interface SDBClient {
          * @param scrt AWS secret
          * @param domain SimpleDB domain
          */
-        public Simple(final String akey, final String scrt,
-            final String domain) {
+        public Simple(@NotNull final String akey, @NotNull final String scrt,
+            @NotNull final String domain) {
             this.key = akey;
             this.secret = scrt;
             this.dmn = domain;

@@ -51,28 +51,28 @@ public interface Work {
      * When started, in milliseconds.
      * @return Milliseconds
      */
-    @NotNull
+    @NotNull(message = "time is never NULL")
     Time started();
 
     /**
      * Owner of this work.
      * @return The owner
      */
-    @NotNull
+    @NotNull(message = "URN of owner is never NULL")
     URN owner();
 
     /**
      * Name of the work (unique for the user).
      * @return The unit
      */
-    @NotNull
+    @NotNull(message = "unit name is never NULL")
     String unit();
 
     /**
      * Spec to run.
      * @return The spec
      */
-    @NotNull
+    @NotNull(message = "spec is never NULL")
     Spec spec();
 
     /**
@@ -85,6 +85,7 @@ public interface Work {
         /**
          * {@inheritDoc}
          */
+        @NotNull
         @Override
         public Time started() {
             throw new UnsupportedOperationException();
@@ -92,6 +93,7 @@ public interface Work {
         /**
          * {@inheritDoc}
          */
+        @NotNull
         @Override
         public URN owner() {
             throw new UnsupportedOperationException();
@@ -99,6 +101,7 @@ public interface Work {
         /**
          * {@inheritDoc}
          */
+        @NotNull
         @Override
         public String unit() {
             throw new UnsupportedOperationException();
@@ -106,6 +109,7 @@ public interface Work {
         /**
          * {@inheritDoc}
          */
+        @NotNull
         @Override
         public Spec spec() {
             throw new UnsupportedOperationException();
@@ -146,7 +150,7 @@ public interface Work {
          * @param owner Owner
          * @param name Name
          */
-        public Simple(@NotNull final URN owner, @NotNull final String name) {
+        public Simple(final URN owner, final String name) {
             this(owner, name, new Time());
         }
         /**
@@ -155,8 +159,7 @@ public interface Work {
          * @param name Name
          * @param when Time
          */
-        public Simple(@NotNull final URN owner, @NotNull final String name,
-            @NotNull final Time when) {
+        public Simple(final URN owner, final String name, final Time when) {
             this(owner, name, new Spec.Simple(), when);
         }
         /**
@@ -165,8 +168,7 @@ public interface Work {
          * @param name Name
          * @param spec Spec
          */
-        public Simple(@NotNull final URN owner, @NotNull final String name,
-            @NotNull final Spec spec) {
+        public Simple(final URN owner, final String name, final Spec spec) {
             this(owner, name, spec, new Time());
         }
         /**
@@ -177,8 +179,10 @@ public interface Work {
          * @param when When it should start
          * @checkstyle ParameterNumber (5 lines)
          */
-        public Simple(@NotNull final URN owner, @NotNull final String name,
-            @NotNull final Spec spec, final Time when) {
+        public Simple(@NotNull(message = "owner can't be NULL") final URN owner,
+            @NotNull(message = "unit name can't be NULL") final String name,
+            @NotNull(message = "spec can't be NULL") final Spec spec,
+            @NotNull(message = "time can't be NULL") final Time when) {
             this.urn = owner;
             this.label = name;
             this.desc = spec;
@@ -200,6 +204,7 @@ public interface Work {
          * {@inheritDoc}
          */
         @Override
+        @NotNull(message = "time of work is never NULL")
         public Time started() {
             return this.time;
         }
@@ -207,6 +212,7 @@ public interface Work {
          * {@inheritDoc}
          */
         @Override
+        @NotNull(message = "URN of owner of work is never NULL")
         public URN owner() {
             return this.urn;
         }
@@ -214,6 +220,7 @@ public interface Work {
          * {@inheritDoc}
          */
         @Override
+        @NotNull(message = "unit name of work is never NULL")
         public String unit() {
             return this.label;
         }
@@ -221,6 +228,7 @@ public interface Work {
          * {@inheritDoc}
          */
         @Override
+        @NotNull(message = "spec of work is never NULL")
         public Spec spec() {
             return this.desc;
         }

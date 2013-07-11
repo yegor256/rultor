@@ -34,6 +34,7 @@ import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -72,7 +73,7 @@ public interface EC2Client {
          * @param akey AWS key
          * @param scrt AWS secret
          */
-        public Simple(final String akey, final String scrt) {
+        public Simple(@NotNull final String akey, @NotNull final String scrt) {
             this.key = akey;
             this.secret = scrt;
         }

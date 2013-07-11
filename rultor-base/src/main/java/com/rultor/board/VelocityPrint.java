@@ -69,8 +69,9 @@ public final class VelocityPrint implements Billboard {
      * @param brd Original board
      * @param tmpl Velocity template
      */
-    public VelocityPrint(@NotNull final String tmpl,
-        @NotNull final Billboard brd) {
+    public VelocityPrint(@NotNull(message = "template can't be NULL")
+        final String tmpl,
+        @NotNull(message = "board can't be NULL") final Billboard brd) {
         this.board = brd;
         this.template = tmpl;
     }

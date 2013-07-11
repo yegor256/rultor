@@ -91,9 +91,13 @@ public final class EC2 implements Environments {
      * @param scrt AWS secret
      * @checkstyle ParameterNumber (5 lines)
      */
-    public EC2(@NotNull final String tpe, @NotNull final String image,
-        @NotNull final String grp, @NotNull final String par,
-        @NotNull final String akey, @NotNull final String scrt) {
+    public EC2(@NotNull(message = "instance type can't be NULL")
+        final String tpe,
+        @NotNull(message = "AMI can't be NULL") final String image,
+        @NotNull(message = "security group can't be NULL") final String grp,
+        @NotNull(message = "key pair can't be NULL") final String par,
+        @NotNull(message = "AWS key can't be NULL") final String akey,
+        @NotNull(message = "AWS secret can't be NULL") final String scrt) {
         this(tpe, image, grp, par, new EC2Client.Simple(akey, scrt));
     }
 

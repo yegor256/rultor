@@ -37,6 +37,7 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.time.DateUtils;
@@ -57,6 +58,7 @@ public interface Drain {
      * @return List of them
      * @throws IOException If some IO problem inside
      */
+    @NotNull(message = "list of pulses is never NULL")
     Pulses pulses() throws IOException;
 
     /**
@@ -64,13 +66,15 @@ public interface Drain {
      * @param lines Lines to append
      * @throws IOException If some IO problem inside
      */
-    void append(Iterable<String> lines) throws IOException;
+    void append(@NotNull(message = "lines can't be NULL")
+        Iterable<String> lines) throws IOException;
 
     /**
      * Read the drain.
      * @return The input stream with data
      * @throws IOException If some IO problem inside
      */
+    @NotNull(message = "InputStream is never NULL")
     InputStream read() throws IOException;
 
     /**
@@ -82,6 +86,7 @@ public interface Drain {
          * The drain.
          * @return Drain
          */
+        @NotNull(message = "drain is never NULL")
         Drain drain();
     }
 
@@ -99,6 +104,7 @@ public interface Drain {
          * Log level of the line.
          * @return Level
          */
+        @NotNull(message = "level is never NULL")
         Level level();
         /**
          * Simple.
@@ -130,9 +136,11 @@ public interface Drain {
              * @param msec When it's happening, msec from start
              * @param level The level
              * @param message The message
-             * @checkstyle ParameterNumber (4 lines)
+             * @checkstyle ParameterNumber (8 lines)
              */
-            public Simple(final long msec, final Level level,
+            public Simple(final long msec,
+                @NotNull(message = "log level can't be NULL") final Level level,
+                @NotNull(message = "message can't be NULL")
                 final String message) {
                 this.when = msec;
                 this.lvl = level.toString();

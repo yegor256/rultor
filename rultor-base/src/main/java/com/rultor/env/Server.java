@@ -57,7 +57,7 @@ public final class Server implements Environments {
      * Public ctor.
      * @param address IP address of the server
      */
-    public Server(@NotNull final String address) {
+    public Server(@NotNull(message = "IP can't be NULL") final String address) {
         this.host = address;
     }
 

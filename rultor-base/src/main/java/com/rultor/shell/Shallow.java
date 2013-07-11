@@ -58,7 +58,8 @@ public final class Shallow implements Shell {
      * Public ctor.
      * @param shls Shells
      */
-    public Shallow(@NotNull final Shells shls) {
+    public Shallow(@NotNull(message = "shells can't be NULL")
+        final Shells shls) {
         this.shells = shls;
     }
 

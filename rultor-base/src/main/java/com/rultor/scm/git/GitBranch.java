@@ -90,8 +90,10 @@ public final class GitBranch implements Branch {
      * @param folder Directory with data
      * @param branch Name of the branch
      */
-    public GitBranch(@NotNull final Terminal term, @NotNull final String folder,
-        @NotNull final String branch) {
+    public GitBranch(@NotNull(message = "terminal can't be NULL")
+        final Terminal term, @NotNull(message = "folder can't be NULL")
+        final String folder, @NotNull(message = "branch can't be NULL")
+        final String branch) {
         this.terminal = term;
         this.dir = folder;
         this.name = branch;

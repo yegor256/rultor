@@ -47,7 +47,7 @@ import lombok.EqualsAndHashCode;
 @Immutable
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-public final class Restrictive implements Proxy {
+public final class Restrictive implements Proxy<Object> {
 
     /**
      * Work we're in.
@@ -69,10 +69,12 @@ public final class Restrictive implements Proxy {
      * @param wrk Work we're in
      * @param frnds List of friends
      * @param instance Original instance
-     * @checkstyle ParameterNumber (5 lines)
+     * @checkstyle ParameterNumber (10 lines)
      */
-    public Restrictive(@NotNull final Work wrk, final Collection<String> frnds,
-        @NotNull final Object instance) {
+    public Restrictive(@NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "friends can't be NULL")
+        final Collection<String> frnds,
+        @NotNull(message = "instance can't be NULL") final Object instance) {
         this.work = wrk;
         this.origin = instance;
         this.friends = frnds.toArray(new String[frnds.size()]);

@@ -30,21 +30,24 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import javax.validation.constraints.NotNull;
 
 /**
  * Proxy of another object.
  *
+ * @param <T> Type of object being proxied
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Proxy {
+public interface Proxy<T> {
 
     /**
      * Get the object.
      * @return The object
      */
-    Object object();
+    @NotNull(message = "proxied object is never NULL")
+    T object();
 
 }

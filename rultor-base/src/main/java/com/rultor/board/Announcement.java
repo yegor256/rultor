@@ -64,8 +64,10 @@ public final class Announcement {
      * @param level Level
      * @param args Arguments
      */
-    public Announcement(@NotNull final Level level,
-        @NotNull final Map<String, Object> args) {
+    public Announcement(@NotNull(message = "log level can't be NULL")
+        final Level level,
+        @NotNull(message = "map of arguments can't be NULL")
+        final Map<String, Object> args) {
         this.lvl = level;
         this.arguments = args;
     }
@@ -74,7 +76,7 @@ public final class Announcement {
      * Get level.
      * @return Level
      */
-    @NotNull
+    @NotNull(message = "log Level is never NULL")
     public Level level() {
         return this.lvl;
     }
@@ -83,7 +85,7 @@ public final class Announcement {
      * Get all arguments.
      * @return Arguments
      */
-    @NotNull
+    @NotNull(message = "map of arguments is never NULL")
     public Map<String, Object> args() {
         return this.arguments;
     }
@@ -94,7 +96,7 @@ public final class Announcement {
      * @param value The value
      * @return Announcement
      */
-    @NotNull
+    @NotNull(message = "announcement is never NULL")
     public Announcement with(@NotNull final String name,
         @NotNull final Object value) {
         return new Announcement(

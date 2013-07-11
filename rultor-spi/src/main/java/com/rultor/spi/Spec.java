@@ -49,7 +49,7 @@ public interface Spec {
      * Convert it to a human readable form.
      * @return The text
      */
-    @NotNull
+    @NotNull(message = "spec text is never NULL")
     String asText();
 
     /**
@@ -74,7 +74,8 @@ public interface Spec {
          * Public ctor.
          * @param spec The text
          */
-        public Simple(final String spec) {
+        public Simple(@NotNull(message = "spec can't be NULL")
+            final String spec) {
             this.text = spec;
         }
         /**

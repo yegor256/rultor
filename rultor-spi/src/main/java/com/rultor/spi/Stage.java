@@ -31,6 +31,7 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -70,6 +71,7 @@ public interface Stage {
      * Result of the stage.
      * @return Result
      */
+    @NotNull(message = "result is never NULL")
     Result result();
 
     /**
@@ -88,6 +90,7 @@ public interface Stage {
      * Output to show to the user (one line).
      * @return Output
      */
+    @NotNull(message = "output is never NULL")
     String output();
 
     /**
@@ -122,8 +125,10 @@ public interface Stage {
          * @param output Text output
          * @checkstyle ParameterNumber (5 lines)
          */
-        public Simple(final Stage.Result result, final long start,
-            final long stop, final String output) {
+        public Simple(@NotNull(message = "result can't be NULL")
+            final Stage.Result result, final long start,
+            final long stop, @NotNull(message = "output can't be NULL")
+            final String output) {
             this.rslt = result;
             this.begin = start;
             this.end = stop;

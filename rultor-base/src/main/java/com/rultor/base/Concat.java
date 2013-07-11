@@ -29,29 +29,63 @@
  */
 package com.rultor.base;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import java.io.ByteArrayInputStream;
+import com.rultor.spi.Proxy;
+import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
 
 /**
- * Base64 text.
+ * Concatenated strings.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@EqualsAndHashCode(callSuper = false)
+@Immutable
+@EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-public final class Base64 extends ByteArrayInputStream {
+public final class Concat implements Proxy<String> {
+
+    /**
+     * Strings to concatenate.
+     */
+    private final transient String[] parts;
+
+    /**
+     * Separator to use.
+     */
+    private final transient String separator;
 
     /**
      * Public ctor.
-     * @param text Source text
+     * @param texts Lines to concatenate
      */
-    public Base64(@NotNull(message = "base64-encoded text can't be NULL")
-        final String text) {
-        super(org.apache.commons.codec.binary.Base64.decodeBase64(text));
+    public Concat(@NotNull(message = "list of lines can't be NULL")
+        final Collection<String> texts) {
+        this(texts, "");
+    }
+
+    /**
+     * Public ctor.
+     * @param texts Lines to concatenate
+     * @param sep Separator
+     */
+    public Concat(@NotNull(message = "lines can't be NULL")
+        final Collection<String> texts,
+        @NotNull(message = "separator can't be NULL") final String sep) {
+        this.parts = texts.toArray(new String[texts.size()]);
+        this.separator = sep;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String object() {
+        return StringUtils.join(this.parts, this.separator);
     }
 
     /**
@@ -59,7 +93,7 @@ public final class Base64 extends ByteArrayInputStream {
      */
     @Override
     public String toString() {
-        return "Base64 bytes";
+        return String.format("%d part(s)", this.parts.length);
     }
 
 }

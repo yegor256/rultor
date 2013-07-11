@@ -85,7 +85,7 @@ public final class Bash implements Batch {
      * @param shls Shells
      * @param scrt Script to run there, Apache Velocity template
      */
-    public Bash(@NotNull final Shells shls, @NotNull final String scrt) {
+    public Bash(final Shells shls, final String scrt) {
         this(shls, scrt, new ConcurrentHashMap<String, Object>(0));
     }
 
@@ -96,8 +96,10 @@ public final class Bash implements Batch {
      * @param map Prerequisites
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public Bash(@NotNull final Shells shls, @NotNull final String scrt,
-        @NotNull final Map<String, Object> map) {
+    public Bash(@NotNull(message = "shells can't be NULL") final Shells shls,
+        @NotNull(message = "script can't be NULL") final String scrt,
+        @NotNull(message = "prerequisites can't be NULL")
+        final Map<String, Object> map) {
         this.shells = shls;
         this.script = scrt;
         this.prerequisites = new Object[map.size()][];
