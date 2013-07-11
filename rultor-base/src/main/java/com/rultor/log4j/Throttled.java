@@ -65,6 +65,11 @@ public final class Throttled implements Instance, Drain.Source {
     private final transient Level level;
 
     /**
+     * Pattern.
+     */
+    private final transient String pattern;
+
+    /**
      * Instance.
      */
     private final transient Instance origin;
@@ -78,16 +83,31 @@ public final class Throttled implements Instance, Drain.Source {
      * Public ctor.
      * @param wrk Work we're in
      * @param lvl Level to show and higher
+     * @param pttn Pattern
      * @param instance Original instance
      * @param drain Drain to use
      * @checkstyle ParameterNumber (4 lines)
      */
     public Throttled(@NotNull final Work wrk, @NotNull final String lvl,
-        @NotNull final Instance instance, @NotNull final Drain drain) {
+        @NotNull final String pttn, @NotNull final Instance instance,
+        @NotNull final Drain drain) {
         this.work = wrk;
         this.level = Level.toLevel(lvl);
+        this.pattern = pttn;
         this.origin = instance;
         this.drn = drain;
+    }
+
+    /**
+     * Public ctor.
+     * @param wrk Work we're in
+     * @param instance Original instance
+     * @param drain Drain to use
+     * @checkstyle ParameterNumber (4 lines)
+     */
+    public Throttled(@NotNull final Work wrk,
+        @NotNull final Instance instance, @NotNull final Drain drain) {
+        this(wrk, Level.INFO.toString(), "%m", instance, drain);
     }
 
     /**
@@ -101,7 +121,7 @@ public final class Throttled implements Instance, Drain.Source {
             this.work.started(), this.drn
         );
         appender.setThreshold(this.level);
-        appender.setLayout(new PatternLayout("%m"));
+        appender.setLayout(new PatternLayout(this.pattern));
         org.apache.log4j.Logger.getRootLogger().addAppender(appender);
         try {
             Logger.info(this, "start scheduled on %s", this.work.started());
