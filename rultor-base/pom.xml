@@ -133,6 +133,8 @@
                             <failsafe.ec2.key>${failsafe.ec2.key}</failsafe.ec2.key>
                             <failsafe.ec2.secret>${failsafe.ec2.secret}</failsafe.ec2.secret>
                             <failsafe.ec2.priv>${failsafe.ec2.priv}</failsafe.ec2.priv>
+                            <failsafe.ses.key>${failsafe.ses.key}</failsafe.ses.key>
+                            <failsafe.ses.secret>${failsafe.ses.secret}</failsafe.ses.secret>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

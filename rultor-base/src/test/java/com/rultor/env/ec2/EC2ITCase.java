@@ -43,7 +43,7 @@ import org.junit.Assume;
 import org.junit.Test;
 
 /**
- * Integration case for {@link EC}.
+ * Integration case for {@link EC2}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
