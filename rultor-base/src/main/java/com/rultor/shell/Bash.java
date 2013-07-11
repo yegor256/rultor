@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -46,6 +47,7 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.TeeOutputStream;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -106,6 +108,19 @@ public final class Bash implements Batch {
             };
             ++idx;
         }
+    }
+
+    /**
+     * Public ctor.
+     * @param shls Shells
+     * @param lines Script lines
+     * @param map Prerequisites
+     */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    public Bash(@NotNull final Shells shls,
+        @NotNull final Collection<String> lines,
+        @NotNull final Map<String, Object> map) {
+        this(shls, StringUtils.join(lines, " && "), map);
     }
 
     /**

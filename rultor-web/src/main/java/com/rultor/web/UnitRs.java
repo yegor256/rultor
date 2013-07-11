@@ -34,7 +34,6 @@ import com.jcabi.urn.URN;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
-import com.rexsl.page.auth.Identity;
 import com.rexsl.page.inset.FlashInset;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
@@ -185,7 +184,7 @@ public final class UnitRs extends BaseRs {
                 }
                 @Override
                 public URN owner() {
-                    return Identity.ANONYMOUS.urn();
+                    return UnitRs.this.user().urn();
                 }
                 @Override
                 public String unit() {
