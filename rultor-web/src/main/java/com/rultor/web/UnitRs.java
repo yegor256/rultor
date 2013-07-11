@@ -162,6 +162,7 @@ public final class UnitRs extends BaseRs {
      * @param type Expected type of it
      * @return Spec
      * @throws SpecException If invalid input
+     * @checkstyle RedundantThrows (4 lines)
      */
     private Spec parse(final String text, final Class<?> type)
         throws SpecException {
