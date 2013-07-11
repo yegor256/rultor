@@ -120,7 +120,7 @@ public final class UnitRs extends BaseRs {
     public Response save(@NotNull @FormParam("spec") final String spec) {
         try {
             this.unit().update(this.parse(spec, Object.class));
-        } catch (IllegalArgumentException ex) {
+        } catch (SpecException ex) {
             return this.head()
                 .append(FlashInset.bundle(Level.SEVERE, ex.getMessage(), 0L))
                 .append(
@@ -161,20 +161,21 @@ public final class UnitRs extends BaseRs {
      * @param text Text
      * @param type Expected type of it
      * @return Spec
+     * @throws SpecException If invalid input
      */
-    private Spec parse(final String text, final Class<?> type) {
-        final Variable<?> var;
-        final Object object;
+    private Spec parse(final String text, final Class<?> type)
+        throws SpecException {
+        final Variable<?> var = new Repo.Cached(
+            this.repo(), this.user(), new Spec.Simple(text)
+        ).get();
+        final Object object = var.instantiate(this.users(), new Work.None());
         try {
-            var = new Repo.Cached(
-                this.repo(), this.user(), new Spec.Simple(text)
-            ).get();
-            object = var.instantiate(this.users(), new Work.None());
-        } catch (SpecException ex) {
-            throw new IllegalArgumentException(ex);
+            object.toString();
+        } catch (SecurityException ex) {
+            throw new SpecException(ex);
         }
         if (!type.isAssignableFrom(object.getClass())) {
-            throw new IllegalArgumentException(
+            throw new SpecException(
                 String.format(
                     "%s expected while %s provided",
                     type.getName(),

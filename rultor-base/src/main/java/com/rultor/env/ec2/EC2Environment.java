@@ -196,6 +196,7 @@ final class EC2Environment implements Environment {
      * @param type Type of EC2 instance
      * @param zone Availability zone
      * @param msec Time spent
+     * @return The price of the instance time
      * @throws IOException If IO problem inside
      */
     private static String costOf(final String type, final String zone,
