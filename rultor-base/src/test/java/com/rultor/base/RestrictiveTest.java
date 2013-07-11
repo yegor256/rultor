@@ -52,8 +52,7 @@ public final class RestrictiveTest {
     public void passesThroughWhenAllowed() throws Exception {
         final Instance origin = Mockito.mock(Instance.class);
         final Work work = new Work.Simple(new URN("urn:test:3"), "test-unit");
-        new Restrictive(work, Arrays.asList("urn:test:*"), origin).pulse();
-        Mockito.verify(origin).pulse();
+        new Restrictive(work, Arrays.asList("urn:test:*"), origin).toString();
     }
 
     /**
@@ -64,8 +63,7 @@ public final class RestrictiveTest {
     public void passesThroughWhenAllowedForAll() throws Exception {
         final Instance origin = Mockito.mock(Instance.class);
         final Work work = new Work.Simple(new URN("urn:test:33"), "test-43");
-        new Restrictive(work, Arrays.asList("*"), origin).pulse();
-        Mockito.verify(origin).pulse();
+        new Restrictive(work, Arrays.asList("*"), origin).object();
     }
 
     /**
@@ -76,7 +74,7 @@ public final class RestrictiveTest {
     public void blocksWhenNotAllowed() throws Exception {
         final Instance origin = Mockito.mock(Instance.class);
         final Work work = new Work.Simple(new URN("urn:test:6"), "test-44");
-        new Restrictive(work, Arrays.asList("urn:facebook:2"), origin).pulse();
+        new Restrictive(work, Arrays.asList("urn:facebook:2"), origin).object();
     }
 
     /**
@@ -87,7 +85,7 @@ public final class RestrictiveTest {
     public void blocksEverybodyWhenRequested() throws Exception {
         final Instance origin = Mockito.mock(Instance.class);
         final Work work = new Work.Simple(new URN("urn:test:998"), "test-8");
-        new Restrictive(work, new ArrayList<String>(0), origin).pulse();
+        new Restrictive(work, new ArrayList<String>(0), origin).toString();
     }
 
 }

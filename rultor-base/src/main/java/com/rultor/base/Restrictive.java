@@ -32,6 +32,7 @@ package com.rultor.base;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Instance;
+import com.rultor.spi.Proxy;
 import com.rultor.spi.Work;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
@@ -47,7 +48,7 @@ import lombok.EqualsAndHashCode;
 @Immutable
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-public final class Restrictive implements Instance {
+public final class Restrictive implements Proxy {
 
     /**
      * Work we're in.
@@ -57,7 +58,7 @@ public final class Restrictive implements Instance {
     /**
      * Origin.
      */
-    private final transient Instance origin;
+    private final transient Object origin;
 
     /**
      * List of friends (masks).
@@ -82,16 +83,16 @@ public final class Restrictive implements Instance {
      * {@inheritDoc}
      */
     @Override
-    public void pulse() throws Exception {
+    public Object object() {
         if (!this.allowed()) {
             throw new SecurityException(
                 String.format(
-                    "You (%s) are not allowed to pulse me",
+                    "You (%s) are not allowed to touch me",
                     this.work.owner()
                 )
             );
         }
-        this.origin.pulse();
+        return this.origin;
     }
 
     /**

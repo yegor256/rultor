@@ -32,6 +32,7 @@ package com.rultor.repo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.rultor.spi.Proxy;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
@@ -126,8 +127,9 @@ final class Composite implements Variable<Object> {
             types[idx] = object.getClass();
         }
         final Constructor<?> ctor = this.ctor(types);
+        Object object;
         try {
-            return ctor.newInstance(args);
+            object = ctor.newInstance(args);
         } catch (InstantiationException ex) {
             throw new SpecException(
                 String.format(
@@ -156,6 +158,10 @@ final class Composite implements Variable<Object> {
                 ex
             );
         }
+        if (object instanceof Proxy) {
+            object = Proxy.class.cast(object).object();
+        }
+        return object;
     }
 
     /**
