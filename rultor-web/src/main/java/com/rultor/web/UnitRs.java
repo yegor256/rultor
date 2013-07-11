@@ -30,13 +30,16 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rexsl.page.auth.Identity;
 import com.rexsl.page.inset.FlashInset;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
+import com.rultor.spi.Time;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
@@ -57,6 +60,7 @@ import javax.ws.rs.core.Response;
  * @version $Id$
  * @since 1.0
  * @checkstyle MultipleStringLiterals (500 lines)
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Path("/unit/{name:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
@@ -117,10 +121,12 @@ public final class UnitRs extends BaseRs {
      */
     @POST
     @Path("/")
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public Response save(@NotNull @FormParam("spec") final String spec) {
         try {
             this.unit().update(this.parse(spec, Object.class));
-        } catch (SpecException ex) {
+        // @checkstyle IllegalCatch (1 line)
+        } catch (Exception ex) {
             return this.head()
                 .append(FlashInset.bundle(Level.SEVERE, ex.getMessage(), 0L))
                 .append(
@@ -166,10 +172,31 @@ public final class UnitRs extends BaseRs {
      */
     private Spec parse(final String text, final Class<?> type)
         throws SpecException {
+        final Spec spec = new Spec.Simple(text);
         final Variable<?> var = new Repo.Cached(
-            this.repo(), this.user(), new Spec.Simple(text)
+            this.repo(), this.user(), spec
         ).get();
-        final Object object = var.instantiate(this.users(), new Work.None());
+        final Object object = var.instantiate(
+            this.users(),
+            new Work() {
+                @Override
+                public Time started() {
+                    return new Time();
+                }
+                @Override
+                public URN owner() {
+                    return Identity.ANONYMOUS.urn();
+                }
+                @Override
+                public String unit() {
+                    return UnitRs.this.name;
+                }
+                @Override
+                public Spec spec() {
+                    return spec;
+                }
+            }
+        );
         try {
             object.toString();
         } catch (SecurityException ex) {
