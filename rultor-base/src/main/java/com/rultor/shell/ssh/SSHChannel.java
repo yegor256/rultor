@@ -38,6 +38,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.rultor.shell.Shell;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -230,11 +231,13 @@ public final class SSHChannel implements Shell {
             JSch.setConfig("StrictHostKeyChecking", "no");
             JSch.setLogger(SSHChannel.LOGGER);
             final JSch jsch = new JSch();
-            jsch.addIdentity(this.key.asFile().getAbsolutePath());
+            final File file = this.key.asFile();
+            jsch.addIdentity(file.getAbsolutePath());
             Logger.info(
                 this,
-                "Opening SSH session to %s@%s:%s...",
-                this.login, this.addr, SSHChannel.PORT
+                "Opening SSH session to %s@%s:%s (%d bytes in RSA key)...",
+                this.login, this.addr, SSHChannel.PORT,
+                file.length()
             );
             final Session session = jsch.getSession(
                 this.login, this.addr, SSHChannel.PORT

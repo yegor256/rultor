@@ -171,15 +171,39 @@ final class EC2Environment implements Environment {
             );
             final InstanceStateChange change =
                 result.getTerminatingInstances().get(0);
+            final long age = System.currentTimeMillis()
+                - instance.getLaunchTime().getTime();
             Signal.log(
                 Signal.Mnemo.SUCCESS,
-                "EC2 instance %s terminated, after %[ms]s of activity",
+                // @checkstyle LineLength (1 line)
+                "EC2 instance %s (%s) terminated, after %[ms]s of activity (approx. %s)",
                 change.getInstanceId(),
-                System.currentTimeMillis() - instance.getLaunchTime().getTime()
+                instance.getInstanceType(),
+                age,
+                EC2Environment.costOf(
+                    instance.getInstanceType(),
+                    instance.getPlacement().getAvailabilityZone(),
+                    age
+                )
             );
         } finally {
             aws.shutdown();
         }
+    }
+
+    /**
+     * Calculate cost of time spent.
+     * @param type Type of EC2 instance
+     * @param zone Availability zone
+     * @param msec Time spent
+     * @throws IOException If IO problem inside
+     */
+    private static String costOf(final String type, final String zone,
+        final long msec) throws IOException {
+        assert type != null;
+        assert zone != null;
+        assert msec > 0;
+        return "$0.00";
     }
 
 }
