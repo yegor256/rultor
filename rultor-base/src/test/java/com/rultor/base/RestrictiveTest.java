@@ -56,6 +56,18 @@ public final class RestrictiveTest {
     }
 
     /**
+     * Restrictive can pass through when exact URN provided.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void passesThroughWhenAllowedForExactUrn() throws Exception {
+        final Object origin = Mockito.mock(Object.class);
+        final String owner = "urn:test:777";
+        final Work work = new Work.Simple(new URN(owner), "test-A");
+        new Restrictive(work, Arrays.asList(owner), origin).toString();
+    }
+
+    /**
      * Restrictive can pass through when it's allowed.
      * @throws Exception If some problem inside
      */
