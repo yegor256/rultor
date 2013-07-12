@@ -121,7 +121,8 @@ public final class Restrictive implements Proxy<Object> {
     private boolean allowed() {
         boolean allowed = false;
         for (String friend : this.friends) {
-            if (this.work.owner().matches(friend)) {
+            if (this.work.owner().matches(friend)
+                || this.work.owner().toString().equals(friend)) {
                 allowed = true;
                 break;
             }
