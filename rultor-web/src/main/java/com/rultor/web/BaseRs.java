@@ -114,6 +114,10 @@ public class BaseRs extends BaseResource {
                 final Response.ResponseBuilder builder) {
                 builder.type(MediaType.TEXT_XML);
                 builder.header(HttpHeaders.VARY, "Cookie");
+                builder.header(
+                    "X-Rultor-Revision",
+                    Manifests.read("Rultor-Revision")
+                );
             }
         };
     }

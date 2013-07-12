@@ -120,6 +120,10 @@
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-log</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi</groupId>
             <artifactId>jcabi-dynamo</artifactId>
             <version>${jcabi.version}</version>
         </dependency>
