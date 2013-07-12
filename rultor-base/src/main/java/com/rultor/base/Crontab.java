@@ -96,8 +96,9 @@ public final class Crontab implements Instance {
      * @param text Mask to use
      * @param instance Original instance
      */
-    public Crontab(@NotNull final Work wrk, @NotNull final String text,
-        @NotNull final Instance instance) {
+    public Crontab(@NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "crontab text can't be NULL") final String text,
+        @NotNull(message = "instance can't be NULL") final Instance instance) {
         this.work = wrk;
         this.origin = instance;
         this.gates = Crontab.split(text);

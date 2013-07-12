@@ -73,8 +73,10 @@ public final class SSHServer implements Shell {
      * @param user Login
      * @param priv Private SSH key
      */
-    public SSHServer(@NotNull final Environment environ,
-        @NotNull final String user, @NotNull final PrivateKey priv) {
+    public SSHServer(
+        @NotNull(message = "env can't be NULL") final Environment environ,
+        @NotNull(message = "user name can't be NULL") final String user,
+        @NotNull(message = "private key can't be NULL") final PrivateKey priv) {
         this.env = environ;
         this.login = user;
         this.key = priv;

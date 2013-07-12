@@ -72,8 +72,9 @@ public final class BucketLineup implements Lineup {
      * @param pfx Prefix
      * @param clnt Client
      */
-    public BucketLineup(@NotNull final Work wrk, @NotNull final String pfx,
-        @NotNull final S3Client clnt) {
+    public BucketLineup(@NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "S3 prefix can't be NULL") final String pfx,
+        @NotNull(message = "S3 client can't be NULL") final S3Client clnt) {
         this.work = wrk;
         this.prefix = pfx;
         this.client = clnt;

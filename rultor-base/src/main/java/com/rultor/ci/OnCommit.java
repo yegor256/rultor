@@ -83,10 +83,12 @@ public final class OnCommit implements Instance {
      * @param ntp Notepad
      * @param btch Batch to use
      * @param brd The board where to announce
-     * @checkstyle ParameterNumber (5 lines)
+     * @checkstyle ParameterNumber (9 lines)
      */
-    public OnCommit(@NotNull final Branch brn, @NotNull final Notepad ntp,
-        @NotNull final Batch btch, @NotNull final Billboard brd) {
+    public OnCommit(@NotNull(message = "branch can't be NULL") final Branch brn,
+        @NotNull(message = "notepad can't be NULL") final Notepad ntp,
+        @NotNull(message = "batch can't be NULL") final Batch btch,
+        @NotNull(message = "board can't be NULL") final Billboard brd) {
         this.branch = brn;
         this.notepad = ntp;
         this.batch = btch;

@@ -95,7 +95,8 @@ public final class PulseRs extends BaseRs {
      * @param unit Unit name
      */
     @PathParam("name")
-    public void setName(@NotNull final String unit) {
+    public void setName(@NotNull(message = "unit name is mandatory")
+        final String unit) {
         this.name = unit;
     }
 
@@ -104,7 +105,8 @@ public final class PulseRs extends BaseRs {
      * @param time Pulse time
      */
     @PathParam("date")
-    public void setDate(@NotNull final String time) {
+    public void setDate(@NotNull(message = "date is mandatory")
+        final String time) {
         this.date = new Time(Long.parseLong(time));
     }
 

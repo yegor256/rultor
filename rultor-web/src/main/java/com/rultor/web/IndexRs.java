@@ -96,7 +96,8 @@ public final class IndexRs extends BaseRs {
      */
     @POST
     @Path("/create")
-    public Response create(@NotNull @FormParam("name") final String name) {
+    public Response create(@NotNull(message = "unit name is mandatory")
+        @FormParam("name") final String name) {
         this.user().create(name);
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()

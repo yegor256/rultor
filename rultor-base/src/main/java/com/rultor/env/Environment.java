@@ -50,7 +50,7 @@ public interface Environment extends Closeable {
      * @return IP address of it
      * @throws IOException If fails
      */
-    @NotNull
+    @NotNull(message = "IP address is never NULL")
     InetAddress address() throws IOException;
 
 }

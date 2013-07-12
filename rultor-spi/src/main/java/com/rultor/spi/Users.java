@@ -48,7 +48,7 @@ public interface Users {
      * Get everybody.
      * @return All users
      */
-    @NotNull
+    @NotNull(message = "set of URNs is never NULL")
     Set<URN> everybody();
 
     /**
@@ -56,7 +56,7 @@ public interface Users {
      * @param name URN of it
      * @return The user
      */
-    @NotNull
-    User get(@NotNull URN name);
+    @NotNull(message = "user is never NULL")
+    User get(@NotNull(message = "name can't be NULL") URN name);
 
 }

@@ -87,8 +87,9 @@ public final class ObjectLineup implements Lineup {
      * @param obj Object name
      * @param clnt Client
      */
-    public ObjectLineup(@NotNull final String obj,
-        @NotNull final S3Client clnt) {
+    public ObjectLineup(
+        @NotNull(message = "object can't be NULL") final String obj,
+        @NotNull(message = "S3 client can't be NULL") final S3Client clnt) {
         this.key = obj;
         this.client = clnt;
     }

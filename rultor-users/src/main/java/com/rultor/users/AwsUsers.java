@@ -76,6 +76,7 @@ public final class AwsUsers implements Users, Metricable {
      * {@inheritDoc}
      */
     @Override
+    @NotNull(message = "list of URN names is never NULL")
     public Set<URN> everybody() {
         final Set<URN> users = new HashSet<URN>(0);
         for (Item item : this.region.table("units").frame()) {
@@ -87,8 +88,8 @@ public final class AwsUsers implements Users, Metricable {
     /**
      * {@inheritDoc}
      */
-    @NotNull
     @Override
+    @NotNull(message = "User is never NULL")
     public User get(@NotNull final URN urn) {
         return new AwsUser(this.region, urn);
     }

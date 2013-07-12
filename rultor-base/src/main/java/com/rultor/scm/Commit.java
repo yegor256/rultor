@@ -52,7 +52,7 @@ public interface Commit {
      * @return Identifier of it
      * @throws IOException If fails
      */
-    @NotNull
+    @NotNull(message = "name of commit is never NULL")
     String name() throws IOException;
 
     /**
@@ -60,7 +60,7 @@ public interface Commit {
      * @return Date
      * @throws IOException If fails
      */
-    @NotNull
+    @NotNull(message = "time of commit is never NULL")
     Time time() throws IOException;
 
     /**
@@ -68,7 +68,7 @@ public interface Commit {
      * @return Author
      * @throws IOException If fails
      */
-    @NotNull
+    @NotNull(message = "author of commit is never NULL")
     String author() throws IOException;
 
     /**

@@ -34,6 +34,7 @@ import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -72,7 +73,7 @@ public interface SNSClient {
          * @param akey AWS key
          * @param scrt AWS secret
          */
-        public Simple(final String akey, final String scrt) {
+        public Simple(@NotNull final String akey, @NotNull final String scrt) {
             this.key = akey;
             this.secret = scrt;
         }

@@ -90,7 +90,8 @@ public final class DrainRs extends BaseRs {
      * @param unit Unit name
      */
     @PathParam("unit")
-    public void setName(@NotNull final String unit) {
+    public void setName(@NotNull(message = "unit name can't be NULL")
+        final String unit) {
         this.name = unit;
     }
 

@@ -66,8 +66,10 @@ public final class DomainLineup implements Lineup {
      * @param wrk Work we're in
      * @param clnt Client
      */
-    public DomainLineup(@NotNull final Work wrk,
-        @NotNull final SDBClient clnt) {
+    public DomainLineup(
+        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "SimpleDB client can't be NULL")
+        final SDBClient clnt) {
         this.work = wrk;
         this.client = clnt;
     }

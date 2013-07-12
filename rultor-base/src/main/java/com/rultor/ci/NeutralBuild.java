@@ -66,8 +66,9 @@ public final class NeutralBuild implements Instance {
      * @param btch Batch to use
      * @param brd The board where to announce
      */
-    public NeutralBuild(@NotNull final Batch btch,
-        @NotNull final Billboard brd) {
+    public NeutralBuild(@NotNull(message = "batch can't be NULL")
+        final Batch btch,
+        @NotNull(message = "board can't be NULL") final Billboard brd) {
         this.batch = btch;
         this.board = brd;
     }

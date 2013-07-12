@@ -46,13 +46,13 @@ public interface Unit {
      * Save specification.
      * @param spec Specification to save
      */
-    void update(@NotNull Spec spec);
+    void update(@NotNull(message = "spec can't be NULL") Spec spec);
 
     /**
      * Get specification.
      * @return Specification
      */
-    @NotNull
+    @NotNull(message = "spec is never NULL")
     Spec spec();
 
     /**
@@ -63,7 +63,7 @@ public interface Unit {
          * {@inheritDoc}
          */
         @Override
-        public void update(final Spec spec) {
+        public void update(@NotNull final Spec spec) {
             assert spec != null;
         }
         /**

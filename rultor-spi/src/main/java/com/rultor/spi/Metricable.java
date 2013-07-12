@@ -45,6 +45,7 @@ public interface Metricable {
      * Register itself in Metrics Registry.
      * @param registry The registry
      */
-    void register(@NotNull MetricRegistry registry);
+    void register(@NotNull(message = "registry can't be NULL")
+        MetricRegistry registry);
 
 }

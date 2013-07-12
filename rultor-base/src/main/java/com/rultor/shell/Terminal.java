@@ -62,7 +62,7 @@ public final class Terminal {
      * Public ctor.
      * @param shl Shell to use
      */
-    public Terminal(@NotNull final Shell shl) {
+    public Terminal(@NotNull(message = "shell can't be NULL") final Shell shl) {
         this.shell = shl;
     }
 

@@ -65,7 +65,8 @@ public final class PrivateKey {
      * Public ctor.
      * @param txt Text
      */
-    public PrivateKey(@NotNull final String txt) {
+    public PrivateKey(
+        @NotNull(message = "RSA key text can't be NULL") final String txt) {
         this.text = PrivateKey.normalize(txt);
         this.toString();
     }

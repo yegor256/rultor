@@ -59,7 +59,8 @@ public final class Echo implements Billboard {
      * {@inheritDoc}
      */
     @Override
-    public void announce(@NotNull final Announcement anmt) {
+    public void announce(@NotNull(message = "announcement can't be NULL")
+        final Announcement anmt) {
         Logger.info(this, anmt.toString());
     }
 

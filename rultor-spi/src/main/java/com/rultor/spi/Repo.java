@@ -54,7 +54,7 @@ public interface Repo {
      * @return The instance
      * @throws SpecException If can't instantiate
      */
-    @NotNull
+    @NotNull(message = "variable is never NULL")
     Variable<?> make(@NotNull User user, @NotNull Spec spec)
         throws SpecException;
 
@@ -84,8 +84,9 @@ public interface Repo {
          * @param usr User
          * @param spc Spec
          */
-        public Cached(@NotNull final Repo rep, @NotNull final User usr,
-            @NotNull final Spec spc) {
+        public Cached(@NotNull(message = "repo can't be NULL") final Repo rep,
+            @NotNull(message = "user can't be NULL") final User usr,
+            @NotNull(message = "spec can't be NULL") final Spec spc) {
             this.repo = rep;
             this.user = usr;
             this.spec = spc;
@@ -95,6 +96,7 @@ public interface Repo {
          * @return The object or exception if fails
          * @throws SpecException If fails
          */
+        @NotNull(message = "result variable is never NULL")
         @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
         public Variable<?> get() throws SpecException {
             return this.repo.make(this.user, this.spec);

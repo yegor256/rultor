@@ -50,7 +50,7 @@ public interface Queue {
      * Push new work into it.
      * @param work The work to do
      */
-    void push(@NotNull Work work);
+    void push(@NotNull(message = "work can't be NULL") Work work);
 
     /**
      * Pull the next available work (waits until it is available).
@@ -59,8 +59,9 @@ public interface Queue {
      * @return The work available or Work.None
      * @throws InterruptedException If interrupted while waiting
      */
-    @NotNull
-    Work pull(int limit, TimeUnit unit) throws InterruptedException;
+    @NotNull(message = "work is never NULL")
+    Work pull(int limit, @NotNull(message = "time unit can't be NULL")
+        TimeUnit unit) throws InterruptedException;
 
     /**
      * In memory.
@@ -78,15 +79,16 @@ public interface Queue {
          * {@inheritDoc}
          */
         @Override
-        public void push(final Work work) {
+        public void push(@NotNull final Work work) {
             this.list.add(work);
         }
         /**
          * {@inheritDoc}
          */
         @Override
+        @NotNull
         @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-        public Work pull(final int limit, final TimeUnit unit)
+        public Work pull(final int limit, @NotNull final TimeUnit unit)
             throws InterruptedException {
             return this.list.poll(limit, unit);
         }

@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -63,7 +64,7 @@ public final class Pulse {
      * Public ctor.
      * @param drn Drain
      */
-    public Pulse(final Drain drn) {
+    public Pulse(@NotNull(message = "drain can't be NULL") final Drain drn) {
         this.drain = drn;
     }
 
@@ -72,6 +73,7 @@ public final class Pulse {
      * @return Collection of them
      * @throws IOException If IO error
      */
+    @NotNull(message = "list of stages is never NULL")
     public Collection<Stage> stages() throws IOException {
         final Collection<Stage> stages = new LinkedList<Stage>();
         final BufferedReader reader =

@@ -50,7 +50,8 @@ public interface Variable<T> extends Spec {
      * @return The object
      * @throws SpecException If can't instantiate
      */
-    T instantiate(@NotNull Users users, @NotNull Work work)
+    T instantiate(@NotNull(message = "users can't be NULL") Users users,
+        @NotNull(message = "work can't be NULL") Work work)
         throws SpecException;
 
 }

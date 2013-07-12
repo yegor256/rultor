@@ -86,8 +86,10 @@ public final class ItemLineup implements Lineup {
      * @param obj Item name
      * @param clnt Client
      */
-    public ItemLineup(@NotNull final String obj,
-        @NotNull final SDBClient clnt) {
+    public ItemLineup(
+        @NotNull(message = "object name can't be NULL") final String obj,
+        @NotNull(message = "SimpleDB client can't be NULL")
+        final SDBClient clnt) {
         this.name = obj;
         this.client = clnt;
     }

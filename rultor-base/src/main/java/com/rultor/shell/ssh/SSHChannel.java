@@ -109,8 +109,10 @@ public final class SSHChannel implements Shell {
      * @param user Login
      * @param priv Private SSH key
      */
-    public SSHChannel(@NotNull final InetAddress adr,
-        @NotNull final String user, @NotNull final PrivateKey priv) {
+    public SSHChannel(
+        @NotNull(message = "IP address can't be NULL") final InetAddress adr,
+        @NotNull(message = "user name can't be NULL") final String user,
+        @NotNull(message = "private key can't be NULL") final PrivateKey priv) {
         this.addr = adr.getHostAddress();
         Validate.matchesPattern(
             this.addr,

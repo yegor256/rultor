@@ -91,8 +91,10 @@ public final class DomainNotepad implements Notepad {
      * @param wrk Work
      * @param clnt Client
      */
-    public DomainNotepad(@NotNull final Work wrk,
-        @NotNull final SDBClient clnt) {
+    public DomainNotepad(
+        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "SimpleDB client can't be NULL")
+        final SDBClient clnt) {
         this.work = wrk;
         this.client = clnt;
     }

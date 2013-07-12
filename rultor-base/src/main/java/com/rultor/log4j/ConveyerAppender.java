@@ -96,8 +96,9 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
      * @param date When it starts
      * @param drn Drain to log to
      */
-    protected ConveyerAppender(@NotNull final Time date,
-        @NotNull final Drain drn) {
+    protected ConveyerAppender(@NotNull(message = "date can't be NULL")
+        final Time date, @NotNull(message = "drain can't be NULL")
+        final Drain drn) {
         super();
         this.start = date;
         this.drain = drn;

@@ -34,6 +34,7 @@ import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -83,8 +84,8 @@ public interface SQSClient {
          * @param scrt AWS secret
          * @param url URL of the queue
          */
-        public Simple(final String akey, final String scrt,
-            final String url) {
+        public Simple(@NotNull final String akey, @NotNull final String scrt,
+            @NotNull final String url) {
             this.key = akey;
             this.secret = scrt;
             this.queue = url;

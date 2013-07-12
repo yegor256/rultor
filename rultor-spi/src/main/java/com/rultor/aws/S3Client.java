@@ -34,6 +34,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -83,8 +84,8 @@ public interface S3Client {
          * @param scrt AWS secret
          * @param bucket S3 bucket
          */
-        public Simple(final String akey, final String scrt,
-            final String bucket) {
+        public Simple(@NotNull final String akey, @NotNull final String scrt,
+            @NotNull final String bucket) {
             this.key = akey;
             this.secret = scrt;
             this.bkt = bucket;

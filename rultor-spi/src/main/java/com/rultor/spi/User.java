@@ -48,14 +48,14 @@ public interface User {
      * His URN.
      * @return URN
      */
-    @NotNull
+    @NotNull(message = "URN of user is never NULL")
     URN urn();
 
     /**
      * Names of all his units.
      * @return Collection of units
      */
-    @NotNull
+    @NotNull(message = "set of units of user is never NULL")
     Set<String> units();
 
     /**
@@ -63,19 +63,19 @@ public interface User {
      * @param name The name of it
      * @return The unit
      */
-    @NotNull
+    @NotNull(message = "unit is never NULL")
     Unit get(@NotNull String name);
 
     /**
      * Remove unit by name (runtime exception if it's absent).
      * @param name The name of it
      */
-    void remove(@NotNull String name);
+    void remove(@NotNull(message = "name can't be NULL") String name);
 
     /**
      * Create empty default unit with this name.
      * @param name The name of it
      */
-    void create(@NotNull String name);
+    void create(@NotNull(message = "name can't be NULL") String name);
 
 }

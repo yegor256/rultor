@@ -86,8 +86,9 @@ public final class ObjectNotepad implements Notepad {
      * @param obj Object key name
      * @param clnt Client
      */
-    public ObjectNotepad(@NotNull final String obj,
-        @NotNull final S3Client clnt) {
+    public ObjectNotepad(
+        @NotNull(message = "object can't be NULL") final String obj,
+        @NotNull(message = "S3 client can't be NULL") final S3Client clnt) {
         this.key = obj;
         this.client = clnt;
     }

@@ -97,7 +97,8 @@ public final class SNS implements Billboard {
      * {@inheritDoc}
      */
     @Override
-    public void announce(@NotNull final Announcement anmt) throws IOException {
+    public void announce(@NotNull(message = "announcement can't be NULL")
+        final Announcement anmt) throws IOException {
         final AmazonSNS aws = this.client.get();
         try {
             String print = String.class.cast(anmt.args().get("print"));

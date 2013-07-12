@@ -83,8 +83,9 @@ public final class Git implements SCM {
      * @param folder Directory to use for clone
      * @checkstyle ParameterNumber (5 lines)
      */
-    public Git(@NotNull final Shell shl, @NotNull final URL addr,
-        @NotNull final String folder) {
+    public Git(@NotNull(message = "shell can't be NULL") final Shell shl,
+        @NotNull(message = "URL can't be NULL") final URL addr,
+        @NotNull(message = "folder can't be NULL") final String folder) {
         this(
             shl, addr, folder,
             new PrivateKey(

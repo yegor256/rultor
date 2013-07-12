@@ -75,7 +75,8 @@ public final class UnitRs extends BaseRs {
      * @param unit Unit name (or NULL)
      */
     @PathParam("name")
-    public void setName(@NotNull final String unit) {
+    public void setName(@NotNull(message = "unit name is mandatory")
+        final String unit) {
         this.name = unit;
     }
 

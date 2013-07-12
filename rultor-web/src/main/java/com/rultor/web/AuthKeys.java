@@ -35,6 +35,7 @@ import com.jcabi.urn.URN;
 import com.rexsl.page.auth.HttpBasic;
 import com.rexsl.page.auth.Identity;
 import java.net.URI;
+import javax.validation.constraints.NotNull;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
@@ -56,7 +57,9 @@ public final class AuthKeys implements HttpBasic.Vault {
      * {@inheritDoc}
      */
     @Override
-    public Identity authenticate(final String user, final String password) {
+    public Identity authenticate(@NotNull(message = "user can't be NULL")
+        final String user, @NotNull(message = "password can't be NULL")
+        final String password) {
         Identity identity = new Identity.Simple(
             URN.create(user), "", URI.create("#")
         );
@@ -71,7 +74,8 @@ public final class AuthKeys implements HttpBasic.Vault {
      * @param identity Identity to make key for
      * @return Key
      */
-    public String make(final Identity identity) {
+    public String make(@NotNull(message = "identity can't be NULL")
+        final Identity identity) {
         return DigestUtils.md5Hex(
             String.format("%s-%s", identity.urn(), this.key)
         );

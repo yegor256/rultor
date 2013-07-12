@@ -87,9 +87,11 @@ public final class Parallel implements Instance {
      * @param instance Original instance
      * @checkstyle ParameterNumber (5 lines)
      */
-    public Parallel(@NotNull final Work wrk, final int max,
-        @NotNull final Lineup lnp, @NotNull final Notepad atv,
-        @NotNull final Instance instance) {
+    public Parallel(@NotNull(message = "work can't be NULL") final Work wrk,
+        final int max,
+        @NotNull(message = "lineup can't be NULL") final Lineup lnp,
+        @NotNull(message = "notepad can't be NULL") final Notepad atv,
+        @NotNull(message = "instance can't be NULL") final Instance instance) {
         Validate.isTrue(max >= 0, "Maximum can't be negative, %d given", max);
         this.work = wrk;
         this.origin = instance;

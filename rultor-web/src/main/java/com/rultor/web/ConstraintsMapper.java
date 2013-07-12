@@ -30,9 +30,13 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.inset.FlashInset;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.logging.Level;
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -61,9 +65,26 @@ public final class ConstraintsMapper extends BaseResource
         if (msg == null) {
             msg = "undisclosed constraint violation (internal problem)";
         }
+        final Collection<String> violations =
+            new ArrayList<String>(violation.getConstraintViolations().size());
+        for (ConstraintViolation<?> vio : violation.getConstraintViolations()) {
+            violations.add(
+                Logger.format(
+                    "%s %s %[type]s %s",
+                    vio.getConstraintDescriptor(),
+                    vio.getMessage(),
+                    vio.getLeafBean(),
+                    vio.getRootBeanClass()
+                )
+            );
+        }
         return FlashInset.forward(
             this.uriInfo().getRequestUri(),
-            msg,
+            Logger.format(
+                "%s: %[list]s",
+                msg,
+                violations
+            ),
             Level.WARNING
         ).getResponse();
     }

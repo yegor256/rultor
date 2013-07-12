@@ -74,7 +74,7 @@ public final class Time implements Comparable<Time> {
      * Public ctor.
      * @param millis Milliseconds
      */
-    public Time(@NotNull final long millis) {
+    public Time(final long millis) {
         Validate.isTrue(millis > 0, "millis can't be negative: %d", millis);
         this.msec = millis;
     }
@@ -83,7 +83,7 @@ public final class Time implements Comparable<Time> {
      * Public ctor.
      * @param date Date
      */
-    public Time(@NotNull final Date date) {
+    public Time(@NotNull(message = "date can't be NULL") final Date date) {
         this(date.getTime());
     }
 
@@ -91,7 +91,7 @@ public final class Time implements Comparable<Time> {
      * Public ctor.
      * @param date Date
      */
-    public Time(@NotNull final String date) {
+    public Time(@NotNull(message = "text can't be NULL") final String date) {
         this(Time.parse(date));
     }
 
@@ -116,7 +116,7 @@ public final class Time implements Comparable<Time> {
      * @param time Time to reach
      * @return Distance between this time and given one
      */
-    public long delta(final Time time) {
+    public long delta(@NotNull final Time time) {
         return this.msec - time.msec;
     }
 

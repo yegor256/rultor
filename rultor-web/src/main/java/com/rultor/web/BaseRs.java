@@ -81,6 +81,7 @@ public class BaseRs extends BaseResource {
      * @return The inset with flash
      */
     @Inset.Runtime
+    @NotNull(message = "flash can never be NULL")
     public final FlashInset flash() {
         return new FlashInset(this);
     }
@@ -90,6 +91,7 @@ public class BaseRs extends BaseResource {
      * @return The inset
      */
     @Inset.Runtime
+    @NotNull(message = "version can never be NULL")
     public final Inset insetVersion() {
         return new VersionInset(
             Manifests.read("Rultor-Version"),
@@ -104,6 +106,7 @@ public class BaseRs extends BaseResource {
      * @return The inset
      */
     @Inset.Runtime
+    @NotNull(message = "supplementary inset can never be NULL")
     public final Inset insetSupplementary() {
         return new Inset() {
             @Override
@@ -120,6 +123,7 @@ public class BaseRs extends BaseResource {
      * @return The inset
      */
     @Inset.Runtime
+    @NotNull(message = "auth key inset can never be NULL")
     public final Inset insetAuthKey() {
         return new Inset() {
             @Override
@@ -140,6 +144,7 @@ public class BaseRs extends BaseResource {
      * @return The inset
      */
     @Inset.Runtime
+    @NotNull(message = "auth inset can never be NULL")
     public final AuthInset auth() {
         // @checkstyle LineLength (4 lines)
         return new AuthInset(this, Manifests.read("Rultor-SecurityKey"))
