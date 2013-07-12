@@ -82,8 +82,9 @@ public final class ObjectDrain implements Drain {
      * @param clnt S3 client
      * @param name S3 object name
      */
-    public ObjectDrain(@NotNull final S3Client clnt,
-        @NotNull final String name) {
+    public ObjectDrain(
+        @NotNull(message = "S3 client can't be NULL") final S3Client clnt,
+        @NotNull(message = "object name can't be NULL") final String name) {
         this.client = clnt;
         Validate.matchesPattern(
             name, "([^/]+/)*[^/]+", "invalid S3 object name '%s'", name

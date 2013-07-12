@@ -131,8 +131,9 @@ public interface Pulses extends Iterable<Time> {
          * @param frst First
          * @param scnd Second
          */
-        public Sequence(@NotNull final Pulses frst,
-            @NotNull final Pulses scnd) {
+        public Sequence(
+            @NotNull(message = "first can't be NULL") final Pulses frst,
+            @NotNull(message = "second can't be NULL") final Pulses scnd) {
             this.first = frst;
             this.second = scnd;
         }
@@ -141,7 +142,8 @@ public interface Pulses extends Iterable<Time> {
          */
         @Override
         @NotNull
-        public Pulses tail(@NotNull final Time head) {
+        public Pulses tail(
+            @NotNull(message = "head can't be NULL") final Time head) {
             return new Pulses.Sequence(
                 this.first.tail(head), this.second.tail(head)
             );

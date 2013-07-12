@@ -91,7 +91,8 @@ public final class Compact implements Billboard {
      * {@inheritDoc}
      */
     @Override
-    public void announce(@NotNull final Announcement anmt) throws IOException {
+    public void announce(@NotNull(message = "announcement can't be NULL")
+        final Announcement anmt) throws IOException {
         final ImmutableMap.Builder<String, Object> args =
             new ImmutableMap.Builder<String, Object>();
         for (Map.Entry<String, Object> entry : anmt.args().entrySet()) {

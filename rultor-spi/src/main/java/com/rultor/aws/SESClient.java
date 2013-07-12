@@ -73,7 +73,9 @@ public interface SESClient {
          * @param akey AWS key
          * @param scrt AWS secret
          */
-        public Simple(@NotNull final String akey, @NotNull final String scrt) {
+        public Simple(
+            @NotNull(message = "AWS key can't be NULL") final String akey,
+            @NotNull(message = "AWS secret can't be NULL") final String scrt) {
             this.key = akey;
             this.secret = scrt;
         }

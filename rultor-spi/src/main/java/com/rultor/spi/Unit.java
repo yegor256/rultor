@@ -63,13 +63,15 @@ public interface Unit {
          * {@inheritDoc}
          */
         @Override
-        public void update(@NotNull final Spec spec) {
+        public void update(@NotNull(message = "spec can't be NULL")
+            final Spec spec) {
             assert spec != null;
         }
         /**
          * {@inheritDoc}
          */
         @Override
+        @NotNull(message = "spec of an empty unit is never NULL")
         public Spec spec() {
             return new Spec.Simple();
         }

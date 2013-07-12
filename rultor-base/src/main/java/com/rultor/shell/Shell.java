@@ -56,8 +56,10 @@ public interface Shell extends Closeable {
      * @throws IOException If fails
      * @checkstyle ParameterNumber (5 lines)
      */
-    int exec(@NotNull String command, @NotNull InputStream stdin,
-        @NotNull OutputStream stdout, @NotNull OutputStream stderr)
+    int exec(@NotNull(message = "command can't be NULL") String command,
+        @NotNull(message = "stdin can't be NULL") InputStream stdin,
+        @NotNull(message = "stdout can't be NULL") OutputStream stdout,
+        @NotNull(message = "stderr can't be NULL") OutputStream stderr)
         throws IOException;
 
 }

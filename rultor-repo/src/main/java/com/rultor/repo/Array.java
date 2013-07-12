@@ -83,12 +83,14 @@ final class Array implements Variable<List<Object>> {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
+     * @checkstyle RedundantThrows (8 lines)
      */
     @Override
     @NotNull
-    public List<Object> instantiate(@NotNull final Users users,
-        @NotNull final Work work) throws SpecException {
+    public List<Object> instantiate(
+        @NotNull(message = "users can't be NULL") final Users users,
+        @NotNull(message = "work can't be NULL") final Work work)
+        throws SpecException {
         final List<Object> objects =
             new ArrayList<Object>(this.values.length);
         for (Variable<?> var : this.values) {

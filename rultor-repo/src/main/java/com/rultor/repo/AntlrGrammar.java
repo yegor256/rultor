@@ -58,11 +58,13 @@ final class AntlrGrammar implements Grammar {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
+     * @checkstyle RedundantThrows (10 lines)
      */
     @Override
-    @NotNull
-    public Variable<?> parse(@NotNull final URN urn, @NotNull final String text)
+    @NotNull(message = "variable is never NULL")
+    public Variable<?> parse(
+        @NotNull(message = "URN can't be NULL") final URN urn,
+        @NotNull(message = "text can't be NULL") final String text)
         throws SpecException {
         final CharStream input = new ANTLRStringStream(text);
         final SpecLexer lexer = new SpecLexer(input);

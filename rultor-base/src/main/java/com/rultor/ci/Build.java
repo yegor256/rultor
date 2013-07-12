@@ -78,7 +78,8 @@ final class Build {
      * @throws IOException If some IO problem
      */
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    public Announcement exec(@NotNull final Map<String, Object> args)
+    public Announcement exec(@NotNull(message = "args can't be NULL")
+        final Map<String, Object> args)
         throws IOException {
         Signal.log(Signal.Mnemo.START, "Started to build");
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();

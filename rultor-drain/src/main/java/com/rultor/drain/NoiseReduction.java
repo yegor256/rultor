@@ -90,11 +90,14 @@ public final class NoiseReduction implements Drain {
      * @param vsbl How many items should be visible from dirty drain
      * @param drt Dirty drain
      * @param cln Clean drain
-     * @checkstyle ParameterNumber (4 lines)
+     * @checkstyle ParameterNumber (10 lines)
      */
-    public NoiseReduction(@NotNull final Work wrk,
-        @NotNull final String ptn, final int vsbl,
-        @NotNull final Drain drt, @NotNull final Drain cln) {
+    public NoiseReduction(
+        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "pattern can't be NULL") final String ptn,
+        final int vsbl,
+        @NotNull(message = "dirty drain can't be NULL") final Drain drt,
+        @NotNull(message = "clean drain can't be NULL") final Drain cln) {
         this.work = wrk;
         this.pattern = ptn;
         this.visible = vsbl;

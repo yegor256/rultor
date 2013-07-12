@@ -56,7 +56,8 @@ public interface Batch {
      * @throws IOException If some IO problem
      * @checkstyle MultipleStringLiterals (100 lines)
      */
-    int exec(@NotNull Map<String, Object> args,
-        @NotNull OutputStream output) throws IOException;
+    int exec(@NotNull(message = "args can't be NULL") Map<String, Object> args,
+        @NotNull(message = "output can't be NULL") OutputStream output)
+        throws IOException;
 
 }

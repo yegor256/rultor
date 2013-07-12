@@ -57,4 +57,10 @@ def unit = user.get(name)
     unit.update(new Spec.Simple(it.key))
     MatcherAssert.assertThat(unit.spec().asText(), Matchers.equalTo(it.value))
 }
+[
+    'com.rultor.base.Empty()',
+    'com.rultor.base.Restrictive($work, ["*"], com.rultor.base.Empty())',
+].each {
+    unit.update(new Spec.Simple(it))
+}
 user.remove(name)

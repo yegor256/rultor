@@ -68,7 +68,9 @@ public final class Tailed implements Drain {
      * @param body Main drain
      * @param extra Tail drain
      */
-    public Tailed(@NotNull final Drain body, @NotNull final Drain extra) {
+    public Tailed(
+        @NotNull(message = "body drain can't be NULL") final Drain body,
+        @NotNull(message = "tail can't be NULL") final Drain extra) {
         this.main = body;
         this.tail = extra;
     }

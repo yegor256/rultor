@@ -113,12 +113,14 @@ final class Composite implements Variable<Object> {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
+     * @checkstyle RedundantThrows (10 lines)
      */
     @Override
     @NotNull
-    public Object instantiate(@NotNull final Users users,
-        @NotNull final Work work) throws SpecException {
+    public Object instantiate(
+        @NotNull(message = "users can't be NULL") final Users users,
+        @NotNull(message = "work can't be NULL") final Work work)
+        throws SpecException {
         final Object[] args = new Object[this.vars.length];
         final Class<?>[] types = new Class<?>[this.vars.length];
         for (int idx = 0; idx < this.vars.length; ++idx) {

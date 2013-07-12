@@ -96,8 +96,9 @@ public final class BufferedRead implements Drain {
      * @param sec For how long to keep them in memory
      * @param drain Original drain
      */
-    public BufferedRead(@NotNull final Work wrk, final long sec,
-        @NotNull final Drain drain) {
+    public BufferedRead(
+        @NotNull(message = "work can't be NULL") final Work wrk, final long sec,
+        @NotNull(message = "drain can't be NULL") final Drain drain) {
         assert BufferedRead.CLEANER != null;
         Validate.isTrue(
             sec <= TimeUnit.HOURS.toSeconds(1),

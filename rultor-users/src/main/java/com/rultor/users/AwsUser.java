@@ -89,7 +89,7 @@ final class AwsUser implements User {
      * {@inheritDoc}
      */
     @Override
-    @NotNull
+    @NotNull(message = "URN of a user is never NULL")
     public URN urn() {
         return this.name;
     }
@@ -98,7 +98,7 @@ final class AwsUser implements User {
      * {@inheritDoc}
      */
     @Override
-    @NotNull
+    @NotNull(message = "list of units of a user is never NULL")
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Set<String> units() {
         final Set<String> units = new TreeSet<String>();
@@ -115,9 +115,12 @@ final class AwsUser implements User {
      */
     @Override
     @Cacheable.FlushAfter
-    public void create(@NotNull @Pattern(
-        regexp = "[-a-z0-9]+",
-        message = "Only numbers, letters, and dashes are allowed")
+    public void create(
+        @NotNull(message = "unit name is mandatory when creating new unit")
+        @Pattern(
+            regexp = "[-a-z0-9]+",
+            message = "Only numbers, letters, and dashes are allowed"
+        )
         final String unt) {
         if (this.units().contains(unt)) {
             throw new IllegalArgumentException(
@@ -132,7 +135,8 @@ final class AwsUser implements User {
      */
     @Override
     @Cacheable.FlushAfter
-    public void remove(@NotNull final String unit) {
+    public void remove(@NotNull(message = "unit name is mandatory")
+        final String unit) {
         final Iterator<Item> items = this.region.table(AwsUnit.TABLE).frame()
             .where(AwsUnit.KEY_OWNER, Conditions.equalTo(this.name))
             .where(AwsUnit.KEY_NAME, Conditions.equalTo(unit))
@@ -150,7 +154,8 @@ final class AwsUser implements User {
      * {@inheritDoc}
      */
     @Override
-    public Unit get(@NotNull final String unit) {
+    public Unit get(@NotNull(message = "unit name can't be NULL")
+        final String unit) {
         if (!this.units().contains(unit)) {
             throw new IllegalArgumentException(
                 String.format("Unit '%s' doesn't exist", unit)

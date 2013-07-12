@@ -97,7 +97,9 @@ public final class Temporary implements Drain {
      * @param wrk Work we're in
      * @param mrk Optional marker
      */
-    public Temporary(@NotNull final Work wrk, @NotNull final String mrk) {
+    public Temporary(
+        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "marker can't be NULL") final String mrk) {
         assert Temporary.CLEANER != null;
         this.work = wrk;
         this.marker = mrk;
@@ -107,7 +109,7 @@ public final class Temporary implements Drain {
      * Public ctor.
      * @param wrk Work we're in
      */
-    public Temporary(@NotNull final Work wrk) {
+    public Temporary(final Work wrk) {
         this(wrk, "def");
     }
 

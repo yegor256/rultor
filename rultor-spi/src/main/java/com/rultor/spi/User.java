@@ -64,7 +64,7 @@ public interface User {
      * @return The unit
      */
     @NotNull(message = "unit is never NULL")
-    Unit get(@NotNull String name);
+    Unit get(@NotNull(message = "unit name can't be NULL") String name);
 
     /**
      * Remove unit by name (runtime exception if it's absent).

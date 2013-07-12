@@ -85,9 +85,10 @@ public final class Parallel implements Instance {
      * @param lnp Lineup
      * @param atv List of active threads
      * @param instance Original instance
-     * @checkstyle ParameterNumber (5 lines)
+     * @checkstyle ParameterNumber (10 lines)
      */
-    public Parallel(@NotNull(message = "work can't be NULL") final Work wrk,
+    public Parallel(
+        @NotNull(message = "work can't be NULL") final Work wrk,
         final int max,
         @NotNull(message = "lineup can't be NULL") final Lineup lnp,
         @NotNull(message = "notepad can't be NULL") final Notepad atv,

@@ -48,7 +48,7 @@ public interface Lineup {
      * Execute in a synchronized manner.
      * @param runnable The runnable to execute
      */
-    void exec(@NotNull Runnable runnable);
+    void exec(@NotNull(message = "runnable can't be NULL") Runnable runnable);
 
     /**
      * Execute in a synchronized manner.
@@ -57,7 +57,8 @@ public interface Lineup {
      * @return Result returned by the callable
      * @throws Exception If something goes wrong
      */
-    <T> T exec(@NotNull Callable<T> callable) throws Exception;
+    <T> T exec(@NotNull(message = "callable can't be NULL")
+        Callable<T> callable) throws Exception;
 
     /**
      * Asynchronous (without any synchronization).

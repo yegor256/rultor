@@ -85,7 +85,7 @@ public final class BucketLineup implements Lineup {
      * @param wrk Work we're in
      * @param clnt Client
      */
-    public BucketLineup(@NotNull final Work wrk, @NotNull final S3Client clnt) {
+    public BucketLineup(final Work wrk, final S3Client clnt) {
         this(wrk, "", clnt);
     }
 

@@ -116,8 +116,10 @@ public final class SimpleConveyer implements Closeable, Metricable {
      * @param usrs Users
      * @checkstyle ParameterNumber (4 lines)
      */
-    public SimpleConveyer(@NotNull final Queue que, @NotNull final Repo rep,
-        @NotNull final Users usrs) {
+    public SimpleConveyer(
+        @NotNull(message = "queue can't be NULL") final Queue que,
+        @NotNull(message = "repo can't be NULL") final Repo rep,
+        @NotNull(message = "users can't be NULL") final Users usrs) {
         this.queue = que;
         this.repo = rep;
         this.users = usrs;
@@ -170,7 +172,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
      * {@inheritDoc}
      */
     @Override
-    public void register(@NotNull final MetricRegistry registry) {
+    public void register(final MetricRegistry registry) {
         this.counter = registry.counter(
             MetricRegistry.name(this.getClass(), "done-jobs")
         );

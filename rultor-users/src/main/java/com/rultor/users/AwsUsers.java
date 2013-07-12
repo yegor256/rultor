@@ -90,7 +90,7 @@ public final class AwsUsers implements Users, Metricable {
      */
     @Override
     @NotNull(message = "User is never NULL")
-    public User get(@NotNull final URN urn) {
+    public User get(@NotNull(message = "URN can't be empty") final URN urn) {
         return new AwsUser(this.region, urn);
     }
 

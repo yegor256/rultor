@@ -51,9 +51,12 @@ interface Grammar {
      * @param text Text to convert
      * @return The variable
      * @throws SpecException If fails
-     * @checkstyle RedundantThrows (3 lines)
+     * @checkstyle RedundantThrows (10 lines)
      */
-    @NotNull Variable<?> parse(@NotNull URN owner, @NotNull String text)
+    @NotNull(message = "variable is never NULL")
+    Variable<?> parse(
+        @NotNull(message = "URN of owner can't be NULL") URN owner,
+        @NotNull(message = "text can't be NULL") String text)
         throws SpecException;
 
 }

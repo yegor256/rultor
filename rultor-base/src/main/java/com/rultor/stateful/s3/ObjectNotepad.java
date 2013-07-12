@@ -101,8 +101,8 @@ public final class ObjectNotepad implements Notepad {
      * @param scrt AWS secret
      * @checkstyle ParameterNumber (5 lines)
      */
-    public ObjectNotepad(@NotNull final String obj, @NotNull final String bkt,
-        @NotNull final String akey, @NotNull final String scrt) {
+    public ObjectNotepad(final String obj, final String bkt,
+        final String akey, final String scrt) {
         this(obj, new S3Client.Simple(akey, scrt, bkt));
     }
 

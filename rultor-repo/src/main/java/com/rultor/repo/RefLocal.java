@@ -82,12 +82,14 @@ final class RefLocal implements Variable<Object> {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
+     * @checkstyle RedundantThrows (8 lines)
      */
     @Override
     @NotNull
-    public Object instantiate(@NotNull final Users users,
-        @NotNull final Work work) throws SpecException {
+    public Object instantiate(
+        @NotNull(message = "users can't be NULL") final Users users,
+        @NotNull(message = "work can't be NULL") final Work work)
+        throws SpecException {
         return new RefForeign(
             this.grammar, this.owner, this.name
         ).instantiate(users, work);
@@ -97,6 +99,7 @@ final class RefLocal implements Variable<Object> {
      * {@inheritDoc}
      */
     @Override
+    @NotNull(message = "text is never NULL")
     public String asText() {
         return this.name;
     }

@@ -89,7 +89,8 @@ public final class IRC implements Billboard {
      * {@inheritDoc}
      */
     @Override
-    public void announce(@NotNull final Announcement anmt) throws IOException {
+    public void announce(@NotNull(message = "announcement can't be NULL")
+        final Announcement anmt) throws IOException {
         assert this.host != null;
         assert this.port != 0;
         assert this.channel != null;

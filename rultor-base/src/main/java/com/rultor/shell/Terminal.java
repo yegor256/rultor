@@ -80,7 +80,8 @@ public final class Terminal {
      * @return Escaped and bash-safe
      * @todo #34 This implementation is extremely bad
      */
-    public static String escape(@NotNull final String arg) {
+    public static String escape(@NotNull(message = "argument can't be NULL")
+        final String arg) {
         return new StringBuilder()
             .append('"')
             .append(arg.replace("\"", "\\\"").replace("$", "\\$"))
@@ -94,7 +95,8 @@ public final class Terminal {
      * @return Output stream
      * @throws IOException If some IO problem inside
      */
-    public String exec(@NotNull final String command) throws IOException {
+    public String exec(@NotNull(message = "command can't be NULL")
+        final String command) throws IOException {
         return this.exec(command, "");
     }
 
@@ -105,8 +107,10 @@ public final class Terminal {
      * @return Output stream
      * @throws IOException If some IO problem inside
      */
-    public String exec(@NotNull final String command,
-        @NotNull final String stdin) throws IOException {
+    public String exec(
+        @NotNull(message = "command can't be NULL") final String command,
+        @NotNull(message = "stdin can't be NULL") final String stdin)
+        throws IOException {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
         final int code = this.shell.exec(

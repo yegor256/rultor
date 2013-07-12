@@ -75,11 +75,13 @@ public final class ClasspathRepo implements Repo, Metricable {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
+     * @checkstyle RedundantThrows (8 lines)
      */
     @Override
     @NotNull
-    public Variable<?> make(@NotNull final User user, @NotNull final Spec spec)
+    public Variable<?> make(
+        @NotNull(message = "user can't be NULL") final User user,
+        @NotNull(message = "spec can't be NULL") final Spec spec)
         throws SpecException {
         return this.grammar.parse(user.urn(), spec.asText());
     }
@@ -88,7 +90,7 @@ public final class ClasspathRepo implements Repo, Metricable {
      * {@inheritDoc}
      */
     @Override
-    public void register(@NotNull final MetricRegistry registry) {
+    public void register(final MetricRegistry registry) {
         // nothing to do
     }
 

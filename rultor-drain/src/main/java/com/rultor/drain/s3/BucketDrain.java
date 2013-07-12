@@ -71,7 +71,9 @@ public final class BucketDrain implements Drain {
      * @param clnt S3 client
      * @param wrk Work we're in now
      */
-    public BucketDrain(@NotNull final Work wrk, @NotNull final S3Client clnt) {
+    public BucketDrain(
+        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "S3 client can't be NULL") final S3Client clnt) {
         this.client = clnt;
         this.work = wrk;
     }

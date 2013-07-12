@@ -91,12 +91,14 @@ final class Dictionary implements Variable<Map<String, Object>> {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
+     * @checkstyle RedundantThrows (8 lines)
      */
     @Override
     @NotNull
-    public Map<String, Object> instantiate(@NotNull final Users users,
-        @NotNull final Work work) throws SpecException {
+    public Map<String, Object> instantiate(
+        @NotNull(message = "users can't be NULL") final Users users,
+        @NotNull(message = "work can't be NULL") final Work work)
+        throws SpecException {
         final ConcurrentMap<String, Object> objects =
             new ConcurrentHashMap<String, Object>(this.map.length);
         for (Object[] pair : this.map) {

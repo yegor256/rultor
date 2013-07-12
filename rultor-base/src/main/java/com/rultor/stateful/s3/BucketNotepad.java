@@ -87,8 +87,7 @@ public final class BucketNotepad implements Notepad {
      * @param wrk Work we're in
      * @param clnt Client
      */
-    public BucketNotepad(@NotNull final Work wrk,
-        @NotNull final S3Client clnt) {
+    public BucketNotepad(final Work wrk, final S3Client clnt) {
         this(wrk, "", clnt);
     }
 

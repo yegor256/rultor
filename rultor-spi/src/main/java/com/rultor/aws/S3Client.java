@@ -84,8 +84,10 @@ public interface S3Client {
          * @param scrt AWS secret
          * @param bucket S3 bucket
          */
-        public Simple(@NotNull final String akey, @NotNull final String scrt,
-            @NotNull final String bucket) {
+        public Simple(
+            @NotNull(message = "AWS key can't be NULL") final String akey,
+            @NotNull(message = "AWS secret can't be NULL") final String scrt,
+            @NotNull(message = "S3 bucket can't be NULL") final String bucket) {
             this.key = akey;
             this.secret = scrt;
             this.bkt = bucket;

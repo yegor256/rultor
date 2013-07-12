@@ -68,15 +68,7 @@ public final class ConstraintsMapper extends BaseResource
         final Collection<String> violations =
             new ArrayList<String>(violation.getConstraintViolations().size());
         for (ConstraintViolation<?> vio : violation.getConstraintViolations()) {
-            violations.add(
-                Logger.format(
-                    "%s %s %[type]s %s",
-                    vio.getConstraintDescriptor(),
-                    vio.getMessage(),
-                    vio.getLeafBean(),
-                    vio.getRootBeanClass()
-                )
-            );
+            violations.add(vio.getMessage());
         }
         return FlashInset.forward(
             this.uriInfo().getRequestUri(),

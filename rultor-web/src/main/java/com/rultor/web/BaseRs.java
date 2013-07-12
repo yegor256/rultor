@@ -48,8 +48,11 @@ import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Time;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import com.rultor.spi.Work;
 import java.io.IOException;
 import java.net.URI;
 import javax.validation.constraints.NotNull;
@@ -68,7 +71,7 @@ import javax.ws.rs.core.Response;
 @Resource.Forwarded
 @Loggable(Loggable.DEBUG)
 @Inset.Default(LinksInset.class)
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({ "PMD.TooManyMethods", "PMD.ExcessiveImports" })
 public class BaseRs extends BaseResource {
 
     /**
@@ -205,6 +208,33 @@ public class BaseRs extends BaseResource {
         return Repo.class.cast(
             this.servletContext().getAttribute(Repo.class.getName())
         );
+    }
+
+    /**
+     * The work we're in (while rendering).
+     * @param unit Unit being rendered
+     * @param spec Its spec
+     * @return The work
+     */
+    protected final Work work(final String unit, final Spec spec) {
+        return new Work() {
+            @Override
+            public Time started() {
+                return new Time();
+            }
+            @Override
+            public URN owner() {
+                return BaseRs.this.user().urn();
+            }
+            @Override
+            public String unit() {
+                return unit;
+            }
+            @Override
+            public Spec spec() {
+                return spec;
+            }
+        };
     }
 
 }

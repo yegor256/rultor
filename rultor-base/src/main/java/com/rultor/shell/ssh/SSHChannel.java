@@ -138,14 +138,16 @@ public final class SSHChannel implements Shell {
 
     /**
      * {@inheritDoc}
-     * @checkstyle ParameterNumber (6 lines)
+     * @checkstyle ParameterNumber (10 lines)
      */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = 1, unit = TimeUnit.HOURS)
-    public int exec(@NotNull final String command,
-        @NotNull final InputStream stdin,
-        @NotNull final OutputStream stdout,
-        @NotNull final OutputStream stderr) throws IOException {
+    public int exec(@NotNull(message = "command can't be NULL")
+        final String command,
+        @NotNull(message = "stdin can't be NULL") final InputStream stdin,
+        @NotNull(message = "stdout can't be NULL") final OutputStream stdout,
+        @NotNull(message = "stderr can't be NULL") final OutputStream stderr)
+        throws IOException {
         try {
             final Session session = this.session();
             try {

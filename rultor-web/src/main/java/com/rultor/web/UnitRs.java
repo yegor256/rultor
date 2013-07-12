@@ -30,7 +30,6 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
-import com.jcabi.urn.URN;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
@@ -38,10 +37,8 @@ import com.rexsl.page.inset.FlashInset;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
-import com.rultor.spi.Time;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Variable;
-import com.rultor.spi.Work;
 import java.net.HttpURLConnection;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -122,7 +119,8 @@ public final class UnitRs extends BaseRs {
     @POST
     @Path("/")
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    public Response save(@NotNull @FormParam("spec") final String spec) {
+    public Response save(@NotNull(message = "spec form param is mandatory")
+        @FormParam("spec") final String spec) {
         try {
             this.unit().update(this.parse(spec, Object.class));
         // @checkstyle IllegalCatch (1 line)
@@ -178,24 +176,7 @@ public final class UnitRs extends BaseRs {
         ).get();
         final Object object = var.instantiate(
             this.users(),
-            new Work() {
-                @Override
-                public Time started() {
-                    return new Time();
-                }
-                @Override
-                public URN owner() {
-                    return UnitRs.this.user().urn();
-                }
-                @Override
-                public String unit() {
-                    return UnitRs.this.name;
-                }
-                @Override
-                public Spec spec() {
-                    return spec;
-                }
-            }
+            this.work(this.name, spec)
         );
         try {
             object.toString();

@@ -106,7 +106,8 @@ public final class SQSQueue implements Queue, Metricable {
      * Public ctor.
      * @param clnt S3 client
      */
-    public SQSQueue(@NotNull final SQSClient clnt) {
+    public SQSQueue(@NotNull(message = "SQS client can't be NULL")
+        final SQSClient clnt) {
         this.client = clnt;
     }
 
@@ -114,7 +115,7 @@ public final class SQSQueue implements Queue, Metricable {
      * {@inheritDoc}
      */
     @Override
-    public void push(@NotNull final Work work) {
+    public void push(@NotNull(message = "work can't be NULL") final Work work) {
         final AmazonSQS aws = this.client.get();
         try {
             final SendMessageResult result = aws.sendMessage(
@@ -139,7 +140,8 @@ public final class SQSQueue implements Queue, Metricable {
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    public Work pull(final int limit, final TimeUnit unit)
+    public Work pull(final int limit,
+        @NotNull(message = "unit can't be NULL") final TimeUnit unit)
         throws InterruptedException {
         final AmazonSQS aws = this.client.get();
         Work work;
@@ -183,7 +185,7 @@ public final class SQSQueue implements Queue, Metricable {
      * {@inheritDoc}
      */
     @Override
-    public void register(@NotNull final MetricRegistry registry) {
+    public void register(final MetricRegistry registry) {
         registry.register(
             MetricRegistry.name(this.getClass(), "queue-size"),
             new Gauge<Integer>() {

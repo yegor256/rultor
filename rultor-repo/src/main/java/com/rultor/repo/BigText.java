@@ -69,12 +69,14 @@ final class BigText implements Variable<String> {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
+     * @checkstyle RedundantThrows (8 lines)
      */
     @Override
     @NotNull
-    public String instantiate(@NotNull final Users users,
-        @NotNull final Work work) throws SpecException {
+    public String instantiate(
+        @NotNull(message = "users can't be NULL") final Users users,
+        @NotNull(message = "work can't be NULL") final Work work)
+        throws SpecException {
         return this.value;
     }
 

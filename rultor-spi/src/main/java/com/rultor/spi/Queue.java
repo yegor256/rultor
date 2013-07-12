@@ -79,7 +79,8 @@ public interface Queue {
          * {@inheritDoc}
          */
         @Override
-        public void push(@NotNull final Work work) {
+        public void push(@NotNull(message = "work can't be NULL")
+            final Work work) {
             this.list.add(work);
         }
         /**
@@ -88,7 +89,8 @@ public interface Queue {
         @Override
         @NotNull
         @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-        public Work pull(final int limit, @NotNull final TimeUnit unit)
+        public Work pull(final int limit,
+            @NotNull(message = "time unit can't be NULL") final TimeUnit unit)
             throws InterruptedException {
             return this.list.poll(limit, unit);
         }

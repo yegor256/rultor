@@ -84,8 +84,11 @@ public interface SDBClient {
          * @param scrt AWS secret
          * @param domain SimpleDB domain
          */
-        public Simple(@NotNull final String akey, @NotNull final String scrt,
-            @NotNull final String domain) {
+        public Simple(
+            @NotNull(message = "AWS key can't be NULL") final String akey,
+            @NotNull(message = "AWS secret can't be NULL") final String scrt,
+            @NotNull(message = "SimpleDB domain can't be NULL")
+            final String domain) {
             this.key = akey;
             this.secret = scrt;
             this.dmn = domain;

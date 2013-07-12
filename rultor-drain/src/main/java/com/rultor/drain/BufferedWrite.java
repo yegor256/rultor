@@ -97,8 +97,9 @@ public final class BufferedWrite implements Drain {
      * @param sec How often should be flush, in seconds
      * @param drain Original drain
      */
-    public BufferedWrite(@NotNull final Work wrk, final long sec,
-        @NotNull final Drain drain) {
+    public BufferedWrite(
+        @NotNull(message = "work can't be NULL") final Work wrk, final long sec,
+        @NotNull(message = "drain can't be NULL") final Drain drain) {
         assert BufferedWrite.FLUSH != null;
         Validate.isTrue(
             sec <= TimeUnit.HOURS.toSeconds(1),

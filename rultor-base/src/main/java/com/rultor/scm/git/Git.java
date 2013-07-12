@@ -105,8 +105,8 @@ public final class Git implements SCM {
      * @param priv Private key to use locally
      * @checkstyle ParameterNumber (5 lines)
      */
-    public Git(@NotNull final Shell shl, @NotNull final URL addr,
-        @NotNull final String folder, @NotNull final PrivateKey priv) {
+    public Git(final Shell shl, final URL addr, final String folder,
+        final PrivateKey priv) {
         this.terminal = new Terminal(shl);
         this.url = addr.toString();
         this.dir = folder;

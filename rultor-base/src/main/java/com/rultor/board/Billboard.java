@@ -48,6 +48,7 @@ public interface Billboard {
      * @param anmt Announcement to deliver
      * @throws IOException If fails
      */
-    void announce(@NotNull Announcement anmt) throws IOException;
+    void announce(@NotNull(message = "announcement can't be NULL")
+        Announcement anmt) throws IOException;
 
 }

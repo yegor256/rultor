@@ -97,8 +97,9 @@ public final class Announcement {
      * @return Announcement
      */
     @NotNull(message = "announcement is never NULL")
-    public Announcement with(@NotNull final String name,
-        @NotNull final Object value) {
+    public Announcement with(
+        @NotNull(message = "name can't be NULL") final String name,
+        @NotNull(message = "value can't be NULL") final Object value) {
         return new Announcement(
             this.lvl,
             new ImmutableMap.Builder<String, Object>()

@@ -120,9 +120,8 @@ public final class Bash implements Batch {
      * @param map Prerequisites
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public Bash(@NotNull final Shells shls,
-        @NotNull final Collection<String> lines,
-        @NotNull final Map<String, Object> map) {
+    public Bash(final Shells shls, final Collection<String> lines,
+        final Map<String, Object> map) {
         this(shls, StringUtils.join(lines, " && "), map);
     }
 
@@ -131,8 +130,10 @@ public final class Bash implements Batch {
      */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    public int exec(@NotNull final Map<String, Object> args,
-        @NotNull final OutputStream output) throws IOException {
+    public int exec(@NotNull(message = "args can't be NULL")
+        final Map<String, Object> args,
+        @NotNull(message = "stream can't be NULL") final OutputStream output)
+        throws IOException {
         final Shell shell = this.shells.acquire();
         Signal.log(Signal.Mnemo.SUCCESS, "%s acquired", shell);
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();

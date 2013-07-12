@@ -55,7 +55,9 @@ public interface Repo {
      * @throws SpecException If can't instantiate
      */
     @NotNull(message = "variable is never NULL")
-    Variable<?> make(@NotNull User user, @NotNull Spec spec)
+    Variable<?> make(
+        @NotNull(message = "user can't be NULL") User user,
+        @NotNull(message = "spec can't be NULL") Spec spec)
         throws SpecException;
 
     /**
@@ -84,7 +86,8 @@ public interface Repo {
          * @param usr User
          * @param spc Spec
          */
-        public Cached(@NotNull(message = "repo can't be NULL") final Repo rep,
+        public Cached(
+            @NotNull(message = "repo can't be NULL") final Repo rep,
             @NotNull(message = "user can't be NULL") final User usr,
             @NotNull(message = "spec can't be NULL") final Spec spc) {
             this.repo = rep;

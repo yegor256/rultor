@@ -80,8 +80,9 @@ public final class RestUser implements User {
      * @param urn User unique name in the system
      * @param key Secret authentication key
      */
-    public RestUser(@NotNull final URI entry,
-        @NotNull final URN urn, @NotNull final String key) {
+    public RestUser(@NotNull(message = "URI can't be NULL") final URI entry,
+        @NotNull(message = "URN can't be NULL") final URN urn,
+        @NotNull(message = "key can't be NULL") final String key) {
         this.home = entry.toString();
         try {
             this.token = String.format(
@@ -104,7 +105,7 @@ public final class RestUser implements User {
      * @param urn User unique name in the system
      * @param key Secret authentication key
      */
-    public RestUser(@NotNull final URN urn, @NotNull final String key) {
+    public RestUser(final URN urn, final String key) {
         this(URI.create("http://www.rultor.com"), urn, key);
     }
 

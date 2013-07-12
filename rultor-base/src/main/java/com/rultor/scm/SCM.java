@@ -49,7 +49,8 @@ public interface SCM {
      * @return Branch
      * @throws IOException If fails
      */
-    @NotNull
-    Branch checkout(@NotNull String name) throws IOException;
+    @NotNull(message = "branch is never NULL")
+    Branch checkout(@NotNull(message = "branch can't be NULL")
+        String name) throws IOException;
 
 }

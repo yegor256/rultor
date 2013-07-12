@@ -116,7 +116,8 @@ public final class Time implements Comparable<Time> {
      * @param time Time to reach
      * @return Distance between this time and given one
      */
-    public long delta(@NotNull final Time time) {
+    public long delta(@NotNull(message = "delta time can't be NULL")
+        final Time time) {
         return this.msec - time.msec;
     }
 

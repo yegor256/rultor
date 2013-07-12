@@ -86,11 +86,13 @@ public final class Throttled implements Instance, Drain.Source {
      * @param pttn Pattern
      * @param instance Original instance
      * @param drain Drain to use
-     * @checkstyle ParameterNumber (4 lines)
+     * @checkstyle ParameterNumber (8 lines)
      */
-    public Throttled(@NotNull final Work wrk, @NotNull final String lvl,
-        @NotNull final String pttn, @NotNull final Instance instance,
-        @NotNull final Drain drain) {
+    public Throttled(@NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "log level can't be NULL") final String lvl,
+        @NotNull(message = "pattern can't be NULL") final String pttn,
+        @NotNull(message = "instance can't be NULL") final Instance instance,
+        @NotNull(message = "drain can't be NULL") final Drain drain) {
         this.work = wrk;
         this.level = Level.toLevel(lvl);
         this.pattern = pttn;
@@ -105,8 +107,8 @@ public final class Throttled implements Instance, Drain.Source {
      * @param drain Drain to use
      * @checkstyle ParameterNumber (4 lines)
      */
-    public Throttled(@NotNull final Work wrk,
-        @NotNull final Instance instance, @NotNull final Drain drain) {
+    public Throttled(final Work wrk, final Instance instance,
+        final Drain drain) {
         this(wrk, Level.INFO.toString(), "%m", instance, drain);
     }
 

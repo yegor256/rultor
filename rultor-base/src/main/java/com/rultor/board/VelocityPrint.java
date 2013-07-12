@@ -91,7 +91,8 @@ public final class VelocityPrint implements Billboard {
      * {@inheritDoc}
      */
     @Override
-    public void announce(@NotNull final Announcement anmt) throws IOException {
+    public void announce(@NotNull(message = "announcement can't be NULL")
+        final Announcement anmt) throws IOException {
         final StringWriter writer = new StringWriter();
         final Context context = new VelocityContext();
         for (Map.Entry<String, Object> entry : anmt.args().entrySet()) {

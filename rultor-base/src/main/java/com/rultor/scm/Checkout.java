@@ -62,7 +62,8 @@ public final class Checkout implements Branch {
      * @param src SCM
      * @param branch Name of the branch
      */
-    public Checkout(@NotNull final SCM src, @NotNull final String branch) {
+    public Checkout(@NotNull(message = "SCM can't be NULL") final SCM src,
+        @NotNull(message = "branch can't be NULL") final String branch) {
         this.scm = src;
         this.name = branch;
     }

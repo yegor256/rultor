@@ -97,8 +97,10 @@ public interface Commit {
          * @param date When it happened
          * @param author Author of commit
          */
-        public Simple(@NotNull final String name, @NotNull final Time date,
-            @NotNull final String author) {
+        public Simple(
+            @NotNull(message = "name can't be NULL") final String name,
+            @NotNull(message = "date can't be NULL") final Time date,
+            @NotNull(message = "author can't be NULL") final String author) {
             this.label = name;
             this.when = date;
             this.who = author;

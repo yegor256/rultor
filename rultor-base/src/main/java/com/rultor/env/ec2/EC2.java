@@ -110,9 +110,8 @@ public final class EC2 implements Environments {
      * @param clnt EC2 client
      * @checkstyle ParameterNumber (5 lines)
      */
-    public EC2(@NotNull final String tpe, @NotNull final String image,
-        @NotNull final String grp, @NotNull final String par,
-        @NotNull final EC2Client clnt) {
+    public EC2(final String tpe, final String image, final String grp,
+        final String par, final EC2Client clnt) {
         this.type = tpe;
         this.ami = image;
         this.group = grp;

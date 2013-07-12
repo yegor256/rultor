@@ -102,8 +102,8 @@ public final class ObjectLineup implements Lineup {
      * @param scrt AWS secret
      * @checkstyle ParameterNumber (5 lines)
      */
-    public ObjectLineup(@NotNull final String bkt, @NotNull final String obj,
-        @NotNull final String akey, @NotNull final String scrt) {
+    public ObjectLineup(final String bkt, final String obj, final String akey,
+        final String scrt) {
         this(obj, new S3Client.Simple(akey, scrt, bkt));
     }
 

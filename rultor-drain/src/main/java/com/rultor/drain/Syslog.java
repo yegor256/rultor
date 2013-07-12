@@ -78,8 +78,9 @@ public final class Syslog implements Drain {
      * @param prt Port
      * @param pri Priority
      */
-    public Syslog(@NotNull final String hst, @NotNull final int prt,
-        @NotNull final int pri) {
+    public Syslog(
+        @NotNull(message = "host can't be NULL") final String hst,
+        final int prt, final int pri) {
         this.host = hst;
         this.port = prt;
         this.priority = pri;
@@ -90,7 +91,7 @@ public final class Syslog implements Drain {
      * @param hst Host
      * @param prt Port
      */
-    public Syslog(@NotNull final String hst, @NotNull final int prt) {
+    public Syslog(final String hst, final int prt) {
         // @checkstyle MagicNumber (1 line)
         this(hst, prt, 14);
     }

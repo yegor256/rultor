@@ -38,7 +38,6 @@ import com.rultor.spi.Drain;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
-import com.rultor.spi.Work;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
@@ -178,7 +177,7 @@ public final class IndexRs extends BaseRs {
         try {
             final Object object = new Repo.Cached(
                 this.repo(), this.user(), spec
-            ).get().instantiate(this.users(), new Work.None());
+            ).get().instantiate(this.users(), this.work(name, spec));
             bundle = bundle
                 .add("type", object.getClass().getName())
                 .up()

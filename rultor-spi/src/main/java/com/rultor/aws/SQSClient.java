@@ -84,8 +84,10 @@ public interface SQSClient {
          * @param scrt AWS secret
          * @param url URL of the queue
          */
-        public Simple(@NotNull final String akey, @NotNull final String scrt,
-            @NotNull final String url) {
+        public Simple(
+            @NotNull(message = "AWS key can't be NULL") final String akey,
+            @NotNull(message = "AWS secret can't be NULL") final String scrt,
+            @NotNull(message = "SQS URL can't be NULL") final String url) {
             this.key = akey;
             this.secret = scrt;
             this.queue = url;
