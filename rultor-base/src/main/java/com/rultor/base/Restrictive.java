@@ -89,8 +89,9 @@ public final class Restrictive implements Proxy<Object> {
         if (!this.allowed()) {
             throw new SecurityException(
                 String.format(
-                    "You (%s) are not allowed to touch me",
-                    this.work.owner()
+                    "You (%s) are not allowed to touch %s",
+                    this.work.owner(),
+                    this.origin
                 )
             );
         }
@@ -105,7 +106,7 @@ public final class Restrictive implements Proxy<Object> {
         if (!this.allowed()) {
             throw new SecurityException(
                 String.format(
-                    "You (%s) are not allowed to use '%s'",
+                    "You (%s) are not allowed to use %s",
                     this.work.owner(),
                     this.origin
                 )

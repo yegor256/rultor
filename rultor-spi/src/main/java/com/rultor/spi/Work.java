@@ -76,6 +76,12 @@ public interface Work {
     Spec spec();
 
     /**
+     * Report usage of resources while processing this work.
+     * @param exp Expense transaction
+     */
+    void spent(@NotNull(message = "transaction can't be NULL") Expense exp);
+
+    /**
      * No work at all.
      */
     @Immutable
@@ -113,6 +119,13 @@ public interface Work {
         @Override
         public Spec spec() {
             throw new UnsupportedOperationException();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void spent(final Expense exp) {
+            assert exp != null;
         }
     }
 
@@ -231,6 +244,13 @@ public interface Work {
         @NotNull(message = "spec of work is never NULL")
         public Spec spec() {
             return this.desc;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void spent(final Expense exp) {
+            throw new UnsupportedOperationException();
         }
     }
 

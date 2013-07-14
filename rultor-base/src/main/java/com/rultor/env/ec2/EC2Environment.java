@@ -44,7 +44,9 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
+import com.rultor.spi.Expense;
 import com.rultor.spi.Signal;
+import com.rultor.spi.Work;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
@@ -63,6 +65,11 @@ import lombok.EqualsAndHashCode;
 final class EC2Environment implements Environment {
 
     /**
+     * Work we're in.
+     */
+    private final transient Work work;
+
+    /**
      * Instance ID.
      */
     private final transient String name;
@@ -74,10 +81,13 @@ final class EC2Environment implements Environment {
 
     /**
      * Public ctor.
+     * @param wrk Work we're in
      * @param instance Instance ID
      * @param clnt EC2 client
      */
-    protected EC2Environment(final String instance, final EC2Client clnt) {
+    protected EC2Environment(final Work wrk, final String instance,
+        final EC2Client clnt) {
+        this.work = wrk;
         this.name = instance;
         this.client = clnt;
     }
@@ -173,17 +183,29 @@ final class EC2Environment implements Environment {
                 result.getTerminatingInstances().get(0);
             final long age = System.currentTimeMillis()
                 - instance.getLaunchTime().getTime();
+            final long cost = EC2Environment.costOf(
+                instance.getInstanceType(),
+                instance.getPlacement().getAvailabilityZone(),
+                age
+            );
             Signal.log(
                 Signal.Mnemo.SUCCESS,
                 // @checkstyle LineLength (1 line)
-                "EC2 instance %s (%s) terminated, after %[ms]s of activity (approx. %s)",
+                "EC2 instance %s (%s) terminated, after %[ms]s of activity (approx. %.2f USD)",
                 change.getInstanceId(),
                 instance.getInstanceType(),
                 age,
-                EC2Environment.costOf(
-                    instance.getInstanceType(),
-                    instance.getPlacement().getAvailabilityZone(),
-                    age
+                cost / Tv.MILLION
+            );
+            this.work.spent(
+                new Expense.Simple(
+                    String.format(
+                        // @checkstyle LineLength (1 line)
+                        "%[ms]s of AWS EC2 %s instance",
+                        age,
+                        instance.getInstanceType()
+                    ),
+                    cost
                 )
             );
         } finally {
@@ -192,19 +214,20 @@ final class EC2Environment implements Environment {
     }
 
     /**
-     * Calculate cost of time spent.
+     * Calculate cost of time spent, in points (one millionth of USD).
      * @param type Type of EC2 instance
      * @param zone Availability zone
      * @param msec Time spent
      * @return The price of the instance time
      * @throws IOException If IO problem inside
      */
-    private static String costOf(final String type, final String zone,
+    private static long costOf(final String type, final String zone,
         final long msec) throws IOException {
         assert type != null;
         assert zone != null;
         assert msec > 0;
-        return "$0.00";
+        final long hourly = 1;
+        return msec * hourly * Tv.MILLION / TimeUnit.HOURS.toMillis(1);
     }
 
 }

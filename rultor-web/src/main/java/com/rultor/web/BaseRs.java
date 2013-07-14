@@ -47,6 +47,7 @@ import com.rexsl.page.auth.Provider;
 import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
+import com.rultor.spi.Expense;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Time;
@@ -233,6 +234,10 @@ public class BaseRs extends BaseResource {
             @Override
             public Spec spec() {
                 return spec;
+            }
+            @Override
+            public void spent(final Expense exp) {
+                throw new UnsupportedOperationException();
             }
         };
     }

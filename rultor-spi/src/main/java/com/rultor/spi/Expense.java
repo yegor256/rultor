@@ -27,95 +27,80 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.stateful.sdb;
+package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.aws.SDBClient;
-import com.rultor.spi.Work;
-import com.rultor.stateful.Lineup;
-import java.util.concurrent.Callable;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
- * Lineups in Amazon SimpleDB.
+ * Expense to register in {@link Work}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "work", "client" })
-@Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.DoNotUseThreads")
-public final class DomainLineup implements Lineup {
+public interface Expense {
 
     /**
-     * Work we're in.
+     * Details.
+     * @return Details
      */
-    private final transient Work work;
+    @NotNull(message = "details of expense is never NULL")
+    String details();
 
     /**
-     * SimpleDB client.
+     * Dollar amount in points where 1 USD equals
+     * to 1,000,000 points (a million).
+     * @return The amount
      */
-    private final transient SDBClient client;
+    @NotNull(message = "amount of transaction is never NULL")
+    long points();
 
     /**
-     * Public ctor.
-     * @param wrk Work we're in
-     * @param clnt Client
+     * Simple implementation.
      */
-    public DomainLineup(
-        @NotNull(message = "work can't be NULL") final Work wrk,
-        @NotNull(message = "SimpleDB client can't be NULL")
-        final SDBClient clnt) {
-        this.work = wrk;
-        this.client = clnt;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "SimpleDB lineups in `%s` accessed with %s",
-            this.client.domain(), this.client
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> T exec(final Callable<T> callable) throws Exception {
-        return this.lineup().exec(callable);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    public void exec(final Runnable runnable) {
-        this.lineup().exec(runnable);
-    }
-
-    /**
-     * Make an underlying lineup.
-     * @return The lineup
-     */
-    private Lineup lineup() {
-        return new ItemLineup(
-            this.work,
-            String.format(
-                "%s %s",
-                this.work.owner(),
-                this.work.unit()
-            ),
-            this.client
-        );
+    @Loggable(Loggable.DEBUG)
+    @EqualsAndHashCode(of = { "text", "amount" })
+    @Immutable
+    final class Simple implements Expense {
+        /**
+         * Details.
+         */
+        private final transient String text;
+        /**
+         * Amount of it.
+         */
+        private final transient long amount;
+        /**
+         * Public ctor.
+         * @param details Details
+         * @param points Amount
+         */
+        public Simple(
+            @NotNull(message = "details can't be NULL") final String details,
+            final long points) {
+            this.text = details;
+            this.amount = points;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull(message = "details of transaction is never NULL")
+        public String details() {
+            return this.text;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull(message = "amount of transaction is never NULL")
+        public long points() {
+            return this.amount;
+        }
     }
 
 }

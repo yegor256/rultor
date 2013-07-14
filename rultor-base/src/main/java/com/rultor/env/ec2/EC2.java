@@ -39,6 +39,7 @@ import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
 import com.rultor.env.Environments;
 import com.rultor.spi.Signal;
+import com.rultor.spi.Work;
 import java.io.IOException;
 import java.util.List;
 import javax.validation.constraints.NotNull;
@@ -55,6 +56,11 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = { "type", "ami", "group", "client" })
 @Loggable(Loggable.DEBUG)
 public final class EC2 implements Environments {
+
+    /**
+     * Work we're in.
+     */
+    private final transient Work work;
 
     /**
      * Type of EC2 instance.
@@ -83,6 +89,7 @@ public final class EC2 implements Environments {
 
     /**
      * Public ctor.
+     * @param wrk Work we're in
      * @param tpe Instance type, for example "t1.micro"
      * @param image AMI name
      * @param grp Security group
@@ -91,18 +98,15 @@ public final class EC2 implements Environments {
      * @param scrt AWS secret
      * @checkstyle ParameterNumber (5 lines)
      */
-    public EC2(@NotNull(message = "instance type can't be NULL")
-        final String tpe,
-        @NotNull(message = "AMI can't be NULL") final String image,
-        @NotNull(message = "security group can't be NULL") final String grp,
-        @NotNull(message = "key pair can't be NULL") final String par,
-        @NotNull(message = "AWS key can't be NULL") final String akey,
-        @NotNull(message = "AWS secret can't be NULL") final String scrt) {
-        this(tpe, image, grp, par, new EC2Client.Simple(akey, scrt));
+    public EC2(final Work wrk, final String tpe, final String image,
+        final String grp, final String par, final String akey,
+        final String scrt) {
+        this(wrk, tpe, image, grp, par, new EC2Client.Simple(akey, scrt));
     }
 
     /**
      * Public ctor.
+     * @param wrk Work we're in
      * @param tpe Instance type, for example "t1.micro"
      * @param image AMI name
      * @param grp Security group
@@ -110,8 +114,14 @@ public final class EC2 implements Environments {
      * @param clnt EC2 client
      * @checkstyle ParameterNumber (5 lines)
      */
-    public EC2(final String tpe, final String image, final String grp,
-        final String par, final EC2Client clnt) {
+    public EC2(
+        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "instance type can't be NULL") final String tpe,
+        @NotNull(message = "AMI can't be NULL") final String image,
+        @NotNull(message = "security group can't be NULL") final String grp,
+        @NotNull(message = "key pair can't be NULL") final String par,
+        @NotNull(message = "AWS client can't be NULL") final EC2Client clnt) {
+        this.work = wrk;
         this.type = tpe;
         this.ami = image;
         this.group = grp;
@@ -151,7 +161,11 @@ public final class EC2 implements Environments {
                 result.getReservation().getInstances();
             if (instances.isEmpty()) {
                 throw new IllegalStateException(
-                    "failed top run an EC2 instance"
+                    String.format(
+                        "failed to run an EC2 instance %s with AMI '%s'",
+                        this.type,
+                        this.ami
+                    )
                 );
             }
             final Instance instance = instances.get(0);
@@ -164,7 +178,9 @@ public final class EC2 implements Environments {
                 instance.getKeyName(),
                 instance.getPlatform()
             );
-            return new EC2Environment(instance.getInstanceId(), this.client);
+            return new EC2Environment(
+                this.work, instance.getInstanceId(), this.client
+            );
         } finally {
             aws.shutdown();
         }

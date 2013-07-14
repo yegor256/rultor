@@ -39,6 +39,8 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.SDBClient;
+import com.rultor.spi.Expense;
+import com.rultor.spi.Work;
 import com.rultor.stateful.Lineup;
 import java.security.SecureRandom;
 import java.util.Random;
@@ -72,6 +74,11 @@ public final class ItemLineup implements Lineup {
     private static final Random RAND = new SecureRandom();
 
     /**
+     * Work we're in.
+     */
+    private final transient Work work;
+
+    /**
      * SimpleDB client.
      */
     private final transient SDBClient client;
@@ -83,13 +90,16 @@ public final class ItemLineup implements Lineup {
 
     /**
      * Public ctor.
+     * @param wrk Work we're in
      * @param obj Item name
      * @param clnt Client
      */
     public ItemLineup(
+        @NotNull(message = "work can't be NULL") final Work wrk,
         @NotNull(message = "object name can't be NULL") final String obj,
         @NotNull(message = "SimpleDB client can't be NULL")
         final SDBClient clnt) {
+        this.work = wrk;
         this.name = obj;
         this.client = clnt;
     }
@@ -186,6 +196,17 @@ public final class ItemLineup implements Lineup {
                 .withDomainName(this.client.domain())
                 .withItemName(this.name)
         );
+        this.work.spent(
+            new Expense.Simple(
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    "checked existence of AWS SimpleDB item '%s' in '%s' domain",
+                    this.name,
+                    this.client.domain()
+                ),
+                Tv.HUNDRED
+            )
+        );
         return !result.getAttributes().isEmpty();
     }
 
@@ -205,6 +226,16 @@ public final class ItemLineup implements Lineup {
                         .withReplace(true)
                 )
         );
+        this.work.spent(
+            new Expense.Simple(
+                String.format(
+                    "put AWS SimpleDB item '%s' into '%s' domain",
+                    this.name,
+                    this.client.domain()
+                ),
+                Tv.HUNDRED
+            )
+        );
     }
 
     /**
@@ -219,6 +250,16 @@ public final class ItemLineup implements Lineup {
                 .withItemName(this.name)
                 .withAttributeNames(ItemLineup.IDENTIFIER)
         );
+        this.work.spent(
+            new Expense.Simple(
+                String.format(
+                    "loaded AWS SimpleDB item '%s' from '%s' domain",
+                    this.name,
+                    this.client.domain()
+                ),
+                Tv.HUNDRED
+            )
+        );
         return result.getAttributes().get(0).getValue();
     }
 
@@ -230,6 +271,16 @@ public final class ItemLineup implements Lineup {
             new DeleteAttributesRequest()
                 .withDomainName(this.client.domain())
                 .withItemName(this.name)
+        );
+        this.work.spent(
+            new Expense.Simple(
+                String.format(
+                    "removed AWS SimpleDB item '%s' from '%s' domain",
+                    this.name,
+                    this.client.domain()
+                ),
+                Tv.HUNDRED
+            )
         );
     }
 
