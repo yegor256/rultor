@@ -73,38 +73,44 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             </head>
             <body>
-                <a href="https://github.com/yegor256/rultor" class="hidden-phone">
-                    <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
-                        src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
-                        alt="Fork me on GitHub" />
-                </a>
+                <aside>
+                    <a href="https://github.com/yegor256/rultor" class="hidden-phone">
+                        <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
+                            src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
+                            alt="Fork me on GitHub" />
+                    </a>
+                </aside>
                 <div class="page">
-                    <ul class="inline" style="padding-bottom: 4em; padding-top: 2em;">
-                        <li>
-                            <a class="logo">
-                                <xsl:attribute name="href">
-                                    <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
-                                </xsl:attribute>
-                                <xsl:text>R</xsl:text>
-                            </a>
-                        </li>
-                        <li class="hidden-phone">
-                            <a href="http://blog.rultor.com/">
-                                <xsl:text>how it works?</xsl:text>
-                            </a>
-                        </li>
-                        <xsl:apply-templates select="version"/>
-                        <xsl:apply-templates select="identity"/>
-                    </ul>
+                    <nav>
+                        <ul class="inline" style="padding-bottom: 4em; padding-top: 2em;">
+                            <li>
+                                <a class="logo">
+                                    <xsl:attribute name="href">
+                                        <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
+                                    </xsl:attribute>
+                                    <xsl:text>R</xsl:text>
+                                </a>
+                            </li>
+                            <li class="hidden-phone">
+                                <a href="http://blog.rultor.com/">
+                                    <xsl:text>how it works?</xsl:text>
+                                </a>
+                            </li>
+                            <xsl:apply-templates select="version"/>
+                            <xsl:apply-templates select="identity"/>
+                        </ul>
+                    </nav>
                     <xsl:apply-templates select="flash"/>
-                    <xsl:choose>
-                        <xsl:when test="/page/identity">
-                            <xsl:call-template name="content"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:call-template name="login"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
+                    <article style="max-width: 50em;">
+                        <xsl:choose>
+                            <xsl:when test="/page/identity">
+                                <xsl:call-template name="content"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="login"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </article>
                 </div>
             </body>
         </html>

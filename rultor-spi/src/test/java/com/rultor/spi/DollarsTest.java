@@ -53,7 +53,7 @@ public final class DollarsTest {
             new ImmutableMap.Builder<Dollars, String>()
                 .put(new Dollars(Tv.MILLION), "$1.00")
                 .put(new Dollars(Tv.FIVE * Tv.MILLION), "$5.00")
-                .put(new Dollars(Tv.THOUSAND), "$0.00")
+                .put(new Dollars(Tv.THOUSAND), "$0.001")
                 .put(new Dollars(Tv.TEN * Tv.THOUSAND), "$0.01")
                 .put(new Dollars(-Tv.FIVE * Tv.MILLION), "($5.00)")
                 .build();

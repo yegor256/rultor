@@ -66,7 +66,7 @@
                 <li>
                     <xsl:value-of select="date"/>
                 </li>
-                <li>
+                <li class="hidden-phone">
                     <xsl:value-of select="when"/>
                     <xsl:text> ago</xsl:text>
                 </li>
@@ -74,7 +74,7 @@
                     <xsl:value-of select="amount"/>
                 </li>
             </ul>
-            <pre>
+            <pre class="hidden-phone">
                 <xsl:value-of select="text"/>
             </pre>
         </li>

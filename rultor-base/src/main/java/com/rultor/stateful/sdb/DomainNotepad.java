@@ -38,7 +38,10 @@ import com.amazonaws.services.simpledb.model.SelectResult;
 import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rultor.aws.SDBClient;
+import com.rultor.spi.Dollars;
+import com.rultor.spi.Expense;
 import com.rultor.spi.Work;
 import com.rultor.stateful.Notepad;
 import java.util.Collection;
@@ -153,6 +156,16 @@ public final class DomainNotepad implements Notepad {
                 .withConsistentRead(true)
                 .withSelectExpression(query)
         );
+        this.work.spent(
+            new Expense.Simple(
+                String.format(
+                    "retrieved AWS SimpleDB %d items from '%s' domain",
+                    result.getItems().size(),
+                    this.client.domain()
+                ),
+                new Dollars(-Tv.HUNDRED)
+            )
+        );
         final Collection<String> items = new LinkedList<String>();
         for (Item item : result.getItems()) {
             items.add(item.getAttributes().get(0).getValue());
@@ -201,6 +214,16 @@ public final class DomainNotepad implements Notepad {
                         .withReplace(true)
                 )
         );
+        this.work.spent(
+            new Expense.Simple(
+                String.format(
+                    "added AWS SimpleDB item '%s' to '%s' domain",
+                    this.name(line.toString()),
+                    this.client.domain()
+                ),
+                new Dollars(-Tv.HUNDRED)
+            )
+        );
         return true;
     }
 
@@ -213,6 +236,16 @@ public final class DomainNotepad implements Notepad {
             new DeleteAttributesRequest()
                 .withDomainName(this.client.domain())
                 .withItemName(this.name(line.toString()))
+        );
+        this.work.spent(
+            new Expense.Simple(
+                String.format(
+                    "removed AWS SimpleDB item '%s' from '%s' domain",
+                    this.name(line.toString()),
+                    this.client.domain()
+                ),
+                new Dollars(-Tv.HUNDRED)
+            )
         );
         return true;
     }

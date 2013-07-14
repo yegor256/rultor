@@ -192,7 +192,7 @@ final class EC2Environment implements Environment {
             Signal.log(
                 Signal.Mnemo.SUCCESS,
                 // @checkstyle LineLength (1 line)
-                "EC2 instance %s (%s) terminated, after %[ms]s of activity (approx. %s)",
+                "EC2 instance %s (%s) terminated, after %[ms]s of activity, approx. %s",
                 change.getInstanceId(),
                 instance.getInstanceType(),
                 age,
@@ -228,7 +228,7 @@ final class EC2Environment implements Environment {
         assert zone != null;
         final long hourly = 1;
         return new Dollars(
-            msec * hourly * Tv.MILLION / TimeUnit.HOURS.toMillis(1)
+            -msec * hourly * Tv.MILLION / TimeUnit.HOURS.toMillis(1)
         );
     }
 
