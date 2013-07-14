@@ -42,7 +42,7 @@
                 <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
             </xsl:attribute>
             <fieldset>
-                <label for="spec">
+                <label for="spec" class="hidden-phone">
                     <xsl:text>Specification of </xsl:text>
                     <code>
                         <xsl:value-of select="/page/unit/name"/>
@@ -53,7 +53,7 @@
                 <button type="submit" class="btn">
                     <xsl:text>Save</xsl:text>
                 </button>
-                <span class="help-inline">
+                <span class="help-inline hidden-phone">
                     <xsl:text>Takes up to five minutes to update all servers</xsl:text>
                 </span>
             </fieldset>

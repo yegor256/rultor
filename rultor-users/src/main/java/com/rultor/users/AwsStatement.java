@@ -29,6 +29,7 @@
  */
 package com.rultor.users;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -104,7 +105,12 @@ final class AwsStatement implements Statement {
                 .with(AwsInvoices.KEY_OWNER, this.name)
                 .with(AwsInvoices.KEY_CODE, new Invoice.Code(invoice))
                 .with(AwsInvoices.FIELD_TEXT, invoice.text())
-                .with(AwsInvoices.FIELD_AMOUNT, invoice.amount().points())
+                .with(
+                    AwsInvoices.FIELD_AMOUNT,
+                    new AttributeValue().withN(
+                        Long.toString(invoice.amount().points())
+                    )
+                )
         );
     }
 

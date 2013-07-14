@@ -130,10 +130,12 @@ final class AwsInvoices implements Invoices {
      */
     @Override
     public Iterator<Invoice> iterator() {
+        assert this.head != null;
         final Iterator<Item> items = this.region.table(AwsInvoices.TABLE)
             .frame()
             .where(AwsInvoices.KEY_OWNER, Conditions.equalTo(this.name))
             .iterator();
+        // @checkstyle AnonInnerLength (50 lines)
         return new Iterator<Invoice>() {
             @Override
             public boolean hasNext() {

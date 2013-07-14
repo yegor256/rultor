@@ -51,6 +51,7 @@ import org.junit.Test;
  * Integration case for {@link ItemLineup}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class ItemLineupITCase {
 

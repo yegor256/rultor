@@ -35,11 +35,15 @@ import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
+import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.TableMocker;
 import com.jcabi.urn.URN;
-import com.rultor.spi.User;
+import com.rultor.spi.Dollars;
+import com.rultor.spi.Expense;
+import com.rultor.spi.Invoice;
+import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.After;
@@ -48,12 +52,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Integration case for {@link AwsUser}.
+ * Integration case for {@link AwsStatement}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public final class AwsUserITCase {
+public final class AwsStatementITCase {
 
     /**
      * AWS key.
@@ -76,12 +80,12 @@ public final class AwsUserITCase {
      */
     @Before
     public void prepare() throws Exception {
-        Assume.assumeNotNull(AwsUserITCase.KEY);
+        Assume.assumeNotNull(AwsStatementITCase.KEY);
         final String prefix = System.getProperty("failsafe.dynamo.prefix");
         this.region = new Region.Prefixed(
             new Region.Simple(
                 new Credentials.Simple(
-                    AwsUserITCase.KEY,
+                    AwsStatementITCase.KEY,
                     System.getProperty("failsafe.dynamo.secret")
                 )
             ),
@@ -90,7 +94,7 @@ public final class AwsUserITCase {
         this.table = new TableMocker(
             this.region,
             new CreateTableRequest()
-                .withTableName(String.format("%sunits", prefix))
+                .withTableName(String.format("%sinvoices", prefix))
                 .withProvisionedThroughput(
                     new ProvisionedThroughput()
                         .withReadCapacityUnits(1L)
@@ -98,18 +102,18 @@ public final class AwsUserITCase {
                 )
                 .withAttributeDefinitions(
                     new AttributeDefinition()
-                        .withAttributeName(AwsUnit.KEY_OWNER)
+                        .withAttributeName(AwsInvoices.KEY_OWNER)
                         .withAttributeType(ScalarAttributeType.S),
                     new AttributeDefinition()
-                        .withAttributeName(AwsUnit.KEY_NAME)
+                        .withAttributeName(AwsInvoices.KEY_CODE)
                         .withAttributeType(ScalarAttributeType.S)
                 )
                 .withKeySchema(
                     new KeySchemaElement()
-                        .withAttributeName(AwsUnit.KEY_OWNER)
+                        .withAttributeName(AwsInvoices.KEY_OWNER)
                         .withKeyType(KeyType.HASH),
                     new KeySchemaElement()
-                        .withAttributeName(AwsUnit.KEY_NAME)
+                        .withAttributeName(AwsInvoices.KEY_CODE)
                         .withKeyType(KeyType.RANGE)
                 )
         );
@@ -121,25 +125,32 @@ public final class AwsUserITCase {
      */
     @After
     public void drop() {
-        Assume.assumeNotNull(AwsUserITCase.KEY);
+        Assume.assumeNotNull(AwsStatementITCase.KEY);
         this.table.drop();
     }
 
     /**
-     * AwsUser can work with real data.
+     * AwsStatement can work with real data.
      * @throws Exception If some problem inside
      */
     @Test
     public void worksWithRealDynamoDb() throws Exception {
         final URN urn = new URN("urn:github:66");
-        final User user = new AwsUser(this.region, urn);
-        MatcherAssert.assertThat(user.urn(), Matchers.equalTo(urn));
-        final String name = "simple-unit";
-        if (user.units().contains(name)) {
-            user.remove(name);
-        }
-        user.create(name);
-        MatcherAssert.assertThat(user.units(), Matchers.hasItem(name));
+        final AwsStatement stmt = new AwsStatement(this.region, urn);
+        final Invoice invoice = new Invoice.Composed(
+            Arrays.<Expense>asList(
+                new Expense.Simple("just test", new Dollars(Tv.MILLION))
+            )
+        );
+        stmt.add(invoice);
+        MatcherAssert.assertThat(
+            stmt.invoices().iterator().next().amount(),
+            Matchers.equalTo(invoice.amount())
+        );
+        MatcherAssert.assertThat(
+            stmt.balance().points(),
+            Matchers.greaterThan(0L)
+        );
     }
 
 }

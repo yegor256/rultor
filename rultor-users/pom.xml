@@ -58,6 +58,13 @@
             <version>${jcabi.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-dynamo</artifactId>
+            <version>${jcabi.version}</version>
+            <scope>test</scope>
+            <classifier>mock</classifier>
+        </dependency>
+        <dependency>
             <groupId>javax.json</groupId>
             <artifactId>javax.json-api</artifactId>
         </dependency>

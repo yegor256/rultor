@@ -32,7 +32,9 @@
 @import "bootstrap.less";
 
 .page {
-    padding: 2em;
+    padding: .5em;
+    @media only screen and (min-width: 768px) { padding: 1em; }
+    @media only screen and (min-width: 1024px) { padding: 2em; }
     .clearfix();
 }
 
