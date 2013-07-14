@@ -77,9 +77,11 @@ public interface Work {
 
     /**
      * Report usage of resources while processing this work.
-     * @param exp Expense transaction
+     * @param details Description of operation
+     * @param amount Amount of money to charge
      */
-    void spent(@NotNull(message = "transaction can't be NULL") Expense exp);
+    void charge(@NotNull(message = "details can't be NULL") String details,
+        @NotNull(message = "amount can't be NULL") Dollars amount);
 
     /**
      * No work at all.
@@ -124,8 +126,9 @@ public interface Work {
          * {@inheritDoc}
          */
         @Override
-        public void spent(final Expense exp) {
-            assert exp != null;
+        public void charge(final String details, final Dollars amount) {
+            assert details != null;
+            assert amount != null;
         }
     }
 
@@ -249,7 +252,7 @@ public interface Work {
          * {@inheritDoc}
          */
         @Override
-        public void spent(final Expense exp) {
+        public void charge(final String details, final Dollars amount) {
             throw new UnsupportedOperationException();
         }
     }

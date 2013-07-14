@@ -31,24 +31,46 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
- * Expense to register in {@link Work}.
+ * Receipt to register in {@link Work}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Expense {
+public interface Receipt {
+
+    /**
+     * When it happened.
+     * @return The date
+     */
+    @NotNull(message = "date or receipt is never NULL")
+    Time date();
+
+    /**
+     * Who is paying.
+     * @return The URN
+     */
+    @NotNull(message = "payer or receipt is never NULL")
+    URN payer();
+
+    /**
+     * Who is receiving.
+     * @return The URN
+     */
+    @NotNull(message = "beneficiary or receipt is never NULL")
+    URN beneficiary();
 
     /**
      * Details.
      * @return Details
      */
-    @NotNull(message = "details of expense is never NULL")
+    @NotNull(message = "details of receipt is never NULL")
     String details();
 
     /**
@@ -56,7 +78,7 @@ public interface Expense {
      * to 1,000,000 points (a million).
      * @return The amount
      */
-    @NotNull(message = "amount of transaction is never NULL")
+    @NotNull(message = "amount of receipt is never NULL")
     Dollars dollars();
 
     /**
@@ -65,7 +87,19 @@ public interface Expense {
     @Loggable(Loggable.DEBUG)
     @EqualsAndHashCode(of = { "text", "amount" })
     @Immutable
-    final class Simple implements Expense {
+    final class Simple implements Receipt {
+        /**
+         * When did it happen.
+         */
+        private final transient Time when;
+        /**
+         * Who is paying.
+         */
+        private final transient URN pyr;
+        /**
+         * Who is receiving.
+         */
+        private final transient URN rcv;
         /**
          * Details.
          */
@@ -76,12 +110,22 @@ public interface Expense {
         private final transient Dollars amount;
         /**
          * Public ctor.
+         * @param time Time of receipt
+         * @param payer Payer
+         * @param beneficiary Receiver
          * @param details Details
          * @param points Amount
+         * @checkstyle ParameterNumber (10 lines)
          */
         public Simple(
+            @NotNull(message = "date can't be NULL") final Time time,
+            @NotNull(message = "details can't be NULL") final URN payer,
+            @NotNull(message = "details can't be NULL") final URN beneficiary,
             @NotNull(message = "details can't be NULL") final String details,
             @NotNull(message = "dollars can't be NULL") final Dollars points) {
+            this.when = time;
+            this.pyr = payer;
+            this.rcv = beneficiary;
             this.text = details;
             this.amount = points;
         }
@@ -89,7 +133,7 @@ public interface Expense {
          * {@inheritDoc}
          */
         @Override
-        @NotNull(message = "details of transaction is never NULL")
+        @NotNull(message = "details of receipt is never NULL")
         public String details() {
             return this.text;
         }
@@ -97,9 +141,33 @@ public interface Expense {
          * {@inheritDoc}
          */
         @Override
-        @NotNull(message = "amount of transaction is never NULL")
+        @NotNull(message = "amount of receipt is never NULL")
         public Dollars dollars() {
             return this.amount;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull(message = "date of receipt is never NULL")
+        public Time date() {
+            return this.when;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull(message = "payer of receipt is never NULL")
+        public URN payer() {
+            return this.pyr;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull(message = "beneficiary of receipt is never NULL")
+        public URN beneficiary() {
+            return this.rcv;
         }
     }
 

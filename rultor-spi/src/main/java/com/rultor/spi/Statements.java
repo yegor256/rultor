@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -27,38 +26,34 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<?xml-stylesheet type='text/xsl' href='/xsl/statement.xsl'?>
-<page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
-    <identity>
-        <urn>urn:facebook:1</urn>
-        <name>Jeff Lebowski</name>
-        <photo>http://images.sodahead.com/polls/002320349/200261278_The_Big_Lebowski___Jeff_Bridges_answer_9_xlarge.jpeg</photo>
-    </identity>
-    <version>
-        <name>1.0-SNAPSHOT</name>
-        <revision>123</revision>
-        <date>22-Aug-2012</date>
-    </version>
-    <links>
-        <link href="/xml/index.xml" rel="self" type="text/xml"/>
-        <link href="/xml/index.xml" rel="home" type="text/xml"/>
-        <link href="/xml/index.xml" rel="more" type="text/xml"/>
-    </links>
-    <millis>16</millis>
-    <balance>$0.45</balance>
-    <invoices>
-        <invoice>
-            <amount>$1.66</amount>
-            <date>2012-08-23T13:25:33Z</date>
-            <when>45 hours</when>
-            <text>some text</text>
-        </invoice>
-        <invoice>
-            <amount>$0.09</amount>
-            <date>2012-08-23T13:25:33Z</date>
-            <when>13 minutes</when>
-            <text>some other text</text>
-        </invoice>
-    </invoices>
-</page>
+ */
+package com.rultor.spi;
+
+import com.jcabi.aspects.Immutable;
+import javax.validation.constraints.NotNull;
+
+/**
+ * Sorted vector of {@link Statement}s (most recent goes first).
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+@Immutable
+public interface Statements extends Iterable<Statement> {
+
+    /**
+     * Tail, that does include the provided date.
+     * @param head Head of the new vector
+     * @return Statements
+     */
+    @NotNull(message = "tail is never NULL")
+    Statements tail(Time head);
+
+    /**
+     * Add new statement.
+     * @param stmt The statement to add
+     */
+    void add(@NotNull(message = "statement can't be NULL") Statement stmt);
+
+}

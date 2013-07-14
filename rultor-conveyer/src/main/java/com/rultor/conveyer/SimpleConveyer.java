@@ -34,25 +34,18 @@ import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseRunnable;
-import com.jcabi.urn.URN;
-import com.rultor.spi.Expense;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Invoice;
 import com.rultor.spi.Metricable;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Time;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Random;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
@@ -219,42 +212,9 @@ public final class SimpleConveyer implements Closeable, Metricable {
         final User owner = this.users.get(work.owner());
         final Variable<?> var =
             new Repo.Cached(this.repo, owner, work.spec()).get();
-        final Collection<Expense> expenses =
-            new CopyOnWriteArrayList<Expense>();
-        final Object object = var.instantiate(
-            this.users,
-            // @checkstyle AnonInnerLength (50 lines)
-            new Work() {
-                @Override
-                public Time started() {
-                    return work.started();
-                }
-                @Override
-                public URN owner() {
-                    return work.owner();
-                }
-                @Override
-                public String unit() {
-                    return work.unit();
-                }
-                @Override
-                public Spec spec() {
-                    return work.spec();
-                }
-                @Override
-                public void spent(final Expense exp) {
-                    expenses.add(exp);
-                }
-            }
-        );
+        final Object object = var.instantiate(this.users, work);
         if (object instanceof Instance) {
-            try {
-                Instance.class.cast(object).pulse();
-            } finally {
-                this.users.get(work.owner()).statement().add(
-                    new Invoice.Composed(expenses)
-                );
-            }
+            Instance.class.cast(object).pulse();
         }
     }
 

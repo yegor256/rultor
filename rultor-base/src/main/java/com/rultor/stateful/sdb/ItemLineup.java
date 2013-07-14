@@ -40,7 +40,6 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.SDBClient;
 import com.rultor.spi.Dollars;
-import com.rultor.spi.Expense;
 import com.rultor.spi.Work;
 import com.rultor.stateful.Lineup;
 import java.security.SecureRandom;
@@ -198,16 +197,13 @@ public final class ItemLineup implements Lineup {
                 .withDomainName(this.client.domain())
                 .withItemName(this.name)
         );
-        this.work.spent(
-            new Expense.Simple(
-                String.format(
-                    // @checkstyle LineLength (1 line)
-                    "checked existence of AWS SimpleDB item '%s' in '%s' domain",
-                    this.name,
-                    this.client.domain()
-                ),
-                new Dollars(-Tv.HUNDRED)
-            )
+        this.work.charge(
+            String.format(
+                "checked existence of AWS SimpleDB item '%s' in '%s' domain",
+                this.name,
+                this.client.domain()
+            ),
+            new Dollars(Tv.HUNDRED)
         );
         return !result.getAttributes().isEmpty();
     }
@@ -228,15 +224,13 @@ public final class ItemLineup implements Lineup {
                         .withReplace(true)
                 )
         );
-        this.work.spent(
-            new Expense.Simple(
-                String.format(
-                    "put AWS SimpleDB item '%s' into '%s' domain",
-                    this.name,
-                    this.client.domain()
-                ),
-                new Dollars(-Tv.HUNDRED)
-            )
+        this.work.charge(
+            String.format(
+                "put AWS SimpleDB item '%s' into '%s' domain",
+                this.name,
+                this.client.domain()
+            ),
+            new Dollars(Tv.HUNDRED)
         );
     }
 
@@ -252,15 +246,13 @@ public final class ItemLineup implements Lineup {
                 .withItemName(this.name)
                 .withAttributeNames(ItemLineup.IDENTIFIER)
         );
-        this.work.spent(
-            new Expense.Simple(
-                String.format(
-                    "loaded AWS SimpleDB item '%s' from '%s' domain",
-                    this.name,
-                    this.client.domain()
-                ),
-                new Dollars(-Tv.HUNDRED)
-            )
+        this.work.charge(
+            String.format(
+                "loaded AWS SimpleDB item '%s' from '%s' domain",
+                this.name,
+                this.client.domain()
+            ),
+            new Dollars(Tv.HUNDRED)
         );
         return result.getAttributes().get(0).getValue();
     }
@@ -274,15 +266,13 @@ public final class ItemLineup implements Lineup {
                 .withDomainName(this.client.domain())
                 .withItemName(this.name)
         );
-        this.work.spent(
-            new Expense.Simple(
-                String.format(
-                    "removed AWS SimpleDB item '%s' from '%s' domain",
-                    this.name,
-                    this.client.domain()
-                ),
-                new Dollars(-Tv.HUNDRED)
-            )
+        this.work.charge(
+            String.format(
+                "removed AWS SimpleDB item '%s' from '%s' domain",
+                this.name,
+                this.client.domain()
+            ),
+            new Dollars(Tv.HUNDRED)
         );
     }
 

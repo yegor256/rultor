@@ -33,13 +33,11 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rultor.repo.ClasspathRepo;
-import com.rultor.spi.Dollars;
-import com.rultor.spi.Invoice;
-import com.rultor.spi.Invoices;
 import com.rultor.spi.Queue;
+import com.rultor.spi.Receipt;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Statement;
+import com.rultor.spi.Statements;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
@@ -98,6 +96,14 @@ final class Testing implements Profile {
             public User get(final URN urn) {
                 return new Testing.MemoryUser(urn);
             }
+            @Override
+            public void charge(final Receipt receipt) {
+                assert receipt != null;
+            }
+            @Override
+            public void reconcile() {
+                throw new UnsupportedOperationException();
+            }
         };
     }
 
@@ -130,10 +136,6 @@ final class Testing implements Profile {
             return URN.create(this.name.toString());
         }
         @Override
-        public Statement statement() {
-            return new Testing.MemoryStatement(this.name);
-        }
-        @Override
         public Set<String> units() {
             return Testing.UNITS.keySet();
         }
@@ -148,6 +150,14 @@ final class Testing implements Profile {
         @Override
         public void remove(final String txt) {
             Testing.UNITS.remove(txt);
+        }
+        @Override
+        public Statements statements() {
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public Iterable<Receipt> receipts() {
+            throw new UnsupportedOperationException();
         }
     }
 
@@ -175,36 +185,6 @@ final class Testing implements Profile {
         @Override
         public Spec spec() {
             return Testing.SPECS.get(this.name);
-        }
-    }
-
-    /**
-     * In-memory statement.
-     */
-    @Immutable
-    private static final class MemoryStatement implements Statement {
-        /**
-         * Name of the user.
-         */
-        private final transient URN user;
-        /**
-         * Public ctor.
-         * @param urn Name of it
-         */
-        protected MemoryStatement(final URN urn) {
-            this.user = urn;
-        }
-        @Override
-        public Invoices invoices() {
-            throw new UnsupportedOperationException();
-        }
-        @Override
-        public Dollars balance() {
-            return new Dollars(0);
-        }
-        @Override
-        public void add(final Invoice invoice) {
-            throw new UnsupportedOperationException();
         }
     }
 

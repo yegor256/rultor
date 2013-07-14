@@ -30,10 +30,12 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 
 /**
- * Statement of a {@link User}.
+ * One financial statement.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -43,11 +45,18 @@ import javax.validation.constraints.NotNull;
 public interface Statement {
 
     /**
-     * All invoices.
-     * @return All invoices
+     * Date of the statement.
+     * @return The date
      */
-    @NotNull(message = "list of invoices is never NULL")
-    Invoices invoices();
+    @NotNull(message = "date of statement is never NULL")
+    Time date();
+
+    /**
+     * Amount of it.
+     * @return The amount
+     */
+    @NotNull(message = "amount of statement is never NULL")
+    Dollars amount();
 
     /**
      * Final balance.
@@ -57,9 +66,95 @@ public interface Statement {
     Dollars balance();
 
     /**
-     * Add new invoice.
-     * @param invoice The invoice to add
+     * Details in text.
+     * @return Text of the statement
      */
-    void add(@NotNull(message = "invoice can't be NULL") Invoice invoice);
+    @NotNull(message = "text of statements is never NULL")
+    String details();
+
+    /**
+     * Simple implementation.
+     */
+    @Loggable(Loggable.DEBUG)
+    @EqualsAndHashCode(of = { "when", "total", "end", "text" })
+    @Immutable
+    final class Simple implements Statement {
+        /**
+         * When did it happen.
+         */
+        private final transient Time when;
+        /**
+         * Total amount.
+         */
+        private final transient Dollars total;
+        /**
+         * Ending balance.
+         */
+        private final transient Dollars end;
+        /**
+         * Details.
+         */
+        private final transient String text;
+        /**
+         * Public ctor (balance it now known).
+         * @param time Time of statement
+         * @param amount Amount of it
+         * @param details Details
+         */
+        public Simple(final Time time, final Dollars amount,
+            final String details) {
+            this(time, amount, new Dollars(0), details);
+        }
+        /**
+         * Public ctor.
+         * @param time Time of statement
+         * @param amount Amount of it
+         * @param balance Balance
+         * @param details Details
+         * @checkstyle ParameterNumber (10 lines)
+         */
+        public Simple(
+            @NotNull(message = "date can't be NULL") final Time time,
+            @NotNull(message = "amount can't be NULL") final Dollars amount,
+            @NotNull(message = "balance can't be NULL") final Dollars balance,
+            @NotNull(message = "details can't be NULL") final String details) {
+            this.when = time;
+            this.total = amount;
+            this.end = balance;
+            this.text = details;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull(message = "details of statement is never NULL")
+        public String details() {
+            return this.text;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull(message = "amount of statement is never NULL")
+        public Dollars amount() {
+            return this.total;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull(message = "balance of statement is never NULL")
+        public Dollars balance() {
+            return this.end;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull(message = "date of statement is never NULL")
+        public Time date() {
+            return this.when;
+        }
+    }
 
 }

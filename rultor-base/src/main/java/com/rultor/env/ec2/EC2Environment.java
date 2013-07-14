@@ -45,7 +45,6 @@ import com.jcabi.log.Logger;
 import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
 import com.rultor.spi.Dollars;
-import com.rultor.spi.Expense;
 import com.rultor.spi.Signal;
 import com.rultor.spi.Work;
 import java.io.IOException;
@@ -198,16 +197,13 @@ final class EC2Environment implements Environment {
                 age,
                 cost
             );
-            this.work.spent(
-                new Expense.Simple(
-                    String.format(
-                        // @checkstyle LineLength (1 line)
-                        "%[ms]s of AWS EC2 %s instance",
-                        age,
-                        instance.getInstanceType()
-                    ),
-                    cost
-                )
+            this.work.charge(
+                String.format(
+                    "%[ms]s of AWS EC2 %s instance",
+                    age,
+                    instance.getInstanceType()
+                ),
+                cost
             );
         } finally {
             aws.shutdown();
@@ -228,7 +224,7 @@ final class EC2Environment implements Environment {
         assert zone != null;
         final long hourly = 1;
         return new Dollars(
-            -msec * hourly * Tv.MILLION / TimeUnit.HOURS.toMillis(1)
+            msec * hourly * Tv.MILLION / TimeUnit.HOURS.toMillis(1)
         );
     }
 

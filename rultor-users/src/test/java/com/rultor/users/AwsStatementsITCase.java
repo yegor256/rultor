@@ -35,15 +35,14 @@ import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
-import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.TableMocker;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Dollars;
-import com.rultor.spi.Expense;
-import com.rultor.spi.Invoice;
-import java.util.Arrays;
+import com.rultor.spi.Statement;
+import com.rultor.spi.Statements;
+import com.rultor.spi.Time;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.After;
@@ -51,12 +50,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Integration case for {@link AwsStatement}.
+ * Integration case for {@link AwsStatements}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public final class AwsStatementITCase {
+public final class AwsStatementsITCase {
 
     /**
      * AWS key.
@@ -79,14 +78,14 @@ public final class AwsStatementITCase {
      */
     @Before
     public void prepare() throws Exception {
-        if (AwsStatementITCase.KEY == null) {
+        if (AwsStatementsITCase.KEY == null) {
             return;
         }
         final String prefix = System.getProperty("failsafe.dynamo.prefix");
         this.region = new Region.Prefixed(
             new Region.Simple(
                 new Credentials.Simple(
-                    AwsStatementITCase.KEY,
+                    AwsStatementsITCase.KEY,
                     System.getProperty("failsafe.dynamo.secret")
                 )
             ),
@@ -95,7 +94,7 @@ public final class AwsStatementITCase {
         this.table = new TableMocker(
             this.region,
             new CreateTableRequest()
-                .withTableName(String.format("%sinvoices", prefix))
+                .withTableName(String.format("%sstatements", prefix))
                 .withProvisionedThroughput(
                     new ProvisionedThroughput()
                         .withReadCapacityUnits(1L)
@@ -103,18 +102,18 @@ public final class AwsStatementITCase {
                 )
                 .withAttributeDefinitions(
                     new AttributeDefinition()
-                        .withAttributeName(AwsInvoices.KEY_OWNER)
+                        .withAttributeName(AwsStatements.KEY_OWNER)
                         .withAttributeType(ScalarAttributeType.S),
                     new AttributeDefinition()
-                        .withAttributeName(AwsInvoices.KEY_CODE)
+                        .withAttributeName(AwsStatements.KEY_TIME)
                         .withAttributeType(ScalarAttributeType.S)
                 )
                 .withKeySchema(
                     new KeySchemaElement()
-                        .withAttributeName(AwsInvoices.KEY_OWNER)
+                        .withAttributeName(AwsStatements.KEY_OWNER)
                         .withKeyType(KeyType.HASH),
                     new KeySchemaElement()
-                        .withAttributeName(AwsInvoices.KEY_CODE)
+                        .withAttributeName(AwsStatements.KEY_TIME)
                         .withKeyType(KeyType.RANGE)
                 )
         );
@@ -127,34 +126,33 @@ public final class AwsStatementITCase {
      */
     @After
     public void drop() throws Exception {
-        if (AwsStatementITCase.KEY != null) {
+        if (AwsStatementsITCase.KEY != null) {
             this.table.drop();
         }
     }
 
     /**
-     * AwsStatement can work with real data.
+     * AwsStatements can work with real data.
      * @throws Exception If some problem inside
      */
     @Test
+    @SuppressWarnings("PMD.CloseResource")
     public void worksWithRealDynamoDb() throws Exception {
-        if (AwsStatementITCase.KEY == null) {
+        if (AwsStatementsITCase.KEY == null) {
             return;
         }
         final URN urn = new URN("urn:github:66");
-        final AwsStatement stmt = new AwsStatement(this.region, urn);
-        final Invoice invoice = new Invoice.Composed(
-            Arrays.<Expense>asList(
-                new Expense.Simple("just test", new Dollars(Tv.MILLION))
-            )
+        final Statements stmts = new AwsStatements(this.region, urn);
+        final Statement statement = new Statement.Simple(
+            new Time(), new Dollars(1L), "some statement text"
         );
-        stmt.add(invoice);
+        stmts.add(statement);
         MatcherAssert.assertThat(
-            stmt.invoices().iterator().next().amount(),
-            Matchers.equalTo(invoice.amount())
+            stmts.iterator().next().amount(),
+            Matchers.equalTo(statement.amount())
         );
         MatcherAssert.assertThat(
-            stmt.balance().points(),
+            stmts.iterator().next().balance().points(),
             Matchers.greaterThan(0L)
         );
     }

@@ -52,11 +52,18 @@ public interface User {
     URN urn();
 
     /**
-     * Statement of financial activities.
-     * @return The statement
+     * All statements of financial activities.
+     * @return Statements
      */
-    @NotNull(message = "statement of user is never NULL")
-    Statement statement();
+    @NotNull(message = "statements of user is never NULL")
+    Statements statements();
+
+    /**
+     * All receipts not yet statementd.
+     * @return All receipts
+     */
+    @NotNull(message = "list of receipts is never NULL")
+    Iterable<Receipt> receipts();
 
     /**
      * Names of all his units.

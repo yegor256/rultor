@@ -38,9 +38,9 @@
     </xsl:template>
     <xsl:template name="content">
         <xsl:choose>
-            <xsl:when test="/page/invoices/invoice">
+            <xsl:when test="/page/statements/statement">
                 <ul class="nav">
-                    <xsl:apply-templates select="/page/invoices/invoice"/>
+                    <xsl:apply-templates select="/page/statements/statement"/>
                 </ul>
                 <xsl:if test="//links/link[@rel='more']">
                     <xsl:text>See </xsl:text>
@@ -50,17 +50,17 @@
                         </xsl:attribute>
                         <xsl:text>more</xsl:text>
                     </a>
-                    <xsl:text> older invoices.</xsl:text>
+                    <xsl:text> older statements.</xsl:text>
                 </xsl:if>
             </xsl:when>
             <xsl:otherwise>
                 <p>
-                    <xsl:text>No invoices at the moment.</xsl:text>
+                    <xsl:text>No statements at the moment.</xsl:text>
                 </p>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <xsl:template match="invoice">
+    <xsl:template match="statement">
         <li>
             <ul class="inline btn-group-vertical">
                 <li>
@@ -75,7 +75,7 @@
                 </li>
             </ul>
             <pre class="hidden-phone">
-                <xsl:value-of select="text"/>
+                <xsl:value-of select="details"/>
             </pre>
         </li>
     </xsl:template>

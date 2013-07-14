@@ -59,4 +59,15 @@ public interface Users {
     @NotNull(message = "user is never NULL")
     User get(@NotNull(message = "name can't be NULL") URN name);
 
+    /**
+     * Register new expense between two users.
+     * @param receipt Receipt of transaction
+     */
+    void charge(@NotNull(message = "receipt can't be NULL") Receipt receipt);
+
+    /**
+     * Compress all receipts into new statements.
+     */
+    void reconcile();
+
 }

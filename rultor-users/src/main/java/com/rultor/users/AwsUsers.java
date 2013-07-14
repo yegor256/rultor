@@ -37,11 +37,15 @@ import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Metricable;
+import com.rultor.spi.Receipt;
+import com.rultor.spi.Statement;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -92,6 +96,27 @@ public final class AwsUsers implements Users, Metricable {
     @NotNull(message = "User is never NULL")
     public User get(@NotNull(message = "URN can't be empty") final URN urn) {
         return new AwsUser(this.region, urn);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void charge(@NotNull(message = "receipt can't be empty")
+        final Receipt receipt) {
+        AwsReceipts.add(this.region, receipt);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reconcile() {
+        final ConcurrentMap<URN, Statement> statements =
+            new AwsPending(this.region).fetch();
+        for (Map.Entry<URN, Statement> entry : statements.entrySet()) {
+            this.get(entry.getKey()).statements().add(entry.getValue());
+        }
     }
 
     /**

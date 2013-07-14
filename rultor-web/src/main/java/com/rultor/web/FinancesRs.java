@@ -34,9 +34,8 @@ import com.jcabi.aspects.Tv;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
-import com.rultor.spi.Invoice;
-import com.rultor.spi.Invoices;
 import com.rultor.spi.Statement;
+import com.rultor.spi.Statements;
 import com.rultor.spi.Time;
 import java.util.Iterator;
 import javax.ws.rs.GET;
@@ -46,7 +45,7 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 /**
- * Statement of a user.
+ * Finances of a user.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -54,9 +53,9 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Path("/stmt")
+@Path("/fin")
 @Loggable(Loggable.DEBUG)
-public final class StatementRs extends BaseRs {
+public final class FinancesRs extends BaseRs {
 
     /**
      * Query param.
@@ -72,7 +71,7 @@ public final class StatementRs extends BaseRs {
      * Inject it from query.
      * @param time Since what time
      */
-    @QueryParam(StatementRs.QUERY_SINCE)
+    @QueryParam(FinancesRs.QUERY_SINCE)
     public void setSince(final String time) {
         if (time != null) {
             this.since = new Time(Long.parseLong(time));
@@ -85,19 +84,17 @@ public final class StatementRs extends BaseRs {
      */
     @GET
     @Path("/")
-    @SuppressWarnings("PMD.CloseResource")
     public Response index() {
-        final Statement stmt = this.user().statement();
         EmptyPage page = new PageBuilder()
-            .stylesheet("/xsl/statement.xsl")
+            .stylesheet("/xsl/finances.xsl")
             .build(EmptyPage.class)
             .init(this);
-        Invoices invoices = stmt.invoices();
+        Statements statements = this.user().statements();
         final int total;
         if (this.since == null) {
             total = Tv.FIVE;
         } else {
-            invoices = invoices.tail(this.since);
+            statements = statements.tail(this.since);
             total = Tv.TWENTY;
             page = page
                 .append(new JaxbBundle("since", this.since.toString()))
@@ -106,33 +103,33 @@ public final class StatementRs extends BaseRs {
                         "latest",
                         this.uriInfo().getBaseUriBuilder()
                             .clone()
-                            .path(StatementRs.class)
+                            .path(FinancesRs.class)
                     )
                 );
         }
         return page
-            .append(this.invoices(invoices.iterator(), total))
+            .append(this.statements(statements.iterator(), total))
             .render()
             .build();
     }
 
     /**
-     * All invoices of the statement.
-     * @param invoices All invoices to show
+     * All statements of the user.
+     * @param statements All statements to show
      * @param maximum Maximum to show
      * @return Collection of JAXB units
      */
-    private JaxbBundle invoices(final Iterator<Invoice> invoices,
+    private JaxbBundle statements(final Iterator<Statement> statements,
         final int maximum) {
-        JaxbBundle bundle = new JaxbBundle("invoices");
+        JaxbBundle bundle = new JaxbBundle("statements");
         int pos;
         for (pos = 0; pos < maximum; ++pos) {
-            if (!invoices.hasNext()) {
+            if (!statements.hasNext()) {
                 break;
             }
-            bundle = bundle.add(this.invoice(invoices.next()));
+            bundle = bundle.add(this.statement(statements.next()));
         }
-        if (pos == maximum && invoices.hasNext()) {
+        if (pos == maximum && statements.hasNext()) {
             bundle = bundle.link(
                 new Link(
                     "more",
@@ -141,8 +138,8 @@ public final class StatementRs extends BaseRs {
                         .clone()
                         .path(DrainRs.class)
                         .queryParam(
-                            StatementRs.QUERY_SINCE,
-                            invoices.next().date().millis()
+                            FinancesRs.QUERY_SINCE,
+                            statements.next().date().millis()
                         )
                         .build()
                 )
@@ -152,22 +149,24 @@ public final class StatementRs extends BaseRs {
     }
 
     /**
-     * Convert invoice to JaxbBundle.
-     * @param invoice Invoice to render
+     * Convert statement to JaxbBundle.
+     * @param statement Statement to render
      * @return Bundle
      */
-    private JaxbBundle invoice(final Invoice invoice) {
-        return new JaxbBundle("invoice")
-            .add("amount", invoice.amount().toString())
+    private JaxbBundle statement(final Statement statement) {
+        return new JaxbBundle("statement")
+            .add("amount", statement.amount().toString())
             .up()
-            .add("text", invoice.text())
+            .add("balance", statement.balance().toString())
             .up()
-            .add("date", invoice.date().toString())
+            .add("details", statement.details())
+            .up()
+            .add("date", statement.date().toString())
             .up()
             .add(
                 "when",
                 DurationFormatUtils.formatDurationWords(
-                    System.currentTimeMillis() - invoice.date().millis(),
+                    System.currentTimeMillis() - statement.date().millis(),
                     true, true
                 )
             )

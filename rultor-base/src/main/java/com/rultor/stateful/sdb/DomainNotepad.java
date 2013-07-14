@@ -41,7 +41,6 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rultor.aws.SDBClient;
 import com.rultor.spi.Dollars;
-import com.rultor.spi.Expense;
 import com.rultor.spi.Work;
 import com.rultor.stateful.Notepad;
 import java.util.Collection;
@@ -156,15 +155,13 @@ public final class DomainNotepad implements Notepad {
                 .withConsistentRead(true)
                 .withSelectExpression(query)
         );
-        this.work.spent(
-            new Expense.Simple(
-                String.format(
-                    "retrieved AWS SimpleDB %d items from '%s' domain",
-                    result.getItems().size(),
-                    this.client.domain()
-                ),
-                new Dollars(-Tv.HUNDRED)
-            )
+        this.work.charge(
+            String.format(
+                "retrieved AWS SimpleDB %d items from '%s' domain",
+                result.getItems().size(),
+                this.client.domain()
+            ),
+            new Dollars(Tv.HUNDRED)
         );
         final Collection<String> items = new LinkedList<String>();
         for (Item item : result.getItems()) {
@@ -214,15 +211,13 @@ public final class DomainNotepad implements Notepad {
                         .withReplace(true)
                 )
         );
-        this.work.spent(
-            new Expense.Simple(
-                String.format(
-                    "added AWS SimpleDB item '%s' to '%s' domain",
-                    this.name(line),
-                    this.client.domain()
-                ),
-                new Dollars(-Tv.HUNDRED)
-            )
+        this.work.charge(
+            String.format(
+                "added AWS SimpleDB item '%s' to '%s' domain",
+                this.name(line),
+                this.client.domain()
+            ),
+            new Dollars(Tv.HUNDRED)
         );
         return true;
     }
@@ -237,15 +232,13 @@ public final class DomainNotepad implements Notepad {
                 .withDomainName(this.client.domain())
                 .withItemName(this.name(line.toString()))
         );
-        this.work.spent(
-            new Expense.Simple(
-                String.format(
-                    "removed AWS SimpleDB item '%s' from '%s' domain",
-                    this.name(line.toString()),
-                    this.client.domain()
-                ),
-                new Dollars(-Tv.HUNDRED)
-            )
+        this.work.charge(
+            String.format(
+                "removed AWS SimpleDB item '%s' from '%s' domain",
+                this.name(line.toString()),
+                this.client.domain()
+            ),
+            new Dollars(Tv.HUNDRED)
         );
         return true;
     }

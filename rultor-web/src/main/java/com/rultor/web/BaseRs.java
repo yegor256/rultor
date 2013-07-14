@@ -48,7 +48,7 @@ import com.rexsl.page.auth.Provider;
 import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
-import com.rultor.spi.Expense;
+import com.rultor.spi.Dollars;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Time;
@@ -144,14 +144,15 @@ public class BaseRs extends BaseResource {
                         "statement",
                         BaseRs.this.uriInfo().getBaseUriBuilder()
                             .clone()
-                            .path(StatementRs.class)
+                            .path(FinancesRs.class)
                             .build()
                     )
                 );
                 page.append(
                     new JaxbBundle(
                         "balance",
-                        BaseRs.this.user().statement().balance().toString()
+                        BaseRs.this.user().statements()
+                            .iterator().next().balance().toString()
                     )
                 );
             }
@@ -269,7 +270,7 @@ public class BaseRs extends BaseResource {
                 return spec;
             }
             @Override
-            public void spent(final Expense exp) {
+            public void charge(final String details, final Dollars amount) {
                 throw new UnsupportedOperationException();
             }
         };

@@ -29,9 +29,11 @@
  */
 package com.rultor.conveyer;
 
+import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Receipt;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Statement;
+import com.rultor.spi.Statements;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
@@ -115,10 +117,30 @@ final class FakeUsers implements Users {
                 throw new UnsupportedOperationException();
             }
             @Override
-            public Statement statement() {
+            public Statements statements() {
+                throw new UnsupportedOperationException();
+            }
+            @Override
+            public Iterable<Receipt> receipts() {
                 throw new UnsupportedOperationException();
             }
         };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void charge(final Receipt receipt) {
+        Logger.info(this, "#charge(%s)", receipt);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reconcile() {
+        throw new UnsupportedOperationException();
     }
 
 }
