@@ -31,6 +31,7 @@ package com.rultor.conveyer;
 
 import com.jcabi.urn.URN;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Statement;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
@@ -111,6 +112,10 @@ final class FakeUsers implements Users {
             }
             @Override
             public void create(final String name) {
+                throw new UnsupportedOperationException();
+            }
+            @Override
+            public Statement statement() {
                 throw new UnsupportedOperationException();
             }
         };

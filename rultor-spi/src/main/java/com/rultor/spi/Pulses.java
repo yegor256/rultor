@@ -57,7 +57,7 @@ public interface Pulses extends Iterable<Time> {
      * Get a subset of this vector.
      * @param head Maximum time that is allowed in the result vector
      * @return Similar vector, that contains only pulses that are older than
-     *  the provided date
+     *  or equal to the provided date
      */
     @NotNull(message = "pulses are never NULL")
     Pulses tail(@NotNull(message = "head can't be NULL") Time head);

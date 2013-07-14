@@ -44,6 +44,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
+import com.rultor.spi.Dollars;
 import com.rultor.spi.Expense;
 import com.rultor.spi.Signal;
 import com.rultor.spi.Work;
@@ -183,7 +184,7 @@ final class EC2Environment implements Environment {
                 result.getTerminatingInstances().get(0);
             final long age = System.currentTimeMillis()
                 - instance.getLaunchTime().getTime();
-            final long cost = EC2Environment.costOf(
+            final Dollars cost = EC2Environment.costOf(
                 instance.getInstanceType(),
                 instance.getPlacement().getAvailabilityZone(),
                 age
@@ -191,11 +192,11 @@ final class EC2Environment implements Environment {
             Signal.log(
                 Signal.Mnemo.SUCCESS,
                 // @checkstyle LineLength (1 line)
-                "EC2 instance %s (%s) terminated, after %[ms]s of activity (approx. %.2f USD)",
+                "EC2 instance %s (%s) terminated, after %[ms]s of activity (approx. %s)",
                 change.getInstanceId(),
                 instance.getInstanceType(),
                 age,
-                cost / Tv.MILLION
+                cost
             );
             this.work.spent(
                 new Expense.Simple(
@@ -221,13 +222,14 @@ final class EC2Environment implements Environment {
      * @return The price of the instance time
      * @throws IOException If IO problem inside
      */
-    private static long costOf(final String type, final String zone,
+    private static Dollars costOf(final String type, final String zone,
         final long msec) throws IOException {
         assert type != null;
         assert zone != null;
-        assert msec > 0;
         final long hourly = 1;
-        return msec * hourly * Tv.MILLION / TimeUnit.HOURS.toMillis(1);
+        return new Dollars(
+            msec * hourly * Tv.MILLION / TimeUnit.HOURS.toMillis(1)
+        );
     }
 
 }

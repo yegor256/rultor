@@ -27,62 +27,14 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.web.rexsl.xhtml
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
-import java.util.Set;
-import javax.validation.constraints.NotNull;
+import com.rexsl.test.XhtmlMatchers
+import org.hamcrest.MatcherAssert
 
-/**
- * User.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- */
-@Immutable
-public interface User {
-
-    /**
-     * His URN.
-     * @return URN
-     */
-    @NotNull(message = "URN of user is never NULL")
-    URN urn();
-
-    /**
-     * Statement of financial activities.
-     * @return The statement
-     */
-    @NotNull(message = "statement of user is never NULL")
-    Statement statement();
-
-    /**
-     * Names of all his units.
-     * @return Collection of units
-     */
-    @NotNull(message = "set of units of user is never NULL")
-    Set<String> units();
-
-    /**
-     * Get unit by name (runtime exception if it's absent).
-     * @param name The name of it
-     * @return The unit
-     */
-    @NotNull(message = "unit is never NULL")
-    Unit get(@NotNull(message = "unit name can't be NULL") String name);
-
-    /**
-     * Remove unit by name (runtime exception if it's absent).
-     * @param name The name of it
-     */
-    void remove(@NotNull(message = "name can't be NULL") String name);
-
-    /**
-     * Create empty default unit with this name.
-     * @param name The name of it
-     */
-    void create(@NotNull(message = "name can't be NULL") String name);
-
-}
+MatcherAssert.assertThat(
+    rexsl.document,
+    XhtmlMatchers.hasXPaths(
+        '//xhtml:html/xhtml:head/xhtml:title'
+    )
+)

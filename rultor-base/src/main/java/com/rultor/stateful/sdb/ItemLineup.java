@@ -39,6 +39,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.SDBClient;
+import com.rultor.spi.Dollars;
 import com.rultor.spi.Expense;
 import com.rultor.spi.Work;
 import com.rultor.stateful.Lineup;
@@ -204,7 +205,7 @@ public final class ItemLineup implements Lineup {
                     this.name,
                     this.client.domain()
                 ),
-                Tv.HUNDRED
+                new Dollars(Tv.HUNDRED)
             )
         );
         return !result.getAttributes().isEmpty();
@@ -233,7 +234,7 @@ public final class ItemLineup implements Lineup {
                     this.name,
                     this.client.domain()
                 ),
-                Tv.HUNDRED
+                new Dollars(Tv.HUNDRED)
             )
         );
     }
@@ -257,7 +258,7 @@ public final class ItemLineup implements Lineup {
                     this.name,
                     this.client.domain()
                 ),
-                Tv.HUNDRED
+                new Dollars(Tv.HUNDRED)
             )
         );
         return result.getAttributes().get(0).getValue();
@@ -279,7 +280,7 @@ public final class ItemLineup implements Lineup {
                     this.name,
                     this.client.domain()
                 ),
-                Tv.HUNDRED
+                new Dollars(Tv.HUNDRED)
             )
         );
     }

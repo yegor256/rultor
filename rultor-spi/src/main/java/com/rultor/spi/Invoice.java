@@ -31,75 +31,95 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.CharUtils;
 
 /**
- * Expense to register in {@link Work}.
+ * One invoice.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Expense {
+public interface Invoice {
 
     /**
-     * Details.
-     * @return Details
+     * Date of the invoice.
+     * @return The date
      */
-    @NotNull(message = "details of expense is never NULL")
-    String details();
+    @NotNull(message = "date of invoice is never NULL")
+    Time date();
 
     /**
-     * Dollar amount in points where 1 USD equals
-     * to 1,000,000 points (a million).
+     * Amount of it.
      * @return The amount
      */
-    @NotNull(message = "amount of transaction is never NULL")
-    Dollars dollars();
+    @NotNull(message = "amount of invoice is never NULL")
+    Dollars amount();
 
     /**
-     * Simple implementation.
+     * Details in text.
+     * @return Text of the invoice
      */
-    @Loggable(Loggable.DEBUG)
-    @EqualsAndHashCode(of = { "text", "amount" })
+    @NotNull(message = "text of invoices is never NULL")
+    String text();
+
+    /**
+     * Composed of expenses.
+     */
     @Immutable
-    final class Simple implements Expense {
+    @Loggable(Loggable.DEBUG)
+    @EqualsAndHashCode(of = { "when", "expenses" })
+    final class Composed implements Invoice {
         /**
-         * Details.
+         * Date of the invoice.
          */
-        private final transient String text;
+        private final transient Time when = new Time();
         /**
-         * Amount of it.
+         * Expenses included.
          */
-        private final transient Dollars amount;
+        private final transient Expense[] expenses;
         /**
          * Public ctor.
-         * @param details Details
-         * @param points Amount
+         * @param exps Expenses
          */
-        public Simple(
-            @NotNull(message = "details can't be NULL") final String details,
-            @NotNull(message = "dollars can't be NULL") final Dollars points) {
-            this.text = details;
-            this.amount = points;
+        public Composed(final Collection<Expense> exps) {
+            this.expenses = exps.toArray(new Expense[exps.size()]);
         }
         /**
          * {@inheritDoc}
          */
         @Override
-        @NotNull(message = "details of transaction is never NULL")
-        public String details() {
-            return this.text;
+        public Time date() {
+            return this.when;
         }
         /**
          * {@inheritDoc}
          */
         @Override
-        @NotNull(message = "amount of transaction is never NULL")
-        public Dollars dollars() {
-            return this.amount;
+        public Dollars amount() {
+            long points = 0;
+            for (Expense exp : this.expenses) {
+                points += exp.dollars().points();
+            }
+            return new Dollars(points);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String text() {
+            final StringBuilder text = new StringBuilder();
+            for (Expense exp : this.expenses) {
+                text.append(exp.details())
+                    .append(' ')
+                    .append(exp.dollars())
+                    .append(CharUtils.LF);
+            }
+            return text.toString();
         }
     }
 

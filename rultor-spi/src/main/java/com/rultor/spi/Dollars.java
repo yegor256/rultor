@@ -31,76 +31,46 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import javax.validation.constraints.NotNull;
+import com.jcabi.aspects.Tv;
 import lombok.EqualsAndHashCode;
 
 /**
- * Expense to register in {@link Work}.
+ * Dollar amount.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Expense {
+@Loggable(Loggable.DEBUG)
+@EqualsAndHashCode(of = "amount")
+public final class Dollars {
 
     /**
-     * Details.
-     * @return Details
+     * Amount of it in millionth of dollar.
      */
-    @NotNull(message = "details of expense is never NULL")
-    String details();
+    private final transient long amount;
 
     /**
-     * Dollar amount in points where 1 USD equals
-     * to 1,000,000 points (a million).
-     * @return The amount
+     * Public ctor.
+     * @param points Amount
      */
-    @NotNull(message = "amount of transaction is never NULL")
-    Dollars dollars();
-
+    public Dollars(final long points) {
+        this.amount = points;
+    }
     /**
-     * Simple implementation.
+     * {@inheritDoc}
      */
-    @Loggable(Loggable.DEBUG)
-    @EqualsAndHashCode(of = { "text", "amount" })
-    @Immutable
-    final class Simple implements Expense {
-        /**
-         * Details.
-         */
-        private final transient String text;
-        /**
-         * Amount of it.
-         */
-        private final transient Dollars amount;
-        /**
-         * Public ctor.
-         * @param details Details
-         * @param points Amount
-         */
-        public Simple(
-            @NotNull(message = "details can't be NULL") final String details,
-            @NotNull(message = "dollars can't be NULL") final Dollars points) {
-            this.text = details;
-            this.amount = points;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @NotNull(message = "details of transaction is never NULL")
-        public String details() {
-            return this.text;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @NotNull(message = "amount of transaction is never NULL")
-        public Dollars dollars() {
-            return this.amount;
-        }
+    @Override
+    public String toString() {
+        return String.format("$%.2f", (double) this.amount / Tv.MILLION);
+    }
+    /**
+     * Points.
+     * @return Points
+     */
+    public long points() {
+        return this.amount;
     }
 
 }

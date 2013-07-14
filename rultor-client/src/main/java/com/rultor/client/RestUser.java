@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
+import com.rultor.spi.Statement;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import java.io.UnsupportedEncodingException;
@@ -209,6 +210,14 @@ public final class RestUser implements User {
             )
             .get(String.format("#remove(%s)", name))
             .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Statement statement() {
+        throw new UnsupportedOperationException();
     }
 
 }
