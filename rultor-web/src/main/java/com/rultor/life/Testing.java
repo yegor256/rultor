@@ -33,14 +33,19 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rultor.repo.ClasspathRepo;
+import com.rultor.spi.Dollars;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Receipt;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Statement;
 import com.rultor.spi.Statements;
+import com.rultor.spi.Time;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -153,7 +158,22 @@ final class Testing implements Profile {
         }
         @Override
         public Statements statements() {
-            throw new UnsupportedOperationException();
+            return new Statements() {
+                @Override
+                public Statements tail(final Time head) {
+                    return this;
+                }
+                @Override
+                public void add(final Statement stmt) {
+                    throw new UnsupportedOperationException();
+                }
+                @Override
+                public Iterator<Statement> iterator() {
+                    return Arrays.<Statement>asList(
+                        new Statement.Simple(new Time(), new Dollars(0), "")
+                    ).iterator();
+                }
+            };
         }
         @Override
         public Iterable<Receipt> receipts() {
