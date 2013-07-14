@@ -29,12 +29,15 @@
  */
 package com.rultor.conveyer;
 
-import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Receipt;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Statements;
+import com.rultor.spi.Unit;
 import com.rultor.spi.User;
-import com.rultor.spi.Users;
 import com.rultor.spi.Work;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -50,7 +53,7 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode
-final class FakeUsers implements Users {
+final class FakeUser implements User {
 
     /**
      * Work to return.
@@ -61,15 +64,47 @@ final class FakeUsers implements Users {
      * Public ctor.
      * @param wrk Work
      */
-    protected FakeUsers(final Work wrk) {
+    protected FakeUser(final Work wrk) {
         this.work = wrk;
+    }
+
+    @Override
+    public Unit get(final String name) {
+        return new Unit() {
+            @Override
+            public void update(final Spec spec) {
+                throw new UnsupportedOperationException();
+            }
+            @Override
+            public Spec spec() {
+                return FakeUser.this.work.spec();
+            }
+        };
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Set<URN> everybody() {
+    public URN urn() {
+        return FakeUser.this.work.owner();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Set<String> units() {
+        return new HashSet<String>(
+            Arrays.asList(FakeUser.this.work.unit())
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void remove(final String name) {
         throw new UnsupportedOperationException();
     }
 
@@ -77,23 +112,23 @@ final class FakeUsers implements Users {
      * {@inheritDoc}
      */
     @Override
-    public User get(final URN name) {
-        return new FakeUser(this.work);
+    public void create(final String name) {
+        throw new UnsupportedOperationException();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void charge(final Receipt receipt) {
-        Logger.info(this, "#charge(%s)", receipt);
+    public Statements statements() {
+        throw new UnsupportedOperationException();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void reconcile() {
+    public Iterable<Receipt> receipts() {
         throw new UnsupportedOperationException();
     }
 

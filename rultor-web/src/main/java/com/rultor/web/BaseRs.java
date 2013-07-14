@@ -51,12 +51,14 @@ import com.rexsl.page.inset.VersionInset;
 import com.rultor.spi.Dollars;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Statement;
 import com.rultor.spi.Time;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -148,13 +150,15 @@ public class BaseRs extends BaseResource {
                             .build()
                     )
                 );
-                page.append(
-                    new JaxbBundle(
-                        "balance",
-                        BaseRs.this.user().statements()
-                            .iterator().next().balance().toString()
-                    )
-                );
+                final Iterator<Statement> stmts = BaseRs.this.user()
+                    .statements().iterator();
+                final Dollars balance;
+                if (stmts.hasNext()) {
+                    balance = stmts.next().balance();
+                } else {
+                    balance = new Dollars(0);
+                }
+                page.append(new JaxbBundle("balance", balance.toString()));
             }
         };
     }

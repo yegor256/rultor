@@ -150,7 +150,7 @@ public final class Main {
      */
     private static OptionParser parser() {
         final OptionParser parser = new OptionParser();
-        parser.accepts("help", "detailed instructions").forHelp();
+        parser.accepts("help", "Show detailed instructions").forHelp();
         parser.accepts("spec", "Text file with work specification")
             .withRequiredArg().ofType(String.class);
         parser.accepts("lifetime", "Maximum lifetime of the daemon, in millis")
