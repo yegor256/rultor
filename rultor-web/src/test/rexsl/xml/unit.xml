@@ -45,6 +45,7 @@
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
         <link href="/xml/add.xml" rel="save" type="text/xml"/>
     </links>
+    <balance>$5.90</balance>
     <millis>1869</millis>
     <unit>
         <name>nightly-build</name>

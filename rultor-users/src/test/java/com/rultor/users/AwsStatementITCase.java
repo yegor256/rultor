@@ -47,7 +47,6 @@ import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.After;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -80,7 +79,9 @@ public final class AwsStatementITCase {
      */
     @Before
     public void prepare() throws Exception {
-        Assume.assumeNotNull(AwsStatementITCase.KEY);
+        if (AwsStatementITCase.KEY == null) {
+            return;
+        }
         final String prefix = System.getProperty("failsafe.dynamo.prefix");
         this.region = new Region.Prefixed(
             new Region.Simple(
@@ -126,8 +127,9 @@ public final class AwsStatementITCase {
      */
     @After
     public void drop() throws Exception {
-        Assume.assumeNotNull(AwsStatementITCase.KEY);
-        this.table.drop();
+        if (AwsStatementITCase.KEY != null) {
+            this.table.drop();
+        }
     }
 
     /**
@@ -136,6 +138,9 @@ public final class AwsStatementITCase {
      */
     @Test
     public void worksWithRealDynamoDb() throws Exception {
+        if (AwsStatementITCase.KEY == null) {
+            return;
+        }
         final URN urn = new URN("urn:github:66");
         final AwsStatement stmt = new AwsStatement(this.region, urn);
         final Invoice invoice = new Invoice.Composed(

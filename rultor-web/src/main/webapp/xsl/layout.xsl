@@ -131,18 +131,16 @@
             <xsl:value-of select="name"/>
         </li>
         <li class="hidden-phone hidden-tablet">
-            <a title="see commit in Github">
+            <a>
                 <xsl:attribute name="href">
                     <xsl:text>https://github.com/yegor256/rultor/commit/</xsl:text>
                     <xsl:value-of select="revision"/>
                 </xsl:attribute>
+                <xsl:attribute name="title">
+                    <xsl:value-of select="revision"/>
+                </xsl:attribute>
                 <i class="icon-github"><xsl:comment>github icon</xsl:comment></i>
             </a>
-        </li>
-        <li class="hidden-phone hidden-tablet">
-            <code>
-                <xsl:value-of select="revision"/>
-            </code>
         </li>
         <li class="hidden-phone hidden-tablet">
             <xsl:call-template name="millis">
@@ -192,6 +190,14 @@
         </li>
         <li>
             <xsl:value-of select="name"/>
+        </li>
+        <li>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='statement']/@href"/>
+                </xsl:attribute>
+                <xsl:value-of select="/page/balance"/>
+            </a>
         </li>
         <li class="hidden-phone">
             <i>

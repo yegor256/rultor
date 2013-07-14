@@ -29,54 +29,40 @@
  */
 package com.rultor.spi;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Tv;
-import lombok.EqualsAndHashCode;
+import java.util.Map;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Dollar amount.
- *
+ * Test case for {@link Dollars}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-@Loggable(Loggable.DEBUG)
-@EqualsAndHashCode(of = "amount")
-public final class Dollars {
+public final class DollarsTest {
 
     /**
-     * Amount of it in millionth of dollar.
+     * Dollars can print monetary value.
+     * @throws Exception If some problem inside
      */
-    private final transient long amount;
-
-    /**
-     * Public ctor.
-     * @param points Amount
-     */
-    public Dollars(final long points) {
-        this.amount = points;
-    }
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        String body = String.format(
-            "$%.2f", Math.abs((double) this.amount / Tv.MILLION)
-        );
-        if (this.amount < 0) {
-            body = String.format("(%s)", body);
+    @Test
+    public void printsItselfToString() throws Exception {
+        final ImmutableMap<Dollars, String> map =
+            new ImmutableMap.Builder<Dollars, String>()
+                .put(new Dollars(Tv.MILLION), "$1.00")
+                .put(new Dollars(Tv.FIVE * Tv.MILLION), "$5.00")
+                .put(new Dollars(Tv.THOUSAND), "$0.00")
+                .put(new Dollars(Tv.TEN * Tv.THOUSAND), "$0.01")
+                .put(new Dollars(-Tv.FIVE * Tv.MILLION), "($5.00)")
+                .build();
+        for (Map.Entry<Dollars, String> entry : map.entrySet()) {
+            MatcherAssert.assertThat(
+                entry.getKey(),
+                Matchers.hasToString(entry.getValue())
+            );
         }
-        return body;
-    }
-    /**
-     * Points.
-     * @return Points
-     */
-    public long points() {
-        return this.amount;
     }
 
 }

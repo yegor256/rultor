@@ -73,7 +73,11 @@ import lombok.ToString;
 @Loggable(Loggable.INFO)
 @ToString
 @EqualsAndHashCode(of = "queue")
-@SuppressWarnings("PMD.DoNotUseThreads")
+@SuppressWarnings({
+    "PMD.DoNotUseThreads",
+    "PMD.TooManyMethods",
+    "PMD.ExcessiveImports"
+})
 public final class SimpleConveyer implements Closeable, Metricable {
 
     /**
@@ -219,6 +223,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
             new CopyOnWriteArrayList<Expense>();
         final Object object = var.instantiate(
             this.users,
+            // @checkstyle AnonInnerLength (50 lines)
             new Work() {
                 @Override
                 public Time started() {

@@ -189,7 +189,7 @@ final class Testing implements Profile {
         private final transient URN user;
         /**
          * Public ctor.
-         * @param unit Name of it
+         * @param urn Name of it
          */
         protected MemoryStatement(final URN urn) {
             this.user = urn;
@@ -200,7 +200,7 @@ final class Testing implements Profile {
         }
         @Override
         public Dollars balance() {
-            throw new UnsupportedOperationException();
+            return new Dollars(0);
         }
         @Override
         public void add(final Invoice invoice) {

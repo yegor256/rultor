@@ -36,6 +36,7 @@ import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
 import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.Link;
 import com.rexsl.page.Resource;
 import com.rexsl.page.auth.AuthInset;
 import com.rexsl.page.auth.Facebook;
@@ -121,6 +122,37 @@ public class BaseRs extends BaseResource {
                 builder.header(
                     "X-Rultor-Revision",
                     Manifests.read("Rultor-Revision")
+                );
+            }
+        };
+    }
+
+    /**
+     * User financial stats.
+     * @return The inset
+     */
+    @Inset.Runtime
+    @NotNull(message = "finance inset can never be NULL")
+    public final Inset insetFinances() {
+        // @checkstyle AnonInnerLength (50 lines)
+        return new Inset() {
+            @Override
+            public void render(final BasePage<?, ?> page,
+                final Response.ResponseBuilder builder) {
+                page.link(
+                    new Link(
+                        "statement",
+                        BaseRs.this.uriInfo().getBaseUriBuilder()
+                            .clone()
+                            .path(StatementRs.class)
+                            .build()
+                    )
+                );
+                page.append(
+                    new JaxbBundle(
+                        "balance",
+                        BaseRs.this.user().statement().balance().toString()
+                    )
                 );
             }
         };
@@ -218,6 +250,7 @@ public class BaseRs extends BaseResource {
      * @return The work
      */
     protected final Work work(final String unit, final Spec spec) {
+        // @checkstyle AnonInnerLength (50 lines)
         return new Work() {
             @Override
             public Time started() {

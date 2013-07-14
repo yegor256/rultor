@@ -35,6 +35,8 @@ import com.rexsl.page.ServletContextMocker;
 import com.rexsl.page.UriInfoMocker;
 import com.rexsl.test.JaxbConverter;
 import com.rexsl.test.XhtmlMatchers;
+import com.rultor.spi.Dollars;
+import com.rultor.spi.Statement;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import javax.ws.rs.core.Response;
@@ -64,6 +66,9 @@ public final class IndexRsTest {
         final User user = Mockito.mock(User.class);
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(Mockito.any(URN.class));
+        final Statement stmt = Mockito.mock(Statement.class);
+        Mockito.doReturn(stmt).when(user).statement();
+        Mockito.doReturn(new Dollars(0)).when(stmt).balance();
         res.setServletContext(
             new ServletContextMocker().withAttribute(
                 Users.class.getName(), users

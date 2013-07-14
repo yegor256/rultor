@@ -155,7 +155,7 @@ public final class Main {
             .withRequiredArg().ofType(String.class);
         parser.accepts("lifetime", "Maximum lifetime of the daemon, in millis")
             .withRequiredArg().ofType(String.class)
-            .defaultsTo(Long.toString(Long.MAX_VALUE));
+            .defaultsTo(Long.toString(TimeUnit.DAYS.toMillis(Tv.FIVE)));
         parser.accepts("dynamo-key", "Amazon DynamoDB access key")
             .withRequiredArg().ofType(String.class);
         parser.accepts("dynamo-secret", "Amazon DynamoDB secret key")

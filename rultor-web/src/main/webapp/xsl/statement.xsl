@@ -75,7 +75,7 @@
                 </li>
             </ul>
             <pre>
-                <xsl:value-of select="text"/ >
+                <xsl:value-of select="text"/>
             </pre>
         </li>
     </xsl:template>

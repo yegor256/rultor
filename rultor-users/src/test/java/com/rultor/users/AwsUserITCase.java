@@ -43,7 +43,6 @@ import com.rultor.spi.User;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.After;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -76,7 +75,9 @@ public final class AwsUserITCase {
      */
     @Before
     public void prepare() throws Exception {
-        Assume.assumeNotNull(AwsUserITCase.KEY);
+        if (AwsUserITCase.KEY == null) {
+            return;
+        }
         final String prefix = System.getProperty("failsafe.dynamo.prefix");
         this.region = new Region.Prefixed(
             new Region.Simple(
@@ -122,8 +123,9 @@ public final class AwsUserITCase {
      */
     @After
     public void drop() throws Exception {
-        Assume.assumeNotNull(AwsUserITCase.KEY);
-        this.table.drop();
+        if (AwsUserITCase.KEY != null) {
+            this.table.drop();
+        }
     }
 
     /**
@@ -132,6 +134,9 @@ public final class AwsUserITCase {
      */
     @Test
     public void worksWithRealDynamoDb() throws Exception {
+        if (AwsUserITCase.KEY == null) {
+            return;
+        }
         final URN urn = new URN("urn:github:66");
         final User user = new AwsUser(this.region, urn);
         MatcherAssert.assertThat(user.urn(), Matchers.equalTo(urn));
