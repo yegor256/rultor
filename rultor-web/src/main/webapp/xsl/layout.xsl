@@ -101,7 +101,7 @@
                         </ul>
                     </nav>
                     <xsl:apply-templates select="flash"/>
-                    <article style="max-width: 50em;">
+                    <article>
                         <xsl:choose>
                             <xsl:when test="/page/identity">
                                 <xsl:call-template name="content"/>
