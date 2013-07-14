@@ -85,8 +85,8 @@ public final class StatementRs extends BaseRs {
      */
     @GET
     @Path("/")
+    @SuppressWarnings("PMD.CloseResource")
     public Response index() {
-        @SuppressWarnings("PMD.CloseResource")
         final Statement stmt = this.user().statement();
         EmptyPage page = new PageBuilder()
             .stylesheet("/xsl/statement.xsl")
