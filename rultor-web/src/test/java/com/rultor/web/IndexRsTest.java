@@ -66,6 +66,7 @@ public final class IndexRsTest {
         final User user = Mockito.mock(User.class);
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(Mockito.any(URN.class));
+        @SuppressWarnings("PMD.CloseResource")
         final Statement stmt = Mockito.mock(Statement.class);
         Mockito.doReturn(stmt).when(user).statement();
         Mockito.doReturn(new Dollars(0)).when(stmt).balance();
