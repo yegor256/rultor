@@ -218,7 +218,7 @@ public final class DomainNotepad implements Notepad {
             new Expense.Simple(
                 String.format(
                     "added AWS SimpleDB item '%s' to '%s' domain",
-                    this.name(line.toString()),
+                    this.name(line),
                     this.client.domain()
                 ),
                 new Dollars(-Tv.HUNDRED)
