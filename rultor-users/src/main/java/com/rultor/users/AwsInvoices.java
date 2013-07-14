@@ -82,6 +82,11 @@ final class AwsInvoices implements Invoices {
     public static final String FIELD_AMOUNT = "amount";
 
     /**
+     * Dynamo DB table column.
+     */
+    public static final String FIELD_BALANCE = "balance";
+
+    /**
      * Dynamo.
      */
     private final transient Region region;

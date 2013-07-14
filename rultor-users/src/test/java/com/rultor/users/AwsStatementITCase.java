@@ -122,9 +122,10 @@ public final class AwsStatementITCase {
 
     /**
      * Assume we're online.
+     * @throws Exception If fails
      */
     @After
-    public void drop() {
+    public void drop() throws Exception {
         Assume.assumeNotNull(AwsStatementITCase.KEY);
         this.table.drop();
     }

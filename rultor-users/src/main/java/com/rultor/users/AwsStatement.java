@@ -29,11 +29,15 @@
  */
 package com.rultor.users;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.QueryRequest;
+import com.amazonaws.services.dynamodbv2.model.QueryResult;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Attributes;
+import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Dollars;
@@ -91,7 +95,30 @@ final class AwsStatement implements Statement {
     @Override
     @Cacheable
     public Dollars balance() {
-        throw new UnsupportedOperationException();
+        final AmazonDynamoDB aws = this.region.aws();
+        final QueryResult result = aws.query(
+            new QueryRequest()
+                .withConsistentRead(true)
+                .withLimit(1)
+                .withScanIndexForward(false)
+                .withTableName(this.region.table(AwsInvoices.TABLE).name())
+                .withKeyConditions(
+                    new Conditions().with(
+                        AwsInvoices.KEY_OWNER,
+                        Conditions.equalTo(this.name)
+                    )
+                )
+                .withAttributesToGet(AwsInvoices.FIELD_BALANCE)
+        );
+        final long balance;
+        if (result.getCount() == 0) {
+            balance = 0;
+        } else {
+            balance = Long.parseLong(
+                result.getItems().get(0).get(AwsInvoices.FIELD_BALANCE).getN()
+            );
+        }
+        return new Dollars(balance);
     }
 
     /**
@@ -100,6 +127,7 @@ final class AwsStatement implements Statement {
     @Override
     @Cacheable.FlushAfter
     public void add(final Invoice invoice) {
+        final Dollars balance = this.balance();
         this.region.table(AwsInvoices.TABLE).put(
             new Attributes()
                 .with(AwsInvoices.KEY_OWNER, this.name)
@@ -109,6 +137,14 @@ final class AwsStatement implements Statement {
                     AwsInvoices.FIELD_AMOUNT,
                     new AttributeValue().withN(
                         Long.toString(invoice.amount().points())
+                    )
+                )
+                .with(
+                    AwsInvoices.FIELD_BALANCE,
+                    new AttributeValue().withN(
+                        Long.toString(
+                            balance.points() + invoice.amount().points()
+                        )
                     )
                 )
         );
