@@ -83,9 +83,8 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <artifactId>maven-war-plugin</artifactId>
+                    <artifactId>maven-jar-plugin</artifactId>
                     <configuration>
-                        <warSourceExcludes>js/**, css/**, xsl/**</warSourceExcludes>
                         <archive>
                             <manifestEntries>
                                 <Rultor-Version>${project.version}</Rultor-Version>

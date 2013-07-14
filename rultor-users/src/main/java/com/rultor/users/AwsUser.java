@@ -38,6 +38,7 @@ import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Statement;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import java.util.Collection;
@@ -162,6 +163,14 @@ final class AwsUser implements User {
             );
         }
         return new AwsUnit(this.region, this.name, unit);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Statement statement() {
+        return new AwsStatement(this.region, this.name);
     }
 
 }
