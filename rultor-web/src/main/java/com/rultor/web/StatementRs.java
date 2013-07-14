@@ -91,8 +91,7 @@ public final class StatementRs extends BaseRs {
         EmptyPage page = new PageBuilder()
             .stylesheet("/xsl/statement.xsl")
             .build(EmptyPage.class)
-            .init(this)
-            .append(new JaxbBundle("balance", stmt.balance().toString()));
+            .init(this);
         Invoices invoices = stmt.invoices();
         final int total;
         if (this.since == null) {
