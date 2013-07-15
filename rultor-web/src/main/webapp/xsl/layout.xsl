@@ -75,8 +75,8 @@
                     </a>
                 </aside>
                 <div class="page">
-                    <nav>
-                        <ul class="inline" style="padding-bottom: 4em; padding-top: 2em;">
+                    <nav class="head">
+                        <ul class="inline">
                             <li>
                                 <a class="logo">
                                     <xsl:attribute name="href">
