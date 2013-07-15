@@ -66,12 +66,12 @@ public final class Dollars {
         final double usd = Math.abs((double) this.amount / Tv.MILLION);
         String body;
         // @checkstyle MagicNumber (3 lines)
-        if (usd < 0.001d) {
-            body = String.format("$%.4f", usd);
-        } else if (usd < 0.01d) {
+        if (usd >= 0.01d || usd < 0.0001d) {
+            body = String.format("$%.2f", usd);
+        } else if (usd >= 0.001d) {
             body = String.format("$%.3f", usd);
         } else {
-            body = String.format("$%.2f", usd);
+            body = String.format("$%.4f", usd);
         }
         if (this.amount < 0) {
             body = String.format("(%s)", body);
