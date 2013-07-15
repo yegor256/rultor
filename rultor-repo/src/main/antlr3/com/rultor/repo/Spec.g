@@ -91,7 +91,7 @@ variable returns [Variable<?> ret]
     { $ret = new RefLocal(this.grammar, this.owner, $NAME.text); }
     |
     OWNER ':' NAME
-    { $ret = new RefForeign(this.grammar, URN.create($OWNER.text), $NAME.text); }
+    { $ret = new RefForeign(this.grammar, this.owner, URN.create($OWNER.text), $NAME.text); }
     |
     TEXT
     { $ret = new Text(StringEscapeUtils.unescapeJava($TEXT.text)); }

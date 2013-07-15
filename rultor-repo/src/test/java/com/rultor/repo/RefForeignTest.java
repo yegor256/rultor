@@ -67,7 +67,7 @@ public final class RefForeignTest {
         final URN urn = new URN("urn:facebook:1");
         Mockito.doReturn(urn).when(user).urn();
         final Variable<Object> var =
-            new RefForeign(new AntlrGrammar(), urn, name);
+            new RefForeign(new AntlrGrammar(), urn, urn, name);
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(urn);
         MatcherAssert.assertThat(

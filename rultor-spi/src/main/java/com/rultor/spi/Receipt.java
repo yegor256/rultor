@@ -43,6 +43,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@SuppressWarnings("PMD.TooManyMethods")
 public interface Receipt {
 
     /**
@@ -125,6 +126,7 @@ public interface Receipt {
          * @param beneficiary Receiver
          * @param details Details
          * @param points Amount
+         * @param unit Name of the unit
          * @checkstyle ParameterNumber (10 lines)
          */
         public Simple(

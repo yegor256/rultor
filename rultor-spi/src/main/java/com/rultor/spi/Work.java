@@ -253,7 +253,8 @@ public interface Work {
          */
         @Override
         public void charge(final String details, final Dollars amount) {
-            throw new UnsupportedOperationException();
+            assert details != null;
+            assert amount != null;
         }
     }
 

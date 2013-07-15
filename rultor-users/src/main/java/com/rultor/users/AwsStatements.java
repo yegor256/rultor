@@ -35,6 +35,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
+import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Dollars;
@@ -141,6 +142,7 @@ final class AwsStatements implements Statements {
         final Iterator<Item> items = this.region.table(AwsStatements.TABLE)
             .frame()
             .where(AwsStatements.KEY_OWNER, Conditions.equalTo(this.name))
+            .through(new QueryValve().withScanIndexForward(false))
             .iterator();
         // @checkstyle AnonInnerLength (50 lines)
         return new Iterator<Statement>() {

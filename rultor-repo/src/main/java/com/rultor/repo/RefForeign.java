@@ -32,7 +32,11 @@ package com.rultor.repo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Dollars;
+import com.rultor.spi.Receipt;
+import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
+import com.rultor.spi.Time;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
@@ -63,7 +67,12 @@ final class RefForeign implements Variable<Object> {
     private final transient Grammar grammar;
 
     /**
-     * Owner of the unit.
+     * Client of the unit (who is using the unit).
+     */
+    private final transient URN client;
+
+    /**
+     * Owner of the unit (who provides the unit).
      */
     private final transient URN owner;
 
@@ -75,12 +84,16 @@ final class RefForeign implements Variable<Object> {
     /**
      * Public ctor.
      * @param grm Grammar to use
+     * @param clnt Client of the unit
      * @param urn Owner of the unit
      * @param ref RefForeign
+     * @checkstyle ParameterNumber (4 lines)
      */
-    protected RefForeign(final Grammar grm, final URN urn, final String ref) {
+    protected RefForeign(final Grammar grm, final URN clnt,
+        final URN urn, final String ref) {
         Validate.matchesPattern(ref, "[-_\\w]+");
         this.grammar = grm;
+        this.client = clnt;
         this.owner = urn;
         this.name = ref;
     }
@@ -104,10 +117,16 @@ final class RefForeign implements Variable<Object> {
                 )
             );
         }
+        final Work monetary;
+        if (this.client.equals(this.owner)) {
+            monetary = work;
+        } else {
+            monetary = new RefForeign.Monetary(users, work);
+        }
         return this.alter(
             this.grammar.parse(
                 user.urn(), user.get(this.name).spec().asText()
-            ).instantiate(users, work)
+            ).instantiate(users, monetary)
         );
     }
 
@@ -142,6 +161,70 @@ final class RefForeign implements Variable<Object> {
             }
         }
         return object;
+    }
+
+    private final class Monetary implements Work {
+        /**
+         * Users.
+         */
+        private final transient Users users;
+        /**
+         * Original work.
+         */
+        private final transient Work origin;
+        /**
+         * Public ctor.
+         * @param usrs Users
+         * @param wrk Origin work
+         */
+        protected Monetary(final Users usrs, final Work wrk) {
+            this.users = usrs;
+            this.origin = wrk;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Time started() {
+            return this.origin.started();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public URN owner() {
+            return this.origin.owner();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String unit() {
+            return this.origin.unit();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Spec spec() {
+            return this.origin.spec();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void charge(final String details, final Dollars amount) {
+            this.users.charge(
+                new Receipt.Simple(
+                    new Time(),
+                    RefForeign.this.client,
+                    RefForeign.this.owner,
+                    details,
+                    amount,
+                    this.unit()
+                )
+            );
+        }
     }
 
 }

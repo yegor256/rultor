@@ -36,6 +36,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
+import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Dollars;
@@ -133,6 +134,7 @@ final class AwsReceipts implements Iterable<Receipt> {
         final Iterator<Item> items = this.region.table(AwsReceipts.TABLE)
             .frame()
             .where(field, Conditions.equalTo(this.name))
+            .through(new QueryValve().withScanIndexForward(false))
             .iterator();
         // @checkstyle AnonInnerLength (50 lines)
         return new Iterator<Receipt>() {
