@@ -29,15 +29,14 @@
  */
 package com.rultor.users;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
+import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
-import com.jcabi.dynamo.ScanValve;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Dollars;
 import com.rultor.spi.Receipt;
@@ -67,7 +66,12 @@ final class AwsReceipts implements Iterable<Receipt> {
     /**
      * Dynamo DB table column.
      */
-    private static final String KEY_HASH = "hash";
+    private static final String HASH_UNIT = "unit";
+
+    /**
+     * Dynamo DB table column.
+     */
+    private static final String RANGE_TIME = "time";
 
     /**
      * Dynamo DB table column.
@@ -88,11 +92,6 @@ final class AwsReceipts implements Iterable<Receipt> {
      * Dynamo DB table column.
      */
     private static final String FIELD_AMOUNT = "amount";
-
-    /**
-     * Dynamo DB table column.
-     */
-    private static final String FIELD_UNIT = "unit";
 
     /**
      * Dynamo.
@@ -134,7 +133,7 @@ final class AwsReceipts implements Iterable<Receipt> {
         final Iterator<Item> items = this.region.table(AwsReceipts.TABLE)
             .frame()
             .where(field, Conditions.equalTo(this.name))
-            .through(new ScanValve())
+            .through(new QueryValve().withScanIndexForward(false))
             .iterator();
         // @checkstyle AnonInnerLength (50 lines)
         return new Iterator<Receipt>() {
@@ -159,16 +158,15 @@ final class AwsReceipts implements Iterable<Receipt> {
      * @return Receipt
      */
     public static Receipt toReceipt(final Item item) {
-        final String[] parts = item.get(AwsReceipts.KEY_HASH).getS().split(" ");
         return new Receipt.Simple(
-            new Time(parts[0]),
+            new Time(item.get(AwsReceipts.RANGE_TIME).getS()),
             URN.create(item.get(AwsReceipts.FIELD_PAYER).getS()),
             URN.create(item.get(AwsReceipts.FIELD_BENEFICIARY).getS()),
             item.get(AwsReceipts.FIELD_DETAILS).getS(),
             new Dollars(
-                Long.parseLong(item.get(AwsReceipts.FIELD_AMOUNT).getN())
+                Long.parseLong(item.get(AwsReceipts.FIELD_AMOUNT).getS())
             ),
-            item.get(AwsReceipts.FIELD_UNIT).getS()
+            item.get(AwsReceipts.HASH_UNIT).getS()
         );
     }
 
@@ -180,36 +178,12 @@ final class AwsReceipts implements Iterable<Receipt> {
     public static void add(final Region region, final Receipt receipt) {
         region.table(AwsReceipts.TABLE).put(
             new Attributes()
-                .with(
-                    AwsReceipts.KEY_HASH,
-                    new AttributeValue(
-                        String.format(
-                            "%s %d", receipt.date(), System.nanoTime()
-                        )
-                    )
-            )
-                .with(
-                    AwsReceipts.FIELD_PAYER,
-                    new AttributeValue(receipt.payer().toString())
-                )
-                .with(
-                    AwsReceipts.FIELD_BENEFICIARY,
-                    new AttributeValue(receipt.beneficiary().toString())
-                )
-                .with(
-                    AwsReceipts.FIELD_DETAILS,
-                    new AttributeValue(receipt.details())
-                )
-                .with(
-                    AwsReceipts.FIELD_UNIT,
-                    new AttributeValue(receipt.unit())
-                )
-                .with(
-                    AwsReceipts.FIELD_AMOUNT,
-                    new AttributeValue(
-                        Long.toString(receipt.dollars().points())
-                    )
-                )
+                .with(AwsReceipts.HASH_UNIT, receipt.unit())
+                .with(AwsReceipts.RANGE_TIME, receipt.date())
+                .with(AwsReceipts.FIELD_PAYER, receipt.payer())
+                .with(AwsReceipts.FIELD_BENEFICIARY, receipt.beneficiary())
+                .with(AwsReceipts.FIELD_DETAILS, receipt.details())
+                .with(AwsReceipts.FIELD_AMOUNT, receipt.dollars().points())
         );
     }
 

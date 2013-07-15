@@ -29,13 +29,22 @@
  */
 package com.rultor.web;
 
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Receipt;
+import java.io.StringWriter;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.apache.commons.lang3.CharUtils;
 
 /**
  * Receipts of a user.
@@ -61,9 +70,81 @@ public final class ReceiptsRs extends BaseRs {
             .stylesheet("/xsl/receipts.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(this.receipts(this.user().receipts()))
+            .append(
+                this.receipts(
+                    Iterables.limit(this.user().receipts(), Tv.HUNDRED)
+                )
+            )
+            .link(
+                new Link(
+                    "text",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(ReceiptsRs.class)
+                        .path(ReceiptsRs.class, "text")
+                        .build()
+                )
+            )
+            .link(
+                new Link(
+                    "json",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(ReceiptsRs.class)
+                        .path(ReceiptsRs.class, "json")
+                        .build()
+                )
+            )
             .render()
             .build();
+    }
+
+    /**
+     * Load them all in plain text.
+     * @return The JAX-RS response
+     */
+    @GET
+    @Path("/text")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String text() {
+        final StringBuilder text = new StringBuilder();
+        for (Receipt receipt : this.user().receipts()) {
+            text.append(receipt.date())
+                .append('\t')
+                .append(receipt.payer())
+                .append('\t')
+                .append(receipt.beneficiary())
+                .append('\t')
+                .append(receipt.unit())
+                .append('\t')
+                .append(receipt.details())
+                .append(CharUtils.LF);
+        }
+        return text.toString();
+    }
+
+    /**
+     * Load them all in plain text.
+     * @return The JAX-RS response
+     */
+    @GET
+    @Path("/json")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String json() {
+        final JsonArrayBuilder json = Json.createArrayBuilder();
+        for (Receipt receipt : this.user().receipts()) {
+            json.add(
+                Json.createObjectBuilder()
+                    .add("date", receipt.date().toString())
+                    .add("payer", receipt.payer().toString())
+                    .add("beneficiary", receipt.beneficiary().toString())
+                    .add("unit", receipt.unit())
+                    .add("details", receipt.details())
+            );
+        }
+        final StringWriter writer = new StringWriter();
+        Json.createWriter(writer).writeArray(json.build());
+        return writer.toString();
     }
 
     /**
