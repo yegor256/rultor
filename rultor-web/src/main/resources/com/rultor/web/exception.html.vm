@@ -3,13 +3,13 @@
     <head>
         <title>Internal application error</title>
         <link href="/css/main.css?${buildNumber}" rel="stylesheet" type="text/css"></link>
-        <link rel="icon" type="image/gif" href="http://img.rultor.com/favicon.ico?${buildNumber}"/>
+        <link rel="icon" type="image/gif" href="//img.rultor.com/favicon.ico?${buildNumber}"/>
     </head>
     <body>
         <div class="page">
             <ul class="inline" style="padding-bottom: 4em;">
                 <li>
-                    <a class="logo" href="http://www.rultor.com">R</a>
+                    <a class="logo" href="//www.rultor.com">R</a>
                 </li>
                 <li>
                     <code>${buildNumber}</code>

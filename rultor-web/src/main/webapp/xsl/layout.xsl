@@ -38,15 +38,9 @@
             <head>
                 <meta charset="UTF-8"/>
                 <meta name="description" content="Programmable Enforcer of a Software Development Process"/>
-                <meta name="keywords" content="IPaaS, continuous integration, continuous delivery"/>
+                <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
                 <meta name="author" content="rultor.com"/>
                 <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet" />
-                <link rel="stylesheet">
-                    <xsl:attribute name="href">
-                        <xsl:text>//img.rultor.com/logo-font.css?</xsl:text>
-                        <xsl:value-of select="/page/version/revision"/>
-                    </xsl:attribute>
-                </link>
                 <link rel="stylesheet" type="text/css" media="all">
                     <xsl:attribute name="href">
                         <xsl:text>/css/main.css?</xsl:text>
@@ -55,7 +49,7 @@
                 </link>
                 <link rel="icon" type="image/gif">
                     <xsl:attribute name="href">
-                        <xsl:text>http://img.rultor.com/favicon.ico?</xsl:text>
+                        <xsl:text>//img.rultor.com/favicon.ico?</xsl:text>
                         <xsl:value-of select="/page/version/revision"/>
                     </xsl:attribute>
                 </link>
@@ -92,7 +86,7 @@
                                 </a>
                             </li>
                             <li class="hidden-phone">
-                                <a href="http://blog.rultor.com/">
+                                <a href="//blog.rultor.com/">
                                     <xsl:text>how it works?</xsl:text>
                                 </a>
                             </li>
