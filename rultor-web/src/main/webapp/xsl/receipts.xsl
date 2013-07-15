@@ -42,9 +42,10 @@
                 <table class="table table-condensed">
                     <colgroup>
                         <col style="width: 5em;"/>
-                        <col style="width: 5em;"/>
-                        <col style="width: 5em;"/>
+                        <col style="width: 6em;"/>
+                        <col style="width: 6em;"/>
                         <col style="width: 3em;"/>
+                        <col style="width: 6em;"/>
                         <col/>
                     </colgroup>
                     <tbody>
@@ -72,6 +73,9 @@
             </td>
             <td>
                 <xsl:value-of select="beneficiary"/>
+            </td>
+            <td>
+                <xsl:value-of select="unit"/>
             </td>
             <td>
                 <xsl:value-of select="details"/>

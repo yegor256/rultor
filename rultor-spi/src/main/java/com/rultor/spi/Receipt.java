@@ -74,12 +74,18 @@ public interface Receipt {
     String details();
 
     /**
-     * Dollar amount in points where 1 USD equals
-     * to 1,000,000 points (a million).
+     * Dollar amount.
      * @return The amount
      */
     @NotNull(message = "amount of receipt is never NULL")
     Dollars dollars();
+
+    /**
+     * Unit that this receipt is for.
+     * @return Unit name
+     */
+    @NotNull(message = "unit of receipt is never NULL")
+    String unit();
 
     /**
      * Simple implementation.
@@ -109,6 +115,10 @@ public interface Receipt {
          */
         private final transient Dollars amount;
         /**
+         * Unit name of it.
+         */
+        private final transient String subject;
+        /**
          * Public ctor.
          * @param time Time of receipt
          * @param payer Payer
@@ -119,15 +129,17 @@ public interface Receipt {
          */
         public Simple(
             @NotNull(message = "date can't be NULL") final Time time,
-            @NotNull(message = "details can't be NULL") final URN payer,
-            @NotNull(message = "details can't be NULL") final URN beneficiary,
+            @NotNull(message = "payer can't be NULL") final URN payer,
+            @NotNull(message = "receiver can't be NULL") final URN beneficiary,
             @NotNull(message = "details can't be NULL") final String details,
-            @NotNull(message = "dollars can't be NULL") final Dollars points) {
+            @NotNull(message = "points can't be NULL") final Dollars points,
+            @NotNull(message = "unit can't be NULL") final String unit) {
             this.when = time;
             this.pyr = payer;
             this.rcv = beneficiary;
             this.text = details;
             this.amount = points;
+            this.subject = unit;
         }
         /**
          * {@inheritDoc}
@@ -168,6 +180,14 @@ public interface Receipt {
         @NotNull(message = "beneficiary of receipt is never NULL")
         public URN beneficiary() {
             return this.rcv;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull(message = "unit of receipt is never NULL")
+        public String unit() {
+            return this.subject;
         }
     }
 

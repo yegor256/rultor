@@ -53,6 +53,7 @@
             <payer>urn:facebook:1</payer>
             <beneficiary>urn:github:526301</beneficiary>
             <details>some text</details>
+            <unit>some-test-unit-name</unit>
         </receipt>
         <receipt>
             <amount>($4.09)</amount>
@@ -60,6 +61,7 @@
             <payer>urn:facebook:1</payer>
             <beneficiary>urn:github:526301</beneficiary>
             <details>some other text</details>
+            <unit>some-test-unit-name</unit>
         </receipt>
     </receipts>
 </page>

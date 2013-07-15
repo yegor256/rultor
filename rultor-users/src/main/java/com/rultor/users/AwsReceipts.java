@@ -89,6 +89,11 @@ final class AwsReceipts implements Iterable<Receipt> {
     private static final String FIELD_AMOUNT = "amount";
 
     /**
+     * Dynamo DB table column.
+     */
+    private static final String FIELD_UNIT = "unit";
+
+    /**
      * Dynamo.
      */
     private final transient Region region;
@@ -160,7 +165,8 @@ final class AwsReceipts implements Iterable<Receipt> {
             item.get(AwsReceipts.FIELD_DETAILS).getS(),
             new Dollars(
                 Long.parseLong(item.get(AwsReceipts.FIELD_AMOUNT).getN())
-            )
+            ),
+            item.get(AwsReceipts.FIELD_UNIT).getS()
         );
     }
 
@@ -191,6 +197,10 @@ final class AwsReceipts implements Iterable<Receipt> {
                 .with(
                     AwsReceipts.FIELD_DETAILS,
                     new AttributeValue(receipt.details())
+                )
+                .with(
+                    AwsReceipts.FIELD_UNIT,
+                    new AttributeValue(receipt.unit())
                 )
                 .with(
                     AwsReceipts.FIELD_AMOUNT,

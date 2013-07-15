@@ -98,6 +98,8 @@ public final class ReceiptsRs extends BaseRs {
             .add("beneficiary", receipt.beneficiary().toString())
             .up()
             .add("date", receipt.date().toString())
+            .up()
+            .add("unit", receipt.unit())
             .up();
     }
 
