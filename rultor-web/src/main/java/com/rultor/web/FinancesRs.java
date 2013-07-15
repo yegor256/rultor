@@ -53,7 +53,7 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Path("/fin")
+@Path("/finances")
 @Loggable(Loggable.DEBUG)
 public final class FinancesRs extends BaseRs {
 
@@ -88,7 +88,16 @@ public final class FinancesRs extends BaseRs {
         EmptyPage page = new PageBuilder()
             .stylesheet("/xsl/finances.xsl")
             .build(EmptyPage.class)
-            .init(this);
+            .init(this)
+            .link(
+                new Link(
+                    "receipts",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(ReceiptsRs.class)
+                        .build()
+                )
+            );
         Statements statements = this.user().statements();
         final int total;
         if (this.since == null) {

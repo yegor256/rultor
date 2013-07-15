@@ -64,7 +64,7 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="unit">
-        <div style="max-width: 50em;">
+        <div>
             <ul class="inline btn-group-vertical">
                 <li>
                     <a title="edit">

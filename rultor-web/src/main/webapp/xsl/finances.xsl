@@ -33,10 +33,20 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
-            <xsl:text>statement</xsl:text>
+            <xsl:text>finances</xsl:text>
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <p>
+            <xsl:text>Unbilled </xsl:text>
+            <a title="receipts">
+                <xsl:attribute name="href">
+                    <xsl:value-of select="//links/link[@rel='receipts']/@href"/>
+                </xsl:attribute>
+                <xsl:text>receipts</xsl:text>
+            </a>
+            <xsl:text>.</xsl:text>
+        </p>
         <xsl:choose>
             <xsl:when test="/page/statements/statement">
                 <ul class="nav">
@@ -48,9 +58,9 @@
                         <xsl:attribute name="href">
                             <xsl:value-of select="//links/link[@rel='more']/@href"/>
                         </xsl:attribute>
-                        <xsl:text>more</xsl:text>
+                        <xsl:text>older</xsl:text>
                     </a>
-                    <xsl:text> older statements.</xsl:text>
+                    <xsl:text> statements.</xsl:text>
                 </xsl:if>
             </xsl:when>
             <xsl:otherwise>
