@@ -29,6 +29,7 @@
  */
 package com.rultor.users;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -42,6 +43,7 @@ import com.rultor.spi.Dollars;
 import com.rultor.spi.Receipt;
 import com.rultor.spi.Time;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -67,12 +69,7 @@ final class AwsReceipts implements Iterable<Receipt> {
     /**
      * Dynamo DB table column.
      */
-    public static final String HASH_UNIT = "unit";
-
-    /**
-     * Dynamo DB table column.
-     */
-    public static final String RANGE_TIME = "time";
+    public static final String HASH_NANO = "nano";
 
     /**
      * Dynamo DB table column.
@@ -93,6 +90,11 @@ final class AwsReceipts implements Iterable<Receipt> {
      * Dynamo DB table column.
      */
     private static final String FIELD_AMOUNT = "amount";
+
+    /**
+     * Dynamo DB table column.
+     */
+    private static final String FIELD_UNIT = "unit";
 
     /**
      * Dynamo.
@@ -160,14 +162,20 @@ final class AwsReceipts implements Iterable<Receipt> {
      */
     public static Receipt toReceipt(final Item item) {
         return new Receipt.Simple(
-            new Time(item.get(AwsReceipts.RANGE_TIME).getS()),
+            new Time(
+                TimeUnit.NANOSECONDS.toMillis(
+                    Long.parseLong(
+                        item.get(AwsReceipts.HASH_NANO).getN()
+                    )
+                )
+            ),
             URN.create(item.get(AwsReceipts.FIELD_PAYER).getS()),
             URN.create(item.get(AwsReceipts.FIELD_BENEFICIARY).getS()),
             item.get(AwsReceipts.FIELD_DETAILS).getS(),
             new Dollars(
                 Long.parseLong(item.get(AwsReceipts.FIELD_AMOUNT).getS())
             ),
-            item.get(AwsReceipts.HASH_UNIT).getS()
+            item.get(AwsReceipts.FIELD_UNIT).getS()
         );
     }
 
@@ -179,12 +187,15 @@ final class AwsReceipts implements Iterable<Receipt> {
     public static void add(final Region region, final Receipt receipt) {
         region.table(AwsReceipts.TABLE).put(
             new Attributes()
-                .with(AwsReceipts.HASH_UNIT, receipt.unit())
-                .with(AwsReceipts.RANGE_TIME, receipt.date())
+                .with(AwsReceipts.FIELD_UNIT, receipt.unit())
                 .with(AwsReceipts.FIELD_PAYER, receipt.payer())
                 .with(AwsReceipts.FIELD_BENEFICIARY, receipt.beneficiary())
                 .with(AwsReceipts.FIELD_DETAILS, receipt.details())
                 .with(AwsReceipts.FIELD_AMOUNT, receipt.dollars().points())
+                .with(
+                    AwsReceipts.HASH_NANO,
+                    new AttributeValue().withN(Long.toString(System.nanoTime()))
+                )
         );
     }
 

@@ -101,19 +101,13 @@ public final class AwsReceiptsITCase {
                 )
                 .withAttributeDefinitions(
                     new AttributeDefinition()
-                        .withAttributeName(AwsReceipts.HASH_UNIT)
-                        .withAttributeType(ScalarAttributeType.S),
-                    new AttributeDefinition()
-                        .withAttributeName(AwsReceipts.RANGE_TIME)
-                        .withAttributeType(ScalarAttributeType.S)
+                        .withAttributeName(AwsReceipts.HASH_NANO)
+                        .withAttributeType(ScalarAttributeType.N)
                 )
                 .withKeySchema(
                     new KeySchemaElement()
-                        .withAttributeName(AwsReceipts.HASH_UNIT)
-                        .withKeyType(KeyType.HASH),
-                    new KeySchemaElement()
-                        .withAttributeName(AwsReceipts.RANGE_TIME)
-                        .withKeyType(KeyType.RANGE)
+                        .withAttributeName(AwsReceipts.HASH_NANO)
+                        .withKeyType(KeyType.HASH)
                 )
         );
         this.table.create();
