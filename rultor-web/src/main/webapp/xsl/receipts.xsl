@@ -39,6 +39,23 @@
     <xsl:template name="content">
         <xsl:choose>
             <xsl:when test="/page/receipts/receipt">
+                <p>
+                    <xsl:text>Random 100 receipts are visible here, download the entire list in </xsl:text>
+                    <a title="JSON">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="//links/link[@rel='json']/@href"/>
+                        </xsl:attribute>
+                        <xsl:text>JSON</xsl:text>
+                    </a>
+                    <xsl:text> or </xsl:text>
+                    <a title="plain text">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="//links/link[@rel='text']/@href"/>
+                        </xsl:attribute>
+                        <xsl:text>plain text</xsl:text>
+                    </a>
+                    <xsl:text>.</xsl:text>
+                </p>
                 <table class="table table-condensed">
                     <colgroup>
                         <col style="width: 5em;"/>
