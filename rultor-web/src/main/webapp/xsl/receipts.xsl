@@ -40,7 +40,7 @@
         <xsl:choose>
             <xsl:when test="/page/receipts/receipt">
                 <p>
-                    <xsl:text>Random 100 receipts are visible here, download the entire list in </xsl:text>
+                    <xsl:text>Only a few random receipts are visible below, however you can download the entire list in </xsl:text>
                     <a title="JSON">
                         <xsl:attribute name="href">
                             <xsl:value-of select="//links/link[@rel='json']/@href"/>
@@ -63,15 +63,25 @@
                     </a>
                     <xsl:text>.</xsl:text>
                 </p>
-                <table class="table table-condensed">
+                <table class="table table-condensed" style="font-size: 85%">
                     <colgroup>
-                        <col style="width: 5em;"/>
+                        <col style="width: 13em;"/>
                         <col style="width: 6em;"/>
                         <col style="width: 6em;"/>
-                        <col style="width: 3em;"/>
                         <col style="width: 6em;"/>
+                        <col style="width: 15em;"/>
                         <col/>
                     </colgroup>
+                    <thead>
+                        <tr>
+                            <th><xsl:text>Time</xsl:text></th>
+                            <th><xsl:text>Amount</xsl:text></th>
+                            <th><xsl:text>From</xsl:text></th>
+                            <th><xsl:text>To</xsl:text></th>
+                            <th><xsl:text>Unit</xsl:text></th>
+                            <th><xsl:text>Description</xsl:text></th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <xsl:apply-templates select="/page/receipts/receipt"/>
                     </tbody>
@@ -93,10 +103,14 @@
                 <xsl:value-of select="amount"/>
             </td>
             <td>
-                <xsl:value-of select="payer"/>
+                <xsl:call-template name="account">
+                    <xsl:with-param name="urn" select="payer"/>
+                </xsl:call-template>
             </td>
             <td>
-                <xsl:value-of select="beneficiary"/>
+                <xsl:call-template name="account">
+                    <xsl:with-param name="urn" select="beneficiary"/>
+                </xsl:call-template>
             </td>
             <td>
                 <xsl:value-of select="unit"/>
@@ -105,5 +119,16 @@
                 <xsl:value-of select="details"/>
             </td>
         </tr>
+    </xsl:template>
+    <xsl:template name="account">
+        <xsl:param name="urn" as="xs:string"/>
+        <xsl:choose>
+            <xsl:when test="$urn = /page/identity/urn">
+                <xsl:text>you</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <code><xsl:value-of select="$urn"/></code>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 </xsl:stylesheet>

@@ -102,18 +102,18 @@ public final class AwsStatementsITCase {
                 )
                 .withAttributeDefinitions(
                     new AttributeDefinition()
-                        .withAttributeName(AwsStatements.KEY_OWNER)
+                        .withAttributeName(AwsStatements.HASH_OWNER)
                         .withAttributeType(ScalarAttributeType.S),
                     new AttributeDefinition()
-                        .withAttributeName(AwsStatements.KEY_TIME)
+                        .withAttributeName(AwsStatements.RANGE_TIME)
                         .withAttributeType(ScalarAttributeType.S)
                 )
                 .withKeySchema(
                     new KeySchemaElement()
-                        .withAttributeName(AwsStatements.KEY_OWNER)
+                        .withAttributeName(AwsStatements.HASH_OWNER)
                         .withKeyType(KeyType.HASH),
                     new KeySchemaElement()
-                        .withAttributeName(AwsStatements.KEY_TIME)
+                        .withAttributeName(AwsStatements.RANGE_TIME)
                         .withKeyType(KeyType.RANGE)
                 )
         );
@@ -143,10 +143,15 @@ public final class AwsStatementsITCase {
         }
         final URN urn = new URN("urn:github:66");
         final Statements stmts = new AwsStatements(this.region, urn);
+        final Time time = new Time("2013-07-16T16:46Z");
         final Statement statement = new Statement.Simple(
-            new Time(), new Dollars(1L), "some statement text"
+            time, new Dollars(1L), "some statement text"
         );
         stmts.add(statement);
+        MatcherAssert.assertThat(
+            stmts.get(time).date(),
+            Matchers.equalTo(time)
+        );
         MatcherAssert.assertThat(
             stmts.iterator().next().amount(),
             Matchers.equalTo(statement.amount())

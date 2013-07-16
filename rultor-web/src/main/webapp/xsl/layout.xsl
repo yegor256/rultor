@@ -194,7 +194,7 @@
         <li>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='statement']/@href"/>
+                    <xsl:value-of select="/page/links/link[@rel='finances']/@href"/>
                 </xsl:attribute>
                 <xsl:value-of select="/page/balance"/>
             </a>

@@ -30,22 +30,19 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.rexsl.page.JaxbBundle;
-import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Statement;
-import com.rultor.spi.Statements;
 import com.rultor.spi.Time;
-import java.util.Iterator;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 /**
- * Finances of a user.
+ * Statement of a user.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -53,29 +50,23 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Path("/finances")
+@Path("/statement/{time:\\d+}")
 @Loggable(Loggable.DEBUG)
-public final class FinancesRs extends BaseRs {
+public final class StatementRs extends BaseRs {
 
     /**
-     * Query param.
+     * Exact time of the statement.
      */
-    public static final String QUERY_SINCE = "since";
+    private transient Time time;
 
     /**
-     * Since (date).
+     * Inject it from path.
+     * @param txt Text of the value
      */
-    private transient Time since;
-
-    /**
-     * Inject it from query.
-     * @param time Since what time
-     */
-    @QueryParam(FinancesRs.QUERY_SINCE)
-    public void setSince(final String time) {
-        if (time != null) {
-            this.since = new Time(Long.parseLong(time));
-        }
+    @PathParam("time")
+    public void setSince(@NotNull(message = "time path param is mandatory")
+        final String txt) {
+        this.time = new Time(Long.parseLong(txt));
     }
 
     /**
@@ -85,76 +76,13 @@ public final class FinancesRs extends BaseRs {
     @GET
     @Path("/")
     public Response index() {
-        EmptyPage page = new PageBuilder()
-            .stylesheet("/xsl/finances.xsl")
+        return new PageBuilder()
+            .stylesheet("/xsl/statement.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .link(
-                new Link(
-                    "receipts",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(ReceiptsRs.class)
-                        .build()
-                )
-            );
-        Statements statements = this.user().statements();
-        final int total;
-        if (this.since == null) {
-            total = Tv.FIVE;
-        } else {
-            statements = statements.tail(this.since);
-            total = Tv.TWENTY;
-            page = page
-                .append(new JaxbBundle("since", this.since.toString()))
-                .link(
-                    new Link(
-                        "latest",
-                        this.uriInfo().getBaseUriBuilder()
-                            .clone()
-                            .path(FinancesRs.class)
-                    )
-                );
-        }
-        return page
-            .append(this.statements(statements.iterator(), total))
+            .append(this.statement(this.user().statements().get(this.time)))
             .render()
             .build();
-    }
-
-    /**
-     * All statements of the user.
-     * @param statements All statements to show
-     * @param maximum Maximum to show
-     * @return Collection of JAXB units
-     */
-    private JaxbBundle statements(final Iterator<Statement> statements,
-        final int maximum) {
-        JaxbBundle bundle = new JaxbBundle("statements");
-        int pos;
-        for (pos = 0; pos < maximum; ++pos) {
-            if (!statements.hasNext()) {
-                break;
-            }
-            bundle = bundle.add(this.statement(statements.next()));
-        }
-        if (pos == maximum && statements.hasNext()) {
-            bundle = bundle.link(
-                new Link(
-                    "more",
-                    this.uriInfo()
-                        .getBaseUriBuilder()
-                        .clone()
-                        .path(DrainRs.class)
-                        .queryParam(
-                            FinancesRs.QUERY_SINCE,
-                            statements.next().date().millis()
-                        )
-                        .build()
-                )
-            );
-        }
-        return bundle;
     }
 
     /**
@@ -169,6 +97,8 @@ public final class FinancesRs extends BaseRs {
             .add("balance", statement.balance().toString())
             .up()
             .add("date", statement.date().toString())
+            .up()
+            .add("details", statement.details())
             .up()
             .add(
                 "when",

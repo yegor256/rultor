@@ -28,41 +28,20 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<?xml-stylesheet type='text/xsl' href='/xsl/receipts.xsl'?>
-<page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
-    <identity>
-        <urn>urn:facebook:1</urn>
-        <name>Jeff Lebowski</name>
-        <photo>http://images.sodahead.com/polls/002320349/200261278_The_Big_Lebowski___Jeff_Bridges_answer_9_xlarge.jpeg</photo>
-    </identity>
-    <version>
-        <name>1.0-SNAPSHOT</name>
-        <revision>123</revision>
-        <date>22-Aug-2012</date>
-    </version>
-    <links>
-        <link href="/xml/index.xml" rel="self" type="text/xml"/>
-        <link href="/xml/index.xml" rel="home" type="text/xml"/>
-        <link href="/xml/finances.xml" rel="finances" type="text/xml"/>
-    </links>
-    <millis>16</millis>
-    <balance>$0.45</balance>
-    <receipts>
-        <receipt>
-            <amount>$1.66</amount>
-            <date>2012-08-23T13:25:33Z</date>
-            <payer>urn:facebook:1</payer>
-            <beneficiary>urn:github:526301</beneficiary>
-            <details>some text</details>
-            <unit>some-test-unit-name</unit>
-        </receipt>
-        <receipt>
-            <amount>($4.09)</amount>
-            <date>2012-08-23T13:25:33Z</date>
-            <payer>urn:facebook:1</payer>
-            <beneficiary>urn:github:526301</beneficiary>
-            <details>some other text</details>
-            <unit>some-test-unit-name</unit>
-        </receipt>
-    </receipts>
-</page>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+    <xsl:output method="xml" omit-xml-declaration="yes"/>
+    <xsl:include href="/xsl/layout.xsl"/>
+    <xsl:template name="head">
+        <title>
+            <xsl:text>statement</xsl:text>
+        </title>
+    </xsl:template>
+    <xsl:template name="content">
+        <xsl:apply-templates select="/page/statement"/>
+    </xsl:template>
+    <xsl:template match="statement">
+        <pre>
+            <xsl:value-of select="details"/>
+        </pre>
+    </xsl:template>
+</xsl:stylesheet>

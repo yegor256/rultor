@@ -143,7 +143,7 @@ public class BaseRs extends BaseResource {
                 final Response.ResponseBuilder builder) {
                 page.link(
                     new Link(
-                        "statement",
+                        "finances",
                         BaseRs.this.uriInfo().getBaseUriBuilder()
                             .clone()
                             .path(FinancesRs.class)

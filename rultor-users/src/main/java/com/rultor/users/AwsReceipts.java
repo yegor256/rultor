@@ -44,6 +44,7 @@ import com.rultor.spi.Time;
 import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Receipts in DynamoDB.
@@ -178,6 +179,10 @@ final class AwsReceipts implements Iterable<Receipt> {
      * @param receipt The receipt to add
      */
     public static void add(final Region region, final Receipt receipt) {
+        Validate.isTrue(
+            receipt.dollars().points() > 0,
+            "receipt can be positive only, %s provided", receipt.dollars()
+        );
         region.table(AwsReceipts.TABLE).put(
             new Attributes()
                 .with(AwsReceipts.FIELD_UNIT, receipt.unit())

@@ -67,12 +67,12 @@ final class AwsStatements implements Statements {
     /**
      * Dynamo DB table column.
      */
-    public static final String KEY_OWNER = "owner";
+    public static final String HASH_OWNER = "owner";
 
     /**
      * Dynamo DB table column.
      */
-    public static final String KEY_TIME = "time";
+    public static final String RANGE_TIME = "time";
 
     /**
      * Dynamo DB table column.
@@ -141,10 +141,9 @@ final class AwsStatements implements Statements {
         assert this.head != null;
         final Iterator<Item> items = this.region.table(AwsStatements.TABLE)
             .frame()
-            .where(AwsStatements.KEY_OWNER, Conditions.equalTo(this.name))
+            .where(AwsStatements.HASH_OWNER, Conditions.equalTo(this.name))
             .through(new QueryValve().withScanIndexForward(false))
             .iterator();
-        // @checkstyle AnonInnerLength (50 lines)
         return new Iterator<Statement>() {
             @Override
             public boolean hasNext() {
@@ -152,29 +151,28 @@ final class AwsStatements implements Statements {
             }
             @Override
             public Statement next() {
-                final Item item = items.next();
-                return new Statement.Simple(
-                    new Time(
-                        item.get(AwsStatements.KEY_TIME).getS()
-                    ),
-                    new Dollars(
-                        Long.parseLong(
-                            item.get(AwsStatements.FIELD_AMOUNT).getN()
-                        )
-                    ),
-                    new Dollars(
-                        Long.parseLong(
-                            item.get(AwsStatements.FIELD_BALANCE).getN()
-                        )
-                    ),
-                    item.get(AwsStatements.FIELD_DETAILS).getS()
-                );
+                return AwsStatements.toStatement(items.next());
             }
             @Override
             public void remove() {
                 throw new UnsupportedOperationException();
             }
         };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Statement get(final Time time) {
+        return AwsStatements.toStatement(
+            this.region.table(AwsStatements.TABLE)
+                .frame()
+                .where(AwsStatements.HASH_OWNER, Conditions.equalTo(this.name))
+                .where(AwsStatements.RANGE_TIME, Conditions.equalTo(time))
+                .iterator()
+                .next()
+        );
     }
 
     /**
@@ -191,8 +189,8 @@ final class AwsStatements implements Statements {
         }
         this.region.table(AwsStatements.TABLE).put(
             new Attributes()
-                .with(AwsStatements.KEY_OWNER, this.name)
-                .with(AwsStatements.KEY_TIME, statement.date())
+                .with(AwsStatements.HASH_OWNER, this.name)
+                .with(AwsStatements.RANGE_TIME, statement.date())
                 .with(AwsStatements.FIELD_DETAILS, statement.details())
                 .with(
                     AwsStatements.FIELD_AMOUNT,
@@ -206,6 +204,24 @@ final class AwsStatements implements Statements {
                         Long.toString(balance + statement.amount().points())
                     )
                 )
+        );
+    }
+
+    /**
+     * Item to statement.
+     * @param item The item
+     * @return The statement
+     */
+    private static Statement toStatement(final Item item) {
+        return new Statement.Simple(
+            new Time(item.get(AwsStatements.RANGE_TIME).getS()),
+            new Dollars(
+                Long.parseLong(item.get(AwsStatements.FIELD_AMOUNT).getN())
+            ),
+            new Dollars(
+                Long.parseLong(item.get(AwsStatements.FIELD_BALANCE).getN())
+            ),
+            item.get(AwsStatements.FIELD_DETAILS).getS()
         );
     }
 

@@ -51,6 +51,14 @@ public interface Statements extends Iterable<Statement> {
     Statements tail(Time head);
 
     /**
+     * Get by time.
+     * @param time Time of it
+     * @return Statement
+     */
+    @NotNull(message = "statement is never NULL")
+    Statement get(Time time);
+
+    /**
      * Add new statement.
      * @param stmt The statement to add
      */

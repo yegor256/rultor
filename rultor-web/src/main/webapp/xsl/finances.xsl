@@ -53,14 +53,16 @@
                     <xsl:apply-templates select="/page/statements/statement"/>
                 </ul>
                 <xsl:if test="//links/link[@rel='more']">
-                    <xsl:text>See </xsl:text>
-                    <a title="more">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="//links/link[@rel='more']/@href"/>
-                        </xsl:attribute>
-                        <xsl:text>older</xsl:text>
-                    </a>
-                    <xsl:text> statements.</xsl:text>
+                    <p>
+                        <xsl:text>See </xsl:text>
+                        <a title="more">
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="//links/link[@rel='more']/@href"/>
+                            </xsl:attribute>
+                            <xsl:text>older</xsl:text>
+                        </a>
+                        <xsl:text> statements.</xsl:text>
+                    </p>
                 </xsl:if>
             </xsl:when>
             <xsl:otherwise>
@@ -74,7 +76,12 @@
         <li>
             <ul class="inline btn-group-vertical">
                 <li>
-                    <xsl:value-of select="date"/>
+                    <a title="see details">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='see']/@href"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="date"/>
+                    </a>
                 </li>
                 <li class="hidden-phone">
                     <xsl:value-of select="when"/>
@@ -84,9 +91,6 @@
                     <xsl:value-of select="amount"/>
                 </li>
             </ul>
-            <pre class="hidden-phone">
-                <xsl:value-of select="details"/>
-            </pre>
         </li>
     </xsl:template>
 </xsl:stylesheet>

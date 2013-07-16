@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<?xml-stylesheet type='text/xsl' href='/xsl/receipts.xsl'?>
+<?xml-stylesheet type='text/xsl' href='/xsl/statement.xsl'?>
 <page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
     <identity>
         <urn>urn:facebook:1</urn>
@@ -47,22 +47,10 @@
     </links>
     <millis>16</millis>
     <balance>$0.45</balance>
-    <receipts>
-        <receipt>
-            <amount>$1.66</amount>
-            <date>2012-08-23T13:25:33Z</date>
-            <payer>urn:facebook:1</payer>
-            <beneficiary>urn:github:526301</beneficiary>
-            <details>some text</details>
-            <unit>some-test-unit-name</unit>
-        </receipt>
-        <receipt>
-            <amount>($4.09)</amount>
-            <date>2012-08-23T13:25:33Z</date>
-            <payer>urn:facebook:1</payer>
-            <beneficiary>urn:github:526301</beneficiary>
-            <details>some other text</details>
-            <unit>some-test-unit-name</unit>
-        </receipt>
-    </receipts>
+    <statement>
+        <amount>$1.66</amount>
+        <date>2012-08-23T13:25:33Z</date>
+        <when>45 hours</when>
+        <details>some text</details>
+    </statement>
 </page>

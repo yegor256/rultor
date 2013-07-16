@@ -168,6 +168,10 @@ final class Testing implements Profile {
                     throw new UnsupportedOperationException();
                 }
                 @Override
+                public Statement get(final Time time) {
+                    throw new UnsupportedOperationException();
+                }
+                @Override
                 public Iterator<Statement> iterator() {
                     return Arrays.<Statement>asList(
                         new Statement.Simple(new Time(), new Dollars(0), "")
