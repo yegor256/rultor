@@ -121,6 +121,8 @@ public final class ReceiptsRs extends BaseRs {
         for (Receipt receipt : this.user().receipts()) {
             text.append(receipt.date())
                 .append('\t')
+                .append(receipt.dollars().points())
+                .append('\t')
                 .append(receipt.payer())
                 .append('\t')
                 .append(receipt.beneficiary())
@@ -146,6 +148,7 @@ public final class ReceiptsRs extends BaseRs {
             json.add(
                 Json.createObjectBuilder()
                     .add("date", receipt.date().toString())
+                    .add("points", receipt.dollars().points())
                     .add("payer", receipt.payer().toString())
                     .add("beneficiary", receipt.beneficiary().toString())
                     .add("unit", receipt.unit())
