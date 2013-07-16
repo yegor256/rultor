@@ -214,10 +214,10 @@ final class RefForeign implements Variable<Object> {
          */
         @Override
         public void charge(final String details, final Dollars amount) {
-        Validate.isTrue(
-            amount.points() > 0,
-            "charge amount can be positive only, %s provided", amount
-        );
+            Validate.isTrue(
+                amount.points() > 0,
+                "charge amount can be positive only, %s provided", amount
+            );
             this.users.charge(
                 new Receipt.Simple(
                     new Time(),
