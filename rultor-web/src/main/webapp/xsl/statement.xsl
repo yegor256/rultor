@@ -40,6 +40,19 @@
         <xsl:apply-templates select="/page/statement"/>
     </xsl:template>
     <xsl:template match="statement">
+        <div>
+            <ul class="inline btn-group-vertical">
+                <li>
+                    <xsl:value-of select="date"/>
+                </li>
+                <li>
+                    <xsl:value-of select="when"/>
+                </li>
+                <li>
+                    <xsl:value-of select="amount"/>
+                </li>
+            </ul>
+        </div>
         <pre>
             <xsl:value-of select="details"/>
         </pre>

@@ -50,7 +50,7 @@
     <statement>
         <amount>$1.66</amount>
         <date>2012-08-23T13:25:33Z</date>
-        <when>45 hours</when>
+        <when>45 hours ago</when>
         <details>some text</details>
     </statement>
 </page>
