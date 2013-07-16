@@ -72,7 +72,7 @@ public final class ReceiptsRs extends BaseRs {
             .init(this)
             .append(
                 this.receipts(
-                    Iterables.limit(this.user().receipts(), Tv.HUNDRED)
+                    Iterables.limit(this.user().receipts(), Tv.TEN)
                 )
             )
             .link(

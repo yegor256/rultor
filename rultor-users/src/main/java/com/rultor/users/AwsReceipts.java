@@ -32,6 +32,7 @@ package com.rultor.users;
 import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
@@ -135,9 +136,8 @@ final class AwsReceipts implements Iterable<Receipt> {
         final Iterator<Item> items = this.region.table(AwsReceipts.TABLE)
             .frame()
             .where(field, Conditions.equalTo(this.name))
-            .through(new ScanValve())
+            .through(new ScanValve().withLimit(Tv.FIFTY))
             .iterator();
-        // @checkstyle AnonInnerLength (50 lines)
         return new Iterator<Receipt>() {
             @Override
             public boolean hasNext() {
