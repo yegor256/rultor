@@ -33,7 +33,6 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Attributes;
-import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
@@ -141,7 +140,7 @@ final class AwsStatements implements Statements {
         assert this.head != null;
         final Iterator<Item> items = this.region.table(AwsStatements.TABLE)
             .frame()
-            .where(AwsStatements.HASH_OWNER, Conditions.equalTo(this.name))
+            .where(AwsStatements.HASH_OWNER, this.name.toString())
             .through(new QueryValve().withScanIndexForward(false))
             .iterator();
         return new Iterator<Statement>() {
@@ -168,8 +167,8 @@ final class AwsStatements implements Statements {
         return AwsStatements.toStatement(
             this.region.table(AwsStatements.TABLE)
                 .frame()
-                .where(AwsStatements.HASH_OWNER, Conditions.equalTo(this.name))
-                .where(AwsStatements.RANGE_TIME, Conditions.equalTo(time))
+                .where(AwsStatements.HASH_OWNER, this.name.toString())
+                .where(AwsStatements.RANGE_TIME, time.toString())
                 .iterator()
                 .next()
         );

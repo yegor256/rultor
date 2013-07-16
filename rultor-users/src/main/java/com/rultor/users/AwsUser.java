@@ -33,7 +33,6 @@ import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
@@ -105,7 +104,8 @@ final class AwsUser implements User {
     public Set<String> units() {
         final Set<String> units = new TreeSet<String>();
         final Collection<Item> items = this.region.table(AwsUnit.TABLE)
-            .frame().where(AwsUnit.KEY_OWNER, Conditions.equalTo(this.name));
+            .frame()
+            .where(AwsUnit.KEY_OWNER, this.name.toString());
         for (Item item : items) {
             units.add(item.get(AwsUnit.KEY_NAME).getS());
         }
@@ -140,8 +140,8 @@ final class AwsUser implements User {
     public void remove(@NotNull(message = "unit name is mandatory")
         final String unit) {
         final Iterator<Item> items = this.region.table(AwsUnit.TABLE).frame()
-            .where(AwsUnit.KEY_OWNER, Conditions.equalTo(this.name))
-            .where(AwsUnit.KEY_NAME, Conditions.equalTo(unit))
+            .where(AwsUnit.KEY_OWNER, this.name.toString())
+            .where(AwsUnit.KEY_NAME, unit)
             .iterator();
         if (!items.hasNext()) {
             throw new NoSuchElementException(

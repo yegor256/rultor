@@ -34,7 +34,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
-import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.ScanValve;
@@ -135,8 +134,16 @@ final class AwsReceipts implements Iterable<Receipt> {
     private Iterator<Receipt> iterator(final String field) {
         final Iterator<Item> items = this.region.table(AwsReceipts.TABLE)
             .frame()
-            .where(field, Conditions.equalTo(this.name))
-            .through(new ScanValve().withLimit(Tv.FIFTY))
+            .where(field, this.name.toString())
+            .through(
+                new ScanValve()
+                    .withLimit(Tv.FIFTY)
+                    .withAttributeToGet(AwsReceipts.FIELD_AMOUNT)
+                    .withAttributeToGet(AwsReceipts.FIELD_BENEFICIARY)
+                    .withAttributeToGet(AwsReceipts.FIELD_DETAILS)
+                    .withAttributeToGet(AwsReceipts.FIELD_PAYER)
+                    .withAttributeToGet(AwsReceipts.FIELD_UNIT)
+            )
             .iterator();
         return new Iterator<Receipt>() {
             @Override

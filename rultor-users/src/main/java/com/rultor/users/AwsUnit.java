@@ -35,7 +35,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
-import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.Table;
@@ -148,8 +147,8 @@ final class AwsUnit implements Unit {
     private Item item() {
         final Table table = this.region.table(AwsUnit.TABLE);
         final Iterator<Item> items = table.frame()
-            .where(AwsUnit.KEY_OWNER, Conditions.equalTo(this.owner))
-            .where(AwsUnit.KEY_NAME, Conditions.equalTo(this.name))
+            .where(AwsUnit.KEY_OWNER, this.owner.toString())
+            .where(AwsUnit.KEY_NAME, this.name)
             .iterator();
         Item item;
         if (items.hasNext()) {
