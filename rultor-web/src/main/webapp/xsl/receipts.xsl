@@ -47,7 +47,14 @@
                         </xsl:attribute>
                         <xsl:text>JSON</xsl:text>
                     </a>
-                    <xsl:text> or </xsl:text>
+                    <xsl:text>, </xsl:text>
+                    <a title="XML">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="//links/link[@rel='xml']/@href"/>
+                        </xsl:attribute>
+                        <xsl:text>XML</xsl:text>
+                    </a>
+                    <xsl:text>, or </xsl:text>
                     <a title="plain text">
                         <xsl:attribute name="href">
                             <xsl:value-of select="//links/link[@rel='text']/@href"/>

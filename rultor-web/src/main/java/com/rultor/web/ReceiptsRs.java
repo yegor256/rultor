@@ -95,6 +95,16 @@ public final class ReceiptsRs extends BaseRs {
                         .build()
                 )
             )
+            .link(
+                new Link(
+                    "xml",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(ReceiptsRs.class)
+                        .path(ReceiptsRs.class, "xml")
+                        .build()
+                )
+            )
             .render()
             .build();
     }
@@ -124,12 +134,12 @@ public final class ReceiptsRs extends BaseRs {
     }
 
     /**
-     * Load them all in plain text.
+     * Load them all in JSON.
      * @return The JAX-RS response
      */
     @GET
     @Path("/json")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public String json() {
         final JsonArrayBuilder json = Json.createArrayBuilder();
         for (Receipt receipt : this.user().receipts()) {
@@ -145,6 +155,17 @@ public final class ReceiptsRs extends BaseRs {
         final StringWriter writer = new StringWriter();
         Json.createWriter(writer).writeArray(json.build());
         return writer.toString();
+    }
+
+    /**
+     * Load them all in XML.
+     * @return The JAX-RS response
+     */
+    @GET
+    @Path("/xml")
+    @Produces(MediaType.APPLICATION_XML)
+    public String xml() {
+        return "not implemented yet";
     }
 
     /**
