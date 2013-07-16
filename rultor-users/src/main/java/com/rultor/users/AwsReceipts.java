@@ -29,7 +29,6 @@
  */
 package com.rultor.users;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -43,7 +42,6 @@ import com.rultor.spi.Dollars;
 import com.rultor.spi.Receipt;
 import com.rultor.spi.Time;
 import java.util.Iterator;
-import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -69,7 +67,7 @@ final class AwsReceipts implements Iterable<Receipt> {
     /**
      * Dynamo DB table column.
      */
-    public static final String HASH_NANO = "nano";
+    public static final String HASH = "hash";
 
     /**
      * Dynamo DB table column.
@@ -161,14 +159,9 @@ final class AwsReceipts implements Iterable<Receipt> {
      * @return Receipt
      */
     public static Receipt toReceipt(final Item item) {
+        final String[] parts = item.get(AwsReceipts.HASH).getS().split(" ");
         return new Receipt.Simple(
-            new Time(
-                TimeUnit.NANOSECONDS.toMillis(
-                    Long.parseLong(
-                        item.get(AwsReceipts.HASH_NANO).getN()
-                    )
-                )
-            ),
+            new Time(parts[0]),
             URN.create(item.get(AwsReceipts.FIELD_PAYER).getS()),
             URN.create(item.get(AwsReceipts.FIELD_BENEFICIARY).getS()),
             item.get(AwsReceipts.FIELD_DETAILS).getS(),
@@ -193,8 +186,8 @@ final class AwsReceipts implements Iterable<Receipt> {
                 .with(AwsReceipts.FIELD_DETAILS, receipt.details())
                 .with(AwsReceipts.FIELD_AMOUNT, receipt.dollars().points())
                 .with(
-                    AwsReceipts.HASH_NANO,
-                    new AttributeValue().withN(Long.toString(System.nanoTime()))
+                    AwsReceipts.HASH,
+                    String.format("%s %s", receipt.date(), System.nanoTime())
                 )
         );
     }

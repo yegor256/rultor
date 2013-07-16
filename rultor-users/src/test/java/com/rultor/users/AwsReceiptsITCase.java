@@ -101,12 +101,12 @@ public final class AwsReceiptsITCase {
                 )
                 .withAttributeDefinitions(
                     new AttributeDefinition()
-                        .withAttributeName(AwsReceipts.HASH_NANO)
-                        .withAttributeType(ScalarAttributeType.N)
+                        .withAttributeName(AwsReceipts.HASH)
+                        .withAttributeType(ScalarAttributeType.S)
                 )
                 .withKeySchema(
                     new KeySchemaElement()
-                        .withAttributeName(AwsReceipts.HASH_NANO)
+                        .withAttributeName(AwsReceipts.HASH)
                         .withKeyType(KeyType.HASH)
                 )
         );
