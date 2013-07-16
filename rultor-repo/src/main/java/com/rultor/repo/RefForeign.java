@@ -223,9 +223,9 @@ final class RefForeign implements Variable<Object> {
                     new Time(),
                     RefForeign.this.client,
                     RefForeign.this.owner,
-                    details,
+                    String.format("%s: %s", this.unit(), details),
                     amount,
-                    this.unit()
+                    RefForeign.this.name
                 )
             );
         }
