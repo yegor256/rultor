@@ -40,6 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Big text, without any formatting.
@@ -50,23 +51,53 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "value")
+@EqualsAndHashCode(of = "lines")
 @Loggable(Loggable.DEBUG)
 final class BigText implements Variable<String> {
 
     /**
-     * The value.
+     * EOL.
      */
-    private final transient String value;
+    private static final String EOL = "\n";
+
+    /**
+     * Lines of text.
+     */
+    private final transient String[] lines;
 
     /**
      * Public ctor.
      * @param text Text to parse and encapsulate
      */
     protected BigText(final String text) {
-        this.value = text.replace("\r", "")
-            .replaceAll("[ \t]*\n[ \t]*", "\n")
-            .trim();
+        this.lines = StringUtils.splitPreserveAllTokens(
+            StringUtils.stripStart(
+                StringUtils.stripEnd(text, null),
+                "\n\r"
+            ),
+            BigText.EOL
+        );
+        int min = Integer.MAX_VALUE;
+        for (int idx = 0; idx < this.lines.length; ++idx) {
+            this.lines[idx] = StringUtils.strip(this.lines[idx], "\r")
+                .replaceAll("\\s+$", "")
+                .replaceAll("\t", "    ");
+            if (this.lines[idx].isEmpty()) {
+                continue;
+            }
+            min = Math.min(
+                min,
+                this.lines[idx].length()
+                - this.lines[idx].replaceAll("^\\s+", "").length()
+            );
+        }
+        for (int idx = 0; idx < this.lines.length; ++idx) {
+            if (this.lines[idx].length() > min) {
+                this.lines[idx] = this.lines[idx].substring(min);
+            } else {
+                this.lines[idx] = StringUtils.repeat(' ', min);
+            }
+        }
     }
 
     /**
@@ -79,7 +110,7 @@ final class BigText implements Variable<String> {
         @NotNull(message = "users can't be NULL") final Users users,
         @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
-        return this.value;
+        return StringUtils.join(this.lines, BigText.EOL);
     }
 
     /**
@@ -88,7 +119,7 @@ final class BigText implements Variable<String> {
     @Override
     public String asText() {
         return new StringBuilder("\"\"\"\n")
-            .append(this.value)
+            .append(StringUtils.join(this.lines, BigText.EOL))
             .append("\n\"\"\"")
             .toString();
     }

@@ -42,8 +42,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -175,7 +175,7 @@ final class Composite implements Variable<Object> {
     @Override
     public Map<Integer, String> arguments() throws SpecException {
         final ConcurrentMap<Integer, String> args =
-            new ConcurrentHashMap<Integer, String>(0);
+            new ConcurrentSkipListMap<Integer, String>();
         for (Variable<?> var : this.vars) {
             args.putAll(var.arguments());
         }

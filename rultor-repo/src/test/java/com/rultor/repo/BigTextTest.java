@@ -29,7 +29,6 @@
  */
 package com.rultor.repo;
 
-import com.rultor.spi.Variable;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -47,10 +46,9 @@ public final class BigTextTest {
      */
     @Test
     public void makesInstance() throws Exception {
-        final Variable<String> var = new BigText("  some \u20ac\n\n \"' test ");
         MatcherAssert.assertThat(
-            var.asText(),
-            Matchers.equalTo("\"\"\"\n some \u20ac\n\n\"' test\n\"\"\"")
+            new BigText("\n  some \u20ac\n\n \"' test \n  ").asText(),
+            Matchers.equalTo("\"\"\"\n some \u20ac\n \n\"' test\n\"\"\"")
         );
     }
 

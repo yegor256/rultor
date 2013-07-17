@@ -71,7 +71,7 @@ public final class ClasspathRepoTest {
             "com.first(com.second(com.third(), com.forth()))",
             "[com.second(com.third(), com.forth()), 4]",
             "{\"test\": com.second(com.third(), com.forth()), \"c\": 77}",
-            "\"\"\"\nsome\nunformatted\ttext\t\u20ac\u0433\n\"\"\"",
+            "\"\"\"\nsome\nunformatted text \u20ac\u0433\n\"\"\"",
         };
         final User user = Mockito.mock(User.class);
         final URN urn = new URN("urn:facebook:1");
@@ -114,7 +114,7 @@ public final class ClasspathRepoTest {
      */
     @Test
     public void makesSpecFromPlainText() throws Exception {
-        final String text = "\"\"\"\ns\nnome\t\tued\ntext\u20ac\n\"\"\"";
+        final String text = "\"\"\"\ns\nnome  ued\ntext\u20ac\n\"\"\"";
         final Repo repo = new ClasspathRepo();
         final User user = Mockito.mock(User.class);
         final URN urn = new URN("urn:facebook:5");

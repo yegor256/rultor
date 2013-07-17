@@ -39,8 +39,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -108,7 +108,7 @@ final class Array implements Variable<List<Object>> {
     @Override
     public Map<Integer, String> arguments() throws SpecException {
         final ConcurrentMap<Integer, String> args =
-            new ConcurrentHashMap<Integer, String>(0);
+            new ConcurrentSkipListMap<Integer, String>();
         for (Variable<?> var : this.values) {
             args.putAll(var.arguments());
         }

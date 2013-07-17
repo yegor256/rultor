@@ -36,8 +36,8 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
@@ -106,7 +106,7 @@ final class Meta implements Variable<Object> {
     @Override
     public Map<Integer, String> arguments() throws SpecException {
         final ConcurrentMap<Integer, String> args =
-            new ConcurrentHashMap<Integer, String>(0);
+            new ConcurrentSkipListMap<Integer, String>();
         if (this.position > 0) {
             args.put(this.position, String.format("arg #%d", this.position));
         }
