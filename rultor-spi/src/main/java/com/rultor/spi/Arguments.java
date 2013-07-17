@@ -86,10 +86,13 @@ public final class Arguments {
      * Get value by position.
      * @param pos Position
      * @return The value
+     * @throws SpecException If fails to find it
      */
-    public Object get(final int pos) {
+    public Object get(final int pos) throws SpecException {
         Validate.isTrue(pos >= 0, "position can't be negative");
-        Validate.isTrue(pos < this.values.length, "%d is out of bounds", pos);
+        if (pos < this.values.length) {
+            throw new SpecException(String.format("#%d is out of bounds", pos));
+        }
         return this.values[pos];
     }
 
