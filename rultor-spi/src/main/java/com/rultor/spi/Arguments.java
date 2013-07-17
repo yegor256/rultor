@@ -88,6 +88,8 @@ public final class Arguments {
      * @return The value
      */
     public Object get(final int pos) {
+        Validate.isTrue(pos >= 0, "position can't be negative");
+        Validate.isTrue(pos < this.values.length, "%d is out of bounds", pos);
         return this.values[pos];
     }
 
