@@ -41,6 +41,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -59,6 +62,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @ToString
@@ -162,6 +166,20 @@ final class Composite implements Variable<Object> {
             .append(new Brackets(this.vars))
             .append(')')
             .toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
+     */
+    @Override
+    public Map<Integer, String> arguments() throws SpecException {
+        final ConcurrentMap<Integer, String> args =
+            new ConcurrentHashMap<Integer, String>(0);
+        for (Variable<?> var : this.vars) {
+            args.putAll(var.arguments());
+        }
+        return args;
     }
 
     /**

@@ -175,23 +175,25 @@ public final class UnitRs extends BaseRs {
         final Variable<?> var = new Repo.Cached(
             this.repo(), this.user(), spec
         ).get();
-        final Object object = var.instantiate(
-            this.users(),
-            new Arguments(this.work(this.name, spec))
-        );
-        try {
-            object.toString();
-        } catch (SecurityException ex) {
-            throw new SpecException(ex);
-        }
-        if (!type.isAssignableFrom(object.getClass())) {
-            throw new SpecException(
-                String.format(
-                    "%s expected while %s provided",
-                    type.getName(),
-                    object.getClass().getName()
-                )
+        if (var.arguments().isEmpty()) {
+            final Object object = var.instantiate(
+                this.users(),
+                new Arguments(this.work(this.name, spec))
             );
+            try {
+                object.toString();
+            } catch (SecurityException ex) {
+                throw new SpecException(ex);
+            }
+            if (!type.isAssignableFrom(object.getClass())) {
+                throw new SpecException(
+                    String.format(
+                        "%s expected while %s provided",
+                        type.getName(),
+                        object.getClass().getName()
+                    )
+                );
+            }
         }
         return new Spec.Simple(var.asText());
     }

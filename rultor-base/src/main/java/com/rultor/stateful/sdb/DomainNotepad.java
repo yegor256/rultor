@@ -161,7 +161,7 @@ public final class DomainNotepad implements Notepad {
                 result.getItems().size(),
                 this.client.domain()
             ),
-            new Dollars(Tv.HUNDRED)
+            new Dollars(Tv.TEN)
         );
         final Collection<String> items = new LinkedList<String>();
         for (Item item : result.getItems()) {
@@ -217,7 +217,7 @@ public final class DomainNotepad implements Notepad {
                 this.name(line),
                 this.client.domain()
             ),
-            new Dollars(Tv.HUNDRED)
+            new Dollars(Tv.TEN)
         );
         return true;
     }
@@ -238,7 +238,7 @@ public final class DomainNotepad implements Notepad {
                 this.name(line.toString()),
                 this.client.domain()
             ),
-            new Dollars(Tv.HUNDRED)
+            new Dollars(Tv.TEN)
         );
         return true;
     }

@@ -39,6 +39,7 @@ import com.rultor.spi.Drain;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
+import com.rultor.spi.Variable;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
@@ -134,7 +135,7 @@ public final class IndexRs extends BaseRs {
         return new JaxbBundle("unit")
             .add("name", name)
             .up()
-            .add(this.face("spec", unit.spec()))
+            .add(this.face(unit.spec()))
             .link(
                 new Link(
                     // @checkstyle MultipleStringLiterals (1 line)
@@ -168,39 +169,51 @@ public final class IndexRs extends BaseRs {
 
     /**
      * Get face from spec.
-     * @param name Name of it
      * @param spec The Spec
      * @return Bundle
      */
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    private JaxbBundle face(final String name, final Spec spec) {
-        JaxbBundle bundle = new JaxbBundle(name);
+    private JaxbBundle face(final Spec spec) {
+        JaxbBundle bundle = new JaxbBundle("spec");
         try {
-            final Object object = new Repo.Cached(
+            final Variable<?> var = new Repo.Cached(
                 this.repo(), this.user(), spec
-            ).get().instantiate(
-                this.users(),
-                new Arguments(this.work(name, spec))
-            );
-            bundle = bundle
-                .add("type", object.getClass().getName())
-                .up()
-                .add(
-                    "drainable",
-                    Boolean.toString(object instanceof Drain.Source)
-                )
-                .up()
-                .add(
-                    "face",
-                    StringEscapeUtils.escapeHtml4(
-                        object.toString()
-                    ).replaceAll("`([^`]+)`", "<code>$1</code>")
+            ).get();
+            if (var.arguments().isEmpty()) {
+                final Object object = var.instantiate(
+                    this.users(),
+                    new Arguments(this.work("", spec))
                 );
+                bundle = bundle
+                    .add("type", object.getClass().getName())
+                    .up()
+                    .add(
+                        "drainable",
+                        Boolean.toString(object instanceof Drain.Source)
+                    )
+                    .up()
+                    .add(
+                        "face",
+                        StringEscapeUtils.escapeHtml4(
+                            object.toString()
+                        ).replaceAll("`([^`]+)`", "<code>$1</code>")
+                    )
+                    .up();
+            } else {
+                bundle = bundle.add("arguments").add(
+                    new JaxbBundle.Group<String>(var.arguments().values()) {
+                        @Override
+                        public JaxbBundle bundle(final String arg) {
+                            return new JaxbBundle("argument", arg);
+                        }
+                    }
+                ).up();
+            }
         // @checkstyle IllegalCatch (1 line)
         } catch (Exception ex) {
-            bundle = bundle.add("exception", ex.getMessage());
+            bundle = bundle.add("exception", ex.getMessage()).up();
         }
-        return bundle.up();
+        return bundle;
     }
 
 }

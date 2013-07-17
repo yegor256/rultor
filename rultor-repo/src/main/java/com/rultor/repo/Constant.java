@@ -37,6 +37,8 @@ import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import java.text.DecimalFormat;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -96,6 +98,14 @@ final class Constant<T> implements Variable<Object> {
             text = this.value.toString();
         }
         return text;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<Integer, String> arguments() {
+        return new ConcurrentHashMap<Integer, String>(0);
     }
 
 }

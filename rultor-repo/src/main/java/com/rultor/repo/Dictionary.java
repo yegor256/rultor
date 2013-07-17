@@ -37,7 +37,7 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -103,16 +103,11 @@ final class Dictionary implements Variable<Map<String, Object>> {
      */
     @Override
     public String asText() {
-        final List<Variable<?>> vars =
-            new ArrayList<Variable<?>>(this.map.length);
-        for (Object[] pair : this.map) {
-            vars.add(Variable.class.cast(pair[1]));
-        }
         return new StringBuilder()
             .append('{')
             .append(
                 new Brackets(
-                    Iterables.toArray(vars, Variable.class),
+                    Iterables.toArray(this.variables(), Variable.class),
                     new Brackets.Format() {
                         @Override
                         public String print(final int pos,
@@ -129,6 +124,33 @@ final class Dictionary implements Variable<Map<String, Object>> {
             )
             .append('}')
             .toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
+     */
+    @Override
+    public Map<Integer, String> arguments() throws SpecException {
+        final ConcurrentMap<Integer, String> args =
+            new ConcurrentHashMap<Integer, String>(0);
+        for (Variable<?> var : this.variables()) {
+            args.putAll(var.arguments());
+        }
+        return args;
+    }
+
+    /**
+     * Get all variables.
+     * @return List of them
+     */
+    private Collection<Variable<?>> variables() {
+        final Collection<Variable<?>> vars =
+            new ArrayList<Variable<?>>(this.map.length);
+        for (Object[] pair : this.map) {
+            vars.add(Variable.class.cast(pair[1]));
+        }
+        return vars;
     }
 
 }

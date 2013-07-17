@@ -38,6 +38,9 @@ import com.rultor.spi.Variable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -96,6 +99,20 @@ final class Array implements Variable<List<Object>> {
             .append(new Brackets(this.values))
             .append(']')
             .toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
+     */
+    @Override
+    public Map<Integer, String> arguments() throws SpecException {
+        final ConcurrentMap<Integer, String> args =
+            new ConcurrentHashMap<Integer, String>(0);
+        for (Variable<?> var : this.values) {
+            args.putAll(var.arguments());
+        }
+        return args;
     }
 
 }

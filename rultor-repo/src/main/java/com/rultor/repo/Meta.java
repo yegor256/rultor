@@ -35,6 +35,9 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
@@ -94,6 +97,18 @@ final class Meta implements Variable<Object> {
     @Override
     public String asText() {
         return String.format("${%d}", this.position);
+    }
+
+    /**
+     * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
+     */
+    @Override
+    public Map<Integer, String> arguments() throws SpecException {
+        final ConcurrentMap<Integer, String> args =
+            new ConcurrentHashMap<Integer, String>(0);
+        args.put(this.position, String.format("arg #%d", this.position));
+        return args;
     }
 
 }

@@ -72,6 +72,16 @@
                             <xsl:value-of select="links/link[@rel='edit']/@href"/>
                         </xsl:attribute>
                         <xsl:value-of select="name"/>
+                        <xsl:if test="spec/arguments">
+                            <xsl:text>(</xsl:text>
+                            <xsl:for-each select="spec/arguments/argument">
+                                <xsl:if test="position() &gt; 1">
+                                    <xsl:text>, </xsl:text>
+                                </xsl:if>
+                                <xsl:value-of select="."/>
+                            </xsl:for-each>
+                            <xsl:text>)</xsl:text>
+                        </xsl:if>
                     </a>
                 </li>
                 <xsl:if test="spec/drainable = 'true'">
@@ -95,7 +105,7 @@
                 </li>
             </ul>
         </div>
-        <xsl:if test="not(spec/type) or spec/type != 'java.lang.String'">
+        <xsl:if test="spec/exception or (spec/type and spec/type != 'java.lang.String')">
             <p style="padding-left: 3em;" class="hidden-phone">
                 <xsl:choose>
                     <xsl:when test="spec/face">

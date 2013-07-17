@@ -30,6 +30,7 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -53,5 +54,12 @@ public interface Variable<T> extends Spec {
     T instantiate(@NotNull(message = "users can't be NULL") Users users,
         @NotNull(message = "arguments can't be NULL") Arguments arguments)
         throws SpecException;
+
+    /**
+     * Get a list of required arguments.
+     * @return Their position numbers and descriptions
+     * @throws SpecException If can't instantiate
+     */
+    Map<Integer, String> arguments() throws SpecException;
 
 }

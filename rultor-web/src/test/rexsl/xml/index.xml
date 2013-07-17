@@ -77,5 +77,19 @@
                 <link href="/xml/index.xml" rel="remove" type="text/xml"/>
             </links>
         </unit>
+        <unit>
+            <name>git-template</name>
+            <spec>
+                <arguments>
+                    <argument>first</argument>
+                    <argument>second</argument>
+                </arguments>
+            </spec>
+            <links>
+                <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
+                <link href="/xml/drain.xml" rel="drain" type="text/xml"/>
+                <link href="/xml/index.xml" rel="remove" type="text/xml"/>
+            </links>
+        </unit>
     </units>
 </page>

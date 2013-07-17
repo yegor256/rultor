@@ -35,6 +35,8 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -89,6 +91,14 @@ final class Text implements Variable<String> {
             "\"%s\"",
             StringEscapeUtils.escapeJava(this.value)
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<Integer, String> arguments() {
+        return new ConcurrentHashMap<Integer, String>(0);
     }
 
 }
