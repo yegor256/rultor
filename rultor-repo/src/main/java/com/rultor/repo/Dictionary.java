@@ -29,9 +29,9 @@
  */
 package com.rultor.repo;
 
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
@@ -44,8 +44,6 @@ import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.CharUtils;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Array.
@@ -59,16 +57,6 @@ import org.apache.commons.lang3.StringUtils;
 @EqualsAndHashCode(of = "map")
 @Loggable(Loggable.DEBUG)
 final class Dictionary implements Variable<Map<String, Object>> {
-
-    /**
-     * Indentation.
-     */
-    private static final String INDENT = "  ";
-
-    /**
-     * EOL.
-     */
-    private static final String EOL = "\n";
 
     /**
      * Map of values.
@@ -115,39 +103,32 @@ final class Dictionary implements Variable<Map<String, Object>> {
      */
     @Override
     public String asText() {
-        final StringBuilder text = new StringBuilder();
-        text.append('{');
-        final List<String> kids =
-            new ArrayList<String>(this.map.length);
+        final List<Variable<?>> vars =
+            new ArrayList<Variable<?>>(this.map.length);
         for (Object[] pair : this.map) {
-            kids.add(
-                String.format(
-                    "\"%s\": %s",
-                    pair[0].toString().replace("\"", "\\\""),
-                    Variable.class.cast(pair[1]).asText()
+            vars.add(Variable.class.cast(pair[1]));
+        }
+        return new StringBuilder()
+            .append('{')
+            .append(
+                new Brackets(
+                    Iterables.toArray(vars, Variable.class),
+                    new Brackets.Format() {
+                        @Override
+                        public String print(final int pos,
+                            final Variable<?> var) {
+                            return String.format(
+                                "\"%s\": %s",
+                                Dictionary.this.map[pos][0].toString()
+                                    .replace("\"", "\\\""),
+                                Variable.class.cast(var).asText()
+                            );
+                        }
+                    }
                 )
-            );
-        }
-        final String line = StringUtils.join(kids, ", ");
-        if (line.length() < Tv.FIFTY && !line.contains(Dictionary.EOL)) {
-            text.append(line);
-        } else {
-            final String shift = new StringBuilder()
-                .append(CharUtils.LF).append(Dictionary.INDENT).toString();
-            int idx;
-            for (idx = 0; idx < kids.size(); ++idx) {
-                if (idx > 0) {
-                    text.append(',');
-                }
-                text.append(shift)
-                    .append(kids.get(idx).replace(Dictionary.EOL, shift));
-            }
-            if (idx > 0) {
-                text.append(CharUtils.LF);
-            }
-        }
-        text.append('}');
-        return text.toString();
+            )
+            .append('}')
+            .toString();
     }
 
 }

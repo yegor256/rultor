@@ -46,15 +46,15 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test case for {@link RefForeign}.
+ * Test case for {@link RefLocal}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public final class RefForeignTest {
+public final class RefLocalTest {
 
     /**
-     * RefForeign can make an instance.
+     * RefLocal can make an instance.
      * @throws Exception If some problem inside
      */
     @Test
@@ -69,8 +69,8 @@ public final class RefForeignTest {
         Mockito.doReturn(unit).when(user).get(name);
         final URN urn = new URN("urn:facebook:1");
         Mockito.doReturn(urn).when(user).urn();
-        final Variable<Object> var = new RefForeign(
-            new AntlrGrammar(), urn, urn, name,
+        final Variable<Object> var = new RefLocal(
+            new AntlrGrammar(), urn, name,
             new ArrayList<Variable<?>>(0)
         );
         final Users users = Mockito.mock(Users.class);
@@ -82,19 +82,19 @@ public final class RefForeignTest {
     }
 
     /**
-     * RefForeign can make a text.
+     * RefLocalTest can make a text.
      * @throws Exception If some problem inside
      */
     @Test
     public void makesText() throws Exception {
         final URN urn = new URN("urn:facebook:998");
-        final Variable<Object> var = new RefForeign(
-            new AntlrGrammar(), urn, urn, "some-name",
+        final Variable<Object> var = new RefLocal(
+            new AntlrGrammar(), urn, "some-name",
             new ArrayList<Variable<?>>(0)
         );
         MatcherAssert.assertThat(
             var.asText(),
-            Matchers.equalTo("urn:facebook:998:some-name()")
+            Matchers.equalTo("some-name()")
         );
     }
 

@@ -114,7 +114,12 @@ final class RefLocal implements Variable<Object> {
     @Override
     @NotNull(message = "text is never NULL")
     public String asText() {
-        return this.name;
+        return new StringBuilder()
+            .append(this.name)
+            .append('(')
+            .append(new Brackets(this.children))
+            .append(')')
+            .toString();
     }
 
 }

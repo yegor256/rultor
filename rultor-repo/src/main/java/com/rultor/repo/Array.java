@@ -31,7 +31,6 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
@@ -42,8 +41,6 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.CharUtils;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Array.
@@ -57,16 +54,6 @@ import org.apache.commons.lang3.StringUtils;
 @EqualsAndHashCode(of = "values")
 @Loggable(Loggable.DEBUG)
 final class Array implements Variable<List<Object>> {
-
-    /**
-     * Indentation.
-     */
-    private static final String INDENT = "  ";
-
-    /**
-     * EOL.
-     */
-    private static final String EOL = "\n";
 
     /**
      * Values.
@@ -104,32 +91,11 @@ final class Array implements Variable<List<Object>> {
      */
     @Override
     public String asText() {
-        final StringBuilder text = new StringBuilder();
-        text.append('[');
-        final List<String> kids = new ArrayList<String>(this.values.length);
-        for (Variable<?> var : this.values) {
-            kids.add(var.asText());
-        }
-        final String line = StringUtils.join(kids, ", ");
-        if (line.length() < Tv.FIFTY && !line.contains(Array.EOL)) {
-            text.append(line);
-        } else {
-            final String shift = new StringBuilder()
-                .append(CharUtils.LF).append(Array.INDENT).toString();
-            int idx;
-            for (idx = 0; idx < kids.size(); ++idx) {
-                if (idx > 0) {
-                    text.append(',');
-                }
-                text.append(shift)
-                    .append(kids.get(idx).replace(Array.EOL, shift));
-            }
-            if (idx > 0) {
-                text.append(CharUtils.LF);
-            }
-        }
-        text.append(']');
-        return text.toString();
+        return new StringBuilder()
+            .append('[')
+            .append(new Brackets(this.values))
+            .append(']')
+            .toString();
     }
 
 }

@@ -144,7 +144,14 @@ final class RefForeign implements Variable<Object> {
      */
     @Override
     public String asText() {
-        return String.format("%s:%s", this.owner, this.name);
+        return new StringBuilder()
+            .append(this.owner)
+            .append(':')
+            .append(this.name)
+            .append('(')
+            .append(new Brackets(this.children))
+            .append(')')
+            .toString();
     }
 
     /**

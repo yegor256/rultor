@@ -31,7 +31,6 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Proxy;
 import com.rultor.spi.SpecException;
@@ -40,10 +39,8 @@ import com.rultor.spi.Variable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -54,8 +51,6 @@ import javassist.NotFoundException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.CharUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
@@ -80,16 +75,6 @@ final class Composite implements Variable<Object> {
      * Supplementary field name.
      */
     private static final String FIELD = "__rultor_toString";
-
-    /**
-     * Indentation.
-     */
-    private static final String INDENT = "  ";
-
-    /**
-     * EOL.
-     */
-    private static final String EOL = "\n";
 
     /**
      * Type name.
@@ -171,32 +156,12 @@ final class Composite implements Variable<Object> {
      */
     @Override
     public String asText() {
-        final StringBuilder text = new StringBuilder();
-        text.append(this.type).append('(');
-        final List<String> kids = new ArrayList<String>(this.vars.length);
-        for (Variable<?> var : this.vars) {
-            kids.add(var.asText());
-        }
-        final String line = StringUtils.join(kids, ", ");
-        if (line.length() < Tv.FIFTY && !line.contains(Composite.EOL)) {
-            text.append(line);
-        } else {
-            final String shift = new StringBuilder()
-                .append(CharUtils.LF).append(Composite.INDENT).toString();
-            int idx;
-            for (idx = 0; idx < kids.size(); ++idx) {
-                if (idx > 0) {
-                    text.append(',');
-                }
-                text.append(shift)
-                    .append(kids.get(idx).replace(Composite.EOL, shift));
-            }
-            if (idx > 0) {
-                text.append(CharUtils.LF);
-            }
-        }
-        text.append(')');
-        return text.toString();
+        return new StringBuilder()
+            .append(this.type)
+            .append('(')
+            .append(new Brackets(this.vars))
+            .append(')')
+            .toString();
     }
 
     /**
