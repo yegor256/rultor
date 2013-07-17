@@ -40,6 +40,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.SDBClient;
 import com.rultor.spi.Dollars;
+import com.rultor.spi.Time;
 import com.rultor.spi.Work;
 import com.rultor.stateful.Lineup;
 import java.security.SecureRandom;
@@ -140,13 +141,6 @@ public final class ItemLineup implements Lineup {
             this.save(marker);
             final String saved = this.load();
             if (saved.equals(marker)) {
-                Logger.debug(
-                    this,
-                    "SimpleDB item '%s/%s' is locked by us with '%s'",
-                    this.client.domain(),
-                    this.name,
-                    saved
-                );
                 break;
             }
             Logger.debug(
@@ -221,6 +215,10 @@ public final class ItemLineup implements Lineup {
                     new ReplaceableAttribute()
                         .withName(ItemLineup.IDENTIFIER)
                         .withValue(content)
+                        .withReplace(true),
+                    new ReplaceableAttribute()
+                        .withName("time")
+                        .withValue(new Time().toString())
                         .withReplace(true)
                 )
         );
