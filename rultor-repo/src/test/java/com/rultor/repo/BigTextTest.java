@@ -50,7 +50,7 @@ public final class BigTextTest {
         final Variable<String> var = new BigText("  some \u20ac\n\n \"' test ");
         MatcherAssert.assertThat(
             var.asText(),
-            Matchers.equalTo("\"\"\"\nsome \u20ac\n\n\"' test\n\"\"\"")
+            Matchers.equalTo("\"\"\"\n some \u20ac\n\n\"' test\n\"\"\"")
         );
     }
 
