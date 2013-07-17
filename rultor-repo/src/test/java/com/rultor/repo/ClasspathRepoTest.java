@@ -32,13 +32,14 @@ package com.rultor.repo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Arguments;
-import com.rultor.spi.Instance;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Arrays;
+import java.util.HashSet;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -135,56 +136,109 @@ public final class ClasspathRepoTest {
     @Test
     public void makesInstanceFromSpec() throws Exception {
         final Repo repo = new ClasspathRepo();
-        final Spec spec = new Spec.Simple(
-            "com.rultor.repo.ClasspathRepoTest$Foo(2L)"
+        final Spec multiply = new Spec.Simple(
+            // @checkstyle StringLiteralsConcatenation (4 lines)
+            "com.rultor.repo.ClasspathRepoTest$Plus(  "
+            + "  com.rultor.repo.ClasspathRepoTest$Const(${1}),"
+            + "  com.rultor.repo.ClasspathRepoTest$Const(${1} )"
+            + ") "
         );
-        ClasspathRepoTest.Foo.COUNTER.set(0);
+        final Spec spec = new Spec.Simple(
+            // @checkstyle StringLiteralsConcatenation (8 lines)
+            "com.rultor.repo.ClasspathRepoTest$Plus("
+            + "  com.rultor.repo.ClasspathRepoTest$Plus("
+            + "    com.rultor.repo.ClasspathRepoTest$Const(5), "
+            + "    multiply-by-two(-2)"
+            + "  ),"
+            + "  com.rultor.repo.ClasspathRepoTest$Const(${1})"
+            + ")"
+        );
+        final Unit unit = Mockito.mock(Unit.class);
+        Mockito.doReturn(multiply).when(unit).spec();
+        final String name = "multiply-by-two";
         final User user = Mockito.mock(User.class);
+        Mockito.doReturn(unit).when(user).get(name);
+        Mockito.doReturn(
+            new HashSet<String>(Arrays.asList(name))
+        ).when(user).units();
         final URN urn = new URN("urn:facebook:77");
         Mockito.doReturn(urn).when(user).urn();
         final Users users = Mockito.mock(Users.class);
-        final Object instance = repo.make(user, spec)
-            .instantiate(users, new Arguments(new Work.None()));
-        MatcherAssert.assertThat(
-            ClasspathRepoTest.Foo.COUNTER.get(),
-            Matchers.equalTo(2L)
+        Mockito.doReturn(user).when(users).get(urn);
+        final ClasspathRepoTest.Atom atom = ClasspathRepoTest.Atom.class.cast(
+            repo.make(user, spec).instantiate(
+                users, new Arguments(new Work.None(), Arrays.<Object>asList(-2))
+            )
         );
-        Instance.class.cast(instance).pulse();
-        MatcherAssert.assertThat(
-            ClasspathRepoTest.Foo.COUNTER.get(),
-            Matchers.equalTo(-1L)
-        );
+        MatcherAssert.assertThat(atom.calc(), Matchers.equalTo(-1));
     }
 
     /**
-     * Test class.
+     * Atom.
      */
     @Immutable
-    public static final class Foo implements Instance {
+    public interface Atom {
         /**
-         * Static counter.
+         * Get its value.
+         * @return Result
          */
-        public static final AtomicLong COUNTER = new AtomicLong();
+        int calc();
+    }
+
+    /**
+     * Just number.
+     */
+    @Immutable
+    public static final class Const implements ClasspathRepoTest.Atom {
+        /**
+         * Number.
+         */
+        private final transient int value;
         /**
          * Public ctor.
-         * @param number The number
+         * @param val The number
          */
-        public Foo(final long number) {
-            ClasspathRepoTest.Foo.COUNTER.addAndGet(number);
+        public Const(final int val) {
+            this.value = val;
         }
         /**
          * {@inheritDoc}
          */
         @Override
-        public void pulse() {
-            ClasspathRepoTest.Foo.COUNTER.set(-1);
+        public int calc() {
+            return this.value;
+        }
+    }
+
+    /**
+     * Number plus number.
+     */
+    @Immutable
+    public static final class Plus implements ClasspathRepoTest.Atom {
+        /**
+         * Left number.
+         */
+        private final transient ClasspathRepoTest.Atom left;
+        /**
+         * Right number.
+         */
+        private final transient ClasspathRepoTest.Atom right;
+        /**
+         * Public ctor.
+         * @param first The number
+         * @param second The number
+         */
+        public Plus(final ClasspathRepoTest.Atom first,
+            final ClasspathRepoTest.Atom second) {
+            this.left = first;
+            this.right = second;
         }
         /**
          * {@inheritDoc}
          */
         @Override
-        public String toString() {
-            return ClasspathRepoTest.Foo.COUNTER.toString();
+        public int calc() {
+            return this.left.calc() + this.right.calc();
         }
     }
 
