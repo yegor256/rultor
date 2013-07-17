@@ -29,13 +29,16 @@
  */
 package com.rultor.repo;
 
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
-import com.rultor.spi.Work;
+import java.util.Arrays;
+import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -69,15 +72,23 @@ final class RefLocal implements Variable<Object> {
     private final transient String name;
 
     /**
+     * Parameters.
+     */
+    private final transient Variable[] children;
+
+    /**
      * Public ctor.
      * @param grm Grammar to use
      * @param urn Owner of the unit
      * @param ref Reference
+     * @param childs Enclosed parameters
      */
-    protected RefLocal(final Grammar grm, final URN urn, final String ref) {
+    protected RefLocal(final Grammar grm, final URN urn, final String ref,
+        final Collection<Variable<?>> childs) {
         this.grammar = grm;
         this.owner = urn;
         this.name = ref;
+        this.children = Iterables.toArray(childs, Variable.class);
     }
 
     /**
@@ -88,11 +99,12 @@ final class RefLocal implements Variable<Object> {
     @NotNull
     public Object instantiate(
         @NotNull(message = "users can't be NULL") final Users users,
-        @NotNull(message = "work can't be NULL") final Work work)
+        @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
         return new RefForeign(
-            this.grammar, this.owner, this.owner, this.name
-        ).instantiate(users, work);
+            this.grammar, this.owner, this.owner, this.name,
+            Arrays.<Variable<?>>asList(this.children)
+        ).instantiate(users, args);
     }
 
     /**

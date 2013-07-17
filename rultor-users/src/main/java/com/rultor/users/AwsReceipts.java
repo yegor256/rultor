@@ -137,7 +137,7 @@ final class AwsReceipts implements Iterable<Receipt> {
             .where(field, this.name.toString())
             .through(
                 new ScanValve()
-                    .withLimit(Tv.FIFTY)
+                    .withLimit(Tv.THOUSAND)
                     .withAttributeToGet(AwsReceipts.FIELD_AMOUNT)
                     .withAttributeToGet(AwsReceipts.FIELD_BENEFICIARY)
                     .withAttributeToGet(AwsReceipts.FIELD_DETAILS)

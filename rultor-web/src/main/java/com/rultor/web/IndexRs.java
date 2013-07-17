@@ -34,6 +34,7 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.auth.Identity;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
@@ -177,7 +178,10 @@ public final class IndexRs extends BaseRs {
         try {
             final Object object = new Repo.Cached(
                 this.repo(), this.user(), spec
-            ).get().instantiate(this.users(), this.work(name, spec));
+            ).get().instantiate(
+                this.users(),
+                new Arguments(this.work(name, spec))
+            );
             bundle = bundle
                 .add("type", object.getClass().getName())
                 .up()

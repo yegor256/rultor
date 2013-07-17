@@ -31,10 +31,10 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
-import com.rultor.spi.Work;
 import java.text.DecimalFormat;
 import java.util.Locale;
 import javax.validation.constraints.NotNull;
@@ -75,7 +75,7 @@ final class Constant<T> implements Variable<Object> {
     @NotNull
     public Object instantiate(
         @NotNull(message = "users can't be NULL") final Users users,
-        @NotNull(message = "work can't be NULL") final Work work)
+        @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
         return this.value;
     }

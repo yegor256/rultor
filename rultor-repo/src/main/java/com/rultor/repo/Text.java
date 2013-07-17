@@ -31,10 +31,10 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
-import com.rultor.spi.Work;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -74,7 +74,7 @@ final class Text implements Variable<String> {
     @NotNull
     public String instantiate(
         @NotNull(message = "users can't be NULL") final Users users,
-        @NotNull(message = "work can't be NULL") final Work work)
+        @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
         return this.value;
     }

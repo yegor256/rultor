@@ -27,78 +27,46 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.spi;
 
-import com.google.common.collect.ImmutableMap;
-import com.jcabi.aspects.Tv;
-import com.rultor.spi.Arguments;
-import com.rultor.spi.Users;
-import com.rultor.spi.Variable;
-import com.rultor.spi.Work;
 import java.util.Arrays;
-import java.util.Map;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test case for {@link Dictionary}.
+ * Test case for {@link ArgumentsTest}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class DictionaryTest {
+public final class ArgumentsTest {
 
     /**
-     * Dictionary can make an instance.
+     * Arguments can retrieve item by index.
      * @throws Exception If some problem inside
      */
     @Test
-    public void makesInstance() throws Exception {
-        final String key = "some key";
-        final Variable<Map<String, Object>> var = new Dictionary(
-            new ImmutableMap.Builder<String, Variable<?>>()
-                .put(key, new Constant<Integer>(Tv.TEN))
-                .build()
-        );
-        MatcherAssert.assertThat(
-            var.instantiate(
-                Mockito.mock(Users.class),
-                new Arguments(Mockito.mock(Work.class))
-            ),
-            Matchers.<String, Object>hasEntry(key, Tv.TEN)
-        );
+    public void retrievesItemByIndex() throws Exception {
+        final Work work = Mockito.mock(Work.class);
+        final Arguments args = new Arguments(work);
+        MatcherAssert.assertThat(args.get(0), Matchers.<Object>equalTo(work));
     }
 
     /**
-     * Dictionary can make a text.
+     * Arguments can replace item by index.
      * @throws Exception If some problem inside
      */
     @Test
-    public void makesText() throws Exception {
-        final Variable<Map<String, Object>> var = new Dictionary(
-            new ImmutableMap.Builder<String, Variable<?>>()
-                .put("one", new Constant<Long>((long) Tv.TEN))
-                .put("two", new Text("some text\nline two"))
-                .put(
-                    "three",
-                    new Composite(
-                        "com.rultor.SomeOtherClass",
-                        Arrays.<Variable<?>>asList()
-                    )
-                )
-                .build()
+    public void replacesItemByIndex() throws Exception {
+        final Work work = Mockito.mock(Work.class);
+        final String value = "some test value";
+        final Arguments args = new Arguments(
+            work, Arrays.<Object>asList("previous value")
         );
         MatcherAssert.assertThat(
-            var.asText(),
-            Matchers.equalTo(
-                // @checkstyle StringLiteralsConcatenation (5 lines)
-                "{\n"
-                + "  \"one\": 10L,\n"
-                + "  \"two\": \"some text\\nline two\",\n"
-                + "  \"three\": com.rultor.SomeOtherClass()\n"
-                + "}"
-            )
+            args.with(1, value).get(1),
+            Matchers.<Object>equalTo(value)
         );
     }
 

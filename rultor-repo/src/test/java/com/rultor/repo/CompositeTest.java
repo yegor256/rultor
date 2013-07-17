@@ -31,6 +31,7 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
@@ -61,7 +62,7 @@ public final class CompositeTest {
         );
         MatcherAssert.assertThat(
             var.instantiate(
-                Mockito.mock(Users.class), Mockito.mock(Work.class)
+                Mockito.mock(Users.class), new Arguments(new Work.None())
             ),
             Matchers.<Object>equalTo(Tv.TEN)
         );
@@ -114,7 +115,8 @@ public final class CompositeTest {
                 Arrays.<Variable<?>>asList()
             );
             final Object object = composite.instantiate(
-                Mockito.mock(Users.class), Mockito.mock(Work.class)
+                Mockito.mock(Users.class),
+                new Arguments(Mockito.mock(Work.class))
             );
             MatcherAssert.assertThat(
                 object,

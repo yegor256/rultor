@@ -29,6 +29,7 @@
  */
 package com.rultor.repo;
 
+import com.rultor.spi.Arguments;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
@@ -54,7 +55,8 @@ public final class TextTest {
         final Variable<String> var = new Text(text);
         MatcherAssert.assertThat(
             var.instantiate(
-                Mockito.mock(Users.class), Mockito.mock(Work.class)
+                Mockito.mock(Users.class),
+                new Arguments(Mockito.mock(Work.class))
             ),
             Matchers.equalTo(text)
         );

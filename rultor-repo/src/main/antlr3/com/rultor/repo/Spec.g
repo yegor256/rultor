@@ -85,13 +85,13 @@ variable returns [Variable<?> ret]
     { $ret = $dictionary.ret; }
     |
     META
-    { $ret = new Meta($META.text.substring(1)); }
+    { $ret = new Meta($META.text); }
     |
-    NAME
-    { $ret = new RefLocal(this.grammar, this.owner, $NAME.text); }
+    NAME arguments
+    { $ret = new RefLocal(this.grammar, this.owner, $NAME.text, $arguments.ret); }
     |
-    OWNER ':' NAME
-    { $ret = new RefForeign(this.grammar, this.owner, URN.create($OWNER.text), $NAME.text); }
+    OWNER ':' NAME arguments
+    { $ret = new RefForeign(this.grammar, this.owner, URN.create($OWNER.text), $NAME.text, $arguments.ret); }
     |
     TEXT
     { $ret = new Text(StringEscapeUtils.unescapeJava($TEXT.text)); }
@@ -116,18 +116,24 @@ composite returns [Composite ret]
     @init { final Collection<Variable<?>> vars = new LinkedList<Variable<?>>(); }
     :
     TYPE
+    arguments
+    { $ret = new Composite($TYPE.text, $arguments.ret); }
+    ;
+
+arguments returns [Collection<Variable<?>> ret]
+    @init { $ret = new LinkedList<Variable<?>>(); }
+    :
     '('
     (
         first=variable
-        { vars.add($first.ret); }
+        { $ret.add($first.ret); }
         (
             ','
             next=variable
-            { vars.add($next.ret); }
+            { $ret.add($next.ret); }
         )*
     )*
     ')'
-    { $ret = new Composite($TYPE.text, vars); }
     ;
 
 array returns [Array ret]
@@ -180,7 +186,7 @@ TYPE
 
 META
     :
-    '$' LETTER+
+    '$' '{' DIGIT+ '}'
     ;
 
 NAME

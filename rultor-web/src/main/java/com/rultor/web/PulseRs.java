@@ -33,6 +33,7 @@ import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
@@ -220,11 +221,13 @@ public final class PulseRs extends BaseRs {
                         this.repo(), this.user(), unit.spec()
                     ).get().instantiate(
                         this.users(),
-                        new Work.Simple(
-                            this.user().urn(),
-                            this.name,
-                            new Spec.Simple(),
-                            this.date
+                        new Arguments(
+                            new Work.Simple(
+                                this.user().urn(),
+                                this.name,
+                                new Spec.Simple(),
+                                this.date
+                            )
                         )
                     )
                 ).drain()

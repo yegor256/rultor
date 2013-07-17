@@ -32,11 +32,11 @@ package com.rultor.repo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.Proxy;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
-import com.rultor.spi.Work;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -119,12 +119,12 @@ final class Composite implements Variable<Object> {
     @NotNull
     public Object instantiate(
         @NotNull(message = "users can't be NULL") final Users users,
-        @NotNull(message = "work can't be NULL") final Work work)
+        @NotNull(message = "arguments can't be NULL") final Arguments arguments)
         throws SpecException {
         final Object[] args = new Object[this.vars.length];
         final Class<?>[] types = new Class<?>[this.vars.length];
         for (int idx = 0; idx < this.vars.length; ++idx) {
-            final Object object = this.vars[idx].instantiate(users, work);
+            final Object object = this.vars[idx].instantiate(users, arguments);
             args[idx] = object;
             types[idx] = object.getClass();
         }

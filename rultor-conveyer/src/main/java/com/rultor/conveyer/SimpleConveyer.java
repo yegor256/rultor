@@ -34,6 +34,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseRunnable;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Metricable;
 import com.rultor.spi.Queue;
@@ -212,7 +213,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
         final User owner = this.users.get(work.owner());
         final Variable<?> var =
             new Repo.Cached(this.repo, owner, work.spec()).get();
-        final Object object = var.instantiate(this.users, work);
+        final Object object = var.instantiate(this.users, new Arguments(work));
         if (object instanceof Instance) {
             Instance.class.cast(object).pulse();
         }

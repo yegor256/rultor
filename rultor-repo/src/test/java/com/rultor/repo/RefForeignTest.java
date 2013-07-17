@@ -30,12 +30,14 @@
 package com.rultor.repo;
 
 import com.jcabi.urn.URN;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import org.hamcrest.MatcherAssert;
@@ -47,6 +49,7 @@ import org.mockito.Mockito;
  * Test case for {@link RefForeign}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class RefForeignTest {
 
@@ -66,12 +69,14 @@ public final class RefForeignTest {
         Mockito.doReturn(unit).when(user).get(name);
         final URN urn = new URN("urn:facebook:1");
         Mockito.doReturn(urn).when(user).urn();
-        final Variable<Object> var =
-            new RefForeign(new AntlrGrammar(), urn, urn, name);
+        final Variable<Object> var = new RefForeign(
+            new AntlrGrammar(), urn, urn, name,
+            new ArrayList<Variable<?>>(0)
+        );
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(urn);
         MatcherAssert.assertThat(
-            var.instantiate(users, new Work.None()),
+            var.instantiate(users, new Arguments(new Work.None())),
             Matchers.<Object>equalTo(1L)
         );
     }

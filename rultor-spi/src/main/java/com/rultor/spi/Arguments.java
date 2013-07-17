@@ -27,73 +27,93 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.spi;
 
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Arguments;
-import com.rultor.spi.SpecException;
-import com.rultor.spi.Users;
-import com.rultor.spi.Variable;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.lang3.Validate;
 
 /**
- * Meta.
+ * Arguments for {@link Variable} instantiation.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = "position")
 @Loggable(Loggable.DEBUG)
-final class Meta implements Variable<Object> {
+@EqualsAndHashCode(of = "values")
+public final class Arguments {
 
     /**
-     * Pattern to use for parsing.
+     * Ordered values.
      */
-    private static final Pattern PTN = Pattern.compile("\\$\\{(\\d+)\\}");
-
-    /**
-     * Position number.
-     */
-    private final transient int position;
+    private final transient Object[] values;
 
     /**
      * Public ctor.
-     * @param text Text to parse
+     * @param work Mandatory first value
      */
-    protected Meta(final String text) {
-        final Matcher matcher = Meta.PTN.matcher(text);
-        Validate.isTrue(matcher.matches(), "invalid input '%s'", text);
-        this.position = Integer.parseInt(matcher.group(1));
+    public Arguments(final Work work) {
+        this(work, new ArrayList<Object>(0));
     }
 
     /**
-     * {@inheritDoc}
-     * @checkstyle RedundantThrows (8 lines)
+     * Public ctor.
+     * @param work Mandatory first value
+     * @param tail Other values
      */
-    @Override
-    @NotNull
-    public Object instantiate(
-        @NotNull(message = "users can't be NULL") final Users users,
-        @NotNull(message = "arguments can't be NULL") final Arguments args)
-        throws SpecException {
-        return args.get(this.position);
+    public Arguments(@NotNull(message = "work can't be NULL") final Work work,
+        @NotNull(message = "tail is NULL") final Collection<Object> tail) {
+        this(Iterables.concat(Arrays.asList(work), tail));
     }
 
     /**
-     * {@inheritDoc}
+     * Public ctor.
+     * @param vals All values
      */
-    @Override
-    public String asText() {
-        return String.format("${%d}", this.position);
+    private Arguments(final Iterable<Object> vals) {
+        this.values = Iterables.toArray(vals, Object.class);
+    }
+
+    /**
+     * Get value by position.
+     * @param pos Position
+     * @return The value
+     */
+    public Object get(final int pos) {
+        return this.values[pos];
+    }
+
+    /**
+     * Get them all as objects.
+     * @return Objects
+     */
+    public Collection<Object> get() {
+        return Arrays.asList(this.values);
+    }
+
+    /**
+     * Replace one item.
+     * @param pos Position
+     * @param value The value to save instead
+     * @return New arguments
+     */
+    public Arguments with(final int pos, final Object value) {
+        Validate.isTrue(pos < this.values.length, "%d is out of boundary", pos);
+        return new Arguments(
+            Iterables.concat(
+                Iterables.limit(Arrays.asList(this.values), pos),
+                Arrays.asList(value),
+                Iterables.skip(Arrays.asList(this.values), pos + 1)
+            )
+        );
     }
 
 }

@@ -30,6 +30,7 @@
 package com.rultor.repo;
 
 import com.jcabi.aspects.Tv;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
@@ -58,7 +59,8 @@ public final class ArrayTest {
         );
         MatcherAssert.assertThat(
             var.instantiate(
-                Mockito.mock(Users.class), Mockito.mock(Work.class)
+                Mockito.mock(Users.class),
+                new Arguments(new Work.None())
             ).get(0),
             Matchers.<Object>equalTo(Tv.TEN)
         );

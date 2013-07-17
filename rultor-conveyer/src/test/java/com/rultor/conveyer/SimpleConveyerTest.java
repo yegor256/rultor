@@ -30,6 +30,7 @@
 package com.rultor.conveyer;
 
 import com.jcabi.urn.URN;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
@@ -90,8 +91,9 @@ public final class SimpleConveyerTest {
         final Repo repo = Mockito.mock(Repo.class);
         final Instance instance = Mockito.mock(Instance.class);
         final Variable<?> var = Mockito.mock(Variable.class);
-        Mockito.doReturn(instance).when(var)
-            .instantiate(Mockito.any(Users.class), Mockito.any(Work.class));
+        Mockito.doReturn(instance).when(var).instantiate(
+            Mockito.any(Users.class), Mockito.any(Arguments.class)
+        );
         final CountDownLatch made = new CountDownLatch(1);
         Mockito.doAnswer(
             new Answer<Variable<?>>() {
@@ -105,7 +107,7 @@ public final class SimpleConveyerTest {
         ).when(repo).make(Mockito.any(User.class), Mockito.eq(spec));
         final Variable<?> dvar = Mockito.mock(Variable.class);
         Mockito.doReturn(Mockito.mock(Drain.class)).when(dvar).instantiate(
-            Mockito.any(Users.class), Mockito.any(Work.class)
+            Mockito.any(Users.class), Mockito.any(Arguments.class)
         );
         final User user = Mockito.mock(User.class);
         final Unit unit = Mockito.mock(Unit.class);

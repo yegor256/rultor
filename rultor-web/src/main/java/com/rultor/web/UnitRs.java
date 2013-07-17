@@ -34,6 +34,7 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
@@ -176,7 +177,7 @@ public final class UnitRs extends BaseRs {
         ).get();
         final Object object = var.instantiate(
             this.users(),
-            this.work(this.name, spec)
+            new Arguments(this.work(this.name, spec))
         );
         try {
             object.toString();

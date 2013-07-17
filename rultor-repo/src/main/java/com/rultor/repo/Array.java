@@ -32,10 +32,10 @@ package com.rultor.repo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
-import com.rultor.spi.Work;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -89,12 +89,12 @@ final class Array implements Variable<List<Object>> {
     @NotNull
     public List<Object> instantiate(
         @NotNull(message = "users can't be NULL") final Users users,
-        @NotNull(message = "work can't be NULL") final Work work)
+        @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
         final List<Object> objects =
             new ArrayList<Object>(this.values.length);
         for (Variable<?> var : this.values) {
-            objects.add(var.instantiate(users, work));
+            objects.add(var.instantiate(users, args));
         }
         return objects;
     }

@@ -32,10 +32,10 @@ package com.rultor.repo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
-import com.rultor.spi.Work;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -97,14 +97,14 @@ final class Dictionary implements Variable<Map<String, Object>> {
     @NotNull
     public Map<String, Object> instantiate(
         @NotNull(message = "users can't be NULL") final Users users,
-        @NotNull(message = "work can't be NULL") final Work work)
+        @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
         final ConcurrentMap<String, Object> objects =
             new ConcurrentHashMap<String, Object>(this.map.length);
         for (Object[] pair : this.map) {
             objects.put(
                 pair[0].toString(),
-                Variable.class.cast(pair[1]).instantiate(users, work)
+                Variable.class.cast(pair[1]).instantiate(users, args)
             );
         }
         return objects;

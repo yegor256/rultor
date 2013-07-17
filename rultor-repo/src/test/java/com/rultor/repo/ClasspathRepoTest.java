@@ -31,6 +31,7 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
@@ -143,7 +144,7 @@ public final class ClasspathRepoTest {
         Mockito.doReturn(urn).when(user).urn();
         final Users users = Mockito.mock(Users.class);
         final Object instance = repo.make(user, spec)
-            .instantiate(users, new Work.None());
+            .instantiate(users, new Arguments(new Work.None()));
         MatcherAssert.assertThat(
             ClasspathRepoTest.Foo.COUNTER.get(),
             Matchers.equalTo(2L)

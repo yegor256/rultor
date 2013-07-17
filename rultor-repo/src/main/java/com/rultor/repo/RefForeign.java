@@ -29,9 +29,11 @@
  */
 package com.rultor.repo;
 
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.Dollars;
 import com.rultor.spi.Receipt;
 import com.rultor.spi.Spec;
@@ -43,6 +45,8 @@ import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -82,20 +86,27 @@ final class RefForeign implements Variable<Object> {
     private final transient String name;
 
     /**
+     * Parameters.
+     */
+    private final transient Variable[] children;
+
+    /**
      * Public ctor.
      * @param grm Grammar to use
      * @param clnt Client of the unit
      * @param urn Owner of the unit
      * @param ref RefForeign
+     * @param childs Enclosed child parameters
      * @checkstyle ParameterNumber (4 lines)
      */
     protected RefForeign(final Grammar grm, final URN clnt,
-        final URN urn, final String ref) {
+        final URN urn, final String ref, final Collection<Variable<?>> childs) {
         Validate.matchesPattern(ref, "[-_\\w]+");
         this.grammar = grm;
         this.client = clnt;
         this.owner = urn;
         this.name = ref;
+        this.children = Iterables.toArray(childs, Variable.class);
     }
 
     /**
@@ -106,7 +117,7 @@ final class RefForeign implements Variable<Object> {
     @NotNull
     public Object instantiate(
         @NotNull(message = "users can't be NULL") final Users users,
-        @NotNull(message = "work can't be NULL") final Work work)
+        @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
         final User user = users.get(this.owner);
         if (!user.units().contains(this.name)) {
@@ -117,16 +128,14 @@ final class RefForeign implements Variable<Object> {
                 )
             );
         }
-        final Work monetary;
-        if (this.client.equals(this.owner)) {
-            monetary = work;
-        } else {
-            monetary = new RefForeign.Monetary(users, work);
+        Work work = Work.class.cast(args.get(0));
+        if (!this.client.equals(this.owner)) {
+            work = new RefForeign.Monetary(users, work);
         }
         return this.alter(
-            this.grammar.parse(
-                user.urn(), user.get(this.name).spec().asText()
-            ).instantiate(users, monetary)
+            this.grammar
+                .parse(user.urn(), user.get(this.name).spec().asText())
+                .instantiate(users, this.mapping(users, work, args))
         );
     }
 
@@ -136,6 +145,25 @@ final class RefForeign implements Variable<Object> {
     @Override
     public String asText() {
         return String.format("%s:%s", this.owner, this.name);
+    }
+
+    /**
+     * Make arguments for the underlying spec.
+     * @param users Users to use for instantiation
+     * @param work Work to pass through
+     * @param args Arguments received from the upper level caller
+     * @return Arguments to use
+     * @throws SpecException If fails
+     * @checkstyle RedundantThrows (5 lines)
+     */
+    private Arguments mapping(final Users users, final Work work,
+        final Arguments args) throws SpecException {
+        final Collection<Object> values =
+            new ArrayList<Object>(this.children.length);
+        for (Variable<?> var : this.children) {
+            values.add(var.instantiate(users, args));
+        }
+        return new Arguments(work, values);
     }
 
     /**
