@@ -82,6 +82,7 @@ final class RefLocal implements Variable<Object> {
      * @param urn Owner of the unit
      * @param ref Reference
      * @param childs Enclosed parameters
+     * @checkstyle ParameterNumber (5 lines)
      */
     protected RefLocal(final Grammar grm, final URN urn, final String ref,
         final Collection<Variable<?>> childs) {
