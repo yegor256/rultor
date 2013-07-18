@@ -155,6 +155,7 @@ final class FtpBatch {
                 this.login
             );
             try {
+                ftp.enterLocalActiveMode();
                 this.chdir(ftp, dir);
                 return script.exec(ftp);
             } finally {
