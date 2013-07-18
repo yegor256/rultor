@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -155,9 +156,9 @@ final class FtpBatch {
                 this.login
             );
             try {
-                this.chdir(ftp, dir);
                 ftp.setFileType(FTP.ASCII_FILE_TYPE);
                 ftp.enterLocalPassiveMode();
+                this.chdir(ftp, dir);
                 return script.exec(ftp);
             } finally {
                 ftp.logout();
@@ -185,7 +186,7 @@ final class FtpBatch {
      */
     private void chdir(final FTPClient ftp, final String dir)
         throws IOException {
-        for (String part : dir.split("/")) {
+        for (String part : StringUtils.split(dir, '/')) {
             if (!this.exists(ftp, part) && !ftp.makeDirectory(part)) {
                 throw new IOException(
                     String.format(
