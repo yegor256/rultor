@@ -35,7 +35,6 @@ import com.jcabi.log.Logger;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
@@ -156,8 +155,6 @@ final class FtpBatch {
                 this.login
             );
             try {
-                ftp.setFileType(FTP.ASCII_FILE_TYPE);
-                ftp.enterLocalPassiveMode();
                 this.chdir(ftp, dir);
                 return script.exec(ftp);
             } finally {
@@ -190,7 +187,7 @@ final class FtpBatch {
             if (!this.exists(ftp, part) && !ftp.makeDirectory(part)) {
                 throw new IOException(
                     String.format(
-                        "failed to mkdir %s because of '%s'",
+                        "failed to mkdir '%s' because of '%s'",
                         part,
                         ftp.getReplyString().trim()
                     )
@@ -199,7 +196,7 @@ final class FtpBatch {
             if (!ftp.changeWorkingDirectory(part)) {
                 throw new IOException(
                     String.format(
-                        "failed to chdir to %s because of '%s'",
+                        "failed to change dir to '%s' because of '%s'",
                         part,
                         ftp.getReplyString().trim()
                     )
@@ -225,6 +222,7 @@ final class FtpBatch {
                 break;
             }
         }
+        Logger.debug(this, "#exists('%s'): %B", dir, exists);
         return exists;
     }
 
