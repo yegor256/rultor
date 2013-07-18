@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -80,6 +81,20 @@ public final class Arguments {
      */
     private Arguments(final Iterable<Object> vals) {
         this.values = Iterables.toArray(vals, Object.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        final Collection<String> texts = new ArrayList<String>(
+            this.values.length - 1
+        );
+        for (int idx = 1; idx < this.values.length; ++idx) {
+            texts.add(this.values[idx].toString());
+        }
+        return StringUtils.join(texts, " and ");
     }
 
     /**

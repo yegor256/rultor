@@ -138,7 +138,8 @@ final class RefForeign implements Variable<Object> {
         return this.alter(
             this.grammar
                 .parse(user.urn(), user.get(this.name).spec().asText())
-                .instantiate(users, this.mapping(users, work, args))
+                .instantiate(users, this.mapping(users, work, args)),
+            args
         );
     }
 
@@ -193,16 +194,22 @@ final class RefForeign implements Variable<Object> {
     /**
      * Alter the object by injecting name into it.
      * @param object The object
+     * @param args Arguments used to instantiate it
      * @return Altered object
      * @throws SpecException If some error inside
      * @checkstyle RedundantThrows (5 lines)
      */
-    private Object alter(final Object object)
+    private Object alter(final Object object, final Arguments args)
         throws SpecException {
         for (Method method : object.getClass().getMethods()) {
             if (method.getName().equals(Composite.METHOD)) {
                 try {
-                    method.invoke(object, String.format("`%s`", this.name));
+                    method.invoke(
+                        object,
+                        String.format(
+                            "`%s:%s` with %s", this.owner, this.name, args
+                        )
+                    );
                 } catch (IllegalAccessException ex) {
                     throw new SpecException(ex);
                 } catch (SecurityException ex) {
