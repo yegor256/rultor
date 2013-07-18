@@ -139,8 +139,8 @@ public final class ClasspathRepoTest {
         final Spec multiply = new Spec.Simple(
             // @checkstyle StringLiteralsConcatenation (4 lines)
             "com.rultor.repo.ClasspathRepoTest$Plus(  "
-            + "  com.rultor.repo.ClasspathRepoTest$Const(${1}),"
-            + "  com.rultor.repo.ClasspathRepoTest$Const(${1} )"
+            + "  com.rultor.repo.ClasspathRepoTest$Const(${1:test}),"
+            + "  com.rultor.repo.ClasspathRepoTest$Const(${1:test} )"
             + ") "
         );
         final Spec spec = new Spec.Simple(
@@ -150,7 +150,7 @@ public final class ClasspathRepoTest {
             + "    com.rultor.repo.ClasspathRepoTest$Const(5), "
             + "    multiply-by-two(-2)"
             + "  ),"
-            + "  com.rultor.repo.ClasspathRepoTest$Const(${1})"
+            + "  com.rultor.repo.ClasspathRepoTest$Const(${1:test again})"
             + ")"
         );
         final Unit unit = Mockito.mock(Unit.class);

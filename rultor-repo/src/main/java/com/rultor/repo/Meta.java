@@ -61,12 +61,19 @@ final class Meta implements Variable<Object> {
     /**
      * Pattern to use for parsing.
      */
-    private static final Pattern PTN = Pattern.compile("\\$\\{(\\d+)\\}");
+    private static final Pattern PTN = Pattern.compile(
+        "\\$\\{(\\d+)(?::(.+))?\\}"
+    );
 
     /**
      * Position number.
      */
     private final transient int position;
+
+    /**
+     * Description.
+     */
+    private final transient String desc;
 
     /**
      * Public ctor.
@@ -76,6 +83,11 @@ final class Meta implements Variable<Object> {
         final Matcher matcher = Meta.PTN.matcher(text);
         Validate.isTrue(matcher.matches(), "invalid input '%s'", text);
         this.position = Integer.parseInt(matcher.group(1));
+        if (matcher.group(2) == null) {
+            this.desc = "?";
+        } else {
+            this.desc = matcher.group(2);
+        }
     }
 
     /**
@@ -96,7 +108,7 @@ final class Meta implements Variable<Object> {
      */
     @Override
     public String asText() {
-        return String.format("${%d}", this.position);
+        return String.format("${%d:%s}", this.position, this.desc);
     }
 
     /**
@@ -108,7 +120,7 @@ final class Meta implements Variable<Object> {
         final ConcurrentMap<Integer, String> args =
             new ConcurrentSkipListMap<Integer, String>();
         if (this.position > 0) {
-            args.put(this.position, String.format("arg #%d", this.position));
+            args.put(this.position, this.desc);
         }
         return args;
     }
