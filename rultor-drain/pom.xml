@@ -80,6 +80,11 @@
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-aspects</artifactId>
         </dependency>
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.1</version>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>
@@ -91,6 +96,10 @@
                             <failsafe.s3.key>${failsafe.s3.key}</failsafe.s3.key>
                             <failsafe.s3.secret>${failsafe.s3.secret}</failsafe.s3.secret>
                             <failsafe.s3.bucket>${failsafe.s3.bucket}</failsafe.s3.bucket>
+                            <failsafe.ftp.host>${failsafe.ftp.host}</failsafe.ftp.host>
+                            <failsafe.ftp.login>${failsafe.ftp.login}</failsafe.ftp.login>
+                            <failsafe.ftp.password>${failsafe.ftp.password}</failsafe.ftp.password>
+                            <failsafe.ftp.file>${failsafe.ftp.file}</failsafe.ftp.file>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
