@@ -129,18 +129,24 @@ public final class NoiseReduction implements Drain {
      */
     @Override
     public Pulses pulses() throws IOException {
-        final Pulses drt = this.dirty.pulses();
-        final Pulses cln = this.clean.pulses();
         return new Pulses() {
             @Override
-            public Pulses tail(final Time head) {
-                return cln.tail(head);
+            public Pulses tail(final Time head) throws IOException {
+                return NoiseReduction.this.clean.pulses().tail(head);
             }
             @Override
             public Iterator<Time> iterator() {
-                return Iterables.concat(
-                    Iterables.limit(drt, NoiseReduction.this.visible), cln
-                ).iterator();
+                try {
+                    return Iterables.concat(
+                        Iterables.limit(
+                            NoiseReduction.this.dirty.pulses(),
+                            NoiseReduction.this.visible
+                        ),
+                        NoiseReduction.this.clean.pulses()
+                    ).iterator();
+                } catch (IOException ex) {
+                    throw new IllegalStateException(ex);
+                }
             }
         };
     }

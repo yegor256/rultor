@@ -32,6 +32,7 @@ package com.rultor.spi;
 import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -58,9 +59,11 @@ public interface Pulses extends Iterable<Time> {
      * @param head Maximum time that is allowed in the result vector
      * @return Similar vector, that contains only pulses that are older than
      *  or equal to the provided date
+     * @throws IOException If fails with some IO problem
      */
     @NotNull(message = "pulses are never NULL")
-    Pulses tail(@NotNull(message = "head can't be NULL") Time head);
+    Pulses tail(@NotNull(message = "head can't be NULL") Time head)
+        throws IOException;
 
     /**
      * Immutable collection, based on array.
@@ -143,7 +146,8 @@ public interface Pulses extends Iterable<Time> {
         @Override
         @NotNull
         public Pulses tail(
-            @NotNull(message = "head can't be NULL") final Time head) {
+            @NotNull(message = "head can't be NULL") final Time head)
+            throws IOException {
             return new Pulses.Sequence(
                 this.first.tail(head), this.second.tail(head)
             );
