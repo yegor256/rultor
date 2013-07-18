@@ -81,12 +81,12 @@
     </developers>
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/yegor256/rultor/issues</url>
+        <url>https://github.com/rultor/rultor/issues</url>
     </issueManagement>
     <scm>
-        <connection>scm:git:git@github.com:yegor256/rultor.git</connection>
-        <developerConnection>scm:git:git@github.com:yegor256/rultor.git</developerConnection>
-        <url>https://github.com/yegor256/rultor</url>
+        <connection>scm:git:git@github.com:rultor/rultor.git</connection>
+        <developerConnection>scm:git:git@github.com:rultor/rultor.git</developerConnection>
+        <url>https://github.com/rultor/rultor</url>
     </scm>
     <ciManagement>
         <system>jenkins</system>

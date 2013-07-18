@@ -68,7 +68,7 @@
             </head>
             <body>
                 <aside>
-                    <a href="https://github.com/yegor256/rultor" class="hidden-phone">
+                    <a href="https://github.com/rultor/rultor" class="hidden-phone">
                         <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
                             src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
                             alt="Fork me on GitHub" />
@@ -133,7 +133,7 @@
         <li class="hidden-phone hidden-tablet">
             <a>
                 <xsl:attribute name="href">
-                    <xsl:text>https://github.com/yegor256/rultor/commit/</xsl:text>
+                    <xsl:text>https://github.com/rultor/rultor/commit/</xsl:text>
                     <xsl:value-of select="revision"/>
                 </xsl:attribute>
                 <xsl:attribute name="title">

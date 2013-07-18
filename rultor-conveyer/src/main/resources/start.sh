@@ -9,7 +9,7 @@ source /tmp/credentials.sh
 
 INSTANCE=`curl --silent http://169.254.169.254/latest/meta-data/instance-id`
 
-curl --silent https://raw.github.com/yegor256/rultor/master/rultor-conveyer/src/main/resources/ec2-pom.xml > pom.xml
+curl --silent https://raw.github.com/rultor/rultor/master/rultor-conveyer/src/main/resources/ec2-pom.xml > pom.xml
 
 mvn test --quiet --update-snapshots \
     "-Daws-key=${AWS_KEY}" "-Daws-secret=${AWS_SECRET}" \

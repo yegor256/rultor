@@ -16,6 +16,6 @@ $ mvn clean install -Pqulice
 ## Got questions?
 
 If you have questions or general suggestions, don't hesitate to submit
-a new [Github issue](https://github.com/yegor256/rultor/issues/new),
+a new [Github issue](https://github.com/rultor/rultor/issues/new),
 or a question to our
 [Google Group](https://groups.google.com/forum/#!forum/rultor).

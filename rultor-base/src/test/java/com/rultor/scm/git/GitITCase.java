@@ -56,7 +56,7 @@ public final class GitITCase {
         final File dir = Files.createTempDir();
         final SCM git = new Git(
             new ShellMocker.Bash(dir),
-            new URL("https://github.com/yegor256/rultor.git"),
+            new URL("https://github.com/rultor/rultor.git"),
             "rultor"
         );
         final Branch branch = git.checkout("master");
