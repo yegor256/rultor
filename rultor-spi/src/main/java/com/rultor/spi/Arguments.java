@@ -90,7 +90,7 @@ public final class Arguments {
      */
     public Object get(final int pos) throws SpecException {
         Validate.isTrue(pos >= 0, "position can't be negative");
-        if (pos < this.values.length) {
+        if (pos >= this.values.length) {
             throw new SpecException(String.format("#%d is out of bounds", pos));
         }
         return this.values[pos];
