@@ -125,7 +125,19 @@ public final class DrainRs extends BaseRs {
         if (this.since == null) {
             total = Tv.FIVE;
         } else {
-            pulses = pulses.tail(this.since);
+            try {
+                pulses = pulses.tail(this.since);
+            } catch (IOException ex) {
+                throw this.flash().redirect(
+                    this.uriInfo().getBaseUri(),
+                    String.format(
+                        "I/O problem with the tail of drain of \"%s\": %s",
+                        this.name,
+                        ExceptionUtils.getRootCauseMessage(ex)
+                    ),
+                    Level.SEVERE
+                );
+            }
             total = Tv.TWENTY;
             page = page
                 .append(new JaxbBundle("since", this.since.toString()))
