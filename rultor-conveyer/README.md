@@ -33,9 +33,10 @@ Install AS [command line tools](http://aws.amazon.com/developertools/2535).
 Create new AS launch configuration ([more info](http://docs.aws.amazon.com/AutoScaling/latest/DeveloperGuide/US_BasicSetup.html)):
 
 ```
-$ as-create-launch-config rultor-conveyer-0.1.10 \
-  --image-id ami-XXXXXXXX --instance-type t1.micro \
+$ as-create-launch-config rultor-conveyer-0.1.16 \
+  --image-id ami-80a0d9e9 --instance-type t1.micro \
   --group rultor-conveyer --monitoring-disabled \
+  --iam-instance-profile rultor-conveyer \
   --user-data '{"url":"...","prefix":"..."}'
 ```
 
@@ -75,5 +76,3 @@ $ as-delete-launch-config rultor-conveyer-0.1.10
 De-register previous AMI.
 
 Delete old EBS snapshot related to the previous AMI.
-
-
