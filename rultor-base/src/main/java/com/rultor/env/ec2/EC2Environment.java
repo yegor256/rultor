@@ -198,7 +198,7 @@ final class EC2Environment implements Environment {
                 cost
             );
             this.work.charge(
-                String.format(
+                Logger.format(
                     "%[ms]s of AWS EC2 %s instance",
                     age,
                     instance.getInstanceType()
