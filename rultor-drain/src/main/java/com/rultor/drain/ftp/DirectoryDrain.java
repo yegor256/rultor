@@ -137,8 +137,8 @@ public final class DirectoryDrain implements Drain {
     @Override
     public String toString() {
         return String.format(
-            "files in ftp://%s@%s:%d/%s",
-            this.login, this.host, this.port, this.dir
+            "files in ftp://%s@%s:%d/%s/%s",
+            this.login, this.host, this.port, this.dir, this.prefix()
         );
     }
 
