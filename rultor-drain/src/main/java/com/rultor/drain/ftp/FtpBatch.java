@@ -33,8 +33,12 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
@@ -123,6 +127,12 @@ final class FtpBatch {
     public <T> T exec(final FtpBatch.Script<T> script, final String dir)
         throws IOException {
         final FTPClient ftp = new FTPClient();
+        ftp.setControlKeepAliveTimeout(TimeUnit.MINUTES.toSeconds(1));
+        ftp.addProtocolCommandListener(
+            new PrintCommandListener(
+                new PrintStream(Logger.stream(Level.FINE, this))
+            )
+        );
         ftp.connect(this.host, this.port);
         try {
             final int reply = ftp.getReplyCode();
@@ -155,7 +165,7 @@ final class FtpBatch {
                 this.login
             );
             try {
-                ftp.enterLocalActiveMode();
+                ftp.enterLocalPassiveMode();
                 this.chdir(ftp, dir);
                 return script.exec(ftp);
             } finally {

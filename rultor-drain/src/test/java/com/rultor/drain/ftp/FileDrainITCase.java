@@ -84,6 +84,7 @@ public final class FileDrainITCase {
             this.host, this.login, this.password, this.file
         );
         drain.append(Arrays.asList(msg));
+        drain.append(Arrays.asList("something else"));
         final Pulses names = drain.pulses();
         MatcherAssert.assertThat(names, Matchers.<Time>iterableWithSize(0));
         MatcherAssert.assertThat(
