@@ -166,6 +166,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
     @Loggable(value = Loggable.INFO, limit = Integer.MAX_VALUE)
     public void close() throws IOException {
         final Random rand = new Random();
+        final long start = System.currentTimeMillis();
         try {
             while (true) {
                 this.svc.shutdown();
@@ -174,7 +175,8 @@ public final class SimpleConveyer implements Closeable, Metricable {
                 }
                 TimeUnit.SECONDS.sleep(rand.nextInt(Tv.HUNDRED));
                 com.jcabi.log.Logger.info(
-                    this, "waiting for threads termination"
+                    this, "waiting %[ms]s for threads termination",
+                    System.currentTimeMillis() - start
                 );
             }
         } catch (InterruptedException ex) {
