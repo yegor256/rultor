@@ -47,6 +47,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPReply;
 
 /**
  * Drain in an FTP directory.
@@ -195,7 +196,17 @@ public final class DirectoryDrain implements Drain {
         final Collection<Time> times = new TreeSet<Time>(
             Collections.reverseOrder()
         );
-        for (FTPFile file : ftp.listFiles()) {
+        final FTPFile[] files = ftp.listFiles();
+        final int reply = ftp.getReplyCode();
+        if (!FTPReply.isPositiveCompletion(reply)) {
+            throw new IOException(
+                String.format(
+                    "failed to list files because of '%s'",
+                    ftp.getReplyString().trim()
+                )
+            );
+        }
+        for (FTPFile file : files) {
             if (!file.getName().matches("\\d{20}")) {
                 continue;
             }

@@ -227,7 +227,17 @@ final class FtpBatch {
     private boolean exists(final FTPClient ftp, final String dir)
         throws IOException {
         boolean exists = false;
-        for (FTPFile file : ftp.listDirectories()) {
+        final FTPFile[] files = ftp.listDirectories();
+        final int reply = ftp.getReplyCode();
+        if (!FTPReply.isPositiveCompletion(reply)) {
+            throw new IOException(
+                String.format(
+                    "failed to list directories because of '%s'",
+                    ftp.getReplyString().trim()
+                )
+            );
+        }
+        for (FTPFile file : files) {
             if (file.getName().equals(dir)) {
                 exists = true;
                 break;
