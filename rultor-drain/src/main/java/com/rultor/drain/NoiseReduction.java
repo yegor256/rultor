@@ -202,8 +202,9 @@ public final class NoiseReduction implements Drain {
             IOUtils.toInputStream(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "NoiseReduction: exists=%B, pattern='%s', visible=%d, dirty='%s', clean='%s'\n",
+                    "NoiseReduction: exists=%B, good=%B, pattern='%s', visible=%d, dirty='%s', clean='%s'\n",
                     exists,
+                    NoiseReduction.GOOD.contains(this.dirty),
                     this.pattern,
                     this.visible,
                     this.dirty,
