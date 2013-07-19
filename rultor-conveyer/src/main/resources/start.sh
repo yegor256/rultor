@@ -10,14 +10,19 @@ SQS_URL=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.url'`
 DYNAMO_PREFIX=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.prefix'`
 INSTANCE=`curl --silent http://169.254.169.254/latest/meta-data/instance-id`
 
+echo "AWS_KEY=${AWS_KEY}"
+echo "SQL_URL=${SQL_URL}"
+echo "DYNAMO_PREFIX=${DYNAMO_PREFIX}"
+echo "INSTANCE=${INSTANCE}"
+
 # https://github.com/sebdah/dynamic-dynamodb
 for table in units receipts statements
 do
-    dynamic-dynamodb --daemon start --instance ${table} \
+    dynamic-dynamodb --daemon start --instance "${table}" \
         --region us-east-1 \
-        --table-name ${DYNAMO_PREFIX}${table} \
-        --aws-access-key-id ${AWS_KEY} \
-        --aws-secret-access-key ${AWS_SECRET} \
+        --table-name "${DYNAMO_PREFIX}${table}" \
+        --aws-access-key-id "${AWS_KEY}" \
+        --aws-secret-access-key "${AWS_SECRET}" \
         --reads-upper-threshold 90 \
         --reads-lower-threshold 30 \
         --increase-reads-with 50 \
