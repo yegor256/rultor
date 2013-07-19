@@ -11,7 +11,7 @@ DYNAMO_PREFIX=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.p
 INSTANCE=`curl --silent http://169.254.169.254/latest/meta-data/instance-id`
 
 echo "AWS_KEY=${AWS_KEY}"
-echo "SQL_URL=${SQL_URL}"
+echo "SQS_URL=${SQS_URL}"
 echo "DYNAMO_PREFIX=${DYNAMO_PREFIX}"
 echo "INSTANCE=${INSTANCE}"
 
