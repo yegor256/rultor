@@ -29,12 +29,16 @@
  */
 package com.rultor.users;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.model.DescribeTableRequest;
+import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
+import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Metricable;
 import com.rultor.spi.Receipt;
@@ -73,6 +77,16 @@ public final class AwsUsers implements Users, Metricable {
      * @param reg AWS region
      */
     public AwsUsers(final Region reg) {
+        final AmazonDynamoDB aws = reg.aws();
+        final DescribeTableResult result = aws.describeTable(
+            new DescribeTableRequest()
+                // @checkstyle MultipleStringLiterals (1 line)
+                .withTableName(reg.table("units").name())
+        );
+        Logger.info(
+            this, "Amazon DynamoDB is ready with %d units",
+            result.getTable().getItemCount()
+        );
         this.region = reg;
     }
 
