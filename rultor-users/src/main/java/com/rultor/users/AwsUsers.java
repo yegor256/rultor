@@ -84,7 +84,7 @@ public final class AwsUsers implements Users, Metricable {
                 .withTableName(reg.table("units").name())
         );
         Logger.info(
-            this, "Amazon DynamoDB is ready with %d units",
+            AwsUsers.class, "Amazon DynamoDB is ready with %d units",
             result.getTable().getItemCount()
         );
         this.region = reg;
