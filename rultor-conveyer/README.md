@@ -30,26 +30,14 @@ and terminate the instance.
 
 Install AS [command line tools](http://aws.amazon.com/developertools/2535).
 
-Create `credentials.txt` file, with production data:
-
-```
-AWS_KEY="..."
-AWS_SECRET="..."
-SQS_URL="..."
-DYNAMO_PREFIX="..."
-```
-
 Create new AS launch configuration ([more info](http://docs.aws.amazon.com/AutoScaling/latest/DeveloperGuide/US_BasicSetup.html)):
 
 ```
 $ as-create-launch-config rultor-conveyer-0.1.10 \
   --image-id ami-XXXXXXXX --instance-type t1.micro \
   --group rultor-conveyer --monitoring-disabled \
-  --user-data-file credentials.txt
+  --user-data '{"url":"...","prefix":"..."}'
 ```
-
-Meaning of these Maven command line arguments is explained in
-`rultor-queue` and `rultor-users` modules.
 
 Create AS group:
 
