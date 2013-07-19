@@ -29,44 +29,51 @@
  */
 package com.rultor.queue;
 
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.AmazonSQSClient;
+import com.amazonaws.services.sqs.model.CreateQueueRequest;
+import com.amazonaws.services.sqs.model.CreateQueueResult;
+import com.amazonaws.services.sqs.model.DeleteQueueRequest;
+import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Time;
 import com.rultor.spi.Work;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Integration case for {@link SQSQueue}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class SQSQueueITCase {
 
     /**
-     * SQSClient to work with.
+     * AWS key.
      */
-    private transient SQSClient client;
+    private final transient String key =
+        System.getProperty("failsafe.sqs.key");
 
     /**
-     * We're online.
+     * AWS secret key.
      */
-    @Before
-    public void weAreOnline() {
-        final String key = System.getProperty("failsafe.sqs.key");
-        if (key != null) {
-            this.client = new SQSClient.Simple(
-                key,
-                System.getProperty("failsafe.sqs.secret"),
-                System.getProperty("failsafe.sqs.url")
-            );
-        }
-    }
+    private final transient String secret =
+        System.getProperty("failsafe.sqs.secret");
+
+    /**
+     * SQS queue prefix.
+     */
+    private final transient String prefix =
+        System.getProperty("failsafe.sqs.prefix");
 
     /**
      * SQSQueue can accept and return works.
@@ -74,17 +81,37 @@ public final class SQSQueueITCase {
      */
     @Test
     public void acceptsAndReturnsWorks() throws Exception {
-        Assume.assumeNotNull(this.client);
-        final Spec spec = new Spec.Simple("java.lang.Integer(5)");
-        final String unit = "some-test-unit";
-        final URN owner = new URN("urn:facebook:1");
-        final Work work = new Work.Simple(owner, unit, spec);
-        final Queue queue = new SQSQueue(this.client);
-        queue.push(work);
-        MatcherAssert.assertThat(
-            queue.pull(1, TimeUnit.SECONDS),
-            Matchers.equalTo(work)
+        Assume.assumeNotNull(this.key);
+        final AmazonSQS aws = new AmazonSQSClient(
+            new BasicAWSCredentials(this.key, this.secret)
         );
+        final CreateQueueResult result = aws.createQueue(
+            new CreateQueueRequest().withQueueName(
+                String.format(
+                    "%s%s",
+                    this.prefix,
+                    RandomStringUtils.randomAlphabetic(Tv.TEN)
+                )
+            )
+        );
+        final String url = result.getQueueUrl();
+        try {
+            final Spec spec = new Spec.Simple("java.lang.Integer(5)");
+            final String unit = "some-test-unit";
+            final URN owner = new URN("urn:facebook:1");
+            final Time time = new Time("2013-07-19T14:05Z");
+            final Work work = new Work.Simple(owner, unit, spec, time);
+            final Queue queue = new SQSQueue(
+                new SQSClient.Simple(this.key, this.secret, url)
+            );
+            queue.push(work);
+            MatcherAssert.assertThat(
+                queue.pull(1, TimeUnit.SECONDS),
+                Matchers.equalTo(work)
+            );
+        } finally {
+            aws.deleteQueue(new DeleteQueueRequest().withQueueUrl(url));
+        }
     }
 
 }

@@ -29,6 +29,7 @@
  */
 package com.rultor.drain;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -40,7 +41,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.Iterator;
-import java.util.Scanner;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
@@ -57,6 +59,11 @@ import org.apache.commons.io.IOUtils;
 @EqualsAndHashCode(of = { "work", "pattern", "visible", "dirty", "clean" })
 @Loggable(Loggable.DEBUG)
 public final class NoiseReduction implements Drain {
+
+    /**
+     * Static set of good drains.
+     */
+    private static final Set<Drain> GOOD = new CopyOnWriteArraySet<Drain>();
 
     /**
      * Work we're in.
@@ -157,9 +164,21 @@ public final class NoiseReduction implements Drain {
     @Override
     public void append(final Iterable<String> lines)
         throws IOException {
-        this.dirty.append(lines);
-        final Scanner scanner = new Scanner(this.dirty.read());
-        if (scanner.findWithinHorizon(this.pattern, 0) != null) {
+        this.dirty.append(
+            Iterables.filter(
+                lines,
+                new Predicate<String>() {
+                    @Override
+                    public boolean apply(final String input) {
+                        if (input.matches(NoiseReduction.this.pattern)) {
+                            NoiseReduction.GOOD.add(NoiseReduction.this.dirty);
+                        }
+                        return true;
+                    }
+                }
+            )
+        );
+        if (NoiseReduction.GOOD.contains(this.dirty)) {
             this.clean.append(lines);
         }
     }

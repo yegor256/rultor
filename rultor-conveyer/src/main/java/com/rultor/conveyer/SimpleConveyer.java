@@ -75,6 +75,12 @@ import lombok.ToString;
 public final class SimpleConveyer implements Closeable, Metricable {
 
     /**
+     * How many threads to run in parallel.
+     */
+    private static final int THREADS =
+        Runtime.getRuntime().availableProcessors() * Tv.TEN;
+
+    /**
      * Queue.
      */
     private final transient Queue queue;
@@ -99,7 +105,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
      */
     private final transient ScheduledExecutorService svc =
         Executors.newScheduledThreadPool(
-            Runtime.getRuntime().availableProcessors() * Tv.TEN,
+            SimpleConveyer.THREADS,
             new ThreadFactory() {
                 private final transient AtomicLong group = new AtomicLong();
                 @Override
@@ -135,19 +141,22 @@ public final class SimpleConveyer implements Closeable, Metricable {
      * Start the conveyer.
      */
     public void start() {
-        this.svc.scheduleWithFixedDelay(
-            new VerboseRunnable(
-                new Callable<Void>() {
-                    @Override
-                    public Void call() throws Exception {
-                        SimpleConveyer.this.process();
-                        return null;
-                    }
-                },
-                true, false
-            ),
-            TimeUnit.SECONDS.toMicros(1), 1, TimeUnit.MICROSECONDS
+        final Runnable runnable = new VerboseRunnable(
+            new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    SimpleConveyer.this.process();
+                    return null;
+                }
+            },
+            true, true
         );
+        for (int thread = 0; thread < SimpleConveyer.THREADS; ++thread) {
+            this.svc.scheduleWithFixedDelay(
+                runnable,
+                TimeUnit.SECONDS.toMicros(1), 1, TimeUnit.MICROSECONDS
+            );
+        }
     }
 
     /**

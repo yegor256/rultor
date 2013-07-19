@@ -53,6 +53,10 @@
             <artifactId>aws-java-sdk</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
             <groupId>javax.json</groupId>
             <artifactId>javax.json-api</artifactId>
         </dependency>
@@ -100,7 +104,7 @@
                         <systemPropertyVariables>
                             <failsafe.sqs.key>${failsafe.sqs.key}</failsafe.sqs.key>
                             <failsafe.sqs.secret>${failsafe.sqs.secret}</failsafe.sqs.secret>
-                            <failsafe.sqs.url>${failsafe.sqs.url}</failsafe.sqs.url>
+                            <failsafe.sqs.prefix>${failsafe.sqs.prefix}</failsafe.sqs.prefix>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
