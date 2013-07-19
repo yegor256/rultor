@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export M2_HOME="/usr/local/share/apache-maven"
-export PATH="${M2_HOME}/bin:${PATH}"
+export PATH="${M2_HOME}/bin:/usr/local/bin:${PATH}"
 export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=256m"
 
 AWS_KEY=`curl --silent http://169.254.169.254/latest/meta-data/iam/security-credentials/rultor-conveyer | jq -r '.AccessKeyId'`
