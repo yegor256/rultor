@@ -128,6 +128,7 @@ final class FtpBatch {
         throws IOException {
         final FTPClient ftp = new FTPClient();
         ftp.setControlKeepAliveTimeout(TimeUnit.MINUTES.toSeconds(1));
+        ftp.setRemoteVerificationEnabled(false);
         ftp.addProtocolCommandListener(
             new PrintCommandListener(
                 new PrintStream(Logger.stream(Level.FINE, this))
