@@ -30,9 +30,11 @@
 package com.rultor.env.ec2;
 
 import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
+import com.amazonaws.services.ec2.model.Tag;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.aws.EC2Client;
@@ -177,6 +179,24 @@ public final class EC2 implements Environments {
                 this.ami,
                 instance.getKeyName(),
                 instance.getPlatform()
+            );
+            aws.createTags(
+                new CreateTagsRequest()
+                    .withResources(instance.getInstanceId())
+                    .withTags(
+                        new Tag()
+                            .withKey("Name")
+                            .withValue(this.work.unit()),
+                        new Tag()
+                            .withKey("rultor:work:unit")
+                            .withValue(this.work.unit()),
+                        new Tag()
+                            .withKey("rultor:work:owner")
+                            .withValue(this.work.owner().toString()),
+                        new Tag()
+                            .withKey("rultor:work:started")
+                            .withValue(this.work.started().toString())
+                    )
             );
             return new EC2Environment(
                 this.work, instance.getInstanceId(), this.client
