@@ -39,18 +39,20 @@ INSTANCE=`curl --silent http://169.254.169.254/latest/meta-data/instance-id`
 # https://github.com/sebdah/dynamic-dynamodb
 for table in units receipts statements
 do
-    dynamic-dynamodb --daemon start --instance "${table}" \
-        --region us-east-1 \
-        --table-name "${DYNAMO_PREFIX}${table}" \
-        --reads-upper-threshold 90 \
-        --reads-lower-threshold 30 \
-        --increase-reads-with 50 \
-        --decrease-reads-with 40 \
-        --writes-upper-threshold 90 \
-        --writes-lower-threshold 40 \
-        --increase-writes-with 40 \
-        --decrease-writes-with 70 \
-        --check-interval 60 | logger -t dyndyn
+    while true
+    do
+        dynamic-dynamodb
+            --table-name "${DYNAMO_PREFIX}${table}" \
+            --reads-upper-threshold 90 \
+            --reads-lower-threshold 30 \
+            --increase-reads-with 50 \
+            --decrease-reads-with 40 \
+            --writes-upper-threshold 90 \
+            --writes-lower-threshold 40 \
+            --increase-writes-with 40 \
+            --decrease-writes-with 70 | logger -t dyndyn
+        sleep 60
+    done &
 done
 
 curl --silent https://raw.github.com/rultor/rultor/master/rultor-conveyer/src/main/resources/ec2-pom.xml > pom.xml
