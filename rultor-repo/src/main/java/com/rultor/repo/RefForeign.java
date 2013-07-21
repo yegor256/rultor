@@ -226,7 +226,6 @@ final class RefForeign implements Variable<Object> {
     /**
      * Work that tracks expenses.
      */
-    @Immutable
     @EqualsAndHashCode(of = { "users", "origin" })
     @Loggable(Loggable.DEBUG)
     private final class Monetary implements Work {
