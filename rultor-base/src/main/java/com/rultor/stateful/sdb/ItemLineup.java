@@ -252,7 +252,13 @@ public final class ItemLineup implements Lineup {
             ),
             new Dollars(Tv.TEN)
         );
-        return result.getAttributes().get(0).getValue();
+        final String text;
+        if (result.getAttributes().isEmpty()) {
+            text = "";
+        } else {
+            text = result.getAttributes().get(0).getValue();
+        }
+        return text;
     }
 
     /**
