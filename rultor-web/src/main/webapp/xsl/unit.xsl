@@ -66,6 +66,9 @@
                 <xsl:when test="exception">
                     <pre class="text-error"><xsl:value-of select="exception"/></pre>
                 </xsl:when>
+                <xsl:when test="arguments">
+                    <xsl:text>It's a template</xsl:text>
+                </xsl:when>
                 <xsl:otherwise>
                     <code><xsl:value-of select="type"/></code>
                     <xsl:text> </xsl:text>
