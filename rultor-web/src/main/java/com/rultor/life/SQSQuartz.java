@@ -155,13 +155,15 @@ public final class SQSQuartz implements Runnable, Closeable {
                 .withDelaySeconds(0)
                 .withMessageBody(next.toString())
         );
-        aws.deleteMessage(
-            new DeleteMessageRequest()
-                .withQueueUrl(this.client.url())
-                .withReceiptHandle(
-                    result.getMessages().get(0).getReceiptHandle()
-                )
-        );
+        if (!result.getMessages().isEmpty()) {
+            aws.deleteMessage(
+                new DeleteMessageRequest()
+                    .withQueueUrl(this.client.url())
+                    .withReceiptHandle(
+                        result.getMessages().get(0).getReceiptHandle()
+                    )
+            );
+        }
         return previous;
     }
 

@@ -126,18 +126,10 @@ public final class Main {
             );
             alive = System.currentTimeMillis() - start < lifetime;
         } else {
-            final String mine = Manifests.read("Rultor-Revision");
-            final String base = Main.revision();
-            if (mine.equals(base)) {
+            if (Main.same()) {
                 TimeUnit.SECONDS.sleep(Main.RND.nextInt(Tv.HUNDRED));
                 alive = true;
             } else {
-                Logger.info(
-                    Main.class,
-                    "#main(): we're in %s while %s is the newest one",
-                    mine,
-                    base
-                );
                 alive = false;
             }
         }
@@ -254,13 +246,32 @@ public final class Main {
     /**
      * Get revision from the web server.
      * @return Revision found there
-     * @throws Exception If something is wrong
      */
-    private static String revision() throws Exception {
-        return RestTester.start(new URI("http://www.rultor.com/misc/version"))
-            .get("read revision from web node")
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .getBody();
+    private static boolean same() {
+        boolean same;
+        final String mine = Manifests.read("Rultor-Revision");
+        try {
+            final String base = RestTester
+                .start(URI.create("http://www.rultor.com/misc/version"))
+                .get("read revision from web node")
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .getBody();
+            if (mine.equals(base)) {
+                same = true;
+            } else {
+                same = false;
+                Logger.info(
+                    Main.class,
+                    "#same(): we're in %s while %s is the newest one",
+                    mine,
+                    base
+                );
+            }
+        } catch (AssertionError ex) {
+            Logger.warn(Main.class, "#same(): %s", ex);
+            same = true;
+        }
+        return same;
     }
 
 }
