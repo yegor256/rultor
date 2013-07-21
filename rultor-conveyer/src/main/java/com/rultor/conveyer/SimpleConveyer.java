@@ -149,7 +149,7 @@ public final class SimpleConveyer implements Closeable, Metricable {
                     return null;
                 }
             },
-            true, true
+            true, false
         );
         for (int thread = 0; thread < SimpleConveyer.THREADS; ++thread) {
             this.svc.scheduleWithFixedDelay(
