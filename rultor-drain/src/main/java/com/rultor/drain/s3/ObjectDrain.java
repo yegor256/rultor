@@ -225,7 +225,7 @@ public final class ObjectDrain implements Drain {
         return new SequenceInputStream(
             IOUtils.toInputStream(
                 String.format(
-                    "ObjectDrain: key='%s', client='%s'\n",
+                    "ObjectDrain: key='%s', client='%s'\n\n",
                     this.key,
                     this.client
                 )

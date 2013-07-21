@@ -39,6 +39,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.FilenameUtils;
@@ -143,15 +144,24 @@ public final class FileDrain implements Drain {
      */
     @Override
     public InputStream read() throws IOException {
-        return this.batch.exec(
-            new FtpBatch.Script<InputStream>() {
-                @Override
-                public InputStream exec(final FTPClient ftp)
-                    throws IOException {
-                    return FileDrain.this.read(ftp);
-                }
-            },
-            FilenameUtils.getFullPathNoEndSeparator(this.file)
+        return new SequenceInputStream(
+            IOUtils.toInputStream(
+                String.format(
+                    "FileDrain: %s, file='%s'\n\n",
+                    this.batch,
+                    this.file
+                )
+            ),
+            this.batch.exec(
+                new FtpBatch.Script<InputStream>() {
+                    @Override
+                    public InputStream exec(final FTPClient ftp)
+                        throws IOException {
+                        return FileDrain.this.read(ftp);
+                    }
+                },
+                FilenameUtils.getFullPathNoEndSeparator(this.file)
+            )
         );
     }
 
