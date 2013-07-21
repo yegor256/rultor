@@ -177,9 +177,9 @@ public final class FileDrain implements Drain {
         if (!ftp.appendFile(name, this.toStream(lines))) {
             throw new IOException(
                 String.format(
-                    "failed to append to %s in %s because of %d '%s'",
+                    "failed to append to %s in %s because of '%s'",
                     name, this.batch,
-                    ftp.getReplyCode(), ftp.getReplyString()
+                    ftp.getReplyString().trim()
                 )
             );
         }
@@ -202,9 +202,9 @@ public final class FileDrain implements Drain {
         if (!ftp.retrieveFile(name, baos)) {
             throw new IOException(
                 String.format(
-                    "failed to read %s in %s because of %d '%s'",
+                    "failed to read %s in %s because of '%s'",
                     name, this.batch,
-                    ftp.getReplyCode(), ftp.getReplyString()
+                    ftp.getReplyString().trim()
                 )
             );
         }

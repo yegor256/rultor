@@ -43,6 +43,7 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Time;
 import com.rultor.spi.Unit;
+import com.rultor.spi.Work;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -117,7 +118,7 @@ public final class DrainRs extends BaseRs {
             .build(EmptyPage.class)
             .init(this)
             .append(new JaxbBundle("unit", this.name));
-        final Drain drain = this.drain();
+        final Drain drain = this.drain(new Time());
         Pulses pulses = this.pulses(drain);
         final int total;
         if (this.since == null) {
@@ -157,16 +158,22 @@ public final class DrainRs extends BaseRs {
 
     /**
      * Get drain.
+     * @param time Time where we should create a drain
      * @return The drain
      */
-    private Drain drain() {
+    private Drain drain(final Time time) {
         try {
             return Drain.Source.class.cast(
                 new Repo.Cached(
                     this.repo(), this.user(), this.unit().spec()
                 ).get().instantiate(
                     this.users(),
-                    new Arguments(this.work(this.name, this.unit().spec()))
+                    new Arguments(
+                        new Work.Simple(
+                            this.user().urn(), this.name,
+                            this.unit().spec(), time
+                        )
+                    )
                 )
             ).drain();
         } catch (SpecException ex) {
@@ -258,7 +265,7 @@ public final class DrainRs extends BaseRs {
      * @return Bundle
      */
     private JaxbBundle pulse(final Time date) {
-        final Pulse pulse = new Pulse(this.drain());
+        final Pulse pulse = new Pulse(this.drain(date));
         final Collection<Stage> stages;
         try {
             stages = pulse.stages();

@@ -99,6 +99,7 @@ public final class SQSQuartz implements Runnable, Closeable {
      */
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    @Loggable(value = Loggable.DEBUG, limit = 2, unit = TimeUnit.MINUTES)
     public void run() {
         this.publish(this.passed(this.next()));
     }
@@ -132,6 +133,7 @@ public final class SQSQuartz implements Runnable, Closeable {
      * Pull next execution time from the quartz queue.
      * @return Time
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Time next() {
         final AmazonSQS aws = this.client.get();
         final ReceiveMessageResult result = aws.receiveMessage(
