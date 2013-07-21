@@ -203,7 +203,7 @@ public final class ItemLineup implements Lineup {
     }
 
     /**
-     * Save text to S3 object.
+     * Save text to SimpleDB object.
      * @param content Content to save
      */
     private void save(final String content) {
@@ -233,7 +233,7 @@ public final class ItemLineup implements Lineup {
     }
 
     /**
-     * Load text from S3 object (or empty if it doesn't exist).
+     * Load text from SimpleDB item (or empty if it doesn't exist).
      * @return The content loaded
      */
     private String load() {
@@ -256,7 +256,7 @@ public final class ItemLineup implements Lineup {
     }
 
     /**
-     * Remove object from S3.
+     * Remove object from SimpleDB.
      */
     private void remove() {
         this.client.get().deleteAttributes(

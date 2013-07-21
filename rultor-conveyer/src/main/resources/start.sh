@@ -41,7 +41,7 @@ for table in units receipts statements
 do
     while true
     do
-        dynamic-dynamodb \
+        dynamic-dynamodb --log-level WARNING \
             --table-name "${DYNAMO_PREFIX}${table}" \
             --increase-reads-with 1 \
             --decrease-reads-with 1 \
