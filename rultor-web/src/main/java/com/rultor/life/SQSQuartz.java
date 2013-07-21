@@ -34,6 +34,7 @@ import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Tv;
@@ -57,6 +58,7 @@ import lombok.EqualsAndHashCode;
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
+@Immutable
 @Loggable(Loggable.DEBUG)
 @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.SECONDS)
 @EqualsAndHashCode(of = { "users", "queue", "client" })
