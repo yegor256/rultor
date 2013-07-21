@@ -148,10 +148,12 @@ public final class Git implements SCM {
                 // @checkstyle LineLength (1 line)
                 .append(" && if [ ! -d $DIR/repo ]; then git clone $URL $DIR/repo; fi")
                 .append(" && cd $DIR/repo")
+                .append(" && git remote set-url origin $URL")
                 .append(" && git remote update -p")
                 .append(" && git reset --hard")
                 .append(" && git clean -f -d")
-                .append(" && git checkout $BRANCH")
+                // @checkstyle LineLength (1 line)
+                .append(" && if [ `git rev-parse --abbrev-ref HEAD` != $BRANCH ]; then git checkout $BRANCH; fi")
                 .toString(),
             this.key.asText()
         );
