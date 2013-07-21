@@ -41,7 +41,7 @@ for table in units receipts statements
 do
     while true
     do
-        dynamic-dynamodb
+        dynamic-dynamodb \
             --table-name "${DYNAMO_PREFIX}${table}" \
             --reads-upper-threshold 90 \
             --reads-lower-threshold 30 \
