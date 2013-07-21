@@ -113,7 +113,7 @@ public final class OnCommit implements Instance {
             } else {
                 Signal.log(
                     Signal.Mnemo.SUCCESS,
-                    "Found HEAD of SCM %s by %s on %s",
+                    "Found new HEAD of SCM %s by %s on %s",
                     head.name(), head.author(), head.time()
                 );
                 this.build(head);

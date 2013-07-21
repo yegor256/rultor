@@ -202,7 +202,7 @@ public final class ObjectDrain implements Drain {
             stream = new SequenceInputStream(
                 IOUtils.toInputStream(
                     String.format(
-                        "ObjectDrain: etag='%s', size=%s\n",
+                        "ObjectDrain: etag='%s', size=%s\n\n",
                         object.getObjectMetadata().getETag(),
                         FileUtils.byteCountToDisplaySize(
                             object.getObjectMetadata().getContentLength()
@@ -225,7 +225,7 @@ public final class ObjectDrain implements Drain {
         return new SequenceInputStream(
             IOUtils.toInputStream(
                 String.format(
-                    "ObjectDrain: key='%s', client='%s'\n\n",
+                    "ObjectDrain: key='%s', client='%s'\n",
                     this.key,
                     this.client
                 )
