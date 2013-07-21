@@ -37,7 +37,7 @@
     <googleAnalyticsAccountId>UA-1963507-10</googleAnalyticsAccountId>
     <bannerLeft>
         <name>rultor.com</name>
-        <src>http://img.rultor.com/logo.png</src>
+        <src>http://img.rultor.com/logo-64x64.png</src>
         <href>http://maven.rultor.com/</href>
     </bannerLeft>
     <body>

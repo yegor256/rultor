@@ -89,7 +89,7 @@ final class JaxbFace {
     public JaxbBundle bundle(final URN urn, final String unit) {
         final User user = this.users.get(urn);
         final Spec spec = user.get(unit).spec();
-        JaxbBundle bundle = new JaxbBundle("spec");
+        JaxbBundle bundle = new JaxbBundle("face");
         try {
             final Variable<?> var = new Repo.Cached(
                 this.repo, user, spec
@@ -108,7 +108,7 @@ final class JaxbFace {
                     )
                     .up()
                     .add(
-                        "face",
+                        "html",
                         StringEscapeUtils.escapeHtml4(
                             object.toString()
                         ).replaceAll("`([^`]+)`", "<code>$1</code>")
