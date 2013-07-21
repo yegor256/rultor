@@ -33,6 +33,7 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Instance;
@@ -46,7 +47,9 @@ import com.rultor.spi.Work;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
@@ -99,6 +102,11 @@ public final class SimpleConveyer implements Closeable, Metricable {
      * Counter of currently running jobs.
      */
     private transient Counter counter;
+
+    /**
+     * Works currently processing.
+     */
+    private final transient Set<Work> works = new CopyOnWriteArraySet<Work>();
 
     /**
      * Consumer and executer of new specs from Queue.
@@ -169,14 +177,21 @@ public final class SimpleConveyer implements Closeable, Metricable {
         final long start = System.currentTimeMillis();
         try {
             while (true) {
-                this.svc.shutdown();
+                final long age = System.currentTimeMillis() - start;
+                if (age > TimeUnit.HOURS.toMillis(2)) {
+                    this.svc.shutdownNow();
+                } else {
+                    this.svc.shutdown();
+                }
                 if (this.svc.awaitTermination(1, TimeUnit.SECONDS)) {
                     break;
                 }
                 TimeUnit.SECONDS.sleep(rand.nextInt(Tv.HUNDRED));
-                com.jcabi.log.Logger.info(
-                    this, "waiting %[ms]s for threads termination",
-                    System.currentTimeMillis() - start
+                Logger.info(
+                    this, "waiting %[ms]s for %d work(s) termination: %[list]s",
+                    age,
+                    this.works.size(),
+                    this.works
                 );
             }
         } catch (InterruptedException ex) {
@@ -205,9 +220,11 @@ public final class SimpleConveyer implements Closeable, Metricable {
             if (this.counter != null) {
                 this.counter.inc();
             }
+            this.works.add(work);
             try {
                 this.process(work);
             } finally {
+                this.works.remove(work);
                 if (this.counter != null) {
                     this.counter.dec();
                 }
