@@ -134,7 +134,9 @@ final class RefForeign implements Variable<Object> {
         }
         Work work = Work.class.cast(args.get(0));
         if (!this.client.equals(this.owner)) {
-            work = new RefForeign.Monetary(users, work);
+            work = new RefForeign.Monetary(
+                users, work, this.client, this.owner, this.name
+            );
         }
         return this.alter(
             this.grammar
@@ -226,9 +228,10 @@ final class RefForeign implements Variable<Object> {
     /**
      * Work that tracks expenses.
      */
+    @Immutable
     @EqualsAndHashCode(of = { "users", "origin" })
     @Loggable(Loggable.DEBUG)
-    private final class Monetary implements Work {
+    private static final class Monetary implements Work {
         /**
          * Users.
          */
@@ -238,13 +241,33 @@ final class RefForeign implements Variable<Object> {
          */
         private final transient Work origin;
         /**
+         * Client of the unit (who is using the unit).
+         */
+        private final transient URN client;
+        /**
+         * Owner of the unit (who provides the unit).
+         */
+        private final transient URN user;
+        /**
+         * The name.
+         */
+        private final transient String name;
+        /**
          * Public ctor.
          * @param usrs Users
          * @param wrk Origin work
+         * @param clnt URN of the client
+         * @param owner URN of the owner
+         * @param unit Name of the unit
+         * @checkstyle ParameterNumber (4 lines)
          */
-        protected Monetary(final Users usrs, final Work wrk) {
+        protected Monetary(final Users usrs, final Work wrk, final URN clnt,
+            final URN owner, final String unit) {
             this.users = usrs;
             this.origin = wrk;
+            this.client = clnt;
+            this.user = owner;
+            this.name = unit;
         }
         /**
          * {@inheritDoc}
@@ -293,11 +316,11 @@ final class RefForeign implements Variable<Object> {
             this.users.charge(
                 new Receipt.Simple(
                     new Time(),
-                    RefForeign.this.client,
-                    RefForeign.this.owner,
+                    this.client,
+                    this.user,
                     String.format("%s: %s", this.unit(), details),
                     amount,
-                    RefForeign.this.name
+                    this.name
                 )
             );
         }
