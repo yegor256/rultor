@@ -46,10 +46,10 @@ do
             --reads-upper-threshold 90 \
             --reads-lower-threshold 30 \
             --increase-reads-with 50 \
-            --decrease-reads-with 40 \
+            --decrease-reads-with 50 \
             --writes-upper-threshold 90 \
             --writes-lower-threshold 40 \
-            --increase-writes-with 40 \
+            --increase-writes-with 50 \
             --decrease-writes-with 70
         sleep 60
     done &
