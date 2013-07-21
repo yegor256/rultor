@@ -95,7 +95,7 @@
     <distributionManagement>
         <site>
             <id>github</id>
-            <url>http://maven.rultor.com</url>
+            <url>http://doc.rultor.com</url>
         </site>
     </distributionManagement>
     <properties>

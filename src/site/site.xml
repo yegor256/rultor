@@ -38,14 +38,14 @@
     <bannerLeft>
         <name>rultor.com</name>
         <src>http://img.rultor.com/logo-64x64.png</src>
-        <href>http://maven.rultor.com/</href>
+        <href>http://doc.rultor.com/</href>
     </bannerLeft>
     <body>
         <head>
             <link href="http://img.rultor.com/favicon.ico" rel="shortcut icon"/>
         </head>
         <breadcrumbs>
-            <item name="rultor.com" href="http://maven.rultor.com"/>
+            <item name="rultor.com" href="http://doc.rultor.com"/>
         </breadcrumbs>
         <menu name="Overview">
             <item name="Introduction" href="./index.html"/>
