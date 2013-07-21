@@ -31,6 +31,7 @@ package com.rultor.life;
 
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
+import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
@@ -155,13 +156,11 @@ public final class SQSQuartz implements Runnable, Closeable {
                 .withDelaySeconds(0)
                 .withMessageBody(next.toString())
         );
-        if (!result.getMessages().isEmpty()) {
+        for (Message msg : result.getMessages()) {
             aws.deleteMessage(
                 new DeleteMessageRequest()
                     .withQueueUrl(this.client.url())
-                    .withReceiptHandle(
-                        result.getMessages().get(0).getReceiptHandle()
-                    )
+                    .withReceiptHandle(msg.getReceiptHandle())
             );
         }
         return previous;
