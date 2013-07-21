@@ -29,11 +29,9 @@
  */
 package com.rultor.repo;
 
-import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
-import com.rultor.spi.Metricable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
@@ -55,7 +53,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "grammar")
 @Loggable(Loggable.DEBUG)
-public final class ClasspathRepo implements Repo, Metricable {
+public final class ClasspathRepo implements Repo {
 
     /**
      * Grammar to use.
@@ -84,14 +82,6 @@ public final class ClasspathRepo implements Repo, Metricable {
         @NotNull(message = "spec can't be NULL") final Spec spec)
         throws SpecException {
         return this.grammar.parse(user.urn(), spec.asText());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void register(final MetricRegistry registry) {
-        // nothing to do
     }
 
 }

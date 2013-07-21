@@ -29,15 +29,12 @@
  */
 package com.rultor.conveyer;
 
-import com.codahale.metrics.Counter;
-import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Metricable;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.User;
@@ -75,7 +72,7 @@ import lombok.ToString;
     "PMD.TooManyMethods",
     "PMD.ExcessiveImports"
 })
-public final class SimpleConveyer implements Closeable, Metricable {
+public final class SimpleConveyer implements Closeable {
 
     /**
      * How many threads to run in parallel.
@@ -97,11 +94,6 @@ public final class SimpleConveyer implements Closeable, Metricable {
      * Users.
      */
     private final transient Users users;
-
-    /**
-     * Counter of currently running jobs.
-     */
-    private transient Counter counter;
 
     /**
      * Works currently processing.
@@ -201,33 +193,17 @@ public final class SimpleConveyer implements Closeable, Metricable {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void register(final MetricRegistry registry) {
-        this.counter = registry.counter(
-            MetricRegistry.name(this.getClass(), "done-jobs")
-        );
-    }
-
-    /**
      * Process the next work from the queue.
      * @throws Exception If fails
      */
     private void process() throws Exception {
         final Work work = this.queue.pull(1, TimeUnit.SECONDS);
         if (!work.equals(new Work.None())) {
-            if (this.counter != null) {
-                this.counter.inc();
-            }
             this.works.add(work);
             try {
                 this.process(work);
             } finally {
                 this.works.remove(work);
-                if (this.counter != null) {
-                    this.counter.dec();
-                }
             }
         }
     }

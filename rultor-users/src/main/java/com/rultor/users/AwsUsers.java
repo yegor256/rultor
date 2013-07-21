@@ -32,15 +32,12 @@ package com.rultor.users;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableRequest;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
-import com.codahale.metrics.Gauge;
-import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Metricable;
 import com.rultor.spi.Receipt;
 import com.rultor.spi.Statement;
 import com.rultor.spi.User;
@@ -65,7 +62,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "region")
 @Loggable(Loggable.DEBUG)
-public final class AwsUsers implements Users, Metricable {
+public final class AwsUsers implements Users {
 
     /**
      * Dynamo.
@@ -131,22 +128,6 @@ public final class AwsUsers implements Users, Metricable {
         for (Map.Entry<URN, Statement> entry : statements.entrySet()) {
             this.get(entry.getKey()).statements().add(entry.getValue());
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void register(final MetricRegistry registry) {
-        registry.register(
-            MetricRegistry.name(this.getClass(), "users-total"),
-            new Gauge<Integer>() {
-                @Override
-                public Integer getValue() {
-                    return AwsUsers.this.everybody().size();
-                }
-            }
-        );
     }
 
 }

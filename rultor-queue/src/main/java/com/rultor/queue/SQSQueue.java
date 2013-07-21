@@ -38,15 +38,12 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.amazonaws.services.sqs.model.SendMessageResult;
-import com.codahale.metrics.Gauge;
-import com.codahale.metrics.MetricRegistry;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
-import com.rultor.spi.Metricable;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Time;
@@ -75,7 +72,7 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "client")
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.ExcessiveImports")
-public final class SQSQueue implements Queue, Metricable {
+public final class SQSQueue implements Queue {
 
     /**
      * JSON key.
@@ -189,22 +186,6 @@ public final class SQSQueue implements Queue, Metricable {
             aws.shutdown();
         }
         return work;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void register(final MetricRegistry registry) {
-        registry.register(
-            MetricRegistry.name(this.getClass(), "queue-size"),
-            new Gauge<Integer>() {
-                @Override
-                public Integer getValue() {
-                    return SQSQueue.this.size();
-                }
-            }
-        );
     }
 
     /**
