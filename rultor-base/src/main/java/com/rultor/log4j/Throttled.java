@@ -119,7 +119,7 @@ public final class Throttled implements Instance, Drain.Source {
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void pulse() throws Exception {
-        final ConveyerAppender appender = new ConveyerAppender(
+        final GroupAppender appender = new GroupAppender(
             this.work.started(), this.drn
         );
         appender.setThreshold(this.level);

@@ -29,33 +29,45 @@
  */
 package com.rultor.log4j;
 
+import com.jcabi.aspects.Tv;
+import com.jcabi.log.VerboseRunnable;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Time;
+import java.util.Collection;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.spi.LoggingEvent;
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test case for {@link ConveyerAppender}.
+ * Test case for {@link GroupAppender}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @SuppressWarnings("PMD.DoNotUseThreads")
-public final class ConveyerAppenderTest {
+public final class GroupAppenderTest {
 
     /**
-     * ConveyerAppender can log slf4j messages.
+     * GroupAppender can log slf4j messages.
      * @throws Exception If some problem inside
      */
     @Test
     public void logsMessages() throws Exception {
         final Drain drain = Mockito.mock(Drain.class);
-        final ConveyerAppender appender =
-            new ConveyerAppender(new Time(), drain);
+        final GroupAppender appender =
+            new GroupAppender(new Time(), drain);
         appender.setLayout(new PatternLayout("%m"));
         final String text = "test message to see in log";
         final Thread publisher = new Thread() {
@@ -86,15 +98,15 @@ public final class ConveyerAppenderTest {
     }
 
     /**
-     * ConveyerAppender can log slf4j messages in the same thread.
+     * GroupAppender can log slf4j messages in the same thread.
      * @throws Exception If some problem inside
      */
     @Test
     @SuppressWarnings("unchecked")
     public void logsMessagesInSameThread() throws Exception {
         final Drain drain = Mockito.mock(Drain.class);
-        final ConveyerAppender appender =
-            new ConveyerAppender(new Time(), drain);
+        final GroupAppender appender =
+            new GroupAppender(new Time(), drain);
         appender.setLayout(new PatternLayout(" %m"));
         Logger.getRootLogger().addAppender(appender);
         appender.append(
@@ -110,6 +122,77 @@ public final class ConveyerAppenderTest {
         appender.close();
         Mockito.verify(drain).append(
             (Iterable<String>) Mockito.any(Object.class)
+        );
+    }
+
+    /**
+     * GroupAppender can log in multiple threads.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void logsMessagesInMultipleThreads() throws Exception {
+        final String text = "test message to see \u20ac";
+        final CountDownLatch start = new CountDownLatch(1);
+        final int threads = Tv.TEN;
+        final CountDownLatch done = new CountDownLatch(threads);
+        final CountDownLatch ready = new CountDownLatch(threads);
+        final Collection<GroupAppender> appenders =
+            new CopyOnWriteArrayList<GroupAppender>();
+        final Callable<?> callable = new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                final Drain drain = Mockito.mock(Drain.class);
+                final GroupAppender appender =
+                    new GroupAppender(new Time(), drain);
+                appender.setLayout(new PatternLayout("%m"));
+                appenders.add(appender);
+                ready.countDown();
+                assert start.await(1, TimeUnit.SECONDS);
+                for (GroupAppender app : appenders) {
+                    app.append(
+                        new LoggingEvent(
+                            "",
+                            Logger.getLogger(this.getClass()),
+                            org.apache.log4j.Level.INFO,
+                            text,
+                            new IllegalArgumentException()
+                        )
+                    );
+                }
+                Mockito.verify(drain).append(
+                    Mockito.argThat(Matchers.<String>iterableWithSize(1))
+                );
+                done.countDown();
+                return null;
+            }
+        };
+        final ExecutorService svc = Executors.newFixedThreadPool(
+            threads,
+            new ThreadFactory() {
+                private final transient AtomicLong group = new AtomicLong();
+                @Override
+                public Thread newThread(final Runnable runnable) {
+                    return new Thread(
+                        new ThreadGroup(
+                            Long.toString(this.group.incrementAndGet())
+                        ),
+                        runnable,
+                        String.format("app-%d", this.group.get())
+                    );
+                }
+            }
+        );
+        for (int thread = 0; thread < threads; ++thread) {
+            svc.submit(new VerboseRunnable(callable));
+        }
+        MatcherAssert.assertThat(
+            ready.await(1, TimeUnit.SECONDS),
+            Matchers.is(true)
+        );
+        start.countDown();
+        MatcherAssert.assertThat(
+            done.await(1, TimeUnit.SECONDS),
+            Matchers.is(true)
         );
     }
 

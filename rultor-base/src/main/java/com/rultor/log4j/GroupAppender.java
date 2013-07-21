@@ -53,7 +53,7 @@ import org.apache.log4j.spi.LoggingEvent;
 @ToString
 @EqualsAndHashCode(callSuper = false)
 @SuppressWarnings("PMD.DoNotUseThreads")
-final class ConveyerAppender extends AppenderSkeleton implements Appender {
+final class GroupAppender extends AppenderSkeleton implements Appender {
 
     /**
      * Map of levels.
@@ -96,7 +96,7 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
      * @param date When it starts
      * @param drn Drain to log to
      */
-    protected ConveyerAppender(@NotNull(message = "date can't be NULL")
+    protected GroupAppender(@NotNull(message = "date can't be NULL")
         final Time date, @NotNull(message = "drain can't be NULL")
         final Drain drn) {
         super();
@@ -114,14 +114,14 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
     @Override
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     protected void append(final LoggingEvent event) {
-        if (this.busy.compareAndSet(false, true)) {
-            if (Thread.currentThread().getThreadGroup().equals(this.group)) {
+        if (Thread.currentThread().getThreadGroup().equals(this.group)) {
+            if (this.busy.compareAndSet(false, true)) {
                 try {
                     this.drain.append(
                         Arrays.asList(
                             new Drain.Line.Simple(
                                 new Time().delta(this.start),
-                                ConveyerAppender.LEVELS.get(event.getLevel()),
+                                GroupAppender.LEVELS.get(event.getLevel()),
                                 this.layout.format(event)
                             ).toString()
                         )
@@ -130,8 +130,8 @@ final class ConveyerAppender extends AppenderSkeleton implements Appender {
                 } catch (Throwable ex) {
                     Logger.warn(this, "#append(): %s", ex);
                 }
+                this.busy.set(false);
             }
-            this.busy.set(false);
         }
     }
 
