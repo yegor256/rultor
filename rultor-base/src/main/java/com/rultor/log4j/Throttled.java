@@ -134,7 +134,7 @@ public final class Throttled implements Instance, Drain.Source {
         root.addAppender(appender);
         try {
             Logger.info(this, "start scheduled on %s", this.work.started());
-            Logger.info(this, "actual work started on %s", new Time());
+            Logger.info(this, "actual work started at %s", new Time());
             Logger.info(
                 this,
                 "www.rultor.com %s %s %s",
@@ -144,6 +144,7 @@ public final class Throttled implements Instance, Drain.Source {
             );
             Signal.log(Signal.Mnemo.SPEC, this.work.spec().asText());
             this.origin.pulse();
+            Logger.info(this, "pulse finished at %s", new Time());
             // @checkstyle IllegalCatch (1 line)
         } catch (Exception ex) {
             Logger.warn(this, "#pulse(): %[exception]s", ex);
