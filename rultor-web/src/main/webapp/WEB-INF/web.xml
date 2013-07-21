@@ -88,14 +88,6 @@
         <servlet-name>RestfulServlet</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>metrics</servlet-name>
-        <servlet-class>com.codahale.metrics.servlets.AdminServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>metrics</servlet-name>
-        <url-pattern>/metrics/*</url-pattern>
-    </servlet-mapping>
     <error-page>
         <error-code>404</error-code>
         <location>/error</location>
