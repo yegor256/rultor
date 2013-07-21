@@ -1,4 +1,4 @@
 # Queue
 
-{{{./apidocs-${project.version}/com/rultor/queue/SQSQueue.html}<<<SQSQueue>>>}}
-is implemented as an adapter of {{{http://aws.amazon.com/sqs/}Amazon SQS}}.
+[SQSQueue](./apidocs-${project.version}/com/rultor/queue/SQSQueue.html)
+is implemented as an adapter of [Amazon SQS](http://aws.amazon.com/sqs/).
