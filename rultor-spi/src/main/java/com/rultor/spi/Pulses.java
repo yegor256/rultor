@@ -39,6 +39,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -100,9 +101,10 @@ public interface Pulses extends Iterable<Time> {
         @Override
         @NotNull
         public Pulses tail(@NotNull(message = "head is NULL") final Time head) {
-            return new Pulses.Array(
-                new TreeSet<Time>(Arrays.asList(this.times)).tailSet(head)
-            );
+            final SortedSet<Time> array =
+                new TreeSet<Time>(Collections.reverseOrder());
+            array.addAll(Arrays.asList(this.times));
+            return new Pulses.Array(array.tailSet(head));
         }
         /**
          * {@inheritDoc}
