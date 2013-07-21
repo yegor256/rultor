@@ -265,6 +265,7 @@
                                 <Rultor-SQSKey>${sqs.key}</Rultor-SQSKey>
                                 <Rultor-SQSSecret>${sqs.secret}</Rultor-SQSSecret>
                                 <Rultor-SQSUrl>${sqs.url}</Rultor-SQSUrl>
+                                <Rultor-SQSQuartz>${sqs.quartz}</Rultor-SQSQuartz>
                                 <Rultor-DynamoKey>${dynamo.key}</Rultor-DynamoKey>
                                 <Rultor-DynamoSecret>${dynamo.secret}</Rultor-DynamoSecret>
                                 <Rultor-DynamoPrefix>${dynamo.prefix}</Rultor-DynamoPrefix>

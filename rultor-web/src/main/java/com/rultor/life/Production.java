@@ -29,6 +29,7 @@
  */
 package com.rultor.life;
 
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Credentials;
@@ -41,6 +42,7 @@ import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Users;
 import com.rultor.users.AwsUsers;
+import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -50,6 +52,7 @@ import lombok.ToString;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Immutable
 @ToString
@@ -58,9 +61,23 @@ import lombok.ToString;
 final class Production implements Profile {
 
     /**
+     * Quartz to use.
+     */
+    private final transient SQSQuartz quartz = new SQSQuartz(
+        this.users(),
+        this.queue(),
+        new SQSClient.Simple(
+            Manifests.read("Rultor-SQSKey"),
+            Manifests.read("Rultor-SQSSecret"),
+            Manifests.read("Rultor-SQSQuartz")
+        )
+    );
+
+    /**
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(forever = true)
     public Repo repo() {
         return new ClasspathRepo();
     }
@@ -69,6 +86,7 @@ final class Production implements Profile {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(forever = true)
     public Users users() {
         return new AwsUsers(
             new Region.Prefixed(
@@ -87,6 +105,7 @@ final class Production implements Profile {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(forever = true)
     public Queue queue() {
         return new SQSQueue(
             new SQSClient.Simple(
@@ -95,6 +114,14 @@ final class Production implements Profile {
                 Manifests.read("Rultor-SQSUrl")
             )
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() throws IOException {
+        this.quartz.close();
     }
 
 }

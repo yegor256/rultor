@@ -44,6 +44,7 @@ import com.rultor.spi.Time;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
@@ -118,6 +119,14 @@ final class Testing implements Profile {
     @Override
     public Queue queue() {
         return new Queue.Memory();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() throws IOException {
+        // nothing to do
     }
 
     /**

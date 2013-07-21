@@ -117,7 +117,7 @@ public final class DrainRs extends BaseRs {
             .build(EmptyPage.class)
             .init(this)
             .append(new JaxbBundle("unit", this.name));
-        final Drain drain = this.drain(new Time());
+        final Drain drain = this.drain();
         Pulses pulses = this.pulses(drain);
         final int total;
         if (this.since == null) {
@@ -157,10 +157,9 @@ public final class DrainRs extends BaseRs {
 
     /**
      * Get drain.
-     * @param time Time to use for Drain constructing
      * @return The drain
      */
-    private Drain drain(final Time time) {
+    private Drain drain() {
         try {
             return Drain.Source.class.cast(
                 new Repo.Cached(
@@ -259,7 +258,7 @@ public final class DrainRs extends BaseRs {
      * @return Bundle
      */
     private JaxbBundle pulse(final Time date) {
-        final Pulse pulse = new Pulse(this.drain(date));
+        final Pulse pulse = new Pulse(this.drain());
         final Collection<Stage> stages;
         try {
             stages = pulse.stages();

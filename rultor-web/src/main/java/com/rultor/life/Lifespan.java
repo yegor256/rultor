@@ -50,9 +50,9 @@ import org.apache.commons.io.IOUtils;
 public final class Lifespan implements ServletContextListener {
 
     /**
-     * Quartz the works.
+     * Current profile.
      */
-    private transient Quartz quartz;
+    private transient Profile profile;
 
     /**
      * {@inheritDoc}
@@ -65,16 +65,14 @@ public final class Lifespan implements ServletContextListener {
             throw new IllegalStateException(ex);
         }
         final ServletContext context = event.getServletContext();
-        final Profile profile;
         if (Manifests.read("Rultor-DynamoKey").matches("[A-Z0-9]{20}")) {
-            profile = new Production();
+            this.profile = new Production();
         } else {
-            profile = new Testing();
+            this.profile = new Testing();
         }
-        final Users users = profile.users();
-        final Queue queue = profile.queue();
-        final Repo repo = profile.repo();
-        this.quartz = new Quartz(users, queue);
+        final Users users = this.profile.users();
+        final Queue queue = this.profile.queue();
+        final Repo repo = this.profile.repo();
         context.setAttribute(Users.class.getName(), users);
         context.setAttribute(Repo.class.getName(), repo);
         context.setAttribute(Queue.class.getName(), queue);
@@ -85,7 +83,7 @@ public final class Lifespan implements ServletContextListener {
      */
     @Override
     public void contextDestroyed(final ServletContextEvent event) {
-        IOUtils.closeQuietly(this.quartz);
+        IOUtils.closeQuietly(this.profile);
     }
 
 }

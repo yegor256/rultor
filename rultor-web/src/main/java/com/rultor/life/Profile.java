@@ -32,6 +32,7 @@ package com.rultor.life;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Users;
+import java.io.Closeable;
 
 /**
  * Profile.
@@ -40,7 +41,7 @@ import com.rultor.spi.Users;
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-interface Profile {
+interface Profile extends Closeable {
 
     /**
      * Repository.
