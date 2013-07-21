@@ -93,6 +93,10 @@ public final class UnitRs extends BaseRs {
                     .add("spec", this.unit().spec().asText())
                     .up()
             )
+            .append(
+                new JaxbFace(this.repo(), this.users())
+                    .bundle(this.user().urn(), this.name)
+            )
             .render()
             .build();
     }

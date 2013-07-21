@@ -67,14 +67,19 @@
         <div>
             <ul class="inline btn-group-vertical">
                 <li>
-                    <a title="edit">
+                    <a title="edit this unit">
+                    <xsl:if test="face/exception">
+                            <xsl:attribute name="class">
+                                <xsl:text>text-error</xsl:text>
+                            </xsl:attribute>
+                        </xsl:if>
                         <xsl:attribute name="href">
                             <xsl:value-of select="links/link[@rel='edit']/@href"/>
                         </xsl:attribute>
                         <xsl:value-of select="name"/>
-                        <xsl:if test="spec/arguments">
+                        <xsl:if test="face/arguments">
                             <xsl:text>(</xsl:text>
-                            <xsl:for-each select="spec/arguments/argument">
+                            <xsl:for-each select="face/arguments/argument">
                                 <xsl:if test="position() &gt; 1">
                                     <xsl:text>, </xsl:text>
                                 </xsl:if>
@@ -86,9 +91,9 @@
                         </xsl:if>
                     </a>
                 </li>
-                <xsl:if test="spec/drainable = 'true'">
+                <xsl:if test="face/drainable = 'true'">
                     <li>
-                        <a title="drain">
+                        <a title="view drain of the unit">
                             <xsl:attribute name="href">
                                 <xsl:value-of select="links/link[@rel='drain']/@href"/>
                             </xsl:attribute>
@@ -106,18 +111,6 @@
                     </a>
                 </li>
             </ul>
-            <xsl:if test="spec/exception or (spec/type and spec/type != 'java.lang.String')">
-                <span class="hidden-phone">
-                    <xsl:choose>
-                        <xsl:when test="spec/face">
-                            <xsl:value-of select="spec/face" disable-output-escaping="yes"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <code class="text-error"><xsl:value-of select="spec/exception"/></code>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </span>
-            </xsl:if>
         </div>
     </xsl:template>
 </xsl:stylesheet>

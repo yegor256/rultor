@@ -37,6 +37,7 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <xsl:apply-templates select="/page/face"/>
         <form method="post">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
@@ -58,5 +59,19 @@
                 </span>
             </fieldset>
         </form>
+    </xsl:template>
+    <xsl:template match="face">
+        <p>
+            <xsl:choose>
+                <xsl:when test="exception">
+                    <pre class="text-error"><xsl:value-of select="exception"/></pre>
+                </xsl:when>
+                <xsl:otherwise>
+                    <code><xsl:value-of select="type"/></code>
+                    <xsl:text> </xsl:text>
+                    <xsl:value-of disable-output-escaping="yes" select="html"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </p>
     </xsl:template>
 </xsl:stylesheet>

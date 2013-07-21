@@ -34,12 +34,6 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.auth.Identity;
-import com.rultor.spi.Arguments;
-import com.rultor.spi.Drain;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Unit;
-import com.rultor.spi.Variable;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
@@ -47,7 +41,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * Index resource, front page of the website.
@@ -127,15 +120,17 @@ public final class IndexRs extends BaseRs {
 
     /**
      * Convert unit to JaxbBundle.
-     * @param name Name of it
+     * @param name Name of unit
      * @return Bundle
      */
     private JaxbBundle unit(final String name) {
-        final Unit unit = this.user().get(name);
         return new JaxbBundle("unit")
             .add("name", name)
             .up()
-            .add(this.face(unit.spec()))
+            .add(
+                new JaxbFace(this.repo(), this.users())
+                    .bundle(this.user().urn(), name)
+            )
             .link(
                 new Link(
                     // @checkstyle MultipleStringLiterals (1 line)
@@ -165,55 +160,6 @@ public final class IndexRs extends BaseRs {
                         .build(name)
                 )
             );
-    }
-
-    /**
-     * Get face from spec.
-     * @param spec The Spec
-     * @return Bundle
-     */
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    private JaxbBundle face(final Spec spec) {
-        JaxbBundle bundle = new JaxbBundle("spec");
-        try {
-            final Variable<?> var = new Repo.Cached(
-                this.repo(), this.user(), spec
-            ).get();
-            if (var.arguments().isEmpty()) {
-                final Object object = var.instantiate(
-                    this.users(),
-                    new Arguments(this.work("", spec))
-                );
-                bundle = bundle
-                    .add("type", object.getClass().getName())
-                    .up()
-                    .add(
-                        "drainable",
-                        Boolean.toString(object instanceof Drain.Source)
-                    )
-                    .up()
-                    .add(
-                        "face",
-                        StringEscapeUtils.escapeHtml4(
-                            object.toString()
-                        ).replaceAll("`([^`]+)`", "<code>$1</code>")
-                    )
-                    .up();
-            } else {
-                bundle = bundle.add("arguments").add(
-                    new JaxbBundle.Group<String>(var.arguments().values()) {
-                        @Override
-                        public JaxbBundle bundle(final String arg) {
-                            return new JaxbBundle("argument", arg);
-                        }
-                    }
-                ).up();
-            }
-        // @checkstyle IllegalCatch (1 line)
-        } catch (Exception ex) {
-            bundle = bundle.add("exception", ex.getMessage()).up();
-        }
-        return bundle;
     }
 
 }

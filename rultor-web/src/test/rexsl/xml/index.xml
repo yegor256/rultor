@@ -55,11 +55,11 @@
     <units>
         <unit>
             <name>git-rultor</name>
-            <spec>
+            <face>
                 <type>com.rultor.Something</type>
                 <drainable>true</drainable>
-                <face>some very long text to show, some very &lt;code&gt;long text&lt;/code&gt; to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, </face>
-            </spec>
+                <html>some very long text to show, some very &lt;code&gt;long text&lt;/code&gt; to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, </html>
+            </face>
             <links>
                 <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
                 <link href="/xml/drain.xml" rel="drain" type="text/xml"/>
@@ -68,9 +68,9 @@
         </unit>
         <unit>
             <name>nightly-build-rultor</name>
-            <spec>
+            <face>
                 <exception>invalid text somewhere</exception>
-            </spec>
+            </face>
             <links>
                 <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
                 <link href="/xml/drain.xml" rel="drain" type="text/xml"/>
@@ -79,12 +79,12 @@
         </unit>
         <unit>
             <name>git-template</name>
-            <spec>
+            <face>
                 <arguments>
                     <argument>first</argument>
                     <argument>second</argument>
                 </arguments>
-            </spec>
+            </face>
             <links>
                 <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
                 <link href="/xml/drain.xml" rel="drain" type="text/xml"/>
