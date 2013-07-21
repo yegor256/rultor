@@ -39,12 +39,10 @@ import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Stage;
 import com.rultor.spi.Time;
 import com.rultor.spi.Unit;
-import com.rultor.spi.Work;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -169,12 +167,7 @@ public final class DrainRs extends BaseRs {
                     this.repo(), this.user(), this.unit().spec()
                 ).get().instantiate(
                     this.users(),
-                    new Arguments(
-                        new Work.Simple(
-                            this.user().urn(),
-                            this.name, new Spec.Simple(), time
-                        )
-                    )
+                    new Arguments(this.work(this.name, this.unit().spec()))
                 )
             ).drain();
         } catch (SpecException ex) {

@@ -144,6 +144,12 @@ public final class Parallel implements Instance {
         );
         try {
             if (this.active.size() <= this.maximum) {
+                Logger.info(
+                    this,
+                    "%d thread(s) are running now, execution allowed: %[list]s",
+                    this.active.size(),
+                    this.active
+                );
                 this.origin.pulse();
             } else {
                 Logger.info(
