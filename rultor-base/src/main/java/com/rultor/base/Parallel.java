@@ -133,9 +133,7 @@ public final class Parallel implements Instance {
      * @throws Exception If fails
      */
     private void pass() throws Exception {
-        final String key = String.format(
-            "%s %s %s", this.work.owner(), this.work.unit(), this.work.started()
-        );
+        final String key = this.work.started().toString();
         this.lineup.exec(
             new Runnable() {
                 @Override
