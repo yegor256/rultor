@@ -1,3 +1,3 @@
-# Rultor.com, Lightweight Integration Platform as a Service
+# Service Programming Interface (basic classes)
 
 To be continued...

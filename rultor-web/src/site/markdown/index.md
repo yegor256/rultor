@@ -1,3 +1,3 @@
-# Rultor.com, Lightweight Integration Platform as a Service
+# Web Front-End
 
 To be continued...

@@ -1,3 +1,3 @@
-# Rultor.com, Lightweight Integration Platform as a Service
+# Users
 
 To be continued...

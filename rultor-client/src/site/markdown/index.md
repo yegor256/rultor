@@ -1,3 +1,3 @@
-# Rultor.com, Lightweight Integration Platform as a Service
+# RESTful HTTP client
 
 To be continued...
