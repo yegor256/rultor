@@ -154,6 +154,7 @@ public final class Git implements SCM {
                 .append(" && git clean -f -d")
                 // @checkstyle LineLength (1 line)
                 .append(" && if [ `git rev-parse --abbrev-ref HEAD` != $BRANCH ]; then git checkout $BRANCH; fi")
+                .append(" && git pull")
                 .toString(),
             this.key.asText()
         );
