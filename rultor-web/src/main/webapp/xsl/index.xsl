@@ -106,18 +106,18 @@
                     </a>
                 </li>
             </ul>
+            <xsl:if test="spec/exception or (spec/type and spec/type != 'java.lang.String')">
+                <span class="hidden-phone">
+                    <xsl:choose>
+                        <xsl:when test="spec/face">
+                            <xsl:value-of select="spec/face" disable-output-escaping="yes"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <code class="text-error"><xsl:value-of select="spec/exception"/></code>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </span>
+            </xsl:if>
         </div>
-        <xsl:if test="spec/exception or (spec/type and spec/type != 'java.lang.String')">
-            <p style="padding-left: 3em;" class="hidden-phone">
-                <xsl:choose>
-                    <xsl:when test="spec/face">
-                        <xsl:value-of select="spec/face" disable-output-escaping="yes"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <code class="text-error"><xsl:value-of select="spec/exception"/></code>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </p>
-        </xsl:if>
     </xsl:template>
 </xsl:stylesheet>

@@ -109,11 +109,14 @@ public final class SQSQueue implements Queue, Metricable {
     public SQSQueue(@NotNull(message = "SQS client can't be NULL")
         final SQSClient clnt) {
         final AmazonSQS aws = clnt.get();
-        aws.getQueueAttributes(
+        final GetQueueAttributesResult result = aws.getQueueAttributes(
             new GetQueueAttributesRequest()
                 .withQueueUrl(clnt.url())
         );
-        Logger.info(SQSQueue.class, "SQS queue is ready");
+        Logger.info(
+            SQSQueue.class, "SQS queue is ready with %s",
+            result.getAttributes()
+        );
         this.client = clnt;
     }
 

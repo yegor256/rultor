@@ -30,6 +30,8 @@
 package com.rultor.queue;
 
 import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.model.GetQueueAttributesRequest;
+import com.amazonaws.services.sqs.model.GetQueueAttributesResult;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
@@ -73,6 +75,9 @@ public final class SQSQueueTest {
         Mockito.doReturn(
             new SendMessageResult().withMessageId("test")
         ).when(aws).sendMessage(Mockito.any(SendMessageRequest.class));
+        Mockito.doReturn(new GetQueueAttributesResult())
+            .when(aws)
+            .getQueueAttributes(Mockito.any(GetQueueAttributesRequest.class));
         final SQSQueue queue = new SQSQueue(client);
         queue.push(work);
         Mockito.verify(aws).sendMessage(
@@ -97,6 +102,9 @@ public final class SQSQueueTest {
         final SQSClient client = Mockito.mock(SQSClient.class);
         final AmazonSQS aws = Mockito.mock(AmazonSQS.class);
         Mockito.doReturn(aws).when(client).get();
+        Mockito.doReturn(new GetQueueAttributesResult())
+            .when(aws)
+            .getQueueAttributes(Mockito.any(GetQueueAttributesRequest.class));
         final SQSQueue queue = new SQSQueue(client);
         Mockito.doReturn(
             new ReceiveMessageResult().withMessages(
