@@ -32,6 +32,7 @@ package com.rultor.repo;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Dollars;
@@ -308,6 +309,7 @@ final class RefForeign implements Variable<Object> {
          * {@inheritDoc}
          */
         @Override
+        @RetryOnFailure
         public void charge(final String details, final Dollars amount) {
             Validate.isTrue(
                 amount.points() > 0,
