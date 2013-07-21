@@ -114,24 +114,23 @@ final class GroupAppender extends AppenderSkeleton implements Appender {
     @Override
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     protected void append(final LoggingEvent event) {
-        if (Thread.currentThread().getThreadGroup().equals(this.group)) {
-            if (this.busy.compareAndSet(false, true)) {
-                try {
-                    this.drain.append(
-                        Arrays.asList(
-                            new Drain.Line.Simple(
-                                new Time().delta(this.start),
-                                GroupAppender.LEVELS.get(event.getLevel()),
-                                this.layout.format(event)
-                            ).toString()
-                        )
-                    );
-                // @checkstyle IllegalCatch (1 line)
-                } catch (Throwable ex) {
-                    Logger.warn(this, "#append(): %s", ex);
-                }
-                this.busy.set(false);
+        if (Thread.currentThread().getThreadGroup().equals(this.group)
+            && this.busy.compareAndSet(false, true)) {
+            try {
+                this.drain.append(
+                    Arrays.asList(
+                        new Drain.Line.Simple(
+                            new Time().delta(this.start),
+                            GroupAppender.LEVELS.get(event.getLevel()),
+                            this.layout.format(event)
+                        ).toString()
+                    )
+                );
+            // @checkstyle IllegalCatch (1 line)
+            } catch (Throwable ex) {
+                Logger.warn(this, "#append(): %s", ex);
             }
+            this.busy.set(false);
         }
     }
 

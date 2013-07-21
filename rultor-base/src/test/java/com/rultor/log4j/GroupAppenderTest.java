@@ -138,34 +138,36 @@ public final class GroupAppenderTest {
         final CountDownLatch ready = new CountDownLatch(threads);
         final Collection<GroupAppender> appenders =
             new CopyOnWriteArrayList<GroupAppender>();
-        final Callable<?> callable = new Callable<Void>() {
-            @Override
-            public Void call() throws Exception {
-                final Drain drain = Mockito.mock(Drain.class);
-                final GroupAppender appender =
-                    new GroupAppender(new Time(), drain);
-                appender.setLayout(new PatternLayout("%m"));
-                appenders.add(appender);
-                ready.countDown();
-                assert start.await(1, TimeUnit.SECONDS);
-                for (GroupAppender app : appenders) {
-                    app.append(
-                        new LoggingEvent(
-                            "",
-                            Logger.getLogger(this.getClass()),
-                            org.apache.log4j.Level.INFO,
-                            text,
-                            new IllegalArgumentException()
-                        )
+        final Runnable runnable = new VerboseRunnable(
+            // @checkstyle AnonInnerLength (50 lines)
+            new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    final Drain drain = Mockito.mock(Drain.class);
+                    final GroupAppender appender =
+                        new GroupAppender(new Time(), drain);
+                    appender.setLayout(new PatternLayout("%m%n"));
+                    appenders.add(appender);
+                    ready.countDown();
+                    assert start.await(1, TimeUnit.SECONDS);
+                    final LoggingEvent event = new LoggingEvent(
+                        "",
+                        Logger.getLogger(this.getClass()),
+                        org.apache.log4j.Level.INFO,
+                        text,
+                        new IllegalArgumentException()
                     );
+                    for (GroupAppender app : appenders) {
+                        app.append(event);
+                    }
+                    Mockito.verify(drain).append(
+                        Mockito.argThat(Matchers.<String>iterableWithSize(1))
+                    );
+                    done.countDown();
+                    return null;
                 }
-                Mockito.verify(drain).append(
-                    Mockito.argThat(Matchers.<String>iterableWithSize(1))
-                );
-                done.countDown();
-                return null;
             }
-        };
+        );
         final ExecutorService svc = Executors.newFixedThreadPool(
             threads,
             new ThreadFactory() {
@@ -183,7 +185,7 @@ public final class GroupAppenderTest {
             }
         );
         for (int thread = 0; thread < threads; ++thread) {
-            svc.submit(new VerboseRunnable(callable));
+            svc.submit(runnable);
         }
         MatcherAssert.assertThat(
             ready.await(1, TimeUnit.SECONDS),
