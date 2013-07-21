@@ -136,7 +136,7 @@ public final class SQSQuartz implements Runnable, Closeable {
                 .withQueueUrl(this.client.url())
                 .withWaitTimeSeconds(Tv.TWENTY)
                 .withVisibilityTimeout(Tv.FIVE)
-                .withMaxNumberOfMessages(1)
+                .withMaxNumberOfMessages(Tv.TEN)
         );
         final Time previous;
         if (result.getMessages().isEmpty()) {

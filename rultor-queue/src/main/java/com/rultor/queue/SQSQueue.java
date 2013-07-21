@@ -189,25 +189,6 @@ public final class SQSQueue implements Queue {
     }
 
     /**
-     * Approximate size of the queue.
-     * @return Size of it
-     */
-    private int size() {
-        final AmazonSQS aws = this.client.get();
-        try {
-            final String name = "ApproximateNumberOfMessages";
-            final GetQueueAttributesResult result = aws.getQueueAttributes(
-                new GetQueueAttributesRequest()
-                    .withAttributeNames(name)
-                    .withQueueUrl(this.client.url())
-            );
-            return Integer.parseInt(result.getAttributes().get(name));
-        } finally {
-            aws.shutdown();
-        }
-    }
-
-    /**
      * Serialize work to string.
      * @param work The work to serialize
      * @return Text
