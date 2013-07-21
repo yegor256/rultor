@@ -38,9 +38,8 @@ import com.rultor.spi.Work;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.TreeSet;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
@@ -193,10 +192,8 @@ public final class DirectoryDrain implements Drain {
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Collection<Time> pulses(final FTPClient ftp) throws IOException {
-        final Collection<Time> times = new TreeSet<Time>(
-            Collections.reverseOrder()
-        );
         final FTPFile[] files = ftp.listFiles();
+        final Collection<Time> times = new ArrayList<Time>(files.length);
         final int reply = ftp.getReplyCode();
         if (!FTPReply.isPositiveCompletion(reply)) {
             throw new IOException(
