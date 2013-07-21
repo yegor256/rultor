@@ -43,14 +43,20 @@ do
     do
         dynamic-dynamodb \
             --table-name "${DYNAMO_PREFIX}${table}" \
+            --increase-reads-with 1 \
+            --decrease-reads-with 1 \
+            --increase-writes-with 1 \
+            --decrease-writes-with 1 \
+            --increase-reads-unit units \
+            --decrease-reads-unit units \
             --reads-upper-threshold 90 \
             --reads-lower-threshold 30 \
-            --increase-reads-with 50 \
-            --decrease-reads-with 50 \
             --writes-upper-threshold 90 \
             --writes-lower-threshold 40 \
-            --increase-writes-with 50 \
-            --decrease-writes-with 70
+            --min-provisioned-reads 1 \
+            --max-provisioned-reads 32 \
+            --min-provisioned-writes 1 \
+            --max-provisioned-writes 32
         sleep 60
     done &
 done
