@@ -50,7 +50,7 @@ do
             --writes-upper-threshold 90 \
             --writes-lower-threshold 40 \
             --increase-writes-with 40 \
-            --decrease-writes-with 70 | logger -t dyndyn
+            --decrease-writes-with 70
         sleep 60
     done &
 done
