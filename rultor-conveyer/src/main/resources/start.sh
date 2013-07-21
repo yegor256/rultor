@@ -50,7 +50,7 @@ do
         --writes-lower-threshold 40 \
         --increase-writes-with 40 \
         --decrease-writes-with 70 \
-        --check-interval 300
+        --check-interval 60 | logger -t dyndyn
 done
 
 curl --silent https://raw.github.com/rultor/rultor/master/rultor-conveyer/src/main/resources/ec2-pom.xml > pom.xml
