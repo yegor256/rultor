@@ -70,11 +70,7 @@
                                 <arg>-classpath</arg>
                                 <classpath/>
                                 <arg>com.rultor.conveyer.Main</arg>
-                                <arg>--sqs-key=${aws-key}</arg>
-                                <arg>--sqs-secret=${aws-secret}</arg>
                                 <arg>--sqs-url=${sqs-url}</arg>
-                                <arg>--dynamo-key=${aws-key}</arg>
-                                <arg>--dynamo-secret=${aws-secret}</arg>
                                 <arg>--dynamo-prefix=${dynamo-prefix}</arg>
                             </arguments>
                         </configuration>
