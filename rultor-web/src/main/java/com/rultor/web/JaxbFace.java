@@ -99,21 +99,7 @@ final class JaxbFace {
                     this.users,
                     new Arguments(this.work(urn, unit, spec))
                 );
-                bundle = bundle
-                    .add("type", object.getClass().getName())
-                    .up()
-                    .add(
-                        "drainable",
-                        Boolean.toString(object instanceof Drain.Source)
-                    )
-                    .up()
-                    .add(
-                        "html",
-                        StringEscapeUtils.escapeHtml4(
-                            object.toString()
-                        ).replaceAll("`([^`]+)`", "<code>$1</code>")
-                    )
-                    .up();
+                bundle = this.append(bundle, object);
             } else {
                 bundle = bundle.add("arguments").add(
                     new JaxbBundle.Group<String>(var.arguments().values()) {
@@ -129,6 +115,32 @@ final class JaxbFace {
             bundle = bundle.add("exception", ex.getMessage()).up();
         }
         return bundle;
+    }
+
+    /**
+     * Append object elements to the bundle.
+     * @param bundle Bundle to append to
+     * @param object Object to describe
+     * @return Bundle
+     */
+    public JaxbBundle append(final JaxbBundle bundle, final Object object) {
+        JaxbBundle output = bundle
+            .add("type", object.getClass().getName())
+            .up()
+            .add(
+                "drainable",
+                Boolean.toString(object instanceof Drain.Source)
+            )
+            .up();
+        if (!(object instanceof String)) {
+            output = output.add(
+                "html",
+                StringEscapeUtils.escapeHtml4(object.toString())
+                    .replaceAll("`([^`]+)`", "<code>$1</code>")
+                    .replaceAll("\\*{2}([^\\*]+)\\*{2}", "<strong>$1</strong>")
+            ).up();
+        }
+        return output;
     }
 
     /**

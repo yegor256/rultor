@@ -66,13 +66,13 @@
                 <xsl:when test="exception">
                     <pre class="text-error"><xsl:value-of select="exception"/></pre>
                 </xsl:when>
-                <xsl:when test="arguments">
-                    <xsl:text>It's a template</xsl:text>
-                </xsl:when>
-                <xsl:otherwise>
+                <xsl:when test="type and html">
                     <code><xsl:value-of select="type"/></code>
                     <xsl:text> </xsl:text>
                     <xsl:value-of disable-output-escaping="yes" select="html"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <!-- nothing to show -->
                 </xsl:otherwise>
             </xsl:choose>
         </p>
