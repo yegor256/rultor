@@ -51,7 +51,7 @@ import org.apache.log4j.spi.LoggingEvent;
  * @since 1.0
  */
 @ToString
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, of = { "group", "start", "drain" })
 @SuppressWarnings("PMD.DoNotUseThreads")
 final class GroupAppender extends AppenderSkeleton implements Appender {
 
