@@ -29,6 +29,7 @@
  */
 package com.rultor.conveyer;
 
+import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
@@ -122,7 +123,7 @@ public final class SimpleConveyerTest {
         try {
             conveyer.start();
             MatcherAssert.assertThat(
-                made.await(2, TimeUnit.SECONDS), Matchers.is(true)
+                made.await(Tv.TEN, TimeUnit.SECONDS), Matchers.is(true)
             );
         } finally {
             TimeUnit.SECONDS.sleep(1);
