@@ -29,6 +29,7 @@
  */
 package com.rultor.spi;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -44,6 +45,7 @@ import lombok.ToString;
  * @version $Id$
  * @since 1.0
  */
+@Immutable
 public interface Queue {
 
     /**

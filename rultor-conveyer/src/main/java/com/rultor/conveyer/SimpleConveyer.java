@@ -213,6 +213,7 @@ public final class SimpleConveyer implements Closeable {
      * @param work The work to process
      * @throws Exception If fails
      */
+    @Loggable(Loggable.INFO)
     private void process(final Work work) throws Exception {
         final User owner = this.users.get(work.owner());
         final Variable<?> var =

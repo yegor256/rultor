@@ -50,9 +50,6 @@
     <listener>
         <listener-class>com.rultor.life.Lifespan</listener-class>
     </listener>
-    <listener>
-        <listener-class>com.rultor.life.MetricsLife</listener-class>
-    </listener>
     <servlet>
         <servlet-name>ExceptionTrap</servlet-name>
         <servlet-class>com.rexsl.core.ExceptionTrap</servlet-class>
