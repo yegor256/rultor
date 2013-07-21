@@ -222,6 +222,12 @@ final class RefForeign implements Variable<Object> {
         return object;
     }
 
+    /**
+     * Work that tracks expenses.
+     */
+    @Immutable
+    @EqualsAndHashCode(of = { "users", "origin" })
+    @Loggable(Loggable.DEBUG)
     private final class Monetary implements Work {
         /**
          * Users.
@@ -239,6 +245,13 @@ final class RefForeign implements Variable<Object> {
         protected Monetary(final Users usrs, final Work wrk) {
             this.users = usrs;
             this.origin = wrk;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return this.origin.toString();
         }
         /**
          * {@inheritDoc}
