@@ -66,6 +66,7 @@ import org.apache.commons.lang3.Validate;
 @ToString
 @EqualsAndHashCode(of = { "grammar", "owner", "name" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.TooManyMethods")
 final class RefForeign implements Variable<Object> {
 
     /**
