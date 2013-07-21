@@ -44,7 +44,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "text")
 @Loggable(Loggable.DEBUG)
 public final class MD5 implements Proxy<String> {
 

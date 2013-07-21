@@ -49,7 +49,7 @@ import org.apache.log4j.PatternLayout;
  * @version $Id$
  * @since 1.0
  */
-@EqualsAndHashCode(of = { "work", "level", "origin", "drn" })
+@EqualsAndHashCode(of = { "work", "level", "pattern", "origin", "drn" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
 public final class Throttled implements Instance, Drain.Source {

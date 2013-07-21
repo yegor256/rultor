@@ -45,7 +45,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode
+@EqualsAndHashCode(of = { "parts", "separator" })
 @Loggable(Loggable.DEBUG)
 public final class Concat implements Proxy<String> {
 

@@ -55,7 +55,7 @@ import org.apache.commons.lang3.StringUtils;
  * @see <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html">Crontab specification</a>
  */
 @Immutable
-@EqualsAndHashCode(of = { "origin", "gates" })
+@EqualsAndHashCode(of = { "work", "origin", "gates" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings({ "PMD.TooManyMethods", "PMD.CyclomaticComplexity" })
 public final class Crontab implements Instance {
@@ -188,7 +188,7 @@ public final class Crontab implements Instance {
      * Abstract gate.
      */
     @Immutable
-    @EqualsAndHashCode(of = "alternatives")
+    @EqualsAndHashCode(of = { "prefix", "alternatives" })
     @Loggable(Loggable.DEBUG)
     private abstract static class AbstractBigGate
         implements Crontab.Gate<Calendar> {
