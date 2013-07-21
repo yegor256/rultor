@@ -146,6 +146,7 @@ public final class Throttled implements Instance, Drain.Source {
             this.origin.pulse();
             // @checkstyle IllegalCatch (1 line)
         } catch (Exception ex) {
+            Logger.warn(this, "#pulse(): %[exception]s", ex);
             Signal.log(Signal.Mnemo.FAILURE, ex.getMessage());
             throw ex;
         } finally {

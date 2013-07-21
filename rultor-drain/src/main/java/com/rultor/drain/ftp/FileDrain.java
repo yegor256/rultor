@@ -185,7 +185,7 @@ public final class FileDrain implements Drain {
         }
         Logger.debug(
             this,
-            "#read(..): appended some lines to '%s' in %s",
+            "#append(..): appended some lines to '%s' in %s",
             this.file, this.batch
         );
     }
