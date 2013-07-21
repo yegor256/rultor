@@ -157,7 +157,8 @@ public final class SQSQueue implements Queue, Metricable {
         try {
             final ReceiveMessageRequest request = new ReceiveMessageRequest()
                 .withQueueUrl(this.client.url())
-                .withMaxNumberOfMessages(1);
+                .withMaxNumberOfMessages(1)
+                .withWaitTimeSeconds((int) unit.toSeconds(limit));
             ReceiveMessageResult result;
             final long start = System.currentTimeMillis();
             while (true) {
