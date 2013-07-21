@@ -117,4 +117,46 @@ public interface SQSClient {
         }
     }
 
+    /**
+     * Client for assumed role.
+     */
+    @Immutable
+    @EqualsAndHashCode(of = "queue")
+    @Loggable(Loggable.DEBUG)
+    final class Assumed implements SQSClient {
+        /**
+         * Queue URL.
+         */
+        private final transient String queue;
+        /**
+         * Public ctor.
+         * @param url URL of the queue
+         */
+        public Assumed(@NotNull(message = "URL can't be NULL")
+            final String url) {
+            this.queue = url;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return String.format("`%s`", this.queue);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public AmazonSQS get() {
+            return new AmazonSQSClient();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String url() {
+            return this.queue;
+        }
+    }
+
 }

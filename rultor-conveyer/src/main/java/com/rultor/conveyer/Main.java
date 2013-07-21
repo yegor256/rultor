@@ -214,24 +214,39 @@ public final class Main {
             };
             users = new FakeUsers(work);
         } else {
-            queue = new SQSQueue(
-                new SQSClient.Simple(
-                    options.valueOf("sqs-key").toString(),
-                    options.valueOf("sqs-secret").toString(),
-                    options.valueOf("sqs-url").toString()
-                )
-            );
-            users = new AwsUsers(
-                new Region.Prefixed(
-                    new Region.Simple(
-                        new Credentials.Simple(
-                            options.valueOf("dynamo-key").toString(),
-                            options.valueOf("dynamo-secret").toString()
-                        )
-                    ),
-                    options.valueOf("dynamo-prefix").toString()
-                )
-            );
+            if (options.has("sqs-key")) {
+                queue = new SQSQueue(
+                    new SQSClient.Simple(
+                        options.valueOf("sqs-key").toString(),
+                        options.valueOf("sqs-secret").toString(),
+                        options.valueOf("sqs-url").toString()
+                    )
+                );
+            } else {
+                queue = new SQSQueue(
+                    new SQSClient.Assumed(options.valueOf("sqs-url").toString())
+                );
+            }
+            if (options.has("dynamo-key")) {
+                users = new AwsUsers(
+                    new Region.Prefixed(
+                        new Region.Simple(
+                            new Credentials.Simple(
+                                options.valueOf("dynamo-key").toString(),
+                                options.valueOf("dynamo-secret").toString()
+                            )
+                        ),
+                        options.valueOf("dynamo-prefix").toString()
+                    )
+                );
+            } else {
+                users = new AwsUsers(
+                    new Region.Prefixed(
+                        new Region.Simple(new Credentials.Assumed()),
+                        options.valueOf("dynamo-prefix").toString()
+                    )
+                );
+            }
         }
         return new SimpleConveyer(queue, new ClasspathRepo(), users);
     }
