@@ -199,7 +199,9 @@ final class Composite implements Variable<Object> {
                 throw new SpecException(ex);
             }
         } else {
-            cls = Composite.load(this.type);
+            synchronized (Composite.class) {
+                cls = Composite.load(this.type);
+            }
         }
         Constructor<?> ctor = null;
         for (Constructor<?> opt : cls.getConstructors()) {
