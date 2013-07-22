@@ -33,7 +33,11 @@
         <menu ref="parent"/>
         <menu name="Overview">
             <item name="Introduction" href="./index.html"/>
+            <item name="JavaDoc ${project.version}" href="apidocs-${project.version}/index.html"/>
+            <item name="Test Coverage" href="cobertura/index.html"/>
+            <item name="Release History" href="changes-report.html"/>
         </menu>
+        <menu ref="modules"/>
         <menu ref="reports"/>
     </body>
 </project>

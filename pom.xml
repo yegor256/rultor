@@ -76,7 +76,7 @@
                 <role>Architect</role>
                 <role>Developer</role>
             </roles>
-            <timezone>-7</timezone>
+            <timezone>+1</timezone>
         </developer>
     </developers>
     <issueManagement>
@@ -94,8 +94,9 @@
     </ciManagement>
     <distributionManagement>
         <site>
-            <id>github</id>
-            <url>http://doc.rultor.com</url>
+            <id>github-pages-site</id>
+            <name>Deployment through GitHub's site deployment plugin</name>
+            <url></url>
         </site>
     </distributionManagement>
     <properties>
@@ -126,6 +127,8 @@
                 <version>0.8</version>
                 <configuration>
                     <message>site for ${project.version}</message>
+                    <path>${project.distributionManagement.site.url}</path>
+                    <merge>true</merge>
                 </configuration>
                 <executions>
                     <execution>

@@ -30,6 +30,7 @@
 package com.rultor.drain;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -45,6 +46,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -106,7 +108,7 @@ public final class NoiseReduction implements Drain {
         @NotNull(message = "dirty drain can't be NULL") final Drain drt,
         @NotNull(message = "clean drain can't be NULL") final Drain cln) {
         this.work = wrk;
-        this.pattern = ptn;
+        this.pattern = String.format(".*(?:%s).*", ptn);
         this.visible = vsbl;
         this.dirty = drt;
         this.clean = cln;
@@ -164,20 +166,30 @@ public final class NoiseReduction implements Drain {
     @Override
     public void append(final Iterable<String> lines)
         throws IOException {
-        this.dirty.append(
-            Iterables.filter(
-                lines,
-                new Predicate<String>() {
-                    @Override
-                    public boolean apply(final String input) {
-                        if (input.matches(NoiseReduction.this.pattern)) {
-                            NoiseReduction.GOOD.add(NoiseReduction.this.dirty);
+        final boolean matched;
+        synchronized (NoiseReduction.GOOD) {
+            matched = !NoiseReduction.GOOD.contains(this.dirty)
+                && Iterables.any(
+                    lines,
+                    new Predicate<String>() {
+                        @Override
+                        public boolean apply(final String input) {
+                            return input.matches(NoiseReduction.this.pattern);
                         }
-                        return true;
                     }
-                }
-            )
-        );
+                );
+            if (matched) {
+                NoiseReduction.GOOD.add(this.dirty);
+            }
+        }
+        if (matched) {
+            this.clean.append(
+                ImmutableList.copyOf(
+                    IOUtils.lineIterator(this.dirty.read(), CharEncoding.UTF_8)
+                )
+            );
+        }
+        this.dirty.append(lines);
         if (NoiseReduction.GOOD.contains(this.dirty)) {
             this.clean.append(lines);
         }

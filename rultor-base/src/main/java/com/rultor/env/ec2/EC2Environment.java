@@ -37,6 +37,7 @@ import com.amazonaws.services.ec2.model.InstanceState;
 import com.amazonaws.services.ec2.model.InstanceStateChange;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesResult;
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
@@ -49,6 +50,7 @@ import com.rultor.spi.Signal;
 import com.rultor.spi.Work;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 
@@ -63,6 +65,22 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = { "name", "client" })
 @Loggable(Loggable.DEBUG)
 final class EC2Environment implements Environment {
+
+    /**
+     * Approximate prices for certain instance types.
+     */
+    private static final ImmutableMap<String, Double> PRICES =
+        new ImmutableMap.Builder<String, Double>()
+            // @checkstyle MagicNumber (10 lines)
+            .put(".+\\.micro", 0.02d)
+            .put(".+\\.small", 0.06d)
+            .put(".+\\.medium", 0.12d)
+            .put(".+\\.large", 0.24d)
+            .put(".+\\.xlarge", 0.48d)
+            .put(".+\\.2xlarge", 1d)
+            .put(".+\\.4xlarge", 1.64d)
+            .put(".+\\.8xlarge", 3.5d)
+            .build();
 
     /**
      * Work we're in.
@@ -220,12 +238,16 @@ final class EC2Environment implements Environment {
      */
     private static Dollars costOf(final String type, final String zone,
         final long msec) throws IOException {
-        assert type != null;
         assert zone != null;
-        final long hourly = 1;
-        return new Dollars(
-            msec * hourly * Tv.MILLION / TimeUnit.HOURS.toMillis(1)
-        );
+        final int hours = (int) (1 + msec / TimeUnit.HOURS.toMillis(1));
+        Double hourly = 1d;
+        for (Map.Entry<String, Double> ent : EC2Environment.PRICES.entrySet()) {
+            if (type.matches(ent.getKey())) {
+                hourly = ent.getValue();
+                break;
+            }
+        }
+        return new Dollars((long) (hours * hourly * Tv.MILLION));
     }
 
 }

@@ -53,7 +53,6 @@ public final class NoiseReductionTest {
     @SuppressWarnings("unchecked")
     public void filtersNoise() throws Exception {
         final Drain dirty = Mockito.mock(Drain.class);
-        Mockito.doReturn(IOUtils.toInputStream("")).when(dirty).read();
         final Drain clean = Mockito.mock(Drain.class);
         final Drain drain = new NoiseReduction(
             new Work.Simple(),
@@ -63,11 +62,17 @@ public final class NoiseReductionTest {
             clean
         );
         final String bad = "somefffffds900-4932%^&$%^&#%@^&!\u20ac\tfdsfs";
+        final String good = "how about this? Hello1!";
         drain.append(Arrays.asList(bad));
         Mockito.verify(dirty, Mockito.times(1))
             .append(Mockito.any(Iterable.class));
-        Mockito.verify(clean, Mockito.never())
-            .append(Mockito.any(Iterable.class));
+        Mockito.doReturn(
+            IOUtils.toInputStream(String.format("%s\n%s\n", bad, good))
+        ).when(dirty).read();
+        drain.append(Arrays.asList(good));
+        Mockito.verify(clean, Mockito.times(1)).append(
+            Mockito.argThat(Matchers.hasItems(bad, good))
+        );
     }
 
     /**

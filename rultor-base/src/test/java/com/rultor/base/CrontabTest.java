@@ -157,4 +157,17 @@ public final class CrontabTest {
         );
     }
 
+    /**
+     * Crontab can print encapsulated rules as text.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void printsRulesAsText() throws Exception {
+        final Instance origin = Mockito.mock(Instance.class);
+        MatcherAssert.assertThat(
+            new Crontab(new Work.Simple(), "0 * 2-3,5 * *", origin).rules(),
+            Matchers.equalTo("0 * 2-3|5 * *")
+        );
+    }
+
 }

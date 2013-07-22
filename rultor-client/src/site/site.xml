@@ -29,26 +29,13 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 <project xmlns="http://maven.apache.org/DECORATION/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0     http://maven.apache.org/xsd/decoration-1.0.0.xsd" name="rultor-client">
-    <skin>
-        <groupId>com.jcabi</groupId>
-        <artifactId>jcabi-maven-skin</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </skin>
-    <googleAnalyticsAccountId>UA-1963507-10</googleAnalyticsAccountId>
-    <bannerLeft>
-        <name>rultor.com</name>
-        <src>http://img.rultor.com/logo-64x64.png</src>
-        <href>http://maven.rultor.com/</href>
-    </bannerLeft>
     <body>
-        <head>
-            <link href="http://img.rultor.com/favicon.ico" rel="shortcut icon"/>
-        </head>
-        <breadcrumbs>
-            <item name="rultor.com" href="http://maven.rultor.com"/>
-        </breadcrumbs>
+        <menu ref="parent"/>
         <menu name="Overview">
             <item name="Introduction" href="./index.html"/>
+            <item name="JavaDoc ${project.version}" href="apidocs-${project.version}/index.html"/>
+            <item name="Test Coverage" href="cobertura/index.html"/>
+            <item name="Release History" href="changes-report.html"/>
         </menu>
         <menu ref="modules"/>
         <menu ref="reports"/>

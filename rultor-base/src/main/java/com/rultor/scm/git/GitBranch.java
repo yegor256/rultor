@@ -31,23 +31,15 @@ package com.rultor.scm.git;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
 import com.rultor.shell.Terminal;
 import com.rultor.spi.Signal;
-import com.rultor.spi.Time;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.Validate;
 
 /**
  * Git.
@@ -60,14 +52,6 @@ import org.apache.commons.lang3.Validate;
 @EqualsAndHashCode(of = { "terminal", "name" })
 @Loggable(Loggable.DEBUG)
 public final class GitBranch implements Branch {
-
-    /**
-     * Pattern for every log line.
-     */
-    private static final Pattern LINE = Pattern.compile(
-        // @checkstyle LineLength (1 line)
-        "([a-f0-9]{40}) ([\\w\\-@\\.]+) (\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2} \\+\\d{4}) (.*)"
-    );
 
     /**
      * Terminal to use.
@@ -142,7 +126,7 @@ public final class GitBranch implements Branch {
                     }
                     @Override
                     public Commit next() {
-                        return GitBranch.toCommit(iterator.next());
+                        return GitCommit.parse(iterator.next());
                     }
                     @Override
                     public void remove() {
@@ -151,34 +135,6 @@ public final class GitBranch implements Branch {
                 };
             }
         };
-    }
-
-    /**
-     * Convert one log line to commit.
-     * @param line The line to convert
-     * @return Commit
-     */
-    private static Commit toCommit(final String line) {
-        final Matcher matcher = GitBranch.LINE.matcher(line);
-        Validate.isTrue(matcher.matches(), "invalid line from Git: %s", line);
-        final SimpleDateFormat fmt = new SimpleDateFormat(
-            "yyyy-MM-dd HH:mm:ss X", Locale.ENGLISH
-        );
-        try {
-            return new Commit.Simple(
-                matcher.group(1),
-                new Time(fmt.parse(matcher.group(Tv.THREE))),
-                matcher.group(2)
-            );
-        } catch (ParseException ex) {
-            throw new IllegalArgumentException(
-                String.format(
-                    "failed to parse date '%s'",
-                    matcher.group(Tv.THREE)
-                ),
-                ex
-            );
-        }
     }
 
 }

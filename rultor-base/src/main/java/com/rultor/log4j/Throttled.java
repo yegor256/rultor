@@ -132,6 +132,7 @@ public final class Throttled implements Instance, Drain.Source {
             );
         }
         root.addAppender(appender);
+        final long start = System.currentTimeMillis();
         try {
             Logger.info(this, "start scheduled on %s", this.work.started());
             Logger.info(this, "actual work started at %s", new Time());
@@ -144,10 +145,16 @@ public final class Throttled implements Instance, Drain.Source {
             );
             Signal.log(Signal.Mnemo.SPEC, this.work.spec().asText());
             this.origin.pulse();
-            Logger.info(this, "pulse finished at %s", new Time());
+            Logger.info(
+                this, "pulse finished at %s and took %[ms]s",
+                new Time(), System.currentTimeMillis() - start
+            );
             // @checkstyle IllegalCatch (1 line)
         } catch (Exception ex) {
-            Logger.warn(this, "#pulse(): %[exception]s", ex);
+            Logger.warn(
+                this, "pulse failed after %[ms]s: %[exception]s",
+                ex, System.currentTimeMillis() - start
+            );
             Signal.log(Signal.Mnemo.FAILURE, ex.getMessage());
             throw ex;
         } finally {

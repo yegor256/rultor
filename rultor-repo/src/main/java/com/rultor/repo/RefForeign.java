@@ -32,14 +32,9 @@ package com.rultor.repo;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Arguments;
-import com.rultor.spi.Dollars;
-import com.rultor.spi.Receipt;
-import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
-import com.rultor.spi.Time;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
@@ -135,7 +130,7 @@ final class RefForeign implements Variable<Object> {
         }
         Work work = Work.class.cast(args.get(0));
         if (!this.client.equals(this.owner)) {
-            work = new RefForeign.Monetary(
+            work = new MonetaryWork(
                 users, work, this.client, this.owner, this.name
             );
         }
@@ -224,108 +219,6 @@ final class RefForeign implements Variable<Object> {
             }
         }
         return object;
-    }
-
-    /**
-     * Work that tracks expenses.
-     */
-    @Immutable
-    @EqualsAndHashCode(of = { "users", "origin" })
-    @Loggable(Loggable.DEBUG)
-    private static final class Monetary implements Work {
-        /**
-         * Users.
-         */
-        private final transient Users users;
-        /**
-         * Original work.
-         */
-        private final transient Work origin;
-        /**
-         * Client of the unit (who is using the unit).
-         */
-        private final transient URN client;
-        /**
-         * Owner of the unit (who provides the unit).
-         */
-        private final transient URN user;
-        /**
-         * The name.
-         */
-        private final transient String name;
-        /**
-         * Public ctor.
-         * @param usrs Users
-         * @param wrk Origin work
-         * @param clnt URN of the client
-         * @param owner URN of the owner
-         * @param unit Name of the unit
-         * @checkstyle ParameterNumber (4 lines)
-         */
-        protected Monetary(final Users usrs, final Work wrk, final URN clnt,
-            final URN owner, final String unit) {
-            this.users = usrs;
-            this.origin = wrk;
-            this.client = clnt;
-            this.user = owner;
-            this.name = unit;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString() {
-            return this.origin.toString();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Time started() {
-            return this.origin.started();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public URN owner() {
-            return this.origin.owner();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String unit() {
-            return this.origin.unit();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Spec spec() {
-            return this.origin.spec();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @RetryOnFailure
-        public void charge(final String details, final Dollars amount) {
-            Validate.isTrue(
-                amount.points() > 0,
-                "charge amount can be positive only, %s provided", amount
-            );
-            this.users.charge(
-                new Receipt.Simple(
-                    new Time(),
-                    this.client,
-                    this.user,
-                    String.format("%s: %s", this.unit(), details),
-                    amount,
-                    this.name
-                )
-            );
-        }
     }
 
 }

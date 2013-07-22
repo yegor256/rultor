@@ -44,6 +44,7 @@ import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Sends pulses through, only on certain time moments.
@@ -122,7 +123,7 @@ public final class Crontab implements Instance {
             Signal.log(
                 Signal.Mnemo.SUCCESS,
                 "Crontab \"%s\" allows execution at \"%s\"",
-                this.asText(),
+                this.rules(),
                 Crontab.moment(this.work.started())
             );
             this.origin.pulse();
@@ -132,7 +133,7 @@ public final class Crontab implements Instance {
                 // @checkstyle LineLength (1 line)
                 "Not the right moment \"%s\" for \"%s\", see you again in %[ms]s (denied by %s)",
                 Crontab.moment(this.work.started()),
-                this.asText(),
+                this.rules(),
                 this.lag(this.work.started()),
                 denier
             );
@@ -145,6 +146,14 @@ public final class Crontab implements Instance {
     @Override
     public String toString() {
         return Logger.format("%s in %[ms]s", this.origin, this.lag(new Time()));
+    }
+
+    /**
+     * Show all encapsulated rules.
+     * @return The text
+     */
+    public String rules() {
+        return StringUtils.join(this.gates, " ");
     }
 
     /**
@@ -185,35 +194,28 @@ public final class Crontab implements Instance {
     }
 
     /**
-     * Abstract gate.
+     * Abstract big gate.
      */
     @Immutable
-    @EqualsAndHashCode(of = { "prefix", "alternatives" })
+    @EqualsAndHashCode(of = "alternatives")
     @Loggable(Loggable.DEBUG)
     private abstract static class AbstractBigGate
         implements Crontab.Gate<Calendar> {
-        /**
-         * Prefix to name it.
-         */
-        private final transient String prefix;
         /**
          * All alternatives.
          */
         private final transient Crontab.Gate<Integer>[] alternatives;
         /**
          * Public ctor.
-         * @param pfx Prefix for user-friendly rendering
          * @param text Text spec
          */
         @SuppressWarnings("unchecked")
-        protected AbstractBigGate(final String pfx, final String text) {
-            this.prefix = pfx;
+        protected AbstractBigGate(final String text) {
             final String[] parts = text.split(",");
             this.alternatives =
                 (Crontab.Gate<Integer>[]) new Crontab.Gate<?>[parts.length];
             for (int idx = 0; idx < parts.length; ++idx) {
-                this.alternatives[idx] =
-                    Crontab.AbstractBigGate.parse(parts[idx]);
+                this.alternatives[idx] = Crontab.parse(parts[idx]);
             }
         }
         /**
@@ -221,11 +223,7 @@ public final class Crontab implements Instance {
          */
         @Override
         public String toString() {
-            return String.format(
-                "%s:%s",
-                this.prefix,
-                StringUtils.join(this.alternatives, "|")
-            );
+            return StringUtils.join(this.alternatives, "|");
         }
         /**
          * Matches the number?
@@ -254,77 +252,194 @@ public final class Crontab implements Instance {
             }
             return lag;
         }
+    }
+
+    /**
+     * Exact gate.
+     */
+    @Immutable
+    @EqualsAndHashCode(of = "exact")
+    @Loggable(Loggable.DEBUG)
+    private static final class ExactGate implements Crontab.Gate<Integer> {
         /**
-         * Parse text into alternative.
-         * @param part The text to parse
-         * @return Small gate condition
+         * Exact value to match.
          */
-        private static Crontab.Gate<Integer> parse(final String part) {
-            final Crontab.Gate<Integer> alternative;
-            if (part.matches("\\d+")) {
-                alternative = new Crontab.Gate<Integer>() {
-                    @Override
-                    public boolean pass(final Integer num) {
-                        return num.equals(Integer.valueOf(part));
-                    }
-                    @Override
-                    public long lag(final Integer num) {
-                        return Math.abs(num - Integer.valueOf(part));
-                    }
-                };
-            } else if (part.matches("\\d+-\\d+")) {
-                final String[] numbers = part.split("-");
-                final int left = Integer.valueOf(numbers[0]);
-                final int right = Integer.valueOf(numbers[1]);
-                alternative = new Crontab.Gate<Integer>() {
-                    @Override
-                    public boolean pass(final Integer num) {
-                        return num >= left && num <= right;
-                    }
-                    @Override
-                    public long lag(final Integer num) {
-                        long lag = 0;
-                        if (!this.pass(num)) {
-                            lag = Math.abs(num - left);
-                        }
-                        return lag;
-                    }
-                };
-            } else if (part.matches("\\*/\\d+")) {
-                final String[] sectors = part.split("/");
-                final int div = Integer.valueOf(sectors[1]);
-                alternative = new Crontab.Gate<Integer>() {
-                    @Override
-                    public boolean pass(final Integer num) {
-                        return num % div == 0;
-                    }
-                    @Override
-                    public long lag(final Integer num) {
-                        long lag = 0;
-                        if (!this.pass(num)) {
-                            lag = ((num + div - 1) / div) * div - num;
-                        }
-                        return lag;
-                    }
-                };
-            } else if ("*".equals(part)) {
-                alternative = new Crontab.Gate<Integer>() {
-                    @Override
-                    public boolean pass(final Integer num) {
-                        return true;
-                    }
-                    @Override
-                    public long lag(final Integer num) {
-                        return 0L;
-                    }
-                };
-            } else {
-                throw new IllegalArgumentException(
-                    String.format("invalid crontab sector '%s'", part)
-                );
-            }
-            return alternative;
+        private final transient int exact;
+        /**
+         * Protected ctor.
+         * @param val The value to encapsulate
+         */
+        protected ExactGate(final int val) {
+            this.exact = val;
         }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return Integer.toString(this.exact);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean pass(final Integer num) {
+            return num == this.exact;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public long lag(final Integer num) {
+            return Math.abs(num - this.exact);
+        }
+    }
+
+    /**
+     * Interval gate.
+     */
+    @Immutable
+    @EqualsAndHashCode(of = { "left", "right" })
+    @Loggable(Loggable.DEBUG)
+    private static final class IntervalGate implements Crontab.Gate<Integer> {
+        /**
+         * Left, inclusive.
+         */
+        private final transient int left;
+        /**
+         * Right, inclusive.
+         */
+        private final transient int right;
+        /**
+         * Protected ctor.
+         * @param lft Left, inclusive
+         * @param rgt Right, inclusive
+         */
+        protected IntervalGate(final int lft, final int rgt) {
+            Validate.isTrue(
+                lft < rgt, "left value %d should be less than right %d",
+                lft, rgt
+            );
+            this.left = lft;
+            this.right = rgt;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return String.format("%d-%d", this.left, this.right);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean pass(final Integer num) {
+            return num >= this.left && num <= this.right;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public long lag(final Integer num) {
+            long lag = 0;
+            if (!this.pass(num)) {
+                lag = Math.abs(num - this.left);
+            }
+            return lag;
+        }
+    }
+
+    /**
+     * Modulo gate.
+     */
+    @Immutable
+    @EqualsAndHashCode(of = "divisor")
+    @Loggable(Loggable.DEBUG)
+    private static final class ModuloGate implements Crontab.Gate<Integer> {
+        /**
+         * Divisor.
+         */
+        private final transient int divisor;
+        /**
+         * Protected ctor.
+         * @param div The divisor
+         */
+        protected ModuloGate(final int div) {
+            Validate.isTrue(
+                div > 0, "divisor %d has to be positive and non-zero",
+                div
+            );
+            this.divisor = div;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return String.format("*/%d", this.divisor);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean pass(final Integer num) {
+            return num % this.divisor == 0;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public long lag(final Integer num) {
+            long lag = 0;
+            if (!this.pass(num)) {
+                lag = ((num + this.divisor - 1)
+                    / this.divisor) * this.divisor - num;
+            }
+            return lag;
+        }
+    }
+
+    /**
+     * Parse text into alternative.
+     * @param part The text to parse
+     * @return Small gate condition
+     */
+    private static Crontab.Gate<Integer> parse(final String part) {
+        final Crontab.Gate<Integer> alternative;
+        if (part.matches("\\d+")) {
+            alternative = new Crontab.ExactGate(Integer.parseInt(part));
+        } else if (part.matches("\\d+-\\d+")) {
+            final String[] numbers = part.split("-");
+            alternative = new Crontab.IntervalGate(
+                Integer.parseInt(numbers[0]), Integer.parseInt(numbers[1])
+            );
+        } else if (part.matches("\\*/\\d+")) {
+            alternative = new Crontab.ModuloGate(
+                Integer.valueOf(part.substring(part.indexOf('/') + 1))
+            );
+        // @checkstyle MultipleStringLiterals (1 line)
+        } else if ("*".equals(part)) {
+            alternative = new Crontab.Gate<Integer>() {
+                @Override
+                public String toString() {
+                    return "*";
+                }
+                @Override
+                public boolean pass(final Integer num) {
+                    return true;
+                }
+                @Override
+                public long lag(final Integer num) {
+                    return 0L;
+                }
+            };
+        } else {
+            throw new IllegalArgumentException(
+                String.format("invalid crontab sector '%s'", part)
+            );
+        }
+        return alternative;
     }
 
     /**
@@ -345,7 +460,7 @@ public final class Crontab implements Instance {
             );
         }
         return (Crontab.Gate<Calendar>[]) new Crontab.Gate<?>[] {
-            new Crontab.AbstractBigGate("min", parts[0]) {
+            new Crontab.AbstractBigGate(parts[0]) {
                 @Override
                 public boolean pass(final Calendar calendar) {
                     return this.matches(calendar.get(Calendar.MINUTE));
@@ -357,7 +472,7 @@ public final class Crontab implements Instance {
                     ) * TimeUnit.MINUTES.toMillis(1);
                 }
             },
-            new Crontab.AbstractBigGate("hour", parts[1]) {
+            new Crontab.AbstractBigGate(parts[1]) {
                 @Override
                 public boolean pass(final Calendar calendar) {
                     return this.matches(calendar.get(Calendar.HOUR_OF_DAY));
@@ -369,7 +484,7 @@ public final class Crontab implements Instance {
                     ) * TimeUnit.HOURS.toMillis(1);
                 }
             },
-            new Crontab.AbstractBigGate("day", parts[2]) {
+            new Crontab.AbstractBigGate(parts[2]) {
                 @Override
                 public boolean pass(final Calendar calendar) {
                     return this.matches(
@@ -383,7 +498,7 @@ public final class Crontab implements Instance {
                     ) * TimeUnit.DAYS.toMillis(1);
                 }
             },
-            new Crontab.AbstractBigGate("mon", parts[Tv.THREE]) {
+            new Crontab.AbstractBigGate(parts[Tv.THREE]) {
                 @Override
                 public boolean pass(final Calendar calendar) {
                     return this.matches(calendar.get(Calendar.MONTH) + 1);
@@ -395,7 +510,7 @@ public final class Crontab implements Instance {
                     ) * Tv.THIRTY * TimeUnit.DAYS.toMillis(1);
                 }
             },
-            new Crontab.AbstractBigGate("wday", parts[Tv.FOUR]) {
+            new Crontab.AbstractBigGate(parts[Tv.FOUR]) {
                 @Override
                 public boolean pass(final Calendar calendar) {
                     return this.matches(calendar.get(Calendar.DAY_OF_WEEK));
@@ -408,14 +523,6 @@ public final class Crontab implements Instance {
                 }
             },
         };
-    }
-
-    /**
-     * Convert it to text.
-     * @return The text
-     */
-    private String asText() {
-        return StringUtils.join(this.gates, " ");
     }
 
     /**
