@@ -50,7 +50,9 @@
         </form>
         <xsl:choose>
             <xsl:when test="/page/units/unit">
-                <xsl:apply-templates select="/page/units/unit"/>
+                <ul class="nav">
+                    <xsl:apply-templates select="/page/units/unit"/>
+                </ul>
             </xsl:when>
             <xsl:otherwise>
                 <p>
@@ -64,7 +66,7 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="unit">
-        <div>
+        <li>
             <ul class="inline btn-group-vertical">
                 <li>
                     <a title="edit this unit">
@@ -111,6 +113,6 @@
                     </a>
                 </li>
             </ul>
-        </div>
+        </li>
     </xsl:template>
 </xsl:stylesheet>
