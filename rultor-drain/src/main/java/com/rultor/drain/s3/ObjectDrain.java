@@ -130,10 +130,10 @@ public final class ObjectDrain implements Drain {
             body = object.getObjectContent();
             size = object.getObjectMetadata().getContentLength();
         }
-        final byte[] suffix = String.format(
-            "%s\n",
-            StringUtils.join(lines, "\n")
-        ).getBytes(CharEncoding.UTF_8);
+        final byte[] suffix = new StringBuilder(StringUtils.join(lines, "\n"))
+            .append('\n')
+            .toString()
+            .getBytes(CharEncoding.UTF_8);
         Validate.isTrue(suffix.length > 0, "empty input");
         size += suffix.length;
         final ObjectMetadata meta = new ObjectMetadata();
