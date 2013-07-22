@@ -94,9 +94,8 @@
     </ciManagement>
     <distributionManagement>
         <site>
-            <id>github-pages-site</id>
-            <name>Deployment through GitHub's site deployment plugin</name>
-            <url></url>
+            <id>github-pages</id>
+            <url>http://doc.rultor.com</url>
         </site>
     </distributionManagement>
     <properties>
@@ -127,7 +126,7 @@
                 <version>0.8</version>
                 <configuration>
                     <message>site for ${project.version}</message>
-                    <path>${project.distributionManagement.site.url}</path>
+                    <path></path>
                     <merge>true</merge>
                 </configuration>
                 <executions>

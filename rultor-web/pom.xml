@@ -272,6 +272,14 @@
         </pluginManagement>
         <plugins>
             <plugin>
+                <!-- @see https://github.com/github/maven-plugins/issues/22 -->
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <configuration>
+                    <path>${project.artifactId}</path>
+                </configuration>
+            </plugin>
+            <plugin>
                 <!-- @see https://github.com/marceloverdijk/lesscss-maven-plugin/issues/10 -->
                 <groupId>org.lesscss</groupId>
                 <artifactId>lesscss-maven-plugin</artifactId>
