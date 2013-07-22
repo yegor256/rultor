@@ -1,3 +1,0 @@
-# RESTful HTTP client
-
-To be continued...

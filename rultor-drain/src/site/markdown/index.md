@@ -1,3 +1,0 @@
-# Basic Drains
-
-To be continued...

@@ -1,3 +1,0 @@
-# Service Programming Interface (basic classes)
-
-To be continued...
