@@ -96,7 +96,7 @@
         <site>
             <id>github-pages-site</id>
             <name>Deployment through GitHub's site deployment plugin</name>
-            <url>.</url>
+            <url>site</url>
         </site>
     </distributionManagement>
     <properties>
