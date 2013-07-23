@@ -95,7 +95,6 @@ final class Build {
                     .putAll(args)
                     .build()
             );
-            Signal.log(Signal.Mnemo.SUCCESS, "Announced success");
         } else {
             announcement = new Announcement(
                 Level.SEVERE,
@@ -105,7 +104,6 @@ final class Build {
                     .putAll(args)
                     .build()
             );
-            Signal.log(Signal.Mnemo.SUCCESS, "Announced failure");
         }
         return announcement;
     }

@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
+import com.rultor.board.Announcement;
 import com.rultor.board.Billboard;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
@@ -148,14 +149,18 @@ public final class OnCommit implements Instance {
      * @throws IOException If some IO problem
      */
     private void build(final Commit head) throws IOException {
-        this.board.announce(
-            new Build(this.batch).exec(
-                new ImmutableMap.Builder<String, Object>()
-                    .put("branch", this.branch)
-                    .put("head", head)
-                    .build()
-            )
+        final Announcement anmt = new Build(this.batch).exec(
+            new ImmutableMap.Builder<String, Object>()
+                .put("branch", this.branch)
+                .put("head", head)
+                .build()
         );
+        this.board.announce(anmt);
+        Signal.log(
+            Signal.Mnemo.SUCCESS, "Announced %s to %s",
+            anmt, this.board
+        );
+
     }
 
 }

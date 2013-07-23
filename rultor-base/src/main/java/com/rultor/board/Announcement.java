@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Announcement.
@@ -44,7 +43,6 @@ import lombok.ToString;
  * @version $Id$
  * @since 1.0
  */
-@ToString
 @EqualsAndHashCode(of = { "lvl", "arguments" })
 @Loggable(Loggable.DEBUG)
 public final class Announcement {
@@ -70,6 +68,14 @@ public final class Announcement {
         final Map<String, Object> args) {
         this.lvl = level;
         this.arguments = args;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return this.lvl.toString();
     }
 
     /**

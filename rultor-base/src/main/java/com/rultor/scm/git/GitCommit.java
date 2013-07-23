@@ -139,7 +139,7 @@ final class GitCommit implements Commit {
             "yyyy-MM-dd HH:mm:ss X", Locale.ENGLISH
         );
         try {
-            return new Commit.Simple(
+            return new GitCommit(
                 matcher.group(1),
                 new Time(fmt.parse(matcher.group(Tv.THREE))),
                 matcher.group(2)
