@@ -39,7 +39,7 @@ import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Concatenated strings.
+ * Concatenated some strings into one.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
