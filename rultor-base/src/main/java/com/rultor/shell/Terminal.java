@@ -123,7 +123,7 @@ public final class Terminal {
             throw new IOException(
                 Logger.format(
                     // @checkstyle LineLength (1 line)
-                    "non-zero exit code %d after executing '%s' at %s, stdout='%[text]s', stderr='%[text]s'",
+                    "non-zero exit code %d after executing `%s` at %s, stdout='%[text]s', stderr='%[text]s'",
                     code,
                     command,
                     this.shell,

@@ -105,7 +105,7 @@ final class CFStack implements Environment {
                 final Stack stack = result.getStacks().get(0);
                 Logger.info(
                     this,
-                    "stack %s is in '%s' status: %s",
+                    "stack `%s` is in `%s` status: %s",
                     stack.getStackId(),
                     stack.getStackStatus(),
                     stack.getStackStatusReason()
@@ -121,7 +121,7 @@ final class CFStack implements Environment {
                 if (!"CREATE_IN_PROGRESS".equals(stack.getStackStatus())) {
                     throw new IllegalStateException(
                         String.format(
-                            "stack %s is in invalid state '%s'",
+                            "stack `%s` is in invalid state `%s`",
                             stack.getStackId(),
                             stack.getStackStatus()
                         )
@@ -149,7 +149,7 @@ final class CFStack implements Environment {
             aws.deleteStack(new DeleteStackRequest().withStackName(this.name));
             Logger.info(
                 this,
-                "Stack %s sent for deletion",
+                "Stack `%s` sent for deletion",
                 this.name
             );
         } finally {
@@ -175,7 +175,9 @@ final class CFStack implements Environment {
         }
         if (address == null) {
             throw new IllegalArgumentException(
-                "no IP output from the stack"
+                String.format(
+                    "no IP output from stack `%s`", stack.getStackId()
+                )
             );
         }
         return address;

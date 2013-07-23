@@ -111,7 +111,7 @@ public final class GitBranch implements Branch {
         );
         Signal.log(
             Signal.Mnemo.SUCCESS,
-            "Git log in branch %s retrieved",
+            "Git log in branch `%s` retrieved",
             this.name
         );
         final Iterable<String> lines = Arrays.asList(stdout.split("\n"));

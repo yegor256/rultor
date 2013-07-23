@@ -126,7 +126,7 @@ final class AwsUser implements User {
         final String unt) {
         if (this.units().contains(unt)) {
             throw new IllegalArgumentException(
-                String.format("Unit '%s' already exists", unt)
+                String.format("Unit `%s` already exists", unt)
             );
         }
         new AwsUnit(this.region, this.name, unt).update(new Spec.Simple());
@@ -145,7 +145,7 @@ final class AwsUser implements User {
             .iterator();
         if (!items.hasNext()) {
             throw new NoSuchElementException(
-                String.format("unit '%s' not found", unit)
+                String.format("Unit `%s` not found", unit)
             );
         }
         items.next();
@@ -160,7 +160,7 @@ final class AwsUser implements User {
         final String unit) {
         if (!this.units().contains(unit)) {
             throw new IllegalArgumentException(
-                String.format("Unit '%s' doesn't exist", unit)
+                String.format("Unit `%s` doesn't exist", unit)
             );
         }
         return new AwsUnit(this.region, this.name, unit);

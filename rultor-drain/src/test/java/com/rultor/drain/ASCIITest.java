@@ -64,10 +64,12 @@ public final class ASCIITest {
     public void filtersAndProcessesLines() throws Exception {
         final Drain drain = Mockito.mock(Drain.class);
         new ASCII(drain).append(
-            Arrays.asList("should be removed\r\u0008how \u0008\u0008are you?")
+            Arrays.asList("to be removed\r\u0008how \u0008\u0008are\u0009you?")
         );
         Mockito.verify(drain).append(
-            Mockito.argThat(Matchers.everyItem(Matchers.equalTo("hoare you?")))
+            Mockito.argThat(
+                Matchers.everyItem(Matchers.equalTo("hoare   you?"))
+            )
         );
     }
 

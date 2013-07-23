@@ -209,7 +209,7 @@ public final class PulseRs extends BaseRs {
         if (!this.user().units().contains(this.name)) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
-                String.format("Unit '%s' doesn't exist", this.name),
+                String.format("Unit `%s` doesn't exist", this.name),
                 Level.SEVERE
             );
         }
@@ -256,7 +256,7 @@ public final class PulseRs extends BaseRs {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 String.format(
-                    "Can't fetch Spec from '%s': %s",
+                    "Can't fetch Spec from `%s`: %s",
                     this.date,
                     ExceptionUtils.getRootCauseMessage(ex)
                 ),
@@ -276,7 +276,7 @@ public final class PulseRs extends BaseRs {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 String.format(
-                    "Can't fetch stages from '%s': %s",
+                    "Can't fetch stages from `%s`: %s",
                     this.date,
                     ExceptionUtils.getRootCauseMessage(ex)
                 ),

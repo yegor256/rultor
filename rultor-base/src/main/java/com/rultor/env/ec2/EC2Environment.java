@@ -140,7 +140,7 @@ final class EC2Environment implements Environment {
                 final InstanceState state = instance.getState();
                 Logger.info(
                     this,
-                    "instance %s/%s is in '%s' state (code=%d)",
+                    "instance `%s`/`%s` is in `%s` state (code=%d)",
                     instance.getInstanceId(),
                     instance.getPlacement().getAvailabilityZone(),
                     state.getName(),
@@ -150,8 +150,9 @@ final class EC2Environment implements Environment {
                     if (!immediately) {
                         Signal.log(
                             Signal.Mnemo.SUCCESS,
-                            "EC2 instance %s is ready",
-                            instance.getInstanceId()
+                            "EC2 instance `%s`/`%s` is ready",
+                            instance.getInstanceId(),
+                            instance.getInstanceType()
                         );
                     }
                     return InetAddress.getByAddress(
@@ -164,7 +165,7 @@ final class EC2Environment implements Environment {
                 if (!"pending".equals(state.getName())) {
                     throw new IllegalStateException(
                         String.format(
-                            "instance %s is in invalid state '%s'",
+                            "instance `%s` is in invalid state `%s`",
                             instance.getInstanceId(),
                             state.getName()
                         )
@@ -209,7 +210,7 @@ final class EC2Environment implements Environment {
             Signal.log(
                 Signal.Mnemo.SUCCESS,
                 // @checkstyle LineLength (1 line)
-                "EC2 instance %s (%s) terminated, after %[ms]s of activity, approx. %s",
+                "EC2 instance `%s`/`%s` terminated, after %[ms]s of activity, approx. %s",
                 change.getInstanceId(),
                 instance.getInstanceType(),
                 age,
@@ -217,7 +218,7 @@ final class EC2Environment implements Environment {
             );
             this.work.charge(
                 Logger.format(
-                    "%[ms]s of AWS EC2 %s instance",
+                    "%[ms]s of AWS EC2 `%s` instance",
                     age,
                     instance.getInstanceType()
                 ),

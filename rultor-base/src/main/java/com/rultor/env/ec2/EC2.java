@@ -164,7 +164,7 @@ public final class EC2 implements Environments {
             if (instances.isEmpty()) {
                 throw new IllegalStateException(
                     String.format(
-                        "failed to run an EC2 instance %s with AMI '%s'",
+                        "failed to run an EC2 instance `%s` with AMI `%s`",
                         this.type,
                         this.ami
                     )
@@ -173,7 +173,8 @@ public final class EC2 implements Environments {
             final Instance instance = instances.get(0);
             Signal.log(
                 Signal.Mnemo.SUCCESS,
-                "EC2 instance %s created, type=%s, ami=%s, key=%s, platform=%s",
+                // @checkstyle LineLength (1 line)
+                "EC2 instance `%s` created, type=`%s`, ami=`%s`, key=`%s`, platform=`%s`",
                 instance.getInstanceId(),
                 this.type,
                 this.ami,

@@ -157,7 +157,7 @@ public final class DomainNotepad implements Notepad {
         );
         this.work.charge(
             String.format(
-                "retrieved AWS SimpleDB %d items from '%s' domain",
+                "retrieved AWS SimpleDB %d items from `%s` domain",
                 result.getItems().size(),
                 this.client.domain()
             ),
@@ -213,7 +213,7 @@ public final class DomainNotepad implements Notepad {
         );
         this.work.charge(
             String.format(
-                "added AWS SimpleDB item '%s' to '%s' domain",
+                "added AWS SimpleDB item `%s` to `%s` domain",
                 this.name(line),
                 this.client.domain()
             ),
@@ -234,7 +234,7 @@ public final class DomainNotepad implements Notepad {
         );
         this.work.charge(
             String.format(
-                "removed AWS SimpleDB item '%s' from '%s' domain",
+                "removed AWS SimpleDB item `%s` from `%s` domain",
                 this.name(line.toString()),
                 this.client.domain()
             ),

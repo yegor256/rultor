@@ -147,7 +147,7 @@ final class GitCommit implements Commit {
         } catch (ParseException ex) {
             throw new IllegalArgumentException(
                 String.format(
-                    "failed to parse date '%s'",
+                    "failed to parse date `%s`",
                     matcher.group(Tv.THREE)
                 ),
                 ex

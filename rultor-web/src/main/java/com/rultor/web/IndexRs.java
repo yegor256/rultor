@@ -98,7 +98,7 @@ public final class IndexRs extends BaseRs {
                 .clone()
                 .path(UnitRs.class)
                 .build(name),
-            String.format("Unit '%s' successfully created", name),
+            String.format("Unit `%s` successfully created", name),
             Level.INFO
         );
     }

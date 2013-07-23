@@ -117,7 +117,7 @@ public final class SSHChannel implements Shell {
         Validate.matchesPattern(
             this.addr,
             "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}",
-            "Invalid IP address of the server '%s'",
+            "Invalid IP address of the server `%s`",
             this.addr
         );
         this.login = user;

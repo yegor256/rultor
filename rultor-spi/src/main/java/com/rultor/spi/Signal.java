@@ -147,7 +147,7 @@ public final class Signal {
         if (!mtr.matches()) {
             throw new IllegalArgumentException(
                 String.format(
-                    "signal not found in '%s', use exists() first",
+                    "signal not found in `%s`, use exists() first",
                     text
                 )
             );
@@ -156,7 +156,7 @@ public final class Signal {
             != mtr.group(Tv.THREE).length()) {
             throw new IllegalArgumentException(
                 String.format(
-                    "matcher counter mismatch in '%s', use exists() first",
+                    "matcher counter mismatch in `%s`, use exists() first",
                     text
                 )
             );

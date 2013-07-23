@@ -33,6 +33,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulses;
 import java.io.IOException;
@@ -138,6 +139,13 @@ public final class ASCII implements Drain {
             if (chr == '\010') {
                 if (output.length() > 0) {
                     output.setLength(output.length() - 1);
+                }
+                continue;
+            }
+            if (chr == '\011') {
+                final int lag = Tv.EIGHT - (output.length() % Tv.EIGHT);
+                for (int space = 0; space < lag; ++space) {
+                    output.append(' ');
                 }
                 continue;
             }

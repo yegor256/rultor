@@ -145,7 +145,7 @@ public final class ItemLineup implements Lineup {
             }
             Logger.debug(
                 this,
-                "SimpleDB object '%s/%s' is locked by '%s', let's wait...",
+                "SimpleDB object `%s/%s` is locked by `%s`, let's wait...",
                 this.client.domain(),
                 this.name,
                 saved
@@ -193,7 +193,7 @@ public final class ItemLineup implements Lineup {
         );
         this.work.charge(
             String.format(
-                "checked existence of AWS SimpleDB item '%s' in '%s' domain",
+                "checked existence of AWS SimpleDB item `%s` in `%s` domain",
                 this.name,
                 this.client.domain()
             ),
@@ -224,7 +224,7 @@ public final class ItemLineup implements Lineup {
         );
         this.work.charge(
             String.format(
-                "put AWS SimpleDB item '%s' into '%s' domain",
+                "put AWS SimpleDB item `%s` into `%s` domain",
                 this.name,
                 this.client.domain()
             ),
@@ -246,7 +246,7 @@ public final class ItemLineup implements Lineup {
         );
         this.work.charge(
             String.format(
-                "loaded AWS SimpleDB item '%s' from '%s' domain",
+                "loaded AWS SimpleDB item `%s` from `%s` domain",
                 this.name,
                 this.client.domain()
             ),
@@ -272,7 +272,7 @@ public final class ItemLineup implements Lineup {
         );
         this.work.charge(
             String.format(
-                "removed AWS SimpleDB item '%s' from '%s' domain",
+                "removed AWS SimpleDB item `%s` from `%s` domain",
                 this.name,
                 this.client.domain()
             ),

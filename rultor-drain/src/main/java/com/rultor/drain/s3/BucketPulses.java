@@ -149,7 +149,7 @@ final class BucketPulses implements Pulses {
                 Logger.info(
                     this,
                     // @checkstyle LineLength (1 line)
-                    "loaded %d pulse(s) from S3 bucket '%s', marker is '%s', next marker is '%s'",
+                    "loaded %d pulse(s) from S3 bucket `%s`, marker is `%s`, next marker is `%s`",
                     this.queue.size(),
                     listing.getBucketName(),
                     this.marker,

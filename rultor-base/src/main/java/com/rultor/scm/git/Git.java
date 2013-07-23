@@ -160,7 +160,7 @@ public final class Git implements SCM {
         );
         Signal.log(
             Signal.Mnemo.SUCCESS,
-            "Git branch %s checked out",
+            "Git branch `%s` checked out",
             name
         );
         return new GitBranch(this.terminal, this.dir, name);

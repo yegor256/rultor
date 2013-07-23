@@ -144,7 +144,7 @@ public final class ObjectLineup implements Lineup {
             if (saved.equals(marker)) {
                 Logger.debug(
                     this,
-                    "S3 object '%s/%s' is locked by us with '%s'",
+                    "S3 object `%s/%s` is locked by us with `%s`",
                     this.client.bucket(),
                     this.key,
                     saved
@@ -153,7 +153,7 @@ public final class ObjectLineup implements Lineup {
             }
             Logger.debug(
                 this,
-                "S3 object '%s/%s' is locked by '%s', let's wait...",
+                "S3 object `%s/%s` is locked by `%s`, let's wait...",
                 this.client.bucket(),
                 this.key,
                 saved
@@ -200,7 +200,7 @@ public final class ObjectLineup implements Lineup {
         if (exists) {
             Logger.debug(
                 this,
-                "S3 object '%s/%s' exists: %s",
+                "S3 object `%s/%s` exists: %s",
                 this.client.bucket(),
                 this.key,
                 this.load()
@@ -227,7 +227,7 @@ public final class ObjectLineup implements Lineup {
             );
             Logger.debug(
                 this,
-                "saved %d char(s) to S3 object '%s/%s', etag=%s",
+                "saved %d char(s) to S3 object `%s/%s`, etag=`%s`",
                 content.length(),
                 this.client.bucket(),
                 this.key,
@@ -253,7 +253,7 @@ public final class ObjectLineup implements Lineup {
                 content = IOUtils.toString(stream, CharEncoding.UTF_8);
                 Logger.debug(
                     this,
-                    "loaded %d char(s) from S3 object '%s/%s'",
+                    "loaded %d char(s) from S3 object `%s/%s`",
                     content.length(),
                     this.client.bucket(),
                     this.key
@@ -280,7 +280,7 @@ public final class ObjectLineup implements Lineup {
         aws.deleteObject(this.client.bucket(), this.key);
         Logger.debug(
             this,
-            "deleted S3 object '%s/%s'",
+            "deleted S3 object `%s/%s`",
             this.client.bucket(),
             this.key
         );

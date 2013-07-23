@@ -123,7 +123,7 @@ final class RefForeign implements Variable<Object> {
         if (!user.units().contains(this.name)) {
             throw new SpecException(
                 String.format(
-                    "unit '%s' not found in '%s' but requested by '%s'",
+                    "unit `%s` not found in `%s` but requested by `%s`",
                     this.name, this.owner, this.client
                 )
             );

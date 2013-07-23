@@ -111,7 +111,7 @@ public final class UnitRs extends BaseRs {
         this.user().remove(this.name);
         throw this.flash().redirect(
             this.uriInfo().getBaseUri(),
-            String.format("Unit '%s' successfully removed", this.name),
+            String.format("Unit `%s` successfully removed", this.name),
             Level.INFO
         );
     }
@@ -145,7 +145,7 @@ public final class UnitRs extends BaseRs {
         }
         throw this.flash().redirect(
             this.uriInfo().getRequestUri(),
-            String.format("Unit '%s' successfully saved/updated", this.name),
+            String.format("Unit `%s` successfully saved/updated", this.name),
             Level.INFO
         );
     }
@@ -158,7 +158,7 @@ public final class UnitRs extends BaseRs {
         if (!this.user().units().contains(this.name)) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
-                String.format("Unit '%s' doesn't exist", this.name),
+                String.format("Unit `%s` doesn't exist", this.name),
                 Level.SEVERE
             );
         }

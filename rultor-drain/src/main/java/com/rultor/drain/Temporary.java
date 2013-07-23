@@ -162,7 +162,7 @@ public final class Temporary implements Drain {
         if (buffer == null) {
             throw new IOException(
                 String.format(
-                    "temporary buffer is absent for '%s' in '%s'",
+                    "temporary buffer is absent for `%s` in `%s`",
                     this.marker,
                     this.work
                 )

@@ -152,7 +152,7 @@ public final class ObjectDrain implements Drain {
             );
             Logger.info(
                 this,
-                "'%s' saved %s to S3, etag=%s",
+                "`%s` saved %s to S3, etag=`%s`",
                 this.key,
                 FileUtils.byteCountToDisplaySize(size),
                 result.getETag()
@@ -160,7 +160,7 @@ public final class ObjectDrain implements Drain {
         } catch (AmazonS3Exception ex) {
             throw new IOException(
                 String.format(
-                    "failed to flush %s to %s: %s",
+                    "failed to flush %s to `%s`: %s",
                     this.key,
                     this.client.bucket(),
                     ex

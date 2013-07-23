@@ -108,20 +108,20 @@ public final class OnCommit implements Instance {
             if (this.notepad.contains(head.name())) {
                 Signal.log(
                     Signal.Mnemo.SUCCESS,
-                    "HEAD was already seen: %s",
+                    "HEAD `%s` was already seen",
                     head
                 );
             } else {
                 Signal.log(
                     Signal.Mnemo.SUCCESS,
-                    "Found new HEAD of SCM: %s",
+                    "Found previously unseen HEAD `%s`",
                     head
                 );
                 this.build(head);
                 this.notepad.add(head.name());
                 Signal.log(
                     Signal.Mnemo.SUCCESS,
-                    "HEAD %s marked as seen",
+                    "HEAD `%s` marked as seen",
                     head
                 );
             }
