@@ -31,6 +31,7 @@ package com.rultor.base;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.Array;
 import com.rultor.spi.Proxy;
 import com.rultor.spi.Work;
 import java.util.Collection;
@@ -62,7 +63,7 @@ public final class Restrictive implements Proxy<Object> {
     /**
      * List of friends (masks).
      */
-    private final transient String[] friends;
+    private final transient Array<String> friends;
 
     /**
      * Public ctor.
@@ -78,7 +79,7 @@ public final class Restrictive implements Proxy<Object> {
         @NotNull(message = "instance can't be NULL") final Object instance) {
         this.work = wrk;
         this.origin = instance;
-        this.friends = frnds.toArray(new String[frnds.size()]);
+        this.friends = new Array<String>(frnds);
     }
 
     /**

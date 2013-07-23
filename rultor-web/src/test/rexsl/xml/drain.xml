@@ -53,6 +53,7 @@
     <pulses>
         <pulse>
             <date>2012-08-23T13:25:33Z</date>
+            <when>a few minutes ago</when>
             <stages>
                 <stage>
                     <result>SUCCESS</result>
@@ -92,6 +93,7 @@
         </pulse>
         <pulse>
             <date>2012-08-22T13:21:23Z</date>
+            <when>a few minutes ago</when>
             <stages>
                 <stage>
                     <result>SUCCESS</result>
@@ -133,6 +135,7 @@
         </pulse>
         <pulse>
             <date>2012-08-21T13:27:09Z</date>
+            <when>a few minutes ago</when>
             <stages>
                 <stage>
                     <result>SUCCESS</result>

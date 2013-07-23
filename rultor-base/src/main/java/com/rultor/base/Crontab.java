@@ -33,12 +33,15 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Signal;
 import com.rultor.spi.Time;
 import com.rultor.spi.Work;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
@@ -52,6 +55,7 @@ import org.apache.commons.lang3.Validate;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  * @see <a href="https://en.wikipedia.org/wiki/Cron">Cron in Wikipedia</a>
  * @see <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html">Crontab specification</a>
  */
@@ -89,7 +93,7 @@ public final class Crontab implements Instance {
     /**
      * All gates.
      */
-    private final transient Crontab.Gate<Calendar>[] gates;
+    private final transient Array<Crontab.Gate<Calendar>> gates;
 
     /**
      * Public ctor.
@@ -102,7 +106,7 @@ public final class Crontab implements Instance {
         @NotNull(message = "instance can't be NULL") final Instance instance) {
         this.work = wrk;
         this.origin = instance;
-        this.gates = Crontab.split(text);
+        this.gates = new Array<Crontab.Gate<Calendar>>(Crontab.split(text));
     }
 
     /**
@@ -204,7 +208,7 @@ public final class Crontab implements Instance {
         /**
          * All alternatives.
          */
-        private final transient Crontab.Gate<Integer>[] alternatives;
+        private final transient Array<Crontab.Gate<Integer>> alternatives;
         /**
          * Public ctor.
          * @param text Text spec
@@ -212,11 +216,12 @@ public final class Crontab implements Instance {
         @SuppressWarnings("unchecked")
         protected AbstractBigGate(final String text) {
             final String[] parts = text.split(",");
-            this.alternatives =
-                (Crontab.Gate<Integer>[]) new Crontab.Gate<?>[parts.length];
+            final Collection<Crontab.Gate<Integer>> alts =
+                new ArrayList<Crontab.Gate<Integer>>(parts.length);
             for (int idx = 0; idx < parts.length; ++idx) {
-                this.alternatives[idx] = Crontab.parse(parts[idx]);
+                alts.add(Crontab.parse(parts[idx]));
             }
+            this.alternatives = new Array<Crontab.Gate<Integer>>(alts);
         }
         /**
          * {@inheritDoc}

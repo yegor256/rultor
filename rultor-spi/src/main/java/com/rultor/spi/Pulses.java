@@ -32,15 +32,13 @@ package com.rultor.spi;
 import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.ArraySortedSet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -77,7 +75,7 @@ public interface Pulses extends Iterable<Time> {
         /**
          * Encapsulated array.
          */
-        private final transient Time[] times;
+        private final transient ArraySortedSet<Time> times;
         /**
          * Public ctor.
          */
@@ -90,10 +88,9 @@ public interface Pulses extends Iterable<Time> {
          */
         public Array(@NotNull(message = "array can't be NULL")
             final Collection<Time> array) {
-            final Collection<Time> set =
-                new TreeSet<Time>(Collections.reverseOrder());
-            set.addAll(array);
-            this.times = set.toArray(new Time[set.size()]);
+            this.times = new ArraySortedSet<Time>(
+                array, new ArraySortedSet.Comparator.Reverse<Time>()
+            );
         }
         /**
          * {@inheritDoc}
@@ -101,17 +98,14 @@ public interface Pulses extends Iterable<Time> {
         @Override
         @NotNull
         public Pulses tail(@NotNull(message = "head is NULL") final Time head) {
-            final SortedSet<Time> array =
-                new TreeSet<Time>(Collections.reverseOrder());
-            array.addAll(Arrays.asList(this.times));
-            return new Pulses.Array(array.tailSet(head));
+            return new Pulses.Array(this.times.tailSet(head));
         }
         /**
          * {@inheritDoc}
          */
         @Override
         public Iterator<Time> iterator() {
-            return Arrays.asList(this.times).iterator();
+            return this.times.iterator();
         }
     }
 

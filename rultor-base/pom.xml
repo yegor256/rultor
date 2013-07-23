@@ -116,6 +116,11 @@
             <artifactId>sc-light-jdk15on</artifactId>
             <version>1.47.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.mylyn.github</groupId>
+            <artifactId>org.eclipse.egit.github.core</artifactId>
+            <version>2.1.5</version>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>
@@ -135,6 +140,9 @@
                             <failsafe.ec2.priv>${failsafe.ec2.priv}</failsafe.ec2.priv>
                             <failsafe.ses.key>${failsafe.ses.key}</failsafe.ses.key>
                             <failsafe.ses.secret>${failsafe.ses.secret}</failsafe.ses.secret>
+                            <failsafe.github.user>${failsafe.github.user}</failsafe.github.user>
+                            <failsafe.github.password>${failsafe.github.password}</failsafe.github.password>
+                            <failsafe.github.repo>${failsafe.github.repo}</failsafe.github.repo>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

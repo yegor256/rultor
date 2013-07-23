@@ -27,46 +27,43 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.ci;
+package com.rultor.guard;
 
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
-import com.rultor.board.Announcement;
-import com.rultor.board.Billboard;
-import com.rultor.scm.Branch;
-import com.rultor.scm.Commit;
 import com.rultor.shell.Batch;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Signal;
-import com.rultor.stateful.Notepad;
+import com.rultor.stateful.ConcurrentNotepad;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
- * Build on every new commit.
+ * On pull request.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "branch", "notepad", "batch", "board" })
+@EqualsAndHashCode(of = { "requests", "busy", "batch" })
 @Loggable(Loggable.DEBUG)
-public final class OnCommit implements Instance {
+public final class OnPullRequest implements Instance {
 
     /**
-     * Branch to monitor.
+     * All available pull requests.
      */
-    private final transient Branch branch;
+    private final transient MergeRequests requests;
 
     /**
-     * Notepad where to track all commits.
+     * List of requests we're busy with at the moment.
      */
-    private final transient Notepad notepad;
+    private final transient ConcurrentNotepad busy;
 
     /**
      * Batch to execute.
@@ -74,26 +71,18 @@ public final class OnCommit implements Instance {
     private final transient Batch batch;
 
     /**
-     * Where to notify about success/failure.
-     */
-    private final transient Billboard board;
-
-    /**
      * Public ctor.
-     * @param brn Branch
+     * @param rqsts Requests
      * @param ntp Notepad
      * @param btch Batch to use
-     * @param brd The board where to announce
-     * @checkstyle ParameterNumber (9 lines)
      */
-    public OnCommit(@NotNull(message = "branch can't be NULL") final Branch brn,
-        @NotNull(message = "notepad can't be NULL") final Notepad ntp,
-        @NotNull(message = "batch can't be NULL") final Batch btch,
-        @NotNull(message = "board can't be NULL") final Billboard brd) {
-        this.branch = brn;
-        this.notepad = ntp;
+    public OnPullRequest(
+        @NotNull(message = "requests can't be NULL") final MergeRequests rqsts,
+        @NotNull(message = "notepad can't be NULL") final ConcurrentNotepad ntp,
+        @NotNull(message = "batch can't be NULL") final Batch btch) {
+        this.busy = ntp;
         this.batch = btch;
-        this.board = brd;
+        this.requests = rqsts;
     }
 
     /**
@@ -102,28 +91,16 @@ public final class OnCommit implements Instance {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
-        final Iterator<Commit> commits = this.branch.log().iterator();
-        if (commits.hasNext()) {
-            final Commit head = commits.next();
-            if (this.notepad.contains(head.name())) {
-                Signal.log(
-                    Signal.Mnemo.SUCCESS,
-                    "HEAD `%s` was already seen",
-                    head
-                );
-            } else {
-                Signal.log(
-                    Signal.Mnemo.SUCCESS,
-                    "Found previously unseen HEAD `%s`",
-                    head
-                );
-                this.build(head);
-                this.notepad.add(head.name());
-                Signal.log(
-                    Signal.Mnemo.SUCCESS,
-                    "HEAD `%s` marked as seen",
-                    head
-                );
+        final Iterator<MergeRequest> iterator = this.requests.iterator();
+        while (iterator.hasNext()) {
+            final MergeRequest request = iterator.next();
+            if (!this.busy.addIfAbsent(request.name())) {
+                continue;
+            }
+            try {
+                this.merge(request);
+            } finally {
+                this.busy.remove(request.name());
             }
         }
     }
@@ -134,32 +111,28 @@ public final class OnCommit implements Instance {
     @Override
     public String toString() {
         return Logger.format(
-            // @checkstyle LineLength (1 line)
-            "on new commits at %s executes %s and announces through %s, tracks commits at %s",
-            this.branch,
-            this.notepad,
+            "on pull request from %s executes %s and track it in %s",
+            this.requests,
             this.batch,
-            this.board
+            this.busy
         );
     }
 
     /**
-     * Build.
-     * @param head Head of the branch
-     * @throws IOException If some IO problem
+     * Merge this pull request.
+     * @param request The request to merge
+     * @throws IOException If IO problem
      */
-    private void build(final Commit head) throws IOException {
-        final Announcement anmt = new Build(this.batch).exec(
+    private void merge(final MergeRequest request) throws IOException {
+        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        final int code = this.batch.exec(
             new ImmutableMap.Builder<String, Object>()
-                .put("branch", this.branch)
-                .put("head", head)
-                .build()
+                .put("request", request)
+                .put("home", "")
+                .build(),
+            stdout
         );
-        this.board.announce(anmt);
-        Signal.log(
-            Signal.Mnemo.SUCCESS, "Announced %s to %s",
-            anmt, this.board
-        );
+        request.notify(code, new ByteArrayInputStream(stdout.toByteArray()));
     }
 
 }

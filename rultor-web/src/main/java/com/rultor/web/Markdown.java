@@ -27,74 +27,48 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.base;
+package com.rultor.web;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.immutable.Array;
-import com.rultor.spi.Proxy;
-import java.util.Collection;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.StringUtils;
+import lombok.ToString;
 
 /**
- * Concatenated strings.
+ * Markdown text.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Immutable
-@EqualsAndHashCode(of = { "parts", "separator" })
+@ToString
 @Loggable(Loggable.DEBUG)
-public final class Concat implements Proxy<String> {
+@EqualsAndHashCode(of = "text")
+final class Markdown {
 
     /**
-     * Strings to concatenate.
+     * Text in MD.
      */
-    private final transient Array<String> parts;
-
-    /**
-     * Separator to use.
-     */
-    private final transient String separator;
+    private final transient String text;
 
     /**
      * Public ctor.
-     * @param texts Lines to concatenate
+     * @param txt Text to encapsulate
      */
-    public Concat(@NotNull(message = "list of lines can't be NULL")
-        final Collection<String> texts) {
-        this(texts, "");
+    protected Markdown(final String txt) {
+        this.text = txt;
     }
 
     /**
-     * Public ctor.
-     * @param texts Lines to concatenate
-     * @param sep Separator
+     * As HTML4.
+     * @return HTML
      */
-    public Concat(@NotNull(message = "lines can't be NULL")
-        final Collection<String> texts,
-        @NotNull(message = "separator can't be NULL") final String sep) {
-        this.parts = new Array<String>(texts);
-        this.separator = sep;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String object() {
-        return StringUtils.join(this.parts, this.separator);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("%d part(s)", this.parts.size());
+    public String html() {
+        return this.text
+            .replaceAll("`([^`]+)`", "<code>$1</code>")
+            .replaceAll("\\*{2}([^\\*]+)\\*{2}", "<strong>$1</strong>");
     }
 
 }

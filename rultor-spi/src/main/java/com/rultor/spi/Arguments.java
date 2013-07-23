@@ -30,8 +30,10 @@
 package com.rultor.spi;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -55,7 +57,7 @@ public final class Arguments {
     /**
      * Ordered values.
      */
-    private final transient Object[] values;
+    private final transient Array<Object> values;
 
     /**
      * Public ctor.
@@ -80,7 +82,7 @@ public final class Arguments {
      * @param vals All values
      */
     private Arguments(final Iterable<Object> vals) {
-        this.values = Iterables.toArray(vals, Object.class);
+        this.values = new Array<Object>(Lists.newArrayList(vals));
     }
 
     /**
@@ -88,13 +90,7 @@ public final class Arguments {
      */
     @Override
     public String toString() {
-        final Collection<String> texts = new ArrayList<String>(
-            this.values.length - 1
-        );
-        for (int idx = 1; idx < this.values.length; ++idx) {
-            texts.add(this.values[idx].toString());
-        }
-        return StringUtils.join(texts, " and ");
+        return StringUtils.join(Iterables.skip(this.values, 1), " and ");
     }
 
     /**
@@ -105,10 +101,10 @@ public final class Arguments {
      */
     public Object get(final int pos) throws SpecException {
         Validate.isTrue(pos >= 0, "position can't be negative");
-        if (pos >= this.values.length) {
+        if (pos >= this.values.size()) {
             throw new SpecException(String.format("#%d is out of bounds", pos));
         }
-        return this.values[pos];
+        return this.values.get(pos);
     }
 
     /**
@@ -116,7 +112,7 @@ public final class Arguments {
      * @return Objects
      */
     public Collection<Object> get() {
-        return Arrays.asList(this.values);
+        return this.values;
     }
 
     /**
@@ -126,12 +122,12 @@ public final class Arguments {
      * @return New arguments
      */
     public Arguments with(final int pos, final Object value) {
-        Validate.isTrue(pos < this.values.length, "%d is out of boundary", pos);
+        Validate.isTrue(pos < this.values.size(), "%d is out of boundary", pos);
         return new Arguments(
             Iterables.concat(
-                Iterables.limit(Arrays.asList(this.values), pos),
+                Iterables.limit(this.values, pos),
                 Arrays.asList(value),
-                Iterables.skip(Arrays.asList(this.values), pos + 1)
+                Iterables.skip(this.values, pos + 1)
             )
         );
     }

@@ -29,15 +29,14 @@
  */
 package com.rultor.repo;
 
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.Array;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -77,7 +76,7 @@ final class RefLocal implements Variable<Object> {
     /**
      * Parameters.
      */
-    private final transient Variable[] children;
+    private final transient Array<Variable<?>> children;
 
     /**
      * Public ctor.
@@ -92,7 +91,7 @@ final class RefLocal implements Variable<Object> {
         this.grammar = grm;
         this.owner = urn;
         this.name = ref;
-        this.children = Iterables.toArray(childs, Variable.class);
+        this.children = new Array<Variable<?>>(childs);
     }
 
     /**
@@ -106,8 +105,7 @@ final class RefLocal implements Variable<Object> {
         @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
         return new RefForeign(
-            this.grammar, this.owner, this.owner, this.name,
-            Arrays.<Variable<?>>asList(this.children)
+            this.grammar, this.owner, this.owner, this.name, this.children
         ).instantiate(users, args);
     }
 

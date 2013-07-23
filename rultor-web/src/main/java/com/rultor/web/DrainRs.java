@@ -54,6 +54,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
@@ -338,7 +339,12 @@ public final class DrainRs extends BaseRs {
             .up()
             .add("msec", Long.toString(stage.stop() - stage.start()))
             .up()
-            .add("output", stage.output())
+            .add(
+                "output",
+                StringEscapeUtils.unescapeHtml4(
+                    new Markdown(stage.output()).html()
+                )
+            )
             .up()
             .link(
                 new Link(

@@ -31,6 +31,7 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.Array;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
@@ -46,7 +47,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Array.
+ * Vector.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -56,19 +57,19 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "values")
 @Loggable(Loggable.DEBUG)
-final class Array implements Variable<List<Object>> {
+final class Vector implements Variable<List<Object>> {
 
     /**
      * Values.
      */
-    private final transient Variable<?>[] values;
+    private final transient Array<Variable<?>> values;
 
     /**
      * Public ctor.
      * @param vals Values
      */
-    protected Array(final Collection<Variable<?>> vals) {
-        this.values = vals.toArray(new Variable<?>[vals.size()]);
+    protected Vector(final Collection<Variable<?>> vals) {
+        this.values = new com.jcabi.immutable.Array<Variable<?>>(vals);
     }
 
     /**
@@ -82,7 +83,7 @@ final class Array implements Variable<List<Object>> {
         @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
         final List<Object> objects =
-            new ArrayList<Object>(this.values.length);
+            new ArrayList<Object>(this.values.size());
         for (Variable<?> var : this.values) {
             objects.add(var.instantiate(users, args));
         }

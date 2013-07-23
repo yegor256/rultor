@@ -27,74 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.base;
-
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.immutable.Array;
-import com.rultor.spi.Proxy;
-import java.util.Collection;
-import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.StringUtils;
 
 /**
- * Concatenated strings.
+ * Github-related guard classes.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-@EqualsAndHashCode(of = { "parts", "separator" })
-@Loggable(Loggable.DEBUG)
-public final class Concat implements Proxy<String> {
-
-    /**
-     * Strings to concatenate.
-     */
-    private final transient Array<String> parts;
-
-    /**
-     * Separator to use.
-     */
-    private final transient String separator;
-
-    /**
-     * Public ctor.
-     * @param texts Lines to concatenate
-     */
-    public Concat(@NotNull(message = "list of lines can't be NULL")
-        final Collection<String> texts) {
-        this(texts, "");
-    }
-
-    /**
-     * Public ctor.
-     * @param texts Lines to concatenate
-     * @param sep Separator
-     */
-    public Concat(@NotNull(message = "lines can't be NULL")
-        final Collection<String> texts,
-        @NotNull(message = "separator can't be NULL") final String sep) {
-        this.parts = new Array<String>(texts);
-        this.separator = sep;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String object() {
-        return StringUtils.join(this.parts, this.separator);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("%d part(s)", this.parts.size());
-    }
-
-}
+package com.rultor.guard.github;

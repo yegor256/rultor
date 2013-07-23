@@ -31,6 +31,7 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.Array;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Proxy;
 import com.rultor.spi.SpecException;
@@ -88,7 +89,7 @@ final class Composite implements Variable<Object> {
     /**
      * Type name.
      */
-    private final transient Variable[] vars;
+    private final transient Array<Variable<?>> vars;
 
     /**
      * Public ctor.
@@ -97,7 +98,7 @@ final class Composite implements Variable<Object> {
      */
     protected Composite(final String name, final Collection<Variable<?>> args) {
         this.type = name;
-        this.vars = args.toArray(new Variable<?>[args.size()]);
+        this.vars = new Array<Variable<?>>(args);
     }
 
     /**
@@ -110,10 +111,11 @@ final class Composite implements Variable<Object> {
         @NotNull(message = "users can't be NULL") final Users users,
         @NotNull(message = "arguments can't be NULL") final Arguments arguments)
         throws SpecException {
-        final Object[] args = new Object[this.vars.length];
-        final Class<?>[] types = new Class<?>[this.vars.length];
-        for (int idx = 0; idx < this.vars.length; ++idx) {
-            final Object object = this.vars[idx].instantiate(users, arguments);
+        final Object[] args = new Object[this.vars.size()];
+        final Class<?>[] types = new Class<?>[this.vars.size()];
+        for (int idx = 0; idx < this.vars.size(); ++idx) {
+            final Object object = this.vars.get(idx)
+                .instantiate(users, arguments);
             args[idx] = object;
             types[idx] = object.getClass();
         }

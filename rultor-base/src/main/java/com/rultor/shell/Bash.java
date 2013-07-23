@@ -31,6 +31,7 @@ package com.rultor.shell;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.ArrayMap;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Signal;
 import java.io.ByteArrayInputStream;
@@ -78,7 +79,7 @@ public final class Bash implements Batch {
     /**
      * Prerequisites.
      */
-    private final transient Object[][] prerequisites;
+    private final transient ArrayMap<String, Object> prerequisites;
 
     /**
      * Public ctor.
@@ -103,14 +104,7 @@ public final class Bash implements Batch {
         final Map<String, Object> map) {
         this.shells = shls;
         this.script = scrt;
-        this.prerequisites = new Object[map.size()][];
-        int idx = 0;
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            this.prerequisites[idx] = new Object[] {
-                entry.getKey(), entry.getValue(),
-            };
-            ++idx;
-        }
+        this.prerequisites = new ArrayMap<String, Object>(map);
     }
 
     /**
@@ -140,10 +134,11 @@ public final class Bash implements Batch {
         final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
         int code;
         try {
-            for (Object[] pair : this.prerequisites) {
+            for (Map.Entry<String, Object> pair
+                : this.prerequisites.entrySet()) {
                 shell.exec(
-                    String.format("cat > %s", pair[0]),
-                    Bash.toInputStream(pair[1]),
+                    String.format("cat > %s", pair.getKey()),
+                    Bash.toInputStream(pair.getValue()),
                     Logger.stream(Level.INFO, this),
                     Logger.stream(Level.WARNING, this)
                 );

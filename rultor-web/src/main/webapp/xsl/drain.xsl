@@ -57,7 +57,7 @@
                         </ul>
                     </div>
                 </xsl:if>
-                <ul class="nav">
+                <ul class="nav spacious">
                     <xsl:apply-templates select="/page/pulses/pulse"/>
                 </ul>
                 <xsl:if test="//links/link[@rel='more']">
@@ -99,9 +99,8 @@
                         <xsl:value-of select="date"/>
                     </a>
                 </li>
-                <li>
+                <li class="muted">
                     <xsl:value-of select="when"/>
-                    <xsl:text> ago</xsl:text>
                 </li>
                 <xsl:if test="links/link[@rel='stop']">
                     <li>
@@ -169,7 +168,7 @@
                             <xsl:attribute name="href">
                                 <xsl:value-of select="links/link[@rel='log']/@href"/>
                             </xsl:attribute>
-                            <xsl:value-of select="output"/>
+                            <xsl:value-of disable-output-escaping="yes" select="output"/>
                         </a>
                     </xsl:when>
                     <xsl:otherwise>

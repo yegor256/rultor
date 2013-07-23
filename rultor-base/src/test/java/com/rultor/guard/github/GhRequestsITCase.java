@@ -27,71 +27,60 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.guard.github;
 
-import com.jcabi.aspects.Tv;
-import com.rultor.spi.Arguments;
-import com.rultor.spi.Users;
-import com.rultor.spi.Variable;
-import com.rultor.spi.Work;
-import java.util.Arrays;
-import java.util.List;
+import com.rultor.guard.MergeRequest;
+import com.rultor.guard.MergeRequests;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assume;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
- * Test case for {@link Array}.
+ * Integration case for {@link GhRequests}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class ArrayTest {
+public final class GhRequestsITCase {
 
     /**
-     * Array can make an instance.
+     * Github user.
+     */
+    private static final String USER =
+        System.getProperty("failsafe.github.user");
+
+    /**
+     * Github password.
+     */
+    private static final String PASSWORD =
+        System.getProperty("failsafe.github.password");
+
+    /**
+     * Github repository name.
+     */
+    private static final String REPO =
+        System.getProperty("failsafe.github.repo");
+
+    /**
+     * GhRequests can retrieve pull requests.
      * @throws Exception If some problem inside
      */
     @Test
-    public void makesInstance() throws Exception {
-        final Variable<List<Object>> var = new Array(
-            Arrays.<Variable<?>>asList(new Constant<Integer>(Tv.TEN))
+    public void fetchesPullRequestsFromGithub() throws Exception {
+        Assume.assumeNotNull(GhRequestsITCase.USER);
+        final MergeRequests requests = new GhRequests(
+            GhRequestsITCase.USER,
+            GhRequestsITCase.PASSWORD,
+            GhRequestsITCase.REPO
         );
         MatcherAssert.assertThat(
-            var.instantiate(
-                Mockito.mock(Users.class),
-                new Arguments(new Work.None())
-            ).get(0),
-            Matchers.<Object>equalTo(Tv.TEN)
+            requests,
+            Matchers.<MergeRequest>iterableWithSize(Matchers.greaterThan(0))
         );
-    }
-
-    /**
-     * Array can make a text.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void makesText() throws Exception {
-        final Variable<List<Object>> var = new Array(
-            Arrays.<Variable<?>>asList(
-                new Constant<Long>((long) Tv.TEN),
-                new Text("some text\nline two"),
-                new Composite(
-                    "com.rultor.SomeOtherClass",
-                    Arrays.<Variable<?>>asList()
-                )
-            )
-        );
+        final MergeRequest request = requests.iterator().next();
         MatcherAssert.assertThat(
-            var.asText(),
-            Matchers.equalTo(
-                // @checkstyle StringLiteralsConcatenation (5 lines)
-                "[\n"
-                + "  10L,\n"
-                + "  \"some text\\nline two\",\n"
-                + "  com.rultor.SomeOtherClass()\n"
-                + "]"
-            )
+            request.params(),
+            Matchers.hasKey("issue")
         );
     }
 

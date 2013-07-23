@@ -50,7 +50,7 @@
         </form>
         <xsl:choose>
             <xsl:when test="/page/units/unit">
-                <ul class="nav">
+                <ul class="nav spacious">
                     <xsl:apply-templates select="/page/units/unit"/>
                 </ul>
             </xsl:when>

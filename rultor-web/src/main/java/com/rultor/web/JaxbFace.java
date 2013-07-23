@@ -135,9 +135,9 @@ final class JaxbFace {
         if (!(object instanceof String)) {
             output = output.add(
                 "html",
-                StringEscapeUtils.escapeHtml4(object.toString())
-                    .replaceAll("`([^`]+)`", "<code>$1</code>")
-                    .replaceAll("\\*{2}([^\\*]+)\\*{2}", "<strong>$1</strong>")
+                StringEscapeUtils.escapeHtml4(
+                    new Markdown(object.toString()).html()
+                )
             ).up();
         }
         return output;

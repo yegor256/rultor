@@ -29,9 +29,9 @@
  */
 package com.rultor.repo;
 
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.Array;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
@@ -88,7 +88,7 @@ final class RefForeign implements Variable<Object> {
     /**
      * Parameters.
      */
-    private final transient Variable[] children;
+    private final transient Array<Variable<?>> children;
 
     /**
      * Public ctor.
@@ -106,7 +106,7 @@ final class RefForeign implements Variable<Object> {
         this.client = clnt;
         this.owner = urn;
         this.name = ref;
-        this.children = Iterables.toArray(childs, Variable.class);
+        this.children = new Array<Variable<?>>(childs);
     }
 
     /**
@@ -183,7 +183,7 @@ final class RefForeign implements Variable<Object> {
     private Arguments mapping(final Users users, final Work work,
         final Arguments args) throws SpecException {
         final Collection<Object> values =
-            new ArrayList<Object>(this.children.length);
+            new ArrayList<Object>(this.children.size());
         for (Variable<?> var : this.children) {
             values.add(var.instantiate(users, args));
         }

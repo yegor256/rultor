@@ -32,9 +32,10 @@ package com.rultor.repo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.immutable.Array;
 import com.rultor.spi.Variable;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.CharUtils;
@@ -65,7 +66,7 @@ final class Brackets {
     /**
      * Variables to render.
      */
-    private final transient Variable[] vars;
+    private final transient Array<Variable<?>> vars;
 
     /**
      * Transition function.
@@ -90,7 +91,7 @@ final class Brackets {
      * Public ctor.
      * @param args Arguments
      */
-    protected Brackets(final Variable[] args) {
+    protected Brackets(final Collection<Variable<?>> args) {
         this(
             args,
             new Brackets.Format() {
@@ -107,8 +108,8 @@ final class Brackets {
      * @param args Arguments
      * @param fmt Format to use for printing
      */
-    protected Brackets(final Variable[] args, final Brackets.Format fmt) {
-        this.vars = Arrays.copyOf(args, args.length);
+    protected Brackets(final Collection<Variable<?>> args, final Brackets.Format fmt) {
+        this.vars = new com.jcabi.immutable.Array<Variable<?>>(args);
         this.format = fmt;
     }
 
@@ -118,9 +119,9 @@ final class Brackets {
     @Override
     public String toString() {
         final StringBuilder text = new StringBuilder();
-        final List<String> kids = new ArrayList<String>(this.vars.length);
-        for (int pos = 0; pos < this.vars.length; ++pos) {
-            kids.add(this.format.print(pos, this.vars[pos]));
+        final List<String> kids = new ArrayList<String>(this.vars.size());
+        for (int pos = 0; pos < this.vars.size(); ++pos) {
+            kids.add(this.format.print(pos, this.vars.get(pos)));
         }
         final String line = StringUtils.join(kids, ", ");
         if (line.length() < Tv.FIFTY && !line.contains(Brackets.EOL)) {

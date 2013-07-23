@@ -29,15 +29,15 @@
  */
 package com.rultor.repo;
 
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.ArrayMap;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -62,7 +62,7 @@ final class Dictionary implements Variable<Map<String, Object>> {
     /**
      * Map of values.
      */
-    private final transient Object[][] map;
+    private final transient ArrayMap<String, Variable<?>> map;
 
     /**
      * Public ctor.
@@ -70,12 +70,7 @@ final class Dictionary implements Variable<Map<String, Object>> {
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     protected Dictionary(final Map<String, Variable<?>> vals) {
-        this.map = new Object[vals.size()][];
-        int idx = 0;
-        for (Map.Entry<String, Variable<?>> entry : vals.entrySet()) {
-            this.map[idx] = new Object[] {entry.getKey(), entry.getValue()};
-            ++idx;
-        }
+        this.map = new ArrayMap<String, Variable<?>>(vals);
     }
 
     /**
@@ -89,11 +84,11 @@ final class Dictionary implements Variable<Map<String, Object>> {
         @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
         final ConcurrentMap<String, Object> objects =
-            new ConcurrentHashMap<String, Object>(this.map.length);
-        for (Object[] pair : this.map) {
+            new ConcurrentHashMap<String, Object>(this.map.size());
+        for (Map.Entry<String, Variable<?>> pair : this.map.entrySet()) {
             objects.put(
-                pair[0].toString(),
-                Variable.class.cast(pair[1]).instantiate(users, args)
+                pair.getKey(),
+                pair.getValue().instantiate(users, args)
             );
         }
         return objects;
@@ -104,20 +99,21 @@ final class Dictionary implements Variable<Map<String, Object>> {
      */
     @Override
     public String asText() {
+        final List<String> names = new ArrayList<String>(this.map.size());
+        names.addAll(this.map.keySet());
         return new StringBuilder()
             .append('{')
             .append(
                 new Brackets(
-                    Iterables.toArray(this.variables(), Variable.class),
+                    this.map.values(),
                     new Brackets.Format() {
                         @Override
                         public String print(final int pos,
                             final Variable<?> var) {
                             return String.format(
                                 "\"%s\": %s",
-                                Dictionary.this.map[pos][0].toString()
-                                    .replace("\"", "\\\""),
-                                Variable.class.cast(var).asText()
+                                names.get(pos).replace("\"", "\\\""),
+                                var.asText()
                             );
                         }
                     }
@@ -135,23 +131,10 @@ final class Dictionary implements Variable<Map<String, Object>> {
     public Map<Integer, String> arguments() throws SpecException {
         final ConcurrentMap<Integer, String> args =
             new ConcurrentSkipListMap<Integer, String>();
-        for (Variable<?> var : this.variables()) {
+        for (Variable<?> var : this.map.values()) {
             args.putAll(var.arguments());
         }
         return args;
-    }
-
-    /**
-     * Get all variables.
-     * @return List of them
-     */
-    private Collection<Variable<?>> variables() {
-        final Collection<Variable<?>> vars =
-            new ArrayList<Variable<?>>(this.map.length);
-        for (Object[] pair : this.map) {
-            vars.add(Variable.class.cast(pair[1]));
-        }
-        return vars;
     }
 
 }

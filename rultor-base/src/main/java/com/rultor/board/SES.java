@@ -38,10 +38,10 @@ import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.amazonaws.services.simpleemail.model.SendEmailResult;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import com.rultor.aws.SESClient;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
@@ -54,6 +54,7 @@ import org.apache.commons.lang.CharUtils;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @EqualsAndHashCode(of = { "client", "sender", "recipients" })
@@ -73,7 +74,7 @@ public final class SES implements Billboard {
     /**
      * Recipients.
      */
-    private final transient String[] recipients;
+    private final transient Array<String> recipients;
 
     /**
      * Public ctor.
@@ -97,7 +98,7 @@ public final class SES implements Billboard {
     public SES(final String src, final Collection<String> rcpts,
         final SESClient clnt) {
         this.client = clnt;
-        this.recipients = rcpts.toArray(new String[rcpts.size()]);
+        this.recipients = new Array<String>(rcpts);
         this.sender = src;
     }
 
@@ -107,8 +108,8 @@ public final class SES implements Billboard {
     @Override
     public String toString() {
         return Logger.format(
-            "SES emails from %s to %[list]s accessed with %s",
-            this.sender, Arrays.asList(this.recipients), this.client
+            "SES emails from %s to %s accessed with %s",
+            this.sender, this.recipients, this.client
         );
     }
 
@@ -150,10 +151,10 @@ public final class SES implements Billboard {
             );
             Logger.info(
                 this,
-                "#announce(..): sent SES email %s from %s to %[list]s",
+                "#announce(..): sent SES email %s from %s to %s",
                 result.getMessageId(),
                 this.sender,
-                Arrays.asList(this.recipients)
+                this.recipients
             );
         } finally {
             aws.shutdown();

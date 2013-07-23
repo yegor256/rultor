@@ -31,6 +31,7 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.Array;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
@@ -63,14 +64,14 @@ final class BigText implements Variable<String> {
     /**
      * Lines of text.
      */
-    private final transient String[] lines;
+    private final transient Array<String> lines;
 
     /**
      * Public ctor.
      * @param text Text to parse and encapsulate
      */
     protected BigText(final String text) {
-        this.lines = StringUtils.splitPreserveAllTokens(
+        final String[] items = StringUtils.splitPreserveAllTokens(
             StringUtils.stripStart(
                 StringUtils.stripEnd(text, null),
                 "\n\r"
@@ -78,26 +79,27 @@ final class BigText implements Variable<String> {
             BigText.EOL
         );
         int min = Integer.MAX_VALUE;
-        for (int idx = 0; idx < this.lines.length; ++idx) {
-            this.lines[idx] = StringUtils.strip(this.lines[idx], "\r")
+        for (int idx = 0; idx < items.length; ++idx) {
+            items[idx] = StringUtils.strip(items[idx], "\r")
                 .replaceAll("\\s+$", "")
                 .replaceAll("\t", "    ");
-            if (this.lines[idx].isEmpty()) {
+            if (items[idx].isEmpty()) {
                 continue;
             }
             min = Math.min(
                 min,
-                this.lines[idx].length()
-                - this.lines[idx].replaceAll("^\\s+", "").length()
+                items[idx].length()
+                - items[idx].replaceAll("^\\s+", "").length()
             );
         }
-        for (int idx = 0; idx < this.lines.length; ++idx) {
-            if (this.lines[idx].length() > min) {
-                this.lines[idx] = this.lines[idx].substring(min);
+        for (int idx = 0; idx < items.length; ++idx) {
+            if (items[idx].length() > min) {
+                items[idx] = items[idx].substring(min);
             } else {
-                this.lines[idx] = StringUtils.repeat(' ', min);
+                items[idx] = StringUtils.repeat(' ', min);
             }
         }
+        this.lines = new Array<String>(items);
     }
 
     /**
