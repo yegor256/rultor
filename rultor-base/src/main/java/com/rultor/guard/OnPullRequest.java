@@ -80,9 +80,9 @@ public final class OnPullRequest implements Instance {
         @NotNull(message = "requests can't be NULL") final MergeRequests rqsts,
         @NotNull(message = "notepad can't be NULL") final ConcurrentNotepad ntp,
         @NotNull(message = "batch can't be NULL") final Batch btch) {
+        this.requests = rqsts;
         this.busy = ntp;
         this.batch = btch;
-        this.requests = rqsts;
     }
 
     /**

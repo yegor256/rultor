@@ -30,6 +30,10 @@
 package com.rultor.stateful;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import java.util.Collection;
+import java.util.Iterator;
+import lombok.EqualsAndHashCode;
 
 /**
  * Concurrent notepad.
@@ -39,6 +43,7 @@ import com.jcabi.aspects.Immutable;
  * @since 1.0
  */
 @Immutable
+@SuppressWarnings("PMD.TooManyMethods")
 public interface ConcurrentNotepad extends Notepad {
 
     /**
@@ -47,5 +52,129 @@ public interface ConcurrentNotepad extends Notepad {
      * @return TRUE if it was added
      */
     boolean addIfAbsent(String item);
+
+    /**
+     * Composite.
+     */
+    @Immutable
+    @EqualsAndHashCode(of = { "notepad", "lineup" })
+    @Loggable(Loggable.DEBUG)
+    final class Composite implements ConcurrentNotepad {
+        /**
+         * Original notepad.
+         */
+        private final transient Notepad notepad;
+        /**
+         * Original lineup.
+         */
+        private final transient Lineup lineup;
+        /**
+         * Public ctor.
+         * @param ntp Notepad
+         * @param lnp Lineup
+         */
+        public Composite(final Notepad ntp, final Lineup lnp) {
+            this.notepad = ntp;
+            this.lineup = lnp;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean addIfAbsent(String item) {
+            throw new UnsupportedOperationException();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int size() {
+            return this.notepad.size();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean isEmpty() {
+            return this.notepad.isEmpty();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean contains(final Object obj) {
+            return this.notepad.contains(obj);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Iterator<String> iterator() {
+            return this.notepad.iterator();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Object[] toArray() {
+            return this.notepad.toArray();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public <T> T[] toArray(final T[] array) {
+            return this.notepad.toArray(array);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean add(final String item) {
+            return this.notepad.add(item);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean remove(final Object item) {
+            return this.notepad.remove(item);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean containsAll(final Collection<?> items) {
+            return this.notepad.containsAll(items);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean addAll(final Collection<? extends String> items) {
+            return this.notepad.addAll(items);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean removeAll(final Collection<?> items) {
+            return this.notepad.removeAll(items);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean retainAll(final Collection<?> items) {
+            return this.notepad.retainAll(items);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void clear() {
+            this.notepad.clear();
+        }
+    }
 
 }
