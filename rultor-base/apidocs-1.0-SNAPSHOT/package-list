@@ -3,6 +3,8 @@ com.rultor.board
 com.rultor.ci
 com.rultor.env
 com.rultor.env.ec2
+com.rultor.guard
+com.rultor.guard.github
 com.rultor.log4j
 com.rultor.scm
 com.rultor.scm.git

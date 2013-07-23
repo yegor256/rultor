@@ -293,7 +293,7 @@
 <tr>  <td class="numLine">&nbsp;146</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                    <span class="keyword">this</span>,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;147</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                    <span class="string">"S3 object '%s/%s' is locked by us with '%s'"</span>,</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                    <span class="string">"S3 object `%s/%s` is locked by us with `%s`"</span>,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;148</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                    <span class="keyword">this</span>.client.bucket(),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;149</td>  <td class="nbHits">&nbsp;</td>
@@ -309,7 +309,7 @@
 <tr>  <td class="numLine">&nbsp;155</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="keyword">this</span>,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;156</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                <span class="string">"S3 object '%s/%s' is locked by '%s', let's wait..."</span>,</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                <span class="string">"S3 object `%s/%s` is locked by `%s`, let's wait..."</span>,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;157</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="keyword">this</span>.client.bucket(),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;158</td>  <td class="nbHits">&nbsp;</td>
@@ -387,7 +387,7 @@
 <tr>  <td class="numLine">&nbsp;202</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="keyword">this</span>,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;203</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                <span class="string">"S3 object '%s/%s' exists: %s"</span>,</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                <span class="string">"S3 object `%s/%s` exists: %s"</span>,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;204</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="keyword">this</span>.client.bucket(),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;205</td>  <td class="nbHits">&nbsp;</td>
@@ -433,7 +433,7 @@
 <tr>  <td class="numLine">&nbsp;229</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="keyword">this</span>,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;230</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                <span class="string">"saved %d char(s) to S3 object '%s/%s', etag=%s"</span>,</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                <span class="string">"saved %d char(s) to S3 object `%s/%s`, etag=`%s`"</span>,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;231</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                content.length(),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;232</td>  <td class="nbHits">&nbsp;</td>
@@ -476,7 +476,7 @@
 <tr>  <td class="numLine">&nbsp;255</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                    <span class="keyword">this</span>,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;256</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                    <span class="string">"loaded %d char(s) from S3 object '%s/%s'"</span>,</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                    <span class="string">"loaded %d char(s) from S3 object `%s/%s`"</span>,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;257</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                    content.length(),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;258</td>  <td class="nbHits">&nbsp;</td>
@@ -517,7 +517,7 @@
 <tr>  <td class="numLine">&nbsp;282</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;283</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;            <span class="string">"deleted S3 object '%s/%s'"</span>,</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;            <span class="string">"deleted S3 object `%s/%s`"</span>,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;284</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.client.bucket(),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;285</td>  <td class="nbHits">&nbsp;</td>
@@ -531,6 +531,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 7/22/13 8:29 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 7/23/13 8:19 PM.</div>
 </body>
 </html>
