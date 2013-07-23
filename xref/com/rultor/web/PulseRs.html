@@ -219,7 +219,7 @@
 <a class="jxr_linenumber" name="209" href="#209">209</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.user().units().contains(<strong class="jxr_keyword">this</strong>.name)) {
 <a class="jxr_linenumber" name="210" href="#210">210</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">this</strong>.flash().redirect(
 <a class="jxr_linenumber" name="211" href="#211">211</a>                 <strong class="jxr_keyword">this</strong>.uriInfo().getBaseUri(),
-<a class="jxr_linenumber" name="212" href="#212">212</a>                 String.format(<span class="jxr_string">"Unit '%s' doesn't exist"</span>, <strong class="jxr_keyword">this</strong>.name),
+<a class="jxr_linenumber" name="212" href="#212">212</a>                 String.format(<span class="jxr_string">"Unit `%s` doesn't exist"</span>, <strong class="jxr_keyword">this</strong>.name),
 <a class="jxr_linenumber" name="213" href="#213">213</a>                 Level.SEVERE
 <a class="jxr_linenumber" name="214" href="#214">214</a>             );
 <a class="jxr_linenumber" name="215" href="#215">215</a>         }
@@ -266,7 +266,7 @@
 <a class="jxr_linenumber" name="256" href="#256">256</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">this</strong>.flash().redirect(
 <a class="jxr_linenumber" name="257" href="#257">257</a>                 <strong class="jxr_keyword">this</strong>.uriInfo().getBaseUri(),
 <a class="jxr_linenumber" name="258" href="#258">258</a>                 String.format(
-<a class="jxr_linenumber" name="259" href="#259">259</a>                     <span class="jxr_string">"Can't fetch Spec from '%s': %s"</span>,
+<a class="jxr_linenumber" name="259" href="#259">259</a>                     <span class="jxr_string">"Can't fetch Spec from `%s`: %s"</span>,
 <a class="jxr_linenumber" name="260" href="#260">260</a>                     <strong class="jxr_keyword">this</strong>.date,
 <a class="jxr_linenumber" name="261" href="#261">261</a>                     ExceptionUtils.getRootCauseMessage(ex)
 <a class="jxr_linenumber" name="262" href="#262">262</a>                 ),
@@ -286,7 +286,7 @@
 <a class="jxr_linenumber" name="276" href="#276">276</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">this</strong>.flash().redirect(
 <a class="jxr_linenumber" name="277" href="#277">277</a>                 <strong class="jxr_keyword">this</strong>.uriInfo().getBaseUri(),
 <a class="jxr_linenumber" name="278" href="#278">278</a>                 String.format(
-<a class="jxr_linenumber" name="279" href="#279">279</a>                     <span class="jxr_string">"Can't fetch stages from '%s': %s"</span>,
+<a class="jxr_linenumber" name="279" href="#279">279</a>                     <span class="jxr_string">"Can't fetch stages from `%s`: %s"</span>,
 <a class="jxr_linenumber" name="280" href="#280">280</a>                     <strong class="jxr_keyword">this</strong>.date,
 <a class="jxr_linenumber" name="281" href="#281">281</a>                     ExceptionUtils.getRootCauseMessage(ex)
 <a class="jxr_linenumber" name="282" href="#282">282</a>                 ),

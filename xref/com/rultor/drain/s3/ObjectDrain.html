@@ -162,7 +162,7 @@
 <a class="jxr_linenumber" name="152" href="#152">152</a>             );
 <a class="jxr_linenumber" name="153" href="#153">153</a>             Logger.info(
 <a class="jxr_linenumber" name="154" href="#154">154</a>                 <strong class="jxr_keyword">this</strong>,
-<a class="jxr_linenumber" name="155" href="#155">155</a>                 <span class="jxr_string">"'%s' saved %s to S3, etag=%s"</span>,
+<a class="jxr_linenumber" name="155" href="#155">155</a>                 <span class="jxr_string">"`%s` saved %s to S3, etag=`%s`"</span>,
 <a class="jxr_linenumber" name="156" href="#156">156</a>                 <strong class="jxr_keyword">this</strong>.key,
 <a class="jxr_linenumber" name="157" href="#157">157</a>                 FileUtils.byteCountToDisplaySize(size),
 <a class="jxr_linenumber" name="158" href="#158">158</a>                 result.getETag()
@@ -170,7 +170,7 @@
 <a class="jxr_linenumber" name="160" href="#160">160</a>         } <strong class="jxr_keyword">catch</strong> (AmazonS3Exception ex) {
 <a class="jxr_linenumber" name="161" href="#161">161</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IOException(
 <a class="jxr_linenumber" name="162" href="#162">162</a>                 String.format(
-<a class="jxr_linenumber" name="163" href="#163">163</a>                     <span class="jxr_string">"failed to flush %s to %s: %s"</span>,
+<a class="jxr_linenumber" name="163" href="#163">163</a>                     <span class="jxr_string">"failed to flush %s to `%s`: %s"</span>,
 <a class="jxr_linenumber" name="164" href="#164">164</a>                     <strong class="jxr_keyword">this</strong>.key,
 <a class="jxr_linenumber" name="165" href="#165">165</a>                     <strong class="jxr_keyword">this</strong>.client.bucket(),
 <a class="jxr_linenumber" name="166" href="#166">166</a>                     ex

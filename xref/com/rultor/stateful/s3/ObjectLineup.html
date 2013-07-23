@@ -154,7 +154,7 @@
 <a class="jxr_linenumber" name="144" href="#144">144</a>             <strong class="jxr_keyword">if</strong> (saved.equals(marker)) {
 <a class="jxr_linenumber" name="145" href="#145">145</a>                 Logger.debug(
 <a class="jxr_linenumber" name="146" href="#146">146</a>                     <strong class="jxr_keyword">this</strong>,
-<a class="jxr_linenumber" name="147" href="#147">147</a>                     <span class="jxr_string">"S3 object '%s/%s' is locked by us with '%s'"</span>,
+<a class="jxr_linenumber" name="147" href="#147">147</a>                     <span class="jxr_string">"S3 object `%s/%s` is locked by us with `%s`"</span>,
 <a class="jxr_linenumber" name="148" href="#148">148</a>                     <strong class="jxr_keyword">this</strong>.client.bucket(),
 <a class="jxr_linenumber" name="149" href="#149">149</a>                     <strong class="jxr_keyword">this</strong>.key,
 <a class="jxr_linenumber" name="150" href="#150">150</a>                     saved
@@ -163,7 +163,7 @@
 <a class="jxr_linenumber" name="153" href="#153">153</a>             }
 <a class="jxr_linenumber" name="154" href="#154">154</a>             Logger.debug(
 <a class="jxr_linenumber" name="155" href="#155">155</a>                 <strong class="jxr_keyword">this</strong>,
-<a class="jxr_linenumber" name="156" href="#156">156</a>                 <span class="jxr_string">"S3 object '%s/%s' is locked by '%s', let's wait..."</span>,
+<a class="jxr_linenumber" name="156" href="#156">156</a>                 <span class="jxr_string">"S3 object `%s/%s` is locked by `%s`, let's wait..."</span>,
 <a class="jxr_linenumber" name="157" href="#157">157</a>                 <strong class="jxr_keyword">this</strong>.client.bucket(),
 <a class="jxr_linenumber" name="158" href="#158">158</a>                 <strong class="jxr_keyword">this</strong>.key,
 <a class="jxr_linenumber" name="159" href="#159">159</a>                 saved
@@ -210,7 +210,7 @@
 <a class="jxr_linenumber" name="200" href="#200">200</a>         <strong class="jxr_keyword">if</strong> (exists) {
 <a class="jxr_linenumber" name="201" href="#201">201</a>             Logger.debug(
 <a class="jxr_linenumber" name="202" href="#202">202</a>                 <strong class="jxr_keyword">this</strong>,
-<a class="jxr_linenumber" name="203" href="#203">203</a>                 <span class="jxr_string">"S3 object '%s/%s' exists: %s"</span>,
+<a class="jxr_linenumber" name="203" href="#203">203</a>                 <span class="jxr_string">"S3 object `%s/%s` exists: %s"</span>,
 <a class="jxr_linenumber" name="204" href="#204">204</a>                 <strong class="jxr_keyword">this</strong>.client.bucket(),
 <a class="jxr_linenumber" name="205" href="#205">205</a>                 <strong class="jxr_keyword">this</strong>.key,
 <a class="jxr_linenumber" name="206" href="#206">206</a>                 <strong class="jxr_keyword">this</strong>.load()
@@ -237,7 +237,7 @@
 <a class="jxr_linenumber" name="227" href="#227">227</a>             );
 <a class="jxr_linenumber" name="228" href="#228">228</a>             Logger.debug(
 <a class="jxr_linenumber" name="229" href="#229">229</a>                 <strong class="jxr_keyword">this</strong>,
-<a class="jxr_linenumber" name="230" href="#230">230</a>                 <span class="jxr_string">"saved %d char(s) to S3 object '%s/%s', etag=%s"</span>,
+<a class="jxr_linenumber" name="230" href="#230">230</a>                 <span class="jxr_string">"saved %d char(s) to S3 object `%s/%s`, etag=`%s`"</span>,
 <a class="jxr_linenumber" name="231" href="#231">231</a>                 content.length(),
 <a class="jxr_linenumber" name="232" href="#232">232</a>                 <strong class="jxr_keyword">this</strong>.client.bucket(),
 <a class="jxr_linenumber" name="233" href="#233">233</a>                 <strong class="jxr_keyword">this</strong>.key,
@@ -263,7 +263,7 @@
 <a class="jxr_linenumber" name="253" href="#253">253</a>                 content = IOUtils.toString(stream, CharEncoding.UTF_8);
 <a class="jxr_linenumber" name="254" href="#254">254</a>                 Logger.debug(
 <a class="jxr_linenumber" name="255" href="#255">255</a>                     <strong class="jxr_keyword">this</strong>,
-<a class="jxr_linenumber" name="256" href="#256">256</a>                     <span class="jxr_string">"loaded %d char(s) from S3 object '%s/%s'"</span>,
+<a class="jxr_linenumber" name="256" href="#256">256</a>                     <span class="jxr_string">"loaded %d char(s) from S3 object `%s/%s`"</span>,
 <a class="jxr_linenumber" name="257" href="#257">257</a>                     content.length(),
 <a class="jxr_linenumber" name="258" href="#258">258</a>                     <strong class="jxr_keyword">this</strong>.client.bucket(),
 <a class="jxr_linenumber" name="259" href="#259">259</a>                     <strong class="jxr_keyword">this</strong>.key
@@ -290,7 +290,7 @@
 <a class="jxr_linenumber" name="280" href="#280">280</a>         aws.deleteObject(<strong class="jxr_keyword">this</strong>.client.bucket(), <strong class="jxr_keyword">this</strong>.key);
 <a class="jxr_linenumber" name="281" href="#281">281</a>         Logger.debug(
 <a class="jxr_linenumber" name="282" href="#282">282</a>             <strong class="jxr_keyword">this</strong>,
-<a class="jxr_linenumber" name="283" href="#283">283</a>             <span class="jxr_string">"deleted S3 object '%s/%s'"</span>,
+<a class="jxr_linenumber" name="283" href="#283">283</a>             <span class="jxr_string">"deleted S3 object `%s/%s`"</span>,
 <a class="jxr_linenumber" name="284" href="#284">284</a>             <strong class="jxr_keyword">this</strong>.client.bucket(),
 <a class="jxr_linenumber" name="285" href="#285">285</a>             <strong class="jxr_keyword">this</strong>.key
 <a class="jxr_linenumber" name="286" href="#286">286</a>         );

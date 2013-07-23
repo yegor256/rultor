@@ -145,9 +145,9 @@
 <a class="jxr_linenumber" name="135" href="#135">135</a>         <strong class="jxr_keyword">if</strong> (!(object instanceof String)) {
 <a class="jxr_linenumber" name="136" href="#136">136</a>             output = output.add(
 <a class="jxr_linenumber" name="137" href="#137">137</a>                 <span class="jxr_string">"html"</span>,
-<a class="jxr_linenumber" name="138" href="#138">138</a>                 StringEscapeUtils.escapeHtml4(object.toString())
-<a class="jxr_linenumber" name="139" href="#139">139</a>                     .replaceAll(<span class="jxr_string">"`([^`]+)`"</span>, <span class="jxr_string">"&lt;code&gt;$1&lt;/code&gt;"</span>)
-<a class="jxr_linenumber" name="140" href="#140">140</a>                     .replaceAll(<span class="jxr_string">"&#92;&#92;*{2}([^&#92;&#92;*]+)&#92;&#92;*{2}"</span>, <span class="jxr_string">"&lt;strong&gt;$1&lt;/strong&gt;"</span>)
+<a class="jxr_linenumber" name="138" href="#138">138</a>                 StringEscapeUtils.escapeHtml4(
+<a class="jxr_linenumber" name="139" href="#139">139</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/web/Markdown.html">Markdown</a>(object.toString()).html()
+<a class="jxr_linenumber" name="140" href="#140">140</a>                 )
 <a class="jxr_linenumber" name="141" href="#141">141</a>             ).up();
 <a class="jxr_linenumber" name="142" href="#142">142</a>         }
 <a class="jxr_linenumber" name="143" href="#143">143</a>         <strong class="jxr_keyword">return</strong> output;

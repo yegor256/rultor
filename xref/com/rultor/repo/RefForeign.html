@@ -39,9 +39,9 @@
 <a class="jxr_linenumber" name="29" href="#29">29</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="30" href="#30">30</a>  <strong class="jxr_keyword">package</strong> com.rultor.repo;
 <a class="jxr_linenumber" name="31" href="#31">31</a>  
-<a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.google.common.collect.Iterables;
-<a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Immutable;
-<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Loggable;
+<a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Immutable;
+<a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Loggable;
+<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.immutable.Array;
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.jcabi.urn.URN;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Arguments;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.SpecException;
@@ -98,7 +98,7 @@
 <a class="jxr_linenumber" name="88" href="#88">88</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="89" href="#89">89</a>  <em class="jxr_javadoccomment">     * Parameters.</em>
 <a class="jxr_linenumber" name="90" href="#90">90</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="91" href="#91">91</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> <a href="../../../com/rultor/spi/Variable.html">Variable</a>[] children;
+<a class="jxr_linenumber" name="91" href="#91">91</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> Array&lt;Variable&lt;?&gt;&gt; children;
 <a class="jxr_linenumber" name="92" href="#92">92</a>  
 <a class="jxr_linenumber" name="93" href="#93">93</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="94" href="#94">94</a>  <em class="jxr_javadoccomment">     * Public ctor.</em>
@@ -116,7 +116,7 @@
 <a class="jxr_linenumber" name="106" href="#106">106</a>         <strong class="jxr_keyword">this</strong>.client = clnt;
 <a class="jxr_linenumber" name="107" href="#107">107</a>         <strong class="jxr_keyword">this</strong>.owner = urn;
 <a class="jxr_linenumber" name="108" href="#108">108</a>         <strong class="jxr_keyword">this</strong>.name = ref;
-<a class="jxr_linenumber" name="109" href="#109">109</a>         <strong class="jxr_keyword">this</strong>.children = Iterables.toArray(childs, Variable.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="109" href="#109">109</a>         <strong class="jxr_keyword">this</strong>.children = <strong class="jxr_keyword">new</strong> Array&lt;Variable&lt;?&gt;&gt;(childs);
 <a class="jxr_linenumber" name="110" href="#110">110</a>     }
 <a class="jxr_linenumber" name="111" href="#111">111</a> 
 <a class="jxr_linenumber" name="112" href="#112">112</a>     <em class="jxr_javadoccomment">/**</em>
@@ -133,7 +133,7 @@
 <a class="jxr_linenumber" name="123" href="#123">123</a>         <strong class="jxr_keyword">if</strong> (!user.units().contains(<strong class="jxr_keyword">this</strong>.name)) {
 <a class="jxr_linenumber" name="124" href="#124">124</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/SpecException.html">SpecException</a>(
 <a class="jxr_linenumber" name="125" href="#125">125</a>                 String.format(
-<a class="jxr_linenumber" name="126" href="#126">126</a>                     <span class="jxr_string">"unit '%s' not found in '%s' but requested by '%s'"</span>,
+<a class="jxr_linenumber" name="126" href="#126">126</a>                     <span class="jxr_string">"unit `%s` not found in `%s` but requested by `%s`"</span>,
 <a class="jxr_linenumber" name="127" href="#127">127</a>                     <strong class="jxr_keyword">this</strong>.name, <strong class="jxr_keyword">this</strong>.owner, <strong class="jxr_keyword">this</strong>.client
 <a class="jxr_linenumber" name="128" href="#128">128</a>                 )
 <a class="jxr_linenumber" name="129" href="#129">129</a>             );
@@ -193,7 +193,7 @@
 <a class="jxr_linenumber" name="183" href="#183">183</a>     <strong class="jxr_keyword">private</strong> <a href="../../../com/rultor/spi/Arguments.html">Arguments</a> mapping(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Users.html">Users</a> users, <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Work.html">Work</a> work,
 <a class="jxr_linenumber" name="184" href="#184">184</a>         <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Arguments.html">Arguments</a> args) <strong class="jxr_keyword">throws</strong> SpecException {
 <a class="jxr_linenumber" name="185" href="#185">185</a>         <strong class="jxr_keyword">final</strong> Collection&lt;Object&gt; values =
-<a class="jxr_linenumber" name="186" href="#186">186</a>             <strong class="jxr_keyword">new</strong> ArrayList&lt;Object&gt;(<strong class="jxr_keyword">this</strong>.children.length);
+<a class="jxr_linenumber" name="186" href="#186">186</a>             <strong class="jxr_keyword">new</strong> ArrayList&lt;Object&gt;(<strong class="jxr_keyword">this</strong>.children.size());
 <a class="jxr_linenumber" name="187" href="#187">187</a>         <strong class="jxr_keyword">for</strong> (Variable&lt;?&gt; <strong class="jxr_keyword">var</strong> : <strong class="jxr_keyword">this</strong>.children) {
 <a class="jxr_linenumber" name="188" href="#188">188</a>             values.add(<strong class="jxr_keyword">var</strong>.instantiate(users, args));
 <a class="jxr_linenumber" name="189" href="#189">189</a>         }

@@ -149,7 +149,7 @@
 <a class="jxr_linenumber" name="139" href="#139">139</a>             <span class="jxr_string">"yyyy-MM-dd HH:mm:ss X"</span>, Locale.ENGLISH
 <a class="jxr_linenumber" name="140" href="#140">140</a>         );
 <a class="jxr_linenumber" name="141" href="#141">141</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="142" href="#142">142</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Commit.Simple(
+<a class="jxr_linenumber" name="142" href="#142">142</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/scm/git/GitCommit.html">GitCommit</a>(
 <a class="jxr_linenumber" name="143" href="#143">143</a>                 matcher.group(1),
 <a class="jxr_linenumber" name="144" href="#144">144</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/spi/Time.html">Time</a>(fmt.parse(matcher.group(Tv.THREE))),
 <a class="jxr_linenumber" name="145" href="#145">145</a>                 matcher.group(2)
@@ -157,7 +157,7 @@
 <a class="jxr_linenumber" name="147" href="#147">147</a>         } <strong class="jxr_keyword">catch</strong> (ParseException ex) {
 <a class="jxr_linenumber" name="148" href="#148">148</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(
 <a class="jxr_linenumber" name="149" href="#149">149</a>                 String.format(
-<a class="jxr_linenumber" name="150" href="#150">150</a>                     <span class="jxr_string">"failed to parse date '%s'"</span>,
+<a class="jxr_linenumber" name="150" href="#150">150</a>                     <span class="jxr_string">"failed to parse date `%s`"</span>,
 <a class="jxr_linenumber" name="151" href="#151">151</a>                     matcher.group(Tv.THREE)
 <a class="jxr_linenumber" name="152" href="#152">152</a>                 ),
 <a class="jxr_linenumber" name="153" href="#153">153</a>                 ex

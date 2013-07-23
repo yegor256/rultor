@@ -136,7 +136,7 @@
 <a class="jxr_linenumber" name="126" href="#126">126</a>         <strong class="jxr_keyword">final</strong> String unt) {
 <a class="jxr_linenumber" name="127" href="#127">127</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.units().contains(unt)) {
 <a class="jxr_linenumber" name="128" href="#128">128</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(
-<a class="jxr_linenumber" name="129" href="#129">129</a>                 String.format(<span class="jxr_string">"Unit '%s' already exists"</span>, unt)
+<a class="jxr_linenumber" name="129" href="#129">129</a>                 String.format(<span class="jxr_string">"Unit `%s` already exists"</span>, unt)
 <a class="jxr_linenumber" name="130" href="#130">130</a>             );
 <a class="jxr_linenumber" name="131" href="#131">131</a>         }
 <a class="jxr_linenumber" name="132" href="#132">132</a>         <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/users/AwsUnit.html">AwsUnit</a>(<strong class="jxr_keyword">this</strong>.region, <strong class="jxr_keyword">this</strong>.name, unt).update(<strong class="jxr_keyword">new</strong> Spec.Simple());
@@ -155,7 +155,7 @@
 <a class="jxr_linenumber" name="145" href="#145">145</a>             .iterator();
 <a class="jxr_linenumber" name="146" href="#146">146</a>         <strong class="jxr_keyword">if</strong> (!items.hasNext()) {
 <a class="jxr_linenumber" name="147" href="#147">147</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NoSuchElementException(
-<a class="jxr_linenumber" name="148" href="#148">148</a>                 String.format(<span class="jxr_string">"unit '%s' not found"</span>, unit)
+<a class="jxr_linenumber" name="148" href="#148">148</a>                 String.format(<span class="jxr_string">"Unit `%s` not found"</span>, unit)
 <a class="jxr_linenumber" name="149" href="#149">149</a>             );
 <a class="jxr_linenumber" name="150" href="#150">150</a>         }
 <a class="jxr_linenumber" name="151" href="#151">151</a>         items.next();
@@ -170,7 +170,7 @@
 <a class="jxr_linenumber" name="160" href="#160">160</a>         <strong class="jxr_keyword">final</strong> String unit) {
 <a class="jxr_linenumber" name="161" href="#161">161</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.units().contains(unit)) {
 <a class="jxr_linenumber" name="162" href="#162">162</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(
-<a class="jxr_linenumber" name="163" href="#163">163</a>                 String.format(<span class="jxr_string">"Unit '%s' doesn't exist"</span>, unit)
+<a class="jxr_linenumber" name="163" href="#163">163</a>                 String.format(<span class="jxr_string">"Unit `%s` doesn't exist"</span>, unit)
 <a class="jxr_linenumber" name="164" href="#164">164</a>             );
 <a class="jxr_linenumber" name="165" href="#165">165</a>         }
 <a class="jxr_linenumber" name="166" href="#166">166</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/users/AwsUnit.html">AwsUnit</a>(<strong class="jxr_keyword">this</strong>.region, <strong class="jxr_keyword">this</strong>.name, unit);
