@@ -127,8 +127,7 @@ public final class OnPullRequest implements Instance {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final int code = this.batch.exec(
             new ImmutableMap.Builder<String, Object>()
-                .put("request", request)
-                .put("home", "")
+                .putAll(request.params())
                 .build(),
             stdout
         );

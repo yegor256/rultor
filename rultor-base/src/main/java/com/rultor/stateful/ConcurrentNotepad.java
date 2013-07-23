@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.concurrent.Callable;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -81,8 +82,29 @@ public interface ConcurrentNotepad extends Notepad {
          * {@inheritDoc}
          */
         @Override
-        public boolean addIfAbsent(String item) {
-            throw new UnsupportedOperationException();
+        @SuppressWarnings("PMD.AvoidCatchingGenericException")
+        public boolean addIfAbsent(final String item) {
+            try {
+                return this.lineup.exec(
+                    new Callable<Boolean>() {
+                        @Override
+                        public Boolean call() throws Exception {
+                            final boolean added;
+                            if (ConcurrentNotepad.Composite.this
+                                .contains(item)) {
+                                added = false;
+                            } else {
+                                ConcurrentNotepad.Composite.this.add(item);
+                                added = true;
+                            }
+                            return added;
+                        }
+                    }
+                );
+            // @checkstyle IllegalCatch (1 line)
+            } catch (Exception ex) {
+                throw new IllegalStateException(ex);
+            }
         }
         /**
          * {@inheritDoc}

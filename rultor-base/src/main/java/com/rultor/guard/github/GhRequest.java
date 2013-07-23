@@ -58,11 +58,6 @@ import org.eclipse.egit.github.core.service.PullRequestService;
 final class GhRequest implements MergeRequest {
 
     /**
-     * Issue number key.
-     */
-    private static final String ISSUE = "issue";
-
-    /**
      * Github.
      */
     private final transient Github github;
@@ -78,6 +73,11 @@ final class GhRequest implements MergeRequest {
     private final transient ArrayMap<String, Object> parameters;
 
     /**
+     * Issue ID.
+     */
+    private final transient int issue;
+
+    /**
      * Public ctor.
      * @param ghub Github
      * @param rep Repository name
@@ -89,15 +89,18 @@ final class GhRequest implements MergeRequest {
         this.repository = rep;
         this.parameters = new ArrayMap<String, Object>(
             new ImmutableMap.Builder<String, Object>()
-                .put(GhRequest.ISSUE, req.getNumber())
-                .put("base-repo", req.getBase().getRepo().getName())
-                .put("base-branch", req.getBase().getRef())
-                .put("head-repo", req.getHead().getRepo().getName())
-                .put("head-branch", req.getHead().getRef())
+                .put("issue", req.getNumber())
+                .put("baseRepo", req.getBase().getRepo().getName())
+                .put("baseBranch", req.getBase().getRef())
+                .put("baseUser", req.getBase().getUser().getLogin())
+                .put("headRepo", req.getHead().getRepo().getName())
+                .put("headBranch", req.getHead().getRef())
+                .put("headUser", req.getHead().getUser().getLogin())
                 .put("date", new Time(req.getCreatedAt()))
                 .put("title", req.getTitle())
                 .build()
         );
+        this.issue = req.getNumber();
     }
 
     /**
@@ -105,7 +108,7 @@ final class GhRequest implements MergeRequest {
      */
     @Override
     public String name() {
-        return this.parameters.get(GhRequest.ISSUE).toString();
+        return Integer.toString(this.issue);
     }
 
     /**
@@ -115,13 +118,12 @@ final class GhRequest implements MergeRequest {
     public void notify(final int code, final InputStream stdout) {
         final GitHubClient client = this.github.client();
         try {
-            final int issue = Integer.parseInt(this.name());
             if (code == 0) {
                 final PullRequestService svc = new PullRequestService(client);
-                svc.merge(this.repository, issue, "");
+                svc.merge(this.repository, this.issue, "tested, looks good");
             } else {
                 final IssueService svc = new IssueService(client);
-                svc.createComment(this.repository, issue, "oops, failed...");
+                svc.createComment(this.repository, this.issue, "failed...");
             }
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
@@ -134,8 +136,9 @@ final class GhRequest implements MergeRequest {
     @Override
     public String toString() {
         return Logger.format(
-            "%s in %s",
+            "%s (#%d) in %s",
             this.name(),
+            this.issue,
             this.repository
         );
     }
