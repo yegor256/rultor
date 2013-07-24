@@ -29,9 +29,12 @@
  */
 package com.rultor.board;
 
-import com.google.common.collect.ImmutableMap;
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.ArrayMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -43,6 +46,7 @@ import lombok.EqualsAndHashCode;
  * @version $Id$
  * @since 1.0
  */
+@Immutable
 @EqualsAndHashCode(of = { "lvl", "arguments" })
 @Loggable(Loggable.DEBUG)
 public final class Announcement {
@@ -50,12 +54,12 @@ public final class Announcement {
     /**
      * Level of announcement.
      */
-    private final transient Level lvl;
+    private final transient String lvl;
 
     /**
      * Arguments.
      */
-    private final transient Map<String, Object> arguments;
+    private final transient ArrayMap<String, Object> arguments;
 
     /**
      * Public ctor.
@@ -66,8 +70,8 @@ public final class Announcement {
         final Level level,
         @NotNull(message = "map of arguments can't be NULL")
         final Map<String, Object> args) {
-        this.lvl = level;
-        this.arguments = args;
+        this.lvl = level.toString();
+        this.arguments = new ArrayMap<String, Object>(args);
     }
 
     /**
@@ -75,7 +79,7 @@ public final class Announcement {
      */
     @Override
     public String toString() {
-        return this.lvl.toString();
+        return this.lvl;
     }
 
     /**
@@ -84,7 +88,7 @@ public final class Announcement {
      */
     @NotNull(message = "log Level is never NULL")
     public Level level() {
-        return this.lvl;
+        return Level.parse(this.lvl);
     }
 
     /**
@@ -106,13 +110,11 @@ public final class Announcement {
     public Announcement with(
         @NotNull(message = "name can't be NULL") final String name,
         @NotNull(message = "value can't be NULL") final Object value) {
-        return new Announcement(
-            this.lvl,
-            new ImmutableMap.Builder<String, Object>()
-                .putAll(this.arguments)
-                .put(name, value)
-                .build()
-        );
+        final ConcurrentMap<String, Object> map =
+            new ConcurrentHashMap<String, Object>(0);
+        map.putAll(this.arguments);
+        map.put(name, value);
+        return new Announcement(this.level(), map);
     }
 
 }

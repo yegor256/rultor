@@ -45,8 +45,8 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.time.DateUtils;
 
 /**
  * Publish on of the arguments in S3 object.
