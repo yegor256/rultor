@@ -128,7 +128,8 @@ public final class Bash implements Batch {
         throws IOException {
         final Shell shell = this.shells.acquire();
         Signal.log(Signal.Mnemo.SUCCESS, "%s acquired", shell);
-        int code;
+        final long start = System.currentTimeMillis();
+        final int code;
         try {
             for (Map.Entry<String, Object> pair
                 : this.prerequisites.entrySet()) {
@@ -149,7 +150,10 @@ public final class Bash implements Batch {
             output.close();
             shell.close();
         }
-        Signal.log(Signal.Mnemo.SUCCESS, "Batch executed");
+        Signal.log(
+            Signal.Mnemo.SUCCESS, "Bash script executed in %[ms]s",
+            System.currentTimeMillis() - start
+        );
         return code;
     }
 
