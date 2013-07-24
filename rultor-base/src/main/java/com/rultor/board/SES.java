@@ -121,7 +121,7 @@ public final class SES implements Billboard {
         final Announcement anmt) throws IOException {
         final AmazonSimpleEmailService aws = this.client.get();
         try {
-            String print = String.class.cast(anmt.args().get("print"));
+            String print = String.class.cast(anmt.args().get("emailBody"));
             if (print == null) {
                 final StringBuilder txt = new StringBuilder();
                 for (Map.Entry<String, Object> entry : anmt.args().entrySet()) {
