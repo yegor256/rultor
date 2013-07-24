@@ -43,6 +43,7 @@ import com.rultor.spi.Signal;
 import com.rultor.stateful.Notepad;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
@@ -86,7 +87,8 @@ public final class OnCommit implements Instance {
      * @param brd The board where to announce
      * @checkstyle ParameterNumber (9 lines)
      */
-    public OnCommit(@NotNull(message = "branch can't be NULL") final Branch brn,
+    public OnCommit(
+        @NotNull(message = "branch can't be NULL") final Branch brn,
         @NotNull(message = "notepad can't be NULL") final Notepad ntp,
         @NotNull(message = "batch can't be NULL") final Batch btch,
         @NotNull(message = "board can't be NULL") final Billboard brd) {
@@ -156,10 +158,17 @@ public final class OnCommit implements Instance {
                 .build()
         );
         this.board.announce(anmt);
-        Signal.log(
-            Signal.Mnemo.SUCCESS, "Announced %s to %s",
-            anmt, this.board
-        );
+        if (anmt.level().equals(Level.INFO)) {
+            Signal.log(
+                Signal.Mnemo.SUCCESS, "Announced success to %s",
+                this.board
+            );
+        } else {
+            Signal.log(
+                Signal.Mnemo.FAILURE, "Announced failure (%s) to %s",
+                anmt, this.board
+            );
+        }
     }
 
 }

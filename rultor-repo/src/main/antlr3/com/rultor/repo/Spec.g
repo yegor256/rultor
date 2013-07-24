@@ -136,7 +136,7 @@ arguments returns [Collection<Variable<?>> ret]
     ')'
     ;
 
-array returns [Array ret]
+array returns [Vector ret]
     @init { final Collection<Variable<?>> vars = new LinkedList<Variable<?>>(); }
     :
     '['
@@ -150,7 +150,7 @@ array returns [Array ret]
         )*
     )*
     ']'
-    { $ret = new Array(vars); }
+    { $ret = new Vector(vars); }
     ;
 
 dictionary returns [Dictionary ret]
