@@ -27,43 +27,38 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.scm.git;
+package com.rultor.shell;
 
-import com.google.common.io.Files;
-import com.rultor.scm.Branch;
-import com.rultor.scm.Commit;
-import com.rultor.scm.SCM;
-import com.rultor.shell.ShellMocker;
-import java.io.File;
-import java.net.URL;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
+import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Integration case for {@link Git}.
+ * Test case for {@link ASCIIOutputStream}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class GitITCase {
+public final class ASCIIOutputStreamTest {
 
     /**
-     * Git can execute return a branch.
+     * ASCIIOutputStream can process ASCII command codes.
      * @throws Exception If some problem inside
      */
     @Test
-    public void manipulatesBranches() throws Exception {
-        final File dir = Files.createTempDir();
-        final SCM git = new Git(
-            new ShellMocker.Bash(dir),
-            new URL("https://github.com/alex-palevsky/test.git"),
-            "test"
+    public void processesAsciiCommandCodes() throws Exception {
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final PrintWriter writer = new PrintWriter(
+            new ASCIIOutputStream(baos), true
         );
-        final Branch branch = git.checkout("master");
-        final Commit head = branch.log().iterator().next();
+        writer.print("first line to be removed completely\r");
+        writer.println("hi\u0008ello,\u0009world!");
+        writer.close();
         MatcherAssert.assertThat(
-            head.name().matches("[a-f0-9]{40}"),
-            Matchers.is(true)
+            baos.toString(CharEncoding.UTF_8),
+            Matchers.equalTo("hello,  world!")
         );
     }
 

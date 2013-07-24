@@ -122,8 +122,8 @@ public final class Bash implements Batch {
      */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    public int exec(@NotNull(message = "args can't be NULL")
-        final Map<String, Object> args,
+    public int exec(
+        @NotNull(message = "args can't be NULL") final Map<String, Object> args,
         @NotNull(message = "stream can't be NULL") final OutputStream output)
         throws IOException {
         final Shell shell = this.shells.acquire();

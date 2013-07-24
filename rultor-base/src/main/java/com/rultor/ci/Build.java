@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.board.Announcement;
+import com.rultor.shell.ASCIIOutputStream;
 import com.rultor.shell.Batch;
 import com.rultor.spi.Signal;
 import java.io.ByteArrayOutputStream;
@@ -83,7 +84,9 @@ final class Build {
         throws IOException {
         Signal.log(Signal.Mnemo.START, "Started to build");
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
-        final int code = this.batch.exec(args, stdout);
+        final int code = this.batch.exec(
+            args, new ASCIIOutputStream(stdout)
+        );
         final Announcement announcement;
         if (code == 0) {
             announcement = new Announcement(
