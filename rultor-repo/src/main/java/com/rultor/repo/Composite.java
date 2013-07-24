@@ -165,7 +165,7 @@ final class Composite implements Variable<Object> {
         return new StringBuilder()
             .append(this.type)
             .append('(')
-            .append(new Brackets(this.vars))
+            .append(new Brackets<Variable<?>>(this.vars))
             .append(')')
             .toString();
     }

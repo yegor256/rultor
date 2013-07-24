@@ -47,7 +47,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Vector.
+ * Chain.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -57,7 +57,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "values")
 @Loggable(Loggable.DEBUG)
-final class Vector implements Variable<List<Object>> {
+final class Chain implements Variable<List<Object>> {
 
     /**
      * Values.
@@ -68,7 +68,7 @@ final class Vector implements Variable<List<Object>> {
      * Public ctor.
      * @param vals Values
      */
-    protected Vector(final Collection<Variable<?>> vals) {
+    protected Chain(final Collection<Variable<?>> vals) {
         this.values = new com.jcabi.immutable.Array<Variable<?>>(vals);
     }
 
@@ -97,7 +97,7 @@ final class Vector implements Variable<List<Object>> {
     public String asText() {
         return new StringBuilder()
             .append('[')
-            .append(new Brackets(this.values))
+            .append(new Brackets<Variable<?>>(this.values))
             .append(']')
             .toString();
     }

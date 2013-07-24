@@ -42,19 +42,19 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test case for {@link Vector}.
+ * Test case for {@link Chain}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class VectorTest {
+public final class ChainTest {
 
     /**
-     * Vector can make an instance.
+     * Chain can make an instance.
      * @throws Exception If some problem inside
      */
     @Test
     public void makesInstance() throws Exception {
-        final Variable<List<Object>> var = new Vector(
+        final Variable<List<Object>> var = new Chain(
             Arrays.<Variable<?>>asList(new Constant<Integer>(Tv.TEN))
         );
         MatcherAssert.assertThat(
@@ -67,12 +67,12 @@ public final class VectorTest {
     }
 
     /**
-     * Vector can make a text.
+     * Chain can make a text.
      * @throws Exception If some problem inside
      */
     @Test
     public void makesText() throws Exception {
-        final Variable<List<Object>> var = new Vector(
+        final Variable<List<Object>> var = new Chain(
             Arrays.<Variable<?>>asList(
                 new Constant<Long>((long) Tv.TEN),
                 new Text("some text\nline two"),

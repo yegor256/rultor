@@ -36,8 +36,6 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -99,21 +97,19 @@ final class Dictionary implements Variable<Map<String, Object>> {
      */
     @Override
     public String asText() {
-        final List<String> names = new ArrayList<String>(this.map.size());
-        names.addAll(this.map.keySet());
         return new StringBuilder()
             .append('{')
             .append(
-                new Brackets(
-                    this.map.values(),
-                    new Brackets.Format() {
+                new Brackets<Map.Entry<String, Variable<?>>>(
+                    this.map.entrySet(),
+                    new Brackets.Format<Map.Entry<String, Variable<?>>>() {
                         @Override
-                        public String print(final int pos,
-                            final Variable<?> var) {
+                        public String print(
+                            final Map.Entry<String, Variable<?>> entry) {
                             return String.format(
                                 "\"%s\": %s",
-                                names.get(pos).replace("\"", "\\\""),
-                                var.asText()
+                                entry.getKey().replace("\"", "\\\""),
+                                entry.getValue().asText()
                             );
                         }
                     }

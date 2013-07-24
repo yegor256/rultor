@@ -44,6 +44,13 @@ import javax.validation.constraints.NotNull;
 public interface Branch {
 
     /**
+     * Name of it.
+     * @return The name
+     */
+    @NotNull
+    String name();
+
+    /**
      * Get history of commits, the latest on top.
      * @return Commits
      * @throws IOException If fails

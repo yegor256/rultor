@@ -94,9 +94,9 @@ public final class DictionaryTest {
             Matchers.equalTo(
                 // @checkstyle StringLiteralsConcatenation (5 lines)
                 "{\n"
-                + "  \"three\": com.rultor.SomeOtherClass()\n"
-                + "  \"two\": \"some text\\nline two\",\n"
                 + "  \"one\": 10L,\n"
+                + "  \"three\": com.rultor.SomeOtherClass(),\n"
+                + "  \"two\": \"some text\\nline two\"\n"
                 + "}"
             )
         );

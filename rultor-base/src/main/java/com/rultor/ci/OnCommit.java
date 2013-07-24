@@ -153,7 +153,7 @@ public final class OnCommit implements Instance {
     private void build(final Commit head) throws IOException {
         final Announcement anmt = new Build(this.batch).exec(
             new ImmutableMap.Builder<String, Object>()
-                .put("branch", this.branch)
+                .put("branch", this.branch.name())
                 .put("head", head)
                 .build()
         );

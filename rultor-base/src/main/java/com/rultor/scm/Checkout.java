@@ -43,7 +43,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "scm", "name" })
+@EqualsAndHashCode(of = { "scm", "label" })
 @Loggable(Loggable.DEBUG)
 public final class Checkout implements Branch {
 
@@ -55,7 +55,7 @@ public final class Checkout implements Branch {
     /**
      * Name of the branch.
      */
-    private final transient String name;
+    private final transient String label;
 
     /**
      * Public ctor.
@@ -65,7 +65,7 @@ public final class Checkout implements Branch {
     public Checkout(@NotNull(message = "SCM can't be NULL") final SCM src,
         @NotNull(message = "branch can't be NULL") final String branch) {
         this.scm = src;
-        this.name = branch;
+        this.label = branch;
     }
 
     /**
@@ -73,7 +73,7 @@ public final class Checkout implements Branch {
      */
     @Override
     public String toString() {
-        return String.format("branch `%s` at %s", this.name, this.scm);
+        return String.format("branch `%s` at %s", this.label, this.scm);
     }
 
     /**
@@ -81,7 +81,15 @@ public final class Checkout implements Branch {
      */
     @Override
     public Iterable<Commit> log() throws IOException {
-        return this.scm.checkout(this.name).log();
+        return this.scm.checkout(this.label).log();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String name() {
+        return this.label;
     }
 
 }

@@ -66,7 +66,7 @@ public final class GitBranch implements Branch {
     /**
      * Branch name.
      */
-    private final transient String name;
+    private final transient String label;
 
     /**
      * Public ctor.
@@ -80,7 +80,7 @@ public final class GitBranch implements Branch {
         final String branch) {
         this.terminal = term;
         this.dir = folder;
-        this.name = branch;
+        this.label = branch;
     }
 
     /**
@@ -90,7 +90,7 @@ public final class GitBranch implements Branch {
     public String toString() {
         return String.format(
             "Git branch `%s` at `%s` in %s",
-            this.name, this.dir, this.terminal
+            this.label, this.dir, this.terminal
         );
     }
 
@@ -112,7 +112,7 @@ public final class GitBranch implements Branch {
         Signal.log(
             Signal.Mnemo.SUCCESS,
             "Git log in branch `%s` retrieved",
-            this.name
+            this.label
         );
         final Iterable<String> lines = Arrays.asList(stdout.split("\n"));
         return new Iterable<Commit>() {
@@ -135,6 +135,14 @@ public final class GitBranch implements Branch {
                 };
             }
         };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String name() {
+        return this.label;
     }
 
 }

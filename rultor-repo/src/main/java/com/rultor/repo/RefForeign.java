@@ -57,6 +57,7 @@ import org.apache.commons.lang3.Validate;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @ToString
@@ -152,7 +153,7 @@ final class RefForeign implements Variable<Object> {
             .append(':')
             .append(this.name)
             .append('(')
-            .append(new Brackets(this.children))
+            .append(new Brackets<Variable<?>>(this.children))
             .append(')')
             .toString();
     }

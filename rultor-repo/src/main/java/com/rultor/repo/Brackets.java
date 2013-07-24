@@ -51,7 +51,7 @@ import org.apache.commons.lang3.StringUtils;
 @Immutable
 @EqualsAndHashCode(of = "vars")
 @Loggable(Loggable.DEBUG)
-final class Brackets {
+final class Brackets<T> {
 
     /**
      * Indentation.
@@ -66,38 +66,37 @@ final class Brackets {
     /**
      * Variables to render.
      */
-    private final transient Array<Variable<?>> vars;
+    private final transient Array<T> vars;
 
     /**
      * Transition function.
      */
-    private final transient Brackets.Format format;
+    private final transient Brackets.Format<T> format;
 
     /**
      * Formatter.
      */
     @Immutable
-    public interface Format {
+    public interface Format<T> {
         /**
          * Format the line.
-         * @param pos Position of the variable
          * @param var Variable to render
          * @return Text rendered
          */
-        String print(int pos, Variable<?> var);
+        String print(T var);
     }
 
     /**
      * Public ctor.
      * @param args Arguments
      */
-    protected Brackets(final Collection<Variable<?>> args) {
+    protected Brackets(final Collection<T> args) {
         this(
             args,
-            new Brackets.Format() {
+            new Brackets.Format<T>() {
                 @Override
-                public String print(final int pos, final Variable<?> var) {
-                    return var.asText();
+                public String print(final T var) {
+                    return Variable.class.cast(var).asText();
                 }
             }
         );
@@ -108,8 +107,8 @@ final class Brackets {
      * @param args Arguments
      * @param fmt Format to use for printing
      */
-    protected Brackets(final Collection<Variable<?>> args, final Brackets.Format fmt) {
-        this.vars = new com.jcabi.immutable.Array<Variable<?>>(args);
+    protected Brackets(final Collection<T> args, final Brackets.Format<T> fmt) {
+        this.vars = new Array<T>(args);
         this.format = fmt;
     }
 
@@ -120,8 +119,8 @@ final class Brackets {
     public String toString() {
         final StringBuilder text = new StringBuilder();
         final List<String> kids = new ArrayList<String>(this.vars.size());
-        for (int pos = 0; pos < this.vars.size(); ++pos) {
-            kids.add(this.format.print(pos, this.vars.get(pos)));
+        for (T var : this.vars) {
+            kids.add(this.format.print(var));
         }
         final String line = StringUtils.join(kids, ", ");
         if (line.length() < Tv.FIFTY && !line.contains(Brackets.EOL)) {

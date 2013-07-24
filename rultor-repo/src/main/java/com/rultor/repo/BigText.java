@@ -70,6 +70,7 @@ final class BigText implements Variable<String> {
      * Public ctor.
      * @param text Text to parse and encapsulate
      */
+    @SuppressWarnings("PMD.UseStringBufferForStringAppends")
     protected BigText(final String text) {
         final String[] items = StringUtils.splitPreserveAllTokens(
             StringUtils.stripStart(

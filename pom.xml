@@ -99,7 +99,7 @@
         </site>
     </distributionManagement>
     <properties>
-        <jcabi.version>0.7.21</jcabi.version>
+        <jcabi.version>1.0-SNAPSHOT</jcabi.version>
         <rexsl.version>0.4.13</rexsl.version>
         <jersey.version>1.17.1</jersey.version>
         <github.global.server>github</github.global.server>

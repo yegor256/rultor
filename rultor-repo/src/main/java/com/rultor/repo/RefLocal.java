@@ -118,7 +118,7 @@ final class RefLocal implements Variable<Object> {
         return new StringBuilder()
             .append(this.name)
             .append('(')
-            .append(new Brackets(this.children))
+            .append(new Brackets<Variable<?>>(this.children))
             .append(')')
             .toString();
     }
