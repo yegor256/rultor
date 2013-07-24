@@ -49,7 +49,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "terminal", "name" })
+@EqualsAndHashCode(of = { "terminal", "label" })
 @Loggable(Loggable.DEBUG)
 public final class GitBranch implements Branch {
 
