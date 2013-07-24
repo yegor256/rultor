@@ -36,7 +36,6 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Signal;
 import com.rultor.spi.Time;
 import com.rultor.spi.Work;
 import java.util.ArrayList;
@@ -124,8 +123,8 @@ public final class Crontab implements Instance {
             }
         }
         if (denier == null) {
-            Signal.log(
-                Signal.Mnemo.SUCCESS,
+            Logger.info(
+                this,
                 "Crontab `%s` allows execution at `%s`",
                 this.rules(),
                 Crontab.moment(this.work.started())
