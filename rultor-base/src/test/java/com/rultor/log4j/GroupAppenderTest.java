@@ -89,8 +89,8 @@ public final class GroupAppenderTest {
         Mockito.verify(drain).append(
             Mockito.argThat(
                 Matchers.everyItem(
-                    Matchers.equalTo(
-                        "  0:00 INFO test message to see in log"
+                    Matchers.endsWith(
+                        " INFO test message to see in log"
                     )
                 )
             )
