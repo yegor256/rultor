@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * Markdown text.
@@ -66,7 +67,7 @@ final class Markdown {
      * @return HTML
      */
     public String html() {
-        return this.text
+        return StringEscapeUtils.escapeHtml4(this.text)
             .replaceAll("`([^`]+)`", "<code>$1</code>")
             .replaceAll("\\*{2}([^\\*]+)\\*{2}", "<strong>$1</strong>");
     }
