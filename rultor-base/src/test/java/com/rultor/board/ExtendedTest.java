@@ -36,21 +36,21 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test case for {@link VelocityPrint}.
+ * Test case for {@link Extended}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class VelocityPrintTest {
+public final class ExtendedTest {
 
     /**
-     * VelocityPrint can compress text elements.
+     * Extended can compress text elements.
      * @throws Exception If some problem inside
      */
     @Test
     public void printsUsingVelocityTemplate() throws Exception {
         final Billboard board = Mockito.mock(Billboard.class);
         final String arg = "argument-name";
-        new VelocityPrint(arg, "hello, ${name}!", board).announce(
+        new Extended(arg, "hello, ${name}!", board).announce(
             new Announcement(
                 Level.INFO,
                 new ImmutableMap.Builder<String, Object>()

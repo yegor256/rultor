@@ -52,7 +52,7 @@ import org.apache.velocity.runtime.RuntimeConstants;
 @Immutable
 @EqualsAndHashCode(of = { "board", "template" })
 @Loggable(Loggable.DEBUG)
-public final class VelocityPrint implements Billboard {
+public final class Extended implements Billboard {
 
     /**
      * Original board.
@@ -75,7 +75,7 @@ public final class VelocityPrint implements Billboard {
      * @param brd Original board
      * @param tmpl Velocity template
      */
-    public VelocityPrint(
+    public Extended(
         @NotNull(message = "argument can't be NULL") final String arg,
         @NotNull(message = "template can't be NULL") final String tmpl,
         @NotNull(message = "board can't be NULL") final Billboard brd) {

@@ -27,47 +27,50 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.shell;
+package com.rultor.board;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
+import com.jcabi.immutable.Array;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.CharEncoding;
 
 /**
- * ASCII command codes aware output stream.
+ * Without certain arguments.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@EqualsAndHashCode(callSuper = false, of = "origin")
+@Immutable
+@EqualsAndHashCode(of = { "board", "exclude" })
 @Loggable(Loggable.DEBUG)
-public final class ASCIIOutputStream extends OutputStream {
+public final class Scrambled implements Billboard {
 
     /**
-     * Original stream.
+     * Original board.
      */
-    private final transient OutputStream origin;
+    private final transient Billboard board;
 
     /**
-     * Accumulated latest line.
+     * Black list.
      */
-    @SuppressWarnings("PMD.AvoidStringBufferField")
-    private final transient StringBuffer line = new StringBuffer();
+    private final transient Array<String> exclude;
 
     /**
      * Public ctor.
-     * @param stream Original stream
+     * @param brd Original board
+     * @param args Names of excluded arguments
      */
-    public ASCIIOutputStream(
-        @NotNull(message = "stream can't be NULL") final OutputStream stream) {
-        super();
-        this.origin = stream;
+    public Scrambled(
+        @NotNull(message = "template can't be NULL") final Collection<String> args,
+        @NotNull(message = "board can't be NULL") final Billboard brd) {
+        this.exclude = new Array<String>(args);
+        this.board = brd;
     }
 
     /**
@@ -76,8 +79,8 @@ public final class ASCIIOutputStream extends OutputStream {
     @Override
     public String toString() {
         return String.format(
-            "%s sensitive to ASCII command codes",
-            this.origin
+            "%s without %s",
+            this.board, this.exclude
         );
     }
 
@@ -85,31 +88,15 @@ public final class ASCIIOutputStream extends OutputStream {
      * {@inheritDoc}
      */
     @Override
-    public void write(final int chr) throws IOException {
-        if (chr == '\015') {
-            this.line.setLength(0);
-        } else if (chr == '\010') {
-            synchronized (this.line) {
-                if (this.line.length() > 0) {
-                    this.line.setLength(this.line.length() - 1);
-                }
-            }
-        } else if (chr == '\011') {
-            final int lag = Tv.EIGHT - (this.line.length() % Tv.EIGHT);
-            for (int space = 0; space < lag; ++space) {
-                this.line.append(' ');
-            }
-        } else if (chr == '\012') {
-            synchronized (this.line) {
-                this.origin.write(
-                    this.line.toString().getBytes(CharEncoding.UTF_8)
-                );
-                this.origin.write(chr);
-                this.line.setLength(0);
-            }
-        } else {
-            this.line.append((char) chr);
+    public void announce(@NotNull(message = "announcement can't be NULL")
+        final Announcement anmt) throws IOException {
+        final ConcurrentMap<String, Object> map =
+            new ConcurrentHashMap<String, Object>(0);
+        map.putAll(anmt.args());
+        for (String arg : this.exclude) {
+            map.remove(arg);
         }
+        this.board.announce(new Announcement(anmt.level(), map));
     }
 
 }

@@ -58,7 +58,7 @@ public final class ASCIIOutputStreamTest {
         writer.close();
         MatcherAssert.assertThat(
             baos.toString(CharEncoding.UTF_8),
-            Matchers.equalTo("hello,  world!")
+            Matchers.equalTo("hello,  world!\n")
         );
     }
 
