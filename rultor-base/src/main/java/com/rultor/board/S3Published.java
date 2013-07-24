@@ -35,6 +35,7 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.S3Client;
 import java.io.ByteArrayInputStream;
@@ -44,6 +45,7 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.CharEncoding;
 
 /**
@@ -168,7 +170,8 @@ public final class S3Published implements Billboard {
             result.getETag()
         );
         return aws.generatePresignedUrl(
-            this.client.bucket(), key, new Date()
+            this.client.bucket(), key,
+            DateUtils.addDays(new Date(), Tv.TWENTY)
         );
     }
 
