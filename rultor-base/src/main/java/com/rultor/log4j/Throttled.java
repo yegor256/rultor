@@ -153,7 +153,7 @@ public final class Throttled implements Instance, Drain.Source {
         } catch (Exception ex) {
             Logger.warn(
                 this, "pulse failed after %[ms]s: %[exception]s",
-                ex, System.currentTimeMillis() - start
+                System.currentTimeMillis() - start, ex
             );
             Signal.log(Signal.Mnemo.FAILURE, ex.getMessage());
             throw ex;
