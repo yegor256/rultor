@@ -66,8 +66,8 @@
 <a class="jxr_linenumber" name="56" href="#56">56</a>          <strong class="jxr_keyword">final</strong> File dir = Files.createTempDir();
 <a class="jxr_linenumber" name="57" href="#57">57</a>          <strong class="jxr_keyword">final</strong> SCM git = <strong class="jxr_keyword">new</strong> Git(
 <a class="jxr_linenumber" name="58" href="#58">58</a>              <strong class="jxr_keyword">new</strong> ShellMocker.Bash(dir),
-<a class="jxr_linenumber" name="59" href="#59">59</a>              <strong class="jxr_keyword">new</strong> URL(<span class="jxr_string">"https://github.com/rultor/rultor.git"</span>),
-<a class="jxr_linenumber" name="60" href="#60">60</a>              <span class="jxr_string">"rultor"</span>
+<a class="jxr_linenumber" name="59" href="#59">59</a>              <strong class="jxr_keyword">new</strong> URL(<span class="jxr_string">"https://github.com/alex-palevsky/test.git"</span>),
+<a class="jxr_linenumber" name="60" href="#60">60</a>              <span class="jxr_string">"test"</span>
 <a class="jxr_linenumber" name="61" href="#61">61</a>          );
 <a class="jxr_linenumber" name="62" href="#62">62</a>          <strong class="jxr_keyword">final</strong> Branch branch = git.checkout(<span class="jxr_string">"master"</span>);
 <a class="jxr_linenumber" name="63" href="#63">63</a>          <strong class="jxr_keyword">final</strong> Commit head = branch.log().iterator().next();

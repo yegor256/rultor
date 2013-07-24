@@ -53,7 +53,7 @@
 <a class="jxr_linenumber" name="43" href="#43">43</a>  <em class="jxr_javadoccomment"> * @since 1.0</em>
 <a class="jxr_linenumber" name="44" href="#44">44</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="45" href="#45">45</a>  @Immutable
-<a class="jxr_linenumber" name="46" href="#46">46</a>  @EqualsAndHashCode(of = { <span class="jxr_string">"scm"</span>, <span class="jxr_string">"name"</span> })
+<a class="jxr_linenumber" name="46" href="#46">46</a>  @EqualsAndHashCode(of = { <span class="jxr_string">"scm"</span>, <span class="jxr_string">"label"</span> })
 <a class="jxr_linenumber" name="47" href="#47">47</a>  @Loggable(Loggable.DEBUG)
 <a class="jxr_linenumber" name="48" href="#48">48</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/scm/Checkout.html">Checkout</a> <strong class="jxr_keyword">implements</strong> <a href="../../../com/rultor/scm/Branch.html">Branch</a> {
 <a class="jxr_linenumber" name="49" href="#49">49</a>  
@@ -65,7 +65,7 @@
 <a class="jxr_linenumber" name="55" href="#55">55</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="56" href="#56">56</a>  <em class="jxr_javadoccomment">     * Name of the branch.</em>
 <a class="jxr_linenumber" name="57" href="#57">57</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="58" href="#58">58</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> String name;
+<a class="jxr_linenumber" name="58" href="#58">58</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> String label;
 <a class="jxr_linenumber" name="59" href="#59">59</a>  
 <a class="jxr_linenumber" name="60" href="#60">60</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="61" href="#61">61</a>  <em class="jxr_javadoccomment">     * Public ctor.</em>
@@ -75,7 +75,7 @@
 <a class="jxr_linenumber" name="65" href="#65">65</a>      <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/scm/Checkout.html">Checkout</a>(@NotNull(message = <span class="jxr_string">"SCM can't be NULL"</span>) <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/scm/SCM.html">SCM</a> src,
 <a class="jxr_linenumber" name="66" href="#66">66</a>          @NotNull(message = <span class="jxr_string">"branch can't be NULL"</span>) <strong class="jxr_keyword">final</strong> String branch) {
 <a class="jxr_linenumber" name="67" href="#67">67</a>          <strong class="jxr_keyword">this</strong>.scm = src;
-<a class="jxr_linenumber" name="68" href="#68">68</a>          <strong class="jxr_keyword">this</strong>.name = branch;
+<a class="jxr_linenumber" name="68" href="#68">68</a>          <strong class="jxr_keyword">this</strong>.label = branch;
 <a class="jxr_linenumber" name="69" href="#69">69</a>      }
 <a class="jxr_linenumber" name="70" href="#70">70</a>  
 <a class="jxr_linenumber" name="71" href="#71">71</a>      <em class="jxr_javadoccomment">/**</em>
@@ -83,7 +83,7 @@
 <a class="jxr_linenumber" name="73" href="#73">73</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="74" href="#74">74</a>      @Override
 <a class="jxr_linenumber" name="75" href="#75">75</a>      <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="76" href="#76">76</a>          <strong class="jxr_keyword">return</strong> String.format(<span class="jxr_string">"branch `%s` at %s"</span>, <strong class="jxr_keyword">this</strong>.name, <strong class="jxr_keyword">this</strong>.scm);
+<a class="jxr_linenumber" name="76" href="#76">76</a>          <strong class="jxr_keyword">return</strong> String.format(<span class="jxr_string">"branch `%s` at %s"</span>, <strong class="jxr_keyword">this</strong>.label, <strong class="jxr_keyword">this</strong>.scm);
 <a class="jxr_linenumber" name="77" href="#77">77</a>      }
 <a class="jxr_linenumber" name="78" href="#78">78</a>  
 <a class="jxr_linenumber" name="79" href="#79">79</a>      <em class="jxr_javadoccomment">/**</em>
@@ -91,10 +91,18 @@
 <a class="jxr_linenumber" name="81" href="#81">81</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="82" href="#82">82</a>      @Override
 <a class="jxr_linenumber" name="83" href="#83">83</a>      <strong class="jxr_keyword">public</strong> Iterable&lt;Commit&gt; log() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="84" href="#84">84</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.scm.checkout(<strong class="jxr_keyword">this</strong>.name).log();
+<a class="jxr_linenumber" name="84" href="#84">84</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.scm.checkout(<strong class="jxr_keyword">this</strong>.label).log();
 <a class="jxr_linenumber" name="85" href="#85">85</a>      }
 <a class="jxr_linenumber" name="86" href="#86">86</a>  
-<a class="jxr_linenumber" name="87" href="#87">87</a>  }
+<a class="jxr_linenumber" name="87" href="#87">87</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="88" href="#88">88</a>  <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a class="jxr_linenumber" name="89" href="#89">89</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="90" href="#90">90</a>      @Override
+<a class="jxr_linenumber" name="91" href="#91">91</a>      <strong class="jxr_keyword">public</strong> String name() {
+<a class="jxr_linenumber" name="92" href="#92">92</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.label;
+<a class="jxr_linenumber" name="93" href="#93">93</a>      }
+<a class="jxr_linenumber" name="94" href="#94">94</a>  
+<a class="jxr_linenumber" name="95" href="#95">95</a>  }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
