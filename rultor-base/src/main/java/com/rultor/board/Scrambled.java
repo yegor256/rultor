@@ -67,7 +67,7 @@ public final class Scrambled implements Billboard {
      * @param args Names of excluded arguments
      */
     public Scrambled(
-        @NotNull(message = "template can't be NULL") final Collection<String> args,
+        @NotNull(message = "args can't be NULL") final Collection<String> args,
         @NotNull(message = "board can't be NULL") final Billboard brd) {
         this.exclude = new Array<String>(args);
         this.board = brd;
