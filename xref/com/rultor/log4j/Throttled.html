@@ -163,7 +163,7 @@
 <a class="jxr_linenumber" name="153" href="#153">153</a>         } <strong class="jxr_keyword">catch</strong> (Exception ex) {
 <a class="jxr_linenumber" name="154" href="#154">154</a>             Logger.warn(
 <a class="jxr_linenumber" name="155" href="#155">155</a>                 <strong class="jxr_keyword">this</strong>, <span class="jxr_string">"pulse failed after %[ms]s: %[exception]s"</span>,
-<a class="jxr_linenumber" name="156" href="#156">156</a>                 ex, System.currentTimeMillis() - start
+<a class="jxr_linenumber" name="156" href="#156">156</a>                 System.currentTimeMillis() - start, ex
 <a class="jxr_linenumber" name="157" href="#157">157</a>             );
 <a class="jxr_linenumber" name="158" href="#158">158</a>             Signal.log(Signal.Mnemo.FAILURE, ex.getMessage());
 <a class="jxr_linenumber" name="159" href="#159">159</a>             <strong class="jxr_keyword">throw</strong> ex;

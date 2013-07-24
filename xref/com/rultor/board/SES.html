@@ -131,7 +131,7 @@
 <a class="jxr_linenumber" name="121" href="#121">121</a>         <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/board/Announcement.html">Announcement</a> anmt) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="122" href="#122">122</a>         <strong class="jxr_keyword">final</strong> AmazonSimpleEmailService aws = <strong class="jxr_keyword">this</strong>.client.get();
 <a class="jxr_linenumber" name="123" href="#123">123</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="124" href="#124">124</a>             String print = String.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(anmt.args().get(<span class="jxr_string">"print"</span>));
+<a class="jxr_linenumber" name="124" href="#124">124</a>             String print = String.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(anmt.args().get(<span class="jxr_string">"emailBody"</span>));
 <a class="jxr_linenumber" name="125" href="#125">125</a>             <strong class="jxr_keyword">if</strong> (print == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="126" href="#126">126</a>                 <strong class="jxr_keyword">final</strong> StringBuilder txt = <strong class="jxr_keyword">new</strong> StringBuilder();
 <a class="jxr_linenumber" name="127" href="#127">127</a>                 <strong class="jxr_keyword">for</strong> (Map.Entry&lt;String, Object&gt; entry : anmt.args().entrySet()) {
