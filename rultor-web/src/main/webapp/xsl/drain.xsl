@@ -172,7 +172,7 @@
                         </a>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:value-of select="output"/>
+                        <xsl:value-of disable-output-escaping="yes" select="output"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </td>
