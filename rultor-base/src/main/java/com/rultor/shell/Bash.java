@@ -34,8 +34,6 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Signal;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -130,8 +128,6 @@ public final class Bash implements Batch {
         throws IOException {
         final Shell shell = this.shells.acquire();
         Signal.log(Signal.Mnemo.SUCCESS, "%s acquired", shell);
-        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
-        final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
         int code;
         try {
             for (Map.Entry<String, Object> pair
@@ -146,11 +142,8 @@ public final class Bash implements Batch {
             code = shell.exec(
                 this.compile(args),
                 IOUtils.toInputStream(""),
-                new TeeOutputStream(stdout, Logger.stream(Level.INFO, this)),
-                new TeeOutputStream(stderr, Logger.stream(Level.WARNING, this))
-            );
-            IOUtils.copy(
-                new ByteArrayInputStream(stdout.toByteArray()), output
+                new TeeOutputStream(output, Logger.stream(Level.INFO, this)),
+                new TeeOutputStream(output, Logger.stream(Level.WARNING, this))
             );
         } finally {
             output.close();
