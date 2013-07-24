@@ -49,7 +49,8 @@ public final class VelocityPrintTest {
     @Test
     public void printsUsingVelocityTemplate() throws Exception {
         final Billboard board = Mockito.mock(Billboard.class);
-        new VelocityPrint("hello, ${name}!", board).announce(
+        final String arg = "argument-name";
+        new VelocityPrint(arg, "hello, ${name}!", board).announce(
             new Announcement(
                 Level.INFO,
                 new ImmutableMap.Builder<String, Object>()
@@ -63,7 +64,7 @@ public final class VelocityPrintTest {
                     public boolean matches(final Object obj) {
                         final Announcement anmt = Announcement.class.cast(obj);
                         return "hello, 1!".equals(
-                            anmt.args().get("print").toString()
+                            anmt.args().get(arg).toString()
                         );
                     }
                 }

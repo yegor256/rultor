@@ -44,7 +44,6 @@ import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * Face of {@link Spec} in JAXB.
@@ -134,10 +133,7 @@ final class JaxbFace {
             .up();
         if (!(object instanceof String)) {
             output = output.add(
-                "html",
-                StringEscapeUtils.escapeHtml4(
-                    new Markdown(object.toString()).html()
-                )
+                "html", new Markdown(object.toString()).html()
             ).up();
         }
         return output;

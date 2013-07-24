@@ -65,13 +65,21 @@ public final class VelocityPrint implements Billboard {
     private final transient String template;
 
     /**
+     * Name of argument to inject into announcement.
+     */
+    private final transient String argument;
+
+    /**
      * Public ctor.
+     * @param arg Name of the argument
      * @param brd Original board
      * @param tmpl Velocity template
      */
-    public VelocityPrint(@NotNull(message = "template can't be NULL")
-        final String tmpl,
+    public VelocityPrint(
+        @NotNull(message = "argument can't be NULL") final String arg,
+        @NotNull(message = "template can't be NULL") final String tmpl,
         @NotNull(message = "board can't be NULL") final Billboard brd) {
+        this.argument = arg;
         this.board = brd;
         this.template = tmpl;
     }
@@ -113,7 +121,7 @@ public final class VelocityPrint implements Billboard {
             this.getClass().getName(), this.template
         );
         Validate.isTrue(success, "failed to compile VTL");
-        this.board.announce(anmt.with("print", writer.toString()));
+        this.board.announce(anmt.with(this.argument, writer.toString()));
     }
 
 }
