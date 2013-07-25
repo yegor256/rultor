@@ -84,28 +84,32 @@ final class Build {
         throws IOException {
         Signal.log(Signal.Mnemo.START, "Started to build");
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        final long start = System.currentTimeMillis();
         final int code = this.batch.exec(
             args, new ASCIIOutputStream(stdout)
         );
         final Announcement announcement;
+        final ImmutableMap.Builder<String, Object> builder =
+            new ImmutableMap.Builder<String, Object>()
+                .put("stdout", stdout.toString(CharEncoding.UTF_8))
+                .put(
+                    "elapsed",
+                    String.format(
+                        "%[ms]s",
+                        System.currentTimeMillis() - start
+                    )
+                )
+                .putAll(args);
         if (code == 0) {
             announcement = new Announcement(
                 Level.INFO,
-                new ImmutableMap.Builder<String, Object>()
-                    // @checkstyle MultipleStringLiterals (2 lines)
-                    .put("title", "built successfully")
-                    .put("stdout", stdout.toString(CharEncoding.UTF_8))
-                    .putAll(args)
-                    .build()
+                // @checkstyle MultipleStringLiterals (2 lines)
+                builder.put("title", "built successfully").build()
             );
         } else {
             announcement = new Announcement(
                 Level.SEVERE,
-                new ImmutableMap.Builder<String, Object>()
-                    .put("title", "failed to build")
-                    .put("stdout", stdout.toString(CharEncoding.UTF_8))
-                    .putAll(args)
-                    .build()
+                builder.put("title", "failed to build").build()
             );
         }
         return announcement;
