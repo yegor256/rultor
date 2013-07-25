@@ -120,7 +120,7 @@ public final class EditRs extends BaseRs {
                         .clone()
                         .path(EditRs.class)
                         .path(EditRs.class, "save")
-                        .build()
+                        .build(this.timeline.name())
                 )
             )
             .render()
