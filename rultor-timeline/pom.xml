@@ -220,8 +220,8 @@
                                 <Rultor-FbSecret>${fb.secret}</Rultor-FbSecret>
                                 <Rultor-GoogleId>${google.id}</Rultor-GoogleId>
                                 <Rultor-GoogleSecret>${google.secret}</Rultor-GoogleSecret>
-                                <Rultor-GithubId>${github.id}</Rultor-GithubId>
-                                <Rultor-GithubSecret>${github.secret}</Rultor-GithubSecret>
+                                <Rultor-GithubId>${github.timeline.id}</Rultor-GithubId>
+                                <Rultor-GithubSecret>${github.timeline.secret}</Rultor-GithubSecret>
                                 <Rultor-SecurityKey>${security.key}</Rultor-SecurityKey>
                                 <Rultor-MongoHost>${mongo.host}</Rultor-MongoHost>
                                 <Rultor-MongoPort>${mongo.port}</Rultor-MongoPort>
