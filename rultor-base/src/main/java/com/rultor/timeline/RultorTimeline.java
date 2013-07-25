@@ -31,6 +31,7 @@ package com.rultor.timeline;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.log.Logger;
 import com.rexsl.test.RestTester;
 import java.io.IOException;
@@ -94,6 +95,7 @@ public final class RultorTimeline implements Timeline {
      * {@inheritDoc}
      */
     @Override
+    @RetryOnFailure
     public void submit(final String text, final Collection<Tag> tags,
         final Collection<Product> products) throws IOException {
         final URI uri = UriBuilder.fromUri("http://timeline.rultor.com/t/")
