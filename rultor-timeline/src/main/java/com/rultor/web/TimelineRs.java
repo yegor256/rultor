@@ -100,12 +100,15 @@ public final class TimelineRs extends BaseRs {
             .init(this)
             .append(new JaxbBundle("name", this.timeline.name()))
             .append(
-                new JaxbBundle.Group<Event>(this.timeline.events(new Time())) {
-                    @Override
-                    public JaxbBundle bundle(final Event event) {
-                        return TimelineRs.this.event(event);
+                new JaxbBundle("events").add(
+                    new JaxbBundle.Group<Event>(
+                        this.timeline.events(new Time())) {
+                        @Override
+                        public JaxbBundle bundle(final Event event) {
+                            return TimelineRs.this.event(event);
+                        }
                     }
-                }
+                )
             )
             .render()
             .build();
