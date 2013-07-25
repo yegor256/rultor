@@ -41,6 +41,7 @@ import com.rultor.timeline.Timeline;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -105,8 +106,8 @@ public final class TimelineRs extends BaseRs {
      * @return The JAX-RS response
      */
     @POST
-    @Path("/create")
-    public Response post(final String text) {
+    @Path("/post")
+    public Response post(@FormParam("text") @NotNull final String text) {
         final Event event = this.timeline.post(
             text, new ArrayList<Tag>(0), new ArrayList<Product>(0)
         );
