@@ -76,7 +76,7 @@ import javax.ws.rs.core.Response;
 @Loggable(Loggable.DEBUG)
 @Inset.Default(LinksInset.class)
 @SuppressWarnings({ "PMD.TooManyMethods", "PMD.ExcessiveImports" })
-class BaseRs extends BaseResource {
+public class BaseRs extends BaseResource {
 
     /**
      * Authentication keys.
