@@ -77,6 +77,17 @@ public final class IndexRs extends BaseRs {
                     }
                 )
             )
+            .link(
+                new Link(
+                    // @checkstyle MultipleStringLiterals (1 line)
+                    "create",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(IndexRs.class)
+                        .path(IndexRs.class, "remove")
+                        .build()
+                )
+            )
             .render()
             .build();
     }
