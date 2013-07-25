@@ -60,7 +60,7 @@ public interface Timelines {
      * Get one get by name.
      * @param name Name of it
      * @return Timeline
-     * @throws Timelines.TimelineNotFoundException If not found
+     * @throws TimelineNotFoundException If not found
      */
     Timeline get(String name) throws TimelineNotFoundException;
 

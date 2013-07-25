@@ -142,6 +142,7 @@ public final class MongoTimelines implements Timelines {
 
     /**
      * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
     public Timeline get(final String name)
