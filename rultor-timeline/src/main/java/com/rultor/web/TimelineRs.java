@@ -160,24 +160,16 @@ public final class TimelineRs extends BaseRs {
                 }
             )
             .up()
-            .add(this.products(event.products()))
-            .up();
-    }
-
-    /**
-     * Convert products to JaxbBundle.
-     * @param products Products to convert
-     * @return Bundle
-     */
-    private JaxbBundle products(final Iterable<Product> products) {
-        return new JaxbBundle("products").add(
-            new JaxbBundle.Group<Product>(products) {
-                @Override
-                public JaxbBundle bundle(final Product product) {
-                    return TimelineRs.this.product(product);
+            .add("products")
+            .add(
+                new JaxbBundle.Group<Product>(event.products()) {
+                    @Override
+                    public JaxbBundle bundle(final Product product) {
+                        return TimelineRs.this.product(product);
+                    }
                 }
-            }
-        );
+            )
+            .up();
     }
 
     /**
