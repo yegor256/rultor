@@ -61,13 +61,14 @@ public interface Timelines {
      * @param name Name of it
      * @return Timeline
      * @throws TimelineNotFoundException If not found
+     * @checkstyle RedundantThrows (5 lines)
      */
     Timeline get(String name) throws TimelineNotFoundException;
 
     /**
      * When timeline is not found.
      */
-    public final class TimelineNotFoundException extends Exception {
+    final class TimelineNotFoundException extends Exception {
         /**
          * Serialization marker.
          */

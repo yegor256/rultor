@@ -80,7 +80,7 @@ public final class TimelineRs extends BaseRs {
             this.timeline = this.timelines().get(name);
         } catch (Timelines.TimelineNotFoundException ex) {
             throw new WebApplicationException(
-                HttpURLConnection.HTTP_NOT_FOUND
+                ex, HttpURLConnection.HTTP_NOT_FOUND
             );
         }
     }
