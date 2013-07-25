@@ -84,7 +84,7 @@ public final class IndexRs extends BaseRs {
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(IndexRs.class)
-                        .path(IndexRs.class, "remove")
+                        .path(IndexRs.class, "create")
                         .build()
                 )
             )
