@@ -31,10 +31,12 @@ package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.timeline.Timeline;
 import com.rultor.timeline.Timelines;
 import java.net.HttpURLConnection;
+import java.util.Arrays;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -110,6 +112,17 @@ public final class EditRs extends BaseRs {
                     )
                     .up()
             )
+            .link(
+                new Link(
+                    // @checkstyle MultipleStringLiterals (1 line)
+                    "save",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(EditRs.class)
+                        .path(EditRs.class, "save")
+                        .build()
+                )
+            )
             .render()
             .build();
     }
@@ -126,6 +139,9 @@ public final class EditRs extends BaseRs {
     public Response save(@FormParam("key") @NotNull final String key,
         @FormParam("friends") @NotNull final String friends) {
         this.timeline.permissions().key(key);
+        this.timeline.permissions().friends(
+            Arrays.asList(friends.split("\\s+"))
+        );
         throw this.flash().redirect(
             this.uriInfo().getBaseUri(),
             String.format(

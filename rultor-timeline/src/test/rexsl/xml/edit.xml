@@ -55,7 +55,8 @@
         <name>rultor</name>
         <key>B6AK987584EF77CD89E</key>
         <friends>
-            test
+            <friend>urn:facebook:643423423</friend>
+            <friend>urn:github:68867</friend>
         </friends>
     </timeline>
 </page>

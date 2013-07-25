@@ -35,11 +35,6 @@
         <title>
             <xsl:value-of select="/page/timeline/name"/>
         </title>
-        <script type="text/javascript"><![CDATA[
-            function renew() {
-                // tbd...
-            }
-        ]]></script>
     </xsl:template>
     <xsl:template name="content">
             <xsl:apply-templates select="/page/timeline"/>
@@ -62,7 +57,10 @@
                             <xsl:value-of select="key"/>
                         </xsl:attribute>
                     </input>
-                    <button class="btn" type="button" onclick="renew();">
+                    <button class="btn" type="button">
+                        <xsl:attribute name="onclick">
+                            <xsl:text>document.getElementById('key').value = Math.random().toString(36).substring(2);</xsl:text>
+                        </xsl:attribute>
                         <i class="icon-refresh"><xsl:comment>refresh icon</xsl:comment></i>
                     </button>
                 </div>
@@ -70,7 +68,10 @@
                     <xsl:text>Friends (URN masks, one per line)</xsl:text>
                 </label>
                 <textarea name="friends" id="friends" rows="6" class="input-block-level">
-                    <xsl:value-of select="friends"/>
+                    <xsl:for-each select="friends/friend">
+                        <xsl:value-of select="."/>
+                        <xsl:text>&#10;</xsl:text>
+                    </xsl:for-each>
                 </textarea>
                 <label><xsl:comment>for the submit button below</xsl:comment></label>
                 <button type="submit" class="btn">
