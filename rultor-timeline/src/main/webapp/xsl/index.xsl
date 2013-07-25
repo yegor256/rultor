@@ -33,50 +33,58 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
-            <xsl:value-of select="/page/unit/name"/>
+            <xsl:text>timelines</xsl:text>
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <xsl:apply-templates select="/page/face"/>
-        <form method="post">
+        <form method="post" class="form-inline">
             <xsl:attribute name="action">
-                <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
+                <xsl:value-of select="/page/links/link[@rel='create']/@href"/>
             </xsl:attribute>
-            <fieldset>
-                <label for="spec" class="hidden-phone">
-                    <xsl:text>Specification of </xsl:text>
-                    <code>
-                        <xsl:value-of select="/page/unit/name"/>
-                    </code>
-                </label>
-                <textarea name="spec" id="spec" rows="18" class="input-block-level">
-                    <xsl:value-of select="/page/unit/spec"/>
-                </textarea>
-                <label><xsl:comment>for the submit button below</xsl:comment></label>
+            <div class="input-append">
+                <input name="name" type="text" class="input-xlarge" />
                 <button type="submit" class="btn">
-                    <xsl:text>Save</xsl:text>
+                    <xsl:text>Create</xsl:text>
                 </button>
-                <span class="help-inline hidden-phone">
-                    <xsl:text>Takes up to five minutes to update all servers</xsl:text>
-                </span>
-            </fieldset>
+            </div>
         </form>
+        <xsl:choose>
+            <xsl:when test="/page/timelines/timeline">
+                <ul class="nav spacious">
+                    <xsl:apply-templates select="/page/timelines/timeline"/>
+                </ul>
+            </xsl:when>
+            <xsl:otherwise>
+                <p>
+                    <xsl:text>Now create your first timeline and configure it as </xsl:text>
+                    <a href="http://blog.rultor.com">
+                        <xsl:text>this article</xsl:text>
+                    </a>
+                    <xsl:text> explains.</xsl:text>
+                </p>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
-    <xsl:template match="face">
-        <p>
-            <xsl:choose>
-                <xsl:when test="exception">
-                    <pre class="text-error"><xsl:value-of select="exception"/></pre>
-                </xsl:when>
-                <xsl:when test="type and html">
-                    <code><xsl:value-of select="type"/></code>
-                    <xsl:text> </xsl:text>
-                    <xsl:value-of disable-output-escaping="yes" select="html"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <!-- nothing to show -->
-                </xsl:otherwise>
-            </xsl:choose>
-        </p>
+    <xsl:template match="timeline">
+        <li>
+            <ul class="inline btn-group-vertical">
+                <li>
+                    <a title="edit this timeline">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='edit']/@href"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="name"/>
+                    </a>
+                </li>
+                <li>
+                    <a title="see it in action">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='see']/@href"/>
+                        </xsl:attribute>
+                        <i class="icon-chevron-sign-right"><xsl:comment>in action</xsl:comment></i>
+                    </a>
+                </li>
+            </ul>
+        </li>
     </xsl:template>
 </xsl:stylesheet>

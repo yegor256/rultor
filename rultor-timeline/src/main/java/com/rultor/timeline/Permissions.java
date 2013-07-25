@@ -27,30 +27,50 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.timeline;
 
-/*!
- * Bootstrap v2.3.2
+import com.jcabi.aspects.Immutable;
+import com.jcabi.urn.URN;
+import java.util.Collection;
+
+/**
+ * Timeline permissions.
  *
- * Copyright 2012 Twitter, Inc
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
  */
+@Immutable
+public interface Permissions {
 
-@import "bootstrap/mixins.less";
-@import "bootstrap/responsive.less";
-@import "bootstrap/reset.less";
-@import "bootstrap/scaffolding.less";
-@import "bootstrap/lables-badges.less";
-@import "bootstrap/layouts.less";
-@import "bootstrap/type.less";
-@import "bootstrap/code.less";
-@import "bootstrap/forms.less";
-@import "bootstrap/buttons.less";
-@import "bootstrap/button-groups.less";
-@import "bootstrap/alerts.less";
-@import "bootstrap/navs.less";
-@import "bootstrap/tables.less";
-@import "bootstrap/wells.less";
-@import "bootstrap/utilities.less"; // Has to be last to override when necessary
+    /**
+     * Who it belongs to.
+     * @return URN of the owner
+     */
+    URN owner();
+
+    /**
+     * Key.
+     * @return Authentication key
+     */
+    String key();
+
+    /**
+     * Renew the key.
+     * @param value Set key value
+     */
+    void key(String value);
+
+    /**
+     * Get list of friends.
+     * @return URN masks
+     */
+    Collection<String> friends();
+
+    /**
+     * Change friends.
+     * @param masks URN masks
+     */
+    void friends(Collection<String> masks);
+
+}

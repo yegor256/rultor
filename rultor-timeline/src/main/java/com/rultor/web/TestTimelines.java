@@ -27,30 +27,52 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.web;
 
-/*!
- * Bootstrap v2.3.2
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
+import com.rultor.timeline.Timeline;
+import com.rultor.timeline.Timelines;
+import java.util.ArrayList;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+/**
+ * Test Timelines.
  *
- * Copyright 2012 Twitter, Inc
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
  */
+@Immutable
+@ToString
+@EqualsAndHashCode
+@Loggable(Loggable.DEBUG)
+public final class TestTimelines implements Timelines {
 
-@import "bootstrap/mixins.less";
-@import "bootstrap/responsive.less";
-@import "bootstrap/reset.less";
-@import "bootstrap/scaffolding.less";
-@import "bootstrap/lables-badges.less";
-@import "bootstrap/layouts.less";
-@import "bootstrap/type.less";
-@import "bootstrap/code.less";
-@import "bootstrap/forms.less";
-@import "bootstrap/buttons.less";
-@import "bootstrap/button-groups.less";
-@import "bootstrap/alerts.less";
-@import "bootstrap/navs.less";
-@import "bootstrap/tables.less";
-@import "bootstrap/wells.less";
-@import "bootstrap/utilities.less"; // Has to be last to override when necessary
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterable<Timeline> find(final URN owner) {
+        return new ArrayList<Timeline>(0);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void create(final URN owner, final String name) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Timeline get(final String name) {
+        throw new UnsupportedOperationException();
+    }
+
+}

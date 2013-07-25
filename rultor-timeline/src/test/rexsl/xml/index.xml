@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -26,31 +27,44 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/*!
- * Bootstrap v2.3.2
- *
- * Copyright 2012 Twitter, Inc
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Designed and built with all the love in the world @twitter by @mdo and @fat.
- */
-
-@import "bootstrap/mixins.less";
-@import "bootstrap/responsive.less";
-@import "bootstrap/reset.less";
-@import "bootstrap/scaffolding.less";
-@import "bootstrap/lables-badges.less";
-@import "bootstrap/layouts.less";
-@import "bootstrap/type.less";
-@import "bootstrap/code.less";
-@import "bootstrap/forms.less";
-@import "bootstrap/buttons.less";
-@import "bootstrap/button-groups.less";
-@import "bootstrap/alerts.less";
-@import "bootstrap/navs.less";
-@import "bootstrap/tables.less";
-@import "bootstrap/wells.less";
-@import "bootstrap/utilities.less"; // Has to be last to override when necessary
+ -->
+<?xml-stylesheet type='text/xsl' href='/xsl/index.xsl'?>
+<page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
+    <identity>
+        <urn>urn:facebook:1</urn>
+        <name>Jeff Lebowski</name>
+        <photo>http://images.sodahead.com/polls/002320349/200261278_The_Big_Lebowski___Jeff_Bridges_answer_9_xlarge.jpeg</photo>
+    </identity>
+    <flash>
+        <level>INFO</level>
+        <message>This feature works just fine</message>
+        <msec>5660</msec>
+    </flash>
+    <version>
+        <name>1.0-SNAPSHOT</name>
+        <revision>123</revision>
+        <date>22-Aug-2012</date>
+    </version>
+    <links>
+        <link href="/xml/index.xml" rel="self" type="text/xml"/>
+        <link href="/xml/index.xml" rel="home" type="text/xml"/>
+        <link href="/xml/index.xml" rel="create" type="text/xml"/>
+    </links>
+    <millis>16</millis>
+    <timelines>
+        <timeline>
+            <name>rultor</name>
+            <links>
+                <link href="/xml/edit.xml" rel="edit" type="text/xml"/>
+                <link href="/xml/timeline.xml" rel="see" type="text/xml"/>
+            </links>
+        </timeline>
+        <timeline>
+            <name>jcabi</name>
+            <links>
+                <link href="/xml/edit.xml" rel="edit" type="text/xml"/>
+                <link href="/xml/timeline.xml" rel="see" type="text/xml"/>
+            </links>
+        </timeline>
+    </timelines>
+</page>

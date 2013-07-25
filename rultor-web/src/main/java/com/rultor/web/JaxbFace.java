@@ -36,6 +36,7 @@ import com.rexsl.page.JaxbBundle;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Dollars;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Markdown;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Time;

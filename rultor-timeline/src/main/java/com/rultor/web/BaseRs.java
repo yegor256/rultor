@@ -35,30 +35,19 @@ import com.jcabi.urn.URN;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
-import com.rexsl.page.JaxbBundle;
-import com.rexsl.page.Link;
 import com.rexsl.page.Resource;
 import com.rexsl.page.auth.AuthInset;
 import com.rexsl.page.auth.Facebook;
 import com.rexsl.page.auth.Github;
 import com.rexsl.page.auth.Google;
-import com.rexsl.page.auth.HttpBasic;
 import com.rexsl.page.auth.Identity;
 import com.rexsl.page.auth.Provider;
 import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
-import com.rultor.spi.Dollars;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Statement;
-import com.rultor.spi.Time;
-import com.rultor.spi.User;
-import com.rultor.spi.Users;
-import com.rultor.spi.Work;
+import com.rultor.timeline.Timelines;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -76,12 +65,7 @@ import javax.ws.rs.core.Response;
 @Loggable(Loggable.DEBUG)
 @Inset.Default(LinksInset.class)
 @SuppressWarnings({ "PMD.TooManyMethods", "PMD.ExcessiveImports" })
-class BaseRs extends BaseResource {
-
-    /**
-     * Authentication keys.
-     */
-    private static final AuthKeys KEYS = new AuthKeys();
+public class BaseRs extends BaseResource {
 
     /**
      * Flash.
@@ -130,61 +114,6 @@ class BaseRs extends BaseResource {
     }
 
     /**
-     * User financial stats.
-     * @return The inset
-     */
-    @Inset.Runtime
-    @NotNull(message = "finance inset can never be NULL")
-    public final Inset insetFinances() {
-        // @checkstyle AnonInnerLength (50 lines)
-        return new Inset() {
-            @Override
-            public void render(final BasePage<?, ?> page,
-                final Response.ResponseBuilder builder) {
-                page.link(
-                    new Link(
-                        "finances",
-                        BaseRs.this.uriInfo().getBaseUriBuilder()
-                            .clone()
-                            .path(FinancesRs.class)
-                            .build()
-                    )
-                );
-                final Iterator<Statement> stmts = BaseRs.this.user()
-                    .statements().iterator();
-                final Dollars balance;
-                if (stmts.hasNext()) {
-                    balance = stmts.next().balance();
-                } else {
-                    balance = new Dollars(0);
-                }
-                page.append(new JaxbBundle("balance", balance.toString()));
-            }
-        };
-    }
-
-    /**
-     * Authentication key inset.
-     * @return The inset
-     */
-    @Inset.Runtime
-    @NotNull(message = "auth key inset can never be NULL")
-    public final Inset insetAuthKey() {
-        return new Inset() {
-            @Override
-            public void render(final BasePage<?, ?> page,
-                final Response.ResponseBuilder builder) {
-                final Identity identity = BaseRs.this.auth().identity();
-                if (!identity.equals(Identity.ANONYMOUS)) {
-                    page.append(
-                        new JaxbBundle("api-key", BaseRs.KEYS.make(identity))
-                    );
-                }
-            }
-        };
-    }
-
-    /**
      * Authentication inset.
      * @return The inset
      */
@@ -213,71 +142,18 @@ class BaseRs extends BaseResource {
                         return identity;
                     }
                 }
-            )
-            .with(new HttpBasic(this, BaseRs.KEYS));
+            );
     }
 
     /**
-     * Get currently logged in user.
-     * @return The user
+     * All timelines.
+     * @return The timelines
      */
-    @NotNull(message = "User can't be NULL")
-    protected final User user() {
-        return this.users().get(this.auth().identity().urn());
-    }
-
-    /**
-     * Get all users.
-     * @return The users
-     */
-    @NotNull(message = "USERS is not injected into servlet context")
-    protected final Users users() {
-        return Users.class.cast(
-            this.servletContext().getAttribute(Users.class.getName())
+    @NotNull(message = "Timelines can't be NULL")
+    protected final Timelines timelines() {
+        return Timelines.class.cast(
+            this.servletContext().getAttribute(Timelines.class.getName())
         );
-    }
-
-    /**
-     * Get repo.
-     * @return Repo
-     */
-    @NotNull(message = "REPO is not injected into servlet context")
-    protected final Repo repo() {
-        return Repo.class.cast(
-            this.servletContext().getAttribute(Repo.class.getName())
-        );
-    }
-
-    /**
-     * The work we're in (while rendering).
-     * @param unit Unit being rendered
-     * @param spec Its spec
-     * @return The work
-     */
-    protected final Work work(final String unit, final Spec spec) {
-        // @checkstyle AnonInnerLength (50 lines)
-        return new Work() {
-            @Override
-            public Time started() {
-                return new Time();
-            }
-            @Override
-            public URN owner() {
-                return BaseRs.this.user().urn();
-            }
-            @Override
-            public String unit() {
-                return unit;
-            }
-            @Override
-            public Spec spec() {
-                return spec;
-            }
-            @Override
-            public void charge(final String details, final Dollars amount) {
-                throw new UnsupportedOperationException();
-            }
-        };
     }
 
 }

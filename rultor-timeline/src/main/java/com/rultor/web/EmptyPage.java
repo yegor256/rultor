@@ -27,30 +27,23 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.web;
 
-/*!
- * Bootstrap v2.3.2
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ * Empty RESTful page.
  *
- * Copyright 2012 Twitter, Inc
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>All other JAXB pages are inherited from this class, in runtime,
+ * by means of {@link com.rexsl.page.PageBuilder}.
  *
- * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
  */
-
-@import "bootstrap/mixins.less";
-@import "bootstrap/responsive.less";
-@import "bootstrap/reset.less";
-@import "bootstrap/scaffolding.less";
-@import "bootstrap/lables-badges.less";
-@import "bootstrap/layouts.less";
-@import "bootstrap/type.less";
-@import "bootstrap/code.less";
-@import "bootstrap/forms.less";
-@import "bootstrap/buttons.less";
-@import "bootstrap/button-groups.less";
-@import "bootstrap/alerts.less";
-@import "bootstrap/navs.less";
-@import "bootstrap/tables.less";
-@import "bootstrap/wells.less";
-@import "bootstrap/utilities.less"; // Has to be last to override when necessary
+@XmlRootElement(name = "page")
+@XmlAccessorType(XmlAccessType.NONE)
+public class EmptyPage extends com.rexsl.page.BasePage<EmptyPage, BaseRs> {
+}

@@ -33,50 +33,45 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
-            <xsl:value-of select="/page/unit/name"/>
+            <xsl:value-of select="/page/timeline/name"/>
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <xsl:apply-templates select="/page/face"/>
+            <xsl:apply-templates select="/page/timeline"/>
+    </xsl:template>
+    <xsl:template match="timeline">
         <form method="post">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
             </xsl:attribute>
             <fieldset>
-                <label for="spec" class="hidden-phone">
-                    <xsl:text>Specification of </xsl:text>
+                <label for="key">
+                    <xsl:text>Authentication key of </xsl:text>
                     <code>
-                        <xsl:value-of select="/page/unit/name"/>
+                        <xsl:value-of select="name"/>
                     </code>
                 </label>
-                <textarea name="spec" id="spec" rows="18" class="input-block-level">
-                    <xsl:value-of select="/page/unit/spec"/>
+                <div class="input-append">
+                    <input name="key" id="key" type="text" disabled="disabled" class="input-block-level input-large uneditable-input">
+                        <xsl:attribute name="value">
+                            <xsl:value-of select="key"/>
+                        </xsl:attribute>
+                    </input>
+                    <button class="btn" type="button">
+                        <i class="icon-refresh"><xsl:comment>refresh icon</xsl:comment></i>
+                    </button>
+                </div>
+                <label for="friends">
+                    <xsl:text>Friends (URN masks, one per line)</xsl:text>
+                </label>
+                <textarea name="friends" id="friends" rows="6" class="input-block-level">
+                    <xsl:value-of select="friends"/>
                 </textarea>
                 <label><xsl:comment>for the submit button below</xsl:comment></label>
                 <button type="submit" class="btn">
                     <xsl:text>Save</xsl:text>
                 </button>
-                <span class="help-inline hidden-phone">
-                    <xsl:text>Takes up to five minutes to update all servers</xsl:text>
-                </span>
             </fieldset>
         </form>
-    </xsl:template>
-    <xsl:template match="face">
-        <p>
-            <xsl:choose>
-                <xsl:when test="exception">
-                    <pre class="text-error"><xsl:value-of select="exception"/></pre>
-                </xsl:when>
-                <xsl:when test="type and html">
-                    <code><xsl:value-of select="type"/></code>
-                    <xsl:text> </xsl:text>
-                    <xsl:value-of disable-output-escaping="yes" select="html"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <!-- nothing to show -->
-                </xsl:otherwise>
-            </xsl:choose>
-        </p>
     </xsl:template>
 </xsl:stylesheet>

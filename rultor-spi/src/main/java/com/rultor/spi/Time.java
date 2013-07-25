@@ -40,6 +40,7 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 
 /**
  * Time.
@@ -135,6 +136,16 @@ public final class Time implements Comparable<Time> {
      */
     public Date date() {
         return new Date(this.msec);
+    }
+
+    /**
+     * When did it happen, in plain English.
+     * @return Text
+     */
+    public String when() {
+        return DurationFormatUtils.formatDurationWords(
+            System.currentTimeMillis() - this.msec, true, true
+        );
     }
 
     /**

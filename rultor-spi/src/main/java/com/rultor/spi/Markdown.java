@@ -27,30 +27,49 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.spi;
 
-/*!
- * Bootstrap v2.3.2
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.apache.commons.lang3.StringEscapeUtils;
+
+/**
+ * Markdown text.
  *
- * Copyright 2012 Twitter, Inc
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
+@Immutable
+@ToString
+@Loggable(Loggable.DEBUG)
+@EqualsAndHashCode(of = "text")
+public final class Markdown {
 
-@import "bootstrap/mixins.less";
-@import "bootstrap/responsive.less";
-@import "bootstrap/reset.less";
-@import "bootstrap/scaffolding.less";
-@import "bootstrap/lables-badges.less";
-@import "bootstrap/layouts.less";
-@import "bootstrap/type.less";
-@import "bootstrap/code.less";
-@import "bootstrap/forms.less";
-@import "bootstrap/buttons.less";
-@import "bootstrap/button-groups.less";
-@import "bootstrap/alerts.less";
-@import "bootstrap/navs.less";
-@import "bootstrap/tables.less";
-@import "bootstrap/wells.less";
-@import "bootstrap/utilities.less"; // Has to be last to override when necessary
+    /**
+     * Text in MD.
+     */
+    private final transient String text;
+
+    /**
+     * Public ctor.
+     * @param txt Text to encapsulate
+     */
+    public Markdown(final String txt) {
+        this.text = txt;
+    }
+
+    /**
+     * As HTML4.
+     * @return HTML
+     */
+    public String html() {
+        return StringEscapeUtils.escapeHtml4(this.text)
+            .replaceAll("`([^`]+)`", "<code>$1</code>")
+            .replaceAll("\\*{2}([^\\*]+)\\*{2}", "<strong>$1</strong>");
+    }
+
+}

@@ -33,50 +33,15 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
-            <xsl:value-of select="/page/unit/name"/>
+            <xsl:text>page not found</xsl:text>
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <xsl:apply-templates select="/page/face"/>
-        <form method="post">
-            <xsl:attribute name="action">
-                <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
-            </xsl:attribute>
-            <fieldset>
-                <label for="spec" class="hidden-phone">
-                    <xsl:text>Specification of </xsl:text>
-                    <code>
-                        <xsl:value-of select="/page/unit/name"/>
-                    </code>
-                </label>
-                <textarea name="spec" id="spec" rows="18" class="input-block-level">
-                    <xsl:value-of select="/page/unit/spec"/>
-                </textarea>
-                <label><xsl:comment>for the submit button below</xsl:comment></label>
-                <button type="submit" class="btn">
-                    <xsl:text>Save</xsl:text>
-                </button>
-                <span class="help-inline hidden-phone">
-                    <xsl:text>Takes up to five minutes to update all servers</xsl:text>
-                </span>
-            </fieldset>
-        </form>
-    </xsl:template>
-    <xsl:template match="face">
+        <h1>
+            <xsl:text>Page not found</xsl:text>
+        </h1>
         <p>
-            <xsl:choose>
-                <xsl:when test="exception">
-                    <pre class="text-error"><xsl:value-of select="exception"/></pre>
-                </xsl:when>
-                <xsl:when test="type and html">
-                    <code><xsl:value-of select="type"/></code>
-                    <xsl:text> </xsl:text>
-                    <xsl:value-of disable-output-escaping="yes" select="html"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <!-- nothing to show -->
-                </xsl:otherwise>
-            </xsl:choose>
+            <xsl:text>Invalid request or page not found.</xsl:text>
         </p>
     </xsl:template>
 </xsl:stylesheet>

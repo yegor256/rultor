@@ -36,6 +36,7 @@ import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Markdown;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Repo;
@@ -55,7 +56,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.commons.lang3.time.DurationFormatUtils;
 
 /**
  * Drain of a unit.
@@ -293,12 +293,7 @@ public final class DrainRs extends BaseRs {
             .up()
             .add("date", date.toString())
             .up()
-            .add(
-                "when",
-                DurationFormatUtils.formatDurationWords(
-                    System.currentTimeMillis() - date.millis(), true, true
-                )
-            )
+            .add("when", date.when())
             .up()
             .link(
                 new Link(

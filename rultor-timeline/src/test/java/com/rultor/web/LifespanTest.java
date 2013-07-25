@@ -27,30 +27,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.web;
 
-/*!
- * Bootstrap v2.3.2
- *
- * Copyright 2012 Twitter, Inc
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Designed and built with all the love in the world @twitter by @mdo and @fat.
+import com.rexsl.page.ServletContextMocker;
+import javax.servlet.ServletContextEvent;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+/**
+ * Test case for {@link Lifespan}.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
  */
+public final class LifespanTest {
 
-@import "bootstrap/mixins.less";
-@import "bootstrap/responsive.less";
-@import "bootstrap/reset.less";
-@import "bootstrap/scaffolding.less";
-@import "bootstrap/lables-badges.less";
-@import "bootstrap/layouts.less";
-@import "bootstrap/type.less";
-@import "bootstrap/code.less";
-@import "bootstrap/forms.less";
-@import "bootstrap/buttons.less";
-@import "bootstrap/button-groups.less";
-@import "bootstrap/alerts.less";
-@import "bootstrap/navs.less";
-@import "bootstrap/tables.less";
-@import "bootstrap/wells.less";
-@import "bootstrap/utilities.less"; // Has to be last to override when necessary
+    /**
+     * Lifespan can start and stop.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    @org.junit.Ignore
+    public void startsAndStops() throws Exception {
+        final Lifespan life = new Lifespan();
+        final ServletContextEvent event =
+            Mockito.mock(ServletContextEvent.class);
+        Mockito.doReturn(new ServletContextMocker().mock())
+            .when(event).getServletContext();
+        life.contextInitialized(event);
+        life.contextDestroyed(event);
+    }
+
+}

@@ -27,30 +27,56 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.web;
 
-/*!
- * Bootstrap v2.3.2
+import com.jcabi.aspects.Loggable;
+import com.rexsl.page.PageBuilder;
+import java.net.HttpURLConnection;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
+
+/**
+ * Error-catching resource.
  *
- * Copyright 2012 Twitter, Inc
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
  */
+@Path("/error")
+@Loggable(Loggable.DEBUG)
+public final class ErrorRs extends BaseRs {
 
-@import "bootstrap/mixins.less";
-@import "bootstrap/responsive.less";
-@import "bootstrap/reset.less";
-@import "bootstrap/scaffolding.less";
-@import "bootstrap/lables-badges.less";
-@import "bootstrap/layouts.less";
-@import "bootstrap/type.less";
-@import "bootstrap/code.less";
-@import "bootstrap/forms.less";
-@import "bootstrap/buttons.less";
-@import "bootstrap/button-groups.less";
-@import "bootstrap/alerts.less";
-@import "bootstrap/navs.less";
-@import "bootstrap/tables.less";
-@import "bootstrap/wells.less";
-@import "bootstrap/utilities.less"; // Has to be last to override when necessary
+    /**
+     * Show error, on GET.
+     * @return The JAX-RS response
+     */
+    @GET
+    @Path("/")
+    public Response get() {
+        return new PageBuilder()
+            .stylesheet("/xsl/error.xsl")
+            .build(EmptyPage.class)
+            .init(this)
+            .render()
+            .status(HttpURLConnection.HTTP_NOT_FOUND)
+            .build();
+    }
+
+    /**
+     * Show error, on POST.
+     * @return The JAX-RS response
+     */
+    @POST
+    @Path("/")
+    public Response post() {
+        return Response.status(Response.Status.SEE_OTHER).location(
+            this.uriInfo().getBaseUriBuilder()
+                .clone()
+                .path(ErrorRs.class)
+                .build()
+        ).build();
+    }
+
+}

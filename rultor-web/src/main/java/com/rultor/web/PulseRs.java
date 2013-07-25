@@ -132,6 +132,7 @@ public final class PulseRs extends BaseRs {
             )
             .append(new JaxbBundle("spec", this.spec().asText()))
             .append(new JaxbBundle("date", this.date.toString()))
+            .append(new JaxbBundle("when", this.date.when()))
             .append(
                 new JaxbBundle("stages").add(
                     new JaxbBundle.Group<Stage>(this.stages()) {

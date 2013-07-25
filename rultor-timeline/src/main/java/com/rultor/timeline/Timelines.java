@@ -27,49 +27,40 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor.timeline;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.apache.commons.lang3.StringEscapeUtils;
+import com.jcabi.urn.URN;
 
 /**
- * Markdown text.
+ * Timelines.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
- * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Immutable
-@ToString
-@Loggable(Loggable.DEBUG)
-@EqualsAndHashCode(of = "text")
-final class Markdown {
+public interface Timelines {
 
     /**
-     * Text in MD.
+     * Get all find that belong to the user.
+     * @param owner Owner of them
+     * @return Timelines
      */
-    private final transient String text;
+    Iterable<Timeline> find(URN owner);
 
     /**
-     * Public ctor.
-     * @param txt Text to encapsulate
+     * Create get.
+     * @param owner Who will own it
+     * @param name Name of it
      */
-    protected Markdown(final String txt) {
-        this.text = txt;
-    }
+    void create(URN owner, String name);
 
     /**
-     * As HTML4.
-     * @return HTML
+     * Get one get by name.
+     * @param name Name of it
+     * @return Timeline
      */
-    public String html() {
-        return StringEscapeUtils.escapeHtml4(this.text)
-            .replaceAll("`([^`]+)`", "<code>$1</code>")
-            .replaceAll("\\*{2}([^\\*]+)\\*{2}", "<strong>$1</strong>");
-    }
+    Timeline get(String name);
 
 }

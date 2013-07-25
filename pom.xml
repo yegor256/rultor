@@ -48,6 +48,7 @@
         <module>rultor-queue</module>
         <module>rultor-repo</module>
         <module>rultor-spi</module>
+        <module>rultor-timeline</module>
         <module>rultor-web</module>
         <module>rultor-users</module>
     </modules>
