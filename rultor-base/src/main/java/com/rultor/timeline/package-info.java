@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -27,35 +26,13 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<?xml-stylesheet type='text/xsl' href='/xsl/edit.xsl'?>
-<page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
-    <identity>
-        <urn>urn:facebook:1</urn>
-        <name>Jeff Lebowski</name>
-        <photo>http://images.sodahead.com/polls/002320349/200261278_The_Big_Lebowski___Jeff_Bridges_answer_9_xlarge.jpeg</photo>
-    </identity>
-    <flash>
-        <level>INFO</level>
-        <message>This feature works just fine</message>
-        <msec>5660</msec>
-    </flash>
-    <version>
-        <name>1.0-SNAPSHOT</name>
-        <revision>123</revision>
-        <date>22-Aug-2012</date>
-    </version>
-    <links>
-        <link href="/xml/edit.xml" rel="self" type="text/xml"/>
-        <link href="/xml/index.xml" rel="home" type="text/xml"/>
-        <link href="/xml/index.xml" rel="save" type="text/xml"/>
-    </links>
-    <millis>16</millis>
-    <timeline>
-        <name>rultor</name>
-        <key>B6AK987584EF77CD89E</key>
-        <friends>
-            test
-        </friends>
-    </timeline>
-</page>
+ */
+
+/**
+ * Timeline.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+package com.rultor.timeline;

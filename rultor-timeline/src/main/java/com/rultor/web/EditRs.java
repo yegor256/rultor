@@ -31,19 +31,24 @@ package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
-import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.timeline.Timeline;
+import com.rultor.timeline.Timelines;
+import java.net.HttpURLConnection;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * Front page.
+ * Edit timeline.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -51,9 +56,30 @@ import javax.ws.rs.core.Response;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Path("/")
+@Path("/e/{name:[a-z]+}")
 @Loggable(Loggable.DEBUG)
-public final class IndexRs extends BaseRs {
+public final class EditRs extends BaseRs {
+
+    /**
+     * Timeline.
+     */
+    private transient Timeline timeline;
+
+    /**
+     * Inject it from query.
+     * @param name Name of get
+     */
+    @PathParam("name")
+    public void setName(@NotNull(message = "unit name can't be NULL")
+        final String name) {
+        try {
+            this.timeline = this.timelines().get(name);
+        } catch (Timelines.TimelineNotFoundException ex) {
+            throw new WebApplicationException(
+                ex, HttpURLConnection.HTTP_NOT_FOUND
+            );
+        }
+    }
 
     /**
      * Get entrance page JAX-RS response.
@@ -63,79 +89,51 @@ public final class IndexRs extends BaseRs {
     @Path("/")
     public Response index() {
         return new PageBuilder()
-            .stylesheet("/xsl/index.xsl")
+            .stylesheet("/xsl/edit.xsl")
             .build(EmptyPage.class)
             .init(this)
             .append(
-                new JaxbBundle("timelines").add(
-                    new JaxbBundle.Group<Timeline>(
-                        this.timelines().find(this.auth().identity().urn())) {
-                        @Override
-                        public JaxbBundle bundle(final Timeline timeline) {
-                            return IndexRs.this.timeline(timeline);
+                new JaxbBundle("timeline")
+                    .add("name", this.timeline.name())
+                    .up()
+                    .add("key", this.timeline.permissions().key())
+                    .up()
+                    .add("friends")
+                    .add(
+                        new JaxbBundle.Group<String>(
+                            this.timeline.permissions().friends()) {
+                            @Override
+                            public JaxbBundle bundle(final String friend) {
+                                return new JaxbBundle("friend", friend);
+                            }
                         }
-                    }
-                )
-            )
-            .link(
-                new Link(
-                    // @checkstyle MultipleStringLiterals (1 line)
-                    "create",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(IndexRs.class)
-                        .path(IndexRs.class, "create")
-                        .build()
-                )
+                    )
+                    .up()
             )
             .render()
             .build();
     }
 
     /**
-     * Create new get.
-     * @param name Name of the get to create
+     * Save it.
+     * @param key Key to set
+     * @param friends List of friends
      * @return The JAX-RS response
      */
     @POST
-    @Path("/create")
-    public Response create(@NotNull(message = "name is mandatory")
-        @FormParam("name") final String name) {
-        this.timelines().create(this.auth().identity().urn(), name);
+    @Path("/save")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response save(@FormParam("key") @NotNull final String key,
+        @FormParam("friends") @NotNull final String friends) {
+        this.timeline.permissions().key(key);
         throw this.flash().redirect(
             this.uriInfo().getBaseUri(),
-            String.format("Timeline `%s` successfully created", name),
+            String.format(
+                "Timeline `%s` updated successfully",
+                this.timeline.name()
+            ),
             Level.INFO
         );
-    }
-
-    /**
-     * Convert timeline to JaxbBundle.
-     * @param timeline The timeline to convert
-     * @return Bundle
-     */
-    private JaxbBundle timeline(final Timeline timeline) {
-        return new JaxbBundle("timeline")
-            .add("name", timeline.name())
-            .up()
-            .link(
-                new Link(
-                    "see",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(TimelineRs.class)
-                        .build(timeline.name())
-                )
-            )
-            .link(
-                new Link(
-                    "edit",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(EditRs.class)
-                        .build(timeline.name())
-                )
-            );
     }
 
 }

@@ -35,6 +35,11 @@
         <title>
             <xsl:value-of select="/page/timeline/name"/>
         </title>
+        <script type="text/javascript"><![CDATA[
+            function renew() {
+                // tbd...
+            }
+        ]]></script>
     </xsl:template>
     <xsl:template name="content">
             <xsl:apply-templates select="/page/timeline"/>
@@ -57,7 +62,7 @@
                             <xsl:value-of select="key"/>
                         </xsl:attribute>
                     </input>
-                    <button class="btn" type="button">
+                    <button class="btn" type="button" onclick="renew();">
                         <i class="icon-refresh"><xsl:comment>refresh icon</xsl:comment></i>
                     </button>
                 </div>

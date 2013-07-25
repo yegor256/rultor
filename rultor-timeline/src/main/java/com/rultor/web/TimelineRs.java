@@ -43,12 +43,14 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -116,6 +118,7 @@ public final class TimelineRs extends BaseRs {
      */
     @POST
     @Path("/post")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response post(@FormParam("text") @NotNull final String text) {
         final Event event = this.timeline.post(
             text, new ArrayList<Tag>(0), new ArrayList<Product>(0)
