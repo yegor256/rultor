@@ -78,7 +78,7 @@
                     <nav class="head">
                         <ul class="inline">
                             <li>
-                                <a class="logo">
+                                <a class="logo" style="color:#46a546;">
                                     <xsl:attribute name="href">
                                         <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
                                     </xsl:attribute>

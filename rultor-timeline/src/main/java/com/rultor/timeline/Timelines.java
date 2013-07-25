@@ -60,7 +60,25 @@ public interface Timelines {
      * Get one get by name.
      * @param name Name of it
      * @return Timeline
+     * @throws Timelines.TimelineNotFoundException If not found
      */
-    Timeline get(String name);
+    Timeline get(String name) throws TimelineNotFoundException;
+
+    /**
+     * When timeline is not found.
+     */
+    public final class TimelineNotFoundException extends Exception {
+        /**
+         * Serialization marker.
+         */
+        private static final long serialVersionUID = 0x65f30aff345f8092L;
+        /**
+         * Public ctor.
+         * @param cause Cause of it
+         */
+        public TimelineNotFoundException(final String cause) {
+            super(cause);
+        }
+    }
 
 }

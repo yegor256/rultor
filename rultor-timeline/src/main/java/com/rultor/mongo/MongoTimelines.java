@@ -144,15 +144,17 @@ public final class MongoTimelines implements Timelines {
      * {@inheritDoc}
      */
     @Override
-    public Timeline get(final String name) {
+    public Timeline get(final String name)
+        throws Timelines.TimelineNotFoundException {
         final DBCursor cursor = this.collection().find(
             new BasicDBObject(MongoTimeline.ATTR_NAME, name)
         );
         try {
-            Validate.isTrue(
-                cursor.hasNext(),
-                "timeline `%s` doesn't exist", name
-            );
+            if (!cursor.hasNext()) {
+                throw new Timelines.TimelineNotFoundException(
+                    String.format("timeline `%s` doesn't exist", name)
+                );
+            }
             return new MongoTimeline(this.mongo, cursor.next());
         } finally {
             cursor.close();

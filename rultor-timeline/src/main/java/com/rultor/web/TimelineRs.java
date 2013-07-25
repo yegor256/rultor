@@ -38,6 +38,8 @@ import com.rultor.timeline.Event;
 import com.rultor.timeline.Product;
 import com.rultor.timeline.Tag;
 import com.rultor.timeline.Timeline;
+import com.rultor.timeline.Timelines;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -46,6 +48,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 /**
@@ -73,7 +76,13 @@ public final class TimelineRs extends BaseRs {
     @PathParam("name")
     public void setName(@NotNull(message = "unit name can't be NULL")
         final String name) {
-        this.timeline = this.timelines().get(name);
+        try {
+            this.timeline = this.timelines().get(name);
+        } catch (Timelines.TimelineNotFoundException ex) {
+            throw new WebApplicationException(
+                HttpURLConnection.HTTP_NOT_FOUND
+            );
+        }
     }
 
     /**
