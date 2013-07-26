@@ -101,8 +101,9 @@
     </xsl:template>
     <xsl:template match="tag">
         <li>
-            <span class="label">
+            <span>
                 <xsl:attribute name="class">
+                    <xsl:text>label </xsl:text>
                     <xsl:choose>
                         <xsl:when test="level = 'FINE'">
                             <xsl:text>label-success</xsl:text>

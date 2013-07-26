@@ -179,11 +179,11 @@ public final class TimelineRs extends BaseRs {
         final Event event = this.timeline.post(
             object.getString("text"), tags, new ArrayList<Product>(0)
         );
-        throw this.flash().redirect(
-            this.uriInfo().getBaseUri(),
-            String.format("Event `%s` successfully posted", event.time()),
-            Level.INFO
-        );
+        return Response.created(
+            this.uriInfo().getBaseUriBuilder()
+                .path(TimelineRs.class)
+                .build(this.timeline.name())
+        ).entity(event.time().toString()).build();
     }
 
     /**

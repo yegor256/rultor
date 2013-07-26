@@ -41,8 +41,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.Collection;
 import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
+import javax.json.stream.JsonGenerator;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -105,19 +104,16 @@ public final class RultorTimeline implements Timeline {
             .path(this.name)
             .path("/post")
             .build();
-        final JsonObjectBuilder json = Json.createObjectBuilder()
-            .add("text", text);
-        final JsonArrayBuilder tbuilder = Json.createArrayBuilder();
-        for (Tag tag : tags) {
-            tbuilder.add(
-                Json.createObjectBuilder()
-                    .add("label", tag.label())
-                    .add("level", tag.level().toString())
-            );
-        }
-        json.add("tags", tbuilder);
         final StringWriter output = new StringWriter();
-        Json.createWriter(output).writeObject(json.build());
+        final JsonGenerator json = Json.createGenerator(output);
+        json.writeStartObject().write("text", text).writeStartArray("tags");
+        for (Tag tag : tags) {
+            json.writeStartObject()
+                .write("label", tag.label())
+                .write("level", tag.level().toString())
+                .writeEnd();
+        }
+        json.writeEnd().writeEnd().close();
         final String body = output.toString();
         Logger.info(this, "#submit(): sending JSON '%s'", body);
         RestTester.start(uri)
@@ -133,7 +129,7 @@ public final class RultorTimeline implements Timeline {
             )
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
             .post("posting event", body)
-            .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+            .assertStatus(HttpURLConnection.HTTP_CREATED);
     }
 
 }
