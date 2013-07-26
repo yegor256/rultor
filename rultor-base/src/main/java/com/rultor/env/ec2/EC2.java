@@ -194,12 +194,12 @@ public final class EC2 implements Environments {
 
     /**
      * Add tags and do some other wrapping to the running instance.
+     * @param aws AWS client
      * @param instance Instance running (maybe already)
      * @return The same instance
      */
     @RetryOnFailure
-    private Instance wrap(final AmazonEC2 aws, final Instance instance)
-        throws IOException {
+    private Instance wrap(final AmazonEC2 aws, final Instance instance) {
         aws.createTags(
             new CreateTagsRequest()
                 .withResources(instance.getInstanceId())
