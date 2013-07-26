@@ -33,7 +33,7 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
-            <xsl:value-of select="/page/timeline/name"/>
+            <xsl:value-of select="/page/name"/>
         </title>
     </xsl:template>
     <xsl:template name="content">
