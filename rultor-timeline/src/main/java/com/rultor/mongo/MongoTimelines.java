@@ -29,7 +29,6 @@
  */
 package com.rultor.mongo;
 
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
@@ -136,17 +135,14 @@ public final class MongoTimelines implements Timelines {
         } finally {
             cursor.close();
         }
-        final DBObject object = new BasicDBObject(
-            new ImmutableMap.Builder<String, Object>()
-                .put(MongoTimeline.ATTR_OWNER, owner.toString())
-                .put(MongoTimeline.ATTR_NAME, name)
-                .put("friends", new String[0])
-                .put(
-                    MongoTimeline.ATTR_KEY,
-                    RandomStringUtils.randomAlphanumeric(Tv.TWENTY)
-                )
-                .build()
-        );
+        final DBObject object = new BasicDBObject()
+            .append(MongoTimeline.ATTR_OWNER, owner.toString())
+            .append(MongoTimeline.ATTR_NAME, name)
+            .append("friends", new String[0])
+            .append(
+                MongoTimeline.ATTR_KEY,
+                RandomStringUtils.randomAlphanumeric(Tv.TWENTY)
+            );
         final WriteResult result = this.collection().insert(object);
         Validate.isTrue(
             result.getLastError().ok(),

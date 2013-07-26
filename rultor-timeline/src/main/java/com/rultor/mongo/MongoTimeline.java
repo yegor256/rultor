@@ -29,7 +29,6 @@
  */
 package com.rultor.mongo;
 
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
@@ -46,7 +45,6 @@ import com.rultor.timeline.Tag;
 import com.rultor.timeline.Timeline;
 import com.rultor.tools.Time;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import lombok.EqualsAndHashCode;
@@ -65,7 +63,7 @@ import org.apache.commons.lang3.Validate;
 @ToString
 @EqualsAndHashCode(of = { "mongo", "attrs" })
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({ "unchecked", "PMD.TooManyMethods" })
 public final class MongoTimeline implements Timeline {
 
     /**
@@ -98,7 +96,6 @@ public final class MongoTimeline implements Timeline {
      * @param mng Mongo container
      * @param object Object from DB
      */
-    @SuppressWarnings("unchecked")
     public MongoTimeline(final Mongo mng, final DBObject object) {
         this.mongo = mng;
         this.attrs = new ArrayMap<String, Object>(object.toMap());
@@ -124,18 +121,14 @@ public final class MongoTimeline implements Timeline {
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("unchecked")
     public Event post(final String text, final Collection<Tag> tags,
         final Collection<Product> products) {
-        final DBObject object = new BasicDBObject(
-            new ImmutableMap.Builder<String, Object>()
-                .put(MongoEvent.ATTR_TIMELINE, this.name())
-                .put(MongoEvent.ATTR_TEXT, text)
-                .put(MongoEvent.ATTR_TIME, System.currentTimeMillis())
-                .put(MongoEvent.ATTR_TAGS, MongoTimeline.tags(tags))
-                .put(MongoEvent.ATTR_PRODS, MongoTimeline.products(products))
-                .build()
-        );
+        final DBObject object = new BasicDBObject()
+            .append(MongoEvent.ATTR_TIMELINE, this.name())
+            .append(MongoEvent.ATTR_TEXT, text)
+            .append(MongoEvent.ATTR_TIME, System.currentTimeMillis())
+            .append(MongoEvent.ATTR_TAGS, MongoTimeline.tags(tags))
+            .append(MongoEvent.ATTR_PRODS, MongoTimeline.products(products));
         final WriteResult result = this.ecol().insert(object);
         Validate.isTrue(
             result.getLastError().ok(),
@@ -155,12 +148,15 @@ public final class MongoTimeline implements Timeline {
             @Override
             public Iterator<Event> iterator() {
                 final DBCursor cursor = MongoTimeline.this.ecol().find(
-                    new BasicDBObject(
-                        MongoEvent.ATTR_TIME,
-                        new BasicDBObject("$lte", head.millis())
-                    ).append(
-                        MongoEvent.ATTR_TIMELINE, MongoTimeline.this.name()
+                    new BasicDBObject()
+                        .append(
+                            MongoEvent.ATTR_TIME,
+                            new BasicDBObject("$lte", head.millis())
                     )
+                        .append(
+                            MongoEvent.ATTR_TIMELINE,
+                            MongoTimeline.this.name()
+                        )
                 );
                 cursor.sort(new BasicDBObject(MongoEvent.ATTR_TIME, -1));
                 return new Iterator<Event>() {
@@ -169,7 +165,6 @@ public final class MongoTimeline implements Timeline {
                         return cursor.hasNext();
                     }
                     @Override
-                    @SuppressWarnings("unchecked")
                     public Event next() {
                         return new MongoEvent(cursor.next().toMap());
                     }
@@ -187,7 +182,53 @@ public final class MongoTimeline implements Timeline {
      */
     @Override
     public Iterable<Product> products() {
-        return new ArrayList<Product>(0);
+        final Iterable<DBObject> objects = MongoTimeline.this.ecol().aggregate(
+            new BasicDBObject(
+                "$match",
+                new BasicDBObject(MongoEvent.ATTR_TIMELINE, this.name())
+            ),
+            new BasicDBObject(
+                "$group",
+                new BasicDBObject()
+                    // @checkstyle MultipleStringLiterals (1 line)
+                    .append("_id", "$products.name")
+                    .append(
+                        MongoEvent.ATTR_TIME,
+                        new BasicDBObject("$max", "$time")
+                    )
+                    .append(
+                        MongoProduct.ATTR_NAME,
+                        // @checkstyle MultipleStringLiterals (1 line)
+                        new BasicDBObject("$first", "$products.name")
+                    )
+                    .append(
+                        MongoProduct.ATTR_MARKDOWN,
+                        new BasicDBObject("$first", "$products.markdown")
+                    )
+            ),
+            new BasicDBObject("$sort", new BasicDBObject("time", -1))
+        ).results();
+        // @checkstyle AnonInnerLength (50 lines)
+        return new Iterable<Product>() {
+            @Override
+            public Iterator<Product> iterator() {
+                final Iterator<DBObject> iter = objects.iterator();
+                return new Iterator<Product>() {
+                    @Override
+                    public boolean hasNext() {
+                        return iter.hasNext();
+                    }
+                    @Override
+                    public Product next() {
+                        return new MongoProduct(iter.next().toMap());
+                    }
+                    @Override
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+        };
     }
 
     /**
@@ -217,12 +258,9 @@ public final class MongoTimeline implements Timeline {
                 "tag label '%s' is too long, should be less than 40",
                 tag.label()
             );
-            objects[idx] = new BasicDBObject(
-                new ImmutableMap.Builder<String, Object>()
-                    .put(MongoTag.ATTR_LABEL, tag.label())
-                    .put(MongoTag.ATTR_LEVEL, tag.level().toString())
-                    .build()
-            );
+            objects[idx] = new BasicDBObject()
+                .append(MongoTag.ATTR_LABEL, tag.label())
+                .append(MongoTag.ATTR_LEVEL, tag.level().toString());
             ++idx;
         }
         return objects;
@@ -243,12 +281,9 @@ public final class MongoTimeline implements Timeline {
                 "product name '%s' is too long, should be less than 100",
                 product.name()
             );
-            objects[idx] = new BasicDBObject(
-                new ImmutableMap.Builder<String, Object>()
-                    .put(MongoProduct.ATTR_NAME, product.name())
-                    .put(MongoProduct.ATTR_MARKDOWN, product.markdown())
-                    .build()
-            );
+            objects[idx] = new BasicDBObject()
+                .append(MongoProduct.ATTR_NAME, product.name())
+                .append(MongoProduct.ATTR_MARKDOWN, product.markdown());
             ++idx;
         }
         return objects;

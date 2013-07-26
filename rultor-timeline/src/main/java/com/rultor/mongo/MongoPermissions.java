@@ -34,7 +34,6 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.urn.URN;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.rultor.timeline.Permissions;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -98,10 +97,11 @@ public final class MongoPermissions implements Permissions {
      */
     @Override
     public void key(final String value) {
-        final DBObject object = new BasicDBObject(this.attrs);
-        object.put(MongoTimeline.ATTR_KEY, value);
         try {
-            this.mongo.get().getCollection("timelines").save(object);
+            this.mongo.get().getCollection("timelines").save(
+                new BasicDBObject(this.attrs)
+                    .append(MongoTimeline.ATTR_KEY, value)
+            );
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
