@@ -47,6 +47,7 @@ public final class RultorTimelineITCase {
      * @throws Exception If some problem inside
      */
     @Test
+    @org.junit.Ignore
     public void postsJson() throws Exception {
         final Timeline timeline = new RultorTimeline(
             "testing", "wsN45OTo5GGZZcwIz28X"

@@ -68,10 +68,17 @@
                     <xsl:text>Friends (URN masks, one per line)</xsl:text>
                 </label>
                 <textarea name="friends" id="friends" rows="6" class="input-block-level">
-                    <xsl:for-each select="friends/friend">
-                        <xsl:value-of select="."/>
-                        <xsl:text>&#10;</xsl:text>
-                    </xsl:for-each>
+                    <xsl:choose>
+                        <xsl:when test="friends/friend">
+                            <xsl:for-each select="friends/friend">
+                                <xsl:value-of select="."/>
+                                <xsl:text>&#10;</xsl:text>
+                            </xsl:for-each>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:text>enter here...</xsl:text>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </textarea>
                 <label><xsl:comment>for the submit button below</xsl:comment></label>
                 <button type="submit" class="btn">
