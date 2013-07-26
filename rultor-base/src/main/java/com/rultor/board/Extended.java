@@ -31,16 +31,10 @@ package com.rultor.board;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rultor.tools.Vext;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.Validate;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.context.Context;
-import org.apache.velocity.runtime.RuntimeConstants;
 
 /**
  * Pre-renders announcements using Apache Velocity template.
@@ -50,7 +44,7 @@ import org.apache.velocity.runtime.RuntimeConstants;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "board", "template" })
+@EqualsAndHashCode(of = { "board", "vext" })
 @Loggable(Loggable.DEBUG)
 public final class Extended implements Billboard {
 
@@ -60,9 +54,9 @@ public final class Extended implements Billboard {
     private final transient Billboard board;
 
     /**
-     * Velocity template.
+     * Velocity text.
      */
-    private final transient String template;
+    private final transient Vext vext;
 
     /**
      * Name of argument to inject into announcement.
@@ -81,7 +75,7 @@ public final class Extended implements Billboard {
         @NotNull(message = "board can't be NULL") final Billboard brd) {
         this.argument = arg;
         this.board = brd;
-        this.template = tmpl;
+        this.vext = new Vext(tmpl);
     }
 
     /**
@@ -101,27 +95,11 @@ public final class Extended implements Billboard {
     @Override
     public void announce(@NotNull(message = "announcement can't be NULL")
         final Announcement anmt) throws IOException {
-        final StringWriter writer = new StringWriter();
-        final Context context = new VelocityContext();
-        for (Map.Entry<String, Object> entry : anmt.args().entrySet()) {
-            context.put(entry.getKey(), entry.getValue());
-        }
-        final VelocityEngine engine = new VelocityEngine();
-        engine.setProperty(
-            RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
-            "org.apache.velocity.runtime.log.Log4JLogChute"
+        this.board.announce(
+            anmt.with(
+                this.argument, this.vext.print(anmt.args())
+            )
         );
-        engine.setProperty(
-            "runtime.log.logsystem.log4j.logger",
-            "org.apache.velocity"
-        );
-        engine.init();
-        final boolean success = engine.evaluate(
-            context, writer,
-            this.getClass().getName(), this.template
-        );
-        Validate.isTrue(success, "failed to compile VTL");
-        this.board.announce(anmt.with(this.argument, writer.toString()));
     }
 
 }

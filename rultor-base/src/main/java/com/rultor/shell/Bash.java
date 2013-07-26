@@ -34,10 +34,10 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Signal;
+import com.rultor.tools.Vext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,10 +47,6 @@ import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.TeeOutputStream;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.context.Context;
 
 /**
  * Bash batch.
@@ -72,7 +68,7 @@ public final class Bash implements Batch {
     /**
      * Script to execute.
      */
-    private final transient String script;
+    private final transient Vext script;
 
     /**
      * Prerequisites.
@@ -101,7 +97,7 @@ public final class Bash implements Batch {
         @NotNull(message = "prerequisites can't be NULL")
         final Map<String, Object> map) {
         this.shells = shls;
-        this.script = scrt;
+        this.script = new Vext(scrt);
         this.prerequisites = new ArrayMap<String, Object>(map);
     }
 
@@ -141,7 +137,7 @@ public final class Bash implements Batch {
                 );
             }
             code = shell.exec(
-                this.compile(args),
+                this.script.print(args),
                 IOUtils.toInputStream(""),
                 new TeeOutputStream(output, Logger.stream(Level.INFO, this)),
                 new TeeOutputStream(output, Logger.stream(Level.WARNING, this))
@@ -167,25 +163,6 @@ public final class Bash implements Batch {
             this.script,
             this.shells
         );
-    }
-
-    /**
-     * Compile template using arguments.
-     * @param args Arguments
-     * @return Compiled script
-     */
-    private String compile(final Map<String, Object> args) {
-        final StringWriter writer = new StringWriter();
-        final Context context = new VelocityContext();
-        for (Map.Entry<String, Object> entry : args.entrySet()) {
-            context.put(entry.getKey(), entry.getValue());
-        }
-        final boolean success = Velocity.evaluate(
-            context, writer,
-            this.getClass().getName(), this.script
-        );
-        Validate.isTrue(success, "failed to compile VTL");
-        return writer.toString();
     }
 
     /**

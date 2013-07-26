@@ -43,6 +43,7 @@ import com.rultor.env.Environment;
 import com.rultor.env.Environments;
 import com.rultor.spi.Signal;
 import com.rultor.spi.Work;
+import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.List;
 import javax.validation.constraints.NotNull;
@@ -215,7 +216,10 @@ public final class EC2 implements Environments {
                         .withValue(this.work.owner().toString()),
                     new Tag()
                         .withKey("rultor:work:started")
-                        .withValue(this.work.started().toString())
+                        .withValue(this.work.started().toString()),
+                    new Tag()
+                        .withKey("rultor:instance-created")
+                        .withValue(new Time().toString())
                 )
         );
         return instance;

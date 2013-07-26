@@ -46,7 +46,7 @@ import java.util.Collection;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang.CharUtils;
+import org.apache.commons.lang3.CharUtils;
 
 /**
  * Amazon SES.

@@ -35,6 +35,7 @@ import com.jcabi.log.Logger;
 import com.rultor.timeline.Product;
 import com.rultor.timeline.Tag;
 import com.rultor.timeline.Timeline;
+import com.rultor.tools.Vext;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -69,12 +70,12 @@ public final class Resonant implements Batch {
     /**
      * Text on success.
      */
-    private final transient String success;
+    private final transient Vext success;
 
     /**
      * Text on failure.
      */
-    private final transient String failure;
+    private final transient Vext failure;
 
     /**
      * Public ctor.
@@ -92,8 +93,8 @@ public final class Resonant implements Batch {
         @NotNull(message = "bad can't be NULL") final String bad) {
         this.origin = batch;
         this.timeline = tmln;
-        this.success = good;
-        this.failure = bad;
+        this.success = new Vext(good);
+        this.failure = new Vext(bad);
     }
 
     /**
@@ -106,13 +107,13 @@ public final class Resonant implements Batch {
         final int code = this.origin.exec(args, output);
         if (code == 0) {
             this.timeline.submit(
-                this.success,
+                this.success.print(args),
                 Arrays.<Tag>asList(new Tag.Simple("success", Level.INFO)),
                 new ArrayList<Product>(0)
             );
         } else {
             this.timeline.submit(
-                this.failure,
+                this.failure.print(args),
                 Arrays.<Tag>asList(new Tag.Simple("failure", Level.SEVERE)),
                 new ArrayList<Product>(0)
             );
