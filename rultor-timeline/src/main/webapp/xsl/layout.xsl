@@ -96,7 +96,9 @@
                     </nav>
                     <xsl:apply-templates select="flash"/>
                     <article>
-                        <xsl:call-template name="login"/>
+                        <xsl:if test="not(/page/identity)">
+                            <xsl:call-template name="login"/>
+                        </xsl:if>
                         <xsl:call-template name="content"/>
                     </article>
                 </div>

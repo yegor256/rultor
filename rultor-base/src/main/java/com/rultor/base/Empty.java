@@ -51,15 +51,15 @@ public final class Empty implements Instance {
      * Public no-args ctor.
      */
     public Empty() {
-        this(new Object[0]);
+        this("nothing");
     }
 
     /**
      * Public any arg ctor.
-     * @param args Any arguments
+     * @param arg Any argument
      */
-    public Empty(final Object... args) {
-        assert args != null;
+    public Empty(final Object arg) {
+        assert arg != null;
     }
 
     /**
