@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.log.Logger;
+import com.jcabi.manifests.Manifests;
 import com.rexsl.test.RestTester;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -117,14 +118,21 @@ public final class RultorTimeline implements Timeline {
         json.add("tags", tbuilder);
         final StringWriter output = new StringWriter();
         Json.createWriter(output).writeObject(json.build());
+        final String body = output.toString();
+        Logger.info(this, "#submit(): sending JSON '%s'", body);
         RestTester.start(uri)
             .header("X-Rultor-Key", this.key)
-            .header(HttpHeaders.USER_AGENT, "RultorTimeline")
             .header(
-                HttpHeaders.CONTENT_TYPE,
-                MediaType.APPLICATION_JSON
+                HttpHeaders.USER_AGENT,
+                String.format(
+                    "%s %s/%s",
+                    this.getClass().getName(),
+                    Manifests.read("Rultor-Version"),
+                    Manifests.read("Rultor-Revision")
+                )
             )
-            .post("posting event", output.toString())
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+            .post("posting event", body)
             .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
     }
 
