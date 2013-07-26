@@ -77,11 +77,4 @@ public interface Timeline {
      */
     Iterable<Product> products();
 
-    /**
-     * Get one product.
-     * @param name Name of it
-     * @return Product
-     */
-    Product product(String name);
-
 }

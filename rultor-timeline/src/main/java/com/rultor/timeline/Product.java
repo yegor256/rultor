@@ -30,6 +30,9 @@
 package com.rultor.timeline;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Product in event.
@@ -52,5 +55,46 @@ public interface Product {
      * @return Markdown to render
      */
     String markdown();
+
+    /**
+     * Simple implementation.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = { "label", "text" })
+    @Loggable(Loggable.DEBUG)
+    final class Simple implements Product {
+        /**
+         * Label.
+         */
+        private final transient String label;
+        /**
+         * Level.
+         */
+        private final transient String text;
+        /**
+         * Public ctor.
+         * @param name Name of it
+         * @param markdown Markdown
+         */
+        public Simple(final String name, final String markdown) {
+            this.label = name;
+            this.text = markdown;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String name() {
+            return this.label;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String markdown() {
+            return this.text;
+        }
+    }
 
 }

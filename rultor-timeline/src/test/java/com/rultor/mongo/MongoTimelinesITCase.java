@@ -182,6 +182,47 @@ public final class MongoTimelinesITCase {
     }
 
     /**
+     * MongoTimelines can handle products.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void savesAndLoadsProducts() throws Exception {
+        final Timelines timelines = this.timelines();
+        final URN owner = new URN("urn:test:765");
+        final String name = RandomStringUtils.randomAlphabetic(Tv.TEN);
+        final Timeline timeline = timelines.create(owner, name);
+        final Product first = new Product.Simple("first \u20ac", "hey");
+        final Product second = new Product.Simple("second \u20ac", "man");
+        timeline.post(
+            "hi there, Mr. World! \u20ac",
+            new ArrayList<Tag>(0),
+            Arrays.asList(first, second)
+        );
+        MatcherAssert.assertThat(
+            timeline.events(new Time()).iterator().next().products(),
+            Matchers.hasItems(
+                new CustomMatcher<Product>("valid first product") {
+                    @Override
+                    public boolean matches(final Object obj) {
+                        return Product.class.cast(obj).name().startsWith("fir");
+                    }
+                },
+                new CustomMatcher<Product>("valid second product") {
+                    @Override
+                    public boolean matches(final Object obj) {
+                        return Product.class.cast(obj).name().startsWith("sec");
+                    }
+                }
+            )
+        );
+        MatcherAssert.assertThat(
+            timeline.products(),
+            Matchers.<Product>iterableWithSize(2)
+        );
+    }
+
+    /**
      * Get timelines to test against.
      * @return Timelines to test
      * @throws Exception If some problem inside

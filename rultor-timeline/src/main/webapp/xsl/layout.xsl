@@ -96,14 +96,8 @@
                     </nav>
                     <xsl:apply-templates select="flash"/>
                     <article>
-                        <xsl:choose>
-                            <xsl:when test="/page/identity">
-                                <xsl:call-template name="content"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:call-template name="login"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
+                        <xsl:call-template name="login"/>
+                        <xsl:call-template name="content"/>
                     </article>
                 </div>
             </body>

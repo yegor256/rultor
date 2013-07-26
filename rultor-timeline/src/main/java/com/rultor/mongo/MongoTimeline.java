@@ -132,8 +132,8 @@ public final class MongoTimeline implements Timeline {
                 .put(MongoEvent.ATTR_TIMELINE, this.name())
                 .put(MongoEvent.ATTR_TEXT, text)
                 .put(MongoEvent.ATTR_TIME, System.currentTimeMillis())
-                .put(MongoEvent.ATTR_TAGS, MongoTimeline.asObjects(tags))
-                .put("products", new String[0])
+                .put(MongoEvent.ATTR_TAGS, MongoTimeline.tags(tags))
+                .put(MongoEvent.ATTR_PRODS, MongoTimeline.products(products))
                 .build()
         );
         final WriteResult result = this.ecol().insert(object);
@@ -191,14 +191,6 @@ public final class MongoTimeline implements Timeline {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Product product(final String name) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
      * Collection.
      * @return Mongo collection with events
      */
@@ -216,7 +208,7 @@ public final class MongoTimeline implements Timeline {
      * @return Array of objects
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    private static DBObject[] asObjects(final Collection<Tag> tags) {
+    private static DBObject[] tags(final Collection<Tag> tags) {
         final DBObject[] objects = new DBObject[tags.size()];
         int idx = 0;
         for (Tag tag : tags) {
@@ -229,6 +221,32 @@ public final class MongoTimeline implements Timeline {
                 new ImmutableMap.Builder<String, Object>()
                     .put(MongoTag.ATTR_LABEL, tag.label())
                     .put(MongoTag.ATTR_LEVEL, tag.level().toString())
+                    .build()
+            );
+            ++idx;
+        }
+        return objects;
+    }
+
+    /**
+     * Collection of products into DB object.
+     * @param products Collection of them
+     * @return Array of objects
+     */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    private static DBObject[] products(final Collection<Product> products) {
+        final DBObject[] objects = new DBObject[products.size()];
+        int idx = 0;
+        for (Product product : products) {
+            Validate.isTrue(
+                product.name().length() <= Tv.HUNDRED,
+                "product name '%s' is too long, should be less than 100",
+                product.name()
+            );
+            objects[idx] = new BasicDBObject(
+                new ImmutableMap.Builder<String, Object>()
+                    .put(MongoProduct.ATTR_NAME, product.name())
+                    .put(MongoProduct.ATTR_MARKDOWN, product.markdown())
                     .build()
             );
             ++idx;

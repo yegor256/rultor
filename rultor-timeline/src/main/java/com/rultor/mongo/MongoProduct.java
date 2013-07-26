@@ -32,19 +32,13 @@ package com.rultor.mongo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArrayMap;
-import com.mongodb.DBObject;
-import com.rultor.timeline.Event;
 import com.rultor.timeline.Product;
-import com.rultor.timeline.Tag;
-import com.rultor.tools.Time;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Event in Mongo.
+ * Product in Mongo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -54,32 +48,17 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "attrs")
 @Loggable(Loggable.DEBUG)
-public final class MongoEvent implements Event {
+public final class MongoProduct implements Product {
 
     /**
      * Mongo attribute.
      */
-    public static final String ATTR_TIMELINE = "timeline";
+    public static final String ATTR_NAME = "name";
 
     /**
      * Mongo attribute.
      */
-    public static final String ATTR_TEXT = "text";
-
-    /**
-     * Mongo attribute.
-     */
-    public static final String ATTR_TIME = "time";
-
-    /**
-     * Mongo attribute.
-     */
-    public static final String ATTR_TAGS = "tags";
-
-    /**
-     * Mongo attribute.
-     */
-    public static final String ATTR_PRODS = "products";
+    public static final String ATTR_MARKDOWN = "markdown";
 
     /**
      * Data from DB.
@@ -90,8 +69,7 @@ public final class MongoEvent implements Event {
      * Public ctor.
      * @param map Map of attributes
      */
-    @SuppressWarnings("unchecked")
-    public MongoEvent(final Map<String, Object> map) {
+    public MongoProduct(final Map<String, Object> map) {
         this.attrs = new ArrayMap<String, Object>(map);
     }
 
@@ -99,51 +77,16 @@ public final class MongoEvent implements Event {
      * {@inheritDoc}
      */
     @Override
-    public Time time() {
-        return new Time(
-            Long.parseLong(this.attrs.get(MongoEvent.ATTR_TIME).toString())
-        );
+    public String name() {
+        return this.attrs.get(MongoProduct.ATTR_NAME).toString();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String text() {
-        return this.attrs.get(MongoEvent.ATTR_TEXT).toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @SuppressWarnings({ "unchecked", "PMD.AvoidInstantiatingObjectsInLoops" })
-    public Collection<Tag> tags() {
-        final Collection<Object> objects = Collection.class.cast(
-            this.attrs.get(MongoEvent.ATTR_TAGS)
-        );
-        final Collection<Tag> tags = new ArrayList<Tag>(objects.size());
-        for (Object object : objects) {
-            tags.add(new MongoTag(DBObject.class.cast(object).toMap()));
-        }
-        return tags;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @SuppressWarnings({ "unchecked", "PMD.AvoidInstantiatingObjectsInLoops" })
-    public Collection<Product> products() {
-        final Collection<Object> objects = Collection.class.cast(
-            this.attrs.get(MongoEvent.ATTR_PRODS)
-        );
-        final Collection<Product> products =
-            new ArrayList<Product>(objects.size());
-        for (Object object : objects) {
-            products.add(new MongoProduct(DBObject.class.cast(object).toMap()));
-        }
-        return products;
+    public String markdown() {
+        return this.attrs.get(MongoProduct.ATTR_MARKDOWN).toString();
     }
 
 }

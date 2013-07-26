@@ -68,7 +68,7 @@ import javax.ws.rs.core.Response;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Path("/t/{name:[a-z]+}")
+@Path("/t/{timeline:[a-z]+}")
 @Loggable(Loggable.DEBUG)
 public final class TimelineRs extends BaseRs {
 
@@ -81,7 +81,7 @@ public final class TimelineRs extends BaseRs {
      * Inject it from query.
      * @param name Name of get
      */
-    @PathParam("name")
+    @PathParam("timeline")
     public void setName(@NotNull(message = "unit name can't be NULL")
         final String name) {
         try {
@@ -114,6 +114,16 @@ public final class TimelineRs extends BaseRs {
                         @Override
                         public JaxbBundle bundle(final Event event) {
                             return TimelineRs.this.event(event);
+                        }
+                    }
+                )
+            )
+            .append(
+                new JaxbBundle("products").add(
+                    new JaxbBundle.Group<Product>(this.timeline.products()) {
+                        @Override
+                        public JaxbBundle bundle(final Product product) {
+                            return TimelineRs.this.product(product);
                         }
                     }
                 )
@@ -176,8 +186,18 @@ public final class TimelineRs extends BaseRs {
                 )
             );
         }
+        final Collection<Product> products = new ArrayList<Product>(0);
+        for (JsonValue obj : object.getJsonArray("products")) {
+            final JsonObject json = JsonObject.class.cast(obj);
+            products.add(
+                new Product.Simple(
+                    json.getString("name"),
+                    json.getString("markdown")
+                )
+            );
+        }
         final Event event = this.timeline.post(
-            object.getString("text"), tags, new ArrayList<Product>(0)
+            object.getString("text"), tags, products
         );
         return Response.created(
             this.uriInfo().getBaseUriBuilder()
