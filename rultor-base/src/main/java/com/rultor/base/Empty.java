@@ -48,6 +48,21 @@ import lombok.EqualsAndHashCode;
 public final class Empty implements Instance {
 
     /**
+     * Public no-args ctor.
+     */
+    public Empty() {
+        this(new Object[0]);
+    }
+
+    /**
+     * Public any arg ctor.
+     * @param args Any arguments
+     */
+    public Empty(final Object... args) {
+        assert args != null;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
