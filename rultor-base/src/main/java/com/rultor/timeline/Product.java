@@ -51,11 +51,17 @@ public interface Product {
     String name();
 
     /**
+     * Markdown.
+     * @return Markdown
+     */
+    String markdown();
+
+    /**
      * Simple implementation.
      */
     @Immutable
     @ToString
-    @EqualsAndHashCode(of = "label")
+    @EqualsAndHashCode(of = { "label", "text" })
     @Loggable(Loggable.DEBUG)
     final class Simple implements Product {
         /**
@@ -63,11 +69,17 @@ public interface Product {
          */
         private final transient String label;
         /**
+         * Markdown.
+         */
+        private final transient String text;
+        /**
          * Public ctor.
          * @param name Name of it
+         * @param markdown Its markdown
          */
-        public Simple(final String name) {
+        public Simple(final String name, final String markdown) {
             this.label = name;
+            this.text = markdown;
         }
         /**
          * {@inheritDoc}
@@ -75,6 +87,13 @@ public interface Product {
         @Override
         public String name() {
             return this.label;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String markdown() {
+            return this.text;
         }
     }
 

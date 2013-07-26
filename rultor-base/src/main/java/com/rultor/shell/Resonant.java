@@ -38,7 +38,6 @@ import com.rultor.timeline.Timeline;
 import com.rultor.tools.Vext;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Level;
@@ -104,18 +103,23 @@ public final class Resonant implements Batch {
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public int exec(final Map<String, Object> args, final OutputStream output)
         throws IOException {
+        final long start = System.currentTimeMillis();
         final int code = this.origin.exec(args, output);
+        final Product elapsed = new Product.Simple(
+            "elapsed time",
+            Logger.format("%[ms]s", System.currentTimeMillis() - start)
+        );
         if (code == 0) {
             this.timeline.submit(
                 this.success.print(args),
                 Arrays.<Tag>asList(new Tag.Simple("success", Level.FINE)),
-                new ArrayList<Product>(0)
+                Arrays.asList(elapsed)
             );
         } else {
             this.timeline.submit(
                 this.failure.print(args),
                 Arrays.<Tag>asList(new Tag.Simple("failure", Level.SEVERE)),
-                new ArrayList<Product>(0)
+                Arrays.asList(elapsed)
             );
         }
         return code;

@@ -113,6 +113,13 @@ public final class RultorTimeline implements Timeline {
                 .write("level", tag.level().toString())
                 .writeEnd();
         }
+        json.writeEnd().writeStartArray("products");
+        for (Product product : products) {
+            json.writeStartObject()
+                .write("name", product.name())
+                .write("markdown", product.markdown())
+                .writeEnd();
+        }
         json.writeEnd().writeEnd().close();
         final String body = output.toString();
         Logger.info(this, "#submit(): sending JSON '%s'", body);
