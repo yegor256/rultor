@@ -35,16 +35,18 @@ import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.log.Logger;
 import com.rexsl.test.RestTester;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URLEncoder;
 import java.util.Collection;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.codec.CharEncoding;
 
 /**
  * Timeline in {@code http://timeline.rultor.com}.
@@ -102,20 +104,27 @@ public final class RultorTimeline implements Timeline {
             .path(this.name)
             .path("/post")
             .build();
+        final JsonObjectBuilder json = Json.createObjectBuilder()
+            .add("text", text);
+        final JsonArrayBuilder tbuilder = Json.createArrayBuilder();
+        for (Tag tag : tags) {
+            tbuilder.add(
+                Json.createObjectBuilder()
+                    .add("label", tag.label())
+                    .add("level", tag.level().toString())
+            );
+        }
+        json.add("tags", tbuilder);
+        final StringWriter output = new StringWriter();
+        Json.createWriter(output).writeObject(json.build());
         RestTester.start(uri)
+            .header("X-Rultor-Key", this.key)
             .header(HttpHeaders.USER_AGENT, "RultorTimeline")
             .header(
                 HttpHeaders.CONTENT_TYPE,
                 MediaType.APPLICATION_FORM_URLENCODED
             )
-            .post(
-                "posting event",
-                String.format(
-                    "key=%s&text=%s",
-                    URLEncoder.encode(this.key, CharEncoding.UTF_8),
-                    URLEncoder.encode(text, CharEncoding.UTF_8)
-                )
-            )
+            .post("posting event", output.toString())
             .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
     }
 

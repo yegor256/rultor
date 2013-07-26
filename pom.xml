@@ -90,8 +90,8 @@
         <url>https://github.com/rultor/rultor</url>
     </scm>
     <ciManagement>
-        <system>jenkins</system>
-        <url>http://ci.rultor.com:8080/job/rultor/</url>
+        <system>rultor</system>
+        <url>http://timeline.rultor.com/t/rultor</url>
     </ciManagement>
     <distributionManagement>
         <site>

@@ -32,6 +32,7 @@ package com.rultor.mongo;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.immutable.ArrayMap;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -131,7 +132,7 @@ public final class MongoTimeline implements Timeline {
                 .put(MongoEvent.ATTR_TIMELINE, this.name())
                 .put(MongoEvent.ATTR_TEXT, text)
                 .put(MongoEvent.ATTR_TIME, System.currentTimeMillis())
-                .put("tags", new String[0])
+                .put(MongoEvent.ATTR_TAGS, MongoTimeline.asObjects(tags))
                 .put("products", new String[0])
                 .build()
         );
@@ -206,6 +207,32 @@ public final class MongoTimeline implements Timeline {
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
+    }
+
+    /**
+     * Collection of tags into DB object.
+     * @param tags Collection of them
+     * @return Array of objects
+     */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    private static DBObject[] asObjects(final Collection<Tag> tags) {
+        final DBObject[] objects = new DBObject[tags.size()];
+        int idx = 0;
+        for (Tag tag : tags) {
+            Validate.isTrue(
+                tag.label().length() <= Tv.FORTY,
+                "tag label '%s' is too long, should be less than 40",
+                tag.label()
+            );
+            objects[idx] = new BasicDBObject(
+                new ImmutableMap.Builder<String, Object>()
+                    .put(MongoTag.ATTR_LABEL, tag.label())
+                    .put(MongoTag.ATTR_LEVEL, tag.level().toString())
+                    .build()
+            );
+            ++idx;
+        }
+        return objects;
     }
 
 }

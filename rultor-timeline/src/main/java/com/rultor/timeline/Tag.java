@@ -30,7 +30,10 @@
 package com.rultor.timeline;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import java.util.logging.Level;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Tag in Event.
@@ -53,5 +56,46 @@ public interface Tag {
      * @return Level
      */
     Level level();
+
+    /**
+     * Simple implementation.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = { "name", "lvl" })
+    @Loggable(Loggable.DEBUG)
+    final class Simple implements Tag {
+        /**
+         * Label.
+         */
+        private final transient String name;
+        /**
+         * Level.
+         */
+        private final transient String lvl;
+        /**
+         * Public ctor.
+         * @param label Label
+         * @param level Level
+         */
+        public Simple(final String label, final Level level) {
+            this.name = label;
+            this.lvl = level.toString();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String label() {
+            return this.name;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Level level() {
+            return Level.parse(this.lvl);
+        }
+    }
 
 }

@@ -37,7 +37,10 @@ import com.rultor.timeline.Tag;
 import com.rultor.timeline.Timeline;
 import com.rultor.timeline.Timelines;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.logging.Level;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.hamcrest.CustomMatcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -87,16 +90,7 @@ public final class MongoTimelinesITCase {
      */
     @Test
     public void managesDataInMongoDb() throws Exception {
-        Assume.assumeNotNull(MongoTimelinesITCase.HOST);
-        final Timelines timelines = new MongoTimelines(
-            new Mongo.Simple(
-                MongoTimelinesITCase.HOST,
-                Integer.parseInt(MongoTimelinesITCase.PORT),
-                MongoTimelinesITCase.NAME,
-                MongoTimelinesITCase.USER,
-                MongoTimelinesITCase.PWD
-            )
-        );
+        final Timelines timelines = this.timelines();
         final URN owner = new URN("urn:test:1");
         final String name = RandomStringUtils.randomAlphabetic(Tv.TEN);
         final Timeline timeline = timelines.create(owner, name);
@@ -121,16 +115,7 @@ public final class MongoTimelinesITCase {
      */
     @Test
     public void timelinesDontConflic() throws Exception {
-        Assume.assumeNotNull(MongoTimelinesITCase.HOST);
-        final Timelines timelines = new MongoTimelines(
-            new Mongo.Simple(
-                MongoTimelinesITCase.HOST,
-                Integer.parseInt(MongoTimelinesITCase.PORT),
-                MongoTimelinesITCase.NAME,
-                MongoTimelinesITCase.USER,
-                MongoTimelinesITCase.PWD
-            )
-        );
+        final Timelines timelines = this.timelines();
         final URN owner = new URN(
             String.format("urn:test:%d", System.currentTimeMillis())
         );
@@ -152,8 +137,58 @@ public final class MongoTimelinesITCase {
      */
     @Test(expected = Timelines.TimelineExistsException.class)
     public void avoidsDuplicatedTimelines() throws Exception {
+        final Timelines timelines = this.timelines();
+        final URN owner = new URN("urn:test:77");
+        final String name = RandomStringUtils.randomAlphabetic(Tv.TEN);
+        timelines.create(owner, name);
+        timelines.create(owner, name);
+    }
+
+    /**
+     * MongoTimelines can handle tags.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void savesAndLoadsTags() throws Exception {
+        final Timelines timelines = this.timelines();
+        final URN owner = new URN("urn:test:980");
+        final String name = RandomStringUtils.randomAlphabetic(Tv.TEN);
+        final Timeline timeline = timelines.create(owner, name);
+        final Tag good = new Tag.Simple("good \u20ac", Level.INFO);
+        final Tag bad = new Tag.Simple("bad \u20ac", Level.SEVERE);
+        timeline.post(
+            "hi there, world! \u20ac",
+            Arrays.asList(good, bad),
+            new ArrayList<Product>(0)
+        );
+        MatcherAssert.assertThat(
+            timeline.events(new Time()).iterator().next().tags(),
+            Matchers.hasItems(
+                new CustomMatcher<Tag>("valid good tag") {
+                    @Override
+                    public boolean matches(final Object obj) {
+                        return Tag.class.cast(obj).level().equals(Level.INFO);
+                    }
+                },
+                new CustomMatcher<Tag>("valid bad tag") {
+                    @Override
+                    public boolean matches(final Object obj) {
+                        return Tag.class.cast(obj).level().equals(Level.SEVERE);
+                    }
+                }
+            )
+        );
+    }
+
+    /**
+     * Get timelines to test against.
+     * @return Timelines to test
+     * @throws Exception If some problem inside
+     */
+    private Timelines timelines() throws Exception {
         Assume.assumeNotNull(MongoTimelinesITCase.HOST);
-        final Timelines timelines = new MongoTimelines(
+        return new MongoTimelines(
             new Mongo.Simple(
                 MongoTimelinesITCase.HOST,
                 Integer.parseInt(MongoTimelinesITCase.PORT),
@@ -162,10 +197,6 @@ public final class MongoTimelinesITCase {
                 MongoTimelinesITCase.PWD
             )
         );
-        final URN owner = new URN("urn:test:77");
-        final String name = RandomStringUtils.randomAlphabetic(Tv.TEN);
-        timelines.create(owner, name);
-        timelines.create(owner, name);
     }
 
 }

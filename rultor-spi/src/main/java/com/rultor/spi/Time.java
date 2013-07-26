@@ -143,8 +143,11 @@ public final class Time implements Comparable<Time> {
      * @return Text
      */
     public String when() {
-        return DurationFormatUtils.formatDurationWords(
-            System.currentTimeMillis() - this.msec, true, true
+        return String.format(
+            "%s ago",
+            DurationFormatUtils.formatDurationWords(
+                System.currentTimeMillis() - this.msec, true, true
+            )
         );
     }
 

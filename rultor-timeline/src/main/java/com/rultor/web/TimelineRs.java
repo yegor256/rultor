@@ -39,18 +39,20 @@ import com.rultor.timeline.Product;
 import com.rultor.timeline.Tag;
 import com.rultor.timeline.Timeline;
 import com.rultor.timeline.Timelines;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.logging.Level;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonValue;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -115,16 +117,44 @@ public final class TimelineRs extends BaseRs {
     }
 
     /**
-     * Post into it.
-     * @param text Text of the event
+     * Post into it, in JSON format.
+     *
+     * <pre>
+     * {
+     *   "text": "event text in Unicode",
+     *   "tags": [
+     *     {
+     *       "label": "label of a tag, up to 40 characters",
+     *       "level": "INFO|WARNING|SEVERE"
+     *     }
+     *   ],
+     *   "products": [
+     *     {
+     *       "name": "name of a product",
+     *     }
+     *   ]
+     * }
+     * </pre>
+     *
+     * @param body Body of HTTP request
      * @return The JAX-RS response
      */
     @POST
     @Path("/post")
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response post(@FormParam("text") @NotNull final String text) {
+    public Response post(final InputStream body) {
+        final JsonObject object = Json.createReader(body).readObject();
+        final Collection<Tag> tags = new ArrayList<Tag>(0);
+        for (JsonValue obj : object.getJsonArray("tags")) {
+            final JsonObject json = JsonObject.class.cast(obj);
+            tags.add(
+                new Tag.Simple(
+                    json.getString("label"),
+                    Level.parse(json.getString("level"))
+                )
+            );
+        }
         final Event event = this.timeline.post(
-            text, new ArrayList<Tag>(0), new ArrayList<Product>(0)
+            object.getString("text"), tags, new ArrayList<Product>(0)
         );
         throw this.flash().redirect(
             this.uriInfo().getBaseUri(),

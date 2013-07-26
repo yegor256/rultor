@@ -38,7 +38,9 @@ import com.rultor.timeline.Timeline;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
@@ -104,11 +106,15 @@ public final class Resonant implements Batch {
         final int code = this.origin.exec(args, output);
         if (code == 0) {
             this.timeline.submit(
-                this.success, new ArrayList<Tag>(0), new ArrayList<Product>(0)
+                this.success,
+                Arrays.<Tag>asList(new Tag.Simple("success", Level.INFO)),
+                new ArrayList<Product>(0)
             );
         } else {
             this.timeline.submit(
-                this.failure, new ArrayList<Tag>(0), new ArrayList<Product>(0)
+                this.failure,
+                Arrays.<Tag>asList(new Tag.Simple("failure", Level.SEVERE)),
+                new ArrayList<Product>(0)
             );
         }
         return code;
