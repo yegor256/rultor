@@ -143,6 +143,21 @@ public final class TimelineRs extends BaseRs {
     @Path("/post")
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Response post(final InputStream body) {
+        final String hdr = this.httpServletRequest().getHeader("X-Rultor-Key");
+        if (hdr == null) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                "authentication key expected in X-Rultor-Key HTTP header",
+                Level.SEVERE
+            );
+        }
+        if (!hdr.equals(this.timeline.permissions().key())) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                "invalid authentication key, access denied",
+                Level.SEVERE
+            );
+        }
         final JsonObject object = Json.createReader(body).readObject();
         final Collection<Tag> tags = new ArrayList<Tag>(0);
         for (JsonValue obj : object.getJsonArray("tags")) {
@@ -175,7 +190,7 @@ public final class TimelineRs extends BaseRs {
             .up()
             .add("when", event.time().when())
             .up()
-            .add("text", event.text())
+            .add("html", new Markdown(event.text()).html())
             .up()
             .add("tags")
             .add(

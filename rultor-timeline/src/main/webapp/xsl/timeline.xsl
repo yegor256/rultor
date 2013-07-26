@@ -83,7 +83,7 @@
                         <xsl:value-of select="when"/>
                     </li>
                     <li>
-                        <xsl:value-of disable-output-escaping="yes" select="text"/>
+                        <xsl:value-of disable-output-escaping="yes" select="html"/>
                     </li>
                 </ul>
             </div>
