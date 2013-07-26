@@ -39,7 +39,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.S3Client;
 import com.rultor.spi.Pulses;
-import com.rultor.spi.Time;
+import com.rultor.tools.Time;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;

@@ -27,42 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
-
-import com.jcabi.aspects.Immutable;
-import com.rultor.tools.Time;
-import javax.validation.constraints.NotNull;
 
 /**
- * Sorted vector of {@link Statement}s (most recent goes first).
+ * Simple commonly used tools.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Statements extends Iterable<Statement> {
-
-    /**
-     * Tail, that does include the provided date.
-     * @param head Head of the new vector
-     * @return Statements
-     */
-    @NotNull(message = "tail is never NULL")
-    Statements tail(Time head);
-
-    /**
-     * Get by time.
-     * @param time Time of it
-     * @return Statement
-     */
-    @NotNull(message = "statement is never NULL")
-    Statement get(Time time);
-
-    /**
-     * Add new statement.
-     * @param stmt The statement to add
-     */
-    void add(@NotNull(message = "statement can't be NULL") Statement stmt);
-
-}
+package com.rultor.tools;

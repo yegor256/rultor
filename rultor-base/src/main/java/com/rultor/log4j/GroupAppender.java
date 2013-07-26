@@ -32,7 +32,7 @@ package com.rultor.log4j;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Time;
+import com.rultor.tools.Time;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.validation.constraints.NotNull;

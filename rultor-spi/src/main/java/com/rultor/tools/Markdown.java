@@ -27,42 +27,49 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.tools;
 
 import com.jcabi.aspects.Immutable;
-import com.rultor.tools.Time;
-import javax.validation.constraints.NotNull;
+import com.jcabi.aspects.Loggable;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- * Sorted vector of {@link Statement}s (most recent goes first).
+ * Markdown text.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Immutable
-public interface Statements extends Iterable<Statement> {
+@ToString
+@Loggable(Loggable.DEBUG)
+@EqualsAndHashCode(of = "text")
+public final class Markdown {
 
     /**
-     * Tail, that does include the provided date.
-     * @param head Head of the new vector
-     * @return Statements
+     * Text in MD.
      */
-    @NotNull(message = "tail is never NULL")
-    Statements tail(Time head);
+    private final transient String text;
 
     /**
-     * Get by time.
-     * @param time Time of it
-     * @return Statement
+     * Public ctor.
+     * @param txt Text to encapsulate
      */
-    @NotNull(message = "statement is never NULL")
-    Statement get(Time time);
+    public Markdown(final String txt) {
+        this.text = txt;
+    }
 
     /**
-     * Add new statement.
-     * @param stmt The statement to add
+     * As HTML4.
+     * @return HTML
      */
-    void add(@NotNull(message = "statement can't be NULL") Statement stmt);
+    public String html() {
+        return StringEscapeUtils.escapeHtml4(this.text)
+            .replaceAll("`([^`]+)`", "<code>$1</code>")
+            .replaceAll("\\*{2}([^\\*]+)\\*{2}", "<strong>$1</strong>");
+    }
 
 }

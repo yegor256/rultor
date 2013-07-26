@@ -31,8 +31,8 @@ package com.rultor.base;
 
 import com.jcabi.aspects.Tv;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Time;
 import com.rultor.spi.Work;
+import com.rultor.tools.Time;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;

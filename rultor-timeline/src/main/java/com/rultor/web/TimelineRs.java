@@ -32,13 +32,13 @@ package com.rultor.web;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.PageBuilder;
-import com.rultor.spi.Markdown;
-import com.rultor.spi.Time;
 import com.rultor.timeline.Event;
 import com.rultor.timeline.Product;
 import com.rultor.timeline.Tag;
 import com.rultor.timeline.Timeline;
 import com.rultor.timeline.Timelines;
+import com.rultor.tools.Markdown;
+import com.rultor.tools.Time;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -141,6 +141,7 @@ public final class TimelineRs extends BaseRs {
      */
     @POST
     @Path("/post")
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Response post(final InputStream body) {
         final JsonObject object = Json.createReader(body).readObject();
         final Collection<Tag> tags = new ArrayList<Tag>(0);

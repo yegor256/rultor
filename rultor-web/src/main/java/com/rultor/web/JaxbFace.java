@@ -34,16 +34,16 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rexsl.page.JaxbBundle;
 import com.rultor.spi.Arguments;
-import com.rultor.spi.Dollars;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Markdown;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Time;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
+import com.rultor.tools.Dollars;
+import com.rultor.tools.Markdown;
+import com.rultor.tools.Time;
 import lombok.EqualsAndHashCode;
 
 /**

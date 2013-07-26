@@ -29,7 +29,7 @@
  */
 package com.rultor.drain.s3;
 
-import com.rultor.spi.Time;
+import com.rultor.tools.Time;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;

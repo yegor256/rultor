@@ -27,49 +27,42 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.tools;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.apache.commons.lang3.StringEscapeUtils;
+import com.google.common.collect.ImmutableMap;
+import com.jcabi.aspects.Tv;
+import java.util.Map;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Markdown text.
- *
+ * Test case for {@link Dollars}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
- * @checkstyle MultipleStringLiterals (500 lines)
  */
-@Immutable
-@ToString
-@Loggable(Loggable.DEBUG)
-@EqualsAndHashCode(of = "text")
-public final class Markdown {
+public final class DollarsTest {
 
     /**
-     * Text in MD.
+     * Dollars can print monetary value.
+     * @throws Exception If some problem inside
      */
-    private final transient String text;
-
-    /**
-     * Public ctor.
-     * @param txt Text to encapsulate
-     */
-    public Markdown(final String txt) {
-        this.text = txt;
-    }
-
-    /**
-     * As HTML4.
-     * @return HTML
-     */
-    public String html() {
-        return StringEscapeUtils.escapeHtml4(this.text)
-            .replaceAll("`([^`]+)`", "<code>$1</code>")
-            .replaceAll("\\*{2}([^\\*]+)\\*{2}", "<strong>$1</strong>");
+    @Test
+    public void printsItselfToString() throws Exception {
+        final ImmutableMap<Dollars, String> map =
+            new ImmutableMap.Builder<Dollars, String>()
+                .put(new Dollars(Tv.MILLION), "$1.00")
+                .put(new Dollars(Tv.FIVE * Tv.MILLION), "$5.00")
+                .put(new Dollars(Tv.THOUSAND), "$0.001")
+                .put(new Dollars(Tv.TEN * Tv.THOUSAND), "$0.01")
+                .put(new Dollars(-Tv.FIVE * Tv.MILLION), "($5.00)")
+                .build();
+        for (Map.Entry<Dollars, String> entry : map.entrySet()) {
+            MatcherAssert.assertThat(
+                entry.getKey(),
+                Matchers.hasToString(entry.getValue())
+            );
+        }
     }
 
 }

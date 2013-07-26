@@ -29,6 +29,7 @@
  */
 package com.rultor.spi;
 
+import com.rultor.tools.Time;
 import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;

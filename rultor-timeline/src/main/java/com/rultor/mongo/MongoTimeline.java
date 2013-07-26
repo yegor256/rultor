@@ -39,12 +39,12 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
-import com.rultor.spi.Time;
 import com.rultor.timeline.Event;
 import com.rultor.timeline.Permissions;
 import com.rultor.timeline.Product;
 import com.rultor.timeline.Tag;
 import com.rultor.timeline.Timeline;
+import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -162,6 +162,7 @@ public final class MongoTimeline implements Timeline {
                         MongoEvent.ATTR_TIMELINE, MongoTimeline.this.name()
                     )
                 );
+                cursor.sort(new BasicDBObject(MongoEvent.ATTR_TIME, -1));
                 return new Iterator<Event>() {
                     @Override
                     public boolean hasNext() {

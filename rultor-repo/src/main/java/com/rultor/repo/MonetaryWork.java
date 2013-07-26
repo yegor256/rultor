@@ -33,12 +33,12 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Dollars;
 import com.rultor.spi.Receipt;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Time;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
+import com.rultor.tools.Dollars;
+import com.rultor.tools.Time;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.Validate;
 

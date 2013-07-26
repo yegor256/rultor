@@ -27,42 +27,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.tools;
 
-import com.google.common.collect.ImmutableMap;
-import com.jcabi.aspects.Tv;
-import java.util.Map;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link Dollars}.
+ * Test case for {@link Time}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class DollarsTest {
+public final class TimeTest {
 
     /**
-     * Dollars can print monetary value.
+     * Time can print and parse.
      * @throws Exception If some problem inside
      */
     @Test
-    public void printsItselfToString() throws Exception {
-        final ImmutableMap<Dollars, String> map =
-            new ImmutableMap.Builder<Dollars, String>()
-                .put(new Dollars(Tv.MILLION), "$1.00")
-                .put(new Dollars(Tv.FIVE * Tv.MILLION), "$5.00")
-                .put(new Dollars(Tv.THOUSAND), "$0.001")
-                .put(new Dollars(Tv.TEN * Tv.THOUSAND), "$0.01")
-                .put(new Dollars(-Tv.FIVE * Tv.MILLION), "($5.00)")
-                .build();
-        for (Map.Entry<Dollars, String> entry : map.entrySet()) {
-            MatcherAssert.assertThat(
-                entry.getKey(),
-                Matchers.hasToString(entry.getValue())
-            );
-        }
+    public void printsAndParses() throws Exception {
+        final Time time = new Time();
+        MatcherAssert.assertThat(
+            new Time(time.toString()).toString(),
+            Matchers.equalTo(time.toString())
+        );
+        MatcherAssert.assertThat(
+            new Time(time.millis()).toString(),
+            Matchers.equalTo(time.toString())
+        );
     }
 
 }

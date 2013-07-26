@@ -30,7 +30,7 @@
 package com.rultor.timeline;
 
 import com.jcabi.aspects.Immutable;
-import com.rultor.spi.Time;
+import com.rultor.tools.Time;
 import java.util.Collection;
 
 /**

@@ -31,7 +31,7 @@ package com.rultor.drain.ftp;
 
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulses;
-import com.rultor.spi.Time;
+import com.rultor.tools.Time;
 import java.util.Arrays;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;

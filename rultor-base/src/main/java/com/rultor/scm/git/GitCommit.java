@@ -33,7 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rultor.scm.Commit;
-import com.rultor.spi.Time;
+import com.rultor.tools.Time;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

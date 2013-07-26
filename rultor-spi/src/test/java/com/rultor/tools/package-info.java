@@ -27,63 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
-
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
-import lombok.EqualsAndHashCode;
 
 /**
- * Dollar amount.
+ * Tools, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-@Loggable(Loggable.DEBUG)
-@EqualsAndHashCode(of = "amount")
-public final class Dollars {
-
-    /**
-     * Amount of it in millionth of dollar.
-     */
-    private final transient long amount;
-
-    /**
-     * Public ctor.
-     * @param points Amount
-     */
-    public Dollars(final long points) {
-        this.amount = points;
-    }
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        final double usd = Math.abs((double) this.amount / Tv.MILLION);
-        String body;
-        // @checkstyle MagicNumber (3 lines)
-        if (usd >= 0.01d || usd < 0.0001d) {
-            body = String.format("$%.2f", usd);
-        } else if (usd >= 0.001d) {
-            body = String.format("$%.3f", usd);
-        } else {
-            body = String.format("$%.4f", usd);
-        }
-        if (this.amount < 0) {
-            body = String.format("(%s)", body);
-        }
-        return body;
-    }
-    /**
-     * Points.
-     * @return Points
-     */
-    public long points() {
-        return this.amount;
-    }
-
-}
+package com.rultor.tools;

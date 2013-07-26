@@ -35,7 +35,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.log.Logger;
 import com.rultor.guard.MergeRequest;
-import com.rultor.spi.Time;
+import com.rultor.tools.Time;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;

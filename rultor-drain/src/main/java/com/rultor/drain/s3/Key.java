@@ -30,7 +30,7 @@
 package com.rultor.drain.s3;
 
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Time;
+import com.rultor.tools.Time;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.regex.Matcher;

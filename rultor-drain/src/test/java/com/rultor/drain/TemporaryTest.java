@@ -31,8 +31,8 @@ package com.rultor.drain;
 
 import com.jcabi.urn.URN;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Time;
 import com.rultor.spi.Work;
+import com.rultor.tools.Time;
 import java.util.Arrays;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;

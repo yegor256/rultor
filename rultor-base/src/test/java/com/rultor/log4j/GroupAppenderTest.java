@@ -32,7 +32,7 @@ package com.rultor.log4j;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseRunnable;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Time;
+import com.rultor.tools.Time;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;

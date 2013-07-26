@@ -32,7 +32,7 @@ package com.rultor.timeline;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
-import com.rultor.spi.Time;
+import com.rultor.tools.Time;
 import java.util.Collection;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

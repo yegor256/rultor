@@ -36,7 +36,7 @@ import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Statement;
 import com.rultor.spi.Statements;
-import com.rultor.spi.Time;
+import com.rultor.tools.Time;
 import java.util.Iterator;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

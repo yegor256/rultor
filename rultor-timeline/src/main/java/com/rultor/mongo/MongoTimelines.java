@@ -105,6 +105,7 @@ public final class MongoTimelines implements Timelines {
         final DBCursor cursor = this.collection().find(
             new BasicDBObject(MongoTimeline.ATTR_OWNER, owner.toString())
         );
+        cursor.sort(new BasicDBObject(MongoTimeline.ATTR_NAME, 1));
         final Collection<Timeline> timelines = new LinkedList<Timeline>();
         try {
             while (cursor.hasNext()) {

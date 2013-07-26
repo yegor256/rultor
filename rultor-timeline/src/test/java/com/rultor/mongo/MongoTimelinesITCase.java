@@ -31,11 +31,11 @@ package com.rultor.mongo;
 
 import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Time;
 import com.rultor.timeline.Product;
 import com.rultor.timeline.Tag;
 import com.rultor.timeline.Timeline;
 import com.rultor.timeline.Timelines;
+import com.rultor.tools.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;

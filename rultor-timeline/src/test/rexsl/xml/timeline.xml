@@ -45,9 +45,7 @@
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
     </links>
     <millis>16</millis>
-    <timeline>
-        <name>rultor</name>
-    </timeline>
+    <name>rultor</name>
     <products>
         <product>
             <name>head</name>
