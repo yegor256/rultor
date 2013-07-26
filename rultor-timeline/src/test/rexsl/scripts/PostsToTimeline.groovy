@@ -27,52 +27,14 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor.web.rexsl.scripts
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.urn.URN;
-import com.rultor.timeline.Timeline;
-import com.rultor.timeline.Timelines;
-import java.util.ArrayList;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.jcabi.manifests.Manifests
+import com.jcabi.urn.URN
+import com.rexsl.page.auth.Identity
 
-/**
- * Test Timelines.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- */
-@Immutable
-@ToString
-@EqualsAndHashCode
-@Loggable(Loggable.DEBUG)
-public final class TestTimelines implements Timelines {
+Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
+def identity = new Identity.Simple(new URN('urn:facebook:1'), '', new URI('#'))
+assert identity != null
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterable<Timeline> find(final URN owner) {
-        return new ArrayList<Timeline>(0);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Timeline create(final URN owner, final String name) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Timeline get(final String name) {
-        throw new UnsupportedOperationException();
-    }
-
-}
+// to be continued...

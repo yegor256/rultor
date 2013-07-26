@@ -37,6 +37,7 @@ import com.jcabi.urn.URN;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import com.rultor.timeline.Timeline;
 import com.rultor.timeline.Timelines;
@@ -117,27 +118,41 @@ public final class MongoTimelines implements Timelines {
 
     /**
      * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public void create(final URN owner, final String name) {
-        final WriteResult result = this.collection().insert(
-            new BasicDBObject(
-                new ImmutableMap.Builder<String, Object>()
-                    .put(MongoTimeline.ATTR_OWNER, owner.toString())
-                    .put(MongoTimeline.ATTR_NAME, name)
-                    .put("friends", new String[0])
-                    .put(
-                        MongoTimeline.ATTR_KEY,
-                        RandomStringUtils.randomAlphanumeric(Tv.TWENTY)
-                    )
-                    .build()
-            )
+    public Timeline create(final URN owner, final String name)
+        throws TimelineExistsException {
+        final DBCursor cursor = this.collection().find(
+            new BasicDBObject(MongoTimeline.ATTR_NAME, name)
         );
+        try {
+            if (cursor.hasNext()) {
+                throw new TimelineExistsException(
+                    String.format("timeline `%s` already exists", name)
+                );
+            }
+        } finally {
+            cursor.close();
+        }
+        final DBObject object = new BasicDBObject(
+            new ImmutableMap.Builder<String, Object>()
+                .put(MongoTimeline.ATTR_OWNER, owner.toString())
+                .put(MongoTimeline.ATTR_NAME, name)
+                .put("friends", new String[0])
+                .put(
+                    MongoTimeline.ATTR_KEY,
+                    RandomStringUtils.randomAlphanumeric(Tv.TWENTY)
+                )
+                .build()
+        );
+        final WriteResult result = this.collection().insert(object);
         Validate.isTrue(
             result.getLastError().ok(),
             "failed to create new timeline `%s`: %s",
             name, result.getLastError().getErrorMessage()
         );
+        return new MongoTimeline(this.mongo, object);
     }
 
     /**

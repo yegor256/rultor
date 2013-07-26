@@ -78,7 +78,7 @@ public final class SimpleConveyer implements Closeable {
      * How many threads to run in parallel.
      */
     private static final int THREADS =
-        Runtime.getRuntime().availableProcessors() * Tv.TEN;
+        Runtime.getRuntime().availableProcessors() * Tv.TWENTY;
 
     /**
      * Queue.

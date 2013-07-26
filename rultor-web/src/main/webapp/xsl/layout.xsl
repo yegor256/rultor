@@ -201,6 +201,9 @@
         </li>
         <li class="hidden-phone">
             <i>
+                <xsl:attribute name="title">
+                    <xsl:value-of select="urn"/>
+                </xsl:attribute>
                 <xsl:attribute name="class">
                     <xsl:text>icon-</xsl:text>
                     <xsl:choose>

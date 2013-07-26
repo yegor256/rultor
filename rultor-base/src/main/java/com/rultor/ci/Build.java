@@ -32,6 +32,7 @@ package com.rultor.ci;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import com.rultor.board.Announcement;
 import com.rultor.shell.ASCIIOutputStream;
 import com.rultor.shell.Batch;
@@ -94,7 +95,7 @@ final class Build {
                 .put("stdout", stdout.toString(CharEncoding.UTF_8))
                 .put(
                     "elapsed",
-                    String.format(
+                    Logger.format(
                         "%[ms]s",
                         System.currentTimeMillis() - start
                     )

@@ -58,6 +58,11 @@ public final class MongoEvent implements Event {
     /**
      * Mongo attribute.
      */
+    public static final String ATTR_TIMELINE = "timeline";
+
+    /**
+     * Mongo attribute.
+     */
     public static final String ATTR_TEXT = "text";
 
     /**

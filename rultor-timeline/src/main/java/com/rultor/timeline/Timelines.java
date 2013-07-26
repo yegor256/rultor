@@ -53,8 +53,11 @@ public interface Timelines {
      * Create get.
      * @param owner Who will own it
      * @param name Name of it
+     * @return Timeline just created
+     * @throws TimelineExistsException If not found
+     * @checkstyle RedundantThrows (5 lines)
      */
-    void create(URN owner, String name);
+    Timeline create(URN owner, String name) throws TimelineExistsException;
 
     /**
      * Get one get by name.
@@ -78,6 +81,23 @@ public interface Timelines {
          * @param cause Cause of it
          */
         public TimelineNotFoundException(final String cause) {
+            super(cause);
+        }
+    }
+
+    /**
+     * When timeline already exists.
+     */
+    final class TimelineExistsException extends Exception {
+        /**
+         * Serialization marker.
+         */
+        private static final long serialVersionUID = 0x65f30aff345f8042L;
+        /**
+         * Public ctor.
+         * @param cause Cause of it
+         */
+        public TimelineExistsException(final String cause) {
             super(cause);
         }
     }

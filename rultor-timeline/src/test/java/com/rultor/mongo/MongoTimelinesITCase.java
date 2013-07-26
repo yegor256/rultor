@@ -99,8 +99,7 @@ public final class MongoTimelinesITCase {
         );
         final URN owner = new URN("urn:test:1");
         final String name = RandomStringUtils.randomAlphabetic(Tv.TEN);
-        timelines.create(owner, name);
-        final Timeline timeline = timelines.get(name);
+        final Timeline timeline = timelines.create(owner, name);
         MatcherAssert.assertThat(timeline.name(), Matchers.equalTo(name));
         MatcherAssert.assertThat(
             timeline.permissions().owner(), Matchers.equalTo(owner)
@@ -114,6 +113,59 @@ public final class MongoTimelinesITCase {
             timeline.events(new Time()).iterator().next().text(),
             Matchers.equalTo(text)
         );
+    }
+
+    /**
+     * MongoTimelines can manage timelines without conflicts.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void timelinesDontConflic() throws Exception {
+        Assume.assumeNotNull(MongoTimelinesITCase.HOST);
+        final Timelines timelines = new MongoTimelines(
+            new Mongo.Simple(
+                MongoTimelinesITCase.HOST,
+                Integer.parseInt(MongoTimelinesITCase.PORT),
+                MongoTimelinesITCase.NAME,
+                MongoTimelinesITCase.USER,
+                MongoTimelinesITCase.PWD
+            )
+        );
+        final URN owner = new URN(
+            String.format("urn:test:%d", System.currentTimeMillis())
+        );
+        final Timeline first = timelines.create(
+            owner, RandomStringUtils.randomAlphabetic(Tv.TEN)
+        );
+        first.post("hi", new ArrayList<Tag>(0), new ArrayList<Product>(0));
+        MatcherAssert.assertThat(
+            timelines.create(owner, RandomStringUtils.randomAlphabetic(Tv.TEN))
+                .events(new Time())
+                .iterator().hasNext(),
+            Matchers.is(false)
+        );
+    }
+
+    /**
+     * MongoTimelines can avoid duplicates.
+     * @throws Exception If some problem inside
+     */
+    @Test(expected = Timelines.TimelineExistsException.class)
+    public void avoidsDuplicatedTimelines() throws Exception {
+        Assume.assumeNotNull(MongoTimelinesITCase.HOST);
+        final Timelines timelines = new MongoTimelines(
+            new Mongo.Simple(
+                MongoTimelinesITCase.HOST,
+                Integer.parseInt(MongoTimelinesITCase.PORT),
+                MongoTimelinesITCase.NAME,
+                MongoTimelinesITCase.USER,
+                MongoTimelinesITCase.PWD
+            )
+        );
+        final URN owner = new URN("urn:test:77");
+        final String name = RandomStringUtils.randomAlphabetic(Tv.TEN);
+        timelines.create(owner, name);
+        timelines.create(owner, name);
     }
 
 }

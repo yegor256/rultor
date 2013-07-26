@@ -128,6 +128,7 @@ public final class MongoTimeline implements Timeline {
         final Collection<Product> products) {
         final DBObject object = new BasicDBObject(
             new ImmutableMap.Builder<String, Object>()
+                .put(MongoEvent.ATTR_TIMELINE, this.name())
                 .put(MongoEvent.ATTR_TEXT, text)
                 .put(MongoEvent.ATTR_TIME, System.currentTimeMillis())
                 .put("tags", new String[0])
@@ -156,6 +157,8 @@ public final class MongoTimeline implements Timeline {
                     new BasicDBObject(
                         MongoEvent.ATTR_TIME,
                         new BasicDBObject("$lte", head.millis())
+                    ).append(
+                        MongoEvent.ATTR_TIMELINE, MongoTimeline.this.name()
                     )
                 );
                 return new Iterator<Event>() {

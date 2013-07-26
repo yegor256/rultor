@@ -37,6 +37,7 @@ import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.Tag;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
 import com.rultor.env.Environments;
@@ -181,30 +182,43 @@ public final class EC2 implements Environments {
                 instance.getKeyName(),
                 instance.getPlatform()
             );
-            aws.createTags(
-                new CreateTagsRequest()
-                    .withResources(instance.getInstanceId())
-                    .withTags(
-                        new Tag()
-                            .withKey("Name")
-                            .withValue(this.work.unit()),
-                        new Tag()
-                            .withKey("rultor:work:unit")
-                            .withValue(this.work.unit()),
-                        new Tag()
-                            .withKey("rultor:work:owner")
-                            .withValue(this.work.owner().toString()),
-                        new Tag()
-                            .withKey("rultor:work:started")
-                            .withValue(this.work.started().toString())
-                    )
-            );
             return new EC2Environment(
-                this.work, instance.getInstanceId(), this.client
+                this.work,
+                this.wrap(aws, instance).getInstanceId(),
+                this.client
             );
         } finally {
             aws.shutdown();
         }
+    }
+
+    /**
+     * Add tags and do some other wrapping to the running instance.
+     * @param instance Instance running (maybe already)
+     * @return The same instance
+     */
+    @RetryOnFailure
+    private Instance wrap(final AmazonEC2 aws, final Instance instance)
+        throws IOException {
+        aws.createTags(
+            new CreateTagsRequest()
+                .withResources(instance.getInstanceId())
+                .withTags(
+                    new Tag()
+                        .withKey("Name")
+                        .withValue(this.work.unit()),
+                    new Tag()
+                        .withKey("rultor:work:unit")
+                        .withValue(this.work.unit()),
+                    new Tag()
+                        .withKey("rultor:work:owner")
+                        .withValue(this.work.owner().toString()),
+                    new Tag()
+                        .withKey("rultor:work:started")
+                        .withValue(this.work.started().toString())
+                )
+        );
+        return instance;
     }
 
 }

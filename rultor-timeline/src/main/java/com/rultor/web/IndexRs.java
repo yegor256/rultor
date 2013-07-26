@@ -34,6 +34,7 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.timeline.Timeline;
+import com.rultor.timeline.Timelines;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
@@ -101,7 +102,11 @@ public final class IndexRs extends BaseRs {
     @Path("/create")
     public Response create(@NotNull(message = "name is mandatory")
         @FormParam("name") final String name) {
-        this.timelines().create(this.auth().identity().urn(), name);
+        try {
+            this.timelines().create(this.auth().identity().urn(), name);
+        } catch (Timelines.TimelineExistsException ex) {
+            throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
+        }
         throw this.flash().redirect(
             this.uriInfo().getBaseUri(),
             String.format("Timeline `%s` successfully created", name),

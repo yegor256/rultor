@@ -27,52 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
-
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.urn.URN;
-import com.rultor.timeline.Timeline;
-import com.rultor.timeline.Timelines;
-import java.util.ArrayList;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * Test Timelines.
+ * Continuous Integration (CI) basic tools, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-@ToString
-@EqualsAndHashCode
-@Loggable(Loggable.DEBUG)
-public final class TestTimelines implements Timelines {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterable<Timeline> find(final URN owner) {
-        return new ArrayList<Timeline>(0);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Timeline create(final URN owner, final String name) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Timeline get(final String name) {
-        throw new UnsupportedOperationException();
-    }
-
-}
+package com.rultor.ci;
