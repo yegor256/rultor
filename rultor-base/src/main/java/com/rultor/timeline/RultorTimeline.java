@@ -122,7 +122,7 @@ public final class RultorTimeline implements Timeline {
             .header(HttpHeaders.USER_AGENT, "RultorTimeline")
             .header(
                 HttpHeaders.CONTENT_TYPE,
-                MediaType.APPLICATION_FORM_URLENCODED
+                MediaType.APPLICATION_JSON
             )
             .post("posting event", output.toString())
             .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);

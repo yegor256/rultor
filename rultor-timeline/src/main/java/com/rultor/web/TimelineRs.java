@@ -50,11 +50,13 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -145,6 +147,7 @@ public final class TimelineRs extends BaseRs {
      */
     @POST
     @Path("/post")
+    @Consumes(MediaType.APPLICATION_JSON)
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Response post(final InputStream body) {
         final String hdr = this.httpServletRequest().getHeader("X-Rultor-Key");
