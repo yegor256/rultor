@@ -67,7 +67,7 @@ public final class Markdown {
      * @return HTML
      */
     public String html() {
-        return StringEscapeUtils.escapeHtml4(this.text)
+        return StringEscapeUtils.escapeXml(this.text)
             .replaceAll("`([^`]+)`", "<code>$1</code>")
             .replaceAll("\\*{2}([^\\*]+)\\*{2}", "<strong>$1</strong>");
     }

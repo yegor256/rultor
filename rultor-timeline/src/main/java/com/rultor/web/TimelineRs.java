@@ -29,7 +29,9 @@
  */
 package com.rultor.web;
 
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.PageBuilder;
 import com.rultor.timeline.Event;
@@ -96,6 +98,9 @@ public final class TimelineRs extends BaseRs {
     @GET
     @Path("/")
     public Response index() {
+        final Iterable<Event> events = Iterables.limit(
+            this.timeline.events(new Time()), Tv.FIFTY
+        );
         return new PageBuilder()
             .stylesheet("/xsl/timeline.xsl")
             .build(EmptyPage.class)
@@ -103,8 +108,7 @@ public final class TimelineRs extends BaseRs {
             .append(new JaxbBundle("name", this.timeline.name()))
             .append(
                 new JaxbBundle("events").add(
-                    new JaxbBundle.Group<Event>(
-                        this.timeline.events(new Time())) {
+                    new JaxbBundle.Group<Event>(events) {
                         @Override
                         public JaxbBundle bundle(final Event event) {
                             return TimelineRs.this.event(event);

@@ -108,7 +108,7 @@ public final class Resonant implements Batch {
         if (code == 0) {
             this.timeline.submit(
                 this.success.print(args),
-                Arrays.<Tag>asList(new Tag.Simple("success", Level.INFO)),
+                Arrays.<Tag>asList(new Tag.Simple("success", Level.FINE)),
                 new ArrayList<Product>(0)
             );
         } else {

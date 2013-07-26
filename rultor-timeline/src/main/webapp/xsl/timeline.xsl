@@ -37,6 +37,9 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <h1>
+            <xsl:value-of select="/page/name"/>
+        </h1>
         <div class="row-fluid">
             <div class="span5">
                 <xsl:choose>
@@ -99,6 +102,22 @@
     <xsl:template match="tag">
         <li>
             <span class="label">
+                <xsl:attribute name="class">
+                    <xsl:choose>
+                        <xsl:when test="level = 'FINE'">
+                            <xsl:text>label-success</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="level = 'INFO'">
+                            <xsl:text>label-info</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="level = 'WARNING'">
+                            <xsl:text>label-warning</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="level = 'SEVERE'">
+                            <xsl:text>label-important</xsl:text>
+                        </xsl:when>
+                    </xsl:choose>
+                </xsl:attribute>
                 <xsl:value-of select="label"/>
             </span>
         </li>
