@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.immutable.ArrayMap;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -47,6 +48,7 @@ import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.Validate;
@@ -187,26 +189,17 @@ public final class MongoTimeline implements Timeline {
                 "$match",
                 new BasicDBObject(MongoEvent.ATTR_TIMELINE, this.name())
             ),
+            new BasicDBObject("$sort", new BasicDBObject("time", -1)),
             new BasicDBObject(
                 "$group",
                 new BasicDBObject()
                     // @checkstyle MultipleStringLiterals (1 line)
                     .append("_id", "$products.name")
                     .append(
-                        MongoEvent.ATTR_TIME,
-                        new BasicDBObject("$max", "$time")
-                    )
-                    .append(
-                        MongoProduct.ATTR_NAME,
-                        // @checkstyle MultipleStringLiterals (1 line)
-                        new BasicDBObject("$first", "$products.name")
-                    )
-                    .append(
                         MongoProduct.ATTR_MARKDOWN,
                         new BasicDBObject("$first", "$products.markdown")
                     )
-            ),
-            new BasicDBObject("$sort", new BasicDBObject("time", -1))
+            )
         ).results();
         // @checkstyle AnonInnerLength (50 lines)
         return new Iterable<Product>() {
@@ -219,8 +212,21 @@ public final class MongoTimeline implements Timeline {
                         return iter.hasNext();
                     }
                     @Override
+                    @SuppressWarnings("PMD.UseConcurrentHashMap")
                     public Product next() {
-                        return new MongoProduct(iter.next().toMap());
+                        final Map<String, Object> map = iter.next().toMap();
+                        map.put(
+                            MongoProduct.ATTR_NAME,
+                            BasicDBList.class.cast(map.get("_id"))
+                                .get(Integer.toString(0))
+                        );
+                        map.put(
+                            MongoProduct.ATTR_MARKDOWN,
+                            BasicDBList.class.cast(
+                                map.get(MongoProduct.ATTR_MARKDOWN)
+                            ).get(Integer.toString(0))
+                        );
+                        return new MongoProduct(map);
                     }
                     @Override
                     public void remove() {

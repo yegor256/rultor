@@ -52,6 +52,7 @@ import org.junit.Test;
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
+@SuppressWarnings({ "unchecked", "PMD.TooManyMethods" })
 public final class MongoTimelinesITCase {
 
     /**
@@ -149,7 +150,6 @@ public final class MongoTimelinesITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    @SuppressWarnings("unchecked")
     public void savesAndLoadsTags() throws Exception {
         final Timelines timelines = this.timelines();
         final URN owner = new URN("urn:test:980");
@@ -186,7 +186,6 @@ public final class MongoTimelinesITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    @SuppressWarnings("unchecked")
     public void savesAndLoadsProducts() throws Exception {
         final Timelines timelines = this.timelines();
         final URN owner = new URN("urn:test:765");
@@ -216,9 +215,47 @@ public final class MongoTimelinesITCase {
                 }
             )
         );
+    }
+
+    /**
+     * MongoTimelines can handle aggregated products.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void savesAndLoadsAggregatedProducts() throws Exception {
+        final Timelines timelines = this.timelines();
+        final Timeline timeline = timelines.create(
+            new URN("urn:test:7699"), RandomStringUtils.randomAlphabetic(Tv.TEN)
+        );
+        final String name = "my-product";
+        final String first = "first value";
+        final String second = "second value";
+        timeline.post(
+            "first calculation of a product",
+            new ArrayList<Tag>(0),
+            Arrays.<Product>asList(new Product.Simple(name, first))
+        );
+        timeline.post(
+            "second calculation of a product",
+            new ArrayList<Tag>(0),
+            Arrays.<Product>asList(new Product.Simple(name, second))
+        );
         MatcherAssert.assertThat(
             timeline.products(),
-            Matchers.<Product>iterableWithSize(2)
+            Matchers.<Product>iterableWithSize(1)
+        );
+        MatcherAssert.assertThat(
+            timeline.products(),
+            Matchers.hasItem(
+                new CustomMatcher<Product>("valid result of aggregation") {
+                    @Override
+                    public boolean matches(final Object obj) {
+                        final Product product = Product.class.cast(obj);
+                        return product.name().equals(name)
+                            && product.markdown().equals(second);
+                    }
+                }
+            )
         );
     }
 

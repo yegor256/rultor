@@ -39,6 +39,7 @@ import com.rultor.timeline.Tag;
 import com.rultor.tools.Time;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -126,7 +127,7 @@ public final class MongoEvent implements Event {
         for (Object object : objects) {
             tags.add(new MongoTag(DBObject.class.cast(object).toMap()));
         }
-        return tags;
+        return Collections.unmodifiableCollection(tags);
     }
 
     /**
@@ -143,7 +144,7 @@ public final class MongoEvent implements Event {
         for (Object object : objects) {
             products.add(new MongoProduct(DBObject.class.cast(object).toMap()));
         }
-        return products;
+        return Collections.unmodifiableCollection(products);
     }
 
 }
