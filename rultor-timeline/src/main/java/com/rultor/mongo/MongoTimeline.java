@@ -187,7 +187,12 @@ public final class MongoTimeline implements Timeline {
         final Iterable<DBObject> objects = MongoTimeline.this.ecol().aggregate(
             new BasicDBObject(
                 "$match",
-                new BasicDBObject(MongoEvent.ATTR_TIMELINE, this.name())
+                new BasicDBObject()
+                    .append(MongoEvent.ATTR_TIMELINE, this.name())
+                    .append(
+                        MongoEvent.ATTR_PRODS,
+                        new BasicDBObject("$gt", new BasicDBObject())
+                    )
             ),
             new BasicDBObject("$sort", new BasicDBObject("time", -1)),
             new BasicDBObject(

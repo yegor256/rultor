@@ -240,6 +240,11 @@ public final class MongoTimelinesITCase {
             new ArrayList<Tag>(0),
             Arrays.<Product>asList(new Product.Simple(name, second))
         );
+        timeline.post(
+            "event without a product",
+            new ArrayList<Tag>(0),
+            new ArrayList<Product>(0)
+        );
         MatcherAssert.assertThat(
             timeline.products(),
             Matchers.<Product>iterableWithSize(1)
