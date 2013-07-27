@@ -66,6 +66,4 @@ curl --silent https://raw.github.com/rultor/rultor/master/rultor-conveyer/src/ma
 mvn test --quiet --update-snapshots \
     "-Dsqs-url=${SQS_URL}" "-Ddynamo-prefix=${DYNAMO_PREFIX}"
 
-if [ $? -eq 0 ]; then
-    ec2-terminate-instances "${INSTANCE}"
-fi
+ec2-terminate-instances "${INSTANCE}"
