@@ -92,6 +92,7 @@
                     <xsl:value-of select="time"/>
                 </xsl:attribute>
                 <xsl:value-of select="when"/>
+                <xsl:text> </xsl:text>
                 <xsl:value-of disable-output-escaping="yes" select="html"/>
             </div>
             <xsl:if test="products/product">

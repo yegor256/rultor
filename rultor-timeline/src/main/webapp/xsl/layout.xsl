@@ -220,6 +220,9 @@
         </li>
     </xsl:template>
     <xsl:template name="login">
+        <li class="hidden-phone">
+            <xsl:text>login: </xsl:text>
+        </li>
         <li>
             <a class="btn">
                 <xsl:attribute name="href">
