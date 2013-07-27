@@ -84,8 +84,8 @@ public final class Extended implements Billboard {
     @Override
     public String toString() {
         return String.format(
-            "%s with Velocity layout",
-            this.board
+            "%s with `%s` as %s",
+            this.board, this.argument, this.vext
         );
     }
 
