@@ -91,14 +91,18 @@
                                 </a>
                             </li>
                             <xsl:apply-templates select="version"/>
-                            <xsl:apply-templates select="identity"/>
+                            <xsl:choose>
+                                <xsl:when test="/page/identity">
+                                    <xsl:apply-templates select="identity"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:call-template name="login"/>
+                                </xsl:otherwise>
+                            </xsl:choose>
                         </ul>
                     </nav>
                     <xsl:apply-templates select="flash"/>
                     <article>
-                        <xsl:if test="not(/page/identity)">
-                            <xsl:call-template name="login"/>
-                        </xsl:if>
                         <xsl:call-template name="content"/>
                     </article>
                 </div>
@@ -216,37 +220,29 @@
         </li>
     </xsl:template>
     <xsl:template name="login">
-        <p>
-            <xsl:text>To start, login using one of your accounts at: </xsl:text>
-        </p>
-        <ul class="inline btn-group">
-            <li>
-                <a class="btn">
-                    <xsl:attribute name="href">
-                        <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
-                    </xsl:attribute>
-                    <i class="icon-facebook-sign"><xsl:comment>facebook sign</xsl:comment></i>
-                    <span class="hidden-phone"><xsl:text> Facebook</xsl:text></span>
-                </a>
-            </li>
-            <li>
-                <a class="btn">
-                    <xsl:attribute name="href">
-                        <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
-                    </xsl:attribute>
-                    <i class="icon-google-plus-sign"><xsl:comment>google plus sign</xsl:comment></i>
-                    <span class="hidden-phone"><xsl:text> Google</xsl:text></span>
-                </a>
-            </li>
-            <li>
-                <a class="btn">
-                    <xsl:attribute name="href">
-                        <xsl:value-of select="/page/links/link[@rel='auth-github']/@href"/>
-                    </xsl:attribute>
-                    <i class="icon-github-sign"><xsl:comment>github sign</xsl:comment></i>
-                    <span class="hidden-phone"><xsl:text> Github</xsl:text></span>
-                </a>
-            </li>
-        </ul>
+        <li>
+            <a class="btn">
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
+                </xsl:attribute>
+                <i class="icon-facebook-sign"><xsl:comment>facebook sign</xsl:comment></i>
+            </a>
+        </li>
+        <li>
+            <a class="btn">
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
+                </xsl:attribute>
+                <i class="icon-google-plus-sign"><xsl:comment>google plus sign</xsl:comment></i>
+            </a>
+        </li>
+        <li>
+            <a class="btn">
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='auth-github']/@href"/>
+                </xsl:attribute>
+                <i class="icon-github-sign"><xsl:comment>github sign</xsl:comment></i>
+            </a>
+        </li>
     </xsl:template>
 </xsl:stylesheet>

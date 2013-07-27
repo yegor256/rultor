@@ -35,37 +35,47 @@
         <title>
             <xsl:value-of select="/page/name"/>
         </title>
+        <style><![CDATA[
+            .snapshot {
+                float: right;
+                width: 15em;
+            }
+            @media (max-width: 30em) {
+                .snapshot {
+                    float: none;
+                    width: 100%;
+                }
+            }
+        ]]></style>
     </xsl:template>
     <xsl:template name="content">
-        <h1>
+        <h1 class="hidden-phone">
             <xsl:value-of select="/page/name"/>
         </h1>
-        <div class="row-fluid">
-            <div class="span5">
-                <xsl:choose>
-                    <xsl:when test="/page/events/event">
-                        <ul class="nav spacious">
-                            <xsl:apply-templates select="/page/events/event"/>
-                        </ul>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <p>
-                            <xsl:text>No events at the moment, read </xsl:text>
-                            <a href="http://blog.rultor.com">
-                                <xsl:text>why</xsl:text>
-                            </a>
-                            <xsl:text>...</xsl:text>
-                        </p>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </div>
+        <div style="max-width: 50em;">
             <xsl:if test="/page/products/product">
-                <aside class="span2 well">
+                <aside class="snapshot well span2">
                     <ul class="unstyled">
                         <xsl:apply-templates select="/page/products/product"/>
                     </ul>
                 </aside>
             </xsl:if>
+            <xsl:choose>
+                <xsl:when test="/page/events/event">
+                    <ul class="nav spacious">
+                        <xsl:apply-templates select="/page/events/event"/>
+                    </ul>
+                </xsl:when>
+                <xsl:otherwise>
+                    <p>
+                        <xsl:text>No events at the moment, read </xsl:text>
+                        <a href="http://blog.rultor.com">
+                            <xsl:text>why</xsl:text>
+                        </a>
+                        <xsl:text>...</xsl:text>
+                    </p>
+                </xsl:otherwise>
+            </xsl:choose>
         </div>
     </xsl:template>
     <xsl:template match="event">
@@ -78,17 +88,11 @@
                 </div>
             </xsl:if>
             <div>
-                <ul class="inline btn-group-vertical">
-                    <li>
-                        <xsl:attribute name="title">
-                            <xsl:value-of select="time"/>
-                        </xsl:attribute>
-                        <xsl:value-of select="when"/>
-                    </li>
-                    <li>
-                        <xsl:value-of disable-output-escaping="yes" select="html"/>
-                    </li>
-                </ul>
+                <xsl:attribute name="title">
+                    <xsl:value-of select="time"/>
+                </xsl:attribute>
+                <xsl:value-of select="when"/>
+                <xsl:value-of disable-output-escaping="yes" select="html"/>
             </div>
             <xsl:if test="products/product">
                 <div>
