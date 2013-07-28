@@ -54,7 +54,7 @@ import org.apache.commons.io.IOUtils;
 @Immutable
 @EqualsAndHashCode(of = { "origin", "map" })
 @Loggable(Loggable.DEBUG)
-public final class BashPrerequisites implements Shells {
+public final class Prerequisites implements Shells {
 
     /**
      * Shells.
@@ -71,7 +71,7 @@ public final class BashPrerequisites implements Shells {
      * @param shls Shells
      * @param pres Prerequisites
      */
-    public BashPrerequisites(
+    public Prerequisites(
         @NotNull(message = "shells can't be NULL") final Shells shls,
         @NotNull(message = "prerequisites can't be NULL")
         final Map<String, Object> pres) {
@@ -88,7 +88,7 @@ public final class BashPrerequisites implements Shells {
         for (Map.Entry<String, Object> pair : this.map.entrySet()) {
             shell.exec(
                 String.format("cat > %s", pair.getKey()),
-                BashPrerequisites.toInputStream(pair.getValue()),
+                Prerequisites.toInputStream(pair.getValue()),
                 Logger.stream(Level.INFO, this),
                 Logger.stream(Level.WARNING, this)
             );
