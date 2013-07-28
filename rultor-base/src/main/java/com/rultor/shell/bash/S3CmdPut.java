@@ -127,19 +127,25 @@ public final class S3CmdPut implements Relic {
     public Product discover(final Shell shell) throws IOException {
         final String dir = FilenameUtils.getFullPathNoEndSeparator(this.path);
         final String mask = FilenameUtils.getName(this.path);
-        final String head = String.format(
-            "s3://%s.s3.amazonaws.com/%s${f}", this.bucket, this.prefix
+        final String url = String.format(
+            "http://%s.s3.amazonaws.com/%s", this.bucket, this.prefix
         );
         final int files = new Terminal(shell).exec(
             new StringBuilder()
-                .append("cat > ~/.s3cfg")
+                .append("CONFIG=`mktemp /tmp/s3cmdput-XXXX`")
+                .append(" && cat > $CONFIG")
+                .append(" && HEAD=")
+                .append(
+                    Terminal.escape(
+                        String.format("s3://%s/%s", this.bucket, this.prefix)
+                    )
+                )
                 .append(" && cd ")
                 .append(Terminal.escape(dir))
                 .append(" && for f in `find ")
-                .append(Terminal.escape(mask))
-                .append(" -type f`; do s3cmd --no-progress put")
-                .append(Terminal.escape(String.format("%s${f}", head)))
-                .append(" > /dev/null; echo $f; done")
+                .append(mask)
+                // @checkstyle LineLength (1 line)
+                .append(" -type f`; do s3cmd --config=$CONFIG put $f \"$HEAD$f\" > /dev/null; echo $f; done")
                 .toString(),
             new StringBuilder()
                 .append("[default]\n")
@@ -149,9 +155,9 @@ public final class S3CmdPut implements Relic {
         ).split("\n").length;
         final String markdown;
         if (mask.contains("*")) {
-            markdown = String.format("[%d files](%sindex.html)", files, head);
+            markdown = String.format("[%d files](%sindex.html)", files, url);
         } else {
-            markdown = String.format("[%s](%s%1$s)", mask, head);
+            markdown = String.format("[%s](%s%1$s)", mask, url);
         }
         return new Product.Simple(this.name, markdown);
     }

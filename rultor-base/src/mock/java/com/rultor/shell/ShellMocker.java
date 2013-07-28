@@ -30,6 +30,7 @@
 package com.rultor.shell;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,6 +65,7 @@ public final class ShellMocker {
         public int exec(final String command, final InputStream stdin,
             final OutputStream stdout, final OutputStream stderr)
             throws IOException {
+            Logger.info(this, "$ %s", command);
             final Process process = new ProcessBuilder()
                 .command("bash", "-c", command)
                 .directory(new File(this.dir))

@@ -38,6 +38,7 @@ import com.amazonaws.services.ec2.model.Tag;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
+import com.jcabi.aspects.Tv;
 import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
 import com.rultor.env.Environments;
@@ -46,6 +47,7 @@ import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
@@ -199,7 +201,7 @@ public final class EC2 implements Environments {
      * @param instance Instance running (maybe already)
      * @return The same instance
      */
-    @RetryOnFailure
+    @RetryOnFailure(delay = Tv.TWENTY, unit = TimeUnit.SECONDS)
     private Instance wrap(final AmazonEC2 aws, final Instance instance) {
         aws.createTags(
             new CreateTagsRequest()
