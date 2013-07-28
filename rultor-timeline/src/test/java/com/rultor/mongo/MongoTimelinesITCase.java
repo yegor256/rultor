@@ -155,8 +155,8 @@ public final class MongoTimelinesITCase {
         final URN owner = new URN("urn:test:980");
         final String name = RandomStringUtils.randomAlphabetic(Tv.TEN);
         final Timeline timeline = timelines.create(owner, name);
-        final Tag good = new Tag.Simple("good \u20ac", Level.INFO);
-        final Tag bad = new Tag.Simple("bad \u20ac", Level.SEVERE);
+        final Tag good = new Tag.Simple("good-euro", Level.INFO);
+        final Tag bad = new Tag.Simple("bad-euro", Level.SEVERE);
         timeline.post(
             "hi there, world! \u20ac",
             Arrays.asList(good, bad),
@@ -245,9 +245,14 @@ public final class MongoTimelinesITCase {
             new ArrayList<Tag>(0),
             new ArrayList<Product>(0)
         );
+        timeline.post(
+            "event with a different product",
+            new ArrayList<Tag>(0),
+            Arrays.<Product>asList(new Product.Simple("something", ""))
+        );
         MatcherAssert.assertThat(
             timeline.products(),
-            Matchers.<Product>iterableWithSize(1)
+            Matchers.<Product>iterableWithSize(2)
         );
         MatcherAssert.assertThat(
             timeline.products(),
