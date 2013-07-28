@@ -176,9 +176,6 @@
     </xsl:template>
     <xsl:template match="identity">
         <li class="hidden-phone hidden-tablet">
-            <code><xsl:value-of select="urn"/></code>
-        </li>
-        <li class="hidden-phone hidden-tablet">
             <img style="width: 25px; height: 25px;" class="img-rounded">
                 <xsl:attribute name="src">
                     <xsl:value-of select="photo"/>
@@ -189,6 +186,9 @@
             </img>
         </li>
         <li>
+            <xsl:attribute name="title">
+                <xsl:value-of select="urn"/>
+            </xsl:attribute>
             <xsl:value-of select="name"/>
         </li>
         <li>
