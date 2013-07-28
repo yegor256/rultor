@@ -38,11 +38,18 @@ import com.rultor.timeline.Timeline;
 import com.rultor.tools.Vext;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.CharEncoding;
 
 /**
  * Batch that resonates to a {@link Timeline}.
@@ -55,6 +62,13 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = { "origin", "timeline", "success", "failure" })
 @Loggable(Loggable.DEBUG)
 public final class Resonant implements Batch {
+
+    /**
+     * Pattern we're expecting in output stream.
+     */
+    private static final Pattern LINE = Pattern.compile(
+        ".*RULTOR-PRODUCT(?:\\s([A-Za-z0-9=/\\+]+)){2}"
+    );
 
     /**
      * Original batch.
@@ -84,7 +98,6 @@ public final class Resonant implements Batch {
      * @param bad Message on failure
      * @checkstyle ParameterNumber (8 lines)
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Resonant(
         @NotNull(message = "batch can't be NULL") final Batch batch,
         @NotNull(message = "script can't be NULL") final Timeline tmln,
@@ -104,22 +117,55 @@ public final class Resonant implements Batch {
     public int exec(final Map<String, Object> args, final OutputStream output)
         throws IOException {
         final long start = System.currentTimeMillis();
-        final int code = this.origin.exec(args, output);
-        final Product elapsed = new Product.Simple(
-            "elapsed time",
-            Logger.format("%[ms]s", System.currentTimeMillis() - start)
+        final Collection<Product> products =
+            new CopyOnWriteArrayList<Product>();
+        final StringBuffer line = new StringBuffer();
+        final int code = this.origin.exec(
+            args,
+            new OutputStream() {
+                @Override
+                public void write(final int chr) throws IOException {
+                    output.write(chr);
+                    line.append((char) chr);
+                    if (chr == '\n') {
+                        final Matcher matcher =
+                            Resonant.LINE.matcher(line.toString().trim());
+                        if (matcher.matches()) {
+                            products.add(
+                                new Product.Simple(
+                                    new String(
+                                        Base64.decodeBase64(matcher.group(1)),
+                                        CharEncoding.UTF_8
+                                    ),
+                                    new String(
+                                        Base64.decodeBase64(matcher.group(2)),
+                                        CharEncoding.UTF_8
+                                    )
+                                )
+                            );
+                        }
+                        line.setLength(0);
+                    }
+                }
+            }
+        );
+        products.add(
+            new Product.Simple(
+                "elapsed time",
+                Logger.format("%[ms]s", System.currentTimeMillis() - start)
+            )
         );
         if (code == 0) {
             this.timeline.submit(
                 this.success.print(args),
                 Arrays.<Tag>asList(new Tag.Simple("success", Level.FINE)),
-                Arrays.asList(elapsed)
+                products
             );
         } else {
             this.timeline.submit(
                 this.failure.print(args),
                 Arrays.<Tag>asList(new Tag.Simple("failure", Level.SEVERE)),
-                Arrays.asList(elapsed)
+                products
             );
         }
         return code;
@@ -134,6 +180,25 @@ public final class Resonant implements Batch {
             "%s resonated to %s",
             this.origin,
             this.timeline
+        );
+    }
+
+    /**
+     * Encode product into log line.
+     * @param product Product to encode
+     * @return Line to log
+     * @throws UnsupportedEncodingException If can't encode
+     */
+    public static String encode(final Product product)
+        throws UnsupportedEncodingException {
+        return String.format(
+            "RULTOR-PRODUCT %s %s",
+            Base64.encodeBase64String(
+                product.name().getBytes(CharEncoding.UTF_8)
+            ),
+            Base64.encodeBase64String(
+                product.markdown().getBytes(CharEncoding.UTF_8)
+            )
         );
     }
 

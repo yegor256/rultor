@@ -27,20 +27,20 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.shell;
+package com.rultor.shell.bash;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.immutable.ArrayMap;
 import com.jcabi.log.Logger;
+import com.rultor.shell.Batch;
+import com.rultor.shell.Shell;
+import com.rultor.shell.Shells;
 import com.rultor.spi.Signal;
 import com.rultor.tools.Vext;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -56,7 +56,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "shells", "script", "prerequisites" })
+@EqualsAndHashCode(of = { "shells", "script" })
 @Loggable(Loggable.DEBUG)
 public final class Bash implements Batch {
 
@@ -71,46 +71,24 @@ public final class Bash implements Batch {
     private final transient Vext script;
 
     /**
-     * Prerequisites.
-     */
-    private final transient ArrayMap<String, Object> prerequisites;
-
-    /**
      * Public ctor.
      * @param shls Shells
      * @param scrt Script to run there, Apache Velocity template
      */
-    public Bash(final Shells shls, final String scrt) {
-        this(shls, scrt, new ConcurrentHashMap<String, Object>(0));
-    }
-
-    /**
-     * Public ctor.
-     * @param shls Shells
-     * @param scrt Script to run there, Apache Velocity template
-     * @param map Prerequisites
-     */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Bash(
         @NotNull(message = "shells can't be NULL") final Shells shls,
-        @NotNull(message = "script can't be NULL") final String scrt,
-        @NotNull(message = "prerequisites can't be NULL")
-        final Map<String, Object> map) {
+        @NotNull(message = "script can't be NULL") final String scrt) {
         this.shells = shls;
         this.script = new Vext(scrt);
-        this.prerequisites = new ArrayMap<String, Object>(map);
     }
 
     /**
      * Public ctor.
      * @param shls Shells
      * @param lines Script lines
-     * @param map Prerequisites
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public Bash(final Shells shls, final Collection<String> lines,
-        final Map<String, Object> map) {
-        this(shls, StringUtils.join(lines, " && "), map);
+    public Bash(final Shells shls, final Collection<String> lines) {
+        this(shls, StringUtils.join(lines, " && "));
     }
 
     /**
@@ -127,15 +105,6 @@ public final class Bash implements Batch {
         final long start = System.currentTimeMillis();
         final int code;
         try {
-            for (Map.Entry<String, Object> pair
-                : this.prerequisites.entrySet()) {
-                shell.exec(
-                    String.format("cat > %s", pair.getKey()),
-                    Bash.toInputStream(pair.getValue()),
-                    Logger.stream(Level.INFO, this),
-                    Logger.stream(Level.WARNING, this)
-                );
-            }
             code = shell.exec(
                 this.script.print(args),
                 IOUtils.toInputStream(""),
@@ -163,21 +132,6 @@ public final class Bash implements Batch {
             this.script,
             this.shells
         );
-    }
-
-    /**
-     * Convert it to input stream.
-     * @param object Object
-     * @return Input stream
-     */
-    private static InputStream toInputStream(final Object object) {
-        final InputStream stream;
-        if (object instanceof InputStream) {
-            stream = InputStream.class.cast(object);
-        } else {
-            stream = IOUtils.toInputStream(object.toString());
-        }
-        return stream;
     }
 
 }
