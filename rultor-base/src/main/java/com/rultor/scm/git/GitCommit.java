@@ -96,11 +96,7 @@ final class GitCommit implements Commit {
      */
     @Override
     public String toString() {
-        return String.format(
-            "%s/%s/%s",
-            this.hash.substring(0, Tv.SEVEN),
-            this.who, this.when
-        );
+        return this.hash.substring(0, Tv.SEVEN);
     }
 
     /**
