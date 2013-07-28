@@ -31,7 +31,6 @@ package com.rultor.timeline;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.util.Collection;
@@ -79,11 +78,12 @@ public final class Failsafe implements Timeline {
      * {@inheritDoc}
      */
     @Override
-    @RetryOnFailure
+    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public void submit(final String text, final Collection<Tag> tags,
         final Collection<Product> products) throws IOException {
         try {
             this.origin.submit(text, tags, products);
+        // @checkstyle IllegalCatch (1 line)
         } catch (Throwable ex) {
             Logger.warn(this, "failed to submit: %[exception]s", ex);
         }

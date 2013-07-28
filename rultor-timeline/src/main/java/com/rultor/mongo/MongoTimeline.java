@@ -265,8 +265,8 @@ public final class MongoTimeline implements Timeline {
         int idx = 0;
         for (Tag tag : tags) {
             Validate.isTrue(
-                tag.label().length() <= Tv.FORTY,
-                "tag label '%s' is too long, should be less than 40",
+                tag.label().matches("[a-z\\-]{2,40}"),
+                "tag label '%s' doesn't match '[a-z\\-]{2,40}'",
                 tag.label()
             );
             objects[idx] = new BasicDBObject()
