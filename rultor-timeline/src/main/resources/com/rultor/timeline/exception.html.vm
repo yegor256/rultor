@@ -10,7 +10,7 @@
             <nav class="head">
                 <ul class="inline">
                     <li>
-                        <a class="logo" href="//www.rultor.com">R</a>
+                        <a class="logo" style="color:#46a546;" href="//timeline.rultor.com">R</a>
                     </li>
                     <li>
                         <code>${buildNumber}</code>
