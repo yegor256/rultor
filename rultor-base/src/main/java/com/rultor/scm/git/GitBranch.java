@@ -31,10 +31,10 @@ package com.rultor.scm.git;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
 import com.rultor.shell.Terminal;
-import com.rultor.spi.Signal;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -109,11 +109,7 @@ public final class GitBranch implements Branch {
                 .append(" && git log --pretty=format:'%H %ae %cd %s' --date=iso8601")
                 .toString()
         );
-        Signal.log(
-            Signal.Mnemo.SUCCESS,
-            "Git log in branch `%s` retrieved",
-            this.label
-        );
+        Logger.info(this, "Git log in branch `%s` retrieved", this.label);
         final Iterable<String> lines = Arrays.asList(stdout.split("\n"));
         return new Iterable<Commit>() {
             @Override
