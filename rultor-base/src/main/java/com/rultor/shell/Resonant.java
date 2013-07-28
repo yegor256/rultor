@@ -67,7 +67,7 @@ public final class Resonant implements Batch {
      * Pattern we're expecting in output stream.
      */
     private static final Pattern LINE = Pattern.compile(
-        ".*RULTOR-PRODUCT(?:\\s([A-Za-z0-9=/\\+]+)){2}"
+        ".*RULTOR-PRODUCT\\s+([A-Za-z0-9=/\\+]+)\\s+([A-Za-z0-9=/\\+]+)"
     );
 
     /**
