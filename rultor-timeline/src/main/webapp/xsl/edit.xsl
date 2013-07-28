@@ -52,7 +52,7 @@
                     </code>
                 </label>
                 <div class="input-append">
-                    <input name="key" id="key" type="text" disabled="disabled" class="input-block-level input-large uneditable-input">
+                    <input name="key" id="key" type="text" class="input-block-level input-large uneditable-input">
                         <xsl:attribute name="value">
                             <xsl:value-of select="key"/>
                         </xsl:attribute>
