@@ -34,7 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.log.Logger;
 import com.rultor.shell.Relic;
-import com.rultor.tools.Time;
+import com.rultor.spi.Work;
 import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,10 +54,15 @@ import org.apache.commons.lang3.Validate;
 @Immutable
 @EqualsAndHashCode(
     callSuper = false,
-    of = { "names", "bucket", "prefix", "key", "secret" }
+    of = { "work", "names", "bucket", "prefix", "key", "secret" }
 )
 @Loggable(Loggable.DEBUG)
 public final class S3CmdRelics extends AbstractCollection<Relic> {
+
+    /**
+     * Work we're in.
+     */
+    private final transient Work work;
 
     /**
      * Name/path map.
@@ -86,6 +91,7 @@ public final class S3CmdRelics extends AbstractCollection<Relic> {
 
     /**
      * Public ctor.
+     * @param wrk Work we're in
      * @param map Map of names/paths
      * @param bkt Bucket name
      * @param pfx Prefix in S3 bucket
@@ -94,15 +100,20 @@ public final class S3CmdRelics extends AbstractCollection<Relic> {
      * @checkstyle ParameterNumber (8 lines)
      */
     public S3CmdRelics(
+        @NotNull(message = "map can't be NULL") final Work wrk,
         @NotNull(message = "map can't be NULL") final Map<String, String> map,
         @NotNull(message = "bucket can't be NULL") final String bkt,
         @NotNull(message = "prefix can't be NULL") final String pfx,
         @NotNull(message = "key can't be NULL") final String akey,
         @NotNull(message = "secret can't be NULL") final String scrt) {
         super();
+        this.work = wrk;
         this.names = new ArrayMap<String, String>(map);
         this.bucket = bkt;
-        Validate.isTrue(pfx.endsWith("/"), "prefix must end with fwd slash");
+        Validate.isTrue(
+            pfx.isEmpty() || pfx.endsWith("/"),
+            "prefix must be empty or must end with forward slash"
+        );
         this.prefix = pfx;
         this.key = akey;
         this.secret = scrt;
@@ -133,7 +144,9 @@ public final class S3CmdRelics extends AbstractCollection<Relic> {
                     entry.getKey(), entry.getValue(),
                     this.bucket,
                     String.format(
-                        "%s%s/%s/", this.prefix, entry.getKey(), new Time()
+                        "%s%s/%s/%s/%s/", this.prefix,
+                        this.work.owner(), this.work.unit(),
+                        entry.getKey(), this.work.started()
                     ),
                     this.key, this.secret
                 )
