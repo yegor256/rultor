@@ -122,6 +122,7 @@ public final class Resonant implements Batch {
         final StringBuffer line = new StringBuffer();
         final int code = this.origin.exec(
             args,
+            // @checkstyle AnonInnerLength (50 lines)
             new OutputStream() {
                 @Override
                 public void write(final int chr) throws IOException {

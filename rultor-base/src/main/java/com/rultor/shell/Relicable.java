@@ -42,7 +42,7 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
- * Relics after shell execution.
+ * Relicable after shell execution.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -51,7 +51,7 @@ import lombok.EqualsAndHashCode;
 @Immutable
 @EqualsAndHashCode(of = { "origin", "all" })
 @Loggable(Loggable.DEBUG)
-public final class Relics implements Shells {
+public final class Relicable implements Shells {
 
     /**
      * Original shells.
@@ -59,16 +59,16 @@ public final class Relics implements Shells {
     private final transient Shells origin;
 
     /**
-     * Relics to collect.
+     * Relicable to collect.
      */
     private final transient Array<Relic> all;
 
     /**
      * Public ctor.
      * @param shells Original shells
-     * @param rlcs Relics to collect
+     * @param rlcs Relicable to collect
      */
-    public Relics(
+    public Relicable(
         @NotNull(message = "shells can't be NULL") final Shells shells,
         @NotNull(message = "relics can't be NULL")
         final Collection<Relic> rlcs) {
@@ -96,12 +96,13 @@ public final class Relics implements Shells {
         final Shell shell = this.origin.acquire();
         return new Shell() {
             @Override
+            // @checkstyle ParameterNumber (2 lines)
             public int exec(final String command, final InputStream stdin,
                 final OutputStream stdout, final OutputStream stderr)
                 throws IOException {
                 final int code = shell.exec(command, stdin, stdout, stderr);
                 final PrintWriter writer = new PrintWriter(stdout, true);
-                for (Relic relic : Relics.this.all) {
+                for (Relic relic : Relicable.this.all) {
                     writer.println(Resonant.encode(relic.discover(shell)));
                 }
                 writer.close();
