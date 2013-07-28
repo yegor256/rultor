@@ -94,6 +94,7 @@ public final class Relicable implements Shells {
     @Override
     public Shell acquire() throws IOException {
         final Shell shell = this.origin.acquire();
+        // @checkstyle AnonInnerLength (50 lines)
         return new Shell() {
             @Override
             // @checkstyle ParameterNumber (2 lines)
