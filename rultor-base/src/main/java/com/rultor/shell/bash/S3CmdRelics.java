@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.log.Logger;
 import com.rultor.shell.Relic;
+import com.rultor.tools.Time;
 import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -131,7 +132,9 @@ public final class S3CmdRelics extends AbstractCollection<Relic> {
                 new S3CmdPut(
                     entry.getKey(), entry.getValue(),
                     this.bucket,
-                    String.format("%s%s/", this.prefix, entry.getKey()),
+                    String.format(
+                        "%s%s/%s/", this.prefix, entry.getKey(), new Time()
+                    ),
                     this.key, this.secret
                 )
             );
