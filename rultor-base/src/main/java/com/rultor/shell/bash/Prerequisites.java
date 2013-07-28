@@ -94,8 +94,8 @@ public final class Prerequisites implements Shells {
             );
         }
         Signal.log(
-            Signal.Mnemo.SUCCESS, "%d bash prerequisite(s) uploaded",
-            this.map.size()
+            Signal.Mnemo.SUCCESS, "%d bash prerequisite(s) uploaded: %[list]s",
+            this.map.size(), this.map.keySet()
         );
         return shell;
     }
