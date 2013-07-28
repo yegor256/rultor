@@ -30,8 +30,11 @@
 package com.rultor.timeline;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import java.util.Collection;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Timeline permissions.
@@ -72,5 +75,41 @@ public interface Permissions {
      * @param masks URN masks
      */
     void friends(Collection<String> masks);
+
+    /**
+     * Control.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "perms")
+    @Loggable(Loggable.DEBUG)
+    final class Control {
+        /**
+         * Permissions to control.
+         */
+        private final transient Permissions perms;
+        /**
+         * Public ctor.
+         * @param prms Permissions
+         */
+        public Control(final Permissions prms) {
+            this.perms = prms;
+        }
+        /**
+         * Access allowed?
+         * @param urn URN to check
+         * @return TRUE if allowed
+         */
+        public boolean allowed(final URN urn) {
+            boolean allowed = false;
+            for (String mask : this.perms.friends()) {
+                if (urn.matches(mask)) {
+                    allowed = true;
+                    break;
+                }
+            }
+            return allowed;
+        }
+    }
 
 }

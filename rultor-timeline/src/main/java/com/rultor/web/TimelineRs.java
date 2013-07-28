@@ -32,9 +32,11 @@ package com.rultor.web;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.urn.URN;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.PageBuilder;
 import com.rultor.timeline.Event;
+import com.rultor.timeline.Permissions;
 import com.rultor.timeline.Product;
 import com.rultor.timeline.Tag;
 import com.rultor.timeline.Timeline;
@@ -70,6 +72,7 @@ import javax.ws.rs.core.Response;
  */
 @Path("/t/{timeline:[a-z]+}")
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class TimelineRs extends BaseRs {
 
     /**
@@ -89,6 +92,16 @@ public final class TimelineRs extends BaseRs {
         } catch (Timelines.TimelineNotFoundException ex) {
             throw new WebApplicationException(
                 ex, HttpURLConnection.HTTP_NOT_FOUND
+            );
+        }
+        final Permissions perm = this.timeline.permissions();
+        final URN self = this.auth().identity().urn();
+        if (!perm.owner().equals(self)
+            && !new Permissions.Control(perm).allowed(self)) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                "access denied",
+                Level.SEVERE
             );
         }
     }
