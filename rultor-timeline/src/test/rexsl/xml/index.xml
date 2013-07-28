@@ -30,11 +30,6 @@
  -->
 <?xml-stylesheet type='text/xsl' href='/xsl/index.xsl'?>
 <page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
-    <identity>
-        <urn>urn:facebook:1</urn>
-        <name>Jeff Lebowski</name>
-        <photo>http://images.sodahead.com/polls/002320349/200261278_The_Big_Lebowski___Jeff_Bridges_answer_9_xlarge.jpeg</photo>
-    </identity>
     <flash>
         <level>INFO</level>
         <message>This feature works just fine</message>

@@ -37,17 +37,19 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <form method="post" class="form-inline">
-            <xsl:attribute name="action">
-                <xsl:value-of select="/page/links/link[@rel='create']/@href"/>
-            </xsl:attribute>
-            <div class="input-append">
-                <input name="name" type="text" class="input-xlarge" />
-                <button type="submit" class="btn">
-                    <xsl:text>Create</xsl:text>
-                </button>
-            </div>
-        </form>
+        <xsl:if test="/page/links/link[@rel='create']">
+            <form method="post" class="form-inline">
+                <xsl:attribute name="action">
+                    <xsl:value-of select="/page/links/link[@rel='create']/@href"/>
+                </xsl:attribute>
+                <div class="input-append">
+                    <input name="name" type="text" class="input-xlarge" />
+                    <button type="submit" class="btn">
+                        <xsl:text>Create</xsl:text>
+                    </button>
+                </div>
+            </form>
+        </xsl:if>
         <xsl:choose>
             <xsl:when test="/page/timelines/timeline">
                 <ul class="nav spacious">

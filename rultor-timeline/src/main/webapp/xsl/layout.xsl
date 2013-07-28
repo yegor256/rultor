@@ -221,10 +221,10 @@
     </xsl:template>
     <xsl:template name="login">
         <li class="hidden-phone">
-            <xsl:text>login: </xsl:text>
+            <xsl:text>login with: </xsl:text>
         </li>
         <li>
-            <a class="btn">
+            <a style="font-size: 1.5em; vertical-align: middle;">
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
                 </xsl:attribute>
@@ -232,7 +232,7 @@
             </a>
         </li>
         <li>
-            <a class="btn">
+            <a style="font-size: 1.5em; vertical-align: middle;">
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
                 </xsl:attribute>
@@ -240,7 +240,7 @@
             </a>
         </li>
         <li>
-            <a class="btn">
+            <a style="font-size: 1.5em; vertical-align: middle;">
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-github']/@href"/>
                 </xsl:attribute>
