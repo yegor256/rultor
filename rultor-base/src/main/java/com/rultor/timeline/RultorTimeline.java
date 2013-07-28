@@ -100,10 +100,51 @@ public final class RultorTimeline implements Timeline {
     @RetryOnFailure
     public void submit(final String text, final Collection<Tag> tags,
         final Collection<Product> products) throws IOException {
-        final URI uri = UriBuilder.fromUri("http://timeline.rultor.com/t/")
-            .path(this.name)
-            .path("/post")
-            .build();
+        try {
+            this.post(
+                UriBuilder.fromUri("http://timeline.rultor.com/t/")
+                    .path(this.name)
+                    .path("/post")
+                    .build(),
+                this.json(text, tags, products)
+            );
+        } catch (AssertionError ex) {
+            throw new IOException(ex);
+        }
+    }
+
+    /**
+     * Post it.
+     * @param uri Destination URI
+     * @param json JSON to post
+     */
+    @RetryOnFailure
+    private void post(final URI uri, final String json) {
+        RestTester.start(uri)
+            .header("X-Rultor-Key", this.key)
+            .header(
+                HttpHeaders.USER_AGENT,
+                String.format(
+                    "%s %s/%s",
+                    this.getClass().getName(),
+                    Manifests.read("Rultor-Version"),
+                    Manifests.read("Rultor-Revision")
+                )
+            )
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+            .post("posting event", json)
+            .assertStatus(HttpURLConnection.HTTP_CREATED);
+    }
+
+    /**
+     * Make JSON.
+     * @param text Text
+     * @param tags Tags
+     * @param products Products
+     * @return JSON to be posted
+     */
+    private String json(final String text, final Collection<Tag> tags,
+        final Collection<Product> products) {
         final StringWriter output = new StringWriter();
         final JsonGenerator json = Json.createGenerator(output);
         json.writeStartObject().write("text", text).writeStartArray("tags");
@@ -121,22 +162,7 @@ public final class RultorTimeline implements Timeline {
                 .writeEnd();
         }
         json.writeEnd().writeEnd().close();
-        final String body = output.toString();
-        Logger.info(this, "#submit(): sending JSON '%s'", body);
-        RestTester.start(uri)
-            .header("X-Rultor-Key", this.key)
-            .header(
-                HttpHeaders.USER_AGENT,
-                String.format(
-                    "%s %s/%s",
-                    this.getClass().getName(),
-                    Manifests.read("Rultor-Version"),
-                    Manifests.read("Rultor-Revision")
-                )
-            )
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-            .post("posting event", body)
-            .assertStatus(HttpURLConnection.HTTP_CREATED);
+        return output.toString();
     }
 
 }

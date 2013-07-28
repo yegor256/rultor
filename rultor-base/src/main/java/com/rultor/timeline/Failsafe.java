@@ -27,44 +27,41 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.tools;
+package com.rultor.timeline;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.log.Logger;
-import java.io.StringWriter;
-import java.util.Map;
+import java.io.IOException;
+import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.Validate;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.context.Context;
-import org.apache.velocity.runtime.RuntimeConstants;
 
 /**
- * Velocity text.
+ * Doesn't fail no matter what happens inside.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = "template")
+@EqualsAndHashCode(of = "origin")
 @Loggable(Loggable.DEBUG)
-public final class Vext {
+public final class Failsafe implements Timeline {
 
     /**
-     * Template encapsulated.
+     * Original timeline.
      */
-    private final transient String template;
+    private final transient Timeline origin;
 
     /**
      * Public ctor.
-     * @param text Template to encapsulate
+     * @param timeline Original timeline
      */
-    public Vext(final String text) {
-        this.template = text;
+    public Failsafe(
+        @NotNull(message = "origin can't be NULL") final Timeline timeline) {
+        this.origin = timeline;
     }
 
     /**
@@ -72,37 +69,24 @@ public final class Vext {
      */
     @Override
     public String toString() {
-        return Logger.format("`%[text]s`", this.template);
+        return String.format(
+            "fail-safe %s",
+            this.origin
+        );
     }
 
     /**
-     * Print using these arguments.
-     * @param args Arguments
-     * @return Text printed
+     * {@inheritDoc}
      */
-    public String print(@NotNull(message = "args can't be NULL")
-        final Map<String, Object> args) {
-        final StringWriter writer = new StringWriter();
-        final Context context = new VelocityContext();
-        for (Map.Entry<String, Object> entry : args.entrySet()) {
-            context.put(entry.getKey(), entry.getValue());
+    @Override
+    @RetryOnFailure
+    public void submit(final String text, final Collection<Tag> tags,
+        final Collection<Product> products) throws IOException {
+        try {
+            this.origin.submit(text, tags, products);
+        } catch (Throwable ex) {
+            Logger.warn(this, "failed to submit: %[exception]s", ex);
         }
-        final VelocityEngine engine = new VelocityEngine();
-        engine.setProperty(
-            RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
-            "org.apache.velocity.runtime.log.Log4JLogChute"
-        );
-        engine.setProperty(
-            "runtime.log.logsystem.log4j.logger",
-            "org.apache.velocity"
-        );
-        engine.init();
-        final boolean success = engine.evaluate(
-            context, writer,
-            this.getClass().getName(), this.template
-        );
-        Validate.isTrue(success, "failed to compile VTL");
-        return writer.toString();
     }
 
 }
