@@ -112,6 +112,10 @@ public final class Relicable implements Shells {
             public void close() throws IOException {
                 shell.close();
             }
+            @Override
+            public String toString() {
+                return shell.toString();
+            }
         };
     }
 
