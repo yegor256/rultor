@@ -44,6 +44,7 @@ import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
 import com.rultor.tools.Markdown;
 import com.rultor.tools.Time;
+import java.net.URI;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -168,6 +169,10 @@ final class JaxbFace {
             }
             @Override
             public void charge(final String details, final Dollars amount) {
+                throw new UnsupportedOperationException();
+            }
+            @Override
+            public URI stdout() {
                 throw new UnsupportedOperationException();
             }
         };

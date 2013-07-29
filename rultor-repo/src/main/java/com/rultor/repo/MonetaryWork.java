@@ -39,6 +39,7 @@ import com.rultor.spi.Users;
 import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
+import java.net.URI;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.Validate;
 
@@ -157,5 +158,13 @@ final class MonetaryWork implements Work {
                 this.name
             )
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public URI stdout() {
+        return this.origin.stdout();
     }
 }

@@ -33,26 +33,30 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
+import com.jcabi.urn.URN;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Spec;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
+import com.rultor.tools.Dollars;
+import com.rultor.tools.Time;
 import java.io.Closeable;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Random;
-import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -96,9 +100,9 @@ public final class SimpleConveyer implements Closeable {
     private final transient Users users;
 
     /**
-     * Works currently processing.
+     * Streams.
      */
-    private final transient Set<Work> works = new CopyOnWriteArraySet<Work>();
+    private final transient Streams streams;
 
     /**
      * Consumer and executer of new specs from Queue.
@@ -135,6 +139,7 @@ public final class SimpleConveyer implements Closeable {
         this.queue = que;
         this.repo = rep;
         this.users = usrs;
+        this.streams = new Log4jStreams();
     }
 
     /**
@@ -180,10 +185,7 @@ public final class SimpleConveyer implements Closeable {
                 }
                 TimeUnit.SECONDS.sleep(rand.nextInt(Tv.HUNDRED));
                 Logger.info(
-                    this, "waiting %[ms]s for %d work(s) termination: %[list]s",
-                    age,
-                    this.works.size(),
-                    this.works
+                    this, "waiting %[ms]s for threads termination", age
                 );
             }
         } catch (InterruptedException ex) {
@@ -197,13 +199,43 @@ public final class SimpleConveyer implements Closeable {
      * @throws Exception If fails
      */
     private void process() throws Exception {
-        final Work work = this.queue.pull(1, TimeUnit.SECONDS);
-        if (!work.equals(new Work.None())) {
-            this.works.add(work);
+        final Work origin = this.queue.pull(1, TimeUnit.SECONDS);
+        if (!origin.equals(new Work.None())) {
+            final String key = this.streams.register();
+            // @checkstyle AnonInnerLength (50 lines)
+            final Work work = new Work() {
+                @Override
+                public Time started() {
+                    return origin.started();
+                }
+                @Override
+                public URN owner() {
+                    return origin.owner();
+                }
+                @Override
+                public String unit() {
+                    return origin.unit();
+                }
+                @Override
+                public Spec spec() {
+                    return origin.spec();
+                }
+                @Override
+                public void charge(final String details, final Dollars amount) {
+                    origin.charge(details, amount);
+                }
+                @Override
+                public URI stdout() {
+                    return UriBuilder.fromUri("http://localhost/{key}")
+                        .host(null)
+                        .port(Tv.EIGHTY)
+                        .build(key);
+                }
+            };
             try {
                 this.process(work);
             } finally {
-                this.works.remove(work);
+                this.streams.unregister(key);
             }
         }
     }

@@ -277,6 +277,10 @@ public class BaseRs extends BaseResource {
             public void charge(final String details, final Dollars amount) {
                 throw new UnsupportedOperationException();
             }
+            @Override
+            public URI stdout() {
+                throw new UnsupportedOperationException();
+            }
         };
     }
 
