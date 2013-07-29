@@ -76,7 +76,12 @@ import lombok.ToString;
     "PMD.TooManyMethods",
     "PMD.ExcessiveImports"
 })
-public final class SimpleConveyer implements Closeable {
+final class SimpleConveyer implements Closeable {
+
+    /**
+     * HTTP port we're listening to.
+     */
+    private static final int PORT = 9095;
 
     /**
      * How many threads to run in parallel.
@@ -105,6 +110,11 @@ public final class SimpleConveyer implements Closeable {
     private final transient Streams streams;
 
     /**
+     * HTTP server.
+     */
+    private final transient HttpServer server;
+
+    /**
      * Consumer and executer of new specs from Queue.
      */
     private final transient ScheduledExecutorService svc =
@@ -130,16 +140,19 @@ public final class SimpleConveyer implements Closeable {
      * @param que The queue of specs
      * @param rep Repo
      * @param usrs Users
+     * @throws IOException If fails
      * @checkstyle ParameterNumber (4 lines)
      */
-    public SimpleConveyer(
+    protected SimpleConveyer(
         @NotNull(message = "queue can't be NULL") final Queue que,
         @NotNull(message = "repo can't be NULL") final Repo rep,
-        @NotNull(message = "users can't be NULL") final Users usrs) {
+        @NotNull(message = "users can't be NULL") final Users usrs)
+        throws IOException {
         this.queue = que;
         this.repo = rep;
         this.users = usrs;
         this.streams = new Log4jStreams();
+        this.server = new HttpServer(this.streams, SimpleConveyer.PORT);
     }
 
     /**
@@ -192,6 +205,7 @@ public final class SimpleConveyer implements Closeable {
             Thread.currentThread().interrupt();
             throw new IOException(ex);
         }
+        this.server.close();
     }
 
     /**
@@ -228,7 +242,7 @@ public final class SimpleConveyer implements Closeable {
                 public URI stdout() {
                     return UriBuilder.fromUri("http://localhost/{key}")
                         .host(null)
-                        .port(Tv.EIGHTY)
+                        .port(SimpleConveyer.PORT)
                         .build(key);
                 }
             };
