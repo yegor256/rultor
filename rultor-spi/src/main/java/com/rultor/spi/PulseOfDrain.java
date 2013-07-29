@@ -44,7 +44,7 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
- * Pulse.
+ * PulseOfDrain.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -53,7 +53,7 @@ import lombok.EqualsAndHashCode;
 @Immutable
 @EqualsAndHashCode(of = "drain")
 @Loggable(Loggable.DEBUG)
-public final class Pulse {
+public final class PulseOfDrain {
 
     /**
      * Drain.
@@ -64,7 +64,7 @@ public final class Pulse {
      * Public ctor.
      * @param drn Drain
      */
-    public Pulse(@NotNull(message = "drain can't be NULL") final Drain drn) {
+    public PulseOfDrain(@NotNull(message = "drain can't be NULL") final Drain drn) {
         this.drain = drn;
     }
 
@@ -93,7 +93,7 @@ public final class Pulse {
                 } else if (signal.key().equals(Signal.Mnemo.SUCCESS)
                     || signal.key().equals(Signal.Mnemo.FAILURE)) {
                     stages.add(
-                        Pulse.toStage(
+                        PulseOfDrain.toStage(
                             line, signal, starts.get(signal.value())
                         )
                     );

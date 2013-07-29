@@ -35,7 +35,7 @@ import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.PulseOfDrain;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
@@ -87,7 +87,7 @@ public final class PulseRs extends BaseRs {
     private transient String name;
 
     /**
-     * Pulse date.
+     * PulseOfDrain date.
      */
     private transient Time date;
 
@@ -103,7 +103,7 @@ public final class PulseRs extends BaseRs {
 
     /**
      * Inject it from query.
-     * @param time Pulse time
+     * @param time PulseOfDrain time
      */
     @PathParam("date")
     public void setDate(@NotNull(message = "date is mandatory")
@@ -206,7 +206,7 @@ public final class PulseRs extends BaseRs {
      * Get pulse.
      * @return The pulse
      */
-    private Pulse pulse() {
+    private PulseOfDrain pulse() {
         if (!this.user().units().contains(this.name)) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
@@ -216,7 +216,7 @@ public final class PulseRs extends BaseRs {
         }
         final Unit unit = this.user().get(this.name);
         try {
-            return new Pulse(
+            return new PulseOfDrain(
                 Drain.Source.class.cast(
                     new Repo.Cached(
                         this.repo(), this.user(), unit.spec()

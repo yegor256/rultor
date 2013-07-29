@@ -36,15 +36,15 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test case for {@link Pulse}.
+ * Test case for {@link PulseOfDrain}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle MultipleStringLiterals (500 lines)
  */
-public final class PulseTest {
+public final class PulseOfDrainTest {
 
     /**
-     * Pulse can find stages.
+     * PulseOfDrain can find stages.
      * @throws Exception If some problem inside
      */
     @Test
@@ -57,7 +57,7 @@ public final class PulseTest {
         final Drain drain = Mockito.mock(Drain.class);
         Mockito.doReturn(IOUtils.toInputStream(text)).when(drain).read();
         MatcherAssert.assertThat(
-            new Pulse(drain).stages(),
+            new PulseOfDrain(drain).stages(),
             Matchers.<Stage>hasItems(
                 // @checkstyle MagicNumber (2 lines)
                 new Stage.Simple(Stage.Result.SUCCESS, 0, 715000, "a"),

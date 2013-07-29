@@ -187,6 +187,9 @@
                             <failsafe.s3.key>${failsafe.s3.key}</failsafe.s3.key>
                             <failsafe.s3.secret>${failsafe.s3.secret}</failsafe.s3.secret>
                             <failsafe.s3.bucket>${failsafe.s3.bucket}</failsafe.s3.bucket>
+                            <failsafe.sqs.key>${failsafe.sqs.key}</failsafe.sqs.key>
+                            <failsafe.sqs.secret>${failsafe.sqs.secret}</failsafe.sqs.secret>
+                            <failsafe.sqs.meter>${failsafe.sqs.meter}</failsafe.sqs.meter>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

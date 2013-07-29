@@ -36,7 +36,7 @@ import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.PulseOfDrain;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Repo;
 import com.rultor.spi.SpecException;
@@ -265,7 +265,7 @@ public final class DrainRs extends BaseRs {
      * @return Bundle
      */
     private JaxbBundle pulse(final Time date) {
-        final Pulse pulse = new Pulse(this.drain(date));
+        final PulseOfDrain pulse = new PulseOfDrain(this.drain(date));
         final Collection<Stage> stages;
         try {
             stages = pulse.stages();
