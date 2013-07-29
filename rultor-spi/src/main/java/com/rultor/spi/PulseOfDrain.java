@@ -53,7 +53,7 @@ import lombok.EqualsAndHashCode;
 @Immutable
 @EqualsAndHashCode(of = "drain")
 @Loggable(Loggable.DEBUG)
-public final class PulseOfDrain {
+public final class PulseOfDrain implements Pulse {
 
     /**
      * Drain.
@@ -64,16 +64,15 @@ public final class PulseOfDrain {
      * Public ctor.
      * @param drn Drain
      */
-    public PulseOfDrain(@NotNull(message = "drain can't be NULL") final Drain drn) {
+    public PulseOfDrain(
+        @NotNull(message = "drain can't be NULL") final Drain drn) {
         this.drain = drn;
     }
 
     /**
-     * Stages.
-     * @return Collection of them
-     * @throws IOException If IO error
+     * {@inheritDoc}
      */
-    @NotNull(message = "list of stages is never NULL")
+    @Override
     public Collection<Stage> stages() throws IOException {
         final Collection<Stage> stages = new LinkedList<Stage>();
         final BufferedReader reader =
@@ -104,19 +103,17 @@ public final class PulseOfDrain {
     }
 
     /**
-     * Exact spec, which was used.
-     * @return Spec
-     * @throws IOException If IO error
+     * {@inheritDoc}
      */
+    @Override
     public Spec spec() throws IOException {
         return new Spec.Simple(this.find(Signal.Mnemo.SPEC, ""));
     }
 
     /**
-     * Read it.
-     * @return Stream to read from
-     * @throws IOException If fails
+     * {@inheritDoc}
      */
+    @Override
     public InputStream read() throws IOException {
         return this.drain.read();
     }
