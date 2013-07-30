@@ -27,10 +27,16 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.web;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Drain;
+import com.rultor.spi.Pulse;
+import com.rultor.spi.Signal;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Stage;
+import com.rultor.spi.Work;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

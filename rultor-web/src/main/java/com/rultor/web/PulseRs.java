@@ -35,7 +35,6 @@ import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
-import com.rultor.spi.PulseOfDrain;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
