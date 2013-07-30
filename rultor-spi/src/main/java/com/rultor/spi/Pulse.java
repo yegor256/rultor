@@ -32,7 +32,6 @@ package com.rultor.spi;
 import com.jcabi.aspects.Immutable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -46,28 +45,12 @@ import javax.validation.constraints.NotNull;
 public interface Pulse {
 
     /**
-     * Work where it is produced.
-     * @return The work
+     * Story in XML.
+     * @return The story
      * @throws IOException If IO error
      */
-    @NotNull(message = "work is never NULL")
-    Work work() throws IOException;
-
-    /**
-     * Exact spec, which was used.
-     * @return Spec
-     * @throws IOException If IO error
-     */
-    @NotNull(message = "spec is never NULL")
-    Spec spec() throws IOException;
-
-    /**
-     * Stages.
-     * @return Collection of them
-     * @throws IOException If IO error
-     */
-    @NotNull(message = "list of stages is never NULL")
-    Collection<Stage> stages() throws IOException;
+    @NotNull(message = "story is never NULL")
+    String story() throws IOException;
 
     /**
      * Read it as a stream.
