@@ -46,12 +46,12 @@ import javax.validation.constraints.NotNull;
 public interface Pulse {
 
     /**
-     * Stages.
-     * @return Collection of them
+     * Work where it is produced.
+     * @return The work
      * @throws IOException If IO error
      */
-    @NotNull(message = "list of stages is never NULL")
-    Collection<Stage> stages() throws IOException;
+    @NotNull(message = "work is never NULL")
+    Work work() throws IOException;
 
     /**
      * Exact spec, which was used.
@@ -62,11 +62,19 @@ public interface Pulse {
     Spec spec() throws IOException;
 
     /**
+     * Stages.
+     * @return Collection of them
+     * @throws IOException If IO error
+     */
+    @NotNull(message = "list of stages is never NULL")
+    Collection<Stage> stages() throws IOException;
+
+    /**
      * Read it as a stream.
-     * @return Stream to read from
+     * @return Stream to stream from
      * @throws IOException If fails
      */
     @NotNull(message = "stream is never NULL")
-    InputStream read() throws IOException;
+    InputStream stream() throws IOException;
 
 }

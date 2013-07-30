@@ -185,7 +185,7 @@ public final class PulseRs extends BaseRs {
                 .append("stop: ")
                 .append(stop)
                 .append(CharUtils.LF)
-                .append(IOUtils.toString(this.pulse().read()))
+                .append(IOUtils.toString(this.pulse().stream()))
                 .toString();
         } catch (IOException ex) {
             throw this.flash().redirect(

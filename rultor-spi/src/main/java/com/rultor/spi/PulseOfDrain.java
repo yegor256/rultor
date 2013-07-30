@@ -73,10 +73,26 @@ public final class PulseOfDrain implements Pulse {
      * {@inheritDoc}
      */
     @Override
+    public Work work() throws IOException {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spec spec() throws IOException {
+        return new Spec.Simple(this.find(Signal.Mnemo.SPEC, ""));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Collection<Stage> stages() throws IOException {
         final Collection<Stage> stages = new LinkedList<Stage>();
         final BufferedReader reader =
-            new BufferedReader(new InputStreamReader(this.read()));
+            new BufferedReader(new InputStreamReader(this.stream()));
         final ConcurrentMap<String, Long> starts =
             new ConcurrentHashMap<String, Long>(0);
         while (true) {
@@ -106,15 +122,7 @@ public final class PulseOfDrain implements Pulse {
      * {@inheritDoc}
      */
     @Override
-    public Spec spec() throws IOException {
-        return new Spec.Simple(this.find(Signal.Mnemo.SPEC, ""));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public InputStream read() throws IOException {
+    public InputStream stream() throws IOException {
         return this.drain.read();
     }
 
@@ -128,7 +136,7 @@ public final class PulseOfDrain implements Pulse {
     private String find(final Signal.Mnemo mnemo, final String def)
         throws IOException {
         final BufferedReader reader =
-            new BufferedReader(new InputStreamReader(this.read()));
+            new BufferedReader(new InputStreamReader(this.stream()));
         String value = null;
         while (true) {
             final String line = reader.readLine();
