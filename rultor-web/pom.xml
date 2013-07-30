@@ -280,27 +280,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <!-- @see https://github.com/marceloverdijk/lesscss-maven-plugin/issues/10 -->
-                <groupId>org.lesscss</groupId>
-                <artifactId>lesscss-maven-plugin</artifactId>
-                <version>1.3.3</version>
-                <configuration>
-                    <sourceDirectory>${project.basedir}/src/main/resources/less</sourceDirectory>
-                    <outputDirectory>${project.build.directory}/${project.build.finalName}/css</outputDirectory>
-                    <compress>true</compress>
-                    <includes>
-                        <include>main.less</include>
-                    </includes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <executions>
                     <execution>

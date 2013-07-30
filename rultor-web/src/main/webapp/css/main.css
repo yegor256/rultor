@@ -28,29 +28,45 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*!
- * Bootstrap v2.3.2
- *
- * Copyright 2012 Twitter, Inc
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Designed and built with all the love in the world @twitter by @mdo and @fat.
- */
+@font-face {
+    font-family: 'Rultor-Logo';
+    src: url('//img.rultor.com/rultor.eot');
+    src: url('//img.rultor.com/rultor.eot?#iefix') format('embedded-opentype'),
+        url('//img.rultor.com/rultor.woff') format('woff'),
+        url('//img.rultor.com/rultor.ttf') format('truetype'),
+        url('//img.rultor.com/rultor.svg?#rultor') format('svg');
+}
 
-@import "bootstrap/mixins.less";
-@import "bootstrap/responsive.less";
-@import "bootstrap/reset.less";
-@import "bootstrap/scaffolding.less";
-@import "bootstrap/labels-badges.less";
-@import "bootstrap/layouts.less";
-@import "bootstrap/type.less";
-@import "bootstrap/code.less";
-@import "bootstrap/forms.less";
-@import "bootstrap/buttons.less";
-@import "bootstrap/button-groups.less";
-@import "bootstrap/alerts.less";
-@import "bootstrap/navs.less";
-@import "bootstrap/tables.less";
-@import "bootstrap/wells.less";
-@import "bootstrap/utilities.less"; // Has to be last to override when necessary
+.page {
+    padding: .5em;
+    clear: both;
+}
+@media only screen and (min-width: 768px) {
+    .page { padding: 1em; }
+}
+@media only screen and (min-width: 1024px) {
+    .page { padding: 2em; }
+}
+
+.head {
+    padding-bottom: 2em;
+    padding-top: 2em;
+    clear: both;
+}
+
+.logo {
+    font-family: 'Rultor-Logo';
+    font-size: 4em;
+    vertical-align: middle;
+    color: inherit;
+    -webkit-font-smoothing: antialiased;
+}
+    .logo:hover {
+        color: gray;
+        text-decoration: none;
+    }
+
+ul.spacious > li {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
