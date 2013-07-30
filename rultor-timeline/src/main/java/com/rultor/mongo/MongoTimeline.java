@@ -47,6 +47,9 @@ import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.Validate;
@@ -159,6 +162,7 @@ public final class MongoTimeline implements Timeline {
                         )
                 );
                 cursor.sort(new BasicDBObject(MongoEvent.ATTR_TIME, -1));
+                MongoTimeline.closeLater(cursor);
                 return new Iterator<Event>() {
                     @Override
                     public boolean hasNext() {
@@ -288,6 +292,22 @@ public final class MongoTimeline implements Timeline {
             ++idx;
         }
         return objects;
+    }
+
+    /**
+     * Close this cursor later, in a few seconds.
+     * @param cursor The cursor to close
+     */
+    private static void closeLater(final DBCursor cursor) {
+        new Timer().schedule(
+            new TimerTask() {
+                @Override
+                public void run() {
+                    cursor.close();
+                }
+            },
+            TimeUnit.SECONDS.toMillis(Tv.FIVE)
+        );
     }
 
 }
