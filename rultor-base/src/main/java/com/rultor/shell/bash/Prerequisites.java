@@ -35,7 +35,6 @@ import com.jcabi.immutable.ArrayMap;
 import com.jcabi.log.Logger;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
-import com.rultor.spi.Signal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -93,10 +92,6 @@ public final class Prerequisites implements Shells {
                 Logger.stream(Level.WARNING, this)
             );
         }
-        Signal.log(
-            Signal.Mnemo.SUCCESS, "%d bash prerequisite(s) uploaded: %[list]s",
-            this.map.size(), this.map.keySet()
-        );
         return shell;
     }
 

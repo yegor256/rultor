@@ -31,49 +31,44 @@ package com.rultor.shell;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.immutable.Array;
-import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
- * Relicable after shell execution.
+ * Shells followed on closing.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "origin", "all" })
+@EqualsAndHashCode(of = "origin")
 @Loggable(Loggable.DEBUG)
-public final class Relicable implements Shells {
+public final class Followed implements Shells {
 
     /**
-     * Original shells.
+     * Original.
      */
     private final transient Shells origin;
 
     /**
-     * Relicable to collect.
+     * Sequel.
      */
-    private final transient Array<Relic> all;
+    private final transient Sequel sequel;
 
     /**
      * Public ctor.
-     * @param shells Original shells
-     * @param rlcs Relicable to collect
+     * @param seql Sequel
+     * @param shells Shells
      */
-    public Relicable(
-        @NotNull(message = "shells can't be NULL") final Shells shells,
-        @NotNull(message = "relics can't be NULL")
-        final Collection<Relic> rlcs) {
+    public Followed(
+        @NotNull(message = "sequael can't be NULL") final Sequel seql,
+        @NotNull(message = "shells can't be NULL") final Shells shells) {
+        this.sequel = seql;
         this.origin = shells;
-        this.all = new Array<Relic>(rlcs);
     }
 
     /**
@@ -81,11 +76,7 @@ public final class Relicable implements Shells {
      */
     @Override
     public String toString() {
-        return Logger.format(
-            "%s with %d relic(s)",
-            this.origin,
-            this.all.size()
-        );
+        return String.format("%s followed by %s", this.origin);
     }
 
     /**
@@ -93,31 +84,49 @@ public final class Relicable implements Shells {
      */
     @Override
     public Shell acquire() throws IOException {
-        final Shell shell = this.origin.acquire();
-        // @checkstyle AnonInnerLength (50 lines)
-        return new Shell() {
-            @Override
-            // @checkstyle ParameterNumber (2 lines)
-            public int exec(final String command, final InputStream stdin,
-                final OutputStream stdout, final OutputStream stderr)
-                throws IOException {
-                final int code = shell.exec(command, stdin, stdout, stderr);
-                final PrintWriter writer = new PrintWriter(stdout, true);
-                for (Relic relic : Relicable.this.all) {
-                    writer.println(Resonant.encode(relic.discover(shell)));
-                }
-                writer.close();
-                return code;
-            }
-            @Override
-            public void close() throws IOException {
-                shell.close();
-            }
-            @Override
-            public String toString() {
-                return shell.toString();
-            }
-        };
+        return new Followed.Sequeled(this.origin.acquire(), this.sequel);
+    }
+
+    /**
+     * Followed with sequel.
+     */
+    private static final class Sequeled implements Shell {
+        /**
+         * Original.
+         */
+        private final transient Shell origin;
+        /**
+         * Sequel.
+         */
+        private final transient Sequel sequel;
+        /**
+         * Public ctor.
+         * @param shell Original shell
+         * @param seql Sequel
+         */
+        protected Sequeled(final Shell shell, final Sequel seql) {
+            this.origin = shell;
+            this.sequel = seql;
+        }
+        /**
+         * {@inheritDoc}
+         * @checkstyle ParameterNumber (5 lines)
+         */
+        @Override
+        public int exec(final String command, final InputStream stdin,
+            final OutputStream stdout, final OutputStream stderr)
+            throws IOException {
+            return this.origin.exec(command, stdin, stdout, stderr);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void close() throws IOException {
+            this.sequel.exec(this.origin);
+            this.origin.close();
+        }
+
     }
 
 }

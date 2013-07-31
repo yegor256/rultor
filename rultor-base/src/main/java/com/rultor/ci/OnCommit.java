@@ -38,8 +38,8 @@ import com.rultor.board.Billboard;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
 import com.rultor.shell.Batch;
+import com.rultor.snapshot.Step;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Signal;
 import com.rultor.stateful.Notepad;
 import java.io.IOException;
 import java.util.Iterator;
@@ -107,25 +107,9 @@ public final class OnCommit implements Instance {
         final Iterator<Commit> commits = this.branch.log().iterator();
         if (commits.hasNext()) {
             final Commit head = commits.next();
-            if (this.notepad.contains(head.name())) {
-                Signal.log(
-                    Signal.Mnemo.SUCCESS,
-                    "HEAD `%s` was already seen",
-                    head
-                );
-            } else {
-                Signal.log(
-                    Signal.Mnemo.SUCCESS,
-                    "Found previously unseen HEAD `%s`",
-                    head
-                );
+            if (!this.seen(head)) {
                 this.build(head);
                 this.notepad.add(head.name());
-                Signal.log(
-                    Signal.Mnemo.SUCCESS,
-                    "HEAD `%s` marked as seen",
-                    head
-                );
             }
         }
     }
@@ -146,29 +130,44 @@ public final class OnCommit implements Instance {
     }
 
     /**
+     * This HEAD commit was seen already?
+     * @param head HEAD commit
+     * @return TRUE if seen
+     * @throws IOException If fails
+     */
+    @Step("commit ${args[0]} was ${self ?: \"NOT \"}seen before")
+    private boolean seen(final Commit head) throws IOException {
+        return this.notepad.contains(head.name());
+    }
+
+    /**
      * Build.
      * @param head Head of the branch
+     * @return TRUE if success
      * @throws IOException If some IO problem
      */
-    private void build(final Commit head) throws IOException {
-        final Announcement anmt = new Build(this.batch).exec(
-            new ImmutableMap.Builder<String, Object>()
-                .put("branch", this.branch.name())
-                .put("head", head)
-                .build()
+    @Step(before = "building", value = "built ${args[0]}")
+    private boolean build(final Commit head) throws IOException {
+        return this.announce(
+            new Build(this.batch).exec(
+                new ImmutableMap.Builder<String, Object>()
+                    .put("branch", this.branch.name())
+                    .put("head", head)
+                    .build()
+            )
         );
+    }
+
+    /**
+     * Announce result and return success status.
+     * @param anmt Announcement to announce
+     * @return TRUE if it is a success
+     * @throws IOException If fails
+     */
+    @Step("announced ${result ? \"success\" : \"failure\"} to ${self.board}")
+    private boolean announce(final Announcement anmt) throws IOException {
         this.board.announce(anmt);
-        if (anmt.level().equals(Level.INFO)) {
-            Signal.log(
-                Signal.Mnemo.SUCCESS, "Announced success to %s",
-                this.board
-            );
-        } else {
-            Signal.log(
-                Signal.Mnemo.FAILURE, "Announced failure (%s) to %s",
-                anmt, this.board
-            );
-        }
+        return anmt.level().equals(Level.INFO);
     }
 
 }

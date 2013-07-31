@@ -41,7 +41,7 @@
         <date>22-Aug-2012</date>
     </version>
     <links>
-        <link href="/xml/index.xml" rel="self" type="text/xml"/>
+        <link href="/xml/pule.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
         <link href="/xml/index.xml" rel="stream" type="text/xml"/>
     </links>
@@ -50,36 +50,46 @@
     <unit>nightly-build</unit>
     <pulse>464738182</pulse>
     <date>2012-08-23T13:25Z</date>
-    <spec>something...</spec>
-    <stages>
-        <stage>
-            <result>SUCCESS</result>
-            <msec>12000</msec>
-            <output>Git repository cloned</output>
-            <links>
-                <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-            </links>
-        </stage>
-        <stage>
-            <result>SUCCESS</result>
-            <msec>170000</msec>
-            <output>Unit tests ran successfully</output>
-            <links>
-                <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-            </links>
-        </stage>
-        <stage final="true">
-            <result>RUNNING</result>
-            <msec>204000</msec>
-            <output>Static analysis running</output>
-            <links>
-                <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-            </links>
-        </stage>
-        <stage>
-            <result>WAITING</result>
-            <msec>88090</msec>
-            <output>Code coverage checking</output>
-        </stage>
-    </stages>
+    <when>a few minutes ago</when>
+    <snapshot>
+        <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
+        <work>
+            <owner>urn:test:1</owner>
+            <unit>nightly-build</unit>
+            <started>2012-08-23T13:25Z</started>
+        </work>
+        <started>2012-08-23T13:25Z</started>
+        <eta>6574874000</eta>
+        <spec>some specificiation</spec>
+        <tags>
+            <tag>
+                <level>INFO</level>
+                <label>success</label>
+            </tag>
+        </tags>
+        <products>
+            <product>
+                <name>stdout</name>
+                <markdown>1 file</markdown>
+            </product>
+        </products>
+        <steps>
+            <step>
+                <id>ec2-instance</id>
+                <at>896000</at>
+                <summary>created EC2 instance `i-09aeb44` of `m1.small` type</summary>
+                <level>INFO</level>
+                <duration>764000</duration>
+            </step>
+            <step>
+                <id>build</id>
+                <at>2678000</at>
+                <summary>running bash build script</summary>
+            </step>
+            <step>
+                <id>announce</id>
+                <summary>announce results</summary>
+            </step>
+        </jobs>
+    </snapshot>
 </page>

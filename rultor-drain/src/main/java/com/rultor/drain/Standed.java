@@ -27,46 +27,41 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.timeline;
+package com.rultor.drain;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
 import com.rexsl.test.RestTester;
-import com.rultor.spi.Instance;
+import com.rultor.spi.Drain;
+import com.rultor.spi.Pulses;
+import com.rultor.spi.Stand;
 import com.rultor.spi.Work;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URLEncoder;
-import java.util.concurrent.TimeUnit;
 import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang.CharEncoding;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 import org.apache.http.HttpHeaders;
 
 /**
- * Metered instance.
+ * Mirrored to a web {@link Stand}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@EqualsAndHashCode(of = { "work", "origin", "timeline", "key" })
+@EqualsAndHashCode(of = "origin")
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.DoNotUseThreads")
-public final class Metered implements Instance {
-
-    /**
-     * URL of the SQS queue.
-     */
-    private static final URI QUEUE = URI.create(
-        "https://sqs.us-east-1.amazonaws.com/019644334823/rultor-meter"
-    );
+public final class Standed implements Drain {
 
     /**
      * Work we're in.
@@ -74,66 +69,37 @@ public final class Metered implements Instance {
     private final transient Work work;
 
     /**
-     * Origin.
+     * Original drain.
      */
-    private final transient Instance origin;
+    private final transient Drain origin;
 
     /**
-     * Timeline name.
+     * Name of stand.
      */
-    private final transient String timeline;
+    private final transient String stand;
 
     /**
-     * Timeline authentication key.
+     * Secret key of it.
      */
     private final transient String key;
 
     /**
      * Public ctor.
      * @param wrk Work we're in
-     * @param name Name of timeline
-     * @param auth Authentication key
-     * @param inst Original instance
-     * @checkstyle ParameterNumber (10 lines)
+     * @param name Name of stand
+     * @param secret Secret key of the stand
+     * @param drain Main drain
+     * @checkstyle ParameterNumber (8 lines)
      */
-    public Metered(
+    public Standed(
         @NotNull(message = "work can't be NULL") final Work wrk,
-        @NotNull(message = "name can't be NULL") final String name,
-        @NotNull(message = "key can't be NULL") final String auth,
-        @NotNull(message = "instance can't be NULL") final Instance inst) {
+        @NotNull(message = "name of stand can't be NULL") final String name,
+        @NotNull(message = "key can't be NULL") final String secret,
+        @NotNull(message = "drain can't be NULL") final Drain drain) {
         this.work = wrk;
-        this.timeline = name;
-        this.key = auth;
-        this.origin = inst;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void pulse() throws Exception {
-        final Thread monitor = new Thread(
-            new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        TimeUnit.SECONDS.sleep(1);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                        throw new IllegalStateException(ex);
-                    }
-                    try {
-                        Metered.this.send("alive");
-                    } catch (IOException ex) {
-                        Logger.warn(this, "failed to meter: %s", ex);
-                    }
-                }
-            }
-        );
-        this.send("start");
-        this.origin.pulse();
-        monitor.interrupt();
-        this.send("stop");
+        this.stand = name;
+        this.key = secret;
+        this.origin = drain;
     }
 
     /**
@@ -142,24 +108,58 @@ public final class Metered implements Instance {
     @Override
     public String toString() {
         return String.format(
-            "%s metered at `%s`",
-            this.origin, this.timeline
+            "%s standed at `%s`",
+            this.origin, this.stand
         );
     }
 
     /**
-     * Send JSON message to the queue.
-     * @param msg Message to send
-     * @throws IOException If IO problem inside
+     * {@inheritDoc}
      */
-    private void send(final String msg) throws IOException {
+    @Override
+    public Pulses pulses() throws IOException {
+        return this.origin.pulses();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void append(final Iterable<String> lines) throws IOException {
+        for (String line : lines) {
+            this.send(line);
+        }
+        this.origin.append(lines);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InputStream read() throws IOException {
+        return new SequenceInputStream(
+            IOUtils.toInputStream(
+                String.format(
+                    "Standed: stand='%s', origin='%s'\n",
+                    this.stand, this.origin
+                )
+            ),
+            this.origin.read()
+        );
+    }
+
+    /**
+     * Send line to stand.
+     * @param line The line
+     * @throws IOException If fails
+     */
+    private void send(final String line) throws IOException {
         final StringWriter writer = new StringWriter();
         Json.createGenerator(writer)
             .writeStartObject()
-            .write("timeline", this.timeline)
+            .write("stand", this.stand)
             .write("key", this.key)
-            .write("message", msg)
-            .write("stdout", this.work.stdout().toString())
+            .write("text", line)
             .writeStartObject("work")
             .write("owner", this.work.owner().toString())
             .write("unit", this.work.unit())
@@ -173,7 +173,7 @@ public final class Metered implements Instance {
         );
         try {
             RestTester
-                .start(Metered.QUEUE)
+                .start(Stand.QUEUE)
                 .header(HttpHeaders.CONTENT_ENCODING, CharEncoding.UTF_8)
                 .header(
                     HttpHeaders.CONTENT_LENGTH,
@@ -183,7 +183,7 @@ public final class Metered implements Instance {
                     HttpHeaders.CONTENT_TYPE,
                     MediaType.APPLICATION_FORM_URLENCODED
                 )
-                .post("sending meter note", body)
+                .post("sending one line to stand SQS queue", body)
                 .assertStatus(HttpURLConnection.HTTP_OK);
         } catch (AssertionError ex) {
             throw new IOException(ex);

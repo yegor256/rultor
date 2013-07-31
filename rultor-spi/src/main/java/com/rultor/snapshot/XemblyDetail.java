@@ -27,12 +27,63 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.snapshot;
+
+import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
+import org.w3c.dom.Document;
+import org.xembly.Directives;
+import org.xembly.Xembler;
+import org.xembly.XemblyBuilder;
 
 /**
- * Timeline, tests.
+ * Detail in Xembly.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-package com.rultor.timeline;
+@Immutable
+public final class XemblyDetail implements Detail {
+
+    /**
+     * Encapsulated xembly program.
+     */
+    private final transient String script;
+
+    /**
+     * Public ctor.
+     * @param scrpt Xembly script to encapsulate
+     */
+    public XemblyDetail(final String scrpt) {
+        this.script = scrpt;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return this.script;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void refine(final Document story) {
+        new Xembler(new Directives(this.script)).exec(story);
+    }
+
+    /**
+     * Convenient utility method to log xembly.
+     * @param builder Builder of xembly code
+     */
+    public static void log(final XemblyBuilder builder) {
+        Logger.info(
+            XemblyDetail.class,
+            new TextDetail(new XemblyDetail(builder.toString())).toString()
+        );
+    }
+
+}

@@ -27,38 +27,26 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.shell;
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import com.jcabi.aspects.Immutable;
+import java.io.IOException;
 
 /**
- * Test case for {@link Signal}.
+ * After effect of a followed shell.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class SignalTest {
+@Immutable
+public interface Sequel {
 
     /**
-     * Signal can make a string.
-     * @throws Exception If some problem inside
+     * Do something with this shell while it is still open.
+     * @param shell The shell to work with
+     * @throws IOException If fails
      */
-    @Test
-    public void makesString() throws Exception {
-        final String value = "\u20ac\n\tfast\ttest\r\u0433";
-        final String encoded = String.format(
-            "some \u20ac prefixed text %s",
-            new Signal(Signal.Mnemo.SUCCESS, value).toString()
-        );
-        MatcherAssert.assertThat(
-            Signal.exists(encoded),
-            Matchers.is(true)
-        );
-        MatcherAssert.assertThat(
-            Signal.valueOf(encoded).key(),
-            Matchers.equalTo(Signal.Mnemo.SUCCESS)
-        );
-    }
+    void exec(Shell shell) throws IOException;
 
 }

@@ -73,6 +73,21 @@ public interface User {
     Set<String> units();
 
     /**
+     * Names of all his stands.
+     * @return Collection of stand names
+     */
+    @NotNull(message = "set of stands of user is never NULL")
+    Set<String> stands();
+
+    /**
+     * Get stand by name (runtime exception if it's absent).
+     * @param name The name of it
+     * @return The stand
+     */
+    @NotNull(message = "stand is never NULL")
+    Stand stand(@NotNull(message = "stand name can't be NULL") String name);
+
+    /**
      * Get unit by name (runtime exception if it's absent).
      * @param name The name of it
      * @return The unit

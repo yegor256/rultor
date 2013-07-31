@@ -33,17 +33,16 @@ import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rultor.snapshot.Snapshot;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
-import com.rultor.spi.Stage;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -129,19 +128,9 @@ public final class PulseRs extends BaseRs {
                     Long.toString(this.date.millis())
                 )
             )
-            .append(new JaxbBundle("spec", this.spec().asText()))
             .append(new JaxbBundle("date", this.date.toString()))
             .append(new JaxbBundle("when", this.date.when()))
-            .append(
-                new JaxbBundle("stages").add(
-                    new JaxbBundle.Group<Stage>(this.stages()) {
-                        @Override
-                        public JaxbBundle bundle(final Stage stage) {
-                            return PulseRs.this.stage(stage);
-                        }
-                    }
-                )
-            )
+            .append(this.snapshot().xml().getDocumentElement())
             .link(
                 new Link(
                     "stream",
@@ -246,74 +235,23 @@ public final class PulseRs extends BaseRs {
     }
 
     /**
-     * Get spec of the pulse.
-     * @return The spec
+     * Get snapshot of the pulse.
+     * @return The snapshot
      */
-    private Spec spec() {
+    private Snapshot snapshot() {
         try {
-            return this.pulse().spec();
+            return this.pulse().snapshot();
         } catch (IOException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 String.format(
-                    "Can't fetch Spec from `%s`: %s",
+                    "Can't fetch snapshot from `%s`: %s",
                     this.date,
                     ExceptionUtils.getRootCauseMessage(ex)
                 ),
                 Level.SEVERE
             );
         }
-    }
-
-    /**
-     * Get stages of the pulse.
-     * @return The stages
-     */
-    private Collection<Stage> stages() {
-        try {
-            return this.pulse().stages();
-        } catch (IOException ex) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                String.format(
-                    "Can't fetch stages from `%s`: %s",
-                    this.date,
-                    ExceptionUtils.getRootCauseMessage(ex)
-                ),
-                Level.SEVERE
-            );
-        }
-    }
-
-    /**
-     * Convert stage to JaxbBundle.
-     * @param stage Stage to convert
-     * @return Bundle
-     */
-    private JaxbBundle stage(final Stage stage) {
-        return new JaxbBundle("stage")
-            .add("result", stage.result().toString())
-            .up()
-            .add("start", Long.toString(stage.start()))
-            .up()
-            .add("stop", Long.toString(stage.stop()))
-            .up()
-            .add("msec", Long.toString(stage.stop() - stage.start()))
-            .up()
-            .add("output", stage.output())
-            .up()
-            .link(
-                new Link(
-                    "log",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(PulseRs.class)
-                        .path(PulseRs.class, "stream")
-                        .queryParam(PulseRs.QUERY_START, stage.start())
-                        .queryParam(PulseRs.QUERY_STOP, stage.stop())
-                        .build(this.name, this.date.millis())
-                )
-            );
     }
 
 }

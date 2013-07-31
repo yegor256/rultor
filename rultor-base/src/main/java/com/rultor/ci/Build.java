@@ -36,7 +36,6 @@ import com.jcabi.log.Logger;
 import com.rultor.board.Announcement;
 import com.rultor.shell.ASCIIOutputStream;
 import com.rultor.shell.Batch;
-import com.rultor.spi.Signal;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
@@ -81,9 +80,7 @@ final class Build {
      */
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public Announcement exec(@NotNull(message = "args can't be NULL")
-        final Map<String, Object> args)
-        throws IOException {
-        Signal.log(Signal.Mnemo.START, "Started to build");
+        final Map<String, Object> args) throws IOException {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final long start = System.currentTimeMillis();
         final int code = this.batch.exec(

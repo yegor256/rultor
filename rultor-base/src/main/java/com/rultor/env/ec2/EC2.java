@@ -42,7 +42,7 @@ import com.jcabi.aspects.Tv;
 import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
 import com.rultor.env.Environments;
-import com.rultor.spi.Signal;
+import com.rultor.snapshot.Step;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
@@ -152,6 +152,22 @@ public final class EC2 implements Environments {
      */
     @Override
     public Environment acquire() throws IOException {
+        return new EC2Environment(
+            this.work,
+            this.create().getInstanceId(),
+            this.client
+        );
+    }
+
+    /**
+     * Create EC2 instance.
+     * @return Instance created and in stable state
+     */
+    @Step(
+        before = "creating EC instance `${self.type}` from `${self.ami}`",
+        value = "EC2 instance `${result.getInstanceId()}` created"
+    )
+    private Instance create() {
         final AmazonEC2 aws = this.client.get();
         try {
             final RunInstancesResult result = aws.runInstances(
@@ -175,21 +191,7 @@ public final class EC2 implements Environments {
                 );
             }
             final Instance instance = instances.get(0);
-            Signal.log(
-                Signal.Mnemo.SUCCESS,
-                // @checkstyle LineLength (1 line)
-                "EC2 instance `%s` created, type=`%s`, ami=`%s`, key=`%s`, platform=`%s`",
-                instance.getInstanceId(),
-                this.type,
-                this.ami,
-                instance.getKeyName(),
-                instance.getPlatform()
-            );
-            return new EC2Environment(
-                this.work,
-                this.wrap(aws, instance).getInstanceId(),
-                this.client
-            );
+            return this.wrap(aws, instance);
         } finally {
             aws.shutdown();
         }

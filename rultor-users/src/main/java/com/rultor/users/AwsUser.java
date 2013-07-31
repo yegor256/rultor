@@ -38,6 +38,7 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Receipt;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Stand;
 import com.rultor.spi.Statements;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
@@ -180,6 +181,22 @@ final class AwsUser implements User {
     @Override
     public Iterable<Receipt> receipts() {
         return new AwsReceipts(this.region, this.name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Set<String> stands() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stand stand(final String stand) {
+        throw new UnsupportedOperationException();
     }
 
 }

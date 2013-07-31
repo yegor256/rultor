@@ -27,36 +27,26 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.timeline;
+package com.rultor.snapshot;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.logging.Level;
-import org.junit.Test;
+import com.jcabi.aspects.Immutable;
+import javax.validation.constraints.NotNull;
+import org.w3c.dom.Document;
 
 /**
- * Integration case for {@link RultorTimeline}.
+ * Detail of story.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @since 1.0
  */
-public final class RultorTimelineITCase {
+@Immutable
+public interface Detail {
 
     /**
-     * RultorTimeline can post JSON.
-     * @throws Exception If some problem inside
+     * Refine the story with this extra detail.
+     * @param story Story in XML
      */
-    @Test
-    @org.junit.Ignore
-    public void postsJson() throws Exception {
-        final Timeline timeline = new RultorTimeline(
-            "testing", "wsN45OTo5GGZZcwIz28X"
-        );
-        timeline.submit(
-            "it's a test",
-            Arrays.<Tag>asList(new Tag.Simple("success", Level.INFO)),
-            new ArrayList<Product>(0)
-        );
-    }
+    void refine(@NotNull(message = "story can't be NULL") Document story);
 
 }

@@ -27,33 +27,35 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.timeline;
+package com.rultor.snapshot;
 
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
-import java.util.Collection;
-import javax.validation.constraints.NotNull;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Timeline.
+ * Step in a story.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Timeline {
+@Documented
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Step {
 
     /**
-     * Consume a new event.
-     * @param text What just happened
-     * @param tags Tags to add
-     * @param products Products obtained
-     * @throws IOException If some IO problem
+     * Main line to print in story.
      */
-    void submit(@NotNull(message = "text can't be NULL") String text,
-        @NotNull(message = "tags can't be NULL") Collection<Tag> tags,
-        @NotNull(message = "tags can't be NULL") Collection<Product> products)
-        throws IOException;
+    String value();
+
+    /**
+     * Line to show before this step starts.
+     */
+    String before() default "";
 
 }
+

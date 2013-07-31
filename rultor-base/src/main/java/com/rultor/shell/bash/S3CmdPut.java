@@ -32,14 +32,15 @@ package com.rultor.shell.bash;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
-import com.rultor.shell.Relic;
+import com.rultor.shell.Sequel;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Terminal;
-import com.rultor.timeline.Product;
+import com.rultor.snapshot.XemblyDetail;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.FilenameUtils;
+import org.xembly.XemblyBuilder;
 
 /**
  * Put file(s) using s3cmd command line tool.
@@ -52,7 +53,7 @@ import org.apache.commons.io.FilenameUtils;
 @Immutable
 @EqualsAndHashCode(of = { "name", "path", "bucket", "prefix", "key", "secret" })
 @Loggable(Loggable.DEBUG)
-public final class S3CmdPut implements Relic {
+public final class S3CmdPut implements Sequel {
 
     /**
      * Product name.
@@ -124,7 +125,7 @@ public final class S3CmdPut implements Relic {
      * {@inheritDoc}
      */
     @Override
-    public Product discover(final Shell shell) throws IOException {
+    public void exec(final Shell shell) throws IOException {
         final String dir = FilenameUtils.getFullPathNoEndSeparator(this.path);
         final String mask = FilenameUtils.getName(this.path);
         final String url = String.format(
@@ -159,7 +160,17 @@ public final class S3CmdPut implements Relic {
         } else {
             markdown = String.format("[%s](%s%1$s)", mask, url);
         }
-        return new Product.Simple(this.name, markdown);
+        XemblyDetail.log(
+            new XemblyBuilder()
+                .xpath("/snapshot")
+                .addIfAbsent("products")
+                .add("product")
+                .add("name")
+                .set(this.name)
+                .up()
+                .add("markdown")
+                .set(markdown)
+        );
     }
 
 }

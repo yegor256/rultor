@@ -32,6 +32,7 @@ package com.rultor.conveyer;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Receipt;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Stand;
 import com.rultor.spi.Statements;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
@@ -129,6 +130,22 @@ final class FakeUser implements User {
      */
     @Override
     public Iterable<Receipt> receipts() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Set<String> stands() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stand stand(String name) {
         throw new UnsupportedOperationException();
     }
 

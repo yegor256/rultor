@@ -30,6 +30,7 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.rultor.snapshot.Snapshot;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.validation.constraints.NotNull;
@@ -45,12 +46,12 @@ import javax.validation.constraints.NotNull;
 public interface Pulse {
 
     /**
-     * Story in XML.
-     * @return The story
+     * Snapshot.
+     * @return The snapshot
      * @throws IOException If IO error
      */
     @NotNull(message = "story is never NULL")
-    String story() throws IOException;
+    Snapshot snapshot() throws IOException;
 
     /**
      * Read it as a stream.

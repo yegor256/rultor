@@ -30,20 +30,16 @@
 package com.rultor.log4j;
 
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
-import com.jcabi.manifests.Manifests;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Signal;
 import com.rultor.spi.Work;
-import com.rultor.tools.Time;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.log4j.Level;
 import org.apache.log4j.PatternLayout;
 
 /**
- * Throttled instance.
+ * ThreadGroupSpy instance.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -52,7 +48,7 @@ import org.apache.log4j.PatternLayout;
 @EqualsAndHashCode(of = { "work", "level", "pattern", "origin", "drn" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
-public final class Throttled implements Instance, Drain.Source {
+public final class ThreadGroupSpy implements Instance, Drain.Source {
 
     /**
      * The work we're in.
@@ -88,7 +84,8 @@ public final class Throttled implements Instance, Drain.Source {
      * @param drain Drain to use
      * @checkstyle ParameterNumber (8 lines)
      */
-    public Throttled(@NotNull(message = "work can't be NULL") final Work wrk,
+    public ThreadGroupSpy(
+        @NotNull(message = "work can't be NULL") final Work wrk,
         @NotNull(message = "log level can't be NULL") final String lvl,
         @NotNull(message = "pattern can't be NULL") final String pttn,
         @NotNull(message = "instance can't be NULL") final Instance instance,
@@ -107,7 +104,7 @@ public final class Throttled implements Instance, Drain.Source {
      * @param drain Drain to use
      * @checkstyle ParameterNumber (4 lines)
      */
-    public Throttled(final Work wrk, final Instance instance,
+    public ThreadGroupSpy(final Work wrk, final Instance instance,
         final Drain drain) {
         this(wrk, Level.INFO.toString(), "%m", instance, drain);
     }
@@ -117,7 +114,6 @@ public final class Throttled implements Instance, Drain.Source {
      */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void pulse() throws Exception {
         final GroupAppender appender = new GroupAppender(
             this.work.started(), this.drn
@@ -132,31 +128,8 @@ public final class Throttled implements Instance, Drain.Source {
             );
         }
         root.addAppender(appender);
-        final long start = System.currentTimeMillis();
         try {
-            Logger.info(this, "start scheduled on %s", this.work.started());
-            Logger.info(this, "actual work started at %s", new Time());
-            Logger.info(
-                this,
-                "www.rultor.com %s %s %s",
-                Manifests.read("Rultor-Version"),
-                Manifests.read("Rultor-Revision"),
-                Manifests.read("Rultor-Date")
-            );
-            Signal.log(Signal.Mnemo.SPEC, this.work.spec().asText());
             this.origin.pulse();
-            Logger.info(
-                this, "pulse finished at %s and took %[ms]s",
-                new Time(), System.currentTimeMillis() - start
-            );
-            // @checkstyle IllegalCatch (1 line)
-        } catch (Exception ex) {
-            Logger.warn(
-                this, "pulse failed after %[ms]s: %[exception]s",
-                System.currentTimeMillis() - start, ex
-            );
-            Signal.log(Signal.Mnemo.FAILURE, ex.getMessage());
-            throw ex;
         } finally {
             org.apache.log4j.Logger.getRootLogger().removeAppender(appender);
         }

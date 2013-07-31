@@ -27,12 +27,55 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.spi;
+
+import com.jcabi.aspects.Immutable;
+import java.net.URI;
+import javax.validation.constraints.NotNull;
 
 /**
- * Timeline.
+ * Stand.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-package com.rultor.timeline;
+@Immutable
+public interface Stand {
+
+    /**
+     * Public Amazon SQS queue where anyone can report their details.
+     */
+    URI QUEUE = URI.create(
+        "https://sqs.us-east-1.amazonaws.com/019644334823/rultor-stands"
+    );
+
+    /**
+     * Update ACL.
+     * @param spec Specification to save
+     */
+    void acl(@NotNull(message = "ACL can't be NULL") Spec spec);
+
+    /**
+     * Get its ACL.
+     * @return Specification of ACL
+     */
+    @NotNull(message = "ACL is never NULL")
+    Spec acl();
+
+    /**
+     * Get all pulses.
+     * @return Pulses
+     */
+    @NotNull(message = "collection of pulses is never NULL")
+    Iterable<Pulse> pulses();
+
+    /**
+     * Post new detail to the stand.
+     * @param work Which work it belongs to
+     * @param text Specification to save
+     */
+    void post(@NotNull(message = "work can't be NULL") Work work,
+        @NotNull(message = "text can't be NULL") String text);
+
+}

@@ -27,75 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.timeline;
-
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import java.util.logging.Level;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * Tag.
+ * Snapshot management.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Tag {
-
-    /**
-     * Label of the tag.
-     * @return Label
-     */
-    String label();
-
-    /**
-     * Level of it.
-     * @return Level
-     */
-    Level level();
-
-    /**
-     * Simple implementation.
-     */
-    @Immutable
-    @ToString
-    @EqualsAndHashCode(of = { "name", "lvl" })
-    @Loggable(Loggable.DEBUG)
-    final class Simple implements Tag {
-        /**
-         * Label.
-         */
-        private final transient String name;
-        /**
-         * Level.
-         */
-        private final transient String lvl;
-        /**
-         * Public ctor.
-         * @param label Label
-         * @param level Level
-         */
-        public Simple(final String label, final Level level) {
-            this.name = label;
-            this.lvl = level.toString();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String label() {
-            return this.name;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Level level() {
-            return Level.parse(this.lvl);
-        }
-    }
-
-}
+package com.rultor.snapshot;

@@ -37,6 +37,7 @@ import com.rultor.spi.Queue;
 import com.rultor.spi.Receipt;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Stand;
 import com.rultor.spi.Statement;
 import com.rultor.spi.Statements;
 import com.rultor.spi.Unit;
@@ -190,6 +191,14 @@ final class Testing implements Profile {
         }
         @Override
         public Iterable<Receipt> receipts() {
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public Set<String> stands() {
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public Stand stand(String name) {
             throw new UnsupportedOperationException();
         }
     }

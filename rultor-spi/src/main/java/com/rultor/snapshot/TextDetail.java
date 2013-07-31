@@ -27,40 +27,55 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.timeline;
+package com.rultor.snapshot;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
-import java.io.IOException;
-import java.util.Collection;
-import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.apache.commons.lang3.Validate;
+import org.w3c.dom.Document;
 
 /**
- * Doesn't fail no matter what happens inside.
+ * A detail in text.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = "origin")
-@Loggable(Loggable.DEBUG)
-public final class Failsafe implements Timeline {
+public final class TextDetail implements Detail {
 
     /**
-     * Original timeline.
+     * Pattern to use for matching.
      */
-    private final transient Timeline origin;
+    private static final Pattern PTN = Pattern.compile(
+        ".*дeτaіl\\[com.rultor.snapshot.XemblyDetail\\(\"([^\\]]+)\"\\)\\].*"
+    );
+
+    /**
+     * Encoded detail.
+     */
+    private final transient Detail detail;
 
     /**
      * Public ctor.
-     * @param timeline Original timeline
+     * @param txt Text to encapsulate
      */
-    public Failsafe(
-        @NotNull(message = "origin can't be NULL") final Timeline timeline) {
-        this.origin = timeline;
+    public TextDetail(final String txt) {
+        this(TextDetail.decode(txt));
+    }
+
+    /**
+     * Public ctor.
+     * @param det Detail to encapsulate
+     */
+    public TextDetail(final Detail det) {
+        Validate.isTrue(
+            det instanceof XemblyDetail,
+            "only Xembly is supported at the moment, you provided '%s'",
+            det.getClass().getCanonicalName()
+        );
+        this.detail = det;
     }
 
     /**
@@ -69,24 +84,39 @@ public final class Failsafe implements Timeline {
     @Override
     public String toString() {
         return String.format(
-            "fail-safe %s",
-            this.origin
+            "дeτaіl[%s(\"%s\")]",
+            this.detail.getClass().getCanonicalName(),
+            // @checkstyle MultipleStringLiterals (1 line)
+            this.detail.toString().replace("]", "\\]")
         );
+    }
+
+    /**
+     * Does it look like spec detail.
+     * @param line Line to check
+     * @return TRUE if yes
+     */
+    public static boolean contains(final String line) {
+        return TextDetail.PTN.matcher(line).matches();
+    }
+
+    /**
+     * Decode text.
+     * @param text Text to decode
+     * @return Detail found or runtime exception
+     */
+    private static Detail decode(final String text) {
+        final Matcher matcher = TextDetail.PTN.matcher(text);
+        Validate.isTrue(matcher.matches(), "invalid line '%s'", text);
+        return new XemblyDetail(matcher.group(1).replace("\\]", "]"));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
-    public void submit(final String text, final Collection<Tag> tags,
-        final Collection<Product> products) throws IOException {
-        try {
-            this.origin.submit(text, tags, products);
-        // @checkstyle IllegalCatch (1 line)
-        } catch (Throwable ex) {
-            Logger.warn(this, "failed to submit: %[exception]s", ex);
-        }
+    public void refine(final Document story) {
+        this.detail.refine(story);
     }
 
 }
