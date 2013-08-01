@@ -30,10 +30,6 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
-import com.rexsl.page.JaxbBundle;
-import com.rexsl.page.Link;
-import com.rexsl.page.PageBuilder;
-import com.rultor.snapshot.Snapshot;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Repo;
@@ -49,11 +45,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
@@ -70,22 +63,12 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 public final class PulseRs extends BaseRs {
 
     /**
-     * Query param.
-     */
-    public static final String QUERY_START = "start";
-
-    /**
-     * Query param.
-     */
-    public static final String QUERY_STOP = "stop";
-
-    /**
      * Unit name.
      */
     private transient String name;
 
     /**
-     * PulseOfDrain date.
+     * Pulse date.
      */
     private transient Time date;
 
@@ -110,71 +93,15 @@ public final class PulseRs extends BaseRs {
     }
 
     /**
-     * Get entrance page JAX-RS response.
-     * @return The JAX-RS response
-     */
-    @GET
-    @Path("/")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response index() {
-        return new PageBuilder()
-            .stylesheet("/xsl/pulse.xsl")
-            .build(EmptyPage.class)
-            .init(this)
-            .append(new JaxbBundle("unit", this.name))
-            .append(
-                new JaxbBundle(
-                    "pulse",
-                    Long.toString(this.date.millis())
-                )
-            )
-            .append(new JaxbBundle("date", this.date.toString()))
-            .append(new JaxbBundle("when", this.date.when()))
-            .append(this.snapshot().xml().getDocumentElement())
-            .link(
-                new Link(
-                    "stream",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(PulseRs.class)
-                        .path(PulseRs.class, "stream")
-                        .build(this.name, this.date.millis())
-                )
-            )
-            .link(
-                new Link(
-                    "drain",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(DrainRs.class)
-                        .build(this.name)
-                )
-            )
-            .render()
-            .build();
-    }
-
-    /**
      * Get stream.
-     * @param start Start moment to render
-     * @param stop Stop moment to render
      * @return The JAX-RS response
      */
     @GET
     @Path("/stream")
     @Produces(MediaType.TEXT_PLAIN)
-    public String stream(@QueryParam(PulseRs.QUERY_START) final String start,
-        @QueryParam(PulseRs.QUERY_STOP) final String stop) {
+    public String stream() {
         try {
-            return new StringBuilder()
-                .append("start: ")
-                .append(start)
-                .append(CharUtils.LF)
-                .append("stop: ")
-                .append(stop)
-                .append(CharUtils.LF)
-                .append(IOUtils.toString(this.pulse().stream()))
-                .toString();
+            return IOUtils.toString(this.pulse().stream());
         } catch (IOException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUriBuilder()
@@ -227,26 +154,6 @@ public final class PulseRs extends BaseRs {
                 String.format(
                     "Can't instantiate drain of \"%s\": %s",
                     this.name,
-                    ExceptionUtils.getRootCauseMessage(ex)
-                ),
-                Level.SEVERE
-            );
-        }
-    }
-
-    /**
-     * Get snapshot of the pulse.
-     * @return The snapshot
-     */
-    private Snapshot snapshot() {
-        try {
-            return this.pulse().snapshot();
-        } catch (IOException ex) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                String.format(
-                    "Can't fetch snapshot from `%s`: %s",
-                    this.date,
                     ExceptionUtils.getRootCauseMessage(ex)
                 ),
                 Level.SEVERE

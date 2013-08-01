@@ -1,3 +1,0 @@
-# Web Front-End
-
-To be continued...

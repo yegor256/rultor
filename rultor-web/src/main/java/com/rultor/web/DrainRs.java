@@ -278,22 +278,9 @@ public final class DrainRs extends BaseRs {
             );
         }
         return new JaxbBundle("pulse")
-            .add("snapshot")
-            .add(snapshot.xml().getDocumentElement())
-            .up()
             .add("date", date.toString())
             .up()
-            .add("when", date.when())
-            .up()
-            .link(
-                new Link(
-                    "see",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(PulseRs.class)
-                        .build(this.name, date.millis())
-                )
-            )
+            .add(snapshot.xml().getDocumentElement())
             .link(
                 new Link(
                     // @checkstyle MultipleStringLiterals (1 line)

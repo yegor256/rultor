@@ -40,7 +40,7 @@
                 <meta name="description" content="Programmable Enforcer of a Software Development Process"/>
                 <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
                 <meta name="author" content="rultor.com"/>
-                <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet" />
+                <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet" />
                 <link rel="stylesheet" type="text/css" media="all">
                     <xsl:attribute name="href">
                         <xsl:text>/css/main.css?</xsl:text>
@@ -54,6 +54,19 @@
                     </xsl:attribute>
                 </link>
                 <xsl:call-template name="head"/>
+                <script type="text/javascript" src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+                <script type="text/javascript" src="//rawgithub.com/timrwood/moment/2.1.0/min/moment.min.js"></script>
+                <script type="text/javascript"><![CDATA[
+                    $(document).ready(
+                        function() {
+                            $('span.timeago').each(
+                                function (span) {
+                                    $(this).text(moment($(this).text()).fromNow());
+                                }
+                            );
+                        }
+                    );
+                ]]></script>
                 <script type="text/javascript"><![CDATA[
                     var _gaq = _gaq || [];
                     _gaq.push(['_setAccount', 'UA-1963507-10']);
