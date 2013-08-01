@@ -121,14 +121,6 @@ final class RefForeign implements Variable<Object> {
         @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
         final User user = users.get(this.owner);
-        if (!user.units().contains(this.name)) {
-            throw new SpecException(
-                String.format(
-                    "unit `%s` not found in `%s` but requested by `%s`",
-                    this.name, this.owner, this.client
-                )
-            );
-        }
         Work work = Work.class.cast(args.get(0));
         if (!this.client.equals(this.owner)) {
             work = new MonetaryWork(
@@ -137,7 +129,7 @@ final class RefForeign implements Variable<Object> {
         }
         return this.alter(
             this.grammar
-                .parse(user.urn(), user.get(this.name).spec().asText())
+                .parse(user.urn(), user.units().get(this.name).spec().asText())
                 .instantiate(users, this.mapping(users, work, args)),
             args
         );

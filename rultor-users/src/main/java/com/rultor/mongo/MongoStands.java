@@ -27,91 +27,85 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.snapshot;
+package com.rultor.mongo;
 
 import com.jcabi.aspects.Immutable;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import org.apache.commons.lang3.Validate;
-import org.w3c.dom.Document;
+import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Stand;
+import com.rultor.spi.Stands;
+import java.util.Iterator;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * A detail in text.
+ * Stands in Mongo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public final class TextDetail implements Detail {
+@ToString
+@EqualsAndHashCode(of = { "mongo", "origin" })
+@Loggable(Loggable.DEBUG)
+public final class MongoStands implements Stands {
 
     /**
-     * Pattern to use for matching.
+     * Mongo container.
      */
-    private static final Pattern PTN = Pattern.compile(
-        ".*χembly '([^']+)'.*"
-    );
+    private final transient Mongo mongo;
 
     /**
-     * Encoded detail.
+     * Original stands.
      */
-    private final transient Detail detail;
-
-    /**
-     * Public ctor.
-     * @param txt Text to encapsulate
-     */
-    public TextDetail(final String txt) {
-        this(TextDetail.decode(txt));
-    }
+    private final transient Stands origin;
 
     /**
      * Public ctor.
-     * @param det Detail to encapsulate
+     * @param mng Mongo container
+     * @param stands Original
      */
-    public TextDetail(final Detail det) {
-        Validate.isTrue(
-            det instanceof XemblyDetail,
-            "only Xembly is supported at the moment, you provided '%s'",
-            det.getClass().getCanonicalName()
-        );
-        this.detail = det;
+    public MongoStands(final Mongo mng, final Stands stands) {
+        this.mongo = mng;
+        this.origin = stands;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return String.format("χembly '%s'", this.detail.toString());
-    }
-
-    /**
-     * Does it look like spec detail.
-     * @param line Line to check
-     * @return TRUE if yes
-     */
-    public static boolean contains(final String line) {
-        return TextDetail.PTN.matcher(line).matches();
-    }
-
-    /**
-     * Decode text.
-     * @param text Text to decode
-     * @return Detail found or runtime exception
-     */
-    private static Detail decode(final String text) {
-        final Matcher matcher = TextDetail.PTN.matcher(text);
-        Validate.isTrue(matcher.matches(), "invalid line '%s'", text);
-        return new XemblyDetail(matcher.group(1));
+    public Stand get(final String name) {
+        return new MongoStand(this.mongo, this.origin.get(name));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void refine(final Document story) {
-        this.detail.refine(story);
+    public void create(final String name) {
+        this.origin.create(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterator<Stand> iterator() {
+        final Iterator<Stand> iter = this.origin.iterator();
+        return new Iterator<Stand>() {
+            @Override
+            public boolean hasNext() {
+                return iter.hasNext();
+            }
+            @Override
+            public Stand next() {
+                return new MongoStand(MongoStands.this.mongo, iter.next());
+            }
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
 }

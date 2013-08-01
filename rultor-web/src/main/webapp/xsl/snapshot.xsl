@@ -98,6 +98,8 @@
                         </xsl:choose>
                         <xsl:text>%;</xsl:text>
                     </xsl:attribute>
+                    <!-- this is for W3C compliance -->
+                    <xsl:text> </xsl:text>
                 </div>
             </div>
             <xsl:if test="steps/step">

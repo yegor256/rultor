@@ -39,6 +39,7 @@ import com.rultor.spi.Unit;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -122,14 +123,12 @@ public final class PulseRs extends BaseRs {
      * @return The pulse
      */
     private PulseOfDrain pulse() {
-        if (!this.user().units().contains(this.name)) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                String.format("Unit `%s` doesn't exist", this.name),
-                Level.SEVERE
-            );
+        final Unit unit;
+        try {
+            unit = this.user().units().get(this.name);
+        } catch (NoSuchElementException ex) {
+            throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
-        final Unit unit = this.user().get(this.name);
         try {
             return new PulseOfDrain(
                 Drain.Source.class.cast(

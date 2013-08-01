@@ -31,7 +31,6 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
-import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -59,7 +58,7 @@ public interface User {
     Statements statements();
 
     /**
-     * All receipts not yet statementd.
+     * All receipts not yet statement.
      * @return All receipts
      */
     @NotNull(message = "list of receipts is never NULL")
@@ -70,41 +69,13 @@ public interface User {
      * @return Collection of units
      */
     @NotNull(message = "set of units of user is never NULL")
-    Set<String> units();
+    Units units();
 
     /**
      * Names of all his stands.
      * @return Collection of stand names
      */
     @NotNull(message = "set of stands of user is never NULL")
-    Set<String> stands();
-
-    /**
-     * Get stand by name (runtime exception if it's absent).
-     * @param name The name of it
-     * @return The stand
-     */
-    @NotNull(message = "stand is never NULL")
-    Stand stand(@NotNull(message = "stand name can't be NULL") String name);
-
-    /**
-     * Get unit by name (runtime exception if it's absent).
-     * @param name The name of it
-     * @return The unit
-     */
-    @NotNull(message = "unit is never NULL")
-    Unit get(@NotNull(message = "unit name can't be NULL") String name);
-
-    /**
-     * Remove unit by name (runtime exception if it's absent).
-     * @param name The name of it
-     */
-    void remove(@NotNull(message = "name can't be NULL") String name);
-
-    /**
-     * Create empty default unit with this name.
-     * @param name The name of it
-     */
-    void create(@NotNull(message = "name can't be NULL") String name);
+    Stands stands();
 
 }

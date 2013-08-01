@@ -34,16 +34,14 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
 import com.rultor.spi.Receipt;
-import com.rultor.spi.Stand;
+import com.rultor.spi.Stands;
 import com.rultor.spi.Statements;
-import com.rultor.spi.Unit;
+import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLEncoder;
-import java.util.HashSet;
-import java.util.Set;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -133,85 +131,8 @@ public final class RestUser implements User {
      * {@inheritDoc}
      */
     @Override
-    public Set<String> units() {
-        return new HashSet<String>(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("#isEmpty()")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath("/page/units/unit/name/text()")
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Unit get(final String name) {
-        return new RestUnit(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get(String.format("#get(%s)", name))
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath(
-                    String.format(
-                        // @checkstyle LineLength (1 line)
-                        "/page/units/unit[name='%s']/links/link[@rel='edit']/@href",
-                        name
-                    )
-                )
-                .get(0),
-            this.token
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void create(final String name) {
-        try {
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get(String.format("preparing to #create(%s)", name))
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .rel("/page/links/link[@rel='create']/@href")
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .post(
-                    String.format("#create(%s)", name),
-                    String.format(
-                        "name=%s",
-                        URLEncoder.encode(name, CharEncoding.UTF_8)
-                    )
-                )
-                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
-        } catch (UnsupportedEncodingException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void remove(final String name) {
-        RestTester.start(UriBuilder.fromUri(this.home))
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-            .header(HttpHeaders.AUTHORIZATION, this.token)
-            .get(String.format("preparing to #remove(%s)", name))
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .rel(
-                String.format(
-                    // @checkstyle LineLength (1 line)
-                    "/page/units/unit[name='%s']/links/link[@rel='remove']/@href",
-                    name
-                )
-            )
-            .get(String.format("#remove(%s)", name))
-            .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+    public Units units() {
+        return new RestUnits(URI.create(this.home), this.token);
     }
 
     /**
@@ -234,15 +155,7 @@ public final class RestUser implements User {
      * {@inheritDoc}
      */
     @Override
-    public Set<String> stands() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Stand stand(final String name) {
+    public Stands stands() {
         throw new UnsupportedOperationException();
     }
 

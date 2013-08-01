@@ -34,6 +34,7 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.auth.Identity;
+import com.rultor.spi.Unit;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
@@ -92,7 +93,7 @@ public final class IndexRs extends BaseRs {
     @Path("/create")
     public Response create(@NotNull(message = "unit name is mandatory")
         @FormParam("name") final String name) {
-        this.user().create(name);
+        this.user().units().create(name);
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()
                 .clone()
@@ -109,10 +110,10 @@ public final class IndexRs extends BaseRs {
      */
     private JaxbBundle mine() {
         return new JaxbBundle("units").add(
-            new JaxbBundle.Group<String>(this.user().units()) {
+            new JaxbBundle.Group<Unit>(this.user().units()) {
                 @Override
-                public JaxbBundle bundle(final String name) {
-                    return IndexRs.this.unit(name);
+                public JaxbBundle bundle(final Unit unit) {
+                    return IndexRs.this.unit(unit);
                 }
             }
         );
@@ -120,16 +121,16 @@ public final class IndexRs extends BaseRs {
 
     /**
      * Convert unit to JaxbBundle.
-     * @param name Name of unit
+     * @param unit Name of unit
      * @return Bundle
      */
-    private JaxbBundle unit(final String name) {
+    private JaxbBundle unit(final Unit unit) {
         return new JaxbBundle("unit")
-            .add("name", name)
+            .add("name", unit.name())
             .up()
             .add(
                 new JaxbFace(this.repo(), this.users())
-                    .bundle(this.user().urn(), name)
+                    .bundle(this.user().urn(), unit.name())
             )
             .link(
                 new Link(
@@ -139,7 +140,7 @@ public final class IndexRs extends BaseRs {
                         .clone()
                         .path(UnitRs.class)
                         .path(UnitRs.class, "remove")
-                        .build(name)
+                        .build(unit.name())
                 )
             )
             .link(
@@ -148,7 +149,7 @@ public final class IndexRs extends BaseRs {
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(UnitRs.class)
-                        .build(name)
+                        .build(unit.name())
                 )
             )
             .link(
@@ -157,7 +158,7 @@ public final class IndexRs extends BaseRs {
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(DrainRs.class)
-                        .build(name)
+                        .build(unit.name())
                 )
             );
     }

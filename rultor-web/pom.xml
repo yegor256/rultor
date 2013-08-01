@@ -89,6 +89,10 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+        </dependency>
+        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <scope>runtime</scope>
@@ -264,6 +268,11 @@
                                 <Rultor-DynamoKey>${dynamo.key}</Rultor-DynamoKey>
                                 <Rultor-DynamoSecret>${dynamo.secret}</Rultor-DynamoSecret>
                                 <Rultor-DynamoPrefix>${dynamo.prefix}</Rultor-DynamoPrefix>
+                                <Rultor-MongoHost>${mongo.host}</Rultor-MongoHost>
+                                <Rultor-MongoPort>${mongo.port}</Rultor-MongoPort>
+                                <Rultor-MongoName>${mongo.name}</Rultor-MongoName>
+                                <Rultor-MongoUser>${mongo.user}</Rultor-MongoUser>
+                                <Rultor-MongoPassword>${mongo.password}</Rultor-MongoPassword>
                             </manifestEntries>
                         </archive>
                     </configuration>

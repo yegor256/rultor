@@ -27,73 +27,87 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.mongo;
 
-import com.jcabi.urn.URN;
-import com.rultor.spi.Arguments;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Unit;
-import com.rultor.spi.Units;
-import com.rultor.spi.User;
-import com.rultor.spi.Users;
-import com.rultor.spi.Variable;
-import com.rultor.spi.Work;
-import java.util.ArrayList;
+import com.jcabi.aspects.Tv;
+import com.rexsl.test.XhtmlMatchers;
+import com.rultor.spi.Stand;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
+import org.junit.Assume;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test case for {@link RefForeign}.
+ * Integration case for {@link MongoStand}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public final class RefForeignTest {
+@SuppressWarnings({ "unchecked", "PMD.TooManyMethods" })
+public final class MongoStandITCase {
 
     /**
-     * RefForeign can make an instance.
+     * Mongo host.
+     */
+    private static final String HOST =
+        System.getProperty("failsafe.mongo.host");
+
+    /**
+     * Mongo port.
+     */
+    private static final String PORT =
+        System.getProperty("failsafe.mongo.port");
+
+    /**
+     * Mongo database name.
+     */
+    private static final String NAME =
+        System.getProperty("failsafe.mongo.name");
+
+    /**
+     * Mongo user.
+     */
+    private static final String USER =
+        System.getProperty("failsafe.mongo.user");
+
+    /**
+     * Mongo password.
+     */
+    private static final String PWD =
+        System.getProperty("failsafe.mongo.password");
+
+    /**
+     * MongoStand can accept and return pulses.
      * @throws Exception If some problem inside
      */
     @Test
-    public void makesInstance() throws Exception {
-        final String name = "some-ref-name";
-        final Unit unit = Mockito.mock(Unit.class);
-        final Spec spec = new Spec.Simple("java.lang.Long(1L)");
-        Mockito.doReturn(spec).when(unit).spec();
-        final User user = Mockito.mock(User.class);
-        final Units units = Mockito.mock(Units.class);
-        Mockito.doReturn(units).when(user).units();
-        Mockito.doReturn(unit).when(units).get(name);
-        final URN urn = new URN("urn:facebook:1");
-        Mockito.doReturn(urn).when(user).urn();
-        final Variable<Object> var = new RefForeign(
-            new AntlrGrammar(), urn, urn, name,
-            new ArrayList<Variable<?>>(0)
-        );
-        final Users users = Mockito.mock(Users.class);
-        Mockito.doReturn(user).when(users).get(urn);
+    public void managesDataInMongoDb() throws Exception {
+        final Stand stand = this.stand();
+        final String pulse = RandomStringUtils.randomAlphabetic(Tv.TEN);
+        stand.post(pulse, "ADD 'test'; SET 'hello, world!';");
         MatcherAssert.assertThat(
-            var.instantiate(users, new Arguments(new Work.None())),
-            Matchers.<Object>equalTo(1L)
+            stand.pulses().iterator().next().snapshot().xml(),
+            XhtmlMatchers.hasXPath("/snapshot/test[.='hello, world!']")
         );
     }
 
     /**
-     * RefForeign can make a text.
+     * Get stand to test against.
+     * @return Stand to test
      * @throws Exception If some problem inside
      */
-    @Test
-    public void makesText() throws Exception {
-        final URN urn = new URN("urn:facebook:998");
-        final Variable<Object> var = new RefForeign(
-            new AntlrGrammar(), urn, urn, "some-name",
-            new ArrayList<Variable<?>>(0)
-        );
-        MatcherAssert.assertThat(
-            var.asText(),
-            Matchers.equalTo("urn:facebook:998:some-name()")
+    private Stand stand() throws Exception {
+        Assume.assumeNotNull(MongoStandITCase.HOST);
+        return new MongoStand(
+            new Mongo.Simple(
+                MongoStandITCase.HOST,
+                Integer.parseInt(MongoStandITCase.PORT),
+                MongoStandITCase.NAME,
+                MongoStandITCase.USER,
+                MongoStandITCase.PWD
+            ),
+            Mockito.mock(Stand.class)
         );
     }
 

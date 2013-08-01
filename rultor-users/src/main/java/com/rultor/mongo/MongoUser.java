@@ -31,15 +31,17 @@ package com.rultor.mongo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.immutable.ArrayMap;
-import com.rultor.timeline.Tag;
-import java.util.Map;
-import java.util.logging.Level;
+import com.jcabi.urn.URN;
+import com.rultor.spi.Receipt;
+import com.rultor.spi.Stands;
+import com.rultor.spi.Statements;
+import com.rultor.spi.Units;
+import com.rultor.spi.User;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Tag in Mongo.
+ * User with extra features from Mongo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -47,47 +49,68 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "attrs")
+@EqualsAndHashCode(of = { "mongo", "origin" })
 @Loggable(Loggable.DEBUG)
-public final class MongoTag implements Tag {
+public final class MongoUser implements User {
 
     /**
-     * Mongo attribute.
+     * Mongo container.
      */
-    public static final String ATTR_LABEL = "label";
+    private final transient Mongo mongo;
 
     /**
-     * Mongo attribute.
+     * Original user.
      */
-    public static final String ATTR_LEVEL = "level";
-
-    /**
-     * Data from DB.
-     */
-    private final transient ArrayMap<String, Object> attrs;
+    private final transient User origin;
 
     /**
      * Public ctor.
-     * @param map Map of attributes
+     * @param mng Mongo container
+     * @param user User
      */
-    public MongoTag(final Map<String, Object> map) {
-        this.attrs = new ArrayMap<String, Object>(map);
+    public MongoUser(final Mongo mng, final User user) {
+        this.mongo = mng;
+        this.origin = user;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String label() {
-        return this.attrs.get(MongoTag.ATTR_LABEL).toString();
+    public URN urn() {
+        return this.origin.urn();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Level level() {
-        return Level.parse(this.attrs.get(MongoTag.ATTR_LEVEL).toString());
+    public Statements statements() {
+        return this.origin.statements();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterable<Receipt> receipts() {
+        return this.origin.receipts();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Units units() {
+        return this.origin.units();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stands stands() {
+        return new MongoStands(this.mongo, this.origin.stands());
     }
 
 }

@@ -46,9 +46,9 @@ MatcherAssert.assertThat(user.urn(), Matchers.equalTo(identity.urn()))
 
 def name = 'sample-unit'
 if (!user.units().contains(name)) {
-    user.create(name)
+    user.units().create(name)
 }
-def unit = user.get(name)
+def unit = user.units().get(name)
 
 [
     'java.lang.Double ( -55.0 )': 'java.lang.Double(-55.0)',
@@ -63,4 +63,4 @@ def unit = user.get(name)
 ].each {
     unit.update(new Spec.Simple(it))
 }
-user.remove(name)
+user.units().remove(name)

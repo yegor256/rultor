@@ -54,8 +54,14 @@
                     </xsl:attribute>
                 </link>
                 <xsl:call-template name="head"/>
-                <script type="text/javascript" src="//code.jquery.com/jquery-2.0.3.min.js"></script>
-                <script type="text/javascript" src="//rawgithub.com/timrwood/moment/2.1.0/min/moment.min.js"></script>
+                <script type="text/javascript" src="//code.jquery.com/jquery-2.0.3.min.js">
+                    <!-- this is for W3C compliance -->
+                    <xsl:text> </xsl:text>
+                </script>
+                <script type="text/javascript" src="//rawgithub.com/timrwood/moment/2.1.0/min/moment.min.js">
+                    <!-- this is for W3C compliance -->
+                    <xsl:text> </xsl:text>
+                </script>
                 <script type="text/javascript"><![CDATA[
                     $(document).ready(
                         function() {

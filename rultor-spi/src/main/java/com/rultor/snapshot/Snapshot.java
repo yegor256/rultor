@@ -30,18 +30,8 @@
 package com.rultor.snapshot;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.immutable.Array;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Collection;
-import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * Snapshot.
@@ -51,66 +41,13 @@ import org.w3c.dom.Element;
  * @since 1.0
  */
 @Immutable
-public final class Snapshot {
-
-    /**
-     * Details.
-     */
-    private final transient Array<Detail> details;
-
-    /**
-     * Public ctor.
-     * @param stream Input stream where to find details
-     * @throws IOException If IO problem inside
-     */
-    public Snapshot(final InputStream stream) throws IOException {
-        this.details = new Array<Detail>(Snapshot.fetch(stream));
-    }
+public interface Snapshot {
 
     /**
      * Print it as an XML document.
      * @return XML
      */
     @NotNull(message = "output XML is never NULL")
-    public Document xml() {
-        final Document dom;
-        try {
-            dom = DocumentBuilderFactory.newInstance()
-                .newDocumentBuilder().newDocument();
-        } catch (ParserConfigurationException ex) {
-            throw new IllegalStateException(ex);
-        }
-        final Element root = dom.createElement("snapshot");
-        dom.adoptNode(root);
-        for (Detail detail : this.details) {
-            detail.refine(dom);
-        }
-        return dom;
-    }
-
-    /**
-     * Fetch them from input stream.
-     * @param stream Input stream
-     * @return Iterator of details
-     * @throws IOException If fails on IO problem
-     */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    private static Collection<Detail> fetch(final InputStream stream)
-        throws IOException {
-        final BufferedReader reader = new BufferedReader(
-            new InputStreamReader(stream)
-        );
-        final Collection<Detail> details = new LinkedList<Detail>();
-        while (true) {
-            final String line = reader.readLine();
-            if (line == null) {
-                break;
-            }
-            if (TextDetail.contains(line)) {
-                details.add(new TextDetail(line));
-            }
-        }
-        return details;
-    }
+    Document xml();
 
 }

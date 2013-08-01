@@ -31,7 +31,6 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
-import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -42,14 +41,7 @@ import javax.validation.constraints.NotNull;
  * @since 1.0
  */
 @Immutable
-public interface Users {
-
-    /**
-     * Get everybody.
-     * @return All users
-     */
-    @NotNull(message = "set of URNs is never NULL")
-    Set<URN> everybody();
+public interface Users extends Iterable<User> {
 
     /**
      * Get user by URN (no exception even if it's seen for the first time).

@@ -36,12 +36,8 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
-import com.jcabi.dynamo.Region;
-import com.jcabi.dynamo.Table;
-import com.jcabi.urn.URN;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
-import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -57,7 +53,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "region", "owner", "name" })
+@EqualsAndHashCode(of = "item")
 @Loggable(Loggable.DEBUG)
 final class AwsUnit implements Unit {
 
@@ -69,43 +65,29 @@ final class AwsUnit implements Unit {
     /**
      * Dynamo DB table column.
      */
-    public static final String KEY_OWNER = "owner";
+    public static final String HASH_OWNER = "owner";
 
     /**
      * Dynamo DB table column.
      */
-    public static final String KEY_NAME = "name";
+    public static final String RANGE_NAME = "name";
 
     /**
      * Dynamo DB table column.
      */
-    private static final String FIELD_SPEC = "spec";
+    public static final String FIELD_SPEC = "spec";
 
     /**
-     * Dynamo DB region.
+     * Item.
      */
-    private final transient Region region;
-
-    /**
-     * URN of the user.
-     */
-    private final transient URN owner;
-
-    /**
-     * Name of the unit.
-     */
-    private final transient String name;
+    private final transient Item item;
 
     /**
      * Public ctor.
-     * @param reg Region in Dynamo
-     * @param urn URN of the user/owner
-     * @param label Name of it
+     * @param itm Item from Dynamo
      */
-    protected AwsUnit(final Region reg, final URN urn, final String label) {
-        this.region = reg;
-        this.owner = urn;
-        this.name = label;
+    protected AwsUnit(final Item itm) {
+        this.item = itm;
     }
 
     /**
@@ -115,7 +97,7 @@ final class AwsUnit implements Unit {
     @Cacheable.FlushBefore
     public void update(@NotNull(message = "spec is mandatory and can't be NULL")
         final Spec spec) {
-        this.item().put(
+        this.item.put(
             new Attributes()
                 .with(
                     AwsUnit.FIELD_SPEC,
@@ -132,8 +114,8 @@ final class AwsUnit implements Unit {
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Spec spec() {
         Spec spec;
-        if (this.item().has(AwsUnit.FIELD_SPEC)) {
-            spec = new Spec.Simple(this.item().get(AwsUnit.FIELD_SPEC).getS());
+        if (this.item.has(AwsUnit.FIELD_SPEC)) {
+            spec = new Spec.Simple(this.item.get(AwsUnit.FIELD_SPEC).getS());
         } else {
             spec = new Spec.Simple();
         }
@@ -141,26 +123,11 @@ final class AwsUnit implements Unit {
     }
 
     /**
-     * Fetch dynamo item.
-     * @return The item
+     * {@inheritDoc}
      */
-    private Item item() {
-        final Table table = this.region.table(AwsUnit.TABLE);
-        final Iterator<Item> items = table.frame()
-            .where(AwsUnit.KEY_OWNER, this.owner.toString())
-            .where(AwsUnit.KEY_NAME, this.name)
-            .iterator();
-        Item item;
-        if (items.hasNext()) {
-            item = items.next();
-        } else {
-            item = table.put(
-                new Attributes()
-                    .with(AwsUnit.KEY_OWNER, this.owner)
-                    .with(AwsUnit.KEY_NAME, this.name)
-            );
-        }
-        return item;
+    @Override
+    public String name() {
+        return this.item.get(AwsUnit.RANGE_NAME).getS();
     }
 
 }

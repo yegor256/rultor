@@ -27,62 +27,95 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.mongo;
 
 import com.jcabi.aspects.Immutable;
-import java.net.URI;
-import javax.validation.constraints.NotNull;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
+import com.rultor.spi.Receipt;
+import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import java.util.Iterator;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Stand.
+ * Users with extra features from Mongo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Stand {
+@ToString
+@EqualsAndHashCode(of = { "mongo", "origin" })
+@Loggable(Loggable.DEBUG)
+public final class MongoUsers implements Users {
 
     /**
-     * Public Amazon SQS queue where anyone can report their details.
+     * Mongo container.
      */
-    URI QUEUE = URI.create(
-        "https://sqs.us-east-1.amazonaws.com/019644334823/rultor-stands"
-    );
+    private final transient Mongo mongo;
 
     /**
-     * Name of it.
-     * @return Name
+     * Original users.
      */
-    @NotNull(message = "name of stand is never NULL")
-    String name();
+    private final transient Users origin;
 
     /**
-     * Update ACL.
-     * @param spec Specification to save
+     * Public ctor.
+     * @param mng Mongo container
+     * @param users Users
      */
-    void acl(@NotNull(message = "ACL can't be NULL") Spec spec);
+    public MongoUsers(final Mongo mng, final Users users) {
+        this.mongo = mng;
+        this.origin = users;
+    }
 
     /**
-     * Get its ACL.
-     * @return Specification of ACL
+     * {@inheritDoc}
      */
-    @NotNull(message = "ACL is never NULL")
-    Spec acl();
+    @Override
+    public Iterator<User> iterator() {
+        final Iterator<User> iter = this.origin.iterator();
+        return new Iterator<User>() {
+            @Override
+            public boolean hasNext() {
+                return iter.hasNext();
+            }
+            @Override
+            public User next() {
+                return new MongoUser(MongoUsers.this.mongo, iter.next());
+            }
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
 
     /**
-     * Get all pulses.
-     * @return Pulses
+     * {@inheritDoc}
      */
-    @NotNull(message = "collection of pulses is never NULL")
-    Iterable<Pulse> pulses();
+    @Override
+    public User get(final URN name) {
+        return new MongoUser(this.mongo, this.origin.get(name));
+    }
 
     /**
-     * Post new xembly script to the pulse of the stand.
-     * @param pulse Unique pulse name
-     * @param xembly Xembly script
+     * {@inheritDoc}
      */
-    void post(@NotNull(message = "pulse can't be NULL") String pulse,
-        @NotNull(message = "text can't be NULL") String xembly);
+    @Override
+    public void charge(final Receipt receipt) {
+        this.origin.charge(receipt);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reconcile() {
+        this.origin.reconcile();
+    }
 
 }

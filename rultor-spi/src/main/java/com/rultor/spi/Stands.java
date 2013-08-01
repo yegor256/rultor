@@ -30,59 +30,30 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import java.net.URI;
 import javax.validation.constraints.NotNull;
 
 /**
- * Stand.
+ * Stands.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Stand {
+public interface Stands extends Iterable<Stand> {
 
     /**
-     * Public Amazon SQS queue where anyone can report their details.
+     * Get stand by name (runtime exception if it's absent).
+     * @param name The name of it
+     * @return The stand
      */
-    URI QUEUE = URI.create(
-        "https://sqs.us-east-1.amazonaws.com/019644334823/rultor-stands"
-    );
+    @NotNull(message = "stand is never NULL")
+    Stand get(@NotNull(message = "stand name can't be NULL") String name);
 
     /**
-     * Name of it.
-     * @return Name
+     * Create empty default stand with this name.
+     * @param name The name of it
      */
-    @NotNull(message = "name of stand is never NULL")
-    String name();
-
-    /**
-     * Update ACL.
-     * @param spec Specification to save
-     */
-    void acl(@NotNull(message = "ACL can't be NULL") Spec spec);
-
-    /**
-     * Get its ACL.
-     * @return Specification of ACL
-     */
-    @NotNull(message = "ACL is never NULL")
-    Spec acl();
-
-    /**
-     * Get all pulses.
-     * @return Pulses
-     */
-    @NotNull(message = "collection of pulses is never NULL")
-    Iterable<Pulse> pulses();
-
-    /**
-     * Post new xembly script to the pulse of the stand.
-     * @param pulse Unique pulse name
-     * @param xembly Xembly script
-     */
-    void post(@NotNull(message = "pulse can't be NULL") String pulse,
-        @NotNull(message = "text can't be NULL") String xembly);
+    void create(@NotNull(message = "name can't be NULL") String name);
 
 }

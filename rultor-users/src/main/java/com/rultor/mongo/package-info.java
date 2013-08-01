@@ -29,7 +29,7 @@
  */
 
 /**
- * Timeline in MongoDB.
+ * Stand in MongoDB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$

@@ -33,13 +33,12 @@ import com.jcabi.urn.URN;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
+import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -64,9 +63,9 @@ public final class RefLocalTest {
         final Spec spec = new Spec.Simple("java.lang.Long(1L)");
         Mockito.doReturn(spec).when(unit).spec();
         final User user = Mockito.mock(User.class);
-        Mockito.doReturn(new HashSet<String>(Arrays.asList(name)))
-            .when(user).units();
-        Mockito.doReturn(unit).when(user).get(name);
+        final Units units = Mockito.mock(Units.class);
+        Mockito.doReturn(units).when(user).units();
+        Mockito.doReturn(unit).when(units).get(name);
         final URN urn = new URN("urn:facebook:1");
         Mockito.doReturn(urn).when(user).urn();
         final Variable<Object> var = new RefLocal(

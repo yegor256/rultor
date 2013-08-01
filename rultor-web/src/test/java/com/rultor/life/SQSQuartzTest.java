@@ -40,12 +40,12 @@ import com.rultor.aws.SQSClient;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
+import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.util.Arrays;
-import java.util.HashSet;
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -67,17 +67,16 @@ public final class SQSQuartzTest {
     @Test
     public void publishesWorksIntoQueue() throws Exception {
         final Users users = Mockito.mock(Users.class);
-        final URN urn = new URN("urn:github:1");
-        Mockito.doReturn(new HashSet<URN>(Arrays.asList(urn)))
-            .when(users).everybody();
         final User user = Mockito.mock(User.class);
-        Mockito.doReturn(urn).when(user).urn();
-        Mockito.doReturn(user).when(users).get(urn);
-        final String name = "unit-name";
-        Mockito.doReturn(new HashSet<String>(Arrays.asList(name)))
-            .when(user).units();
+        Mockito.doReturn(Arrays.asList(user).iterator())
+            .when(users).iterator();
+        Mockito.doReturn(new URN("urn:github:1")).when(user).urn();
         final Unit unit = Mockito.mock(Unit.class);
-        Mockito.doReturn(unit).when(user).get(name);
+        Mockito.doReturn("some-unit").when(unit).name();
+        final Units units = Mockito.mock(Units.class);
+        Mockito.doReturn(units).when(user).units();
+        Mockito.doReturn(Arrays.asList(unit).iterator())
+            .when(units).iterator();
         Mockito.doReturn(new Spec.Simple()).when(unit).spec();
         final Queue queue = Mockito.mock(Queue.class);
         final SQSClient client = Mockito.mock(SQSClient.class);

@@ -31,6 +31,10 @@ package com.rultor.snapshot;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.Validate;
 import org.w3c.dom.Document;
 import org.xembly.Directives;
 import org.xembly.Xembler;
@@ -44,7 +48,15 @@ import org.xembly.XemblyBuilder;
  * @since 1.0
  */
 @Immutable
+@EqualsAndHashCode(of = "script")
 public final class XemblyDetail implements Detail {
+
+    /**
+     * Pattern to use for matching.
+     */
+    private static final Pattern PTN = Pattern.compile(
+        ".*χembly '([^']+)'.*"
+    );
 
     /**
      * Encapsulated xembly program.
@@ -64,7 +76,7 @@ public final class XemblyDetail implements Detail {
      */
     @Override
     public String toString() {
-        return this.script;
+        return String.format("χembly '%s'", this.script);
     }
 
     /**
@@ -76,13 +88,33 @@ public final class XemblyDetail implements Detail {
     }
 
     /**
+     * Does it look like spec detail.
+     * @param line Line to check
+     * @return TRUE if yes
+     */
+    public static boolean contains(final String line) {
+        return XemblyDetail.PTN.matcher(line).matches();
+    }
+
+    /**
+     * Decode text.
+     * @param text Text to decode
+     * @return Detail found or runtime exception
+     */
+    public static Detail parse(final String text) {
+        final Matcher matcher = XemblyDetail.PTN.matcher(text);
+        Validate.isTrue(matcher.matches(), "invalid line '%s'", text);
+        return new XemblyDetail(matcher.group(1));
+    }
+
+    /**
      * Convenient utility method to log xembly.
      * @param builder Builder of xembly code
      */
     public static void log(final XemblyBuilder builder) {
         Logger.info(
             XemblyDetail.class,
-            new TextDetail(new XemblyDetail(builder.toString())).toString()
+            new XemblyDetail(builder.toString()).toString()
         );
     }
 

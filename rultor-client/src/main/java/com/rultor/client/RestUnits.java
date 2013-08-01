@@ -32,11 +32,14 @@ package com.rultor.client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
-import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
+import com.rultor.spi.Units;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URLEncoder;
+import java.util.Iterator;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
@@ -45,7 +48,7 @@ import lombok.ToString;
 import org.apache.commons.lang3.CharEncoding;
 
 /**
- * RESTful Unit.
+ * RESTful Units.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -55,7 +58,7 @@ import org.apache.commons.lang3.CharEncoding;
 @ToString
 @EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
-final class RestUnit implements Unit {
+public final class RestUnits implements Units {
 
     /**
      * Home URI.
@@ -68,33 +71,66 @@ final class RestUnit implements Unit {
     private final transient String token;
 
     /**
-     * Public ctor.
-     * @param uri URI of home page
-     * @param auth Authentication token
+     * Public ctor, with custom entry point.
+     * @param entry Entry point (URI)
+     * @param tkn Token
      */
-    protected RestUnit(final String uri, final String auth) {
-        this.home = uri;
-        this.token = auth;
+    public RestUnits(
+        @NotNull(message = "URI can't be NULL") final URI entry,
+        @NotNull(message = "token can't be NULL") final String tkn) {
+        this.home = entry.toString();
+        this.token = tkn;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void update(final Spec spec) {
+    public Iterator<Unit> iterator() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Unit get(final String name) {
+        return new RestUnit(
+            RestTester.start(UriBuilder.fromUri(this.home))
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
+                .get(String.format("#get(%s)", name))
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .xpath(
+                    String.format(
+                        // @checkstyle LineLength (1 line)
+                        "/page/units/unit[name='%s']/links/link[@rel='edit']/@href",
+                        name
+                    )
+                )
+                .get(0),
+            this.token
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void create(final String name) {
         try {
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get(String.format("preparing for #spec(%s)", spec))
+                .get(String.format("preparing to #create(%s)", name))
                 .assertStatus(HttpURLConnection.HTTP_OK)
-                .rel("/page/links/link[@rel='save']/@href")
+                .rel("/page/links/link[@rel='create']/@href")
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .post(
-                    String.format("#spec(%s)", spec.asText()),
+                    String.format("#create(%s)", name),
                     String.format(
-                        "spec=%s",
-                        URLEncoder.encode(spec.asText(), CharEncoding.UTF_8)
+                        "name=%s",
+                        URLEncoder.encode(name, CharEncoding.UTF_8)
                     )
                 )
                 .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
@@ -107,30 +143,35 @@ final class RestUnit implements Unit {
      * {@inheritDoc}
      */
     @Override
-    public Spec spec() {
-        return new Spec.Simple(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("#spec()")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath("/page/unit/spec/text()")
-                .get(0)
-        );
+    public void remove(final String name) {
+        RestTester.start(UriBuilder.fromUri(this.home))
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+            .header(HttpHeaders.AUTHORIZATION, this.token)
+            .get(String.format("preparing to #remove(%s)", name))
+            .assertStatus(HttpURLConnection.HTTP_OK)
+            .rel(
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    "/page/units/unit[name='%s']/links/link[@rel='remove']/@href",
+                    name
+                )
+            )
+            .get(String.format("#remove(%s)", name))
+            .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String name() {
-        return RestTester.start(UriBuilder.fromUri(this.home))
+    public boolean contains(final String name) {
+        return !RestTester.start(UriBuilder.fromUri(this.home))
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
             .header(HttpHeaders.AUTHORIZATION, this.token)
-            .get("#name()")
+            .get(String.format("#contains(%s)", name))
             .assertStatus(HttpURLConnection.HTTP_OK)
-            .xpath("/page/unit/name/text()")
-            .get(0);
+            .xpath(String.format("/page/units/unit[name='%s']", name))
+            .isEmpty();
     }
 
 }

@@ -32,6 +32,7 @@ package com.rultor.web;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.snapshot.Snapshot;
+import com.rultor.snapshot.SnapshotInStream;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
 import java.io.IOException;
@@ -70,7 +71,7 @@ public final class PulseOfDrain implements Pulse {
      */
     @Override
     public Snapshot snapshot() throws IOException {
-        return new Snapshot(this.stream());
+        return new SnapshotInStream(this.stream());
     }
 
     /**

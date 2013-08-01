@@ -39,7 +39,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Tv;
-import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Unit;
@@ -174,14 +173,12 @@ public final class SQSQuartz implements Runnable, Closeable {
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private void publish(final Time time) {
-        for (URN urn : this.users.everybody()) {
-            final User user = this.users.get(urn);
-            for (String name : user.units()) {
-                final Unit unit = user.get(name);
+        for (User user : this.users) {
+            for (Unit unit : user.units()) {
                 this.queue.push(
                     new Work.Simple(
                         user.urn(),
-                        name,
+                        unit.name(),
                         unit.spec(),
                         time
                     )

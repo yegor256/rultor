@@ -27,100 +27,124 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.mongo;
+package com.rultor.users;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.immutable.ArrayMap;
-import com.jcabi.urn.URN;
-import com.mongodb.BasicDBObject;
-import com.rultor.timeline.Permissions;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
+import com.jcabi.aspects.Tv;
+import com.jcabi.dynamo.Attributes;
+import com.jcabi.dynamo.Item;
+import com.rultor.spi.Pulse;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Stand;
+import java.util.concurrent.TimeUnit;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Permissions of timeline in Mongo.
+ * Single stand in Dynamo DB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "mongo", "attrs" })
+@EqualsAndHashCode(of = "item")
 @Loggable(Loggable.DEBUG)
-public final class MongoPermissions implements Permissions {
+final class AwsStand implements Stand {
 
     /**
-     * Mongo container.
+     * Dynamo DB table name.
      */
-    private final transient Mongo mongo;
+    public static final String TABLE = "stands";
 
     /**
-     * Data from DB.
+     * Dynamo DB table column.
      */
-    private final transient ArrayMap<String, Object> attrs;
+    public static final String HASH_URN = "urn";
+
+    /**
+     * Dynamo DB table column.
+     */
+    public static final String RANGE_STAND = "stand";
+
+    /**
+     * Dynamo DB table column.
+     */
+    public static final String FIELD_ACL = "acl";
+
+    /**
+     * Item.
+     */
+    private final transient Item item;
 
     /**
      * Public ctor.
-     * @param mng Mongo container
-     * @param map Map of attributes
+     * @param itm Item from Dynamo
      */
-    @SuppressWarnings("unchecked")
-    public MongoPermissions(final Mongo mng, final Map<String, Object> map) {
-        this.mongo = mng;
-        this.attrs = new ArrayMap<String, Object>(map);
+    protected AwsStand(final Item itm) {
+        this.item = itm;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public URN owner() {
-        return URN.create(this.attrs.get(MongoTimeline.ATTR_OWNER).toString());
+    @Cacheable.FlushBefore
+    public void acl(@NotNull(message = "ACL is mandatory and can't be NULL")
+        final Spec spec) {
+        this.item.put(
+            new Attributes()
+                .with(
+                    AwsStand.FIELD_ACL,
+                    new AttributeValue(spec.asText())
+            )
+        );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String key() {
-        return this.attrs.get(MongoTimeline.ATTR_KEY).toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void key(final String value) {
-        try {
-            this.mongo.get().getCollection("timelines").save(
-                new BasicDBObject(this.attrs)
-                    .append(MongoTimeline.ATTR_KEY, value)
-            );
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
+    @NotNull(message = "ACL of a stand is never NULL")
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    public Spec acl() {
+        Spec spec;
+        if (this.item.has(AwsStand.FIELD_ACL)) {
+            spec = new Spec.Simple(this.item.get(AwsStand.FIELD_ACL).getS());
+        } else {
+            spec = new Spec.Simple();
         }
+        return spec;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Collection<String> friends() {
-        return new ArrayList<String>(0);
+    public String name() {
+        return this.item.get(AwsStand.RANGE_STAND).getS();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void friends(final Collection<String> masks) {
-        // not implemented yet
+    public Iterable<Pulse> pulses() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void post(final String pulse, final String xembly) {
+        throw new UnsupportedOperationException();
     }
 
 }

@@ -29,48 +29,35 @@
  */
 package com.rultor.users;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.model.DescribeTableRequest;
-import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
+import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
-import com.jcabi.log.Logger;
+import com.jcabi.dynamo.ScanValve;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Receipt;
-import com.rultor.spi.Statement;
-import com.rultor.spi.User;
-import com.rultor.spi.Users;
+import com.rultor.spi.Stand;
+import com.rultor.spi.Stands;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
-import javax.validation.constraints.NotNull;
+import java.util.NoSuchElementException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * All users in Dynamo DB.
+ * Stands in DynamoDB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "region")
+@EqualsAndHashCode(of = { "region", "owner" })
 @Loggable(Loggable.DEBUG)
-public final class AwsUsers implements Users {
-
-    /**
-     * Dynamo DB table name.
-     */
-    public static final String INDEX = "users";
-
-    /**
-     * Dynamo DB table column.
-     */
-    public static final String HASH_URN = "urn";
+final class AwsStands implements Stands {
 
     /**
      * Dynamo.
@@ -78,42 +65,43 @@ public final class AwsUsers implements Users {
     private final transient Region region;
 
     /**
-     * Public ctor.
-     * @param reg AWS region
+     * URN of the user.
      */
-    public AwsUsers(final Region reg) {
-        final AmazonDynamoDB aws = reg.aws();
-        final DescribeTableResult result = aws.describeTable(
-            new DescribeTableRequest()
-                // @checkstyle MultipleStringLiterals (1 line)
-                .withTableName(reg.table(AwsUsers.INDEX).name())
-        );
-        Logger.info(
-            AwsUsers.class, "Amazon DynamoDB is ready with %d units",
-            result.getTable().getItemCount()
-        );
+    private final transient URN owner;
+
+    /**
+     * Public ctor.
+     * @param reg Region in Dynamo
+     * @param urn URN of the user
+     */
+    protected AwsStands(final Region reg, final URN urn) {
         this.region = reg;
+        this.owner = urn;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull(message = "list of users is never NULL")
-    public Iterator<User> iterator() {
-        final Iterator<Item> items = this.region.table(AwsUsers.INDEX)
-            .frame().iterator();
-        return new Iterator<User>() {
+    public Iterator<Stand> iterator() {
+        final Iterator<Item> items = this.region.table(AwsReceipts.TABLE)
+            .frame()
+            .where(AwsStand.HASH_URN, this.owner.toString())
+            .through(
+                new ScanValve()
+                    .withLimit(Tv.TWENTY)
+                    .withAttributeToGet(AwsStand.RANGE_STAND)
+                    .withAttributeToGet(AwsStand.FIELD_ACL)
+            )
+            .iterator();
+        return new Iterator<Stand>() {
             @Override
             public boolean hasNext() {
                 return items.hasNext();
             }
             @Override
-            public User next() {
-                return new AwsUser(
-                    AwsUsers.this.region,
-                    URN.create(items.next().get(AwsUsers.HASH_URN).getS())
-                );
+            public Stand next() {
+                return new AwsStand(items.next());
             }
             @Override
             public void remove() {
@@ -126,30 +114,30 @@ public final class AwsUsers implements Users {
      * {@inheritDoc}
      */
     @Override
-    @NotNull(message = "User is never NULL")
-    public User get(@NotNull(message = "URN can't be empty") final URN urn) {
-        return new AwsUser(this.region, urn);
+    public void create(final String stand) {
+        this.region.table(AwsReceipts.TABLE).put(
+            new Attributes()
+                .with(AwsStand.HASH_URN, this.owner.toString())
+                .with(AwsStand.RANGE_STAND, stand)
+                .with(AwsStand.FIELD_ACL, "")
+        );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void charge(@NotNull(message = "receipt can't be empty")
-        final Receipt receipt) {
-        AwsReceipts.add(this.region, receipt);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void reconcile() {
-        final ConcurrentMap<URN, Statement> statements =
-            new AwsPending(this.region).fetch();
-        for (Map.Entry<URN, Statement> entry : statements.entrySet()) {
-            this.get(entry.getKey()).statements().add(entry.getValue());
+    public Stand get(final String stand) {
+        final Collection<Item> items = this.region.table(AwsStand.TABLE)
+            .frame()
+            .where(AwsStand.HASH_URN, this.owner.toString())
+            .where(AwsStand.RANGE_STAND, stand);
+        if (items.isEmpty()) {
+            throw new NoSuchElementException(
+                String.format("Stand `%s` doesn't exist", stand)
+            );
         }
+        return new AwsStand(items.iterator().next());
     }
 
 }

@@ -27,66 +27,46 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.mongo;
+package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.immutable.ArrayMap;
-import com.rultor.timeline.Product;
-import java.util.Map;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import javax.validation.constraints.NotNull;
 
 /**
- * Product in Mongo.
+ * Units.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = "attrs")
-@Loggable(Loggable.DEBUG)
-public final class MongoProduct implements Product {
+public interface Units extends Iterable<Unit> {
 
     /**
-     * Mongo attribute.
+     * Contains a unit with this name?
+     * @param name The name of it
+     * @return TRUE if it already exists
      */
-    public static final String ATTR_NAME = "name";
+    boolean contains(@NotNull(message = "name can't be NULL") String name);
 
     /**
-     * Mongo attribute.
+     * Get unit by name (runtime exception if it's absent).
+     * @param name The name of it
+     * @return The unit
      */
-    public static final String ATTR_MARKDOWN = "markdown";
+    @NotNull(message = "unit is never NULL")
+    Unit get(@NotNull(message = "unit name can't be NULL") String name);
 
     /**
-     * Data from DB.
+     * Remove unit by name (runtime exception if it's absent).
+     * @param name The name of it
      */
-    private final transient ArrayMap<String, Object> attrs;
+    void remove(@NotNull(message = "name can't be NULL") String name);
 
     /**
-     * Public ctor.
-     * @param map Map of attributes
+     * Create empty default unit with this name.
+     * @param name The name of it
      */
-    public MongoProduct(final Map<String, Object> map) {
-        this.attrs = new ArrayMap<String, Object>(map);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String name() {
-        return this.attrs.get(MongoProduct.ATTR_NAME).toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String markdown() {
-        return this.attrs.get(MongoProduct.ATTR_MARKDOWN).toString();
-    }
+    void create(@NotNull(message = "name can't be NULL") String name);
 
 }

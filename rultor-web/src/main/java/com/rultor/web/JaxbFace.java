@@ -89,7 +89,7 @@ final class JaxbFace {
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public JaxbBundle bundle(final URN urn, final String unit) {
         final User user = this.users.get(urn);
-        final Spec spec = user.get(unit).spec();
+        final Spec spec = user.units().get(unit).spec();
         JaxbBundle bundle = new JaxbBundle("face");
         try {
             final Variable<?> var = new Repo.Cached(

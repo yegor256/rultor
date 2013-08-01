@@ -159,7 +159,7 @@ public final class Standed implements Drain {
             .writeStartObject()
             .write("stand", this.stand)
             .write("key", this.key)
-            .write("text", line)
+            .write("xembly", line)
             .writeStartObject("work")
             .write("owner", this.work.owner().toString())
             .write("unit", this.work.unit())

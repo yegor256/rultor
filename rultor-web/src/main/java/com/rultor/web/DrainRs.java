@@ -45,6 +45,7 @@ import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -212,14 +213,11 @@ public final class DrainRs extends BaseRs {
      * @return The unit
      */
     private Unit unit() {
-        if (!this.user().units().contains(this.name)) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                String.format("Unit `%s` doesn't exist", this.name),
-                Level.SEVERE
-            );
+        try {
+            return this.user().units().get(this.name);
+        } catch (NoSuchElementException ex) {
+            throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
-        return this.user().get(this.name);
     }
 
     /**
