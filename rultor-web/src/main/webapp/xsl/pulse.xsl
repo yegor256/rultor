@@ -31,6 +31,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:include href="/xsl/layout.xsl"/>
+    <xsl:include href="/xsl/snapshot.xsl"/>
     <xsl:template name="head">
         <title>
             <xsl:value-of select="/page/pulse"/>
@@ -50,6 +51,9 @@
                 <li>
                     <xsl:value-of select="/page/date"/>
                 </li>
+                <li class="muted">
+                    <xsl:value-of select="/page/when"/>
+                </li>
                 <li>
                     <a title="see log">
                         <xsl:attribute name="href">
@@ -60,80 +64,6 @@
                 </li>
             </ul>
         </div>
-        <div class="pulse-details">
-            <xsl:if test="count(/page/stages/stage) &gt; 0">
-                <table class="table table-condensed">
-                    <colgroup>
-                        <col style="width: 2em;"/>
-                        <col style="width: 5em;"/>
-                        <col/>
-                    </colgroup>
-                    <tbody>
-                        <xsl:apply-templates select="/page/stages/stage"/>
-                    </tbody>
-                </table>
-            </xsl:if>
-        </div>
-        <pre><xsl:value-of select="spec"/></pre>
-    </xsl:template>
-    <xsl:template match="stage">
-        <tr>
-            <xsl:attribute name="class">
-                <xsl:choose>
-                    <xsl:when test="result = 'SUCCESS'">
-                        <xsl:text>success</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="result = 'FAILURE'">
-                        <xsl:text>error</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="result = 'RUNNING'">
-                        <xsl:text>warning</xsl:text>
-                    </xsl:when>
-                </xsl:choose>
-            </xsl:attribute>
-            <td>
-                <xsl:apply-templates select="result"/>
-            </td>
-            <td>
-                <xsl:call-template name="millis">
-                    <xsl:with-param name="millis" select="msec"/>
-                </xsl:call-template>
-                <xsl:value-of select="duration"/>
-            </td>
-            <td>
-                <xsl:choose>
-                    <xsl:when test="links/link[@rel='see']">
-                        <a title="see log">
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="links/link[@rel='log']/@href"/>
-                            </xsl:attribute>
-                            <xsl:value-of select="output"/>
-                        </a>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:value-of select="output"/>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="result">
-        <xsl:choose>
-            <xsl:when test=". = 'SUCCESS'">
-                <i class="icon-ok-sign text-success"><xsl:comment>success</xsl:comment></i>
-            </xsl:when>
-            <xsl:when test=". = 'FAILURE'">
-                <i class="icon-minus-sign text-error"><xsl:comment>failure</xsl:comment></i>
-            </xsl:when>
-            <xsl:when test=". = 'RUNNING'">
-                <i class="icon-circle-blank text-success"><xsl:comment>success</xsl:comment></i>
-            </xsl:when>
-            <xsl:when test=". = 'WAITING'">
-                <xsl:comment>waiting</xsl:comment>
-            </xsl:when>
-            <xsl:otherwise>
-                <i class="icon-question-sign text-error"><xsl:comment>unknown</xsl:comment></i>
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:apply-templates select="/page/snapshot"/>
     </xsl:template>
 </xsl:stylesheet>

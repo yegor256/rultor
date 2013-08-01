@@ -90,6 +90,6 @@
                 <id>announce</id>
                 <summary>announce results</summary>
             </step>
-        </jobs>
+        </steps>
     </snapshot>
 </page>

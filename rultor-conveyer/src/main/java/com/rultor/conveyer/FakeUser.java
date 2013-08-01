@@ -145,7 +145,7 @@ final class FakeUser implements User {
      * {@inheritDoc}
      */
     @Override
-    public Stand stand(String name) {
+    public Stand stand(final String name) {
         throw new UnsupportedOperationException();
     }
 

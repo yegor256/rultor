@@ -49,7 +49,7 @@ public final class TextDetail implements Detail {
      * Pattern to use for matching.
      */
     private static final Pattern PTN = Pattern.compile(
-        ".*дeτaіl\\[com.rultor.snapshot.XemblyDetail\\(\"([^\\]]+)\"\\)\\].*"
+        ".*χembly '([^']+)'.*"
     );
 
     /**
@@ -83,12 +83,7 @@ public final class TextDetail implements Detail {
      */
     @Override
     public String toString() {
-        return String.format(
-            "дeτaіl[%s(\"%s\")]",
-            this.detail.getClass().getCanonicalName(),
-            // @checkstyle MultipleStringLiterals (1 line)
-            this.detail.toString().replace("]", "\\]")
-        );
+        return String.format("χembly '%s'", this.detail.toString());
     }
 
     /**
@@ -108,7 +103,7 @@ public final class TextDetail implements Detail {
     private static Detail decode(final String text) {
         final Matcher matcher = TextDetail.PTN.matcher(text);
         Validate.isTrue(matcher.matches(), "invalid line '%s'", text);
-        return new XemblyDetail(matcher.group(1).replace("\\]", "]"));
+        return new XemblyDetail(matcher.group(1));
     }
 
     /**

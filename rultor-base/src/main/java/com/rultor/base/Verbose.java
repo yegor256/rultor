@@ -124,8 +124,8 @@ public final class Verbose implements Instance {
         this.origin.pulse();
         XemblyDetail.log(
             new XemblyBuilder()
-                .xpath("/snapshot[not(finished)]")
-                .add("finished")
+                .xpath("/snapshot[not(finish)]")
+                .add("finish")
                 .set(new Time().toString())
         );
         XemblyDetail.log(
