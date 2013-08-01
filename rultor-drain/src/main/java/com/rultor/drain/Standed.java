@@ -157,6 +157,7 @@ public final class Standed implements Drain {
         final StringWriter writer = new StringWriter();
         Json.createGenerator(writer)
             .writeStartObject()
+            .write("user", this.work.owner().toString())
             .write("stand", this.stand)
             .write("key", this.key)
             .write("xembly", line)

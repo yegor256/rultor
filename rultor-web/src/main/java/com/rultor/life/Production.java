@@ -40,6 +40,7 @@ import com.rultor.queue.SQSQueue;
 import com.rultor.repo.ClasspathRepo;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Stand;
 import com.rultor.spi.Users;
 import com.rultor.users.AwsUsers;
 import java.io.IOException;
@@ -70,6 +71,18 @@ final class Production implements Profile {
             Manifests.read("Rultor-SQSKey"),
             Manifests.read("Rultor-SQSSecret"),
             Manifests.read("Rultor-SQSQuartz")
+        )
+    );
+
+    /**
+     * SQS pulse sensor.
+     */
+    private final transient SQSPulseSensor sensor = new SQSPulseSensor(
+        this.users(),
+        new SQSClient.Simple(
+            Manifests.read("Rultor-SQSKey"),
+            Manifests.read("Rultor-SQSSecret"),
+            Stand.QUEUE.toString()
         )
     );
 
@@ -122,6 +135,7 @@ final class Production implements Profile {
     @Override
     public void close() throws IOException {
         this.quartz.close();
+        this.sensor.close();
     }
 
 }
