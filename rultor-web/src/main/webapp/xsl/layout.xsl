@@ -186,16 +186,16 @@
     <xsl:template match="flash">
         <p>
             <xsl:attribute name="class">
-                <xsl:text>alert </xsl:text>
+                <xsl:text>alert</xsl:text>
                 <xsl:choose>
                     <xsl:when test="level = 'INFO'">
-                        <xsl:text>alert-success</xsl:text>
+                        <xsl:text> alert-success</xsl:text>
                     </xsl:when>
                     <xsl:when test="level = 'WARNING'">
-                        <xsl:text>alert-info</xsl:text>
+                        <xsl:text> alert-info</xsl:text>
                     </xsl:when>
                     <xsl:when test="level = 'ERROR'">
-                        <xsl:text>alert-error</xsl:text>
+                        <xsl:text> alert-error</xsl:text>
                     </xsl:when>
                 </xsl:choose>
             </xsl:attribute>
