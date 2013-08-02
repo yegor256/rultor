@@ -164,6 +164,40 @@ public class BaseRs extends BaseResource {
     }
 
     /**
+     * Nagivation links.
+     * @return The inset
+     */
+    @Inset.Runtime
+    @NotNull(message = "navigation inset can never be NULL")
+    public final Inset insetNavigation() {
+        // @checkstyle AnonInnerLength (50 lines)
+        return new Inset() {
+            @Override
+            public void render(final BasePage<?, ?> page,
+                final Response.ResponseBuilder builder) {
+                page.link(
+                    new Link(
+                        "units",
+                        BaseRs.this.uriInfo().getBaseUriBuilder()
+                            .clone()
+                            .path(IndexRs.class)
+                            .build()
+                    )
+                );
+                page.link(
+                    new Link(
+                        "stands",
+                        BaseRs.this.uriInfo().getBaseUriBuilder()
+                            .clone()
+                            .path(StandsRs.class)
+                            .build()
+                    )
+                );
+            }
+        };
+    }
+
+    /**
      * Authentication key inset.
      * @return The inset
      */

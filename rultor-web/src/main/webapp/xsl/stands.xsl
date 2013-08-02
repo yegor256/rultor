@@ -49,14 +49,14 @@
             </div>
         </form>
         <xsl:choose>
-            <xsl:when test="/page/units/unit">
+            <xsl:when test="/page/stands/stand">
                 <ul class="nav spacious">
-                    <xsl:apply-templates select="/page/units/unit"/>
+                    <xsl:apply-templates select="/page/stands/stand"/>
                 </ul>
             </xsl:when>
             <xsl:otherwise>
                 <p>
-                    <xsl:text>Now create your first management unit and configure it as </xsl:text>
+                    <xsl:text>Now create your first management stand and configure it as </xsl:text>
                     <a href="http://blog.rultor.com">
                         <xsl:text>this article</xsl:text>
                     </a>
@@ -65,51 +65,23 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <xsl:template match="unit">
+    <xsl:template match="stand">
         <li>
             <ul class="inline btn-group-vertical">
                 <li>
-                    <a title="edit this unit">
-                        <xsl:if test="face/exception">
-                            <xsl:attribute name="class">
-                                <xsl:text>text-error</xsl:text>
-                            </xsl:attribute>
-                        </xsl:if>
+                    <a title="edit this stand">
                         <xsl:attribute name="href">
                             <xsl:value-of select="links/link[@rel='edit']/@href"/>
                         </xsl:attribute>
                         <xsl:value-of select="name"/>
-                        <xsl:if test="face/arguments">
-                            <xsl:text>(</xsl:text>
-                            <xsl:for-each select="face/arguments/argument">
-                                <xsl:if test="position() &gt; 1">
-                                    <xsl:text>, </xsl:text>
-                                </xsl:if>
-                                <xsl:text>&quot;</xsl:text>
-                                <xsl:value-of select="."/>
-                                <xsl:text>&quot;</xsl:text>
-                            </xsl:for-each>
-                            <xsl:text>)</xsl:text>
-                        </xsl:if>
                     </a>
                 </li>
-                <xsl:if test="face/drainable = 'true'">
-                    <li>
-                        <a title="view drain of the unit">
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="links/link[@rel='drain']/@href"/>
-                            </xsl:attribute>
-                            <i class="icon-chevron-sign-right"><xsl:comment>drain</xsl:comment></i>
-                        </a>
-                    </li>
-                </xsl:if>
                 <li>
-                    <a onclick="return confirm('Are you sure?');"
-                        title="delete this unit">
+                    <a title="view pulses of the stand">
                         <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='remove']/@href"/>
+                            <xsl:value-of select="links/link[@rel='see']/@href"/>
                         </xsl:attribute>
-                        <i class="icon-remove"><xsl:comment>remove</xsl:comment></i>
+                        <i class="icon-chevron-sign-right"><xsl:comment>pulses</xsl:comment></i>
                     </a>
                 </li>
             </ul>
