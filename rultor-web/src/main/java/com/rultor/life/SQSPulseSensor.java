@@ -129,14 +129,14 @@ public final class SQSPulseSensor implements Runnable, Closeable {
             .stands()
             .get(object.getString("stand"));
         stand.post(
-                String.format(
-                    "%s:%s:%s",
-                    object.getString("work.owner"),
-                    object.getString("work.unit"),
-                    object.getString("work.started")
-                ),
-                object.getString("xembly")
-            );
+            String.format(
+                "%s:%s:%s",
+                object.getString("work.owner"),
+                object.getString("work.unit"),
+                object.getString("work.started")
+            ),
+            object.getString("xembly")
+        );
     }
 
 }

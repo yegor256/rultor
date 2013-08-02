@@ -36,6 +36,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
+import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
@@ -135,7 +136,7 @@ final class AwsStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public Iterable<Pulse> pulses() {
+    public Pageable<Pulse> pulses() {
         throw new UnsupportedOperationException();
     }
 

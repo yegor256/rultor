@@ -35,7 +35,7 @@ import com.rultor.drain.BufferedWrite;
 import com.rultor.drain.NoiseReduction;
 import com.rultor.drain.Trash;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Pageable;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.util.Arrays;
@@ -87,7 +87,7 @@ public final class ObjectDrainITCase {
             this.client, "S3DrainITCase/test.txt"
         );
         drain.append(Arrays.asList(msg));
-        final Pulses names = drain.pulses();
+        final Pageable<Time> names = drain.pulses();
         MatcherAssert.assertThat(names, Matchers.<Time>iterableWithSize(0));
         MatcherAssert.assertThat(
             IOUtils.toString(drain.read(), CharEncoding.UTF_8),

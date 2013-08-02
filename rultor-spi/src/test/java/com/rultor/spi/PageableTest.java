@@ -36,21 +36,21 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link Pulses}.
+ * Test case for {@link Pageable}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class PulsesTest {
+public final class PageableTest {
 
     /**
-     * Pulses.Array can sort times correctly.
+     * Pageable.Array can sort times correctly.
      * @throws Exception If some problem inside
      */
     @Test
     public void sortsElementsInRightOrder() throws Exception {
         final Time fresh = new Time("2013-07-21T12:15Z");
         final Time old = new Time("2011-07-21T12:15Z");
-        final Pulses pulses = new Pulses.Array(
+        final Pageable<Time> pulses = new Pageable.Array<Time>(
             Arrays.asList(fresh, old)
         );
         MatcherAssert.assertThat(

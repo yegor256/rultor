@@ -33,7 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.aws.S3Client;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Pageable;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
@@ -93,7 +93,7 @@ public final class BucketDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public Pulses pulses() {
+    public Pageable<Time> pulses() {
         return new BucketPulses(this.client, this.prefix(), new Time());
     }
 

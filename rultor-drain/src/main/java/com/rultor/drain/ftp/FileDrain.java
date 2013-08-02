@@ -34,7 +34,8 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Pageable;
+import com.rultor.tools.Time;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -118,8 +119,8 @@ public final class FileDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public Pulses pulses() {
-        return new Pulses.Array();
+    public Pageable<Time> pulses() {
+        return new Pageable.Array<Time>();
     }
 
     /**

@@ -38,7 +38,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.S3Client;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Pageable;
 import com.rultor.tools.Time;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -48,7 +48,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Pulses in bucket.
+ * Pageable in bucket.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -59,7 +59,7 @@ import lombok.ToString;
 @EqualsAndHashCode(of = { "prefix", "top", "client" })
 @Loggable(Loggable.DEBUG)
 @ToString
-final class BucketPulses implements Pulses {
+final class BucketPulses implements Pageable<Time> {
 
     /**
      * The prefix.
@@ -94,7 +94,7 @@ final class BucketPulses implements Pulses {
      * {@inheritDoc}
      */
     @Override
-    public Pulses tail(final Time head) {
+    public Pageable<Time> tail(final Time head) {
         return new BucketPulses(
             this.client, this.prefix, new Time(head.millis() + 1)
         );

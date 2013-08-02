@@ -55,7 +55,7 @@ public final class XemblyDetail implements Detail {
      * Pattern to use for matching.
      */
     private static final Pattern PTN = Pattern.compile(
-        ".*χembly '([^']+)'.*"
+        ".*χemβly '([^']+)'.*"
     );
 
     /**
@@ -76,7 +76,7 @@ public final class XemblyDetail implements Detail {
      */
     @Override
     public String toString() {
-        return String.format("χembly '%s'", this.script);
+        return String.format("χemβly '%s'", this.script);
     }
 
     /**

@@ -32,7 +32,7 @@ package com.rultor.drain.s3;
 import com.jcabi.urn.URN;
 import com.rultor.aws.S3Client;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Pageable;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
@@ -91,7 +91,7 @@ public final class BucketDrainITCase {
             this.client
         );
         drain.append(Arrays.asList(msg));
-        final Pulses names = drain.pulses();
+        final Pageable<Time> names = drain.pulses();
         MatcherAssert.assertThat(names, Matchers.hasItem(date));
         MatcherAssert.assertThat(names.tail(date), Matchers.hasItem(date));
         MatcherAssert.assertThat(

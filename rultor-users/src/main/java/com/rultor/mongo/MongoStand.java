@@ -38,6 +38,7 @@ import com.mongodb.WriteResult;
 import com.rexsl.test.SimpleXml;
 import com.rexsl.test.XmlDocument;
 import com.rultor.snapshot.Snapshot;
+import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
@@ -162,11 +163,15 @@ public final class MongoStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public Iterable<Pulse> pulses() {
-        return new Iterable<Pulse>() {
+    public Pageable<Pulse> pulses() {
+        return new Pageable<Pulse>() {
             @Override
             public Iterator<Pulse> iterator() {
                 return MongoStand.this.iterator();
+            }
+            @Override
+            public Pageable<Pulse> tail(final Pulse head) throws IOException {
+                throw new UnsupportedOperationException();
             }
         };
     }

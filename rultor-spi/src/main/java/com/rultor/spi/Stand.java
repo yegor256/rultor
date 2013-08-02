@@ -72,10 +72,10 @@ public interface Stand {
 
     /**
      * Get all pulses.
-     * @return Pulses
+     * @return Pageable
      */
     @NotNull(message = "collection of pulses is never NULL")
-    Iterable<Pulse> pulses();
+    Pageable<Pulse> pulses();
 
     /**
      * Post new xembly script to the pulse of the stand.

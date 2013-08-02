@@ -32,7 +32,7 @@ package com.rultor.drain.ftp;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Pageable;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
@@ -145,8 +145,8 @@ public final class DirectoryDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public Pulses pulses() throws IOException {
-        return new Pulses.Array(
+    public Pageable<Time> pulses() throws IOException {
+        return new Pageable.Array<Time>(
             new FtpBatch(this.host, this.login, this.password, this.port).exec(
                 new FtpBatch.Script<Collection<Time>>() {
                     @Override

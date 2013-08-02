@@ -33,7 +33,6 @@ import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArraySortedSet;
-import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,12 +46,13 @@ import lombok.ToString;
 /**
  * Vector of pulses.
  *
+ * @param <T> Type of elements to page
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Pulses extends Iterable<Time> {
+public interface Pageable<T> extends Iterable<T> {
 
     /**
      * Get a subset of this vector.
@@ -62,35 +62,36 @@ public interface Pulses extends Iterable<Time> {
      * @throws IOException If fails with some IO problem
      */
     @NotNull(message = "pulses are never NULL")
-    Pulses tail(@NotNull(message = "head can't be NULL") Time head)
+    Pageable<T> tail(@NotNull(message = "head can't be NULL") T head)
         throws IOException;
 
     /**
      * Immutable collection, based on array.
+     * @param <T> Type of elements
      */
     @Immutable
     @ToString
     @EqualsAndHashCode
     @Loggable(Loggable.DEBUG)
-    final class Array implements Pulses {
+    final class Array<T> implements Pageable<T> {
         /**
          * Encapsulated array.
          */
-        private final transient ArraySortedSet<Time> times;
+        private final transient ArraySortedSet<T> times;
         /**
          * Public ctor.
          */
         public Array() {
-            this(new ArrayList<Time>(0));
+            this(new ArrayList<T>(0));
         }
         /**
          * Public ctor.
          * @param array Array of data
          */
         public Array(@NotNull(message = "array can't be NULL")
-            final Collection<Time> array) {
-            this.times = new ArraySortedSet<Time>(
-                array, new ArraySortedSet.Comparator.Reverse<Time>()
+            final Collection<T> array) {
+            this.times = new ArraySortedSet<T>(
+                array, new ArraySortedSet.Comparator.Reverse<T>()
             );
         }
         /**
@@ -98,42 +99,44 @@ public interface Pulses extends Iterable<Time> {
          */
         @Override
         @NotNull
-        public Pulses tail(@NotNull(message = "head is NULL") final Time head) {
-            return new Pulses.Array(this.times.tailSet(head));
+        public Pageable<T> tail(
+            @NotNull(message = "head is NULL") final T head) {
+            return new Pageable.Array<T>(this.times.tailSet(head));
         }
         /**
          * {@inheritDoc}
          */
         @Override
-        public Iterator<Time> iterator() {
+        public Iterator<T> iterator() {
             return this.times.iterator();
         }
     }
 
     /**
      * Sequence of pulses.
+     * @param <T> Type of elements
      */
     @Immutable
     @ToString
     @EqualsAndHashCode
     @Loggable(Loggable.DEBUG)
-    final class Sequence implements Pulses {
+    final class Sequence<T> implements Pageable<T> {
         /**
          * First.
          */
-        private final transient Pulses first;
+        private final transient Pageable<T> first;
         /**
          * Second.
          */
-        private final transient Pulses second;
+        private final transient Pageable<T> second;
         /**
          * Public ctor.
          * @param frst First
          * @param scnd Second
          */
         public Sequence(
-            @NotNull(message = "first can't be NULL") final Pulses frst,
-            @NotNull(message = "second can't be NULL") final Pulses scnd) {
+            @NotNull(message = "first can't be NULL") final Pageable<T> frst,
+            @NotNull(message = "second can't be NULL") final Pageable<T> scnd) {
             this.first = frst;
             this.second = scnd;
         }
@@ -142,10 +145,10 @@ public interface Pulses extends Iterable<Time> {
          */
         @Override
         @NotNull
-        public Pulses tail(
-            @NotNull(message = "head can't be NULL") final Time head)
+        public Pageable<T> tail(
+            @NotNull(message = "head can't be NULL") final T head)
             throws IOException {
-            return new Pulses.Sequence(
+            return new Pageable.Sequence<T>(
                 this.first.tail(head), this.second.tail(head)
             );
         }
@@ -154,13 +157,13 @@ public interface Pulses extends Iterable<Time> {
          */
         @Override
         @SuppressWarnings("unchecked")
-        public Iterator<Time> iterator() {
+        public Iterator<T> iterator() {
             return Iterators.mergeSorted(
                 Arrays.asList(this.first.iterator(), this.second.iterator()),
-                new Comparator<Time>() {
+                new Comparator<T>() {
                     @Override
-                    public int compare(final Time left, final Time right) {
-                        return right.compareTo(left);
+                    public int compare(final T left, final T right) {
+                        return Comparable.class.cast(right).compareTo(left);
                     }
                 }
             );

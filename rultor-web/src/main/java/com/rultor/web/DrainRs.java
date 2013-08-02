@@ -37,7 +37,7 @@ import com.rexsl.page.PageBuilder;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Pageable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Unit;
@@ -117,7 +117,7 @@ public final class DrainRs extends BaseRs {
             .init(this)
             .append(new JaxbBundle("unit", this.name));
         final Drain drain = this.drain(new Time());
-        Pulses pulses = this.pulses(drain);
+        Pageable<Time> pulses = this.pulses(drain);
         final int total;
         if (this.since == null) {
             total = Tv.FIVE;
@@ -192,7 +192,7 @@ public final class DrainRs extends BaseRs {
      * @param drain The drain
      * @return The pulses
      */
-    private Pulses pulses(final Drain drain) {
+    private Pageable<Time> pulses(final Drain drain) {
         try {
             return drain.pulses();
         } catch (IOException ex) {

@@ -39,7 +39,8 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.aws.S3Client;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Pageable;
+import com.rultor.tools.Time;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -108,8 +109,8 @@ public final class ObjectDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public Pulses pulses() {
-        return new Pulses.Array();
+    public Pageable<Time> pulses() {
+        return new Pageable.Array<Time>();
     }
 
     /**

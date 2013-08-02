@@ -27,10 +27,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.log4j;
+package com.rultor.drain;
 
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Pageable;
+import com.rultor.tools.Time;
 import java.io.IOException;
 import java.io.InputStream;
 import lombok.EqualsAndHashCode;
@@ -47,13 +48,13 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode
-public final class ConsoleDrain implements Drain {
+public final class Console implements Drain {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Pulses pulses() throws IOException {
+    public Pageable<Time> pulses() throws IOException {
         throw new UnsupportedOperationException();
     }
 
@@ -64,7 +65,7 @@ public final class ConsoleDrain implements Drain {
     @SuppressWarnings("PMD.SystemPrintln")
     public void append(final Iterable<String> lines) throws IOException {
         for (String line : lines) {
-            System.out.println(String.format("CONSOLE DRAIN: %s", line));
+            System.out.println(String.format("CONSOLE: %s", line));
         }
     }
 
