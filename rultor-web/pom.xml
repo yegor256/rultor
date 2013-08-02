@@ -343,7 +343,7 @@
     </build>
     <profiles>
         <profile>
-            <id>deploy-release</id>
+            <id>deploy-live</id>
             <pluginRepositories>
                 <pluginRepository>
                     <id>cloudbees-public-release</id>
@@ -377,17 +377,35 @@
         </profile>
         <profile>
             <id>deploy-master</id>
+            <repositories>
+                <repository>
+                    <id>repo.rultor.com</id>
+                    <url>s3://repo.rultor.com/snapshots</url>
+                </repository>
+            </repositories>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>repo.rultor.com</id>
+                    <url>s3://repo.rultor.com/snapshots</url>
+                </snapshotRepository>
+            </distributionManagement>
             <dependencies>
                 <dependency>
                     <groupId>com.rexsl</groupId>
                     <artifactId>rexsl-standalone</artifactId>
                     <version>${rexsl.version}</version>
                     <classifier>bin</classifier>
-                    <scope>runtime</scope>
+                    <scope>provided</scope>
                 </dependency>
             </dependencies>
             <build>
                 <plugins>
+                    <plugin>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                        </configuration>
+                    </plugin>
                     <plugin>
                         <artifactId>maven-war-plugin</artifactId>
                         <configuration>
