@@ -41,7 +41,7 @@
     </xsl:template>
     <xsl:template match="statement">
         <div>
-            <ul class="inline btn-group-vertical">
+            <ul class="list-inline">
                 <li>
                     <xsl:value-of select="date"/>
                 </li>

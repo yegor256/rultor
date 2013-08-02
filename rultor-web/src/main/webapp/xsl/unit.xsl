@@ -37,28 +37,34 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <h2>
+            <xsl:text>Unit &quot;</xsl:text>
+            <xsl:value-of select="/page/unit/name"/>
+            <xsl:text>&quot;</xsl:text>
+        </h2>
         <xsl:apply-templates select="/page/face"/>
         <form method="post">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
             </xsl:attribute>
             <fieldset>
-                <label for="spec" class="hidden-phone">
-                    <xsl:text>Specification of </xsl:text>
-                    <code>
-                        <xsl:value-of select="/page/unit/name"/>
-                    </code>
-                </label>
-                <textarea name="spec" id="spec" rows="18" class="input-block-level">
-                    <xsl:value-of select="/page/unit/spec"/>
-                </textarea>
-                <label><xsl:comment>for the submit button below</xsl:comment></label>
-                <button type="submit" class="btn">
-                    <xsl:text>Save</xsl:text>
-                </button>
-                <span class="help-inline hidden-phone">
-                    <xsl:text>Takes up to five minutes to update all servers</xsl:text>
-                </span>
+                <div class="form-group">
+                    <label for="spec" class="hidden-phone">
+                        <xsl:text>Specification</xsl:text>
+                    </label>
+                    <textarea name="spec" id="spec" rows="18" class="form-control">
+                        <xsl:value-of select="/page/unit/spec"/>
+                    </textarea>
+                </div>
+                <div class="form-group">
+                    <label><xsl:comment>for the submit button below</xsl:comment></label>
+                    <button type="submit" class="btn btn-primary">
+                        <xsl:text>Save</xsl:text>
+                    </button>
+                    <span class="help-block hidden-phone">
+                        <xsl:text>Takes up to five minutes to update all servers</xsl:text>
+                    </span>
+                </div>
             </fieldset>
         </form>
     </xsl:template>

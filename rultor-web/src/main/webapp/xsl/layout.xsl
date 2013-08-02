@@ -94,53 +94,41 @@
                             alt="Fork me on GitHub" />
                     </a>
                 </aside>
-                <div class="page">
-                    <nav class="head">
-                        <ul class="list-inline">
+                <section class="page">
+                    <ul class="list-inline">
+                        <li>
+                            <a class="logo">
+                                <xsl:attribute name="href">
+                                    <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
+                                </xsl:attribute>
+                                <xsl:choose>
+                                    <xsl:when test="contains(/page/version/name, 'SNAPSHOT')">
+                                        <xsl:text>r</xsl:text>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:text>R</xsl:text>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </a>
+                        </li>
+                        <li class="hidden-phone">
+                            <a href="//blog.rultor.com/">
+                                <xsl:text>how it works?</xsl:text>
+                            </a>
+                        </li>
+                        <xsl:apply-templates select="version"/>
+                        <xsl:if test="/page/links/link[@rel='stands']">
                             <li>
-                                <a class="logo">
+                                <a title="stands">
                                     <xsl:attribute name="href">
-                                        <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
+                                        <xsl:value-of select="/page/links/link[@rel='stands']/@href"/>
                                     </xsl:attribute>
-                                    <xsl:choose>
-                                        <xsl:when test="contains(/page/version/name, 'SNAPSHOT')">
-                                            <xsl:text>r</xsl:text>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:text>R</xsl:text>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
+                                    <i class="icon-cogs"><xsl:comment>cogs</xsl:comment></i>
                                 </a>
                             </li>
-                            <li class="hidden-phone">
-                                <a href="//blog.rultor.com/">
-                                    <xsl:text>how it works?</xsl:text>
-                                </a>
-                            </li>
-                            <xsl:apply-templates select="version"/>
-                            <xsl:if test="/page/links/link[@rel='units']">
-                                <li>
-                                    <a title="units">
-                                        <xsl:attribute name="href">
-                                            <xsl:value-of select="/page/links/link[@rel='units']/@href"/>
-                                        </xsl:attribute>
-                                        <i class="icon-cogs"><xsl:comment>cogs</xsl:comment></i>
-                                    </a>
-                                </li>
-                            </xsl:if>
-                            <xsl:if test="/page/links/link[@rel='stands']">
-                                <li>
-                                    <a title="stands">
-                                        <xsl:attribute name="href">
-                                            <xsl:value-of select="/page/links/link[@rel='stands']/@href"/>
-                                        </xsl:attribute>
-                                        <i class="icon-heart"><xsl:comment>stands</xsl:comment></i>
-                                    </a>
-                                </li>
-                            </xsl:if>
-                            <xsl:apply-templates select="identity"/>
-                        </ul>
-                    </nav>
+                        </xsl:if>
+                        <xsl:apply-templates select="identity"/>
+                    </ul>
                     <xsl:apply-templates select="flash"/>
                     <article>
                         <xsl:choose>
@@ -152,7 +140,7 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </article>
-                </div>
+                </section>
             </body>
         </html>
     </xsl:template>

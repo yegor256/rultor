@@ -41,9 +41,11 @@
         <date>22-Aug-2012</date>
     </version>
     <links>
-        <link href="/xml/index.xml" rel="self" type="text/xml"/>
+        <link href="/xml/unit.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
-        <link href="/xml/add.xml" rel="save" type="text/xml"/>
+        <link href="/xml/unit.xml" rel="save" type="text/xml"/>
+        <link href="/xml/index.xml" rel="units" type="text/xml"/>
+        <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
     </links>
     <balance>$5.90</balance>
     <millis>1869</millis>

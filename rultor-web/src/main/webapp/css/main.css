@@ -37,6 +37,10 @@
         url('//img.rultor.com/rultor.svg?#rultor') format('svg');
 }
 
+body {
+    font-size: 16px;
+}
+
 .page {
     padding: .5em;
     clear: both;
@@ -48,10 +52,8 @@
     .page { padding: 2em; }
 }
 
-.head {
-    padding-bottom: 2em;
-    padding-top: 2em;
-    clear: both;
+textarea {
+    font-family: 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
 }
 
 .logo {
@@ -67,6 +69,6 @@
     }
 
 ul.spacious > li {
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
 }

@@ -30,84 +30,82 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:template match="snapshot">
-        <div style="padding: 1em; margin-bottom: 2em; border: 1px solid lightgray;">
-            <xsl:if test="tags/tag">
-                <div>
-                    <ul class="inline btn-group-vertical">
-                        <xsl:apply-templates select="tags/tag"/>
-                        <li class="muted">
-                            <xsl:text>updated </xsl:text>
-                            <span class="timeago"><xsl:value-of select="updated"/></span>
-                        </li>
-                    </ul>
-                </div>
-            </xsl:if>
+        <xsl:if test="tags/tag">
             <div>
-                <ul class="inline btn-group-vertical">
-                    <xsl:if test="work">
-                        <xsl:apply-templates select="work"/>
-                    </xsl:if>
-                    <xsl:if test="lines">
-                        <li>
-                            <i class="icon-signal"><xsl:comment>lines</xsl:comment></i>
-                            <xsl:text> </xsl:text>
-                            <xsl:value-of select="lines"/>
-                        </li>
-                    </xsl:if>
-                    <xsl:if test="start">
-                        <li>
-                            <i class="icon-time"><xsl:comment>start</xsl:comment></i>
-                            <xsl:text> </xsl:text>
-                            <span class="timeago"><xsl:value-of select="start"/></span>
-                        </li>
-                    </xsl:if>
-                    <xsl:if test="eta">
-                        <li>
-                            <i class="icon-suitcase"><xsl:comment>eta</xsl:comment></i>
-                            <xsl:text> </xsl:text>
-                            <span class="timeago"><xsl:value-of select="eta"/></span>
-                        </li>
-                    </xsl:if>
-                    <xsl:if test="finish">
-                        <li>
-                            <i class="icon-flag-checkered"><xsl:comment>finish</xsl:comment></i>
-                            <xsl:text> </xsl:text>
-                            <span class="timeago"><xsl:value-of select="finish"/></span>
-                        </li>
-                    </xsl:if>
+                <ul class="list-inline">
+                    <xsl:apply-templates select="tags/tag"/>
+                    <li class="text-muted">
+                        <xsl:text>updated </xsl:text>
+                        <span class="timeago"><xsl:value-of select="updated"/></span>
+                    </li>
                 </ul>
             </div>
-            <xsl:if test="products/product">
-                <div>
-                    <ul class="inline btn-group-vertical">
-                        <xsl:apply-templates select="products/product"/>
-                    </ul>
-                </div>
-            </xsl:if>
-            <div class="progress">
-                <div class="bar">
-                    <xsl:attribute name="style">
-                        <xsl:text>width:</xsl:text>
-                        <xsl:choose>
-                            <xsl:when test="start and eta">
-                                <xsl:text>15</xsl:text>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:text>50</xsl:text>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                        <xsl:text>%;</xsl:text>
-                    </xsl:attribute>
-                    <!-- this is for W3C compliance -->
-                    <xsl:text> </xsl:text>
-                </div>
-            </div>
-            <xsl:if test="steps/step">
-                <div>
-                    <xsl:apply-templates select="steps/step"/>
-                </div>
-            </xsl:if>
+        </xsl:if>
+        <div>
+            <ul class="list-inline">
+                <xsl:if test="work">
+                    <xsl:apply-templates select="work"/>
+                </xsl:if>
+                <xsl:if test="lines">
+                    <li>
+                        <i class="icon-signal"><xsl:comment>lines</xsl:comment></i>
+                        <xsl:text> </xsl:text>
+                        <xsl:value-of select="lines"/>
+                    </li>
+                </xsl:if>
+                <xsl:if test="start">
+                    <li>
+                        <i class="icon-time"><xsl:comment>start</xsl:comment></i>
+                        <xsl:text> </xsl:text>
+                        <span class="timeago"><xsl:value-of select="start"/></span>
+                    </li>
+                </xsl:if>
+                <xsl:if test="eta">
+                    <li>
+                        <i class="icon-suitcase"><xsl:comment>eta</xsl:comment></i>
+                        <xsl:text> </xsl:text>
+                        <span class="timeago"><xsl:value-of select="eta"/></span>
+                    </li>
+                </xsl:if>
+                <xsl:if test="finish">
+                    <li>
+                        <i class="icon-flag-checkered"><xsl:comment>finish</xsl:comment></i>
+                        <xsl:text> </xsl:text>
+                        <span class="timeago"><xsl:value-of select="finish"/></span>
+                    </li>
+                </xsl:if>
+            </ul>
         </div>
+        <xsl:if test="products/product">
+            <div>
+                <ul class="list-inline">
+                    <xsl:apply-templates select="products/product"/>
+                </ul>
+            </div>
+        </xsl:if>
+        <div class="progress">
+            <div class="progress-bar">
+                <xsl:attribute name="style">
+                    <xsl:text>width:</xsl:text>
+                    <xsl:choose>
+                        <xsl:when test="start and eta">
+                            <xsl:text>15</xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:text>50</xsl:text>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                    <xsl:text>%;</xsl:text>
+                </xsl:attribute>
+                <!-- this is for W3C compliance -->
+                <xsl:text> </xsl:text>
+            </div>
+        </div>
+        <xsl:if test="steps/step">
+            <div>
+                <xsl:apply-templates select="steps/step"/>
+            </div>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="work">
         <li>
@@ -127,35 +125,38 @@
     </xsl:template>
     <xsl:template match="step">
         <div>
+            <xsl:attribute name="class">
+                <xsl:choose>
+                    <xsl:when test="level = 'FINE'">
+                        <xsl:text>text-success</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="level = 'INFO'">
+                        <xsl:text>text-info</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="level = 'WARNING'">
+                        <xsl:text>text-warning</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="level = 'SEVERE'">
+                        <xsl:text>text-important</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>text-muted</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:attribute>
             <xsl:choose>
                 <xsl:when test="finish">
-                    <i class="icon-check"><xsl:comment>finish</xsl:comment></i>
+                    <i class="icon-check"><xsl:comment>done</xsl:comment></i>
                 </xsl:when>
                 <xsl:when test="start">
-                    <i class="icon-spinner"><xsl:comment>start</xsl:comment></i>
+                    <i class="icon-spinner"><xsl:comment>progress</xsl:comment></i>
                 </xsl:when>
+                <xsl:otherwise>
+                    <i class="icon-check-empty"><xsl:comment>waiting</xsl:comment></i>
+                </xsl:otherwise>
             </xsl:choose>
             <xsl:text> </xsl:text>
             <span>
-                <xsl:attribute name="class">
-                    <xsl:choose>
-                        <xsl:when test="level = 'FINE'">
-                            <xsl:text>text-success</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="level = 'INFO'">
-                            <xsl:text>text-info</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="level = 'WARNING'">
-                            <xsl:text>text-warning</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="level = 'SEVERE'">
-                            <xsl:text>text-important</xsl:text>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:text>muted</xsl:text>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:attribute>
                 <xsl:value-of select="summary"/>
             </span>
         </div>

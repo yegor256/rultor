@@ -178,15 +178,6 @@ public class BaseRs extends BaseResource {
                 final Response.ResponseBuilder builder) {
                 page.link(
                     new Link(
-                        "units",
-                        BaseRs.this.uriInfo().getBaseUriBuilder()
-                            .clone()
-                            .path(IndexRs.class)
-                            .build()
-                    )
-                );
-                page.link(
-                    new Link(
                         "stands",
                         BaseRs.this.uriInfo().getBaseUriBuilder()
                             .clone()

@@ -42,7 +42,7 @@
             <xsl:when test="/page/pulses/pulse">
                 <xsl:if test="/page/since">
                     <div>
-                        <ul class="inline">
+                        <ul class="list-inline">
                             <li>
                                 <xsl:text>Since </xsl:text>
                                 <span class="timeago"><xsl:value-of select="/page/since"/></span>
@@ -78,7 +78,7 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="pulse">
-        <div>
+        <div class="panel">
             <xsl:apply-templates select="snapshot"/>
         </div>
     </xsl:template>

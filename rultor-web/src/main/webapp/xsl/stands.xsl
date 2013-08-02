@@ -37,20 +37,31 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <h2>
+            <xsl:text>Stands</xsl:text>
+        </h2>
         <form method="post" class="form-inline">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='create']/@href"/>
             </xsl:attribute>
-            <div class="input-append">
-                <input name="name" type="text" class="input-xlarge" />
-                <button type="submit" class="btn">
-                    <xsl:text>Create</xsl:text>
-                </button>
-            </div>
+            <fieldset>
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="input-group">
+                            <input name="name" type="text" class="form-control" />
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-default">
+                                    <xsl:text>Create</xsl:text>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
         </form>
         <xsl:choose>
             <xsl:when test="/page/stands/stand">
-                <ul class="nav spacious">
+                <ul class="list-unstyled spacious">
                     <xsl:apply-templates select="/page/stands/stand"/>
                 </ul>
             </xsl:when>
@@ -67,7 +78,7 @@
     </xsl:template>
     <xsl:template match="stand">
         <li>
-            <ul class="inline btn-group-vertical">
+            <ul class="list-inline">
                 <li>
                     <a title="edit this stand">
                         <xsl:attribute name="href">

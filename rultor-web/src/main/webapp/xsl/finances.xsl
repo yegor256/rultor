@@ -74,7 +74,7 @@
     </xsl:template>
     <xsl:template match="statement">
         <li>
-            <ul class="inline btn-group-vertical">
+            <ul class="list-inline">
                 <li>
                     <a title="see details">
                         <xsl:attribute name="href">
