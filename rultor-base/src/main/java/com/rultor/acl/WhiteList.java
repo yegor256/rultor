@@ -27,90 +27,72 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.mongo;
+package com.rultor.acl;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.Array;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Receipt;
-import com.rultor.spi.Stands;
-import com.rultor.spi.Statements;
-import com.rultor.spi.Units;
-import com.rultor.spi.User;
+import com.rultor.spi.ACL;
+import java.util.Collection;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * User with extra features from Mongo.
+ * White List of allowed users.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = { "mongo", "origin" })
+@EqualsAndHashCode(of = "friends")
 @Loggable(Loggable.DEBUG)
-final class MongoUser implements User {
+public final class WhiteList implements ACL {
 
     /**
-     * Mongo container.
+     * Friends.
      */
-    private final transient Mongo mongo;
-
-    /**
-     * Original user.
-     */
-    private final transient User origin;
+    private final transient Array<URN> friends;
 
     /**
      * Public ctor.
-     * @param mng Mongo container
-     * @param user User
+     * @param urns URNs of friends
      */
-    public MongoUser(final Mongo mng, final User user) {
-        this.mongo = mng;
-        this.origin = user;
+    public WhiteList(@NotNull(message = "list of friends can't be NULL")
+        final Collection<URN> urns) {
+        this.friends = new Array<URN>(urns);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public URN urn() {
-        return this.origin.urn();
+    public String toString() {
+        return String.format("%d friend(s)", this.friends.size());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Statements statements() {
-        return this.origin.statements();
+    public boolean canView(final URN urn) {
+        boolean allowed = false;
+        for (URN friend : this.friends) {
+            if (friend.equals(urn)) {
+                allowed = true;
+                break;
+            }
+        }
+        return allowed;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Iterable<Receipt> receipts() {
-        return this.origin.receipts();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Units units() {
-        return this.origin.units();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Stands stands() {
-        return new MongoStands(this.mongo, this.origin.stands());
+    public boolean canPost(final String key) {
+        return false;
     }
 
 }

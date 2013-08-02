@@ -27,90 +27,80 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.mongo;
+package com.rultor.acl;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.Array;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Receipt;
-import com.rultor.spi.Stands;
-import com.rultor.spi.Statements;
-import com.rultor.spi.Units;
-import com.rultor.spi.User;
+import com.rultor.spi.ACL;
+import java.util.Collection;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
- * User with extra features from Mongo.
+ * Allows if any of enclosed ACLs give a go.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = { "mongo", "origin" })
+@EqualsAndHashCode(of = "acls")
 @Loggable(Loggable.DEBUG)
-final class MongoUser implements User {
+public final class Either implements ACL {
 
     /**
-     * Mongo container.
+     * Friends.
      */
-    private final transient Mongo mongo;
-
-    /**
-     * Original user.
-     */
-    private final transient User origin;
+    private final transient Array<ACL> acls;
 
     /**
      * Public ctor.
-     * @param mng Mongo container
-     * @param user User
+     * @param acls ACLs to check
      */
-    public MongoUser(final Mongo mng, final User user) {
-        this.mongo = mng;
-        this.origin = user;
+    public Either(@NotNull(message = "list of ACLs can't be NULL")
+        final Collection<ACL> acls) {
+        this.acls = new Array<ACL>(acls);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public URN urn() {
-        return this.origin.urn();
+    public String toString() {
+        return StringUtils.join(this.acls, " or ");
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Statements statements() {
-        return this.origin.statements();
+    public boolean canView(final URN urn) {
+        boolean allowed = false;
+        for (ACL acl : this.acls) {
+            if (acl.canView(urn)) {
+                allowed = true;
+                break;
+            }
+        }
+        return allowed;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Iterable<Receipt> receipts() {
-        return this.origin.receipts();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Units units() {
-        return this.origin.units();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Stands stands() {
-        return new MongoStands(this.mongo, this.origin.stands());
+    public boolean canPost(final String key) {
+        boolean allowed = false;
+        for (ACL acl : this.acls) {
+            if (acl.canPost(key)) {
+                allowed = true;
+                break;
+            }
+        }
+        return allowed;
     }
 
 }

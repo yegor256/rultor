@@ -27,90 +27,62 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.mongo;
+package com.rultor.acl;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Receipt;
-import com.rultor.spi.Stands;
-import com.rultor.spi.Statements;
-import com.rultor.spi.Units;
-import com.rultor.spi.User;
+import com.rultor.spi.ACL;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
- * User with extra features from Mongo.
+ * With a post-key in MD5.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = { "mongo", "origin" })
+@EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-final class MongoUser implements User {
+public final class MD5Keyed implements ACL {
 
     /**
-     * Mongo container.
+     * MD5 hash of the key.
      */
-    private final transient Mongo mongo;
-
-    /**
-     * Original user.
-     */
-    private final transient User origin;
+    private final transient String hash;
 
     /**
      * Public ctor.
-     * @param mng Mongo container
-     * @param user User
+     * @param txt MD5 hash
      */
-    public MongoUser(final Mongo mng, final User user) {
-        this.mongo = mng;
-        this.origin = user;
+    public MD5Keyed(@NotNull(message = "hash can't be NULL") final String txt) {
+        this.hash = txt;
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format("with MD5 hash `%s`", this.hash);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public URN urn() {
-        return this.origin.urn();
+    public boolean canView(final URN urn) {
+        return false;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Statements statements() {
-        return this.origin.statements();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterable<Receipt> receipts() {
-        return this.origin.receipts();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Units units() {
-        return this.origin.units();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Stands stands() {
-        return new MongoStands(this.mongo, this.origin.stands());
+    public boolean canPost(final String key) {
+        return DigestUtils.md5Hex(key).equals(this.hash);
     }
 
 }

@@ -48,7 +48,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "mongo", "origin" })
 @Loggable(Loggable.DEBUG)
-public final class MongoStands implements Stands {
+final class MongoStands implements Stands {
 
     /**
      * Mongo container.

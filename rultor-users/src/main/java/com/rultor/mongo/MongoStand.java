@@ -82,7 +82,7 @@ import org.xml.sax.SAXException;
 @EqualsAndHashCode(of = { "mongo", "origin" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
-public final class MongoStand implements Stand {
+final class MongoStand implements Stand {
 
     /**
      * MongoDB table name.
