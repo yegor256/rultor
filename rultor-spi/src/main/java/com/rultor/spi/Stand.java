@@ -30,6 +30,7 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.urn.URN;
 import java.net.URI;
 import javax.validation.constraints.NotNull;
 
@@ -56,6 +57,13 @@ public interface Stand {
      */
     @NotNull(message = "name of stand is never NULL")
     String name();
+
+    /**
+     * Owner of it.
+     * @return Owner's URN
+     */
+    @NotNull(message = "owner of stand is never NULL")
+    URN owner();
 
     /**
      * Update ACL.

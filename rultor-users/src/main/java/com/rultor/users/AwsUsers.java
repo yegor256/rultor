@@ -39,11 +39,14 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Receipt;
+import com.rultor.spi.Stand;
 import com.rultor.spi.Statement;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -150,6 +153,22 @@ public final class AwsUsers implements Users {
         for (Map.Entry<URN, Statement> entry : statements.entrySet()) {
             this.get(entry.getKey()).statements().add(entry.getValue());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stand stand(final String stand) {
+        final Collection<Item> items = this.region.table(AwsStand.TABLE)
+            .frame()
+            .where(AwsStand.RANGE_STAND, stand);
+        if (items.isEmpty()) {
+            throw new NoSuchElementException(
+                String.format("Stand `%s` doesn't exist", stand)
+            );
+        }
+        return new AwsStand(items.iterator().next());
     }
 
 }

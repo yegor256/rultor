@@ -27,10 +27,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.mongo;
+package com.rultor.users.mongo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -81,7 +82,7 @@ import org.xml.sax.SAXException;
 @ToString
 @EqualsAndHashCode(of = { "mongo", "origin" })
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({ "PMD.TooManyMethods", "PMD.ExcessiveImports" })
 final class MongoStand implements Stand {
 
     /**
@@ -129,7 +130,7 @@ final class MongoStand implements Stand {
      * @param mng Mongo container
      * @param stand Original
      */
-    public MongoStand(final Mongo mng, final Stand stand) {
+    protected MongoStand(final Mongo mng, final Stand stand) {
         this.mongo = mng;
         this.origin = stand;
     }
@@ -182,6 +183,14 @@ final class MongoStand implements Stand {
     @Override
     public String name() {
         return this.origin.name();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public URN owner() {
+        return this.origin.owner();
     }
 
     /**

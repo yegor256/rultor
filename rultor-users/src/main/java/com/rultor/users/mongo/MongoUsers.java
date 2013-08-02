@@ -27,18 +27,21 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.mongo;
+package com.rultor.users.mongo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
+import com.rultor.spi.Receipt;
 import com.rultor.spi.Stand;
-import com.rultor.spi.Stands;
+import com.rultor.spi.User;
+import com.rultor.spi.Users;
 import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Stands in Mongo.
+ * Users with extra features from Mongo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -48,7 +51,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "mongo", "origin" })
 @Loggable(Loggable.DEBUG)
-final class MongoStands implements Stands {
+public final class MongoUsers implements Users {
 
     /**
      * Mongo container.
@@ -56,56 +59,72 @@ final class MongoStands implements Stands {
     private final transient Mongo mongo;
 
     /**
-     * Original stands.
+     * Original users.
      */
-    private final transient Stands origin;
+    private final transient Users origin;
 
     /**
      * Public ctor.
      * @param mng Mongo container
-     * @param stands Original
+     * @param users Users
      */
-    public MongoStands(final Mongo mng, final Stands stands) {
+    public MongoUsers(final Mongo mng, final Users users) {
         this.mongo = mng;
-        this.origin = stands;
+        this.origin = users;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Stand get(final String name) {
-        return new MongoStand(this.mongo, this.origin.get(name));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void create(final String name) {
-        this.origin.create(name);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterator<Stand> iterator() {
-        final Iterator<Stand> iter = this.origin.iterator();
-        return new Iterator<Stand>() {
+    public Iterator<User> iterator() {
+        final Iterator<User> iter = this.origin.iterator();
+        return new Iterator<User>() {
             @Override
             public boolean hasNext() {
                 return iter.hasNext();
             }
             @Override
-            public Stand next() {
-                return new MongoStand(MongoStands.this.mongo, iter.next());
+            public User next() {
+                return new MongoUser(MongoUsers.this.mongo, iter.next());
             }
             @Override
             public void remove() {
                 throw new UnsupportedOperationException();
             }
         };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public User get(final URN name) {
+        return new MongoUser(this.mongo, this.origin.get(name));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void charge(final Receipt receipt) {
+        this.origin.charge(receipt);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reconcile() {
+        this.origin.reconcile();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stand stand(final String name) {
+        return new MongoStand(this.mongo, this.origin.stand(name));
     }
 
 }

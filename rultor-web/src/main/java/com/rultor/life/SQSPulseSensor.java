@@ -38,10 +38,15 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Tv;
-import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
+import com.rultor.spi.ACL;
+import com.rultor.spi.Arguments;
+import com.rultor.spi.Repo;
+import com.rultor.spi.SpecException;
 import com.rultor.spi.Stand;
+import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import com.rultor.spi.Work;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.StringReader;
@@ -70,6 +75,11 @@ public final class SQSPulseSensor implements Runnable, Closeable {
     private final transient Users users;
 
     /**
+     * Repository for ACL instantiation.
+     */
+    private final transient Repo repo;
+
+    /**
      * Quartz queue client.
      */
     private final transient SQSClient client;
@@ -77,10 +87,13 @@ public final class SQSPulseSensor implements Runnable, Closeable {
     /**
      * Public ctor.
      * @param usr Users
+     * @param rpo Repo
      * @param clnt SQS client for quartz queue
      */
-    protected SQSPulseSensor(final Users usr, final SQSClient clnt) {
+    protected SQSPulseSensor(final Users usr, final Repo rpo,
+        final SQSClient clnt) {
         this.users = usr;
+        this.repo = rpo;
         this.client = clnt;
     }
 
@@ -124,19 +137,35 @@ public final class SQSPulseSensor implements Runnable, Closeable {
         final JsonObject object = Json.createReader(
             new StringReader(json)
         ).readObject();
-        final Stand stand = this.users
-            .get(URN.create(object.getString("user")))
-            .stands()
-            .get(object.getString("stand"));
-        stand.post(
-            String.format(
-                "%s:%s:%s",
-                object.getString("work.owner"),
-                object.getString("work.unit"),
-                object.getString("work.started")
-            ),
-            object.getString("xembly")
-        );
+        final Stand stand = this.users.stand(object.getString("stand"));
+        if (this.acl(stand).canPost(object.getString("key"))) {
+            stand.post(
+                String.format(
+                    "%s:%s:%s",
+                    object.getString("work.owner"),
+                    object.getString("work.unit"),
+                    object.getString("work.started")
+                ),
+                object.getString("xembly")
+            );
+        }
+    }
+
+    /**
+     * Get ACL of a stand.
+     * @param stand The stand
+     * @return ACL
+     */
+    private ACL acl(final Stand stand) {
+        try {
+            return ACL.class.cast(
+                new Repo.Cached(this.repo, new User.Nobody(), stand.acl())
+                    .get()
+                    .instantiate(this.users, new Arguments(new Work.None()))
+            );
+        } catch (SpecException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
 }

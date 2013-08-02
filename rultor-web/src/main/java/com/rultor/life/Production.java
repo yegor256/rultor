@@ -43,6 +43,8 @@ import com.rultor.spi.Repo;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Users;
 import com.rultor.users.AwsUsers;
+import com.rultor.users.mongo.Mongo;
+import com.rultor.users.mongo.MongoUsers;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -79,6 +81,7 @@ final class Production implements Profile {
      */
     private final transient SQSPulseSensor sensor = new SQSPulseSensor(
         this.users(),
+        this.repo(),
         new SQSClient.Simple(
             Manifests.read("Rultor-SQSKey"),
             Manifests.read("Rultor-SQSSecret"),
@@ -101,15 +104,24 @@ final class Production implements Profile {
     @Override
     @Cacheable(forever = true)
     public Users users() {
-        return new AwsUsers(
-            new Region.Prefixed(
-                new Region.Simple(
-                    new Credentials.Simple(
-                        Manifests.read("Rultor-DynamoKey"),
-                        Manifests.read("Rultor-DynamoSecret")
-                    )
-                ),
-                Manifests.read("Rultor-DynamoPrefix")
+        return new MongoUsers(
+            new Mongo.Simple(
+                Manifests.read("Rultor-MongoHost"),
+                Integer.parseInt(Manifests.read("Rultor-MongoPort")),
+                Manifests.read("Rultor-MongoName"),
+                Manifests.read("Rultor-MongoUser"),
+                Manifests.read("Rultor-MongoPassword")
+            ),
+            new AwsUsers(
+                new Region.Prefixed(
+                    new Region.Simple(
+                        new Credentials.Simple(
+                            Manifests.read("Rultor-DynamoKey"),
+                            Manifests.read("Rultor-DynamoSecret")
+                        )
+                    ),
+                    Manifests.read("Rultor-DynamoPrefix")
+                )
             )
         );
     }

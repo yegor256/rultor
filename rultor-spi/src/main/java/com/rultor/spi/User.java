@@ -30,8 +30,10 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 
 /**
  * User.
@@ -77,5 +79,34 @@ public interface User {
      */
     @NotNull(message = "set of stands of user is never NULL")
     Stands stands();
+
+    /**
+     * Nobody.
+     */
+    @Immutable
+    @Loggable(Loggable.DEBUG)
+    @EqualsAndHashCode
+    final class Nobody implements User {
+        @Override
+        public URN urn() {
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public Statements statements() {
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public Iterable<Receipt> receipts() {
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public Units units() {
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public Stands stands() {
+            throw new UnsupportedOperationException();
+        }
+    }
 
 }

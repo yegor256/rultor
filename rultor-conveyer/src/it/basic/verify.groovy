@@ -32,7 +32,7 @@ def log = new File(basedir, 'build.log')
 assert log.exists()
 assert log.text.contains('INFO: main Starting SimpleConveyer(')
 assert log.text.contains('CONSOLE: ')
-assert log.text.contains('INFO χembly ')
+assert log.text.contains('INFO χemβly ')
 assert log.text.contains('INFO nothing to do')
 assert log.text.contains('INFO: main #close():')
 

@@ -58,11 +58,11 @@ public final class Either implements ACL {
 
     /**
      * Public ctor.
-     * @param acls ACLs to check
+     * @param list ACLs to check
      */
     public Either(@NotNull(message = "list of ACLs can't be NULL")
-        final Collection<ACL> acls) {
-        this.acls = new Array<ACL>(acls);
+        final Collection<ACL> list) {
+        this.acls = new Array<ACL>(list);
     }
 
     /**

@@ -133,11 +133,20 @@ public final class AclRs extends BaseRs {
      * @return Stand
      */
     private Stand stand() {
+        final Stand stand;
         try {
-            return this.user().stands().get(this.name);
+            stand = this.users().stand(this.name);
         } catch (NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
+        if (!stand.owner().equals(this.user().urn())) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                String.format("access denied to stand `%s`", this.name),
+                Level.SEVERE
+            );
+        }
+        return stand;
     }
 
     /**

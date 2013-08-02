@@ -37,6 +37,7 @@ import com.rultor.spi.Queue;
 import com.rultor.spi.Receipt;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
 import com.rultor.spi.Statement;
 import com.rultor.spi.Statements;
@@ -94,6 +95,7 @@ final class Testing implements Profile {
      */
     @Override
     public Users users() {
+        // @checkstyle AnonInnerLength (50 lines)
         return new Users() {
             @Override
             public Iterator<User> iterator() {
@@ -109,6 +111,10 @@ final class Testing implements Profile {
             }
             @Override
             public void reconcile() {
+                throw new UnsupportedOperationException();
+            }
+            @Override
+            public Stand stand(final String name) {
                 throw new UnsupportedOperationException();
             }
         };

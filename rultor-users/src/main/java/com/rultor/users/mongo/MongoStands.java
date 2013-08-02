@@ -27,21 +27,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.mongo;
+package com.rultor.users.mongo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.urn.URN;
-import com.rultor.spi.Receipt;
+import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
-import com.rultor.spi.Statements;
-import com.rultor.spi.Units;
-import com.rultor.spi.User;
+import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * User with extra features from Mongo.
+ * Stands in Mongo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -51,7 +48,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "mongo", "origin" })
 @Loggable(Loggable.DEBUG)
-final class MongoUser implements User {
+final class MongoStands implements Stands {
 
     /**
      * Mongo container.
@@ -59,58 +56,48 @@ final class MongoUser implements User {
     private final transient Mongo mongo;
 
     /**
-     * Original user.
+     * Original stands.
      */
-    private final transient User origin;
+    private final transient Stands origin;
 
     /**
      * Public ctor.
      * @param mng Mongo container
-     * @param user User
+     * @param stands Original
      */
-    public MongoUser(final Mongo mng, final User user) {
+    protected MongoStands(final Mongo mng, final Stands stands) {
         this.mongo = mng;
-        this.origin = user;
+        this.origin = stands;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public URN urn() {
-        return this.origin.urn();
+    public void create(final String name) {
+        this.origin.create(name);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Statements statements() {
-        return this.origin.statements();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterable<Receipt> receipts() {
-        return this.origin.receipts();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Units units() {
-        return this.origin.units();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Stands stands() {
-        return new MongoStands(this.mongo, this.origin.stands());
+    public Iterator<Stand> iterator() {
+        final Iterator<Stand> iter = this.origin.iterator();
+        return new Iterator<Stand>() {
+            @Override
+            public boolean hasNext() {
+                return iter.hasNext();
+            }
+            @Override
+            public Stand next() {
+                return new MongoStand(MongoStands.this.mongo, iter.next());
+            }
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
 }

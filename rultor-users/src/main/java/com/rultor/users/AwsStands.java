@@ -39,9 +39,7 @@ import com.jcabi.dynamo.ScanValve;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -121,23 +119,6 @@ final class AwsStands implements Stands {
                 .with(AwsStand.RANGE_STAND, stand)
                 .with(AwsStand.FIELD_ACL, "")
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Stand get(final String stand) {
-        final Collection<Item> items = this.region.table(AwsStand.TABLE)
-            .frame()
-            .where(AwsStand.HASH_URN, this.owner.toString())
-            .where(AwsStand.RANGE_STAND, stand);
-        if (items.isEmpty()) {
-            throw new NoSuchElementException(
-                String.format("Stand `%s` doesn't exist", stand)
-            );
-        }
-        return new AwsStand(items.iterator().next());
     }
 
 }

@@ -29,10 +29,10 @@
  */
 
 /**
- * Stand in MongoDB, tests.
+ * Stand in MongoDB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-package com.rultor.mongo;
+package com.rultor.users.mongo;

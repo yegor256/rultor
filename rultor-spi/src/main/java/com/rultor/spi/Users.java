@@ -52,6 +52,14 @@ public interface Users extends Iterable<User> {
     User get(@NotNull(message = "name can't be NULL") URN name);
 
     /**
+     * Get stand by name (runtime exception if it's absent).
+     * @param name The name of it
+     * @return The stand
+     */
+    @NotNull(message = "stand is never NULL")
+    Stand stand(@NotNull(message = "stand name can't be NULL") String name);
+
+    /**
      * Register new expense between two users.
      * @param receipt Receipt of transaction
      */

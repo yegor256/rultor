@@ -59,6 +59,7 @@ import com.rultor.tools.Time;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Iterator;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -257,7 +258,15 @@ public class BaseRs extends BaseResource {
      */
     @NotNull(message = "User can't be NULL")
     protected final User user() {
-        return this.users().get(this.auth().identity().urn());
+        final Identity self = this.auth().identity();
+        if (self.equals(Identity.ANONYMOUS)) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                "login first",
+                Level.WARNING
+            );
+        }
+        return this.users().get(self.urn());
     }
 
     /**

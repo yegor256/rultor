@@ -27,20 +27,21 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.mongo;
+package com.rultor.users.mongo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Receipt;
+import com.rultor.spi.Stands;
+import com.rultor.spi.Statements;
+import com.rultor.spi.Units;
 import com.rultor.spi.User;
-import com.rultor.spi.Users;
-import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Users with extra features from Mongo.
+ * User with extra features from Mongo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -50,7 +51,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "mongo", "origin" })
 @Loggable(Loggable.DEBUG)
-public final class MongoUsers implements Users {
+final class MongoUser implements User {
 
     /**
      * Mongo container.
@@ -58,64 +59,58 @@ public final class MongoUsers implements Users {
     private final transient Mongo mongo;
 
     /**
-     * Original users.
+     * Original user.
      */
-    private final transient Users origin;
+    private final transient User origin;
 
     /**
      * Public ctor.
      * @param mng Mongo container
-     * @param users Users
+     * @param user User
      */
-    public MongoUsers(final Mongo mng, final Users users) {
+    protected MongoUser(final Mongo mng, final User user) {
         this.mongo = mng;
-        this.origin = users;
+        this.origin = user;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Iterator<User> iterator() {
-        final Iterator<User> iter = this.origin.iterator();
-        return new Iterator<User>() {
-            @Override
-            public boolean hasNext() {
-                return iter.hasNext();
-            }
-            @Override
-            public User next() {
-                return new MongoUser(MongoUsers.this.mongo, iter.next());
-            }
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
+    public URN urn() {
+        return this.origin.urn();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public User get(final URN name) {
-        return new MongoUser(this.mongo, this.origin.get(name));
+    public Statements statements() {
+        return this.origin.statements();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void charge(final Receipt receipt) {
-        this.origin.charge(receipt);
+    public Iterable<Receipt> receipts() {
+        return this.origin.receipts();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void reconcile() {
-        this.origin.reconcile();
+    public Units units() {
+        return this.origin.units();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stands stands() {
+        return new MongoStands(this.mongo, this.origin.stands());
     }
 
 }

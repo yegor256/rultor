@@ -101,7 +101,14 @@
                                     <xsl:attribute name="href">
                                         <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
                                     </xsl:attribute>
-                                    <xsl:text>R</xsl:text>
+                                    <xsl:choose>
+                                        <xsl:when test="contains(/page/version/name, 'SNAPSHOT')">
+                                            <xsl:text>r</xsl:text>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:text>R</xsl:text>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
                                 </a>
                             </li>
                             <li class="hidden-phone">
@@ -110,6 +117,26 @@
                                 </a>
                             </li>
                             <xsl:apply-templates select="version"/>
+                            <xsl:if test="/page/links/link[@rel='units']">
+                                <li>
+                                    <a title="units">
+                                        <xsl:attribute name="href">
+                                            <xsl:value-of select="/page/links/link[@rel='units']/@href"/>
+                                        </xsl:attribute>
+                                        <i class="icon-cogs"><xsl:comment>cogs</xsl:comment></i>
+                                    </a>
+                                </li>
+                            </xsl:if>
+                            <xsl:if test="/page/links/link[@rel='stands']">
+                                <li>
+                                    <a title="stands">
+                                        <xsl:attribute name="href">
+                                            <xsl:value-of select="/page/links/link[@rel='stands']/@href"/>
+                                        </xsl:attribute>
+                                        <i class="icon-heart"><xsl:comment>stands</xsl:comment></i>
+                                    </a>
+                                </li>
+                            </xsl:if>
                             <xsl:apply-templates select="identity"/>
                         </ul>
                     </nav>

@@ -36,6 +36,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
+import com.jcabi.urn.URN;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
@@ -130,6 +131,14 @@ final class AwsStand implements Stand {
     @Override
     public String name() {
         return this.item.get(AwsStand.RANGE_STAND).getS();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public URN owner() {
+        return URN.create(this.item.get(AwsStand.HASH_URN).getS());
     }
 
     /**

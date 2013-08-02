@@ -36,7 +36,7 @@
         <photo>http://images.sodahead.com/polls/002320349/200261278_The_Big_Lebowski___Jeff_Bridges_answer_9_xlarge.jpeg</photo>
     </identity>
     <version>
-        <name>1.0-SNAPSHOT</name>
+        <name>1.5</name>
         <revision>123</revision>
         <date>22-Aug-2012</date>
     </version>
@@ -44,6 +44,8 @@
         <link href="/xml/acl.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
         <link href="/xml/acl.xml" rel="save" type="text/xml"/>
+        <link href="/xml/index.xml" rel="units" type="text/xml"/>
+        <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
     </links>
     <balance>$5.90</balance>
     <millis>1869</millis>
