@@ -45,6 +45,14 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi.incubator</groupId>
+            <artifactId>xembly</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
@@ -55,6 +63,11 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rexsl</groupId>
+            <artifactId>rexsl-test</artifactId>
+            <version>${rexsl.version}</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
@@ -85,12 +98,21 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-urn</artifactId>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-aspects</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>2.10.1</version>
         </dependency>
     </dependencies>
     <build>
@@ -115,6 +137,11 @@
                             <failsafe.dynamo.key>${failsafe.dynamo.key}</failsafe.dynamo.key>
                             <failsafe.dynamo.secret>${failsafe.dynamo.secret}</failsafe.dynamo.secret>
                             <failsafe.dynamo.prefix>${failsafe.dynamo.prefix}</failsafe.dynamo.prefix>
+                            <failsafe.mongo.host>${failsafe.mongo.host}</failsafe.mongo.host>
+                            <failsafe.mongo.port>${failsafe.mongo.port}</failsafe.mongo.port>
+                            <failsafe.mongo.name>${failsafe.mongo.name}</failsafe.mongo.name>
+                            <failsafe.mongo.user>${failsafe.mongo.user}</failsafe.mongo.user>
+                            <failsafe.mongo.password>${failsafe.mongo.password}</failsafe.mongo.password>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

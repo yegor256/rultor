@@ -32,7 +32,8 @@ package com.rultor.drain;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Pageable;
+import com.rultor.tools.Time;
 import java.io.IOException;
 import java.io.InputStream;
 import lombok.EqualsAndHashCode;
@@ -63,8 +64,8 @@ public final class Trash implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public Pulses pulses() throws IOException {
-        return new Pulses.Array();
+    public Pageable<Time> pulses() throws IOException {
+        return new Pageable.Array<Time>();
     }
 
     /**

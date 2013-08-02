@@ -70,7 +70,7 @@
             <ul class="inline btn-group-vertical">
                 <li>
                     <a title="edit this unit">
-                    <xsl:if test="face/exception">
+                        <xsl:if test="face/exception">
                             <xsl:attribute name="class">
                                 <xsl:text>text-error</xsl:text>
                             </xsl:attribute>

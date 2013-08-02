@@ -31,7 +31,7 @@ package com.rultor.drain.ftp;
 
 import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Pageable;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.util.Arrays;
@@ -92,7 +92,7 @@ public final class DirectoryDrainITCase {
             work, this.host, this.login, this.password, this.dir
         );
         drain.append(Arrays.asList(msg));
-        final Pulses names = drain.pulses();
+        final Pageable<Time> names = drain.pulses();
         MatcherAssert.assertThat(names, Matchers.hasItem(work.started()));
         MatcherAssert.assertThat(
             IOUtils.toString(drain.read(), CharEncoding.UTF_8),

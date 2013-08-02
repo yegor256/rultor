@@ -39,13 +39,14 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Receipt;
+import com.rultor.spi.Stand;
 import com.rultor.spi.Statement;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -65,6 +66,16 @@ import lombok.ToString;
 public final class AwsUsers implements Users {
 
     /**
+     * Dynamo DB table name.
+     */
+    public static final String INDEX = "users";
+
+    /**
+     * Dynamo DB table column.
+     */
+    public static final String HASH_URN = "urn";
+
+    /**
      * Dynamo.
      */
     private final transient Region region;
@@ -78,7 +89,7 @@ public final class AwsUsers implements Users {
         final DescribeTableResult result = aws.describeTable(
             new DescribeTableRequest()
                 // @checkstyle MultipleStringLiterals (1 line)
-                .withTableName(reg.table("units").name())
+                .withTableName(reg.table(AwsUsers.INDEX).name())
         );
         Logger.info(
             AwsUsers.class, "Amazon DynamoDB is ready with %d units",
@@ -91,13 +102,27 @@ public final class AwsUsers implements Users {
      * {@inheritDoc}
      */
     @Override
-    @NotNull(message = "list of URN names is never NULL")
-    public Set<URN> everybody() {
-        final Set<URN> users = new HashSet<URN>(0);
-        for (Item item : this.region.table("units").frame()) {
-            users.add(URN.create(item.get(AwsUnit.KEY_OWNER).getS()));
-        }
-        return Collections.unmodifiableSet(users);
+    @NotNull(message = "list of users is never NULL")
+    public Iterator<User> iterator() {
+        final Iterator<Item> items = this.region.table(AwsUsers.INDEX)
+            .frame().iterator();
+        return new Iterator<User>() {
+            @Override
+            public boolean hasNext() {
+                return items.hasNext();
+            }
+            @Override
+            public User next() {
+                return new AwsUser(
+                    AwsUsers.this.region,
+                    URN.create(items.next().get(AwsUsers.HASH_URN).getS())
+                );
+            }
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
     /**
@@ -128,6 +153,22 @@ public final class AwsUsers implements Users {
         for (Map.Entry<URN, Statement> entry : statements.entrySet()) {
             this.get(entry.getKey()).statements().add(entry.getValue());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stand stand(final String stand) {
+        final Collection<Item> items = this.region.table(AwsStand.TABLE)
+            .frame()
+            .where(AwsStand.RANGE_STAND, stand);
+        if (items.isEmpty()) {
+            throw new NoSuchElementException(
+                String.format("Stand `%s` doesn't exist", stand)
+            );
+        }
+        return new AwsStand(items.iterator().next());
     }
 
 }

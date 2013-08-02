@@ -35,7 +35,7 @@ import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Pageable;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
@@ -137,10 +137,10 @@ public final class NoiseReduction implements Drain {
      *  https://code.google.com/p/guava-libraries/issues/detail?id=1464
      */
     @Override
-    public Pulses pulses() throws IOException {
-        return new Pulses() {
+    public Pageable<Time> pulses() throws IOException {
+        return new Pageable<Time>() {
             @Override
-            public Pulses tail(final Time head) throws IOException {
+            public Pageable<Time> tail(final Time head) throws IOException {
                 return NoiseReduction.this.clean.pulses().tail(head);
             }
             @Override

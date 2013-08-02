@@ -34,20 +34,18 @@ import com.jcabi.aspects.Tv;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rultor.snapshot.Snapshot;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulse;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Pageable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.SpecException;
-import com.rultor.spi.Stage;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Work;
-import com.rultor.tools.Markdown;
 import com.rultor.tools.Time;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -119,7 +117,7 @@ public final class DrainRs extends BaseRs {
             .init(this)
             .append(new JaxbBundle("unit", this.name));
         final Drain drain = this.drain(new Time());
-        Pulses pulses = this.pulses(drain);
+        Pageable<Time> pulses = this.pulses(drain);
         final int total;
         if (this.since == null) {
             total = Tv.FIVE;
@@ -194,7 +192,7 @@ public final class DrainRs extends BaseRs {
      * @param drain The drain
      * @return The pulses
      */
-    private Pulses pulses(final Drain drain) {
+    private Pageable<Time> pulses(final Drain drain) {
         try {
             return drain.pulses();
         } catch (IOException ex) {
@@ -215,14 +213,11 @@ public final class DrainRs extends BaseRs {
      * @return The unit
      */
     private Unit unit() {
-        if (!this.user().units().contains(this.name)) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                String.format("Unit `%s` doesn't exist", this.name),
-                Level.SEVERE
-            );
+        try {
+            return this.user().units().get(this.name);
+        } catch (NoSuchElementException ex) {
+            throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
-        return this.user().get(this.name);
     }
 
     /**
@@ -265,15 +260,15 @@ public final class DrainRs extends BaseRs {
      * @return Bundle
      */
     private JaxbBundle pulse(final Time date) {
-        final Pulse pulse = new Pulse(this.drain(date));
-        final Collection<Stage> stages;
+        final PulseOfDrain pulse = new PulseOfDrain(this.drain(date));
+        final Snapshot snapshot;
         try {
-            stages = pulse.stages();
+            snapshot = pulse.snapshot();
         } catch (IOException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 String.format(
-                    "I/O problem with the stages of \"%s\": %s",
+                    "I/O problem with the snapshot of \"%s\": %s",
                     date,
                     ExceptionUtils.getRootCauseMessage(ex)
                 ),
@@ -281,29 +276,9 @@ public final class DrainRs extends BaseRs {
             );
         }
         return new JaxbBundle("pulse")
-            .add("stages")
-            .add(
-                new JaxbBundle.Group<Stage>(stages) {
-                    @Override
-                    public JaxbBundle bundle(final Stage stage) {
-                        return DrainRs.this.stage(date, stage);
-                    }
-                }
-            )
-            .up()
             .add("date", date.toString())
             .up()
-            .add("when", date.when())
-            .up()
-            .link(
-                new Link(
-                    "see",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(PulseRs.class)
-                        .build(this.name, date.millis())
-                )
-            )
+            .add(snapshot.xml().getDocumentElement())
             .link(
                 new Link(
                     // @checkstyle MultipleStringLiterals (1 line)
@@ -312,37 +287,6 @@ public final class DrainRs extends BaseRs {
                         .clone()
                         .path(PulseRs.class)
                         .path(PulseRs.class, "stream")
-                        .build(this.name, date.millis())
-                )
-            );
-    }
-
-    /**
-     * Convert stage to JaxbBundle.
-     * @param date Date of it
-     * @param stage Stage to convert
-     * @return Bundle
-     */
-    private JaxbBundle stage(final Time date, final Stage stage) {
-        return new JaxbBundle("stage")
-            .add("result", stage.result().toString())
-            .up()
-            .add("start", Long.toString(stage.start()))
-            .up()
-            .add("stop", Long.toString(stage.stop()))
-            .up()
-            .add("msec", Long.toString(stage.stop() - stage.start()))
-            .up()
-            .add("output", new Markdown(stage.output()).html())
-            .up()
-            .link(
-                new Link(
-                    "log",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(PulseRs.class)
-                        .queryParam(PulseRs.QUERY_START, stage.start())
-                        .queryParam(PulseRs.QUERY_STOP, stage.stop())
                         .build(this.name, date.millis())
                 )
             );

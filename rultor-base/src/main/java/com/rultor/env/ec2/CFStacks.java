@@ -37,7 +37,7 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.aws.CFClient;
 import com.rultor.env.Environment;
 import com.rultor.env.Environments;
-import com.rultor.spi.Signal;
+import com.rultor.snapshot.Step;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 
@@ -99,18 +99,22 @@ public final class CFStacks implements Environments {
      */
     @Override
     public Environment acquire() throws IOException {
+        return new CFStack(this.create(), this.client);
+    }
+
+    /**
+     * Create stack.
+     * @return Name of stack just created
+     */
+    @Step("CloudFormation stack `{$result}` created")
+    private String create() {
         final AmazonCloudFormation aws = this.client.get();
         try {
             final CreateStackResult result = aws.createStack(
                 new CreateStackRequest()
                     .withTemplateBody(this.template)
             );
-            Signal.log(
-                Signal.Mnemo.SUCCESS,
-                "CloudFormation stack %s created",
-                result.getStackId()
-            );
-            return new CFStack(result.getStackId(), this.client);
+            return result.getStackId();
         } finally {
             aws.shutdown();
         }

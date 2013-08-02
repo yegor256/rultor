@@ -41,9 +41,9 @@
         <date>22-Aug-2012</date>
     </version>
     <links>
-        <link href="/xml/index.xml" rel="self" type="text/xml"/>
+        <link href="/xml/drain.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
-        <link href="/xml/index.xml" rel="more" type="text/xml"/>
+        <link href="/xml/drain.xml" rel="more" type="text/xml"/>
         <link href="/xml/finances.xml" rel="finances" type="text/xml"/>
     </links>
     <millis>16</millis>
@@ -52,127 +52,73 @@
     <balance>$0.45</balance>
     <pulses>
         <pulse>
-            <date>2012-08-23T13:25:33Z</date>
-            <when>a few minutes ago</when>
-            <stages>
-                <stage>
-                    <result>SUCCESS</result>
-                    <msec>12000</msec>
-                    <output>Git repository cloned</output>
-                    <links>
-                        <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-                    </links>
-                </stage>
-                <stage>
-                    <result>SUCCESS</result>
-                    <msec>170000</msec>
-                    <output>Unit tests ran successfully</output>
-                    <links>
-                        <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-                    </links>
-                </stage>
-                <stage final="true">
-                    <result>RUNNING</result>
-                    <msec>204000</msec>
-                    <output>Static analysis running</output>
-                    <links>
-                        <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-                    </links>
-                </stage>
-                <stage>
-                    <result>WAITING</result>
-                    <msec>88090</msec>
-                    <output>Code coverage checking</output>
-                </stage>
-            </stages>
+            <date>2012-08-23T13:23Z</date>
+            <snapshot>
+                <updated>2012-08-23T13:25Z</updated>
+                <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
+                <work>
+                    <owner>urn:test:1</owner>
+                    <unit>nightly-build</unit>
+                    <started>2012-08-23T13:25Z</started>
+                </work>
+                <start>2012-08-23T13:25Z</start>
+                <eta>2013-08-23T17:57Z</eta>
+                <spec>some specificiation</spec>
+                <lines>6473</lines>
+                <tags>
+                    <tag>
+                        <level>FINE</level>
+                        <label>success</label>
+                    </tag>
+                    <tag>
+                        <level>INFO</level>
+                        <label>#324</label>
+                    </tag>
+                    <tag>
+                        <level>INFO</level>
+                        <label>pull-request</label>
+                    </tag>
+                </tags>
+                <products>
+                    <product>
+                        <name>stdout</name>
+                        <html>&lt;a href="#"&gt;1 file&lt;/a&gt;</html>
+                    </product>
+                </products>
+                <steps>
+                    <step>
+                        <id>ec2-instance</id>
+                        <start>2013-08-23T17:57Z</start>
+                        <finish>2013-08-23T17:57Z</finish>
+                        <summary>created EC2 instance `i-09aeb44` of `m1.small` type</summary>
+                        <level>INFO</level>
+                    </step>
+                    <step>
+                        <id>build</id>
+                        <start>2013-08-23T17:59Z</start>
+                        <summary>running bash build script</summary>
+                    </step>
+                    <step>
+                        <id>announce</id>
+                        <summary>announce results</summary>
+                    </step>
+                </steps>
+            </snapshot>
             <links>
-                <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-                <link href="/xml/pulse.xml" rel="stream" type="text/xml"/>
-                <link href="/xml/pulse.xml" rel="stop" type="text/xml"/>
+                <link href="/xml/drain.xml" rel="stream" type="text/xml"/>
+                <link href="/xml/drain.xml" rel="stop" type="text/xml"/>
             </links>
         </pulse>
         <pulse>
-            <date>2012-08-22T13:21:23Z</date>
-            <when>a few minutes ago</when>
-            <stages>
-                <stage>
-                    <result>SUCCESS</result>
-                    <msec>13530</msec>
-                    <output>Git repository cloned successfully into https://github.com/rultor/rultor.git</output>
-                    <links>
-                        <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-                    </links>
-                </stage>
-                <stage>
-                    <result>SUCCESS</result>
-                    <msec>154039</msec>
-                    <output>Unit tests ran successfully</output>
-                    <links>
-                        <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-                    </links>
-                </stage>
-                <stage>
-                    <result>SUCCESS</result>
-                    <msec>174879</msec>
-                    <output>Static analysis done</output>
-                    <links>
-                        <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-                    </links>
-                </stage>
-                <stage final="true">
-                    <result>FAILURE</result>
-                    <msec>88333</msec>
-                    <output>Code coverage is too low</output>
-                    <links>
-                        <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-                    </links>
-                </stage>
-            </stages>
+            <date>2012-08-23T13:23Z</date>
+            <snapshot>
+                <updated>2012-08-23T13:25Z</updated>
+                <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
+                <start>2012-08-23T13:25Z</start>
+            </snapshot>
             <links>
-                <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-                <link href="/xml/pulse.xml" rel="stream" type="text/xml"/>
-            </links>
-        </pulse>
-        <pulse>
-            <date>2012-08-21T13:27:09Z</date>
-            <when>a few minutes ago</when>
-            <stages>
-                <stage>
-                    <result>SUCCESS</result>
-                    <msec>10000</msec>
-                    <output>Git repository cloned</output>
-                    <links>
-                        <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-                    </links>
-                </stage>
-                <stage>
-                    <result>SUCCESS</result>
-                    <msec>150000</msec>
-                    <output>Unit tests ran successfully</output>
-                    <links>
-                        <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-                    </links>
-                </stage>
-                <stage>
-                    <result>SUCCESS</result>
-                    <msec>200000</msec>
-                    <output>Static analysis done</output>
-                    <links>
-                        <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-                    </links>
-                </stage>
-                <stage final="true">
-                    <result>SUCCESS</result>
-                    <msec>80000</msec>
-                    <output>Code coverage is OK</output>
-                    <links>
-                        <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-                    </links>
-                </stage>
-            </stages>
-            <links>
-                <link href="/xml/pulse.xml" rel="see" type="text/xml"/>
-                <link href="/xml/pulse.xml" rel="stream" type="text/xml"/>
+                <link href="/xml/drain.xml" rel="stream" type="text/xml"/>
+                <link href="/xml/drain.xml" rel="stop" type="text/xml"/>
             </links>
         </pulse>
     </pulses>

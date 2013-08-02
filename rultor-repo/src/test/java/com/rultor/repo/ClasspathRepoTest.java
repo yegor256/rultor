@@ -35,11 +35,11 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
+import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
 import java.util.Arrays;
-import java.util.HashSet;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -157,10 +157,9 @@ public final class ClasspathRepoTest {
         Mockito.doReturn(multiply).when(unit).spec();
         final String name = "multiply-by-two";
         final User user = Mockito.mock(User.class);
-        Mockito.doReturn(unit).when(user).get(name);
-        Mockito.doReturn(
-            new HashSet<String>(Arrays.asList(name))
-        ).when(user).units();
+        final Units units = Mockito.mock(Units.class);
+        Mockito.doReturn(units).when(user).units();
+        Mockito.doReturn(unit).when(units).get(name);
         final URN urn = new URN("urn:facebook:77");
         Mockito.doReturn(urn).when(user).urn();
         final Users users = Mockito.mock(Users.class);

@@ -30,7 +30,7 @@
 package com.rultor.drain.ftp;
 
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Pageable;
 import com.rultor.tools.Time;
 import java.util.Arrays;
 import org.apache.commons.io.IOUtils;
@@ -85,7 +85,7 @@ public final class FileDrainITCase {
         );
         drain.append(Arrays.asList(msg));
         drain.append(Arrays.asList("something else"));
-        final Pulses names = drain.pulses();
+        final Pageable<Time> names = drain.pulses();
         MatcherAssert.assertThat(names, Matchers.<Time>iterableWithSize(0));
         MatcherAssert.assertThat(
             IOUtils.toString(drain.read(), CharEncoding.UTF_8),

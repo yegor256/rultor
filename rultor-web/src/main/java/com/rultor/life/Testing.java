@@ -37,9 +37,12 @@ import com.rultor.spi.Queue;
 import com.rultor.spi.Receipt;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Stand;
+import com.rultor.spi.Stands;
 import com.rultor.spi.Statement;
 import com.rultor.spi.Statements;
 import com.rultor.spi.Unit;
+import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.tools.Dollars;
@@ -47,7 +50,6 @@ import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -93,10 +95,11 @@ final class Testing implements Profile {
      */
     @Override
     public Users users() {
+        // @checkstyle AnonInnerLength (50 lines)
         return new Users() {
             @Override
-            public Set<URN> everybody() {
-                return new TreeSet<URN>();
+            public Iterator<User> iterator() {
+                return new TreeSet<User>().iterator();
             }
             @Override
             public User get(final URN urn) {
@@ -108,6 +111,10 @@ final class Testing implements Profile {
             }
             @Override
             public void reconcile() {
+                throw new UnsupportedOperationException();
+            }
+            @Override
+            public Stand stand(final String name) {
                 throw new UnsupportedOperationException();
             }
         };
@@ -150,20 +157,30 @@ final class Testing implements Profile {
             return URN.create(this.name.toString());
         }
         @Override
-        public Set<String> units() {
-            return Testing.UNITS.keySet();
-        }
-        @Override
-        public Unit get(final String unit) {
-            return Testing.UNITS.get(unit);
-        }
-        @Override
-        public void create(final String txt) {
-            Testing.UNITS.put(txt, new MemoryUnit(txt));
-        }
-        @Override
-        public void remove(final String txt) {
-            Testing.UNITS.remove(txt);
+        public Units units() {
+            // @checkstyle AnonInnerLength (50 lines)
+            return new Units() {
+                @Override
+                public Iterator<Unit> iterator() {
+                    return Testing.UNITS.values().iterator();
+                }
+                @Override
+                public Unit get(final String unit) {
+                    return Testing.UNITS.get(unit);
+                }
+                @Override
+                public void create(final String txt) {
+                    Testing.UNITS.put(txt, new MemoryUnit(txt));
+                }
+                @Override
+                public void remove(final String txt) {
+                    Testing.UNITS.remove(txt);
+                }
+                @Override
+                public boolean contains(final String txt) {
+                    return Testing.UNITS.containsKey(txt);
+                }
+            };
         }
         @Override
         public Statements statements() {
@@ -192,6 +209,10 @@ final class Testing implements Profile {
         public Iterable<Receipt> receipts() {
             throw new UnsupportedOperationException();
         }
+        @Override
+        public Stands stands() {
+            throw new UnsupportedOperationException();
+        }
     }
 
     /**
@@ -202,22 +223,26 @@ final class Testing implements Profile {
         /**
          * Name of the unit.
          */
-        private final transient String name;
+        private final transient String label;
         /**
          * Public ctor.
          * @param unit Name of it
          */
         protected MemoryUnit(final String unit) {
             Testing.SPECS.put(unit, new Spec.Simple());
-            this.name = unit;
+            this.label = unit;
         }
         @Override
         public void update(final Spec spec) {
-            Testing.SPECS.put(this.name, spec);
+            Testing.SPECS.put(this.label, spec);
         }
         @Override
         public Spec spec() {
-            return Testing.SPECS.get(this.name);
+            return Testing.SPECS.get(this.label);
+        }
+        @Override
+        public String name() {
+            return this.label;
         }
     }
 

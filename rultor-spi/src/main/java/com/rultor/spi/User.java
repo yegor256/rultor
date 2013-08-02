@@ -30,9 +30,10 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
-import java.util.Set;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 
 /**
  * User.
@@ -59,7 +60,7 @@ public interface User {
     Statements statements();
 
     /**
-     * All receipts not yet statementd.
+     * All receipts not yet statement.
      * @return All receipts
      */
     @NotNull(message = "list of receipts is never NULL")
@@ -70,26 +71,42 @@ public interface User {
      * @return Collection of units
      */
     @NotNull(message = "set of units of user is never NULL")
-    Set<String> units();
+    Units units();
 
     /**
-     * Get unit by name (runtime exception if it's absent).
-     * @param name The name of it
-     * @return The unit
+     * Names of all his stands.
+     * @return Collection of stand names
      */
-    @NotNull(message = "unit is never NULL")
-    Unit get(@NotNull(message = "unit name can't be NULL") String name);
+    @NotNull(message = "set of stands of user is never NULL")
+    Stands stands();
 
     /**
-     * Remove unit by name (runtime exception if it's absent).
-     * @param name The name of it
+     * Nobody.
      */
-    void remove(@NotNull(message = "name can't be NULL") String name);
-
-    /**
-     * Create empty default unit with this name.
-     * @param name The name of it
-     */
-    void create(@NotNull(message = "name can't be NULL") String name);
+    @Immutable
+    @Loggable(Loggable.DEBUG)
+    @EqualsAndHashCode
+    final class Nobody implements User {
+        @Override
+        public URN urn() {
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public Statements statements() {
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public Iterable<Receipt> receipts() {
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public Units units() {
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public Stands stands() {
+            throw new UnsupportedOperationException();
+        }
+    }
 
 }

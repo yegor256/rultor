@@ -41,6 +41,7 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Variable;
 import java.net.HttpURLConnection;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
@@ -108,7 +109,7 @@ public final class UnitRs extends BaseRs {
     @GET
     @Path("/remove")
     public Response remove() {
-        this.user().remove(this.name);
+        this.user().units().remove(this.name);
         throw this.flash().redirect(
             this.uriInfo().getBaseUri(),
             String.format("Unit `%s` successfully removed", this.name),
@@ -155,14 +156,11 @@ public final class UnitRs extends BaseRs {
      * @return Unit
      */
     private Unit unit() {
-        if (!this.user().units().contains(this.name)) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                String.format("Unit `%s` doesn't exist", this.name),
-                Level.SEVERE
-            );
+        try {
+            return this.user().units().get(this.name);
+        } catch (NoSuchElementException ex) {
+            throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
-        return this.user().get(this.name);
     }
 
     /**

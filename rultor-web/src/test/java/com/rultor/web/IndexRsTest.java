@@ -37,9 +37,12 @@ import com.rexsl.test.JaxbConverter;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.spi.Statement;
 import com.rultor.spi.Statements;
+import com.rultor.spi.Unit;
+import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.tools.Dollars;
+import java.util.ArrayList;
 import java.util.Arrays;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -66,6 +69,10 @@ public final class IndexRsTest {
         res.setHttpHeaders(new HttpHeadersMocker().mock());
         res.setSecurityContext(Mockito.mock(SecurityContext.class));
         final User user = Mockito.mock(User.class);
+        final Units units = Mockito.mock(Units.class);
+        Mockito.doReturn(units).when(user).units();
+        Mockito.doReturn(new ArrayList<Unit>(0).iterator())
+            .when(units).iterator();
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(Mockito.any(URN.class));
         final Statements stmts = Mockito.mock(Statements.class);

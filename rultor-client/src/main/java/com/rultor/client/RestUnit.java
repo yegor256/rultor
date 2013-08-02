@@ -119,4 +119,18 @@ final class RestUnit implements Unit {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String name() {
+        return RestTester.start(UriBuilder.fromUri(this.home))
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+            .header(HttpHeaders.AUTHORIZATION, this.token)
+            .get("#name()")
+            .assertStatus(HttpURLConnection.HTTP_OK)
+            .xpath("/page/unit/name/text()")
+            .get(0);
+    }
+
 }

@@ -30,13 +30,10 @@
 package com.rultor.shell.bash;
 
 import com.google.common.io.Files;
-import com.rultor.shell.Relic;
+import com.rultor.shell.Sequel;
 import com.rultor.shell.ShellMocker;
-import com.rultor.timeline.Product;
 import java.io.File;
 import org.apache.commons.io.FileUtils;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Assume;
 import org.junit.Test;
 
@@ -72,7 +69,7 @@ public final class S3CmdPutITCase {
     @Test
     public void uploadsToAmazon() throws Exception {
         Assume.assumeNotNull(S3CmdPutITCase.KEY);
-        final Relic relic = new S3CmdPut(
+        final Sequel sequel = new S3CmdPut(
             "test-relic",
             "./test/*.html",
             S3CmdPutITCase.BUCKET,
@@ -83,14 +80,7 @@ public final class S3CmdPutITCase {
         final File dir = Files.createTempDir();
         FileUtils.write(new File(dir, "test/index.html"), "<html/>");
         FileUtils.write(new File(dir, "test/data.html"), "content-B");
-        final Product product = relic.discover(new ShellMocker.Bash(dir));
-        MatcherAssert.assertThat(
-            product.markdown(),
-            Matchers.allOf(
-                Matchers.startsWith("[2 files](http://"),
-                Matchers.endsWith("S3CmdPutITCase/index.html)")
-            )
-        );
+        sequel.exec(new ShellMocker.Bash(dir));
     }
 
 }

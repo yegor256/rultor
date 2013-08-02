@@ -34,8 +34,9 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Pageable;
 import com.rultor.spi.Work;
+import com.rultor.tools.Time;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -131,7 +132,7 @@ public final class BufferedRead implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public Pulses pulses() throws IOException {
+    public Pageable<Time> pulses() throws IOException {
         return this.origin.pulses();
     }
 

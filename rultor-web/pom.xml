@@ -38,12 +38,6 @@
     <artifactId>rultor-web</artifactId>
     <packaging>war</packaging>
     <name>rultor-web</name>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>cloudbees-public-release</id>
-            <url>http://repository-cloudbees.forge.cloudbees.com/public-release</url>
-        </pluginRepository>
-    </pluginRepositories>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -87,6 +81,10 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -264,6 +262,11 @@
                                 <Rultor-DynamoKey>${dynamo.key}</Rultor-DynamoKey>
                                 <Rultor-DynamoSecret>${dynamo.secret}</Rultor-DynamoSecret>
                                 <Rultor-DynamoPrefix>${dynamo.prefix}</Rultor-DynamoPrefix>
+                                <Rultor-MongoHost>${mongo.host}</Rultor-MongoHost>
+                                <Rultor-MongoPort>${mongo.port}</Rultor-MongoPort>
+                                <Rultor-MongoName>${mongo.name}</Rultor-MongoName>
+                                <Rultor-MongoUser>${mongo.user}</Rultor-MongoUser>
+                                <Rultor-MongoPassword>${mongo.password}</Rultor-MongoPassword>
                             </manifestEntries>
                         </archive>
                     </configuration>
@@ -336,26 +339,113 @@
                     </dependency>
                 </dependencies>
             </plugin>
-            <plugin>
-                <groupId>com.cloudbees</groupId>
-                <artifactId>bees-maven-plugin</artifactId>
-                <version>1.3.2</version>
-                <configuration>
-                    <appid>${bees.appId}</appid>
-                    <apikey>${bees.apikey}</apikey>
-                    <secret>${bees.secret}</secret>
-                    <message>${buildNumber}</message>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>deploy-to-production</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>deploy-live</id>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>cloudbees-public-release</id>
+                    <url>http://repository-cloudbees.forge.cloudbees.com/public-release</url>
+                </pluginRepository>
+            </pluginRepositories>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.cloudbees</groupId>
+                        <artifactId>bees-maven-plugin</artifactId>
+                        <version>1.3.2</version>
+                        <configuration>
+                            <appid>${bees.appId}</appid>
+                            <apikey>${bees.apikey}</apikey>
+                            <secret>${bees.secret}</secret>
+                            <message>${buildNumber}</message>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>deploy-to-production</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>deploy-master</id>
+            <repositories>
+                <repository>
+                    <id>repo.rultor.com</id>
+                    <url>s3://repo.rultor.com/snapshots</url>
+                </repository>
+            </repositories>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>repo.rultor.com</id>
+                    <url>s3://repo.rultor.com/snapshots</url>
+                </snapshotRepository>
+            </distributionManagement>
+            <dependencies>
+                <dependency>
+                    <groupId>com.rexsl</groupId>
+                    <artifactId>rexsl-standalone</artifactId>
+                    <version>${rexsl.version}</version>
+                    <classifier>bin</classifier>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>com.rexsl.standalone.RexslMain</mainClass>
+                                </manifest>
+                            </archive>
+                            <overlays>
+                                <overlay>
+                                    <groupId>com.rexsl</groupId>
+                                    <artifactId>rexsl-standalone</artifactId>
+                                    <classifier>bin</classifier>
+                                    <type>jar</type>
+                                </overlay>
+                            </overlays>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.jcabi</groupId>
+                        <artifactId>jcabi-heroku-maven-plugin</artifactId>
+                        <version>${jcabi.version}</version>
+                        <configuration>
+                            <server>heroku.com</server>
+                            <name>rultor-master</name>
+                            <artifacts>
+                                <artifact>${project.groupId}:${project.artifactId}:war::${project.version}</artifact>
+                            </artifacts>
+                            <procfile>web: java -Xmx256m -jar ./${project.artifactId}.war ${PORT}</procfile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
