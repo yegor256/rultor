@@ -44,6 +44,7 @@ import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
 import com.rultor.tools.Markdown;
 import com.rultor.tools.Time;
+import java.net.URI;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -88,7 +89,7 @@ final class JaxbFace {
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public JaxbBundle bundle(final URN urn, final String unit) {
         final User user = this.users.get(urn);
-        final Spec spec = user.get(unit).spec();
+        final Spec spec = user.units().get(unit).spec();
         JaxbBundle bundle = new JaxbBundle("face");
         try {
             final Variable<?> var = new Repo.Cached(
@@ -168,6 +169,10 @@ final class JaxbFace {
             }
             @Override
             public void charge(final String details, final Dollars amount) {
+                throw new UnsupportedOperationException();
+            }
+            @Override
+            public URI stdout() {
                 throw new UnsupportedOperationException();
             }
         };

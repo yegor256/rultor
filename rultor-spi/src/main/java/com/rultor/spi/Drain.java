@@ -32,6 +32,7 @@ package com.rultor.spi;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.rultor.tools.Time;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -59,7 +60,7 @@ public interface Drain {
      * @throws IOException If some IO problem inside
      */
     @NotNull(message = "list of pulses is never NULL")
-    Pulses pulses() throws IOException;
+    Pageable<Time> pulses() throws IOException;
 
     /**
      * Append a few lines to the drain.

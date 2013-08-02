@@ -35,7 +35,6 @@ import com.jcabi.log.Logger;
 import com.rultor.shell.Batch;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
-import com.rultor.spi.Signal;
 import com.rultor.tools.Vext;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -101,8 +100,6 @@ public final class Bash implements Batch {
         @NotNull(message = "stream can't be NULL") final OutputStream output)
         throws IOException {
         final Shell shell = this.shells.acquire();
-        Signal.log(Signal.Mnemo.SUCCESS, "%s acquired", shell);
-        final long start = System.currentTimeMillis();
         final int code;
         try {
             code = shell.exec(
@@ -112,13 +109,8 @@ public final class Bash implements Batch {
                 new TeeOutputStream(output, Logger.stream(Level.WARNING, this))
             );
         } finally {
-            output.close();
             shell.close();
         }
-        Signal.log(
-            Signal.Mnemo.SUCCESS, "Bash script executed in %[ms]s",
-            System.currentTimeMillis() - start
-        );
         return code;
     }
 

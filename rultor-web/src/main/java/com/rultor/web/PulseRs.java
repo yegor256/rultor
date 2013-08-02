@@ -30,32 +30,24 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
-import com.rexsl.page.JaxbBundle;
-import com.rexsl.page.Link;
-import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
-import com.rultor.spi.Stage;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
@@ -70,16 +62,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 @Path("/pulse/{name:[\\w\\-]+}/{date:\\d+}")
 @Loggable(Loggable.DEBUG)
 public final class PulseRs extends BaseRs {
-
-    /**
-     * Query param.
-     */
-    public static final String QUERY_START = "start";
-
-    /**
-     * Query param.
-     */
-    public static final String QUERY_STOP = "stop";
 
     /**
      * Unit name.
@@ -103,7 +85,7 @@ public final class PulseRs extends BaseRs {
 
     /**
      * Inject it from query.
-     * @param time Pulse time
+     * @param time PulseOfDrain time
      */
     @PathParam("date")
     public void setDate(@NotNull(message = "date is mandatory")
@@ -112,81 +94,15 @@ public final class PulseRs extends BaseRs {
     }
 
     /**
-     * Get entrance page JAX-RS response.
-     * @return The JAX-RS response
-     */
-    @GET
-    @Path("/")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response index() {
-        return new PageBuilder()
-            .stylesheet("/xsl/pulse.xsl")
-            .build(EmptyPage.class)
-            .init(this)
-            .append(new JaxbBundle("unit", this.name))
-            .append(
-                new JaxbBundle(
-                    "pulse",
-                    Long.toString(this.date.millis())
-                )
-            )
-            .append(new JaxbBundle("spec", this.spec().asText()))
-            .append(new JaxbBundle("date", this.date.toString()))
-            .append(new JaxbBundle("when", this.date.when()))
-            .append(
-                new JaxbBundle("stages").add(
-                    new JaxbBundle.Group<Stage>(this.stages()) {
-                        @Override
-                        public JaxbBundle bundle(final Stage stage) {
-                            return PulseRs.this.stage(stage);
-                        }
-                    }
-                )
-            )
-            .link(
-                new Link(
-                    "stream",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(PulseRs.class)
-                        .path(PulseRs.class, "stream")
-                        .build(this.name, this.date.millis())
-                )
-            )
-            .link(
-                new Link(
-                    "drain",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(DrainRs.class)
-                        .build(this.name)
-                )
-            )
-            .render()
-            .build();
-    }
-
-    /**
      * Get stream.
-     * @param start Start moment to render
-     * @param stop Stop moment to render
      * @return The JAX-RS response
      */
     @GET
     @Path("/stream")
     @Produces(MediaType.TEXT_PLAIN)
-    public String stream(@QueryParam(PulseRs.QUERY_START) final String start,
-        @QueryParam(PulseRs.QUERY_STOP) final String stop) {
+    public String stream() {
         try {
-            return new StringBuilder()
-                .append("start: ")
-                .append(start)
-                .append(CharUtils.LF)
-                .append("stop: ")
-                .append(stop)
-                .append(CharUtils.LF)
-                .append(IOUtils.toString(this.pulse().read()))
-                .toString();
+            return IOUtils.toString(this.pulse().stream());
         } catch (IOException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUriBuilder()
@@ -206,17 +122,15 @@ public final class PulseRs extends BaseRs {
      * Get pulse.
      * @return The pulse
      */
-    private Pulse pulse() {
-        if (!this.user().units().contains(this.name)) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                String.format("Unit `%s` doesn't exist", this.name),
-                Level.SEVERE
-            );
-        }
-        final Unit unit = this.user().get(this.name);
+    private PulseOfDrain pulse() {
+        final Unit unit;
         try {
-            return new Pulse(
+            unit = this.user().units().get(this.name);
+        } catch (NoSuchElementException ex) {
+            throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
+        }
+        try {
+            return new PulseOfDrain(
                 Drain.Source.class.cast(
                     new Repo.Cached(
                         this.repo(), this.user(), unit.spec()
@@ -244,77 +158,6 @@ public final class PulseRs extends BaseRs {
                 Level.SEVERE
             );
         }
-    }
-
-    /**
-     * Get spec of the pulse.
-     * @return The spec
-     */
-    private Spec spec() {
-        try {
-            return this.pulse().spec();
-        } catch (IOException ex) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                String.format(
-                    "Can't fetch Spec from `%s`: %s",
-                    this.date,
-                    ExceptionUtils.getRootCauseMessage(ex)
-                ),
-                Level.SEVERE
-            );
-        }
-    }
-
-    /**
-     * Get stages of the pulse.
-     * @return The stages
-     */
-    private Collection<Stage> stages() {
-        try {
-            return this.pulse().stages();
-        } catch (IOException ex) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                String.format(
-                    "Can't fetch stages from `%s`: %s",
-                    this.date,
-                    ExceptionUtils.getRootCauseMessage(ex)
-                ),
-                Level.SEVERE
-            );
-        }
-    }
-
-    /**
-     * Convert stage to JaxbBundle.
-     * @param stage Stage to convert
-     * @return Bundle
-     */
-    private JaxbBundle stage(final Stage stage) {
-        return new JaxbBundle("stage")
-            .add("result", stage.result().toString())
-            .up()
-            .add("start", Long.toString(stage.start()))
-            .up()
-            .add("stop", Long.toString(stage.stop()))
-            .up()
-            .add("msec", Long.toString(stage.stop() - stage.start()))
-            .up()
-            .add("output", stage.output())
-            .up()
-            .link(
-                new Link(
-                    "log",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(PulseRs.class)
-                        .path(PulseRs.class, "stream")
-                        .queryParam(PulseRs.QUERY_START, stage.start())
-                        .queryParam(PulseRs.QUERY_STOP, stage.stop())
-                        .build(this.name, this.date.millis())
-                )
-            );
     }
 
 }

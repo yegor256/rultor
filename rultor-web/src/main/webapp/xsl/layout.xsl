@@ -41,7 +41,7 @@
                 <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
                 <meta name="author" content="rultor.com"/>
                 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" rel="stylesheet" />
-                <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet" />
+                <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet" />
                 <link rel="stylesheet" type="text/css" media="all">
                     <xsl:attribute name="href">
                         <xsl:text>/css/main.css?</xsl:text>
@@ -55,6 +55,25 @@
                     </xsl:attribute>
                 </link>
                 <xsl:call-template name="head"/>
+                <script type="text/javascript" src="//code.jquery.com/jquery-2.0.3.min.js">
+                    <!-- this is for W3C compliance -->
+                    <xsl:text> </xsl:text>
+                </script>
+                <script type="text/javascript" src="//rawgithub.com/timrwood/moment/2.1.0/min/moment.min.js">
+                    <!-- this is for W3C compliance -->
+                    <xsl:text> </xsl:text>
+                </script>
+                <script type="text/javascript"><![CDATA[
+                    $(document).ready(
+                        function() {
+                            $('span.timeago').each(
+                                function (span) {
+                                    $(this).text(moment($(this).text()).fromNow());
+                                }
+                            );
+                        }
+                    );
+                ]]></script>
                 <script type="text/javascript"><![CDATA[
                     var _gaq = _gaq || [];
                     _gaq.push(['_setAccount', 'UA-1963507-10']);
@@ -83,7 +102,14 @@
                                     <xsl:attribute name="href">
                                         <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
                                     </xsl:attribute>
-                                    <xsl:text>R</xsl:text>
+                                    <xsl:choose>
+                                        <xsl:when test="contains(/page/version/name, 'SNAPSHOT')">
+                                            <xsl:text>r</xsl:text>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:text>R</xsl:text>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
                                 </a>
                             </li>
                             <li class="hidden-phone">
@@ -92,6 +118,26 @@
                                 </a>
                             </li>
                             <xsl:apply-templates select="version"/>
+                            <xsl:if test="/page/links/link[@rel='units']">
+                                <li>
+                                    <a title="units">
+                                        <xsl:attribute name="href">
+                                            <xsl:value-of select="/page/links/link[@rel='units']/@href"/>
+                                        </xsl:attribute>
+                                        <i class="icon-cogs"><xsl:comment>cogs</xsl:comment></i>
+                                    </a>
+                                </li>
+                            </xsl:if>
+                            <xsl:if test="/page/links/link[@rel='stands']">
+                                <li>
+                                    <a title="stands">
+                                        <xsl:attribute name="href">
+                                            <xsl:value-of select="/page/links/link[@rel='stands']/@href"/>
+                                        </xsl:attribute>
+                                        <i class="icon-heart"><xsl:comment>stands</xsl:comment></i>
+                                    </a>
+                                </li>
+                            </xsl:if>
                             <xsl:apply-templates select="identity"/>
                         </ul>
                     </nav>

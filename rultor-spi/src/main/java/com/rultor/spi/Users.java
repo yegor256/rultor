@@ -31,7 +31,6 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
-import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -42,14 +41,7 @@ import javax.validation.constraints.NotNull;
  * @since 1.0
  */
 @Immutable
-public interface Users {
-
-    /**
-     * Get everybody.
-     * @return All users
-     */
-    @NotNull(message = "set of URNs is never NULL")
-    Set<URN> everybody();
+public interface Users extends Iterable<User> {
 
     /**
      * Get user by URN (no exception even if it's seen for the first time).
@@ -58,6 +50,14 @@ public interface Users {
      */
     @NotNull(message = "user is never NULL")
     User get(@NotNull(message = "name can't be NULL") URN name);
+
+    /**
+     * Get stand by name (runtime exception if it's absent).
+     * @param name The name of it
+     * @return The stand
+     */
+    @NotNull(message = "stand is never NULL")
+    Stand stand(@NotNull(message = "stand name can't be NULL") String name);
 
     /**
      * Register new expense between two users.

@@ -35,7 +35,8 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Pageable;
+import com.rultor.tools.Time;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
@@ -84,7 +85,7 @@ public final class ASCII implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public Pulses pulses() throws IOException {
+    public Pageable<Time> pulses() throws IOException {
         return this.origin.pulses();
     }
 

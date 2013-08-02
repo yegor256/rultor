@@ -45,7 +45,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
-import com.rultor.spi.Signal;
+import com.rultor.snapshot.Step;
 import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
 import java.io.IOException;
@@ -125,69 +125,21 @@ final class EC2Environment implements Environment {
      * {@inheritDoc}
      */
     @Override
-    @RetryOnFailure
     public InetAddress address() throws IOException {
-        final AmazonEC2 aws = this.client.get();
-        final DescribeInstancesRequest request = new DescribeInstancesRequest()
-            .withInstanceIds(this.name);
-        boolean immediately = true;
-        try {
-            while (true) {
-                final DescribeInstancesResult result =
-                    aws.describeInstances(request);
-                final Instance instance =
-                    result.getReservations().get(0).getInstances().get(0);
-                final InstanceState state = instance.getState();
-                Logger.info(
-                    this,
-                    "instance `%s`/`%s` is in `%s` state (code=%d)",
-                    instance.getInstanceId(),
-                    instance.getPlacement().getAvailabilityZone(),
-                    state.getName(),
-                    state.getCode()
-                );
-                if ("running".equals(state.getName())) {
-                    if (!immediately) {
-                        Signal.log(
-                            Signal.Mnemo.SUCCESS,
-                            "EC2 instance `%s`/`%s` is ready",
-                            instance.getInstanceId(),
-                            instance.getInstanceType()
-                        );
-                    }
-                    return InetAddress.getByAddress(
-                        instance.getPublicDnsName(),
-                        InetAddress.getByName(
-                            instance.getPublicIpAddress()
-                        ).getAddress()
-                    );
-                }
-                if (!"pending".equals(state.getName())) {
-                    throw new IllegalStateException(
-                        String.format(
-                            "instance `%s` is in invalid state `%s`",
-                            instance.getInstanceId(),
-                            state.getName()
-                        )
-                    );
-                }
-                immediately = false;
-                try {
-                    TimeUnit.SECONDS.sleep(Tv.FIFTEEN);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                    throw new IllegalStateException(ex);
-                }
-            }
-        } finally {
-            aws.shutdown();
-        }
+        final Instance instance = this.instance();
+        return InetAddress.getByAddress(
+            instance.getPublicDnsName(),
+            InetAddress.getByName(
+                instance.getPublicIpAddress()
+            ).getAddress()
+        );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
+    @Step("EC2 instance ${self.name} terminated")
     public void close() throws IOException {
         final AmazonEC2 aws = this.client.get();
         try {
@@ -207,8 +159,8 @@ final class EC2Environment implements Environment {
                 instance.getPlacement().getAvailabilityZone(),
                 age
             );
-            Signal.log(
-                Signal.Mnemo.SUCCESS,
+            Logger.info(
+                this,
                 // @checkstyle LineLength (1 line)
                 "EC2 instance `%s`/`%s` terminated, after %[ms]s of activity, approx. %s",
                 change.getInstanceId(),
@@ -224,6 +176,56 @@ final class EC2Environment implements Environment {
                 ),
                 cost
             );
+        } finally {
+            aws.shutdown();
+        }
+    }
+
+    /**
+     * Return instance when it's ready.
+     * @return Instance
+     * @throws IOException If fails
+     */
+    @RetryOnFailure
+    @Step("EC2 instance `${result.getInstanceType()}` is ready")
+    private Instance instance() throws IOException {
+        final AmazonEC2 aws = this.client.get();
+        final DescribeInstancesRequest request = new DescribeInstancesRequest()
+            .withInstanceIds(this.name);
+        try {
+            while (true) {
+                final DescribeInstancesResult result =
+                    aws.describeInstances(request);
+                final Instance instance =
+                    result.getReservations().get(0).getInstances().get(0);
+                final InstanceState state = instance.getState();
+                Logger.info(
+                    this,
+                    "instance `%s`/`%s` is in `%s` state (code=%d)",
+                    instance.getInstanceId(),
+                    instance.getPlacement().getAvailabilityZone(),
+                    state.getName(),
+                    state.getCode()
+                );
+                if ("running".equals(state.getName())) {
+                    return instance;
+                }
+                if (!"pending".equals(state.getName())) {
+                    throw new IllegalStateException(
+                        String.format(
+                            "instance `%s` is in invalid state `%s`",
+                            instance.getInstanceId(),
+                            state.getName()
+                        )
+                    );
+                }
+                try {
+                    TimeUnit.SECONDS.sleep(Tv.FIFTEEN);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                    throw new IllegalStateException(ex);
+                }
+            }
         } finally {
             aws.shutdown();
         }

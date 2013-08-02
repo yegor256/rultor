@@ -38,12 +38,12 @@ import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
+import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -112,13 +112,14 @@ public final class SimpleConveyerTest {
         );
         final User user = Mockito.mock(User.class);
         final Unit unit = Mockito.mock(Unit.class);
-        Mockito.doReturn(new HashSet<String>(Arrays.asList(name)))
-            .when(user).units();
-        Mockito.doReturn(unit).when(user).get(name);
+        final Units units = Mockito.mock(Units.class);
+        Mockito.doReturn(units).when(user).units();
+        Mockito.doReturn(Arrays.asList(unit).iterator()).when(units).iterator();
+        Mockito.doReturn(unit).when(units).get(name);
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(owner);
-        Mockito.doReturn(new HashSet<URN>(Arrays.asList(owner)))
-            .when(users).everybody();
+        Mockito.doReturn(Arrays.asList(user).iterator())
+            .when(users).iterator();
         final SimpleConveyer conveyer = new SimpleConveyer(queue, repo, users);
         try {
             conveyer.start();

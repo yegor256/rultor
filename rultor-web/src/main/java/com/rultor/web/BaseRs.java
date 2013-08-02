@@ -59,6 +59,7 @@ import com.rultor.tools.Time;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Iterator;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -164,6 +165,40 @@ public class BaseRs extends BaseResource {
     }
 
     /**
+     * Nagivation links.
+     * @return The inset
+     */
+    @Inset.Runtime
+    @NotNull(message = "navigation inset can never be NULL")
+    public final Inset insetNavigation() {
+        // @checkstyle AnonInnerLength (50 lines)
+        return new Inset() {
+            @Override
+            public void render(final BasePage<?, ?> page,
+                final Response.ResponseBuilder builder) {
+                page.link(
+                    new Link(
+                        "units",
+                        BaseRs.this.uriInfo().getBaseUriBuilder()
+                            .clone()
+                            .path(IndexRs.class)
+                            .build()
+                    )
+                );
+                page.link(
+                    new Link(
+                        "stands",
+                        BaseRs.this.uriInfo().getBaseUriBuilder()
+                            .clone()
+                            .path(StandsRs.class)
+                            .build()
+                    )
+                );
+            }
+        };
+    }
+
+    /**
      * Authentication key inset.
      * @return The inset
      */
@@ -223,7 +258,15 @@ public class BaseRs extends BaseResource {
      */
     @NotNull(message = "User can't be NULL")
     protected final User user() {
-        return this.users().get(this.auth().identity().urn());
+        final Identity self = this.auth().identity();
+        if (self.equals(Identity.ANONYMOUS)) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                "login first",
+                Level.WARNING
+            );
+        }
+        return this.users().get(self.urn());
     }
 
     /**
@@ -275,6 +318,10 @@ public class BaseRs extends BaseResource {
             }
             @Override
             public void charge(final String details, final Dollars amount) {
+                throw new UnsupportedOperationException();
+            }
+            @Override
+            public URI stdout() {
                 throw new UnsupportedOperationException();
             }
         };

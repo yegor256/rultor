@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
+import java.net.URI;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -86,6 +87,12 @@ public interface Work {
         @NotNull(message = "amount can't be NULL") Dollars amount);
 
     /**
+     * Instant access to running logs/stdout.
+     * @return URI of it
+     */
+    URI stdout();
+
+    /**
      * No work at all.
      */
     @Immutable
@@ -131,6 +138,13 @@ public interface Work {
         public void charge(final String details, final Dollars amount) {
             assert details != null;
             assert amount != null;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public URI stdout() {
+            throw new UnsupportedOperationException();
         }
     }
 
@@ -257,6 +271,13 @@ public interface Work {
         public void charge(final String details, final Dollars amount) {
             assert details != null;
             assert amount != null;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public URI stdout() {
+            throw new UnsupportedOperationException();
         }
     }
 

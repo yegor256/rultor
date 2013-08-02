@@ -29,27 +29,16 @@
  */
 package com.rultor.users;
 
-import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
-import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Receipt;
-import com.rultor.spi.Spec;
+import com.rultor.spi.Stands;
 import com.rultor.spi.Statements;
-import com.rultor.spi.Unit;
+import com.rultor.spi.Units;
 import com.rultor.spi.User;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -99,77 +88,16 @@ final class AwsUser implements User {
      * {@inheritDoc}
      */
     @Override
-    @NotNull(message = "list of units of a user is never NULL")
-    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-    public Set<String> units() {
-        final Set<String> units = new TreeSet<String>();
-        final Collection<Item> items = this.region.table(AwsUnit.TABLE)
-            .frame()
-            .where(AwsUnit.KEY_OWNER, this.name.toString());
-        for (Item item : items) {
-            units.add(item.get(AwsUnit.KEY_NAME).getS());
-        }
-        return Collections.unmodifiableSet(units);
+    @NotNull(message = "units of a user is never NULL")
+    public Units units() {
+        return new AwsUnits(this.region, this.name);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Cacheable.FlushAfter
-    public void create(
-        @NotNull(message = "unit name is mandatory when creating new unit")
-        @Pattern(
-            regexp = "[-a-z0-9]+",
-            message = "Only numbers, letters, and dashes are allowed"
-        )
-        final String unt) {
-        if (this.units().contains(unt)) {
-            throw new IllegalArgumentException(
-                String.format("Unit `%s` already exists", unt)
-            );
-        }
-        new AwsUnit(this.region, this.name, unt).update(new Spec.Simple());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Cacheable.FlushAfter
-    public void remove(@NotNull(message = "unit name is mandatory")
-        final String unit) {
-        final Iterator<Item> items = this.region.table(AwsUnit.TABLE).frame()
-            .where(AwsUnit.KEY_OWNER, this.name.toString())
-            .where(AwsUnit.KEY_NAME, unit)
-            .iterator();
-        if (!items.hasNext()) {
-            throw new NoSuchElementException(
-                String.format("Unit `%s` not found", unit)
-            );
-        }
-        items.next();
-        items.remove();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Unit get(@NotNull(message = "unit name can't be NULL")
-        final String unit) {
-        if (!this.units().contains(unit)) {
-            throw new IllegalArgumentException(
-                String.format("Unit `%s` doesn't exist", unit)
-            );
-        }
-        return new AwsUnit(this.region, this.name, unit);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+    @NotNull(message = "statements of a user is never NULL")
     public Statements statements() {
         return new AwsStatements(this.region, this.name);
     }
@@ -178,8 +106,18 @@ final class AwsUser implements User {
      * {@inheritDoc}
      */
     @Override
+    @NotNull(message = "receipts of a user is never NULL")
     public Iterable<Receipt> receipts() {
         return new AwsReceipts(this.region, this.name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NotNull(message = "stands of a user is never NULL")
+    public Stands stands() {
+        return new AwsStands(this.region, this.name);
     }
 
 }

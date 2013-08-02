@@ -31,6 +31,8 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Unit.
@@ -41,6 +43,13 @@ import javax.validation.constraints.NotNull;
  */
 @Immutable
 public interface Unit {
+
+    /**
+     * Get its name.
+     * @return Name of it
+     */
+    @NotNull(message = "name of unit is never NULL")
+    String name();
 
     /**
      * Save specification.
@@ -58,7 +67,17 @@ public interface Unit {
     /**
      * Always empty Unit.
      */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode
     final class Empty implements Unit {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String name() {
+            return "empty";
+        }
         /**
          * {@inheritDoc}
          */

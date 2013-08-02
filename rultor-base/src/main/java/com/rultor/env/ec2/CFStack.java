@@ -41,7 +41,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.CFClient;
 import com.rultor.env.Environment;
-import com.rultor.spi.Signal;
+import com.rultor.snapshot.Step;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Locale;
@@ -96,6 +96,34 @@ final class CFStack implements Environment {
      */
     @Override
     public InetAddress address() throws IOException {
+        final Stack stack = this.whenReady();
+        return CFStack.address(stack);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Step("requested deletion of stack `${self.name}`")
+    public void close() throws IOException {
+        final AmazonCloudFormation aws = this.client.get();
+        try {
+            aws.deleteStack(new DeleteStackRequest().withStackName(this.name));
+        } finally {
+            aws.shutdown();
+        }
+    }
+
+    /**
+     * Create CF stack.
+     * @return The stack created
+     * @throws IOException If fails
+     */
+    @Step(
+        before = "waiting for CloudFormation stack `${self.name}`",
+        value = "CF stack `${self.name}` is ready as `${result.getStackId()}`"
+    )
+    private Stack whenReady() throws IOException {
         final AmazonCloudFormation aws = this.client.get();
         final DescribeStacksRequest request = new DescribeStacksRequest()
             .withStackName(this.name);
@@ -111,12 +139,7 @@ final class CFStack implements Environment {
                     stack.getStackStatusReason()
                 );
                 if ("CREATE_COMPLETE".equals(stack.getStackStatus())) {
-                    Signal.log(
-                        Signal.Mnemo.SUCCESS,
-                        "CloudFormation server is ready at stack %s",
-                        stack.getStackId()
-                    );
-                    return CFStack.address(stack);
+                    return stack;
                 }
                 if (!"CREATE_IN_PROGRESS".equals(stack.getStackStatus())) {
                     throw new IllegalStateException(
@@ -134,24 +157,6 @@ final class CFStack implements Environment {
                     throw new IllegalStateException(ex);
                 }
             }
-        } finally {
-            aws.shutdown();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void close() throws IOException {
-        final AmazonCloudFormation aws = this.client.get();
-        try {
-            aws.deleteStack(new DeleteStackRequest().withStackName(this.name));
-            Logger.info(
-                this,
-                "Stack `%s` sent for deletion",
-                this.name
-            );
         } finally {
             aws.shutdown();
         }

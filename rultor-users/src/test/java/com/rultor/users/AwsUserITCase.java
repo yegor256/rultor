@@ -39,6 +39,7 @@ import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.TableMocker;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -99,18 +100,18 @@ public final class AwsUserITCase {
                 )
                 .withAttributeDefinitions(
                     new AttributeDefinition()
-                        .withAttributeName(AwsUnit.KEY_OWNER)
+                        .withAttributeName(AwsUnit.HASH_OWNER)
                         .withAttributeType(ScalarAttributeType.S),
                     new AttributeDefinition()
-                        .withAttributeName(AwsUnit.KEY_NAME)
+                        .withAttributeName(AwsUnit.RANGE_NAME)
                         .withAttributeType(ScalarAttributeType.S)
                 )
                 .withKeySchema(
                     new KeySchemaElement()
-                        .withAttributeName(AwsUnit.KEY_OWNER)
+                        .withAttributeName(AwsUnit.HASH_OWNER)
                         .withKeyType(KeyType.HASH),
                     new KeySchemaElement()
-                        .withAttributeName(AwsUnit.KEY_NAME)
+                        .withAttributeName(AwsUnit.RANGE_NAME)
                         .withKeyType(KeyType.RANGE)
                 )
         );
@@ -140,12 +141,15 @@ public final class AwsUserITCase {
         final URN urn = new URN("urn:github:66");
         final User user = new AwsUser(this.region, urn);
         MatcherAssert.assertThat(user.urn(), Matchers.equalTo(urn));
-        final String name = "simple-unit";
-        if (user.units().contains(name)) {
-            user.remove(name);
+        for (Unit unit : user.units()) {
+            user.units().remove(unit.name());
         }
-        user.create(name);
-        MatcherAssert.assertThat(user.units(), Matchers.hasItem(name));
+        final String name = "simple-unit";
+        user.units().create(name);
+        MatcherAssert.assertThat(
+            user.units(),
+            Matchers.<Unit>iterableWithSize(1)
+        );
     }
 
 }

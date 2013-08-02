@@ -33,12 +33,10 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.log.Logger;
-import com.rultor.shell.Relic;
+import com.rultor.shell.Sequel;
+import com.rultor.shell.Shell;
 import com.rultor.spi.Work;
-import java.util.AbstractCollection;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.io.IOException;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -57,7 +55,7 @@ import org.apache.commons.lang3.Validate;
     of = { "work", "names", "bucket", "prefix", "key", "secret" }
 )
 @Loggable(Loggable.DEBUG)
-public final class S3CmdRelics extends AbstractCollection<Relic> {
+public final class S3CmdRelics implements Sequel {
 
     /**
      * Work we're in.
@@ -135,32 +133,19 @@ public final class S3CmdRelics extends AbstractCollection<Relic> {
      */
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public Iterator<Relic> iterator() {
-        final Collection<Relic> relics =
-            new ArrayList<Relic>(this.names.size());
+    public void exec(final Shell shell) throws IOException {
         for (Map.Entry<String, String> entry : this.names.entrySet()) {
-            relics.add(
-                new S3CmdPut(
-                    entry.getKey(), entry.getValue(),
-                    this.bucket,
-                    String.format(
-                        "%s%s/%s/%s/%s/", this.prefix,
-                        this.work.owner(), this.work.unit(),
-                        entry.getKey(), this.work.started()
-                    ),
-                    this.key, this.secret
-                )
-            );
+            new S3CmdPut(
+                entry.getKey(), entry.getValue(),
+                this.bucket,
+                String.format(
+                    "%s%s/%s/%s/%s/", this.prefix,
+                    this.work.owner(), this.work.unit(),
+                    entry.getKey(), this.work.started()
+                ),
+                this.key, this.secret
+            ).exec(shell);
         }
-        return relics.iterator();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int size() {
-        return this.names.size();
     }
 
 }

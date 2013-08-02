@@ -32,13 +32,13 @@ package com.rultor.conveyer;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Receipt;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Stands;
 import com.rultor.spi.Statements;
 import com.rultor.spi.Unit;
+import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Work;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -53,6 +53,7 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode
+@SuppressWarnings("PMD.TooManyMethods")
 final class FakeUser implements User {
 
     /**
@@ -69,15 +70,41 @@ final class FakeUser implements User {
     }
 
     @Override
-    public Unit get(final String name) {
-        return new Unit() {
+    public Units units() {
+        // @checkstyle AnonInnerLength (50 lines)
+        return new Units() {
             @Override
-            public void update(final Spec spec) {
+            public Unit get(final String name) {
+                return new Unit() {
+                    @Override
+                    public void update(final Spec spec) {
+                        throw new UnsupportedOperationException();
+                    }
+                    @Override
+                    public Spec spec() {
+                        return FakeUser.this.work.spec();
+                    }
+                    @Override
+                    public String name() {
+                        return name;
+                    }
+                };
+            }
+            @Override
+            public void remove(final String name) {
                 throw new UnsupportedOperationException();
             }
             @Override
-            public Spec spec() {
-                return FakeUser.this.work.spec();
+            public void create(final String name) {
+                throw new UnsupportedOperationException();
+            }
+            @Override
+            public Iterator<Unit> iterator() {
+                throw new UnsupportedOperationException();
+            }
+            @Override
+            public boolean contains(final String name) {
+                throw new UnsupportedOperationException();
             }
         };
     }
@@ -94,32 +121,6 @@ final class FakeUser implements User {
      * {@inheritDoc}
      */
     @Override
-    public Set<String> units() {
-        return new HashSet<String>(
-            Arrays.asList(FakeUser.this.work.unit())
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void remove(final String name) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void create(final String name) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Statements statements() {
         throw new UnsupportedOperationException();
     }
@@ -129,6 +130,14 @@ final class FakeUser implements User {
      */
     @Override
     public Iterable<Receipt> receipts() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stands stands() {
         throw new UnsupportedOperationException();
     }
 

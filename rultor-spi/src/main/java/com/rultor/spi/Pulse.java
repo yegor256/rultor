@@ -30,18 +30,10 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import java.io.BufferedReader;
+import com.rultor.snapshot.Snapshot;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
 
 /**
  * Pulse.
@@ -51,132 +43,22 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = "drain")
-@Loggable(Loggable.DEBUG)
-public final class Pulse {
+public interface Pulse {
 
     /**
-     * Drain.
-     */
-    private final transient Drain drain;
-
-    /**
-     * Public ctor.
-     * @param drn Drain
-     */
-    public Pulse(@NotNull(message = "drain can't be NULL") final Drain drn) {
-        this.drain = drn;
-    }
-
-    /**
-     * Stages.
-     * @return Collection of them
+     * Snapshot.
+     * @return The snapshot
      * @throws IOException If IO error
      */
-    @NotNull(message = "list of stages is never NULL")
-    public Collection<Stage> stages() throws IOException {
-        final Collection<Stage> stages = new LinkedList<Stage>();
-        final BufferedReader reader =
-            new BufferedReader(new InputStreamReader(this.read()));
-        final ConcurrentMap<String, Long> starts =
-            new ConcurrentHashMap<String, Long>(0);
-        while (true) {
-            final String txt = reader.readLine();
-            if (txt == null) {
-                break;
-            }
-            if (Signal.exists(txt) && Drain.Line.Simple.has(txt)) {
-                final Drain.Line line = Drain.Line.Simple.parse(txt);
-                final Signal signal = Signal.valueOf(txt);
-                if (signal.key().equals(Signal.Mnemo.START)) {
-                    starts.put(signal.value(), line.msec());
-                } else if (signal.key().equals(Signal.Mnemo.SUCCESS)
-                    || signal.key().equals(Signal.Mnemo.FAILURE)) {
-                    stages.add(
-                        Pulse.toStage(
-                            line, signal, starts.get(signal.value())
-                        )
-                    );
-                }
-            }
-        }
-        return Collections.unmodifiableCollection(stages);
-    }
+    @NotNull(message = "story is never NULL")
+    Snapshot snapshot() throws IOException;
 
     /**
-     * Exact spec, which was used.
-     * @return Spec
-     * @throws IOException If IO error
-     */
-    public Spec spec() throws IOException {
-        return new Spec.Simple(this.find(Signal.Mnemo.SPEC, ""));
-    }
-
-    /**
-     * Read it.
-     * @return Stream to read from
+     * Read it as a stream.
+     * @return Stream to stream from
      * @throws IOException If fails
      */
-    public InputStream read() throws IOException {
-        return this.drain.read();
-    }
-
-    /**
-     * Find this signal in the stream.
-     * @param mnemo Signal name
-     * @param def Default value, if not found
-     * @return Found value
-     * @throws IOException If fails
-     */
-    private String find(final Signal.Mnemo mnemo, final String def)
-        throws IOException {
-        final BufferedReader reader =
-            new BufferedReader(new InputStreamReader(this.read()));
-        String value = null;
-        while (true) {
-            final String line = reader.readLine();
-            if (line == null) {
-                break;
-            }
-            if (Signal.exists(line)) {
-                final Signal signal = Signal.valueOf(line);
-                if (signal.key().equals(mnemo)) {
-                    value = signal.value();
-                    break;
-                }
-            }
-        }
-        if (value == null) {
-            value = def;
-        }
-        return value;
-    }
-
-    /**
-     * Convert signal and line to stage.
-     * @param line Line
-     * @param signal Signal
-     * @param start When started or NULL if unknown
-     * @return The stage
-     */
-    private static Stage toStage(final Drain.Line line,
-        final Signal signal, final Long start) {
-        Stage.Result result;
-        if (signal.key().equals(Signal.Mnemo.SUCCESS)) {
-            result = Stage.Result.SUCCESS;
-        } else {
-            result = Stage.Result.FAILURE;
-        }
-        long begin = 0;
-        if (start != null) {
-            begin = start;
-        }
-        return new Stage.Simple(
-            result,
-            begin,
-            line.msec(),
-            signal.value()
-        );
-    }
+    @NotNull(message = "stream is never NULL")
+    InputStream stream() throws IOException;
 
 }
