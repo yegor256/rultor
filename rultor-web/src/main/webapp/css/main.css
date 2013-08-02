@@ -52,6 +52,10 @@ body {
     .page { padding: 2em; }
 }
 
+code {
+    color: inherit;
+    font-family: 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
+}
 textarea {
     font-family: 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
 }

@@ -54,7 +54,7 @@
     <balance>$0.45</balance>
     <pulses>
         <pulse>
-            <date>2012-08-23T13:23Z</date>
+            <time>2012-08-23T13:23Z</time>
             <snapshot>
                 <updated>2012-08-23T13:25Z</updated>
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
@@ -108,11 +108,10 @@
             </snapshot>
             <links>
                 <link href="/xml/drain.xml" rel="stream" type="text/xml"/>
-                <link href="/xml/drain.xml" rel="stop" type="text/xml"/>
             </links>
         </pulse>
         <pulse>
-            <date>2012-08-23T13:23Z</date>
+            <time>2012-08-23T13:23Z</time>
             <snapshot>
                 <updated>2012-08-23T13:25Z</updated>
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
@@ -120,7 +119,6 @@
             </snapshot>
             <links>
                 <link href="/xml/drain.xml" rel="stream" type="text/xml"/>
-                <link href="/xml/drain.xml" rel="stop" type="text/xml"/>
             </links>
         </pulse>
     </pulses>

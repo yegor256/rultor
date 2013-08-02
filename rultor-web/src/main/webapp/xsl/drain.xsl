@@ -38,6 +38,11 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <h2>
+            <xsl:text>Drain of &quot;</xsl:text>
+            <xsl:value-of select="/page/unit"/>
+            <xsl:text>&quot;</xsl:text>
+        </h2>
         <xsl:choose>
             <xsl:when test="/page/pulses/pulse">
                 <xsl:if test="/page/since">
@@ -79,6 +84,16 @@
     </xsl:template>
     <xsl:template match="pulse">
         <div class="panel">
+            <div class="panel-heading">
+                <xsl:value-of select="time"/>
+                <xsl:text> </xsl:text>
+                <a title="stream">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="links/link[@rel='stream']/@href"/>
+                    </xsl:attribute>
+                    <i class="icon-chevron-sign-right"><xsl:comment>drain</xsl:comment></i>
+                </a>
+            </div>
             <xsl:apply-templates select="snapshot"/>
         </div>
     </xsl:template>

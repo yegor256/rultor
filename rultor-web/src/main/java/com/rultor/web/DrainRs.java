@@ -256,11 +256,11 @@ public final class DrainRs extends BaseRs {
 
     /**
      * Convert pulse to JaxbBundle.
-     * @param date Date of it
+     * @param time Date of it
      * @return Bundle
      */
-    private JaxbBundle pulse(final Time date) {
-        final PulseOfDrain pulse = new PulseOfDrain(this.drain(date));
+    private JaxbBundle pulse(final Time time) {
+        final PulseOfDrain pulse = new PulseOfDrain(this.drain(time));
         final Snapshot snapshot;
         try {
             snapshot = pulse.snapshot();
@@ -269,14 +269,14 @@ public final class DrainRs extends BaseRs {
                 this.uriInfo().getBaseUri(),
                 String.format(
                     "I/O problem with the snapshot of \"%s\": %s",
-                    date,
+                    time,
                     ExceptionUtils.getRootCauseMessage(ex)
                 ),
                 Level.SEVERE
             );
         }
         return new JaxbBundle("pulse")
-            .add("date", date.toString())
+            .add("time", time.toString())
             .up()
             .add(snapshot.xml().getDocumentElement())
             .link(
@@ -287,7 +287,7 @@ public final class DrainRs extends BaseRs {
                         .clone()
                         .path(PulseRs.class)
                         .path(PulseRs.class, "stream")
-                        .build(this.name, date.millis())
+                        .build(this.name, time.millis())
                 )
             );
     }
