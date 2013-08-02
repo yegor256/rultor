@@ -34,7 +34,7 @@ import java.util.concurrent.Callable;
 import javax.validation.constraints.NotNull;
 
 /**
- * Lineup of executions.
+ * Lineup of executions, thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$

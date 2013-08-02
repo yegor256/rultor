@@ -27,36 +27,77 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.stateful;
+package com.rultor.stateful.sdb;
 
 import com.jcabi.aspects.Immutable;
-import java.util.AbstractCollection;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import com.jcabi.aspects.Loggable;
+import com.rultor.aws.SDBClient;
+import com.rultor.spi.Work;
+import com.rultor.stateful.Spinbox;
+import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 
 /**
- * Collection of texts.
+ * Spinboxes in Amazon SimpleDB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Notepad extends Collection<String> {
+@Loggable(Loggable.DEBUG)
+@EqualsAndHashCode(of = { "work", "client" })
+public final class DomainSpinbox implements Spinbox {
 
     /**
-     * Always empty.
+     * Work we're in.
      */
-    final class Empty extends AbstractCollection<String> implements Notepad {
-        @Override
-        public Iterator<String> iterator() {
-            return new ArrayList<String>(0).iterator();
-        }
-        @Override
-        public int size() {
-            return 0;
-        }
-    };
+    private final transient Work work;
+
+    /**
+     * SimpleDB client.
+     */
+    private final transient SDBClient client;
+
+    /**
+     * Public ctor.
+     * @param wrk Work we're in
+     * @param clnt Client
+     */
+    public DomainSpinbox(
+        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "SimpleDB client can't be NULL")
+        final SDBClient clnt) {
+        this.work = wrk;
+        this.client = clnt;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format(
+            "SimpleDB spinboxes in `%s` accessed with %s",
+            this.client.domain(), this.client
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public long add(final long value) {
+        return new ItemSpinbox(
+            this.work,
+            String.format(
+                "%s %s %s",
+                this.work.owner(),
+                this.work.unit(),
+                this.work.started()
+            ),
+            this.client
+        ).add(value);
+    }
 
 }

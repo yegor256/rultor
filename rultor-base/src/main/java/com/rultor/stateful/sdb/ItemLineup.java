@@ -76,7 +76,7 @@ public final class ItemLineup implements Lineup {
     private static final Random RAND = new SecureRandom();
 
     /**
-     * Work we're in.
+     * Work we're in, for charging.
      */
     private final transient Work work;
 
