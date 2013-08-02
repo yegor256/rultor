@@ -37,6 +37,7 @@ import com.rultor.scm.SCM;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Terminal;
 import com.rultor.shell.ssh.PrivateKey;
+import com.rultor.snapshot.Step;
 import java.io.IOException;
 import java.net.URL;
 import javax.validation.constraints.NotNull;
@@ -131,6 +132,7 @@ public final class Git implements SCM {
      * {@inheritDoc}
      */
     @Override
+    @Step("Git branch ${args[0]} checked out")
     public Branch checkout(final String name) throws IOException {
         this.terminal.exec(
             new StringBuilder()
