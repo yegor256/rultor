@@ -374,7 +374,7 @@
                     <artifactId>rexsl-standalone</artifactId>
                     <version>${rexsl.version}</version>
                     <classifier>bin</classifier>
-                    <scope>provided</scope>
+                    <scope>test</scope>
                 </dependency>
             </dependencies>
             <build>
