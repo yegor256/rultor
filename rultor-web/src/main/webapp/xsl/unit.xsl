@@ -43,7 +43,7 @@
             <xsl:text>&quot;</xsl:text>
         </h2>
         <xsl:apply-templates select="/page/face"/>
-        <form method="post">
+        <form method="post" class="spacious">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
             </xsl:attribute>
@@ -69,7 +69,7 @@
         </form>
     </xsl:template>
     <xsl:template match="face">
-        <p>
+        <p class="spacious">
             <xsl:choose>
                 <xsl:when test="exception">
                     <pre class="text-error"><xsl:value-of select="exception"/></pre>

@@ -42,7 +42,7 @@
             <xsl:value-of select="/page/stand/name"/>
             <xsl:text>&quot;</xsl:text>
         </h2>
-        <form method="post">
+        <form method="post" class="spacious">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
             </xsl:attribute>

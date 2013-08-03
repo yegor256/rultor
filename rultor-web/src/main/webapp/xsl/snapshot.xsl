@@ -86,6 +86,15 @@
         <xsl:choose>
             <xsl:when test="stdout">
                 <div class="progress progress-striped active">
+                    <small>
+                        <a style="margin-right: .5em;" class="pull-right text-danger" title="stop execution immediately">
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="stdout"/>
+                                <xsl:text>?stop</xsl:text>
+                            </xsl:attribute>
+                            <i class="icon-off"><xsl:comment>off</xsl:comment></i>
+                        </a>
+                    </small>
                     <a title="click to tail the output">
                         <xsl:attribute name="href">
                             <xsl:value-of select="stdout"/>

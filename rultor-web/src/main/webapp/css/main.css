@@ -39,17 +39,14 @@
 
 body {
     font-size: 16px;
-}
-
-.page {
     padding: .5em;
     clear: both;
 }
 @media only screen and (min-width: 768px) {
-    .page { padding: 1em; }
+    body { padding: 1em; }
 }
 @media only screen and (min-width: 1024px) {
-    .page { padding: 2em; }
+    body { padding: 3em; }
 }
 
 code {
@@ -72,7 +69,11 @@ textarea {
         text-decoration: none;
     }
 
-ul.spacious > li {
-    padding-top: 0.3em;
-    padding-bottom: 0.3em;
+h2 {
+    padding-top: 1em;
+    padding-bottom: .5em;
+}
+.spacious {
+    padding-top: 10px;
+    padding-bottom: 10px;
 }

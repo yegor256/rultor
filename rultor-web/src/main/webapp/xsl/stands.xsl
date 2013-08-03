@@ -40,7 +40,7 @@
         <h2>
             <xsl:text>Stands</xsl:text>
         </h2>
-        <form method="post" class="form-inline">
+        <form method="post" class="form-inline spacious">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='create']/@href"/>
             </xsl:attribute>
@@ -77,7 +77,7 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="stand">
-        <li>
+        <li class="spacious">
             <ul class="list-inline">
                 <li>
                     <a title="edit this stand">

@@ -47,7 +47,9 @@ import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
 import java.io.Closeable;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -240,10 +242,15 @@ final class SimpleConveyer implements Closeable {
                 }
                 @Override
                 public URI stdout() {
-                    return UriBuilder.fromUri("http://localhost/{key}")
-                        .host(null)
-                        .port(SimpleConveyer.PORT)
-                        .build(key);
+                    try {
+                        return UriBuilder.fromUri("http://localhost/")
+                            .path("{key}")
+                            .host(InetAddress.getLocalHost().getHostAddress())
+                            .port(SimpleConveyer.PORT)
+                            .build(key);
+                    } catch (UnknownHostException ex) {
+                        throw new IllegalStateException(ex);
+                    }
                 }
             };
             try {
