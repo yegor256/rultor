@@ -53,6 +53,12 @@ interface Streams {
     void unregister(String key);
 
     /**
+     * Interrupt thread group associated with this key.
+     * @param key Authentication key
+     */
+    void interrupt(String key);
+
+    /**
      * Read stream by key (wait until it becomes available).
      * @param key Authentication key
      * @return Stream with data

@@ -29,6 +29,7 @@
  */
 package com.rultor.conveyer;
 
+import com.google.common.collect.ImmutableBiMap;
 import com.jcabi.aspects.Tv;
 import java.io.IOException;
 import java.io.InputStream;
@@ -107,6 +108,14 @@ public final class Log4jStreams extends AppenderSkeleton implements Streams {
                 return Log4jStreams.this.read();
             }
         };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void interrupt(final String key) {
+        ImmutableBiMap.copyOf(this.groups).inverse().get(key).interrupt();
     }
 
     /**

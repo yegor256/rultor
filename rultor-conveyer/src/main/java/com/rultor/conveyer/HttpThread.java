@@ -98,20 +98,37 @@ final class HttpThread {
             );
             final Matcher matcher = HttpThread.TOP.matcher(reader.readLine());
             if (matcher.matches()) {
-                final OutputStream output = socket.getOutputStream();
-                final PrintWriter writer = new PrintWriter(output);
-                writer.println("HTTP/1.1 200 OK");
-                writer.println("Content-Type: plain/text");
-                writer.println("Cache-Control: no-cache");
-                writer.println("");
-                writer.flush();
-                IOUtils.copy(this.streams.stream(matcher.group(1)), output);
+                this.process(matcher.group(1), socket.getOutputStream());
             }
         } catch (IOException ex) {
             Logger.warn(this, "failed to dispatch %s: %s", socket, ex);
         } finally {
             IOUtils.closeQuietly(socket);
         }
+    }
+
+    /**
+     * Process this auth key into the given output stream.
+     * @param query HTTP query string, without a leading slash
+     * @param output Output stream
+     * @throws IOException If fails
+     */
+    private void process(final String query, final OutputStream output)
+        throws IOException {
+        final PrintWriter writer = new PrintWriter(output);
+        writer.println("HTTP/1.1 200 OK");
+        writer.println("Content-Type: plain/text");
+        writer.println("Cache-Control: no-cache");
+        writer.println("");
+        writer.flush();
+        final String key;
+        if (query.endsWith("?interrupt")) {
+            key = query.substring(0, query.indexOf('?'));
+            this.streams.interrupt(key);
+        } else {
+            key = query;
+        }
+        IOUtils.copy(this.streams.stream(key), output);
     }
 
 }

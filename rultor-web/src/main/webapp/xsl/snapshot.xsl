@@ -90,7 +90,7 @@
                         <a style="margin-right: .5em;" class="pull-right text-danger" title="stop execution immediately">
                             <xsl:attribute name="href">
                                 <xsl:value-of select="stdout"/>
-                                <xsl:text>?stop</xsl:text>
+                                <xsl:text>?interrupt</xsl:text>
                             </xsl:attribute>
                             <i class="icon-off"><xsl:comment>off</xsl:comment></i>
                         </a>
