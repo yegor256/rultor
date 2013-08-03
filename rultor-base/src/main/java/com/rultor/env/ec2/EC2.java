@@ -164,7 +164,7 @@ public final class EC2 implements Environments {
      * @return Instance created and in stable state
      */
     @Step(
-        before = "creating EC instance `${self.type}` from `${self.ami}`",
+        before = "creating EC instance `${this.type}` from `${this.ami}`",
         value = "EC2 instance `${result.getInstanceId()}` created"
     )
     private Instance create() {

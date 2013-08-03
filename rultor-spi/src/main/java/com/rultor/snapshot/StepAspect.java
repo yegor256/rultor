@@ -29,7 +29,9 @@
  */
 package com.rultor.snapshot;
 
+import com.google.common.collect.ImmutableMap;
 import com.rultor.tools.Time;
+import com.rultor.tools.Vext;
 import java.lang.reflect.Method;
 import java.util.Random;
 import java.util.logging.Level;
@@ -63,6 +65,10 @@ public final class StepAspect {
             MethodSignature.class.cast(point.getSignature()).getMethod();
         final Step step = method.getAnnotation(Step.class);
         final String label = this.label(method);
+        final ImmutableMap.Builder<String, Object> args =
+            new ImmutableMap.Builder<String, Object>()
+                .put("this", point.getThis())
+                .put("args", point.getArgs());
         XemblyDetail.log(
             new XemblyBuilder()
                 .xpath("/spanshot")
@@ -70,14 +76,20 @@ public final class StepAspect {
                 .add("step")
                 .add("id").set(label).up()
                 .add("start").set(new Time().toString()).up()
-                .add("summary").set(step.before()).up()
+                .add("summary")
+                .set(new Vext(step.before()).print(args.build()))
         );
         try {
             final Object result = point.proceed();
             XemblyDetail.log(
                 new XemblyBuilder()
                     .xpath(String.format("//step[id='%s']/summary", label))
-                    .set(step.value()).up()
+                    .set(
+                        new Vext(step.value()).print(
+                            args.put("result", result).build()
+                        )
+                    )
+                    .up()
                     // @checkstyle MultipleStringLiterals (1 line)
                     .add("level").set(Level.INFO.toString())
             );

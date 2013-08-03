@@ -104,7 +104,7 @@ final class CFStack implements Environment {
      * {@inheritDoc}
      */
     @Override
-    @Step("requested deletion of stack `${self.name}`")
+    @Step("requested deletion of stack `${this.name}`")
     public void close() throws IOException {
         final AmazonCloudFormation aws = this.client.get();
         try {
@@ -120,8 +120,8 @@ final class CFStack implements Environment {
      * @throws IOException If fails
      */
     @Step(
-        before = "waiting for CloudFormation stack `${self.name}`",
-        value = "CF stack `${self.name}` is ready as `${result.getStackId()}`"
+        before = "waiting for CloudFormation stack `${this.name}`",
+        value = "CF stack `${this.name}` is ready as `${result.getStackId()}`"
     )
     private Stack whenReady() throws IOException {
         final AmazonCloudFormation aws = this.client.get();

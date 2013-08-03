@@ -135,7 +135,7 @@ public final class OnCommit implements Instance {
      * @return TRUE if seen
      * @throws IOException If fails
      */
-    @Step("commit ${args[0]} was ${self ?: \"NOT \"}seen before")
+    @Step("commit ${args[0]} was ${this ?: \"NOT \"}seen before")
     private boolean seen(final Commit head) throws IOException {
         return this.notepad.contains(head.name());
     }
@@ -164,7 +164,7 @@ public final class OnCommit implements Instance {
      * @return TRUE if it is a success
      * @throws IOException If fails
      */
-    @Step("announced ${result ? \"success\" : \"failure\"} to ${self.board}")
+    @Step("announced ${result ? \"success\" : \"failure\"} to ${this.board}")
     private boolean announce(final Announcement anmt) throws IOException {
         this.board.announce(anmt);
         return anmt.level().equals(Level.INFO);
