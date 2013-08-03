@@ -44,6 +44,7 @@ import com.rultor.spi.Statement;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -66,16 +67,6 @@ import lombok.ToString;
 public final class AwsUsers implements Users {
 
     /**
-     * Dynamo DB table name.
-     */
-    public static final String INDEX = "users";
-
-    /**
-     * Dynamo DB table column.
-     */
-    public static final String HASH_URN = "urn";
-
-    /**
      * Dynamo.
      */
     private final transient Region region;
@@ -89,10 +80,10 @@ public final class AwsUsers implements Users {
         final DescribeTableResult result = aws.describeTable(
             new DescribeTableRequest()
                 // @checkstyle MultipleStringLiterals (1 line)
-                .withTableName(reg.table(AwsUsers.INDEX).name())
+                .withTableName(reg.table(AwsUnit.TABLE).name())
         );
         Logger.info(
-            AwsUsers.class, "Amazon DynamoDB is ready with %d units",
+            AwsUsers.class, "Amazon DynamoDB is ready with %d unit(s)",
             result.getTable().getItemCount()
         );
         this.region = reg;
@@ -103,26 +94,18 @@ public final class AwsUsers implements Users {
      */
     @Override
     @NotNull(message = "list of users is never NULL")
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Iterator<User> iterator() {
-        final Iterator<Item> items = this.region.table(AwsUsers.INDEX)
-            .frame().iterator();
-        return new Iterator<User>() {
-            @Override
-            public boolean hasNext() {
-                return items.hasNext();
-            }
-            @Override
-            public User next() {
-                return new AwsUser(
+        final Collection<User> users = new HashSet<User>(0);
+        for (Item item : this.region.table(AwsUnit.TABLE).frame()) {
+            users.add(
+                new AwsUser(
                     AwsUsers.this.region,
-                    URN.create(items.next().get(AwsUsers.HASH_URN).getS())
-                );
-            }
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
+                    URN.create(item.get(AwsUnit.HASH_OWNER).getS())
+                )
+            );
+        }
+        return users.iterator();
     }
 
     /**

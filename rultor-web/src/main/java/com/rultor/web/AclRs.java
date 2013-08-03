@@ -123,7 +123,11 @@ public final class AclRs extends BaseRs {
         }
         throw this.flash().redirect(
             this.uriInfo().getRequestUri(),
-            String.format("Stand `%s` successfully saved/updated", this.name),
+            String.format(
+                // @checkstyle LineLength (1 line)
+                "ACL of stand `%s` successfully updated, will take a few minutes to propagate to all servers",
+                this.name
+            ),
             Level.INFO
         );
     }

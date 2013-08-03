@@ -146,7 +146,11 @@ public final class UnitRs extends BaseRs {
         }
         throw this.flash().redirect(
             this.uriInfo().getRequestUri(),
-            String.format("Unit `%s` successfully saved/updated", this.name),
+            String.format(
+                // @checkstyle LineLength (1 line)
+                "Unit `%s` successfully updated, will take a few minutes to propagate to all servers",
+                this.name
+            ),
             Level.INFO
         );
     }
