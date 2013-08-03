@@ -46,7 +46,7 @@
         <xsl:choose>
             <xsl:when test="/page/pulses/pulse">
                 <xsl:if test="/page/since">
-                    <div>
+                    <div class="spacious">
                         <ul class="list-inline">
                             <li>
                                 <xsl:text>Since </xsl:text>
@@ -65,14 +65,16 @@
                 </xsl:if>
                 <xsl:apply-templates select="/page/pulses/pulse"/>
                 <xsl:if test="//links/link[@rel='more']">
-                    <xsl:text>See </xsl:text>
-                    <a title="more">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="//links/link[@rel='more']/@href"/>
-                        </xsl:attribute>
-                        <xsl:text>more</xsl:text>
-                    </a>
-                    <xsl:text> pulses.</xsl:text>
+                    <p>
+                        <xsl:text>See </xsl:text>
+                        <a title="more">
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="//links/link[@rel='more']/@href"/>
+                            </xsl:attribute>
+                            <xsl:text>more</xsl:text>
+                        </a>
+                        <xsl:text> pulses.</xsl:text>
+                    </p>
                 </xsl:if>
             </xsl:when>
             <xsl:otherwise>

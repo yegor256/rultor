@@ -110,11 +110,13 @@
                             </xsl:choose>
                         </a>
                     </li>
-                    <li class="hidden-phone">
-                        <a href="//blog.rultor.com/">
-                            <xsl:text>how it works?</xsl:text>
-                        </a>
-                    </li>
+                    <xsl:if test="not(contains(/page/version/name, 'SNAPSHOT'))">
+                        <li class="hidden-phone">
+                            <a href="//blog.rultor.com/">
+                                <xsl:text>how it works?</xsl:text>
+                            </a>
+                        </li>
+                    </xsl:if>
                     <xsl:apply-templates select="version"/>
                     <xsl:if test="/page/links/link[@rel='stands']">
                         <li>
@@ -160,7 +162,13 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="version">
-        <li class="hidden-phone hidden-tablet">
+        <li>
+            <xsl:attribute name="class">
+                <xsl:text>hidden-phone hidden-tablet</xsl:text>
+                <xsl:if test="contains(name, 'SNAPSHOT')">
+                    <xsl:text> text-danger</xsl:text>
+                </xsl:if>
+            </xsl:attribute>
             <xsl:value-of select="name"/>
         </li>
         <li class="hidden-phone hidden-tablet">
