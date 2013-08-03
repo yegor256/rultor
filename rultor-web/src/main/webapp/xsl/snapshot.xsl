@@ -83,24 +83,29 @@
                 </ul>
             </div>
         </xsl:if>
-        <div class="progress">
-            <div class="progress-bar">
-                <xsl:attribute name="style">
-                    <xsl:text>width:</xsl:text>
-                    <xsl:choose>
-                        <xsl:when test="start and eta">
-                            <xsl:text>15</xsl:text>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:text>50</xsl:text>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                    <xsl:text>%;</xsl:text>
-                </xsl:attribute>
-                <!-- this is for W3C compliance -->
-                <xsl:text> </xsl:text>
-            </div>
-        </div>
+        <xsl:choose>
+            <xsl:when test="stdout">
+                <div class="progress progress-striped active">
+                    <a title="click to tail the output">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="stdout"/>
+                        </xsl:attribute>
+                        <xsl:call-template name="bar">
+                            <xsl:with-param name="style" select="'progress-bar-info'"/>
+                            <xsl:with-param name="snapshot" select="."/>
+                        </xsl:call-template>
+                    </a>
+                </div>
+            </xsl:when>
+            <xsl:otherwise>
+                <div class="progress">
+                    <xsl:call-template name="bar">
+                        <xsl:with-param name="style" select="'progress-bar-warning'"/>
+                        <xsl:with-param name="snapshot" select="."/>
+                    </xsl:call-template>
+                </div>
+            </xsl:otherwise>
+        </xsl:choose>
         <xsl:if test="steps/step">
             <div>
                 <xsl:apply-templates select="steps/step"/>
@@ -191,5 +196,29 @@
             <xsl:text>: </xsl:text>
             <xsl:value-of disable-output-escaping="yes" select="html"/>
         </li>
+    </xsl:template>
+    <xsl:template name="bar">
+        <xsl:param name="snapshot"/>
+        <xsl:param name="style"/>
+        <div>
+            <xsl:attribute name="class">
+                <xsl:text>progress-bar </xsl:text>
+                <xsl:value-of select="$style"/>
+            </xsl:attribute>
+            <xsl:attribute name="style">
+                <xsl:text>width:</xsl:text>
+                <xsl:choose>
+                    <xsl:when test="$snapshot/start and $snapshot/eta">
+                        <xsl:text>15</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>50</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:text>%;</xsl:text>
+            </xsl:attribute>
+            <!-- this is for W3C compliance -->
+            <xsl:text> </xsl:text>
+        </div>
     </xsl:template>
 </xsl:stylesheet>

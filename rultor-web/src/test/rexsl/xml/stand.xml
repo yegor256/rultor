@@ -63,6 +63,7 @@
                     <unit>nightly-build</unit>
                     <started>2012-08-23T13:25Z</started>
                 </work>
+                <stdout>http://127.0.0.1/s4378h9892fu8i9890</stdout>
                 <start>2012-08-23T13:25Z</start>
                 <eta>2013-08-23T17:57Z</eta>
                 <spec>some specificiation</spec>

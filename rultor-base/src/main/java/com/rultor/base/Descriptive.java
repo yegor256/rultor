@@ -42,7 +42,7 @@ import lombok.EqualsAndHashCode;
 import org.xembly.XemblyBuilder;
 
 /**
- * Verbose instance.
+ * Descriptive instance that tells about itself in the xembly log.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -51,7 +51,7 @@ import org.xembly.XemblyBuilder;
 @Immutable
 @EqualsAndHashCode(of = { "work", "origin" })
 @Loggable(Loggable.DEBUG)
-public final class Verbose implements Instance {
+public final class Descriptive implements Instance {
 
     /**
      * Work we're in.
@@ -68,7 +68,7 @@ public final class Verbose implements Instance {
      * @param wrk Work we're in
      * @param instance Original instance
      */
-    public Verbose(
+    public Descriptive(
         @NotNull(message = "work can't be NULL") final Work wrk,
         @NotNull(message = "instance can't be NULL") final Instance instance) {
         this.work = wrk;
@@ -104,6 +104,12 @@ public final class Verbose implements Instance {
         );
         XemblyDetail.log(
             new XemblyBuilder()
+                .xpath("/snapshot[not(stdout)]")
+                .add("stdout")
+                .set(this.work.stdout().toString())
+        );
+        XemblyDetail.log(
+            new XemblyBuilder()
                 .xpath("/snapshot[not(version)]")
                 .add("version")
                 .set(
@@ -121,19 +127,25 @@ public final class Verbose implements Instance {
                 .add("spec")
                 .set(this.work.spec().asText())
         );
-        this.origin.pulse();
-        XemblyDetail.log(
-            new XemblyBuilder()
-                .xpath("/snapshot[not(finish)]")
-                .add("finish")
-                .set(new Time().toString())
-        );
-        XemblyDetail.log(
-            new XemblyBuilder()
-                .xpath("/snapshot[not(duration)]")
-                .add("duration")
-                .set(Long.toString(System.currentTimeMillis() - start))
-        );
+        try {
+            this.origin.pulse();
+        } finally {
+            XemblyDetail.log(
+                new XemblyBuilder().xpath("/snapshot/stdout").remove()
+            );
+            XemblyDetail.log(
+                new XemblyBuilder()
+                    .xpath("/snapshot[not(finish)]")
+                    .add("finish")
+                    .set(new Time().toString())
+            );
+            XemblyDetail.log(
+                new XemblyBuilder()
+                    .xpath("/snapshot[not(duration)]")
+                    .add("duration")
+                    .set(Long.toString(System.currentTimeMillis() - start))
+            );
+        }
     }
 
     /**
