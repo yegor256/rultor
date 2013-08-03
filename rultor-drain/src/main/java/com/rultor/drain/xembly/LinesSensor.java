@@ -32,6 +32,7 @@ package com.rultor.drain.xembly;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rultor.snapshot.XemblyDetail;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
@@ -43,6 +44,7 @@ import java.io.SequenceInputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.Validate;
 import org.xembly.XemblyBuilder;
 
 /**
@@ -82,6 +84,7 @@ public final class LinesSensor implements Drain {
         final long dlt,
         @NotNull(message = "spinbox can't be NULL") final Spinbox box,
         @NotNull(message = "drain can't be NULL") final Drain drain) {
+        Validate.isTrue(dlt > Tv.TEN, "delta %d can't be less than ten", dlt);
         this.delta = dlt;
         this.spinbox = box;
         this.origin = drain;
@@ -113,7 +116,7 @@ public final class LinesSensor implements Drain {
     public void append(final Iterable<String> lines) throws IOException {
         final long before = this.spinbox.add(0);
         final long after = this.spinbox.add(Iterables.size(lines));
-        if (after > before + this.delta) {
+        if ((after / this.delta) * this.delta > before) {
             XemblyDetail.log(
                 new XemblyBuilder()
                     .xpath("/spanshot")
