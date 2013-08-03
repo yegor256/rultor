@@ -68,7 +68,7 @@ final class AwsStand implements Stand {
     /**
      * Dynamo DB table column.
      */
-    public static final String HASH_URN = "urn";
+    public static final String HASH_OWNER = "owner";
 
     /**
      * Dynamo DB table column.
@@ -138,7 +138,7 @@ final class AwsStand implements Stand {
      */
     @Override
     public URN owner() {
-        return URN.create(this.item.get(AwsStand.HASH_URN).getS());
+        return URN.create(this.item.get(AwsStand.HASH_OWNER).getS());
     }
 
     /**

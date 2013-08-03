@@ -84,7 +84,7 @@ final class AwsStands implements Stands {
     public Iterator<Stand> iterator() {
         final Iterator<Item> items = this.region.table(AwsReceipts.TABLE)
             .frame()
-            .where(AwsStand.HASH_URN, this.owner.toString())
+            .where(AwsStand.HASH_OWNER, this.owner.toString())
             .through(
                 new ScanValve()
                     .withLimit(Tv.TWENTY)
@@ -115,7 +115,7 @@ final class AwsStands implements Stands {
     public void create(final String stand) {
         this.region.table(AwsReceipts.TABLE).put(
             new Attributes()
-                .with(AwsStand.HASH_URN, this.owner.toString())
+                .with(AwsStand.HASH_OWNER, this.owner.toString())
                 .with(AwsStand.RANGE_STAND, stand)
                 .with(AwsStand.FIELD_ACL, "")
         );

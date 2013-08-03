@@ -142,24 +142,26 @@ public class BaseRs extends BaseResource {
             @Override
             public void render(final BasePage<?, ?> page,
                 final Response.ResponseBuilder builder) {
-                page.link(
-                    new Link(
-                        "finances",
-                        BaseRs.this.uriInfo().getBaseUriBuilder()
-                            .clone()
-                            .path(FinancesRs.class)
-                            .build()
-                    )
-                );
-                final Iterator<Statement> stmts = BaseRs.this.user()
-                    .statements().iterator();
-                final Dollars balance;
-                if (stmts.hasNext()) {
-                    balance = stmts.next().balance();
-                } else {
-                    balance = new Dollars(0);
+                if (!BaseRs.this.auth().identity().equals(Identity.ANONYMOUS)) {
+                    page.link(
+                        new Link(
+                            "finances",
+                            BaseRs.this.uriInfo().getBaseUriBuilder()
+                                .clone()
+                                .path(FinancesRs.class)
+                                .build()
+                        )
+                    );
+                    final Iterator<Statement> stmts = BaseRs.this.user()
+                        .statements().iterator();
+                    final Dollars balance;
+                    if (stmts.hasNext()) {
+                        balance = stmts.next().balance();
+                    } else {
+                        balance = new Dollars(0);
+                    }
+                    page.append(new JaxbBundle("balance", balance.toString()));
                 }
-                page.append(new JaxbBundle("balance", balance.toString()));
             }
         };
     }
@@ -253,7 +255,7 @@ public class BaseRs extends BaseResource {
         if (self.equals(Identity.ANONYMOUS)) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
-                "login first",
+                "please login first",
                 Level.WARNING
             );
         }

@@ -2,46 +2,43 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Internal application error</title>
-        <link href="/css/main.css?${buildNumber}" rel="stylesheet" type="text/css"></link>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="/css/main.css?${buildNumber}" rel="stylesheet" type="text/css"/>
         <link rel="icon" type="image/gif" href="//img.rultor.com/favicon.ico?${buildNumber}"/>
     </head>
     <body>
-        <div class="page">
-            <nav class="head">
-                <ul class="inline">
-                    <li>
-                        <a class="logo" href="//www.rultor.com">R</a>
-                    </li>
-                    <li>
-                        <code>${buildNumber}</code>
-                    </li>
-                    <li class="text-error">
-                        Internal Application Error
-                    </li>
-                </ul>
-            </nav>
-            <article>
-                <p>
-                    Something went terribly wrong. The system can't
-                    serve your request at the moment. We've been already
-                    notified about this situation and will start working
-                    on it really soon. In the meantime, please get back
-                    to the site and try to do the same operation again.
-                    Maybe it will work, you know :)
-                </p>
-                <p>
-                    The text below is a detailed description of your
-                    <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP request</a>
-                    and a
-                    <a href="http://en.wikipedia.org/wiki/Stack_trace">stacktrace</a>
-                    of the <a href="http://en.wikipedia.org/wiki/Exception_handling">runtime exception</a>
-                    thrown by
-                    <a href="http://en.wikipedia.org/wiki/Java_virtual_machine">JVM</a>.
-                    If you want to help us, please post this text as a new issue to
-                    <a href="https://github.com/rultor/rultor/issues/new">Github</a>.
-                </p>
-                <pre>${text}</pre>
-            </article>
-        </div>
+        <ul class="list-inline">
+            <li>
+                <a class="logo" href="//www.rultor.com">R</a>
+            </li>
+            <li>
+                <code>${buildNumber}</code>
+            </li>
+            <li class="text-error">
+                Internal Application Error
+            </li>
+        </ul>
+        <article>
+            <p>
+                Something went terribly wrong. The system can't
+                serve your request at the moment. We've been already
+                notified about this situation and will start working
+                on it really soon. In the meantime, please get back
+                to the site and try to do the same operation again.
+                Maybe it will work, you know :)
+            </p>
+            <p>
+                The text below is a detailed description of your
+                <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP request</a>
+                and a
+                <a href="http://en.wikipedia.org/wiki/Stack_trace">stacktrace</a>
+                of the <a href="http://en.wikipedia.org/wiki/Exception_handling">runtime exception</a>
+                thrown by
+                <a href="http://en.wikipedia.org/wiki/Java_virtual_machine">JVM</a>.
+                If you want to help us, please post this text as a new issue to
+                <a href="https://github.com/rultor/rultor/issues/new">Github</a>.
+            </p>
+            <pre>${text}</pre>
+        </article>
     </body>
 </html>
