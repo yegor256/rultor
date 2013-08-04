@@ -35,8 +35,8 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
-import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.ScanValve;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
@@ -126,7 +126,7 @@ final class AwsStands implements Stands {
             .frame()
             .where(AwsStand.HASH_OWNER, this.owner.toString())
             .through(
-                new QueryValve()
+                new ScanValve()
                     .withAttributeToGet(AwsStand.RANGE_STAND)
                     .withAttributeToGet(AwsStand.FIELD_ACL)
             );
