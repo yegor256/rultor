@@ -46,7 +46,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -99,7 +98,7 @@ public final class PulseRs extends BaseRs {
      */
     @GET
     @Path("/stream")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces("text/html; charset=UTF-8")
     public String stream() {
         try {
             return IOUtils.toString(this.pulse().stream());
