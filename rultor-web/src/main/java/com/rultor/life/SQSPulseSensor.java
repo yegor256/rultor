@@ -56,6 +56,7 @@ import java.util.concurrent.TimeUnit;
 import javax.json.Json;
 import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Sensor to pulses in SQS queue.
@@ -139,7 +140,7 @@ public final class SQSPulseSensor implements Runnable, Closeable {
                 this.post(msg.getBody());
             // @checkstyle IllegalCatch (1 line)
             } catch (Exception ex) {
-                Logger.warn(this, "%[type]s: %s", ex, ex.getMessage());
+                Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
             } finally {
                 aws.deleteMessage(
                     new DeleteMessageRequest()
@@ -167,17 +168,24 @@ public final class SQSPulseSensor implements Runnable, Closeable {
             new StringReader(json)
         ).readObject();
         final Stand stand = this.users.stand(object.getString("stand"));
-        if (this.acl(stand).canPost(object.getString("key"))) {
-            stand.post(
+        final String key = object.getString("key");
+        if (!this.acl(stand).canPost(key)) {
+            throw new SecurityException(
                 String.format(
-                    "%s:%s:%s",
-                    object.getString("work.owner"),
-                    object.getString("work.unit"),
-                    object.getString("work.started")
-                ),
-                object.getString("xembly")
+                    "access denied to `%s` for '%s'",
+                    stand.name(), key
+                )
             );
         }
+        stand.post(
+            String.format(
+                "%s:%s:%s",
+                object.getString("work.owner"),
+                object.getString("work.unit"),
+                object.getString("work.started")
+            ),
+            object.getString("xembly")
+        );
     }
 
     /**

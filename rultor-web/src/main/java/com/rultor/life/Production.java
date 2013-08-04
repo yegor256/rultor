@@ -30,7 +30,6 @@
 package com.rultor.life;
 
 import com.jcabi.aspects.Cacheable;
-import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
@@ -57,7 +56,6 @@ import lombok.ToString;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  * @checkstyle MultipleStringLiterals (500 lines)
  */
-@Immutable
 @ToString
 @EqualsAndHashCode
 @Loggable(Loggable.INFO)
