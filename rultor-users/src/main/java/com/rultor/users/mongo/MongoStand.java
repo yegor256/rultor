@@ -31,6 +31,7 @@ package com.rultor.users.mongo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -48,6 +49,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.dom.DOMSource;
@@ -257,6 +261,15 @@ final class MongoStand implements Stand {
             new BasicDBObject(MongoStand.ATTR_STAND, this.name())
         );
         cursor.sort(new BasicDBObject(MongoStand.ATTR_UPDATED, -1));
+        new Timer().schedule(
+            new TimerTask() {
+                @Override
+                public void run() {
+                    cursor.close();
+                }
+            },
+            TimeUnit.SECONDS.toMillis(Tv.TEN)
+        );
         // @checkstyle AnonInnerLength (50 lines)
         return new Iterator<Pulse>() {
             @Override
