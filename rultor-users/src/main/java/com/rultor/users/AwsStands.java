@@ -108,7 +108,7 @@ final class AwsStands implements Stands {
     @Override
     @Cacheable.FlushAfter
     public void create(final String stand) {
-        this.region.table(AwsReceipts.TABLE).put(
+        this.region.table(AwsStand.TABLE).put(
             new Attributes()
                 .with(AwsStand.HASH_OWNER, this.owner.toString())
                 .with(AwsStand.RANGE_STAND, stand)
@@ -122,7 +122,7 @@ final class AwsStands implements Stands {
      */
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     private Collection<Item> fetch() {
-        return this.region.table(AwsReceipts.TABLE)
+        return this.region.table(AwsStand.TABLE)
             .frame()
             .where(AwsStand.HASH_OWNER, this.owner.toString())
             .through(
