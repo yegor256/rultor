@@ -57,7 +57,9 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
 import org.w3c.dom.Document;
 import org.xembly.Directives;
+import org.xembly.ImpossibleModificationException;
 import org.xembly.Xembler;
+import org.xembly.XemblySyntaxException;
 import org.xml.sax.SAXException;
 
 /**
@@ -141,7 +143,13 @@ final class MongoStand implements Stand {
     @Override
     public void post(final String pulse, final String xembly) {
         final Document dom = this.previous(pulse);
-        new Xembler(new Directives(xembly)).exec(dom);
+        try {
+            new Xembler(new Directives(xembly)).exec(dom);
+        } catch (XemblySyntaxException ex) {
+            throw new IllegalArgumentException(ex);
+        } catch (ImpossibleModificationException ex) {
+            throw new IllegalArgumentException(ex);
+        }
         final XmlDocument xml = new SimpleXml(new DOMSource(dom));
         final WriteResult result = this.collection().update(
             new BasicDBObject()
