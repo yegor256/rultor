@@ -117,8 +117,8 @@ public final class HttpServer implements Closeable {
                 0, 1, TimeUnit.NANOSECONDS
             );
         }
-        Logger.info(
-            this, "HTTP server started at port %d with %d thread",
+        Logger.warn(
+            this, "HTTP server started on TCP port %d with %d thread(s)",
             port, HttpServer.THREADS
         );
     }
