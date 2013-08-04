@@ -89,7 +89,7 @@ public interface User {
     final class Nobody implements User {
         @Override
         public URN urn() {
-            throw new UnsupportedOperationException();
+            return URN.create("urn:test:0");
         }
         @Override
         public Statements statements() {

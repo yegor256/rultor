@@ -29,11 +29,13 @@
  */
 package com.rultor.conveyer;
 
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.urn.URN;
+import com.rexsl.test.RestTester;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
@@ -47,9 +49,7 @@ import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.URI;
-import java.net.UnknownHostException;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -242,15 +242,11 @@ final class SimpleConveyer implements Closeable {
                 }
                 @Override
                 public URI stdout() {
-                    try {
-                        return UriBuilder.fromUri("http://localhost/")
-                            .path("{key}")
-                            .host(InetAddress.getLocalHost().getHostAddress())
-                            .port(SimpleConveyer.PORT)
-                            .build(key);
-                    } catch (UnknownHostException ex) {
-                        throw new IllegalStateException(ex);
-                    }
+                    return UriBuilder.fromUri("http://localhost/")
+                        .path("{key}")
+                        .host(SimpleConveyer.address())
+                        .port(SimpleConveyer.PORT)
+                        .build(key);
                 }
             };
             try {
@@ -278,6 +274,24 @@ final class SimpleConveyer implements Closeable {
                 Instance.class.cast(object).pulse();
             }
         }
+    }
+
+    /**
+     * Fetch my public IP.
+     * @return IP
+     * @see http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#using-instance-addressing-common
+     */
+    @Cacheable(forever = true)
+    private static String address() {
+        String address;
+        try {
+            address = RestTester.start(
+                URI.create("http://169.254.169.254/latest/meta-data/public-ipv4")
+            ).get("fetch EC2 public IP").getBody();
+        } catch (AssertionError ex) {
+            address = "localhost";
+        }
+        return address;
     }
 
 }
