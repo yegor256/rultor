@@ -53,9 +53,9 @@
                         <xsl:value-of select="lines"/>
                     </li>
                 </xsl:if>
-                <xsl:if test="start">
+                <xsl:if test="start and not(finish)">
                     <li>
-                        <i class="icon-time"><xsl:comment>start</xsl:comment></i>
+                        <i class="icon-flag"><xsl:comment>start</xsl:comment></i>
                         <xsl:text> </xsl:text>
                         <span class="timeago"><xsl:value-of select="start"/></span>
                     </li>
@@ -72,6 +72,13 @@
                         <i class="icon-flag-checkered"><xsl:comment>finish</xsl:comment></i>
                         <xsl:text> </xsl:text>
                         <span class="timeago"><xsl:value-of select="finish"/></span>
+                    </li>
+                </xsl:if>
+                <xsl:if test="duration">
+                    <li>
+                        <xsl:call-template name="millis">
+                            <xsl:with-param name="millis" select="duration"/>
+                        </xsl:call-template>
                     </li>
                 </xsl:if>
             </ul>
