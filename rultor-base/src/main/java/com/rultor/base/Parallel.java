@@ -171,6 +171,7 @@ public final class Parallel implements Instance {
                         Parallel.this.active.remove(key);
                     }
                     @Override
+                    @SuppressWarnings("PMD.ReturnFromFinallyBlock")
                     public String toString() {
                         return String.format("remove %s", Parallel.this.work);
                     }

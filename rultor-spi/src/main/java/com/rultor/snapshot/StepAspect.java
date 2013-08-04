@@ -81,15 +81,14 @@ public final class StepAspect {
         );
         try {
             final Object result = point.proceed();
+            if (result != null) {
+                args.put("result", result);
+            }
             XemblyDetail.log(
                 new XemblyBuilder()
                     .xpath(String.format("//step[@id='%s']/summary", label))
                     .strict(1)
-                    .set(
-                        new Vext(step.value()).print(
-                            args.put("result", result).build()
-                        )
-                    )
+                    .set(new Vext(step.value()).print(args.build()))
                     .up()
                     // @checkstyle MultipleStringLiterals (1 line)
                     .add("level").set(Level.INFO.toString())
