@@ -29,6 +29,7 @@
  */
 package com.rultor.conveyer;
 
+import com.rultor.conveyer.http.Streams;
 import com.google.common.collect.ImmutableBiMap;
 import com.jcabi.aspects.Tv;
 import java.io.IOException;

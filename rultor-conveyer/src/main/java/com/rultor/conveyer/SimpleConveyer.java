@@ -36,6 +36,8 @@ import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
+import com.rultor.conveyer.http.HttpServer;
+import com.rultor.conveyer.http.Streams;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;

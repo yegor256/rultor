@@ -27,42 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer;
-
-import java.io.InputStream;
 
 /**
- * Streams.
+ * HTTP front.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-interface Streams {
-
-    /**
-     * Register current Thread Group and return it's auth key.
-     * @return Auth key
-     */
-    String register();
-
-    /**
-     * Un-register current Thread Group.
-     * @param key Authentication key
-     */
-    void unregister(String key);
-
-    /**
-     * Interrupt thread group associated with this key.
-     * @param key Authentication key
-     */
-    void interrupt(String key);
-
-    /**
-     * Read stream by key (wait until it becomes available).
-     * @param key Authentication key
-     * @return Stream with data
-     */
-    InputStream stream(String key);
-
-}
+package com.rultor.conveyer.http;

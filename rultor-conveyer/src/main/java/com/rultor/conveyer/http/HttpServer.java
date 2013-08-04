@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer;
+package com.rultor.conveyer.http;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
@@ -57,7 +57,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "frontend", "backend", "sockets", "server" })
 @SuppressWarnings("PMD.DoNotUseThreads")
-final class HttpServer implements Closeable {
+public final class HttpServer implements Closeable {
 
     /**
      * How many threads to use.
@@ -97,7 +97,7 @@ final class HttpServer implements Closeable {
      * @param port Port we're at
      * @throws IOException If fails
      */
-    protected HttpServer(final Streams streams, final int port)
+    public HttpServer(final Streams streams, final int port)
         throws IOException {
         this.server = new ServerSocket(port);
         final HttpThread thread = new HttpThread(this.sockets, streams);
