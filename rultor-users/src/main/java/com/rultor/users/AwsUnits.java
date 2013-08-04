@@ -118,9 +118,7 @@ final class AwsUnits implements Units {
             message = "Only numbers, letters, and dashes are allowed"
         )
         final String unt) {
-        final boolean exists = !this.region.table(AwsUnit.TABLE)
-            .frame().where(AwsUnit.RANGE_NAME, unt).isEmpty();
-        if (exists) {
+        if (this.contains(unt)) {
             throw new IllegalArgumentException(
                 String.format("Unit `%s` already exists", unt)
             );
@@ -143,6 +141,7 @@ final class AwsUnits implements Units {
         final Iterator<Item> items = this.region.table(AwsUnit.TABLE).frame()
             .where(AwsUnit.HASH_OWNER, this.owner.toString())
             .where(AwsUnit.RANGE_NAME, unit)
+            .through(new QueryValve())
             .iterator();
         if (!items.hasNext()) {
             throw new NoSuchElementException(
@@ -157,13 +156,14 @@ final class AwsUnits implements Units {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Unit get(@NotNull(message = "unit name can't be NULL")
         final String unit) {
         final Collection<Item> items = this.region.table(AwsUnit.TABLE)
             .frame()
             .where(AwsUnit.HASH_OWNER, this.owner.toString())
             .where(AwsUnit.RANGE_NAME, unit)
-            .through(new QueryValve().withAttributeToGet(AwsUnit.FIELD_SPEC));
+            .through(new QueryValve());
         if (items.isEmpty()) {
             throw new NoSuchElementException(
                 String.format("Unit `%s` doesn't exist", unit)
@@ -182,6 +182,7 @@ final class AwsUnits implements Units {
             .frame()
             .where(AwsUnit.HASH_OWNER, this.owner.toString())
             .where(AwsUnit.RANGE_NAME, unit)
+            .through(new QueryValve())
             .isEmpty();
     }
 
@@ -194,11 +195,7 @@ final class AwsUnits implements Units {
         return this.region.table(AwsUnit.TABLE)
             .frame()
             .where(AwsUnit.HASH_OWNER, this.owner.toString())
-            .through(
-                new QueryValve().withAttributesToGet(
-                    AwsUnit.RANGE_NAME, AwsUnit.FIELD_SPEC
-                )
-            );
+            .through(new QueryValve());
     }
 
 }

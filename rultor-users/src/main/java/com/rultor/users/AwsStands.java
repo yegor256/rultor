@@ -35,14 +35,16 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
+import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
-import com.jcabi.dynamo.ScanValve;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -107,7 +109,13 @@ final class AwsStands implements Stands {
      */
     @Override
     @Cacheable.FlushAfter
-    public void create(final String stand) {
+    public void create(
+        @NotNull(message = "stand name is mandatory when creating")
+        @Pattern(
+            regexp = "[a-z][-a-z0-9]{2,}",
+            message = "Only numbers, letters, and dashes are allowed"
+        )
+        final String stand) {
         this.region.table(AwsStand.TABLE).put(
             new Attributes()
                 .with(AwsStand.HASH_OWNER, this.owner.toString())
@@ -126,7 +134,7 @@ final class AwsStands implements Stands {
             .frame()
             .where(AwsStand.HASH_OWNER, this.owner.toString())
             .through(
-                new ScanValve()
+                new QueryValve()
                     .withAttributeToGet(AwsStand.RANGE_STAND)
                     .withAttributeToGet(AwsStand.FIELD_ACL)
             );

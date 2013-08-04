@@ -30,12 +30,15 @@
 package com.rultor.users;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -91,6 +94,7 @@ final class AwsUnit implements Unit {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable.FlushAfter
     public void update(@NotNull(message = "spec is mandatory and can't be NULL")
         final Spec spec) {
         this.item.put(
@@ -107,6 +111,7 @@ final class AwsUnit implements Unit {
      */
     @Override
     @NotNull(message = "spec of a unit is never NULL")
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Spec spec() {
         Spec spec;
         if (this.item.has(AwsUnit.FIELD_SPEC)) {

@@ -156,6 +156,8 @@ final class MongoStand implements Stand {
                 .append(MongoStand.ATTR_PULSE, pulse)
                 .append(MongoStand.ATTR_STAND, this.name()),
             new BasicDBObject()
+                .append(MongoStand.ATTR_PULSE, pulse)
+                .append(MongoStand.ATTR_STAND, this.name())
                 .append(MongoStand.ATTR_UPDATED, new Time().toString())
                 .append(MongoStand.ATTR_SNAPSHOT, xml.toString())
                 .append(MongoStand.ATTR_TAGS, this.tags(xml)),
@@ -232,7 +234,7 @@ final class MongoStand implements Stand {
         if (cursor.hasNext()) {
             xml = cursor.next().get(MongoStand.ATTR_SNAPSHOT).toString();
         } else {
-            xml = "<spanshot/>";
+            xml = "<snapshot/>";
         }
         return MongoStand.document(xml);
     }
@@ -291,7 +293,7 @@ final class MongoStand implements Stand {
      */
     private DBCollection collection() {
         try {
-            return this.mongo.get().getCollection("timelines");
+            return this.mongo.get().getCollection(MongoStand.TABLE);
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }

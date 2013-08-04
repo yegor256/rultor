@@ -31,9 +31,12 @@ package com.rultor.users.mongo;
 
 import com.jcabi.aspects.Tv;
 import com.rexsl.test.XhtmlMatchers;
+import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
+import java.util.Iterator;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Assume;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -86,8 +89,10 @@ public final class MongoStandITCase {
         final Stand stand = this.stand();
         final String pulse = RandomStringUtils.randomAlphabetic(Tv.TEN);
         stand.post(pulse, "ADD 'test'; SET 'hello, world!';");
+        final Iterator<Pulse> pulses = stand.pulses().iterator();
+        MatcherAssert.assertThat(pulses.hasNext(), Matchers.is(true));
         MatcherAssert.assertThat(
-            stand.pulses().iterator().next().snapshot().xml(),
+            XhtmlMatchers.xhtml(pulses.next().snapshot().xml()),
             XhtmlMatchers.hasXPath("/snapshot/test[.='hello, world!']")
         );
     }
@@ -99,6 +104,9 @@ public final class MongoStandITCase {
      */
     private Stand stand() throws Exception {
         Assume.assumeNotNull(MongoStandITCase.HOST);
+        final Stand origin = Mockito.mock(Stand.class);
+        Mockito.doReturn(RandomStringUtils.randomAlphabetic(Tv.FIVE))
+            .when(origin).name();
         return new MongoStand(
             new Mongo.Simple(
                 MongoStandITCase.HOST,
@@ -107,7 +115,7 @@ public final class MongoStandITCase {
                 MongoStandITCase.USER,
                 MongoStandITCase.PWD
             ),
-            Mockito.mock(Stand.class)
+            origin
         );
     }
 

@@ -143,7 +143,7 @@ public final class AwsStatementsITCase {
         }
         final URN urn = new URN("urn:github:66");
         final Statements stmts = new AwsStatements(this.region, urn);
-        final Time time = new Time("2013-07-16T16:46Z");
+        final Time time = new Time("2013-07-16T16:46:00Z");
         final Statement statement = new Statement.Simple(
             time, new Dollars(1L), "some statement text"
         );

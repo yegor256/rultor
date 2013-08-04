@@ -150,6 +150,10 @@ public final class AwsUserITCase {
             user.units(),
             Matchers.<Unit>iterableWithSize(1)
         );
+        MatcherAssert.assertThat(
+            user.units().contains(name),
+            Matchers.is(true)
+        );
     }
 
 }
