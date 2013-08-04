@@ -92,6 +92,13 @@ final class SimpleConveyer implements Closeable {
         Runtime.getRuntime().availableProcessors() * Tv.TWENTY;
 
     /**
+     * Where to get public IP from EC2.
+     */
+    private static final URI META_IP = URI.create(
+        "http://169.254.169.254/latest/meta-data/public-ipv4"
+    );
+
+    /**
      * Queue.
      */
     private final transient Queue queue;
@@ -285,9 +292,8 @@ final class SimpleConveyer implements Closeable {
     private static String address() {
         String address;
         try {
-            address = RestTester.start(
-                URI.create("http://169.254.169.254/latest/meta-data/public-ipv4")
-            ).get("fetch EC2 public IP").getBody();
+            address = RestTester.start(SimpleConveyer.META_IP)
+                .get("fetch EC2 public IP").getBody();
         } catch (AssertionError ex) {
             address = "localhost";
         }
