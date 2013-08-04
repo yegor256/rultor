@@ -37,8 +37,10 @@ import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.Validate;
 import org.w3c.dom.Document;
 import org.xembly.Directives;
+import org.xembly.ImpossibleModificationException;
 import org.xembly.Xembler;
 import org.xembly.XemblyBuilder;
+import org.xembly.XemblySyntaxException;
 
 /**
  * Detail in Xembly.
@@ -84,7 +86,13 @@ public final class XemblyDetail implements Detail {
      */
     @Override
     public void refine(final Document story) {
-        new Xembler(new Directives(this.script)).exec(story);
+        try {
+            new Xembler(new Directives(this.script)).exec(story);
+        } catch (ImpossibleModificationException ex) {
+            Logger.warn(this, ex.getMessage());
+        } catch (XemblySyntaxException ex) {
+            Logger.warn(this, ex.getMessage());
+        }
     }
 
     /**

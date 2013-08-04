@@ -58,20 +58,19 @@ public final class PulseOfDrainTest {
             .append(
                 new XemblyDetail(
                     new XemblyBuilder()
-                        .xpath("/spanshot")
+                        .xpath("/snapshot")
                         .add("test")
-                        .set("hello, world!")
+                        .set("hello, друг!")
                         .toString()
                 ).toString()
             )
             .append("\nHow are you?\n")
             .toString();
-        System.out.println("stream: " + stream);
         Mockito.doReturn(IOUtils.toInputStream(stream)).when(drain).read();
         final Pulse pulse = new PulseOfDrain(drain);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(pulse.snapshot().xml()),
-            XhtmlMatchers.hasXPath("/snapshot[test='hello, world']")
+            XhtmlMatchers.hasXPath("/snapshot[test='hello, друг!']")
         );
     }
 

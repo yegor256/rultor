@@ -57,18 +57,20 @@ public final class SnapshotInStreamTest {
                             .append(
                                 new XemblyDetail(
                                     new XemblyBuilder()
-                                        .xpath("/spanshot")
+                                        .xpath("/snapshot")
+                                        .strict(1)
                                         .add("test")
-                                        .set("hello, world!")
+                                        .strict(1)
+                                        .set("hello, друг!")
                                         .toString()
                                 ).toString()
                             )
                             .append("\nHow are you?\n")
                             .toString()
                     )
-                ).xml()
+                ).xml().getDocumentElement()
             ),
-            XhtmlMatchers.hasXPath("/snapshot[test='hello, world']")
+            XhtmlMatchers.hasXPath("/snapshot[test='hello, друг!']")
         );
     }
 
