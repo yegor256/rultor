@@ -70,7 +70,7 @@ public final class PulseOfDrainTest {
         final Pulse pulse = new PulseOfDrain(drain);
         MatcherAssert.assertThat(
             pulse.snapshot().xembly(),
-            Matchers.containsString("ADD 'test';")
+            Matchers.containsString("ADD \"test\";")
         );
     }
 

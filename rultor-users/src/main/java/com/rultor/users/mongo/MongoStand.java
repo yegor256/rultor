@@ -29,6 +29,7 @@
  */
 package com.rultor.users.mongo;
 
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
@@ -291,6 +292,7 @@ final class MongoStand implements Stand {
      * Collection.
      * @return Mongo collection
      */
+    @Cacheable(forever = true)
     private DBCollection collection() {
         try {
             return this.mongo.get().getCollection(MongoStand.TABLE);

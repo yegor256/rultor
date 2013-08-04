@@ -46,6 +46,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.xembly.XemblyBuilder;
 
 /**
  * Stand front page.
@@ -139,7 +140,13 @@ public final class StandRs extends BaseRs {
     private JaxbBundle pulse(final Pulse pulse) {
         try {
             return new JaxbBundle("pulse").add(
-                new Snapshot.XML(pulse.snapshot()).dom().getDocumentElement()
+                new Snapshot.XML(
+                    new StringBuilder(pulse.snapshot().xembly()).append(
+                        new XemblyBuilder()
+                            .xpath("/snapshot/spec")
+                            .remove()
+                    ).toString()
+                ).dom().getDocumentElement()
             );
         } catch (IOException ex) {
             throw this.flash().redirect(
