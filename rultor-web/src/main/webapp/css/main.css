@@ -51,6 +51,8 @@ body {
 
 code {
     color: inherit;
+    background-color: #eee;
+    border: 1px solid #ccc;
     font-family: 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
 }
 textarea {
