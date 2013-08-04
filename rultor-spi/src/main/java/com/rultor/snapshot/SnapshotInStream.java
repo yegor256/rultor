@@ -83,7 +83,7 @@ public final class SnapshotInStream implements Snapshot {
             throw new IllegalStateException(ex);
         }
         final Element root = dom.createElement("snapshot");
-        dom.adoptNode(root);
+        dom.appendChild(root);
         for (Detail detail : this.details) {
             detail.refine(dom);
         }
