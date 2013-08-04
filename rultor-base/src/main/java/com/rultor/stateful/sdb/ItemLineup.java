@@ -143,7 +143,7 @@ public final class ItemLineup implements Lineup {
             if (saved.equals(marker)) {
                 break;
             }
-            Logger.debug(
+            Logger.info(
                 this,
                 "SimpleDB object `%s/%s` is locked by `%s`, let's wait...",
                 this.client.domain(),
