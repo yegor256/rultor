@@ -98,7 +98,7 @@ public final class PulseRs extends BaseRs {
      */
     @GET
     @Path("/stream")
-    @Produces("text/html; charset=UTF-8")
+    @Produces("text/plain; charset=UTF-8")
     public String stream() {
         try {
             return IOUtils.toString(this.pulse().stream());
