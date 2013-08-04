@@ -34,11 +34,10 @@ import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
-import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
+import com.jcabi.log.VerboseThreads;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.ACL;
 import com.rultor.spi.Arguments;
@@ -51,6 +50,8 @@ import com.rultor.spi.Work;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -63,12 +64,24 @@ import lombok.EqualsAndHashCode;
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Immutable
 @Loggable(Loggable.DEBUG)
-@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.SECONDS)
 @EqualsAndHashCode(of = { "users", "client" })
 @SuppressWarnings("PMD.DoNotUseThreads")
 public final class SQSPulseSensor implements Runnable, Closeable {
+
+    /**
+     * How many threads to use.
+     */
+    private static final int THREADS =
+        Runtime.getRuntime().availableProcessors() * Tv.FIVE;
+
+    /**
+     * Executor service.
+     */
+    private final transient ScheduledExecutorService service =
+        Executors.newScheduledThreadPool(
+            SQSPulseSensor.THREADS, new VerboseThreads()
+        );
 
     /**
      * Users.
@@ -96,6 +109,12 @@ public final class SQSPulseSensor implements Runnable, Closeable {
         this.users = usr;
         this.repo = rpo;
         this.client = clnt;
+        for (int thread = 0; thread < SQSPulseSensor.THREADS; ++thread) {
+            this.service.scheduleWithFixedDelay(
+                this, TimeUnit.SECONDS.toMillis(1), 1,
+                TimeUnit.MILLISECONDS
+            );
+        }
     }
 
     /**
@@ -136,7 +155,7 @@ public final class SQSPulseSensor implements Runnable, Closeable {
      */
     @Override
     public void close() throws IOException {
-        // nothing to do
+        this.service.shutdown();
     }
 
     /**
