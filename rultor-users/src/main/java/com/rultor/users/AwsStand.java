@@ -97,7 +97,7 @@ final class AwsStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    @Cacheable.FlushAfter
     public void acl(@NotNull(message = "ACL is mandatory and can't be NULL")
         final Spec spec) {
         this.item.put(
@@ -114,7 +114,7 @@ final class AwsStand implements Stand {
      */
     @Override
     @NotNull(message = "ACL of a stand is never NULL")
-    @Cacheable.FlushAfter
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Spec acl() {
         Spec spec;
         if (this.item.has(AwsStand.FIELD_ACL)) {
