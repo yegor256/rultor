@@ -92,7 +92,7 @@ public final class XemblyDetail implements Detail {
      * @param line Line to check
      * @return TRUE if yes
      */
-    public static boolean contains(final String line) {
+    public static boolean existsIn(final String line) {
         return line.contains("χemβly");
     }
 

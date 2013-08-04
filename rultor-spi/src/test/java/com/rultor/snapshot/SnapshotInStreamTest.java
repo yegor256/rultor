@@ -27,50 +27,47 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor.snapshot;
 
 import com.rexsl.test.XhtmlMatchers;
-import com.rultor.snapshot.XemblyDetail;
-import com.rultor.spi.Drain;
-import com.rultor.spi.Pulse;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.xembly.XemblyBuilder;
 
 /**
- * Test case for {@link PulseOfDrain}.
+ * Test case for {@link SnapshotInStream}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class PulseOfDrainTest {
+public final class SnapshotInStreamTest {
 
     /**
-     * PulseOfDrain can fetch snapshot from drain.
+     * SnapshotInStream can fetch snapshot from stream.
      * @throws Exception If some problem inside
      */
     @Test
-    public void fetchesSnapshotFromDrain() throws Exception {
-        final Drain drain = Mockito.mock(Drain.class);
-        final String stream = new StringBuilder()
-            .append("hey dude!\n")
-            .append(
-                new XemblyDetail(
-                    new XemblyBuilder()
-                        .xpath("/spanshot")
-                        .add("test")
-                        .set("hello, world!")
-                        .toString()
-                ).toString()
-            )
-            .append("\nHow are you?\n")
-            .toString();
-        System.out.println("stream: " + stream);
-        Mockito.doReturn(IOUtils.toInputStream(stream)).when(drain).read();
-        final Pulse pulse = new PulseOfDrain(drain);
+    public void fetchesSnapshotFromStream() throws Exception {
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(pulse.snapshot().xml()),
+            XhtmlMatchers.xhtml(
+                new SnapshotInStream(
+                    IOUtils.toInputStream(
+                        new StringBuilder()
+                            .append("hey dude!\n")
+                            .append(
+                                new XemblyDetail(
+                                    new XemblyBuilder()
+                                        .xpath("/spanshot")
+                                        .add("test")
+                                        .set("hello, world!")
+                                        .toString()
+                                ).toString()
+                            )
+                            .append("\nHow are you?\n")
+                            .toString()
+                    )
+                ).xml()
+            ),
             XhtmlMatchers.hasXPath("/snapshot[test='hello, world']")
         );
     }

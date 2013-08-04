@@ -107,7 +107,7 @@ public final class SnapshotInStream implements Snapshot {
             if (line == null) {
                 break;
             }
-            if (XemblyDetail.contains(line)) {
+            if (XemblyDetail.existsIn(line)) {
                 details.add(XemblyDetail.parse(line));
             }
         }
