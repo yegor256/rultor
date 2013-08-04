@@ -29,17 +29,20 @@
  */
 package com.rultor.users;
 
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
+import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
-import com.jcabi.dynamo.ScanValve;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -82,16 +85,7 @@ final class AwsStands implements Stands {
      */
     @Override
     public Iterator<Stand> iterator() {
-        final Iterator<Item> items = this.region.table(AwsReceipts.TABLE)
-            .frame()
-            .where(AwsStand.HASH_OWNER, this.owner.toString())
-            .through(
-                new ScanValve()
-                    .withLimit(Tv.TWENTY)
-                    .withAttributeToGet(AwsStand.RANGE_STAND)
-                    .withAttributeToGet(AwsStand.FIELD_ACL)
-            )
-            .iterator();
+        final Iterator<Item> items = this.fetch().iterator();
         return new Iterator<Stand>() {
             @Override
             public boolean hasNext() {
@@ -112,13 +106,30 @@ final class AwsStands implements Stands {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable.FlushAfter
     public void create(final String stand) {
         this.region.table(AwsReceipts.TABLE).put(
             new Attributes()
                 .with(AwsStand.HASH_OWNER, this.owner.toString())
                 .with(AwsStand.RANGE_STAND, stand)
-                .with(AwsStand.FIELD_ACL, "")
+                .with(AwsStand.FIELD_ACL, "com.rultor.acl.Prohibited()")
         );
+    }
+
+    /**
+     * Fetch all items.
+     * @return All stands
+     */
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    private Collection<Item> fetch() {
+        return this.region.table(AwsReceipts.TABLE)
+            .frame()
+            .where(AwsStand.HASH_OWNER, this.owner.toString())
+            .through(
+                new QueryValve()
+                    .withAttributeToGet(AwsStand.RANGE_STAND)
+                    .withAttributeToGet(AwsStand.FIELD_ACL)
+            );
     }
 
 }
