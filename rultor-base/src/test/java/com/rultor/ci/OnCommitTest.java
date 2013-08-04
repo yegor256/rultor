@@ -53,6 +53,7 @@ public final class OnCommitTest {
     @Test
     public void buildsOnNewCommit() throws Exception {
         final Branch branch = Mockito.mock(Branch.class);
+        Mockito.doReturn("master").when(branch).name();
         final Commit commit = Mockito.mock(Commit.class);
         Mockito.doReturn(Arrays.asList(commit)).when(branch).log();
         final Notepad notepad = Mockito.mock(Notepad.class);
