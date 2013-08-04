@@ -41,7 +41,7 @@ import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Maps constraint violations to JAX-RS responses.
@@ -81,7 +81,7 @@ public final class ConstraintsMapper extends BaseResource
                 ),
                 Level.WARNING
             ).getResponse()
-        ).entity(ExceptionUtils.getFullStackTrace(violation)).build();
+        ).entity(ExceptionUtils.getRootCauseStackTrace(violation)).build();
     }
 
 }
