@@ -141,8 +141,8 @@ public final class Standed implements Drain {
         return new SequenceInputStream(
             IOUtils.toInputStream(
                 String.format(
-                    "Standed: stand='%s', origin='%s'\n",
-                    this.stand, this.origin
+                    "Standed: stand='%s'\n",
+                    this.stand
                 )
             ),
             this.origin.read()
