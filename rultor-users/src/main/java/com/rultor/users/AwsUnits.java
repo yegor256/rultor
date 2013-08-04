@@ -163,7 +163,8 @@ final class AwsUnits implements Units {
         final Collection<Item> items = this.region.table(AwsUnit.TABLE)
             .frame()
             .where(AwsUnit.HASH_OWNER, this.owner.toString())
-            .where(AwsUnit.RANGE_NAME, unit);
+            .where(AwsUnit.RANGE_NAME, unit)
+            .through(new QueryValve().withAttributeToGet(AwsUnit.FIELD_SPEC));
         if (items.isEmpty()) {
             throw new NoSuchElementException(
                 String.format("Unit `%s` doesn't exist", unit)
