@@ -35,14 +35,14 @@ import org.junit.Test;
 import org.xembly.XemblyBuilder;
 
 /**
- * Test case for {@link XemblyDetail}.
+ * Test case for {@link XemblyLine}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class XemblyDetailTest {
+public final class XemblyLineTest {
 
     /**
-     * XemblyDetail can print and parse.
+     * XemblyLine can print and parse.
      * @throws Exception If some problem inside
      */
     @Test
@@ -53,11 +53,11 @@ public final class XemblyDetailTest {
             .set("hello, world!")
             .toString();
         MatcherAssert.assertThat(
-            XemblyDetail.existsIn(new XemblyDetail(xembly).toString()),
+            XemblyLine.existsIn(new XemblyLine(xembly).toString()),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(
-            XemblyDetail.parse(new XemblyDetail(xembly).toString()).toString(),
+            XemblyLine.parse(new XemblyLine(xembly).toString()).toString(),
             Matchers.containsString(xembly)
         );
     }

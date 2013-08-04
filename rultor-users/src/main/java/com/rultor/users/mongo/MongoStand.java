@@ -52,19 +52,10 @@ import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
-import org.w3c.dom.Document;
-import org.xembly.Directives;
-import org.xembly.ImpossibleModificationException;
-import org.xembly.Xembler;
-import org.xembly.XemblySyntaxException;
-import org.xml.sax.SAXException;
 
 /**
  * Stand in Mongo.
@@ -74,7 +65,7 @@ import org.xml.sax.SAXException;
  *   pulse: String,
  *   stand: String,
  *   updated: Time,
- *   snapshot: String,
+ *   xembly: String,
  *   tags: String[]
  * };
  * </pre>
@@ -114,7 +105,7 @@ final class MongoStand implements Stand {
     /**
      * MongoDB table column.
      */
-    public static final String ATTR_SNAPSHOT = "snapshot";
+    public static final String ATTR_XEMBLY = "xembly";
 
     /**
      * MongoDB table column.
@@ -146,15 +137,10 @@ final class MongoStand implements Stand {
      */
     @Override
     public void post(final String pulse, final String xembly) {
-        final Document dom = this.previous(pulse);
-        try {
-            new Xembler(new Directives(xembly)).exec(dom);
-        } catch (XemblySyntaxException ex) {
-            throw new IllegalArgumentException(ex);
-        } catch (ImpossibleModificationException ex) {
-            throw new IllegalArgumentException(ex);
-        }
-        final XmlDocument xml = new SimpleXml(new DOMSource(dom));
+        final String script = this.append(pulse, xembly);
+        final XmlDocument xml = new SimpleXml(
+            new DOMSource(new Snapshot.XML(script).dom())
+        );
         final WriteResult result = this.collection().update(
             new BasicDBObject()
                 .append(MongoStand.ATTR_PULSE, pulse)
@@ -163,7 +149,7 @@ final class MongoStand implements Stand {
                 .append(MongoStand.ATTR_PULSE, pulse)
                 .append(MongoStand.ATTR_STAND, this.name())
                 .append(MongoStand.ATTR_UPDATED, new Time().toString())
-                .append(MongoStand.ATTR_SNAPSHOT, xml.toString())
+                .append(MongoStand.ATTR_XEMBLY, script)
                 .append(MongoStand.ATTR_TAGS, this.tags(xml)),
             true, false
         );
@@ -224,24 +210,23 @@ final class MongoStand implements Stand {
     }
 
     /**
-     * Load previous XML of snapshot.
+     * Load previous script of snapshot and append this suffix to it.
      * @param pulse Pulse to read
-     * @return DOM
+     * @param xembly Suffix to append
+     * @return New script
      */
-    private Document previous(final String pulse) {
+    private String append(final String pulse, final String xembly) {
         final DBCursor cursor = this.collection().find(
             new BasicDBObject()
                 .append(MongoStand.ATTR_PULSE, pulse)
                 .append(MongoStand.ATTR_STAND, this.name())
         );
         try {
-            final String xml;
+            final StringBuilder script = new StringBuilder();
             if (cursor.hasNext()) {
-                xml = cursor.next().get(MongoStand.ATTR_SNAPSHOT).toString();
-            } else {
-                xml = "<snapshot/>";
+                script.append(cursor.next().get(MongoStand.ATTR_XEMBLY));
             }
-            return MongoStand.document(xml);
+            return script.append(xembly).toString();
         } finally {
             cursor.close();
         }
@@ -286,9 +271,7 @@ final class MongoStand implements Stand {
                     @Override
                     public Snapshot snapshot() throws IOException {
                         return MongoStand.snapshot(
-                            cursor.next().get(
-                                MongoStand.ATTR_SNAPSHOT
-                            ).toString()
+                            cursor.next().get(MongoStand.ATTR_XEMBLY).toString()
                         );
                     }
                     @Override
@@ -317,36 +300,17 @@ final class MongoStand implements Stand {
     }
 
     /**
-     * Make snapshot from XML.
-     * @param xml XML
+     * Make snapshot from xembly.
+     * @param xembly Xembly script
      * @return Snapshot
      */
-    private static Snapshot snapshot(final String xml) {
+    private static Snapshot snapshot(final String xembly) {
         return new Snapshot() {
             @Override
-            public Document xml() {
-                return MongoStand.document(xml);
+            public String xembly() {
+                return xembly;
             }
         };
-    }
-
-    /**
-     * Parse XML into DOM object.
-     * @param xml XML
-     * @return DOM document
-     */
-    private static Document document(final String xml) {
-        try {
-            return DocumentBuilderFactory.newInstance()
-                .newDocumentBuilder()
-                .parse(IOUtils.toInputStream(xml));
-        } catch (ParserConfigurationException ex) {
-            throw new IllegalStateException(ex);
-        } catch (SAXException ex) {
-            throw new IllegalStateException(ex);
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
-        }
     }
 
 }

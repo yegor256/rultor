@@ -30,8 +30,17 @@
 package com.rultor.snapshot;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.w3c.dom.Document;
+import org.xembly.Directives;
+import org.xembly.ImpossibleModificationException;
+import org.xembly.Xembler;
+import org.xembly.XemblySyntaxException;
 
 /**
  * Snapshot.
@@ -44,10 +53,60 @@ import org.w3c.dom.Document;
 public interface Snapshot {
 
     /**
-     * Print it as an XML document.
-     * @return XML
+     * Print it as a Xembly document.
+     * @return Xembly script
      */
-    @NotNull(message = "output XML is never NULL")
-    Document xml();
+    @NotNull(message = "output Xembly is never NULL")
+    String xembly();
+
+    /**
+     * Xembly to document formatter.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "xembly")
+    @Loggable(Loggable.DEBUG)
+    final class XML {
+        /**
+         * Script.
+         */
+        private final transient String xembly;
+        /**
+         * Public ctor.
+         * @param snapshot Snapshot
+         */
+        public XML(final Snapshot snapshot) {
+            this(snapshot.xembly());
+        }
+        /**
+         * Public ctor.
+         * @param script Script
+         */
+        public XML(final String script) {
+            this.xembly = script;
+        }
+        /**
+         * Convert it to DOM document.
+         * @return DOM document
+         */
+        public Document dom() {
+            final Document dom;
+            try {
+                dom = DocumentBuilderFactory.newInstance()
+                    .newDocumentBuilder().newDocument();
+            } catch (ParserConfigurationException ex) {
+                throw new IllegalStateException(ex);
+            }
+            dom.appendChild(dom.createElement("snapshot"));
+            try {
+                new Xembler(new Directives(this.xembly)).exec(dom);
+            } catch (XemblySyntaxException ex) {
+                throw new IllegalArgumentException(ex);
+            } catch (ImpossibleModificationException ex) {
+                throw new IllegalArgumentException(ex);
+            }
+            return dom;
+        }
+    }
 
 }

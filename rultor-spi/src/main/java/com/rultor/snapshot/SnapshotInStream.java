@@ -30,35 +30,28 @@
 package com.rultor.snapshot;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.immutable.Array;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Collection;
-import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import lombok.EqualsAndHashCode;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
- * Snapshot.
+ * Snapshot in stream.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = "details")
+@EqualsAndHashCode(of = "script")
 public final class SnapshotInStream implements Snapshot {
 
     /**
-     * Details.
+     * Script.
      */
-    private final transient Array<Detail> details;
+    private final transient String script;
 
     /**
      * Public ctor.
@@ -66,7 +59,20 @@ public final class SnapshotInStream implements Snapshot {
      * @throws IOException If IO problem inside
      */
     public SnapshotInStream(final InputStream stream) throws IOException {
-        this.details = new Array<Detail>(SnapshotInStream.fetch(stream));
+        final BufferedReader reader = new BufferedReader(
+            new InputStreamReader(stream)
+        );
+        final StringBuilder buf = new StringBuilder();
+        while (true) {
+            final String line = reader.readLine();
+            if (line == null) {
+                break;
+            }
+            if (XemblyLine.existsIn(line)) {
+                buf.append(XemblyLine.parse(line).xembly());
+            }
+        }
+        this.script = buf.toString();
     }
 
     /**
@@ -74,44 +80,8 @@ public final class SnapshotInStream implements Snapshot {
      */
     @Override
     @NotNull(message = "output XML is never NULL")
-    public Document xml() {
-        final Document dom;
-        try {
-            dom = DocumentBuilderFactory.newInstance()
-                .newDocumentBuilder().newDocument();
-        } catch (ParserConfigurationException ex) {
-            throw new IllegalStateException(ex);
-        }
-        final Element root = dom.createElement("snapshot");
-        dom.appendChild(root);
-        for (Detail detail : this.details) {
-            detail.refine(dom);
-        }
-        return dom;
-    }
-
-    /**
-     * Fetch them from input stream.
-     * @param stream Input stream
-     * @return Iterator of details
-     * @throws IOException If fails on IO problem
-     */
-    private static Collection<Detail> fetch(final InputStream stream)
-        throws IOException {
-        final BufferedReader reader = new BufferedReader(
-            new InputStreamReader(stream)
-        );
-        final Collection<Detail> details = new LinkedList<Detail>();
-        while (true) {
-            final String line = reader.readLine();
-            if (line == null) {
-                break;
-            }
-            if (XemblyDetail.existsIn(line)) {
-                details.add(XemblyDetail.parse(line));
-            }
-        }
-        return details;
+    public String xembly() {
+        return this.script;
     }
 
 }

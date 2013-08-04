@@ -69,7 +69,7 @@ public final class StepAspect {
             new ImmutableMap.Builder<String, Object>()
                 .put("this", point.getThis())
                 .put("args", point.getArgs());
-        XemblyDetail.log(
+        XemblyLine.log(
             new XemblyBuilder()
                 .xpath("/spanshot")
                 .addIfAbsent("steps").strict(1)
@@ -84,7 +84,7 @@ public final class StepAspect {
             if (result != null) {
                 args.put("result", result);
             }
-            XemblyDetail.log(
+            XemblyLine.log(
                 new XemblyBuilder()
                     .xpath(String.format("//step[@id='%s']/summary", label))
                     .strict(1)
@@ -96,7 +96,7 @@ public final class StepAspect {
             return result;
         // @checkstyle IllegalCatch (1 line)
         } catch (Throwable ex) {
-            XemblyDetail.log(
+            XemblyLine.log(
                 new XemblyBuilder()
                     .xpath(String.format("//step[@id = '%s']", label))
                     .strict(1)
@@ -104,7 +104,7 @@ public final class StepAspect {
             );
             throw ex;
         } finally {
-            XemblyDetail.log(
+            XemblyLine.log(
                 new XemblyBuilder()
                     .xpath(String.format("//step[@id='%s']", label))
                     .strict(1)

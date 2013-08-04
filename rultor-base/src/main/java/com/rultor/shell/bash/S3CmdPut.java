@@ -35,7 +35,7 @@ import com.jcabi.log.Logger;
 import com.rultor.shell.Sequel;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Terminal;
-import com.rultor.snapshot.XemblyDetail;
+import com.rultor.snapshot.XemblyLine;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -160,7 +160,7 @@ public final class S3CmdPut implements Sequel {
         } else {
             markdown = String.format("[%s](%s%1$s)", mask, url);
         }
-        XemblyDetail.log(
+        XemblyLine.log(
             new XemblyBuilder()
                 .xpath("/snapshot")
                 .addIfAbsent("products")

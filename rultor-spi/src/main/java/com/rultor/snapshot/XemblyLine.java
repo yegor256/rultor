@@ -35,15 +35,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.Validate;
-import org.w3c.dom.Document;
-import org.xembly.Directives;
-import org.xembly.ImpossibleModificationException;
-import org.xembly.Xembler;
 import org.xembly.XemblyBuilder;
-import org.xembly.XemblySyntaxException;
 
 /**
- * Detail in Xembly.
+ * Log line in Xembly.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -51,7 +46,7 @@ import org.xembly.XemblySyntaxException;
  */
 @Immutable
 @EqualsAndHashCode(of = "script")
-public final class XemblyDetail implements Detail {
+public final class XemblyLine {
 
     /**
      * Pattern to use for matching.
@@ -69,7 +64,7 @@ public final class XemblyDetail implements Detail {
      * Public ctor.
      * @param scrpt Xembly script to encapsulate
      */
-    public XemblyDetail(final String scrpt) {
+    public XemblyLine(final String scrpt) {
         this.script = scrpt;
     }
 
@@ -82,17 +77,11 @@ public final class XemblyDetail implements Detail {
     }
 
     /**
-     * {@inheritDoc}
+     * Get Xembly script.
+     * @return Script
      */
-    @Override
-    public void refine(final Document story) {
-        try {
-            new Xembler(new Directives(this.script)).exec(story);
-        } catch (ImpossibleModificationException ex) {
-            Logger.warn(this, ex.getMessage());
-        } catch (XemblySyntaxException ex) {
-            Logger.warn(this, ex.getMessage());
-        }
+    public String xembly() {
+        return this.script;
     }
 
     /**
@@ -109,10 +98,10 @@ public final class XemblyDetail implements Detail {
      * @param text Text to decode
      * @return Detail found or runtime exception
      */
-    public static Detail parse(final String text) {
-        final Matcher matcher = XemblyDetail.PTN.matcher(text);
+    public static XemblyLine parse(final String text) {
+        final Matcher matcher = XemblyLine.PTN.matcher(text);
         Validate.isTrue(matcher.matches(), "invalid line '%s'", text);
-        return new XemblyDetail(matcher.group(1));
+        return new XemblyLine(matcher.group(1));
     }
 
     /**
@@ -121,8 +110,8 @@ public final class XemblyDetail implements Detail {
      */
     public static void log(final XemblyBuilder builder) {
         Logger.info(
-            XemblyDetail.class,
-            new XemblyDetail(builder.toString()).toString()
+            XemblyLine.class,
+            new XemblyLine(builder.toString()).toString()
         );
     }
 

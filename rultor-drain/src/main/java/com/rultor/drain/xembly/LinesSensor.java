@@ -33,7 +33,7 @@ import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.rultor.snapshot.XemblyDetail;
+import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
 import com.rultor.stateful.Spinbox;
@@ -117,7 +117,7 @@ public final class LinesSensor implements Drain {
         final long before = this.spinbox.add(0);
         final long after = this.spinbox.add(Iterables.size(lines));
         if ((after / this.delta) * this.delta > before) {
-            XemblyDetail.log(
+            XemblyLine.log(
                 new XemblyBuilder()
                     .xpath("/spanshot")
                     .addIfAbsent("lines")

@@ -33,7 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.LogExceptions;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
-import com.rultor.snapshot.XemblyDetail;
+import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
@@ -83,7 +83,7 @@ public final class Descriptive implements Instance {
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
         final long start = System.currentTimeMillis();
-        XemblyDetail.log(
+        XemblyLine.log(
             new XemblyBuilder()
                 .xpath("/snapshot[not(work)]")
                 .add("work")
@@ -96,19 +96,19 @@ public final class Descriptive implements Instance {
                 .add("started")
                 .set(this.work.started().toString())
         );
-        XemblyDetail.log(
+        XemblyLine.log(
             new XemblyBuilder()
                 .xpath("/snapshot[not(started)]")
                 .add("start")
                 .set(new Time().toString())
         );
-        XemblyDetail.log(
+        XemblyLine.log(
             new XemblyBuilder()
                 .xpath("/snapshot[not(stdout)]")
                 .add("stdout")
                 .set(this.work.stdout().toString())
         );
-        XemblyDetail.log(
+        XemblyLine.log(
             new XemblyBuilder()
                 .xpath("/snapshot[not(version)]")
                 .add("version")
@@ -121,7 +121,7 @@ public final class Descriptive implements Instance {
                     )
                 )
         );
-        XemblyDetail.log(
+        XemblyLine.log(
             new XemblyBuilder()
                 .xpath("/snapshot[not(spec)]")
                 .add("spec")
@@ -130,16 +130,16 @@ public final class Descriptive implements Instance {
         try {
             this.origin.pulse();
         } finally {
-            XemblyDetail.log(
+            XemblyLine.log(
                 new XemblyBuilder().xpath("/snapshot/stdout").remove()
             );
-            XemblyDetail.log(
+            XemblyLine.log(
                 new XemblyBuilder()
                     .xpath("/snapshot[not(finish)]")
                     .add("finish")
                     .set(new Time().toString())
             );
-            XemblyDetail.log(
+            XemblyLine.log(
                 new XemblyBuilder()
                     .xpath("/snapshot[not(duration)]")
                     .add("duration")

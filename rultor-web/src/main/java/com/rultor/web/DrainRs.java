@@ -278,7 +278,7 @@ public final class DrainRs extends BaseRs {
         return new JaxbBundle("pulse")
             .add("time", time.toString())
             .up()
-            .add(snapshot.xml().getDocumentElement())
+            .add(new Snapshot.XML(snapshot).dom().getDocumentElement())
             .link(
                 new Link(
                     // @checkstyle MultipleStringLiterals (1 line)

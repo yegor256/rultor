@@ -33,6 +33,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.PageBuilder;
+import com.rultor.snapshot.Snapshot;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
 import java.io.IOException;
@@ -137,8 +138,9 @@ public final class StandRs extends BaseRs {
      */
     private JaxbBundle pulse(final Pulse pulse) {
         try {
-            return new JaxbBundle("pulse")
-                .add(pulse.snapshot().xml().getDocumentElement());
+            return new JaxbBundle("pulse").add(
+                new Snapshot.XML(pulse.snapshot()).dom().getDocumentElement()
+            );
         } catch (IOException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),

@@ -29,9 +29,9 @@
  */
 package com.rultor.snapshot;
 
-import com.rexsl.test.XhtmlMatchers;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.xembly.XemblyBuilder;
 
@@ -49,28 +49,26 @@ public final class SnapshotInStreamTest {
     @Test
     public void fetchesSnapshotFromStream() throws Exception {
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(
-                new SnapshotInStream(
-                    IOUtils.toInputStream(
-                        new StringBuilder()
-                            .append("hey dude!\n")
-                            .append(
-                                new XemblyDetail(
-                                    new XemblyBuilder()
-                                        .xpath("/snapshot")
-                                        .strict(1)
-                                        .add("test")
-                                        .strict(1)
-                                        .set("hello, друг!")
-                                        .toString()
-                                ).toString()
-                            )
-                            .append("\nHow are you?\n")
-                            .toString()
-                    )
-                ).xml().getDocumentElement()
-            ),
-            XhtmlMatchers.hasXPath("/snapshot[test='hello, друг!']")
+            new SnapshotInStream(
+                IOUtils.toInputStream(
+                    new StringBuilder()
+                        .append("hey dude!\n")
+                        .append(
+                            new XemblyLine(
+                                new XemblyBuilder()
+                                    .xpath("/snapshot")
+                                    .strict(1)
+                                    .add("test")
+                                    .strict(1)
+                                    .set("hello, друг!")
+                                    .toString()
+                            ).toString()
+                        )
+                        .append("\nHow are you?\n")
+                        .toString()
+                )
+            ).xembly(),
+            Matchers.containsString("ADD \"test\";")
         );
     }
 

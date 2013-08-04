@@ -29,12 +29,12 @@
  */
 package com.rultor.web;
 
-import com.rexsl.test.XhtmlMatchers;
-import com.rultor.snapshot.XemblyDetail;
+import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xembly.XemblyBuilder;
@@ -56,7 +56,7 @@ public final class PulseOfDrainTest {
         final String stream = new StringBuilder()
             .append("hey dude!\n")
             .append(
-                new XemblyDetail(
+                new XemblyLine(
                     new XemblyBuilder()
                         .xpath("/snapshot")
                         .add("test")
@@ -69,8 +69,8 @@ public final class PulseOfDrainTest {
         Mockito.doReturn(IOUtils.toInputStream(stream)).when(drain).read();
         final Pulse pulse = new PulseOfDrain(drain);
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(pulse.snapshot().xml()),
-            XhtmlMatchers.hasXPath("/snapshot[test='hello, друг!']")
+            pulse.snapshot().xembly(),
+            Matchers.containsString("ADD 'test';")
         );
     }
 
