@@ -157,7 +157,6 @@ final class AwsUnits implements Units {
      * {@inheritDoc}
      */
     @Override
-    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Unit get(@NotNull(message = "unit name can't be NULL")
         final String unit) {
         final Collection<Item> items = this.region.table(AwsUnit.TABLE)
