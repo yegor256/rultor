@@ -81,7 +81,7 @@ public final class SQSQuartzTest {
         final Queue queue = Mockito.mock(Queue.class);
         final SQSClient client = Mockito.mock(SQSClient.class);
         final AmazonSQS aws = Mockito.mock(AmazonSQS.class);
-        final Time time = new Time("2013-07-21T13:36Z");
+        final Time time = new Time("2013-07-21T13:36:00Z");
         final String handle = "some-random-text";
         Mockito.doReturn(aws).when(client).get();
         Mockito.doReturn(
@@ -100,7 +100,7 @@ public final class SQSQuartzTest {
             Mockito.argThat(
                 Matchers.<SendMessageRequest>hasProperty(
                     "messageBody",
-                    Matchers.equalTo("2013-07-21T13:37Z")
+                    Matchers.equalTo("2013-07-21T13:37:00Z")
                 )
             )
         );

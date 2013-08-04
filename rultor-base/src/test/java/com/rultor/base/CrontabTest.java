@@ -132,27 +132,27 @@ public final class CrontabTest {
         );
         MatcherAssert.assertThat(
             new Crontab(work, "12 * * * *", org)
-                .lag(new Time("2013-05-03T10:10Z")),
+                .lag(new Time("2013-05-03T10:10:00Z")),
             Matchers.equalTo(TimeUnit.MINUTES.toMillis(2))
         );
         MatcherAssert.assertThat(
             new Crontab(work, "*/15 * * * *", org)
-                .lag(new Time("2013-05-04T10:13Z")),
+                .lag(new Time("2013-05-04T10:13:00Z")),
             Matchers.equalTo(TimeUnit.MINUTES.toMillis(2))
         );
         MatcherAssert.assertThat(
             new Crontab(work, "*/16 * * * *", org)
-                .lag(new Time("2013-05-04T10:11Z")),
+                .lag(new Time("2013-05-04T10:11:00Z")),
             Matchers.equalTo(TimeUnit.MINUTES.toMillis(Tv.FIVE))
         );
         MatcherAssert.assertThat(
             new Crontab(work, "0 */2 * * *", org)
-                .lag(new Time("2013-05-04T09:00Z")),
+                .lag(new Time("2013-05-04T09:00:00Z")),
             Matchers.equalTo(TimeUnit.HOURS.toMillis(1))
         );
         MatcherAssert.assertThat(
             new Crontab(work, "0 0 3-5 * *", org)
-                .lag(new Time("2013-05-02T00:00Z")),
+                .lag(new Time("2013-05-02T00:00:00Z")),
             Matchers.equalTo(TimeUnit.DAYS.toMillis(1))
         );
     }

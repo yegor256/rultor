@@ -57,4 +57,17 @@ public final class TimeTest {
         );
     }
 
+    /**
+     * Time can parse ISO 8601.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void parsesIsoFormat() throws Exception {
+        final String iso = "2013-07-21T12:15:00Z";
+        MatcherAssert.assertThat(
+            new Time(iso).toString(),
+            Matchers.equalTo(iso)
+        );
+    }
+
 }

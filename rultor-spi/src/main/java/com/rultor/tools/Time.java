@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -40,6 +41,7 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 
 /**
  * Time.
@@ -56,7 +58,7 @@ public final class Time implements Comparable<Time> {
     /**
      * ISO 8601.
      */
-    private static final String FORMAT = "yyyy-MM-dd'T'HH:mm'Z'";
+    private static final String FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
     /**
      * Milliseconds.
@@ -135,6 +137,14 @@ public final class Time implements Comparable<Time> {
      */
     public Date date() {
         return new Date(this.msec);
+    }
+
+    /**
+     * Get rid of seconds and milliseconds.
+     * @return New time without seconds and milliseconds
+     */
+    public Time round() {
+        return new Time(DateUtils.truncate(this.date(), Calendar.MINUTE));
     }
 
     /**

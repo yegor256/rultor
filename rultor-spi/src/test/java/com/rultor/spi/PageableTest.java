@@ -48,8 +48,8 @@ public final class PageableTest {
      */
     @Test
     public void sortsElementsInRightOrder() throws Exception {
-        final Time fresh = new Time("2013-07-21T12:15Z");
-        final Time old = new Time("2011-07-21T12:15Z");
+        final Time fresh = new Time("2013-07-21T12:15:00Z");
+        final Time old = new Time("2011-07-21T12:15:00Z");
         final Pageable<Time> pulses = new Pageable.Array<Time>(
             Arrays.asList(fresh, old)
         );

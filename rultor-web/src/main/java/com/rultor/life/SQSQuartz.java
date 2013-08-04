@@ -150,7 +150,7 @@ public final class SQSQuartz implements Runnable, Closeable {
         }
         final Time next = new Time(
             previous.millis() + TimeUnit.MINUTES.toMillis(1)
-        );
+        ).round();
         aws.sendMessage(
             new SendMessageRequest()
                 .withQueueUrl(this.client.url())
