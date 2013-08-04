@@ -41,6 +41,7 @@ import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
  * Maps constraint violations to JAX-RS responses.
@@ -70,15 +71,17 @@ public final class ConstraintsMapper extends BaseResource
         for (ConstraintViolation<?> vio : violation.getConstraintViolations()) {
             violations.add(vio.getMessage());
         }
-        return FlashInset.forward(
-            this.uriInfo().getRequestUri(),
-            Logger.format(
-                "%s: %[list]s",
-                msg,
-                violations
-            ),
-            Level.WARNING
-        ).getResponse();
+        return Response.fromResponse(
+            FlashInset.forward(
+                this.uriInfo().getRequestUri(),
+                Logger.format(
+                    "%s: %[list]s",
+                    msg,
+                    violations
+                ),
+                Level.WARNING
+            ).getResponse()
+        ).entity(ExceptionUtils.getFullStackTrace(violation)).build();
     }
 
 }
