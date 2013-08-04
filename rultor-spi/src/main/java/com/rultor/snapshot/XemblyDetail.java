@@ -93,7 +93,7 @@ public final class XemblyDetail implements Detail {
      * @return TRUE if yes
      */
     public static boolean contains(final String line) {
-        return XemblyDetail.PTN.matcher(line).matches();
+        return line.contains("χemβly");
     }
 
     /**
