@@ -30,8 +30,10 @@
 package com.rultor.users;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
 import com.jcabi.urn.URN;
@@ -39,6 +41,7 @@ import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -94,6 +97,7 @@ final class AwsStand implements Stand {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public void acl(@NotNull(message = "ACL is mandatory and can't be NULL")
         final Spec spec) {
         this.item.put(
@@ -110,6 +114,7 @@ final class AwsStand implements Stand {
      */
     @Override
     @NotNull(message = "ACL of a stand is never NULL")
+    @Cacheable.FlushAfter
     public Spec acl() {
         Spec spec;
         if (this.item.has(AwsStand.FIELD_ACL)) {

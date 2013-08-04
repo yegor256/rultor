@@ -133,11 +133,7 @@ final class AwsStands implements Stands {
         return this.region.table(AwsStand.TABLE)
             .frame()
             .where(AwsStand.HASH_OWNER, this.owner.toString())
-            .through(
-                new QueryValve()
-                    .withAttributeToGet(AwsStand.RANGE_STAND)
-                    .withAttributeToGet(AwsStand.FIELD_ACL)
-            );
+            .through(new QueryValve().withAttributeToGet(AwsStand.RANGE_STAND));
     }
 
 }

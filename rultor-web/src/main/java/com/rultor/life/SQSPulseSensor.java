@@ -131,7 +131,7 @@ public final class SQSPulseSensor implements Runnable, Closeable {
         final ReceiveMessageResult result = aws.receiveMessage(
             new ReceiveMessageRequest()
                 .withQueueUrl(this.client.url())
-                .withWaitTimeSeconds(0)
+                .withWaitTimeSeconds(Tv.TWENTY)
                 .withVisibilityTimeout(Tv.FIVE)
                 .withMaxNumberOfMessages(Tv.TEN)
         );

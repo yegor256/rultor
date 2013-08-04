@@ -32,8 +32,10 @@ package com.rultor.users;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableRequest;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.log.Logger;
@@ -49,6 +51,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -142,6 +145,7 @@ public final class AwsUsers implements Users {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Stand stand(final String stand) {
         final Collection<Item> items = this.region.table(AwsStand.TABLE)
             .frame()
