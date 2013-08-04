@@ -94,7 +94,6 @@ final class AwsUnit implements Unit {
      * {@inheritDoc}
      */
     @Override
-    @Cacheable.FlushBefore
     public void update(@NotNull(message = "spec is mandatory and can't be NULL")
         final Spec spec) {
         this.item.put(
@@ -111,7 +110,6 @@ final class AwsUnit implements Unit {
      */
     @Override
     @NotNull(message = "spec of a unit is never NULL")
-    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Spec spec() {
         Spec spec;
         if (this.item.has(AwsUnit.FIELD_SPEC)) {

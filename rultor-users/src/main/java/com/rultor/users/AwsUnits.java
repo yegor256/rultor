@@ -87,12 +87,8 @@ final class AwsUnits implements Units {
      */
     @Override
     @NotNull(message = "list of units of a user is never NULL")
-    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Iterator<Unit> iterator() {
-        final Iterator<Item> items = this.region.table(AwsUnit.TABLE)
-            .frame()
-            .where(AwsUnit.HASH_OWNER, this.owner.toString())
-            .iterator();
+        final Iterator<Item> items = this.fetch().iterator();
         return new Iterator<Unit>() {
             @Override
             public boolean hasNext() {
@@ -160,6 +156,7 @@ final class AwsUnits implements Units {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Unit get(@NotNull(message = "unit name can't be NULL")
         final String unit) {
         final Collection<Item> items = this.region.table(AwsUnit.TABLE)
@@ -178,12 +175,24 @@ final class AwsUnits implements Units {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public boolean contains(final String unit) {
         return !this.region.table(AwsUnit.TABLE)
             .frame()
             .where(AwsUnit.HASH_OWNER, this.owner.toString())
             .where(AwsUnit.RANGE_NAME, unit)
             .isEmpty();
+    }
+
+    /**
+     * Fetch them all.
+     * @return All Units
+     */
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    private Collection<Item> fetch() {
+        return this.region.table(AwsUnit.TABLE)
+            .frame()
+            .where(AwsUnit.HASH_OWNER, this.owner.toString());
     }
 
 }

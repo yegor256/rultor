@@ -43,5 +43,43 @@
                 for sofware development teams.
             </xsl:text>
         </p>
+        <p>
+            <xsl:text>To start, login using one of your accounts at: </xsl:text>
+        </p>
+        <ul class="list-inline">
+            <xsl:if test="/page/links/link[@rel='auth-facebook']">
+                <li>
+                    <a class="btn btn-default">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
+                        </xsl:attribute>
+                        <i class="icon-facebook-sign"><xsl:comment>facebook sign</xsl:comment></i>
+                        <span class="hidden-phone"><xsl:text> Facebook</xsl:text></span>
+                    </a>
+                </li>
+            </xsl:if>
+            <xsl:if test="/page/links/link[@rel='auth-google']">
+                <li>
+                    <a class="btn btn-default">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
+                        </xsl:attribute>
+                        <i class="icon-google-plus-sign"><xsl:comment>google plus sign</xsl:comment></i>
+                        <span class="hidden-phone"><xsl:text> Google</xsl:text></span>
+                    </a>
+                </li>
+            </xsl:if>
+            <xsl:if test="/page/links/link[@rel='auth-github']">
+                <li>
+                    <a class="btn btn-default">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="/page/links/link[@rel='auth-github']/@href"/>
+                        </xsl:attribute>
+                        <i class="icon-github-sign"><xsl:comment>github sign</xsl:comment></i>
+                        <span class="hidden-phone"><xsl:text> Github</xsl:text></span>
+                    </a>
+                </li>
+            </xsl:if>
+        </ul>
     </xsl:template>
 </xsl:stylesheet>
