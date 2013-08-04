@@ -61,9 +61,7 @@
         </form>
         <xsl:choose>
             <xsl:when test="/page/units/unit">
-                <ul class="list-unstyled spacious">
-                    <xsl:apply-templates select="/page/units/unit"/>
-                </ul>
+                <xsl:apply-templates select="/page/units/unit"/>
             </xsl:when>
             <xsl:otherwise>
                 <p>
@@ -77,13 +75,13 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="unit">
-        <li class="spacious">
+        <div class="spacious">
             <ul class="list-inline">
                 <li>
                     <a title="edit this unit">
                         <xsl:if test="face/exception">
                             <xsl:attribute name="class">
-                                <xsl:text>text-error</xsl:text>
+                                <xsl:text>text-danger</xsl:text>
                             </xsl:attribute>
                         </xsl:if>
                         <xsl:attribute name="href">
@@ -124,6 +122,11 @@
                     </a>
                 </li>
             </ul>
-        </li>
+            <xsl:if test="face/exception">
+                <small class="text-danger">
+                    <code><xsl:value-of select="face/exception"/></code>
+                </small>
+            </xsl:if>
+        </div>
     </xsl:template>
 </xsl:stylesheet>

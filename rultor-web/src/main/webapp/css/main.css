@@ -78,3 +78,7 @@ p,
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
+.list-inline li:first-child {
+    padding-left: 0;
+}

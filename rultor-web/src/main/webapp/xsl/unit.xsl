@@ -72,7 +72,7 @@
         <p class="spacious">
             <xsl:choose>
                 <xsl:when test="exception">
-                    <pre class="text-error"><xsl:value-of select="exception"/></pre>
+                    <pre class="text-danger"><xsl:value-of select="exception"/></pre>
                 </xsl:when>
                 <xsl:when test="type and html">
                     <code><xsl:value-of select="type"/></code>
