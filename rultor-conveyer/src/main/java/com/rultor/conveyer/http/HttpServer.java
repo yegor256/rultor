@@ -53,8 +53,8 @@ import lombok.ToString;
  * @since 1.0
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Loggable(Loggable.DEBUG)
 @ToString
+@Loggable(Loggable.INFO)
 @EqualsAndHashCode(of = { "frontend", "backend", "sockets", "server" })
 @SuppressWarnings("PMD.DoNotUseThreads")
 public final class HttpServer implements Closeable {
@@ -117,6 +117,10 @@ public final class HttpServer implements Closeable {
                 0, 1, TimeUnit.NANOSECONDS
             );
         }
+        Logger.info(
+            this, "HTTP server started at port %d with %d thread",
+            port, HttpServer.THREADS
+        );
     }
 
     /**

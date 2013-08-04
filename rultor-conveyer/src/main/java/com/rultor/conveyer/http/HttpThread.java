@@ -97,9 +97,11 @@ final class HttpThread {
                 new InputStreamReader(socket.getInputStream())
             );
             final Matcher matcher = HttpThread.TOP.matcher(reader.readLine());
+            final OutputStream output = socket.getOutputStream();
             if (matcher.matches()) {
-                this.process(matcher.group(1), socket.getOutputStream());
+                this.process(matcher.group(1), output);
             }
+            IOUtils.closeQuietly(output);
         } catch (IOException ex) {
             Logger.warn(this, "failed to dispatch %s: %s", socket, ex);
         } finally {
@@ -121,14 +123,15 @@ final class HttpThread {
         writer.println("Cache-Control: no-cache");
         writer.println("");
         writer.flush();
-        final String key;
         if (query.endsWith("?interrupt")) {
-            key = query.substring(0, query.indexOf('?'));
-            this.streams.interrupt(key);
+            this.streams.interrupt(query.substring(0, query.indexOf('?')));
+            writer.println("interrupted OK");
+        } else if (query.isEmpty()) {
+            writer.println(this.streams.toString());
         } else {
-            key = query;
+            IOUtils.copy(this.streams.stream(query), output);
         }
-        IOUtils.copy(this.streams.stream(key), output);
+        writer.close();
     }
 
 }
