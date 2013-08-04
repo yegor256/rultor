@@ -335,7 +335,7 @@ final class Composite implements Variable<Object> {
         } catch (NotFoundException ex) {
             throw new SpecException(
                 String.format(
-                    "not found \"%s\"",
+                    "class not found \"%s\"",
                     name
                 ),
                 ex
