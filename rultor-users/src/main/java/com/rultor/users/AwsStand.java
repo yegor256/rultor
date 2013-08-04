@@ -30,10 +30,8 @@
 package com.rultor.users;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
 import com.jcabi.urn.URN;
@@ -41,7 +39,6 @@ import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
-import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
