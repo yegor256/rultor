@@ -39,9 +39,7 @@
     </xsl:template>
     <xsl:template name="content">
         <h2>
-            <xsl:text>Drain of &quot;</xsl:text>
             <xsl:value-of select="/page/unit"/>
-            <xsl:text>&quot;</xsl:text>
         </h2>
         <xsl:choose>
             <xsl:when test="/page/pulses/pulse">

@@ -112,12 +112,15 @@ public final class SQSPulseSensor implements Runnable, Closeable {
                 .withMaxNumberOfMessages(Tv.TEN)
         );
         for (Message msg : result.getMessages()) {
-            this.post(msg.getBody());
-            aws.deleteMessage(
-                new DeleteMessageRequest()
-                    .withQueueUrl(this.client.url())
-                    .withReceiptHandle(msg.getReceiptHandle())
-            );
+            try {
+                this.post(msg.getBody());
+            } finally {
+                aws.deleteMessage(
+                    new DeleteMessageRequest()
+                        .withQueueUrl(this.client.url())
+                        .withReceiptHandle(msg.getReceiptHandle())
+                );
+            }
         }
     }
 
