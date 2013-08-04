@@ -38,9 +38,7 @@
     </xsl:template>
     <xsl:template name="content">
         <h2>
-            <xsl:text>Stand &quot;</xsl:text>
             <xsl:value-of select="/page/stand/name"/>
-            <xsl:text>&quot;</xsl:text>
         </h2>
         <form method="post" class="spacious">
             <xsl:attribute name="action">

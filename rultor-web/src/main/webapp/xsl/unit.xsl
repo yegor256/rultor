@@ -38,9 +38,7 @@
     </xsl:template>
     <xsl:template name="content">
         <h2>
-            <xsl:text>Unit &quot;</xsl:text>
             <xsl:value-of select="/page/unit/name"/>
-            <xsl:text>&quot;</xsl:text>
         </h2>
         <xsl:apply-templates select="/page/face"/>
         <form method="post" class="spacious">

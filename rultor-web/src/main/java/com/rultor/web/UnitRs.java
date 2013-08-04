@@ -34,12 +34,7 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
-import com.rultor.spi.Arguments;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
-import com.rultor.spi.SpecException;
 import com.rultor.spi.Unit;
-import com.rultor.spi.Variable;
 import java.net.HttpURLConnection;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
@@ -165,43 +160,6 @@ public final class UnitRs extends BaseRs {
         } catch (NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
-    }
-
-    /**
-     * Make a spec from text.
-     * @param text Text
-     * @param type Expected type of it
-     * @return Spec
-     * @throws SpecException If invalid input
-     * @checkstyle RedundantThrows (4 lines)
-     */
-    private Spec parse(final String text, final Class<?> type)
-        throws SpecException {
-        final Spec spec = new Spec.Simple(text);
-        final Variable<?> var = new Repo.Cached(
-            this.repo(), this.user(), spec
-        ).get();
-        if (var.arguments().isEmpty()) {
-            final Object object = var.instantiate(
-                this.users(),
-                new Arguments(this.work(this.name, spec))
-            );
-            try {
-                object.toString();
-            } catch (SecurityException ex) {
-                throw new SpecException(ex);
-            }
-            if (!type.isAssignableFrom(object.getClass())) {
-                throw new SpecException(
-                    String.format(
-                        "%s expected while %s provided",
-                        type.getName(),
-                        object.getClass().getName()
-                    )
-                );
-            }
-        }
-        return new Spec.Simple(var.asText());
     }
 
     /**
