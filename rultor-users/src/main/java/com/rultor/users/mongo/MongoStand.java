@@ -234,13 +234,17 @@ final class MongoStand implements Stand {
                 .append(MongoStand.ATTR_PULSE, pulse)
                 .append(MongoStand.ATTR_STAND, this.name())
         );
-        final String xml;
-        if (cursor.hasNext()) {
-            xml = cursor.next().get(MongoStand.ATTR_SNAPSHOT).toString();
-        } else {
-            xml = "<snapshot/>";
+        try {
+            final String xml;
+            if (cursor.hasNext()) {
+                xml = cursor.next().get(MongoStand.ATTR_SNAPSHOT).toString();
+            } else {
+                xml = "<snapshot/>";
+            }
+            return MongoStand.document(xml);
+        } finally {
+            cursor.close();
         }
-        return MongoStand.document(xml);
     }
 
     /**
@@ -260,7 +264,6 @@ final class MongoStand implements Stand {
         final DBCursor cursor = this.collection().find(
             new BasicDBObject(MongoStand.ATTR_STAND, this.name())
         );
-        cursor.sort(new BasicDBObject(MongoStand.ATTR_UPDATED, -1));
         new Timer().schedule(
             new TimerTask() {
                 @Override
@@ -270,6 +273,7 @@ final class MongoStand implements Stand {
             },
             TimeUnit.SECONDS.toMillis(Tv.TEN)
         );
+        cursor.sort(new BasicDBObject(MongoStand.ATTR_UPDATED, -1));
         // @checkstyle AnonInnerLength (50 lines)
         return new Iterator<Pulse>() {
             @Override
