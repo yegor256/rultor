@@ -138,6 +138,8 @@ public final class SQSPulseSensor implements Runnable, Closeable {
         for (Message msg : result.getMessages()) {
             try {
                 this.post(msg.getBody());
+            } catch (SecurityException ex) {
+                Logger.info(this, ExceptionUtils.getRootCauseMessage(ex));
             // @checkstyle IllegalCatch (1 line)
             } catch (Exception ex) {
                 Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
@@ -177,12 +179,13 @@ public final class SQSPulseSensor implements Runnable, Closeable {
                 )
             );
         }
+        final JsonObject work = object.getJsonObject("work");
         stand.post(
             String.format(
                 "%s:%s:%s",
-                object.getString("work.owner"),
-                object.getString("work.unit"),
-                object.getString("work.started")
+                work.getString("owner"),
+                work.getString("unit"),
+                work.getString("started")
             ),
             object.getString("xembly")
         );
