@@ -74,7 +74,7 @@ public final class StepAspect {
                 .xpath("/spanshot")
                 .addIfAbsent("steps")
                 .add("step")
-                .add("id").set(label).up()
+                .attr("id", label)
                 .add("start").set(new Time().toString()).up()
                 .add("summary")
                 .set(new Vext(step.before()).print(args.build()))
@@ -83,7 +83,7 @@ public final class StepAspect {
             final Object result = point.proceed();
             XemblyDetail.log(
                 new XemblyBuilder()
-                    .xpath(String.format("//step[id='%s']/summary", label))
+                    .xpath(String.format("//step[@id='%s']/summary", label))
                     .set(
                         new Vext(step.value()).print(
                             args.put("result", result).build()
@@ -98,14 +98,14 @@ public final class StepAspect {
         } catch (Throwable ex) {
             XemblyDetail.log(
                 new XemblyBuilder()
-                    .xpath(String.format("//step[id = '%s']", label))
+                    .xpath(String.format("//step[@id = '%s']", label))
                     .add("level").set(Level.SEVERE.toString())
             );
             throw ex;
         } finally {
             XemblyDetail.log(
                 new XemblyBuilder()
-                    .xpath(String.format("//step[id='%s']", label))
+                    .xpath(String.format("//step[@id='%s']", label))
                     .add("finish").set(new Time().toString())
             );
         }
