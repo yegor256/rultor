@@ -38,6 +38,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.Logger;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.ACL;
 import com.rultor.spi.Arguments;
@@ -101,7 +102,10 @@ public final class SQSPulseSensor implements Runnable, Closeable {
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    @SuppressWarnings({
+        "PMD.AvoidInstantiatingObjectsInLoops",
+        "PMD.AvoidCatchingGenericException"
+    })
     public void run() {
         final AmazonSQS aws = this.client.get();
         final ReceiveMessageResult result = aws.receiveMessage(
@@ -114,6 +118,9 @@ public final class SQSPulseSensor implements Runnable, Closeable {
         for (Message msg : result.getMessages()) {
             try {
                 this.post(msg.getBody());
+            // @checkstyle IllegalCatch (1 line)
+            } catch (Exception ex) {
+                Logger.warn(this, "%[type]s: %s", ex, ex.getMessage());
             } finally {
                 aws.deleteMessage(
                     new DeleteMessageRequest()
