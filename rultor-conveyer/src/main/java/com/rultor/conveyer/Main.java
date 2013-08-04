@@ -256,7 +256,7 @@ public final class Main {
                 .get("read revision from web node")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .getBody();
-            if (mine.equals(base)) {
+            if (mine.equals(base) || !base.matches("[a-f0-9]+")) {
                 same = true;
             } else {
                 same = false;
