@@ -140,6 +140,10 @@ public final class Parallel implements Instance {
                 public void run() {
                     Parallel.this.active.add(key);
                 }
+                @Override
+                public String toString() {
+                    return String.format("add %s", Parallel.this.work);
+                }
             }
         );
         try {
@@ -165,6 +169,10 @@ public final class Parallel implements Instance {
                     @Override
                     public void run() {
                         Parallel.this.active.remove(key);
+                    }
+                    @Override
+                    public String toString() {
+                        return String.format("remove %s", Parallel.this.work);
                     }
                 }
             );
