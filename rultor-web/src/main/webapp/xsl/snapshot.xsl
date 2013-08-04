@@ -43,6 +43,12 @@
         </xsl:if>
         <div>
             <ul class="list-inline">
+                <xsl:if test="spec">
+                    <li>
+                        <i class="icon-beaker" style="cursor:pointer;" title="show specification"
+                            onclick="$(this).parent().parent().parent().parent().find('pre.spec').toggle();"><xsl:comment>spec</xsl:comment></i>
+                    </li>
+                </xsl:if>
                 <xsl:if test="work">
                     <xsl:apply-templates select="work"/>
                 </xsl:if>
@@ -83,6 +89,9 @@
                 </xsl:if>
             </ul>
         </div>
+        <xsl:if test="spec">
+            <pre style="display:none;" class="spec"><xsl:value-of select="spec"/></pre>
+        </xsl:if>
         <xsl:if test="products/product">
             <div>
                 <ul class="list-inline">

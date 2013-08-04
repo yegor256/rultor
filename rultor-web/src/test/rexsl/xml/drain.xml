@@ -65,7 +65,38 @@
                 </work>
                 <start>2012-08-23T13:25Z</start>
                 <eta>2013-08-23T17:57Z</eta>
-                <spec>some specificiation</spec>
+                <spec>urn:github:555555555:git-on-commit(
+  "https://github.com/rultor/rultor.git",
+  "mvn deploy -e -Pqulice -Prultor -Pdeploy-cloudbees --settings ../settings.xml",
+  {
+    "pubring.gpg": gpg-pubring(),
+    "secring.gpg": gpg-secring(),
+    "settings.xml": """
+    &lt;settings&gt;
+      &lt;profiles&gt;
+        &lt;profile&gt;
+          &lt;id&gt;rultor&lt;/id&gt;
+          &lt;properties&gt;
+            &lt;gpg.homedir&gt;/home/ubuntu/&lt;/gpg.homedir&gt;
+            &lt;gpg.keyname&gt;BFFFF&lt;/gpg.keyname&gt;
+            &lt;gpg.passphrase&gt;73829ureisoj&lt;/gpg.passphrase&gt;
+            &lt;mongo.name&gt;fdsfds&lt;/mongo.name&gt;
+            &lt;mongo.user&gt;rultor&lt;/mongo.user&gt;
+            &lt;mongo.password&gt;tttt&lt;/mongo.password&gt;
+          &lt;/properties&gt;
+        &lt;/profile&gt;
+      &lt;/profiles&gt;
+      &lt;servers&gt;
+        &lt;server&gt;
+          &lt;id&gt;oss.sonatype.org&lt;/id&gt;
+          &lt;username&gt;boom&lt;/username&gt;
+          &lt;password&gt;boom&lt;/password&gt;
+        &lt;/server&gt;
+      &lt;/servers&gt;
+    &lt;/settings&gt;
+    """
+  }
+)</spec>
                 <lines>6473</lines>
                 <tags>
                     <tag>

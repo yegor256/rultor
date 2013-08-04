@@ -85,14 +85,17 @@
     <xsl:template match="pulse">
         <div class="panel">
             <div class="panel-heading">
-                <xsl:value-of select="time"/>
-                <xsl:text> </xsl:text>
-                <a title="stream">
-                    <xsl:attribute name="href">
-                        <xsl:value-of select="links/link[@rel='stream']/@href"/>
-                    </xsl:attribute>
-                    <i class="icon-chevron-sign-right"><xsl:comment>drain</xsl:comment></i>
-                </a>
+                <ul class="list-inline" style="margin:0;">
+                    <li><xsl:value-of select="time"/></li>
+                    <li>
+                        <a title="stream">
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="links/link[@rel='stream']/@href"/>
+                            </xsl:attribute>
+                            <i class="icon-chevron-sign-right"><xsl:comment>drain</xsl:comment></i>
+                        </a>
+                    </li>
+                </ul>
             </div>
             <xsl:apply-templates select="snapshot"/>
         </div>
