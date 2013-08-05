@@ -89,6 +89,7 @@ public final class DomainLineup implements Lineup {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public <T> T exec(final Callable<T> callable) throws Exception {
         return this.lineup().exec(callable);
     }
@@ -97,7 +98,7 @@ public final class DomainLineup implements Lineup {
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void exec(final Runnable runnable) {
         this.lineup().exec(runnable);
     }
