@@ -159,6 +159,10 @@ public final class ItemLineup implements Lineup {
                         runnable.run();
                         return null;
                     }
+                    @Override
+                    public String toString() {
+                        return runnable.toString();
+                    }
                 }
             );
         // @checkstyle IllegalCatch (1 line)
