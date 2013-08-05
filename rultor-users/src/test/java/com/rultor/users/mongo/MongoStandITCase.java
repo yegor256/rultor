@@ -30,6 +30,7 @@
 package com.rultor.users.mongo;
 
 import com.jcabi.aspects.Tv;
+import com.rexsl.test.XhtmlMatchers;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
 import java.util.Iterator;
@@ -92,8 +93,8 @@ public final class MongoStandITCase {
         final Iterator<Pulse> pulses = stand.pulses().iterator();
         MatcherAssert.assertThat(pulses.hasNext(), Matchers.is(true));
         MatcherAssert.assertThat(
-            pulses.next().snapshot().xembly(),
-            Matchers.containsString("ADD 'test';")
+            XhtmlMatchers.xhtml(pulses.next().snapshot().dom()),
+            XhtmlMatchers.hasXPath("/snapshot/test[.='hello, world!']")
         );
     }
 

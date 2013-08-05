@@ -31,7 +31,10 @@ package com.rultor.snapshot;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import javax.validation.constraints.NotNull;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import lombok.EqualsAndHashCode;
@@ -50,63 +53,85 @@ import org.xembly.XemblySyntaxException;
  * @since 1.0
  */
 @Immutable
-public interface Snapshot {
+@ToString
+@EqualsAndHashCode(of = "xmbl")
+@Loggable(Loggable.DEBUG)
+public final class Snapshot {
 
     /**
-     * Print it as a Xembly document.
-     * @return Xembly script
+     * Script.
      */
-    @NotNull(message = "output Xembly is never NULL")
-    String xembly();
+    private final transient String xmbl;
 
     /**
-     * Xembly to document formatter.
+     * Public ctor.
+     * @param stream Stream to read it from
+     * @throws IOException If fails to read
      */
-    @Immutable
-    @ToString
-    @EqualsAndHashCode(of = "xembly")
-    @Loggable(Loggable.DEBUG)
-    final class XML {
-        /**
-         * Script.
-         */
-        private final transient String xembly;
-        /**
-         * Public ctor.
-         * @param snapshot Snapshot
-         */
-        public XML(final Snapshot snapshot) {
-            this(snapshot.xembly());
+    public Snapshot(final InputStream stream) throws IOException {
+        this(Snapshot.fetch(stream));
+    }
+
+    /**
+     * Public ctor.
+     * @param script Script
+     */
+    public Snapshot(final String script) {
+        this.xmbl = script;
+    }
+
+    /**
+     * Get xembly script.
+     * @return The script
+     */
+    public String xembly() {
+        return this.xmbl;
+    }
+
+    /**
+     * Convert it to DOM document.
+     * @return DOM document
+     */
+    public Document dom() {
+        final Document dom;
+        try {
+            dom = DocumentBuilderFactory.newInstance()
+                .newDocumentBuilder().newDocument();
+        } catch (ParserConfigurationException ex) {
+            throw new IllegalStateException(ex);
         }
-        /**
-         * Public ctor.
-         * @param script Script
-         */
-        public XML(final String script) {
-            this.xembly = script;
+        dom.appendChild(dom.createElement("snapshot"));
+        try {
+            new Xembler(new Directives(this.xmbl)).exec(dom);
+        } catch (XemblySyntaxException ex) {
+            throw new IllegalArgumentException(ex);
+        } catch (ImpossibleModificationException ex) {
+            throw new IllegalArgumentException(ex);
         }
-        /**
-         * Convert it to DOM document.
-         * @return DOM document
-         */
-        public Document dom() {
-            final Document dom;
-            try {
-                dom = DocumentBuilderFactory.newInstance()
-                    .newDocumentBuilder().newDocument();
-            } catch (ParserConfigurationException ex) {
-                throw new IllegalStateException(ex);
+        return dom;
+    }
+
+    /**
+     * Fetch script from the stream.
+     * @param stream Input stream where to find details
+     * @return The script
+     * @throws IOException If IO problem inside
+     */
+    private static String fetch(final InputStream stream) throws IOException {
+        final BufferedReader reader = new BufferedReader(
+            new InputStreamReader(stream)
+        );
+        final StringBuilder buf = new StringBuilder();
+        while (true) {
+            final String line = reader.readLine();
+            if (line == null) {
+                break;
             }
-            dom.appendChild(dom.createElement("snapshot"));
-            try {
-                new Xembler(new Directives(this.xembly)).exec(dom);
-            } catch (XemblySyntaxException ex) {
-                throw new IllegalArgumentException(ex);
-            } catch (ImpossibleModificationException ex) {
-                throw new IllegalArgumentException(ex);
+            if (XemblyLine.existsIn(line)) {
+                buf.append(XemblyLine.parse(line).xembly());
             }
-            return dom;
         }
+        return buf.toString();
     }
 
 }

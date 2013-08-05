@@ -140,7 +140,7 @@ final class MongoStand implements Stand {
     public void post(final String pulse, final String xembly) {
         final String script = this.append(pulse, xembly);
         final XmlDocument xml = new SimpleXml(
-            new DOMSource(new Snapshot.XML(script).dom())
+            new DOMSource(new Snapshot(script).dom())
         );
         final WriteResult result = this.collection().update(
             new BasicDBObject()
@@ -271,7 +271,7 @@ final class MongoStand implements Stand {
                 return new Pulse() {
                     @Override
                     public Snapshot snapshot() throws IOException {
-                        return MongoStand.snapshot(
+                        return new Snapshot(
                             cursor.next().get(MongoStand.ATTR_XEMBLY).toString()
                         );
                     }
@@ -299,20 +299,6 @@ final class MongoStand implements Stand {
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
-    }
-
-    /**
-     * Make snapshot from xembly.
-     * @param xembly Xembly script
-     * @return Snapshot
-     */
-    private static Snapshot snapshot(final String xembly) {
-        return new Snapshot() {
-            @Override
-            public String xembly() {
-                return xembly;
-            }
-        };
     }
 
 }

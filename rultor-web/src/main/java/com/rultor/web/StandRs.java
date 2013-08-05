@@ -140,7 +140,7 @@ public final class StandRs extends BaseRs {
     private JaxbBundle pulse(final Pulse pulse) {
         try {
             return new JaxbBundle("pulse").add(
-                new Snapshot.XML(
+                new Snapshot(
                     new StringBuilder(pulse.snapshot().xembly()).append(
                         new XemblyBuilder()
                             .xpath("/snapshot/spec")

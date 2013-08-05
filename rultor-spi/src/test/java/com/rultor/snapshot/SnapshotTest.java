@@ -29,9 +29,9 @@
  */
 package com.rultor.snapshot;
 
+import com.rexsl.test.XhtmlMatchers;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.xembly.XemblyBuilder;
 
@@ -40,7 +40,7 @@ import org.xembly.XemblyBuilder;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class SnapshotInStreamTest {
+public final class SnapshotTest {
 
     /**
      * SnapshotInStream can fetch snapshot from stream.
@@ -49,26 +49,28 @@ public final class SnapshotInStreamTest {
     @Test
     public void fetchesSnapshotFromStream() throws Exception {
         MatcherAssert.assertThat(
-            new SnapshotInStream(
-                IOUtils.toInputStream(
-                    new StringBuilder()
-                        .append("hey dude!\n")
-                        .append(
-                            new XemblyLine(
-                                new XemblyBuilder()
-                                    .xpath("/snapshot")
-                                    .strict(1)
-                                    .add("test")
-                                    .strict(1)
-                                    .set("hello, друг!")
-                                    .toString()
-                            ).toString()
-                        )
-                        .append("\nHow are you?\n")
-                        .toString()
-                )
-            ).xembly(),
-            Matchers.containsString("ADD \"test\";")
+            XhtmlMatchers.xhtml(
+                new Snapshot(
+                    IOUtils.toInputStream(
+                        new StringBuilder()
+                            .append("hey dude!\n")
+                            .append(
+                                new XemblyLine(
+                                    new XemblyBuilder()
+                                        .xpath("/snapshot")
+                                        .strict(1)
+                                        .add("test")
+                                        .strict(1)
+                                        .set("hello, друг!")
+                                        .toString()
+                                ).toString()
+                            )
+                            .append("\nHow are you?\n")
+                            .toString()
+                    )
+                ).dom()
+            ),
+            XhtmlMatchers.hasXPath("/snapshot/test[.='hello, друг!']")
         );
     }
 
