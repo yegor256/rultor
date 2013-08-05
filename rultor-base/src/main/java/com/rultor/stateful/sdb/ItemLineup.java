@@ -121,6 +121,7 @@ public final class ItemLineup implements Lineup {
      */
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public <T> T exec(final Callable<T> callable) throws Exception {
         while (true) {
             final String marker = String.format(
@@ -150,6 +151,7 @@ public final class ItemLineup implements Lineup {
      */
     @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void exec(final Runnable runnable) {
         try {
             this.exec(
