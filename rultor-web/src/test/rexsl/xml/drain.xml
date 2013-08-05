@@ -55,6 +55,13 @@
     <pulses>
         <pulse>
             <time>2012-08-23T13:23Z</time>
+            <xembly>ADD "test"; SET "some text to set"; STRICT "1";</xembly>
+            <exceptions>
+                <exception>
+                    <class>com.xembly.ImpossibleModificationException</class>
+                    <message>failed to read some xembly script</message>
+                </exception>
+            </exceptions>
             <snapshot>
                 <updated>2012-08-23T13:25Z</updated>
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
@@ -143,6 +150,12 @@
         </pulse>
         <pulse>
             <time>2012-08-23T13:23Z</time>
+            <exceptions>
+                <exception>
+                    <class>XemblySyntaxException</class>
+                    <message>failed to read some xembly script</message>
+                </exception>
+            </exceptions>
             <snapshot>
                 <updated>2012-08-23T13:25Z</updated>
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>

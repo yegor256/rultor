@@ -45,7 +45,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.w3c.dom.Document;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblyBuilder;
@@ -150,27 +149,17 @@ public final class StandRs extends BaseRs {
                         .remove()
                 ).toString()
             );
-            bundle = bundle.add("xembly", snapshot.xembly()).up();
             final Document dom = Snapshot.empty();
             try {
                 snapshot.apply(dom);
             } catch (ImpossibleModificationException ex) {
-                bundle = bundle.add(
-                    ex.getClass().getSimpleName(),
-                    ExceptionUtils.getRootCauseMessage(ex)
-                ).up();
+                assert ex != null;
             }
             bundle = bundle.add(dom.getDocumentElement());
         } catch (IOException ex) {
-            bundle = bundle.add(
-                ex.getClass().getSimpleName(),
-                ExceptionUtils.getRootCauseMessage(ex)
-            ).up();
+            assert ex != null;
         } catch (XemblySyntaxException ex) {
-            bundle = bundle.add(
-                ex.getClass().getSimpleName(),
-                ExceptionUtils.getRootCauseMessage(ex)
-            ).up();
+            assert ex != null;
         }
         return bundle;
     }

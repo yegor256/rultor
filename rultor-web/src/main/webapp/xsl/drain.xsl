@@ -95,9 +95,40 @@
                             <i class="icon-chevron-sign-right"><xsl:comment>drain</xsl:comment></i>
                         </a>
                     </li>
+                    <xsl:if test="xembly">
+                        <li>
+                            <i class="icon-wrench" style="cursor:pointer;" title="show xembly"
+                                onclick="$(this).parent().parent().parent().parent().find('.xembly').toggle();"><xsl:comment>xembly</xsl:comment></i>
+                        </li>
+                    </xsl:if>
+                    <xsl:if test="exceptions/exception">
+                        <li>
+                            <i class="icon-warning-sign text-danger" style="cursor:pointer;" title="show exceptions"
+                                onclick="$(this).parent().parent().parent().parent().find('.exceptions').toggle();"><xsl:comment>exceptions</xsl:comment></i>
+                        </li>
+                    </xsl:if>
                 </ul>
             </div>
+            <xsl:if test="exceptions/exception">
+                <ul class="list-unstyled exceptions" style="display:none; font-family: monospace;">
+                    <xsl:apply-templates select="exceptions/exception"/>
+                </ul>
+            </xsl:if>
+            <xsl:if test="xembly">
+                <ul class="list-inline xembly" style="display:none; font-family: monospace;">
+                    <li>
+                        <xsl:value-of select="xembly"/>
+                    </li>
+                </ul>
+            </xsl:if>
             <xsl:apply-templates select="snapshot"/>
         </div>
+    </xsl:template>
+    <xsl:template match="exception">
+        <li class="text-danger">
+            <xsl:value-of select="class"/>
+            <xsl:text>: </xsl:text>
+            <xsl:value-of select="message"/>
+        </li>
     </xsl:template>
 </xsl:stylesheet>

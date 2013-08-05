@@ -146,6 +146,7 @@ public final class PulseRs extends BaseRs {
      * Read stream of the drain.
      * @param unit Unit to read from
      * @return Stream
+     * @throws IOException If fails
      */
     private InputStream read(final Unit unit) throws IOException {
         try {

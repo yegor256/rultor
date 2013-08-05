@@ -31,73 +31,67 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:template match="snapshot">
         <xsl:if test="tags/tag">
-            <div>
-                <ul class="list-inline">
-                    <xsl:apply-templates select="tags/tag"/>
-                    <li class="text-muted">
-                        <xsl:text>updated </xsl:text>
-                        <span class="timeago"><xsl:value-of select="updated"/></span>
-                    </li>
-                </ul>
-            </div>
-        </xsl:if>
-        <div>
             <ul class="list-inline">
-                <xsl:if test="spec">
-                    <li>
-                        <i class="icon-beaker" style="cursor:pointer;" title="show specification"
-                            onclick="$(this).parent().parent().parent().parent().find('pre.spec').toggle();"><xsl:comment>spec</xsl:comment></i>
-                    </li>
-                </xsl:if>
-                <xsl:if test="work">
-                    <xsl:apply-templates select="work"/>
-                </xsl:if>
-                <xsl:if test="lines">
-                    <li>
-                        <i class="icon-signal"><xsl:comment>lines</xsl:comment></i>
-                        <xsl:text> </xsl:text>
-                        <xsl:value-of select="lines"/>
-                    </li>
-                </xsl:if>
-                <xsl:if test="start and not(finish)">
-                    <li>
-                        <i class="icon-flag"><xsl:comment>start</xsl:comment></i>
-                        <xsl:text> </xsl:text>
-                        <span class="timeago"><xsl:value-of select="start"/></span>
-                    </li>
-                </xsl:if>
-                <xsl:if test="eta">
-                    <li>
-                        <i class="icon-suitcase"><xsl:comment>eta</xsl:comment></i>
-                        <xsl:text> </xsl:text>
-                        <span class="timeago"><xsl:value-of select="eta"/></span>
-                    </li>
-                </xsl:if>
-                <xsl:if test="finish">
-                    <li>
-                        <i class="icon-flag-checkered"><xsl:comment>finish</xsl:comment></i>
-                        <xsl:text> </xsl:text>
-                        <span class="timeago"><xsl:value-of select="finish"/></span>
-                    </li>
-                </xsl:if>
-                <xsl:if test="duration">
-                    <li>
-                        <xsl:call-template name="millis">
-                            <xsl:with-param name="millis" select="duration"/>
-                        </xsl:call-template>
-                    </li>
-                </xsl:if>
+                <xsl:apply-templates select="tags/tag"/>
+                <li class="text-muted">
+                    <xsl:text>updated </xsl:text>
+                    <span class="timeago"><xsl:value-of select="updated"/></span>
+                </li>
             </ul>
-        </div>
+        </xsl:if>
+        <ul class="list-inline">
+            <xsl:if test="spec">
+                <li>
+                    <i class="icon-beaker" style="cursor:pointer;" title="show specification"
+                        onclick="$(this).parent().parent().parent().parent().find('pre.spec').toggle();"><xsl:comment>spec</xsl:comment></i>
+                </li>
+            </xsl:if>
+            <xsl:if test="work">
+                <xsl:apply-templates select="work"/>
+            </xsl:if>
+            <xsl:if test="lines">
+                <li>
+                    <i class="icon-signal"><xsl:comment>lines</xsl:comment></i>
+                    <xsl:text> </xsl:text>
+                    <xsl:value-of select="lines"/>
+                </li>
+            </xsl:if>
+            <xsl:if test="start and not(finish)">
+                <li>
+                    <i class="icon-flag"><xsl:comment>start</xsl:comment></i>
+                    <xsl:text> </xsl:text>
+                    <span class="timeago"><xsl:value-of select="start"/></span>
+                </li>
+            </xsl:if>
+            <xsl:if test="eta">
+                <li>
+                    <i class="icon-suitcase"><xsl:comment>eta</xsl:comment></i>
+                    <xsl:text> </xsl:text>
+                    <span class="timeago"><xsl:value-of select="eta"/></span>
+                </li>
+            </xsl:if>
+            <xsl:if test="finish">
+                <li>
+                    <i class="icon-flag-checkered"><xsl:comment>finish</xsl:comment></i>
+                    <xsl:text> </xsl:text>
+                    <span class="timeago"><xsl:value-of select="finish"/></span>
+                </li>
+            </xsl:if>
+            <xsl:if test="duration">
+                <li>
+                    <xsl:call-template name="millis">
+                        <xsl:with-param name="millis" select="duration"/>
+                    </xsl:call-template>
+                </li>
+            </xsl:if>
+        </ul>
         <xsl:if test="spec">
             <pre style="display:none;" class="spec"><xsl:value-of select="spec"/></pre>
         </xsl:if>
         <xsl:if test="products/product">
-            <div>
-                <ul class="list-inline">
-                    <xsl:apply-templates select="products/product"/>
-                </ul>
-            </div>
+            <ul class="list-inline">
+                <xsl:apply-templates select="products/product"/>
+            </ul>
         </xsl:if>
         <xsl:choose>
             <xsl:when test="stdout">
@@ -132,9 +126,7 @@
             </xsl:otherwise>
         </xsl:choose>
         <xsl:if test="steps/step">
-            <div>
-                <xsl:apply-templates select="steps/step"/>
-            </div>
+            <xsl:apply-templates select="steps/step"/>
         </xsl:if>
     </xsl:template>
     <xsl:template match="work">

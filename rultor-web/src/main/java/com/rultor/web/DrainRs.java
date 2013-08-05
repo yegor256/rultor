@@ -44,7 +44,9 @@ import com.rultor.spi.Unit;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -69,6 +71,7 @@ import org.xembly.XemblySyntaxException;
  */
 @Path("/drain/{unit:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class DrainRs extends BaseRs {
 
     /**
@@ -263,6 +266,7 @@ public final class DrainRs extends BaseRs {
      * @return Bundle
      */
     private JaxbBundle pulse(final Time time) {
+        final Collection<Exception> bugs = new LinkedList<Exception>();
         JaxbBundle bundle = new JaxbBundle("pulse")
             .add("time", time.toString())
             .up()
@@ -284,25 +288,27 @@ public final class DrainRs extends BaseRs {
             final Document dom = Snapshot.empty();
             try {
                 snapshot.apply(dom);
-                bundle = bundle.add(dom.getDocumentElement());
             } catch (ImpossibleModificationException ex) {
-                bundle = bundle.add(
-                    ex.getClass().getSimpleName(),
-                    ExceptionUtils.getRootCauseMessage(ex)
-                ).up();
+                bugs.add(ex);
             }
+            bundle = bundle.add(dom.getDocumentElement());
         } catch (IOException ex) {
-            bundle = bundle.add(
-                ex.getClass().getSimpleName(),
-                ExceptionUtils.getRootCauseMessage(ex)
-            ).up();
+            bugs.add(ex);
         } catch (XemblySyntaxException ex) {
-            bundle = bundle.add(
-                ex.getClass().getSimpleName(),
-                ExceptionUtils.getRootCauseMessage(ex)
-            ).up();
+            bugs.add(ex);
         }
-        return bundle;
+        return bundle.add(
+            new JaxbBundle.Group<Exception>(bugs) {
+                @Override
+                public JaxbBundle bundle(final Exception bug) {
+                    return new JaxbBundle("exception")
+                        .add("class", bug.getClass().getCanonicalName())
+                        .up()
+                        .add("message", ExceptionUtils.getRootCauseMessage(bug))
+                        .up();
+                }
+            }
+        );
     }
 
 }
