@@ -230,6 +230,10 @@ final class SimpleConveyer implements Closeable {
             // @checkstyle AnonInnerLength (50 lines)
             final Work work = new Work() {
                 @Override
+                public String toString() {
+                    return origin.toString();
+                }
+                @Override
                 public Time started() {
                     return origin.started();
                 }
