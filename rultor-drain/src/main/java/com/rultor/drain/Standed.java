@@ -130,7 +130,7 @@ public final class Standed implements Drain {
     public void append(final Iterable<String> lines) throws IOException {
         for (String line : lines) {
             if (XemblyLine.existsIn(line)) {
-                this.send(line);
+                this.send(XemblyLine.parse(line).xembly());
             }
         }
         this.origin.append(lines);
@@ -154,16 +154,16 @@ public final class Standed implements Drain {
 
     /**
      * Send line to stand.
-     * @param line The line
+     * @param xembly The xembly script
      * @throws IOException If fails
      */
-    private void send(final String line) throws IOException {
+    private void send(final String xembly) throws IOException {
         final StringWriter writer = new StringWriter();
         Json.createGenerator(writer)
             .writeStartObject()
             .write("stand", this.stand)
             .write("key", this.key)
-            .write("xembly", line)
+            .write("xembly", xembly)
             .writeStartObject("work")
             .write("owner", this.work.owner().toString())
             .write("unit", this.work.unit())
