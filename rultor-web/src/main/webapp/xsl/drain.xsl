@@ -115,7 +115,7 @@
                 </ul>
             </xsl:if>
             <xsl:if test="xembly">
-                <ul class="list-inline xembly" style="display:none; font-family: monospace;">
+                <ul class="list-inline xembly" style="white-space: pre; display:none; font-family: monospace;">
                     <li>
                         <xsl:value-of select="xembly"/>
                     </li>

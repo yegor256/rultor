@@ -55,7 +55,8 @@
     <pulses>
         <pulse>
             <time>2012-08-23T13:23Z</time>
-            <xembly>ADD "test"; SET "some text to set"; STRICT "1";</xembly>
+            <xembly>ADD "test";
+SET "some text to set"; STRICT "1";</xembly>
             <exceptions>
                 <exception>
                     <class>com.xembly.ImpossibleModificationException</class>
