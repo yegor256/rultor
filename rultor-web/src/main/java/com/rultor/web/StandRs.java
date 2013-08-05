@@ -143,11 +143,10 @@ public final class StandRs extends BaseRs {
         JaxbBundle bundle = new JaxbBundle("pulse");
         try {
             final Snapshot snapshot = new Snapshot(
-                new StringBuilder(pulse.xembly()).append(
-                    new XemblyBuilder()
-                        .xpath("/snapshot/spec")
-                        .remove()
-                ).toString()
+                new XemblyBuilder(pulse.xembly())
+                    .xpath("/snapshot/spec")
+                    .remove()
+                    .toString()
             );
             final Document dom = Snapshot.empty();
             try {

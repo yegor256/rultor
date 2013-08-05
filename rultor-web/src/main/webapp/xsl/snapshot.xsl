@@ -141,9 +141,6 @@
         <li>
             <xsl:value-of select="unit"/>
         </li>
-        <li>
-            <xsl:value-of select="started"/>
-        </li>
     </xsl:template>
     <xsl:template match="step">
         <div>

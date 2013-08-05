@@ -49,7 +49,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.RandomStringUtils;
 
 /**
  * Lineup with synchronization through Amazon SimpleDB item.
@@ -121,25 +120,13 @@ public final class ItemLineup implements Lineup {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public <T> T exec(final Callable<T> callable) throws Exception {
         while (true) {
-            while (this.exists()) {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(
-                        ItemLineup.RAND.nextInt(Tv.TEN * Tv.THOUSAND)
-                    );
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                    throw new IllegalStateException(ex);
-                }
-            }
             final String marker = String.format(
-                "%d-%s",
-                System.nanoTime(),
-                RandomStringUtils.randomAlphanumeric(Tv.HUNDRED)
+                "%s %d %s", new Time(), System.nanoTime(), callable.toString()
             );
-            this.save(marker);
-            final String saved = this.load();
+            final String saved = this.saveAndLoad(marker);
             if (saved.equals(marker)) {
                 break;
             }
@@ -178,6 +165,26 @@ public final class ItemLineup implements Lineup {
         } catch (Exception ex) {
             throw new IllegalArgumentException(ex);
         }
+    }
+
+    /**
+     * Save this marker when possible and load it back.
+     * @param marker Marker to save
+     * @return What we have in the notepad after saving
+     */
+    private String saveAndLoad(final String marker) {
+        while (this.exists()) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(
+                    ItemLineup.RAND.nextInt(Tv.TEN * Tv.THOUSAND)
+                );
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                throw new IllegalStateException(ex);
+            }
+        }
+        this.save(marker);
+        return this.load();
     }
 
     /**
