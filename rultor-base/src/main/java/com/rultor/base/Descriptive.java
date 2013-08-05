@@ -86,7 +86,7 @@ public final class Descriptive implements Instance {
         XemblyLine.log(
             new XemblyBuilder()
                 .xpath("/snapshot[not(work)]")
-                .add("work")
+                .strict(1)
                 .add("owner")
                 .set(this.work.owner().toString())
                 .up()
@@ -99,18 +99,21 @@ public final class Descriptive implements Instance {
         XemblyLine.log(
             new XemblyBuilder()
                 .xpath("/snapshot[not(started)]")
+                .strict(1)
                 .add("start")
                 .set(new Time().toString())
         );
         XemblyLine.log(
             new XemblyBuilder()
                 .xpath("/snapshot[not(stdout)]")
+                .strict(1)
                 .add("stdout")
                 .set(this.work.stdout().toString())
         );
         XemblyLine.log(
             new XemblyBuilder()
                 .xpath("/snapshot[not(version)]")
+                .strict(1)
                 .add("version")
                 .set(
                     String.format(
@@ -124,6 +127,7 @@ public final class Descriptive implements Instance {
         XemblyLine.log(
             new XemblyBuilder()
                 .xpath("/snapshot[not(spec)]")
+                .strict(1)
                 .add("spec")
                 .set(this.work.spec().asText())
         );
@@ -131,17 +135,19 @@ public final class Descriptive implements Instance {
             this.origin.pulse();
         } finally {
             XemblyLine.log(
-                new XemblyBuilder().xpath("/snapshot/stdout").remove()
+                new XemblyBuilder().xpath("/snapshot/stdout").strict(1).remove()
             );
             XemblyLine.log(
                 new XemblyBuilder()
                     .xpath("/snapshot[not(finish)]")
+                    .strict(1)
                     .add("finish")
                     .set(new Time().toString())
             );
             XemblyLine.log(
                 new XemblyBuilder()
                     .xpath("/snapshot[not(duration)]")
+                    .strict(1)
                     .add("duration")
                     .set(Long.toString(System.currentTimeMillis() - start))
             );
