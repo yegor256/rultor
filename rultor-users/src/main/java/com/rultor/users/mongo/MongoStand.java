@@ -33,6 +33,7 @@ import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -57,6 +58,10 @@ import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.w3c.dom.Document;
+import org.xembly.ImpossibleModificationException;
+import org.xembly.XemblySyntaxException;
 
 /**
  * Stand in Mongo.
@@ -139,26 +144,15 @@ final class MongoStand implements Stand {
     @Override
     public void post(final String pulse, final String xembly) {
         final String script = this.append(pulse, xembly);
-        final XmlDocument xml = new SimpleXml(
-            new DOMSource(new Snapshot(script).dom())
-        );
-        final WriteResult result = this.collection().update(
-            new BasicDBObject()
-                .append(MongoStand.ATTR_PULSE, pulse)
-                .append(MongoStand.ATTR_STAND, this.name()),
-            new BasicDBObject()
-                .append(MongoStand.ATTR_PULSE, pulse)
-                .append(MongoStand.ATTR_STAND, this.name())
-                .append(MongoStand.ATTR_UPDATED, new Time().toString())
-                .append(MongoStand.ATTR_XEMBLY, script)
-                .append(MongoStand.ATTR_TAGS, this.tags(xml)),
-            true, false
-        );
-        Validate.isTrue(
-            result.getLastError().ok(),
-            "failed to create new pulse `%s`: %s",
-            pulse, result.getLastError().getErrorMessage()
-        );
+        final Document dom = Snapshot.empty();
+        try {
+            new Snapshot(script).apply(dom);
+            this.post(pulse, dom, script);
+        } catch (XemblySyntaxException ex) {
+            Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+        } catch (ImpossibleModificationException ex) {
+            Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+        }
     }
 
     /**
@@ -208,6 +202,34 @@ final class MongoStand implements Stand {
     @Override
     public Spec acl() {
         return this.origin.acl();
+    }
+
+    /**
+     * Save data.
+     * @param pulse Pulse name
+     * @param dom DOM
+     * @param xembly Xembly to post
+     */
+    private void post(final String pulse, final Document dom,
+        final String xembly) {
+        final XmlDocument xml = new SimpleXml(new DOMSource(dom));
+        final WriteResult result = this.collection().update(
+            new BasicDBObject()
+                .append(MongoStand.ATTR_PULSE, pulse)
+                .append(MongoStand.ATTR_STAND, this.name()),
+            new BasicDBObject()
+                .append(MongoStand.ATTR_PULSE, pulse)
+                .append(MongoStand.ATTR_STAND, this.name())
+                .append(MongoStand.ATTR_UPDATED, new Time().toString())
+                .append(MongoStand.ATTR_XEMBLY, xembly)
+                .append(MongoStand.ATTR_TAGS, this.tags(xml)),
+            true, false
+        );
+        Validate.isTrue(
+            result.getLastError().ok(),
+            "failed to create new pulse `%s`: %s",
+            pulse, result.getLastError().getErrorMessage()
+        );
     }
 
     /**
@@ -270,10 +292,9 @@ final class MongoStand implements Stand {
             public Pulse next() {
                 return new Pulse() {
                     @Override
-                    public Snapshot snapshot() throws IOException {
-                        return new Snapshot(
-                            cursor.next().get(MongoStand.ATTR_XEMBLY).toString()
-                        );
+                    public String xembly() throws IOException {
+                        return cursor.next().get(MongoStand.ATTR_XEMBLY)
+                            .toString();
                     }
                     @Override
                     public InputStream stream() throws IOException {

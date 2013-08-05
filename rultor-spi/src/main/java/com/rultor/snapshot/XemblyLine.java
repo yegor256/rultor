@@ -34,7 +34,6 @@ import com.jcabi.log.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.Validate;
 import org.xembly.XemblyBuilder;
 
 /**
@@ -100,8 +99,13 @@ public final class XemblyLine {
      */
     public static XemblyLine parse(final String text) {
         final Matcher matcher = XemblyLine.PTN.matcher(text);
-        Validate.isTrue(matcher.matches(), "invalid line '%s'", text);
-        return new XemblyLine(matcher.group(1));
+        final XemblyLine line;
+        if (matcher.matches()) {
+            line = new XemblyLine(matcher.group(1));
+        } else {
+            line = new XemblyLine("");
+        }
+        return line;
     }
 
     /**

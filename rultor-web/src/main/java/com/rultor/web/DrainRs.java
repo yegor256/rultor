@@ -54,6 +54,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.w3c.dom.Document;
+import org.xembly.ImpossibleModificationException;
+import org.xembly.XemblySyntaxException;
 
 /**
  * Drain of a unit.
@@ -260,25 +263,9 @@ public final class DrainRs extends BaseRs {
      * @return Bundle
      */
     private JaxbBundle pulse(final Time time) {
-        final PulseOfDrain pulse = new PulseOfDrain(this.drain(time));
-        final Snapshot snapshot;
-        try {
-            snapshot = pulse.snapshot();
-        } catch (IOException ex) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                String.format(
-                    "I/O problem with the snapshot of \"%s\": %s",
-                    time,
-                    ExceptionUtils.getRootCauseMessage(ex)
-                ),
-                Level.SEVERE
-            );
-        }
-        return new JaxbBundle("pulse")
+        JaxbBundle bundle = new JaxbBundle("pulse")
             .add("time", time.toString())
             .up()
-            .add(snapshot.dom().getDocumentElement())
             .link(
                 new Link(
                     // @checkstyle MultipleStringLiterals (1 line)
@@ -290,6 +277,32 @@ public final class DrainRs extends BaseRs {
                         .build(this.name, time.millis())
                 )
             );
+        final Snapshot snapshot;
+        try {
+            snapshot = new Snapshot(this.drain(time).read());
+            bundle = bundle.add("xembly", snapshot.xembly()).up();
+            final Document dom = Snapshot.empty();
+            try {
+                snapshot.apply(dom);
+                bundle = bundle.add(dom.getDocumentElement());
+            } catch (ImpossibleModificationException ex) {
+                bundle = bundle.add(
+                    ex.getClass().getSimpleName(),
+                    ExceptionUtils.getRootCauseMessage(ex)
+                ).up();
+            }
+        } catch (IOException ex) {
+            bundle = bundle.add(
+                ex.getClass().getSimpleName(),
+                ExceptionUtils.getRootCauseMessage(ex)
+            ).up();
+        } catch (XemblySyntaxException ex) {
+            bundle = bundle.add(
+                ex.getClass().getSimpleName(),
+                ExceptionUtils.getRootCauseMessage(ex)
+            ).up();
+        }
+        return bundle;
     }
 
 }

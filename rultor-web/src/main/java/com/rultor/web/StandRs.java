@@ -46,7 +46,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.w3c.dom.Document;
+import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblyBuilder;
+import org.xembly.XemblySyntaxException;
 
 /**
  * Stand front page.
@@ -138,27 +141,38 @@ public final class StandRs extends BaseRs {
      * @return Bundle
      */
     private JaxbBundle pulse(final Pulse pulse) {
+        JaxbBundle bundle = new JaxbBundle("pulse");
         try {
-            return new JaxbBundle("pulse").add(
-                new Snapshot(
-                    new StringBuilder(pulse.snapshot().xembly()).append(
-                        new XemblyBuilder()
-                            .xpath("/snapshot/spec")
-                            .remove()
-                    ).toString()
-                ).dom().getDocumentElement()
+            final Snapshot snapshot = new Snapshot(
+                new StringBuilder(pulse.xembly()).append(
+                    new XemblyBuilder()
+                        .xpath("/snapshot/spec")
+                        .remove()
+                ).toString()
             );
-        } catch (IOException ex) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                String.format(
-                    "I/O problem with the pulse of \"%s\": %s",
-                    this.name,
+            bundle = bundle.add("xembly", snapshot.xembly()).up();
+            final Document dom = Snapshot.empty();
+            try {
+                snapshot.apply(dom);
+            } catch (ImpossibleModificationException ex) {
+                bundle = bundle.add(
+                    ex.getClass().getSimpleName(),
                     ExceptionUtils.getRootCauseMessage(ex)
-                ),
-                Level.SEVERE
-            );
+                ).up();
+            }
+            bundle = bundle.add(dom.getDocumentElement());
+        } catch (IOException ex) {
+            bundle = bundle.add(
+                ex.getClass().getSimpleName(),
+                ExceptionUtils.getRootCauseMessage(ex)
+            ).up();
+        } catch (XemblySyntaxException ex) {
+            bundle = bundle.add(
+                ex.getClass().getSimpleName(),
+                ExceptionUtils.getRootCauseMessage(ex)
+            ).up();
         }
+        return bundle;
     }
 
 }

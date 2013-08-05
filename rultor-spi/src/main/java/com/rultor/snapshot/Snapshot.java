@@ -54,30 +54,44 @@ import org.xembly.XemblySyntaxException;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "xmbl")
+@EqualsAndHashCode(of = "directives")
 @Loggable(Loggable.DEBUG)
 public final class Snapshot {
 
     /**
-     * Script.
+     * Xembly directives.
      */
-    private final transient String xmbl;
+    private final transient Directives directives;
 
     /**
      * Public ctor.
      * @param stream Stream to read it from
      * @throws IOException If fails to read
+     * @throws XemblySyntaxException If some syntax exception inside
+     * @checkstyle ThrowsCount (5 lines)
+     * @checkstyle RedundantThrows (5 lines)
      */
-    public Snapshot(final InputStream stream) throws IOException {
+    public Snapshot(final InputStream stream)
+        throws IOException, XemblySyntaxException {
         this(Snapshot.fetch(stream));
     }
 
     /**
      * Public ctor.
      * @param script Script
+     * @throws XemblySyntaxException If can't parse
+     * @checkstyle RedundantThrows (5 lines)
      */
-    public Snapshot(final String script) {
-        this.xmbl = script;
+    public Snapshot(final String script) throws XemblySyntaxException {
+        this(new Directives(script));
+    }
+
+    /**
+     * Public ctor.
+     * @param dirs Directives
+     */
+    private Snapshot(final Directives dirs) {
+        this.directives = dirs;
     }
 
     /**
@@ -85,14 +99,14 @@ public final class Snapshot {
      * @return The script
      */
     public String xembly() {
-        return this.xmbl;
+        return this.directives.toString();
     }
 
     /**
-     * Convert it to DOM document.
-     * @return DOM document
+     * Get empty DOM.
+     * @return The DOM
      */
-    public Document dom() {
+    public static Document empty() {
         final Document dom;
         try {
             dom = DocumentBuilderFactory.newInstance()
@@ -101,14 +115,18 @@ public final class Snapshot {
             throw new IllegalStateException(ex);
         }
         dom.appendChild(dom.createElement("snapshot"));
-        try {
-            new Xembler(new Directives(this.xmbl)).exec(dom);
-        } catch (XemblySyntaxException ex) {
-            throw new IllegalArgumentException(ex);
-        } catch (ImpossibleModificationException ex) {
-            throw new IllegalArgumentException(ex);
-        }
         return dom;
+    }
+
+    /**
+     * Apply it to the DOM.
+     * @param dom DOM document
+     * @throws ImpossibleModificationException If fails at some point
+     * @checkstyle RedundantThrows (5 lines)
+     */
+    public void apply(final Document dom)
+        throws ImpossibleModificationException {
+        new Xembler(this.directives).exec(dom);
     }
 
     /**

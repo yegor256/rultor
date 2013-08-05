@@ -32,6 +32,7 @@ package com.rultor.drain;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
+import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Stand;
@@ -128,7 +129,9 @@ public final class Standed implements Drain {
     @Override
     public void append(final Iterable<String> lines) throws IOException {
         for (String line : lines) {
-            this.send(line);
+            if (XemblyLine.existsIn(line)) {
+                this.send(line);
+            }
         }
         this.origin.append(lines);
     }

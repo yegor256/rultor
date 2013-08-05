@@ -33,6 +33,7 @@ import com.rexsl.test.XhtmlMatchers;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
+import org.w3c.dom.Document;
 import org.xembly.XemblyBuilder;
 
 /**
@@ -48,28 +49,28 @@ public final class SnapshotTest {
      */
     @Test
     public void fetchesSnapshotFromStream() throws Exception {
-        MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(
-                new Snapshot(
-                    IOUtils.toInputStream(
-                        new StringBuilder()
-                            .append("hey dude!\n")
-                            .append(
-                                new XemblyLine(
-                                    new XemblyBuilder()
-                                        .xpath("/snapshot")
-                                        .strict(1)
-                                        .add("test")
-                                        .strict(1)
-                                        .set("hello, друг!")
-                                        .toString()
-                                ).toString()
-                            )
-                            .append("\nHow are you?\n")
-                            .toString()
+        final Document dom = Snapshot.empty();
+        new Snapshot(
+            IOUtils.toInputStream(
+                new StringBuilder()
+                    .append("hey dude!\n")
+                    .append(
+                        new XemblyLine(
+                            new XemblyBuilder()
+                                .xpath("/snapshot")
+                                .strict(1)
+                                .add("test")
+                                .strict(1)
+                                .set("hello, друг!")
+                                .toString()
+                        ).toString()
                     )
-                ).dom()
-            ),
+                    .append("\nHow are you?\n")
+                    .toString()
+            )
+        ).apply(dom);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(dom),
             XhtmlMatchers.hasXPath("/snapshot/test[.='hello, друг!']")
         );
     }

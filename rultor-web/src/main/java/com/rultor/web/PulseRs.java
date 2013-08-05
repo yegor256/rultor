@@ -32,6 +32,7 @@ package com.rultor.web;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
+import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
@@ -39,6 +40,7 @@ import com.rultor.spi.Unit;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -121,31 +123,47 @@ public final class PulseRs extends BaseRs {
      * Get pulse.
      * @return The pulse
      */
-    private PulseOfDrain pulse() {
+    private Pulse pulse() {
         final Unit unit;
         try {
             unit = this.user().units().get(this.name);
         } catch (NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
+        return new Pulse() {
+            @Override
+            public String xembly() throws IOException {
+                throw new UnsupportedOperationException();
+            }
+            @Override
+            public InputStream stream() throws IOException {
+                return PulseRs.this.read(unit);
+            }
+        };
+    }
+
+    /**
+     * Read stream of the drain.
+     * @param unit Unit to read from
+     * @return Stream
+     */
+    private InputStream read(final Unit unit) throws IOException {
         try {
-            return new PulseOfDrain(
-                Drain.Source.class.cast(
-                    new Repo.Cached(
-                        this.repo(), this.user(), unit.spec()
-                    ).get().instantiate(
-                        this.users(),
-                        new Arguments(
-                            new Work.Simple(
-                                this.user().urn(),
-                                this.name,
-                                new Spec.Simple(),
-                                this.date
-                            )
+            return Drain.Source.class.cast(
+                new Repo.Cached(
+                    this.repo(), this.user(), unit.spec()
+                ).get().instantiate(
+                    this.users(),
+                    new Arguments(
+                        new Work.Simple(
+                            this.user().urn(),
+                            this.name,
+                            new Spec.Simple(),
+                            this.date
                         )
                     )
-                ).drain()
-            );
+                )
+            ).drain().read();
         } catch (SpecException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
