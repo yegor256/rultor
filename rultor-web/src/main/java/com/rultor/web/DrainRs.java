@@ -305,7 +305,10 @@ public final class DrainRs extends BaseRs {
                         return new JaxbBundle("exception")
                             .add("class", bug.getClass().getCanonicalName())
                             .up()
-                            .add("message", ExceptionUtils.getRootCauseMessage(bug))
+                            .add(
+                                "message",
+                                ExceptionUtils.getRootCauseMessage(bug)
+                            )
                             .up();
                     }
                 }
