@@ -48,7 +48,7 @@ public final class XemblyLineTest {
     @Test
     public void printsAndParses() throws Exception {
         final String xembly = new XemblyBuilder()
-            .xpath("/spanshot")
+            .xpath("/snapshot")
             .add("test")
             .set("hello, world!")
             .toString();

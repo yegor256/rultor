@@ -119,7 +119,7 @@ public final class LinesSensor implements Drain {
         if ((after / this.delta) * this.delta > before) {
             XemblyLine.log(
                 new XemblyBuilder()
-                    .xpath("/spanshot")
+                    .xpath("/snapshot")
                     .addIfAbsent("lines")
                     .set(Long.toString(after))
             );

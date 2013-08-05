@@ -71,7 +71,7 @@ public final class StepAspect {
                 .put("args", point.getArgs());
         XemblyLine.log(
             new XemblyBuilder()
-                .xpath("/spanshot")
+                .xpath("/snapshot")
                 .addIfAbsent("steps").strict(1)
                 .add("step").strict(1)
                 .attr("id", label)
