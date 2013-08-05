@@ -149,9 +149,15 @@ final class MongoStand implements Stand {
             new Snapshot(script).apply(dom);
             this.post(pulse, dom, script);
         } catch (XemblySyntaxException ex) {
-            Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+            Logger.warn(
+                this, "invalid syntax in `%s`: %s",
+                xembly, ExceptionUtils.getRootCauseMessage(ex)
+            );
         } catch (ImpossibleModificationException ex) {
-            Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+            Logger.warn(
+                this, "impossibe to modify `%s`: %s",
+                xembly, ExceptionUtils.getRootCauseMessage(ex)
+            );
         }
     }
 
