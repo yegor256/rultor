@@ -123,6 +123,7 @@ public final class ItemLineup implements Lineup {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public <T> T exec(final Callable<T> callable) throws Exception {
+        final long start = System.currentTimeMillis();
         while (true) {
             final String marker = String.format(
                 "%s %d %s", new Time(), System.nanoTime(), callable.toString()
@@ -133,10 +134,9 @@ public final class ItemLineup implements Lineup {
             }
             Logger.warn(
                 this,
-                "SimpleDB object `%s/%s` is locked by `%s`, let's wait...",
-                this.client.domain(),
-                this.name,
-                saved
+                "SimpleDB item `%s/%s` is locked by `%s` for %[ms]s already...",
+                this.client.domain(), this.name,
+                saved, System.currentTimeMillis() - start
             );
         }
         try {
