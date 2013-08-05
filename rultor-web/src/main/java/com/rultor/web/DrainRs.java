@@ -298,16 +298,18 @@ public final class DrainRs extends BaseRs {
             bugs.add(ex);
         }
         return bundle.add(
-            new JaxbBundle.Group<Exception>(bugs) {
-                @Override
-                public JaxbBundle bundle(final Exception bug) {
-                    return new JaxbBundle("exception")
-                        .add("class", bug.getClass().getCanonicalName())
-                        .up()
-                        .add("message", ExceptionUtils.getRootCauseMessage(bug))
-                        .up();
+            new JaxbBundle("exceptions").add(
+                new JaxbBundle.Group<Exception>(bugs) {
+                    @Override
+                    public JaxbBundle bundle(final Exception bug) {
+                        return new JaxbBundle("exception")
+                            .add("class", bug.getClass().getCanonicalName())
+                            .up()
+                            .add("message", ExceptionUtils.getRootCauseMessage(bug))
+                            .up();
+                    }
                 }
-            }
+            )
         );
     }
 
