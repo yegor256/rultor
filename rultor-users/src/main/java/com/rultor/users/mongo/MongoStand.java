@@ -155,7 +155,7 @@ final class MongoStand implements Stand {
             );
         } catch (ImpossibleModificationException ex) {
             Logger.warn(
-                this, "impossibe to modify `%s`: %s",
+                this, "impossible to modify `%s`: %s",
                 xembly, ExceptionUtils.getRootCauseMessage(ex)
             );
         }
