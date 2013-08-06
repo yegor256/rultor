@@ -43,6 +43,7 @@
     <links>
         <link href="/xml/units.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
+        <link href="/xml/units.xml" rel="create" type="text/xml"/>
         <link href="/xml/units.xml" rel="units" type="text/xml"/>
         <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
     </links>

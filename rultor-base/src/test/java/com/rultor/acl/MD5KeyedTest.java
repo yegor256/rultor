@@ -47,7 +47,8 @@ public final class MD5KeyedTest {
     @Test
     public void passesWhenKeyMatches() throws Exception {
         MatcherAssert.assertThat(
-            new MD5Keyed("test").canPost("valid-key"),
+            new MD5Keyed("a64cad1db8be410c666716f680e8a135")
+                .canPost("valid-key"),
             Matchers.equalTo(true)
         );
     }

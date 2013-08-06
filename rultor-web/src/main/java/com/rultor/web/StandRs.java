@@ -151,10 +151,10 @@ public final class StandRs extends BaseRs {
             final Document dom = Snapshot.empty();
             try {
                 snapshot.apply(dom);
+                bundle = bundle.add(dom.getDocumentElement());
             } catch (ImpossibleModificationException ex) {
                 assert ex != null;
             }
-            bundle = bundle.add(dom.getDocumentElement());
         } catch (IOException ex) {
             assert ex != null;
         } catch (XemblySyntaxException ex) {
