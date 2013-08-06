@@ -47,12 +47,20 @@ public final class MD5KeyedTest {
     @Test
     public void passesWhenKeyMatches() throws Exception {
         MatcherAssert.assertThat(
-            new MD5Keyed("test").canPost("invalid-key"),
-            Matchers.equalTo(false)
-        );
-        MatcherAssert.assertThat(
             new MD5Keyed("test").canPost("valid-key"),
             Matchers.equalTo(true)
+        );
+    }
+
+    /**
+     * MD5Keyed can block when key doesn't match.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void blocksWhenKeyDoesntMatch() throws Exception {
+        MatcherAssert.assertThat(
+            new MD5Keyed("test").canPost("invalid-key"),
+            Matchers.equalTo(false)
         );
     }
 

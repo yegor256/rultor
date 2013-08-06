@@ -29,75 +29,44 @@
  */
 package com.rultor.acl;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.immutable.Array;
 import com.jcabi.urn.URN;
-import com.rultor.spi.ACL;
-import java.util.ArrayList;
-import java.util.Collection;
-import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
+import java.util.Arrays;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * White List of allowed users.
- *
+ * Test case for {@link WhiteList}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-@EqualsAndHashCode(of = "friends")
-@Loggable(Loggable.DEBUG)
-public final class WhiteList implements ACL {
+public final class WhiteListTest {
 
     /**
-     * Friends.
+     * WhiteList can pass when URN matches.
+     * @throws Exception If some problem inside
      */
-    private final transient Array<URN> friends;
-
-    /**
-     * Public ctor.
-     * @param urns URNs of friends
-     */
-    public WhiteList(@NotNull(message = "list of friends can't be NULL")
-        final Collection<String> urns) {
-        final Collection<URN> list = new ArrayList<URN>(urns.size());
-        for (String urn : urns) {
-            list.add(URN.create(urn));
-        }
-        this.friends = new Array<URN>(list);
+    @Test
+    public void passesWhenUrnMatches() throws Exception {
+        final String urn = "urn:github:555";
+        MatcherAssert.assertThat(
+            new WhiteList(Arrays.asList(urn)).canView(URN.create(urn)),
+            Matchers.equalTo(true)
+        );
     }
 
     /**
-     * {@inheritDoc}
+     * WhiteList can block when URN doesn't match.
+     * @throws Exception If some problem inside
      */
-    @Override
-    public String toString() {
-        return String.format("%d friend(s)", this.friends.size());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean canView(final URN urn) {
-        boolean allowed = false;
-        for (URN friend : this.friends) {
-            if (friend.equals(urn)) {
-                allowed = true;
-                break;
-            }
-        }
-        return allowed;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean canPost(final String key) {
-        return false;
+    @Test
+    public void blocksWhenUrnDoesntMatch() throws Exception {
+        MatcherAssert.assertThat(
+            new WhiteList(Arrays.asList("urn:test:1")).canView(
+                URN.create("urn:test:2")
+            ),
+            Matchers.equalTo(false)
+        );
     }
 
 }
