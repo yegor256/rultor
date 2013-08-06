@@ -124,7 +124,7 @@ final class JaxbFace {
      * @param object Object to describe
      * @return Bundle
      */
-    public JaxbBundle append(final JaxbBundle bundle, final Object object) {
+    private JaxbBundle append(final JaxbBundle bundle, final Object object) {
         JaxbBundle output = bundle
             .add("type", object.getClass().getName())
             .up()
