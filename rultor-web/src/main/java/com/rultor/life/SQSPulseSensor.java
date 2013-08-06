@@ -37,6 +37,7 @@ import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
+import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.ACL;
@@ -110,9 +111,10 @@ public final class SQSPulseSensor implements Runnable, Closeable {
         this.users = usr;
         this.repo = rpo;
         this.client = clnt;
+        final Runnable runnable = new VerboseRunnable(this, true, false);
         for (int thread = 0; thread < SQSPulseSensor.THREADS; ++thread) {
             this.service.scheduleWithFixedDelay(
-                this, TimeUnit.SECONDS.toMillis(1), 1,
+                runnable, TimeUnit.SECONDS.toMillis(1), 1,
                 TimeUnit.MILLISECONDS
             );
         }
