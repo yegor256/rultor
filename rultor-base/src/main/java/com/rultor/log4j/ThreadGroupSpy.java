@@ -36,6 +36,7 @@ import com.rultor.spi.Work;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
 /**
@@ -120,18 +121,18 @@ public final class ThreadGroupSpy implements Instance, Drain.Source {
         );
         appender.setThreshold(this.level);
         appender.setLayout(new PatternLayout(this.pattern));
-        final org.apache.log4j.Logger root =
-            org.apache.log4j.Logger.getRootLogger();
+        final Logger root = Logger.getRootLogger();
         if (!root.isInfoEnabled()) {
             throw new IllegalStateException(
-                "INFO logging level is not enabled in LOG4J"
+                // @checkstyle LineLength (1 line)
+                "INFO logging level is not enabled in LOG4J, check log4j.properties file in classpath"
             );
         }
         root.addAppender(appender);
         try {
             this.origin.pulse();
         } finally {
-            org.apache.log4j.Logger.getRootLogger().removeAppender(appender);
+            root.removeAppender(appender);
         }
     }
 
