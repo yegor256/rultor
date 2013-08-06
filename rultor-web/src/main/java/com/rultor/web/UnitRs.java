@@ -46,6 +46,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Pulses.
@@ -140,6 +141,11 @@ public final class UnitRs extends BaseRs {
                         .add("name", this.name)
                         .up()
                         .add("spec", spec)
+                        .up()
+                        .add(
+                            "exception",
+                            ExceptionUtils.getRootCauseMessage(ex)
+                        )
                         .up()
                 )
                 .render()
