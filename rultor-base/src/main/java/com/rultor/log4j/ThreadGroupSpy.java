@@ -40,7 +40,22 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
 /**
- * ThreadGroupSpy instance.
+ * Instance wrapper that intercepts all log4j events initiated by any
+ * thread in the instance thread group.
+ *
+ * <p>The wrapper intercepts all log4j logging events coming from any thread
+ * that belongs to the thread group of the instance. Use it as a top level
+ * wrapper of an instance, for example:
+ *
+ * <pre> com.rultor.log4j.ThreadGroupSpy(
+ *   ${0:?}, "INFO", "%p: %c %m",
+ *   instance,
+ *   drain
+ * )</pre>
+ *
+ * <p>Log4j logging events lower than the specified threshold are filtered
+ * out. All others are rendered using the provided log4j pattern through
+ * {@link PatternLayout}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -125,7 +140,7 @@ public final class ThreadGroupSpy implements Instance, Drain.Source {
         if (!root.isInfoEnabled()) {
             throw new IllegalStateException(
                 // @checkstyle LineLength (1 line)
-                "INFO logging level is not enabled in LOG4J, check log4j.properties file in classpath"
+                "INFO logging level is not enabled in log4j, check log4j.properties file in classpath"
             );
         }
         root.addAppender(appender);
