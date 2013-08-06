@@ -40,7 +40,7 @@ import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.FilenameUtils;
-import org.xembly.XemblyBuilder;
+import org.xembly.Directives;
 
 /**
  * Put file(s) using s3cmd command line tool.
@@ -161,7 +161,7 @@ public final class S3CmdPut implements Sequel {
             markdown = String.format("[%s](%s%1$s)", mask, url);
         }
         XemblyLine.log(
-            new XemblyBuilder()
+            new Directives()
                 .xpath("/snapshot")
                 .addIfAbsent("products")
                 .add("product")

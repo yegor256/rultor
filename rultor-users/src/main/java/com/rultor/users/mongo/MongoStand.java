@@ -60,6 +60,7 @@ import lombok.ToString;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.w3c.dom.Document;
+import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
 
@@ -143,9 +144,9 @@ final class MongoStand implements Stand {
      */
     @Override
     public void post(final String pulse, final String xembly) {
-        final String script = this.append(pulse, xembly);
-        final Document dom = Snapshot.empty();
         try {
+            final String script = this.append(pulse, xembly);
+            final Document dom = Snapshot.empty();
             new Snapshot(script).apply(dom);
             this.post(pulse, dom, script);
         } catch (XemblySyntaxException ex) {
@@ -243,22 +244,29 @@ final class MongoStand implements Stand {
      * @param pulse Pulse to read
      * @param xembly Suffix to append
      * @return New script
+     * @throws XemblySyntaxException If fails
+     * @checkstyle RedundantThrows (3 lines)
      */
-    private String append(final String pulse, final String xembly) {
+    private String append(final String pulse, final String xembly)
+        throws XemblySyntaxException {
         final DBCursor cursor = this.collection().find(
             new BasicDBObject()
                 .append(MongoStand.ATTR_PULSE, pulse)
                 .append(MongoStand.ATTR_STAND, this.name())
         );
+        final Directives dirs;
         try {
-            final StringBuilder script = new StringBuilder();
             if (cursor.hasNext()) {
-                script.append(cursor.next().get(MongoStand.ATTR_XEMBLY));
+                dirs = new Directives(
+                    cursor.next().get(MongoStand.ATTR_XEMBLY).toString()
+                );
+            } else {
+                dirs = new Directives();
             }
-            return script.append(xembly).toString();
         } finally {
             cursor.close();
         }
+        return dirs.append(new Directives(xembly)).toString();
     }
 
     /**

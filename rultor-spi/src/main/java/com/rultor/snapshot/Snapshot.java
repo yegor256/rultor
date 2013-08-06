@@ -31,6 +31,7 @@ package com.rultor.snapshot;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.Array;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,6 +41,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.w3c.dom.Document;
+import org.xembly.Directive;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.Xembler;
@@ -61,7 +63,7 @@ public final class Snapshot {
     /**
      * Xembly directives.
      */
-    private final transient Directives directives;
+    private final transient Array<Directive> directives;
 
     /**
      * Public ctor.
@@ -91,7 +93,7 @@ public final class Snapshot {
      * @param dirs Directives
      */
     private Snapshot(final Directives dirs) {
-        this.directives = dirs;
+        this.directives = new Array<Directive>(dirs);
     }
 
     /**
@@ -99,7 +101,7 @@ public final class Snapshot {
      * @return The script
      */
     public String xembly() {
-        return this.directives.toString();
+        return new Directives(this.directives).toString();
     }
 
     /**
@@ -126,7 +128,7 @@ public final class Snapshot {
      */
     public void apply(final Document dom)
         throws ImpossibleModificationException {
-        new Xembler(this.directives).exec(dom);
+        new Xembler(this.directives).apply(dom);
     }
 
     /**

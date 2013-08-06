@@ -47,7 +47,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import org.w3c.dom.Document;
 import org.xembly.ImpossibleModificationException;
-import org.xembly.XemblyBuilder;
+import org.xembly.Directives;
 import org.xembly.XemblySyntaxException;
 
 /**
@@ -143,7 +143,7 @@ public final class StandRs extends BaseRs {
         JaxbBundle bundle = new JaxbBundle("pulse");
         try {
             final Snapshot snapshot = new Snapshot(
-                new XemblyBuilder(pulse.xembly())
+                new Directives(pulse.xembly())
                     .xpath("/snapshot/spec")
                     .remove()
                     .toString()

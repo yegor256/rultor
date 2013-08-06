@@ -39,7 +39,7 @@ import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.xembly.XemblyBuilder;
+import org.xembly.Directives;
 
 /**
  * Descriptive instance that tells about itself in the xembly log.
@@ -84,7 +84,7 @@ public final class Descriptive implements Instance {
     public void pulse() throws Exception {
         final long start = System.currentTimeMillis();
         XemblyLine.log(
-            new XemblyBuilder()
+            new Directives()
                 .xpath("/snapshot[not(work)]")
                 .strict(1)
                 .add("owner")
@@ -97,21 +97,21 @@ public final class Descriptive implements Instance {
                 .set(this.work.started().toString())
         );
         XemblyLine.log(
-            new XemblyBuilder()
+            new Directives()
                 .xpath("/snapshot[not(started)]")
                 .strict(1)
                 .add("start")
                 .set(new Time().toString())
         );
         XemblyLine.log(
-            new XemblyBuilder()
+            new Directives()
                 .xpath("/snapshot[not(stdout)]")
                 .strict(1)
                 .add("stdout")
                 .set(this.work.stdout().toString())
         );
         XemblyLine.log(
-            new XemblyBuilder()
+            new Directives()
                 .xpath("/snapshot[not(version)]")
                 .strict(1)
                 .add("version")
@@ -125,7 +125,7 @@ public final class Descriptive implements Instance {
                 )
         );
         XemblyLine.log(
-            new XemblyBuilder()
+            new Directives()
                 .xpath("/snapshot[not(spec)]")
                 .strict(1)
                 .add("spec")
@@ -135,17 +135,17 @@ public final class Descriptive implements Instance {
             this.origin.pulse();
         } finally {
             XemblyLine.log(
-                new XemblyBuilder().xpath("/snapshot/stdout").strict(1).remove()
+                new Directives().xpath("/snapshot/stdout").strict(1).remove()
             );
             XemblyLine.log(
-                new XemblyBuilder()
+                new Directives()
                     .xpath("/snapshot[not(finish)]")
                     .strict(1)
                     .add("finish")
                     .set(new Time().toString())
             );
             XemblyLine.log(
-                new XemblyBuilder()
+                new Directives()
                     .xpath("/snapshot[not(duration)]")
                     .strict(1)
                     .add("duration")

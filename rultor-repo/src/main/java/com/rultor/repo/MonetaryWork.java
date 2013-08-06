@@ -142,7 +142,7 @@ final class MonetaryWork implements Work {
      * {@inheritDoc}
      */
     @Override
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     public void charge(final String details, final Dollars amount) {
         Validate.isTrue(
             amount.points() > 0,

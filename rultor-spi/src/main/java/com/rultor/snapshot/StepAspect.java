@@ -39,7 +39,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.xembly.XemblyBuilder;
+import org.xembly.Directives;
 
 /**
  * Step AspectJ aspect.
@@ -70,7 +70,7 @@ public final class StepAspect {
                 .put("this", point.getThis())
                 .put("args", point.getArgs());
         XemblyLine.log(
-            new XemblyBuilder()
+            new Directives()
                 .xpath("/snapshot")
                 .addIfAbsent("steps").strict(1)
                 .add("step").strict(1)
@@ -85,7 +85,7 @@ public final class StepAspect {
                 args.put("result", result);
             }
             XemblyLine.log(
-                new XemblyBuilder()
+                new Directives()
                     .xpath(String.format("//step[@id='%s']/summary", label))
                     .strict(1)
                     .set(new Vext(step.value()).print(args.build()))
@@ -97,7 +97,7 @@ public final class StepAspect {
         // @checkstyle IllegalCatch (1 line)
         } catch (Throwable ex) {
             XemblyLine.log(
-                new XemblyBuilder()
+                new Directives()
                     .xpath(String.format("//step[@id = '%s']", label))
                     .strict(1)
                     .add("level").set(Level.SEVERE.toString())
@@ -105,7 +105,7 @@ public final class StepAspect {
             throw ex;
         } finally {
             XemblyLine.log(
-                new XemblyBuilder()
+                new Directives()
                     .xpath(String.format("//step[@id='%s']", label))
                     .strict(1)
                     .add("finish").set(new Time().toString())

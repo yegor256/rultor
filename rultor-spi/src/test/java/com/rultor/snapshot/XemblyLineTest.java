@@ -32,7 +32,7 @@ package com.rultor.snapshot;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.xembly.XemblyBuilder;
+import org.xembly.Directives;
 
 /**
  * Test case for {@link XemblyLine}.
@@ -47,7 +47,7 @@ public final class XemblyLineTest {
      */
     @Test
     public void printsAndParses() throws Exception {
-        final String xembly = new XemblyBuilder()
+        final String xembly = new Directives()
             .xpath("/snapshot")
             .add("test")
             .set("hello, world!")

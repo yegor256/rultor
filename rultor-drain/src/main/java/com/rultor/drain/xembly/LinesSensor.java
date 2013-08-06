@@ -45,7 +45,7 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
-import org.xembly.XemblyBuilder;
+import org.xembly.Directives;
 
 /**
  * Sensor of output lines (their counter).
@@ -118,7 +118,7 @@ public final class LinesSensor implements Drain {
         final long after = this.spinbox.add(Iterables.size(lines));
         if ((after / this.delta) * this.delta > before) {
             XemblyLine.log(
-                new XemblyBuilder()
+                new Directives()
                     .xpath("/snapshot")
                     .addIfAbsent("lines")
                     .set(Long.toString(after))

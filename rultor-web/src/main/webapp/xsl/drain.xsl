@@ -115,11 +115,7 @@
                 </ul>
             </xsl:if>
             <xsl:if test="xembly">
-                <ul class="list-inline xembly" style="white-space: pre; display:none; font-family: monospace;">
-                    <li>
-                        <xsl:value-of select="xembly"/>
-                    </li>
-                </ul>
+                <pre class="xembly"><xsl:value-of select="xembly"/></pre>
             </xsl:if>
             <xsl:apply-templates select="snapshot"/>
         </div>

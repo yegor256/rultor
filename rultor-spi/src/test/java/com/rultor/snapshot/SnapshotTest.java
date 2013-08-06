@@ -34,7 +34,7 @@ import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import org.xembly.XemblyBuilder;
+import org.xembly.Directives;
 
 /**
  * Test case for {@link SnapshotInStream}.
@@ -56,7 +56,7 @@ public final class SnapshotTest {
                     .append("hey dude!\n")
                     .append(
                         new XemblyLine(
-                            new XemblyBuilder()
+                            new Directives()
                                 .xpath("/snapshot")
                                 .strict(1)
                                 .add("test")

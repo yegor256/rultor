@@ -34,7 +34,7 @@ import com.jcabi.log.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
-import org.xembly.XemblyBuilder;
+import org.xembly.Directives;
 
 /**
  * Log line in Xembly.
@@ -112,7 +112,7 @@ public final class XemblyLine {
      * Convenient utility method to log xembly.
      * @param builder Builder of xembly code
      */
-    public static void log(final XemblyBuilder builder) {
+    public static void log(final Directives builder) {
         Logger.info(
             XemblyLine.class,
             new XemblyLine(builder.toString()).toString()
