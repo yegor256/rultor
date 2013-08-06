@@ -160,17 +160,18 @@ public final class S3CmdPut implements Sequel {
         } else {
             markdown = String.format("[%s](%s%1$s)", mask, url);
         }
-        XemblyLine.log(
+        new XemblyLine(
             new Directives()
                 .xpath("/snapshot")
                 .addIfAbsent("products")
+                .strict(1)
                 .add("product")
                 .add("name")
                 .set(this.name)
                 .up()
                 .add("markdown")
                 .set(markdown)
-        );
+        ).log();
     }
 
 }

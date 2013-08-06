@@ -117,12 +117,14 @@ public final class LinesSensor implements Drain {
         final long before = this.spinbox.add(0);
         final long after = this.spinbox.add(Iterables.size(lines));
         if ((after / this.delta) * this.delta > before) {
-            XemblyLine.log(
+            new XemblyLine(
                 new Directives()
                     .xpath("/snapshot")
+                    .strict(1)
                     .addIfAbsent("lines")
+                    .strict(1)
                     .set(Long.toString(after))
-            );
+            ).log();
         }
         this.origin.append(lines);
     }

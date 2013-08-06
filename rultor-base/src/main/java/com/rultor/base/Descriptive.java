@@ -83,7 +83,7 @@ public final class Descriptive implements Instance {
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
         final long start = System.currentTimeMillis();
-        XemblyLine.log(
+        new XemblyLine(
             new Directives()
                 .xpath("/snapshot[not(work)]")
                 .strict(1)
@@ -95,22 +95,22 @@ public final class Descriptive implements Instance {
                 .up()
                 .add("started")
                 .set(this.work.started().toString())
-        );
-        XemblyLine.log(
+        ).log();
+        new XemblyLine(
             new Directives()
                 .xpath("/snapshot[not(started)]")
                 .strict(1)
                 .add("start")
                 .set(new Time().toString())
-        );
-        XemblyLine.log(
+        ).log();
+        new XemblyLine(
             new Directives()
                 .xpath("/snapshot[not(stdout)]")
                 .strict(1)
                 .add("stdout")
                 .set(this.work.stdout().toString())
-        );
-        XemblyLine.log(
+        ).log();
+        new XemblyLine(
             new Directives()
                 .xpath("/snapshot[not(version)]")
                 .strict(1)
@@ -123,34 +123,34 @@ public final class Descriptive implements Instance {
                         Manifests.read("Rultor-Date")
                     )
                 )
-        );
-        XemblyLine.log(
+        ).log();
+        new XemblyLine(
             new Directives()
                 .xpath("/snapshot[not(spec)]")
                 .strict(1)
                 .add("spec")
                 .set(this.work.spec().asText())
-        );
+        ).log();
         try {
             this.origin.pulse();
         } finally {
-            XemblyLine.log(
+            new XemblyLine(
                 new Directives().xpath("/snapshot/stdout").strict(1).remove()
-            );
-            XemblyLine.log(
+            ).log();
+            new XemblyLine(
                 new Directives()
                     .xpath("/snapshot[not(finish)]")
                     .strict(1)
                     .add("finish")
                     .set(new Time().toString())
-            );
-            XemblyLine.log(
+            ).log();
+            new XemblyLine(
                 new Directives()
                     .xpath("/snapshot[not(duration)]")
                     .strict(1)
                     .add("duration")
                     .set(Long.toString(System.currentTimeMillis() - start))
-            );
+            ).log();
         }
     }
 

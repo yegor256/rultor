@@ -108,7 +108,7 @@ public final class NoiseReduction implements Drain {
         @NotNull(message = "dirty drain can't be NULL") final Drain drt,
         @NotNull(message = "clean drain can't be NULL") final Drain cln) {
         this.work = wrk;
-        this.pattern = String.format(".*(?:%s).*", ptn);
+        this.pattern = ptn;
         this.visible = vsbl;
         this.dirty = drt;
         this.clean = cln;

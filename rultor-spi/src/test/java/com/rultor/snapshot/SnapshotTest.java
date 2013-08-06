@@ -62,7 +62,6 @@ public final class SnapshotTest {
                                 .add("test")
                                 .strict(1)
                                 .set("hello, друг!")
-                                .toString()
                         ).toString()
                     )
                     .append("\nHow are you?\n")

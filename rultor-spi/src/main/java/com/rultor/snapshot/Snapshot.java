@@ -136,8 +136,12 @@ public final class Snapshot {
      * @param stream Input stream where to find details
      * @return The script
      * @throws IOException If IO problem inside
+     * @throws XemblySyntaxException If broken syntax
+     * @checkstyle ThrowsCount (5 lines)
+     * @checkstyle RedundantThrows (4 lines)
      */
-    private static String fetch(final InputStream stream) throws IOException {
+    private static String fetch(final InputStream stream)
+        throws IOException, XemblySyntaxException {
         final BufferedReader reader = new BufferedReader(
             new InputStreamReader(stream)
         );

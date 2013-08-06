@@ -29,9 +29,13 @@
  */
 package com.rultor.snapshot;
 
+import com.jcabi.aspects.Tv;
+import java.util.Collection;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
@@ -47,18 +51,22 @@ public final class XemblyLineTest {
      */
     @Test
     public void printsAndParses() throws Exception {
-        final String xembly = new Directives()
+        final Collection<Directive> dirs = new Directives()
             .xpath("/snapshot")
             .add("test")
-            .set("hello, world!")
-            .toString();
+            .set("hello,\n\"'друг'\"!")
+            .add("foo")
+            .set(RandomStringUtils.random(Tv.TEN));
         MatcherAssert.assertThat(
-            XemblyLine.existsIn(new XemblyLine(xembly).toString()),
+            XemblyLine.existsIn(new XemblyLine(dirs).toString()),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(
-            XemblyLine.parse(new XemblyLine(xembly).toString()).toString(),
-            Matchers.containsString(xembly)
+            XemblyLine.parse(new XemblyLine(dirs).toString()).toString(),
+            Matchers.allOf(
+                Matchers.containsString("друг"),
+                Matchers.not(Matchers.containsString("\n"))
+            )
         );
     }
 

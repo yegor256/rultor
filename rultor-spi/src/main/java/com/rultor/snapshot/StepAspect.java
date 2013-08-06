@@ -69,7 +69,7 @@ public final class StepAspect {
             new ImmutableMap.Builder<String, Object>()
                 .put("this", point.getThis())
                 .put("args", point.getArgs());
-        XemblyLine.log(
+        new XemblyLine(
             new Directives()
                 .xpath("/snapshot")
                 .addIfAbsent("steps").strict(1)
@@ -78,13 +78,13 @@ public final class StepAspect {
                 .add("start").set(new Time().toString()).up()
                 .add("summary")
                 .set(new Vext(step.before()).print(args.build()))
-        );
+        ).log();
         try {
             final Object result = point.proceed();
             if (result != null) {
                 args.put("result", result);
             }
-            XemblyLine.log(
+            new XemblyLine(
                 new Directives()
                     .xpath(String.format("//step[@id='%s']/summary", label))
                     .strict(1)
@@ -92,24 +92,24 @@ public final class StepAspect {
                     .up()
                     // @checkstyle MultipleStringLiterals (1 line)
                     .add("level").set(Level.INFO.toString())
-            );
+            ).log();
             return result;
         // @checkstyle IllegalCatch (1 line)
         } catch (Throwable ex) {
-            XemblyLine.log(
+            new XemblyLine(
                 new Directives()
                     .xpath(String.format("//step[@id = '%s']", label))
                     .strict(1)
                     .add("level").set(Level.SEVERE.toString())
-            );
+            ).log();
             throw ex;
         } finally {
-            XemblyLine.log(
+            new XemblyLine(
                 new Directives()
                     .xpath(String.format("//step[@id='%s']", label))
                     .strict(1)
                     .add("finish").set(new Time().toString())
-            );
+            ).log();
         }
     }
 

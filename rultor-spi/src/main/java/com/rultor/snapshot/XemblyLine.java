@@ -30,11 +30,17 @@
 package com.rultor.snapshot;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
+import org.xembly.Directive;
 import org.xembly.Directives;
+import org.xembly.XemblySyntaxException;
 
 /**
  * Log line in Xembly.
@@ -44,7 +50,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = "script")
+@EqualsAndHashCode(of = "directives")
 public final class XemblyLine {
 
     /**
@@ -55,16 +61,16 @@ public final class XemblyLine {
     );
 
     /**
-     * Encapsulated xembly program.
+     * Encapsulated xembly directives.
      */
-    private final transient String script;
+    private final transient Array<Directive> directives;
 
     /**
      * Public ctor.
-     * @param scrpt Xembly script to encapsulate
+     * @param dirs Xembly directives to encapsulate
      */
-    public XemblyLine(final String scrpt) {
-        this.script = scrpt;
+    public XemblyLine(final Collection<Directive> dirs) {
+        this.directives = new Array<Directive>(dirs);
     }
 
     /**
@@ -72,7 +78,7 @@ public final class XemblyLine {
      */
     @Override
     public String toString() {
-        return String.format("χemβly '%s'", this.script);
+        return String.format("χemβly '%s'", this.xembly());
     }
 
     /**
@@ -80,13 +86,14 @@ public final class XemblyLine {
      * @return Script
      */
     public String xembly() {
-        return this.script;
+        return new StringBuilder(StringUtils.join(this.directives, "; "))
+            .append(';').toString();
     }
 
     /**
-     * Does it look like spec detail.
+     * Does it look like xembly line.
      * @param line Line to check
-     * @return TRUE if yes
+     * @return TRUE if yes (no strong guarantee though)
      */
     public static boolean existsIn(final String line) {
         return line.contains("χemβly");
@@ -96,27 +103,26 @@ public final class XemblyLine {
      * Decode text.
      * @param text Text to decode
      * @return Detail found or runtime exception
+     * @throws XemblySyntaxException If can't parse
+     * @checkstyle RedundantThrows (4 lines)
      */
-    public static XemblyLine parse(final String text) {
+    public static XemblyLine parse(final String text)
+        throws XemblySyntaxException {
         final Matcher matcher = XemblyLine.PTN.matcher(text);
         final XemblyLine line;
         if (matcher.matches()) {
-            line = new XemblyLine(matcher.group(1));
+            line = new XemblyLine(new Directives(matcher.group(1)));
         } else {
-            line = new XemblyLine("");
+            line = new XemblyLine(new ArrayList<Directive>(0));
         }
         return line;
     }
 
     /**
      * Convenient utility method to log xembly.
-     * @param builder Builder of xembly code
      */
-    public static void log(final Directives builder) {
-        Logger.info(
-            XemblyLine.class,
-            new XemblyLine(builder.toString()).toString()
-        );
+    public void log() {
+        Logger.info(this, this.toString());
     }
 
 }

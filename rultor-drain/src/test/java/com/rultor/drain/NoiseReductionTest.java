@@ -56,7 +56,7 @@ public final class NoiseReductionTest {
         final Drain clean = Mockito.mock(Drain.class);
         final Drain drain = new NoiseReduction(
             new Work.Simple(),
-            "Hello[0-9]+",
+            ".*Hello[0-9]+.*",
             1,
             dirty,
             clean
