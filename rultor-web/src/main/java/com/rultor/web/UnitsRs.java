@@ -62,7 +62,7 @@ public final class UnitsRs extends BaseRs {
     @Path("/")
     public Response index() {
         return new PageBuilder()
-            .stylesheet("/xsl/index.xsl")
+            .stylesheet("/xsl/units.xsl")
             .build(EmptyPage.class)
             .init(this)
             .append(this.mine())

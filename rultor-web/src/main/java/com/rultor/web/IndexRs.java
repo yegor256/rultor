@@ -56,7 +56,7 @@ public final class IndexRs extends BaseRs {
     @Path("/")
     public Response index() {
         final Identity self = this.auth().identity();
-        Response response;
+        final Response response;
         if (self.equals(Identity.ANONYMOUS)) {
             response = new PageBuilder()
                 .stylesheet("/xsl/front.xsl")
