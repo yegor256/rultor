@@ -46,8 +46,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import org.w3c.dom.Document;
-import org.xembly.ImpossibleModificationException;
 import org.xembly.Directives;
+import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
 
 /**
