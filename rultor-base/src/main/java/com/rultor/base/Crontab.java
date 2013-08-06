@@ -51,6 +51,13 @@ import org.apache.commons.lang3.Validate;
 /**
  * Sends pulses through, only on certain time moments.
  *
+ * <p>Use it as an instance wrapper:
+ *
+ * <pre> com.rultor.base.Crontab(
+ *   ${0:?}, "&#65;/5 * * * *",
+ *   my-custom-instance
+ * )</pre>
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0

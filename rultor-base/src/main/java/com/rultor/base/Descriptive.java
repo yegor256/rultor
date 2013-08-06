@@ -44,6 +44,15 @@ import org.xembly.Directives;
 /**
  * Descriptive instance that tells about itself in the xembly log.
  *
+ * <p>It is important to use this instance wrapper for
+ * <strong>all instances</strong>. It will enable their visibility in
+ * the management panel and in the stand. Simply wrap whatever instance you
+ * have in the unit into this wrapper:
+ *
+ * <pre> com.rultor.base.Descriptive(
+ *   ${0:?}, my-instance-to-wrap
+ * )</pre>
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
