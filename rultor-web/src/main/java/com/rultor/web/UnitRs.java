@@ -35,6 +35,7 @@ import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
 import com.rultor.spi.Spec;
+import com.rultor.spi.SpecException;
 import com.rultor.spi.Unit;
 import java.net.HttpURLConnection;
 import java.util.NoSuchElementException;
@@ -122,7 +123,6 @@ public final class UnitRs extends BaseRs {
      */
     @POST
     @Path("/")
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public Response save(@NotNull(message = "spec form param is mandatory")
         @FormParam("spec") final String spec) {
         try {
@@ -132,8 +132,7 @@ public final class UnitRs extends BaseRs {
                     this.work(this.name, new Spec.Simple(spec)), Object.class
                 )
             );
-        // @checkstyle IllegalCatch (1 line)
-        } catch (Exception ex) {
+        } catch (SpecException ex) {
             return this.head()
                 .append(FlashInset.bundle(Level.SEVERE, ex.getMessage(), 0L))
                 .append(

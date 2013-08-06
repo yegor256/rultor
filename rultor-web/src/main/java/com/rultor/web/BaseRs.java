@@ -178,24 +178,26 @@ public class BaseRs extends BaseResource {
             @Override
             public void render(final BasePage<?, ?> page,
                 final Response.ResponseBuilder builder) {
-                page.link(
-                    new Link(
-                        "stands",
-                        BaseRs.this.uriInfo().getBaseUriBuilder()
-                            .clone()
-                            .path(StandsRs.class)
-                            .build()
-                    )
-                );
-                page.link(
-                    new Link(
-                        "units",
-                        BaseRs.this.uriInfo().getBaseUriBuilder()
-                            .clone()
-                            .path(UnitsRs.class)
-                            .build()
-                    )
-                );
+                if (!BaseRs.this.auth().identity().equals(Identity.ANONYMOUS)) {
+                    page.link(
+                        new Link(
+                            "stands",
+                            BaseRs.this.uriInfo().getBaseUriBuilder()
+                                .clone()
+                                .path(StandsRs.class)
+                                .build()
+                        )
+                    );
+                    page.link(
+                        new Link(
+                            "units",
+                            BaseRs.this.uriInfo().getBaseUriBuilder()
+                                .clone()
+                                .path(UnitsRs.class)
+                                .build()
+                        )
+                    );
+                }
             }
         };
     }
