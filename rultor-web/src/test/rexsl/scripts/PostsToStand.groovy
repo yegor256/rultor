@@ -29,6 +29,7 @@
  */
 package com.rultor.web.rexsl.scripts
 
+/*
 import com.jcabi.manifests.Manifests
 import com.jcabi.urn.URN
 import com.rexsl.page.auth.Identity
@@ -52,4 +53,4 @@ stand.acl(new Spec.Simple('com.rultor.acl.MD5Keyed("test")'))
 stand.post(name, 'ADD "test"; SET "works fine!";')
 def pulse = user.units().pulses().iterator().next()
 MatcherAssert.assertThat(pulse.xembly(), Matchers.containsString('works fine'))
-
+*/

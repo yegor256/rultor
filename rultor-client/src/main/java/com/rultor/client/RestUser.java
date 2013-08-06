@@ -139,8 +139,8 @@ public final class RestUser implements User {
                     .header(HttpHeaders.AUTHORIZATION, this.token)
                     .get("#units()")
                     .assertStatus(HttpURLConnection.HTTP_OK)
-                    .assertXPath("/page/links/link[@ref='units']")
-                    .xpath("/page/links/link[@ref='units']/@href")
+                    .assertXPath("/page/links/link[@rel='units']")
+                    .xpath("/page/links/link[@rel='units']/@href")
                     .get(0)
             ),
             this.token
@@ -175,8 +175,8 @@ public final class RestUser implements User {
                     .header(HttpHeaders.AUTHORIZATION, this.token)
                     .get("#stands()")
                     .assertStatus(HttpURLConnection.HTTP_OK)
-                    .assertXPath("/page/links/link[@ref='stands']")
-                    .xpath("/page/links/link[@ref='standss']/@href")
+                    .assertXPath("/page/links/link[@rel='stands']")
+                    .xpath("/page/links/link[@rel='stands']/@href")
                     .get(0)
             ),
             this.token

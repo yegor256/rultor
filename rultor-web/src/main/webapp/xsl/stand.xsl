@@ -61,7 +61,7 @@
                         </ul>
                     </div>
                 </xsl:if>
-                <xsl:apply-templates select="/page/pulses/pulse"/>
+                <xsl:apply-templates select="/page/pulses/pulse[snapshot]"/>
                 <xsl:if test="//links/link[@rel='more']">
                     <div class="spacious">
                         <xsl:text>See </xsl:text>

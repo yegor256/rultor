@@ -77,6 +77,12 @@ final class Testing implements Profile {
         new ConcurrentHashMap<String, Unit>(0);
 
     /**
+     * All stands.
+     */
+    private static final ConcurrentMap<String, Stand> STANDS =
+        new ConcurrentHashMap<String, Stand>(0);
+
+    /**
      * All specs.
      */
     private static final ConcurrentMap<String, Spec> SPECS =
@@ -211,7 +217,24 @@ final class Testing implements Profile {
         }
         @Override
         public Stands stands() {
-            throw new UnsupportedOperationException();
+            return new Stands() {
+                @Override
+                public void create(final String txt) {
+                    throw new UnsupportedOperationException();
+                }
+                @Override
+                public boolean contains(final String txt) {
+                    throw new UnsupportedOperationException();
+                }
+                @Override
+                public Stand get(final String txt) {
+                    throw new UnsupportedOperationException();
+                }
+                @Override
+                public Iterator<Stand> iterator() {
+                    return Testing.STANDS.values().iterator();
+                }
+            };
         }
     }
 
