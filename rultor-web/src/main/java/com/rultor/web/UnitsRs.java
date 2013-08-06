@@ -124,7 +124,7 @@ public final class UnitsRs extends BaseRs {
             .up()
             .add(
                 new JaxbFace(this.repo(), this.users())
-                    .bundle(this.user().urn(), unit.name())
+                    .bundle(this.user(), unit)
             )
             .link(
                 new Link(

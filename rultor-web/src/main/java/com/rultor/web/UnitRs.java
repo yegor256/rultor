@@ -86,17 +86,18 @@ public final class UnitRs extends BaseRs {
     @GET
     @Path("/")
     public Response index() {
+        final Unit unit = this.unit();
         return this.head()
             .append(
                 new JaxbBundle("unit")
                     .add("name", this.name)
                     .up()
-                    .add("spec", this.unit().spec().asText())
+                    .add("spec", unit.spec().asText())
                     .up()
             )
             .append(
                 new JaxbFace(this.repo(), this.users())
-                    .bundle(this.user().urn(), this.name)
+                    .bundle(this.user(), unit)
             )
             .render()
             .build();

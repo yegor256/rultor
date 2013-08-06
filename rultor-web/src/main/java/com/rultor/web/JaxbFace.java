@@ -37,6 +37,7 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
@@ -82,14 +83,13 @@ final class JaxbFace {
 
     /**
      * Build bundle.
-     * @param urn URN of the user
+     * @param user URN of the user
      * @param unit Unit of the user
      * @return Bundle
      */
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    public JaxbBundle bundle(final URN urn, final String unit) {
-        final User user = this.users.get(urn);
-        final Spec spec = user.units().get(unit).spec();
+    public JaxbBundle bundle(final User user, final Unit unit) {
+        final Spec spec = unit.spec();
         JaxbBundle bundle = new JaxbBundle("face");
         try {
             final Variable<?> var = new Repo.Cached(
@@ -98,7 +98,7 @@ final class JaxbFace {
             if (var.arguments().isEmpty()) {
                 final Object object = var.instantiate(
                     this.users,
-                    new Arguments(this.work(urn, unit, spec))
+                    new Arguments(this.work(user.urn(), unit.name(), spec))
                 );
                 bundle = this.append(bundle, object);
             } else {
