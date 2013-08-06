@@ -92,6 +92,11 @@ final class HttpThread {
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void dispatch() throws InterruptedException {
         final Socket socket = this.sockets.take();
+        Logger.info(
+            this, "#dispath(): new connection to %s:%d from %s:%d",
+            socket.getLocalAddress(), socket.getLocalPort(),
+            socket.getRemoteSocketAddress(), socket.getPort()
+        );
         try {
             final BufferedReader reader = new BufferedReader(
                 new InputStreamReader(socket.getInputStream())
@@ -102,6 +107,10 @@ final class HttpThread {
                 this.process(matcher.group(1), output);
             }
             IOUtils.closeQuietly(output);
+            Logger.info(
+                this, "#dispath(): done with %s",
+                socket.getRemoteSocketAddress()
+            );
         } catch (IOException ex) {
             Logger.warn(this, "failed to dispatch %s: %s", socket, ex);
         } finally {

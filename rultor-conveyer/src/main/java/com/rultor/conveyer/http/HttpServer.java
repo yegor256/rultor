@@ -101,24 +101,27 @@ public final class HttpServer implements Closeable {
         throws IOException {
         this.server = new ServerSocket(port);
         final HttpThread thread = new HttpThread(this.sockets, streams);
-        final Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    thread.dispatch();
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
+        final Runnable runnable = new VerboseRunnable(
+            new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        thread.dispatch();
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
-            }
-        };
+            },
+            true, false
+        );
         for (int idx = 0; idx < HttpServer.THREADS; ++idx) {
             this.backend.scheduleWithFixedDelay(
                 runnable,
                 0, 1, TimeUnit.NANOSECONDS
             );
         }
-        Logger.warn(
-            this, "HTTP server started on TCP port %d with %d thread(s)",
+        Logger.info(
+            HttpServer.class, "HTTP srv started on TCP port %d, %d thread(s)",
             port, HttpServer.THREADS
         );
     }
@@ -134,7 +137,8 @@ public final class HttpServer implements Closeable {
                     public void run() {
                         HttpServer.this.process();
                     }
-                }
+                },
+                true, false
             ),
             0, 1, TimeUnit.NANOSECONDS
         );
