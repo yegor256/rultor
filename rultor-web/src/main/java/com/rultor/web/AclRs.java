@@ -34,6 +34,7 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
+import com.rultor.spi.ACL;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
 import java.net.HttpURLConnection;
@@ -105,7 +106,12 @@ public final class AclRs extends BaseRs {
     public Response save(@NotNull(message = "spec form param is mandatory")
         @FormParam("spec") final String spec) {
         try {
-            this.stand().acl(new Spec.Simple(spec));
+            this.stand().acl(
+                new Spec.Strict(
+                    spec, this.repo(), this.user(), this.users(),
+                    this.work(this.name, new Spec.Simple(spec)), ACL.class
+                )
+            );
         // @checkstyle IllegalCatch (1 line)
         } catch (Exception ex) {
             return this.head()

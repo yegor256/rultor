@@ -87,4 +87,66 @@ public interface Spec {
         }
     }
 
+    /**
+     * Strict spec.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "spec")
+    @Loggable(Loggable.DEBUG)
+    final class Strict implements Spec {
+        /**
+         * Simple spec that passed all quality controls.
+         */
+        private final transient Spec spec;
+        /**
+         * Public ctor.
+         * @param text The text
+         * @param repo Repo
+         * @param user User
+         * @param users Users
+         * @param work Work we're in
+         * @param type Type expected
+         * @throws SpecException If fails
+         */
+        public Strict(
+            @NotNull(message = "spec can't be NULL") final String text,
+            @NotNull(message = "repo can't be NULL") final Repo repo,
+            @NotNull(message = "user can't be NULL") final User user,
+            @NotNull(message = "users can't be NULL") final Users users,
+            @NotNull(message = "work can't be NULL") final Work work,
+            @NotNull(message = "type can't be NULL") final Class<?> type)
+            throws SpecException {
+            final Spec temp = new Spec.Simple(text);
+            final Variable<?> var = new Repo.Cached(repo, user, temp).get();
+            if (var.arguments().isEmpty()) {
+                final Object object = var.instantiate(
+                    users, new Arguments(work)
+                );
+                try {
+                    object.toString();
+                } catch (SecurityException ex) {
+                    throw new SpecException(ex);
+                }
+                if (!type.isAssignableFrom(object.getClass())) {
+                    throw new SpecException(
+                        String.format(
+                            "%s expected while %s provided",
+                            type.getName(),
+                            object.getClass().getName()
+                        )
+                    );
+                }
+            }
+            this.spec = new Spec.Simple(var.asText());
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String asText() {
+            return this.spec.asText();
+        }
+    }
+
 }
