@@ -128,7 +128,7 @@ final class AwsStands implements Stands {
      * Fetch all items.
      * @return All stands
      */
-    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    @Cacheable(lifetime = Tv.THIRTY, unit = TimeUnit.MINUTES)
     private Collection<Item> fetch() {
         return this.region.table(AwsStand.TABLE)
             .frame()

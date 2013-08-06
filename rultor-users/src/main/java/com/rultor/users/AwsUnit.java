@@ -111,7 +111,7 @@ final class AwsUnit implements Unit {
      */
     @Override
     @NotNull(message = "spec of a unit is never NULL")
-    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    @Cacheable(lifetime = Tv.THIRTY, unit = TimeUnit.MINUTES)
     public Spec spec() {
         Spec spec;
         if (this.item.has(AwsUnit.FIELD_SPEC)) {
