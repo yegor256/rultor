@@ -126,6 +126,10 @@ public final class Snapshot {
      * @throws ImpossibleModificationException If fails at some point
      * @checkstyle RedundantThrows (5 lines)
      */
+    @Loggable(
+        value = Loggable.DEBUG,
+        ignore = ImpossibleModificationException.class
+    )
     public void apply(final Document dom)
         throws ImpossibleModificationException {
         new Xembler(this.directives).apply(dom);
