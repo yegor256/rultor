@@ -124,7 +124,7 @@ public final class Snapshot {
      * Apply it to the DOM.
      * @param dom DOM document
      * @throws ImpossibleModificationException If fails at some point
-     * @checkstyle RedundantThrows (5 lines)
+     * @checkstyle RedundantThrows (10 lines)
      */
     @Loggable(
         value = Loggable.DEBUG,

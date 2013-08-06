@@ -58,7 +58,7 @@ do
             --max-provisioned-reads 32 \
             --min-provisioned-writes 1 \
             --max-provisioned-writes 32
-        sleep 60
+        sleep 300
     done &
 done
 
