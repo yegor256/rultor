@@ -30,16 +30,9 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
-import com.rexsl.page.JaxbBundle;
-import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.auth.Identity;
-import com.rultor.spi.Unit;
-import java.util.logging.Level;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
@@ -76,98 +69,10 @@ public final class IndexRs extends BaseRs {
                 .stylesheet("/xsl/index.xsl")
                 .build(EmptyPage.class)
                 .init(this)
-                .append(this.mine())
-                .link(new Link("create", "./create"))
                 .render()
                 .build();
         }
         return response;
-    }
-
-    /**
-     * Create new empty unit.
-     * @param name Name of the unit to create
-     * @return The JAX-RS response
-     */
-    @POST
-    @Path("/create")
-    public Response create(@NotNull(message = "unit name is mandatory")
-        @FormParam("name") final String name) {
-        if (this.user().units().contains(name)) {
-            throw this.flash().redirect(
-                this.uriInfo().getRequestUri(),
-                String.format("Unit `%s` already exists", name),
-                Level.WARNING
-            );
-        }
-        this.user().units().create(name);
-        throw this.flash().redirect(
-            this.uriInfo().getBaseUriBuilder()
-                .clone()
-                .path(UnitRs.class)
-                .build(name),
-            String.format("Unit `%s` successfully created", name),
-            Level.INFO
-        );
-    }
-
-    /**
-     * All my units.
-     * @return Collection of JAXB units
-     */
-    private JaxbBundle mine() {
-        return new JaxbBundle("units").add(
-            new JaxbBundle.Group<Unit>(this.user().units()) {
-                @Override
-                public JaxbBundle bundle(final Unit unit) {
-                    return IndexRs.this.unit(unit);
-                }
-            }
-        );
-    }
-
-    /**
-     * Convert unit to JaxbBundle.
-     * @param unit Name of unit
-     * @return Bundle
-     */
-    private JaxbBundle unit(final Unit unit) {
-        return new JaxbBundle("unit")
-            .add("name", unit.name())
-            .up()
-            .add(
-                new JaxbFace(this.repo(), this.users())
-                    .bundle(this.user().urn(), unit.name())
-            )
-            .link(
-                new Link(
-                    // @checkstyle MultipleStringLiterals (1 line)
-                    "remove",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(UnitRs.class)
-                        .path(UnitRs.class, "remove")
-                        .build(unit.name())
-                )
-            )
-            .link(
-                new Link(
-                    "edit",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(UnitRs.class)
-                        .build(unit.name())
-                )
-            )
-            .link(
-                new Link(
-                    "drain",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(DrainRs.class)
-                        .build(unit.name())
-                )
-            );
     }
 
 }

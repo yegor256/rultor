@@ -187,6 +187,15 @@ public class BaseRs extends BaseResource {
                             .build()
                     )
                 );
+                page.link(
+                    new Link(
+                        "units",
+                        BaseRs.this.uriInfo().getBaseUriBuilder()
+                            .clone()
+                            .path(UnitsRs.class)
+                            .build()
+                    )
+                );
             }
         };
     }

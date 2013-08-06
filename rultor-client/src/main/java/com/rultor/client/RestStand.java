@@ -33,27 +33,22 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
-import com.rultor.spi.Receipt;
-import com.rultor.spi.Stands;
-import com.rultor.spi.Statements;
-import com.rultor.spi.Units;
-import com.rultor.spi.User;
+import com.rultor.spi.Pageable;
+import com.rultor.spi.Pulse;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Stand;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URLEncoder;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.codec.Charsets;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.CharEncoding;
 
 /**
- * RESTful User.
+ * RESTful Stand.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -63,7 +58,7 @@ import org.apache.commons.lang3.CharEncoding;
 @ToString
 @EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
-public final class RestUser implements User {
+final class RestStand implements Stand {
 
     /**
      * Home URI.
@@ -76,52 +71,82 @@ public final class RestUser implements User {
     private final transient String token;
 
     /**
-     * Public ctor, with custom entry point.
-     * @param entry Entry point (URI)
-     * @param urn User unique name in the system
-     * @param key Secret authentication key
-     */
-    public RestUser(@NotNull(message = "URI can't be NULL") final URI entry,
-        @NotNull(message = "URN can't be NULL") final URN urn,
-        @NotNull(message = "key can't be NULL") final String key) {
-        this.home = entry.toString();
-        try {
-            this.token = String.format(
-                "Basic %s",
-                Base64.encodeBase64String(
-                    String.format(
-                        "%s:%s",
-                        URLEncoder.encode(urn.toString(), CharEncoding.UTF_8),
-                        URLEncoder.encode(key, CharEncoding.UTF_8)
-                    ).getBytes(Charsets.UTF_8)
-                )
-            );
-        } catch (UnsupportedEncodingException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    /**
      * Public ctor.
-     * @param urn User unique name in the system
-     * @param key Secret authentication key
+     * @param uri URI of home page
+     * @param auth Authentication token
      */
-    public RestUser(final URN urn, final String key) {
-        this(URI.create("http://www.rultor.com"), urn, key);
+    protected RestStand(final String uri, final String auth) {
+        this.home = uri;
+        this.token = auth;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public URN urn() {
+    public void acl(final Spec spec) {
+        try {
+            RestTester.start(UriBuilder.fromUri(this.home))
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
+                .get(String.format("preparing for #acl(%s)", spec))
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .rel("/page/links/link[@rel='save']/@href")
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .post(
+                    String.format("#spec(%s)", spec.asText()),
+                    String.format(
+                        "spec=%s",
+                        URLEncoder.encode(spec.asText(), CharEncoding.UTF_8)
+                    )
+                )
+                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+        } catch (UnsupportedEncodingException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spec acl() {
+        return new Spec.Simple(
+            RestTester.start(UriBuilder.fromUri(this.home))
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
+                .get("#spec()")
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .xpath("/page/stand/acl/text()")
+                .get(0)
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String name() {
+        return RestTester.start(UriBuilder.fromUri(this.home))
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+            .header(HttpHeaders.AUTHORIZATION, this.token)
+            .get("#name()")
+            .assertStatus(HttpURLConnection.HTTP_OK)
+            .xpath("/page/stand/name/text()")
+            .get(0);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public URN owner() {
         return URN.create(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("#urn()")
+                .get("#owner()")
                 .assertStatus(HttpURLConnection.HTTP_OK)
-                .assertXPath("/page/identity")
                 .xpath("/page/identity/urn/text()")
                 .get(0)
         );
@@ -131,27 +156,7 @@ public final class RestUser implements User {
      * {@inheritDoc}
      */
     @Override
-    public Units units() {
-        return new RestUnits(
-            URI.create(
-                RestTester.start(UriBuilder.fromUri(this.home))
-                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                    .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .get("#units()")
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .assertXPath("/page/links/link[@ref='units']")
-                    .xpath("/page/links/link[@ref='units']/@href")
-                    .get(0)
-            ),
-            this.token
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Statements statements() {
+    public Pageable<Pulse> pulses() {
         throw new UnsupportedOperationException();
     }
 
@@ -159,28 +164,8 @@ public final class RestUser implements User {
      * {@inheritDoc}
      */
     @Override
-    public Iterable<Receipt> receipts() {
+    public void post(final String pulse, final String xembly) {
         throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Stands stands() {
-        return new RestStands(
-            URI.create(
-                RestTester.start(UriBuilder.fromUri(this.home))
-                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                    .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .get("#stands()")
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .assertXPath("/page/links/link[@ref='stands']")
-                    .xpath("/page/links/link[@ref='standss']/@href")
-                    .get(0)
-            ),
-            this.token
-        );
     }
 
 }

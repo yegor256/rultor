@@ -31,29 +31,24 @@ package com.rultor.client;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
-import com.rultor.spi.Receipt;
+import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
-import com.rultor.spi.Statements;
-import com.rultor.spi.Units;
-import com.rultor.spi.User;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.codec.Charsets;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.CharEncoding;
 
 /**
- * RESTful User.
+ * RESTful Stands.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -63,7 +58,7 @@ import org.apache.commons.lang3.CharEncoding;
 @ToString
 @EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
-public final class RestUser implements User {
+public final class RestStands implements Stands {
 
     /**
      * Home URI.
@@ -78,109 +73,84 @@ public final class RestUser implements User {
     /**
      * Public ctor, with custom entry point.
      * @param entry Entry point (URI)
-     * @param urn User unique name in the system
-     * @param key Secret authentication key
+     * @param tkn Token
      */
-    public RestUser(@NotNull(message = "URI can't be NULL") final URI entry,
-        @NotNull(message = "URN can't be NULL") final URN urn,
-        @NotNull(message = "key can't be NULL") final String key) {
+    public RestStands(
+        @NotNull(message = "URI can't be NULL") final URI entry,
+        @NotNull(message = "token can't be NULL") final String tkn) {
         this.home = entry.toString();
-        try {
-            this.token = String.format(
-                "Basic %s",
-                Base64.encodeBase64String(
+        this.token = tkn;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterator<Stand> iterator() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stand get(final String name) {
+        return new RestStand(
+            RestTester.start(UriBuilder.fromUri(this.home))
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
+                .get(String.format("#get(%s)", name))
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .xpath(
                     String.format(
-                        "%s:%s",
-                        URLEncoder.encode(urn.toString(), CharEncoding.UTF_8),
-                        URLEncoder.encode(key, CharEncoding.UTF_8)
-                    ).getBytes(Charsets.UTF_8)
+                        // @checkstyle LineLength (1 line)
+                        "/page/stands/stand[name='%s']/links/link[@rel='edit']/@href",
+                        name
+                    )
                 )
-            );
+                .get(0),
+            this.token
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void create(final String name) {
+        try {
+            RestTester.start(UriBuilder.fromUri(this.home))
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
+                .get(String.format("preparing to #create(%s)", name))
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .rel("/page/links/link[@rel='create']/@href")
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .post(
+                    String.format("#create(%s)", name),
+                    String.format(
+                        "name=%s",
+                        URLEncoder.encode(name, CharEncoding.UTF_8)
+                    )
+                )
+                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
         } catch (UnsupportedEncodingException ex) {
             throw new IllegalStateException(ex);
         }
     }
 
     /**
-     * Public ctor.
-     * @param urn User unique name in the system
-     * @param key Secret authentication key
-     */
-    public RestUser(final URN urn, final String key) {
-        this(URI.create("http://www.rultor.com"), urn, key);
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
-    public URN urn() {
-        return URN.create(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("#urn()")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .assertXPath("/page/identity")
-                .xpath("/page/identity/urn/text()")
-                .get(0)
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Units units() {
-        return new RestUnits(
-            URI.create(
-                RestTester.start(UriBuilder.fromUri(this.home))
-                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                    .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .get("#units()")
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .assertXPath("/page/links/link[@ref='units']")
-                    .xpath("/page/links/link[@ref='units']/@href")
-                    .get(0)
-            ),
-            this.token
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Statements statements() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterable<Receipt> receipts() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Stands stands() {
-        return new RestStands(
-            URI.create(
-                RestTester.start(UriBuilder.fromUri(this.home))
-                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                    .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .get("#stands()")
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .assertXPath("/page/links/link[@ref='stands']")
-                    .xpath("/page/links/link[@ref='standss']/@href")
-                    .get(0)
-            ),
-            this.token
-        );
+    public boolean contains(final String name) {
+        return !RestTester.start(UriBuilder.fromUri(this.home))
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+            .header(HttpHeaders.AUTHORIZATION, this.token)
+            .get(String.format("#contains(%s)", name))
+            .assertStatus(HttpURLConnection.HTTP_OK)
+            .xpath(String.format("/page/stands/stand[name='%s']", name))
+            .isEmpty();
     }
 
 }

@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -27,18 +26,15 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
-    <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="/xsl/layout.xsl"/>
-    <xsl:template name="head">
-        <title>
-            <xsl:text>index</xsl:text>
-        </title>
-    </xsl:template>
-    <xsl:template name="content">
-        <h2>
-            <xsl:text>Hello!</xsl:text>
-        </h2>
-    </xsl:template>
-</xsl:stylesheet>
+ */
+package com.rultor.web.rexsl.xhtml
+
+import com.rexsl.test.XhtmlMatchers
+import org.hamcrest.MatcherAssert
+
+MatcherAssert.assertThat(
+    rexsl.document,
+    XhtmlMatchers.hasXPaths(
+        '//xhtml:html/xhtml:head/xhtml:title'
+    )
+)
