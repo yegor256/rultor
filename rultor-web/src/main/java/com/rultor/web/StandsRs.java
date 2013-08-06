@@ -80,6 +80,13 @@ public final class StandsRs extends BaseRs {
     @Path("/create")
     public Response create(@NotNull(message = "stand name is mandatory")
         @FormParam("name") final String name) {
+        if (this.user().stands().contains(name)) {
+            throw this.flash().redirect(
+                this.uriInfo().getRequestUri(),
+                String.format("Stand `%s` already exists", name),
+                Level.WARNING
+            );
+        }
         this.user().stands().create(name);
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()

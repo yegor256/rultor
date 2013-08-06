@@ -43,9 +43,25 @@ import javax.validation.constraints.NotNull;
 public interface Stands extends Iterable<Stand> {
 
     /**
-     * Create empty default stand with this name.
+     * Create empty default stand with this name (runtime exception if
+     * it already exists).
      * @param name The name of it
      */
     void create(@NotNull(message = "name can't be NULL") String name);
+
+    /**
+     * Contains a stand with this name?
+     * @param name The name of it
+     * @return TRUE if it already exists
+     */
+    boolean contains(@NotNull(message = "name can't be NULL") String name);
+
+    /**
+     * Get stand by name (runtime exception if it's absent).
+     * @param name The name of it
+     * @return The unit
+     */
+    @NotNull(message = "stand is never NULL")
+    Stand get(@NotNull(message = "stand name can't be NULL") String name);
 
 }

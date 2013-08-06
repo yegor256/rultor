@@ -100,4 +100,20 @@ final class MongoStands implements Stands {
         };
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean contains(final String name) {
+        return this.origin.contains(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stand get(final String name) {
+        return this.origin.get(name);
+    }
+
 }

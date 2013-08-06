@@ -93,6 +93,13 @@ public final class IndexRs extends BaseRs {
     @Path("/create")
     public Response create(@NotNull(message = "unit name is mandatory")
         @FormParam("name") final String name) {
+        if (this.user().units().contains(name)) {
+            throw this.flash().redirect(
+                this.uriInfo().getRequestUri(),
+                String.format("Unit `%s` already exists", name),
+                Level.WARNING
+            );
+        }
         this.user().units().create(name);
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()

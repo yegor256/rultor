@@ -42,6 +42,7 @@ import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -122,6 +123,36 @@ final class AwsStands implements Stands {
                 .with(AwsStand.RANGE_STAND, stand)
                 .with(AwsStand.FIELD_ACL, "com.rultor.acl.Prohibited()")
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Cacheable(lifetime = Tv.THIRTY, unit = TimeUnit.MINUTES)
+    public boolean contains(final String name) {
+        return !this.region.table(AwsStand.TABLE).frame()
+            .where(AwsStand.HASH_OWNER, this.owner.toString())
+            .where(AwsStand.RANGE_STAND, name)
+            .isEmpty();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stand get(final String name) {
+        final Collection<Item> items = this.region.table(AwsStand.TABLE)
+            .frame()
+            .where(AwsStand.HASH_OWNER, this.owner.toString())
+            .where(AwsStand.RANGE_STAND, name)
+            .through(new QueryValve());
+        if (items.isEmpty()) {
+            throw new NoSuchElementException(
+                String.format("Stand `%s` doesn't exist", name)
+            );
+        }
+        return new AwsStand(items.iterator().next());
     }
 
     /**
