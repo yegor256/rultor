@@ -34,18 +34,17 @@ import com.jcabi.aspects.Tv;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
-import com.rultor.spi.Statement;
-import com.rultor.spi.Statements;
-import com.rultor.tools.Time;
+import com.rultor.spi.Sheet;
+import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import org.apache.commons.lang3.time.DurationFormatUtils;
 
 /**
- * Finances of a user.
+ * Account of a user.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -53,9 +52,9 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Path("/finances")
+@Path("/account")
 @Loggable(Loggable.DEBUG)
-public final class FinancesRs extends BaseRs {
+public final class AccountRs extends BaseRs {
 
     /**
      * Query param.
@@ -63,82 +62,77 @@ public final class FinancesRs extends BaseRs {
     public static final String QUERY_SINCE = "since";
 
     /**
-     * Since (date).
+     * Since (position).
      */
-    private transient Time since;
+    private transient Integer since;
 
     /**
      * Inject it from query.
-     * @param time Since what time
+     * @param pos Since what position
      */
-    @QueryParam(FinancesRs.QUERY_SINCE)
-    public void setSince(final String time) {
-        if (time != null) {
-            this.since = new Time(Long.parseLong(time));
+    @QueryParam(AccountRs.QUERY_SINCE)
+    public void setSince(final String pos) {
+        if (pos == null) {
+            this.since = 0;
+        } else {
+            this.since = Integer.valueOf(pos);
         }
     }
 
     /**
      * Get entrance page JAX-RS response.
      * @return The JAX-RS response
+     * @throws IOException If fails on tailing
      */
     @GET
     @Path("/")
-    public Response index() {
-        EmptyPage page = new PageBuilder()
-            .stylesheet("/xsl/finances.xsl")
+    public Response index() throws IOException {
+        final Sheet sheet = this.user().account().sheet();
+        return new PageBuilder()
+            .stylesheet("/xsl/account.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .append(new JaxbBundle("since", this.since.toString()))
+            .append(
+                new JaxbBundle("titles").add(
+                    new JaxbBundle.Group<String>(sheet.titles()) {
+                        @Override
+                        public JaxbBundle bundle(final String title) {
+                            return new JaxbBundle("title", title);
+                        }
+                    }
+                )
+            )
             .link(
                 new Link(
-                    "receipts",
+                    "latest",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
-                        .path(ReceiptsRs.class)
-                        .build()
+                        .path(AccountRs.class)
                 )
-            );
-        Statements statements = this.user().statements();
-        final int total;
-        if (this.since == null) {
-            total = Tv.FIVE;
-        } else {
-            statements = statements.tail(this.since);
-            total = Tv.TWENTY;
-            page = page
-                .append(new JaxbBundle("since", this.since.toString()))
-                .link(
-                    new Link(
-                        "latest",
-                        this.uriInfo().getBaseUriBuilder()
-                            .clone()
-                            .path(FinancesRs.class)
-                    )
-                );
-        }
-        return page
-            .append(this.statements(statements.iterator(), total))
+            )
+            .append(this.receipts(sheet.tail(this.since).iterator(), Tv.TWENTY))
             .render()
             .build();
     }
 
     /**
-     * All statements of the user.
-     * @param statements All statements to show
+     * Show receipts.
+     * @param receipts Receipts
      * @param maximum Maximum to show
      * @return Collection of JAXB units
      */
-    private JaxbBundle statements(final Iterator<Statement> statements,
+    private JaxbBundle receipts(final Iterator<List<Object>> receipts,
         final int maximum) {
-        JaxbBundle bundle = new JaxbBundle("statements");
+        JaxbBundle bundle = new JaxbBundle("receipts");
         int pos;
         for (pos = 0; pos < maximum; ++pos) {
-            if (!statements.hasNext()) {
+            if (!receipts.hasNext()) {
                 break;
             }
-            bundle = bundle.add(this.statement(statements.next()));
+            bundle = bundle.add(this.receipt(receipts.next()));
         }
-        if (pos == maximum && statements.hasNext()) {
+        if (pos == maximum && receipts.hasNext()) {
             bundle = bundle.link(
                 new Link(
                     "more",
@@ -147,8 +141,8 @@ public final class FinancesRs extends BaseRs {
                         .clone()
                         .path(DrainRs.class)
                         .queryParam(
-                            FinancesRs.QUERY_SINCE,
-                            statements.next().date().millis()
+                            AccountRs.QUERY_SINCE,
+                            this.since + pos
                         )
                         .build()
                 )
@@ -158,26 +152,17 @@ public final class FinancesRs extends BaseRs {
     }
 
     /**
-     * Convert statement to JaxbBundle.
-     * @param statement Statement to render
+     * Receipt to bundle.
+     * @param receipt Receipt
      * @return Bundle
      */
-    private JaxbBundle statement(final Statement statement) {
-        return new JaxbBundle("statement")
-            .add("amount", statement.amount().toString())
-            .up()
-            .add("balance", statement.balance().toString())
-            .up()
-            .add("date", statement.date().toString())
-            .up()
-            .add(
-                "when",
-                DurationFormatUtils.formatDurationWords(
-                    System.currentTimeMillis() - statement.date().millis(),
-                    true, true
-                )
-            )
-            .up();
+    private JaxbBundle receipt(final List<Object> receipt) {
+        JaxbBundle bundle = new JaxbBundle("receipt")
+            .attr("id", receipt.get(0).toString());
+        for (int pos = 1; pos < receipt.size(); ++pos) {
+            bundle = bundle.add("cell", receipt.get(pos).toString()).up();
+        }
+        return bundle;
     }
 
 }

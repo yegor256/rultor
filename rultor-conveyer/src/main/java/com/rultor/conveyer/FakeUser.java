@@ -38,6 +38,7 @@ import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
+import com.rultor.tools.Dollars;
 import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -53,7 +54,7 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({ "PMD.TooManyMethods", "PMD.CyclomaticComplexity" })
 final class FakeUser implements User {
 
     /**
@@ -90,7 +91,18 @@ final class FakeUser implements User {
                     }
                     @Override
                     public Wallet wallet() {
-                        throw new UnsupportedOperationException();
+                        return new Wallet() {
+                            @Override
+                            public void charge(final String details,
+                                final Dollars amount) {
+                                throw new UnsupportedOperationException();
+                            }
+                            @Override
+                            public Wallet delegate(final URN urn,
+                                final String unit) {
+                                throw new UnsupportedOperationException();
+                            }
+                        };
                     }
                 };
             }

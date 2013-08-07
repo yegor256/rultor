@@ -118,7 +118,7 @@ public final class DomainLineup implements Lineup {
      */
     private Lineup lineup() {
         return new ItemLineup(
-            this.work, this.wallet,
+            this.wallet,
             String.format(
                 "%s %s",
                 this.work.owner(),

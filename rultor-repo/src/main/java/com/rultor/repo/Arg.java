@@ -31,22 +31,22 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.immutable.Array;
-import com.jcabi.urn.URN;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
-import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.Validate;
 
 /**
- * Local reference.
+ * Arg.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -54,44 +54,40 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "grammar", "owner", "name" })
+@EqualsAndHashCode(of = "position")
 @Loggable(Loggable.DEBUG)
-final class RefLocal implements Variable<Object> {
+final class Arg implements Variable<Object> {
 
     /**
-     * Grammar where to look for vars.
+     * Pattern to use for parsing.
      */
-    private final transient Grammar grammar;
+    private static final Pattern PTN = Pattern.compile(
+        "\\$\\{(\\d+)(?::(.+))?\\}"
+    );
 
     /**
-     * Owner of the unit.
+     * Position number.
      */
-    private final transient URN owner;
+    private final transient int position;
 
     /**
-     * The name.
+     * Description.
      */
-    private final transient String name;
-
-    /**
-     * Parameters.
-     */
-    private final transient Array<Variable<?>> children;
+    private final transient String desc;
 
     /**
      * Public ctor.
-     * @param grm Grammar to use
-     * @param urn Owner of the unit
-     * @param ref Reference
-     * @param childs Enclosed parameters
-     * @checkstyle ParameterNumber (5 lines)
+     * @param text Text to parse
      */
-    protected RefLocal(final Grammar grm, final URN urn, final String ref,
-        final Collection<Variable<?>> childs) {
-        this.grammar = grm;
-        this.owner = urn;
-        this.name = ref;
-        this.children = new Array<Variable<?>>(childs);
+    protected Arg(final String text) {
+        final Matcher matcher = Arg.PTN.matcher(text);
+        Validate.isTrue(matcher.matches(), "invalid input '%s'", text);
+        this.position = Integer.parseInt(matcher.group(1));
+        if (matcher.group(2) == null) {
+            this.desc = "?";
+        } else {
+            this.desc = matcher.group(2);
+        }
     }
 
     /**
@@ -104,23 +100,15 @@ final class RefLocal implements Variable<Object> {
         @NotNull(message = "users can't be NULL") final Users users,
         @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
-        return new RefForeign(
-            this.grammar, this.owner, this.name, this.children
-        ).instantiate(users, args);
+        return args.get(this.position);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull(message = "text is never NULL")
     public String asText() {
-        return new StringBuilder()
-            .append(this.name)
-            .append('(')
-            .append(new Brackets<Variable<?>>(this.children))
-            .append(')')
-            .toString();
+        return String.format("${%d:%s}", this.position, this.desc);
     }
 
     /**
@@ -131,8 +119,8 @@ final class RefLocal implements Variable<Object> {
     public Map<Integer, String> arguments() throws SpecException {
         final ConcurrentMap<Integer, String> args =
             new ConcurrentSkipListMap<Integer, String>();
-        for (Variable<?> var : this.children) {
-            args.putAll(var.arguments());
+        if (this.position > 0) {
+            args.put(this.position, this.desc);
         }
         return args;
     }

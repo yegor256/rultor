@@ -71,11 +71,6 @@ final class RefForeign implements Variable<Object> {
     private final transient Grammar grammar;
 
     /**
-     * Client of the unit (who is using the unit).
-     */
-    private final transient URN client;
-
-    /**
      * Owner of the unit (who provides the unit).
      */
     private final transient URN owner;
@@ -93,17 +88,15 @@ final class RefForeign implements Variable<Object> {
     /**
      * Public ctor.
      * @param grm Grammar to use
-     * @param clnt Client of the unit
      * @param urn Owner of the unit
      * @param ref RefForeign
      * @param childs Enclosed child parameters
      * @checkstyle ParameterNumber (4 lines)
      */
-    protected RefForeign(final Grammar grm, final URN clnt,
-        final URN urn, final String ref, final Collection<Variable<?>> childs) {
+    protected RefForeign(final Grammar grm, final URN urn,
+        final String ref, final Collection<Variable<?>> childs) {
         Validate.matchesPattern(ref, "[-_\\w]+");
         this.grammar = grm;
-        this.client = clnt;
         this.owner = urn;
         this.name = ref;
         this.children = new Array<Variable<?>>(childs);
@@ -172,7 +165,11 @@ final class RefForeign implements Variable<Object> {
         for (Variable<?> var : this.children) {
             values.add(var.instantiate(users, args));
         }
-        return new Arguments(args.work(), args.wallet(), values);
+        return new Arguments(
+            args.work(),
+            args.wallet().delegate(this.owner, this.name),
+            values
+        );
     }
 
     /**

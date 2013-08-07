@@ -30,7 +30,6 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import java.util.Collection;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 
@@ -42,7 +41,7 @@ import javax.validation.constraints.NotNull;
  * @since 1.0
  */
 @Immutable
-public interface Sheet extends Pageable<Collection<Object>, Integer> {
+public interface Sheet extends Pageable<List<Object>, Integer> {
 
     /**
      * Column titles.

@@ -125,7 +125,7 @@ public final class Temporary implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Time> pulses() throws IOException {
+    public Pageable<Time, Time> pulses() throws IOException {
         final Collection<Time> times = new LinkedList<Time>();
         for (Temporary client : Temporary.BUFFERS.keySet()) {
             if (this.similar(client)) {

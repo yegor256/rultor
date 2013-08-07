@@ -50,15 +50,12 @@ import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Statement;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
-import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Iterator;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
@@ -145,22 +142,19 @@ public class BaseRs extends BaseResource {
                 if (!BaseRs.this.auth().identity().equals(Identity.ANONYMOUS)) {
                     page.link(
                         new Link(
-                            "finances",
+                            "account",
                             BaseRs.this.uriInfo().getBaseUriBuilder()
                                 .clone()
-                                .path(FinancesRs.class)
+                                .path(AccountRs.class)
                                 .build()
                         )
                     );
-                    final Iterator<Statement> stmts = BaseRs.this.user()
-                        .statements().iterator();
-                    final Dollars balance;
-                    if (stmts.hasNext()) {
-                        balance = stmts.next().balance();
-                    } else {
-                        balance = new Dollars(0);
-                    }
-                    page.append(new JaxbBundle("balance", balance.toString()));
+                    page.append(
+                        new JaxbBundle(
+                            "balance",
+                            BaseRs.this.user().account().balance().toString()
+                        )
+                    );
                 }
             }
         };
@@ -319,10 +313,6 @@ public class BaseRs extends BaseResource {
             @Override
             public Spec spec() {
                 return spec;
-            }
-            @Override
-            public void charge(final String details, final Dollars amount) {
-                throw new UnsupportedOperationException();
             }
             @Override
             public URI stdout() {

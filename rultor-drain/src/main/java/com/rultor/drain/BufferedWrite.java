@@ -133,7 +133,7 @@ public final class BufferedWrite implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Time> pulses() throws IOException {
+    public Pageable<Time, Time> pulses() throws IOException {
         return this.origin.pulses();
     }
 

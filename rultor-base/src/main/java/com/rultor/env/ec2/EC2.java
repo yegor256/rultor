@@ -73,7 +73,7 @@ public final class EC2 implements Environments {
      * Wallet to charge.
      */
     private final transient Wallet wallet;
-    
+
     /**
      * Type of EC2 instance.
      */

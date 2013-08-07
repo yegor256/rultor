@@ -112,7 +112,7 @@ public final class Syslog implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Time> pulses() throws IOException {
+    public Pageable<Time, Time> pulses() throws IOException {
         return new Pageable.Array<Time>();
     }
 

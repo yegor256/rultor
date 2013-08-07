@@ -87,11 +87,14 @@ variable returns [Variable<?> ret]
     META
     { $ret = new Meta($META.text); }
     |
+    ARG
+    { $ret = new Arg($ARG.text); }
+    |
     NAME arguments
     { $ret = new RefLocal(this.grammar, this.owner, $NAME.text, $arguments.ret); }
     |
     OWNER ':' NAME arguments
-    { $ret = new RefForeign(this.grammar, this.owner, URN.create($OWNER.text), $NAME.text, $arguments.ret); }
+    { $ret = new RefForeign(this.grammar, URN.create($OWNER.text), $NAME.text, $arguments.ret); }
     |
     TEXT
     { $ret = new Text(StringEscapeUtils.unescapeJava($TEXT.text)); }
@@ -185,6 +188,11 @@ TYPE
     ;
 
 META
+    :
+    '$' '{' LETTER+ '}'
+    ;
+
+ARG
     :
     '$' '{' DIGIT+ (':' ~'}'+)* '}'
     ;

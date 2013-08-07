@@ -91,7 +91,7 @@ public final class Tailed implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Time> pulses() throws IOException {
+    public Pageable<Time, Time> pulses() throws IOException {
         return this.main.pulses();
     }
 

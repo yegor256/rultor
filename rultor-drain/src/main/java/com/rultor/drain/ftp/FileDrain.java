@@ -119,7 +119,7 @@ public final class FileDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Time> pulses() {
+    public Pageable<Time, Time> pulses() {
         return new Pageable.Array<Time>();
     }
 

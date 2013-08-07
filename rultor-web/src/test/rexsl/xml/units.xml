@@ -46,6 +46,7 @@
         <link href="/xml/units.xml" rel="create" type="text/xml"/>
         <link href="/xml/units.xml" rel="units" type="text/xml"/>
         <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
+        <link href="/xml/account.xml" rel="account" type="text/xml"/>
     </links>
     <balance>$5.90</balance>
     <millis>1869</millis>

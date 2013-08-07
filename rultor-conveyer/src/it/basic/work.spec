@@ -1,5 +1,5 @@
 com.rultor.log4j.ThreadGroupSpy(
-  ${0},
-  com.rultor.base.Descriptive(${0}, com.rultor.base.Empty()),
+  ${work},
+  com.rultor.base.Descriptive(${work}, com.rultor.base.Empty()),
   com.rultor.drain.Console()
 )

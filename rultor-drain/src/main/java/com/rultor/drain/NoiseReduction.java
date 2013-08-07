@@ -137,10 +137,12 @@ public final class NoiseReduction implements Drain {
      *  https://code.google.com/p/guava-libraries/issues/detail?id=1464
      */
     @Override
-    public Pageable<Time> pulses() throws IOException {
-        return new Pageable<Time>() {
+    public Pageable<Time, Time> pulses() throws IOException {
+        // @checkstyle AnonInnerLength (50 lines)
+        return new Pageable<Time, Time>() {
             @Override
-            public Pageable<Time> tail(final Time head) throws IOException {
+            public Pageable<Time, Time> tail(final Time head)
+                throws IOException {
                 return NoiseReduction.this.clean.pulses().tail(head);
             }
             @Override

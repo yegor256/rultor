@@ -41,8 +41,8 @@ import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
-import com.rultor.tools.Dollars;
 import com.rultor.tools.Markdown;
 import com.rultor.tools.Time;
 import java.net.URI;
@@ -98,7 +98,10 @@ final class JaxbFace {
             if (var.arguments().isEmpty()) {
                 final Object object = var.instantiate(
                     this.users,
-                    new Arguments(this.work(user.urn(), unit.name(), spec))
+                    new Arguments(
+                        this.work(user.urn(), unit.name(), spec),
+                        new Wallet.Empty()
+                    )
                 );
                 bundle = this.append(bundle, object);
             } else {
@@ -166,10 +169,6 @@ final class JaxbFace {
             @Override
             public Spec spec() {
                 return spec;
-            }
-            @Override
-            public void charge(final String details, final Dollars amount) {
-                throw new UnsupportedOperationException();
             }
             @Override
             public URI stdout() {

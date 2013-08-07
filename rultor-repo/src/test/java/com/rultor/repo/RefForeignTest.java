@@ -70,7 +70,7 @@ public final class RefForeignTest {
         final URN urn = new URN("urn:facebook:1");
         Mockito.doReturn(urn).when(user).urn();
         final Variable<Object> var = new RefForeign(
-            new AntlrGrammar(), urn, urn, name,
+            new AntlrGrammar(), urn, name,
             new ArrayList<Variable<?>>(0)
         );
         final Users users = Mockito.mock(Users.class);
@@ -91,7 +91,7 @@ public final class RefForeignTest {
     public void makesText() throws Exception {
         final URN urn = new URN("urn:facebook:998");
         final Variable<Object> var = new RefForeign(
-            new AntlrGrammar(), urn, urn, "some-name",
+            new AntlrGrammar(), urn, "some-name",
             new ArrayList<Variable<?>>(0)
         );
         MatcherAssert.assertThat(

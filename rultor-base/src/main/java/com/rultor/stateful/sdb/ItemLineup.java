@@ -40,7 +40,6 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.SDBClient;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.stateful.Lineup;
 import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
@@ -92,13 +91,12 @@ public final class ItemLineup implements Lineup {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
      * @param wlt Wallet to charge
      * @param obj Item name
      * @param clnt Client
+     * @checkstyle ParameterNumber (7 lines)
      */
     public ItemLineup(
-        @NotNull(message = "work can't be NULL") final Work wrk,
         @NotNull(message = "wallet can't be NULL") final Wallet wlt,
         @NotNull(message = "object name can't be NULL") final String obj,
         @NotNull(message = "SimpleDB client can't be NULL")

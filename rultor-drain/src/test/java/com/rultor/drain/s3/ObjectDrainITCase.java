@@ -87,7 +87,7 @@ public final class ObjectDrainITCase {
             this.client, "S3DrainITCase/test.txt"
         );
         drain.append(Arrays.asList(msg));
-        final Pageable<Time> names = drain.pulses();
+        final Pageable<Time, Time> names = drain.pulses();
         MatcherAssert.assertThat(names, Matchers.<Time>iterableWithSize(0));
         MatcherAssert.assertThat(
             IOUtils.toString(drain.read(), CharEncoding.UTF_8),

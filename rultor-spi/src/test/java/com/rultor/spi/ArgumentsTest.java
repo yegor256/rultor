@@ -65,7 +65,7 @@ public final class ArgumentsTest {
             work, new Wallet.Empty(), Arrays.<Object>asList("previous value")
         );
         MatcherAssert.assertThat(
-            args.with(1, value).get(1),
+            args.with(0, value).get(0),
             Matchers.<Object>equalTo(value)
         );
     }

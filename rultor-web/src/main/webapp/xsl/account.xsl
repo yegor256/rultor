@@ -33,25 +33,45 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
-            <xsl:text>finances</xsl:text>
+            <xsl:text>account</xsl:text>
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <p>
-            <xsl:text>Unbilled </xsl:text>
-            <a title="receipts">
-                <xsl:attribute name="href">
-                    <xsl:value-of select="//links/link[@rel='receipts']/@href"/>
-                </xsl:attribute>
-                <xsl:text>receipts</xsl:text>
-            </a>
-            <xsl:text>.</xsl:text>
-        </p>
-        <xsl:choose>
-            <xsl:when test="/page/statements/statement">
-                <ul class="nav">
-                    <xsl:apply-templates select="/page/statements/statement"/>
+        <xsl:if test="/page/since">
+            <div class="spacious">
+                <ul class="list-inline">
+                    <li>
+                        <xsl:text>Since </xsl:text>
+                        <xsl:value-of select="/page/since"/>
+                    </li>
+                    <li>
+                        <a title="back to start">
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="//links/link[@rel='latest']/@href"/>
+                            </xsl:attribute>
+                            <xsl:text>back to start</xsl:text>
+                        </a>
+                    </li>
                 </ul>
+            </div>
+        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="/page/receipts/receipt">
+                <table class="table table-striped table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <xsl:for-each select="/page/titles/title">
+                                <th>
+                                    <xsl:value-of select="."/>
+                                </th>
+                            </xsl:for-each>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates select="/page/receipts/receipt"/>
+                    </tbody>
+                </table>
                 <xsl:if test="//links/link[@rel='more']">
                     <p>
                         <xsl:text>See </xsl:text>
@@ -59,38 +79,29 @@
                             <xsl:attribute name="href">
                                 <xsl:value-of select="//links/link[@rel='more']/@href"/>
                             </xsl:attribute>
-                            <xsl:text>older</xsl:text>
+                            <xsl:text>more</xsl:text>
                         </a>
-                        <xsl:text> statements.</xsl:text>
+                        <xsl:text>.</xsl:text>
                     </p>
                 </xsl:if>
             </xsl:when>
             <xsl:otherwise>
                 <p>
-                    <xsl:text>No statements at the moment.</xsl:text>
+                    <xsl:text>No receipts at the moment.</xsl:text>
                 </p>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <xsl:template match="statement">
-        <li>
-            <ul class="list-inline">
-                <li>
-                    <a title="see details">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='see']/@href"/>
-                        </xsl:attribute>
-                        <xsl:value-of select="date"/>
-                    </a>
-                </li>
-                <li class="hidden-phone">
-                    <xsl:value-of select="when"/>
-                    <xsl:text> ago</xsl:text>
-                </li>
-                <li>
-                    <xsl:value-of select="amount"/>
-                </li>
-            </ul>
-        </li>
+    <xsl:template match="receipt">
+        <tr>
+            <td>
+                <xsl:value-of select="@id"/>
+            </td>
+            <xsl:for-each select="cell">
+                <td>
+                    <xsl:value-of select="."/>
+                </td>
+            </xsl:for-each>
+        </tr>
     </xsl:template>
 </xsl:stylesheet>

@@ -85,7 +85,7 @@ public final class FileDrainITCase {
         );
         drain.append(Arrays.asList(msg));
         drain.append(Arrays.asList("something else"));
-        final Pageable<Time> names = drain.pulses();
+        final Pageable<Time, Time> names = drain.pulses();
         MatcherAssert.assertThat(names, Matchers.<Time>iterableWithSize(0));
         MatcherAssert.assertThat(
             IOUtils.toString(drain.read(), CharEncoding.UTF_8),

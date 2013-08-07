@@ -133,7 +133,7 @@
                                 <xsl:attribute name="href">
                                     <xsl:value-of select="/page/links/link[@rel='units']/@href"/>
                                 </xsl:attribute>
-                                <i class="icon-cog"><xsl:comment>units</xsl:comment></i>
+                                <i class="icon-cogs"><xsl:comment>units</xsl:comment></i>
                             </a>
                         </li>
                     </xsl:if>
@@ -143,7 +143,7 @@
                                 <xsl:attribute name="href">
                                     <xsl:value-of select="/page/links/link[@rel='stands']/@href"/>
                                 </xsl:attribute>
-                                <i class="icon-cogs"><xsl:comment>stands</xsl:comment></i>
+                                <i class="icon-bullhorn"><xsl:comment>stands</xsl:comment></i>
                             </a>
                         </li>
                     </xsl:if>
@@ -247,7 +247,7 @@
         <li>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='finances']/@href"/>
+                    <xsl:value-of select="/page/links/link[@rel='account']/@href"/>
                 </xsl:attribute>
                 <xsl:value-of select="/page/balance"/>
             </a>

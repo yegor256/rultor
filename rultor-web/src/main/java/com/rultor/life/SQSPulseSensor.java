@@ -47,6 +47,7 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import java.io.Closeable;
 import java.io.IOException;
@@ -203,7 +204,10 @@ public final class SQSPulseSensor implements Runnable, Closeable {
             return ACL.class.cast(
                 new Repo.Cached(this.repo, new User.Nobody(), stand.acl())
                     .get()
-                    .instantiate(this.users, new Arguments(new Work.None()))
+                    .instantiate(
+                        this.users,
+                        new Arguments(new Work.None(), new Wallet.Empty())
+                    )
             );
         } catch (SpecException ex) {
             throw new IllegalStateException(ex);

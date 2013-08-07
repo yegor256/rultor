@@ -109,6 +109,7 @@ final class EC2Environment implements Environment {
      * @param wlt Wallet to charge
      * @param instance Instance ID
      * @param clnt EC2 client
+     * @checkstyle ParameterNumber (5 lines)
      */
     protected EC2Environment(final Work wrk, final Wallet wlt,
         final String instance, final EC2Client clnt) {

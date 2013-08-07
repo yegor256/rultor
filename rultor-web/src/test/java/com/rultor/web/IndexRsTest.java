@@ -35,15 +35,13 @@ import com.rexsl.page.ServletContextMocker;
 import com.rexsl.page.UriInfoMocker;
 import com.rexsl.test.JaxbConverter;
 import com.rexsl.test.XhtmlMatchers;
-import com.rultor.spi.Statement;
-import com.rultor.spi.Statements;
+import com.rultor.spi.Account;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.tools.Dollars;
 import java.util.ArrayList;
-import java.util.Arrays;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.hamcrest.MatcherAssert;
@@ -75,11 +73,9 @@ public final class IndexRsTest {
             .when(units).iterator();
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(Mockito.any(URN.class));
-        final Statements stmts = Mockito.mock(Statements.class);
-        Mockito.doReturn(stmts).when(user).statements();
-        final Statement stmt = Mockito.mock(Statement.class);
-        Mockito.doReturn(new Dollars(0)).when(stmt).balance();
-        Mockito.doReturn(Arrays.asList(stmt).iterator()).when(stmts).iterator();
+        final Account account = Mockito.mock(Account.class);
+        Mockito.doReturn(account).when(user).account();
+        Mockito.doReturn(new Dollars(1)).when(account).balance();
         res.setServletContext(
             new ServletContextMocker().withAttribute(
                 Users.class.getName(), users
