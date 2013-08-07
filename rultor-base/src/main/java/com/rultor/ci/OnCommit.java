@@ -135,7 +135,6 @@ public final class OnCommit implements Instance {
      * @return TRUE if seen
      * @throws IOException If fails
      */
-    @Step("commit ${args[0]} was#if(!$result)NOT#end seen before")
     private boolean seen(final Commit head) throws IOException {
         return this.notepad.contains(head.name());
     }
