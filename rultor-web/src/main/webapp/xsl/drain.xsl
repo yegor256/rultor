@@ -115,7 +115,7 @@
                 </ul>
             </xsl:if>
             <xsl:if test="xembly">
-                <pre class="xembly"><xsl:value-of select="xembly"/></pre>
+                <pre class="xembly" style="display: none;"><xsl:value-of select="xembly"/></pre>
             </xsl:if>
             <xsl:apply-templates select="snapshot"/>
         </div>

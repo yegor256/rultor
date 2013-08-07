@@ -96,6 +96,7 @@ public final class Descriptive implements Instance {
             new Directives()
                 .xpath("/snapshot[not(work)]")
                 .strict(1)
+                .add("work")
                 .add("owner")
                 .set(this.work.owner().toString())
                 .up()
@@ -107,7 +108,7 @@ public final class Descriptive implements Instance {
         ).log();
         new XemblyLine(
             new Directives()
-                .xpath("/snapshot[not(started)]")
+                .xpath("/snapshot[not(start)]")
                 .strict(1)
                 .add("start")
                 .set(new Time().toString())
@@ -124,14 +125,14 @@ public final class Descriptive implements Instance {
                 .xpath("/snapshot[not(version)]")
                 .strict(1)
                 .add("version")
-                .set(
-                    String.format(
-                        "%s %s %s",
-                        Manifests.read("Rultor-Version"),
-                        Manifests.read("Rultor-Revision"),
-                        Manifests.read("Rultor-Date")
-                    )
-                )
+                .add("name")
+                .set(Manifests.read("Rultor-Version"))
+                .up()
+                .add("revision")
+                .set(Manifests.read("Rultor-Revision"))
+                .up()
+                .add("date")
+                .set(Manifests.read("Rultor-Date"))
         ).log();
         new XemblyLine(
             new Directives()
