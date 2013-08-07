@@ -55,6 +55,7 @@ import lombok.EqualsAndHashCode;
  * @version $Id$
  * @since 1.0
  * @checkstyle MultipleStringLiterals (500 lines)
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @Loggable(Loggable.DEBUG)

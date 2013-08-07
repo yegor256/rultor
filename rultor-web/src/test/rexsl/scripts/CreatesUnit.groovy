@@ -59,7 +59,7 @@ def unit = user.units().get(name)
 }
 [
     'com.rultor.base.Empty()',
-    'com.rultor.base.Restrictive(${0}, ["*"], com.rultor.base.Empty())',
+    'com.rultor.base.Restrictive(${work}, ["*"], com.rultor.base.Empty())',
 ].each {
     unit.update(new Spec.Simple(it))
 }
