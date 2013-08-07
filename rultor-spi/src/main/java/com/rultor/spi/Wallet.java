@@ -30,39 +30,62 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import com.rultor.tools.Time;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
+import com.rultor.tools.Dollars;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 
 /**
- * Sorted vector of {@link Statement}s (most recent goes first).
+ * Wallet.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Statements extends Iterable<Statement> {
+public interface Wallet {
 
     /**
-     * Tail, that does include the provided date.
-     * @param head Head of the new vector
-     * @return Statements
+     * Charge some money.
+     * @param details Description of operation
+     * @param amount Amount of money to charge
      */
-    @NotNull(message = "tail is never NULL")
-    Statements tail(Time head);
+    void charge(
+        @NotNull(message = "details can't be NULL") String details,
+        @NotNull(message = "amount can't be NULL") Dollars amount);
 
     /**
-     * Get by time.
-     * @param time Time of it
-     * @return Statement
+     * Delegate to another user/unit.
+     * @param urn URN of another user
+     * @param unit Name of the unit
+     * @return New wallet
      */
-    @NotNull(message = "statement is never NULL")
-    Statement get(Time time);
+    Wallet delegate(
+        @NotNull(message = "URN can't be NULL") URN urn,
+        @NotNull(message = "unit name can't be NULL") String unit);
 
     /**
-     * Add new statement.
-     * @param stmt The statement to add
+     * Empty wallet doing nothing.
      */
-    void add(@NotNull(message = "statement can't be NULL") Statement stmt);
+    @Immutable
+    @EqualsAndHashCode
+    @Loggable(Loggable.DEBUG)
+    final class Empty implements Wallet {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void charge(final String details, final Dollars amount) {
+            assert details != null;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Wallet delegate(final URN urn, final String unit) {
+            return this;
+        }
+    }
 
 }

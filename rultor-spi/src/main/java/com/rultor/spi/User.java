@@ -53,18 +53,11 @@ public interface User {
     URN urn();
 
     /**
-     * All statements of financial activities.
-     * @return Statements
-     */
-    @NotNull(message = "statements of user is never NULL")
-    Statements statements();
-
-    /**
-     * All receipts not yet statement.
+     * Get user's account.
      * @return All receipts
      */
-    @NotNull(message = "list of receipts is never NULL")
-    Iterable<Receipt> receipts();
+    @NotNull(message = "account is never NULL")
+    Account account();
 
     /**
      * Names of all his units.
@@ -92,11 +85,7 @@ public interface User {
             return URN.create("urn:test:0");
         }
         @Override
-        public Statements statements() {
-            throw new UnsupportedOperationException();
-        }
-        @Override
-        public Iterable<Receipt> receipts() {
+        public Account account() {
             throw new UnsupportedOperationException();
         }
         @Override

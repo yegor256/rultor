@@ -38,7 +38,6 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
-import com.rultor.spi.Work;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -121,16 +120,10 @@ final class RefForeign implements Variable<Object> {
         @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
         final User user = users.get(this.owner);
-        Work work = Work.class.cast(args.get(0));
-        if (!this.client.equals(this.owner)) {
-            work = new MonetaryWork(
-                users, work, this.client, this.owner, this.name
-            );
-        }
         return this.alter(
             this.grammar
                 .parse(user.urn(), user.units().get(this.name).spec().asText())
-                .instantiate(users, this.mapping(users, work, args)),
+                .instantiate(users, this.mapping(users, args)),
             args
         );
     }
@@ -167,20 +160,19 @@ final class RefForeign implements Variable<Object> {
     /**
      * Make arguments for the underlying spec.
      * @param users Users to use for instantiation
-     * @param work Work to pass through
      * @param args Arguments received from the upper level caller
      * @return Arguments to use
      * @throws SpecException If fails
      * @checkstyle RedundantThrows (5 lines)
      */
-    private Arguments mapping(final Users users, final Work work,
-        final Arguments args) throws SpecException {
+    private Arguments mapping(final Users users, final Arguments args)
+        throws SpecException {
         final Collection<Object> values =
             new ArrayList<Object>(this.children.size());
         for (Variable<?> var : this.children) {
             values.add(var.instantiate(users, args));
         }
-        return new Arguments(work, values);
+        return new Arguments(args.work(), args.wallet(), values);
     }
 
     /**

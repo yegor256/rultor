@@ -34,6 +34,7 @@ import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
 import com.rultor.shell.ssh.PrivateKey;
 import com.rultor.shell.ssh.SSHServers;
+import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import java.io.ByteArrayOutputStream;
 import org.apache.commons.codec.CharEncoding;
@@ -74,6 +75,7 @@ public final class EC2ITCase {
         final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
         final Environments envs = new EC2(
             new Work.None(),
+            new Wallet.Empty(),
             "t1.micro",
             "ami-82fa58eb",
             EC2ITCase.GROUP,

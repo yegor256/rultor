@@ -27,40 +27,42 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.spi;
 
-import com.rultor.spi.Arguments;
-import com.rultor.spi.Users;
-import com.rultor.spi.Variable;
-import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.mockito.Mockito;
+import com.jcabi.aspects.Immutable;
+import com.rultor.tools.Dollars;
+import javax.validation.constraints.NotNull;
 
 /**
- * Test case for {@link Text}.
+ * User account.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class TextTest {
+@Immutable
+public interface Account {
 
     /**
-     * Text can make an instance.
-     * @throws Exception If some problem inside
+     * Balance.
+     * @return Balance
      */
-    @Test
-    public void makesInstance() throws Exception {
-        final String text = "some \u20ac \"' test";
-        final Variable<String> var = new Text(text);
-        MatcherAssert.assertThat(
-            var.instantiate(
-                Mockito.mock(Users.class),
-                new Arguments(Mockito.mock(Work.class), new Wallet.Empty())
-            ),
-            Matchers.equalTo(text)
-        );
-    }
+    @NotNull(message = "Balance of account is never NULL")
+    Dollars balance();
+
+    /**
+     * Sheet.
+     * @return Sheet
+     */
+    @NotNull(message = "sheet is never NULL")
+    Sheet sheet();
+
+    /**
+     * Fund account.
+     * @param amount Amount to add/deduct
+     * @param details Explanation
+     */
+    @NotNull(message = "account is never NULL")
+    void fund(Dollars amount, String details);
 
 }

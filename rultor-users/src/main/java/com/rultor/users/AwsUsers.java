@@ -40,17 +40,13 @@ import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Receipt;
 import com.rultor.spi.Stand;
-import com.rultor.spi.Statement;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -118,27 +114,6 @@ public final class AwsUsers implements Users {
     @NotNull(message = "User is never NULL")
     public User get(@NotNull(message = "URN can't be empty") final URN urn) {
         return new AwsUser(this.region, urn);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void charge(@NotNull(message = "receipt can't be empty")
-        final Receipt receipt) {
-        AwsReceipts.add(this.region, receipt);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void reconcile() {
-        final ConcurrentMap<URN, Statement> statements =
-            new AwsPending(this.region).fetch();
-        for (Map.Entry<URN, Statement> entry : statements.entrySet()) {
-            this.get(entry.getKey()).statements().add(entry.getValue());
-        }
     }
 
     /**

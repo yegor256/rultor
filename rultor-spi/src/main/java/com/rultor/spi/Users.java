@@ -59,15 +59,4 @@ public interface Users extends Iterable<User> {
     @NotNull(message = "stand is never NULL")
     Stand stand(@NotNull(message = "stand name can't be NULL") String name);
 
-    /**
-     * Register new expense between two users.
-     * @param receipt Receipt of transaction
-     */
-    void charge(@NotNull(message = "receipt can't be NULL") Receipt receipt);
-
-    /**
-     * Compress all receipts into new statements.
-     */
-    void reconcile();
-
 }

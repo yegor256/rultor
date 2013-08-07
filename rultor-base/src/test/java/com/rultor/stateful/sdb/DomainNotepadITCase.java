@@ -30,6 +30,7 @@
 package com.rultor.stateful.sdb;
 
 import com.rultor.aws.SDBClient;
+import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.stateful.Notepad;
 import org.hamcrest.MatcherAssert;
@@ -72,7 +73,7 @@ public final class DomainNotepadITCase {
     @Test
     public void storesAndRetrievesLines() throws Exception {
         final Notepad notepad = new DomainNotepad(
-            new Work.Simple(), this.client
+            new Work.Simple(), new Wallet.Empty(), this.client
         );
         notepad.clear();
         MatcherAssert.assertThat(notepad, Matchers.empty());

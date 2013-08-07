@@ -38,6 +38,7 @@ import com.rultor.spi.Unit;
 import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
@@ -166,7 +167,11 @@ public final class ClasspathRepoTest {
         Mockito.doReturn(user).when(users).get(urn);
         final ClasspathRepoTest.Atom atom = ClasspathRepoTest.Atom.class.cast(
             repo.make(user, spec).instantiate(
-                users, new Arguments(new Work.None(), Arrays.<Object>asList(-2))
+                users,
+                new Arguments(
+                    new Work.None(), new Wallet.Empty(),
+                    Arrays.<Object>asList(-2)
+                )
             )
         );
         MatcherAssert.assertThat(atom.calc(), Matchers.equalTo(-1));

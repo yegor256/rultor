@@ -166,14 +166,14 @@ final class MongoStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse> pulses() {
-        return new Pageable<Pulse>() {
+    public Pageable<Pulse, Integer> pulses() {
+        return new Pageable<Pulse, Integer>() {
             @Override
             public Iterator<Pulse> iterator() {
                 return MongoStand.this.iterator();
             }
             @Override
-            public Pageable<Pulse> tail(final Pulse head) throws IOException {
+            public Pageable<Pulse, Integer> tail(final Integer head) {
                 throw new UnsupportedOperationException();
             }
         };

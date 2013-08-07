@@ -122,7 +122,7 @@ public interface Spec {
             final Variable<?> var = new Repo.Cached(repo, user, temp).get();
             if (var.arguments().isEmpty()) {
                 final Object object = var.instantiate(
-                    users, new Arguments(work)
+                    users, new Arguments(work, new Wallet.Empty())
                 );
                 try {
                     object.toString();

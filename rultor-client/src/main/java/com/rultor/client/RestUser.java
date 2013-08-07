@@ -33,9 +33,8 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
-import com.rultor.spi.Receipt;
+import com.rultor.spi.Account;
 import com.rultor.spi.Stands;
-import com.rultor.spi.Statements;
 import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import java.io.UnsupportedEncodingException;
@@ -151,22 +150,6 @@ public final class RestUser implements User {
      * {@inheritDoc}
      */
     @Override
-    public Statements statements() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterable<Receipt> receipts() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Stands stands() {
         return new RestStands(
             URI.create(
@@ -181,6 +164,14 @@ public final class RestUser implements User {
             ),
             this.token
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Account account() {
+        throw new UnsupportedOperationException();
     }
 
 }

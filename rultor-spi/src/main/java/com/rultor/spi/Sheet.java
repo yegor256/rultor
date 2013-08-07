@@ -27,40 +27,44 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.repo;
+package com.rultor.spi;
 
-import com.rultor.spi.Arguments;
-import com.rultor.spi.Users;
-import com.rultor.spi.Variable;
-import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.mockito.Mockito;
+import com.jcabi.aspects.Immutable;
+import java.util.Collection;
+import java.util.List;
+import javax.validation.constraints.NotNull;
 
 /**
- * Test case for {@link Text}.
+ * Sheet of transactions.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class TextTest {
+@Immutable
+public interface Sheet extends Pageable<Collection<Object>, Integer> {
 
     /**
-     * Text can make an instance.
-     * @throws Exception If some problem inside
+     * Column titles.
+     * @return Titles
      */
-    @Test
-    public void makesInstance() throws Exception {
-        final String text = "some \u20ac \"' test";
-        final Variable<String> var = new Text(text);
-        MatcherAssert.assertThat(
-            var.instantiate(
-                Mockito.mock(Users.class),
-                new Arguments(Mockito.mock(Work.class), new Wallet.Empty())
-            ),
-            Matchers.equalTo(text)
-        );
-    }
+    @NotNull(message = "list of titles is never NULL")
+    List<String> titles();
+
+    /**
+     * Order by.
+     * @param column Column to order by
+     * @return New sheet
+     */
+    @NotNull(message = "new sheet is never NULL")
+    Sheet orderBy(int column);
+
+    /**
+     * Sort by.
+     * @param column Column to sort by
+     * @return New sheet
+     */
+    @NotNull(message = "new sheet is never NULL")
+    Sheet sortBy(int column);
 
 }

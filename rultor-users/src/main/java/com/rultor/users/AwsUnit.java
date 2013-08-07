@@ -38,6 +38,7 @@ import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
+import com.rultor.spi.Wallet;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -128,6 +129,14 @@ final class AwsUnit implements Unit {
     @Override
     public String name() {
         return this.item.get(AwsUnit.RANGE_NAME).getS();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Wallet wallet() {
+        throw new UnsupportedOperationException();
     }
 
 }

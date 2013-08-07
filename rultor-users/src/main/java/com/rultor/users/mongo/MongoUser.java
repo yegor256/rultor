@@ -32,9 +32,8 @@ package com.rultor.users.mongo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Receipt;
+import com.rultor.spi.Account;
 import com.rultor.spi.Stands;
-import com.rultor.spi.Statements;
 import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import lombok.EqualsAndHashCode;
@@ -85,22 +84,6 @@ final class MongoUser implements User {
      * {@inheritDoc}
      */
     @Override
-    public Statements statements() {
-        return this.origin.statements();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterable<Receipt> receipts() {
-        return this.origin.receipts();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Units units() {
         return this.origin.units();
     }
@@ -111,6 +94,14 @@ final class MongoUser implements User {
     @Override
     public Stands stands() {
         return new MongoStands(this.mongo, this.origin.stands());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Account account() {
+        throw new UnsupportedOperationException();
     }
 
 }

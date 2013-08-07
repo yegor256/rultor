@@ -40,6 +40,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rultor.aws.SDBClient;
+import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.stateful.Notepad;
 import com.rultor.tools.Dollars;
@@ -89,15 +90,23 @@ public final class DomainNotepad implements Notepad {
     private final transient Work work;
 
     /**
+     * Wallet to charge.
+     */
+    private final transient Wallet wallet;
+
+    /**
      * Public ctor.
      * @param wrk Work
+     * @param wlt Wallet to charge
      * @param clnt Client
      */
     public DomainNotepad(
         @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "wallet can't be NULL") final Wallet wlt,
         @NotNull(message = "SimpleDB client can't be NULL")
         final SDBClient clnt) {
         this.work = wrk;
+        this.wallet = wlt;
         this.client = clnt;
     }
 
@@ -155,7 +164,7 @@ public final class DomainNotepad implements Notepad {
                 .withConsistentRead(true)
                 .withSelectExpression(query)
         );
-        this.work.charge(
+        this.wallet.charge(
             String.format(
                 "retrieved AWS SimpleDB %d items from `%s` domain",
                 result.getItems().size(),
@@ -211,7 +220,7 @@ public final class DomainNotepad implements Notepad {
                         .withReplace(true)
                 )
         );
-        this.work.charge(
+        this.wallet.charge(
             String.format(
                 "added AWS SimpleDB item `%s` to `%s` domain",
                 this.name(line),
@@ -232,7 +241,7 @@ public final class DomainNotepad implements Notepad {
                 .withDomainName(this.client.domain())
                 .withItemName(this.name(line.toString()))
         );
-        this.work.charge(
+        this.wallet.charge(
             String.format(
                 "removed AWS SimpleDB item `%s` from `%s` domain",
                 this.name(line.toString()),

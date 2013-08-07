@@ -43,11 +43,11 @@ import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
-import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
 import java.io.Closeable;
 import java.io.IOException;
@@ -250,10 +250,6 @@ final class SimpleConveyer implements Closeable {
                     return origin.spec();
                 }
                 @Override
-                public void charge(final String details, final Dollars amount) {
-                    origin.charge(details, amount);
-                }
-                @Override
                 public URI stdout() {
                     return UriBuilder.fromUri("http://localhost/")
                         .path("{key}")
@@ -277,11 +273,12 @@ final class SimpleConveyer implements Closeable {
      */
     private void process(final Work work) throws Exception {
         final User owner = this.users.get(work.owner());
+        final Unit unit = owner.units().get(work.unit());
         final Variable<?> var =
             new Repo.Cached(this.repo, owner, work.spec()).get();
         if (var.arguments().isEmpty()) {
             final Object object = var.instantiate(
-                this.users, new Arguments(work)
+                this.users, new Arguments(work, unit.wallet())
             );
             if (object instanceof Instance) {
                 Instance.class.cast(object).pulse();

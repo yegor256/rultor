@@ -32,6 +32,7 @@ package com.rultor.stateful.sdb;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.aws.SDBClient;
+import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.stateful.Spinbox;
 import javax.validation.constraints.NotNull;
@@ -55,6 +56,11 @@ public final class DomainSpinbox implements Spinbox {
     private final transient Work work;
 
     /**
+     * Wallet to charge.
+     */
+    private final transient Wallet wallet;
+
+    /**
      * SimpleDB client.
      */
     private final transient SDBClient client;
@@ -62,13 +68,16 @@ public final class DomainSpinbox implements Spinbox {
     /**
      * Public ctor.
      * @param wrk Work we're in
+     * @param wlt Wallet
      * @param clnt Client
      */
     public DomainSpinbox(
         @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "wallet can't be NULL") final Wallet wlt,
         @NotNull(message = "SimpleDB client can't be NULL")
         final SDBClient clnt) {
         this.work = wrk;
+        this.wallet = wlt;
         this.client = clnt;
     }
 
@@ -89,7 +98,7 @@ public final class DomainSpinbox implements Spinbox {
     @Override
     public long add(final long value) {
         return new ItemSpinbox(
-            this.work,
+            this.wallet,
             String.format(
                 "%s %s %s",
                 this.work.owner(),
