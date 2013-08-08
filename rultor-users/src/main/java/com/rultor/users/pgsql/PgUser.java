@@ -27,53 +27,81 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.users.pgsql;
 
 import com.jcabi.aspects.Immutable;
-import com.rultor.tools.Time;
-import java.util.List;
-import javax.validation.constraints.NotNull;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
+import com.rultor.spi.Account;
+import com.rultor.spi.Stands;
+import com.rultor.spi.Units;
+import com.rultor.spi.User;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Sheet of transactions.
+ * User with extra features from PostgreSQL.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Sheet extends Pageable<List<Object>, Integer> {
+@ToString
+@EqualsAndHashCode(of = { "client", "origin" })
+@Loggable(Loggable.DEBUG)
+final class PgUser implements User {
 
     /**
-     * Column names/titles.
-     * @return Titles
+     * PostgreSQL client.
      */
-    @NotNull(message = "list of titles is never NULL")
-    List<String> columns();
+    private final transient PgClient client;
 
     /**
-     * Order by.
-     * @param column Column to order by
-     * @return New sheet
+     * Original user.
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet orderBy(String column);
+    private final transient User origin;
 
     /**
-     * Group by.
-     * @param column Column to group by
-     * @return New sheet
+     * Public ctor.
+     * @param clnt Client
+     * @param user User
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet groupBy(String column);
+    protected PgUser(final PgClient clnt, final User user) {
+        this.client = clnt;
+        this.origin = user;
+    }
 
     /**
-     * Between these dates.
-     * @param left Left time
-     * @param right Right time
-     * @return New sheet
+     * {@inheritDoc}
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet between(Time left, Time right);
+    @Override
+    public URN urn() {
+        return this.origin.urn();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Units units() {
+        return this.origin.units();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stands stands() {
+        return this.origin.stands();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Account account() {
+        return new PgAccount(this.client, this.urn());
+    }
 
 }

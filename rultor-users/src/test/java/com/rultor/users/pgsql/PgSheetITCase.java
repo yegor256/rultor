@@ -27,53 +27,69 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.users.pgsql;
 
-import com.jcabi.aspects.Immutable;
-import com.rultor.tools.Time;
+import com.jcabi.urn.URN;
+import com.rultor.spi.Sheet;
 import java.util.List;
-import javax.validation.constraints.NotNull;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Assume;
+import org.junit.Test;
 
 /**
- * Sheet of transactions.
- *
+ * Integration case for {@link PgSheet}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Immutable
-public interface Sheet extends Pageable<List<Object>, Integer> {
+public final class PgSheetITCase {
 
     /**
-     * Column names/titles.
-     * @return Titles
+     * JDBC URL.
      */
-    @NotNull(message = "list of titles is never NULL")
-    List<String> columns();
+    private static final String URL =
+        System.getProperty("failsafe.pgsql.jdbc");
 
     /**
-     * Order by.
-     * @param column Column to order by
-     * @return New sheet
+     * PgSheet can show a list of columns.
+     * @throws Exception If some problem inside
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet orderBy(String column);
+    @Test
+    public void fetchesListOfColumns() throws Exception {
+        final Sheet sheet = this.sheet();
+        MatcherAssert.assertThat(
+            sheet.columns(),
+            Matchers.hasItem("ct")
+        );
+    }
 
     /**
-     * Group by.
-     * @param column Column to group by
-     * @return New sheet
+     * PgSheet can fetch data lines.
+     * @throws Exception If some problem inside
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet groupBy(String column);
+    @Test
+    public void fetchesDataLines() throws Exception {
+        final Sheet sheet = this.sheet();
+        MatcherAssert.assertThat(
+            sheet,
+            Matchers.<List<Object>>iterableWithSize(
+                Matchers.greaterThanOrEqualTo(0)
+            )
+        );
+    }
 
     /**
-     * Between these dates.
-     * @param left Left time
-     * @param right Right time
-     * @return New sheet
+     * Get sheet to test against.
+     * @return Sheet to test
+     * @throws Exception If some problem inside
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet between(Time left, Time right);
+    private Sheet sheet() throws Exception {
+        Assume.assumeNotNull(PgSheetITCase.URL);
+        return new PgSheet(
+            new PgClient.Simple(PgSheetITCase.URL),
+            URN.create("urn:test:1")
+        );
+    }
 
 }

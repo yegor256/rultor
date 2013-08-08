@@ -27,53 +27,66 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.users.pgsql;
 
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
-import com.rultor.tools.Time;
-import java.util.List;
-import javax.validation.constraints.NotNull;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
+import com.jolbox.bonecp.BoneCPDataSource;
+import java.io.IOException;
+import javax.sql.DataSource;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Sheet of transactions.
+ * PostgreSQL client.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Sheet extends Pageable<List<Object>, Integer> {
+public interface PgClient {
 
     /**
-     * Column names/titles.
-     * @return Titles
+     * Get data source.
+     * @return The data source
+     * @throws IOException If IO fails
      */
-    @NotNull(message = "list of titles is never NULL")
-    List<String> columns();
+    DataSource get() throws IOException;
 
     /**
-     * Order by.
-     * @param column Column to order by
-     * @return New sheet
+     * Simple implementation.
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet orderBy(String column);
-
-    /**
-     * Group by.
-     * @param column Column to group by
-     * @return New sheet
-     */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet groupBy(String column);
-
-    /**
-     * Between these dates.
-     * @param left Left time
-     * @param right Right time
-     * @return New sheet
-     */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet between(Time left, Time right);
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "jdbc")
+    @Loggable(Loggable.DEBUG)
+    final class Simple implements PgClient {
+        /**
+         * JDBC URL.
+         */
+        private final transient String jdbc;
+        /**
+         * Public ctor.
+         * @param url JDBC URL
+         */
+        public Simple(final String url) {
+            this.jdbc = url;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @Cacheable(forever = true)
+        public DataSource get() throws IOException {
+            final BoneCPDataSource src = new BoneCPDataSource();
+            src.setDriverClass("org.postgresql.Driver");
+            src.setJdbcUrl(this.jdbc);
+            src.setMaxConnectionsPerPartition(Tv.TEN);
+            return src;
+        }
+    }
 
 }

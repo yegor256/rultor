@@ -27,53 +27,69 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.users.pgsql;
 
-import com.jcabi.aspects.Immutable;
-import com.rultor.tools.Time;
-import java.util.List;
-import javax.validation.constraints.NotNull;
+import com.jcabi.urn.URN;
+import com.rultor.spi.Account;
+import com.rultor.tools.Dollars;
+import java.util.Random;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Assume;
+import org.junit.Test;
 
 /**
- * Sheet of transactions.
- *
+ * Integration case for {@link PgAccount}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Immutable
-public interface Sheet extends Pageable<List<Object>, Integer> {
+public final class PgAccountITCase {
 
     /**
-     * Column names/titles.
-     * @return Titles
+     * JDBC URL.
      */
-    @NotNull(message = "list of titles is never NULL")
-    List<String> columns();
+    private static final String URL =
+        System.getProperty("failsafe.pgsql.jdbc");
 
     /**
-     * Order by.
-     * @param column Column to order by
-     * @return New sheet
+     * PgAccount can fetch balance.
+     * @throws Exception If some problem inside
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet orderBy(String column);
+    @Test
+    public void fetchesAccountBalance() throws Exception {
+        final Account account = this.account();
+        MatcherAssert.assertThat(
+            account.balance().points(),
+            Matchers.greaterThanOrEqualTo(0L)
+        );
+    }
 
     /**
-     * Group by.
-     * @param column Column to group by
-     * @return New sheet
+     * PgAccount can fund itself.
+     * @throws Exception If some problem inside
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet groupBy(String column);
+    @Test
+    public void fundsItself() throws Exception {
+        final Account account = this.account();
+        account.fund(new Dollars(new Random().nextInt()), "for a service");
+        MatcherAssert.assertThat(
+            account.balance().points(),
+            Matchers.greaterThanOrEqualTo(1L)
+        );
+    }
 
     /**
-     * Between these dates.
-     * @param left Left time
-     * @param right Right time
-     * @return New sheet
+     * Get account to test against.
+     * @return Account to test
+     * @throws Exception If some problem inside
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet between(Time left, Time right);
+    private Account account() throws Exception {
+        Assume.assumeNotNull(PgAccountITCase.URL);
+        return new PgAccount(
+            new PgClient.Simple(PgAccountITCase.URL),
+            URN.create("urn:test:1")
+        );
+    }
 
 }

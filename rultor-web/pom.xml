@@ -271,6 +271,7 @@
                                 <Rultor-MongoName>${mongo.name}</Rultor-MongoName>
                                 <Rultor-MongoUser>${mongo.user}</Rultor-MongoUser>
                                 <Rultor-MongoPassword>${mongo.password}</Rultor-MongoPassword>
+                                <Rultor-PgsqlJdbc>${pgsql.jdbc}</Rultor-PgsqlJdbc>
                             </manifestEntries>
                         </archive>
                     </configuration>

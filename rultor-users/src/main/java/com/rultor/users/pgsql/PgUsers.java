@@ -27,53 +27,87 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.users.pgsql;
 
 import com.jcabi.aspects.Immutable;
-import com.rultor.tools.Time;
-import java.util.List;
-import javax.validation.constraints.NotNull;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
+import com.rultor.spi.Stand;
+import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import java.util.Iterator;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Sheet of transactions.
+ * Users with extra features from PostgreSQL.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Sheet extends Pageable<List<Object>, Integer> {
+@ToString
+@EqualsAndHashCode(of = { "client", "origin" })
+@Loggable(Loggable.DEBUG)
+public final class PgUsers implements Users {
 
     /**
-     * Column names/titles.
-     * @return Titles
+     * Mongo container.
      */
-    @NotNull(message = "list of titles is never NULL")
-    List<String> columns();
+    private final transient PgClient client;
 
     /**
-     * Order by.
-     * @param column Column to order by
-     * @return New sheet
+     * Original users.
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet orderBy(String column);
+    private final transient Users origin;
 
     /**
-     * Group by.
-     * @param column Column to group by
-     * @return New sheet
+     * Public ctor.
+     * @param clnt Client
+     * @param users Users
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet groupBy(String column);
+    public PgUsers(final PgClient clnt, final Users users) {
+        this.client = clnt;
+        this.origin = users;
+    }
 
     /**
-     * Between these dates.
-     * @param left Left time
-     * @param right Right time
-     * @return New sheet
+     * {@inheritDoc}
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet between(Time left, Time right);
+    @Override
+    public Iterator<User> iterator() {
+        final Iterator<User> iter = this.origin.iterator();
+        return new Iterator<User>() {
+            @Override
+            public boolean hasNext() {
+                return iter.hasNext();
+            }
+            @Override
+            public User next() {
+                return new PgUser(PgUsers.this.client, iter.next());
+            }
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public User get(final URN name) {
+        return new PgUser(this.client, this.origin.get(name));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stand stand(final String name) {
+        return this.origin.stand(name);
+    }
 
 }

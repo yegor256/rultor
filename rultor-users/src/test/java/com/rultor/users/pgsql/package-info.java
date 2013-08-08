@@ -27,53 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
-
-import com.jcabi.aspects.Immutable;
-import com.rultor.tools.Time;
-import java.util.List;
-import javax.validation.constraints.NotNull;
 
 /**
- * Sheet of transactions.
+ * Users in PostgreSQL.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Sheet extends Pageable<List<Object>, Integer> {
-
-    /**
-     * Column names/titles.
-     * @return Titles
-     */
-    @NotNull(message = "list of titles is never NULL")
-    List<String> columns();
-
-    /**
-     * Order by.
-     * @param column Column to order by
-     * @return New sheet
-     */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet orderBy(String column);
-
-    /**
-     * Group by.
-     * @param column Column to group by
-     * @return New sheet
-     */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet groupBy(String column);
-
-    /**
-     * Between these dates.
-     * @param left Left time
-     * @param right Right time
-     * @return New sheet
-     */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet between(Time left, Time right);
-
-}
+package com.rultor.users.pgsql;

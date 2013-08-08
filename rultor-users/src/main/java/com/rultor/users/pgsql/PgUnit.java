@@ -27,53 +27,79 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.users.pgsql;
 
 import com.jcabi.aspects.Immutable;
-import com.rultor.tools.Time;
-import java.util.List;
-import javax.validation.constraints.NotNull;
+import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Unit;
+import com.rultor.spi.Wallet;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Sheet of transactions.
+ * Unit with extra features from PostgreSQL.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Sheet extends Pageable<List<Object>, Integer> {
+@ToString
+@EqualsAndHashCode(of = { "client", "origin" })
+@Loggable(Loggable.DEBUG)
+final class PgUnit implements Unit {
 
     /**
-     * Column names/titles.
-     * @return Titles
+     * PostgreSQL client.
      */
-    @NotNull(message = "list of titles is never NULL")
-    List<String> columns();
+    private final transient PgClient client;
 
     /**
-     * Order by.
-     * @param column Column to order by
-     * @return New sheet
+     * Original units.
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet orderBy(String column);
+    private final transient Unit origin;
 
     /**
-     * Group by.
-     * @param column Column to group by
-     * @return New sheet
+     * Public ctor.
+     * @param clnt Client
+     * @param unt Unit
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet groupBy(String column);
+    protected PgUnit(final PgClient clnt, final Unit unt) {
+        this.client = clnt;
+        this.origin = unt;
+    }
 
     /**
-     * Between these dates.
-     * @param left Left time
-     * @param right Right time
-     * @return New sheet
+     * {@inheritDoc}
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet between(Time left, Time right);
+    @Override
+    public Wallet wallet() {
+        return new PgWallet(this.client);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String name() {
+        return this.origin.name();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void update(final Spec spec) {
+        this.origin.update(spec);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spec spec() {
+        return this.origin.spec();
+    }
 
 }

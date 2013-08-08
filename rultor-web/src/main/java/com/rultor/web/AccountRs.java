@@ -94,11 +94,11 @@ public final class AccountRs extends BaseRs {
             .init(this)
             .append(new JaxbBundle("since", this.since.toString()))
             .append(
-                new JaxbBundle("titles").add(
-                    new JaxbBundle.Group<String>(sheet.titles()) {
+                new JaxbBundle("columns").add(
+                    new JaxbBundle.Group<String>(sheet.columns()) {
                         @Override
                         public JaxbBundle bundle(final String title) {
-                            return new JaxbBundle("title", title);
+                            return new JaxbBundle("column", title);
                         }
                     }
                 )

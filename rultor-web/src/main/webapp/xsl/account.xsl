@@ -61,7 +61,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <xsl:for-each select="/page/titles/title">
+                            <xsl:for-each select="/page/columns/column">
                                 <th>
                                     <xsl:value-of select="."/>
                                 </th>
