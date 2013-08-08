@@ -29,8 +29,10 @@
  */
 package com.rultor.users.pgsql;
 
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.jdbc.JdbcSession;
 import com.jcabi.jdbc.SingleHandler;
 import com.jcabi.urn.URN;
@@ -38,6 +40,7 @@ import com.rultor.spi.Account;
 import com.rultor.spi.Sheet;
 import com.rultor.tools.Dollars;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -78,6 +81,7 @@ final class PgAccount implements Account {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(lifetime = Tv.FIFTEEN, unit = TimeUnit.MINUTES)
     public Dollars balance() {
         try {
             final long credit = new JdbcSession(this.client.get())
