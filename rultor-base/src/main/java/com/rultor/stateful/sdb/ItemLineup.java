@@ -39,7 +39,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.SDBClient;
-import com.rultor.spi.Work;
+import com.rultor.spi.Wallet;
 import com.rultor.stateful.Lineup;
 import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
@@ -75,9 +75,9 @@ public final class ItemLineup implements Lineup {
     private static final Random RAND = new SecureRandom();
 
     /**
-     * Work we're in, for charging.
+     * Wallet to charge.
      */
-    private final transient Work work;
+    private final transient Wallet wallet;
 
     /**
      * SimpleDB client.
@@ -91,16 +91,17 @@ public final class ItemLineup implements Lineup {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wlt Wallet to charge
      * @param obj Item name
      * @param clnt Client
+     * @checkstyle ParameterNumber (7 lines)
      */
     public ItemLineup(
-        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "wallet can't be NULL") final Wallet wlt,
         @NotNull(message = "object name can't be NULL") final String obj,
         @NotNull(message = "SimpleDB client can't be NULL")
         final SDBClient clnt) {
-        this.work = wrk;
+        this.wallet = wlt;
         this.name = obj;
         this.client = clnt;
     }
@@ -204,7 +205,7 @@ public final class ItemLineup implements Lineup {
                 .withDomainName(this.client.domain())
                 .withItemName(this.name)
         );
-        this.work.charge(
+        this.wallet.charge(
             String.format(
                 "checked existence of AWS SimpleDB item `%s` in `%s` domain",
                 this.name,
@@ -235,7 +236,7 @@ public final class ItemLineup implements Lineup {
                         .withReplace(true)
                 )
         );
-        this.work.charge(
+        this.wallet.charge(
             String.format(
                 "put AWS SimpleDB item `%s` into `%s` domain",
                 this.name,
@@ -257,7 +258,7 @@ public final class ItemLineup implements Lineup {
                 .withItemName(this.name)
                 .withAttributeNames(ItemLineup.IDENTIFIER)
         );
-        this.work.charge(
+        this.wallet.charge(
             String.format(
                 "loaded AWS SimpleDB item `%s` from `%s` domain",
                 this.name,
@@ -283,7 +284,7 @@ public final class ItemLineup implements Lineup {
                 .withDomainName(this.client.domain())
                 .withItemName(this.name)
         );
-        this.work.charge(
+        this.wallet.charge(
             String.format(
                 "removed AWS SimpleDB item `%s` from `%s` domain",
                 this.name,

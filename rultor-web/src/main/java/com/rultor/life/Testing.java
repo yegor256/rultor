@@ -33,22 +33,20 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rultor.repo.ClasspathRepo;
+import com.rultor.spi.Account;
 import com.rultor.spi.Queue;
-import com.rultor.spi.Receipt;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Sheet;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
-import com.rultor.spi.Statement;
-import com.rultor.spi.Statements;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import com.rultor.spi.Wallet;
 import com.rultor.tools.Dollars;
-import com.rultor.tools.Time;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -110,14 +108,6 @@ final class Testing implements Profile {
             @Override
             public User get(final URN urn) {
                 return new Testing.MemoryUser(urn);
-            }
-            @Override
-            public void charge(final Receipt receipt) {
-                assert receipt != null;
-            }
-            @Override
-            public void reconcile() {
-                throw new UnsupportedOperationException();
             }
             @Override
             public Stand stand(final String name) {
@@ -189,33 +179,6 @@ final class Testing implements Profile {
             };
         }
         @Override
-        public Statements statements() {
-            return new Statements() {
-                @Override
-                public Statements tail(final Time head) {
-                    return this;
-                }
-                @Override
-                public void add(final Statement stmt) {
-                    throw new UnsupportedOperationException();
-                }
-                @Override
-                public Statement get(final Time time) {
-                    throw new UnsupportedOperationException();
-                }
-                @Override
-                public Iterator<Statement> iterator() {
-                    return Arrays.<Statement>asList(
-                        new Statement.Simple(new Time(), new Dollars(0), "")
-                    ).iterator();
-                }
-            };
-        }
-        @Override
-        public Iterable<Receipt> receipts() {
-            throw new UnsupportedOperationException();
-        }
-        @Override
         public Stands stands() {
             return new Stands() {
                 @Override
@@ -233,6 +196,23 @@ final class Testing implements Profile {
                 @Override
                 public Iterator<Stand> iterator() {
                     return Testing.STANDS.values().iterator();
+                }
+            };
+        }
+        @Override
+        public Account account() {
+            return new Account() {
+                @Override
+                public Dollars balance() {
+                    return new Dollars(1);
+                }
+                @Override
+                public Sheet sheet() {
+                    throw new UnsupportedOperationException();
+                }
+                @Override
+                public void fund(final Dollars amount, final String details) {
+                    throw new UnsupportedOperationException();
                 }
             };
         }
@@ -266,6 +246,10 @@ final class Testing implements Profile {
         @Override
         public String name() {
             return this.label;
+        }
+        @Override
+        public Wallet wallet() {
+            throw new UnsupportedOperationException();
         }
     }
 

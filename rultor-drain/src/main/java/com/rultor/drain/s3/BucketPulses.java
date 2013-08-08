@@ -59,7 +59,7 @@ import lombok.ToString;
 @EqualsAndHashCode(of = { "prefix", "top", "client" })
 @Loggable(Loggable.DEBUG)
 @ToString
-final class BucketPulses implements Pageable<Time> {
+final class BucketPulses implements Pageable<Time, Time> {
 
     /**
      * The prefix.
@@ -94,7 +94,7 @@ final class BucketPulses implements Pageable<Time> {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Time> tail(final Time head) {
+    public Pageable<Time, Time> tail(final Time head) {
         return new BucketPulses(
             this.client, this.prefix, new Time(head.millis() + 1)
         );

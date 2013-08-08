@@ -37,6 +37,7 @@ import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import java.util.ArrayList;
 import org.hamcrest.MatcherAssert;
@@ -69,13 +70,15 @@ public final class RefForeignTest {
         final URN urn = new URN("urn:facebook:1");
         Mockito.doReturn(urn).when(user).urn();
         final Variable<Object> var = new RefForeign(
-            new AntlrGrammar(), urn, urn, name,
+            new AntlrGrammar(), urn, name,
             new ArrayList<Variable<?>>(0)
         );
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(urn);
         MatcherAssert.assertThat(
-            var.instantiate(users, new Arguments(new Work.None())),
+            var.instantiate(
+                users, new Arguments(new Work.None(), new Wallet.Empty())
+            ),
             Matchers.<Object>equalTo(1L)
         );
     }
@@ -88,7 +91,7 @@ public final class RefForeignTest {
     public void makesText() throws Exception {
         final URN urn = new URN("urn:facebook:998");
         final Variable<Object> var = new RefForeign(
-            new AntlrGrammar(), urn, urn, "some-name",
+            new AntlrGrammar(), urn, "some-name",
             new ArrayList<Variable<?>>(0)
         );
         MatcherAssert.assertThat(

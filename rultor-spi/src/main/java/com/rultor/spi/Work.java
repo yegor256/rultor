@@ -32,7 +32,6 @@ package com.rultor.spi;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
-import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
 import java.net.URI;
 import javax.validation.constraints.NotNull;
@@ -79,14 +78,6 @@ public interface Work {
     Spec spec();
 
     /**
-     * Report usage of resources while processing this work.
-     * @param details Description of operation
-     * @param amount Amount of money to charge
-     */
-    void charge(@NotNull(message = "details can't be NULL") String details,
-        @NotNull(message = "amount can't be NULL") Dollars amount);
-
-    /**
      * Instant access to running logs/stdout.
      * @return URI of it
      */
@@ -130,14 +121,6 @@ public interface Work {
         @Override
         public Spec spec() {
             throw new UnsupportedOperationException();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void charge(final String details, final Dollars amount) {
-            assert details != null;
-            assert amount != null;
         }
         /**
          * {@inheritDoc}
@@ -263,14 +246,6 @@ public interface Work {
         @NotNull(message = "spec of work is never NULL")
         public Spec spec() {
             return this.desc;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void charge(final String details, final Dollars amount) {
-            assert details != null;
-            assert amount != null;
         }
         /**
          * {@inheritDoc}

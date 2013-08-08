@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
+import com.rultor.spi.Wallet;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
@@ -131,6 +132,14 @@ final class RestUnit implements Unit {
             .assertStatus(HttpURLConnection.HTTP_OK)
             .xpath("/page/unit/name/text()")
             .get(0);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Wallet wallet() {
+        throw new UnsupportedOperationException();
     }
 
 }

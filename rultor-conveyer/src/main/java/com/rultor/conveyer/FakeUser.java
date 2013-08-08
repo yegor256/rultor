@@ -30,14 +30,15 @@
 package com.rultor.conveyer;
 
 import com.jcabi.urn.URN;
-import com.rultor.spi.Receipt;
+import com.rultor.spi.Account;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stands;
-import com.rultor.spi.Statements;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Units;
 import com.rultor.spi.User;
+import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
+import com.rultor.tools.Dollars;
 import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -53,7 +54,7 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({ "PMD.TooManyMethods", "PMD.CyclomaticComplexity" })
 final class FakeUser implements User {
 
     /**
@@ -88,6 +89,21 @@ final class FakeUser implements User {
                     public String name() {
                         return name;
                     }
+                    @Override
+                    public Wallet wallet() {
+                        return new Wallet() {
+                            @Override
+                            public void charge(final String details,
+                                final Dollars amount) {
+                                throw new UnsupportedOperationException();
+                            }
+                            @Override
+                            public Wallet delegate(final URN urn,
+                                final String unit) {
+                                throw new UnsupportedOperationException();
+                            }
+                        };
+                    }
                 };
             }
             @Override
@@ -121,23 +137,15 @@ final class FakeUser implements User {
      * {@inheritDoc}
      */
     @Override
-    public Statements statements() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterable<Receipt> receipts() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Stands stands() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Account account() {
         throw new UnsupportedOperationException();
     }
 

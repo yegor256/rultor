@@ -49,8 +49,8 @@ public final class ArgumentsTest {
     @Test
     public void retrievesItemByIndex() throws Exception {
         final Work work = Mockito.mock(Work.class);
-        final Arguments args = new Arguments(work);
-        MatcherAssert.assertThat(args.get(0), Matchers.<Object>equalTo(work));
+        final Arguments args = new Arguments(work, new Wallet.Empty());
+        MatcherAssert.assertThat(args.work(), Matchers.equalTo(work));
     }
 
     /**
@@ -62,10 +62,10 @@ public final class ArgumentsTest {
         final Work work = Mockito.mock(Work.class);
         final String value = "some test value";
         final Arguments args = new Arguments(
-            work, Arrays.<Object>asList("previous value")
+            work, new Wallet.Empty(), Arrays.<Object>asList("previous value")
         );
         MatcherAssert.assertThat(
-            args.with(1, value).get(1),
+            args.with(0, value).get(0),
             Matchers.<Object>equalTo(value)
         );
     }

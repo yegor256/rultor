@@ -36,8 +36,7 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
@@ -54,7 +53,7 @@ import org.apache.commons.lang3.Validate;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "position")
+@EqualsAndHashCode(of = "mnemo")
 @Loggable(Loggable.DEBUG)
 final class Meta implements Variable<Object> {
 
@@ -62,18 +61,13 @@ final class Meta implements Variable<Object> {
      * Pattern to use for parsing.
      */
     private static final Pattern PTN = Pattern.compile(
-        "\\$\\{(\\d+)(?::(.+))?\\}"
+        "\\$\\{(work|wallet)\\}"
     );
 
     /**
-     * Position number.
+     * Text.
      */
-    private final transient int position;
-
-    /**
-     * Description.
-     */
-    private final transient String desc;
+    private final transient String mnemo;
 
     /**
      * Public ctor.
@@ -82,12 +76,7 @@ final class Meta implements Variable<Object> {
     protected Meta(final String text) {
         final Matcher matcher = Meta.PTN.matcher(text);
         Validate.isTrue(matcher.matches(), "invalid input '%s'", text);
-        this.position = Integer.parseInt(matcher.group(1));
-        if (matcher.group(2) == null) {
-            this.desc = "?";
-        } else {
-            this.desc = matcher.group(2);
-        }
+        this.mnemo = matcher.group(1);
     }
 
     /**
@@ -100,7 +89,17 @@ final class Meta implements Variable<Object> {
         @NotNull(message = "users can't be NULL") final Users users,
         @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
-        return args.get(this.position);
+        final Object obj;
+        if ("work".equals(this.mnemo)) {
+            obj = args.work();
+        } else if ("wallet".equals(this.mnemo)) {
+            obj = args.work();
+        } else {
+            throw new IllegalStateException(
+                String.format("unsupported mnemo '%s'", this.mnemo)
+            );
+        }
+        return obj;
     }
 
     /**
@@ -108,7 +107,7 @@ final class Meta implements Variable<Object> {
      */
     @Override
     public String asText() {
-        return String.format("${%d:%s}", this.position, this.desc);
+        return String.format("${%s}", this.mnemo);
     }
 
     /**
@@ -117,12 +116,7 @@ final class Meta implements Variable<Object> {
      */
     @Override
     public Map<Integer, String> arguments() throws SpecException {
-        final ConcurrentMap<Integer, String> args =
-            new ConcurrentSkipListMap<Integer, String>();
-        if (this.position > 0) {
-            args.put(this.position, this.desc);
-        }
-        return args;
+        return new ConcurrentHashMap<Integer, String>(0);
     }
 
 }

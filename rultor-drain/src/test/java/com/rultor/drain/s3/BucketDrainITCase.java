@@ -91,7 +91,7 @@ public final class BucketDrainITCase {
             this.client
         );
         drain.append(Arrays.asList(msg));
-        final Pageable<Time> names = drain.pulses();
+        final Pageable<Time, Time> names = drain.pulses();
         MatcherAssert.assertThat(names, Matchers.hasItem(date));
         MatcherAssert.assertThat(names.tail(date), Matchers.hasItem(date));
         MatcherAssert.assertThat(

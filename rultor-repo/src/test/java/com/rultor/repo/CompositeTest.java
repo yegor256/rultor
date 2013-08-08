@@ -34,6 +34,7 @@ import com.jcabi.aspects.Tv;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import java.util.Arrays;
 import lombok.EqualsAndHashCode;
@@ -62,7 +63,8 @@ public final class CompositeTest {
         );
         MatcherAssert.assertThat(
             var.instantiate(
-                Mockito.mock(Users.class), new Arguments(new Work.None())
+                Mockito.mock(Users.class),
+                new Arguments(new Work.None(), new Wallet.Empty())
             ),
             Matchers.<Object>equalTo(Tv.TEN)
         );
@@ -116,7 +118,7 @@ public final class CompositeTest {
             );
             final Object object = composite.instantiate(
                 Mockito.mock(Users.class),
-                new Arguments(Mockito.mock(Work.class))
+                new Arguments(Mockito.mock(Work.class), new Wallet.Empty())
             );
             MatcherAssert.assertThat(
                 object,

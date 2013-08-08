@@ -32,6 +32,7 @@ package com.rultor.stateful.sdb;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.aws.SDBClient;
+import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.stateful.Lineup;
 import java.util.concurrent.Callable;
@@ -57,6 +58,11 @@ public final class DomainLineup implements Lineup {
     private final transient Work work;
 
     /**
+     * Wallet to charge.
+     */
+    private final transient Wallet wallet;
+
+    /**
      * SimpleDB client.
      */
     private final transient SDBClient client;
@@ -64,13 +70,16 @@ public final class DomainLineup implements Lineup {
     /**
      * Public ctor.
      * @param wrk Work we're in
+     * @param wlt Wallet to charge
      * @param clnt Client
      */
     public DomainLineup(
         @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "wallet can't be NULL") final Wallet wlt,
         @NotNull(message = "SimpleDB client can't be NULL")
         final SDBClient clnt) {
         this.work = wrk;
+        this.wallet = wlt;
         this.client = clnt;
     }
 
@@ -109,7 +118,7 @@ public final class DomainLineup implements Lineup {
      */
     private Lineup lineup() {
         return new ItemLineup(
-            this.work,
+            this.wallet,
             String.format(
                 "%s %s",
                 this.work.owner(),

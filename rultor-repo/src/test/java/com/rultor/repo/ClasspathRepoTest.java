@@ -38,6 +38,7 @@ import com.rultor.spi.Unit;
 import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
@@ -139,8 +140,8 @@ public final class ClasspathRepoTest {
         final Spec multiply = new Spec.Simple(
             // @checkstyle StringLiteralsConcatenation (4 lines)
             "com.rultor.repo.ClasspathRepoTest$Plus(  "
-            + "  com.rultor.repo.ClasspathRepoTest$Const(${1:test}),"
-            + "  com.rultor.repo.ClasspathRepoTest$Const(${1:test} )"
+            + "  com.rultor.repo.ClasspathRepoTest$Const(${0:test}),"
+            + "  com.rultor.repo.ClasspathRepoTest$Const(${0:test} )"
             + ") "
         );
         final Spec spec = new Spec.Simple(
@@ -150,7 +151,7 @@ public final class ClasspathRepoTest {
             + "    com.rultor.repo.ClasspathRepoTest$Const(5), "
             + "    multiply-by-two(-2)"
             + "  ),"
-            + "  com.rultor.repo.ClasspathRepoTest$Const(${1:test again})"
+            + "  com.rultor.repo.ClasspathRepoTest$Const(${0:test again})"
             + ")"
         );
         final Unit unit = Mockito.mock(Unit.class);
@@ -166,7 +167,11 @@ public final class ClasspathRepoTest {
         Mockito.doReturn(user).when(users).get(urn);
         final ClasspathRepoTest.Atom atom = ClasspathRepoTest.Atom.class.cast(
             repo.make(user, spec).instantiate(
-                users, new Arguments(new Work.None(), Arrays.<Object>asList(-2))
+                users,
+                new Arguments(
+                    new Work.None(), new Wallet.Empty(),
+                    Arrays.<Object>asList(-2)
+                )
             )
         );
         MatcherAssert.assertThat(atom.calc(), Matchers.equalTo(-1));

@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<?xml-stylesheet type='text/xsl' href='/xsl/statement.xsl'?>
+<?xml-stylesheet type='text/xsl' href='/xsl/account.xsl'?>
 <page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
     <identity>
         <urn>urn:facebook:1</urn>
@@ -41,16 +41,39 @@
         <date>22-Aug-2012</date>
     </version>
     <links>
-        <link href="/xml/index.xml" rel="self" type="text/xml"/>
+        <link href="/xml/account.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
-        <link href="/xml/finances.xml" rel="finances" type="text/xml"/>
+        <link href="/xml/account.xml" rel="more" type="text/xml"/>
+        <link href="/xml/account.xml" rel="account" type="text/xml"/>
+        <link href="/xml/units.xml" rel="units" type="text/xml"/>
+        <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
     </links>
     <millis>16</millis>
     <balance>$0.45</balance>
-    <statement>
-        <amount>$1.66</amount>
-        <date>2012-08-23T13:25:33Z</date>
-        <when>45 hours ago</when>
-        <details>some text</details>
-    </statement>
+    <titles>
+        <title>Time</title>
+        <title>Ct</title>
+        <title>CtUnit</title>
+        <title>Dt</title>
+        <title>DtUnit</title>
+        <title>Amount</title>
+    </titles>
+    <receipts>
+        <receipt id="5463">
+            <cell>2012-08-23T13:25:23</cell>
+            <cell>urn:github:1</cell>
+            <cell>my-test-unit</cell>
+            <cell>urn:github:1</cell>
+            <cell>rented-unit</cell>
+            <cell>$0.12</cell>
+        </receipt>
+        <receipt id="55563">
+            <cell>2012-08-23T13:25:23</cell>
+            <cell>urn:github:1</cell>
+            <cell>my-test-unit</cell>
+            <cell>urn:github:1</cell>
+            <cell>rented-unit</cell>
+            <cell>$0.09</cell>
+        </receipt>
+    </receipts>
 </page>

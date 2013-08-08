@@ -93,7 +93,7 @@ public final class BucketDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Time> pulses() {
+    public Pageable<Time, Time> pulses() {
         return new BucketPulses(this.client, this.prefix(), new Time());
     }
 

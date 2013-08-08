@@ -43,6 +43,7 @@ import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
 import com.rultor.env.Environments;
 import com.rultor.snapshot.Step;
+import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
@@ -67,6 +68,11 @@ public final class EC2 implements Environments {
      * Work we're in.
      */
     private final transient Work work;
+
+    /**
+     * Wallet to charge.
+     */
+    private final transient Wallet wallet;
 
     /**
      * Type of EC2 instance.
@@ -96,6 +102,7 @@ public final class EC2 implements Environments {
     /**
      * Public ctor.
      * @param wrk Work we're in
+     * @param wlt Wallet to charge
      * @param tpe Instance type, for example "t1.micro"
      * @param image AMI name
      * @param grp Security group
@@ -104,15 +111,16 @@ public final class EC2 implements Environments {
      * @param scrt AWS secret
      * @checkstyle ParameterNumber (5 lines)
      */
-    public EC2(final Work wrk, final String tpe, final String image,
-        final String grp, final String par, final String akey,
-        final String scrt) {
-        this(wrk, tpe, image, grp, par, new EC2Client.Simple(akey, scrt));
+    public EC2(final Work wrk, final Wallet wlt, final String tpe,
+        final String image, final String grp, final String par,
+        final String akey, final String scrt) {
+        this(wrk, wlt, tpe, image, grp, par, new EC2Client.Simple(akey, scrt));
     }
 
     /**
      * Public ctor.
      * @param wrk Work we're in
+     * @param wlt Wallet to charge
      * @param tpe Instance type, for example "t1.micro"
      * @param image AMI name
      * @param grp Security group
@@ -122,12 +130,14 @@ public final class EC2 implements Environments {
      */
     public EC2(
         @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "wallet can't be NULL") final Wallet wlt,
         @NotNull(message = "instance type can't be NULL") final String tpe,
         @NotNull(message = "AMI can't be NULL") final String image,
         @NotNull(message = "security group can't be NULL") final String grp,
         @NotNull(message = "key pair can't be NULL") final String par,
         @NotNull(message = "AWS client can't be NULL") final EC2Client clnt) {
         this.work = wrk;
+        this.wallet = wlt;
         this.type = tpe;
         this.ami = image;
         this.group = grp;
@@ -153,7 +163,7 @@ public final class EC2 implements Environments {
     @Override
     public Environment acquire() throws IOException {
         return new EC2Environment(
-            this.work,
+            this.work, this.wallet,
             this.create().getInstanceId(),
             this.client
         );

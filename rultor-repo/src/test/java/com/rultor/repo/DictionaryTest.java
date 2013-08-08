@@ -34,6 +34,7 @@ import com.jcabi.aspects.Tv;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import java.util.Arrays;
 import java.util.Map;
@@ -64,7 +65,7 @@ public final class DictionaryTest {
         MatcherAssert.assertThat(
             var.instantiate(
                 Mockito.mock(Users.class),
-                new Arguments(Mockito.mock(Work.class))
+                new Arguments(Mockito.mock(Work.class), new Wallet.Empty())
             ),
             Matchers.<String, Object>hasEntry(key, Tv.TEN)
         );

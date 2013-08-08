@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -27,34 +26,13 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
-    <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="/xsl/layout.xsl"/>
-    <xsl:template name="head">
-        <title>
-            <xsl:text>statement</xsl:text>
-        </title>
-    </xsl:template>
-    <xsl:template name="content">
-        <xsl:apply-templates select="/page/statement"/>
-    </xsl:template>
-    <xsl:template match="statement">
-        <div>
-            <ul class="list-inline">
-                <li>
-                    <xsl:value-of select="date"/>
-                </li>
-                <li>
-                    <xsl:value-of select="when"/>
-                </li>
-                <li>
-                    <xsl:value-of select="amount"/>
-                </li>
-            </ul>
-        </div>
-        <pre>
-            <xsl:value-of select="details"/>
-        </pre>
-    </xsl:template>
-</xsl:stylesheet>
+ */
+
+/**
+ * Users in PostgreSQL.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+package com.rultor.users.pgsql;

@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -27,44 +26,66 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<?xml-stylesheet type='text/xsl' href='/xsl/finances.xsl'?>
-<page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
-    <identity>
-        <urn>urn:facebook:1</urn>
-        <name>Jeff Lebowski</name>
-        <photo>http://images.sodahead.com/polls/002320349/200261278_The_Big_Lebowski___Jeff_Bridges_answer_9_xlarge.jpeg</photo>
-    </identity>
-    <version>
-        <name>1.0-SNAPSHOT</name>
-        <revision>123</revision>
-        <date>22-Aug-2012</date>
-    </version>
-    <links>
-        <link href="/xml/index.xml" rel="self" type="text/xml"/>
-        <link href="/xml/index.xml" rel="home" type="text/xml"/>
-        <link href="/xml/index.xml" rel="more" type="text/xml"/>
-        <link href="/xml/finances.xml" rel="finances" type="text/xml"/>
-        <link href="/xml/receipts.xml" rel="receipts" type="text/xml"/>
-    </links>
-    <millis>16</millis>
-    <balance>$0.45</balance>
-    <statements>
-        <statement>
-            <amount>$1.66</amount>
-            <date>2012-08-23T13:25:33Z</date>
-            <when>45 hours</when>
-            <links>
-                <link href="/xml/statement.xml" rel="see" type="text/xml"/>
-            </links>
-        </statement>
-        <statement>
-            <amount>$0.09</amount>
-            <date>2012-08-23T13:25:33Z</date>
-            <when>13 minutes</when>
-            <links>
-                <link href="/xml/statement.xml" rel="see" type="text/xml"/>
-            </links>
-        </statement>
-    </statements>
-</page>
+ */
+package com.rultor.spi;
+
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
+import com.rultor.tools.Dollars;
+import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+
+/**
+ * Wallet.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+@Immutable
+public interface Wallet {
+
+    /**
+     * Charge some money.
+     * @param details Description of operation
+     * @param amount Amount of money to charge
+     */
+    void charge(
+        @NotNull(message = "details can't be NULL") String details,
+        @NotNull(message = "amount can't be NULL") Dollars amount);
+
+    /**
+     * Delegate to another user/unit.
+     * @param urn URN of another user
+     * @param unit Name of the unit
+     * @return New wallet
+     */
+    Wallet delegate(
+        @NotNull(message = "URN can't be NULL") URN urn,
+        @NotNull(message = "unit name can't be NULL") String unit);
+
+    /**
+     * Empty wallet doing nothing.
+     */
+    @Immutable
+    @EqualsAndHashCode
+    @Loggable(Loggable.DEBUG)
+    final class Empty implements Wallet {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void charge(final String details, final Dollars amount) {
+            assert details != null;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Wallet delegate(final URN urn, final String unit) {
+            return this;
+        }
+    }
+
+}

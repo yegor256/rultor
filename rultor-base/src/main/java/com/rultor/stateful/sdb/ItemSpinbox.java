@@ -38,7 +38,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rultor.aws.SDBClient;
-import com.rultor.spi.Work;
+import com.rultor.spi.Wallet;
 import com.rultor.stateful.Spinbox;
 import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
@@ -69,9 +69,9 @@ public final class ItemSpinbox implements Spinbox {
     private static final String TIME = "time";
 
     /**
-     * Work we're in, for charging.
+     * Wallet to charge.
      */
-    private final transient Work work;
+    private final transient Wallet wallet;
 
     /**
      * SimpleDB client.
@@ -85,16 +85,16 @@ public final class ItemSpinbox implements Spinbox {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wlt Wallet to charge
      * @param obj Item name
      * @param clnt Client
      */
     public ItemSpinbox(
-        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "wallet can't be NULL") final Wallet wlt,
         @NotNull(message = "object name can't be NULL") final String obj,
         @NotNull(message = "SimpleDB client can't be NULL")
         final SDBClient clnt) {
-        this.work = wrk;
+        this.wallet = wlt;
         this.name = obj;
         this.client = clnt;
     }
@@ -144,7 +144,7 @@ public final class ItemSpinbox implements Spinbox {
                         .withReplace(true)
                 )
         );
-        this.work.charge(
+        this.wallet.charge(
             String.format(
                 "added %d to spinbox in AWS SimpleDB item `%s` in `%s` domain",
                 value, this.name, this.client.domain()

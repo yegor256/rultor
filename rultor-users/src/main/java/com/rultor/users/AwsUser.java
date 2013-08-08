@@ -33,9 +33,8 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Receipt;
+import com.rultor.spi.Account;
 import com.rultor.spi.Stands;
-import com.rultor.spi.Statements;
 import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import javax.validation.constraints.NotNull;
@@ -97,27 +96,17 @@ final class AwsUser implements User {
      * {@inheritDoc}
      */
     @Override
-    @NotNull(message = "statements of a user is never NULL")
-    public Statements statements() {
-        return new AwsStatements(this.region, this.name);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull(message = "receipts of a user is never NULL")
-    public Iterable<Receipt> receipts() {
-        return new AwsReceipts(this.region, this.name);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     @NotNull(message = "stands of a user is never NULL")
     public Stands stands() {
         return new AwsStands(this.region, this.name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Account account() {
+        throw new UnsupportedOperationException();
     }
 
 }

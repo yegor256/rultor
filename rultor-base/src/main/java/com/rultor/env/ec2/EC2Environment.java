@@ -46,6 +46,7 @@ import com.jcabi.log.Logger;
 import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
 import com.rultor.snapshot.Step;
+import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
 import java.io.IOException;
@@ -88,6 +89,11 @@ final class EC2Environment implements Environment {
     private final transient Work work;
 
     /**
+     * Wallet to charge.
+     */
+    private final transient Wallet wallet;
+
+    /**
      * Instance ID.
      */
     private final transient String name;
@@ -100,12 +106,15 @@ final class EC2Environment implements Environment {
     /**
      * Public ctor.
      * @param wrk Work we're in
+     * @param wlt Wallet to charge
      * @param instance Instance ID
      * @param clnt EC2 client
+     * @checkstyle ParameterNumber (5 lines)
      */
-    protected EC2Environment(final Work wrk, final String instance,
-        final EC2Client clnt) {
+    protected EC2Environment(final Work wrk, final Wallet wlt,
+        final String instance, final EC2Client clnt) {
         this.work = wrk;
+        this.wallet = wlt;
         this.name = instance;
         this.client = clnt;
     }
@@ -168,7 +177,7 @@ final class EC2Environment implements Environment {
                 age,
                 cost
             );
-            this.work.charge(
+            this.wallet.charge(
                 Logger.format(
                     "%[ms]s of AWS EC2 `%s` instance",
                     age,

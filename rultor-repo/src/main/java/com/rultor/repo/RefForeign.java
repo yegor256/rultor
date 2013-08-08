@@ -38,7 +38,6 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
-import com.rultor.spi.Work;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -72,11 +71,6 @@ final class RefForeign implements Variable<Object> {
     private final transient Grammar grammar;
 
     /**
-     * Client of the unit (who is using the unit).
-     */
-    private final transient URN client;
-
-    /**
      * Owner of the unit (who provides the unit).
      */
     private final transient URN owner;
@@ -94,17 +88,15 @@ final class RefForeign implements Variable<Object> {
     /**
      * Public ctor.
      * @param grm Grammar to use
-     * @param clnt Client of the unit
      * @param urn Owner of the unit
      * @param ref RefForeign
      * @param childs Enclosed child parameters
      * @checkstyle ParameterNumber (4 lines)
      */
-    protected RefForeign(final Grammar grm, final URN clnt,
-        final URN urn, final String ref, final Collection<Variable<?>> childs) {
+    protected RefForeign(final Grammar grm, final URN urn,
+        final String ref, final Collection<Variable<?>> childs) {
         Validate.matchesPattern(ref, "[-_\\w]+");
         this.grammar = grm;
-        this.client = clnt;
         this.owner = urn;
         this.name = ref;
         this.children = new Array<Variable<?>>(childs);
@@ -121,16 +113,10 @@ final class RefForeign implements Variable<Object> {
         @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
         final User user = users.get(this.owner);
-        Work work = Work.class.cast(args.get(0));
-        if (!this.client.equals(this.owner)) {
-            work = new MonetaryWork(
-                users, work, this.client, this.owner, this.name
-            );
-        }
         return this.alter(
             this.grammar
                 .parse(user.urn(), user.units().get(this.name).spec().asText())
-                .instantiate(users, this.mapping(users, work, args)),
+                .instantiate(users, this.mapping(users, args)),
             args
         );
     }
@@ -167,20 +153,23 @@ final class RefForeign implements Variable<Object> {
     /**
      * Make arguments for the underlying spec.
      * @param users Users to use for instantiation
-     * @param work Work to pass through
      * @param args Arguments received from the upper level caller
      * @return Arguments to use
      * @throws SpecException If fails
      * @checkstyle RedundantThrows (5 lines)
      */
-    private Arguments mapping(final Users users, final Work work,
-        final Arguments args) throws SpecException {
+    private Arguments mapping(final Users users, final Arguments args)
+        throws SpecException {
         final Collection<Object> values =
             new ArrayList<Object>(this.children.size());
         for (Variable<?> var : this.children) {
             values.add(var.instantiate(users, args));
         }
-        return new Arguments(work, values);
+        return new Arguments(
+            args.work(),
+            args.wallet().delegate(this.owner, this.name),
+            values
+        );
     }
 
     /**

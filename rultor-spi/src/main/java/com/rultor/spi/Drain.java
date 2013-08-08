@@ -60,7 +60,7 @@ public interface Drain {
      * @throws IOException If some IO problem inside
      */
     @NotNull(message = "list of pulses is never NULL")
-    Pageable<Time> pulses() throws IOException;
+    Pageable<Time, Time> pulses() throws IOException;
 
     /**
      * Append a few lines to the drain.

@@ -30,9 +30,7 @@
 package com.rultor.conveyer;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Receipt;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
@@ -82,22 +80,6 @@ final class FakeUsers implements Users {
     @Override
     public User get(final URN name) {
         return new FakeUser(this.work);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void charge(final Receipt receipt) {
-        Logger.info(this, "#charge(%s)", receipt);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void reconcile() {
-        throw new UnsupportedOperationException();
     }
 
     /**

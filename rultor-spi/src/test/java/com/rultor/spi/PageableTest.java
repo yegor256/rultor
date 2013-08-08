@@ -50,7 +50,7 @@ public final class PageableTest {
     public void sortsElementsInRightOrder() throws Exception {
         final Time fresh = new Time("2013-07-21T12:15:00Z");
         final Time old = new Time("2011-07-21T12:15:00Z");
-        final Pageable<Time> pulses = new Pageable.Array<Time>(
+        final Pageable<Time, Time> pulses = new Pageable.Array<Time>(
             Arrays.asList(fresh, old)
         );
         MatcherAssert.assertThat(

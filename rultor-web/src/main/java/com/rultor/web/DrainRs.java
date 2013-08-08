@@ -41,6 +41,7 @@ import com.rultor.spi.Pageable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Unit;
+import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
@@ -77,7 +78,7 @@ public final class DrainRs extends BaseRs {
     /**
      * Query param.
      */
-    public static final String QUERY_SINCE = "since";
+    private static final String QUERY_SINCE = "since";
 
     /**
      * Unit name.
@@ -123,7 +124,7 @@ public final class DrainRs extends BaseRs {
             .init(this)
             .append(new JaxbBundle("unit", this.name));
         final Drain drain = this.drain(new Time());
-        Pageable<Time> pulses = this.pulses(drain);
+        Pageable<Time, Time> pulses = this.pulses(drain);
         final int total;
         if (this.since == null) {
             total = Tv.FIVE;
@@ -176,7 +177,8 @@ public final class DrainRs extends BaseRs {
                         new Work.Simple(
                             this.user().urn(), this.name,
                             this.unit().spec(), time
-                        )
+                        ),
+                        new Wallet.Empty()
                     )
                 )
             ).drain();
@@ -198,7 +200,7 @@ public final class DrainRs extends BaseRs {
      * @param drain The drain
      * @return The pulses
      */
-    private Pageable<Time> pulses(final Drain drain) {
+    private Pageable<Time, Time> pulses(final Drain drain) {
         try {
             return drain.pulses();
         } catch (IOException ex) {

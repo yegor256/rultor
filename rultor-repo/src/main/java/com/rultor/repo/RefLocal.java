@@ -105,7 +105,7 @@ final class RefLocal implements Variable<Object> {
         @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
         return new RefForeign(
-            this.grammar, this.owner, this.owner, this.name, this.children
+            this.grammar, this.owner, this.name, this.children
         ).instantiate(users, args);
     }
 

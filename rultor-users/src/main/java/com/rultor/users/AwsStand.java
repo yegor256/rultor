@@ -145,7 +145,7 @@ final class AwsStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse> pulses() {
+    public Pageable<Pulse, Integer> pulses() {
         throw new UnsupportedOperationException();
     }
 

@@ -105,10 +105,6 @@
             <artifactId>aws-java-sdk</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
             <groupId>javax.json</groupId>
             <artifactId>javax.json-api</artifactId>
         </dependency>
@@ -271,6 +267,7 @@
                                 <Rultor-MongoName>${mongo.name}</Rultor-MongoName>
                                 <Rultor-MongoUser>${mongo.user}</Rultor-MongoUser>
                                 <Rultor-MongoPassword>${mongo.password}</Rultor-MongoPassword>
+                                <Rultor-PgsqlJdbc>${pgsql.jdbc}</Rultor-PgsqlJdbc>
                             </manifestEntries>
                         </archive>
                     </configuration>

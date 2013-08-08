@@ -32,7 +32,7 @@ package com.rultor.stateful.sdb;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseThreads;
 import com.rultor.aws.SDBClient;
-import com.rultor.spi.Work;
+import com.rultor.spi.Wallet;
 import com.rultor.stateful.Lineup;
 import java.security.SecureRandom;
 import java.util.Random;
@@ -64,7 +64,7 @@ public final class ItemLineupITCase {
         final String key = System.getProperty("failsafe.sdb.key");
         Assume.assumeNotNull(key);
         final Lineup lineup = new ItemLineup(
-            new Work.None(),
+            new Wallet.Empty(),
             "S3LineupITCase.txt",
             new SDBClient.Simple(
                 key,

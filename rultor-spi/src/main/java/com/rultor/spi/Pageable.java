@@ -47,12 +47,13 @@ import lombok.ToString;
  * Vector of pulses.
  *
  * @param <T> Type of elements to page
+ * @param <K> Type of positioning element
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Pageable<T> extends Iterable<T> {
+public interface Pageable<T, K> extends Iterable<T> {
 
     /**
      * Get a subset of this vector.
@@ -62,7 +63,7 @@ public interface Pageable<T> extends Iterable<T> {
      * @throws IOException If fails with some IO problem
      */
     @NotNull(message = "pulses are never NULL")
-    Pageable<T> tail(@NotNull(message = "head can't be NULL") T head)
+    Pageable<T, K> tail(@NotNull(message = "head can't be NULL") K head)
         throws IOException;
 
     /**
@@ -73,7 +74,7 @@ public interface Pageable<T> extends Iterable<T> {
     @ToString
     @EqualsAndHashCode
     @Loggable(Loggable.DEBUG)
-    final class Array<T> implements Pageable<T> {
+    final class Array<T> implements Pageable<T, T> {
         /**
          * Encapsulated array.
          */
@@ -99,7 +100,7 @@ public interface Pageable<T> extends Iterable<T> {
          */
         @Override
         @NotNull
-        public Pageable<T> tail(
+        public Pageable<T, T> tail(
             @NotNull(message = "head is NULL") final T head) {
             return new Pageable.Array<T>(this.times.tailSet(head));
         }
@@ -120,23 +121,24 @@ public interface Pageable<T> extends Iterable<T> {
     @ToString
     @EqualsAndHashCode
     @Loggable(Loggable.DEBUG)
-    final class Sequence<T> implements Pageable<T> {
+    final class Sequence<T> implements Pageable<T, T> {
         /**
          * First.
          */
-        private final transient Pageable<T> first;
+        private final transient Pageable<T, T> first;
         /**
          * Second.
          */
-        private final transient Pageable<T> second;
+        private final transient Pageable<T, T> second;
         /**
          * Public ctor.
          * @param frst First
          * @param scnd Second
          */
         public Sequence(
-            @NotNull(message = "first can't be NULL") final Pageable<T> frst,
-            @NotNull(message = "second can't be NULL") final Pageable<T> scnd) {
+            @NotNull(message = "first can't be NULL") final Pageable<T, T> frst,
+            @NotNull(message = "second can't be NULL")
+            final Pageable<T, T> scnd) {
             this.first = frst;
             this.second = scnd;
         }
@@ -145,7 +147,7 @@ public interface Pageable<T> extends Iterable<T> {
          */
         @Override
         @NotNull
-        public Pageable<T> tail(
+        public Pageable<T, T> tail(
             @NotNull(message = "head can't be NULL") final T head)
             throws IOException {
             return new Pageable.Sequence<T>(

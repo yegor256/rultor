@@ -65,6 +65,13 @@ public interface Unit {
     Spec spec();
 
     /**
+     * Wallet of the unit.
+     * @return Wallet
+     */
+    @NotNull(message = "wallet is never NULL")
+    Wallet wallet();
+
+    /**
      * Always empty Unit.
      */
     @Immutable
@@ -93,6 +100,13 @@ public interface Unit {
         @NotNull(message = "spec of an empty unit is never NULL")
         public Spec spec() {
             return new Spec.Simple();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Wallet wallet() {
+            throw new UnsupportedOperationException();
         }
     }
 

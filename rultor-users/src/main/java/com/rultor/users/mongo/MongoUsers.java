@@ -32,7 +32,6 @@ package com.rultor.users.mongo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Receipt;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
@@ -101,22 +100,6 @@ public final class MongoUsers implements Users {
     @Override
     public User get(final URN name) {
         return new MongoUser(this.mongo, this.origin.get(name));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void charge(final Receipt receipt) {
-        this.origin.charge(receipt);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void reconcile() {
-        this.origin.reconcile();
     }
 
     /**

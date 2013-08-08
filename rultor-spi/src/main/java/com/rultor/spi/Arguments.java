@@ -36,7 +36,6 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
@@ -55,33 +54,41 @@ import org.apache.commons.lang3.Validate;
 public final class Arguments {
 
     /**
+     * Work.
+     */
+    private final transient Work wrk;
+
+    /**
+     * Wallet.
+     */
+    private final transient Wallet wlt;
+
+    /**
      * Ordered values.
      */
     private final transient Array<Object> values;
 
     /**
      * Public ctor.
-     * @param work Mandatory first value
+     * @param work Work we're in
+     * @param wallet Wallet with money
      */
-    public Arguments(final Work work) {
-        this(work, new ArrayList<Object>(0));
+    public Arguments(final Work work, final Wallet wallet) {
+        this(work, wallet, new ArrayList<Object>(0));
     }
 
     /**
      * Public ctor.
-     * @param work Mandatory first value
-     * @param tail Other values
+     * @param work Work we're in
+     * @param wallet Wallet with money
+     * @param vals Other values
      */
-    public Arguments(@NotNull(message = "work can't be NULL") final Work work,
-        @NotNull(message = "tail is NULL") final Collection<Object> tail) {
-        this(Iterables.concat(Arrays.asList(work), tail));
-    }
-
-    /**
-     * Public ctor.
-     * @param vals All values
-     */
-    private Arguments(final Iterable<Object> vals) {
+    public Arguments(
+        @NotNull(message = "work can't be NULL") final Work work,
+        @NotNull(message = "wallet can't be NULL") final Wallet wallet,
+        @NotNull(message = "tail is NULL") final Iterable<Object> vals) {
+        this.wrk = work;
+        this.wlt = wallet;
         this.values = new Array<Object>(Lists.newArrayList(vals));
     }
 
@@ -94,6 +101,22 @@ public final class Arguments {
     }
 
     /**
+     * Get work.
+     * @return The work
+     */
+    public Work work() {
+        return this.wrk;
+    }
+
+    /**
+     * Get wallet.
+     * @return The wallet
+     */
+    public Wallet wallet() {
+        return this.wlt;
+    }
+
+    /**
      * Get value by position.
      * @param pos Position
      * @return The value
@@ -102,17 +125,14 @@ public final class Arguments {
     public Object get(final int pos) throws SpecException {
         Validate.isTrue(pos >= 0, "position can't be negative");
         if (pos >= this.values.size()) {
-            throw new SpecException(String.format("#%d is out of bounds", pos));
+            throw new SpecException(
+                String.format(
+                    "argument #%d is out of bounds (%d total)",
+                    pos, this.values.size()
+                )
+            );
         }
         return this.values.get(pos);
-    }
-
-    /**
-     * Get them all as objects.
-     * @return Objects
-     */
-    public Collection<Object> get() {
-        return this.values;
     }
 
     /**
@@ -124,6 +144,8 @@ public final class Arguments {
     public Arguments with(final int pos, final Object value) {
         Validate.isTrue(pos < this.values.size(), "%d is out of boundary", pos);
         return new Arguments(
+            this.wrk,
+            this.wlt,
             Iterables.concat(
                 Iterables.limit(this.values, pos),
                 Arrays.asList(value),
