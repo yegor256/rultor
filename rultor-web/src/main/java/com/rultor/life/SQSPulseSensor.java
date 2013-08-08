@@ -69,7 +69,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
  */
 @Loggable(Loggable.DEBUG)
 @EqualsAndHashCode(of = { "users", "client" })
-@SuppressWarnings("PMD.DoNotUseThreads")
+@SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.ExcessiveImports" })
 public final class SQSPulseSensor implements Runnable, Closeable {
 
     /**
