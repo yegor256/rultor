@@ -46,9 +46,8 @@
                         onclick="$(this).parent().parent().parent().parent().find('pre.spec').toggle();"><xsl:comment>spec</xsl:comment></i>
                 </li>
             </xsl:if>
-            <xsl:if test="work">
-                <xsl:apply-templates select="work"/>
-            </xsl:if>
+            <xsl:apply-templates select="version"/>
+            <xsl:apply-templates select="work"/>
             <xsl:if test="lines">
                 <li>
                     <i class="icon-signal"><xsl:comment>lines</xsl:comment></i>
@@ -58,7 +57,7 @@
             </xsl:if>
             <xsl:if test="start and not(finish)">
                 <li>
-                    <i class="icon-flag"><xsl:comment>start</xsl:comment></i>
+                    <i class="icon-flag-alt"><xsl:comment>start</xsl:comment></i>
                     <xsl:text> </xsl:text>
                     <span class="timeago"><xsl:value-of select="start"/></span>
                 </li>
@@ -116,14 +115,14 @@
                     </a>
                 </div>
             </xsl:when>
-            <xsl:otherwise>
+            <xsl:when test="eta">
                 <div class="progress">
                     <xsl:call-template name="bar">
                         <xsl:with-param name="style" select="'progress-bar-warning'"/>
                         <xsl:with-param name="snapshot" select="."/>
                     </xsl:call-template>
                 </div>
-            </xsl:otherwise>
+            </xsl:when>
         </xsl:choose>
         <xsl:if test="steps/step">
             <xsl:apply-templates select="steps/step"/>
@@ -142,6 +141,20 @@
             <xsl:value-of select="unit"/>
         </li>
     </xsl:template>
+    <xsl:template match="version">
+        <li>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:text>https://github.com/rultor/rultor/commit/</xsl:text>
+                    <xsl:value-of select="revision"/>
+                </xsl:attribute>
+                <xsl:attribute name="title">
+                    <xsl:value-of select="revision"/>
+                </xsl:attribute>
+                <i class="icon-github"><xsl:comment>github</xsl:comment></i>
+            </a>
+        </li>
+    </xsl:template>
     <xsl:template match="step">
         <div>
             <xsl:attribute name="class">
@@ -156,7 +169,7 @@
                         <xsl:text>text-warning</xsl:text>
                     </xsl:when>
                     <xsl:when test="level = 'SEVERE'">
-                        <xsl:text>text-important</xsl:text>
+                        <xsl:text>text-danger</xsl:text>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:text>text-muted</xsl:text>

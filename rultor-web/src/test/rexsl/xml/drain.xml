@@ -65,7 +65,11 @@ SET "some text to set"; STRICT "1";</xembly>
             </exceptions>
             <snapshot>
                 <updated>2012-08-23T13:25Z</updated>
-                <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
+                <version>
+                    <name>1.0-SNAPSHOT</name>
+                    <revision>7f8a702</revision>
+                    <date>2013-08-09 10:12</date>
+                </version>
                 <work>
                     <owner>urn:test:1</owner>
                     <unit>nightly-build</unit>
@@ -132,7 +136,14 @@ SET "some text to set"; STRICT "1";</xembly>
                         <start>2013-08-23T17:57Z</start>
                         <finish>2013-08-23T17:57Z</finish>
                         <summary>created EC2 instance `i-09aeb44` of `m1.small` type</summary>
-                        <level>INFO</level>
+                        <level>FINE</level>
+                    </step>
+                    <step>
+                        <id>build</id>
+                        <start>2013-08-23T17:59Z</start>
+                        <finish>2013-08-23T17:57Z</finish>
+                        <summary>failed to allocate memory</summary>
+                        <level>SEVERE</level>
                     </step>
                     <step>
                         <id>build</id>
@@ -159,7 +170,33 @@ SET "some text to set"; STRICT "1";</xembly>
             </exceptions>
             <snapshot>
                 <updated>2012-08-23T13:25Z</updated>
-                <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
+                <version>
+                    <name>1.0-SNAPSHOT</name>
+                    <revision>7f8a702</revision>
+                    <date>2013-08-09 10:12</date>
+                </version>
+                <start>2012-08-23T13:25Z</start>
+            </snapshot>
+            <links>
+                <link href="/xml/drain.xml" rel="stream" type="text/xml"/>
+            </links>
+        </pulse>
+        <pulse>
+            <time>2012-08-23T13:23Z</time>
+            <exceptions>
+                <exception>
+                    <class>XemblySyntaxException</class>
+                    <message>failed to read some xembly script</message>
+                </exception>
+            </exceptions>
+            <snapshot>
+                <updated>2012-08-23T13:25Z</updated>
+                <stdout>http://localhost:9095/test</stdout>
+                <version>
+                    <name>1.0-SNAPSHOT</name>
+                    <revision>7f8a702</revision>
+                    <date>2013-08-09 10:12</date>
+                </version>
                 <start>2012-08-23T13:25Z</start>
             </snapshot>
             <links>
