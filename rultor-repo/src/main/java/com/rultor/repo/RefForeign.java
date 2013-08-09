@@ -113,12 +113,22 @@ final class RefForeign implements Variable<Object> {
         @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
         final User user = users.get(this.owner);
-        return this.alter(
-            this.grammar
-                .parse(user.urn(), user.units().get(this.name).spec().asText())
-                .instantiate(users, this.mapping(users, args)),
-            args
-        );
+        try {
+            return this.alter(
+                this.grammar.parse(
+                    user.urn(), user.units().get(this.name).spec().asText()
+                ).instantiate(users, this.mapping(users, args)),
+                args
+            );
+        } catch (SpecException ex) {
+            throw new SpecException(
+                String.format(
+                    "failed to instantiate %s:%s with %d params",
+                    this.owner, this.name, this.children.size()
+                ),
+                ex
+            );
+        }
     }
 
     /**
