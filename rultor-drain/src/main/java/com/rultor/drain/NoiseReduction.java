@@ -196,10 +196,11 @@ public final class NoiseReduction implements Drain {
                 )
             );
         }
-        this.dirty.append(lines);
-        NoiseReduction.BAD.add(this.dirty);
         if (NoiseReduction.GOOD.contains(this.dirty)) {
             this.clean.append(lines);
+        } else {
+            this.dirty.append(lines);
+            NoiseReduction.BAD.add(this.dirty);
         }
     }
 
@@ -222,10 +223,8 @@ public final class NoiseReduction implements Drain {
             IOUtils.toInputStream(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "NoiseReduction: exists=%B, good=%B (%d total), pattern='%s', visible=%d, dirty='%s', clean='%s'\n",
+                    "NoiseReduction: exists=%B, pattern='%s', visible=%d, dirty='%s', clean='%s'\n",
                     exists,
-                    NoiseReduction.GOOD.contains(this.dirty),
-                    NoiseReduction.GOOD.size(),
                     this.pattern,
                     this.visible,
                     this.dirty,
