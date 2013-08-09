@@ -64,7 +64,7 @@ import org.xembly.XemblySyntaxException;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@EqualsAndHashCode(of = "origin")
+@EqualsAndHashCode(of = { "origin", "work", "stand", "key" })
 @Loggable(Loggable.DEBUG)
 public final class Standed implements Drain {
 
