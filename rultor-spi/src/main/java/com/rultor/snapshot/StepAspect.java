@@ -75,6 +75,15 @@ public final class StepAspect {
             new ImmutableMap.Builder<String, Object>()
                 .put("this", point.getThis())
                 .put("args", point.getArgs());
+        final String before;
+        if (step.before().isEmpty()) {
+            before = new Vext(step.before()).print(args.build());
+        } else {
+            before = String.format(
+                "%s#%s()",
+                method.getDeclaringClass().getCanonicalName(), method.getName()
+            );
+        }
         new XemblyLine(
             new Directives()
                 .xpath("/snapshot")
@@ -85,7 +94,7 @@ public final class StepAspect {
                 .attr("method", method.getName())
                 .add("start").set(new Time().toString()).up()
                 .add("summary")
-                .set(new Vext(step.before()).print(args.build()))
+                .set(before)
         ).log();
         try {
             final Object result = point.proceed();
