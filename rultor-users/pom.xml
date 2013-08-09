@@ -198,7 +198,7 @@
                             <driver>org.postgresql.Driver</driver>
                             <url>${pgsql.jdbc}</url>
                             <username></username>
-                            <password></password>
+                            <password>${pgsql.password}</password>
                             <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
                         </configuration>
                         <executions>
