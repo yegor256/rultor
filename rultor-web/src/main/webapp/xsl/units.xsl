@@ -128,7 +128,9 @@
                     </li>
                 </xsl:if>
             </ul>
-            <pre style="display:none;" class="exception"><xsl:value-of select="face/exception"/></pre>
+            <xsl:if test="face/exception">
+                <pre style="display:none;" class="exception"><xsl:value-of select="face/exception"/></pre>
+            </xsl:if>
         </div>
     </xsl:template>
 </xsl:stylesheet>
