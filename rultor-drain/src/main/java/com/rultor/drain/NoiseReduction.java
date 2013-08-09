@@ -138,11 +138,6 @@ public final class NoiseReduction implements Drain {
 
     /**
      * {@inheritDoc}
-     *
-     * @todo #43 This implementation leads to duplicates in resulting
-     *  iterator, which is wrong. We should filter out duplicates, but there
-     *  is no such method in Guava at the moment. See
-     *  https://code.google.com/p/guava-libraries/issues/detail?id=1464
      */
     @Override
     public Pageable<Time, Time> pulses() throws IOException {
@@ -243,6 +238,7 @@ public final class NoiseReduction implements Drain {
 
     /**
      * Distinct iterator, not thread-safe.
+     * @see https://code.google.com/p/guava-libraries/issues/detail?id=1464
      */
     private static final class Distinct<T> implements Iterator<T> {
         /**
@@ -277,7 +273,7 @@ public final class NoiseReduction implements Drain {
                     this.recent.set(next);
                 }
             }
-            return this.recent != null;
+            return this.recent.get() != null;
         }
         /**
          * {@inheritDoc}
@@ -287,9 +283,7 @@ public final class NoiseReduction implements Drain {
             if (!this.hasNext()) {
                 throw new NoSuchElementException();
             }
-            final T next = this.recent.get();
-            this.recent.set(null);
-            return next;
+            return this.recent.getAndSet(null);
         }
         /**
          * {@inheritDoc}
