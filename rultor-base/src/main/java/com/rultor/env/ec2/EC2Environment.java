@@ -196,7 +196,6 @@ final class EC2Environment implements Environment {
      * @throws IOException If fails
      */
     @RetryOnFailure
-    @Step("EC2 instance `${result.getInstanceType()}` is ready")
     private Instance instance() throws IOException {
         final AmazonEC2 aws = this.client.get();
         final DescribeInstancesRequest request = new DescribeInstancesRequest()
