@@ -136,7 +136,7 @@ final class AwsUnit implements Unit {
      */
     @Override
     public Wallet wallet() {
-        throw new UnsupportedOperationException();
+        return new SQSWallet();
     }
 
 }

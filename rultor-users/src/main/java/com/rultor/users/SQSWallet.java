@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.users.pgsql;
+package com.rultor.users;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -38,7 +38,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Wallet in PostgreSQL.
+ * Wallet into Amazon SQS.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -46,29 +46,16 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "client")
+@EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-final class PgWallet implements Wallet {
-
-    /**
-     * PostgreSQL client.
-     */
-    private final transient PgClient client;
-
-    /**
-     * Public ctor.
-     * @param clnt Client
-     */
-    protected PgWallet(final PgClient clnt) {
-        this.client = clnt;
-    }
+final class SQSWallet implements Wallet {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void charge(final String details, final Dollars amount) {
-        assert this.client != null;
+        // nothing
     }
 
     /**
