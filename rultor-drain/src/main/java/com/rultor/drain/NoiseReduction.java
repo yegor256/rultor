@@ -63,9 +63,14 @@ import org.apache.commons.io.IOUtils;
 public final class NoiseReduction implements Drain {
 
     /**
-     * Static set of good drains.
+     * Static set of clean drains.
      */
     private static final Set<Drain> GOOD = new CopyOnWriteArraySet<Drain>();
+
+    /**
+     * Static set of dirty drains.
+     */
+    private static final Set<Drain> BAD = new CopyOnWriteArraySet<Drain>();
 
     /**
      * Work we're in.
@@ -184,7 +189,7 @@ public final class NoiseReduction implements Drain {
                 NoiseReduction.GOOD.add(this.dirty);
             }
         }
-        if (matched) {
+        if (matched && NoiseReduction.BAD.contains(this.dirty)) {
             this.clean.append(
                 ImmutableList.copyOf(
                     IOUtils.lineIterator(this.dirty.read(), CharEncoding.UTF_8)
@@ -192,6 +197,7 @@ public final class NoiseReduction implements Drain {
             );
         }
         this.dirty.append(lines);
+        NoiseReduction.BAD.add(this.dirty);
         if (NoiseReduction.GOOD.contains(this.dirty)) {
             this.clean.append(lines);
         }

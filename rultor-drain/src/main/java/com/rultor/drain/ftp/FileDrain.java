@@ -174,12 +174,12 @@ public final class FileDrain implements Drain {
      */
     private void append(final FTPClient ftp, final Iterable<String> lines)
         throws IOException {
-        final String name = FilenameUtils.getBaseName(FileDrain.this.file);
+        final String name = FilenameUtils.getBaseName(this.file);
         if (!ftp.appendFile(name, this.toStream(lines))) {
             throw new IOException(
                 String.format(
-                    "failed to append to %s in %s because of '%s'",
-                    name, this.batch,
+                    "failed to append to %s at %s because of '%s'",
+                    this.file, this.batch,
                     ftp.getReplyString().trim()
                 )
             );
@@ -199,12 +199,12 @@ public final class FileDrain implements Drain {
      */
     private InputStream read(final FTPClient ftp) throws IOException {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final String name = FilenameUtils.getBaseName(FileDrain.this.file);
+        final String name = FilenameUtils.getBaseName(this.file);
         if (!ftp.retrieveFile(name, baos)) {
             throw new IOException(
                 String.format(
-                    "failed to read %s in %s because of '%s'",
-                    name, this.batch,
+                    "failed to read %s from %s because of '%s'",
+                    this.file, this.batch,
                     ftp.getReplyString().trim()
                 )
             );

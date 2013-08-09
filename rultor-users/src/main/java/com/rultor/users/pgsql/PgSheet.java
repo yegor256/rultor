@@ -164,7 +164,7 @@ final class PgSheet implements Sheet {
     @Override
     public Pageable<List<Object>, Integer> tail(final Integer head)
         throws IOException {
-        throw new UnsupportedOperationException();
+        return this;
     }
 
     /**
