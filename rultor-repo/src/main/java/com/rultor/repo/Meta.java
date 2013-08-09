@@ -61,7 +61,7 @@ final class Meta implements Variable<Object> {
      * Pattern to use for parsing.
      */
     private static final Pattern PTN = Pattern.compile(
-        "\\$\\{(work|wallet)\\}"
+        "\\$\\{([a-z]+)\\}"
     );
 
     /**
@@ -75,7 +75,7 @@ final class Meta implements Variable<Object> {
      */
     protected Meta(final String text) {
         final Matcher matcher = Meta.PTN.matcher(text);
-        Validate.isTrue(matcher.matches(), "invalid input '%s'", text);
+        Validate.isTrue(matcher.matches(), "invalid meta '%s'", text);
         this.mnemo = matcher.group(1);
     }
 
@@ -93,7 +93,7 @@ final class Meta implements Variable<Object> {
         if ("work".equals(this.mnemo)) {
             obj = args.work();
         } else if ("wallet".equals(this.mnemo)) {
-            obj = args.work();
+            obj = args.wallet();
         } else {
             throw new IllegalStateException(
                 String.format("unsupported mnemo '%s'", this.mnemo)
