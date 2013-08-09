@@ -121,12 +121,14 @@
                         <i class="icon-remove"><xsl:comment>remove</xsl:comment></i>
                     </a>
                 </li>
+                <xsl:if test="face/exception">
+                    <li>
+                        <i class="icon-warning-sign text-danger" style="cursor:pointer;" title="show exception"
+                            onclick="$(this).parent().find('.exception').toggle();"><xsl:comment>exception</xsl:comment></i>
+                        <pre style="display:none;" class="exception"><xsl:value-of select="face/exception"/></pre>
+                    </li>
+                </xsl:if>
             </ul>
-            <xsl:if test="face/exception">
-                <small class="text-danger">
-                    <code><xsl:value-of select="face/exception"/></code>
-                </small>
-            </xsl:if>
         </div>
     </xsl:template>
 </xsl:stylesheet>

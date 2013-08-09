@@ -118,13 +118,9 @@ final class JaxbFace {
             }
         // @checkstyle IllegalCatch (1 line)
         } catch (Exception ex) {
-            bundle = bundle
-                .add("exception", ex.getMessage())
-                .up()
-                .add("class", ex.getClass().getName())
-                .up()
-                .add("stacktrace", ExceptionUtils.getStackTrace(ex))
-                .up();
+            bundle = bundle.add(
+                "exception", ExceptionUtils.getStackTrace(ex)
+            ).up();
         }
         return bundle;
     }
