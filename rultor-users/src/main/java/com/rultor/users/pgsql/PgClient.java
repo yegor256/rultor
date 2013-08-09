@@ -69,11 +69,17 @@ public interface PgClient {
          */
         private final transient String jdbc;
         /**
+         * JDBC password.
+         */
+        private final transient String password;
+        /**
          * Public ctor.
          * @param url JDBC URL
+         * @param pwd Password
          */
-        public Simple(final String url) {
+        public Simple(final String url, final String pwd) {
             this.jdbc = url;
+            this.password = pwd;
         }
         /**
          * {@inheritDoc}
@@ -84,6 +90,7 @@ public interface PgClient {
             final BoneCPDataSource src = new BoneCPDataSource();
             src.setDriverClass("org.postgresql.Driver");
             src.setJdbcUrl(this.jdbc);
+            src.setPassword(this.password);
             src.setMaxConnectionsPerPartition(Tv.TEN);
             return src;
         }

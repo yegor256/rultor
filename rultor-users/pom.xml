@@ -156,6 +156,7 @@
                             <failsafe.mongo.user>${failsafe.mongo.user}</failsafe.mongo.user>
                             <failsafe.mongo.password>${failsafe.mongo.password}</failsafe.mongo.password>
                             <failsafe.pgsql.jdbc>${failsafe.pgsql.jdbc}</failsafe.pgsql.jdbc>
+                            <failsafe.pgsql.password>${failsafe.pgsql.password}</failsafe.pgsql.password>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

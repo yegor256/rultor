@@ -105,7 +105,10 @@ final class Production implements Profile {
     @Cacheable(forever = true)
     public Users users() {
         return new PgUsers(
-            new PgClient.Simple(Manifests.read("Rultor-PgsqlJdbc")),
+            new PgClient.Simple(
+                Manifests.read("Rultor-PgsqlJdbc"),
+                Manifests.read("Rultor-PgsqlPassword")
+            ),
             new MongoUsers(
                 new Mongo.Simple(
                     Manifests.read("Rultor-MongoHost"),

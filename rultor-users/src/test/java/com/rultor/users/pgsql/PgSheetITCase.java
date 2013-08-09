@@ -52,6 +52,12 @@ public final class PgSheetITCase {
         System.getProperty("failsafe.pgsql.jdbc");
 
     /**
+     * JDBC password.
+     */
+    private static final String PASSWORD =
+        System.getProperty("failsafe.pgsql.password");
+
+    /**
      * PgSheet can show a list of columns.
      * @throws Exception If some problem inside
      */
@@ -87,7 +93,7 @@ public final class PgSheetITCase {
     private Sheet sheet() throws Exception {
         Assume.assumeNotNull(PgSheetITCase.URL);
         return new PgSheet(
-            new PgClient.Simple(PgSheetITCase.URL),
+            new PgClient.Simple(PgSheetITCase.URL, PgSheetITCase.PASSWORD),
             URN.create("urn:test:1")
         );
     }
