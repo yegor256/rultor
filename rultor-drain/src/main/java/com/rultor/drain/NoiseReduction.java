@@ -42,8 +42,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.codec.CharEncoding;
@@ -153,13 +156,15 @@ public final class NoiseReduction implements Drain {
             @Override
             public Iterator<Time> iterator() {
                 try {
-                    return Iterables.concat(
-                        Iterables.limit(
-                            NoiseReduction.this.dirty.pulses(),
-                            NoiseReduction.this.visible
-                        ),
-                        NoiseReduction.this.clean.pulses()
-                    ).iterator();
+                    return new NoiseReduction.Distinct<Time>(
+                        Iterables.concat(
+                            Iterables.limit(
+                                NoiseReduction.this.dirty.pulses(),
+                                NoiseReduction.this.visible
+                            ),
+                            NoiseReduction.this.clean.pulses()
+                        ).iterator()
+                    );
                 } catch (IOException ex) {
                     throw new IllegalStateException(ex);
                 }
@@ -234,6 +239,65 @@ public final class NoiseReduction implements Drain {
             ),
             stream
         );
+    }
+
+    /**
+     * Distinct iterator, not thread-safe.
+     */
+    private static final class Distinct<T> implements Iterator<T> {
+        /**
+         * Original iterator.
+         */
+        private final transient Iterator<T> origin;
+        /**
+         * Set of elements already seen.
+         */
+        private final transient Set<T> seen = new LinkedHashSet<T>(0);
+        /**
+         * Recent element.
+         */
+        private final transient AtomicReference<T> recent =
+            new AtomicReference<T>();
+        /**
+         * Ctor.
+         * @param iterator Original iterator
+         */
+        protected Distinct(final Iterator<T> iterator) {
+            this.origin = iterator;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean hasNext() {
+            while (this.recent.get() == null && this.origin.hasNext()) {
+                final T next = this.origin.next();
+                if (!this.seen.contains(next)) {
+                    this.seen.add(next);
+                    this.recent.set(next);
+                }
+            }
+            return this.recent != null;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public T next() {
+            if (!this.hasNext()) {
+                throw new NoSuchElementException();
+            }
+            final T next = this.recent.get();
+            this.recent.set(null);
+            return next;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
     }
 
 }
