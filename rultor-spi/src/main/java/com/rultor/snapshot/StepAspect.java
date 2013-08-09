@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableMap;
 import com.rultor.tools.Time;
 import com.rultor.tools.Vext;
 import java.lang.reflect.Method;
+import java.security.SecureRandom;
 import java.util.Random;
 import java.util.logging.Level;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -52,6 +53,11 @@ import org.xembly.Directives;
 public final class StepAspect {
 
     /**
+     * Random generator.
+     */
+    private static final Random RND = new SecureRandom();
+
+    /**
      * Track execution of a method annotated with {@link Step}.
      * @param point Join point
      * @return Result of the method
@@ -64,7 +70,7 @@ public final class StepAspect {
         final Method method =
             MethodSignature.class.cast(point.getSignature()).getMethod();
         final Step step = method.getAnnotation(Step.class);
-        final String label = this.label(method);
+        final String label = String.format("%08x", StepAspect.RND.nextInt());
         final ImmutableMap.Builder<String, Object> args =
             new ImmutableMap.Builder<String, Object>()
                 .put("this", point.getThis())
@@ -75,6 +81,8 @@ public final class StepAspect {
                 .addIfAbsent("steps").strict(1)
                 .add("step").strict(1)
                 .attr("id", label)
+                .attr("class", method.getDeclaringClass().getCanonicalName())
+                .attr("method", method.getName())
                 .add("start").set(new Time().toString()).up()
                 .add("summary")
                 .set(new Vext(step.before()).print(args.build()))
@@ -111,17 +119,6 @@ public final class StepAspect {
                     .add("finish").set(new Time().toString())
             ).log();
         }
-    }
-
-    /**
-     * Make a unique label for the given method.
-     * @param method The method
-     * @return Unique label
-     */
-    private String label(final Method method) {
-        return String.format(
-            "%s-%d", method.getName(), Math.abs(new Random().nextInt())
-        );
     }
 
 }
