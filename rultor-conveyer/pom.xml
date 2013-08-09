@@ -181,6 +181,13 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <artifactId>maven-invoker-plugin</artifactId>
+                    <configuration>
+                        <!-- logs break rultor parsing, because they produce Xembly directives -->
+                        <streamLogs>false</streamLogs>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
                     <configuration>
                         <archive>
