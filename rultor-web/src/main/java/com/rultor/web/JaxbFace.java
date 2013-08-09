@@ -47,6 +47,7 @@ import com.rultor.tools.Markdown;
 import com.rultor.tools.Time;
 import java.net.URI;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Face of {@link Spec} in JAXB.
@@ -117,7 +118,13 @@ final class JaxbFace {
             }
         // @checkstyle IllegalCatch (1 line)
         } catch (Exception ex) {
-            bundle = bundle.add("exception", ex.getMessage()).up();
+            bundle = bundle
+                .add("exception", ex.getMessage())
+                .up()
+                .add("class", ex.getClass().getName())
+                .up()
+                .add("stacktrace", ExceptionUtils.getStackTrace(ex))
+                .up();
         }
         return bundle;
     }
