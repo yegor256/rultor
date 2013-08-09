@@ -114,7 +114,7 @@ final class AwsStand implements Stand {
      */
     @Override
     @NotNull(message = "ACL of a stand is never NULL")
-    @Cacheable(lifetime = Tv.THIRTY, unit = TimeUnit.MINUTES)
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Spec acl() {
         Spec spec;
         if (this.item.has(AwsStand.FIELD_ACL)) {

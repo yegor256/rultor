@@ -156,7 +156,7 @@ final class AwsUnits implements Units {
      * {@inheritDoc}
      */
     @Override
-    @Cacheable(lifetime = Tv.THIRTY, unit = TimeUnit.MINUTES)
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Unit get(@NotNull(message = "unit name can't be NULL")
         final String unit) {
         final Collection<Item> items = this.region.table(AwsUnit.TABLE)
@@ -176,7 +176,7 @@ final class AwsUnits implements Units {
      * {@inheritDoc}
      */
     @Override
-    @Cacheable(lifetime = Tv.THIRTY, unit = TimeUnit.MINUTES)
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public boolean contains(final String unit) {
         return !this.region.table(AwsUnit.TABLE)
             .frame()
@@ -190,7 +190,7 @@ final class AwsUnits implements Units {
      * Fetch them all.
      * @return All Units
      */
-    @Cacheable(lifetime = Tv.THIRTY, unit = TimeUnit.MINUTES)
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     private Collection<Item> fetch() {
         return this.region.table(AwsUnit.TABLE)
             .frame()

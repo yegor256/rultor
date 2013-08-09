@@ -129,7 +129,7 @@ final class AwsStands implements Stands {
      * {@inheritDoc}
      */
     @Override
-    @Cacheable(lifetime = Tv.THIRTY, unit = TimeUnit.MINUTES)
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public boolean contains(final String name) {
         return !this.region.table(AwsStand.TABLE).frame()
             .where(AwsStand.HASH_OWNER, this.owner.toString())
@@ -159,7 +159,7 @@ final class AwsStands implements Stands {
      * Fetch all items.
      * @return All stands
      */
-    @Cacheable(lifetime = Tv.THIRTY, unit = TimeUnit.MINUTES)
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     private Collection<Item> fetch() {
         return this.region.table(AwsStand.TABLE)
             .frame()

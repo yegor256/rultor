@@ -120,7 +120,7 @@ public final class AwsUsers implements Users {
      * {@inheritDoc}
      */
     @Override
-    @Cacheable(lifetime = Tv.THIRTY, unit = TimeUnit.MINUTES)
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Stand stand(final String stand) {
         final Collection<Item> items = this.region.table(AwsStand.TABLE)
             .frame()
