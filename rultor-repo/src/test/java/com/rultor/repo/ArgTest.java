@@ -27,60 +27,57 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.repo;
 
-import java.util.Arrays;
+import com.rultor.spi.Arguments;
+import com.rultor.spi.Users;
+import com.rultor.spi.Wallet;
+import com.rultor.spi.Work;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test case for {@link ArgumentsTest}.
+ * Test case for {@link Arg}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class ArgumentsTest {
+public final class ArgTest {
 
     /**
-     * Arguments can retrieve item by index.
+     * Arg can parse and print.
      * @throws Exception If some problem inside
      */
     @Test
-    public void retrievesItemByIndex() throws Exception {
-        final Work work = Mockito.mock(Work.class);
-        final Arguments args = new Arguments(work, new Wallet.Empty());
-        MatcherAssert.assertThat(args.work(), Matchers.equalTo(work));
-    }
-
-    /**
-     * Arguments can replace item by index.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void replacesItemByIndex() throws Exception {
-        final Work work = Mockito.mock(Work.class);
-        final String value = "some test value";
-        final Arguments args = new Arguments(
-            work, new Wallet.Empty(), Arrays.<Object>asList("previous value")
-        );
+    public void parsesAndPrints() throws Exception {
+        final String text = "${3:some text}";
         MatcherAssert.assertThat(
-            args.with(0, value).get(0),
-            Matchers.<Object>equalTo(value)
+            new Arg(text).asText(),
+            Matchers.equalTo(text)
         );
     }
 
     /**
-     * Arguments can append item by index.
+     * Arg can make an instance.
      * @throws Exception If some problem inside
      */
     @Test
-    public void addsItemsByIndex() throws Exception {
+    public void makesInstance() throws Exception {
+        final Users users = Mockito.mock(Users.class);
         final Work work = Mockito.mock(Work.class);
-        final String value = "тест";
+        final Wallet wallet = Mockito.mock(Wallet.class);
+        final String first = "первый";
+        final String second = "второй";
+        final Arguments arguments = new Arguments(work, wallet)
+            .with(0, first).with(1, second);
         MatcherAssert.assertThat(
-            new Arguments(work, new Wallet.Empty()).with(0, value).get(0),
-            Matchers.<Object>equalTo(value)
+            new Arg("${0:first one}").instantiate(users, arguments),
+            Matchers.equalTo((Object) first)
+        );
+        MatcherAssert.assertThat(
+            new Arg("${1:second one}").instantiate(users, arguments),
+            Matchers.equalTo((Object) second)
         );
     }
 

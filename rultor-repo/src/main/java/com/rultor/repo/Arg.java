@@ -119,9 +119,7 @@ final class Arg implements Variable<Object> {
     public Map<Integer, String> arguments() throws SpecException {
         final ConcurrentMap<Integer, String> args =
             new ConcurrentSkipListMap<Integer, String>();
-        if (this.position > 0) {
-            args.put(this.position, this.desc);
-        }
+        args.put(this.position, this.desc);
         return args;
     }
 

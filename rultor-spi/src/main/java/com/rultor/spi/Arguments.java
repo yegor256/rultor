@@ -142,7 +142,11 @@ public final class Arguments {
      * @return New arguments
      */
     public Arguments with(final int pos, final Object value) {
-        Validate.isTrue(pos < this.values.size(), "%d is out of boundary", pos);
+        Validate.isTrue(
+            pos <= this.values.size(),
+            "argument #%d is out of boundary (%d total)",
+            pos, this.values.size()
+        );
         return new Arguments(
             this.wrk,
             this.wlt,

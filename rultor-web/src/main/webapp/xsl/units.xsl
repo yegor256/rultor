@@ -124,11 +124,11 @@
                 <xsl:if test="face/exception">
                     <li>
                         <i class="icon-warning-sign text-danger" style="cursor:pointer;" title="show exception"
-                            onclick="$(this).parent().find('.exception').toggle();"><xsl:comment>exception</xsl:comment></i>
-                        <pre style="display:none;" class="exception"><xsl:value-of select="face/exception"/></pre>
+                            onclick="$(this).parent().parent().find('.exception').toggle();"><xsl:comment>exception</xsl:comment></i>
                     </li>
                 </xsl:if>
             </ul>
+            <pre style="display:none;" class="exception"><xsl:value-of select="face/exception"/></pre>
         </div>
     </xsl:template>
 </xsl:stylesheet>
