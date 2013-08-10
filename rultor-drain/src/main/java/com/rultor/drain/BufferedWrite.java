@@ -48,6 +48,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
 
@@ -176,6 +177,8 @@ public final class BufferedWrite implements Drain {
     /**
      * Thread-safe tunnel to the real drain.
      */
+    @ToString
+    @EqualsAndHashCode(of = { "start", "data" })
     private final class Tunnel {
         /**
          * When was is started.
@@ -212,6 +215,8 @@ public final class BufferedWrite implements Drain {
     /**
      * Flush.
      */
+    @ToString
+    @EqualsAndHashCode
     @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.SECONDS)
     private static final class Flush implements Runnable {
         @Override

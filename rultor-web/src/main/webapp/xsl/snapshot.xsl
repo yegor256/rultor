@@ -88,9 +88,9 @@
             <pre style="display:none;" class="spec"><xsl:value-of select="spec"/></pre>
         </xsl:if>
         <xsl:if test="products/product">
-            <ul class="list-inline">
+            <div>
                 <xsl:apply-templates select="products/product"/>
-            </ul>
+            </div>
         </xsl:if>
         <xsl:choose>
             <xsl:when test="stdout">
@@ -225,11 +225,9 @@
         </li>
     </xsl:template>
     <xsl:template match="product">
-        <li>
-            <xsl:value-of select="name"/>
-            <xsl:text>: </xsl:text>
+        <div>
             <span class="markdown"><xsl:value-of select="markdown"/></span>
-        </li>
+        </div>
     </xsl:template>
     <xsl:template name="bar">
         <xsl:param name="snapshot"/>
