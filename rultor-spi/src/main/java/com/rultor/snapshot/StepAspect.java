@@ -32,6 +32,7 @@ package com.rultor.snapshot;
 import com.google.common.collect.ImmutableMap;
 import com.rultor.tools.Time;
 import com.rultor.tools.Vext;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.security.SecureRandom;
 import java.util.Random;
@@ -74,7 +75,7 @@ public final class StepAspect {
         final String label = String.format("%08x", StepAspect.RND.nextInt());
         final ImmutableMap.Builder<String, Object> args =
             new ImmutableMap.Builder<String, Object>()
-                .put("this", point.getThis())
+                .put("this", new StepAspect.Open(point.getThis()))
                 .put("args", point.getArgs());
         final String before;
         if (step.before().isEmpty()) {
@@ -130,6 +131,34 @@ public final class StepAspect {
                     .strict(1)
                     .add("finish").set(new Time().toString())
             ).log();
+        }
+    }
+
+    /**
+     * Open object for velocity rendering of all private properties.
+     */
+    public static final class Open {
+        /**
+         * The subject.
+         */
+        private final transient Object subject;
+        /**
+         * Protected ctor.
+         * @param subj The subject to open
+         */
+        protected Open(final Object subj) {
+            this.subject = subj;
+        }
+        /**
+         * Get property.
+         * @param name Name of it
+         * @return The object or exception if it's absent
+         * @throws Exception If fails
+         */
+        public Object get(final String name) throws Exception {
+            final Field field = this.subject.getClass().getDeclaredField(name);
+            field.setAccessible(true);
+            return field.get(this.subject);
         }
     }
 

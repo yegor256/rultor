@@ -247,6 +247,10 @@ final class EC2Environment implements Environment {
      * @return The price of the instance time
      * @throws IOException If IO problem inside
      */
+    @Step(
+        before = "calculating EC2 occurred costs",
+        value = "EC2 `${args[0]}` instance in `${args[1]}` costed ${result}"
+    )
     private static Dollars costOf(final String type, final String zone,
         final long msec) throws IOException {
         assert zone != null;

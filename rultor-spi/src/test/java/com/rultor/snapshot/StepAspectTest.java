@@ -48,8 +48,8 @@ public final class StepAspectTest {
     @Test
     public void reportsMethodProgressInLog() throws Exception {
         MatcherAssert.assertThat(
-            new StepAspectTest.Foo().toHex(Tv.HUNDRED),
-            Matchers.equalTo("64")
+            new StepAspectTest.Foo("0x").toHex(Tv.HUNDRED),
+            Matchers.equalTo("0x64")
         );
     }
 
@@ -58,16 +58,30 @@ public final class StepAspectTest {
      */
     private static final class Foo {
         /**
+         * Some property encapsulated.
+         */
+        private final transient String prefix;
+        /**
+         * Ctor.
+         * @param pfx Prefix
+         */
+        protected Foo(final String pfx) {
+            this.prefix = pfx;
+        }
+        /**
          * Simple method.
          * @param number Number to convert to hex
          * @return Hexadecimal number
          */
         @Step(
             before = "planning to do something with ${args[0]}",
-            value = "returned '${result}' after processing ${args[0]}"
+            value = "returned `${result}` on ${args[0]} with `${this.prefix}`"
         )
         public String toHex(final int number) {
-            return Integer.toHexString(number);
+            return String.format(
+                "%s%s",
+                this.prefix, Integer.toHexString(number)
+            );
         }
     }
 
