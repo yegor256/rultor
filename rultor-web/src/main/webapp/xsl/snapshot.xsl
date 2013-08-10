@@ -33,10 +33,12 @@
         <xsl:if test="tags/tag">
             <ul class="list-inline">
                 <xsl:apply-templates select="tags/tag"/>
-                <li class="text-muted">
-                    <xsl:text>updated </xsl:text>
-                    <span class="timeago"><xsl:value-of select="updated"/></span>
-                </li>
+                <xsl:if test="updated">
+                    <li class="text-muted">
+                        <xsl:text>updated </xsl:text>
+                        <span class="timeago"><xsl:value-of select="updated"/></span>
+                    </li>
+                </xsl:if>
             </ul>
         </xsl:if>
         <ul class="list-inline">
