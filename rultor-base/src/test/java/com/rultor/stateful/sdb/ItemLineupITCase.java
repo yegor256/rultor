@@ -118,7 +118,7 @@ public final class ItemLineupITCase {
     /**
      * Get lineup to work with.
      * @param name Name of item
-     * @return lineup
+     * @return Lineup
      * @throws Exception If some problem inside
      */
     private Lineup lineup(final String name) throws Exception {
