@@ -41,6 +41,7 @@ import com.rultor.tools.Time;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
+import java.util.Arrays;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
@@ -117,14 +118,18 @@ public final class LinesSensor implements Drain {
         final long before = this.spinbox.add(0);
         final long after = this.spinbox.add(Iterables.size(lines));
         if ((after / this.delta) * this.delta > before) {
-            new XemblyLine(
-                new Directives()
-                    .xpath("/snapshot")
-                    .strict(1)
-                    .addIfAbsent("lines")
-                    .strict(1)
-                    .set(Long.toString(after))
-            ).log();
+            this.origin.append(
+                Arrays.asList(
+                    new XemblyLine(
+                        new Directives()
+                            .xpath("/snapshot")
+                            .strict(1)
+                            .addIfAbsent("lines")
+                            .strict(1)
+                            .set(Long.toString(after))
+                    ).toString()
+                )
+            );
         }
         this.origin.append(lines);
     }
