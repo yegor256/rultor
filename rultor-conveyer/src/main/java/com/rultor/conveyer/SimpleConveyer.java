@@ -164,7 +164,7 @@ final class SimpleConveyer implements Closeable {
         this.users = usrs;
         this.streams = new Log4jStreams();
         this.server = new HttpServer(this.streams, SimpleConveyer.PORT);
-        Logger.info(SimpleConveyer.class, "our IP: %s", SimpleConveyer.META_IP);
+        Logger.info(SimpleConveyer.class, "IP: %s", SimpleConveyer.address());
     }
 
     /**
