@@ -79,12 +79,12 @@ public final class StepAspect {
                 .put("args", point.getArgs());
         final String before;
         if (step.before().isEmpty()) {
-            before = new Vext(step.before()).print(args.build());
-        } else {
             before = String.format(
                 "%s#%s()",
                 method.getDeclaringClass().getCanonicalName(), method.getName()
             );
+        } else {
+            before = new Vext(step.before()).print(args.build());
         }
         new XemblyLine(
             new Directives()
