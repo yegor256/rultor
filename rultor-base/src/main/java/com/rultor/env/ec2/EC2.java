@@ -178,7 +178,7 @@ public final class EC2 implements Environments {
         // @checkstyle LineLength (1 line)
         value = "EC2 `${result.instanceType}` instance `${result.instanceId}` created"
     )
-    @com.rultor.snapshot.Tag("EC2")
+    @com.rultor.snapshot.Tag("ec2")
     private Instance create() {
         final AmazonEC2 aws = this.client.get();
         try {

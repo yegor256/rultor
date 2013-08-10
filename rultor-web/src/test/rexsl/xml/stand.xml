@@ -85,7 +85,7 @@
                 <products>
                     <product>
                         <name>stdout</name>
-                        <html>&lt;a href="#"&gt;1 file&lt;/a&gt;</html>
+                        <markdown>[1 file](http://google.com)</markdown>
                     </product>
                 </products>
                 <steps>
