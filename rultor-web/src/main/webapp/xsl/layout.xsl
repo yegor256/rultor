@@ -55,6 +55,10 @@
                     </xsl:attribute>
                 </link>
                 <xsl:call-template name="head"/>
+                <script type="text/javascript" src="//img.rultor.com/markdown.js">
+                    <!-- this is for W3C compliance -->
+                    <xsl:text> </xsl:text>
+                </script>
                 <script type="text/javascript" src="//code.jquery.com/jquery-2.0.3.min.js">
                     <!-- this is for W3C compliance -->
                     <xsl:text> </xsl:text>
@@ -69,6 +73,11 @@
                             $('span.timeago').each(
                                 function (span) {
                                     $(this).text(moment($(this).text()).fromNow());
+                                }
+                            );
+                            $('span.markdown').each(
+                                function (span) {
+                                    $(this).html(markdown.toHTML($(this).text()).replace(/<\/?p>/g,''));
                                 }
                             );
                         }

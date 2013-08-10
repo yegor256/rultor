@@ -46,7 +46,7 @@
                         onclick="$(this).parent().parent().parent().parent().find('pre.spec').toggle();"><xsl:comment>spec</xsl:comment></i>
                 </li>
             </xsl:if>
-            <xsl:apply-templates select="version"/>
+            <xsl:apply-templates select="version" mode="compact"/>
             <xsl:apply-templates select="work"/>
             <xsl:if test="lines">
                 <li>
@@ -141,7 +141,7 @@
             <xsl:value-of select="unit"/>
         </li>
     </xsl:template>
-    <xsl:template match="version">
+    <xsl:template match="version" mode="compact">
         <li>
             <a>
                 <xsl:attribute name="href">
@@ -159,11 +159,8 @@
         <div>
             <xsl:attribute name="class">
                 <xsl:choose>
-                    <xsl:when test="level = 'FINE'">
-                        <xsl:text>text-success</xsl:text>
-                    </xsl:when>
                     <xsl:when test="level = 'INFO'">
-                        <xsl:text>text-info</xsl:text>
+                        <xsl:text>text-success</xsl:text>
                     </xsl:when>
                     <xsl:when test="level = 'WARNING'">
                         <xsl:text>text-warning</xsl:text>
@@ -177,6 +174,9 @@
                 </xsl:choose>
             </xsl:attribute>
             <xsl:choose>
+                <xsl:when test="exception">
+                    <i class="icon-warning-sign"><xsl:comment>exception</xsl:comment></i>
+                </xsl:when>
                 <xsl:when test="finish">
                     <i class="icon-check"><xsl:comment>done</xsl:comment></i>
                 </xsl:when>
@@ -188,9 +188,16 @@
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:text> </xsl:text>
-            <span>
+            <span class="markdown">
                 <xsl:value-of select="summary"/>
             </span>
+            <xsl:if test="exception">
+                <xsl:text> (</xsl:text>
+                <span class="markdown">
+                    <xsl:value-of select="exception"/>
+                </span>
+                <xsl:text>)</xsl:text>
+            </xsl:if>
         </div>
     </xsl:template>
     <xsl:template match="tag">
@@ -221,7 +228,7 @@
         <li>
             <xsl:value-of select="name"/>
             <xsl:text>: </xsl:text>
-            <xsl:value-of disable-output-escaping="yes" select="html"/>
+            <span class="markdown"><xsl:value-of select="html"/></span>
         </li>
     </xsl:template>
     <xsl:template name="bar">

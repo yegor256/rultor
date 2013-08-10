@@ -145,7 +145,10 @@ public final class OnCommit implements Instance {
      * @return TRUE if success
      * @throws IOException If some IO problem
      */
-    @Step(before = "building", value = "built ${args[0]}")
+    @Step(
+        before = "building `${arg[0]}",
+        value = "built successfully `${args[0]}`"
+    )
     private boolean build(final Commit head) throws IOException {
         return this.announce(
             new Build(this.batch).exec(

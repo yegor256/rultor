@@ -127,7 +127,7 @@ SET "some text to set"; STRICT "1";</xembly>
                 <products>
                     <product>
                         <name>stdout</name>
-                        <html>&lt;a href="#"&gt;1 file&lt;/a&gt;</html>
+                        <html>[1 file](http://google.com)</html>
                     </product>
                 </products>
                 <steps>
@@ -136,7 +136,7 @@ SET "some text to set"; STRICT "1";</xembly>
                         <start>2013-08-23T17:57Z</start>
                         <finish>2013-08-23T17:57Z</finish>
                         <summary>created EC2 instance `i-09aeb44` of `m1.small` type</summary>
-                        <level>FINE</level>
+                        <level>INFO</level>
                     </step>
                     <step>
                         <id>build</id>
@@ -144,6 +144,7 @@ SET "some text to set"; STRICT "1";</xembly>
                         <finish>2013-08-23T17:57Z</finish>
                         <summary>failed to allocate memory</summary>
                         <level>SEVERE</level>
+                        <exception>Out of memory</exception>
                     </step>
                     <step>
                         <id>build</id>

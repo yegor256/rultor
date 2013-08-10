@@ -36,6 +36,7 @@ import java.lang.reflect.Method;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.logging.Level;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -117,7 +118,9 @@ public final class StepAspect {
                 new Directives()
                     .xpath(String.format("//step[@id = '%s']", label))
                     .strict(1)
-                    .add("level").set(Level.SEVERE.toString())
+                    .add("level").set(Level.SEVERE.toString()).up()
+                    .add("exception")
+                    .set(ExceptionUtils.getRootCauseMessage(ex))
             ).log();
             throw ex;
         } finally {
