@@ -148,7 +148,7 @@ final class EC2Environment implements Environment {
      * {@inheritDoc}
      */
     @Override
-    @Step("EC2 instance ${this.name} terminated")
+    @Step("EC2 instance `${this.name}` terminated")
     public void close() throws IOException {
         final AmazonEC2 aws = this.client.get();
         try {
