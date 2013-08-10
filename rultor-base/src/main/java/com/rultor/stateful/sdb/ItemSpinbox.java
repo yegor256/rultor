@@ -121,6 +121,7 @@ public final class ItemSpinbox implements Spinbox {
                 .withConsistentRead(true)
                 .withDomainName(this.client.domain())
                 .withItemName(this.name)
+                .withAttributeNames(ItemSpinbox.COUNTER)
         );
         final long before;
         if (result.getAttributes().isEmpty()) {

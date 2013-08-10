@@ -29,31 +29,21 @@
  */
 package com.rultor.stateful.sdb;
 
-import com.jcabi.aspects.Tv;
-import com.jcabi.log.VerboseThreads;
 import com.rultor.aws.SDBClient;
 import com.rultor.spi.Wallet;
-import com.rultor.stateful.Lineup;
-import java.security.SecureRandom;
-import java.util.Random;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.rultor.stateful.Spinbox;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
 import org.junit.Test;
 
 /**
- * Integration case for {@link ItemLineup}.
+ * Integration case for {@link ItemSpinbox}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public final class ItemLineupITCase {
+public final class ItemSpinboxITCase {
 
     /**
      * SimpleDB key.
@@ -74,62 +64,34 @@ public final class ItemLineupITCase {
         System.getProperty("failsafe.sdb.domain");
 
     /**
-     * ItemLineup can run code in parallel.
+     * ItemSpinbox can run code in parallel.
      * @throws Exception If some problem inside
      */
     @Test
     public void runsInParallel() throws Exception {
-        final Lineup lineup = this.lineup("ItemLineupITCase.txt");
-        final int threads = 10;
-        final CountDownLatch start = new CountDownLatch(1);
-        final AtomicInteger count = new AtomicInteger();
-        final ExecutorService svc =
-            Executors.newFixedThreadPool(threads, new VerboseThreads());
-        final Random rnd = new SecureRandom();
-        final Callable<?> callable = new Callable<Integer>() {
-            @Override
-            public Integer call() throws Exception {
-                start.await();
-                return lineup.exec(
-                    new Callable<Integer>() {
-                        @Override
-                        public Integer call() throws Exception {
-                            final int num = count.get();
-                            TimeUnit.MILLISECONDS.sleep(rnd.nextInt(Tv.TEN));
-                            count.set(num + 1);
-                            return count.get();
-                        }
-                    }
-                );
-            }
-        };
-        for (int thread = 0; thread < threads; ++thread) {
-            svc.submit(callable);
-        }
-        start.countDown();
-        svc.shutdown();
+        final Spinbox spinbox = this.spinbox("ItemSpinboxITCase");
+        final long before = spinbox.add(0);
         MatcherAssert.assertThat(
-            svc.awaitTermination(2, TimeUnit.MINUTES),
-            Matchers.is(true)
+            spinbox.add(1),
+            Matchers.equalTo(before + 1)
         );
-        MatcherAssert.assertThat(count.get(), Matchers.equalTo(threads));
     }
 
     /**
-     * Get lineup to work with.
+     * Get spinbox to work with.
      * @param name Name of item
-     * @return lineup
+     * @return Spinbox
      * @throws Exception If some problem inside
      */
-    private Lineup lineup(final String name) throws Exception {
-        Assume.assumeNotNull(ItemLineupITCase.KEY);
-        return new ItemLineup(
+    private Spinbox spinbox(final String name) throws Exception {
+        Assume.assumeNotNull(ItemSpinboxITCase.KEY);
+        return new ItemSpinbox(
             new Wallet.Empty(),
             name,
             new SDBClient.Simple(
-                ItemLineupITCase.KEY,
-                ItemLineupITCase.SECRET,
-                ItemLineupITCase.DOMAIN
+                ItemSpinboxITCase.KEY,
+                ItemSpinboxITCase.SECRET,
+                ItemSpinboxITCase.DOMAIN
             )
         );
     }
