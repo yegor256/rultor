@@ -175,7 +175,8 @@ public final class EC2 implements Environments {
      */
     @Step(
         before = "creating EC instance `${this.type}` from `${this.ami}`",
-        value = "EC2 instance `${result.getInstanceId()}` created"
+        // @checkstyle LineLength (1 line)
+        value = "EC2 `${result.instanceType}` instance `${result.instanceId}` created"
     )
     private Instance create() {
         final AmazonEC2 aws = this.client.get();
