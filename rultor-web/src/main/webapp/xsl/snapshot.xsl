@@ -228,7 +228,7 @@
         <li>
             <xsl:value-of select="name"/>
             <xsl:text>: </xsl:text>
-            <span class="markdown"><xsl:value-of select="html"/></span>
+            <span class="markdown"><xsl:value-of select="markdown"/></span>
         </li>
     </xsl:template>
     <xsl:template name="bar">

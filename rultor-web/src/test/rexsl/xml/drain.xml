@@ -127,7 +127,7 @@ SET "some text to set"; STRICT "1";</xembly>
                 <products>
                     <product>
                         <name>stdout</name>
-                        <html>[1 file](http://google.com)</html>
+                        <markdown>[1 file](http://google.com)</markdown>
                     </product>
                 </products>
                 <steps>
