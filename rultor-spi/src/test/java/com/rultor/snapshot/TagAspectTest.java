@@ -29,33 +29,57 @@
  */
 package com.rultor.snapshot;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.jcabi.aspects.Tv;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Step in a snapshot.
- *
+ * Test case for {@link TagAspect}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Documented
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Step {
+public final class TagAspectTest {
 
     /**
-     * Main line to print in story.
+     * TagAspect can report progress of a method.
+     * @throws Exception If some problem inside
      */
-    String value();
+    @Test
+    public void reportsMethodProgressInLog() throws Exception {
+        MatcherAssert.assertThat(
+            new TagAspectTest.Foo("0x").toHex(Tv.HUNDRED),
+            Matchers.equalTo("0x64")
+        );
+    }
 
     /**
-     * Line to show before this step starts.
+     * Dummy class for testing.
      */
-    String before() default "";
+    private static final class Foo {
+        /**
+         * Some property encapsulated.
+         */
+        private final transient String prefix;
+        /**
+         * Ctor.
+         * @param pfx Prefix
+         */
+        protected Foo(final String pfx) {
+            this.prefix = pfx;
+        }
+        /**
+         * Simple method.
+         * @param number Number to convert to hex
+         * @return Hexadecimal number
+         */
+        @Tag("some-test-tag")
+        public String toHex(final int number) {
+            return String.format(
+                "%s%s",
+                this.prefix, Integer.toHexString(number)
+            );
+        }
+    }
 
 }
-

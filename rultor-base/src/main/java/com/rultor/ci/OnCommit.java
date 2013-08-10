@@ -39,6 +39,7 @@ import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Step;
+import com.rultor.snapshot.Tag;
 import com.rultor.spi.Instance;
 import com.rultor.stateful.Notepad;
 import java.io.IOException;
@@ -149,6 +150,7 @@ public final class OnCommit implements Instance {
         before = "building `${arg[0]}",
         value = "built successfully `${args[0]}`"
     )
+    @Tag("ci")
     private boolean build(final Commit head) throws IOException {
         return this.announce(
             new Build(this.batch).exec(

@@ -36,7 +36,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Step in a snapshot.
+ * Tag in a snapshot.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -45,17 +45,12 @@ import java.lang.annotation.Target;
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Step {
+public @interface Tag {
 
     /**
-     * Main line to print in story.
+     * Tag name.
      */
     String value();
-
-    /**
-     * Line to show before this step starts.
-     */
-    String before() default "";
 
 }
 
