@@ -55,7 +55,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "spinbox", "origin" })
+@EqualsAndHashCode(of = { "delta", "spinbox", "origin" })
 @Loggable(Loggable.DEBUG)
 public final class LinesSensor implements Drain {
 
