@@ -139,11 +139,8 @@ public final class AccountRs extends BaseRs {
                     this.uriInfo()
                         .getBaseUriBuilder()
                         .clone()
-                        .path(DrainRs.class)
-                        .queryParam(
-                            AccountRs.QUERY_SINCE,
-                            this.since + pos
-                        )
+                        .path(AccountRs.class)
+                        .queryParam(AccountRs.QUERY_SINCE, this.since + pos)
                         .build()
                 )
             );
