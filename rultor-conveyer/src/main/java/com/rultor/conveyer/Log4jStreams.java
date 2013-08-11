@@ -163,7 +163,10 @@ public final class Log4jStreams extends AppenderSkeleton implements Streams {
     @Override
     public String toString() {
         final StringBuilder text = new StringBuilder()
-            .append(this.getClass().getCanonicalName()).append('\n');
+            .append(this.getClass().getCanonicalName())
+            .append('\n')
+            .append(this.groups.size())
+            .append(" running thread group(s):\n");
         for (Map.Entry<ThreadGroup, String> entry : this.groups.entrySet()) {
             text.append(entry.getKey())
                 .append(": ")
