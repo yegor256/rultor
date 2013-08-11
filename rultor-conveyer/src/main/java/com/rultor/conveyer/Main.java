@@ -160,6 +160,8 @@ public final class Main {
             .withRequiredArg().ofType(String.class);
         parser.accepts("sqs-url", "Amazon SQS URL")
             .withRequiredArg().ofType(String.class);
+        parser.accepts("sqs-wallet-url", "Amazon SQS URL for wallets")
+            .withRequiredArg().ofType(String.class);
         return parser;
     }
 
@@ -229,6 +231,11 @@ public final class Main {
                             )
                         ),
                         options.valueOf("dynamo-prefix").toString()
+                    ),
+                    new SQSClient.Simple(
+                        options.valueOf("sqs-key").toString(),
+                        options.valueOf("sqs-secret").toString(),
+                        options.valueOf("sqs-wallet-url").toString()
                     )
                 );
             } else {
@@ -236,6 +243,9 @@ public final class Main {
                     new Region.Prefixed(
                         new Region.Simple(new Credentials.Assumed()),
                         options.valueOf("dynamo-prefix").toString()
+                    ),
+                    new SQSClient.Assumed(
+                        options.valueOf("sqs-wallet-url").toString()
                     )
                 );
             }

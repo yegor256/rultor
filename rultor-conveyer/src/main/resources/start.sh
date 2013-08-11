@@ -33,6 +33,7 @@ export PATH="${M2_HOME}/bin:/usr/local/bin:${PATH}"
 export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=256m"
 
 SQS_URL=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.url'`
+SQS_WALLET_URL=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.wallet_url'`
 DYNAMO_PREFIX=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.prefix'`
 INSTANCE=`curl --silent http://169.254.169.254/latest/meta-data/instance-id`
 
@@ -64,6 +65,8 @@ done
 
 curl --silent https://raw.github.com/rultor/rultor/master/rultor-conveyer/src/main/resources/ec2-pom.xml > pom.xml
 mvn test --quiet --update-snapshots \
-    "-Dsqs-url=${SQS_URL}" "-Ddynamo-prefix=${DYNAMO_PREFIX}"
+    "-Dsqs-url=${SQS_URL}" \
+    "-Dsqs-wallet-url=${SQS_WALLET_URL}" \
+    "-Ddynamo-prefix=${DYNAMO_PREFIX}"
 
 ec2-terminate-instances "${INSTANCE}"

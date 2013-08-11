@@ -39,6 +39,7 @@ import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.TableMocker;
 import com.jcabi.urn.URN;
+import com.rultor.aws.SQSClient;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import org.hamcrest.MatcherAssert;
@@ -46,6 +47,7 @@ import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Integration case for {@link AwsUser}.
@@ -139,7 +141,9 @@ public final class AwsUserITCase {
             return;
         }
         final URN urn = new URN("urn:github:66");
-        final User user = new AwsUser(this.region, urn);
+        final User user = new AwsUser(
+            this.region, Mockito.mock(SQSClient.class), urn
+        );
         MatcherAssert.assertThat(user.urn(), Matchers.equalTo(urn));
         for (Unit unit : user.units()) {
             user.units().remove(unit.name());

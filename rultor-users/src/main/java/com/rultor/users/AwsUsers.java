@@ -40,6 +40,7 @@ import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
+import com.rultor.aws.SQSClient;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
@@ -71,10 +72,16 @@ public final class AwsUsers implements Users {
     private final transient Region region;
 
     /**
+     * SQS client.
+     */
+    private final transient SQSClient client;
+
+    /**
      * Public ctor.
      * @param reg AWS region
+     * @param sqs SQS client
      */
-    public AwsUsers(final Region reg) {
+    public AwsUsers(final Region reg, final SQSClient sqs) {
         final AmazonDynamoDB aws = reg.aws();
         final DescribeTableResult result = aws.describeTable(
             new DescribeTableRequest()
@@ -86,6 +93,7 @@ public final class AwsUsers implements Users {
             result.getTable().getItemCount()
         );
         this.region = reg;
+        this.client = sqs;
     }
 
     /**
@@ -100,6 +108,7 @@ public final class AwsUsers implements Users {
             users.add(
                 new AwsUser(
                     AwsUsers.this.region,
+                    AwsUsers.this.client,
                     URN.create(item.get(AwsUnit.HASH_OWNER).getS())
                 )
             );
@@ -113,7 +122,7 @@ public final class AwsUsers implements Users {
     @Override
     @NotNull(message = "User is never NULL")
     public User get(@NotNull(message = "URN can't be empty") final URN urn) {
-        return new AwsUser(this.region, urn);
+        return new AwsUser(this.region, this.client, urn);
     }
 
     /**

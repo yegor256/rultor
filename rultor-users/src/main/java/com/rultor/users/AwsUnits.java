@@ -38,6 +38,7 @@ import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
+import com.rultor.aws.SQSClient;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Units;
@@ -69,6 +70,11 @@ final class AwsUnits implements Units {
     private final transient Region region;
 
     /**
+     * SQS client.
+     */
+    private final transient SQSClient client;
+
+    /**
      * URN of the user.
      */
     private final transient URN owner;
@@ -76,10 +82,12 @@ final class AwsUnits implements Units {
     /**
      * Public ctor.
      * @param reg Region in Dynamo
+     * @param sqs SQS client
      * @param urn URN of the user
      */
-    protected AwsUnits(final Region reg, final URN urn) {
+    protected AwsUnits(final Region reg, final SQSClient sqs, final URN urn) {
         this.region = reg;
+        this.client = sqs;
         this.owner = urn;
     }
 
@@ -97,7 +105,7 @@ final class AwsUnits implements Units {
             }
             @Override
             public Unit next() {
-                return new AwsUnit(items.next());
+                return new AwsUnit(AwsUnits.this.client, items.next());
             }
             @Override
             public void remove() {
@@ -169,7 +177,7 @@ final class AwsUnits implements Units {
                 String.format("Unit `%s` doesn't exist", unit)
             );
         }
-        return new AwsUnit(items.iterator().next());
+        return new AwsUnit(this.client, items.iterator().next());
     }
 
     /**

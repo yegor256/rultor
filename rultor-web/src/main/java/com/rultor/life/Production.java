@@ -126,6 +126,11 @@ final class Production implements Profile {
                             )
                         ),
                         Manifests.read("Rultor-DynamoPrefix")
+                    ),
+                    new SQSClient.Simple(
+                        Manifests.read("Rultor-SQSKey"),
+                        Manifests.read("Rultor-SQSSecret"),
+                        Manifests.read("Rultor-SQSWalletUrl")
                     )
                 )
             )

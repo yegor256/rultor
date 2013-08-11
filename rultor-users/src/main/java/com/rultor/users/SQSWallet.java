@@ -32,6 +32,7 @@ package com.rultor.users;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
+import com.rultor.aws.SQSClient;
 import com.rultor.spi.Wallet;
 import com.rultor.tools.Dollars;
 import lombok.EqualsAndHashCode;
@@ -49,6 +50,19 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
 final class SQSWallet implements Wallet {
+
+    /**
+     * SQS client.
+     */
+    private final transient SQSClient client;
+
+    /**
+     * Ctor.
+     * @param sqs SQS client
+     */
+    protected SQSWallet(final SQSClient sqs) {
+        this.client = sqs;
+    }
 
     /**
      * {@inheritDoc}

@@ -33,18 +33,18 @@ Install AS [command line tools](http://aws.amazon.com/developertools/2535).
 Create new AS launch configuration ([more info](http://docs.aws.amazon.com/AutoScaling/latest/DeveloperGuide/US_BasicSetup.html)):
 
 ```
-$ as-create-launch-config rultor-conveyer-0.1.16 \
+$ as-create-launch-config rultor-conveyer-16 \
   --image-id ami-80a0d9e9 --instance-type t1.micro \
   --group rultor-conveyer --monitoring-disabled \
   --iam-instance-profile rultor-conveyer \
-  --user-data '{"url":"...","meter_url":"","prefix":"..."}'
+  --user-data '{"url":"...","wallet_url":"","prefix":"..."}'
 ```
 
 Create AS group:
 
 ```
 $ as-create-auto-scaling-group rultor-conveyer \
-  --launch-configuration rultor-conveyer-0.1.10 \
+  --launch-configuration rultor-conveyer-16 \
   --availability-zones us-east-1d --min-size 1 --max-size 2 \
   --desired-capacity 1
 ```
@@ -58,19 +58,19 @@ through SSH and make required changes.
 
 Create new AMI from the running instance.
 
-Create new AS group, using `as-create-launch-config` (as explained above).
+Create new AS launch config, using `as-create-launch-config` (as explained above).
 
 Update existing AS group to use new launch config:
 
 ```
 $ as-update-auto-scaling-group rultor-conveyer \
-  --launch-configuration rultor-conveyer-0.1.11
+  --launch-configuration rultor-conveyer-16
 ```
 
 Delete previous launch config:
 
 ```
-$ as-delete-launch-config rultor-conveyer-0.1.10
+$ as-delete-launch-config rultor-conveyer-15
 ```
 
 De-register previous AMI.

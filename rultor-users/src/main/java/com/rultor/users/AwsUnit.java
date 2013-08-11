@@ -36,6 +36,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
+import com.rultor.aws.SQSClient;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Wallet;
@@ -84,10 +85,17 @@ final class AwsUnit implements Unit {
     private final transient Item item;
 
     /**
+     * SQS client.
+     */
+    private final transient SQSClient client;
+
+    /**
      * Public ctor.
+     * @param sqs SQS client
      * @param itm Item from Dynamo
      */
-    protected AwsUnit(final Item itm) {
+    protected AwsUnit(final SQSClient sqs, final Item itm) {
+        this.client = sqs;
         this.item = itm;
     }
 
@@ -136,7 +144,7 @@ final class AwsUnit implements Unit {
      */
     @Override
     public Wallet wallet() {
-        return new SQSWallet();
+        return new SQSWallet(this.client);
     }
 
 }

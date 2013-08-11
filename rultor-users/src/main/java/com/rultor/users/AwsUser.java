@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
+import com.rultor.aws.SQSClient;
 import com.rultor.spi.Account;
 import com.rultor.spi.Stands;
 import com.rultor.spi.Units;
@@ -60,6 +61,11 @@ final class AwsUser implements User {
     private final transient Region region;
 
     /**
+     * SQS client.
+     */
+    private final transient SQSClient client;
+
+    /**
      * URN of the user.
      */
     private final transient URN name;
@@ -67,10 +73,12 @@ final class AwsUser implements User {
     /**
      * Public ctor.
      * @param reg Region in Dynamo
+     * @param sqs SQS client
      * @param urn URN of the user
      */
-    protected AwsUser(final Region reg, final URN urn) {
+    protected AwsUser(final Region reg, final SQSClient sqs, final URN urn) {
         this.region = reg;
+        this.client = sqs;
         this.name = urn;
     }
 
@@ -89,7 +97,7 @@ final class AwsUser implements User {
     @Override
     @NotNull(message = "units of a user is never NULL")
     public Units units() {
-        return new AwsUnits(this.region, this.name);
+        return new AwsUnits(this.region, this.client, this.name);
     }
 
     /**

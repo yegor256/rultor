@@ -31,6 +31,7 @@ package com.rultor.users;
 
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
+import com.rultor.aws.SQSClient;
 import com.rultor.spi.User;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -52,7 +53,9 @@ public final class AwsUserTest {
     public void hasName() throws Exception {
         final Region region = Mockito.mock(Region.class);
         final URN urn = new URN("urn:facebook:444");
-        final User user = new AwsUser(region, urn);
+        final User user = new AwsUser(
+            region, Mockito.mock(SQSClient.class), urn
+        );
         MatcherAssert.assertThat(user.urn(), Matchers.equalTo(urn));
     }
 
