@@ -37,6 +37,7 @@ import com.rultor.tools.Dollars;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -50,6 +51,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.Validate;
 import org.hamcrest.Matchers;
 
 /**
@@ -77,7 +79,16 @@ public final class IpnRs extends BaseRs {
             this.split(IOUtils.toString(post, CharEncoding.UTF_8))
         );
         final ConcurrentMap<String, String> vars = this.map(pairs);
-        if ("web_accept".equals(vars.get("txn_type"))) {
+        if ("web_accept".equals(vars.get("txn_type"))
+            && "Completed".equals(vars.get("payment_status"))) {
+            Validate.isTrue(
+                "paypal@rultor.com".equals(vars.get("receiver_email")),
+                "invalid email of money receiver"
+            );
+            Validate.isTrue(
+                "USD".equals(vars.get("mc_currency")),
+                "unexpected currency, only USD is accepted"
+            );
             this.fund(vars);
         }
         return this.join(pairs);
@@ -93,7 +104,10 @@ public final class IpnRs extends BaseRs {
             throw new IllegalArgumentException("invoice not found");
         }
         this.users().get(URN.create(invoice)).account().fund(
-            new Dollars(Tv.MILLION * Long.parseLong(vars.get("mc_gross"))),
+            new Dollars(
+                new BigDecimal(vars.get("mc_gross"))
+                    .movePointRight(Tv.SIX).longValue()
+            ),
             String.format(
                 "paid PayPal customer #%s (%s) on %s, TxID %s",
                 vars.get("payer_id"),
