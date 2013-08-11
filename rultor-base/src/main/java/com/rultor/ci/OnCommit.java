@@ -147,7 +147,7 @@ public final class OnCommit implements Instance {
      * @throws IOException If some IO problem
      */
     @Step(
-        before = "building `${arg[0]}",
+        before = "building `${args[0]}`",
         value = "built successfully `${args[0]}`"
     )
     @Tag("ci")
