@@ -104,15 +104,27 @@ public final class Log4jStreams extends AppenderSkeleton implements Streams {
      */
     @Override
     public InputStream stream(final String key) {
-        return new SequenceInputStream(
-            IOUtils.toInputStream(String.format("Listening to %s...\n\n", key)),
-            new InputStream() {
-                @Override
-                public int read() throws IOException {
-                    return Log4jStreams.this.read(key);
+        final ThreadGroup group = ImmutableBiMap.copyOf(this.groups)
+            .inverse().get(key);
+        final InputStream stream;
+        if (group == null) {
+            stream = IOUtils.toInputStream(
+                String.format("key '%s' is absent", key)
+            );
+        } else {
+            stream = new SequenceInputStream(
+                IOUtils.toInputStream(
+                    String.format("Listening to %s (key=%s)...\n\n", group, key)
+                ),
+                new InputStream() {
+                    @Override
+                    public int read() throws IOException {
+                        return Log4jStreams.this.read(key);
+                    }
                 }
-            }
-        );
+            );
+        }
+        return stream;
     }
 
     /**

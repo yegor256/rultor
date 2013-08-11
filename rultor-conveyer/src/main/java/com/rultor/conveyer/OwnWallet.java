@@ -46,8 +46,8 @@ import lombok.ToString;
  * @since 1.0
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Loggable(Loggable.INFO)
 @ToString
+@Loggable(Loggable.DEBUG)
 @EqualsAndHashCode(of = { "work", "unit" })
 final class OwnWallet implements Wallet {
 

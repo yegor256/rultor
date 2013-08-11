@@ -48,7 +48,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Loggable(Loggable.INFO)
+@Loggable(Loggable.DEBUG)
 @EqualsAndHashCode(of = { "port", "key", "origin" })
 final class StdoutWork implements Work {
 
