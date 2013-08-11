@@ -55,8 +55,9 @@ public interface Streams {
     /**
      * Interrupt thread group associated with this key.
      * @param key Authentication key
+     * @return Message of success
      */
-    void interrupt(String key);
+    String interrupt(String key);
 
     /**
      * Read stream by key (wait until it becomes available).

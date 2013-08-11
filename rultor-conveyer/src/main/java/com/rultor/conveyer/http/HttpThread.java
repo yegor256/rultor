@@ -133,8 +133,9 @@ final class HttpThread {
         writer.println("");
         writer.flush();
         if (query.endsWith("?interrupt")) {
-            this.streams.interrupt(query.substring(0, query.indexOf('?')));
-            writer.println("interrupted OK");
+            writer.println(
+                this.streams.interrupt(query.substring(0, query.indexOf('?')))
+            );
         } else if (query.isEmpty()) {
             writer.println(this.streams.toString());
         } else {

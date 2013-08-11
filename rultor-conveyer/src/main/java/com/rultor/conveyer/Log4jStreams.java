@@ -119,8 +119,17 @@ public final class Log4jStreams extends AppenderSkeleton implements Streams {
      * {@inheritDoc}
      */
     @Override
-    public void interrupt(final String key) {
-        ImmutableBiMap.copyOf(this.groups).inverse().get(key).interrupt();
+    public String interrupt(final String key) {
+        final ThreadGroup group = ImmutableBiMap.copyOf(this.groups)
+            .inverse().get(key);
+        final String response;
+        if (group == null) {
+            response = String.format("key '%s' not found", key);
+        } else {
+            group.interrupt();
+            response = String.format("%s interrupted", group);
+        }
+        return response;
     }
 
     /**
