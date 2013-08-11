@@ -103,23 +103,21 @@ public final class StepAspect {
             if (result != null) {
                 args.put("result", result);
             }
+            this.mark(label, Level.INFO);
             new XemblyLine(
                 new Directives()
-                    .xpath(String.format("//step[@id='%s']/summary", label))
+                    .xpath(String.format("//step[@id=%s]/summary", label))
                     .strict(1)
                     .set(new Vext(step.value()).print(args.build()))
-                    .up()
-                    // @checkstyle MultipleStringLiterals (1 line)
-                    .add("level").set(Level.INFO.toString())
             ).log();
             return result;
         // @checkstyle IllegalCatch (1 line)
         } catch (Throwable ex) {
+            this.mark(label, Level.SEVERE);
             new XemblyLine(
                 new Directives()
-                    .xpath(String.format("//step[@id = '%s']", label))
-                    .strict(1)
-                    .add("level").set(Level.SEVERE.toString()).up()
+                    // @checkstyle MultipleStringLiterals (1 line)
+                    .xpath(String.format("/snapshot/steps/step[@id=%s]", label))
                     .add("exception")
                     .set(ExceptionUtils.getRootCauseMessage(ex))
             ).log();
@@ -127,11 +125,25 @@ public final class StepAspect {
         } finally {
             new XemblyLine(
                 new Directives()
-                    .xpath(String.format("//step[@id='%s']", label))
+                    .xpath(String.format("/snapshot/steps/step[@id=%s]", label))
                     .strict(1)
                     .add("finish").set(new Time().toString())
             ).log();
         }
+    }
+
+    /**
+     * Set log level to the given step (by ID).
+     * @param label Label of the step
+     * @param level Level to set
+     */
+    private void mark(final String label, final Level level) {
+        new XemblyLine(
+            new Directives()
+                .xpath(String.format("/snapshot/steps/step[@id=%s]", label))
+                .strict(1)
+                .add("level").set(level.toString())
+        ).log();
     }
 
     /**
