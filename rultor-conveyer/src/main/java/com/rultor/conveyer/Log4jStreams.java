@@ -109,7 +109,7 @@ public final class Log4jStreams extends AppenderSkeleton implements Streams {
             new InputStream() {
                 @Override
                 public int read() throws IOException {
-                    return Log4jStreams.this.read();
+                    return Log4jStreams.this.read(key);
                 }
             }
         );
@@ -194,23 +194,10 @@ public final class Log4jStreams extends AppenderSkeleton implements Streams {
 
     /**
      * Read next byte.
+     * @param key The key
      * @return The byte
      */
-    private byte read() {
-        final ThreadGroup group = Thread.currentThread().getThreadGroup();
-        String key;
-        while (true) {
-            key = this.groups.get(group);
-            if (key != null) {
-                break;
-            }
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                throw new IllegalStateException(ex);
-            }
-        }
+    private byte read(final String key) {
         final CircularBuffer buffer = this.buffers.get(key);
         if (buffer == null) {
             throw new IllegalStateException("buffer is gone");
