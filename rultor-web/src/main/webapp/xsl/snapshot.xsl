@@ -90,9 +90,9 @@
             <pre style="display:none;" class="spec"><xsl:value-of select="spec"/></pre>
         </xsl:if>
         <xsl:if test="products/product">
-            <div class="spacious">
+            <ul class="list-unstyled">
                 <xsl:apply-templates select="products/product"/>
-            </div>
+            </ul>
         </xsl:if>
         <xsl:choose>
             <xsl:when test="stdout">
@@ -118,7 +118,7 @@
                 </div>
             </xsl:when>
             <xsl:when test="eta">
-                <div class="progress">
+                <div class="progress" style="margin-bottom: 10px;">
                     <xsl:call-template name="bar">
                         <xsl:with-param name="style" select="'progress-bar-warning'"/>
                         <xsl:with-param name="snapshot" select="."/>
@@ -127,7 +127,9 @@
             </xsl:when>
         </xsl:choose>
         <xsl:if test="steps/step">
-            <xsl:apply-templates select="steps/step"/>
+            <ul class="list-unstyled">
+                <xsl:apply-templates select="steps/step"/>
+            </ul>
         </xsl:if>
     </xsl:template>
     <xsl:template match="work">
@@ -158,7 +160,7 @@
         </li>
     </xsl:template>
     <xsl:template match="step">
-        <div>
+        <li>
             <xsl:attribute name="class">
                 <xsl:choose>
                     <xsl:when test="level = 'INFO'">
@@ -200,7 +202,7 @@
                 </span>
                 <xsl:text>)</xsl:text>
             </xsl:if>
-        </div>
+        </li>
     </xsl:template>
     <xsl:template match="tag">
         <li>
@@ -227,9 +229,9 @@
         </li>
     </xsl:template>
     <xsl:template match="product">
-        <div>
+        <li>
             <span class="markdown"><xsl:value-of select="markdown"/></span>
-        </div>
+        </li>
     </xsl:template>
     <xsl:template name="bar">
         <xsl:param name="snapshot"/>
