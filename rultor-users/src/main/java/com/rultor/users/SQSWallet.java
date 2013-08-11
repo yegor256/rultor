@@ -102,9 +102,9 @@ final class SQSWallet implements Wallet {
         this.client = sqs;
         this.work = wrk;
         Validate.isTrue(
-            !ctr.equals(dtr),
-            "creditor '%s' can't be the same as debitor (ctunit=%s, dtunit=%s)",
-            ctr, cunit, dunit
+            !(ctr.equals(dtr) && cunit.equals(dunit)),
+            "credit '%s/%s' can't be the same as debit '%s/%s'",
+            ctr, cunit, dtr, dunit
         );
         this.creditor = ctr;
         this.ctunit = cunit;
