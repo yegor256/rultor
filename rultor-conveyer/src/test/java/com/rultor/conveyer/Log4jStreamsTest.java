@@ -45,6 +45,7 @@ import org.junit.Test;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
+@SuppressWarnings("PMD.DoNotUseThreads")
 public final class Log4jStreamsTest {
 
     /**

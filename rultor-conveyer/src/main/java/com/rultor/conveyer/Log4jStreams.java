@@ -76,6 +76,7 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
      * Public ctor.
      */
     protected Log4jStreams() {
+        super();
         Logger.getRootLogger().addAppender(this);
     }
 
