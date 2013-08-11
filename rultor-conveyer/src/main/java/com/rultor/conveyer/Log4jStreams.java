@@ -215,7 +215,9 @@ public final class Log4jStreams extends AppenderSkeleton implements Streams {
     private byte read(final String key) {
         final CircularBuffer buffer = this.buffers.get(key);
         if (buffer == null) {
-            throw new IllegalStateException("buffer is gone");
+            throw new IllegalStateException(
+                String.format("buffer is absent for key '%s'", key)
+            );
         }
         while (!buffer.isEmpty()) {
             try {
