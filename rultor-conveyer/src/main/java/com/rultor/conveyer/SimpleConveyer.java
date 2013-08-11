@@ -29,29 +29,23 @@
  */
 package com.rultor.conveyer;
 
-import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
-import com.jcabi.urn.URN;
-import com.rexsl.test.RestTester;
 import com.rultor.conveyer.http.HttpServer;
 import com.rultor.conveyer.http.Streams;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Work;
-import com.rultor.tools.Time;
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -60,7 +54,6 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -92,13 +85,6 @@ final class SimpleConveyer implements Closeable {
      */
     private static final int THREADS =
         Runtime.getRuntime().availableProcessors() * Tv.TWENTY;
-
-    /**
-     * Where to get public IP from EC2.
-     */
-    private static final URI META_IP = URI.create(
-        "http://169.254.169.254/latest/meta-data/public-ipv4"
-    );
 
     /**
      * Queue.
@@ -164,7 +150,6 @@ final class SimpleConveyer implements Closeable {
         this.users = usrs;
         this.streams = new Log4jStreams();
         this.server = new HttpServer(this.streams, SimpleConveyer.PORT);
-        Logger.info(SimpleConveyer.class, "IP: %s", SimpleConveyer.address());
     }
 
     /**
@@ -229,39 +214,8 @@ final class SimpleConveyer implements Closeable {
         final Work origin = this.queue.pull(1, TimeUnit.SECONDS);
         if (!origin.equals(new Work.None())) {
             final String key = this.streams.register();
-            // @checkstyle AnonInnerLength (50 lines)
-            final Work work = new Work() {
-                @Override
-                public String toString() {
-                    return origin.toString();
-                }
-                @Override
-                public Time started() {
-                    return origin.started();
-                }
-                @Override
-                public URN owner() {
-                    return origin.owner();
-                }
-                @Override
-                public String unit() {
-                    return origin.unit();
-                }
-                @Override
-                public Spec spec() {
-                    return origin.spec();
-                }
-                @Override
-                public URI stdout() {
-                    return UriBuilder.fromUri("http://localhost/")
-                        .path("{key}")
-                        .host(SimpleConveyer.address())
-                        .port(SimpleConveyer.PORT)
-                        .build(key);
-                }
-            };
             try {
-                this.process(work);
+                this.process(new StdoutWork(SimpleConveyer.PORT, key, origin));
             } finally {
                 this.streams.unregister(key);
             }
@@ -287,23 +241,6 @@ final class SimpleConveyer implements Closeable {
                 Instance.class.cast(object).pulse();
             }
         }
-    }
-
-    /**
-     * Fetch my public IP.
-     * @return IP
-     * @see http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#using-instance-addressing-common
-     */
-    @Cacheable(forever = true)
-    private static String address() {
-        String address;
-        try {
-            address = RestTester.start(SimpleConveyer.META_IP)
-                .get("fetch EC2 public IP").getBody();
-        } catch (AssertionError ex) {
-            address = "localhost";
-        }
-        return address;
     }
 
 }
