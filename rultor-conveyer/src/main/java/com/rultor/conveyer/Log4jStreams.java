@@ -114,7 +114,10 @@ public final class Log4jStreams extends AppenderSkeleton implements Streams {
         } else {
             stream = new SequenceInputStream(
                 IOUtils.toInputStream(
-                    String.format("Listening to %s (key=%s)...\n\n", group, key)
+                    String.format(
+                        "Listening to %s, key=%s, threads=%d...\n\n",
+                        group, key, group.activeCount()
+                    )
                 ),
                 new InputStream() {
                     @Override
@@ -214,7 +217,7 @@ public final class Log4jStreams extends AppenderSkeleton implements Streams {
         if (buffer == null) {
             throw new IllegalStateException("buffer is gone");
         }
-        while (buffer.isEmpty()) {
+        while (!buffer.isEmpty()) {
             try {
                 TimeUnit.MICROSECONDS.sleep(1);
             } catch (InterruptedException ex) {
