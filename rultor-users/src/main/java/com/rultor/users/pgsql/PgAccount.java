@@ -110,6 +110,7 @@ final class PgAccount implements Account {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable.FlushAfter
     public void fund(final Dollars amount, final String details) {
         try {
             new JdbcSession(this.client.get())
