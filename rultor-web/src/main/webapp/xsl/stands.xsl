@@ -33,7 +33,7 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
-            <xsl:text>index</xsl:text>
+            <xsl:text>stands</xsl:text>
         </title>
     </xsl:template>
     <xsl:template name="content">
