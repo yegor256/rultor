@@ -30,6 +30,7 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
 import com.rultor.tools.Dollars;
@@ -44,6 +45,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import org.apache.commons.io.IOUtils;
@@ -74,7 +76,7 @@ public final class IpnRs extends BaseRs {
         final List<Map.Entry<String, String>> pairs = this.validate(
             this.split(IOUtils.toString(post, CharEncoding.UTF_8))
         );
-        final Map<String, String> vars = this.map(pairs);
+        final ConcurrentMap<String, String> vars = this.map(pairs);
         if ("web_accept".equals(vars.get("txn_type"))) {
             this.fund(vars);
         }
@@ -83,8 +85,7 @@ public final class IpnRs extends BaseRs {
 
     /**
      * Fund account.
-     * @param pairs Pairs to use
-     * @throws UnsupportedEncodingException If fails
+     * @param vars Vars to use
      */
     private void fund(final Map<String, String> vars) {
         final String invoice = vars.get("invoice");
@@ -92,7 +93,7 @@ public final class IpnRs extends BaseRs {
             throw new IllegalArgumentException("invoice not found");
         }
         this.users().get(URN.create(invoice)).account().fund(
-            new Dollars(Long.parseLong(vars.get("mc_gross"))),
+            new Dollars(Tv.MILLION * Long.parseLong(vars.get("mc_gross"))),
             String.format(
                 "paid PayPal customer #%s (%s) on %s, TxID %s",
                 vars.get("payer_id"),
@@ -109,6 +110,7 @@ public final class IpnRs extends BaseRs {
      * @return Pairs found
      * @throws UnsupportedEncodingException If fails
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private List<Map.Entry<String, String>> split(final String text)
         throws UnsupportedEncodingException {
         final List<Map.Entry<String, String>> list =
@@ -175,9 +177,9 @@ public final class IpnRs extends BaseRs {
      * @param pairs Pairs
      * @return Map
      */
-    private Map<String, String> map(
+    private ConcurrentMap<String, String> map(
         final List<Map.Entry<String, String>> pairs) {
-        final Map<String, String> map =
+        final ConcurrentMap<String, String> map =
             new ConcurrentHashMap<String, String>(0);
         for (Map.Entry<String, String> pair : pairs) {
             map.put(pair.getKey(), pair.getValue());
