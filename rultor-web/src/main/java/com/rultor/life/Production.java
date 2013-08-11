@@ -104,11 +104,17 @@ final class Production implements Profile {
     @Override
     @Cacheable(forever = true)
     public Users users() {
+        final SQSClient wallet = new SQSClient.Simple(
+            Manifests.read("Rultor-SQSKey"),
+            Manifests.read("Rultor-SQSSecret"),
+            Manifests.read("Rultor-SQSWalletUrl")
+        );
         return new PgUsers(
             new PgClient.Simple(
                 Manifests.read("Rultor-PgsqlJdbc"),
                 Manifests.read("Rultor-PgsqlPassword")
             ),
+            wallet,
             new MongoUsers(
                 new Mongo.Simple(
                     Manifests.read("Rultor-MongoHost"),
@@ -127,11 +133,7 @@ final class Production implements Profile {
                         ),
                         Manifests.read("Rultor-DynamoPrefix")
                     ),
-                    new SQSClient.Simple(
-                        Manifests.read("Rultor-SQSKey"),
-                        Manifests.read("Rultor-SQSSecret"),
-                        Manifests.read("Rultor-SQSWalletUrl")
-                    )
+                    wallet
                 )
             )
         );

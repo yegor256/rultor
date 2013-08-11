@@ -31,19 +31,12 @@ package com.rultor.users.pgsql;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.ScheduleWithFixedDelay;
-import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
-import com.rultor.spi.Stand;
-import com.rultor.spi.User;
-import com.rultor.spi.Users;
-import java.util.Iterator;
-import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Users with extra features from PostgreSQL.
+ * Receipts coming from SQS.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -51,10 +44,9 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "client", "origin" })
+@EqualsAndHashCode(of = "client")
 @Loggable(Loggable.DEBUG)
-@ScheduleWithFixedDelay(threads = 5, delay = 1, unit = TimeUnit.SECONDS)
-public final class PgUsers implements Users, Runnable {
+final class SQSReceipts {
 
     /**
      * Mongo container.
@@ -62,72 +54,25 @@ public final class PgUsers implements Users, Runnable {
     private final transient PgClient client;
 
     /**
-     * SQS receipts.
+     * SQS queue.
      */
-    private final transient SQSReceipts receipts;
-
-    /**
-     * Original users.
-     */
-    private final transient Users origin;
+    private final transient SQSClient queue;
 
     /**
      * Public ctor.
      * @param clnt Client
      * @param sqs SQS queue
-     * @param users Users
      */
-    public PgUsers(final PgClient clnt, final SQSClient sqs,
-        final Users users) {
+    protected SQSReceipts(final PgClient clnt, final SQSClient sqs) {
         this.client = clnt;
-        this.receipts = new SQSReceipts(clnt, sqs);
-        this.origin = users;
+        this.queue = sqs;
     }
 
     /**
-     * {@inheritDoc}
+     * Fetch and process next portions of them.
      */
-    @Override
-    public Iterator<User> iterator() {
-        final Iterator<User> iter = this.origin.iterator();
-        return new Iterator<User>() {
-            @Override
-            public boolean hasNext() {
-                return iter.hasNext();
-            }
-            @Override
-            public User next() {
-                return new PgUser(PgUsers.this.client, iter.next());
-            }
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public User get(final URN name) {
-        return new PgUser(this.client, this.origin.get(name));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Stand stand(final String name) {
-        return this.origin.stand(name);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void run() {
-        this.receipts.process();
+    public void process() {
+        throw new UnsupportedOperationException();
     }
 
 }
