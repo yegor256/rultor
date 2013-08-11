@@ -83,8 +83,8 @@ final class OwnWallet implements Wallet {
     }
 
     @Override
-    public Wallet delegate(final URN urn, final String unit) {
-        return this.unit.wallet(this.work, urn, unit);
+    public Wallet delegate(final URN urn, final String name) {
+        return this.unit.wallet(this.work, urn, name);
     }
 
 }
