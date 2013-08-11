@@ -187,6 +187,7 @@ final class SimpleConveyer implements Closeable {
                 TimeUnit.SECONDS.toMicros(1), 1, TimeUnit.MICROSECONDS
             );
         }
+        this.server.listen();
     }
 
     /**

@@ -72,7 +72,9 @@
                         function() {
                             $('span.timeago').each(
                                 function (span) {
-                                    $(this).text(moment($(this).text()).fromNow());
+                                    var iso = $(this).text();
+                                    $(this).text(moment(iso).fromNow());
+                                    $(this).attr('title', iso);
                                 }
                             );
                             $('span.markdown').each(

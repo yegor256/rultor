@@ -30,6 +30,7 @@
 package com.rultor.conveyer.http;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
@@ -109,6 +110,7 @@ public final class HttpServer implements Closeable {
                         thread.dispatch();
                     } catch (InterruptedException ex) {
                         Thread.currentThread().interrupt();
+                        throw new IllegalStateException(ex);
                     }
                 }
             },
@@ -117,7 +119,7 @@ public final class HttpServer implements Closeable {
         for (int idx = 0; idx < HttpServer.THREADS; ++idx) {
             this.backend.scheduleWithFixedDelay(
                 runnable,
-                0, 1, TimeUnit.NANOSECONDS
+                TimeUnit.SECONDS.toNanos(Tv.FIVE), 1, TimeUnit.NANOSECONDS
             );
         }
         Logger.info(

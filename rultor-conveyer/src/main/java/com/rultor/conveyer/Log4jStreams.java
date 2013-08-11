@@ -34,6 +34,7 @@ import com.jcabi.aspects.Tv;
 import com.rultor.conveyer.http.Streams;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,6 +42,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.AppenderSkeleton;
@@ -102,12 +104,15 @@ public final class Log4jStreams extends AppenderSkeleton implements Streams {
      */
     @Override
     public InputStream stream(final String key) {
-        return new InputStream() {
-            @Override
-            public int read() throws IOException {
-                return Log4jStreams.this.read();
+        return new SequenceInputStream(
+            IOUtils.toInputStream(String.format("Listening to %s...\n\n", key)),
+            new InputStream() {
+                @Override
+                public int read() throws IOException {
+                    return Log4jStreams.this.read();
+                }
             }
-        };
+        );
     }
 
     /**
@@ -152,8 +157,8 @@ public final class Log4jStreams extends AppenderSkeleton implements Streams {
         for (Map.Entry<ThreadGroup, String> entry : this.groups.entrySet()) {
             text.append(entry.getKey())
                 .append(": ")
-                .append(entry.getValue())
-                .append('\n');
+                .append(entry.getValue().substring(0, Tv.FIVE))
+                .append("...\n");
         }
         return text.toString();
     }

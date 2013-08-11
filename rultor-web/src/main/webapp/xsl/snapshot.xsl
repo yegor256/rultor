@@ -90,7 +90,7 @@
             <pre style="display:none;" class="spec"><xsl:value-of select="spec"/></pre>
         </xsl:if>
         <xsl:if test="products/product">
-            <div>
+            <div class="spacious">
                 <xsl:apply-templates select="products/product"/>
             </div>
         </xsl:if>
