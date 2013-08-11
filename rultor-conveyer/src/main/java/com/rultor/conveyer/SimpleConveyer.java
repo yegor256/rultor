@@ -204,6 +204,7 @@ final class SimpleConveyer implements Closeable {
             throw new IOException(ex);
         }
         this.server.close();
+        this.streams.close();
     }
 
     /**

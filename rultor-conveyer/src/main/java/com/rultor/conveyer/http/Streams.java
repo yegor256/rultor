@@ -29,6 +29,7 @@
  */
 package com.rultor.conveyer.http;
 
+import java.io.Closeable;
 import java.io.InputStream;
 
 /**
@@ -38,7 +39,7 @@ import java.io.InputStream;
  * @version $Id$
  * @since 1.0
  */
-public interface Streams {
+public interface Streams extends Closeable {
 
     /**
      * Register current Thread Group and return it's auth key.

@@ -29,7 +29,6 @@
  */
 package com.rultor.conveyer;
 
-import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import java.util.NoSuchElementException;
 import lombok.EqualsAndHashCode;
@@ -44,7 +43,6 @@ import lombok.ToString;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @ToString
-@Loggable(Loggable.DEBUG)
 @EqualsAndHashCode(of = { "data", "head", "tail" })
 final class CircularBuffer {
 
@@ -97,7 +95,9 @@ final class CircularBuffer {
     public byte read() {
         synchronized (this.data) {
             if (this.isEmpty()) {
-                throw new NoSuchElementException();
+                throw new NoSuchElementException(
+                    "circular buffer is empty"
+                );
             }
             final byte item = this.data[this.tail];
             ++this.tail;

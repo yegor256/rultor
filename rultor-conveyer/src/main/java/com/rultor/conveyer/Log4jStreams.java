@@ -46,6 +46,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 
 /**
@@ -57,7 +58,7 @@ import org.apache.log4j.spi.LoggingEvent;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @EqualsAndHashCode(callSuper = false, of = { "groups", "buffers" })
-public final class Log4jStreams extends AppenderSkeleton implements Streams {
+final class Log4jStreams extends AppenderSkeleton implements Streams {
 
     /**
      * Thread groups to keys.
@@ -70,6 +71,21 @@ public final class Log4jStreams extends AppenderSkeleton implements Streams {
      */
     private final transient ConcurrentMap<String, CircularBuffer> buffers =
         new ConcurrentHashMap<String, CircularBuffer>(0);
+
+    /**
+     * Public ctor.
+     */
+    protected Log4jStreams() {
+        Logger.getRootLogger().addAppender(this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        Logger.getRootLogger().removeAppender(this);
+    }
 
     /**
      * {@inheritDoc}
@@ -195,14 +211,6 @@ public final class Log4jStreams extends AppenderSkeleton implements Streams {
      * {@inheritDoc}
      */
     @Override
-    public void close() {
-        // nothing to do
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public boolean requiresLayout() {
         return true;
     }
@@ -219,7 +227,7 @@ public final class Log4jStreams extends AppenderSkeleton implements Streams {
                 String.format("buffer is absent for key '%s'", key)
             );
         }
-        while (!buffer.isEmpty()) {
+        while (buffer.isEmpty()) {
             try {
                 TimeUnit.MICROSECONDS.sleep(1);
             } catch (InterruptedException ex) {
