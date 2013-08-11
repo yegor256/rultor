@@ -173,7 +173,9 @@ final class PgSheet implements Sheet {
     @Override
     public Iterator<List<Object>> iterator() {
         final StringBuilder query = new StringBuilder();
-        query.append("SELECT * FROM receipt")
+        query.append("SELECT ")
+            .append(StringUtils.join(this.columns(), ","))
+            .append(" FROM receipt")
             .append(" WHERE ct = ? OR dt = ?");
         if (!this.groups.isEmpty()) {
             query.append(" GROUP BY ")

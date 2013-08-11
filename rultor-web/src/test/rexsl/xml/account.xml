@@ -50,14 +50,14 @@
     </links>
     <millis>16</millis>
     <balance>$0.45</balance>
-    <titles>
-        <title>Time</title>
-        <title>Ct</title>
-        <title>CtUnit</title>
-        <title>Dt</title>
-        <title>DtUnit</title>
-        <title>Amount</title>
-    </titles>
+    <columns>
+        <column>Time</column>
+        <column>Ct</column>
+        <column>CtUnit</column>
+        <column>Dt</column>
+        <column>DtUnit</column>
+        <column>Amount</column>
+    </columns>
     <receipts>
         <receipt id="5463">
             <cell>2012-08-23T13:25:23</cell>

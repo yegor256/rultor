@@ -37,6 +37,34 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" class="form-inline spacious">
+            <fieldset>
+                <input type="hidden" name="cmd" value="_s-xclick"/>
+                <input type="hidden" name="hosted_button_id" value="LMPZA6C7KTZPY"/>
+                <input type="hidden" name="on0" value="One-time payment amount"/>
+                <input type="hidden" name="currency_code" value="USD"/>
+                <input type="hidden" name="invoice">
+                    <xsl:attribute name="value">
+                        <xsl:value-of select="/page/identity/urn"/>
+                    </xsl:attribute>
+                </input>
+                <div class="row">
+                    <div class="col-6 col-sm-4 col-lg-2">
+                        <select name="os0" class="form-control">
+                            <option value="Small">Small $5.00 USD</option>
+                            <option value="Medium">Medium $10.00 USD</option>
+                            <option value="Large">Large $25.00 USD</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-sm-4 col-lg-2">
+                        <button type="submit" class="btn btn-primary">
+                            <xsl:text>Add funds</xsl:text>
+                        </button>
+                    </div>
+                </div>
+                <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1"/>
+            </fieldset>
+        </form>
         <xsl:if test="/page/since &gt; 0">
             <div class="spacious">
                 <ul class="list-inline">
@@ -60,7 +88,6 @@
                 <table class="table table-striped table-hover table-condensed">
                     <thead>
                         <tr>
-                            <th>#</th>
                             <xsl:for-each select="/page/columns/column">
                                 <th>
                                     <xsl:value-of select="."/>

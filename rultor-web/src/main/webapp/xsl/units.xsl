@@ -50,7 +50,7 @@
                         <div class="input-group">
                             <input name="name" type="text" class="form-control" />
                             <span class="input-group-btn">
-                                <button type="submit" class="btn btn-default">
+                                <button type="submit" class="btn btn-primary">
                                     <xsl:text>Create</xsl:text>
                                 </button>
                             </span>
