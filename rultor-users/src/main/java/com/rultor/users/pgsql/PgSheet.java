@@ -185,6 +185,7 @@ final class PgSheet implements Sheet {
             query.append(" ORDER BY ")
                 .append(StringUtils.join(this.orders, ','));
         }
+        query.append(" LIMIT 50");
         try {
             return new JdbcSession(this.client.get())
                 .sql(query.toString())
