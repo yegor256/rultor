@@ -128,7 +128,7 @@ final class HttpThread {
         throws IOException {
         final PrintWriter writer = new PrintWriter(output);
         writer.println("HTTP/1.1 200 OK");
-        writer.println("Content-Type: plain/text");
+        writer.println("Content-Type: text/plain; charset=UTF-8");
         writer.println("Cache-Control: no-cache");
         writer.println("");
         writer.flush();
@@ -140,6 +140,7 @@ final class HttpThread {
         } else {
             IOUtils.copy(this.streams.stream(query), output);
         }
+        writer.flush();
         writer.close();
     }
 

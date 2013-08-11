@@ -37,7 +37,7 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <xsl:if test="/page/since">
+        <xsl:if test="/page/since &gt; 0">
             <div class="spacious">
                 <ul class="list-inline">
                     <li>

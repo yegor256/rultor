@@ -30,6 +30,7 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.urn.URN;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -66,10 +67,13 @@ public interface Unit {
 
     /**
      * Wallet of the unit.
+     * @param work Which work for
+     * @param taker Who is going to take money from my wallet?
+     * @param unit What this money is for?
      * @return Wallet
      */
     @NotNull(message = "wallet is never NULL")
-    Wallet wallet();
+    Wallet wallet(Work work, URN taker, String unit);
 
     /**
      * Always empty Unit.
@@ -105,7 +109,7 @@ public interface Unit {
          * {@inheritDoc}
          */
         @Override
-        public Wallet wallet() {
+        public Wallet wallet(final Work work, final URN urn, final String unt) {
             throw new UnsupportedOperationException();
         }
     }

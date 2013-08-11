@@ -90,7 +90,8 @@ final class FakeUser implements User {
                         return name;
                     }
                     @Override
-                    public Wallet wallet() {
+                    public Wallet wallet(final Work wrk, final URN urn,
+                        final String unit) {
                         return new Wallet() {
                             @Override
                             public void charge(final String details,

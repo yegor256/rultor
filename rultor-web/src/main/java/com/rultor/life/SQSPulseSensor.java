@@ -154,6 +154,7 @@ public final class SQSPulseSensor implements Runnable, Closeable {
                 );
             }
         }
+        aws.shutdown();
     }
 
     /**

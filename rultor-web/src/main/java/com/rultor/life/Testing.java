@@ -45,6 +45,7 @@ import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Wallet;
+import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
 import java.io.IOException;
 import java.util.Iterator;
@@ -248,7 +249,7 @@ final class Testing implements Profile {
             return this.label;
         }
         @Override
-        public Wallet wallet() {
+        public Wallet wallet(final Work work, final URN urn, final String unt) {
             throw new UnsupportedOperationException();
         }
     }

@@ -280,7 +280,8 @@ final class SimpleConveyer implements Closeable {
             new Repo.Cached(this.repo, owner, work.spec()).get();
         if (var.arguments().isEmpty()) {
             final Object object = var.instantiate(
-                this.users, new Arguments(work, unit.wallet())
+                this.users,
+                new Arguments(work, unit.wallet(work, owner.urn(), unit.name()))
             );
             if (object instanceof Instance) {
                 Instance.class.cast(object).pulse();

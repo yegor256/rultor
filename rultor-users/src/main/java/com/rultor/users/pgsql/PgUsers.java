@@ -32,11 +32,13 @@ package com.rultor.users.pgsql;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
+import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
@@ -53,7 +55,8 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "client", "origin" })
 @Loggable(Loggable.DEBUG)
-@ScheduleWithFixedDelay(threads = 5, delay = 1, unit = TimeUnit.SECONDS)
+@SuppressWarnings("PMD.DoNotUseThreads")
+@ScheduleWithFixedDelay(threads = Tv.FIVE, delay = 1, unit = TimeUnit.SECONDS)
 public final class PgUsers implements Users, Runnable {
 
     /**
@@ -127,7 +130,11 @@ public final class PgUsers implements Users, Runnable {
      */
     @Override
     public void run() {
-        this.receipts.process();
+        try {
+            this.receipts.process();
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
 }

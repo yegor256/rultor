@@ -36,10 +36,12 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
+import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Wallet;
+import com.rultor.spi.Work;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -143,8 +145,20 @@ final class AwsUnit implements Unit {
      * {@inheritDoc}
      */
     @Override
-    public Wallet wallet() {
-        return new SQSWallet(this.client);
+    public Wallet wallet(final Work work, final URN taker, final String unit) {
+        return new SQSWallet(
+            this.client, work,
+            this.owner(), this.name(),
+            taker, unit
+        );
+    }
+
+    /**
+     * Owner of it.
+     * @return URN of the owner
+     */
+    private URN owner() {
+        return URN.create(this.item.get(AwsUnit.HASH_OWNER).getS());
     }
 
 }

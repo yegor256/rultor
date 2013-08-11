@@ -29,14 +29,20 @@
  */
 package com.rultor.users;
 
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Wallet;
+import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
+import java.io.StringWriter;
+import javax.json.Json;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Wallet into Amazon SQS.
@@ -57,11 +63,53 @@ final class SQSWallet implements Wallet {
     private final transient SQSClient client;
 
     /**
+     * Work we're in.
+     */
+    private final transient Work work;
+
+    /**
+     * Creditor.
+     */
+    private final transient URN creditor;
+
+    /**
+     * Credit unit.
+     */
+    private final transient String ctunit;
+
+    /**
+     * Debitor.
+     */
+    private final transient URN debitor;
+
+    /**
+     * Debit unit.
+     */
+    private final transient String dtunit;
+
+    /**
      * Ctor.
      * @param sqs SQS client
+     * @param wrk Work that is using us
+     * @param ctr Creditor
+     * @param cunit Credit unit
+     * @param dtr Debitor
+     * @param dunit Debit unit
+     * @checkstyle ParameterNumber (5 lines)
      */
-    protected SQSWallet(final SQSClient sqs) {
+    protected SQSWallet(final SQSClient sqs, final Work wrk,
+        final URN ctr, final String cunit, final URN dtr, final String dunit) {
         this.client = sqs;
+        this.work = wrk;
+        Validate.isTrue(
+            !ctr.equals(dtr),
+            "creditor '%s' can't be the same as debitor (ctunit=%s, dtunit=%s)",
+            ctr, cunit, dunit
+        );
+        this.creditor = ctr;
+        this.ctunit = cunit;
+        this.debitor = dtr;
+        this.dtunit = dunit;
     }
 
     /**
@@ -69,7 +117,29 @@ final class SQSWallet implements Wallet {
      */
     @Override
     public void charge(final String details, final Dollars amount) {
-        // nothing
+        final StringWriter writer = new StringWriter();
+        Json.createGenerator(writer)
+            .writeStartObject()
+            .write("ct", this.creditor.toString())
+            .write("ctunit", this.ctunit)
+            .write("dt", this.debitor.toString())
+            .write("dtunit", this.dtunit)
+            .write("details", details)
+            .write("amount", amount.points())
+            .writeStartObject("work")
+            .write("owner", this.work.owner().toString())
+            .write("unit", this.work.unit())
+            .write("started", this.work.started().toString())
+            .writeEnd()
+            .writeEnd()
+            .close();
+        final AmazonSQS aws = this.client.get();
+        aws.sendMessage(
+            new SendMessageRequest()
+                .withQueueUrl(this.client.url())
+                .withMessageBody(writer.toString())
+        );
+        aws.shutdown();
     }
 
     /**
@@ -77,7 +147,20 @@ final class SQSWallet implements Wallet {
      */
     @Override
     public Wallet delegate(final URN urn, final String unit) {
-        return this;
+        final Wallet delegate = new SQSWallet(
+            this.client, this.work, this.debitor, this.dtunit, urn, unit
+        );
+        return new Wallet() {
+            @Override
+            public void charge(final String details, final Dollars amount) {
+                delegate.charge(details, amount);
+                SQSWallet.this.charge(details, amount);
+            }
+            @Override
+            public Wallet delegate(final URN urn, final String unit) {
+                return delegate.delegate(urn, unit);
+            }
+        };
     }
 
 }

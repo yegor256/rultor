@@ -61,6 +61,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Loggable(Loggable.INFO)
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 final class Production implements Profile {
 
     /**

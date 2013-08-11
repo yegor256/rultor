@@ -72,7 +72,9 @@ public final class StepAspect {
         final Method method =
             MethodSignature.class.cast(point.getSignature()).getMethod();
         final Step step = method.getAnnotation(Step.class);
-        final String label = String.format("%08x", StepAspect.RND.nextInt());
+        final String label = Integer.toString(
+            Math.abs(StepAspect.RND.nextInt())
+        );
         final ImmutableMap.Builder<String, Object> args =
             new ImmutableMap.Builder<String, Object>()
                 .put("this", new StepAspect.Open(point.getThis()))

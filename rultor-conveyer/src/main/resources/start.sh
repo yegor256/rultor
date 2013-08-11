@@ -39,7 +39,7 @@ INSTANCE=`curl --silent http://169.254.169.254/latest/meta-data/instance-id`
 
 # https://github.com/sebdah/dynamic-dynamodb
 dynamic-dynamodb --version
-for table in units receipts statements stands
+for table in units stands
 do
     while true
     do

@@ -29,9 +29,22 @@
  */
 package com.rultor.users.pgsql;
 
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.model.DeleteMessageRequest;
+import com.amazonaws.services.sqs.model.Message;
+import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
+import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
+import com.jcabi.jdbc.JdbcSession;
+import com.jcabi.jdbc.VoidHandler;
 import com.rultor.aws.SQSClient;
+import com.rultor.tools.Time;
+import java.io.IOException;
+import java.io.StringReader;
+import javax.json.Json;
+import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -70,9 +83,53 @@ final class SQSReceipts {
 
     /**
      * Fetch and process next portions of them.
+     * @throws IOException If fails
      */
-    public void process() {
-        throw new UnsupportedOperationException();
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    public void process() throws IOException {
+        final AmazonSQS aws = this.queue.get();
+        final ReceiveMessageResult result = aws.receiveMessage(
+            new ReceiveMessageRequest()
+                .withQueueUrl(this.queue.url())
+                .withWaitTimeSeconds(Tv.TWENTY)
+                .withVisibilityTimeout(Tv.FIVE)
+                .withMaxNumberOfMessages(Tv.TEN)
+        );
+        for (Message msg : result.getMessages()) {
+            aws.deleteMessage(
+                new DeleteMessageRequest()
+                    .withQueueUrl(this.queue.url())
+                    .withReceiptHandle(this.process(msg))
+            );
+        }
+        aws.shutdown();
+    }
+
+    /**
+     * Process one message in JSON format.
+     * @param msg Message
+     * @return Receipt handle
+     * @throws IOException If fails
+     */
+    private String process(final Message msg) throws IOException {
+        final JsonObject json = Json.createReader(
+            new StringReader(msg.getBody())
+        ).readObject();
+        final JsonObject work = json.getJsonObject("work");
+        new JdbcSession(this.client.get())
+            // @checkstyle LineLength (1 line)
+            .sql("INSERT INTO receipt (wowner, wunit, wstarted, ct, ctunit, dt, dtunit, details, amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
+            .set(work.getString("owner"))
+            .set(work.getString("unit"))
+            .set(new Time(work.getString("started")).toString())
+            .set(json.getString("ct"))
+            .set(json.getString("ctunit"))
+            .set(json.getString("dt"))
+            .set(json.getString("dtunit"))
+            .set(json.getString("details"))
+            .set(json.getJsonNumber("amount").longValue())
+            .insert(new VoidHandler());
+        return msg.getReceiptHandle();
     }
 
 }

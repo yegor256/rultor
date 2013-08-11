@@ -71,7 +71,7 @@ import org.apache.commons.io.FileUtils;
  */
 @ToString
 @EqualsAndHashCode
-@SuppressWarnings("PMD.ExcessiveImports")
+@SuppressWarnings({ "PMD.ExcessiveImports", "PMD.AvoidDuplicateLiterals" })
 @Loggable(Loggable.DEBUG)
 public final class Main {
 
@@ -208,18 +208,17 @@ public final class Main {
             };
             users = new FakeUsers(work);
         } else {
+            final String sqs = options.valueOf("sqs-url").toString();
             if (options.has("sqs-key")) {
                 queue = new SQSQueue(
                     new SQSClient.Simple(
                         options.valueOf("sqs-key").toString(),
                         options.valueOf("sqs-secret").toString(),
-                        options.valueOf("sqs-url").toString()
+                        sqs
                     )
                 );
             } else {
-                queue = new SQSQueue(
-                    new SQSClient.Assumed(options.valueOf("sqs-url").toString())
-                );
+                queue = new SQSQueue(new SQSClient.Assumed(sqs));
             }
             if (options.has("dynamo-key")) {
                 users = new AwsUsers(
