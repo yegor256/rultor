@@ -75,6 +75,18 @@ public final class IpnRs extends BaseRs {
             this.split(IOUtils.toString(post, CharEncoding.UTF_8))
         );
         final Map<String, String> vars = this.map(pairs);
+        if ("web_accept".equals(vars.get("txn_type"))) {
+            this.fund(vars);
+        }
+        return this.join(pairs);
+    }
+
+    /**
+     * Fund account.
+     * @param pairs Pairs to use
+     * @throws UnsupportedEncodingException If fails
+     */
+    private void fund(final Map<String, String> vars) {
         final String invoice = vars.get("invoice");
         if (invoice == null) {
             throw new IllegalArgumentException("invoice not found");
@@ -89,7 +101,6 @@ public final class IpnRs extends BaseRs {
                 vars.get("txn_id")
             )
         );
-        return this.join(pairs);
     }
 
     /**
@@ -173,4 +184,5 @@ public final class IpnRs extends BaseRs {
         }
         return map;
     }
+
 }
