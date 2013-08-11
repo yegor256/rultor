@@ -85,20 +85,22 @@
         </xsl:if>
         <xsl:choose>
             <xsl:when test="/page/receipts/receipt">
-                <table class="table table-striped table-hover table-condensed">
-                    <thead>
-                        <tr>
-                            <xsl:for-each select="/page/columns/column">
-                                <th>
-                                    <xsl:value-of select="."/>
-                                </th>
-                            </xsl:for-each>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <xsl:apply-templates select="/page/receipts/receipt"/>
-                    </tbody>
-                </table>
+                <small>
+                    <table class="table table-striped table-hover table-condensed">
+                        <thead>
+                            <tr>
+                                <xsl:for-each select="/page/columns/column">
+                                    <th>
+                                        <xsl:value-of select="."/>
+                                    </th>
+                                </xsl:for-each>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <xsl:apply-templates select="/page/receipts/receipt"/>
+                        </tbody>
+                    </table>
+                </small>
                 <xsl:if test="//links/link[@rel='more']">
                     <p>
                         <xsl:text>See </xsl:text>

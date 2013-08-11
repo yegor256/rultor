@@ -51,12 +51,13 @@
     <millis>16</millis>
     <balance>$0.45</balance>
     <columns>
-        <column>Time</column>
-        <column>Ct</column>
-        <column>CtUnit</column>
-        <column>Dt</column>
-        <column>DtUnit</column>
-        <column>Amount</column>
+        <column>id</column>
+        <column>time</column>
+        <column>ct</column>
+        <column>ctunit</column>
+        <column>dt</column>
+        <column>dtunit</column>
+        <column>amount</column>
     </columns>
     <receipts>
         <receipt id="5463">
