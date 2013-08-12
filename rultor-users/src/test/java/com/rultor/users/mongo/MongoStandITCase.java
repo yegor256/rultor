@@ -30,15 +30,26 @@
 package com.rultor.users.mongo;
 
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.VerboseRunnable;
+import com.jcabi.log.VerboseThreads;
+import com.rexsl.test.XhtmlMatchers;
+import com.rultor.snapshot.Snapshot;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
 import java.util.Iterator;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.w3c.dom.Document;
 
 /**
  * Integration case for {@link MongoStand}.
@@ -97,6 +108,49 @@ public final class MongoStandITCase {
                 Matchers.containsString("ADD 'test';"),
                 Matchers.containsString("ADD 'tags';")
             )
+        );
+    }
+
+    /**
+     * MongoStand can update the same pulse concurrently.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    @SuppressWarnings("PMD.DoNotUseThreads")
+    public void updatesSameStandConcurrently() throws Exception {
+        final Stand stand = this.stand();
+        final String pulse = RandomStringUtils.randomAlphabetic(Tv.TEN);
+        final CountDownLatch start = new CountDownLatch(1);
+        final AtomicLong nano = new AtomicLong();
+        final Runnable runnable = new VerboseRunnable(
+            new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    start.await();
+                    final long inc = nano.getAndIncrement();
+                    stand.post(pulse, inc, String.format("ADD 'a%d';", inc));
+                    return null;
+                }
+            }
+        );
+        final int threads = 5;
+        final ExecutorService svc = Executors.newFixedThreadPool(
+            threads, new VerboseThreads()
+        );
+        for (int thread = 0; thread < threads; ++thread) {
+            svc.submit(runnable);
+        }
+        start.countDown();
+        svc.shutdown();
+        MatcherAssert.assertThat(
+            svc.awaitTermination(Tv.TEN, TimeUnit.SECONDS),
+            Matchers.is(true)
+        );
+        final Document dom = Snapshot.empty();
+        new Snapshot(stand.pulses().iterator().next().xembly()).apply(dom);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(dom),
+            XhtmlMatchers.hasXPath("/snapshot/a0/a1/a2/a3/a4")
         );
     }
 

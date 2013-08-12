@@ -144,42 +144,11 @@ final class MongoStand implements Stand {
      */
     @Override
     public void post(final String pulse, final long nano, final String xembly) {
-        final DBObject object = this.collection().findAndModify(
-            new BasicDBObject()
-                .append(MongoStand.ATTR_PULSE, pulse)
-                .append(MongoStand.ATTR_STAND, this.name()),
-            new BasicDBObject()
-                .append(MongoStand.ATTR_PULSE, 1)
-                .append(MongoStand.ATTR_STAND, 1)
-                .append(MongoStand.ATTR_XEMBLY, 1),
-            new BasicDBObject(),
-            false,
-            new BasicDBObject().append(
-                "$setOnInsert",
-                new BasicDBObject().append(MongoStand.ATTR_XEMBLY, "")
-            ),
-            true,
-            true
-        );
-        final String after = new StringBuilder()
-            .append(object.get(MongoStand.ATTR_XEMBLY))
-            .append(nano).append(' ')
-            .append(xembly).append('\n').toString();
-        final Document dom = this.dom(MongoStand.decode(after));
-        final WriteResult result = this.collection().update(
-            object,
-            new BasicDBObject()
-                .append(MongoStand.ATTR_PULSE, pulse)
-                .append(MongoStand.ATTR_STAND, this.name())
-                .append(MongoStand.ATTR_UPDATED, new Time().toString())
-                .append(MongoStand.ATTR_XEMBLY, after)
-                .append(MongoStand.ATTR_TAGS, this.tags(dom))
-        );
-        Validate.isTrue(
-            result.getLastError().ok(),
-            "failed to update pulse `%s`: %s",
-            pulse, result.getLastError().getErrorMessage()
-        );
+        while (true) {
+            if (this.save(pulse, nano, xembly)) {
+                break;
+            }
+        }
     }
 
     /**
@@ -229,6 +198,54 @@ final class MongoStand implements Stand {
     @Override
     public Spec acl() {
         return this.origin.acl();
+    }
+
+    /**
+     * Attempt to save.
+     * @param pulse The pulse name
+     * @param nano Nano ID
+     * @param xembly Xembly script to append
+     * @return TRUE if success
+     */
+    private boolean save(final String pulse, final long nano,
+        final String xembly) {
+        final DBObject object = this.collection().findAndModify(
+            new BasicDBObject()
+                .append(MongoStand.ATTR_PULSE, pulse)
+                .append(MongoStand.ATTR_STAND, this.name()),
+            new BasicDBObject()
+                .append(MongoStand.ATTR_PULSE, 1)
+                .append(MongoStand.ATTR_STAND, 1)
+                .append(MongoStand.ATTR_XEMBLY, 1),
+            new BasicDBObject(),
+            false,
+            new BasicDBObject().append(
+                "$setOnInsert",
+                new BasicDBObject().append(MongoStand.ATTR_XEMBLY, "")
+            ),
+            true,
+            true
+        );
+        final String after = new StringBuilder()
+            .append(object.get(MongoStand.ATTR_XEMBLY))
+            .append(nano).append(' ')
+            .append(xembly).append('\n').toString();
+        final Document dom = this.dom(MongoStand.decode(after));
+        final WriteResult result = this.collection().update(
+            object,
+            new BasicDBObject()
+                .append(MongoStand.ATTR_PULSE, pulse)
+                .append(MongoStand.ATTR_STAND, this.name())
+                .append(MongoStand.ATTR_UPDATED, new Time().toString())
+                .append(MongoStand.ATTR_XEMBLY, after)
+                .append(MongoStand.ATTR_TAGS, this.tags(dom))
+        );
+        Validate.isTrue(
+            result.getLastError().ok(),
+            "failed to update pulse `%s`: %s",
+            pulse, result.getLastError().getErrorMessage()
+        );
+        return result.getN() == 1;
     }
 
     /**
