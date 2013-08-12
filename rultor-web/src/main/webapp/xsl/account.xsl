@@ -46,6 +46,8 @@
                 <input type="hidden" name="invoice">
                     <xsl:attribute name="value">
                         <xsl:value-of select="/page/identity/urn"/>
+                        <xsl:text> </xsl:text>
+                        <xsl:value-of select="/page/@date"/>
                     </xsl:attribute>
                 </input>
                 <div class="row">
