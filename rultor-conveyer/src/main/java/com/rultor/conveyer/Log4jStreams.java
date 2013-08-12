@@ -47,6 +47,7 @@ import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 import org.apache.log4j.spi.LoggingEvent;
 
 /**
@@ -78,6 +79,7 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
     protected Log4jStreams() {
         super();
         Logger.getRootLogger().addAppender(this);
+        this.setLayout(new PatternLayout("%m%n"));
     }
 
     /**
