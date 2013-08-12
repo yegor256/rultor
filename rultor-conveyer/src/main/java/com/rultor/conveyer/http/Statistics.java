@@ -124,7 +124,6 @@ final class Statistics {
     /**
      * All details about operating system.
      * @return Plain text to render
-     * @throws Exception If something goes wrong
      */
     @NotNull
     private String system() {
@@ -149,7 +148,6 @@ final class Statistics {
     /**
      * All details about memory.
      * @return Plain text to render
-     * @throws Exception If something goes wrong
      */
     @NotNull
     private String memory() {
