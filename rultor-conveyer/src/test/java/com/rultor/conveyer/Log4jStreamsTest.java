@@ -57,7 +57,8 @@ public final class Log4jStreamsTest {
         final Streams streams = new Log4jStreams();
         final String key = streams.register();
         try {
-            Logger.info(this, "some тест 55");
+            Logger.info(this, "first");
+            Logger.info(this, "тест 55");
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             final Thread thread = new Thread(
                 new Runnable() {
@@ -79,7 +80,7 @@ public final class Log4jStreamsTest {
             thread.interrupt();
             MatcherAssert.assertThat(
                 baos.toString(CharEncoding.UTF_8),
-                Matchers.endsWith("тест 55")
+                Matchers.endsWith("first\nтест 55")
             );
         } finally {
             streams.unregister(key);

@@ -96,12 +96,15 @@ final class HttpThread {
             final BufferedReader reader = new BufferedReader(
                 new InputStreamReader(socket.getInputStream())
             );
-            final Matcher matcher = HttpThread.TOP.matcher(reader.readLine());
-            final OutputStream output = socket.getOutputStream();
-            if (matcher.matches()) {
-                this.process(matcher.group(1), output);
+            final String top = reader.readLine();
+            if (top != null) {
+                final Matcher matcher = HttpThread.TOP.matcher(top);
+                final OutputStream output = socket.getOutputStream();
+                if (matcher.matches()) {
+                    this.process(matcher.group(1), output);
+                }
+                IOUtils.closeQuietly(output);
             }
-            IOUtils.closeQuietly(output);
         } catch (IOException ex) {
             Logger.warn(this, "failed to dispatch %s: %s", socket, ex);
         } finally {

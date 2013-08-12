@@ -79,7 +79,7 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
     protected Log4jStreams() {
         super();
         Logger.getRootLogger().addAppender(this);
-        this.setLayout(new PatternLayout("%m%n"));
+        this.setLayout(new PatternLayout("%p %m%n"));
     }
 
     /**
