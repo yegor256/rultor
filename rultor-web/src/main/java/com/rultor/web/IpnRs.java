@@ -103,7 +103,8 @@ public final class IpnRs extends BaseRs {
         if (invoice == null) {
             throw new IllegalArgumentException("invoice not found");
         }
-        this.users().get(URN.create(invoice)).account().fund(
+        final String[] parts = invoice.split(" ");
+        this.users().get(URN.create(parts[0])).account().fund(
             new Dollars(
                 new BigDecimal(vars.get("mc_gross"))
                     .movePointRight(Tv.SIX).longValue()
