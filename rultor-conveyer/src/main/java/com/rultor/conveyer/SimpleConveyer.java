@@ -207,6 +207,7 @@ final class SimpleConveyer implements Closeable {
                 this.process(new StdoutWork(SimpleConveyer.PORT, key, work));
             } finally {
                 this.streams.unregister(key);
+                this.threads.label("free");
             }
         }
     }
