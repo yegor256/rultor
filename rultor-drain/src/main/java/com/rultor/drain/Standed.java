@@ -168,6 +168,7 @@ public final class Standed implements Drain {
         final StringWriter writer = new StringWriter();
         Json.createGenerator(writer)
             .writeStartObject()
+            .write("nano", System.nanoTime())
             .write("stand", this.stand)
             .write("key", this.key)
             .write("xembly", xembly)

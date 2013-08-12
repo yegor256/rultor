@@ -88,9 +88,12 @@ public interface Stand {
     /**
      * Post new xembly script to the pulse of the stand.
      * @param pulse Unique pulse name
+     * @param nano Order of the script in log
      * @param xembly Xembly script
      */
-    void post(@NotNull(message = "pulse can't be NULL") String pulse,
+    void post(
+        @NotNull(message = "pulse can't be NULL") String pulse,
+        long nano,
         @NotNull(message = "text can't be NULL") String xembly);
 
 }

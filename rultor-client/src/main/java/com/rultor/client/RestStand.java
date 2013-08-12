@@ -164,7 +164,7 @@ final class RestStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public void post(final String pulse, final String xembly) {
+    public void post(final String pulse, final long nano, final String xembly) {
         throw new UnsupportedOperationException();
     }
 

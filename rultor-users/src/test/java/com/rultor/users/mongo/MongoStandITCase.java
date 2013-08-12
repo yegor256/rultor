@@ -87,13 +87,16 @@ public final class MongoStandITCase {
     public void managesDataInMongoDb() throws Exception {
         final Stand stand = this.stand();
         final String pulse = RandomStringUtils.randomAlphabetic(Tv.TEN);
-        stand.post(pulse, "ADD 'test'; SET 'hello, world!';");
-        stand.post(pulse, "ADD 'test-2';");
+        stand.post(pulse, 2, "ADD 'tags'; ADD 'tag'; ADD 'label'; SET 'foo';");
+        stand.post(pulse, 1, "ADD 'test'; SET 'hello, world!';");
         final Iterator<Pulse> pulses = stand.pulses().iterator();
         MatcherAssert.assertThat(pulses.hasNext(), Matchers.is(true));
         MatcherAssert.assertThat(
             pulses.next().xembly(),
-            Matchers.containsString("ADD 'test';")
+            Matchers.allOf(
+                Matchers.containsString("ADD 'test';"),
+                Matchers.containsString("ADD 'tags';")
+            )
         );
     }
 

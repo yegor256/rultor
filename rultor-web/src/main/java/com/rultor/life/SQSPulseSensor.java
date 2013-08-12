@@ -191,6 +191,7 @@ public final class SQSPulseSensor implements Runnable, Closeable {
                 work.getString("unit"),
                 work.getString("started")
             ),
+            object.getJsonNumber("nano").longValue(),
             object.getString("xembly")
         );
     }

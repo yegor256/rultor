@@ -29,15 +29,14 @@
  */
 package com.rultor.users.mongo;
 
-import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import com.rexsl.test.SimpleXml;
 import com.rexsl.test.XmlDocument;
@@ -53,14 +52,15 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.TimeUnit;
 import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.w3c.dom.Document;
-import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
 
@@ -143,23 +143,43 @@ final class MongoStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public void post(final String pulse, final String xembly) {
-        try {
-            final String script = this.append(pulse, xembly);
-            final Document dom = Snapshot.empty();
-            new Snapshot(script).apply(dom);
-            this.post(pulse, dom, script);
-        } catch (XemblySyntaxException ex) {
-            Logger.warn(
-                this, "invalid syntax in `%s`: %s",
-                xembly, ExceptionUtils.getRootCauseMessage(ex)
-            );
-        } catch (ImpossibleModificationException ex) {
-            Logger.warn(
-                this, "impossible to modify `%s`: %s",
-                xembly, ExceptionUtils.getRootCauseMessage(ex)
-            );
-        }
+    public void post(final String pulse, final long nano, final String xembly) {
+        final DBObject object = this.collection().findAndModify(
+            new BasicDBObject()
+                .append(MongoStand.ATTR_PULSE, pulse)
+                .append(MongoStand.ATTR_STAND, this.name()),
+            new BasicDBObject()
+                .append(MongoStand.ATTR_PULSE, 1)
+                .append(MongoStand.ATTR_STAND, 1)
+                .append(MongoStand.ATTR_XEMBLY, 1),
+            new BasicDBObject(),
+            false,
+            new BasicDBObject().append(
+                "$setOnInsert",
+                new BasicDBObject().append(MongoStand.ATTR_XEMBLY, "")
+            ),
+            true,
+            true
+        );
+        final String after = new StringBuilder()
+            .append(object.get(MongoStand.ATTR_XEMBLY))
+            .append(nano).append(' ')
+            .append(xembly).append('\n').toString();
+        final Document dom = this.dom(MongoStand.decode(after));
+        final WriteResult result = this.collection().update(
+            object,
+            new BasicDBObject()
+                .append(MongoStand.ATTR_PULSE, pulse)
+                .append(MongoStand.ATTR_STAND, this.name())
+                .append(MongoStand.ATTR_UPDATED, new Time().toString())
+                .append(MongoStand.ATTR_XEMBLY, after)
+                .append(MongoStand.ATTR_TAGS, this.tags(dom))
+        );
+        Validate.isTrue(
+            result.getLastError().ok(),
+            "failed to update pulse `%s`: %s",
+            pulse, result.getLastError().getErrorMessage()
+        );
     }
 
     /**
@@ -212,69 +232,29 @@ final class MongoStand implements Stand {
     }
 
     /**
-     * Save data.
-     * @param pulse Pulse name
-     * @param dom DOM
-     * @param xembly Xembly to post
+     * Xembly to DOM.
+     * @param xembly Xembly script
+     * @return DOM document
      */
-    private void post(final String pulse, final Document dom,
-        final String xembly) {
-        final XmlDocument xml = new SimpleXml(new DOMSource(dom));
-        final WriteResult result = this.collection().update(
-            new BasicDBObject()
-                .append(MongoStand.ATTR_PULSE, pulse)
-                .append(MongoStand.ATTR_STAND, this.name()),
-            new BasicDBObject()
-                .append(MongoStand.ATTR_PULSE, pulse)
-                .append(MongoStand.ATTR_STAND, this.name())
-                .append(MongoStand.ATTR_UPDATED, new Time().toString())
-                .append(MongoStand.ATTR_XEMBLY, xembly)
-                .append(MongoStand.ATTR_TAGS, this.tags(xml)),
-            true, false
-        );
-        Validate.isTrue(
-            result.getLastError().ok(),
-            "failed to create new pulse `%s`: %s",
-            pulse, result.getLastError().getErrorMessage()
-        );
-    }
-
-    /**
-     * Load previous script of snapshot and append this suffix to it.
-     * @param pulse Pulse to read
-     * @param xembly Suffix to append
-     * @return New script
-     * @throws XemblySyntaxException If fails
-     * @checkstyle RedundantThrows (3 lines)
-     */
-    private String append(final String pulse, final String xembly)
-        throws XemblySyntaxException {
-        final DBCursor cursor = this.collection().find(
-            new BasicDBObject()
-                .append(MongoStand.ATTR_PULSE, pulse)
-                .append(MongoStand.ATTR_STAND, this.name())
-        );
-        final Directives dirs;
+    private Document dom(final String xembly) {
+        final Document dom = Snapshot.empty();
         try {
-            if (cursor.hasNext()) {
-                dirs = new Directives(
-                    cursor.next().get(MongoStand.ATTR_XEMBLY).toString()
-                );
-            } else {
-                dirs = new Directives();
-            }
-        } finally {
-            cursor.close();
+            new Snapshot(xembly).apply(dom);
+        } catch (XemblySyntaxException ex) {
+            throw new IllegalArgumentException(ex);
+        } catch (ImpossibleModificationException ex) {
+            throw new IllegalArgumentException(ex);
         }
-        return dirs.append(new Directives(xembly)).toString();
+        return dom;
     }
 
     /**
      * Fetch all visible tags.
-     * @param xml XML to fetch from
+     * @param dom Document to fetch from
      * @return Array of tags
      */
-    private Collection<String> tags(final XmlDocument xml) {
+    private Collection<String> tags(final Document dom) {
+        final XmlDocument xml = new SimpleXml(new DOMSource(dom));
         return xml.xpath("//tags/tag/label/text()");
     }
 
@@ -307,8 +287,11 @@ final class MongoStand implements Stand {
                 return new Pulse() {
                     @Override
                     public String xembly() throws IOException {
-                        return cursor.next().get(MongoStand.ATTR_XEMBLY)
-                            .toString();
+                        return MongoStand.decode(
+                            cursor.next().get(
+                                MongoStand.ATTR_XEMBLY
+                            ).toString()
+                        );
                     }
                     @Override
                     public InputStream stream() throws IOException {
@@ -324,10 +307,24 @@ final class MongoStand implements Stand {
     }
 
     /**
+     * Decode the text into clean xembly.
+     * @param script Script with prefixes
+     * @return Clean xembly
+     */
+    private static String decode(final String script) {
+        final ConcurrentMap<Long, String> lines =
+            new ConcurrentSkipListMap<Long, String>();
+        for (String line : script.split("\n+")) {
+            final String[] parts = line.split(" ", 2);
+            lines.put(Long.parseLong(parts[0]), parts[1]);
+        }
+        return StringUtils.join(lines.values(), "\n");
+    }
+
+    /**
      * Collection.
      * @return Mongo collection
      */
-    @Cacheable(forever = true)
     private DBCollection collection() {
         try {
             return this.mongo.get().getCollection(MongoStand.TABLE);
