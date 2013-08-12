@@ -48,7 +48,7 @@ public final class CircularBufferTest {
      */
     @Test
     public void writesAndReads() throws Exception {
-        final CircularBuffer buf = new CircularBuffer();
+        final CircularBuffer buf = new CircularBuffer(Tv.FIVE);
         buf.write((byte) 1);
         buf.write((byte) 2);
         MatcherAssert.assertThat(buf.read(), Matchers.equalTo((byte) 1));
@@ -63,15 +63,16 @@ public final class CircularBufferTest {
      */
     @Test
     public void writesAndReadsWithOverflow() throws Exception {
-        final CircularBuffer buf = new CircularBuffer();
+        final CircularBuffer buf = new CircularBuffer(Tv.TEN);
         final byte data = 1;
-        for (int idx = 0; idx < Tv.MILLION; ++idx) {
+        for (int idx = 0; idx < Tv.HUNDRED; ++idx) {
             buf.write(data);
         }
         MatcherAssert.assertThat(buf.isEmpty(), Matchers.equalTo(false));
-        for (int idx = 0; idx < Tv.HUNDRED; ++idx) {
+        for (int idx = 0; idx < Tv.TEN; ++idx) {
             MatcherAssert.assertThat(buf.read(), Matchers.equalTo(data));
         }
+        MatcherAssert.assertThat(buf.isEmpty(), Matchers.equalTo(true));
     }
 
 }

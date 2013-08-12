@@ -100,7 +100,7 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
         if (this.groups.put(group, key) != null) {
             throw new IllegalStateException("call unregister() first");
         }
-        this.buffers.put(key, new CircularBuffer());
+        this.buffers.put(key, new CircularBuffer(Tv.TEN * Tv.THOUSAND));
         return key;
     }
 

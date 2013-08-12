@@ -29,7 +29,6 @@
  */
 package com.rultor.conveyer;
 
-import com.jcabi.aspects.Tv;
 import java.util.NoSuchElementException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -49,7 +48,7 @@ final class CircularBuffer {
     /**
      * Bytes.
      */
-    private final transient byte[] data = new byte[Tv.TEN * Tv.THOUSAND];
+    private final transient byte[] data;
 
     /**
      * Next byte to write to.
@@ -60,6 +59,14 @@ final class CircularBuffer {
      * Next byte to read from.
      */
     private transient int tail;
+
+    /**
+     * Ctor.
+     * @param size Buffer size in bytes
+     */
+    protected CircularBuffer(final int size) {
+        this.data = new byte[size];
+    }
 
     /**
      * Add byte.
