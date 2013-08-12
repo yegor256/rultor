@@ -127,6 +127,8 @@ final class HttpThread {
             writer.println(
                 this.streams.interrupt(query.substring(0, query.indexOf('?')))
             );
+        } else if (query.endsWith("/stats")) {
+            writer.println(new Statistics().toString());
         } else if (query.isEmpty()) {
             writer.println(this.streams.toString());
         } else {
