@@ -30,6 +30,8 @@
 package com.rultor.conveyer;
 
 import com.jcabi.aspects.Loggable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.EqualsAndHashCode;
@@ -50,6 +52,12 @@ import lombok.ToString;
 final class ConveyerThreads implements ThreadFactory {
 
     /**
+     * Labels per thread group.
+     */
+    private final transient ConcurrentMap<ThreadGroup, String> labels =
+        new ConcurrentHashMap<ThreadGroup, String>(0);
+
+    /**
      * Counter of all groups created.
      */
     private final transient AtomicLong group = new AtomicLong();
@@ -59,17 +67,28 @@ final class ConveyerThreads implements ThreadFactory {
      */
     @Override
     public Thread newThread(final Runnable runnable) {
-        final String name = Long.toString(this.group.incrementAndGet());
         return new Thread(
-            new ThreadGroup(name) {
+            new ThreadGroup(Long.toString(this.group.incrementAndGet())) {
                 @Override
                 public String toString() {
-                    return runnable.toString();
+                    String label = ConveyerThreads.this.labels.get(this);
+                    if (label == null) {
+                        label = super.toString();
+                    }
+                    return label;
                 }
             },
             runnable,
             String.format("conveyer-%d", this.group.get())
         );
+    }
+
+    /**
+     * Label current thread group.
+     * @param txt Label to assign to the running thread group
+     */
+    public void label(final String txt) {
+        this.labels.put(Thread.currentThread().getThreadGroup(), txt);
     }
 
 }
