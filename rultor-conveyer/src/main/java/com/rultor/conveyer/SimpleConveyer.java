@@ -50,9 +50,8 @@ import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -116,20 +115,7 @@ final class SimpleConveyer implements Closeable {
      */
     private final transient ScheduledExecutorService svc =
         Executors.newScheduledThreadPool(
-            SimpleConveyer.THREADS,
-            new ThreadFactory() {
-                private final transient AtomicLong group = new AtomicLong();
-                @Override
-                public Thread newThread(final Runnable runnable) {
-                    return new Thread(
-                        new ThreadGroup(
-                            Long.toString(this.group.incrementAndGet())
-                        ),
-                        runnable,
-                        String.format("conveyer-%d", this.group.get())
-                    );
-                }
-            }
+            SimpleConveyer.THREADS, new ConveyerThreads()
         );
 
     /**
@@ -158,9 +144,15 @@ final class SimpleConveyer implements Closeable {
     public void start() {
         final Runnable runnable = new VerboseRunnable(
             new Callable<Void>() {
+                private final transient AtomicReference<String> name =
+                    new AtomicReference<String>();
+                @Override
+                public String toString() {
+                    return this.name.get();
+                }
                 @Override
                 public Void call() throws Exception {
-                    SimpleConveyer.this.process();
+                    SimpleConveyer.this.process(this.name);
                     return null;
                 }
             },
@@ -209,11 +201,13 @@ final class SimpleConveyer implements Closeable {
 
     /**
      * Process the next work from the queue.
+     * @param name Name of the thread group
      * @throws Exception If fails
      */
-    private void process() throws Exception {
+    private void process(final AtomicReference<String> name) throws Exception {
         final Work origin = this.queue.pull(1, TimeUnit.SECONDS);
         if (!origin.equals(new Work.None())) {
+            name.set(origin.toString());
             final String key = this.streams.register();
             try {
                 this.process(new StdoutWork(SimpleConveyer.PORT, key, origin));
