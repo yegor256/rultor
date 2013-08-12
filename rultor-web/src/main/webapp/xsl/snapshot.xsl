@@ -106,6 +106,15 @@
                             <i class="icon-off"><xsl:comment>off</xsl:comment></i>
                         </a>
                     </small>
+                    <small>
+                        <a style="margin-right: .5em;" class="pull-right" title="server statistics">
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="stdout"/>
+                                <xsl:text>/stats</xsl:text>
+                            </xsl:attribute>
+                            <i class="icon-cloud"><xsl:comment>cloud</xsl:comment></i>
+                        </a>
+                    </small>
                     <a title="click to tail the output">
                         <xsl:attribute name="href">
                             <xsl:value-of select="stdout"/>
