@@ -29,6 +29,7 @@
  */
 package com.rultor.conveyer;
 
+import com.jcabi.aspects.Tv;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -54,6 +55,23 @@ public final class CircularBufferTest {
         MatcherAssert.assertThat(buf.isEmpty(), Matchers.equalTo(false));
         MatcherAssert.assertThat(buf.read(), Matchers.equalTo((byte) 2));
         MatcherAssert.assertThat(buf.isEmpty(), Matchers.equalTo(true));
+    }
+
+    /**
+     * CircularBuffer can write and read with overflow.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void writesAndReadsWithOverflow() throws Exception {
+        final CircularBuffer buf = new CircularBuffer();
+        final byte data = 1;
+        for (int idx = 0; idx < Tv.MILLION; ++idx) {
+            buf.write(data);
+        }
+        MatcherAssert.assertThat(buf.isEmpty(), Matchers.equalTo(false));
+        for (int idx = 0; idx < Tv.HUNDRED; ++idx) {
+            MatcherAssert.assertThat(buf.read(), Matchers.equalTo(data));
+        }
     }
 
 }
