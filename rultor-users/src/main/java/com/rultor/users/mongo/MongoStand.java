@@ -272,7 +272,7 @@ final class MongoStand implements Stand {
      */
     private Collection<String> tags(final Document dom) {
         final XmlDocument xml = new SimpleXml(new DOMSource(dom));
-        return xml.xpath("//tags/tag/label/text()");
+        return xml.xpath("/snapshot/tags/tag/label/text()");
     }
 
     /**
