@@ -82,6 +82,9 @@ final class CircularBuffer {
             if (this.head == this.tail) {
                 ++this.tail;
             }
+            if (this.tail == this.data.length) {
+                this.tail = 0;
+            }
         }
     }
 
@@ -103,7 +106,10 @@ final class CircularBuffer {
         synchronized (this.data) {
             if (this.isEmpty()) {
                 throw new NoSuchElementException(
-                    "circular buffer is empty"
+                    String.format(
+                        "circular buffer is empty, size=%d, head=%d, tail=%d",
+                        this.data.length, this.head, this.tail
+                    )
                 );
             }
             final byte item = this.data[this.tail];

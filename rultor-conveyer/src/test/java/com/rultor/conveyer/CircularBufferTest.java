@@ -63,13 +63,13 @@ public final class CircularBufferTest {
      */
     @Test
     public void writesAndReadsWithOverflow() throws Exception {
-        final CircularBuffer buf = new CircularBuffer(Tv.TEN);
+        final CircularBuffer buf = new CircularBuffer(Tv.THREE);
         final byte data = 1;
-        for (int idx = 0; idx < Tv.HUNDRED; ++idx) {
+        for (int idx = 0; idx < Tv.TEN; ++idx) {
             buf.write(data);
         }
         MatcherAssert.assertThat(buf.isEmpty(), Matchers.equalTo(false));
-        for (int idx = 0; idx < Tv.TEN; ++idx) {
+        for (int idx = 0; idx < 2; ++idx) {
             MatcherAssert.assertThat(buf.read(), Matchers.equalTo(data));
         }
         MatcherAssert.assertThat(buf.isEmpty(), Matchers.equalTo(true));

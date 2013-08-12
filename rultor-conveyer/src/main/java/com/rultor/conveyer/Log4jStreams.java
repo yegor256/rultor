@@ -129,6 +129,12 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
                 String.format("key '%s' is absent", key)
             );
         } else {
+            final CircularBuffer buffer = this.buffers.get(key);
+            if (buffer == null) {
+                throw new IllegalStateException(
+                    String.format("buffer is absent for key '%s'", key)
+                );
+            }
             stream = new SequenceInputStream(
                 IOUtils.toInputStream(
                     String.format(
@@ -139,7 +145,7 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
                 new InputStream() {
                     @Override
                     public int read() throws IOException {
-                        return Log4jStreams.this.read(key);
+                        return Log4jStreams.this.read(buffer);
                     }
                 }
             );
@@ -217,20 +223,14 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
     }
 
     /**
-     * Read next byte.
-     * @param key The key
+     * Read next byte from the buffer.
+     * @param buffer The buffer to read from
      * @return The byte
      */
-    private byte read(final String key) {
-        final CircularBuffer buffer = this.buffers.get(key);
-        if (buffer == null) {
-            throw new IllegalStateException(
-                String.format("buffer is absent for key '%s'", key)
-            );
-        }
+    private byte read(final CircularBuffer buffer) {
         while (buffer.isEmpty()) {
             try {
-                TimeUnit.MICROSECONDS.sleep(1);
+                TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 throw new IllegalStateException(ex);
