@@ -185,7 +185,7 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
             if (buffer != null) {
                 final byte[] bytes;
                 try {
-                    bytes = event.getRenderedMessage()
+                    bytes = this.getLayout().format(event)
                         .getBytes(CharEncoding.UTF_8);
                 } catch (UnsupportedEncodingException ex) {
                     throw new IllegalStateException(ex);

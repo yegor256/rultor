@@ -61,8 +61,9 @@ final class HttpThread {
     /**
      * TOP line pattern.
      */
-    private static final Pattern TOP =
-        Pattern.compile("(?:GET|POST|PUT|OPTIONS) /([^ ]*) HTTP/1\\.(?:0|1)");
+    private static final Pattern TOP = Pattern.compile(
+        "(?:GET|POST|PUT|OPTIONS|HEAD) /([^ ]*) HTTP/1\\.(?:0|1)"
+    );
 
     /**
      * Queue of sockets to get from.

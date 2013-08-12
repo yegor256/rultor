@@ -80,7 +80,7 @@ public final class Log4jStreamsTest {
             thread.interrupt();
             MatcherAssert.assertThat(
                 baos.toString(CharEncoding.UTF_8),
-                Matchers.endsWith("first\nтест 55")
+                Matchers.endsWith("INFO first\nINFO тест 55\n")
             );
         } finally {
             streams.unregister(key);

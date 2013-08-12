@@ -250,6 +250,12 @@ final class MongoStand implements Stand {
 
     /**
      * Xembly to DOM.
+     *
+     * <p>All exceptions are swallowed here since we can't be sure
+     * that at this moment Xembly script is fully complete. It may contain
+     * broken parts, which will be completed later. That's why we're
+     * returning our best guess here.
+     *
      * @param xembly Xembly script
      * @return DOM document
      */
@@ -258,9 +264,9 @@ final class MongoStand implements Stand {
         try {
             new Snapshot(xembly).apply(dom);
         } catch (XemblySyntaxException ex) {
-            throw new IllegalArgumentException(ex);
+            assert ex != null;
         } catch (ImpossibleModificationException ex) {
-            throw new IllegalArgumentException(ex);
+            assert ex != null;
         }
         return dom;
     }
