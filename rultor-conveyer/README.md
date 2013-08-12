@@ -46,6 +46,7 @@ Create AS group:
 $ as-create-auto-scaling-group rultor-conveyer \
   --launch-configuration rultor-conveyer-16 \
   --availability-zones us-east-1d --min-size 1 --max-size 2 \
+  --tag "k=Name,v=rultor-conveyer,p=true" \
   --desired-capacity 1
 ```
 
