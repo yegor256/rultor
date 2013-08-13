@@ -49,8 +49,11 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
-    <xsl:variable name="eta">
+    <xsl:variable name="finish">
         <xsl:choose>
+            <xsl:when test="/snapshot/finish">
+                <xsl:value-of select="r:epoch(/snapshot/finish)" />
+            </xsl:when>
             <xsl:when test="/snapshot/eta">
                 <xsl:value-of select="r:epoch(/snapshot/eta)" />
             </xsl:when>
@@ -62,7 +65,7 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
-    <xsl:variable name="length" select="$eta - $start" />
+    <xsl:variable name="length" select="$finish - $start" />
     <xsl:template match="steps/step/start|steps/step/finish|updated">
         <xsl:element name="{local-name()}">
             <xsl:attribute name="at">
