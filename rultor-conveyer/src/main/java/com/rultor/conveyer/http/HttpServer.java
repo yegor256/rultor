@@ -123,7 +123,7 @@ public final class HttpServer implements Closeable {
             );
         }
         Logger.info(
-            HttpServer.class, "HTTP srv started on TCP port %d, %d thread(s)",
+            HttpServer.class, "HTTP srv scheduled on TCP port %d, %d thread(s)",
             port, HttpServer.THREADS
         );
     }

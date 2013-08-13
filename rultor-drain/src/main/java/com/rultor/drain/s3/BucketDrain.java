@@ -132,7 +132,7 @@ public final class BucketDrain implements Drain {
             String.format(
                 "%s%s",
                 this.prefix(),
-                new Key(this.work.started()).toString()
+                new Key(this.work.scheduled()).toString()
             )
         );
     }

@@ -103,7 +103,7 @@ public final class DomainSpinbox implements Spinbox {
                 "%s %s %s",
                 this.work.owner(),
                 this.work.unit(),
-                this.work.started()
+                this.work.scheduled()
             ),
             this.client
         ).add(value);

@@ -134,7 +134,7 @@ public final class Parallel implements Instance {
      * @throws Exception If fails
      */
     private void pass() throws Exception {
-        final String key = this.work.started().toString();
+        final String key = this.work.scheduled().toString();
         this.lineup.exec(
             new Runnable() {
                 @Override

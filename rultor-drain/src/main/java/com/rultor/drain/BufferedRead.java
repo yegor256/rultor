@@ -178,7 +178,7 @@ public final class BufferedRead implements Drain {
      */
     private final class Buffer {
         /**
-         * When was is started.
+         * When was is scheduled.
          */
         private final transient long start = System.currentTimeMillis();
         /**

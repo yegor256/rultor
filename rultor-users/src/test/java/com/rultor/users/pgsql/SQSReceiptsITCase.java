@@ -72,7 +72,7 @@ public final class SQSReceiptsITCase {
                 new Message().withBody(
                     // @checkstyle StringLiteralsConcatenation (5 lines)
                     "{\"work\": {\"owner\": \"urn:test:1\", \"unit\": \"test\","
-                    + " \"started\": \"2012-08-23T13:25:33Z\"},"
+                    + " \"scheduled\": \"2012-08-23T13:25:33Z\"},"
                     + "\"ct\":\"urn:test:2\", \"ctunit\":\"some-other-2\","
                     + "\"dt\":\"urn:test:3\", \"dtunit\":\"some-other-4\","
                     + "\"details\":\"тест\", \"amount\": 16458383}"

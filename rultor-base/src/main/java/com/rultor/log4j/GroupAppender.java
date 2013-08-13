@@ -82,7 +82,7 @@ final class GroupAppender extends AppenderSkeleton implements Appender {
         Thread.currentThread().getThreadGroup();
 
     /**
-     * When the work was started.
+     * When the work was scheduled.
      */
     private final transient Time start;
 
