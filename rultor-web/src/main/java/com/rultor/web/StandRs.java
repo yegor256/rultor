@@ -45,6 +45,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
@@ -151,8 +152,12 @@ public final class StandRs extends BaseRs {
             final Document dom = Snapshot.empty();
             try {
                 snapshot.apply(dom);
-                bundle = bundle.add(dom.getDocumentElement());
+                bundle = bundle.add(
+                    new PostSnapshot(dom).dom().getDocumentElement()
+                );
             } catch (ImpossibleModificationException ex) {
+                assert ex != null;
+            } catch (TransformerException ex) {
                 assert ex != null;
             }
         } catch (IOException ex) {

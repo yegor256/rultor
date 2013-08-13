@@ -30,23 +30,6 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:template match="snapshot">
-        <style><![CDATA[
-            .step-item {
-                font-size: 90%;
-                position: relative;
-                color: #ccc;
-            }
-            .step-finished {
-                border-bottom: 2px solid #ccc;
-            }
-            .step {
-                position: absolute;
-                top: 0;
-                left: 0;
-                white-space: nowrap;
-                overflow: hidden;
-            }
-        ]]></style>
         <xsl:if test="tags/tag">
             <ul class="list-inline">
                 <xsl:apply-templates select="tags/tag"/>

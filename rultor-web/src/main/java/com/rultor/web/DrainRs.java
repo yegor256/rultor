@@ -56,6 +56,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import javax.xml.transform.TransformerException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.w3c.dom.Document;
 import org.xembly.ImpossibleModificationException;
@@ -293,10 +294,14 @@ public final class DrainRs extends BaseRs {
             } catch (ImpossibleModificationException ex) {
                 bugs.add(ex);
             }
-            bundle = bundle.add(dom.getDocumentElement());
+            bundle = bundle.add(
+                new PostSnapshot(dom).dom().getDocumentElement()
+            );
         } catch (IOException ex) {
             bugs.add(ex);
         } catch (XemblySyntaxException ex) {
+            bugs.add(ex);
+        } catch (TransformerException ex) {
             bugs.add(ex);
         }
         return bundle.add(
