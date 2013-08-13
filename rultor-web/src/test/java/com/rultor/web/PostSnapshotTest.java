@@ -116,6 +116,36 @@ public final class PostSnapshotTest {
     }
 
     /**
+     * PostSnapshot can post-process a snapshot without ETA, but with UPDATED.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void postProcessesSnapshotWithoutEtaWithUpdated() throws Exception {
+        final Document dom = Snapshot.empty();
+        new Xembler(
+            new Directives()
+                .xpath("/snapshot")
+                .add("start")
+                .set("2012-08-23T15:00:00Z")
+                .up()
+                .add("updated")
+                .set("2012-08-23T16:00:00Z")
+                .up()
+                .add("steps")
+                .add("step")
+                .attr("id", "9")
+                .add("start")
+                .set("2012-08-23T15:30:00Z")
+        ).apply(dom);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(new PostSnapshot(dom).dom()),
+            XhtmlMatchers.hasXPath(
+                "/snapshot/steps/step[@id=9]/start[@at='0.1']"
+            )
+        );
+    }
+
+    /**
      * PostSnapshot can post-process an empty snapshot.
      * @throws Exception If some problem inside
      */
