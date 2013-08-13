@@ -91,13 +91,9 @@ p,
     position: relative;
     color: #ccc;
 }
-.step-finished {
-    border-bottom: 2px solid #ccc;
-}
-.step {
+.step-mark {
+    height: 3px;
+    background-color: #ccc;
     position: absolute;
     top: 0;
-    left: 0;
-    white-space: nowrap;
-    overflow: hidden;
 }

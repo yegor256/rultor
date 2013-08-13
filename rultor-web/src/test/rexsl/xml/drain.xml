@@ -131,28 +131,30 @@ SET "some text to set"; STRICT "1";</xembly>
                     </product>
                 </products>
                 <steps>
-                    <step>
-                        <id>ec2-instance</id>
+                    <step id="3235">
                         <start at="0.2">2013-08-23T17:57Z</start>
                         <finish at="0.35">2013-08-23T17:57Z</finish>
                         <summary>created EC2 instance `i-09aeb44` of `m1.small` type</summary>
                         <level>INFO</level>
                     </step>
-                    <step>
-                        <id>build</id>
+                    <step id="3231982">
                         <start at="0.4">2013-08-23T17:59Z</start>
                         <finish at="0.45">2013-08-23T17:57Z</finish>
                         <summary>failed to allocate memory</summary>
                         <level>SEVERE</level>
                         <exception>Out of memory</exception>
                     </step>
-                    <step>
-                        <id>build</id>
+                    <step id="32552">
                         <start at="0.27">2013-08-23T17:59Z</start>
                         <summary>running bash build script</summary>
                     </step>
-                    <step>
-                        <id>announce</id>
+                    <step id="32312">
+                        <start at="0.6">2013-08-23T17:59Z</start>
+                        <summary>some very important step</summary>
+                        <finish at="0.8">2013-08-23T17:57Z</finish>
+                        <level>WARNING</level>
+                    </step>
+                    <step id="3231255">
                         <start at="0.89">2013-08-23T17:59Z</start>
                         <summary>announced success to SES emails from no-reply@rultor.com to yegor@tpc2.com accessed with `AKIAILC3456OKMYSCO7A` with `emailBody` as `Hi dude,\n                  \nI just finished the ne..128..()}\n                  \n--\nYours,\nRultor.com` with `html` published in `AKIAILC3456OKMYSCO7A` at `published/` and saved to `URL` with `html` as `&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n  &lt;head&gt;\n    &lt;link media=\"a..385..{stdout}&lt;/pre&gt;\n    &lt;/div&gt;\n  &lt;/body&gt;\n&lt;/html&gt;` with `title` as `${title} https://github.com/tpc2/phprack.git`</summary>
                     </step>

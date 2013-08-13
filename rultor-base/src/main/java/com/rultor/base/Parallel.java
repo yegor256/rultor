@@ -32,6 +32,7 @@ package com.rultor.base;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
+import com.rultor.snapshot.Step;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Work;
 import com.rultor.stateful.Lineup;
@@ -147,21 +148,8 @@ public final class Parallel implements Instance {
             }
         );
         try {
-            if (this.active.size() <= this.maximum) {
-                Logger.info(
-                    this,
-                    "%d thread(s) are running now, execution allowed: %[list]s",
-                    this.active.size(),
-                    this.active
-                );
+            if (this.allowed()) {
                 this.origin.pulse();
-            } else {
-                Logger.info(
-                    this,
-                    "%d thread(s) running already (too many): %[list]s",
-                    this.active.size(),
-                    this.active
-                );
             }
         } finally {
             this.lineup.exec(
@@ -178,6 +166,32 @@ public final class Parallel implements Instance {
                 }
             );
         }
+    }
+
+    /**
+     * Execution is allowed?
+     * @return TRUE if allowed
+     * @checkstyle LineLength (2 lines)
+     */
+    @Step("parallel #if(!$result)NOT#end allowed with ${this.active.size()} thread(s)")
+    private boolean allowed() {
+        final boolean allowed = this.active.size() <= this.maximum;
+        if (allowed) {
+            Logger.info(
+                this,
+                "%d thread(s) are running now, execution allowed: %[list]s",
+                this.active.size(),
+                this.active
+            );
+        } else {
+            Logger.info(
+                this,
+                "%d thread(s) running already (too many): %[list]s",
+                this.active.size(),
+                this.active
+            );
+        }
+        return allowed;
     }
 
 }

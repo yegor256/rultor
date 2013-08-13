@@ -169,25 +169,44 @@
         </li>
     </xsl:template>
     <xsl:template match="step">
-        <li>
-            <xsl:attribute name="class">
-                <xsl:text>step-item</xsl:text>
-                <xsl:if test="finish">
-                    <xsl:text> step-finished</xsl:text>
-                </xsl:if>
-            </xsl:attribute>
+        <xsl:variable name="left" select="start/@at &lt; 0.5"/>
+        <li class="step-item">
             <xsl:attribute name="style">
-                <xsl:text>margin-left:</xsl:text>
-                <xsl:value-of select="100 * start/@at"/>
-                <xsl:text>%;</xsl:text>
-                <xsl:if test="finish">
-                    <xsl:text>max-width:</xsl:text>
-                    <xsl:value-of select="100 * (finish/@at - start/@at)"/>
-                    <xsl:text>%;</xsl:text>
-                </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="$left">
+                        <xsl:text>margin-left:</xsl:text>
+                        <xsl:value-of select="100 * start/@at"/>
+                        <xsl:text>%;</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>margin-right:</xsl:text>
+                        <xsl:value-of select="100 * (1 - start/@at)"/>
+                        <xsl:text>%;text-align:right;</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:attribute>
-            <i class="icon-chevron-right" style="margin-left:-1em;"><xsl:comment>start</xsl:comment></i>
-            <div class="step">
+            <xsl:if test="$left">
+                <i class="icon-chevron-right"><xsl:comment>start</xsl:comment></i>
+            </xsl:if>
+            <xsl:if test="finish">
+                <span class="step-mark">
+                    <xsl:attribute name="style">
+                        <xsl:text>width:</xsl:text>
+                        <xsl:value-of select="100 * (finish/@at - start/@at)"/>
+                        <xsl:text>%;</xsl:text>
+                        <xsl:choose>
+                            <xsl:when test="$left">
+                                <xsl:text>left:0;</xsl:text>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:text>right:0;</xsl:text>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:attribute>
+                    <xsl:comment>mark</xsl:comment>
+                </span>
+            </xsl:if>
+            <span class="step">
                 <xsl:if test="exception">
                     <i class="text-danger icon-warning-sign"><xsl:comment>exception</xsl:comment></i>
                     <xsl:text> </xsl:text>
@@ -228,7 +247,10 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </span>
-            </div>
+            </span>
+            <xsl:if test="not($left)">
+                <i class="icon-chevron-left"><xsl:comment>start</xsl:comment></i>
+            </xsl:if>
         </li>
     </xsl:template>
     <xsl:template match="tag">

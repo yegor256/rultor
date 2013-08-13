@@ -35,6 +35,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
+import com.rultor.snapshot.Step;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
@@ -121,32 +122,8 @@ public final class Crontab implements Instance {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
-        final Calendar today = Crontab.calendar(this.work.started());
-        Crontab.Gate<Calendar> denier = null;
-        for (Crontab.Gate<Calendar> gate : this.gates) {
-            if (!gate.pass(today)) {
-                denier = gate;
-                break;
-            }
-        }
-        if (denier == null) {
-            Logger.info(
-                this,
-                "Crontab `%s` allows execution at `%s`",
-                this.rules(),
-                Crontab.moment(this.work.started())
-            );
+        if (this.allowed()) {
             this.origin.pulse();
-        } else {
-            Logger.info(
-                this,
-                // @checkstyle LineLength (1 line)
-                "Not the right moment `%s` for `%s`, see you again in %[ms]s (denied by `%s`)",
-                Crontab.moment(this.work.started()),
-                this.rules(),
-                this.lag(this.work.started()),
-                denier
-            );
         }
     }
 
@@ -182,6 +159,41 @@ public final class Crontab implements Instance {
             lag += gate.lag(today);
         }
         return lag;
+    }
+
+    /**
+     * Execution allowed?
+     * @return TRUE if allowed
+     */
+    @Step("Crontab execution #if(!$result)NOT#end allowed")
+    private boolean allowed() {
+        final Calendar today = Crontab.calendar(this.work.started());
+        Crontab.Gate<Calendar> denier = null;
+        for (Crontab.Gate<Calendar> gate : this.gates) {
+            if (!gate.pass(today)) {
+                denier = gate;
+                break;
+            }
+        }
+        if (denier == null) {
+            Logger.info(
+                this,
+                "Crontab `%s` allows execution at `%s`",
+                this.rules(),
+                Crontab.moment(this.work.started())
+            );
+        } else {
+            Logger.info(
+                this,
+                // @checkstyle LineLength (1 line)
+                "Not the right moment `%s` for `%s`, see you again in %[ms]s (denied by `%s`)",
+                Crontab.moment(this.work.started()),
+                this.rules(),
+                this.lag(this.work.started()),
+                denier
+            );
+        }
+        return denier == null;
     }
 
     /**
