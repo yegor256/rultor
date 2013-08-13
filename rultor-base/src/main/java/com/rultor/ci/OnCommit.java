@@ -33,7 +33,6 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
-import com.rultor.board.Announcement;
 import com.rultor.board.Billboard;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
@@ -44,7 +43,6 @@ import com.rultor.spi.Instance;
 import com.rultor.stateful.Notepad;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
@@ -164,14 +162,14 @@ public final class OnCommit implements Instance {
 
     /**
      * Announce result and return success status.
-     * @param anmt Announcement to announce
+     * @param snapshot Snapshot to announce
      * @return TRUE if it is a success
      * @throws IOException If fails
      */
     @Step("announced #if($result)success#{else}failure#end to ${this.board}")
-    private boolean announce(final Announcement anmt) throws IOException {
-        this.board.announce(anmt);
-        return anmt.level().equals(Level.INFO);
+    private boolean announce(final String snapshot) throws IOException {
+        this.board.announce(snapshot);
+        return true;
     }
 
 }

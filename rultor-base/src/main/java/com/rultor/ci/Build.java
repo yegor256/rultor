@@ -29,21 +29,22 @@
  */
 package com.rultor.ci;
 
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
-import com.rultor.board.Announcement;
-import com.rultor.shell.ASCIIOutputStream;
+import com.rexsl.test.SimpleXml;
 import com.rultor.shell.Batch;
+import com.rultor.snapshot.Snapshot;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
+import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.CharEncoding;
+import org.w3c.dom.Document;
+import org.xembly.ImpossibleModificationException;
+import org.xembly.XemblySyntaxException;
 
 /**
  * Build.
@@ -73,44 +74,28 @@ final class Build {
     }
 
     /**
-     * Build and return a result.
+     * Build and return a snapshot/XML.
      * @param args Arguments to pass to the batch
-     * @return Announcement of result
+     * @return XML of snapshot
      * @throws IOException If some IO problem
      */
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    public Announcement exec(@NotNull(message = "args can't be NULL")
+    public String exec(@NotNull(message = "args can't be NULL")
         final Map<String, Object> args) throws IOException {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
-        final long start = System.currentTimeMillis();
-        final int code = this.batch.exec(
-            args, new ASCIIOutputStream(stdout)
-        );
-        final Announcement announcement;
-        final ImmutableMap.Builder<String, Object> builder =
-            new ImmutableMap.Builder<String, Object>()
-                .put("stdout", stdout.toString(CharEncoding.UTF_8))
-                .put(
-                    "elapsed",
-                    Logger.format(
-                        "%[ms]s",
-                        System.currentTimeMillis() - start
-                    )
-                )
-                .putAll(args);
-        if (code == 0) {
-            announcement = new Announcement(
-                Level.INFO,
-                // @checkstyle MultipleStringLiterals (2 lines)
-                builder.put("title", "built successfully").build()
+        this.batch.exec(args, stdout);
+        try {
+            final Snapshot snapshot = new Snapshot(
+                new ByteArrayInputStream(stdout.toByteArray())
             );
-        } else {
-            announcement = new Announcement(
-                Level.SEVERE,
-                builder.put("title", "failed to build").build()
-            );
+            final Document dom = Snapshot.empty();
+            snapshot.apply(dom);
+            return new SimpleXml(new DOMSource(dom)).toString();
+        } catch (XemblySyntaxException ex) {
+            throw new IOException(ex);
+        } catch (ImpossibleModificationException ex) {
+            throw new IOException(ex);
         }
-        return announcement;
     }
 
 }

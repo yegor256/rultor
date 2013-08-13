@@ -34,10 +34,12 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.log.Logger;
+import com.rexsl.test.SimpleXml;
+import com.rexsl.test.XmlDocument;
 import com.rultor.guard.MergeRequest;
+import com.rultor.snapshot.Step;
 import com.rultor.tools.Time;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import org.eclipse.egit.github.core.PullRequest;
@@ -115,15 +117,13 @@ final class GhRequest implements MergeRequest {
      * {@inheritDoc}
      */
     @Override
-    public void notify(final int code, final InputStream stdout) {
-        final GitHubClient client = this.github.client();
+    public void notify(final int code, final String xml) {
+        final XmlDocument snapshot = new SimpleXml(xml);
         try {
             if (code == 0) {
-                final PullRequestService svc = new PullRequestService(client);
-                svc.merge(this.repository, this.issue, "tested, looks good");
+                this.accept(snapshot);
             } else {
-                final IssueService svc = new IssueService(client);
-                svc.createComment(this.repository, this.issue, "failed...");
+                this.reject(snapshot);
             }
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
@@ -149,6 +149,59 @@ final class GhRequest implements MergeRequest {
     @Override
     public Map<String, Object> params() {
         return this.parameters;
+    }
+
+    /**
+     * Accept pull request.
+     * @param snapshot Snapshot XML
+     * @throws IOException If fails
+     */
+    @Step("accepted GitHub pull request #${this.issue}")
+    private void accept(final XmlDocument snapshot) throws IOException {
+        final GitHubClient client = this.github.client();
+        final PullRequestService svc = new PullRequestService(client);
+        svc.merge(
+            this.repository, this.issue,
+            String.format(
+                "Tested, looks correct:\n\n```\n%s\n```",
+                this.summary(snapshot)
+            )
+        );
+    }
+
+    /**
+     * Reject pull request.
+     * @param snapshot Snapshot XML
+     * @throws IOException If fails
+     */
+    @Step("rejected GitHub pull request #${this.issue}")
+    private void reject(final XmlDocument snapshot) throws IOException {
+        final GitHubClient client = this.github.client();
+        final IssueService svc = new IssueService(client);
+        svc.createComment(
+            this.repository, this.issue,
+            String.format(
+                "Tests failed, can't merge:\n\n```\n%s\n```\n\n%s",
+                this.summary(snapshot),
+                snapshot.xpath("//product[name='stdout']/markdown").get(0)
+            )
+        );
+    }
+
+    /**
+     * Make summary out of snapshot.
+     * @param snapshot Snapshot XML
+     * @return Summary
+     */
+    private String summary(final XmlDocument snapshot) {
+        return new StringBuilder()
+            .append("started: ")
+            .append(snapshot.xpath("/snapshot/start/text()").get(0))
+            .append("\n")
+            .append("duration: ")
+            .append(snapshot.xpath("/snapshot/duration/text()").get(0))
+            .append("ms\n")
+            .toString();
     }
 
 }

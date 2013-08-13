@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * Transmits all announcements to log.
@@ -59,9 +60,9 @@ public final class Echo implements Billboard {
      * {@inheritDoc}
      */
     @Override
-    public void announce(@NotNull(message = "announcement can't be NULL")
-        final Announcement anmt) {
-        Logger.info(this, anmt.toString());
+    public void announce(
+        @NotNull(message = "body can't be NULL") final String body) {
+        Logger.info(this, StringEscapeUtils.escapeJava(body));
     }
 
 }

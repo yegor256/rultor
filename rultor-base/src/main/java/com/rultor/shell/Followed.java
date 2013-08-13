@@ -76,7 +76,7 @@ public final class Followed implements Shells {
      */
     @Override
     public String toString() {
-        return String.format("%s followed by %s", this.origin);
+        return String.format("%s followed by %s", this.origin, this.sequel);
     }
 
     /**
