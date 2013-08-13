@@ -103,8 +103,8 @@ public final class Descriptive implements Instance {
                 .add("unit")
                 .set(this.work.unit())
                 .up()
-                .add("started")
-                .set(this.work.started().toString())
+                .add("scheduled")
+                .set(this.work.scheduled().toString())
         ).log();
         new XemblyLine(
             new Directives()

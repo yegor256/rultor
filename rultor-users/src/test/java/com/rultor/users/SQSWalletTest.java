@@ -79,7 +79,8 @@ public final class SQSWalletTest {
                                 new StringReader(obj.toString())
                             ).readObject();
                             return new Time(
-                                json.getJsonObject("work").getString("started")
+                                json.getJsonObject("work")
+                                    .getString("scheduled")
                             ).millis() > 0;
                         }
                     }

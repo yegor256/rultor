@@ -162,7 +162,7 @@ final class JaxbFace {
         // @checkstyle AnonInnerLength (50 lines)
         return new Work() {
             @Override
-            public Time started() {
+            public Time scheduled() {
                 return new Time();
             }
             @Override

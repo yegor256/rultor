@@ -132,7 +132,7 @@ public final class ThreadGroupSpy implements Instance, Drain.Source {
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
         final GroupAppender appender = new GroupAppender(
-            this.work.started(), this.drn
+            this.work.scheduled(), this.drn
         );
         appender.setThreshold(this.level);
         appender.setLayout(new PatternLayout(this.pattern));

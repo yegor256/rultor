@@ -117,7 +117,7 @@ public final class SQSQuartzTest {
                 new CustomMatcher<Work>("expected work") {
                     @Override
                     public boolean matches(final Object work) {
-                        return Work.class.cast(work).started().equals(time);
+                        return Work.class.cast(work).scheduled().equals(time);
                     }
                 }
             )

@@ -93,7 +93,7 @@ public final class DirectoryDrainITCase {
         );
         drain.append(Arrays.asList(msg));
         final Pageable<Time, Time> names = drain.pulses();
-        MatcherAssert.assertThat(names, Matchers.hasItem(work.started()));
+        MatcherAssert.assertThat(names, Matchers.hasItem(work.scheduled()));
         MatcherAssert.assertThat(
             IOUtils.toString(drain.read(), CharEncoding.UTF_8),
             Matchers.containsString(msg)

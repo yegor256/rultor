@@ -129,7 +129,7 @@ public final class Temporary implements Drain {
         final Collection<Time> times = new LinkedList<Time>();
         for (Temporary client : Temporary.BUFFERS.keySet()) {
             if (this.similar(client)) {
-                times.add(client.work.started());
+                times.add(client.work.scheduled());
             }
         }
         return new Pageable.Array<Time>(times);
@@ -186,7 +186,7 @@ public final class Temporary implements Drain {
      */
     private final class Buffer {
         /**
-         * When was is started.
+         * When was is scheduled.
          */
         private final transient Long start = System.currentTimeMillis();
         /**

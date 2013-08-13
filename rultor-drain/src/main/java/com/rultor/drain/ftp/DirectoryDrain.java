@@ -225,7 +225,7 @@ public final class DirectoryDrain implements Drain {
             String.format(
                 "%s/%020d",
                 this.prefix(),
-                this.work.started().millis()
+                this.work.scheduled().millis()
             )
         );
     }

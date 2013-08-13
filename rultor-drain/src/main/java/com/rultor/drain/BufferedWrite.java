@@ -181,7 +181,7 @@ public final class BufferedWrite implements Drain {
     @EqualsAndHashCode(of = { "start", "data" })
     private final class Tunnel {
         /**
-         * When was is started.
+         * When was is scheduled.
          */
         private final transient long start = System.currentTimeMillis();
         /**
