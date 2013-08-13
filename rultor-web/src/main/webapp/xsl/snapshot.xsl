@@ -219,8 +219,8 @@
                         </xsl:choose>
                     </xsl:attribute>
                     <xsl:choose>
-                        <xsl:when test="string-length($title) &gt; 100">
-                            <xsl:value-of select="substring($title,1,100)"/>
+                        <xsl:when test="string-length($title) &gt; 70">
+                            <xsl:value-of select="substring($title,1,70)"/>
                             <xsl:text>&#8230;</xsl:text>
                         </xsl:when>
                         <xsl:otherwise>

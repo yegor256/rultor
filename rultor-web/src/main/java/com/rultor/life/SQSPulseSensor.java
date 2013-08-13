@@ -169,6 +169,7 @@ public final class SQSPulseSensor implements Runnable, Closeable {
      * Post this JSON to the right stand.
      * @param json JSON to process
      * @throws Stand.BrokenXemblyException If fails
+     * @checkstyle RedundantThrows (4 lines)
      */
     private void post(final String json) throws Stand.BrokenXemblyException {
         final JsonObject object = Json.createReader(

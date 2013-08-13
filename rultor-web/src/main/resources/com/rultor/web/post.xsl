@@ -37,7 +37,7 @@
     <xsl:function name="r:epoch" as="xs:integer">
         <xsl:param name="iso" as="xs:string"/>
         <!-- @see http://stackoverflow.com/questions/15345457 -->
-        <xsl:value-of select="(xs:dateTime($iso) - xs:dateTime('1970-01-01T00:00:00')) div xs:dayTimeDuration('PT0.001S')" />
+        <xsl:value-of select="(xs:dateTime($iso) - xs:dateTime('1970-01-01T00:00:00Z')) div xs:dayTimeDuration('PT1S')" />
     </xsl:function>
     <xsl:variable name="start">
         <xsl:choose>
@@ -45,7 +45,7 @@
                 <xsl:value-of select="r:epoch(/snapshot/start)" />
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="xs:dateTime('1970-01-01T00:00:00Z')" />
+                <xsl:value-of select="r:epoch('1970-01-01T00:00:00Z')" />
             </xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
@@ -55,10 +55,10 @@
                 <xsl:value-of select="r:epoch(/snapshot/eta)" />
             </xsl:when>
             <xsl:when test="/snapshot/updated">
-                <xsl:value-of select="$start + (r:epoch(/snapshot/updated) - $start) * 0.25" />
+                <xsl:value-of select="$start + (r:epoch(/snapshot/updated) - $start) * 1.25" />
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="$start + xs:dayTimeDuration('PT1H') div xs:dayTimeDuration('PT0.001S')" />
+                <xsl:value-of select="$start + xs:dayTimeDuration('PT1H') div xs:dayTimeDuration('PT1S')" />
             </xsl:otherwise>
         </xsl:choose>
     </xsl:variable>

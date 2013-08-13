@@ -125,22 +125,20 @@ public final class PostSnapshotTest {
         new Xembler(
             new Directives()
                 .xpath("/snapshot")
-                .add("start")
-                .set("2012-08-23T15:00:00Z")
-                .up()
-                .add("updated")
-                .set("2012-08-23T16:00:00Z")
-                .up()
+                .add("version").add("revision").set("ab4ed9f").up().up()
+                .add("start").set("2012-08-23T15:00:00Z").up()
+                .add("updated").set("2012-08-23T16:00:00Z").up()
                 .add("steps")
-                .add("step")
-                .attr("id", "9")
+                .add("step").attr("id", "9")
                 .add("start")
                 .set("2012-08-23T15:30:00Z")
         ).apply(dom);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(new PostSnapshot(dom).dom()),
-            XhtmlMatchers.hasXPath(
-                "/snapshot/steps/step[@id=9]/start[@at='0.1']"
+            XhtmlMatchers.hasXPaths(
+                "/snapshot/updated[@at='0.8']",
+                "/snapshot/version[revision='ab4ed9f']",
+                "/snapshot/steps/step[@id=9]/start[@at='0.4']"
             )
         );
     }
