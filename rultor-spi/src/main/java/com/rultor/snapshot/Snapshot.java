@@ -159,6 +159,9 @@ public final class Snapshot {
                 buf.append(XemblyLine.parse(line).xembly());
             }
         }
+        if (buf.length() == 0) {
+            buf.append("XPATH '/snapshot';");
+        }
         return buf.toString();
     }
 

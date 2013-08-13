@@ -29,9 +29,7 @@
  */
 package com.rultor.board;
 
-import com.google.common.collect.ImmutableMap;
 import java.util.Arrays;
-import java.util.logging.Level;
 import org.junit.Assume;
 import org.junit.Test;
 
@@ -56,14 +54,7 @@ public final class SESITCase {
             key,
             System.getProperty("failsafe.ec2.secret")
         );
-        board.announce(
-            new Announcement(
-                Level.INFO,
-                new ImmutableMap.Builder<String, Object>()
-                    .put("hello", "Yegor!")
-                    .build()
-            )
-        );
+        board.announce("integration testing\nHello, dear tester!\n");
     }
 
 }
