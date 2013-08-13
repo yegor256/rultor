@@ -84,15 +84,15 @@ final class PgAccount implements Account {
     @Cacheable(lifetime = Tv.FIFTEEN, unit = TimeUnit.MINUTES)
     public Dollars balance() {
         try {
-            final long credit = new JdbcSession(this.client.get())
-                .sql("SELECT SUM(amount) FROM receipt WHERE ct=?")
-                .set(this.owner)
-                .select(new SingleHandler<Long>(Long.class));
-            final long debit = new JdbcSession(this.client.get())
-                .sql("SELECT SUM(amount) FROM receipt WHERE dt=?")
-                .set(this.owner)
-                .select(new SingleHandler<Long>(Long.class));
-            return new Dollars(debit - credit);
+            return new Dollars(
+                new JdbcSession(this.client.get())
+                    // @checkstyle LineLength (1 line)
+                    .sql("SELECT SUM(CASE WHEN dt = ? THEN amount ELSE -amount END) FROM receipt WHERE dt=? OR ct=?")
+                    .set(this.owner)
+                    .set(this.owner)
+                    .set(this.owner)
+                    .select(new SingleHandler<Long>(Long.class))
+            );
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
