@@ -144,7 +144,7 @@ public final class SQSPulseSensor implements Runnable, Closeable {
             } catch (SecurityException ex) {
                 Logger.info(this, ExceptionUtils.getRootCauseMessage(ex));
             // @checkstyle IllegalCatch (1 line)
-            } catch (Exception ex) {
+            } catch (Stand.BrokenXemblyException ex) {
                 Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
             } finally {
                 aws.deleteMessage(
@@ -168,8 +168,9 @@ public final class SQSPulseSensor implements Runnable, Closeable {
     /**
      * Post this JSON to the right stand.
      * @param json JSON to process
+     * @throws Stand.BrokenXemblyException If fails
      */
-    private void post(final String json) {
+    private void post(final String json) throws Stand.BrokenXemblyException {
         final JsonObject object = Json.createReader(
             new StringReader(json)
         ).readObject();

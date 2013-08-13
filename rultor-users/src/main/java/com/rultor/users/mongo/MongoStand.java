@@ -141,9 +141,11 @@ final class MongoStand implements Stand {
 
     /**
      * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public void post(final String pulse, final long nano, final String xembly) {
+    public void post(final String pulse, final long nano, final String xembly)
+        throws BrokenXemblyException {
         while (true) {
             if (this.save(pulse, nano, xembly)) {
                 break;
@@ -206,9 +208,11 @@ final class MongoStand implements Stand {
      * @param nano Nano ID
      * @param xembly Xembly script to append
      * @return TRUE if success
+     * @throws Stand.BrokenXemblyException If can't save
+     * @checkstyle RedundantThrows (5 lines)
      */
     private boolean save(final String pulse, final long nano,
-        final String xembly) {
+        final String xembly) throws Stand.BrokenXemblyException {
         final DBObject object = this.collection().findAndModify(
             new BasicDBObject()
                 .append(MongoStand.ATTR_PULSE, pulse)
@@ -258,15 +262,18 @@ final class MongoStand implements Stand {
      *
      * @param xembly Xembly script
      * @return DOM document
+     * @throws Stand.BrokenXemblyException If fails
+     * @checkstyle RedundantThrows (5 lines)
      */
-    private Document dom(final String xembly) {
+    private Document dom(final String xembly)
+        throws Stand.BrokenXemblyException {
         final Document dom = Snapshot.empty();
         try {
             new Snapshot(xembly).apply(dom);
         } catch (XemblySyntaxException ex) {
-            assert ex != null;
+            throw new BrokenXemblyException(ex);
         } catch (ImpossibleModificationException ex) {
-            assert ex != null;
+            throw new BrokenXemblyException(ex);
         }
         return dom;
     }

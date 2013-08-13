@@ -90,10 +90,30 @@ public interface Stand {
      * @param pulse Unique pulse name
      * @param nano Order of the script in log
      * @param xembly Xembly script
+     * @throws BrokenXemblyException If fails to append it
+     * @checkstyle RedundantThrows (8 lines)
      */
     void post(
         @NotNull(message = "pulse can't be NULL") String pulse,
         long nano,
-        @NotNull(message = "text can't be NULL") String xembly);
+        @NotNull(message = "text can't be NULL") String xembly)
+        throws BrokenXemblyException;
+
+    /**
+     * When Xembly can't be accepted.
+     */
+    final class BrokenXemblyException extends Exception {
+        /**
+         * Serialization marker.
+         */
+        private static final long serialVersionUID = 1L;
+        /**
+         * Public ctor.
+         * @param cause Cause of it
+         */
+        public BrokenXemblyException(final Throwable cause) {
+            super(cause);
+        }
+    }
 
 }
