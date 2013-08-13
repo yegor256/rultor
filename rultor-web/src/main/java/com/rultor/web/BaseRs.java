@@ -30,6 +30,7 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Timeable;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.rexsl.page.BasePage;
@@ -137,6 +138,7 @@ public class BaseRs extends BaseResource {
         // @checkstyle AnonInnerLength (50 lines)
         return new Inset() {
             @Override
+            @Timeable
             public void render(final BasePage<?, ?> page,
                 final Response.ResponseBuilder builder) {
                 if (!BaseRs.this.auth().identity().equals(Identity.ANONYMOUS)) {
