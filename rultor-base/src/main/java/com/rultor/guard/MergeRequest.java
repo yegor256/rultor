@@ -30,7 +30,6 @@
 package com.rultor.guard;
 
 import com.jcabi.aspects.Immutable;
-import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -58,8 +57,8 @@ public interface MergeRequest {
     /**
      * Notify when merging is done (successfully or not).
      * @param code Execution code (only zero means success)
-     * @param stdout Output of the batch
+     * @param xml XML of snapshot
      */
-    void notify(int code, InputStream stdout);
+    void notify(int code, String xml);
 
 }
