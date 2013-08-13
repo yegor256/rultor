@@ -41,12 +41,9 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import com.rultor.aws.SESClient;
-import java.io.IOException;
 import java.util.Collection;
-import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.CharUtils;
 
 /**
  * Amazon SES.
@@ -117,29 +114,16 @@ public final class SES implements Billboard {
      * {@inheritDoc}
      */
     @Override
-    public void announce(@NotNull(message = "announcement can't be NULL")
-        final Announcement anmt) throws IOException {
+    public void announce(
+        @NotNull(message = "body can't be NULL") final String body) {
         final AmazonSimpleEmailService aws = this.client.get();
+        final String[] parts = body.split("\n", 2);
         try {
-            String print = String.class.cast(anmt.args().get("emailBody"));
-            if (print == null) {
-                final StringBuilder txt = new StringBuilder();
-                for (Map.Entry<String, Object> entry : anmt.args().entrySet()) {
-                    txt.append(entry.getKey())
-                        .append(':')
-                        .append(CharUtils.LF)
-                        .append(entry.getValue())
-                        .append(CharUtils.LF)
-                        .append(CharUtils.LF);
-                }
-                print = txt.toString();
-            }
-            final String subject = String.format(
-                "%s: %s", anmt.level(), anmt.args().get("title")
-            );
             final Message message = new Message()
-                .withSubject(new Content().withData(subject))
-                .withBody(new Body().withText(new Content().withData(print)));
+                .withSubject(new Content().withData(parts[0]))
+                .withBody(
+                    new Body().withText(new Content().withData(parts[1]))
+                );
             final SendEmailResult result = aws.sendEmail(
                 new SendEmailRequest()
                     .withSource(this.sender)

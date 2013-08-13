@@ -34,12 +34,18 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.guard.MergeRequest;
 import com.rultor.guard.MergeRequests;
+import com.rultor.snapshot.Step;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.PullRequestService;
 
 /**
@@ -93,24 +99,20 @@ public final class GhRequests implements MergeRequests {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public Iterator<MergeRequest> iterator() {
-        final GitHubClient client = this.github.client();
-        final PullRequestService svc = new PullRequestService(client);
         try {
-            final Iterator<PullRequest> iterator = svc.getPullRequests(
-                this.repository,
-                "open"
-            ).iterator();
+            final Iterator<PullRequest> requests =
+                this.filter(this.fetch()).iterator();
             return new Iterator<MergeRequest>() {
                 @Override
                 public boolean hasNext() {
-                    return iterator.hasNext();
+                    return requests.hasNext();
                 }
                 @Override
                 public MergeRequest next() {
                     return new GhRequest(
                         GhRequests.this.github,
                         GhRequests.this.repository,
-                        iterator.next()
+                        requests.next()
                     );
                 }
                 @Override
@@ -133,6 +135,44 @@ public final class GhRequests implements MergeRequests {
             this.repository,
             this.github
         );
+    }
+
+    /**
+     * Fetch all pull requests.
+     * @return Collection of them
+     * @throws IOException If fails
+     */
+    @Step("found ${result.size()} pull request(s) in Github")
+    private Collection<PullRequest> fetch() throws IOException {
+        final GitHubClient client = this.github.client();
+        final PullRequestService svc = new PullRequestService(client);
+        return svc.getPullRequests(this.repository, "open");
+    }
+
+    /**
+     * Filter out requests that were already seen.
+     * @param list List of all of them
+     * @return Collection of them
+     * @throws IOException If fails
+     */
+    @Step("${result.size()} out of ${args[0].size()} request(s) are active")
+    private Collection<PullRequest> filter(final Collection<PullRequest> list)
+        throws IOException {
+        final Collection<PullRequest> requests = new LinkedList<PullRequest>();
+        final GitHubClient client = this.github.client();
+        final IssueService svc = new IssueService(client);
+        for (PullRequest request : list) {
+            final List<Comment> comments = svc.getComments(
+                this.repository.user(),
+                this.repository.repo(), request.getNumber()
+            );
+            final Comment last = comments.get(comments.size() - 1);
+            final String author = last.getUser().getLogin();
+            if (!author.equals(this.github.client().getUser())) {
+                requests.add(request);
+            }
+        }
+        return requests;
     }
 
 }

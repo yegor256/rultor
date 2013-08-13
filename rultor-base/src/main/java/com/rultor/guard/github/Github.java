@@ -35,6 +35,7 @@ import com.jcabi.log.Logger;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.client.GitHubClient;
 
@@ -78,6 +79,21 @@ interface Github {
         @Override
         public String generateId() {
             return this.name;
+        }
+        /**
+         * Owner of the repo (user name).
+         * @return User name
+         */
+        public String user() {
+            // @checkstyle MultipleStringLiterals (1 line)
+            return StringUtils.substringBefore(this.name, "/");
+        }
+        /**
+         * Repository name.
+         * @return Repo name
+         */
+        public String repo() {
+            return StringUtils.substringAfter(this.name, "/");
         }
     }
 

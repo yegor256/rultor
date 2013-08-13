@@ -44,11 +44,11 @@ import javax.validation.constraints.NotNull;
 public interface Billboard {
 
     /**
-     * Announce.
-     * @param anmt Announcement to deliver
+     * Announce (the first line of the body is treated as subject).
+     * @param body Text/XML/XHTML/etc body
      * @throws IOException If fails
      */
-    void announce(@NotNull(message = "announcement can't be NULL")
-        Announcement anmt) throws IOException;
+    void announce(@NotNull(message = "body can't be NULL") String body)
+        throws IOException;
 
 }

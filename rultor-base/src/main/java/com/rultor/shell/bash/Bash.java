@@ -35,6 +35,7 @@ import com.jcabi.log.Logger;
 import com.rultor.shell.Batch;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
+import com.rultor.snapshot.XemblyLine;
 import com.rultor.tools.Vext;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -46,6 +47,7 @@ import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.TeeOutputStream;
 import org.apache.commons.lang3.StringUtils;
+import org.xembly.Directives;
 
 /**
  * Bash batch.
@@ -100,16 +102,30 @@ public final class Bash implements Batch {
         @NotNull(message = "stream can't be NULL") final OutputStream output)
         throws IOException {
         final Shell shell = this.shells.acquire();
+        final String command = this.script.print(args);
         final int code;
         try {
             code = shell.exec(
-                this.script.print(args),
+                command,
                 IOUtils.toInputStream(""),
                 new TeeOutputStream(output, Logger.stream(Level.INFO, this)),
                 new TeeOutputStream(output, Logger.stream(Level.WARNING, this))
             );
         } finally {
             shell.close();
+        }
+        if (code != 0) {
+            new XemblyLine(
+                new Directives()
+                    .xpath("/snapshot")
+                    .addIfAbsent("steps")
+                    .add("step")
+                    .add("summary")
+                    .set(String.format("bash error code #%d", code))
+                    .up()
+                    .add("level")
+                    .set(Level.SEVERE.toString())
+            ).log();
         }
         return code;
     }

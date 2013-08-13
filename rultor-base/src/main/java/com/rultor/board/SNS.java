@@ -34,11 +34,8 @@ import com.amazonaws.services.sns.model.PublishRequest;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.aws.SNSClient;
-import java.io.IOException;
-import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.CharUtils;
 
 /**
  * Amazon SNS.
@@ -97,32 +94,16 @@ public final class SNS implements Billboard {
      * {@inheritDoc}
      */
     @Override
-    public void announce(@NotNull(message = "announcement can't be NULL")
-        final Announcement anmt) throws IOException {
+    public void announce(
+        @NotNull(message = "body can't be NULL") final String body) {
+        final String[] parts = body.split("\n", 2);
         final AmazonSNS aws = this.client.get();
         try {
-            String print = String.class.cast(anmt.args().get("print"));
-            if (print == null) {
-                final StringBuilder txt = new StringBuilder();
-                for (Map.Entry<String, Object> entry : anmt.args().entrySet()) {
-                    txt.append(entry.getKey())
-                        .append(':')
-                        .append(CharUtils.LF)
-                        .append(entry.getValue())
-                        .append(CharUtils.LF)
-                        .append(CharUtils.LF);
-                }
-                print = txt.toString();
-            }
             aws.publish(
                 new PublishRequest()
                     .withTopicArn(this.topic)
-                    .withMessage(print)
-                    .withSubject(
-                        String.format(
-                            "%s: %s", anmt.level(), anmt.args().get("title")
-                        )
-                    )
+                    .withMessage(parts[1])
+                    .withSubject(parts[0])
             );
         } finally {
             aws.shutdown();
