@@ -98,8 +98,8 @@ final class StdoutWork implements Work {
      * {@inheritDoc}
      */
     @Override
-    public Time started() {
-        return this.origin.started();
+    public Time scheduled() {
+        return this.origin.scheduled();
     }
 
     /**

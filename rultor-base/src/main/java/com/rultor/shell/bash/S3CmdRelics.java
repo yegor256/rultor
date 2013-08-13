@@ -141,7 +141,7 @@ public final class S3CmdRelics implements Sequel {
                 String.format(
                     "%s%s/%s/%s/%s/", this.prefix,
                     this.work.owner(), this.work.unit(),
-                    entry.getKey(), this.work.started()
+                    entry.getKey(), this.work.scheduled()
                 ),
                 this.key, this.secret
             ).exec(shell);

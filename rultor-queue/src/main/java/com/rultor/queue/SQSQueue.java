@@ -92,7 +92,7 @@ public final class SQSQueue implements Queue {
     /**
      * JSON key.
      */
-    private static final String KEY_STARTED = "started";
+    private static final String KEY_STARTED = "scheduled";
 
     /**
      * SQS client.
@@ -198,7 +198,7 @@ public final class SQSQueue implements Queue {
         final JsonGenerator generator = Json.createGenerator(writer);
         generator.writeStartObject()
             .write(SQSQueue.KEY_OWNER, work.owner().toString())
-            .write(SQSQueue.KEY_STARTED, work.started().toString())
+            .write(SQSQueue.KEY_STARTED, work.scheduled().toString())
             .write(SQSQueue.KEY_UNIT, work.unit())
             .write(SQSQueue.KEY_SPEC, work.spec().asText())
             .writeEnd()

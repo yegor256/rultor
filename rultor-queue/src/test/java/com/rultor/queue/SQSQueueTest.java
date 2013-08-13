@@ -86,7 +86,7 @@ public final class SQSQueueTest {
                     "messageBody",
                     Matchers.equalTo(
                         // @checkstyle LineLength (1 line)
-                        "{\"urn\":\"urn:facebook:1\",\"started\":\"1970-01-01T00:16:40Z\",\"unit\":\"some-test-unit\",\"spec\":\"java.lang.Integer(5)\"}"
+                        "{\"urn\":\"urn:facebook:1\",\"scheduled\":\"1970-01-01T00:16:40Z\",\"unit\":\"some-test-unit\",\"spec\":\"java.lang.Integer(5)\"}"
                     )
                 )
             )
@@ -110,7 +110,7 @@ public final class SQSQueueTest {
             new ReceiveMessageResult().withMessages(
                 new Message().withBody(
                     // @checkstyle LineLength (1 line)
-                    "{\"urn\":\"urn:facebook:65\",\"unit\":\"test-877\",\"spec\":\"java.lang.Integer(98)\",\"started\":\"1970-01-01T00:16:40Z\"}"
+                    "{\"urn\":\"urn:facebook:65\",\"unit\":\"test-877\",\"spec\":\"java.lang.Integer(98)\",\"scheduled\":\"1970-01-01T00:16:40Z\"}"
                 )
             )
         ).when(aws).receiveMessage(Mockito.any(ReceiveMessageRequest.class));
@@ -123,7 +123,7 @@ public final class SQSQueueTest {
             work.spec().asText(), Matchers.equalTo("java.lang.Integer(98)")
         );
         MatcherAssert.assertThat(
-            work.started().toString(),
+            work.scheduled().toString(),
             Matchers.equalTo(new Time(Tv.MILLION).toString())
         );
     }

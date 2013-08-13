@@ -231,8 +231,8 @@ public final class EC2 implements Environments {
                         .withKey("rultor:work:owner")
                         .withValue(this.work.owner().toString()),
                     new Tag()
-                        .withKey("rultor:work:started")
-                        .withValue(this.work.started().toString()),
+                        .withKey("rultor:work:scheduled")
+                        .withValue(this.work.scheduled().toString()),
                     new Tag()
                         .withKey("rultor:instance-created")
                         .withValue(new Time().toString())

@@ -129,7 +129,7 @@ final class SQSWallet implements Wallet {
             .writeStartObject("work")
             .write("owner", this.work.owner().toString())
             .write("unit", this.work.unit())
-            .write("started", this.work.started().toString())
+            .write("scheduled", this.work.scheduled().toString())
             .writeEnd()
             .writeEnd()
             .close();

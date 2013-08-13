@@ -211,7 +211,7 @@ public final class NoiseReduction implements Drain {
     public InputStream read() throws IOException {
         final boolean exists = Iterables.contains(
             Iterables.limit(this.dirty.pulses(), this.visible),
-            this.work.started()
+            this.work.scheduled()
         );
         InputStream stream;
         if (exists) {

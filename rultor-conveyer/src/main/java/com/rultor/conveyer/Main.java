@@ -112,7 +112,7 @@ public final class Main {
 
     /**
      * Are we still need to be alive?
-     * @param start When started
+     * @param start When scheduled
      * @param options Command line options
      * @return TRUE if we should still be alive
      * @throws Exception If fails

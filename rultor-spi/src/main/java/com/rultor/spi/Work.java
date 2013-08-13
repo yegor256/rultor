@@ -50,11 +50,11 @@ import lombok.ToString;
 public interface Work {
 
     /**
-     * When started, in milliseconds.
+     * When scheduled, in milliseconds.
      * @return Milliseconds
      */
     @NotNull(message = "time is never NULL")
-    Time started();
+    Time scheduled();
 
     /**
      * Owner of this work.
@@ -95,7 +95,7 @@ public interface Work {
          */
         @NotNull
         @Override
-        public Time started() {
+        public Time scheduled() {
             throw new UnsupportedOperationException();
         }
         /**
@@ -139,7 +139,7 @@ public interface Work {
     @Immutable
     final class Simple implements Work {
         /**
-         * When started.
+         * When scheduled.
          */
         private final transient Time time;
         /**
@@ -220,7 +220,7 @@ public interface Work {
          */
         @Override
         @NotNull(message = "time of work is never NULL")
-        public Time started() {
+        public Time scheduled() {
             return this.time;
         }
         /**
