@@ -64,7 +64,7 @@ SET "some text to set"; STRICT "1";</xembly>
                 </exception>
             </exceptions>
             <snapshot>
-                <updated>2012-08-23T13:25Z</updated>
+                <updated at="0.76">2012-08-23T13:25Z</updated>
                 <version>
                     <name>1.0-SNAPSHOT</name>
                     <revision>7f8a702</revision>
@@ -133,27 +133,28 @@ SET "some text to set"; STRICT "1";</xembly>
                 <steps>
                     <step>
                         <id>ec2-instance</id>
-                        <start>2013-08-23T17:57Z</start>
-                        <finish>2013-08-23T17:57Z</finish>
+                        <start at="0.2">2013-08-23T17:57Z</start>
+                        <finish at="0.35">2013-08-23T17:57Z</finish>
                         <summary>created EC2 instance `i-09aeb44` of `m1.small` type</summary>
                         <level>INFO</level>
                     </step>
                     <step>
                         <id>build</id>
-                        <start>2013-08-23T17:59Z</start>
-                        <finish>2013-08-23T17:57Z</finish>
+                        <start at="0.4">2013-08-23T17:59Z</start>
+                        <finish at="0.45">2013-08-23T17:57Z</finish>
                         <summary>failed to allocate memory</summary>
                         <level>SEVERE</level>
                         <exception>Out of memory</exception>
                     </step>
                     <step>
                         <id>build</id>
-                        <start>2013-08-23T17:59Z</start>
+                        <start at="0.27">2013-08-23T17:59Z</start>
                         <summary>running bash build script</summary>
                     </step>
                     <step>
                         <id>announce</id>
-                        <summary>announce results</summary>
+                        <start at="0.89">2013-08-23T17:59Z</start>
+                        <summary>announced success to SES emails from no-reply@rultor.com to yegor@tpc2.com accessed with `AKIAILC3456OKMYSCO7A` with `emailBody` as `Hi dude,\n                  \nI just finished the ne..128..()}\n                  \n--\nYours,\nRultor.com` with `html` published in `AKIAILC3456OKMYSCO7A` at `published/` and saved to `URL` with `html` as `&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n  &lt;head&gt;\n    &lt;link media=\"a..385..{stdout}&lt;/pre&gt;\n    &lt;/div&gt;\n  &lt;/body&gt;\n&lt;/html&gt;` with `title` as `${title} https://github.com/tpc2/phprack.git`</summary>
                     </step>
                 </steps>
             </snapshot>

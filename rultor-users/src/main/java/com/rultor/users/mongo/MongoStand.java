@@ -310,11 +310,16 @@ final class MongoStand implements Stand {
                 return new Pulse() {
                     @Override
                     public String xembly() throws IOException {
-                        return MongoStand.decode(
-                            cursor.next().get(
-                                MongoStand.ATTR_XEMBLY
-                            ).toString()
-                        );
+                        final DBObject next = cursor.next();
+                        final String xembly = next
+                            .get(MongoStand.ATTR_XEMBLY).toString();
+                        return new StringBuilder()
+                            .append(MongoStand.decode(xembly))
+                            .append("XPATH '/snapshot'; ADDIF 'updated';")
+                            .append("SET '")
+                            .append(next.get(MongoStand.ATTR_UPDATED))
+                            .append("';")
+                            .toString();
                     }
                     @Override
                     public InputStream stream() throws IOException {

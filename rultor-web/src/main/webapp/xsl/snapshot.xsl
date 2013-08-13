@@ -30,6 +30,23 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:template match="snapshot">
+        <style><![CDATA[
+            .step-item {
+                font-size: 90%;
+                position: relative;
+                color: #ccc;
+            }
+            .step-finished {
+                border-bottom: 2px solid #ccc;
+            }
+            .step {
+                position: absolute;
+                top: 0;
+                left: 0;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+        ]]></style>
         <xsl:if test="tags/tag">
             <ul class="list-inline">
                 <xsl:apply-templates select="tags/tag"/>
@@ -171,46 +188,64 @@
     <xsl:template match="step">
         <li>
             <xsl:attribute name="class">
-                <xsl:choose>
-                    <xsl:when test="level = 'INFO'">
-                        <xsl:text>text-success</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="level = 'WARNING'">
-                        <xsl:text>text-warning</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="level = 'SEVERE'">
-                        <xsl:text>text-danger</xsl:text>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:text>text-muted</xsl:text>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:text>step-item</xsl:text>
+                <xsl:if test="finish">
+                    <xsl:text> step-finished</xsl:text>
+                </xsl:if>
             </xsl:attribute>
-            <xsl:choose>
-                <xsl:when test="exception">
-                    <i class="icon-warning-sign"><xsl:comment>exception</xsl:comment></i>
-                </xsl:when>
-                <xsl:when test="finish">
-                    <i class="icon-check"><xsl:comment>done</xsl:comment></i>
-                </xsl:when>
-                <xsl:when test="start">
-                    <i class="icon-spinner"><xsl:comment>progress</xsl:comment></i>
-                </xsl:when>
-                <xsl:otherwise>
-                    <i class="icon-check-empty"><xsl:comment>waiting</xsl:comment></i>
-                </xsl:otherwise>
-            </xsl:choose>
-            <xsl:text> </xsl:text>
-            <span class="markdown">
-                <xsl:value-of select="summary"/>
-            </span>
-            <xsl:if test="exception">
-                <xsl:text> (</xsl:text>
-                <span class="markdown">
-                    <xsl:value-of select="exception"/>
+            <xsl:attribute name="style">
+                <xsl:text>margin-left:</xsl:text>
+                <xsl:value-of select="100 * start/@at"/>
+                <xsl:text>%;</xsl:text>
+                <xsl:if test="finish">
+                    <xsl:text>max-width:</xsl:text>
+                    <xsl:value-of select="100 * (finish/@at - start/@at)"/>
+                    <xsl:text>%;</xsl:text>
+                </xsl:if>
+            </xsl:attribute>
+            <i class="icon-chevron-right" style="margin-left:-1em;"><xsl:comment>start</xsl:comment></i>
+            <div class="step">
+                <xsl:if test="exception">
+                    <i class="text-danger icon-warning-sign"><xsl:comment>exception</xsl:comment></i>
+                    <xsl:text> </xsl:text>
+                </xsl:if>
+                <xsl:variable name="title">
+                    <xsl:value-of select="summary"/>
+                    <xsl:if test="exception">
+                        <xsl:text> (</xsl:text>
+                        <xsl:value-of select="exception"/>
+                        <xsl:text>)</xsl:text>
+                    </xsl:if>
+                </xsl:variable>
+                <span>
+                    <xsl:attribute name="class">
+                        <xsl:text>markdown </xsl:text>
+                        <xsl:choose>
+                            <xsl:when test="level = 'INFO'">
+                                <xsl:text>text-success</xsl:text>
+                            </xsl:when>
+                            <xsl:when test="level = 'WARNING'">
+                                <xsl:text>text-warning</xsl:text>
+                            </xsl:when>
+                            <xsl:when test="level = 'SEVERE'">
+                                <xsl:text>text-danger</xsl:text>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:text>text-muted</xsl:text>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:attribute>
+                    <xsl:choose>
+                        <xsl:when test="string-length($title) &gt; 100">
+                            <xsl:value-of select="substring($title,1,100)"/>
+                            <xsl:text>&#8230;</xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="$title"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </span>
-                <xsl:text>)</xsl:text>
-            </xsl:if>
+            </div>
         </li>
     </xsl:template>
     <xsl:template match="tag">
@@ -253,8 +288,8 @@
             <xsl:attribute name="style">
                 <xsl:text>width:</xsl:text>
                 <xsl:choose>
-                    <xsl:when test="$snapshot/start and $snapshot/eta">
-                        <xsl:text>15</xsl:text>
+                    <xsl:when test="$snapshot/eta and updated">
+                        <xsl:value-of select="updated/@at * 100"/>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:text>50</xsl:text>
@@ -265,5 +300,9 @@
             <!-- this is for W3C compliance -->
             <xsl:text> </xsl:text>
         </div>
+    </xsl:template>
+    <xsl:template name="ISO-to-milliseconds">
+        <xsl:param name="iso" as="xs:string"/>
+        <xsl:value-of select="$iso"/>
     </xsl:template>
 </xsl:stylesheet>
