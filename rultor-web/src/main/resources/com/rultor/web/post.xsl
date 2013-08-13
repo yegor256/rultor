@@ -39,10 +39,21 @@
         <!-- @see http://stackoverflow.com/questions/15345457 -->
         <xsl:value-of select="(xs:dateTime($iso) - xs:dateTime('1970-01-01T00:00:00Z')) div xs:dayTimeDuration('PT1S')" />
     </xsl:function>
+    <xsl:function name="r:cap" as="xs:integer">
+        <xsl:param name="iso" as="xs:string"/>
+        <!-- @see http://stackoverflow.com/questions/15345457 -->
+        <xsl:value-of select="(xs:dateTime($iso) - xs:dateTime('1970-01-01T00:00:00Z')) div xs:dayTimeDuration('PT1S')" />
+    </xsl:function>
     <xsl:variable name="start">
         <xsl:choose>
             <xsl:when test="/snapshot/start">
                 <xsl:value-of select="r:epoch(/snapshot/start)" />
+            </xsl:when>
+            <xsl:when test="/snapshot/steps/step/start">
+                <xsl:value-of select="r:epoch(/snapshot/steps/step/start)" />
+            </xsl:when>
+            <xsl:when test="/snapshot/steps/step/finish">
+                <xsl:value-of select="r:epoch(/snapshot/steps/step/finish)" />
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="r:epoch('1970-01-01T00:00:00Z')" />
