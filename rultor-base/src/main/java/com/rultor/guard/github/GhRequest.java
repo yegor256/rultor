@@ -57,6 +57,7 @@ import org.xembly.ImpossibleModificationException;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @EqualsAndHashCode(of = { "github", "repository", "parameters" })
@@ -166,7 +167,7 @@ final class GhRequest implements MergeRequest {
         svc.merge(
             this.repository, this.issue,
             String.format(
-                "Tested, looks correct:\n\n```\n%s\n```",
+                "Tested, no problems found, merging...\n\n```\n%s\n```",
                 this.summary(snapshot)
             )
         );
@@ -204,7 +205,7 @@ final class GhRequest implements MergeRequest {
                         this.getClass().getResourceAsStream("summary.xsl")
                     ).dom()
                 )
-            ).toString();
+            ).xpath("/text/text()").get(0);
         } catch (TransformerException ex) {
             throw new IllegalStateException(ex);
         } catch (ImpossibleModificationException ex) {

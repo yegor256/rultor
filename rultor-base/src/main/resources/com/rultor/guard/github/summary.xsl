@@ -33,12 +33,14 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:r="http://www.rultor.com"
     exclude-result-prefixes="xs">
-    <xsl:output method="text"/>
+    <xsl:output method="xml"/>
     <xsl:template match="/snapshot">
-        <xsl:text>some details of the build snapshot:&#x0A;</xsl:text>
-        <xsl:if test="products/product[name='stdout']">
-            <xsl:text>stdout: </xsl:text>
-            <xsl:value-of select="products/product[name='stdout']/markdown"/>
-        </xsl:if>
+        <text>
+            <xsl:text>some details of the build snapshot:&#x0A;</xsl:text>
+            <xsl:if test="products/product[name='stdout']">
+                <xsl:text>stdout: </xsl:text>
+                <xsl:value-of select="products/product[name='stdout']/markdown"/>
+            </xsl:if>
+        </text>
     </xsl:template>
 </xsl:stylesheet>
