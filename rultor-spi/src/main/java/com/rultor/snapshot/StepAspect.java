@@ -100,6 +100,7 @@ public final class StepAspect {
                 .add("summary")
                 .set(before)
         ).log();
+        final long start = System.currentTimeMillis();
         try {
             final Object result = point.proceed();
             if (result != null) {
@@ -129,7 +130,9 @@ public final class StepAspect {
                 new Directives()
                     .xpath(String.format("/snapshot/steps/step[@id=%s]", label))
                     .strict(1)
-                    .add("finish").set(new Time().toString())
+                    .add("finish").set(new Time().toString()).up()
+                    .add("duration")
+                    .set(Long.toString(System.currentTimeMillis() - start))
             ).log();
         }
     }
