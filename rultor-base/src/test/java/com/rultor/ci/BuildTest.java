@@ -71,6 +71,7 @@ public final class BuildTest {
                             new Directives()
                                 .xpath("/snapshot")
                                 .add("test")
+                                .set("привет")
                         )
                     );
                     stdout.close();
@@ -85,7 +86,7 @@ public final class BuildTest {
         final Build build = new Build(batch);
         MatcherAssert.assertThat(
             build.exec(new ImmutableMap.Builder<String, Object>().build()),
-            XhtmlMatchers.hasXPath("/snapshot/test")
+            XhtmlMatchers.hasXPath("/snapshot[test='привет']")
         );
     }
 
