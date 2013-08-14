@@ -43,6 +43,7 @@ import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -178,7 +179,8 @@ public final class DirectoryDrain implements Drain {
                 String.format(
                     "DirectoryDrain: work='%s', ftp='%s@%s:%d'\n",
                     this.work, this.login, this.host, this.port
-                )
+                ),
+                CharEncoding.UTF_8
             ),
             this.file().read()
         );

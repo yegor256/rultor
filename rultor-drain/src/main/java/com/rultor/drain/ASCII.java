@@ -43,6 +43,7 @@ import java.io.SequenceInputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
  * ASCII command codes sensitive.
@@ -118,7 +119,8 @@ public final class ASCII implements Drain {
                 String.format(
                     "ASCII: origin='%s'\n",
                     this.origin
-                )
+                ),
+                CharEncoding.UTF_8
             ),
             this.origin.read()
         );

@@ -42,6 +42,7 @@ import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
  * Bash batch.
@@ -111,13 +112,17 @@ public final class Prerequisites implements Shells {
      * Convert it to input stream.
      * @param object Object
      * @return Input stream
+     * @throws IOException If fails
      */
-    private static InputStream toInputStream(final Object object) {
+    private static InputStream toInputStream(final Object object)
+        throws IOException {
         final InputStream stream;
         if (object instanceof InputStream) {
             stream = InputStream.class.cast(object);
         } else {
-            stream = IOUtils.toInputStream(object.toString());
+            stream = IOUtils.toInputStream(
+                object.toString(), CharEncoding.UTF_8
+            );
         }
         return stream;
     }

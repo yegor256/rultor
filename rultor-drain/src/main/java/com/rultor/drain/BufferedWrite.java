@@ -50,6 +50,7 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -168,7 +169,8 @@ public final class BufferedWrite implements Drain {
                     this.lifetime,
                     this.work,
                     this.origin
-                )
+                ),
+                CharEncoding.UTF_8
             ),
             this.origin.read()
         );

@@ -40,6 +40,7 @@ import java.io.SequenceInputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
  * Drain with a trail.
@@ -116,7 +117,8 @@ public final class Tailed implements Drain {
                     "Tailed: main='%s', tail='%s'\n",
                     this.main,
                     this.tail
-                )
+                ),
+                CharEncoding.UTF_8
             ),
             this.main.read()
         );

@@ -45,6 +45,7 @@ import java.util.Arrays;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.Validate;
 import org.xembly.Directives;
 
@@ -144,7 +145,8 @@ public final class LinesSensor implements Drain {
                 String.format(
                     "LinesSensor: spinbox=%s%n",
                     this.spinbox
-                )
+                ),
+                CharEncoding.UTF_8
             ),
             this.origin.read()
         );

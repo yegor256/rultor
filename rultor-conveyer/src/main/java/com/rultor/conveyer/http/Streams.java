@@ -30,6 +30,7 @@
 package com.rultor.conveyer.http;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -64,7 +65,8 @@ public interface Streams extends Closeable {
      * Read stream by key (wait until it becomes available).
      * @param key Authentication key
      * @return Stream with data
+     * @throws IOException If fails
      */
-    InputStream stream(String key);
+    InputStream stream(String key) throws IOException;
 
 }

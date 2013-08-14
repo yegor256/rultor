@@ -43,6 +43,7 @@ import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
  * HTTP thread.
@@ -95,7 +96,10 @@ final class HttpThread {
         final Socket socket = this.sockets.take();
         try {
             final BufferedReader reader = new BufferedReader(
-                new InputStreamReader(socket.getInputStream())
+                new InputStreamReader(
+                    socket.getInputStream(),
+                    CharEncoding.UTF_8
+                )
             );
             final String top = reader.readLine();
             if (top != null) {

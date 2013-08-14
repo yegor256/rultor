@@ -40,6 +40,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.CharEncoding;
 import org.w3c.dom.Document;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -147,7 +148,7 @@ public final class Snapshot {
     private static String fetch(final InputStream stream)
         throws IOException, XemblySyntaxException {
         final BufferedReader reader = new BufferedReader(
-            new InputStreamReader(stream)
+            new InputStreamReader(stream, CharEncoding.UTF_8)
         );
         final StringBuilder buf = new StringBuilder();
         while (true) {

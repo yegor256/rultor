@@ -51,6 +51,7 @@ import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
  * Temporary in memory.
@@ -175,7 +176,8 @@ public final class Temporary implements Drain {
                     this.marker,
                     this.work,
                     buffer
-                )
+                ),
+                CharEncoding.UTF_8
             ),
             buffer.read()
         );

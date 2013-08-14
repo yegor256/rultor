@@ -208,7 +208,8 @@ public final class ObjectDrain implements Drain {
                         FileUtils.byteCountToDisplaySize(
                             object.getObjectMetadata().getContentLength()
                         )
-                    )
+                    ),
+                    CharEncoding.UTF_8
                 ),
                 new ObjectDrain.Wrap(object.getObjectContent(), aws)
             );
@@ -229,7 +230,8 @@ public final class ObjectDrain implements Drain {
                     "ObjectDrain: key='%s', client='%s'\n",
                     this.key,
                     this.client
-                )
+                ),
+                CharEncoding.UTF_8
             ),
             stream
         );

@@ -32,6 +32,7 @@ package com.rultor.drain;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Work;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -54,7 +55,9 @@ public final class BufferedReadTest {
         final Work work = new Work.Simple();
         final Drain drain = Mockito.mock(Drain.class);
         final String text = "\u20ac\n\n\n test \u0433";
-        Mockito.doReturn(IOUtils.toInputStream(text)).when(drain).read();
+        Mockito.doReturn(
+            IOUtils.toInputStream(text, CharEncoding.UTF_8)
+        ).when(drain).read();
         MatcherAssert.assertThat(
             IOUtils.toString(new BufferedRead(work, 2, drain).read()),
             Matchers.containsString(text)

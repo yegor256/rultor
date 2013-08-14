@@ -153,7 +153,8 @@ public final class Standed implements Drain {
                 String.format(
                     "Standed: stand='%s'\n",
                     this.stand
-                )
+                ),
+                CharEncoding.UTF_8
             ),
             this.origin.read()
         );

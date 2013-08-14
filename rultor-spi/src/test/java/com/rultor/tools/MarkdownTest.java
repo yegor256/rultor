@@ -47,9 +47,9 @@ public final class MarkdownTest {
     @Test
     public void convertsToHtml() throws Exception {
         MatcherAssert.assertThat(
-            new Markdown("`it` [is](x) & \u20ac **b**").html(),
+            new Markdown("`i` [y](x) & \u20ac **b**").html(),
             Matchers.equalTo(
-                "<code>it</code> <a href='x'>is</a> &amp; € <strong>b</strong>"
+                "<code>i</code> <a href='x'>y</a> &amp; € <strong>b</strong>"
             )
         );
     }

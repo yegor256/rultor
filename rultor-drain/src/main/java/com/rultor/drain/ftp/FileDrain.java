@@ -45,6 +45,7 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -151,7 +152,8 @@ public final class FileDrain implements Drain {
                     "FileDrain: %s, file='%s'\n\n",
                     this.batch,
                     this.file
-                )
+                ),
+                CharEncoding.UTF_8
             ),
             this.batch.exec(
                 new FtpBatch.Script<InputStream>() {
@@ -222,11 +224,13 @@ public final class FileDrain implements Drain {
      * @param lines Lines to pack
      * @return Input stream
      */
-    private InputStream toStream(final Iterable<String> lines) {
+    private InputStream toStream(final Iterable<String> lines)
+        throws IOException {
         return IOUtils.toInputStream(
             new StringBuilder(
                 StringUtils.join(Lists.newLinkedList(lines), "\n")
-            ).append('\n')
+            ).append('\n'),
+            CharEncoding.UTF_8
         );
     }
 

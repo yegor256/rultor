@@ -30,6 +30,7 @@
 package com.rultor.snapshot;
 
 import com.rexsl.test.XhtmlMatchers;
+import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -65,7 +66,8 @@ public final class SnapshotTest {
                         ).toString()
                     )
                     .append("\nHow are you?\n")
-                    .toString()
+                    .toString(),
+                CharEncoding.UTF_8
             )
         ).apply(dom);
         MatcherAssert.assertThat(
