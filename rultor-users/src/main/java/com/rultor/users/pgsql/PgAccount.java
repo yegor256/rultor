@@ -87,7 +87,7 @@ final class PgAccount implements Account {
             return new Dollars(
                 new JdbcSession(this.client.get())
                     // @checkstyle LineLength (1 line)
-                    .sql("SELECT SUM(CASE WHEN dt = ? THEN amount ELSE -amount END) FROM receipt WHERE dt=? OR ct=?")
+                    .sql("SELECT SUM(CASE WHEN dt=? THEN amount ELSE -amount END) FROM receipt WHERE dt=? OR ct=?")
                     .set(this.owner)
                     .set(this.owner)
                     .set(this.owner)

@@ -54,6 +54,7 @@ import com.rultor.spi.Spec;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
+import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.net.URI;
@@ -138,7 +139,6 @@ public class BaseRs extends BaseResource {
         // @checkstyle AnonInnerLength (50 lines)
         return new Inset() {
             @Override
-            @Timeable
             public void render(final BasePage<?, ?> page,
                 final Response.ResponseBuilder builder) {
                 if (!BaseRs.this.auth().identity().equals(Identity.ANONYMOUS)) {
@@ -154,7 +154,7 @@ public class BaseRs extends BaseResource {
                     page.append(
                         new JaxbBundle(
                             "balance",
-                            BaseRs.this.user().account().balance().toString()
+                            BaseRs.this.balance().toString()
                         )
                     );
                 }
@@ -321,6 +321,15 @@ public class BaseRs extends BaseResource {
                 throw new UnsupportedOperationException();
             }
         };
+    }
+
+    /**
+     * Get balance of the current user.
+     * @return His balance
+     */
+    @Timeable
+    private Dollars balance() {
+        return this.user().account().balance();
     }
 
 }
