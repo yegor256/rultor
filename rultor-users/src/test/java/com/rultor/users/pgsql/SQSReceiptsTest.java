@@ -35,6 +35,8 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.rultor.aws.SQSClient;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -88,8 +90,10 @@ public final class SQSReceiptsTest {
                 new Message().withBody("this is not a JSON at all")
             )
         ).when(aws).receiveMessage(Mockito.any(ReceiveMessageRequest.class));
-        final SQSReceipts receipts = new SQSReceipts(this.pgsql(), client);
+        final PgClient pgsql = this.pgsql();
+        final SQSReceipts receipts = new SQSReceipts(pgsql, client);
         MatcherAssert.assertThat(receipts.process(), Matchers.equalTo(1));
+        Mockito.verify(pgsql, Mockito.never()).get();
     }
 
     /**
@@ -104,12 +108,14 @@ public final class SQSReceiptsTest {
         Mockito.doReturn(
             new ReceiveMessageResult().withMessages(
                 new Message().withBody(
-                    "{\"test\": \"some irreleval data\"}"
+                    "{\"work\": {\"unit\":\"x\",\"owner\":\"urn:test:1\"}}"
                 )
             )
         ).when(aws).receiveMessage(Mockito.any(ReceiveMessageRequest.class));
-        final SQSReceipts receipts = new SQSReceipts(this.pgsql(), client);
+        final PgClient pgsql = this.pgsql();
+        final SQSReceipts receipts = new SQSReceipts(pgsql, client);
         MatcherAssert.assertThat(receipts.process(), Matchers.equalTo(1));
+        Mockito.verify(pgsql, Mockito.never()).get();
     }
 
     /**
@@ -117,8 +123,13 @@ public final class SQSReceiptsTest {
      * @return Sheet to test
      * @throws Exception If some problem inside
      */
+    @SuppressWarnings("PMD.CloseResource")
     private PgClient pgsql() throws Exception {
+        final PreparedStatement stmt = Mockito.mock(PreparedStatement.class);
         final Connection conn = Mockito.mock(Connection.class);
+        Mockito.doReturn(stmt).when(conn).prepareStatement(
+            Mockito.anyString(), Mockito.eq(Statement.RETURN_GENERATED_KEYS)
+        );
         final DataSource source = Mockito.mock(DataSource.class);
         Mockito.doReturn(conn).when(source).getConnection();
         final PgClient pgsql = Mockito.mock(PgClient.class);

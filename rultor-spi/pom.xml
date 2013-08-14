@@ -52,6 +52,30 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fge</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fge</groupId>
+            <artifactId>json-schema-core</artifactId>
+            <version>1.0.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.json</groupId>
+            <artifactId>javax.json-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk</artifactId>
         </dependency>
@@ -79,7 +103,6 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
@@ -104,4 +127,23 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>qulice</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.ning.maven.plugins</groupId>
+                        <artifactId>maven-duplicate-finder-plugin</artifactId>
+                        <configuration>
+                            <ignoredResources combine.children="append">
+                                <ignoredResource>draftv3/schema</ignoredResource>
+                                <ignoredResource>draftv4/schema</ignoredResource>
+                            </ignoredResources>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

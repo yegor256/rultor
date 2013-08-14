@@ -1,0 +1,45 @@
+{
+    "description": "receipts from wallets",
+    "type":"object",
+    "required": ["work", "ct", "ctunit", "dt", "dtunit", "details", "amount"],
+    "additionalProperties": false,
+    "properties": {
+        "ct": { "$ref": "#/definitions/urn" },
+        "ctunit": { "$ref": "#/definitions/unit" },
+        "dt": { "$ref": "#/definitions/urn" },
+        "dtunit": { "$ref": "#/definitions/unit" },
+        "details": { "type": "string" },
+        "amount": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "work": {
+            "type": "object",
+            "oneOf": [
+                { "$ref": "#/definitions/work" }
+            ]
+        }
+    },
+    "definitions": {
+        "urn": {
+            "type": "string",
+            "pattern": "^urn:[a-z]+:[0-9]+$"
+        },
+        "unit": {
+            "type": "string",
+            "pattern": "^[a-z0-9\\-]+$"
+        },
+        "work": {
+            "properties": {
+                "owner": { "$ref": "#/definitions/urn" },
+                "unit": { "$ref": "#/definitions/unit" },
+                "scheduled": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "required": ["owner", "unit", "scheduled"],
+            "additionalProperties": false
+        }
+    }
+}

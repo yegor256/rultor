@@ -39,14 +39,15 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.jdbc.JdbcSession;
 import com.jcabi.jdbc.VoidHandler;
+import com.jcabi.log.Logger;
 import com.rultor.aws.SQSClient;
+import com.rultor.tools.NormJson;
 import com.rultor.tools.Time;
 import java.io.IOException;
-import java.io.StringReader;
-import javax.json.Json;
 import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Receipts coming from SQS.
@@ -60,6 +61,13 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "client")
 @Loggable(Loggable.DEBUG)
 final class SQSReceipts {
+
+    /**
+     * JSON schema-based reader.
+     */
+    private static final NormJson NORM = new NormJson(
+        SQSReceipts.class.getResourceAsStream("receipt.json")
+    );
 
     /**
      * Mongo container.
@@ -97,26 +105,28 @@ final class SQSReceipts {
                 .withMaxNumberOfMessages(Tv.TEN)
         );
         for (Message msg : result.getMessages()) {
-            aws.deleteMessage(
-                new DeleteMessageRequest()
-                    .withQueueUrl(this.queue.url())
-                    .withReceiptHandle(this.process(msg))
-            );
+            try {
+                this.process(SQSReceipts.NORM.readObject(msg.getBody()));
+            } catch (NormJson.JsonException ex) {
+                Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+            } finally {
+                aws.deleteMessage(
+                    new DeleteMessageRequest()
+                        .withQueueUrl(this.queue.url())
+                        .withReceiptHandle(msg.getReceiptHandle())
+                );
+            }
         }
         aws.shutdown();
         return result.getMessages().size();
     }
 
     /**
-     * Process one message in JSON format.
-     * @param msg Message
-     * @return Receipt handle
+     * Process one JSON message.
+     * @param json Message in JSON
      * @throws IOException If fails
      */
-    private String process(final Message msg) throws IOException {
-        final JsonObject json = Json.createReader(
-            new StringReader(msg.getBody())
-        ).readObject();
+    private void process(final JsonObject json) throws IOException {
         final JsonObject work = json.getJsonObject("work");
         new JdbcSession(this.client.get())
             // @checkstyle LineLength (1 line)
@@ -131,7 +141,6 @@ final class SQSReceipts {
             .set(json.getString("details"))
             .set(json.getJsonNumber("amount").longValue())
             .insert(new VoidHandler());
-        return msg.getReceiptHandle();
     }
 
 }
