@@ -58,7 +58,7 @@ public interface Queue {
      * Pull the next available work (waits until it is available).
      * @param limit How many time units to wait for, maximum
      * @param unit Time unit
-     * @return The work available or Work.None
+     * @return The work available or Work.None if nothing is available now
      * @throws InterruptedException If interrupted while waiting
      */
     @NotNull(message = "work is never NULL")

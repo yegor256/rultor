@@ -47,17 +47,17 @@ import com.rultor.aws.SQSClient;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Work;
+import com.rultor.tools.NormJson;
 import com.rultor.tools.Time;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.concurrent.TimeUnit;
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.json.stream.JsonGenerator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Queue in Amazon SQS.
@@ -73,6 +73,13 @@ import lombok.ToString;
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.ExcessiveImports")
 public final class SQSQueue implements Queue {
+
+    /**
+     * JSON schema-based reader.
+     */
+    private static final NormJson NORM = new NormJson(
+        SQSQueue.class.getResourceAsStream("work.json")
+    );
 
     /**
      * JSON key.
@@ -92,7 +99,7 @@ public final class SQSQueue implements Queue {
     /**
      * JSON key.
      */
-    private static final String KEY_STARTED = "scheduled";
+    private static final String KEY_SCHEDULED = "scheduled";
 
     /**
      * SQS client.
@@ -149,38 +156,51 @@ public final class SQSQueue implements Queue {
     public Work pull(final int limit,
         @NotNull(message = "unit can't be NULL") final TimeUnit unit)
         throws InterruptedException {
-        final AmazonSQS aws = this.client.get();
+        final long start = System.currentTimeMillis();
         Work work;
+        while (true) {
+            final long delay = System.currentTimeMillis() - start;
+            if (delay > unit.toMillis(limit)) {
+                work = new Work.None();
+                break;
+            }
+            work = this.fetch((int) unit.toSeconds(limit));
+            if (!work.equals(new Work.None())) {
+                break;
+            }
+            TimeUnit.SECONDS.sleep(Tv.FIVE);
+        }
+        return work;
+    }
+
+    /**
+     * Fetch next available work or NONE if nothing found.
+     * @param sec Seconds to wait
+     * @return Work or Work.None
+     */
+    private Work fetch(final int sec) {
+        final AmazonSQS aws = this.client.get();
+        Work work = new Work.None();
         try {
-            final ReceiveMessageRequest request = new ReceiveMessageRequest()
-                .withQueueUrl(this.client.url())
-                .withMaxNumberOfMessages(1)
-                .withWaitTimeSeconds((int) unit.toSeconds(limit));
-            ReceiveMessageResult result;
-            final long start = System.currentTimeMillis();
-            while (true) {
-                final long delay = System.currentTimeMillis() - start;
-                if (delay > unit.toMillis(limit)) {
-                    work = new Work.None();
-                    break;
-                }
-                result = aws.receiveMessage(request);
-                if (!result.getMessages().isEmpty()) {
-                    final Message msg = result.getMessages().get(0);
+            final ReceiveMessageResult result = aws.receiveMessage(
+                new ReceiveMessageRequest()
+                    .withQueueUrl(this.client.url())
+                    .withMaxNumberOfMessages(1)
+                    .withWaitTimeSeconds(sec)
+            );
+            if (!result.getMessages().isEmpty()) {
+                final Message msg = result.getMessages().get(0);
+                try {
+                    work = SQSQueue.unserialize(msg.getBody());
+                } catch (NormJson.JsonException ex) {
+                    Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+                } finally {
                     aws.deleteMessage(
                         new DeleteMessageRequest()
                             .withQueueUrl(this.client.url())
                             .withReceiptHandle(msg.getReceiptHandle())
                     );
-                    Logger.debug(
-                        this,
-                        "#pull(): SQS message %s received",
-                        msg.getMessageId()
-                    );
-                    work = SQSQueue.unserialize(msg.getBody());
-                    break;
                 }
-                TimeUnit.SECONDS.sleep(Tv.FIVE);
             }
         } finally {
             aws.shutdown();
@@ -198,7 +218,7 @@ public final class SQSQueue implements Queue {
         final JsonGenerator generator = Json.createGenerator(writer);
         generator.writeStartObject()
             .write(SQSQueue.KEY_OWNER, work.owner().toString())
-            .write(SQSQueue.KEY_STARTED, work.scheduled().toString())
+            .write(SQSQueue.KEY_SCHEDULED, work.scheduled().toString())
             .write(SQSQueue.KEY_UNIT, work.unit())
             .write(SQSQueue.KEY_SPEC, work.spec().asText())
             .writeEnd()
@@ -210,15 +230,17 @@ public final class SQSQueue implements Queue {
      * Un-serialize text to work.
      * @param text Text to un-serialize
      * @return Work
+     * @throws NormJson.JsonException If can't parse it
+     * @checkstyle RedundantThrows (5 lines)
      */
-    private static Work unserialize(final String text) {
-        final JsonReader reader = Json.createReader(new StringReader(text));
-        final JsonObject object = reader.readObject();
+    private static Work unserialize(final String text)
+        throws NormJson.JsonException {
+        final JsonObject object = SQSQueue.NORM.readObject(text);
         return new Work.Simple(
             URN.create(object.getString(SQSQueue.KEY_OWNER)),
             object.getString(SQSQueue.KEY_UNIT),
             new Spec.Simple(object.getString(SQSQueue.KEY_SPEC)),
-            new Time(object.getString(SQSQueue.KEY_STARTED))
+            new Time(object.getString(SQSQueue.KEY_SCHEDULED))
         );
     }
 
