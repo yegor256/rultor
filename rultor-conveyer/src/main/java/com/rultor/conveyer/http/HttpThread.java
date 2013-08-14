@@ -33,6 +33,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -140,10 +141,27 @@ final class HttpThread {
         } else if (query.isEmpty()) {
             writer.println(this.streams.toString());
         } else {
-            IOUtils.copy(this.streams.stream(query), output);
+            HttpThread.copy(this.streams.stream(query), output);
         }
         writer.flush();
         writer.close();
+    }
+
+    /**
+     * Copy input stream to output stream without any buffering.
+     * @param input Input stream
+     * @param output Output stream
+     * @throws IOException If fails
+     */
+    private static void copy(final InputStream input,
+        final OutputStream output) throws IOException {
+        while (true) {
+            final int data = input.read();
+            if (data == -1) {
+                break;
+            }
+            output.write(data);
+        }
     }
 
 }
