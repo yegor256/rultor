@@ -119,6 +119,7 @@ public final class NormJson {
      * @return Object found there
      * @throws NormJson.JsonException If fails
      */
+    @Loggable(value = Loggable.DEBUG, ignore = NormJson.JsonException.class)
     public JsonObject readObject(final String json)
         throws NormJson.JsonException {
         final ProcessingReport report;
