@@ -34,7 +34,6 @@ import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
 import com.rultor.shell.Batch;
 import com.rultor.spi.Instance;
-import com.rultor.stateful.Notepad;
 import java.util.Arrays;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -56,10 +55,9 @@ public final class OnCommitTest {
         Mockito.doReturn("master").when(branch).name();
         final Commit commit = Mockito.mock(Commit.class);
         Mockito.doReturn(Arrays.asList(commit)).when(branch).log();
-        final Notepad notepad = Mockito.mock(Notepad.class);
         final Batch batch = Mockito.mock(Batch.class);
         final Billboard board = Mockito.mock(Billboard.class);
-        final Instance instance = new OnCommit(branch, notepad, batch, board);
+        final Instance instance = new OnCommit(branch, batch, board);
         instance.pulse();
     }
 

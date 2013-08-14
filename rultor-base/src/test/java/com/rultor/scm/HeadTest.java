@@ -27,39 +27,37 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.guard;
+package com.rultor.scm;
 
-import com.jcabi.aspects.Immutable;
-import com.rultor.snapshot.Snapshot;
-import java.util.Map;
+import java.util.Arrays;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Pull request.
- *
+ * Test case for {@link Head}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-public interface MergeRequest {
+public final class HeadTest {
 
     /**
-     * Unique name of the request.
-     * @return Name of it
+     * Head can return the first commit only.
+     * @throws Exception If some problem inside
      */
-    String name();
-
-    /**
-     * Optional parameters.
-     * @return Map of parameters
-     */
-    Map<String, Object> params();
-
-    /**
-     * Notify when merging is done (successfully or not).
-     * @param code Execution code (only zero means success)
-     * @param snapshot Snapshot
-     */
-    void notify(int code, Snapshot snapshot);
+    @Test
+    public void returnsFirstCommit() throws Exception {
+        final Branch origin = Mockito.mock(Branch.class);
+        Mockito.doReturn(
+            Arrays.asList(
+                Mockito.mock(Commit.class), Mockito.mock(Commit.class)
+            )
+        ).when(origin).log();
+        MatcherAssert.assertThat(
+            new Head(origin).log(),
+            Matchers.<Commit>iterableWithSize(1)
+        );
+    }
 
 }

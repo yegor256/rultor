@@ -40,11 +40,11 @@ import com.rultor.shell.Batch;
 import com.rultor.snapshot.Step;
 import com.rultor.snapshot.Tag;
 import com.rultor.spi.Instance;
-import com.rultor.stateful.Notepad;
 import java.io.IOException;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.xembly.ImpossibleModificationException;
 
 /**
  * Build on every new commit.
@@ -54,7 +54,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "branch", "notepad", "batch", "board" })
+@EqualsAndHashCode(of = { "branch", "batch", "board" })
 @Loggable(Loggable.DEBUG)
 public final class OnCommit implements Instance {
 
@@ -62,11 +62,6 @@ public final class OnCommit implements Instance {
      * Branch to monitor.
      */
     private final transient Branch branch;
-
-    /**
-     * Notepad where to track all commits.
-     */
-    private final transient Notepad notepad;
 
     /**
      * Batch to execute.
@@ -81,18 +76,14 @@ public final class OnCommit implements Instance {
     /**
      * Public ctor.
      * @param brn Branch
-     * @param ntp Notepad
      * @param btch Batch to use
      * @param brd The board where to announce
-     * @checkstyle ParameterNumber (9 lines)
      */
     public OnCommit(
         @NotNull(message = "branch can't be NULL") final Branch brn,
-        @NotNull(message = "notepad can't be NULL") final Notepad ntp,
         @NotNull(message = "batch can't be NULL") final Batch btch,
         @NotNull(message = "board can't be NULL") final Billboard brd) {
         this.branch = brn;
-        this.notepad = ntp;
         this.batch = btch;
         this.board = brd;
     }
@@ -105,11 +96,7 @@ public final class OnCommit implements Instance {
     public void pulse() throws Exception {
         final Iterator<Commit> commits = this.branch.log().iterator();
         if (commits.hasNext()) {
-            final Commit head = commits.next();
-            if (!this.seen(head)) {
-                this.build(head);
-                this.notepad.add(head.name());
-            }
+            this.build(commits.next());
         }
     }
 
@@ -119,23 +106,9 @@ public final class OnCommit implements Instance {
     @Override
     public String toString() {
         return Logger.format(
-            // @checkstyle LineLength (1 line)
-            "on new commits at %s executes %s and announces through %s, tracks commits at %s",
-            this.branch,
-            this.notepad,
-            this.batch,
-            this.board
+            "on new commits at %s executes %s and announces through %s",
+            this.branch, this.batch, this.board
         );
-    }
-
-    /**
-     * This HEAD commit was seen already?
-     * @param head HEAD commit
-     * @return TRUE if seen
-     * @throws IOException If fails
-     */
-    private boolean seen(final Commit head) throws IOException {
-        return this.notepad.contains(head.name());
     }
 
     /**
@@ -150,14 +123,18 @@ public final class OnCommit implements Instance {
     )
     @Tag("ci")
     private boolean build(final Commit head) throws IOException {
-        return this.announce(
-            new Build(this.batch).exec(
-                new ImmutableMap.Builder<String, Object>()
-                    .put("branch", this.branch.name())
-                    .put("head", head)
-                    .build()
-            )
-        );
+        try {
+            return this.announce(
+                new Build(this.batch).exec(
+                    new ImmutableMap.Builder<String, Object>()
+                        .put("branch", this.branch.name())
+                        .put("head", head)
+                        .build()
+                ).xml()
+            );
+        } catch (ImpossibleModificationException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**

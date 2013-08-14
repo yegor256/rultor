@@ -267,15 +267,13 @@ final class MongoStand implements Stand {
      */
     private Document dom(final String xembly)
         throws Stand.BrokenXemblyException {
-        final Document dom = Snapshot.empty();
         try {
-            new Snapshot(xembly).apply(dom);
+            return new Snapshot(xembly).dom();
         } catch (XemblySyntaxException ex) {
             throw new BrokenXemblyException(ex);
         } catch (ImpossibleModificationException ex) {
             throw new BrokenXemblyException(ex);
         }
-        return dom;
     }
 
     /**

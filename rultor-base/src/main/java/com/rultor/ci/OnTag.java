@@ -27,39 +27,81 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.guard;
+package com.rultor.ci;
 
 import com.jcabi.aspects.Immutable;
-import com.rultor.snapshot.Snapshot;
-import java.util.Map;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
+import com.rultor.board.Billboard;
+import com.rultor.scm.SCM;
+import com.rultor.shell.Batch;
+import com.rultor.spi.Instance;
+import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 
 /**
- * Pull request.
+ * Build on every tag.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface MergeRequest {
+@EqualsAndHashCode(of = { "scm", "batch", "board" })
+@Loggable(Loggable.DEBUG)
+public final class OnTag implements Instance {
 
     /**
-     * Unique name of the request.
-     * @return Name of it
+     * SCM to monitor.
      */
-    String name();
+    private final transient SCM scm;
 
     /**
-     * Optional parameters.
-     * @return Map of parameters
+     * Batch to execute.
      */
-    Map<String, Object> params();
+    private final transient Batch batch;
 
     /**
-     * Notify when merging is done (successfully or not).
-     * @param code Execution code (only zero means success)
-     * @param snapshot Snapshot
+     * Where to notify about success/failure.
      */
-    void notify(int code, Snapshot snapshot);
+    private final transient Billboard board;
+
+    /**
+     * Public ctor.
+     * @param src Source control
+     * @param btch Batch to use
+     * @param brd The board where to announce
+     */
+    public OnTag(
+        @NotNull(message = "scm can't be NULL") final SCM src,
+        @NotNull(message = "batch can't be NULL") final Batch btch,
+        @NotNull(message = "board can't be NULL") final Billboard brd) {
+        this.scm = src;
+        this.batch = btch;
+        this.board = brd;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    public void pulse() throws Exception {
+        new OnCommit(
+            this.scm.checkout(this.scm.branches().iterator().next()),
+            this.batch, this.board
+        ).pulse();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return Logger.format(
+            "on every tag in %s executes %s and announces through %s",
+            this.scm, this.batch, this.board
+        );
+    }
 
 }

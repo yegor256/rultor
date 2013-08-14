@@ -27,39 +27,56 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.guard;
+package com.rultor.scm;
 
-import com.jcabi.aspects.Immutable;
-import com.rultor.snapshot.Snapshot;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+import org.hamcrest.Matcher;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Pull request.
- *
+ * Test case for {@link Edge}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-public interface MergeRequest {
+public final class EdgeTest {
 
     /**
-     * Unique name of the request.
-     * @return Name of it
+     * Edge can return the latest branch only.
+     * @throws Exception If some problem inside
      */
-    String name();
+    @Test
+    @SuppressWarnings("unchecked")
+    public void returnsLatestBranch() throws Exception {
+        final SCM origin = Mockito.mock(SCM.class);
+        final String last = "a-13-alpha";
+        Mockito.doReturn(
+            Arrays.asList("a-0.5.1", "a-0.4", "beta", "g", "", last)
+        ).when(origin).branches();
+        MatcherAssert.assertThat(
+            new Edge(origin).branches(),
+            Matchers.allOf(
+                (Matcher) Matchers.hasSize(1),
+                Matchers.hasItem(last)
+            )
+        );
+    }
 
     /**
-     * Optional parameters.
-     * @return Map of parameters
+     * Edge can gracefully handle empty branches.
+     * @throws Exception If some problem inside
      */
-    Map<String, Object> params();
-
-    /**
-     * Notify when merging is done (successfully or not).
-     * @param code Execution code (only zero means success)
-     * @param snapshot Snapshot
-     */
-    void notify(int code, Snapshot snapshot);
+    @Test
+    public void gracefullyHandlesEmptyListOfBranches() throws Exception {
+        final SCM origin = Mockito.mock(SCM.class);
+        Mockito.doReturn(new ArrayList<String>(0)).when(origin).branches();
+        MatcherAssert.assertThat(
+            new Edge(origin).branches(),
+            Matchers.emptyIterable()
+        );
+    }
 
 }

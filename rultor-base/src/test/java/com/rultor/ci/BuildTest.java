@@ -85,7 +85,8 @@ public final class BuildTest {
             );
         final Build build = new Build(batch);
         MatcherAssert.assertThat(
-            build.exec(new ImmutableMap.Builder<String, Object>().build()),
+            build.exec(new ImmutableMap.Builder<String, Object>().build())
+                .xml(),
             XhtmlMatchers.hasXPath("/snapshot[test='привет']")
         );
     }

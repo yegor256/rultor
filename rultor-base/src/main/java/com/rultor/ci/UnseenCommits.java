@@ -29,62 +29,104 @@
  */
 package com.rultor.ci;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.shell.Batch;
-import com.rultor.snapshot.Snapshot;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import com.jcabi.log.Logger;
+import com.rultor.scm.Branch;
+import com.rultor.scm.Commit;
+import com.rultor.stateful.Notepad;
 import java.io.IOException;
-import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.xembly.XemblySyntaxException;
 
 /**
- * Build.
+ * Returns only one commit, if it wasn't seen before.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = "batch")
+@EqualsAndHashCode(of = { "origin", "notepad" })
 @Loggable(Loggable.DEBUG)
-final class Build {
+public final class UnseenCommits implements Branch {
 
     /**
-     * Batch to execute.
+     * Branch to monitor.
      */
-    private final transient Batch batch;
+    private final transient Branch origin;
+
+    /**
+     * Notepad where to track all commits.
+     */
+    private final transient Notepad notepad;
 
     /**
      * Public ctor.
-     * @param btch Batch to use
+     * @param brn Branch
+     * @param ntp Notepad
      */
-    protected Build(@NotNull(message = "batch can't be NULL")
-        final Batch btch) {
-        this.batch = btch;
+    public UnseenCommits(
+        @NotNull(message = "branch can't be NULL") final Branch brn,
+        @NotNull(message = "notepad can't be NULL") final Notepad ntp) {
+        this.origin = brn;
+        this.notepad = ntp;
     }
 
     /**
-     * Build and return a snapshot/XML.
-     * @param args Arguments to pass to the batch
-     * @return XML of snapshot
-     * @throws IOException If some IO problem
+     * {@inheritDoc}
      */
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    public Snapshot exec(@NotNull(message = "args can't be NULL")
-        final Map<String, Object> args) throws IOException {
-        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
-        this.batch.exec(args, stdout);
+    @Override
+    public String toString() {
+        return Logger.format(
+            "unseen commits of %s tracked in %s",
+            this.origin, this.notepad
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String name() {
+        return this.origin.name();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterable<Commit> log() throws IOException {
+        return Iterables.filter(
+            this.origin.log(),
+            new Predicate<Commit>() {
+                @Override
+                public boolean apply(final Commit commit) {
+                    return !UnseenCommits.this.seen(commit);
+                }
+            }
+        );
+    }
+
+    /**
+     * This HEAD commit was seen already?
+     * @param head HEAD commit
+     * @return TRUE if seen
+     */
+    private boolean seen(final Commit head) {
+        final String name;
         try {
-            return new Snapshot(new ByteArrayInputStream(stdout.toByteArray()));
-        } catch (XemblySyntaxException ex) {
-            throw new IOException(ex);
+            name = head.name();
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
         }
+        final boolean seen = this.notepad.contains(name);
+        if (!seen) {
+            this.notepad.add(name);
+        }
+        return seen;
     }
 
 }

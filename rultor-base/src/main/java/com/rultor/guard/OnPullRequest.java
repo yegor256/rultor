@@ -33,7 +33,6 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
-import com.rexsl.test.SimpleXml;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.Tag;
@@ -44,10 +43,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
-import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
-import org.w3c.dom.Document;
-import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
 
 /**
@@ -140,15 +136,11 @@ public final class OnPullRequest implements Instance {
             stdout
         );
         try {
-            final Snapshot snapshot = new Snapshot(
-                new ByteArrayInputStream(stdout.toByteArray())
+            request.notify(
+                code,
+                new Snapshot(new ByteArrayInputStream(stdout.toByteArray()))
             );
-            final Document dom = Snapshot.empty();
-            snapshot.apply(dom);
-            request.notify(code, new SimpleXml(new DOMSource(dom)).toString());
         } catch (XemblySyntaxException ex) {
-            throw new IOException(ex);
-        } catch (ImpossibleModificationException ex) {
             throw new IOException(ex);
         }
     }
