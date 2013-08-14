@@ -49,13 +49,12 @@ import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
+import com.rultor.tools.NormJson;
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import javax.json.Json;
 import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -71,6 +70,13 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 @EqualsAndHashCode(of = { "users", "client" })
 @SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.ExcessiveImports" })
 public final class SQSPulseSensor implements Runnable, Closeable {
+
+    /**
+     * JSON schema-based reader.
+     */
+    private static final NormJson NORM = new NormJson(
+        SQSPulseSensor.class.getResourceAsStream("pulse.json")
+    );
 
     /**
      * How many threads to use.
@@ -140,11 +146,13 @@ public final class SQSPulseSensor implements Runnable, Closeable {
         );
         for (Message msg : result.getMessages()) {
             try {
-                this.post(msg.getBody());
+                this.post(SQSPulseSensor.NORM.readObject(msg.getBody()));
             } catch (SecurityException ex) {
                 Logger.info(this, ExceptionUtils.getRootCauseMessage(ex));
             // @checkstyle IllegalCatch (1 line)
             } catch (Stand.BrokenXemblyException ex) {
+                Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+            } catch (NormJson.JsonException ex) {
                 Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
             } finally {
                 aws.deleteMessage(
@@ -171,12 +179,10 @@ public final class SQSPulseSensor implements Runnable, Closeable {
      * @throws Stand.BrokenXemblyException If fails
      * @checkstyle RedundantThrows (4 lines)
      */
-    private void post(final String json) throws Stand.BrokenXemblyException {
-        final JsonObject object = Json.createReader(
-            new StringReader(json)
-        ).readObject();
-        final Stand stand = this.users.stand(object.getString("stand"));
-        final String key = object.getString("key");
+    private void post(final JsonObject json)
+        throws Stand.BrokenXemblyException {
+        final Stand stand = this.users.stand(json.getString("stand"));
+        final String key = json.getString("key");
         if (!this.acl(stand).canPost(key)) {
             throw new SecurityException(
                 String.format(
@@ -185,7 +191,7 @@ public final class SQSPulseSensor implements Runnable, Closeable {
                 )
             );
         }
-        final JsonObject work = object.getJsonObject("work");
+        final JsonObject work = json.getJsonObject("work");
         stand.post(
             String.format(
                 "%s:%s:%s",
@@ -193,8 +199,8 @@ public final class SQSPulseSensor implements Runnable, Closeable {
                 work.getString("unit"),
                 work.getString("scheduled")
             ),
-            object.getJsonNumber("nano").longValue(),
-            object.getString("xembly")
+            json.getJsonNumber("nano").longValue(),
+            json.getString("xembly")
         );
     }
 

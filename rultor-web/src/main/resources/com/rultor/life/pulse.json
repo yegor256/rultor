@@ -1,0 +1,44 @@
+{
+    "description": "pulse",
+    "type":"object",
+    "required": ["work", "stand", "key", "nano", "xembly"],
+    "additionalProperties": false,
+    "properties": {
+        "stand": {
+            "type": "string" ,
+            "pattern": "^[a-z0-9\\-]+$"
+        },
+        "key": { "type": "string" },
+        "xembly": { "type": "string" },
+        "nano": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "work": {
+            "type": "object",
+            "oneOf": [
+                { "$ref": "#/definitions/work" }
+            ]
+        }
+    },
+    "definitions": {
+        "work": {
+            "properties": {
+                "owner": {
+                    "type": "string",
+                    "pattern": "^urn:[a-z]+:[0-9]+$"
+                },
+                "unit": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9\\-]+$"
+                },
+                "scheduled": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "required": ["owner", "unit", "scheduled"],
+            "additionalProperties": false
+        }
+    }
+}
