@@ -247,6 +247,12 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </span>
+                <xsl:if test="duration">
+                    <xsl:text> </xsl:text>
+                    <xsl:call-template name="millis">
+                        <xsl:with-param name="millis" select="duration"/>
+                    </xsl:call-template>
+                </xsl:if>
             </span>
             <xsl:if test="not($left)">
                 <i class="icon-chevron-left"><xsl:comment>start</xsl:comment></i>

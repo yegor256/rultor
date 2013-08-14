@@ -136,6 +136,7 @@ SET "some text to set"; STRICT "1";</xembly>
                         <finish at="0.35">2013-08-23T17:57Z</finish>
                         <summary>created EC2 instance `i-09aeb44` of `m1.small` type</summary>
                         <level>INFO</level>
+                        <duration>6597777</duration>
                     </step>
                     <step id="3231982">
                         <start at="0.4">2013-08-23T17:59Z</start>
@@ -143,6 +144,7 @@ SET "some text to set"; STRICT "1";</xembly>
                         <summary>failed to allocate memory</summary>
                         <level>SEVERE</level>
                         <exception>Out of memory</exception>
+                        <duration>65733</duration>
                     </step>
                     <step id="32552">
                         <start at="0.27">2013-08-23T17:59Z</start>
