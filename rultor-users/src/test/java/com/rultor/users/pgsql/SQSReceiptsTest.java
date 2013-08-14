@@ -34,31 +34,20 @@ import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.rultor.aws.SQSClient;
+import java.sql.Connection;
+import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Assume;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Integration case for {@link SQSReceipts}.
+ * Test case for {@link SQSReceipts}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public final class SQSReceiptsITCase {
-
-    /**
-     * JDBC URL.
-     */
-    private static final String URL =
-        System.getProperty("failsafe.pgsql.jdbc");
-
-    /**
-     * JDBC password.
-     */
-    private static final String PASSWORD =
-        System.getProperty("failsafe.pgsql.password");
+public final class SQSReceiptsTest {
 
     /**
      * SQSReceipts can process JSON and post to PostrgreSQL.
@@ -86,15 +75,55 @@ public final class SQSReceiptsITCase {
     }
 
     /**
+     * SQSReceipts can gracefully ignore broken JSON.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void gracefullyIgnoresBrokenJson() throws Exception {
+        final SQSClient client = Mockito.mock(SQSClient.class);
+        final AmazonSQS aws = Mockito.mock(AmazonSQS.class);
+        Mockito.doReturn(aws).when(client).get();
+        Mockito.doReturn(
+            new ReceiveMessageResult().withMessages(
+                new Message().withBody("this is not a JSON at all")
+            )
+        ).when(aws).receiveMessage(Mockito.any(ReceiveMessageRequest.class));
+        final SQSReceipts receipts = new SQSReceipts(this.pgsql(), client);
+        MatcherAssert.assertThat(receipts.process(), Matchers.equalTo(1));
+    }
+
+    /**
+     * SQSReceipts can gracefully ignore incomplete JSON.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void gracefullyIgnoresIncompleteJson() throws Exception {
+        final SQSClient client = Mockito.mock(SQSClient.class);
+        final AmazonSQS aws = Mockito.mock(AmazonSQS.class);
+        Mockito.doReturn(aws).when(client).get();
+        Mockito.doReturn(
+            new ReceiveMessageResult().withMessages(
+                new Message().withBody(
+                    "{\"test\": \"some irreleval data\"}"
+                )
+            )
+        ).when(aws).receiveMessage(Mockito.any(ReceiveMessageRequest.class));
+        final SQSReceipts receipts = new SQSReceipts(this.pgsql(), client);
+        MatcherAssert.assertThat(receipts.process(), Matchers.equalTo(1));
+    }
+
+    /**
      * Get PgSql client.
      * @return Sheet to test
      * @throws Exception If some problem inside
      */
     private PgClient pgsql() throws Exception {
-        Assume.assumeNotNull(SQSReceiptsITCase.URL);
-        return new PgClient.Simple(
-            SQSReceiptsITCase.URL, SQSReceiptsITCase.PASSWORD
-        );
+        final Connection conn = Mockito.mock(Connection.class);
+        final DataSource source = Mockito.mock(DataSource.class);
+        Mockito.doReturn(conn).when(source).getConnection();
+        final PgClient pgsql = Mockito.mock(PgClient.class);
+        Mockito.doReturn(source).when(pgsql).get();
+        return pgsql;
     }
 
 }

@@ -83,10 +83,11 @@ final class SQSReceipts {
 
     /**
      * Fetch and process next portions of them.
+     * @return How many messages were processed
      * @throws IOException If fails
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public void process() throws IOException {
+    public int process() throws IOException {
         final AmazonSQS aws = this.queue.get();
         final ReceiveMessageResult result = aws.receiveMessage(
             new ReceiveMessageRequest()
@@ -103,6 +104,7 @@ final class SQSReceipts {
             );
         }
         aws.shutdown();
+        return result.getMessages().size();
     }
 
     /**
