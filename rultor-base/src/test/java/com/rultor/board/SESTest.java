@@ -74,6 +74,7 @@ public final class SESTest {
                         Matchers.<Message>hasProperty(
                             "subject",
                             Matchers.<Content>hasProperty(
+                                // @checkstyle MultipleStringLiterals (1 line)
                                 "data",
                                 Matchers.equalTo("hello, друг!")
                             )
