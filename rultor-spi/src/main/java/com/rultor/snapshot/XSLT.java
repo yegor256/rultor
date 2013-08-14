@@ -98,10 +98,17 @@ public final class XSLT {
      */
     public XSLT(final Snapshot snapshot, final InputStream stream)
         throws ImpossibleModificationException {
-        final Document dom = Snapshot.empty();
-        snapshot.apply(dom);
-        this.source = new DOMSource(dom);
-        this.xsl = new StreamSource(stream);
+        this(new DOMSource(snapshot.dom()), new StreamSource(stream));
+    }
+
+    /**
+     * Ctor.
+     * @param src Source
+     * @param style Stylesheet
+     */
+    public XSLT(final Source src, final Source style) {
+        this.source = src;
+        this.xsl = style;
     }
 
     /**

@@ -122,6 +122,17 @@ public final class Snapshot {
     }
 
     /**
+     * Make DOM out of it.
+     * @return The DOM
+     * @throws ImpossibleModificationException If can't apply
+     */
+    public Document dom() throws ImpossibleModificationException {
+        final Document dom = Snapshot.empty();
+        this.apply(dom);
+        return dom;
+    }
+
+    /**
      * Apply it to the DOM.
      * @param dom DOM document
      * @throws ImpossibleModificationException If fails at some point

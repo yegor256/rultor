@@ -172,7 +172,7 @@ public final class DrainRsTest {
     @Test
     public void postProcessesEmptySnapshot() throws Exception {
         MatcherAssert.assertThat(
-            this.xml(""),
+            this.xml("XPATH '/';"),
             XhtmlMatchers.hasXPath("/snapshot")
         );
     }
