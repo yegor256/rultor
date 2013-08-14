@@ -134,7 +134,7 @@ public final class Git implements SCM {
      */
     @Override
     @Tag("git")
-    @Step("Git branch ${args[0]} checked out")
+    @Step("Git branch `${args[0]}` checked out")
     public Branch checkout(final String name) throws IOException {
         this.terminal.exec(
             new StringBuilder()

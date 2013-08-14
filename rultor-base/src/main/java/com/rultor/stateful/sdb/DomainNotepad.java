@@ -44,6 +44,7 @@ import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.stateful.Notepad;
 import com.rultor.tools.Dollars;
+import com.rultor.tools.Time;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -78,6 +79,11 @@ public final class DomainNotepad implements Notepad {
      * Attribute name for the text.
      */
     private static final String ATTR_TEXT = "text";
+
+    /**
+     * Attribute name for the text.
+     */
+    private static final String ATTR_TIME = "time";
 
     /**
      * SimpleDB client.
@@ -217,6 +223,10 @@ public final class DomainNotepad implements Notepad {
                     new ReplaceableAttribute()
                         .withName(DomainNotepad.ATTR_UNIT)
                         .withValue(this.work.unit())
+                        .withReplace(true),
+                    new ReplaceableAttribute()
+                        .withName(DomainNotepad.ATTR_TIME)
+                        .withValue(new Time().toString())
                         .withReplace(true)
                 )
         );
