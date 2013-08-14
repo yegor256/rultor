@@ -46,7 +46,7 @@ import org.eclipse.egit.github.core.client.GitHubClient;
  * @version $Id$
  */
 @Immutable
-interface Github {
+public interface Github {
 
     /**
      * Get Github client.

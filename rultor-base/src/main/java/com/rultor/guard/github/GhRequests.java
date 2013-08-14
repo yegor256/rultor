@@ -40,13 +40,10 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.PullRequestService;
 
 /**
@@ -72,33 +69,58 @@ public final class GhRequests implements MergeRequests {
     private final transient Github.Repo repository;
 
     /**
+     * Approval to get.
+     */
+    private final transient Approval approval;
+
+    /**
      * Public ctor.
      * @param user User name
      * @param password Password
      * @param rep Repository name in Github
      */
+    public GhRequests(final String user, final String password,
+        final String rep) {
+        this(
+            new Github.Simple(user, password), new Github.Repo(rep),
+            new Approval.Always()
+        );
+    }
+
+    /**
+     * Public ctor.
+     * @param user User name
+     * @param password Password
+     * @param rep Repository name in Github
+     * @param appr Approval
+     */
     public GhRequests(
-        @NotNull(message = "user name can't be NULL") final String user,
+        @NotNull(message = "user can't be NULL") final String user,
         @NotNull(message = "password can't be NULL") final String password,
-        @NotNull(message = "repository can't be NULL") final String rep) {
-        this(new Github.Simple(user, password), new Github.Repo(rep));
+        @NotNull(message = "repository can't be NULL") final String rep,
+        @NotNull(message = "approval can't be NULL") final Approval appr) {
+        this(new Github.Simple(user, password), new Github.Repo(rep), appr);
     }
 
     /**
      * Public ctor.
      * @param ghub Github
      * @param rep Repository name
+     * @param appr Approval
      */
-    protected GhRequests(final Github ghub, final Github.Repo rep) {
+    protected GhRequests(
+        @NotNull(message = "github can't be NULL") final Github ghub,
+        @NotNull(message = "repo can't be NULL") final Github.Repo rep,
+        @NotNull(message = "approval can't be NULL") final Approval appr) {
         this.github = ghub;
         this.repository = rep;
+        this.approval = appr;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     @Tag("github")
     public Iterator<MergeRequest> iterator() {
         try {
@@ -157,20 +179,12 @@ public final class GhRequests implements MergeRequests {
      * @return Collection of them
      * @throws IOException If fails
      */
-    @Step("${result.size()} out of ${args[0].size()} request(s) are active")
+    @Step("${result.size()} out of ${args[0].size()} request(s) approved")
     private Collection<PullRequest> filter(final Collection<PullRequest> list)
         throws IOException {
         final Collection<PullRequest> requests = new LinkedList<PullRequest>();
-        final GitHubClient client = this.github.client();
-        final IssueService svc = new IssueService(client);
         for (PullRequest request : list) {
-            final List<Comment> comments = svc.getComments(
-                this.repository.user(),
-                this.repository.repo(), request.getNumber()
-            );
-            final Comment last = comments.get(comments.size() - 1);
-            final String author = last.getUser().getLogin();
-            if (!author.equals(this.github.client().getUser())) {
+            if (this.approval.has(request, this.github, this.repository)) {
                 requests.add(request);
             }
         }
