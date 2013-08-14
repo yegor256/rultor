@@ -62,9 +62,9 @@ public final class BuildTest {
             new Answer<Void>() {
                 @Override
                 public Void answer(final InvocationOnMock inv)
-                    throws Throwable {
+                    throws Exception {
                     final PrintWriter stdout = new PrintWriter(
-                        OutputStream.class.cast(inv.getArguments()[1])
+                        OutputStream.class.cast(inv.getArguments()[1]), true
                     );
                     stdout.println(
                         new XemblyLine(
@@ -73,12 +73,15 @@ public final class BuildTest {
                                 .add("test")
                         )
                     );
+                    stdout.close();
                     return null;
                 }
             }
-        ).when(batch).exec(
-            Mockito.any(Map.class), Mockito.any(OutputStream.class)
-        );
+        )
+            .when(batch)
+            .exec(
+                Mockito.any(Map.class), Mockito.any(OutputStream.class)
+            );
         final Build build = new Build(batch);
         MatcherAssert.assertThat(
             build.exec(new ImmutableMap.Builder<String, Object>().build()),

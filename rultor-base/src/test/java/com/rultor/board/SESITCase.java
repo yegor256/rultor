@@ -41,7 +41,7 @@ import org.junit.Test;
 public final class SESITCase {
 
     /**
-     * SES can make environments.
+     * SES can send emails.
      * @throws Exception If some problem inside
      */
     @Test
