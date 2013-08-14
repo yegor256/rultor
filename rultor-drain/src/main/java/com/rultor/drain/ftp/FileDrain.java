@@ -223,6 +223,7 @@ public final class FileDrain implements Drain {
      * Convert lines to an input stream to append.
      * @param lines Lines to pack
      * @return Input stream
+     * @throws IOException If fails
      */
     private InputStream toStream(final Iterable<String> lines)
         throws IOException {
