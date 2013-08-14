@@ -144,6 +144,30 @@ public final class PostSnapshotTest {
     }
 
     /**
+     * PostSnapshot can post-process a snapshot without START.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void postProcessesSnapshotWithoutStart() throws Exception {
+        final Document dom = Snapshot.empty();
+        new Xembler(
+            new Directives()
+                .xpath("/snapshot")
+                .add("steps")
+                .add("step").attr("id", "3")
+                .add("start")
+                .set("2012-08-19T15:30:00Z")
+        ).apply(dom);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(new PostSnapshot(dom).dom()),
+            XhtmlMatchers.hasXPaths(
+                "/snapshot/updated[@at='0']",
+                "/snapshot/steps/step[@id=3]/start[@at='0.4']"
+            )
+        );
+    }
+
+    /**
      * PostSnapshot can post-process an empty snapshot.
      * @throws Exception If some problem inside
      */

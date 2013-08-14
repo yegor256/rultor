@@ -93,6 +93,7 @@ public final class GhRequests implements MergeRequests {
      * @param password Password
      * @param rep Repository name in Github
      * @param appr Approval
+     * @checkstyle ParameterNumber (7 lines)
      */
     public GhRequests(
         @NotNull(message = "user can't be NULL") final String user,

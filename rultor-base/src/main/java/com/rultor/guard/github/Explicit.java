@@ -87,8 +87,6 @@ public final class Explicit implements Approval {
     public boolean has(final PullRequest request, final Github github,
         final Github.Repo repo) throws IOException {
         final Time latest = this.latest(request, github, repo);
-        final GitHubClient client = github.client();
-        final PullRequestService psvc = new PullRequestService(client);
         boolean found = false;
         for (Comment comment : this.comments(request, github, repo)) {
             if (latest.date().compareTo(comment.getUpdatedAt()) > 0) {
@@ -112,6 +110,7 @@ public final class Explicit implements Approval {
      * @param github Github client
      * @param repo Repository to check
      * @return Time of latest commit in this pull request
+     * @throws IOException If fails
      */
     private Collection<Comment> comments(final PullRequest request,
         final Github github, final Github.Repo repo) throws IOException {
@@ -128,14 +127,16 @@ public final class Explicit implements Approval {
      * @param github Github client
      * @param repo Repository to check
      * @return Time of latest commit in this pull request
+     * @throws IOException If fails
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Time latest(final PullRequest request, final Github github,
         final Github.Repo repo) throws IOException {
         final GitHubClient client = github.client();
         final PullRequestService psvc = new PullRequestService(client);
         Time latest = new Time(0);
-        for (RepositoryCommit commit :
-            psvc.getCommits(repo, request.getNumber())) {
+        for (RepositoryCommit commit
+            : psvc.getCommits(repo, request.getNumber())) {
             final Time time = new Time(
                 commit.getCommit().getCommitter().getDate()
             );
