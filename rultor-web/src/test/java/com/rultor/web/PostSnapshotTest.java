@@ -156,7 +156,10 @@ public final class PostSnapshotTest {
                 .add("steps")
                 .add("step").attr("id", "3")
                 .add("start")
-                .set("2012-08-19T15:30:00Z")
+                .set("2012-08-19T15:30:00Z").up().up()
+                .add("step").attr("id", "4")
+                .add("start")
+                .set("2012-08-20T15:30:00Z")
         ).apply(dom);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(new PostSnapshot(dom).dom()),
