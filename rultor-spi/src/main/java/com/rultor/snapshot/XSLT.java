@@ -27,28 +27,33 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor.snapshot;
 
 import com.jcabi.aspects.Loggable;
+import java.io.InputStream;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
+import org.xembly.ImpossibleModificationException;
 
 /**
- * Post processor of a snapshot.
+ * XSLT post processor of a snapshot.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Loggable(Loggable.DEBUG)
-final class PostSnapshot {
+public final class XSLT {
 
     /**
      * Factory.
@@ -57,16 +62,46 @@ final class PostSnapshot {
         TransformerFactory.newInstance();
 
     /**
-     * Original DOM.
+     * Document Factory.
      */
-    private final transient Document origin;
+    private static final DocumentBuilderFactory DFACTORY =
+        DocumentBuilderFactory.newInstance();
+
+    /**
+     * Source.
+     */
+    private final transient Source source;
+
+    /**
+     * XSL.
+     */
+    private final transient Source xsl;
 
     /**
      * Ctor.
-     * @param dom Original DOM
+     * @param snapshot Snapshot
+     * @param text XSL as text
+     * @throws ImpossibleModificationException If can't build
+     * @checkstyle RedundantThrows (5 lines)
      */
-    protected PostSnapshot(final Document dom) {
-        this.origin = dom;
+    public XSLT(final Snapshot snapshot, final String text)
+        throws ImpossibleModificationException {
+        this(snapshot, IOUtils.toInputStream(text, Charsets.UTF_8));
+    }
+
+    /**
+     * Ctor.
+     * @param snapshot Snapshot
+     * @param stream XSL
+     * @throws ImpossibleModificationException If can't build
+     * @checkstyle RedundantThrows (5 lines)
+     */
+    public XSLT(final Snapshot snapshot, final InputStream stream)
+        throws ImpossibleModificationException {
+        final Document dom = Snapshot.empty();
+        snapshot.apply(dom);
+        this.source = new DOMSource(dom);
+        this.xsl = new StreamSource(stream);
     }
 
     /**
@@ -75,26 +110,14 @@ final class PostSnapshot {
      * @throws TransformerException If
      */
     public Document dom() throws TransformerException {
-        final Transformer trans = PostSnapshot.FACTORY.newTransformer(
-            new StreamSource(this.getClass().getResourceAsStream("post.xsl"))
-        );
-        final Document dom = PostSnapshot.empty();
-        trans.transform(new DOMSource(this.origin), new DOMResult(dom));
-        return dom;
-    }
-
-    /**
-     * Get empty DOM.
-     * @return The DOM
-     */
-    private static Document empty() {
+        final Transformer trans = XSLT.FACTORY.newTransformer(this.xsl);
         final Document dom;
         try {
-            dom = DocumentBuilderFactory.newInstance()
-                .newDocumentBuilder().newDocument();
+            dom = XSLT.DFACTORY.newDocumentBuilder().newDocument();
         } catch (ParserConfigurationException ex) {
             throw new IllegalStateException(ex);
         }
+        trans.transform(this.source, new DOMResult(dom));
         return dom;
     }
 

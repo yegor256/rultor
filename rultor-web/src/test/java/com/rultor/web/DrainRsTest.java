@@ -31,11 +31,11 @@ package com.rultor.web;
 
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.snapshot.Snapshot;
+import com.rultor.snapshot.XSLT;
+import javax.xml.transform.Source;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
-import org.w3c.dom.Document;
 import org.xembly.Directives;
-import org.xembly.Xembler;
 
 /**
  * Test case for {@link PostSnapshot}.
@@ -44,7 +44,7 @@ import org.xembly.Xembler;
  * @checkstyle MultipleStringLiterals (500 lines)
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
-public final class PostSnapshotTest {
+public final class DrainRsTest {
 
     /**
      * PostSnapshot can post-process a snapshot with ETA.
@@ -52,30 +52,29 @@ public final class PostSnapshotTest {
      */
     @Test
     public void postProcessesSnapshot() throws Exception {
-        final Document dom = Snapshot.empty();
-        new Xembler(
-            new Directives()
-                .xpath("/snapshot")
-                .add("start")
-                .set("2012-08-23T13:00:00Z")
-                .up()
-                .add("eta")
-                .set("2012-08-23T14:00:00Z")
-                .up()
-                .add("updated")
-                .set("2012-08-23T13:30:00Z")
-                .up()
-                .add("steps")
-                .add("step")
-                .attr("id", "7")
-                .add("start")
-                .set("2012-08-23T13:06:00Z")
-                .up()
-                .add("finish")
-                .set("2012-08-23T13:15:00Z")
-        ).apply(dom);
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(new PostSnapshot(dom).dom()),
+            this.xml(
+                new Directives()
+                    .xpath("/snapshot")
+                    .add("start")
+                    .set("2012-08-23T13:00:00Z")
+                    .up()
+                    .add("eta")
+                    .set("2012-08-23T14:00:00Z")
+                    .up()
+                    .add("updated")
+                    .set("2012-08-23T13:30:00Z")
+                    .up()
+                    .add("steps")
+                    .add("step")
+                    .attr("id", "7")
+                    .add("start")
+                    .set("2012-08-23T13:06:00Z")
+                    .up()
+                    .add("finish")
+                    .set("2012-08-23T13:15:00Z")
+                    .toString()
+            ),
             XhtmlMatchers.hasXPaths(
                 "/snapshot/updated[@at='0.5']",
                 "/snapshot/steps/step[@id=7]/start[@at='0.1']",
@@ -90,24 +89,23 @@ public final class PostSnapshotTest {
      */
     @Test
     public void postProcessesSnapshotWithoutEta() throws Exception {
-        final Document dom = Snapshot.empty();
-        new Xembler(
-            new Directives()
-                .xpath("/snapshot")
-                .add("start")
-                .set("2012-08-23T15:00:00Z")
-                .up()
-                .add("steps")
-                .add("step")
-                .attr("id", "19")
-                .add("start")
-                .set("2012-08-23T15:06:00Z")
-                .up()
-                .add("finish")
-                .set("2012-08-23T15:15:00Z")
-        ).apply(dom);
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(new PostSnapshot(dom).dom()),
+            this.xml(
+                new Directives()
+                    .xpath("/snapshot")
+                    .add("start")
+                    .set("2012-08-23T15:00:00Z")
+                    .up()
+                    .add("steps")
+                    .add("step")
+                    .attr("id", "19")
+                    .add("start")
+                    .set("2012-08-23T15:06:00Z")
+                    .up()
+                    .add("finish")
+                    .set("2012-08-23T15:15:00Z")
+                    .toString()
+            ),
             XhtmlMatchers.hasXPaths(
                 "/snapshot/steps/step[@id=19]/start[@at='0.1']",
                 "/snapshot/steps/step[@id=19]/finish[@at='0.25']"
@@ -121,20 +119,19 @@ public final class PostSnapshotTest {
      */
     @Test
     public void postProcessesSnapshotWithoutEtaWithUpdated() throws Exception {
-        final Document dom = Snapshot.empty();
-        new Xembler(
-            new Directives()
-                .xpath("/snapshot")
-                .add("version").add("revision").set("ab4ed9f").up().up()
-                .add("start").set("2012-08-23T15:00:00Z").up()
-                .add("updated").set("2012-08-23T16:00:00Z").up()
-                .add("steps")
-                .add("step").attr("id", "9")
-                .add("start")
-                .set("2012-08-23T15:30:00Z")
-        ).apply(dom);
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(new PostSnapshot(dom).dom()),
+            this.xml(
+                new Directives()
+                    .xpath("/snapshot")
+                    .add("version").add("revision").set("ab4ed9f").up().up()
+                    .add("start").set("2012-08-23T15:00:00Z").up()
+                    .add("updated").set("2012-08-23T16:00:00Z").up()
+                    .add("steps")
+                    .add("step").attr("id", "9")
+                    .add("start")
+                    .set("2012-08-23T15:30:00Z")
+                    .toString()
+            ),
             XhtmlMatchers.hasXPaths(
                 "/snapshot/updated[@at='0.8']",
                 "/snapshot/version[revision='ab4ed9f']",
@@ -149,20 +146,19 @@ public final class PostSnapshotTest {
      */
     @Test
     public void postProcessesSnapshotWithoutStart() throws Exception {
-        final Document dom = Snapshot.empty();
-        new Xembler(
-            new Directives()
-                .xpath("/snapshot")
-                .add("steps")
-                .add("step").attr("id", "3")
-                .add("start")
-                .set("2012-08-19T15:30:00Z").up().up()
-                .add("step").attr("id", "4")
-                .add("start")
-                .set("2012-08-20T15:30:00Z")
-        ).apply(dom);
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(new PostSnapshot(dom).dom()),
+            this.xml(
+                new Directives()
+                    .xpath("/snapshot")
+                    .add("steps")
+                    .add("step").attr("id", "3")
+                    .add("start")
+                    .set("2012-08-19T15:30:00Z").up().up()
+                    .add("step").attr("id", "4")
+                    .add("start")
+                    .set("2012-08-20T15:30:00Z")
+                    .toString()
+            ),
             XhtmlMatchers.hasXPath(
                 "/snapshot/steps/step[@id=3]/start[@at='0']"
             )
@@ -176,8 +172,23 @@ public final class PostSnapshotTest {
     @Test
     public void postProcessesEmptySnapshot() throws Exception {
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(new PostSnapshot(Snapshot.empty()).dom()),
+            this.xml(""),
             XhtmlMatchers.hasXPath("/snapshot")
+        );
+    }
+
+    /**
+     * Make XML out of directives.
+     * @param xembly Xembly
+     * @return XML source
+     * @throws Exception If fails
+     */
+    private Source xml(final String xembly) throws Exception {
+        return XhtmlMatchers.xhtml(
+            new XSLT(
+                new Snapshot(xembly),
+                this.getClass().getResourceAsStream("post.xsl")
+            ).dom()
         );
     }
 
