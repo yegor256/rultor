@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -26,40 +27,20 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.rultor.guard;
-
-import com.jcabi.aspects.Immutable;
-import com.rultor.snapshot.Snapshot;
-import java.util.Map;
-
-/**
- * Pull request.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- */
-@Immutable
-public interface MergeRequest {
-
-    /**
-     * Unique name of the request.
-     * @return Name of it
-     */
-    String name();
-
-    /**
-     * Optional parameters.
-     * @return Map of parameters
-     */
-    Map<String, Object> params();
-
-    /**
-     * Notify when merging is done (successfully or not).
-     * @param code Execution code (only zero means success)
-     * @param snapshot Snapshot
-     */
-    void notify(int code, Snapshot snapshot);
-
-}
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    version="2.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:r="http://www.rultor.com"
+    exclude-result-prefixes="xs">
+    <xsl:output method="xml"/>
+    <xsl:template match="/snapshot">
+        <text>
+            <xsl:text>some details of the build snapshot:&#x0A;</xsl:text>
+            <xsl:if test="products/product[name='stdout']">
+                <xsl:text>stdout: </xsl:text>
+                <xsl:value-of select="products/product[name='stdout']/markdown"/>
+            </xsl:if>
+        </text>
+    </xsl:template>
+</xsl:stylesheet>

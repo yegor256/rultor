@@ -53,4 +53,12 @@ public interface SCM {
     Branch checkout(@NotNull(message = "branch can't be NULL")
         String name) throws IOException;
 
+    /**
+     * Get all available branches/tags.
+     * @return Branches/tags
+     * @throws IOException If fails
+     */
+    @NotNull(message = "list of branches is never NULL")
+    Iterable<String> branches() throws IOException;
+
 }

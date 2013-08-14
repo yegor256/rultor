@@ -27,39 +27,42 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.guard;
+package com.rultor.scm;
 
-import com.jcabi.aspects.Immutable;
-import com.rultor.snapshot.Snapshot;
-import java.util.Map;
+import com.jcabi.aspects.Tv;
+import java.util.Arrays;
+import org.hamcrest.Matcher;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Pull request.
- *
+ * Test case for {@link SemVer}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
-@Immutable
-public interface MergeRequest {
+public final class SemVerTest {
 
     /**
-     * Unique name of the request.
-     * @return Name of it
+     * SemVer can order branches.
+     * @throws Exception If some problem inside
      */
-    String name();
-
-    /**
-     * Optional parameters.
-     * @return Map of parameters
-     */
-    Map<String, Object> params();
-
-    /**
-     * Notify when merging is done (successfully or not).
-     * @param code Execution code (only zero means success)
-     * @param snapshot Snapshot
-     */
-    void notify(int code, Snapshot snapshot);
+    @Test
+    @SuppressWarnings("unchecked")
+    public void sortsBranches() throws Exception {
+        final SCM origin = Mockito.mock(SCM.class);
+        Mockito.doReturn(
+            Arrays.asList("a-0.5.1", "a-0.4", "beta", "g", "", "a-13-alpha")
+        ).when(origin).branches();
+        MatcherAssert.assertThat(
+            new SemVer("a\\-(.*)", origin).branches(),
+            Matchers.allOf(
+                (Matcher) Matchers.hasSize(Tv.THREE),
+                Matchers.contains("a-0.4", "a-0.5.1", "a-13-alpha")
+            )
+        );
+    }
 
 }

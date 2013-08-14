@@ -34,6 +34,7 @@ import com.jcabi.aspects.Tv;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.PageBuilder;
 import com.rultor.snapshot.Snapshot;
+import com.rultor.snapshot.XSLT;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
 import java.io.IOException;
@@ -46,7 +47,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.xml.transform.TransformerException;
-import org.w3c.dom.Document;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
@@ -149,11 +149,12 @@ public final class StandRs extends BaseRs {
                     .remove()
                     .toString()
             );
-            final Document dom = Snapshot.empty();
             try {
-                snapshot.apply(dom);
                 bundle = bundle.add(
-                    new PostSnapshot(dom).dom().getDocumentElement()
+                    new XSLT(
+                        snapshot,
+                        this.getClass().getResourceAsStream("post.xsl")
+                    ).dom().getDocumentElement()
                 );
             } catch (ImpossibleModificationException ex) {
                 assert ex != null;

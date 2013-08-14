@@ -27,39 +27,53 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.guard;
+package com.rultor.guard.github;
 
-import com.jcabi.aspects.Immutable;
+import com.rultor.guard.MergeRequest;
 import com.rultor.snapshot.Snapshot;
-import java.util.Map;
+import java.util.Date;
+import org.eclipse.egit.github.core.PullRequest;
+import org.eclipse.egit.github.core.PullRequestMarker;
+import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.User;
+import org.eclipse.egit.github.core.client.GitHubClient;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Pull request.
- *
+ * Test case for {@link GhRequest}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Immutable
-public interface MergeRequest {
+public final class GhRequestTest {
 
     /**
-     * Unique name of the request.
-     * @return Name of it
+     * GhRequest can close request on success.
+     * @throws Exception If some problem inside
      */
-    String name();
-
-    /**
-     * Optional parameters.
-     * @return Map of parameters
-     */
-    Map<String, Object> params();
-
-    /**
-     * Notify when merging is done (successfully or not).
-     * @param code Execution code (only zero means success)
-     * @param snapshot Snapshot
-     */
-    void notify(int code, Snapshot snapshot);
+    @Test
+    public void closesPullRequestOnSuccess() throws Exception {
+        final Github github = Mockito.mock(Github.class);
+        final GitHubClient client = Mockito.mock(GitHubClient.class);
+        Mockito.doReturn(client).when(github).client();
+        final PullRequest req = new PullRequest();
+        final PullRequestMarker marker = new PullRequestMarker();
+        marker.setRef("");
+        final User user = new User();
+        user.setLogin("user");
+        marker.setUser(user);
+        final Repository repo = new Repository();
+        repo.setName("test");
+        marker.setRepo(repo);
+        req.setBase(marker);
+        req.setHead(marker);
+        req.setCreatedAt(new Date());
+        req.setTitle("some new pull request");
+        final MergeRequest request = new GhRequest(
+            github, new Github.Repo("test/test"), req
+        );
+        request.notify(0, new Snapshot("ADD 'test';"));
+    }
 
 }

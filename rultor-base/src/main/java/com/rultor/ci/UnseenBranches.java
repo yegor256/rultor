@@ -29,62 +29,98 @@
  */
 package com.rultor.ci;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.shell.Batch;
-import com.rultor.snapshot.Snapshot;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import com.jcabi.log.Logger;
+import com.rultor.scm.Branch;
+import com.rultor.scm.SCM;
+import com.rultor.stateful.Notepad;
 import java.io.IOException;
-import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.xembly.XemblySyntaxException;
 
 /**
- * Build.
+ * Returns only one tag, if it wasn't seen before.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = "batch")
+@EqualsAndHashCode(of = { "origin", "notepad" })
 @Loggable(Loggable.DEBUG)
-final class Build {
+public final class UnseenBranches implements SCM {
 
     /**
-     * Batch to execute.
+     * Branch to monitor.
      */
-    private final transient Batch batch;
+    private final transient SCM origin;
+
+    /**
+     * Notepad where to track all commits.
+     */
+    private final transient Notepad notepad;
 
     /**
      * Public ctor.
-     * @param btch Batch to use
+     * @param scm SCM original
+     * @param ntp Notepad
      */
-    protected Build(@NotNull(message = "batch can't be NULL")
-        final Batch btch) {
-        this.batch = btch;
+    public UnseenBranches(
+        @NotNull(message = "SCM can't be NULL") final SCM scm,
+        @NotNull(message = "notepad can't be NULL") final Notepad ntp) {
+        this.origin = scm;
+        this.notepad = ntp;
     }
 
     /**
-     * Build and return a snapshot/XML.
-     * @param args Arguments to pass to the batch
-     * @return XML of snapshot
-     * @throws IOException If some IO problem
+     * {@inheritDoc}
      */
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    public Snapshot exec(@NotNull(message = "args can't be NULL")
-        final Map<String, Object> args) throws IOException {
-        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
-        this.batch.exec(args, stdout);
-        try {
-            return new Snapshot(new ByteArrayInputStream(stdout.toByteArray()));
-        } catch (XemblySyntaxException ex) {
-            throw new IOException(ex);
+    @Override
+    public String toString() {
+        return Logger.format(
+            "unseen branches of %s tracked in %s",
+            this.origin, this.notepad
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Branch checkout(final String name) throws IOException {
+        return this.origin.checkout(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterable<String> branches() throws IOException {
+        return Iterables.filter(
+            this.origin.branches(),
+            new Predicate<String>() {
+                @Override
+                public boolean apply(final String branch) {
+                    return !UnseenBranches.this.seen(branch);
+                }
+            }
+        );
+    }
+
+    /**
+     * This branch was seen already?
+     * @param branch Branch name
+     * @return TRUE if seen
+     */
+    private boolean seen(final String branch) {
+        final boolean seen = this.notepad.contains(branch);
+        if (!seen) {
+            this.notepad.add(branch);
         }
+        return seen;
     }
 
 }

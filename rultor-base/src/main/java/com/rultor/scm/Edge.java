@@ -27,39 +27,70 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.guard;
+package com.rultor.scm;
 
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
-import com.rultor.snapshot.Snapshot;
-import java.util.Map;
+import com.jcabi.aspects.Loggable;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 
 /**
- * Pull request.
+ * Edge of development (latest branch in the list).
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface MergeRequest {
+@EqualsAndHashCode(of = "scm")
+@Loggable(Loggable.DEBUG)
+public final class Edge implements SCM {
 
     /**
-     * Unique name of the request.
-     * @return Name of it
+     * SCM.
      */
-    String name();
+    private final transient SCM scm;
 
     /**
-     * Optional parameters.
-     * @return Map of parameters
+     * Public ctor.
+     * @param src SCM
      */
-    Map<String, Object> params();
+    public Edge(@NotNull(message = "SCM can't be NULL") final SCM src) {
+        this.scm = src;
+    }
 
     /**
-     * Notify when merging is done (successfully or not).
-     * @param code Execution code (only zero means success)
-     * @param snapshot Snapshot
+     * {@inheritDoc}
      */
-    void notify(int code, Snapshot snapshot);
+    @Override
+    public String toString() {
+        return String.format("edge in %s", this.scm);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Branch checkout(final String name) throws IOException {
+        return this.scm.checkout(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterable<String> branches() throws IOException {
+        final Collection<String> branches = new LinkedList<String>();
+        final List<String> all = Lists.newLinkedList(this.scm.branches());
+        if (!all.isEmpty()) {
+            branches.add(all.get(all.size() - 1));
+        }
+        return branches;
+    }
 
 }

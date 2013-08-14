@@ -27,39 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.guard;
-
-import com.jcabi.aspects.Immutable;
-import com.rultor.snapshot.Snapshot;
-import java.util.Map;
 
 /**
- * Pull request.
+ * SCM related classes, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface MergeRequest {
-
-    /**
-     * Unique name of the request.
-     * @return Name of it
-     */
-    String name();
-
-    /**
-     * Optional parameters.
-     * @return Map of parameters
-     */
-    Map<String, Object> params();
-
-    /**
-     * Notify when merging is done (successfully or not).
-     * @param code Execution code (only zero means success)
-     * @param snapshot Snapshot
-     */
-    void notify(int code, Snapshot snapshot);
-
-}
+package com.rultor.scm;

@@ -27,39 +27,62 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.guard;
+package com.rultor.scm;
 
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
-import com.rultor.snapshot.Snapshot;
-import java.util.Map;
+import com.jcabi.aspects.Loggable;
+import java.io.IOException;
+import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 
 /**
- * Pull request.
+ * Head of the branch.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface MergeRequest {
+@EqualsAndHashCode(of = "origin")
+@Loggable(Loggable.DEBUG)
+public final class Head implements Branch {
 
     /**
-     * Unique name of the request.
-     * @return Name of it
+     * Origin branch.
      */
-    String name();
+    private final transient Branch origin;
 
     /**
-     * Optional parameters.
-     * @return Map of parameters
+     * Public ctor.
+     * @param brn Branch
      */
-    Map<String, Object> params();
+    public Head(@NotNull(message = "branch can't be NULL") final Branch brn) {
+        this.origin = brn;
+    }
 
     /**
-     * Notify when merging is done (successfully or not).
-     * @param code Execution code (only zero means success)
-     * @param snapshot Snapshot
+     * {@inheritDoc}
      */
-    void notify(int code, Snapshot snapshot);
+    @Override
+    public String toString() {
+        return String.format("HEAD of %s", this.origin);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterable<Commit> log() throws IOException {
+        return Iterables.limit(this.origin.log(), 1);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String name() {
+        return this.origin.name();
+    }
 
 }

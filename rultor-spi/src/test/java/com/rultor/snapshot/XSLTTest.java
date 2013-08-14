@@ -27,39 +27,46 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.guard;
+package com.rultor.snapshot;
 
-import com.jcabi.aspects.Immutable;
-import com.rultor.snapshot.Snapshot;
-import java.util.Map;
+import com.rexsl.test.XhtmlMatchers;
+import org.hamcrest.MatcherAssert;
+import org.junit.Test;
+import org.xembly.Directives;
 
 /**
- * Pull request.
- *
+ * Test case for {@link XSLT}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-public interface MergeRequest {
+public final class XSLTTest {
 
     /**
-     * Unique name of the request.
-     * @return Name of it
+     * XSLT can transform a snapshot.
+     * @throws Exception If some problem inside
      */
-    String name();
-
-    /**
-     * Optional parameters.
-     * @return Map of parameters
-     */
-    Map<String, Object> params();
-
-    /**
-     * Notify when merging is done (successfully or not).
-     * @param code Execution code (only zero means success)
-     * @param snapshot Snapshot
-     */
-    void notify(int code, Snapshot snapshot);
+    @Test
+    public void transformsSnapshot() throws Exception {
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(
+                new XSLT(
+                    new Snapshot(
+                        new Directives()
+                            .xpath("/snapshot")
+                            .add("start")
+                            .set("2012-08-23T13:00:00Z")
+                            .toString()
+                    ),
+                    // @checkstyle StringLiteralsConcatenation (5 lines)
+                    "<xsl:stylesheet"
+                    + " xmlns:xsl='http://www.w3.org/1999/XSL/Transform'"
+                    + " version='2.0'>"
+                    + "<xsl:template match='snapshot'><test/>"
+                    + "</xsl:template></xsl:stylesheet>"
+                ).dom()
+            ),
+            XhtmlMatchers.hasXPath("/test")
+        );
+    }
 
 }

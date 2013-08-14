@@ -82,7 +82,7 @@ public final class NeutralBuild implements Instance {
         this.board.announce(
             new Build(this.batch).exec(
                 new ImmutableMap.Builder<String, Object>().build()
-            )
+            ).xml()
         );
     }
 

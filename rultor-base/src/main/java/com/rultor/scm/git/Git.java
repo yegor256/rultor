@@ -31,7 +31,6 @@ package com.rultor.scm.git;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
 import com.rultor.scm.Branch;
 import com.rultor.scm.SCM;
 import com.rultor.shell.Shell;
@@ -41,6 +40,8 @@ import com.rultor.snapshot.Step;
 import com.rultor.snapshot.Tag;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
@@ -137,33 +138,58 @@ public final class Git implements SCM {
     @Step("Git branch `${args[0]}` checked out")
     public Branch checkout(final String name) throws IOException {
         this.terminal.exec(
-            new StringBuilder()
-                .append("DIR=`pwd`/")
-                .append(Terminal.escape(this.dir))
-                .append(" && URL=")
-                .append(Terminal.escape(this.url))
+            new StringBuilder(this.reset())
                 .append(" && BRANCH=")
                 .append(Terminal.escape(name))
-                .append(" && mkdir -p \"$DIR\"")
-                .append(" && ( cat > \"$DIR/id_rsa\" )")
-                // @checkstyle LineLength (1 line)
-                .append(" && ( echo \"set -x && git -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i \\\"$DIR/id_rsa\\\" $@\" > \"$DIR/git-ssh.sh\" )")
-                .append(" && GIT_SSH=$DIR/git-ssh.sh")
-                // @checkstyle LineLength (1 line)
-                .append(" && if [ ! -d $DIR/repo ]; then git clone $URL $DIR/repo; fi")
-                .append(" && cd $DIR/repo")
-                .append(" && git remote set-url origin $URL")
-                .append(" && git remote update -p")
-                .append(" && git reset --hard")
-                .append(" && git clean -f -d")
                 // @checkstyle LineLength (1 line)
                 .append(" && if [ `git rev-parse --abbrev-ref HEAD` != $BRANCH ]; then git checkout $BRANCH; fi")
                 .append(" && git pull")
                 .toString(),
             this.key.asText()
         );
-        Logger.info(this, "Git branch `%s` checked out", name);
         return new GitBranch(this.terminal, this.dir, name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Tag("git")
+    @Step("found ${result.size()} refs in Git")
+    public Collection<String> branches() throws IOException {
+        return Arrays.asList(
+            this.terminal.exec(
+                new StringBuilder(this.reset())
+                    .append(" && git for-each-ref --format='%(refname:short)'")
+                    .toString(),
+                this.key.asText()
+            ).split("\n")
+        );
+    }
+
+    /**
+     * Start script, to clone the repo.
+     * @return Script to start
+     */
+    private String reset() {
+        return new StringBuilder()
+            .append("DIR=`pwd`/")
+            .append(Terminal.escape(this.dir))
+            .append(" && URL=")
+            .append(Terminal.escape(this.url))
+            .append(" && mkdir -p \"$DIR\"")
+            .append(" && ( cat > \"$DIR/id_rsa\" )")
+            // @checkstyle LineLength (1 line)
+            .append(" && ( echo \"set -x && git -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i \\\"$DIR/id_rsa\\\" $@\" > \"$DIR/git-ssh.sh\" )")
+            .append(" && GIT_SSH=$DIR/git-ssh.sh")
+            // @checkstyle LineLength (1 line)
+            .append(" && if [ ! -d $DIR/repo ]; then git clone $URL $DIR/repo; fi")
+            .append(" && cd $DIR/repo")
+            .append(" && git remote set-url origin $URL")
+            .append(" && git remote update -p")
+            .append(" && git reset --hard")
+            .append(" && git clean -f -d")
+            .toString();
     }
 
 }

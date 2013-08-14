@@ -35,6 +35,7 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.snapshot.Snapshot;
+import com.rultor.snapshot.XSLT;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
@@ -58,7 +59,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.xml.transform.TransformerException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.w3c.dom.Document;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
 
@@ -288,15 +288,16 @@ public final class DrainRs extends BaseRs {
         try {
             snapshot = new Snapshot(this.drain(time).read());
             bundle = bundle.add("xembly", snapshot.xembly()).up();
-            final Document dom = Snapshot.empty();
             try {
-                snapshot.apply(dom);
+                bundle = bundle.add(
+                    new XSLT(
+                        snapshot,
+                        this.getClass().getResourceAsStream("post.xsl")
+                    ).dom().getDocumentElement()
+                );
             } catch (ImpossibleModificationException ex) {
                 bugs.add(ex);
             }
-            bundle = bundle.add(
-                new PostSnapshot(dom).dom().getDocumentElement()
-            );
         } catch (IOException ex) {
             bugs.add(ex);
         } catch (XemblySyntaxException ex) {
