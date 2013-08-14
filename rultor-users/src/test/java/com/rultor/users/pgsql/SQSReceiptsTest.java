@@ -72,8 +72,10 @@ public final class SQSReceiptsTest {
                 )
             )
         ).when(aws).receiveMessage(Mockito.any(ReceiveMessageRequest.class));
-        final SQSReceipts receipts = new SQSReceipts(this.pgsql(), client);
+        final PgClient pgsql = this.pgsql();
+        final SQSReceipts receipts = new SQSReceipts(pgsql, client);
         MatcherAssert.assertThat(receipts.process(), Matchers.equalTo(1));
+        Mockito.verify(pgsql).get();
     }
 
     /**

@@ -213,5 +213,22 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>qulice</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.ning.maven.plugins</groupId>
+                        <artifactId>maven-duplicate-finder-plugin</artifactId>
+                        <configuration>
+                            <ignoredResources combine.children="append">
+                                <ignoredResource>draftv3/schema</ignoredResource>
+                                <ignoredResource>draftv4/schema</ignoredResource>
+                            </ignoredResources>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>
