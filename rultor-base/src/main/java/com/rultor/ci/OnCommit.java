@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.xembly.ImpossibleModificationException;
 
 /**
  * Build on every new commit.
@@ -122,14 +123,18 @@ public final class OnCommit implements Instance {
     )
     @Tag("ci")
     private boolean build(final Commit head) throws IOException {
-        return this.announce(
-            new Build(this.batch).exec(
-                new ImmutableMap.Builder<String, Object>()
-                    .put("branch", this.branch.name())
-                    .put("head", head)
-                    .build()
-            )
-        );
+        try {
+            return this.announce(
+                new Build(this.batch).exec(
+                    new ImmutableMap.Builder<String, Object>()
+                        .put("branch", this.branch.name())
+                        .put("head", head)
+                        .build()
+                ).xml()
+            );
+        } catch (ImpossibleModificationException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**

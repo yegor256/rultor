@@ -31,7 +31,6 @@ package com.rultor.ci;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.test.SimpleXml;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Snapshot;
 import java.io.ByteArrayInputStream;
@@ -39,11 +38,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
-import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.w3c.dom.Document;
-import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
 
 /**
@@ -80,20 +76,13 @@ final class Build {
      * @throws IOException If some IO problem
      */
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    public String exec(@NotNull(message = "args can't be NULL")
+    public Snapshot exec(@NotNull(message = "args can't be NULL")
         final Map<String, Object> args) throws IOException {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         this.batch.exec(args, stdout);
         try {
-            final Snapshot snapshot = new Snapshot(
-                new ByteArrayInputStream(stdout.toByteArray())
-            );
-            final Document dom = Snapshot.empty();
-            snapshot.apply(dom);
-            return new SimpleXml(new DOMSource(dom)).toString();
+            return new Snapshot(new ByteArrayInputStream(stdout.toByteArray()));
         } catch (XemblySyntaxException ex) {
-            throw new IOException(ex);
-        } catch (ImpossibleModificationException ex) {
             throw new IOException(ex);
         }
     }

@@ -32,12 +32,14 @@ package com.rultor.snapshot;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
+import com.rexsl.test.SimpleXml;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.CharEncoding;
@@ -54,6 +56,7 @@ import org.xembly.XemblySyntaxException;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @ToString
@@ -125,11 +128,22 @@ public final class Snapshot {
      * Make DOM out of it.
      * @return The DOM
      * @throws ImpossibleModificationException If can't apply
+     * @checkstyle RedundantThrows (3 lines)
      */
     public Document dom() throws ImpossibleModificationException {
         final Document dom = Snapshot.empty();
         this.apply(dom);
         return dom;
+    }
+
+    /**
+     * Make XML out of it.
+     * @return The XML
+     * @throws ImpossibleModificationException If can't apply
+     * @checkstyle RedundantThrows (3 lines)
+     */
+    public String xml() throws ImpossibleModificationException {
+        return new SimpleXml(new DOMSource(this.dom())).toString();
     }
 
     /**

@@ -30,6 +30,7 @@
 package com.rultor.guard;
 
 import com.jcabi.aspects.Immutable;
+import com.rultor.snapshot.Snapshot;
 import java.util.Map;
 
 /**
@@ -57,8 +58,8 @@ public interface MergeRequest {
     /**
      * Notify when merging is done (successfully or not).
      * @param code Execution code (only zero means success)
-     * @param xml XML of snapshot
+     * @param snapshot Snapshot
      */
-    void notify(int code, String xml);
+    void notify(int code, Snapshot snapshot);
 
 }

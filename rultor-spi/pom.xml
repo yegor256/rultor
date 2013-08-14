@@ -112,7 +112,6 @@
             <groupId>com.rexsl</groupId>
             <artifactId>rexsl-test</artifactId>
             <version>${rexsl.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>

@@ -36,6 +36,7 @@ import com.jcabi.immutable.ArrayMap;
 import com.jcabi.log.Logger;
 import com.rexsl.test.SimpleXml;
 import com.rultor.guard.MergeRequest;
+import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.Step;
 import com.rultor.snapshot.XSLT;
 import com.rultor.tools.Time;
@@ -43,14 +44,12 @@ import java.io.IOException;
 import java.util.Map;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.IOUtils;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.PullRequestService;
+import org.xembly.ImpossibleModificationException;
 
 /**
  * Github pull request.
@@ -122,12 +121,12 @@ final class GhRequest implements MergeRequest {
      * {@inheritDoc}
      */
     @Override
-    public void notify(final int code, final String xml) {
+    public void notify(final int code, final Snapshot snapshot) {
         try {
             if (code == 0) {
-                this.accept(xml);
+                this.accept(snapshot);
             } else {
-                this.reject(xml);
+                this.reject(snapshot);
             }
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
@@ -161,14 +160,14 @@ final class GhRequest implements MergeRequest {
      * @throws IOException If fails
      */
     @Step("accepted GitHub pull request #${this.issue}")
-    private void accept(final String xml) throws IOException {
+    private void accept(final Snapshot snapshot) throws IOException {
         final GitHubClient client = this.github.client();
         final PullRequestService svc = new PullRequestService(client);
         svc.merge(
             this.repository, this.issue,
             String.format(
                 "Tested, looks correct:\n\n```\n%s\n```",
-                this.summary(xml)
+                this.summary(snapshot)
             )
         );
     }
@@ -179,14 +178,14 @@ final class GhRequest implements MergeRequest {
      * @throws IOException If fails
      */
     @Step("rejected GitHub pull request #${this.issue}")
-    private void reject(final String xml) throws IOException {
+    private void reject(final Snapshot snapshot) throws IOException {
         final GitHubClient client = this.github.client();
         final IssueService svc = new IssueService(client);
         svc.createComment(
             this.repository, this.issue,
             String.format(
                 "Tests failed, can't merge:\n\n```\n%s\n```\n\n%s",
-                this.summary(xml)
+                this.summary(snapshot)
             )
         );
     }
@@ -196,21 +195,19 @@ final class GhRequest implements MergeRequest {
      * @param snapshot Snapshot XML
      * @return Summary
      */
-    private String summary(final String xml) {
+    private String summary(final Snapshot snapshot) {
         try {
             return new SimpleXml(
                 new DOMSource(
                     new XSLT(
-                        new StreamSource(
-                            IOUtils.toInputStream(xml, Charsets.UTF_8)
-                        ),
-                        new StreamSource(
-                            this.getClass().getResourceAsStream("summary.xsl")
-                        )
+                        snapshot,
+                        this.getClass().getResourceAsStream("summary.xsl")
                     ).dom()
                 )
             ).toString();
         } catch (TransformerException ex) {
+            throw new IllegalStateException(ex);
+        } catch (ImpossibleModificationException ex) {
             throw new IllegalStateException(ex);
         }
     }
