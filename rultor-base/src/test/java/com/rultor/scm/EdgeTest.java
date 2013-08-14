@@ -52,14 +52,15 @@ public final class EdgeTest {
     @SuppressWarnings("unchecked")
     public void returnsLatestBranch() throws Exception {
         final SCM origin = Mockito.mock(SCM.class);
+        final String last = "a-13-alpha";
         Mockito.doReturn(
-            Arrays.asList("a-0.5.1", "a-0.4", "beta", "g", "", "a-13-alpha")
+            Arrays.asList("a-0.5.1", "a-0.4", "beta", "g", "", last)
         ).when(origin).branches();
         MatcherAssert.assertThat(
             new Edge(origin).branches(),
             Matchers.allOf(
                 (Matcher) Matchers.hasSize(1),
-                Matchers.hasItem("a-13-alpha")
+                Matchers.hasItem(last)
             )
         );
     }

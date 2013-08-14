@@ -29,6 +29,7 @@
  */
 package com.rultor.scm;
 
+import com.jcabi.aspects.Tv;
 import java.util.Arrays;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
@@ -40,6 +41,7 @@ import org.mockito.Mockito;
  * Test case for {@link SemVer}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 public final class SemVerTest {
 
@@ -57,7 +59,7 @@ public final class SemVerTest {
         MatcherAssert.assertThat(
             new SemVer("a\\-(.*)", origin).branches(),
             Matchers.allOf(
-                (Matcher) Matchers.hasSize(3),
+                (Matcher) Matchers.hasSize(Tv.THREE),
                 Matchers.contains("a-0.4", "a-0.5.1", "a-13-alpha")
             )
         );

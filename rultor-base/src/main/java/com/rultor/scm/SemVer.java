@@ -119,7 +119,7 @@ public final class SemVer implements SCM {
             ordered,
             new Comparator<String>() {
                 @Override
-                public int compare(final String left, String right) {
+                public int compare(final String left, final String right) {
                     final Matcher lft = pattern.matcher(left);
                     assert lft.matches();
                     final Matcher rht = pattern.matcher(right);
@@ -137,8 +137,21 @@ public final class SemVer implements SCM {
      * @param right Right version
      * @return Positive if right is newer than left
      */
-    public static int compare(final String left, String right) {
-        return 1;
+    public static int compare(final String left, final String right) {
+        return SemVer.normalized(left).compareTo(SemVer.normalized(right));
+    }
+
+    /**
+     * Normalize the version.
+     * @param ver Version
+     * @return Normalized version
+     */
+    public static String normalized(final String ver) {
+        final StringBuilder output = new StringBuilder();
+        for (String part : ver.split("\\.")) {
+            output.append(String.format("%3s", part));
+        }
+        return output.toString();
     }
 
 }
