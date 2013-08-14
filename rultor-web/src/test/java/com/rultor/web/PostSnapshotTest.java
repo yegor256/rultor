@@ -163,9 +163,8 @@ public final class PostSnapshotTest {
         ).apply(dom);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(new PostSnapshot(dom).dom()),
-            XhtmlMatchers.hasXPaths(
-                "/snapshot/updated[@at='0']",
-                "/snapshot/steps/step[@id=3]/start[@at='0.4']"
+            XhtmlMatchers.hasXPath(
+                "/snapshot/steps/step[@id=3]/start[@at='0']"
             )
         );
     }

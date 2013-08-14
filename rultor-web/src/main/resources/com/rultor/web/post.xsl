@@ -50,10 +50,10 @@
                 <xsl:value-of select="r:epoch(/snapshot/start)" />
             </xsl:when>
             <xsl:when test="/snapshot/steps/step/start">
-                <xsl:value-of select="r:epoch(/snapshot/steps/step/start)" />
+                <xsl:value-of select="r:epoch(/snapshot/steps/step[position()=1]/start)" />
             </xsl:when>
             <xsl:when test="/snapshot/steps/step/finish">
-                <xsl:value-of select="r:epoch(/snapshot/steps/step/finish)" />
+                <xsl:value-of select="r:epoch(/snapshot/steps/step[position()=1]/finish)" />
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="r:epoch('1970-01-01T00:00:00Z')" />
