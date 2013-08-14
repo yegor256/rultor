@@ -110,7 +110,15 @@ public final class Time implements Comparable<Time> {
      */
     @Override
     public int compareTo(final Time time) {
-        return Long.compare(this.msec, time.msec);
+        final int cmp;
+        if (this.msec < time.msec) {
+            cmp = -1;
+        } else if (this.msec > time.msec) {
+            cmp = 1;
+        } else {
+            cmp = 0;
+        }
+        return cmp;
     }
 
     /**
