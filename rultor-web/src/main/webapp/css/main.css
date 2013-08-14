@@ -95,5 +95,5 @@ p,
     height: 3px;
     background-color: #ccc;
     position: absolute;
-    top: 0;
+    bottom: 0;
 }
