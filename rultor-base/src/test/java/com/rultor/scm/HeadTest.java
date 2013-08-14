@@ -29,36 +29,35 @@
  */
 package com.rultor.scm;
 
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
-import javax.validation.constraints.NotNull;
+import java.util.Arrays;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Source Code Management (SCM) system.
- *
+ * Test case for {@link Head}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-public interface SCM {
+public final class HeadTest {
 
     /**
-     * Checkout branch.
-     * @param name Branch name to checkout (SCM dependent)
-     * @return Branch
-     * @throws IOException If fails
+     * Head can return the first commit only.
+     * @throws Exception If some problem inside
      */
-    @NotNull(message = "branch is never NULL")
-    Branch checkout(@NotNull(message = "branch can't be NULL")
-        String name) throws IOException;
-
-    /**
-     * Get all available branches/tags.
-     * @return Branches/tags
-     * @throws IOException If fails
-     */
-    @NotNull(message = "list of branches is never NULL")
-    Iterable<String> branches() throws IOException;
+    @Test
+    public void returnsFirstCommit() throws Exception {
+        final Branch origin = Mockito.mock(Branch.class);
+        Mockito.doReturn(
+            Arrays.asList(
+                Mockito.mock(Commit.class), Mockito.mock(Commit.class)
+            )
+        ).when(origin).log();
+        MatcherAssert.assertThat(
+            new Head(origin).log(),
+            Matchers.<Commit>iterableWithSize(1)
+        );
+    }
 
 }

@@ -29,36 +29,53 @@
  */
 package com.rultor.scm;
 
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Arrays;
+import org.hamcrest.Matcher;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Source Code Management (SCM) system.
- *
+ * Test case for {@link Edge}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-public interface SCM {
+public final class EdgeTest {
 
     /**
-     * Checkout branch.
-     * @param name Branch name to checkout (SCM dependent)
-     * @return Branch
-     * @throws IOException If fails
+     * Edge can return the latest branch only.
+     * @throws Exception If some problem inside
      */
-    @NotNull(message = "branch is never NULL")
-    Branch checkout(@NotNull(message = "branch can't be NULL")
-        String name) throws IOException;
+    @Test
+    @SuppressWarnings("unchecked")
+    public void returnsLatestBranch() throws Exception {
+        final SCM origin = Mockito.mock(SCM.class);
+        Mockito.doReturn(
+            Arrays.asList("a-0.5.1", "a-0.4", "beta", "g", "", "a-13-alpha")
+        ).when(origin).branches();
+        MatcherAssert.assertThat(
+            new Edge(origin).branches(),
+            Matchers.allOf(
+                (Matcher) Matchers.hasSize(1),
+                Matchers.hasItem("a-13-alpha")
+            )
+        );
+    }
 
     /**
-     * Get all available branches/tags.
-     * @return Branches/tags
-     * @throws IOException If fails
+     * Edge can gracefully handle empty branches.
+     * @throws Exception If some problem inside
      */
-    @NotNull(message = "list of branches is never NULL")
-    Iterable<String> branches() throws IOException;
+    @Test
+    public void gracefullyHandlesEmptyListOfBranches() throws Exception {
+        final SCM origin = Mockito.mock(SCM.class);
+        Mockito.doReturn(new ArrayList<String>(0)).when(origin).branches();
+        MatcherAssert.assertThat(
+            new Edge(origin).branches(),
+            Matchers.emptyIterable()
+        );
+    }
 
 }

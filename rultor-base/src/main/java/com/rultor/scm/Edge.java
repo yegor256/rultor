@@ -29,36 +29,63 @@
  */
 package com.rultor.scm;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import java.io.IOException;
+import java.util.List;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 
 /**
- * Source Code Management (SCM) system.
+ * Edge of development (latest branch in the list).
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface SCM {
+@EqualsAndHashCode(of = "scm")
+@Loggable(Loggable.DEBUG)
+public final class Edge implements SCM {
 
     /**
-     * Checkout branch.
-     * @param name Branch name to checkout (SCM dependent)
-     * @return Branch
-     * @throws IOException If fails
+     * SCM.
      */
-    @NotNull(message = "branch is never NULL")
-    Branch checkout(@NotNull(message = "branch can't be NULL")
-        String name) throws IOException;
+    private final transient SCM scm;
 
     /**
-     * Get all available branches/tags.
-     * @return Branches/tags
-     * @throws IOException If fails
+     * Public ctor.
+     * @param src SCM
      */
-    @NotNull(message = "list of branches is never NULL")
-    Iterable<String> branches() throws IOException;
+    public Edge(@NotNull(message = "SCM can't be NULL") final SCM src) {
+        this.scm = src;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format("edge in %s", this.scm);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Branch checkout(final String name) throws IOException {
+        return this.scm.checkout(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterable<String> branches() throws IOException {
+        final List<String> branches = Lists.newLinkedList(this.scm.branches());
+        return Iterables.skip(branches, branches.size() - 1);
+    }
 
 }

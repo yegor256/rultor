@@ -29,36 +29,38 @@
  */
 package com.rultor.scm;
 
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
-import javax.validation.constraints.NotNull;
+import java.util.Arrays;
+import org.hamcrest.Matcher;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Source Code Management (SCM) system.
- *
+ * Test case for {@link SemVer}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-public interface SCM {
+public final class SemVerTest {
 
     /**
-     * Checkout branch.
-     * @param name Branch name to checkout (SCM dependent)
-     * @return Branch
-     * @throws IOException If fails
+     * SemVer can order branches.
+     * @throws Exception If some problem inside
      */
-    @NotNull(message = "branch is never NULL")
-    Branch checkout(@NotNull(message = "branch can't be NULL")
-        String name) throws IOException;
-
-    /**
-     * Get all available branches/tags.
-     * @return Branches/tags
-     * @throws IOException If fails
-     */
-    @NotNull(message = "list of branches is never NULL")
-    Iterable<String> branches() throws IOException;
+    @Test
+    @SuppressWarnings("unchecked")
+    public void sortsBranches() throws Exception {
+        final SCM origin = Mockito.mock(SCM.class);
+        Mockito.doReturn(
+            Arrays.asList("a-0.5.1", "a-0.4", "beta", "g", "", "a-13-alpha")
+        ).when(origin).branches();
+        MatcherAssert.assertThat(
+            new SemVer("a\\-(.*)", origin).branches(),
+            Matchers.allOf(
+                (Matcher) Matchers.hasSize(3),
+                Matchers.contains("a-0.4", "a-0.5.1", "a-13-alpha")
+            )
+        );
+    }
 
 }

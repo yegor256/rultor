@@ -29,38 +29,32 @@
  */
 package com.rultor.ci;
 
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.board.Billboard;
-import com.rultor.scm.Branch;
-import com.rultor.scm.Commit;
+import com.rultor.scm.SCM;
 import com.rultor.shell.Batch;
-import com.rultor.snapshot.Step;
-import com.rultor.snapshot.Tag;
 import com.rultor.spi.Instance;
-import java.io.IOException;
-import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
- * Build on every new commit.
+ * Build on every tag.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "branch", "batch", "board" })
+@EqualsAndHashCode(of = { "scm", "batch", "board" })
 @Loggable(Loggable.DEBUG)
-public final class OnCommit implements Instance {
+public final class OnTag implements Instance {
 
     /**
-     * Branch to monitor.
+     * SCM to monitor.
      */
-    private final transient Branch branch;
+    private final transient SCM scm;
 
     /**
      * Batch to execute.
@@ -74,15 +68,15 @@ public final class OnCommit implements Instance {
 
     /**
      * Public ctor.
-     * @param brn Branch
+     * @param src Source control
      * @param btch Batch to use
      * @param brd The board where to announce
      */
-    public OnCommit(
-        @NotNull(message = "branch can't be NULL") final Branch brn,
+    public OnTag(
+        @NotNull(message = "scm can't be NULL") final SCM src,
         @NotNull(message = "batch can't be NULL") final Batch btch,
         @NotNull(message = "board can't be NULL") final Billboard brd) {
-        this.branch = brn;
+        this.scm = src;
         this.batch = btch;
         this.board = brd;
     }
@@ -93,10 +87,10 @@ public final class OnCommit implements Instance {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
-        final Iterator<Commit> commits = this.branch.log().iterator();
-        if (commits.hasNext()) {
-            this.build(commits.next());
-        }
+        new OnCommit(
+            this.scm.checkout(this.scm.branches().iterator().next()),
+            this.batch, this.board
+        ).pulse();
     }
 
     /**
@@ -105,43 +99,9 @@ public final class OnCommit implements Instance {
     @Override
     public String toString() {
         return Logger.format(
-            "on new commits at %s executes %s and announces through %s",
-            this.branch, this.batch, this.board
+            "on every tag in %s executes %s and announces through %s",
+            this.scm, this.batch, this.board
         );
-    }
-
-    /**
-     * Build.
-     * @param head Head of the branch
-     * @return TRUE if success
-     * @throws IOException If some IO problem
-     */
-    @Step(
-        before = "building `${args[0]}`",
-        value = "built successfully `${args[0]}`"
-    )
-    @Tag("ci")
-    private boolean build(final Commit head) throws IOException {
-        return this.announce(
-            new Build(this.batch).exec(
-                new ImmutableMap.Builder<String, Object>()
-                    .put("branch", this.branch.name())
-                    .put("head", head)
-                    .build()
-            )
-        );
-    }
-
-    /**
-     * Announce result and return success status.
-     * @param snapshot Snapshot to announce
-     * @return TRUE if it is a success
-     * @throws IOException If fails
-     */
-    @Step("announced #if($result)success#{else}failure#end to ${this.board}")
-    private boolean announce(final String snapshot) throws IOException {
-        this.board.announce(snapshot);
-        return true;
     }
 
 }

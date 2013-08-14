@@ -29,36 +29,60 @@
  */
 package com.rultor.scm;
 
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 
 /**
- * Source Code Management (SCM) system.
+ * Head of the branch.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface SCM {
+@EqualsAndHashCode(of = "origin")
+@Loggable(Loggable.DEBUG)
+public final class Head implements Branch {
 
     /**
-     * Checkout branch.
-     * @param name Branch name to checkout (SCM dependent)
-     * @return Branch
-     * @throws IOException If fails
+     * Origin branch.
      */
-    @NotNull(message = "branch is never NULL")
-    Branch checkout(@NotNull(message = "branch can't be NULL")
-        String name) throws IOException;
+    private final transient Branch origin;
 
     /**
-     * Get all available branches/tags.
-     * @return Branches/tags
-     * @throws IOException If fails
+     * Public ctor.
+     * @param brn Branch
      */
-    @NotNull(message = "list of branches is never NULL")
-    Iterable<String> branches() throws IOException;
+    public Head(@NotNull(message = "branch can't be NULL") final Branch brn) {
+        this.origin = brn;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format("HEAD of %s", this.origin);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterable<Commit> log() throws IOException {
+        return Iterables.limit(this.origin.log(), 1);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String name() {
+        return this.origin.name();
+    }
 
 }

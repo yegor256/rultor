@@ -29,74 +29,50 @@
  */
 package com.rultor.ci;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
-import com.rultor.board.Billboard;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
-import com.rultor.shell.Batch;
-import com.rultor.snapshot.Step;
-import com.rultor.snapshot.Tag;
-import com.rultor.spi.Instance;
+import com.rultor.stateful.Notepad;
 import java.io.IOException;
-import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
- * Build on every new commit.
+ * Returns only one commit, if it wasn't seen before.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "branch", "batch", "board" })
+@EqualsAndHashCode(of = { "origin", "notepad" })
 @Loggable(Loggable.DEBUG)
-public final class OnCommit implements Instance {
+public final class UnseenCommits implements Branch {
 
     /**
      * Branch to monitor.
      */
-    private final transient Branch branch;
+    private final transient Branch origin;
 
     /**
-     * Batch to execute.
+     * Notepad where to track all commits.
      */
-    private final transient Batch batch;
-
-    /**
-     * Where to notify about success/failure.
-     */
-    private final transient Billboard board;
+    private final transient Notepad notepad;
 
     /**
      * Public ctor.
      * @param brn Branch
-     * @param btch Batch to use
-     * @param brd The board where to announce
+     * @param ntp Notepad
      */
-    public OnCommit(
+    public UnseenCommits(
         @NotNull(message = "branch can't be NULL") final Branch brn,
-        @NotNull(message = "batch can't be NULL") final Batch btch,
-        @NotNull(message = "board can't be NULL") final Billboard brd) {
-        this.branch = brn;
-        this.batch = btch;
-        this.board = brd;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    public void pulse() throws Exception {
-        final Iterator<Commit> commits = this.branch.log().iterator();
-        if (commits.hasNext()) {
-            this.build(commits.next());
-        }
+        @NotNull(message = "notepad can't be NULL") final Notepad ntp) {
+        this.origin = brn;
+        this.notepad = ntp;
     }
 
     /**
@@ -105,43 +81,52 @@ public final class OnCommit implements Instance {
     @Override
     public String toString() {
         return Logger.format(
-            "on new commits at %s executes %s and announces through %s",
-            this.branch, this.batch, this.board
+            "unseen commits of %s tracked in %s",
+            this.origin, this.notepad
         );
     }
 
     /**
-     * Build.
-     * @param head Head of the branch
-     * @return TRUE if success
-     * @throws IOException If some IO problem
+     * {@inheritDoc}
      */
-    @Step(
-        before = "building `${args[0]}`",
-        value = "built successfully `${args[0]}`"
-    )
-    @Tag("ci")
-    private boolean build(final Commit head) throws IOException {
-        return this.announce(
-            new Build(this.batch).exec(
-                new ImmutableMap.Builder<String, Object>()
-                    .put("branch", this.branch.name())
-                    .put("head", head)
-                    .build()
-            )
+    @Override
+    public String name() {
+        return this.origin.name();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterable<Commit> log() throws IOException {
+        return Iterables.filter(
+            this.origin.log(),
+            new Predicate<Commit>() {
+                @Override
+                public boolean apply(final Commit commit) {
+                    return !UnseenCommits.this.seen(commit);
+                }
+            }
         );
     }
 
     /**
-     * Announce result and return success status.
-     * @param snapshot Snapshot to announce
-     * @return TRUE if it is a success
-     * @throws IOException If fails
+     * This HEAD commit was seen already?
+     * @param head HEAD commit
+     * @return TRUE if seen
      */
-    @Step("announced #if($result)success#{else}failure#end to ${this.board}")
-    private boolean announce(final String snapshot) throws IOException {
-        this.board.announce(snapshot);
-        return true;
+    private boolean seen(final Commit head) {
+        final String name;
+        try {
+            name = head.name();
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+        final boolean seen = this.notepad.contains(name);
+        if (!seen) {
+            this.notepad.add(name);
+        }
+        return seen;
     }
 
 }
