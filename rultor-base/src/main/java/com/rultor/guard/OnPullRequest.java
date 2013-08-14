@@ -36,6 +36,7 @@ import com.jcabi.log.Logger;
 import com.rexsl.test.SimpleXml;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Snapshot;
+import com.rultor.snapshot.Tag;
 import com.rultor.spi.Instance;
 import com.rultor.stateful.ConcurrentNotepad;
 import java.io.ByteArrayInputStream;
@@ -129,6 +130,7 @@ public final class OnPullRequest implements Instance {
      * @param request The request to merge
      * @throws IOException If IO problem
      */
+    @Tag("merge")
     private void merge(final MergeRequest request) throws IOException {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final int code = this.batch.exec(
