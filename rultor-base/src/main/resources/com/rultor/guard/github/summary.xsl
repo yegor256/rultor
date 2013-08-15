@@ -35,12 +35,25 @@
     exclude-result-prefixes="xs">
     <xsl:output method="xml"/>
     <xsl:template match="/snapshot">
-        <text>
-            <xsl:text>some details of the build snapshot:&#x0A;</xsl:text>
-            <xsl:if test="products/product[name='stdout']">
-                <xsl:text>stdout: </xsl:text>
-                <xsl:value-of select="products/product[name='stdout']/markdown"/>
-            </xsl:if>
-        </text>
+        <markdown>
+            <xsl:text>Test finished at </xsl:text>
+            <xsl:value-of select="finish"/>
+            <xsl:text> and took </xsl:text>
+            <xsl:value-of select="duration div 1000"/>
+            <xsl:text> seconds.</xsl:text>
+            <xsl:apply-templates select="products/product[name='stdout']"/>
+            <xsl:apply-templates select="version"/>
+        </markdown>
+    </xsl:template>
+    <xsl:template match="/snapshot/products/product[name='stdout']">
+        <xsl:text> Full output log is available at </xsl:text>
+        <xsl:value-of select="markdown"/>
+    </xsl:template>
+    <xsl:template match="/snapshot/version">
+        <xsl:text> By [rultor.com](http://www.rultor.com) </xsl:text>
+        <xsl:value-of select="name"/>
+        <xsl:text> at `</xsl:text>
+        <xsl:value-of select="revision"/>
+        <xsl:text>`.</xsl:text>
     </xsl:template>
 </xsl:stylesheet>
