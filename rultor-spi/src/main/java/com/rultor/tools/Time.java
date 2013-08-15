@@ -77,7 +77,7 @@ public final class Time implements Comparable<Time> {
      * @param millis Milliseconds
      */
     public Time(final long millis) {
-        Validate.isTrue(millis > 0, "millis can't be negative: %d", millis);
+        Validate.isTrue(millis >= 0, "millis can't be negative: %d", millis);
         this.msec = millis;
     }
 
