@@ -175,10 +175,7 @@ public final class DrainRs extends BaseRs {
                 ).get().instantiate(
                     this.users(),
                     new Arguments(
-                        new Work.Simple(
-                            this.user().urn(), this.name,
-                            this.unit().spec(), time
-                        ),
+                        new Work.Simple(this.user().urn(), this.name, time),
                         new Wallet.Empty()
                     )
                 )

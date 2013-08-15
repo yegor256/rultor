@@ -313,10 +313,6 @@ public class BaseRs extends BaseResource {
                 return unit;
             }
             @Override
-            public Spec spec() {
-                return spec;
-            }
-            @Override
             public URI stdout() {
                 throw new UnsupportedOperationException();
             }

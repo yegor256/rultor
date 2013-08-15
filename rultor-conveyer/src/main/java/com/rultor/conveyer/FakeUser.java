@@ -63,11 +63,18 @@ final class FakeUser implements User {
     private final transient Work work;
 
     /**
+     * Spec to use.
+     */
+    private final transient Spec specification;
+
+    /**
      * Public ctor.
      * @param wrk Work
+     * @param spc Spec
      */
-    protected FakeUser(final Work wrk) {
+    protected FakeUser(final Work wrk, final Spec spc) {
         this.work = wrk;
+        this.specification = spc;
     }
 
     @Override
@@ -78,12 +85,8 @@ final class FakeUser implements User {
             public Unit get(final String name) {
                 return new Unit() {
                     @Override
-                    public void update(final Spec spec) {
+                    public void update(final Spec spc) {
                         throw new UnsupportedOperationException();
-                    }
-                    @Override
-                    public Spec spec() {
-                        return FakeUser.this.work.spec();
                     }
                     @Override
                     public String name() {
@@ -104,6 +107,10 @@ final class FakeUser implements User {
                                 throw new UnsupportedOperationException();
                             }
                         };
+                    }
+                    @Override
+                    public Spec spec() {
+                        return FakeUser.this.specification;
                     }
                 };
             }

@@ -33,7 +33,6 @@ import com.jcabi.urn.URN;
 import com.rultor.aws.S3Client;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
-import com.rultor.spi.Spec;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.util.Arrays;
@@ -83,11 +82,7 @@ public final class BucketDrainITCase {
         final String msg = "some test log message \u20ac";
         final Time date = new Time();
         final Drain drain = new BucketDrain(
-            new Work.Simple(
-                new URN("urn:facebook:1"),
-                "test-unit", new Spec.Simple(),
-                date
-            ),
+            new Work.Simple(new URN("urn:facebook:1"), "test-unit", date),
             this.client
         );
         drain.append(Arrays.asList(msg));

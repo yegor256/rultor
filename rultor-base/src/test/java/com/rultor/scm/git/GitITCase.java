@@ -38,6 +38,7 @@ import java.io.File;
 import java.net.URL;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assume;
 import org.junit.Test;
 
 /**
@@ -53,6 +54,7 @@ public final class GitITCase {
      */
     @Test
     public void manipulatesBranches() throws Exception {
+        Assume.assumeNotNull(System.getProperty("failsafe.github.user"));
         final File dir = Files.createTempDir();
         final SCM git = new Git(
             new ShellMocker.Bash(dir),

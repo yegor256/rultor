@@ -72,18 +72,16 @@ public final class SimpleConveyerTest {
         final Queue queue = Mockito.mock(Queue.class);
         final URN owner = new URN("urn:facebook:1");
         final String name = "unit-name";
-        final Spec spec = new Spec.Simple();
         final AtomicBoolean pulled = new AtomicBoolean();
         Mockito.doAnswer(
             new Answer<Work>() {
                 @Override
                 public Work answer(final InvocationOnMock inv) {
                     final Work work;
-                    if (pulled.get()) {
+                    if (pulled.getAndSet(true)) {
                         work = new Work.None();
                     } else {
-                        pulled.set(true);
-                        work = new Work.Simple(owner, name, spec);
+                        work = new Work.Simple(owner, name);
                     }
                     return work;
                 }
@@ -105,7 +103,7 @@ public final class SimpleConveyerTest {
                     return var;
                 }
             }
-        ).when(repo).make(Mockito.any(User.class), Mockito.eq(spec));
+        ).when(repo).make(Mockito.any(User.class), Mockito.any(Spec.class));
         final Variable<?> dvar = Mockito.mock(Variable.class);
         Mockito.doReturn(Mockito.mock(Drain.class)).when(dvar).instantiate(
             Mockito.any(Users.class), Mockito.any(Arguments.class)
@@ -116,6 +114,7 @@ public final class SimpleConveyerTest {
         Mockito.doReturn(units).when(user).units();
         Mockito.doReturn(Arrays.asList(unit).iterator()).when(units).iterator();
         Mockito.doReturn(unit).when(units).get(name);
+        Mockito.doReturn(new Spec.Simple()).when(unit).spec();
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(owner);
         Mockito.doReturn(Arrays.asList(user).iterator())
@@ -132,6 +131,8 @@ public final class SimpleConveyerTest {
         }
         Mockito.verify(queue, Mockito.atLeast(1))
             .pull(Mockito.anyInt(), Mockito.any(TimeUnit.class));
+        Mockito.verify(repo, Mockito.atLeast(1))
+            .make(Mockito.any(User.class), Mockito.any(Spec.class));
         Mockito.verify(users, Mockito.atLeast(1)).get(owner);
         Mockito.verify(instance, Mockito.atLeast(1)).pulse();
     }

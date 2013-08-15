@@ -30,7 +30,6 @@
 package com.rultor.drain;
 
 import com.jcabi.urn.URN;
-import com.rultor.spi.Spec;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.util.Arrays;
@@ -69,9 +68,7 @@ public final class TemporaryTest {
         final URN owner = new URN("urn:facebook:8789");
         final String unit = "some-test-unit";
         final String line = "some \t\u20ac\tfdsfs9980 Hello878";
-        final Work work = new Work.Simple(
-            owner, unit, new Spec.Simple("com.test()"), time
-        );
+        final Work work = new Work.Simple(owner, unit, time);
         new Temporary(work).append(Arrays.asList(line));
         MatcherAssert.assertThat(
             IOUtils.toString(

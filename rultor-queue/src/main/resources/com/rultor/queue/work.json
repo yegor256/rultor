@@ -1,14 +1,13 @@
 {
     "description": "work",
     "type":"object",
-    "required": ["urn", "spec", "unit", "scheduled"],
+    "required": ["urn", "unit", "scheduled"],
     "additionalProperties": false,
     "properties": {
         "urn": {
             "type": "string",
             "pattern": "^urn:[a-z]+:[0-9]+$"
         },
-        "spec": { "type": "string" },
         "unit": {
             "type": "string",
             "pattern": "^[a-z0-9\\-]+$"

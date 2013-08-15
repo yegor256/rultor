@@ -33,7 +33,6 @@ import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
-import com.rultor.spi.Spec;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.net.URI;
@@ -116,14 +115,6 @@ final class StdoutWork implements Work {
     @Override
     public String unit() {
         return this.origin.unit();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Spec spec() {
-        return this.origin.spec();
     }
 
     /**

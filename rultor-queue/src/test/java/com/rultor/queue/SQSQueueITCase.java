@@ -39,7 +39,6 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Queue;
-import com.rultor.spi.Spec;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.util.concurrent.TimeUnit;
@@ -96,11 +95,10 @@ public final class SQSQueueITCase {
         );
         final String url = result.getQueueUrl();
         try {
-            final Spec spec = new Spec.Simple("java.lang.Integer(5)");
             final String unit = "some-test-unit";
             final URN owner = new URN("urn:facebook:1");
             final Time time = new Time("2013-07-19T14:05Z");
-            final Work work = new Work.Simple(owner, unit, spec, time);
+            final Work work = new Work.Simple(owner, unit, time);
             final Queue queue = new SQSQueue(
                 new SQSClient.Simple(this.key, this.secret, url)
             );

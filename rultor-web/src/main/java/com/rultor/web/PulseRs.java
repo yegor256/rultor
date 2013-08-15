@@ -34,7 +34,6 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Wallet;
@@ -160,7 +159,6 @@ public final class PulseRs extends BaseRs {
                         new Work.Simple(
                             this.user().urn(),
                             this.name,
-                            new Spec.Simple(),
                             this.date
                         ),
                         new Wallet.Empty()

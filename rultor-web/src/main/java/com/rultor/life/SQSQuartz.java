@@ -175,14 +175,7 @@ public final class SQSQuartz implements Runnable, Closeable {
     private void publish(final Time time) {
         for (User user : this.users) {
             for (Unit unit : user.units()) {
-                this.queue.push(
-                    new Work.Simple(
-                        user.urn(),
-                        unit.name(),
-                        unit.spec(),
-                        time
-                    )
-                );
+                this.queue.push(new Work.Simple(user.urn(), unit.name(), time));
             }
         }
     }

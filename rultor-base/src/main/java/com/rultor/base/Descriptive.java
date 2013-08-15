@@ -37,7 +37,6 @@ import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.xembly.Directives;
 
@@ -77,9 +76,7 @@ public final class Descriptive implements Instance {
      * @param wrk Work we're in
      * @param instance Original instance
      */
-    public Descriptive(
-        @NotNull(message = "work can't be NULL") final Work wrk,
-        @NotNull(message = "instance can't be NULL") final Instance instance) {
+    public Descriptive(final Work wrk, final Instance instance) {
         this.work = wrk;
         this.origin = instance;
     }
@@ -133,13 +130,6 @@ public final class Descriptive implements Instance {
                 .up()
                 .add("date")
                 .set(Manifests.read("Rultor-Date"))
-        ).log();
-        new XemblyLine(
-            new Directives()
-                .xpath("/snapshot[not(spec)]")
-                .strict(1)
-                .add("spec")
-                .set(this.work.spec().asText())
         ).log();
         try {
             this.origin.pulse();

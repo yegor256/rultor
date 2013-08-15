@@ -45,7 +45,6 @@ import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Queue;
-import com.rultor.spi.Spec;
 import com.rultor.spi.Work;
 import com.rultor.tools.NormJson;
 import com.rultor.tools.Time;
@@ -90,11 +89,6 @@ public final class SQSQueue implements Queue {
      * JSON key.
      */
     private static final String KEY_UNIT = "unit";
-
-    /**
-     * JSON key.
-     */
-    private static final String KEY_SPEC = "spec";
 
     /**
      * JSON key.
@@ -220,7 +214,6 @@ public final class SQSQueue implements Queue {
             .write(SQSQueue.KEY_OWNER, work.owner().toString())
             .write(SQSQueue.KEY_SCHEDULED, work.scheduled().toString())
             .write(SQSQueue.KEY_UNIT, work.unit())
-            .write(SQSQueue.KEY_SPEC, work.spec().asText())
             .writeEnd()
             .close();
         return writer.toString();
@@ -239,7 +232,6 @@ public final class SQSQueue implements Queue {
         return new Work.Simple(
             URN.create(object.getString(SQSQueue.KEY_OWNER)),
             object.getString(SQSQueue.KEY_UNIT),
-            new Spec.Simple(object.getString(SQSQueue.KEY_SPEC)),
             new Time(object.getString(SQSQueue.KEY_SCHEDULED))
         );
     }

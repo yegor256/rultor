@@ -179,13 +179,7 @@ public final class Main {
         if (options.has("spec")) {
             final Work work = new Work.Simple(
                 URN.create("urn:facebook:1"),
-                "default",
-                new Spec.Simple(
-                    FileUtils.readFileToString(
-                        new File(options.valueOf("spec").toString()),
-                        CharEncoding.UTF_8
-                    )
-                )
+                "default"
             );
             queue = new Queue() {
                 private final transient AtomicBoolean done =
@@ -206,7 +200,15 @@ public final class Main {
                     return pulled;
                 }
             };
-            users = new FakeUsers(work);
+            users = new FakeUsers(
+                work,
+                new Spec.Simple(
+                    FileUtils.readFileToString(
+                        new File(options.valueOf("spec").toString()),
+                        CharEncoding.UTF_8
+                    )
+                )
+            );
         } else {
             final String sqs = options.valueOf("sqs-url").toString();
             if (options.has("sqs-key")) {

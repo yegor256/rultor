@@ -104,7 +104,7 @@ final class JaxbFace {
                 final Object object = var.instantiate(
                     this.users,
                     new Arguments(
-                        this.work(user.urn(), unit.name(), spec),
+                        this.work(user.urn(), unit.name()),
                         new Wallet.Empty()
                     )
                 );
@@ -155,10 +155,9 @@ final class JaxbFace {
      * The work we're in (while rendering).
      * @param owner Owner of the unit
      * @param unit Name of the unit we're rendering now
-     * @param spec Its spec
      * @return The work
      */
-    private Work work(final URN owner, final String unit, final Spec spec) {
+    private Work work(final URN owner, final String unit) {
         // @checkstyle AnonInnerLength (50 lines)
         return new Work() {
             @Override
@@ -172,10 +171,6 @@ final class JaxbFace {
             @Override
             public String unit() {
                 return unit;
-            }
-            @Override
-            public Spec spec() {
-                return spec;
             }
             @Override
             public URI stdout() {

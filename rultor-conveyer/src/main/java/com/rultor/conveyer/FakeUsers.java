@@ -31,6 +31,7 @@ package com.rultor.conveyer;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
@@ -59,11 +60,18 @@ final class FakeUsers implements Users {
     private final transient Work work;
 
     /**
+     * Spec to use.
+     */
+    private final transient Spec spec;
+
+    /**
      * Public ctor.
      * @param wrk Work
+     * @param spc Spec
      */
-    protected FakeUsers(final Work wrk) {
+    protected FakeUsers(final Work wrk, final Spec spc) {
         this.work = wrk;
+        this.spec = spc;
     }
 
     /**
@@ -79,7 +87,7 @@ final class FakeUsers implements Users {
      */
     @Override
     public User get(final URN name) {
-        return new FakeUser(this.work);
+        return new FakeUser(this.work, this.spec);
     }
 
     /**
