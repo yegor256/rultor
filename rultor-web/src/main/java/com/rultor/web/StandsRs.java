@@ -29,9 +29,7 @@
  */
 package com.rultor.web;
 
-import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
@@ -106,8 +104,7 @@ public final class StandsRs extends BaseRs {
      */
     private JaxbBundle mine() {
         return new JaxbBundle("stands").add(
-            new JaxbBundle.Group<Stand>(
-                Iterables.limit(this.user().stands(), Tv.TEN)) {
+            new JaxbBundle.Group<Stand>(this.user().stands()) {
                 @Override
                 public JaxbBundle bundle(final Stand stand) {
                     return StandsRs.this.stand(stand);
