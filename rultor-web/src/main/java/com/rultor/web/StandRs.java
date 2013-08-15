@@ -31,12 +31,20 @@ package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.Logger;
+import com.jcabi.urn.URN;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.PageBuilder;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
+import com.rultor.spi.ACL;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Repo;
+import com.rultor.spi.SpecException;
 import com.rultor.spi.Stand;
+import com.rultor.spi.Wallet;
+import com.rultor.spi.Work;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -47,6 +55,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.xml.transform.TransformerException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
@@ -62,6 +71,7 @@ import org.xembly.XemblySyntaxException;
  */
 @Path("/s/{stand:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class StandRs extends BaseRs {
 
     /**
@@ -107,7 +117,8 @@ public final class StandRs extends BaseRs {
         } catch (NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
-        if (!stand.owner().equals(this.user().urn())) {
+        if (!stand.owner().equals(this.user().urn())
+            && !this.acl(stand).canView(this.user().urn())) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 String.format("access denied to stand `%s`", this.name),
@@ -167,6 +178,38 @@ public final class StandRs extends BaseRs {
             assert ex != null;
         }
         return bundle;
+    }
+
+    /**
+     * Get ACL of the stand.
+     * @param stand The stand
+     * @return ACL
+     */
+    private ACL acl(final Stand stand) {
+        ACL acl;
+        try {
+            acl = ACL.class.cast(
+                new Repo.Cached(this.repo(), this.user(), stand.acl())
+                    .get()
+                    .instantiate(
+                        this.users(),
+                        new Arguments(new Work.None(), new Wallet.Empty())
+                    )
+            );
+        } catch (SpecException ex) {
+            Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+            acl = new ACL() {
+                @Override
+                public boolean canView(final URN urn) {
+                    return false;
+                }
+                @Override
+                public boolean canPost(final String key) {
+                    return false;
+                }
+            };
+        }
+        return acl;
     }
 
 }
