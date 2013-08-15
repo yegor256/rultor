@@ -45,8 +45,10 @@ import java.util.Map;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.PullRequestService;
 import org.xembly.ImpossibleModificationException;
@@ -80,7 +82,7 @@ final class GhRequest implements MergeRequest {
     private final transient ArrayMap<String, Object> parameters;
 
     /**
-     * Issue ID.
+     * Pull request issue ID.
      */
     private final transient int issue;
 
@@ -171,11 +173,22 @@ final class GhRequest implements MergeRequest {
                 this.summary(snapshot)
             )
         );
-        final PullRequestService svc = new PullRequestService(client);
-        svc.merge(
-            this.repository, this.issue,
-            "merged after full testing"
-        );
+        try {
+            final PullRequestService svc = new PullRequestService(client);
+            svc.merge(
+                this.repository, this.issue,
+                String.format("pull request #%d", this.issue)
+            );
+        } catch (RequestException ex) {
+            issues.createComment(
+                this.repository, this.issue,
+                String.format(
+                    "Failed to merge: %s",
+                    ExceptionUtils.getRootCauseMessage(ex)
+                )
+            );
+            throw ex;
+        }
     }
 
     /**
