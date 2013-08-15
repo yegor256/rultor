@@ -37,6 +37,9 @@ SQS_WALLET_URL=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.
 DYNAMO_PREFIX=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.prefix'`
 INSTANCE=`curl --silent http://169.254.169.254/latest/meta-data/instance-id`
 
+# to update the version of dynamic-dynamo
+sudo pip install -U dynamic-dynamodb
+
 # https://github.com/sebdah/dynamic-dynamodb
 dynamic-dynamodb --version
 for table in units stands
