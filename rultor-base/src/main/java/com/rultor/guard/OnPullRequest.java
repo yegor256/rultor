@@ -130,7 +130,7 @@ public final class OnPullRequest implements Instance {
     @Tag("merge")
     @Step(
         before = "building merge request ${args[0].name()}",
-        value = "request ${args[0].name()} successfully merged"
+        value = "merge request ${args[0].name()} was built"
     )
     private void merge(final MergeRequest request) throws IOException {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();

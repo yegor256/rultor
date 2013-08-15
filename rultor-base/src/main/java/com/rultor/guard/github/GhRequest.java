@@ -169,7 +169,7 @@ final class GhRequest implements MergeRequest {
         issues.createComment(
             this.repository, this.issue,
             String.format(
-                "Tested succefully, merging...:\n\n```\n%s\n```",
+                "Accepted, ready to merge.\n\n%s",
                 this.summary(snapshot)
             )
         );
@@ -177,14 +177,14 @@ final class GhRequest implements MergeRequest {
             final PullRequestService svc = new PullRequestService(client);
             svc.merge(
                 this.repository, this.issue,
-                String.format("pull request #%d", this.issue)
+                String.format("#%d: pull request", this.issue)
             );
         } catch (RequestException ex) {
             issues.createComment(
                 this.repository, this.issue,
                 String.format(
-                    "Failed to merge: %s",
-                    ExceptionUtils.getRootCauseMessage(ex)
+                    "Failed to merge:\n\n```\n%s\n```",
+                    ExceptionUtils.getStackTrace(ex)
                 )
             );
             throw ex;
@@ -203,7 +203,7 @@ final class GhRequest implements MergeRequest {
         svc.createComment(
             this.repository, this.issue,
             String.format(
-                "Tests failed, can't merge:\n\n```\n%s\n```",
+                "**Rejected**, not ready to merge.\n\n%s",
                 this.summary(snapshot)
             )
         );
@@ -223,7 +223,7 @@ final class GhRequest implements MergeRequest {
                         this.getClass().getResourceAsStream("summary.xsl")
                     ).dom()
                 )
-            ).xpath("/text/text()").get(0);
+            ).xpath("/markdown/text()").get(0);
         } catch (TransformerException ex) {
             throw new IllegalStateException(ex);
         } catch (ImpossibleModificationException ex) {
