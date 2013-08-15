@@ -64,6 +64,15 @@ public final class NormJsonTest {
     }
 
     /**
+     * NormJson can throw on an array.
+     * @throws Exception If some problem inside
+     */
+    @Test(expected = NormJson.JsonException.class)
+    public void throwsOnArrayInsteadOfObject() throws Exception {
+        new NormJson("{  }").readObject("[\"first\", \"second\"]");
+    }
+
+    /**
      * NormJson can throw on schema violation.
      * @throws Exception If some problem inside
      */

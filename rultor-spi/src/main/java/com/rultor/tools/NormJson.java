@@ -137,7 +137,11 @@ public final class NormJson {
         if (!report.isSuccess()) {
             throw new NormJson.JsonException(StringUtils.join(report, ";"));
         }
-        return Json.createReader(new StringReader(json)).readObject();
+        try {
+            return Json.createReader(new StringReader(json)).readObject();
+        } catch (javax.json.JsonException ex) {
+            throw new NormJson.JsonException(ex);
+        }
     }
 
 }
