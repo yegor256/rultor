@@ -163,13 +163,18 @@ final class GhRequest implements MergeRequest {
     @Step("accepted GitHub pull request #${this.issue}")
     private void accept(final Snapshot snapshot) throws IOException {
         final GitHubClient client = this.github.client();
+        final IssueService issues = new IssueService(client);
+        issues.createComment(
+            this.repository, this.issue,
+            String.format(
+                "Tested succefully, merging...:\n\n```\n%s\n```",
+                this.summary(snapshot)
+            )
+        );
         final PullRequestService svc = new PullRequestService(client);
         svc.merge(
             this.repository, this.issue,
-            String.format(
-                "Tested, no problems found, merging...\n\n```\n%s\n```",
-                this.summary(snapshot)
-            )
+            "merged after full testing"
         );
     }
 
@@ -185,7 +190,7 @@ final class GhRequest implements MergeRequest {
         svc.createComment(
             this.repository, this.issue,
             String.format(
-                "Tests failed, can't merge:\n\n```\n%s\n```\n\n%s",
+                "Tests failed, can't merge:\n\n```\n%s\n```",
                 this.summary(snapshot)
             )
         );

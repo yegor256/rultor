@@ -35,6 +35,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Snapshot;
+import com.rultor.snapshot.Step;
 import com.rultor.snapshot.Tag;
 import com.rultor.spi.Instance;
 import com.rultor.stateful.ConcurrentNotepad;
@@ -127,6 +128,10 @@ public final class OnPullRequest implements Instance {
      * @throws IOException If IO problem
      */
     @Tag("merge")
+    @Step(
+        before = "building merge request ${args[0].name()}",
+        value = "request ${args[0].name()} successfully merged"
+    )
     private void merge(final MergeRequest request) throws IOException {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final int code = this.batch.exec(

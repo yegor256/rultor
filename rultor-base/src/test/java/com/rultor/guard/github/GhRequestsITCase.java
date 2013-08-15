@@ -31,6 +31,7 @@ package com.rultor.guard.github;
 
 import com.rultor.guard.MergeRequest;
 import com.rultor.guard.MergeRequests;
+import com.rultor.snapshot.Snapshot;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -82,6 +83,8 @@ public final class GhRequestsITCase {
             request.params(),
             Matchers.hasKey("issue")
         );
+        request.notify(1, new Snapshot("ADD 'test';"));
+        request.notify(0, new Snapshot("ADD 'boom';"));
     }
 
 }
