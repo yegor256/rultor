@@ -63,7 +63,7 @@
                     <!-- this is for W3C compliance -->
                     <xsl:text> </xsl:text>
                 </script>
-                <script type="text/javascript" src="//rawgithub.com/timrwood/moment/2.1.0/min/moment.min.js">
+                <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.1.0/moment.min.js">
                     <!-- this is for W3C compliance -->
                     <xsl:text> </xsl:text>
                 </script>
