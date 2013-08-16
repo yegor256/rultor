@@ -34,6 +34,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rultor.snapshot.Step;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -99,7 +100,8 @@ public final class SemVer implements SCM {
      * {@inheritDoc}
      */
     @Override
-    public Iterable<String> branches() throws IOException {
+    @Step("${result.size()} branch(es) match ${this.regex}")
+    public List<String> branches() throws IOException {
         final List<String> ordered = new LinkedList<String>();
         final Pattern pattern = Pattern.compile(this.regex);
         ordered.addAll(
@@ -128,7 +130,7 @@ public final class SemVer implements SCM {
                 }
             }
         );
-        return Collections.unmodifiableCollection(ordered);
+        return Collections.unmodifiableList(ordered);
     }
 
     /**

@@ -33,7 +33,6 @@ import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import javax.validation.constraints.NotNull;
@@ -84,8 +83,8 @@ public final class Edge implements SCM {
      * {@inheritDoc}
      */
     @Override
-    public Iterable<String> branches() throws IOException {
-        final Collection<String> branches = new LinkedList<String>();
+    public List<String> branches() throws IOException {
+        final List<String> branches = new LinkedList<String>();
         final List<String> all = Lists.newLinkedList(this.scm.branches());
         if (!all.isEmpty()) {
             branches.add(all.get(all.size() - 1));
