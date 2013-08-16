@@ -30,50 +30,71 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import com.rultor.tools.Time;
-import java.util.List;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Sheet of transactions.
+ * Column in sheet.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Sheet extends Pageable<List<Object>, Integer> {
+public interface Column {
 
     /**
-     * Column names/titles.
-     * @return Titles
+     * Title of it.
+     * @return Title
      */
-    @NotNull(message = "list of titles is never NULL")
-    List<Column> columns();
+    @NotNull(message = "title is never NULL")
+    String title();
 
     /**
-     * Order by.
-     * @param column Column to order by
-     * @return New sheet
+     * Can group by it?
+     * @return TRUE if we can order by it
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet orderBy(Column column);
+    boolean isGroup();
 
     /**
-     * Group by.
-     * @param column Column to group by
-     * @return New sheet
+     * Simple column.
      */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet groupBy(Column column);
-
-    /**
-     * Between these dates.
-     * @param left Left time
-     * @param right Right time
-     * @return New sheet
-     */
-    @NotNull(message = "new sheet is never NULL")
-    Sheet between(Time left, Time right);
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = { "name", "grp" })
+    final class Simple implements Column {
+        /**
+         * Title of it.
+         */
+        private final transient String name;
+        /**
+         * Can be used in grouping.
+         */
+        private final transient boolean grp;
+        /**
+         * Public ctor.
+         * @param title Title of it
+         * @param group Is it a group?
+         */
+        public Simple(final String title, final boolean group) {
+            this.name = title;
+            this.grp = group;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String title() {
+            return this.name;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean isGroup() {
+            return this.grp;
+        }
+    }
 
 }

@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArraySortedSet;
 import com.jcabi.jdbc.JdbcSession;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Column;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Sheet;
 import com.rultor.tools.Time;
@@ -41,6 +42,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -75,12 +77,12 @@ final class PgSheet implements Sheet {
     /**
      * Order by.
      */
-    private final transient ArraySortedSet<String> orders;
+    private final transient ArraySortedSet<Column> orders;
 
     /**
      * Group by.
      */
-    private final transient ArraySortedSet<String> groups;
+    private final transient ArraySortedSet<Column> groups;
 
     /**
      * Public ctor.
@@ -88,7 +90,7 @@ final class PgSheet implements Sheet {
      * @param urn URN of the owner
      */
     protected PgSheet(final PgClient clnt, final URN urn) {
-        this(clnt, urn, new ArrayList<String>(0), new ArrayList<String>(0));
+        this(clnt, urn, new ArrayList<Column>(0), new ArrayList<Column>(0));
     }
 
     /**
@@ -100,14 +102,14 @@ final class PgSheet implements Sheet {
      * @checkstyle ParameterNumber (5 lines)
      */
     protected PgSheet(final PgClient clnt, final URN urn,
-        final Collection<String> ords, final Collection<String> grps) {
+        final Collection<Column> ords, final Collection<Column> grps) {
         this.client = clnt;
         this.owner = urn;
-        this.orders = new ArraySortedSet<String>(
-            ords, new ArraySortedSet.Comparator.Default<String>()
+        this.orders = new ArraySortedSet<Column>(
+            ords, new ArraySortedSet.Comparator.Default<Column>()
         );
-        this.groups = new ArraySortedSet<String>(
-            grps, new ArraySortedSet.Comparator.Default<String>()
+        this.groups = new ArraySortedSet<Column>(
+            grps, new ArraySortedSet.Comparator.Default<Column>()
         );
     }
 
@@ -115,34 +117,24 @@ final class PgSheet implements Sheet {
      * {@inheritDoc}
      */
     @Override
-    public List<String> columns() {
-        try {
-            return new JdbcSession(this.client.get())
-                // @checkstyle LineLength (1 line)
-                .sql("SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'receipt'")
-                .select(
-                    new JdbcSession.Handler<List<String>>() {
-                        @Override
-                        public List<String> handle(final ResultSet rset)
-                            throws SQLException {
-                            final List<String> names = new LinkedList<String>();
-                            while (rset.next()) {
-                                names.add(rset.getString(1));
-                            }
-                            return names;
-                        }
-                    }
-                );
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+    public List<Column> columns() {
+        return Arrays.<Column>asList(
+            new Column.Simple("id", false),
+            new Column.Simple("time", false),
+            new Column.Simple("ctunit", true),
+            new Column.Simple("ctunit", true),
+            new Column.Simple("dt", true),
+            new Column.Simple("dtunit", true),
+            new Column.Simple("details", false),
+            new Column.Simple("amount", false)
+        );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Sheet orderBy(final String column) {
+    public Sheet orderBy(final Column column) {
         return new PgSheet(
             this.client, this.owner, this.orders.with(column), this.groups
         );
@@ -152,7 +144,7 @@ final class PgSheet implements Sheet {
      * {@inheritDoc}
      */
     @Override
-    public Sheet groupBy(final String column) {
+    public Sheet groupBy(final Column column) {
         return new PgSheet(
             this.client, this.owner, this.orders, this.groups.with(column)
         );
