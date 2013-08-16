@@ -62,7 +62,6 @@ import org.xembly.XemblySyntaxException;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "directives")
-@Loggable(Loggable.DEBUG)
 public final class Snapshot {
 
     /**

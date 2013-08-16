@@ -32,6 +32,7 @@ package com.rultor.users.mongo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -39,7 +40,6 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import com.rexsl.test.SimpleXml;
-import com.rexsl.test.XmlDocument;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
@@ -49,6 +49,7 @@ import com.rultor.tools.Time;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -60,6 +61,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.w3c.dom.Document;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
@@ -144,8 +146,7 @@ final class MongoStand implements Stand {
      * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public void post(final String pulse, final long nano, final String xembly)
-        throws BrokenXemblyException {
+    public void post(final String pulse, final long nano, final String xembly) {
         while (true) {
             if (this.save(pulse, nano, xembly)) {
                 break;
@@ -208,11 +209,10 @@ final class MongoStand implements Stand {
      * @param nano Nano ID
      * @param xembly Xembly script to append
      * @return TRUE if success
-     * @throws Stand.BrokenXemblyException If can't save
-     * @checkstyle RedundantThrows (5 lines)
      */
+    @SuppressWarnings("unchecked")
     private boolean save(final String pulse, final long nano,
-        final String xembly) throws Stand.BrokenXemblyException {
+        final String xembly) {
         final DBObject object = this.collection().findAndModify(
             new BasicDBObject()
                 .append(MongoStand.ATTR_PULSE, pulse)
@@ -220,6 +220,7 @@ final class MongoStand implements Stand {
             new BasicDBObject()
                 .append(MongoStand.ATTR_PULSE, 1)
                 .append(MongoStand.ATTR_STAND, 1)
+                .append(MongoStand.ATTR_TAGS, 1)
                 .append(MongoStand.ATTR_XEMBLY, 1),
             new BasicDBObject(),
             false,
@@ -234,7 +235,6 @@ final class MongoStand implements Stand {
             .append(object.get(MongoStand.ATTR_XEMBLY))
             .append(nano).append(' ')
             .append(xembly).append('\n').toString();
-        final Document dom = this.dom(MongoStand.decode(after));
         final WriteResult result = this.collection().update(
             object,
             new BasicDBObject()
@@ -242,7 +242,13 @@ final class MongoStand implements Stand {
                 .append(MongoStand.ATTR_STAND, this.name())
                 .append(MongoStand.ATTR_UPDATED, new Time().toString())
                 .append(MongoStand.ATTR_XEMBLY, after)
-                .append(MongoStand.ATTR_TAGS, this.tags(dom))
+                .append(
+                    MongoStand.ATTR_TAGS,
+                    this.tags(
+                        MongoStand.decode(after),
+                        (Collection<String>) object.get(MongoStand.ATTR_TAGS)
+                    )
+                )
         );
         Validate.isTrue(
             result.getLastError().ok(),
@@ -278,12 +284,25 @@ final class MongoStand implements Stand {
 
     /**
      * Fetch all visible tags.
-     * @param dom Document to fetch from
+     * @param after Xembly after changes
+     * @param before List of existing tags
      * @return Array of tags
      */
-    private Collection<String> tags(final Document dom) {
-        final XmlDocument xml = new SimpleXml(new DOMSource(dom));
-        return xml.xpath("/snapshot/tags/tag/label/text()");
+    private Collection<String> tags(final String after,
+        final Collection<String> before) {
+        final Collection<String> tags = new HashSet<String>(0);
+        if (before != null) {
+            tags.addAll(before);
+        }
+        try {
+            tags.addAll(
+                new SimpleXml(new DOMSource(this.dom(after)))
+                    .xpath("/snapshot/tags/tag/label/text()")
+            );
+        } catch (BrokenXemblyException ex) {
+            Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+        }
+        return tags;
     }
 
     /**

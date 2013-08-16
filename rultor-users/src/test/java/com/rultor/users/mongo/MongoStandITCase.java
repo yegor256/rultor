@@ -43,6 +43,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -50,6 +51,7 @@ import org.junit.Assume;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.w3c.dom.Document;
+import org.xembly.Directives;
 
 /**
  * Integration case for {@link MongoStand}.
@@ -121,14 +123,21 @@ public final class MongoStandITCase {
         final Stand stand = this.stand();
         final String pulse = RandomStringUtils.randomAlphabetic(Tv.TEN);
         final CountDownLatch start = new CountDownLatch(1);
-        final AtomicLong nano = new AtomicLong();
+        final AtomicLong nano = new AtomicLong(1);
         final Runnable runnable = new VerboseRunnable(
             new Callable<Void>() {
                 @Override
                 public Void call() throws Exception {
                     start.await();
                     final long inc = nano.getAndIncrement();
-                    stand.post(pulse, inc, String.format("ADD 'a%d';", inc));
+                    stand.post(
+                        pulse, inc,
+                        new Directives()
+                            .xpath(String.format("//a%d", inc - 1))
+                            .strict(1)
+                            .add(String.format("a%d", inc))
+                            .toString()
+                    );
                     return null;
                 }
             }
@@ -146,11 +155,13 @@ public final class MongoStandITCase {
             svc.awaitTermination(Tv.TEN, TimeUnit.SECONDS),
             Matchers.is(true)
         );
-        final Document dom = Snapshot.empty();
+        final Document dom = DocumentBuilderFactory.newInstance()
+            .newDocumentBuilder().newDocument();
+        dom.appendChild(dom.createElement("a0"));
         new Snapshot(stand.pulses().iterator().next().xembly()).apply(dom);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(dom),
-            XhtmlMatchers.hasXPath("/snapshot/a0/a1/a2/a3/a4")
+            XhtmlMatchers.hasXPath("/a0/a1/a2/a3/a4")
         );
     }
 
