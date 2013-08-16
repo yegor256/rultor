@@ -29,8 +29,11 @@
  */
 package com.rultor.scm.git;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rultor.scm.Branch;
 import com.rultor.scm.SCM;
 import com.rultor.shell.Shell;
@@ -157,13 +160,26 @@ public final class Git implements SCM {
     @Tag("git")
     @Step("found ${result.size()} refs in Git")
     public Collection<String> branches() throws IOException {
-        return Arrays.asList(
-            this.terminal.exec(
-                new StringBuilder(this.reset())
-                    .append(" && git for-each-ref --format='%(refname:short)'")
-                    .toString(),
-                this.key.asText()
-            ).split("\n")
+        return Collections2.transform(
+            Arrays.asList(
+                this.terminal.exec(
+                    new StringBuilder(this.reset())
+                        // @checkstyle LineLength (1 line)
+                        .append(" && git for-each-ref --format='%(refname:short)' refs/remotes/origin refs/tags")
+                        .toString(),
+                    this.key.asText()
+                ).split("\n")
+            ),
+            new Function<String, String>() {
+                @Override
+                public String apply(final String input) {
+                    String name = input;
+                    if (input.startsWith("origin/")) {
+                        name = input.substring(Tv.SEVEN);
+                    }
+                    return name;
+                }
+            }
         );
     }
 

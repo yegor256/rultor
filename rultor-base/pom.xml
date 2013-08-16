@@ -163,6 +163,8 @@
                             <failsafe.github.user>${failsafe.github.user}</failsafe.github.user>
                             <failsafe.github.password>${failsafe.github.password}</failsafe.github.password>
                             <failsafe.github.repo>${failsafe.github.repo}</failsafe.github.repo>
+                            <failsafe.git.url>${failsafe.git.url}</failsafe.git.url>
+                            <failsafe.git.tag>${failsafe.git.tag}</failsafe.git.tag>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

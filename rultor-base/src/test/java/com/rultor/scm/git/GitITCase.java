@@ -49,16 +49,26 @@ import org.junit.Test;
 public final class GitITCase {
 
     /**
-     * Git can execute return a branch.
+     * URL of test Git repository.
+     */
+    private static final String URL = System.getProperty("failsafe.git.url");
+
+    /**
+     * Tag of test Git repository.
+     */
+    private static final String TAG = System.getProperty("failsafe.git.tag");
+
+    /**
+     * Git can checkout a branch.
      * @throws Exception If some problem inside
      */
     @Test
-    public void manipulatesBranches() throws Exception {
-        Assume.assumeNotNull(System.getProperty("failsafe.github.user"));
+    public void checksOutBranch() throws Exception {
+        Assume.assumeNotNull(GitITCase.URL);
         final File dir = Files.createTempDir();
         final SCM git = new Git(
             new ShellMocker.Bash(dir),
-            new URL("https://github.com/alex-palevsky/test.git"),
+            new URL(GitITCase.URL),
             "test"
         );
         final Branch branch = git.checkout("master");
@@ -66,6 +76,25 @@ public final class GitITCase {
         MatcherAssert.assertThat(
             head.name().matches("[a-f0-9]{40}"),
             Matchers.is(true)
+        );
+    }
+
+    /**
+     * Git can list branches.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void listsBranches() throws Exception {
+        Assume.assumeNotNull(GitITCase.URL);
+        final File dir = Files.createTempDir();
+        final SCM git = new Git(
+            new ShellMocker.Bash(dir),
+            new URL(GitITCase.URL),
+            "boom"
+        );
+        MatcherAssert.assertThat(
+            git.branches(),
+            Matchers.hasItems("HEAD", GitITCase.TAG)
         );
     }
 
