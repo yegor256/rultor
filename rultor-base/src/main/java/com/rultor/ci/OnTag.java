@@ -35,6 +35,8 @@ import com.jcabi.log.Logger;
 import com.rultor.board.Billboard;
 import com.rultor.scm.SCM;
 import com.rultor.shell.Batch;
+import com.rultor.snapshot.Step;
+import com.rultor.snapshot.Tag;
 import com.rultor.spi.Instance;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -87,10 +89,9 @@ public final class OnTag implements Instance {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
-        new OnCommit(
-            this.scm.checkout(this.scm.branches().iterator().next()),
-            this.batch, this.board
-        ).pulse();
+        for (String tag : this.scm.branches()) {
+            this.build(tag);
+        }
     }
 
     /**
@@ -102,6 +103,23 @@ public final class OnTag implements Instance {
             "on every tag in %s executes %s and announces through %s",
             this.scm, this.batch, this.board
         );
+    }
+
+    /**
+     * Build this particular branch.
+     * @param tag Branch name to build
+     * @throws Exception If fails
+     */
+    @Step(
+        before = "building `${args[0]}`",
+        value = "built successfully `${args[0]}`"
+    )
+    @Tag("ci")
+    private void build(final String tag) throws Exception {
+        new OnCommit(
+            this.scm.checkout(tag),
+            this.batch, this.board
+        ).pulse();
     }
 
 }

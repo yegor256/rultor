@@ -41,7 +41,6 @@ import com.rultor.snapshot.Step;
 import com.rultor.snapshot.Tag;
 import com.rultor.spi.Instance;
 import java.io.IOException;
-import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.xembly.ImpossibleModificationException;
@@ -94,9 +93,8 @@ public final class OnCommit implements Instance {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
-        final Iterator<Commit> commits = this.branch.log().iterator();
-        if (commits.hasNext()) {
-            this.build(commits.next());
+        for (Commit commit : this.branch.log()) {
+            this.build(commit);
         }
     }
 
