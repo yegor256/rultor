@@ -33,7 +33,6 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
-import com.rexsl.test.SimpleXml;
 import com.rultor.ci.Build;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Snapshot;
@@ -160,7 +159,7 @@ public final class OnPullRequest implements Instance {
     private boolean success(final Snapshot snapshot, final String tag) {
         boolean success = false;
         try {
-            success ^= new SimpleXml(snapshot.xml())
+            success ^= snapshot.xml()
                 .nodes(String.format("//tag[label='%s' and level='INFO']", tag))
                 .isEmpty();
         } catch (ImpossibleModificationException ex) {

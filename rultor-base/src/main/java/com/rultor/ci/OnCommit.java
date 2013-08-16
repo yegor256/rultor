@@ -128,7 +128,7 @@ public final class OnCommit implements Instance {
                         .put("branch", this.branch.name())
                         .put("head", head)
                         .build()
-                ).xml()
+                ).xml().toString()
             );
         } catch (ImpossibleModificationException ex) {
             throw new IllegalStateException(ex);

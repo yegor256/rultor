@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
 import com.rexsl.test.SimpleXml;
+import com.rexsl.test.XmlDocument;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -142,8 +143,8 @@ public final class Snapshot {
      * @throws ImpossibleModificationException If can't apply
      * @checkstyle RedundantThrows (3 lines)
      */
-    public String xml() throws ImpossibleModificationException {
-        return new SimpleXml(new DOMSource(this.dom())).toString();
+    public XmlDocument xml() throws ImpossibleModificationException {
+        return new SimpleXml(new DOMSource(this.dom()));
     }
 
     /**
