@@ -73,7 +73,7 @@ public final class GhRequestTest {
         final MergeRequest request = new GhRequest(
             github, new Github.Repo("test/test"), req
         );
-        request.notify(0, new Snapshot("ADD 'test';"));
+        request.accept(new Snapshot("ADD 'test';"));
     }
 
 }

@@ -33,13 +33,19 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Snapshot;
+import com.rultor.snapshot.XemblyLine;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.SequenceInputStream;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
+import org.xembly.Directives;
 import org.xembly.XemblySyntaxException;
 
 /**
@@ -53,7 +59,7 @@ import org.xembly.XemblySyntaxException;
 @ToString
 @EqualsAndHashCode(of = "batch")
 @Loggable(Loggable.DEBUG)
-final class Build {
+public final class Build {
 
     /**
      * Batch to execute.
@@ -61,11 +67,19 @@ final class Build {
     private final transient Batch batch;
 
     /**
+     * Name of the product we're building.
+     */
+    private final transient String product;
+
+    /**
      * Public ctor.
+     * @param pdt Product name
      * @param btch Batch to use
      */
-    protected Build(@NotNull(message = "batch can't be NULL")
-        final Batch btch) {
+    public Build(
+        @NotNull(message = "product name can't be NULL") final String pdt,
+        @NotNull(message = "batch can't be NULL") final Batch btch) {
+        this.product = pdt;
         this.batch = btch;
     }
 
@@ -79,12 +93,41 @@ final class Build {
     public Snapshot exec(@NotNull(message = "args can't be NULL")
         final Map<String, Object> args) throws IOException {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
-        this.batch.exec(args, stdout);
+        final int code = this.batch.exec(args, stdout);
         try {
-            return new Snapshot(new ByteArrayInputStream(stdout.toByteArray()));
+            return new Snapshot(
+                new SequenceInputStream(
+                    new ByteArrayInputStream(stdout.toByteArray()),
+                    IOUtils.toInputStream(this.tag(code), Charsets.UTF_8)
+                )
+            );
         } catch (XemblySyntaxException ex) {
             throw new IOException(ex);
         }
+    }
+
+    /**
+     * Make a xembly tag when done.
+     * @param code The code
+     * @return Marker
+     */
+    private String tag(final int code) {
+        final Level level;
+        if (code == 0) {
+            level = Level.INFO;
+        } else {
+            level = Level.SEVERE;
+        }
+        final XemblyLine line = new XemblyLine(
+            new Directives()
+                .xpath("/snapshot").strict(1).addIfAbsent("tags")
+                .xpath(String.format("tag[label='%s']", this.product))
+                .remove().xpath("/snapshot/tags").strict(1)
+                .add("tag").add("label").set(this.product).up()
+                .add("level").set(level.toString())
+        );
+        line.log();
+        return line.toString();
     }
 
 }

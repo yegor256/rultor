@@ -34,6 +34,7 @@ import com.amazonaws.services.sns.model.PublishRequest;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.aws.SNSClient;
+import com.rultor.snapshot.Step;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
@@ -94,6 +95,7 @@ public final class SNS implements Billboard {
      * {@inheritDoc}
      */
     @Override
+    @Step("notification sent to ${this.topic}")
     public void announce(
         @NotNull(message = "body can't be NULL") final String body) {
         final String[] parts = body.split("\n", 2);

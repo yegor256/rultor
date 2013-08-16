@@ -83,11 +83,15 @@ public final class BuildTest {
             .exec(
                 Mockito.any(Map.class), Mockito.any(OutputStream.class)
             );
-        final Build build = new Build(batch);
+        final Build build = new Build("hey", batch);
         MatcherAssert.assertThat(
-            build.exec(new ImmutableMap.Builder<String, Object>().build())
-                .xml(),
-            XhtmlMatchers.hasXPath("/snapshot[test='привет']")
+            build.exec(
+                new ImmutableMap.Builder<String, Object>().build()
+            ).xml(),
+            XhtmlMatchers.hasXPaths(
+                "/snapshot[test='привет']",
+                "/snapshot/tags/tag[label='hey' and level='INFO']"
+            )
         );
     }
 

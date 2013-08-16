@@ -80,7 +80,7 @@ public final class NeutralBuild implements Instance {
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
         this.board.announce(
-            new Build(this.batch).exec(
+            new Build("neutral", this.batch).exec(
                 new ImmutableMap.Builder<String, Object>().build()
             ).xml()
         );

@@ -124,22 +124,6 @@ final class GhRequest implements MergeRequest {
      * {@inheritDoc}
      */
     @Override
-    public void notify(final int code, final Snapshot snapshot) {
-        try {
-            if (code == 0) {
-                this.accept(snapshot);
-            } else {
-                this.reject(snapshot);
-            }
-        } catch (IOException ex) {
-            throw new IllegalArgumentException(ex);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String toString() {
         return Logger.format(
             "%s (#%d) in %s",
@@ -158,12 +142,11 @@ final class GhRequest implements MergeRequest {
     }
 
     /**
-     * Accept pull request.
-     * @param snapshot Snapshot XML
-     * @throws IOException If fails
+     * {@inheritDoc}
      */
+    @Override
     @Step("accepted GitHub pull request #${this.issue}")
-    private void accept(final Snapshot snapshot) throws IOException {
+    public void accept(final Snapshot snapshot) throws IOException {
         final GitHubClient client = this.github.client();
         final IssueService issues = new IssueService(client);
         issues.createComment(
@@ -192,12 +175,11 @@ final class GhRequest implements MergeRequest {
     }
 
     /**
-     * Reject pull request.
-     * @param snapshot Snapshot XML
-     * @throws IOException If fails
+     * {@inheritDoc}
      */
+    @Override
     @Step("rejected GitHub pull request #${this.issue}")
-    private void reject(final Snapshot snapshot) throws IOException {
+    public void reject(final Snapshot snapshot) throws IOException {
         final GitHubClient client = this.github.client();
         final IssueService svc = new IssueService(client);
         svc.createComment(

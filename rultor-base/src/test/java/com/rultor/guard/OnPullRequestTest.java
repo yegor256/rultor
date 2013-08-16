@@ -29,45 +29,37 @@
  */
 package com.rultor.guard;
 
-import com.jcabi.aspects.Immutable;
+import com.rultor.shell.Batch;
 import com.rultor.snapshot.Snapshot;
-import java.io.IOException;
-import java.util.Map;
+import com.rultor.spi.Instance;
+import com.rultor.stateful.ConcurrentNotepad;
+import java.util.Arrays;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Pull request.
- *
+ * Test case for {@link OnPullRequest}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-public interface MergeRequest {
+public final class OnPullRequestTest {
 
     /**
-     * Unique name of the request.
-     * @return Name of it
+     * OnPullRequest can build when request is available.
+     * @throws Exception If some problem inside
      */
-    String name();
-
-    /**
-     * Optional parameters.
-     * @return Map of parameters
-     */
-    Map<String, Object> params();
-
-    /**
-     * Accept and merge.
-     * @param snapshot Snapshot
-     * @throws IOException If fails
-     */
-    void accept(Snapshot snapshot) throws IOException;
-
-    /**
-     * Reject.
-     * @param snapshot Snapshot
-     * @throws IOException If fails
-     */
-    void reject(Snapshot snapshot) throws IOException;
+    @Test
+    public void buildsOnNewPullRequest() throws Exception {
+        final MergeRequests requests = Mockito.mock(MergeRequests.class);
+        final MergeRequest request = Mockito.mock(MergeRequest.class);
+        Mockito.doReturn(Arrays.asList(request).iterator())
+            .when(requests).iterator();
+        final Batch batch = Mockito.mock(Batch.class);
+        final ConcurrentNotepad notepad = Mockito.mock(ConcurrentNotepad.class);
+        Mockito.doReturn(true).when(notepad).addIfAbsent(Mockito.anyString());
+        final Instance instance = new OnPullRequest(requests, notepad, batch);
+        instance.pulse();
+        Mockito.verify(request).reject(Mockito.any(Snapshot.class));
+    }
 
 }

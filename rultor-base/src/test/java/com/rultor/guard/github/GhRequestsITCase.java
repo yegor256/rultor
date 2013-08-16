@@ -83,8 +83,8 @@ public final class GhRequestsITCase {
             request.params(),
             Matchers.hasKey("issue")
         );
-        request.notify(1, new Snapshot("ADD 'test';"));
-        request.notify(0, new Snapshot("ADD 'boom';"));
+        request.reject(new Snapshot("ADD 'test';"));
+        request.accept(new Snapshot("ADD 'boom';"));
     }
 
 }

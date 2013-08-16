@@ -34,7 +34,9 @@ import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
 import com.rultor.shell.Batch;
 import com.rultor.spi.Instance;
+import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Map;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -50,6 +52,7 @@ public final class OnCommitTest {
      * @throws Exception If some problem inside
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void buildsOnNewCommit() throws Exception {
         final Branch branch = Mockito.mock(Branch.class);
         Mockito.doReturn("master").when(branch).name();
@@ -59,6 +62,9 @@ public final class OnCommitTest {
         final Billboard board = Mockito.mock(Billboard.class);
         final Instance instance = new OnCommit(branch, batch, board);
         instance.pulse();
+        Mockito.verify(batch).exec(
+            Mockito.any(Map.class), Mockito.any(OutputStream.class)
+        );
     }
 
 }

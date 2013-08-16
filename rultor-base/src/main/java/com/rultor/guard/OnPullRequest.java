@@ -33,19 +33,20 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
+import com.rexsl.test.SimpleXml;
+import com.rultor.ci.Build;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.Step;
 import com.rultor.snapshot.Tag;
 import com.rultor.spi.Instance;
 import com.rultor.stateful.ConcurrentNotepad;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.xembly.XemblySyntaxException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.xembly.ImpossibleModificationException;
 
 /**
  * On pull request.
@@ -125,29 +126,47 @@ public final class OnPullRequest implements Instance {
     /**
      * Merge this pull request.
      * @param request The request to merge
+     * @return TRUE if success
      * @throws IOException If IO problem
      */
     @Tag("merge")
     @Step(
         before = "building merge request ${args[0].name()}",
-        value = "merge request ${args[0].name()} was built"
+        // @checkstyle LineLength (1 line)
+        value = "merge request ${args[0].name()} #if($result)built successfully#{else}failed to build#end"
     )
-    private void merge(final MergeRequest request) throws IOException {
-        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
-        final int code = this.batch.exec(
+    private boolean merge(final MergeRequest request) throws IOException {
+        final String tag = "on-pull-request";
+        final Snapshot snapshot = new Build(tag, this.batch).exec(
             new ImmutableMap.Builder<String, Object>()
                 .putAll(request.params())
-                .build(),
-            stdout
+                .build()
         );
-        try {
-            request.notify(
-                code,
-                new Snapshot(new ByteArrayInputStream(stdout.toByteArray()))
-            );
-        } catch (XemblySyntaxException ex) {
-            throw new IOException(ex);
+        final boolean success = this.success(snapshot, tag);
+        if (success) {
+            request.accept(snapshot);
+        } else {
+            request.reject(snapshot);
         }
+        return success;
+    }
+
+    /**
+     * Was it a successful merge?
+     * @param snapshot Snapshot received
+     * @param tag Tag to look for
+     * @return TRUE if success
+     */
+    private boolean success(final Snapshot snapshot, final String tag) {
+        boolean success = false;
+        try {
+            success ^= new SimpleXml(snapshot.xml())
+                .nodes(String.format("//tag[label='%s' and level='INFO']", tag))
+                .isEmpty();
+        } catch (ImpossibleModificationException ex) {
+            Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+        }
+        return success;
     }
 
 }

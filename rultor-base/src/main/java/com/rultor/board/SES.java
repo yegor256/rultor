@@ -41,6 +41,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import com.rultor.aws.SESClient;
+import com.rultor.snapshot.Step;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -114,6 +115,7 @@ public final class SES implements Billboard {
      * {@inheritDoc}
      */
     @Override
+    @Step("email sent to ${this.recipients}")
     public void announce(
         @NotNull(message = "body can't be NULL") final String body) {
         final AmazonSimpleEmailService aws = this.client.get();

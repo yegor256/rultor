@@ -123,7 +123,7 @@ public final class OnCommit implements Instance {
     private boolean build(final Commit head) throws IOException {
         try {
             return this.announce(
-                new Build(this.batch).exec(
+                new Build("on-commit", this.batch).exec(
                     new ImmutableMap.Builder<String, Object>()
                         .put("branch", this.branch.name())
                         .put("head", head)
@@ -141,7 +141,7 @@ public final class OnCommit implements Instance {
      * @return TRUE if it is a success
      * @throws IOException If fails
      */
-    @Step("announced #if($result)success#{else}failure#end to ${this.board}")
+    @Step("announced #if($result)success#{else}failure#end")
     private boolean announce(final String snapshot) throws IOException {
         this.board.announce(snapshot);
         return true;
