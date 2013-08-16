@@ -123,9 +123,9 @@ public final class SemVer implements SCM {
                 @Override
                 public int compare(final String left, final String right) {
                     final Matcher lft = pattern.matcher(left);
-                    assert lft.matches();
+                    lft.matches();
                     final Matcher rht = pattern.matcher(right);
-                    assert rht.matches();
+                    rht.matches();
                     return SemVer.compare(lft.group(1), rht.group(1));
                 }
             }
