@@ -36,6 +36,7 @@ import com.rultor.spi.Work;
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -49,6 +50,7 @@ import org.mockito.stubbing.Answer;
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
+@SuppressWarnings("unchecked")
 public final class BufferedWriteTest {
 
     /**
@@ -68,7 +70,6 @@ public final class BufferedWriteTest {
      * @throws Exception If some problem inside
      */
     @Test
-    @SuppressWarnings("unchecked")
     public void sendsLinesThrough() throws Exception {
         final Drain drain = Mockito.mock(Drain.class);
         final Drain first = new BufferedWrite(
@@ -101,6 +102,40 @@ public final class BufferedWriteTest {
                 Matchers.<String>everyItem(Matchers.equalTo(line))
             )
         );
+    }
+
+    /**
+     * BufferedWrite can write and flush at the same time.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void writesAndFlushes() throws Exception {
+        final AtomicLong count = new AtomicLong();
+        final Drain origin = Mockito.mock(Drain.class);
+        Mockito.doAnswer(
+            new Answer<Void>() {
+                @Override
+                public Void answer(final InvocationOnMock inv) {
+                    for (Object line
+                        : Iterable.class.cast(inv.getArguments()[0])) {
+                        final long number = count.getAndIncrement();
+                        if (number != Long.parseLong(line.toString())) {
+                            count.set(0);
+                        }
+                    }
+                    return null;
+                }
+            }
+        ).when(origin).append(Mockito.any(Iterable.class));
+        final Drain drain = new BufferedWrite(
+            new Work.Simple(new URN("urn:test:9"), "f"), 2, origin
+        );
+        final long total = TimeUnit.SECONDS.toMillis(Tv.FIVE);
+        for (int idx = 0; idx < total; ++idx) {
+            drain.append(Arrays.asList(String.format("%d", idx)));
+            TimeUnit.MILLISECONDS.sleep(1);
+        }
+        MatcherAssert.assertThat(count.get(), Matchers.equalTo(total));
     }
 
 }

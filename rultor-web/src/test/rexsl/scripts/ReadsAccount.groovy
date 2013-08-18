@@ -33,7 +33,6 @@ import com.jcabi.manifests.Manifests
 import com.jcabi.urn.URN
 import com.rexsl.page.auth.Identity
 import com.rultor.client.RestUser
-import com.rultor.spi.Spec
 import com.rultor.web.AuthKeys
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
