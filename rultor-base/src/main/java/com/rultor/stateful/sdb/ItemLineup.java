@@ -36,6 +36,7 @@ import com.amazonaws.services.simpledb.model.PutAttributesRequest;
 import com.amazonaws.services.simpledb.model.ReplaceableAttribute;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.SDBClient;
@@ -220,6 +221,7 @@ public final class ItemLineup implements Lineup {
      * Save text to SimpleDB object.
      * @param content Content to save
      */
+    @RetryOnFailure
     private void save(final String content) {
         this.client.get().putAttributes(
             new PutAttributesRequest()
@@ -250,6 +252,7 @@ public final class ItemLineup implements Lineup {
      * Load text from SimpleDB item (or empty if it doesn't exist).
      * @return The content loaded
      */
+    @RetryOnFailure
     private String load() {
         final GetAttributesResult result = this.client.get().getAttributes(
             new GetAttributesRequest()
@@ -278,6 +281,7 @@ public final class ItemLineup implements Lineup {
     /**
      * Remove object from SimpleDB.
      */
+    @RetryOnFailure
     private void remove() {
         this.client.get().deleteAttributes(
             new DeleteAttributesRequest()
