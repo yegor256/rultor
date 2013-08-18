@@ -67,6 +67,7 @@ import lombok.ToString;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @checkstyle AnonInnerLength (500 lines)
  */
 @Immutable
 @ToString
@@ -106,7 +107,6 @@ final class Testing implements Profile {
      */
     @Override
     public Users users() {
-        // @checkstyle AnonInnerLength (50 lines)
         return new Users() {
             @Override
             public Iterator<User> iterator() {
@@ -161,7 +161,6 @@ final class Testing implements Profile {
         }
         @Override
         public Units units() {
-            // @checkstyle AnonInnerLength (50 lines)
             return new Units() {
                 @Override
                 public Iterator<Unit> iterator() {

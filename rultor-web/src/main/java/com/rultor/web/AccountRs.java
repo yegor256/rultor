@@ -96,7 +96,7 @@ public final class AccountRs extends BaseRs {
     /**
      * Since (position).
      */
-    private transient Integer since;
+    private transient int since;
 
     /**
      * Start.
@@ -204,7 +204,7 @@ public final class AccountRs extends BaseRs {
             .stylesheet("/xsl/account.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(new JaxbBundle("since", this.since.toString()))
+            .append(new JaxbBundle("since", Integer.toString(this.since)))
             .append(
                 new JaxbBundle("columns").add(
                     new JaxbBundle.Group<Column>(sheet.columns()) {
