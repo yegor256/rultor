@@ -36,6 +36,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.scm.Branch;
 import com.rultor.scm.SCM;
+import com.rultor.snapshot.Step;
 import com.rultor.stateful.Notepad;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
@@ -115,6 +116,7 @@ public final class UnseenBranches implements SCM {
      * @param branch Branch name
      * @return TRUE if seen
      */
+    @Step("tag `${args[0]}` #if(!$result)NOT#end seen before")
     private boolean seen(final String branch) {
         final boolean seen = this.notepad.contains(branch);
         if (!seen) {

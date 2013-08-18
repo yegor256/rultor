@@ -36,6 +36,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
+import com.rultor.snapshot.Step;
 import com.rultor.stateful.Notepad;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
@@ -115,6 +116,7 @@ public final class UnseenCommits implements Branch {
      * @param head HEAD commit
      * @return TRUE if seen
      */
+    @Step("commit `${args[0].name()}` #if(!$result)NOT#end seen before")
     private boolean seen(final Commit head) {
         final String name;
         try {

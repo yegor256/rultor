@@ -100,7 +100,7 @@ public final class SemVer implements SCM {
      * {@inheritDoc}
      */
     @Override
-    @Step("${result.size()} branch(es) match ${this.regex}")
+    @Step("${result.size()} branch(es) match `${this.regex}`")
     public List<String> branches() throws IOException {
         final List<String> ordered = new LinkedList<String>();
         final Pattern pattern = Pattern.compile(this.regex);

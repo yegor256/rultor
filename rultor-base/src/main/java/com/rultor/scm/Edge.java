@@ -32,6 +32,7 @@ package com.rultor.scm;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rultor.snapshot.Step;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -83,6 +84,7 @@ public final class Edge implements SCM {
      * {@inheritDoc}
      */
     @Override
+    @Step("`${result.size()}` branch(es) at the edge")
     public List<String> branches() throws IOException {
         final List<String> branches = new LinkedList<String>();
         final List<String> all = Lists.newLinkedList(this.scm.branches());
