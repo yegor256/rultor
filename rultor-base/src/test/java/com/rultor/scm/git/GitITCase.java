@@ -98,4 +98,20 @@ public final class GitITCase {
         );
     }
 
+    /**
+     * Git can fetch a tag.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void fetchesBranchOrTag() throws Exception {
+        Assume.assumeNotNull(GitITCase.URL);
+        final File dir = Files.createTempDir();
+        final SCM git = new Git(
+            new ShellMocker.Bash(dir),
+            new URL(GitITCase.URL),
+            "foo-4"
+        );
+        git.checkout(GitITCase.TAG);
+    }
+
 }
