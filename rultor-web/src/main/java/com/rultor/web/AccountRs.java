@@ -36,6 +36,7 @@ import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Column;
 import com.rultor.spi.Sheet;
+import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.Date;
@@ -263,8 +264,12 @@ public final class AccountRs extends BaseRs {
      */
     private JaxbBundle receipt(final List<Object> receipt) {
         JaxbBundle bundle = new JaxbBundle("receipt");
-        for (Object cell : receipt) {
-            bundle = bundle.add("cell", cell.toString()).up();
+        for (int idx = 0; idx < receipt.size(); ++idx) {
+            String cell = receipt.get(idx).toString();
+            if (idx == receipt.size() - 1) {
+                cell = new Dollars(Long.parseLong(cell)).toString();
+            }
+            bundle = bundle.add("cell", cell).up();
         }
         return bundle;
     }

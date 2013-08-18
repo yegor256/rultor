@@ -29,9 +29,10 @@
  */
 package com.rultor.users.pgsql;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.immutable.ArraySortedSet;
 import com.jcabi.jdbc.JdbcSession;
@@ -46,10 +47,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 
@@ -68,19 +73,17 @@ import org.apache.commons.lang3.StringUtils;
 final class PgSheet implements Sheet {
 
     /**
-     * Mapping in case of aggregate.
+     * Comma.
      */
-    private static final ImmutableMap<String, String> AGGREGATE =
-        new ImmutableMap.Builder<String, String>()
-            // @checkstyle MultipleStringLiterals (8 lines)
-            .put("id", "MAX(id)")
-            .put("time", "MAX(time)")
-            .put("ct", "MAX(ct)")
-            .put("ctunit", "MAX(ctunit)")
-            .put("dt", "MAX(dt)")
-            .put("dtunit", "MAX(dtunit)")
-            .put("details", "MAX(details)")
-            .put("amount", "SUM(amount)")
+    private static final String COMMA = ", ";
+
+    /**
+     * These columns should be SUM-ed when grouping.
+     */
+    private static final Set<String> SUM =
+        new ImmutableSet.Builder<String>()
+            // @checkstyle MultipleStringLiterals (1 line)
+            .add("amount")
             .build();
 
     /**
@@ -108,6 +111,21 @@ final class PgSheet implements Sheet {
     private final transient URN owner;
 
     /**
+     * Since which position to start.
+     */
+    private final transient int since;
+
+    /**
+     * Start.
+     */
+    private final transient Time start;
+
+    /**
+     * End.
+     */
+    private final transient Time end;
+
+    /**
      * Order by.
      */
     private final transient ArrayMap<String, Boolean> orders;
@@ -125,7 +143,10 @@ final class PgSheet implements Sheet {
     protected PgSheet(final PgClient clnt, final URN urn) {
         this(
             clnt, urn,
-            new ArrayMap<String, Boolean>(), new ArrayList<String>(0)
+            new ArrayMap<String, Boolean>(), new ArrayList<String>(0),
+            new Time(new Date().getTime() - TimeUnit.DAYS.toMillis(Tv.SEVEN)),
+            new Time(),
+            0
         );
     }
 
@@ -135,16 +156,23 @@ final class PgSheet implements Sheet {
      * @param urn URN of the owner
      * @param ords Orders
      * @param grps Groups
+     * @param left Start of interval
+     * @param right End of interval
+     * @param first Which line to show first
      * @checkstyle ParameterNumber (5 lines)
      */
     protected PgSheet(final PgClient clnt, final URN urn,
-        final Map<String, Boolean> ords, final Collection<String> grps) {
+        final Map<String, Boolean> ords, final Collection<String> grps,
+        final Time left, final Time right, final int first) {
         this.client = clnt;
         this.owner = urn;
         this.orders = new ArrayMap<String, Boolean>(ords);
         this.groups = new ArraySortedSet<String>(
             grps, new ArraySortedSet.Comparator.Default<String>()
         );
+        this.start = left;
+        this.end = right;
+        this.since = first;
     }
 
     /**
@@ -152,7 +180,7 @@ final class PgSheet implements Sheet {
      */
     @Override
     public List<Column> columns() {
-        return PgSheet.COLS;
+        return Collections.unmodifiableList(PgSheet.COLS);
     }
 
     /**
@@ -161,7 +189,8 @@ final class PgSheet implements Sheet {
     @Override
     public Sheet orderBy(final String column, final boolean asc) {
         return new PgSheet(
-            this.client, this.owner, this.orders.with(column, asc), this.groups
+            this.client, this.owner, this.orders.with(column, asc), this.groups,
+            this.start, this.end, this.since
         );
     }
 
@@ -171,7 +200,8 @@ final class PgSheet implements Sheet {
     @Override
     public Sheet groupBy(final String column) {
         return new PgSheet(
-            this.client, this.owner, this.orders, this.groups.with(column)
+            this.client, this.owner, this.orders, this.groups.with(column),
+            this.start, this.end, this.since
         );
     }
 
@@ -181,7 +211,10 @@ final class PgSheet implements Sheet {
     @Override
     public Pageable<List<Object>, Integer> tail(final Integer head)
         throws IOException {
-        return this;
+        return new PgSheet(
+            this.client, this.owner, this.orders, this.groups,
+            this.start, this.end, head
+        );
     }
 
     /**
@@ -197,11 +230,10 @@ final class PgSheet implements Sheet {
      */
     @Override
     public Iterator<List<Object>> iterator() {
+        final String sql = this.query();
         try {
             return new JdbcSession(this.client.get())
-                .sql(this.query())
-                .set(this.owner)
-                .set(this.owner)
+                .sql(sql)
                 .select(
                     new JdbcSession.Handler<Collection<List<Object>>>() {
                         @Override
@@ -218,7 +250,7 @@ final class PgSheet implements Sheet {
                 )
                 .iterator();
         } catch (SQLException ex) {
-            throw new IllegalStateException(ex);
+            throw new IllegalStateException(sql, ex);
         }
     }
 
@@ -227,7 +259,10 @@ final class PgSheet implements Sheet {
      */
     @Override
     public Sheet between(final Time left, final Time right) {
-        return this;
+        return new PgSheet(
+            this.client, this.owner, this.orders, this.groups,
+            left, right, this.since
+        );
     }
 
     /**
@@ -253,12 +288,12 @@ final class PgSheet implements Sheet {
     public String query() {
         return new StringBuilder()
             .append("SELECT ")
-            .append(StringUtils.join(this.select(), ","))
-            .append(" FROM receipt")
-            .append(" WHERE ct = ? OR dt = ?")
-            .append(this.groupBy())
-            .append(this.orderBy())
-            .append(" LIMIT 50")
+            .append(this.select())
+            .append("\nFROM receipt")
+            .append('\n').append(this.where())
+            .append('\n').append(this.groupBy())
+            .append('\n').append(this.orderBy())
+            .append('\n').append(this.limit())
             .toString();
     }
 
@@ -266,23 +301,47 @@ final class PgSheet implements Sheet {
      * Get names to select from SQL.
      * @return List of names
      */
-    private Collection<String> select() {
+    private String select() {
         final Collection<String> names = new LinkedList<String>();
         for (Column col : this.columns()) {
-            if (PgSheet.AGGREGATE.containsKey(col.title())
-                && !this.groups.contains(col.title())) {
+            if (this.groups.isEmpty() || this.groups.contains(col.title())) {
+                names.add(col.title());
+            } else {
+                final String func;
+                if (PgSheet.SUM.contains(col.title())) {
+                    func = "SUM";
+                } else {
+                    func = "MAX";
+                }
                 names.add(
                     String.format(
-                        "%s AS _%s",
-                        PgSheet.AGGREGATE.get(col.title()),
-                        col.title()
+                        "%s(%s) AS %s",
+                        func,
+                        col.title(),
+                        this.ref(col.title())
                     )
                 );
-            } else {
-                names.add(col.title());
             }
         }
-        return names;
+        return StringUtils.join(names, PgSheet.COMMA);
+    }
+
+    /**
+     * Get WHERE statement.
+     * @return Statement
+     */
+    private String where() {
+        return new StringBuilder()
+            .append("WHERE (ct='")
+            .append(this.owner)
+            .append("' OR dt='")
+            .append(this.owner)
+            .append("') AND time >= '")
+            .append(this.start)
+            .append("' AND time <= '")
+            .append(this.end)
+            .append("'")
+            .toString();
     }
 
     /**
@@ -292,8 +351,8 @@ final class PgSheet implements Sheet {
     private String groupBy() {
         final StringBuilder stmt = new StringBuilder();
         if (!this.groups.isEmpty()) {
-            stmt.append(" GROUP BY ")
-                .append(StringUtils.join(this.groups, ','));
+            stmt.append("GROUP BY ")
+                .append(StringUtils.join(this.groups, PgSheet.COMMA));
         }
         return stmt.toString();
     }
@@ -305,17 +364,14 @@ final class PgSheet implements Sheet {
     private String orderBy() {
         final StringBuilder stmt = new StringBuilder();
         if (!this.orders.isEmpty()) {
-            stmt.append(" ORDER BY ");
+            stmt.append("ORDER BY ");
             boolean first = true;
             for (Map.Entry<String, Boolean> order : this.orders.entrySet()) {
                 if (!first) {
-                    stmt.append(',');
+                    stmt.append(PgSheet.COMMA);
                 }
                 first = false;
-                if (!this.groups.contains(order.getKey())) {
-                    stmt.append('_');
-                }
-                stmt.append(order.getKey()).append(' ');
+                stmt.append(this.ref(order.getKey())).append(' ');
                 if (order.getValue()) {
                     stmt.append("ASC");
                 } else {
@@ -324,6 +380,32 @@ final class PgSheet implements Sheet {
             }
         }
         return stmt.toString();
+    }
+
+    /**
+     * Get LIMIT statement.
+     * @return Statement
+     */
+    private String limit() {
+        return new StringBuilder()
+            .append("LIMIT 50 OFFSET ")
+            .append(this.since)
+            .toString();
+    }
+
+    /**
+     * Reference name of a column.
+     * @param column Column name
+     * @return Ref name
+     */
+    private String ref(final String column) {
+        final String ref;
+        if (this.groups.contains(column)) {
+            ref = column;
+        } else {
+            ref = String.format("_%s", column);
+        }
+        return ref;
     }
 
 }

@@ -33,7 +33,9 @@ import com.jcabi.urn.URN;
 import com.rultor.spi.Column;
 import com.rultor.spi.Sheet;
 import com.rultor.tools.Time;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -80,11 +82,14 @@ public final class PgSheetITCase {
     public void fetchesDataLines() throws Exception {
         final Sheet sheet = this.sheet();
         MatcherAssert.assertThat(
-            sheet.between(new Time(), new Time())
-                .groupBy("dt")
+            sheet.groupBy("dt")
                 .groupBy("dtunit")
                 .orderBy("time", true)
                 .orderBy("amount", false)
+                .between(
+                    new Time(new Date().getTime() - TimeUnit.DAYS.toMillis(2)),
+                    new Time()
+                )
                 .tail(2),
             Matchers.<List<Object>>iterableWithSize(
                 Matchers.greaterThanOrEqualTo(0)
