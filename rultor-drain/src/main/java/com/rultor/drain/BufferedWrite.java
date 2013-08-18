@@ -144,17 +144,12 @@ public final class BufferedWrite implements Drain {
      */
     @Override
     public void append(final Iterable<String> lines) throws IOException {
-        final BufferedWrite.Tunnel tunnel;
-        synchronized (BufferedWrite.TUNNELS) {
-            if (!BufferedWrite.TUNNELS.containsKey(this)) {
-                BufferedWrite.TUNNELS.put(
-                    this,
-                    new BufferedWrite.Tunnel()
-                );
-            }
-            tunnel = BufferedWrite.TUNNELS.get(this);
+        synchronized (this.lifetime) {
+            BufferedWrite.TUNNELS.putIfAbsent(
+                this, new BufferedWrite.Tunnel()
+            );
+            BufferedWrite.TUNNELS.get(this).send(lines);
         }
-        tunnel.send(lines);
     }
 
     /**
@@ -226,8 +221,10 @@ public final class BufferedWrite implements Drain {
         public void run() {
             for (BufferedWrite client : BufferedWrite.TUNNELS.keySet()) {
                 try {
-                    if (BufferedWrite.TUNNELS.get(client).flush()) {
-                        BufferedWrite.TUNNELS.remove(client);
+                    synchronized (client.lifetime) {
+                        if (BufferedWrite.TUNNELS.get(client).flush()) {
+                            BufferedWrite.TUNNELS.remove(client);
+                        }
                     }
                 } catch (IOException ex) {
                     Logger.warn(this, "#run(): %s", ex);

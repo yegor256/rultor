@@ -140,6 +140,7 @@ public final class BufferedWriteTest {
             drain.append(Arrays.asList(String.format("%d", idx)));
             TimeUnit.MILLISECONDS.sleep(1);
         }
+        TimeUnit.SECONDS.sleep(2);
         MatcherAssert.assertThat(count.get(), Matchers.equalTo(total));
     }
 
