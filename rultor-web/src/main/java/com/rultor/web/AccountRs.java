@@ -38,6 +38,7 @@ import com.rultor.spi.Column;
 import com.rultor.spi.Sheet;
 import com.rultor.tools.Time;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -160,34 +161,34 @@ public final class AccountRs extends BaseRs {
 
     /**
      * Inject it from query.
-     * @param txt Sorts
+     * @param columns Sorts
      */
     @QueryParam(AccountRs.QUERY_ASC)
-    public void setAsc(final String txt) {
-        if (txt != null) {
-            this.asc.add(txt);
+    public void setAsc(final Collection<String> columns) {
+        if (columns != null) {
+            this.asc.addAll(columns);
         }
     }
 
     /**
      * Inject it from query.
-     * @param txt Sorts
+     * @param columns Sorts
      */
     @QueryParam(AccountRs.QUERY_DESC)
-    public void setDesc(final String txt) {
-        if (txt != null) {
-            this.desc.add(txt);
+    public void setDesc(final Collection<String> columns) {
+        if (columns != null) {
+            this.desc.addAll(columns);
         }
     }
 
     /**
      * Inject it from query.
-     * @param txt Sorts
+     * @param columns Sorts
      */
     @QueryParam(AccountRs.QUERY_GROUP)
-    public void setGroup(final String txt) {
-        if (txt != null) {
-            this.groups.add(txt);
+    public void setGroup(final Collection<String> columns) {
+        if (columns != null) {
+            this.groups.addAll(columns);
         }
     }
 
