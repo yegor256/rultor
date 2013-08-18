@@ -112,7 +112,7 @@
             </xsl:when>
             <xsl:otherwise>
                 <p>
-                    <xsl:text>No receipts at the moment.</xsl:text>
+                    <xsl:text>No receipts to show.</xsl:text>
                 </p>
             </xsl:otherwise>
         </xsl:choose>
