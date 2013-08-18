@@ -116,6 +116,7 @@
                 </p>
             </xsl:otherwise>
         </xsl:choose>
+        <pre><xsl:value-of select="/page/sql"/></pre>
     </xsl:template>
     <xsl:template match="receipt">
         <tr>

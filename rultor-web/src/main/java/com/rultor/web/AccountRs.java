@@ -205,6 +205,7 @@ public final class AccountRs extends BaseRs {
             .stylesheet("/xsl/account.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .append(new JaxbBundle("sql", sheet.toString()))
             .append(new JaxbBundle("since", Integer.toString(this.since)))
             .append(
                 new JaxbBundle("columns").add(

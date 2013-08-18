@@ -51,7 +51,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -63,7 +62,6 @@ import org.apache.commons.lang3.StringUtils;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@ToString
 @EqualsAndHashCode(of = { "client", "owner", "orders", "groups" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
@@ -190,18 +188,18 @@ final class PgSheet implements Sheet {
      * {@inheritDoc}
      */
     @Override
+    public String toString() {
+        return this.query();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Iterator<List<Object>> iterator() {
-        final StringBuilder query = new StringBuilder();
-        query.append("SELECT ")
-            .append(StringUtils.join(this.select(), ","))
-            .append(" FROM receipt")
-            .append(" WHERE ct = ? OR dt = ?")
-            .append(this.groupBy())
-            .append(this.orderBy())
-            .append(" LIMIT 50");
         try {
             return new JdbcSession(this.client.get())
-                .sql(query.toString())
+                .sql(this.query())
                 .set(this.owner)
                 .set(this.owner)
                 .select(
@@ -246,6 +244,22 @@ final class PgSheet implements Sheet {
             row.add(rset.getObject(idx));
         }
         return row;
+    }
+
+    /**
+     * Make a query.
+     * @return SQL query
+     */
+    public String query() {
+        return new StringBuilder()
+            .append("SELECT ")
+            .append(StringUtils.join(this.select(), ","))
+            .append(" FROM receipt")
+            .append(" WHERE ct = ? OR dt = ?")
+            .append(this.groupBy())
+            .append(this.orderBy())
+            .append(" LIMIT 50")
+            .toString();
     }
 
     /**
