@@ -38,7 +38,6 @@ import com.rultor.spi.Column;
 import com.rultor.spi.Sheet;
 import com.rultor.tools.Time;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -164,7 +163,7 @@ public final class AccountRs extends BaseRs {
      * @param columns Sorts
      */
     @QueryParam(AccountRs.QUERY_ASC)
-    public void setAsc(final Collection<String> columns) {
+    public void setAsc(final List<String> columns) {
         if (columns != null) {
             this.asc.addAll(columns);
         }
@@ -175,7 +174,7 @@ public final class AccountRs extends BaseRs {
      * @param columns Sorts
      */
     @QueryParam(AccountRs.QUERY_DESC)
-    public void setDesc(final Collection<String> columns) {
+    public void setDesc(final List<String> columns) {
         if (columns != null) {
             this.desc.addAll(columns);
         }
@@ -186,7 +185,7 @@ public final class AccountRs extends BaseRs {
      * @param columns Sorts
      */
     @QueryParam(AccountRs.QUERY_GROUP)
-    public void setGroup(final Collection<String> columns) {
+    public void setGroup(final List<String> columns) {
         if (columns != null) {
             this.groups.addAll(columns);
         }

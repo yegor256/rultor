@@ -73,7 +73,11 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Loggable(Loggable.INFO)
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({
+    "PMD.TooManyMethods",
+    "PMD.CyclomaticComplexity",
+    "PMD.CyclomaticComplexity"
+})
 final class Testing implements Profile {
 
     /**

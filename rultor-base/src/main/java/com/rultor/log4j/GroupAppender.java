@@ -128,7 +128,7 @@ final class GroupAppender extends AppenderSkeleton implements Appender {
                 );
             // @checkstyle IllegalCatch (1 line)
             } catch (Throwable ex) {
-                Logger.warn(this, "#append(): %s", ex);
+                Logger.error(this, "#append(): %s", ex);
             }
             this.busy.set(false);
         }
