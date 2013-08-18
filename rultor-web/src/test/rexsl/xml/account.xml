@@ -31,7 +31,7 @@
 <?xml-stylesheet type='text/xsl' href='/xsl/account.xsl'?>
 <page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
     <identity>
-        <urn>urn:facebook:1</urn>
+        <urn>urn:facebook:65774</urn>
         <name>Jeff Lebowski</name>
         <photo>http://images.sodahead.com/polls/002320349/200261278_The_Big_Lebowski___Jeff_Bridges_answer_9_xlarge.jpeg</photo>
     </identity>
@@ -119,7 +119,7 @@
             <cell>2012-08-23T13:25:23</cell>
             <cell>urn:github:1</cell>
             <cell>my-test-unit</cell>
-            <cell>urn:github:1</cell>
+            <cell>urn:facebook:65774</cell>
             <cell>rented-unit</cell>
             <cell>some transaction details</cell>
             <cell>$0.12</cell>
@@ -127,7 +127,7 @@
         <receipt>
             <cell>5435</cell>
             <cell>2012-08-23T13:25:23</cell>
-            <cell>urn:github:1</cell>
+            <cell>urn:facebook:65774</cell>
             <cell>my-test-unit</cell>
             <cell>urn:github:1</cell>
             <cell>rented-unit</cell>

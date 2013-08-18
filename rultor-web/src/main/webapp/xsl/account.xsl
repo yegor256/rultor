@@ -120,16 +120,25 @@
     </xsl:template>
     <xsl:template match="receipt">
         <xsl:variable name="agg" select="not(/page/columns[not(column/@grouped)])"/>
+        <xsl:variable name="r" select="."/>
         <tr>
             <xsl:for-each select="cell">
                 <xsl:variable name="p" select="position()"/>
+                <xsl:variable name="column" select="/page/columns/column[position()=$p]"/>
                 <td>
                     <xsl:attribute name="class">
-                        <xsl:if test="$agg and not(/page/columns/column[position()=$p]/@sum) and not(/page/columns/column[position()=$p]/@grouped)">
+                        <xsl:if test="$agg and not($column/@sum) and not($column/@grouped)">
                             <xsl:text>text-muted</xsl:text>
                         </xsl:if>
                     </xsl:attribute>
-                    <xsl:value-of select="."/>
+                    <xsl:choose>
+                        <xsl:when test=". = /page/identity/urn">
+                            <i title="it's you" class="icon-male"><xsl:comment>you</xsl:comment></i>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="."/>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </td>
             </xsl:for-each>
         </tr>
