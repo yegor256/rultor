@@ -30,7 +30,6 @@
 package com.rultor.tools;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -52,7 +51,6 @@ import org.apache.commons.lang3.time.DateUtils;
  */
 @Immutable
 @EqualsAndHashCode(of = "msec")
-@Loggable(Loggable.DEBUG)
 public final class Time implements Comparable<Time> {
 
     /**

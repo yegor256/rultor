@@ -30,11 +30,15 @@
 package com.rultor.log4j;
 
 import com.google.common.collect.ImmutableMap;
+import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
 import com.rultor.tools.Time;
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -53,7 +57,9 @@ import org.apache.log4j.spi.LoggingEvent;
 @ToString
 @EqualsAndHashCode(callSuper = false, of = { "group", "start", "drain" })
 @SuppressWarnings("PMD.DoNotUseThreads")
-final class GroupAppender extends AppenderSkeleton implements Appender {
+@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.SECONDS)
+final class GroupAppender extends AppenderSkeleton
+    implements Runnable, Appender {
 
     /**
      * Map of levels.
@@ -71,9 +77,10 @@ final class GroupAppender extends AppenderSkeleton implements Appender {
             .build();
 
     /**
-     * This thread is currently logging, all other logs are forbidden.
+     * Queue of lines to log.
      */
-    private final transient AtomicBoolean busy = new AtomicBoolean();
+    private final transient BlockingQueue<String> lines =
+        new LinkedBlockingQueue<String>();
 
     /**
      * The group we're in.
@@ -106,31 +113,37 @@ final class GroupAppender extends AppenderSkeleton implements Appender {
 
     /**
      * {@inheritDoc}
+     */
+    @Override
+    @SuppressWarnings("PMD.AvoidCatchingThrowable")
+    public void run() {
+        final Collection<String> all = new LinkedList<String>();
+        this.lines.drainTo(all);
+        try {
+            this.drain.append(all);
+        // @checkstyle IllegalCatch (1 line)
+        } catch (Throwable ex) {
+            Logger.error(this, "#append(): %s", ex);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
      *
      * <p>We swallow exception here in order to enable normal processing
      * of a logging event through LOG4j even when this particular drain
      * fails (this may happen and often).
      */
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     protected void append(final LoggingEvent event) {
-        if (Thread.currentThread().getThreadGroup().equals(this.group)
-            && this.busy.compareAndSet(false, true)) {
-            try {
-                this.drain.append(
-                    Arrays.asList(
-                        new Drain.Line.Simple(
-                            new Time().delta(this.start),
-                            GroupAppender.LEVELS.get(event.getLevel()),
-                            this.layout.format(event)
-                        ).toString()
-                    )
-                );
-            // @checkstyle IllegalCatch (1 line)
-            } catch (Throwable ex) {
-                Logger.error(this, "#append(): %s", ex);
-            }
-            this.busy.set(false);
+        if (Thread.currentThread().getThreadGroup().equals(this.group)) {
+            this.lines.add(
+                new Drain.Line.Simple(
+                    new Time().delta(this.start),
+                    GroupAppender.LEVELS.get(event.getLevel()),
+                    this.layout.format(event)
+                ).toString()
+            );
         }
     }
 
@@ -139,7 +152,7 @@ final class GroupAppender extends AppenderSkeleton implements Appender {
      */
     @Override
     public void close() {
-        // nothing to do
+        this.run();
     }
 
     /**
