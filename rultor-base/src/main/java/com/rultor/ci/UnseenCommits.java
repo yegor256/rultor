@@ -116,7 +116,7 @@ public final class UnseenCommits implements Branch {
      * @param head HEAD commit
      * @return TRUE if seen
      */
-    @Step("commit `${args[0].name()}` #if(!$result)NOT#end seen before")
+    @Step("commit `${args[0]}` #if(!$result)NOT#end seen before")
     private boolean seen(final Commit head) {
         final String name;
         try {
