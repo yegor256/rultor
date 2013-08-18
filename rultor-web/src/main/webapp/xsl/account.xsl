@@ -37,36 +37,57 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" class="form-inline spacious">
-            <fieldset>
-                <input type="hidden" name="cmd" value="_s-xclick"/>
-                <input type="hidden" name="hosted_button_id" value="LMPZA6C7KTZPY"/>
-                <input type="hidden" name="on0" value="One-time payment amount"/>
-                <input type="hidden" name="currency_code" value="USD"/>
-                <input type="hidden" name="invoice">
-                    <xsl:attribute name="value">
-                        <xsl:value-of select="/page/identity/urn"/>
-                        <xsl:text> </xsl:text>
-                        <xsl:value-of select="/page/@date"/>
-                    </xsl:attribute>
-                </input>
-                <div class="row">
-                    <div class="col-6 col-sm-4 col-lg-2">
-                        <select name="os0" class="form-control">
-                            <option value="Small">Small $5.00 USD</option>
-                            <option value="Medium">Medium $10.00 USD</option>
-                            <option value="Large">Large $25.00 USD</option>
-                        </select>
+        <xsl:if test="/page/receipts/receipt">
+            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" class="form-inline spacious">
+                <fieldset>
+                    <input type="hidden" name="cmd" value="_s-xclick"/>
+                    <input type="hidden" name="hosted_button_id" value="LMPZA6C7KTZPY"/>
+                    <input type="hidden" name="on0" value="One-time payment amount"/>
+                    <input type="hidden" name="currency_code" value="USD"/>
+                    <input type="hidden" name="invoice">
+                        <xsl:attribute name="value">
+                            <xsl:value-of select="/page/identity/urn"/>
+                            <xsl:text> </xsl:text>
+                            <xsl:value-of select="/page/@date"/>
+                        </xsl:attribute>
+                    </input>
+                    <div class="row">
+                        <div class="col-6 col-sm-4 col-lg-2">
+                            <select name="os0" class="form-control">
+                                <option value="Small">Small $5.00 USD</option>
+                                <option value="Medium">Medium $10.00 USD</option>
+                                <option value="Large">Large $25.00 USD</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-sm-4 col-lg-2">
+                            <button type="submit" class="btn btn-primary">
+                                <xsl:text>Add funds</xsl:text>
+                            </button>
+                        </div>
                     </div>
-                    <div class="col-6 col-sm-4 col-lg-2">
-                        <button type="submit" class="btn btn-primary">
-                            <xsl:text>Add funds</xsl:text>
-                        </button>
-                    </div>
-                </div>
-                <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1"/>
-            </fieldset>
-        </form>
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1"/>
+                </fieldset>
+            </form>
+            <ul class="list-unstyled" style="margin-bottom: 3em;">
+                <li>
+                    <xsl:text>All payments are made between our customers, we don't charge any commission/margin.</xsl:text>
+                </li>
+                <li>
+                    <xsl:text>At the moment you can fund your account with one-time non-refundable PayPal payments.</xsl:text>
+                </li>
+                <li>
+                    <xsl:text>In the nearest future we'll make possible recurring credit card payments and funds withdrawal (refunds).</xsl:text>
+                </li>
+                <li>
+                    <xsl:text>On the first of every month all negative accounts are funded by $5.00 (gift from us).</xsl:text>
+                </li>
+                <li>
+                    <xsl:text>Please </xsl:text>
+                    <a href="mailto:team@rultor.com">email us</a>
+                    <xsl:text>, if any questions.</xsl:text>
+                </li>
+            </ul>
+        </xsl:if>
         <xsl:if test="/page/since &gt; 0">
             <div class="spacious">
                 <ul class="list-inline">
