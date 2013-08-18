@@ -50,6 +50,7 @@
     </links>
     <millis>16</millis>
     <balance>$0.45</balance>
+    <sql>SELECT * FROM receipt</sql>
     <columns>
         <column sorted="asc">
             <title>id</title>
