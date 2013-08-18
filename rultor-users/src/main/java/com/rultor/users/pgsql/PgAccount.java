@@ -53,7 +53,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "client")
+@EqualsAndHashCode(of = { "client", "owner" })
 @Loggable(Loggable.DEBUG)
 final class PgAccount implements Account {
 
