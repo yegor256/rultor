@@ -136,48 +136,60 @@
     </xsl:template>
     <xsl:template match="column">
         <th>
-            <xsl:value-of select="title"/>
-            <xsl:text> </xsl:text>
-            <xsl:choose>
-                <xsl:when test="not(@sorted) and (links/link[@rel='asc'] or links/link[@rel='desc'])">
-                    <a class="text-muted" title="click to sort in ASC order">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='asc']/@href"/>
-                        </xsl:attribute>
-                        <i class="icon-sort-by-alphabet"><xsl:comment>asc</xsl:comment></i>
-                    </a>
-                </xsl:when>
-                <xsl:when test="@sorted = 'asc'">
-                    <a title="click to sort in DESC order">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='desc']/@href"/>
-                        </xsl:attribute>
-                        <i class="icon-sort-by-alphabet"><xsl:comment>asc</xsl:comment></i>
-                    </a>
-                </xsl:when>
-                <xsl:when test="@sorted = 'desc'">
-                    <a title="click to sort in ASC order">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='asc']/@href"/>
-                        </xsl:attribute>
-                        <i class="icon-sort-by-alphabet-alt"><xsl:comment>desc</xsl:comment></i>
-                    </a>
-                </xsl:when>
-            </xsl:choose>
-            <xsl:text> </xsl:text>
-            <xsl:choose>
-                <xsl:when test="not(@grouped) and links/link[@rel='group']">
-                    <a class="text-muted" title="click to group">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='group']/@href"/>
-                        </xsl:attribute>
-                        <i class="icon-collapse"><xsl:comment>collapse</xsl:comment></i>
-                    </a>
-                </xsl:when>
-                <xsl:when test="@grouped">
-                    <i class="icon-expand"><xsl:comment>group</xsl:comment></i>
-                </xsl:when>
-            </xsl:choose>
+            <ul class="list-inline" style="margin:0;">
+                <li>
+                    <xsl:value-of select="title"/>
+                </li>
+                <xsl:choose>
+                    <xsl:when test="not(@sorted) and (links/link[@rel='asc'] or links/link[@rel='desc'])">
+                        <li>
+                            <a class="text-muted" title="click to sort in ASC order">
+                                <xsl:attribute name="href">
+                                    <xsl:value-of select="links/link[@rel='asc']/@href"/>
+                                </xsl:attribute>
+                                <i class="icon-sort-by-alphabet"><xsl:comment>asc</xsl:comment></i>
+                            </a>
+                        </li>
+                    </xsl:when>
+                    <xsl:when test="@sorted = 'asc'">
+                        <li>
+                            <a title="click to sort in DESC order">
+                                <xsl:attribute name="href">
+                                    <xsl:value-of select="links/link[@rel='desc']/@href"/>
+                                </xsl:attribute>
+                                <i class="icon-sort-by-alphabet"><xsl:comment>asc</xsl:comment></i>
+                            </a>
+                        </li>
+                    </xsl:when>
+                    <xsl:when test="@sorted = 'desc'">
+                        <li>
+                            <a title="click to sort in ASC order">
+                                <xsl:attribute name="href">
+                                    <xsl:value-of select="links/link[@rel='asc']/@href"/>
+                                </xsl:attribute>
+                                <i class="icon-sort-by-alphabet-alt"><xsl:comment>desc</xsl:comment></i>
+                            </a>
+                        </li>
+                    </xsl:when>
+                </xsl:choose>
+                <xsl:choose>
+                    <xsl:when test="not(@grouped) and links/link[@rel='group']">
+                        <li>
+                            <a class="text-muted" title="click to group">
+                                <xsl:attribute name="href">
+                                    <xsl:value-of select="links/link[@rel='group']/@href"/>
+                                </xsl:attribute>
+                                <i class="icon-collapse"><xsl:comment>collapse</xsl:comment></i>
+                            </a>
+                        </li>
+                    </xsl:when>
+                    <xsl:when test="@grouped">
+                        <li>
+                            <i class="icon-expand"><xsl:comment>group</xsl:comment></i>
+                        </li>
+                    </xsl:when>
+                </xsl:choose>
+            </ul>
         </th>
     </xsl:template>
 </xsl:stylesheet>
