@@ -29,14 +29,20 @@
  */
 package com.rultor.drain;
 
+import com.jcabi.aspects.Tv;
+import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Work;
+import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link BufferedRead}.
@@ -75,6 +81,35 @@ public final class BufferedReadTest {
             new BufferedRead(new Work.None(), 2, new Trash()),
             Matchers.hasToString(Matchers.notNullValue())
         );
+    }
+
+    /**
+     * BufferedRead can read and flush at the same time.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void readsAndFlushes() throws Exception {
+        final String content = "hey, привет!";
+        final Drain origin = Mockito.mock(Drain.class);
+        Mockito.doAnswer(
+            new Answer<InputStream>() {
+                @Override
+                public InputStream answer(final InvocationOnMock inv) {
+                    return IOUtils.toInputStream(content);
+                }
+            }
+        ).when(origin).read();
+        final Drain drain = new BufferedRead(
+            new Work.Simple(new URN("urn:test:9"), "f"), 2, origin
+        );
+        final long total = TimeUnit.SECONDS.toMillis(Tv.FIVE);
+        for (int idx = 0; idx < total; ++idx) {
+            MatcherAssert.assertThat(
+                IOUtils.toString(drain.read()),
+                Matchers.containsString(content)
+            );
+            TimeUnit.MILLISECONDS.sleep(1);
+        }
     }
 
 }
