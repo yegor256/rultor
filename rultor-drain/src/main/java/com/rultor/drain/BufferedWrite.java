@@ -144,7 +144,7 @@ public final class BufferedWrite implements Drain {
      */
     @Override
     public void append(final Iterable<String> lines) throws IOException {
-        synchronized (this.lifetime) {
+        synchronized (this.work) {
             BufferedWrite.TUNNELS.putIfAbsent(
                 this, new BufferedWrite.Tunnel()
             );
@@ -221,7 +221,7 @@ public final class BufferedWrite implements Drain {
         public void run() {
             for (BufferedWrite client : BufferedWrite.TUNNELS.keySet()) {
                 try {
-                    synchronized (client.lifetime) {
+                    synchronized (client.work) {
                         if (BufferedWrite.TUNNELS.get(client).flush()) {
                             BufferedWrite.TUNNELS.remove(client);
                         }
