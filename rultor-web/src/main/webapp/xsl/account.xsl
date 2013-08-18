@@ -119,9 +119,16 @@
         <pre><xsl:value-of select="/page/sql"/></pre>
     </xsl:template>
     <xsl:template match="receipt">
+        <xsl:variable name="agg" select="not(/page/columns[not(column/@grouped)])"/>
         <tr>
             <xsl:for-each select="cell">
+                <xsl:variable name="p" select="position()"/>
                 <td>
+                    <xsl:attribute name="class">
+                        <xsl:if test="$agg and not(/page/columns/column[position()=$p]/@sum) and not(/page/columns/column[position()=$p]/@grouped)">
+                            <xsl:text>text-muted</xsl:text>
+                        </xsl:if>
+                    </xsl:attribute>
                     <xsl:value-of select="."/>
                 </td>
             </xsl:for-each>
@@ -159,7 +166,7 @@
             </xsl:choose>
             <xsl:text> </xsl:text>
             <xsl:choose>
-                <xsl:when test="not(@groupped) and links/link[@rel='group']">
+                <xsl:when test="not(@grouped) and links/link[@rel='group']">
                     <a class="text-muted" title="click to group">
                         <xsl:attribute name="href">
                             <xsl:value-of select="links/link[@rel='group']/@href"/>
@@ -167,7 +174,7 @@
                         <i class="icon-collapse"><xsl:comment>collapse</xsl:comment></i>
                     </a>
                 </xsl:when>
-                <xsl:when test="@groupped">
+                <xsl:when test="@grouped">
                     <i class="icon-expand"><xsl:comment>group</xsl:comment></i>
                 </xsl:when>
             </xsl:choose>

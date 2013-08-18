@@ -61,6 +61,10 @@
         </column>
         <column>
             <title>time</title>
+            <links>
+                <link href="/xml/account.xml" rel="asc" type="text/xml"/>
+                <link href="/xml/account.xml" rel="desc" type="text/xml"/>
+            </links>
         </column>
         <column>
             <title>ct</title>
@@ -78,7 +82,7 @@
                 <link href="/xml/account.xml" rel="desc" type="text/xml"/>
             </links>
         </column>
-        <column sorted="asc" groupped="yes">
+        <column sorted="asc" grouped="yes">
             <title>dt</title>
             <links>
                 <link href="/xml/account.xml" rel="group" type="text/xml"/>
@@ -86,7 +90,7 @@
                 <link href="/xml/account.xml" rel="desc" type="text/xml"/>
             </links>
         </column>
-        <column sorted="desc" groupped="yes">
+        <column sorted="desc" grouped="yes">
             <title>dtunit</title>
             <links>
                 <link href="/xml/account.xml" rel="group" type="text/xml"/>
@@ -101,7 +105,7 @@
                 <link href="/xml/account.xml" rel="desc" type="text/xml"/>
             </links>
         </column>
-        <column>
+        <column sum="yes">
             <title>amount</title>
             <links>
                 <link href="/xml/account.xml" rel="asc" type="text/xml"/>

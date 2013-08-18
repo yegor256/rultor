@@ -29,7 +29,6 @@
  */
 package com.rultor.users.pgsql;
 
-import com.google.common.collect.ImmutableSet;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
@@ -53,7 +52,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
@@ -78,26 +76,17 @@ final class PgSheet implements Sheet {
     private static final String COMMA = ", ";
 
     /**
-     * These columns should be SUM-ed when grouping.
-     */
-    private static final Set<String> SUM =
-        new ImmutableSet.Builder<String>()
-            // @checkstyle MultipleStringLiterals (1 line)
-            .add("amount")
-            .build();
-
-    /**
      * All columns.
      */
     private static final List<Column> COLS = Arrays.<Column>asList(
-        new Column.Simple("id", false),
-        new Column.Simple("time", false),
-        new Column.Simple("ct", true),
-        new Column.Simple("ctunit", true),
-        new Column.Simple("dt", true),
-        new Column.Simple("dtunit", true),
-        new Column.Simple("details", false),
-        new Column.Simple("amount", false)
+        new Column.Simple("id", false, false),
+        new Column.Simple("time", false, false),
+        new Column.Simple("ct", true, false),
+        new Column.Simple("ctunit", true, false),
+        new Column.Simple("dt", true, false),
+        new Column.Simple("dtunit", true, false),
+        new Column.Simple("details", false, false),
+        new Column.Simple("amount", false, true)
     );
 
     /**
@@ -308,7 +297,7 @@ final class PgSheet implements Sheet {
                 names.add(col.title());
             } else {
                 final String func;
-                if (PgSheet.SUM.contains(col.title())) {
+                if (col.isSum()) {
                     func = "SUM";
                 } else {
                     func = "MAX";

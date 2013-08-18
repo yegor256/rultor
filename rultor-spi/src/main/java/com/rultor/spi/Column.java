@@ -58,6 +58,12 @@ public interface Column {
     boolean isGroup();
 
     /**
+     * Contains a summary?
+     * @return TRUE if it contains a summary
+     */
+    boolean isSum();
+
+    /**
      * Simple column.
      */
     @Immutable
@@ -73,13 +79,20 @@ public interface Column {
          */
         private final transient boolean grp;
         /**
+         * Contains a summary?
+         */
+        private final transient boolean sum;
+        /**
          * Public ctor.
          * @param title Title of it
          * @param group Is it a group?
+         * @param summ Contains summary
          */
-        public Simple(final String title, final boolean group) {
+        public Simple(final String title, final boolean group,
+            final boolean summ) {
             this.name = title;
             this.grp = group;
+            this.sum = summ;
         }
         /**
          * {@inheritDoc}
@@ -94,6 +107,13 @@ public interface Column {
         @Override
         public boolean isGroup() {
             return this.grp;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean isSum() {
+            return this.sum;
         }
     }
 

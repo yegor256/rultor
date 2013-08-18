@@ -262,6 +262,7 @@ public final class AccountRs extends BaseRs {
      * @param receipt Receipt
      * @return Bundle
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private JaxbBundle receipt(final List<Object> receipt) {
         JaxbBundle bundle = new JaxbBundle("receipt");
         for (int idx = 0; idx < receipt.size(); ++idx) {
@@ -290,7 +291,10 @@ public final class AccountRs extends BaseRs {
             bundle = bundle.attr("sorted", "desc");
         }
         if (this.groups.contains(column.title())) {
-            bundle = bundle.attr("groupped", "yes");
+            bundle = bundle.attr("grouped", "yes");
+        }
+        if (column.isSum()) {
+            bundle = bundle.attr("sum", "yes");
         }
         if (column.isGroup()) {
             bundle.link(

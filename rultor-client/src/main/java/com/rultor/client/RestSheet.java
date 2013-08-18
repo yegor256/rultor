@@ -104,7 +104,8 @@ final class RestSheet implements Sheet {
             columns.add(
                 new Column.Simple(
                     node.xpath("title/text()").get(0),
-                    !node.nodes("links/link[@rel='group']").isEmpty()
+                    !node.nodes("links/link[@rel='group']").isEmpty(),
+                    !node.nodes("./@sum").isEmpty()
                 )
             );
         }

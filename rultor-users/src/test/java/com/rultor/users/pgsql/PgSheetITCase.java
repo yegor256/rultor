@@ -70,7 +70,7 @@ public final class PgSheetITCase {
         final Sheet sheet = this.sheet();
         MatcherAssert.assertThat(
             sheet.columns(),
-            Matchers.hasItem(new Column.Simple("ct", true))
+            Matchers.hasItem(new Column.Simple("ct", true, false))
         );
     }
 

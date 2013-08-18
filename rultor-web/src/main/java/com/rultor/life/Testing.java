@@ -75,6 +75,7 @@ import lombok.ToString;
 @Loggable(Loggable.INFO)
 @SuppressWarnings({
     "PMD.TooManyMethods",
+    "PMD.ExcessiveImports",
     "PMD.CyclomaticComplexity",
     "PMD.CyclomaticComplexity"
 })
@@ -222,9 +223,9 @@ final class Testing implements Profile {
                         @Override
                         public List<Column> columns() {
                             return Arrays.<Column>asList(
-                                new Column.Simple("ct", true),
-                                new Column.Simple("ctunit", true),
-                                new Column.Simple("amount", false)
+                                new Column.Simple("ct", true, false),
+                                new Column.Simple("ctunit", true, false),
+                                new Column.Simple("amount", false, true)
                             );
                         }
                         @Override
