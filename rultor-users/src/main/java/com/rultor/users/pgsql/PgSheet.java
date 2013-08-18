@@ -389,7 +389,7 @@ final class PgSheet implements Sheet {
      */
     private String ref(final String column) {
         final String ref;
-        if (this.groups.contains(column)) {
+        if (this.groups.isEmpty() || this.groups.contains(column)) {
             ref = column;
         } else {
             ref = String.format("_%s", column);
