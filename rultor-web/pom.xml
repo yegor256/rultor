@@ -429,5 +429,39 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>deploy-dev</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.gmaven</groupId>
+                        <artifactId>gmaven-plugin</artifactId>
+                        <version>1.5</version>
+                        <configuration>
+                            <classpath>
+                                <element>
+                                    <groupId>org.tautua.markdownpapers</groupId>
+                                    <artifactId>markdownpapers-core</artifactId>
+                                    <version>1.3.4</version>
+                                </element>
+                            </classpath>
+                            <properties>
+                                <src>${project.basedir}/src/main/dev.rultor.com</src>
+                                <target>${project.build.directory}/dev.rultor.com</target>
+                            </properties>
+                            <source>${project.basedir}/src/main/groovy/dev.groovy</source>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>
