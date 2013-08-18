@@ -30,7 +30,9 @@
 package com.rultor.users.pgsql;
 
 import com.jcabi.urn.URN;
+import com.rultor.spi.Column;
 import com.rultor.spi.Sheet;
+import com.rultor.tools.Time;
 import java.util.List;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -66,7 +68,7 @@ public final class PgSheetITCase {
         final Sheet sheet = this.sheet();
         MatcherAssert.assertThat(
             sheet.columns(),
-            Matchers.hasItem("ct")
+            Matchers.hasItem(new Column.Simple("ct", true))
         );
     }
 
@@ -78,7 +80,12 @@ public final class PgSheetITCase {
     public void fetchesDataLines() throws Exception {
         final Sheet sheet = this.sheet();
         MatcherAssert.assertThat(
-            sheet,
+            sheet.between(new Time(), new Time())
+                .groupBy("dt")
+                .groupBy("dtunit")
+                .orderBy("time", true)
+                .orderBy("amount", false)
+                .tail(2),
             Matchers.<List<Object>>iterableWithSize(
                 Matchers.greaterThanOrEqualTo(0)
             )

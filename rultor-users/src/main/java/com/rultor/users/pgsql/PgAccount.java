@@ -39,7 +39,7 @@ import com.jcabi.urn.URN;
 import com.rultor.spi.Account;
 import com.rultor.spi.Sheet;
 import com.rultor.tools.Dollars;
-import java.io.IOException;
+import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -93,7 +93,7 @@ final class PgAccount implements Account {
                     .set(this.owner)
                     .select(new SingleHandler<Long>(Long.class))
             );
-        } catch (IOException ex) {
+        } catch (SQLException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -123,7 +123,7 @@ final class PgAccount implements Account {
                 .set(details)
                 .set(amount.points())
                 .update();
-        } catch (IOException ex) {
+        } catch (SQLException ex) {
             throw new IllegalStateException(ex);
         }
     }

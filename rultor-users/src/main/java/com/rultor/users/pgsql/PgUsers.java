@@ -38,7 +38,7 @@ import com.rultor.aws.SQSClient;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
-import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
@@ -132,7 +132,7 @@ public final class PgUsers implements Users, Runnable {
     public void run() {
         try {
             this.receipts.process();
-        } catch (IOException ex) {
+        } catch (SQLException ex) {
             throw new IllegalStateException(ex);
         }
     }

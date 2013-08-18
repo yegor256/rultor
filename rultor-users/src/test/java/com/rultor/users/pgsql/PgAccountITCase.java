@@ -67,7 +67,7 @@ public final class PgAccountITCase {
         final Account account = this.account();
         MatcherAssert.assertThat(
             account.balance().points(),
-            Matchers.greaterThanOrEqualTo(0L)
+            Matchers.not(Matchers.equalTo(0L))
         );
     }
 
@@ -81,7 +81,7 @@ public final class PgAccountITCase {
         account.fund(new Dollars(new Random().nextInt()), "for a service");
         MatcherAssert.assertThat(
             account.balance().points(),
-            Matchers.greaterThanOrEqualTo(1L)
+            Matchers.not(Matchers.equalTo(0L))
         );
     }
 

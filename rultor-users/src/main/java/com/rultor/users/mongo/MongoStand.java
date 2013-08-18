@@ -32,7 +32,6 @@ package com.rultor.users.mongo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -61,7 +60,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.w3c.dom.Document;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
@@ -300,7 +298,7 @@ final class MongoStand implements Stand {
                     .xpath("/snapshot/tags/tag/label/text()")
             );
         } catch (BrokenXemblyException ex) {
-            Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+            assert ex != null;
         }
         return tags;
     }

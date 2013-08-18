@@ -90,13 +90,7 @@
                 <table class="table table-striped table-hover table-condensed" style="font-size: 80%;">
                     <thead>
                         <tr>
-                            <xsl:for-each select="/page/columns/column">
-                                <th>
-                                    <xsl:value-of select="."/>
-                                    <xsl:text> </xsl:text>
-                                    <i class="icon-sort-by-alphabet"><xsl:comment>sort</xsl:comment></i>
-                                </th>
-                            </xsl:for-each>
+                            <xsl:apply-templates select="/page/columns/column"/>
                         </tr>
                     </thead>
                     <tbody>
@@ -125,14 +119,57 @@
     </xsl:template>
     <xsl:template match="receipt">
         <tr>
-            <td>
-                <xsl:value-of select="@id"/>
-            </td>
             <xsl:for-each select="cell">
                 <td>
                     <xsl:value-of select="."/>
                 </td>
             </xsl:for-each>
         </tr>
+    </xsl:template>
+    <xsl:template match="column">
+        <th>
+            <xsl:value-of select="title"/>
+            <xsl:text> </xsl:text>
+            <xsl:choose>
+                <xsl:when test="not(@sorted) and (links/link[@rel='asc'] or links/link[@rel='desc'])">
+                    <a class="text-muted" title="click to sort in ASC order">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='asc']/@href"/>
+                        </xsl:attribute>
+                        <i class="icon-sort-by-alphabet"><xsl:comment>asc</xsl:comment></i>
+                    </a>
+                </xsl:when>
+                <xsl:when test="@sorted = 'asc'">
+                    <a title="click to sort in DESC order">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='desc']/@href"/>
+                        </xsl:attribute>
+                        <i class="icon-sort-by-alphabet"><xsl:comment>asc</xsl:comment></i>
+                    </a>
+                </xsl:when>
+                <xsl:when test="@sorted = 'desc'">
+                    <a title="click to sort in ASC order">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='asc']/@href"/>
+                        </xsl:attribute>
+                        <i class="icon-sort-by-alphabet-alt"><xsl:comment>desc</xsl:comment></i>
+                    </a>
+                </xsl:when>
+            </xsl:choose>
+            <xsl:text> </xsl:text>
+            <xsl:choose>
+                <xsl:when test="not(@groupped) and links/link[@rel='group']">
+                    <a class="text-muted" title="click to group">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='group']/@href"/>
+                        </xsl:attribute>
+                        <i class="icon-collapse"><xsl:comment>collapse</xsl:comment></i>
+                    </a>
+                </xsl:when>
+                <xsl:when test="@groupped">
+                    <i class="icon-expand"><xsl:comment>group</xsl:comment></i>
+                </xsl:when>
+            </xsl:choose>
+        </th>
     </xsl:template>
 </xsl:stylesheet>

@@ -51,29 +51,82 @@
     <millis>16</millis>
     <balance>$0.45</balance>
     <columns>
-        <column>id</column>
-        <column>time</column>
-        <column>ct</column>
-        <column>ctunit</column>
-        <column>dt</column>
-        <column>dtunit</column>
-        <column>amount</column>
+        <column sorted="asc">
+            <title>id</title>
+            <links>
+                <link href="/xml/account.xml" rel="asc" type="text/xml"/>
+                <link href="/xml/account.xml" rel="desc" type="text/xml"/>
+            </links>
+        </column>
+        <column>
+            <title>time</title>
+        </column>
+        <column>
+            <title>ct</title>
+            <links>
+                <link href="/xml/account.xml" rel="group" type="text/xml"/>
+                <link href="/xml/account.xml" rel="asc" type="text/xml"/>
+                <link href="/xml/account.xml" rel="desc" type="text/xml"/>
+            </links>
+        </column>
+        <column>
+            <title>ctunit</title>
+            <links>
+                <link href="/xml/account.xml" rel="group" type="text/xml"/>
+                <link href="/xml/account.xml" rel="asc" type="text/xml"/>
+                <link href="/xml/account.xml" rel="desc" type="text/xml"/>
+            </links>
+        </column>
+        <column sorted="asc" groupped="yes">
+            <title>dt</title>
+            <links>
+                <link href="/xml/account.xml" rel="group" type="text/xml"/>
+                <link href="/xml/account.xml" rel="asc" type="text/xml"/>
+                <link href="/xml/account.xml" rel="desc" type="text/xml"/>
+            </links>
+        </column>
+        <column sorted="desc" groupped="yes">
+            <title>dtunit</title>
+            <links>
+                <link href="/xml/account.xml" rel="group" type="text/xml"/>
+                <link href="/xml/account.xml" rel="asc" type="text/xml"/>
+                <link href="/xml/account.xml" rel="desc" type="text/xml"/>
+            </links>
+        </column>
+        <column sorted="asc">
+            <title>details</title>
+            <links>
+                <link href="/xml/account.xml" rel="asc" type="text/xml"/>
+                <link href="/xml/account.xml" rel="desc" type="text/xml"/>
+            </links>
+        </column>
+        <column>
+            <title>amount</title>
+            <links>
+                <link href="/xml/account.xml" rel="asc" type="text/xml"/>
+                <link href="/xml/account.xml" rel="desc" type="text/xml"/>
+            </links>
+        </column>
     </columns>
     <receipts>
-        <receipt id="5463">
+        <receipt>
+            <cell>5433</cell>
             <cell>2012-08-23T13:25:23</cell>
             <cell>urn:github:1</cell>
             <cell>my-test-unit</cell>
             <cell>urn:github:1</cell>
             <cell>rented-unit</cell>
+            <cell>some transaction details</cell>
             <cell>$0.12</cell>
         </receipt>
-        <receipt id="55563">
+        <receipt>
+            <cell>5435</cell>
             <cell>2012-08-23T13:25:23</cell>
             <cell>urn:github:1</cell>
             <cell>my-test-unit</cell>
             <cell>urn:github:1</cell>
             <cell>rented-unit</cell>
+            <cell>some other transaction details in a few lines of text, some other transaction details in a few lines of text</cell>
             <cell>$0.09</cell>
         </receipt>
     </receipts>

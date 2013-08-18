@@ -54,10 +54,11 @@ public interface Sheet extends Pageable<List<Object>, Integer> {
     /**
      * Order by.
      * @param column Column to order by
+     * @param asc Ascending order
      * @return New sheet
      */
     @NotNull(message = "new sheet is never NULL")
-    Sheet orderBy(Column column);
+    Sheet orderBy(String column, boolean asc);
 
     /**
      * Group by.
@@ -65,7 +66,7 @@ public interface Sheet extends Pageable<List<Object>, Integer> {
      * @return New sheet
      */
     @NotNull(message = "new sheet is never NULL")
-    Sheet groupBy(Column column);
+    Sheet groupBy(String column);
 
     /**
      * Between these dates.

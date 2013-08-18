@@ -43,7 +43,7 @@ import com.jcabi.log.Logger;
 import com.rultor.aws.SQSClient;
 import com.rultor.tools.NormJson;
 import com.rultor.tools.Time;
-import java.io.IOException;
+import java.sql.SQLException;
 import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -92,10 +92,10 @@ final class SQSReceipts {
     /**
      * Fetch and process next portions of them.
      * @return How many messages were processed
-     * @throws IOException If fails
+     * @throws SQLException If fails
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public int process() throws IOException {
+    public int process() throws SQLException {
         final AmazonSQS aws = this.queue.get();
         final ReceiveMessageResult result = aws.receiveMessage(
             new ReceiveMessageRequest()
@@ -124,9 +124,9 @@ final class SQSReceipts {
     /**
      * Process one JSON message.
      * @param json Message in JSON
-     * @throws IOException If fails
+     * @throws SQLException If fails
      */
-    private void process(final JsonObject json) throws IOException {
+    private void process(final JsonObject json) throws SQLException {
         final JsonObject work = json.getJsonObject("work");
         new JdbcSession(this.client.get())
             // @checkstyle LineLength (1 line)

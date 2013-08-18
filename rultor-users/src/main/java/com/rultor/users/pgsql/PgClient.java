@@ -34,7 +34,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jolbox.bonecp.BoneCPDataSource;
-import java.io.IOException;
 import javax.sql.DataSource;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -52,9 +51,8 @@ public interface PgClient {
     /**
      * Get data source.
      * @return The data source
-     * @throws IOException If IO fails
      */
-    DataSource get() throws IOException;
+    DataSource get();
 
     /**
      * Simple implementation.
@@ -86,7 +84,7 @@ public interface PgClient {
          */
         @Override
         @Cacheable(forever = true)
-        public DataSource get() throws IOException {
+        public DataSource get() {
             final BoneCPDataSource src = new BoneCPDataSource();
             src.setDriverClass("org.postgresql.Driver");
             src.setJdbcUrl(this.jdbc);

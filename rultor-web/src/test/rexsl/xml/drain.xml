@@ -44,7 +44,7 @@
         <link href="/xml/drain.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
         <link href="/xml/drain.xml" rel="more" type="text/xml"/>
-        <link href="/xml/finances.xml" rel="finances" type="text/xml"/>
+        <link href="/xml/account.xml" rel="account" type="text/xml"/>
         <link href="/xml/units.xml" rel="units" type="text/xml"/>
         <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
     </links>
