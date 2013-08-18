@@ -47,6 +47,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
 
@@ -214,6 +215,9 @@ public final class BufferedRead implements Drain {
     /**
      * Flush.
      */
+    @ToString
+    @Immutable
+    @EqualsAndHashCode
     @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.SECONDS)
     private static final class Cleaner implements Runnable {
         @Override

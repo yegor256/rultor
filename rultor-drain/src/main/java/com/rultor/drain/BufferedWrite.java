@@ -218,6 +218,7 @@ public final class BufferedWrite implements Drain {
      * Flush.
      */
     @ToString
+    @Immutable
     @EqualsAndHashCode
     @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.SECONDS)
     private static final class Flush implements Runnable {

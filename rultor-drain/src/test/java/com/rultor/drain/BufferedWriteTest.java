@@ -121,6 +121,11 @@ public final class BufferedWriteTest {
                         final long number = count.getAndIncrement();
                         if (number != Long.parseLong(line.toString())) {
                             count.set(0);
+                            throw new IllegalStateException(
+                                String.format(
+                                    "expected %d, received %s", number, line
+                                )
+                            );
                         }
                     }
                     return null;
