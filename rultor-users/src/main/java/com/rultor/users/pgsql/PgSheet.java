@@ -280,8 +280,8 @@ final class PgSheet implements Sheet {
             .append(this.select())
             .append("\nFROM receipt")
             .append('\n').append(this.where())
-            .append('\n').append(this.groupBy())
-            .append('\n').append(this.orderBy())
+            .append(this.groupBy())
+            .append(this.orderBy())
             .append('\n').append(this.limit())
             .toString();
     }
@@ -340,7 +340,7 @@ final class PgSheet implements Sheet {
     private String groupBy() {
         final StringBuilder stmt = new StringBuilder();
         if (!this.groups.isEmpty()) {
-            stmt.append("GROUP BY ")
+            stmt.append("\nGROUP BY ")
                 .append(StringUtils.join(this.groups, PgSheet.COMMA));
         }
         return stmt.toString();
@@ -353,7 +353,7 @@ final class PgSheet implements Sheet {
     private String orderBy() {
         final StringBuilder stmt = new StringBuilder();
         if (!this.orders.isEmpty()) {
-            stmt.append("ORDER BY ");
+            stmt.append("\nORDER BY ");
             boolean first = true;
             for (Map.Entry<String, Boolean> order : this.orders.entrySet()) {
                 if (!first) {
