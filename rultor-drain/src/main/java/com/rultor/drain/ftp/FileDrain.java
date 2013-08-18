@@ -32,6 +32,7 @@ package com.rultor.drain.ftp;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
@@ -174,6 +175,7 @@ public final class FileDrain implements Drain {
      * @param lines Lines to append
      * @throws IOException If some I/O problem inside
      */
+    @RetryOnFailure
     private void append(final FTPClient ftp, final Iterable<String> lines)
         throws IOException {
         final String name = FilenameUtils.getBaseName(this.file);

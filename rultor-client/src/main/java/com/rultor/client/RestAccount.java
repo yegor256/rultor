@@ -32,23 +32,20 @@ package com.rultor.client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
-import com.rultor.spi.Unit;
-import com.rultor.spi.Units;
-import java.io.UnsupportedEncodingException;
+import com.rultor.spi.Account;
+import com.rultor.spi.Sheet;
+import com.rultor.tools.Dollars;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URLEncoder;
-import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.CharEncoding;
 
 /**
- * RESTful Units.
+ * RESTful account.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -58,7 +55,7 @@ import org.apache.commons.lang3.CharEncoding;
 @ToString
 @EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
-final class RestUnits implements Units {
+final class RestAccount implements Account {
 
     /**
      * Home URI.
@@ -75,7 +72,7 @@ final class RestUnits implements Units {
      * @param entry Entry point (URI)
      * @param tkn Token
      */
-    protected RestUnits(
+    protected RestAccount(
         @NotNull(message = "URI can't be NULL") final URI entry,
         @NotNull(message = "token can't be NULL") final String tkn) {
         this.home = entry.toString();
@@ -86,29 +83,33 @@ final class RestUnits implements Units {
      * {@inheritDoc}
      */
     @Override
-    public Iterator<Unit> iterator() {
-        throw new UnsupportedOperationException();
+    public Dollars balance() {
+        return Dollars.valueOf(
+            RestTester.start(UriBuilder.fromUri(this.home))
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
+                .get("#balance()")
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .xpath("/page/balance/text()")
+                .get(0)
+        );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Unit get(final String name) {
-        return new RestUnit(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get(String.format("#get(%s)", name))
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath(
-                    String.format(
-                        // @checkstyle LineLength (1 line)
-                        "/page/units/unit[name='%s']/links/link[@rel='edit']/@href",
-                        name
-                    )
-                )
-                .get(0),
+    public Sheet sheet() {
+        return new RestSheet(
+            URI.create(
+                RestTester.start(UriBuilder.fromUri(this.home))
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .header(HttpHeaders.AUTHORIZATION, this.token)
+                    .get("#sheet()")
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .xpath("/page/links/link[@rel='account']/@href")
+                    .get(0)
+            ),
             this.token
         );
     }
@@ -117,61 +118,8 @@ final class RestUnits implements Units {
      * {@inheritDoc}
      */
     @Override
-    public void create(final String name) {
-        try {
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get(String.format("preparing to #create(%s)", name))
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .rel("/page/links/link[@rel='create']/@href")
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .post(
-                    String.format("#create(%s)", name),
-                    String.format(
-                        "name=%s",
-                        URLEncoder.encode(name, CharEncoding.UTF_8)
-                    )
-                )
-                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
-        } catch (UnsupportedEncodingException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void remove(final String name) {
-        RestTester.start(UriBuilder.fromUri(this.home))
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-            .header(HttpHeaders.AUTHORIZATION, this.token)
-            .get(String.format("preparing to #remove(%s)", name))
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .rel(
-                String.format(
-                    // @checkstyle LineLength (1 line)
-                    "/page/units/unit[name='%s']/links/link[@rel='remove']/@href",
-                    name
-                )
-            )
-            .get(String.format("#remove(%s)", name))
-            .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean contains(final String name) {
-        return !RestTester.start(UriBuilder.fromUri(this.home))
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-            .header(HttpHeaders.AUTHORIZATION, this.token)
-            .get(String.format("#contains(%s)", name))
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .xpath(String.format("/page/units/unit[name='%s']", name))
-            .isEmpty();
+    public void fund(final Dollars amount, final String details) {
+        throw new UnsupportedOperationException();
     }
 
 }

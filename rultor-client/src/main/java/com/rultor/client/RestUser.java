@@ -171,7 +171,7 @@ public final class RestUser implements User {
      */
     @Override
     public Account account() {
-        throw new UnsupportedOperationException();
+        return new RestAccount(URI.create(this.home), this.token);
     }
 
 }

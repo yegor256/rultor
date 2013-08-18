@@ -32,7 +32,11 @@ package com.rultor.tools;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import java.math.BigDecimal;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Dollar amount.
@@ -47,6 +51,13 @@ import lombok.EqualsAndHashCode;
 public final class Dollars {
 
     /**
+     * Pattern to parse.
+     */
+    private static final Pattern PTN = Pattern.compile(
+        "\\(?\\$([0-9]+(?:\\.[0-9]+)?)\\)?"
+    );
+
+    /**
      * Amount of it in millionth of dollar.
      */
     private final transient long amount;
@@ -58,6 +69,23 @@ public final class Dollars {
     public Dollars(final long points) {
         this.amount = points;
     }
+
+    /**
+     * Parse string.
+     * @param text Text to parse
+     * @return Dollars
+     */
+    public static Dollars valueOf(final String text) {
+        final Matcher matcher = Dollars.PTN.matcher(text);
+        Validate.isTrue(matcher.matches(), "invalid input '%s'", text);
+        long points = new BigDecimal(matcher.group(1))
+            .movePointRight(Tv.SIX).longValue();
+        if (text.charAt(0) == '(') {
+            points = -points;
+        }
+        return new Dollars(points);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -78,6 +106,7 @@ public final class Dollars {
         }
         return body;
     }
+
     /**
      * Points.
      * @return Points

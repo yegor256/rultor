@@ -27,46 +27,24 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.tools;
+package com.rultor.web.rexsl.scripts
 
-import com.google.common.collect.ImmutableMap;
-import com.jcabi.aspects.Tv;
-import java.util.Map;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import com.jcabi.manifests.Manifests
+import com.jcabi.urn.URN
+import com.rexsl.page.auth.Identity
+import com.rultor.client.RestUser
+import com.rultor.spi.Spec
+import com.rultor.web.AuthKeys
+import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
 
-/**
- * Test case for {@link Dollars}.
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- */
-public final class DollarsTest {
-
-    /**
-     * Dollars can print monetary value.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void printsItselfToString() throws Exception {
-        final ImmutableMap<Dollars, String> map =
-            new ImmutableMap.Builder<Dollars, String>()
-                .put(new Dollars(Tv.MILLION), "$1.00")
-                .put(new Dollars(Tv.FIVE * Tv.MILLION), "$5.00")
-                .put(new Dollars(Tv.THOUSAND), "$0.001")
-                .put(new Dollars(Tv.TEN * Tv.THOUSAND), "$0.01")
-                .put(new Dollars(-Tv.FIVE * Tv.MILLION), "($5.00)")
-                .build();
-        for (Map.Entry<Dollars, String> entry : map.entrySet()) {
-            MatcherAssert.assertThat(
-                entry.getKey(),
-                Matchers.hasToString(entry.getValue())
-            );
-            MatcherAssert.assertThat(
-                Dollars.valueOf(entry.getValue()),
-                Matchers.equalTo(entry.getKey())
-            );
-        }
-    }
-
-}
+Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
+def identity = new Identity.Simple(new URN('urn:facebook:1'), '', new URI('#'))
+def key = new AuthKeys().make(identity)
+def user = new RestUser(rexsl.home, identity.urn(), key)
+MatcherAssert.assertThat(user.account().balance(), Matchers.notNullValue())
+MatcherAssert.assertThat(user.account().sheet(), Matchers.notNullValue())
+MatcherAssert.assertThat(
+    user.account().sheet().columns(),
+    Matchers.iterableWithSize(Matchers.greaterThan(0))
+)

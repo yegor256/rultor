@@ -34,6 +34,8 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rultor.repo.ClasspathRepo;
 import com.rultor.spi.Account;
+import com.rultor.spi.Column;
+import com.rultor.spi.Pageable;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Sheet;
@@ -47,8 +49,12 @@ import com.rultor.spi.Users;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
+import com.rultor.tools.Time;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -209,7 +215,39 @@ final class Testing implements Profile {
                 }
                 @Override
                 public Sheet sheet() {
-                    throw new UnsupportedOperationException();
+                    return new Sheet() {
+                        @Override
+                        public List<Column> columns() {
+                            return Arrays.<Column>asList(
+                                new Column.Simple("ct", true),
+                                new Column.Simple("ctunit", true),
+                                new Column.Simple("amount", false)
+                            );
+                        }
+                        @Override
+                        public Sheet orderBy(final String column,
+                            final boolean asc) {
+                            return this;
+                        }
+                        @Override
+                        public Sheet groupBy(final String column) {
+                            return this;
+                        }
+                        @Override
+                        public Sheet between(final Time left,
+                            final Time right) {
+                            return this;
+                        }
+                        @Override
+                        public Pageable<List<Object>, Integer> tail(
+                            final Integer head) throws IOException {
+                            return this;
+                        }
+                        @Override
+                        public Iterator<List<Object>> iterator() {
+                            return new ArrayList<List<Object>>(0).iterator();
+                        }
+                    };
                 }
                 @Override
                 public void fund(final Dollars amount, final String details) {
