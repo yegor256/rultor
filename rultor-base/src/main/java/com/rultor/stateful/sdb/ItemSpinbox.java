@@ -150,7 +150,7 @@ public final class ItemSpinbox implements Spinbox {
                 "added %d to spinbox in AWS SimpleDB item `%s` in `%s` domain",
                 value, this.name, this.client.domain()
             ),
-            new Dollars(Tv.TEN)
+            new Dollars(Tv.FIVE)
         );
         return after;
     }

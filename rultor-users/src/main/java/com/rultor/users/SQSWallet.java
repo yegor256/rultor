@@ -117,29 +117,18 @@ final class SQSWallet implements Wallet {
      */
     @Override
     public void charge(final String details, final Dollars amount) {
-        final StringWriter writer = new StringWriter();
-        Json.createGenerator(writer)
-            .writeStartObject()
-            .write("ct", this.creditor.toString())
-            .write("ctunit", this.ctunit)
-            .write("dt", this.debitor.toString())
-            .write("dtunit", this.dtunit)
-            .write("details", details)
-            .write("amount", amount.points())
-            .writeStartObject("work")
-            .write("owner", this.work.owner().toString())
-            .write("unit", this.work.unit())
-            .write("scheduled", this.work.scheduled().toString())
-            .writeEnd()
-            .writeEnd()
-            .close();
-        final AmazonSQS aws = this.client.get();
-        aws.sendMessage(
-            new SendMessageRequest()
-                .withQueueUrl(this.client.url())
-                .withMessageBody(writer.toString())
-        );
-        aws.shutdown();
+        if (!this.creditor.equals(this.debitor)) {
+            final AmazonSQS aws = this.client.get();
+            try {
+                aws.sendMessage(
+                    new SendMessageRequest()
+                        .withQueueUrl(this.client.url())
+                        .withMessageBody(this.json(details, amount))
+                );
+            } finally {
+                aws.shutdown();
+            }
+        }
     }
 
     /**
@@ -161,6 +150,32 @@ final class SQSWallet implements Wallet {
                 return delegate.delegate(urn, unit);
             }
         };
+    }
+
+    /**
+     * Make JSON.
+     * @param details Payment details
+     * @param amount Dollar amount
+     * @return JSON
+     */
+    private String json(final String details, final Dollars amount) {
+        final StringWriter writer = new StringWriter();
+        Json.createGenerator(writer)
+            .writeStartObject()
+            .write("ct", this.creditor.toString())
+            .write("ctunit", this.ctunit)
+            .write("dt", this.debitor.toString())
+            .write("dtunit", this.dtunit)
+            .write("details", details)
+            .write("amount", amount.points())
+            .writeStartObject("work")
+            .write("owner", this.work.owner().toString())
+            .write("unit", this.work.unit())
+            .write("scheduled", this.work.scheduled().toString())
+            .writeEnd()
+            .writeEnd()
+            .close();
+        return writer.toString();
     }
 
 }

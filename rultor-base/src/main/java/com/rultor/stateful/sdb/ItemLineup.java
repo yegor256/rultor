@@ -212,7 +212,7 @@ public final class ItemLineup implements Lineup {
                 this.name,
                 this.client.domain()
             ),
-            new Dollars(Tv.TEN)
+            new Dollars(Tv.FIVE)
         );
         return !result.getAttributes().isEmpty();
     }
@@ -244,7 +244,7 @@ public final class ItemLineup implements Lineup {
                 this.name,
                 this.client.domain()
             ),
-            new Dollars(Tv.TEN)
+            new Dollars(Tv.FIVE)
         );
     }
 
@@ -267,7 +267,7 @@ public final class ItemLineup implements Lineup {
                 this.name,
                 this.client.domain()
             ),
-            new Dollars(Tv.TEN)
+            new Dollars(Tv.FIVE)
         );
         final String text;
         if (result.getAttributes().isEmpty()) {
@@ -294,7 +294,7 @@ public final class ItemLineup implements Lineup {
                 this.name,
                 this.client.domain()
             ),
-            new Dollars(Tv.TEN)
+            new Dollars(Tv.FIVE)
         );
     }
 
