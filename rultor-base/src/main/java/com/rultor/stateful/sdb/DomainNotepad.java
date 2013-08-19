@@ -39,6 +39,7 @@ import com.amazonaws.services.simpledb.model.SelectResult;
 import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.SDBClient;
@@ -158,6 +159,7 @@ public final class DomainNotepad implements Notepad {
      * {@inheritDoc}
      */
     @Override
+    @RetryOnFailure
     public Iterator<String> iterator() {
         final String query = String.format(
             "SELECT `%s` FROM `%s` WHERE `%s` = '%s' AND `%s` = '%s'",
@@ -214,6 +216,7 @@ public final class DomainNotepad implements Notepad {
      * {@inheritDoc}
      */
     @Override
+    @RetryOnFailure
     public boolean add(final String line) {
         final long start = System.currentTimeMillis();
         this.client.get().putAttributes(
@@ -255,6 +258,7 @@ public final class DomainNotepad implements Notepad {
      * {@inheritDoc}
      */
     @Override
+    @RetryOnFailure
     public boolean remove(final Object line) {
         final long start = System.currentTimeMillis();
         this.client.get().deleteAttributes(

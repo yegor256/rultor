@@ -199,6 +199,7 @@ public final class ItemLineup implements Lineup {
      * Item exists in SimpleDB.
      * @return TRUE if it exists
      */
+    @RetryOnFailure
     private boolean exists() {
         final GetAttributesResult result = this.client.get().getAttributes(
             new GetAttributesRequest()
