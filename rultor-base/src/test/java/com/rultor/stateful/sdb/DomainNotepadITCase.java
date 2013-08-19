@@ -36,7 +36,6 @@ import com.rultor.stateful.Notepad;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -47,24 +46,22 @@ import org.junit.Test;
 public final class DomainNotepadITCase {
 
     /**
-     * SimpleDB client.
+     * AWS key.
      */
-    private transient SDBClient client;
+    private static final String KEY =
+        System.getProperty("failsafe.sdb.key");
 
     /**
-     * Make a notepad.
-     * @throws Exception If some problem inside
+     * AWS secret.
      */
-    @Before
-    public void prepare() throws Exception {
-        final String key = System.getProperty("failsafe.sdb.key");
-        Assume.assumeNotNull(key);
-        this.client = new SDBClient.Simple(
-            key,
-            System.getProperty("failsafe.sdb.secret"),
-            System.getProperty("failsafe.sdb.domain")
-        );
-    }
+    private static final String SECRET =
+        System.getProperty("failsafe.sdb.secret");
+
+    /**
+     * AWD SimpleDB domain.
+     */
+    private static final String DOMAIN =
+        System.getProperty("failsafe.sdb.domain");
 
     /**
      * DomainNotepad can store and retrieve lines.
@@ -73,7 +70,7 @@ public final class DomainNotepadITCase {
     @Test
     public void storesAndRetrievesLines() throws Exception {
         final Notepad notepad = new DomainNotepad(
-            new Work.Simple(), new Wallet.Empty(), this.client
+            new Work.Simple(), new Wallet.Empty(), this.client()
         );
         notepad.clear();
         MatcherAssert.assertThat(notepad, Matchers.empty());
@@ -83,7 +80,23 @@ public final class DomainNotepadITCase {
         notepad.add(second);
         MatcherAssert.assertThat(notepad, Matchers.hasSize(2));
         MatcherAssert.assertThat(notepad, Matchers.hasItem(first));
+        MatcherAssert.assertThat(notepad.contains(first), Matchers.is(true));
+        MatcherAssert.assertThat(notepad.contains(second), Matchers.is(true));
         notepad.clear();
+        MatcherAssert.assertThat(notepad.contains(second), Matchers.is(false));
+    }
+
+    /**
+     * Make a client.
+     * @throws Exception If some problem inside
+     */
+    private SDBClient client() throws Exception {
+        Assume.assumeNotNull(DomainNotepadITCase.KEY);
+        return new SDBClient.Simple(
+            DomainNotepadITCase.KEY,
+            DomainNotepadITCase.SECRET,
+            DomainNotepadITCase.DOMAIN
+        );
     }
 
 }
