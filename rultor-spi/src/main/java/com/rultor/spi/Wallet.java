@@ -70,7 +70,7 @@ public interface Wallet {
      */
     @Immutable
     @EqualsAndHashCode
-    @Loggable(Loggable.DEBUG)
+    @Loggable(Loggable.INFO)
     final class Empty implements Wallet {
         /**
          * {@inheritDoc}

@@ -29,6 +29,7 @@
  */
 package com.rultor.stateful.sdb;
 
+import com.amazonaws.services.simpledb.model.Attribute;
 import com.amazonaws.services.simpledb.model.DeleteAttributesRequest;
 import com.amazonaws.services.simpledb.model.Item;
 import com.amazonaws.services.simpledb.model.PutAttributesRequest;
@@ -39,6 +40,7 @@ import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.Logger;
 import com.rultor.aws.SDBClient;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
@@ -53,14 +55,15 @@ import lombok.EqualsAndHashCode;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
- * SimpleDB notepads.
+ * SimpleDB {@link Notepad}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@EqualsAndHashCode(of = { "client", "work" })
+@EqualsAndHashCode(of = { "client", "work", "wallet" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
 public final class DomainNotepad implements Notepad {
@@ -122,7 +125,7 @@ public final class DomainNotepad implements Notepad {
     @Override
     public String toString() {
         return String.format(
-            "SimpleDB notepads in `%s` accessed with %s",
+            "SimpleDB notepad in `%s` accessed with %s",
             this.client.domain(), this.client
         );
     }
@@ -165,23 +168,28 @@ public final class DomainNotepad implements Notepad {
             DomainNotepad.ATTR_UNIT,
             this.work.unit()
         );
+        final long start = System.currentTimeMillis();
         final SelectResult result = this.client.get().select(
             new SelectRequest()
                 .withConsistentRead(true)
                 .withSelectExpression(query)
         );
+        final Collection<String> items = new LinkedList<String>();
+        for (Item item : result.getItems()) {
+            final String text = item.getAttributes().get(0).getValue();
+            if (item.getName().equals(this.name(text))) {
+                items.add(text);
+            }
+        }
         this.wallet.charge(
-            String.format(
-                "retrieved AWS SimpleDB %d items from `%s` domain",
-                result.getItems().size(),
-                this.client.domain()
+            Logger.format(
+                // @checkstyle LineLength (1 line)
+                "retrieved AWS SimpleDB %d item(s) from `%s` domain in %[ms]s (%d total)",
+                items.size(), this.client.domain(),
+                System.currentTimeMillis() - start, result.getItems().size()
             ),
             new Dollars(Tv.FIVE)
         );
-        final Collection<String> items = new LinkedList<String>();
-        for (Item item : result.getItems()) {
-            items.add(item.getAttributes().get(0).getValue());
-        }
         return items.iterator();
     }
 
@@ -207,6 +215,7 @@ public final class DomainNotepad implements Notepad {
      */
     @Override
     public boolean add(final String line) {
+        final long start = System.currentTimeMillis();
         this.client.get().putAttributes(
             new PutAttributesRequest()
                 .withDomainName(this.client.domain())
@@ -231,10 +240,11 @@ public final class DomainNotepad implements Notepad {
                 )
         );
         this.wallet.charge(
-            String.format(
-                "added AWS SimpleDB item `%s` to `%s` domain",
+            Logger.format(
+                "added AWS SimpleDB item `%s` to `%s` domain in %[ms]s",
                 this.name(line),
-                this.client.domain()
+                this.client.domain(),
+                System.currentTimeMillis() - start
             ),
             new Dollars(Tv.FIVE)
         );
@@ -246,16 +256,24 @@ public final class DomainNotepad implements Notepad {
      */
     @Override
     public boolean remove(final Object line) {
+        final long start = System.currentTimeMillis();
         this.client.get().deleteAttributes(
             new DeleteAttributesRequest()
                 .withDomainName(this.client.domain())
                 .withItemName(this.name(line.toString()))
+                .withAttributes(
+                    new Attribute().withName(DomainNotepad.ATTR_OWNER),
+                    new Attribute().withName(DomainNotepad.ATTR_TEXT),
+                    new Attribute().withName(DomainNotepad.ATTR_TIME),
+                    new Attribute().withName(DomainNotepad.ATTR_UNIT)
+                )
         );
         this.wallet.charge(
-            String.format(
-                "removed AWS SimpleDB item `%s` from `%s` domain",
+            Logger.format(
+                "removed AWS SimpleDB item `%s` from `%s` domain in %[ms]s",
                 this.name(line.toString()),
-                this.client.domain()
+                this.client.domain(),
+                System.currentTimeMillis() - start
             ),
             new Dollars(Tv.FIVE)
         );

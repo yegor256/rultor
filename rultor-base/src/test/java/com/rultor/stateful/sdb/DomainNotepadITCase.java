@@ -72,10 +72,9 @@ public final class DomainNotepadITCase {
         final Notepad notepad = new DomainNotepad(
             new Work.Simple(), new Wallet.Empty(), this.client()
         );
-        notepad.clear();
-        MatcherAssert.assertThat(notepad, Matchers.empty());
         final String first = "some \u20ac\t\n\r\n\n\n test";
         final String second = "AAA - some \u20ac\t\n\r\n\n\n test";
+        notepad.clear();
         notepad.add(first);
         notepad.add(second);
         MatcherAssert.assertThat(notepad, Matchers.hasSize(2));
@@ -87,7 +86,39 @@ public final class DomainNotepadITCase {
     }
 
     /**
+     * DomainNotepad can clean itself.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void cleansItself() throws Exception {
+        final Notepad notepad = new DomainNotepad(
+            new Work.Simple(), new Wallet.Empty(), this.client()
+        );
+        notepad.add("some test line\t\nпривет");
+        MatcherAssert.assertThat(notepad, Matchers.not(Matchers.empty()));
+        notepad.clear();
+        MatcherAssert.assertThat(notepad, Matchers.empty());
+    }
+
+    /**
+     * DomainNotepad can check item existence.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void checksLineExistence() throws Exception {
+        final Notepad notepad = new DomainNotepad(
+            new Work.Simple(), new Wallet.Empty(), this.client()
+        );
+        final String text = "да test line\t\nпривет";
+        notepad.add(text);
+        MatcherAssert.assertThat(notepad.contains(text), Matchers.is(true));
+        notepad.clear();
+        MatcherAssert.assertThat(notepad.contains(text), Matchers.is(false));
+    }
+
+    /**
      * Make a client.
+     * @return The client
      * @throws Exception If some problem inside
      */
     private SDBClient client() throws Exception {
