@@ -114,6 +114,8 @@ public final class DomainNotepadITCase {
         MatcherAssert.assertThat(notepad.contains(text), Matchers.is(true));
         notepad.clear();
         MatcherAssert.assertThat(notepad.contains(text), Matchers.is(false));
+        notepad.add(text);
+        MatcherAssert.assertThat(notepad.contains(text), Matchers.is(true));
     }
 
     /**

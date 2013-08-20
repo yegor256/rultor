@@ -31,6 +31,8 @@ package com.rultor.stateful.sdb;
 
 import com.amazonaws.services.simpledb.model.Attribute;
 import com.amazonaws.services.simpledb.model.DeleteAttributesRequest;
+import com.amazonaws.services.simpledb.model.GetAttributesRequest;
+import com.amazonaws.services.simpledb.model.GetAttributesResult;
 import com.amazonaws.services.simpledb.model.Item;
 import com.amazonaws.services.simpledb.model.PutAttributesRequest;
 import com.amazonaws.services.simpledb.model.ReplaceableAttribute;
@@ -152,7 +154,23 @@ public final class DomainNotepad implements Notepad {
      */
     @Override
     public boolean contains(final Object object) {
-        return Iterators.contains(this.iterator(), object);
+        final long start = System.currentTimeMillis();
+        final GetAttributesResult result = this.client.get().getAttributes(
+            new GetAttributesRequest()
+                .withDomainName(this.client.domain())
+                .withItemName(this.name(object.toString()))
+                .withConsistentRead(true)
+        );
+        this.wallet.charge(
+            Logger.format(
+                // @checkstyle LineLength (1 line)
+                "checked existence of AWS SimpleDB item from `%s` domain in %[ms]s",
+                this.client.domain(),
+                System.currentTimeMillis() - start
+            ),
+            new Dollars(Tv.FIVE)
+        );
+        return !result.getAttributes().isEmpty();
     }
 
     /**
