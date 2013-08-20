@@ -38,6 +38,7 @@ import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
@@ -65,7 +66,7 @@ import org.apache.commons.lang3.Validate;
 @EqualsAndHashCode(of = { "lifetime", "work", "origin" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.TooManyMethods" })
-public final class BufferedWrite implements Drain {
+public final class BufferedWrite implements Drain, Closeable {
 
     /**
      * All in-memory buffers.
@@ -77,7 +78,7 @@ public final class BufferedWrite implements Drain {
     /**
      * Flusher.
      */
-    private static final Runnable FLUSH = new BufferedWrite.Flush();
+    private static final BufferedWrite.Flush FLUSH = new BufferedWrite.Flush();
 
     /**
      * How long to keep them in buffer, in milliseconds.
@@ -129,6 +130,14 @@ public final class BufferedWrite implements Drain {
             this.origin,
             this.lifetime
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        BufferedWrite.FLUSH.flush(true);
     }
 
     /**
@@ -195,17 +204,20 @@ public final class BufferedWrite implements Drain {
         }
         /**
          * Flush if necessary.
+         * @param force Flush in any case
          * @return TRUE if it was flushed and should be removed
          * @throws IOException If fails
          */
-        public boolean flush() throws IOException {
+        public boolean flush(final boolean force) throws IOException {
             final boolean expired = System.currentTimeMillis() - this.start
                 > BufferedWrite.this.lifetime;
-            if (expired && !this.data.isEmpty()) {
+            boolean flushed = false;
+            if ((expired || force) && !this.data.isEmpty()) {
                 BufferedWrite.this.origin.append(this.data);
                 this.data.clear();
+                flushed = true;
             }
-            return expired;
+            return flushed;
         }
     }
 
@@ -219,10 +231,17 @@ public final class BufferedWrite implements Drain {
     private static final class Flush implements Runnable {
         @Override
         public void run() {
+            this.flush(false);
+        }
+        /**
+         * Flush all buffers.
+         * @param force Flush in any case
+         */
+        public void flush(final boolean force) {
             for (BufferedWrite client : BufferedWrite.TUNNELS.keySet()) {
                 try {
                     synchronized (client.work) {
-                        if (BufferedWrite.TUNNELS.get(client).flush()) {
+                        if (BufferedWrite.TUNNELS.get(client).flush(force)) {
                             BufferedWrite.TUNNELS.remove(client);
                         }
                     }

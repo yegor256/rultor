@@ -34,7 +34,6 @@ import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Work;
 import java.util.Arrays;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import org.hamcrest.MatcherAssert;
@@ -72,16 +71,15 @@ public final class BufferedWriteTest {
     @Test
     public void sendsLinesThrough() throws Exception {
         final Drain drain = Mockito.mock(Drain.class);
-        final Drain first = new BufferedWrite(
+        final BufferedWrite first = new BufferedWrite(
             new Work.Simple(new URN("urn:facebook:8"), "test-99"),
             2, drain
         );
-        final Drain second = new BufferedWrite(
+        final BufferedWrite second = new BufferedWrite(
             new Work.Simple(new URN("urn:facebook:9"), "test-88"),
             Tv.FIVE, Mockito.mock(Drain.class)
         );
         final String line = "some \t\u20ac\tfdsfs9980 Hello878";
-        final CountDownLatch done = new CountDownLatch(1);
         Mockito.doAnswer(
             new Answer<Void>() {
                 @Override
@@ -89,14 +87,14 @@ public final class BufferedWriteTest {
                     throws Exception {
                     first.append(Arrays.asList(line));
                     second.append(Arrays.asList(line));
-                    done.countDown();
                     return null;
                 }
             }
         ).when(drain).append(Mockito.any(Iterable.class));
         first.append(Arrays.asList(line));
         second.append(Arrays.asList(line));
-        assert done.await(Tv.FIVE, TimeUnit.SECONDS);
+        first.close();
+        second.close();
         Mockito.verify(drain).append(
             Mockito.<Iterable<String>>argThat(
                 Matchers.<String>everyItem(Matchers.equalTo(line))
@@ -132,7 +130,7 @@ public final class BufferedWriteTest {
                 }
             }
         ).when(origin).append(Mockito.any(Iterable.class));
-        final Drain drain = new BufferedWrite(
+        final BufferedWrite drain = new BufferedWrite(
             new Work.Simple(new URN("urn:test:9"), "f"), 2, origin
         );
         final long total = TimeUnit.SECONDS.toMillis(Tv.FIVE);
@@ -140,7 +138,7 @@ public final class BufferedWriteTest {
             drain.append(Arrays.asList(String.format("%d", idx)));
             TimeUnit.MILLISECONDS.sleep(1);
         }
-        TimeUnit.SECONDS.sleep(2);
+        drain.close();
         MatcherAssert.assertThat(count.get(), Matchers.equalTo(total));
     }
 

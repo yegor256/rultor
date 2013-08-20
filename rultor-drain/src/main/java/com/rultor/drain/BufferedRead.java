@@ -39,6 +39,7 @@ import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
@@ -63,7 +64,7 @@ import org.apache.commons.lang3.Validate;
 @EqualsAndHashCode(of = { "work", "lifetime", "origin" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.TooManyMethods" })
-public final class BufferedRead implements Drain {
+public final class BufferedRead implements Drain, Closeable {
 
     /**
      * All in-memory buffers.
@@ -127,6 +128,14 @@ public final class BufferedRead implements Drain {
             this.origin,
             this.lifetime
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        BufferedRead.CLEANER.run();
     }
 
     /**
