@@ -71,6 +71,9 @@ final class OwnWallet implements Wallet {
         this.unit = unt;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void charge(final String details, final Dollars amount) {
         throw new UnsupportedOperationException(
@@ -82,6 +85,9 @@ final class OwnWallet implements Wallet {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Wallet delegate(final URN urn, final String name) {
         return this.unit.wallet(this.work, urn, name);

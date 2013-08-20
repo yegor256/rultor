@@ -33,6 +33,7 @@ import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Wallet;
@@ -124,6 +125,11 @@ final class SQSWallet implements Wallet {
                     new SendMessageRequest()
                         .withQueueUrl(this.client.url())
                         .withMessageBody(this.json(details, amount))
+                );
+                Logger.info(
+                    this,
+                    "charged %s from %s to %s for `%s`",
+                    amount, this.creditor, this.debitor, details
                 );
             } finally {
                 aws.shutdown();

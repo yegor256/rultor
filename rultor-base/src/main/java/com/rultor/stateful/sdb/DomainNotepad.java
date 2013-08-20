@@ -162,7 +162,7 @@ public final class DomainNotepad implements Notepad {
     @RetryOnFailure
     public Iterator<String> iterator() {
         final String query = String.format(
-            "SELECT `%s` FROM `%s` WHERE `%s` = '%s' AND `%s` = '%s'",
+            "SELECT `%s` FROM `%s` WHERE `%s`='%s' AND `%s`='%s'",
             DomainNotepad.ATTR_TEXT,
             this.client.domain(),
             DomainNotepad.ATTR_OWNER,
