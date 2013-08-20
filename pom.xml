@@ -61,7 +61,7 @@
     <licenses>
         <license>
             <name>BSD</name>
-            <url>http://maven.rultor.com/LICENSE.txt</url>
+            <url>http://doc.rultor.com/LICENSE.txt</url>
             <distribution>site</distribution>
         </license>
     </licenses>
@@ -90,7 +90,7 @@
     </scm>
     <ciManagement>
         <system>rultor</system>
-        <url>http://timeline.rultor.com/t/rultor</url>
+        <url>http://www.rultor.com/s/rultor</url>
     </ciManagement>
     <distributionManagement>
         <site>
