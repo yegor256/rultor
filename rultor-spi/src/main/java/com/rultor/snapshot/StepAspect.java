@@ -94,6 +94,7 @@ public final class StepAspect {
                 .addIfAbsent("steps").strict(1)
                 .add("step").strict(1)
                 .attr("id", label)
+                // @checkstyle MultipleStringLiterals (1 line)
                 .attr("class", method.getDeclaringClass().getCanonicalName())
                 .attr("method", method.getName())
                 .add("start").set(new Time().toString()).up()
