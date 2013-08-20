@@ -145,7 +145,7 @@ public final class Git implements SCM {
             new StringBuilder(this.reset())
                 .append(" && BRANCH=")
                 .append(Terminal.escape(name))
-                // @checkstyle LineLength (1 line)
+                // @checkstyle LineLength (2 lines)
                 .append(" && if [ `git rev-parse --abbrev-ref HEAD` != $BRANCH ]; then git checkout $BRANCH; fi")
                 .append(" && if git for-each-ref refs/heads/$BRANCH | grep commit; then git pull; fi")
                 .toString(),
