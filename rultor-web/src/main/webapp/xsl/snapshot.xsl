@@ -208,14 +208,20 @@
             </xsl:if>
             <span class="step">
                 <xsl:if test="exception">
-                    <i class="text-danger icon-warning-sign"><xsl:comment>exception</xsl:comment></i>
+                    <i class="text-danger icon-warning-sign"
+                        onclick="$(this).parent().parent().find('pre.exception').toggle();">
+                        <xsl:attribute name="title">
+                            <xsl:value-of select="exception/class"/>
+                        </xsl:attribute>
+                        <xsl:comment>exception</xsl:comment>
+                    </i>
                     <xsl:text> </xsl:text>
                 </xsl:if>
                 <xsl:variable name="title">
                     <xsl:value-of select="summary"/>
                     <xsl:if test="exception">
                         <xsl:text> (</xsl:text>
-                        <xsl:value-of select="exception"/>
+                        <xsl:value-of select="exception/cause"/>
                         <xsl:text>)</xsl:text>
                     </xsl:if>
                 </xsl:variable>
@@ -256,6 +262,9 @@
             </span>
             <xsl:if test="not($left)">
                 <i class="icon-chevron-left"><xsl:comment>start</xsl:comment></i>
+            </xsl:if>
+            <xsl:if test="exception">
+                <pre style="display:none" class="text-danger text-left exception"><xsl:value-of select="exception/stacktrace"/></pre>
             </xsl:if>
         </li>
     </xsl:template>
