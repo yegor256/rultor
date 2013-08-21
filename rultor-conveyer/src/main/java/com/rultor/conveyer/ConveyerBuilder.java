@@ -161,7 +161,6 @@ final class ConveyerBuilder {
 
     /**
      * Make a local conveyer, for one spec.
-     * @param this.options Options
      * @return Conveyer
      * @throws Exception If fails
      */
