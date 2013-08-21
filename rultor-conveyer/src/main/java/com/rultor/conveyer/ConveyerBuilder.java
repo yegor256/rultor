@@ -29,7 +29,6 @@
  */
 package com.rultor.conveyer;
 
-import com.amazonaws.services.sqs.AmazonSQS;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
@@ -40,7 +39,6 @@ import com.rultor.queue.SQSQueue;
 import com.rultor.repo.ClasspathRepo;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Users;
 import com.rultor.spi.Work;
 import com.rultor.users.AwsUsers;
 import com.rultor.users.pgsql.PgClient;
@@ -88,75 +86,80 @@ final class ConveyerBuilder {
      * @throws Exception If fails
      */
     public SimpleConveyer build() throws Exception {
-        final Queue queue;
-        Users users;
         final SimpleConveyer conveyer;
         if (this.options.has("spec")) {
             conveyer = this.local();
         } else {
-            final String sqs = this.options.valueOf("sqs-url").toString();
-            if (this.options.has("sqs-key")) {
-                queue = new SQSQueue(
-                    new SQSClient.Simple(
-                        this.options.valueOf("sqs-key").toString(),
-                        this.options.valueOf("sqs-secret").toString(),
-                        sqs
-                    )
-                );
-            } else {
-                queue = new SQSQueue(new SQSClient.Assumed(sqs));
-            }
-            if (this.options.has("dynamo-key")) {
-                users = new AwsUsers(
-                    new Region.Prefixed(
-                        new Region.Simple(
-                            new Credentials.Simple(
-                                this.options.valueOf("dynamo-key").toString(),
-                                this.options.valueOf("dynamo-secret").toString()
-                            )
-                        ),
-                        this.options.valueOf("dynamo-prefix").toString()
-                    ),
-                    new SQSClient.Simple(
-                        this.options.valueOf("sqs-key").toString(),
-                        this.options.valueOf("sqs-secret").toString(),
-                        this.options.valueOf("sqs-wallet-url").toString()
-                    )
-                );
-            } else {
-                users = new AwsUsers(
-                    new Region.Prefixed(
-                        new Region.Simple(new Credentials.Assumed()),
-                        this.options.valueOf("dynamo-prefix").toString()
-                    ),
-                    new SQSClient.Assumed(
-                        this.options.valueOf("sqs-wallet-url").toString()
-                    )
-                );
-            }
-            users = new PgUsers(
-                new PgClient.Simple(
-                    this.options.valueOf("pgsql-url").toString(),
-                    this.options.valueOf("pgsql-password").toString()
-                ),
-                new SQSClient() {
-                    @Override
-                    public AmazonSQS get() {
-                        throw new UnsupportedOperationException();
-                    }
-                    @Override
-                    public String url() {
-                        throw new UnsupportedOperationException();
-                    }
-                },
-                users
-            );
-            conveyer = new SimpleConveyer(
-                queue, new ClasspathRepo(), new AuditUsers(users),
-                Integer.parseInt(this.options.valueOf("threads").toString())
-            );
+            conveyer = this.standard();
         }
         return conveyer;
+    }
+
+    /**
+     * Create standard conveyer.
+     * @return Conveyer
+     * @throws Exception If fails
+     */
+    public SimpleConveyer standard() throws Exception {
+        final String sqs = this.options.valueOf("sqs-url").toString();
+        final Queue queue;
+        if (this.options.has("sqs-key")) {
+            queue = new SQSQueue(
+                new SQSClient.Simple(
+                    this.options.valueOf("sqs-key").toString(),
+                    this.options.valueOf("sqs-secret").toString(),
+                    sqs
+                )
+            );
+        } else {
+            queue = new SQSQueue(new SQSClient.Assumed(sqs));
+        }
+        final SQSClient receipts;
+        if (this.options.has("sqs-key")) {
+            receipts = new SQSClient.Simple(
+                this.options.valueOf("sqs-key").toString(),
+                this.options.valueOf("sqs-secret").toString(),
+                this.options.valueOf("sqs-wallet-url").toString()
+            );
+        } else {
+            receipts = new SQSClient.Assumed(
+                this.options.valueOf("sqs-wallet-url").toString()
+            );
+        }
+        final Region region;
+        if (this.options.has("dynamo-key")) {
+            region = new Region.Prefixed(
+                new Region.Simple(
+                    new Credentials.Simple(
+                        this.options.valueOf("dynamo-key").toString(),
+                        this.options.valueOf("dynamo-secret").toString()
+                    )
+                ),
+                this.options.valueOf("dynamo-prefix").toString()
+            );
+        } else {
+            region = new Region.Prefixed(
+                new Region.Simple(new Credentials.Assumed()),
+                this.options.valueOf("dynamo-prefix").toString()
+            );
+        }
+        return new SimpleConveyer(
+            queue,
+            new ClasspathRepo(),
+            new AuditUsers(
+                new PgUsers(
+                    new PgClient.Simple(
+                        this.options.valueOf("pgsql-url").toString(),
+                        this.options.valueOf("pgsql-password").toString()
+                    ),
+                    new SQSClient.Assumed(
+                        this.options.valueOf("sqs-receipts-url").toString()
+                    ),
+                    new AwsUsers(region, receipts)
+                )
+            ),
+            Integer.parseInt(this.options.valueOf("threads").toString())
+        );
     }
 
     /**
