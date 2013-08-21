@@ -96,7 +96,7 @@ final class PgCondition implements Sheet.Condition {
         return new PgCondition(
             this.parent,
             String.format(
-                "%s `%s` = $%s$%s$%3$s$",
+                "%s %s = $%s$%s$%3$s$",
                 this.clause, column, tag, value
             )
         );

@@ -265,6 +265,7 @@ final class PgSheet implements Sheet {
     /**
      * With this extra WHERE clause.
      * @param where WHERE clause
+     * @return New sheet
      */
     public Sheet with(final String where) {
         return new PgSheet(
