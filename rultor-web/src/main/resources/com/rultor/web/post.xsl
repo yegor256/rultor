@@ -78,9 +78,20 @@
     </xsl:variable>
     <xsl:variable name="length" select="$finish - $start" />
     <xsl:template match="steps/step/start|steps/step/finish|updated">
+        <xsl:variable name="ratio" select="(r:epoch(.) - $start) div $length" />
         <xsl:element name="{local-name()}">
             <xsl:attribute name="at">
-                <xsl:value-of select="(r:epoch(.) - $start) div $length" />
+                <xsl:choose>
+                    <xsl:when test="$ratio &gt; 1">
+                        <xsl:text>1</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="$ratio &lt; 0">
+                        <xsl:text>0</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="$ratio" />
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:attribute>
             <xsl:value-of select="."/>
         </xsl:element>
