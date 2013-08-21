@@ -79,7 +79,7 @@
                             );
                             $('span.markdown').each(
                                 function (span) {
-                                    $(this).html(markdown.toHTML($(this).text()).replace(/<\/?p>/g,''));
+                                    $(this).html(markdown.toHTML($(this).text()).replace(/<\/?p *>/g,''));
                                 }
                             );
                         }
