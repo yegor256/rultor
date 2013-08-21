@@ -31,11 +31,13 @@ package com.rultor.conveyer.audit;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -50,7 +52,9 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "origin")
 @Loggable(Loggable.DEBUG)
-public final class AuditUsers implements Users {
+@SuppressWarnings("PMD.DoNotUseThreads")
+@ScheduleWithFixedDelay(threads = 2, delay = 1, unit = TimeUnit.HOURS)
+public final class AuditUsers implements Users, Runnable {
 
     /**
      * Original users.
@@ -101,6 +105,17 @@ public final class AuditUsers implements Users {
     @Override
     public Stand stand(final String name) {
         return this.origin.stand(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void run() {
+        final FreeTier tier = new FreeTier();
+        for (User user : this) {
+            tier.fund(user.account());
+        }
     }
 
 }

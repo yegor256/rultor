@@ -86,6 +86,7 @@ public final class PgSheetITCase {
                 .groupBy("dtunit")
                 .orderBy("time", true)
                 .orderBy("amount", false)
+                .where().equalTo("amount", "1").sheet()
                 .between(
                     new Time(new Date().getTime() - TimeUnit.DAYS.toMillis(2)),
                     new Time()

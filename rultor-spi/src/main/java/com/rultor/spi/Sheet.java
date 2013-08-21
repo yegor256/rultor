@@ -77,4 +77,29 @@ public interface Sheet extends Pageable<List<Object>, Integer> {
     @NotNull(message = "new sheet is never NULL")
     Sheet between(Time left, Time right);
 
+    /**
+     * Construct condition and return.
+     * @return Condition
+     */
+    @NotNull(message = "condition can never be NULL")
+    Sheet.Condition where();
+
+    /**
+     * Condition.
+     */
+    interface Condition {
+        /**
+         * Back to sheet.
+         * @return Sheet
+         */
+        Sheet sheet();
+        /**
+         * Equals to.
+         * @param column Column name
+         * @param value Value
+         * @return Condition
+         */
+        Sheet.Condition equalTo(String column, String value);
+    }
+
 }

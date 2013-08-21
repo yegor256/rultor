@@ -153,4 +153,12 @@ final class RestSheet implements Sheet {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Sheet.Condition where() {
+        throw new UnsupportedOperationException();
+    }
+
 }

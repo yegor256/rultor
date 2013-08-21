@@ -27,21 +27,22 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer.audit;
+package com.rultor.users.audit;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.jcabi.urn.URN;
 import com.rultor.spi.Account;
-import com.rultor.spi.Stands;
-import com.rultor.spi.Units;
-import com.rultor.spi.User;
+import com.rultor.spi.Sheet;
+import com.rultor.tools.Dollars;
+import com.rultor.tools.Time;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * User with audit features.
+ * Free tier.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -49,9 +50,9 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "origin")
+@EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-final class AuditUser implements User {
+final class FreeTier {
 
     /**
      * Minimum threshold in points.
@@ -59,51 +60,42 @@ final class AuditUser implements User {
     private static final long THRESHOLD = -Tv.FIVE * Tv.MILLION;
 
     /**
-     * Original user.
+     * Period of silence in order to qualified for free tier, in days.
      */
-    private final transient User origin;
+    private static final int PERIOD = 30;
 
     /**
-     * Public ctor.
-     * @param user User
+     * Add funds if necessary.
+     * @param account Account to fund
      */
-    protected AuditUser(final User user) {
-        this.origin = user;
+    public void fund(final Account account) {
+        final long balance = account.balance().points();
+        if (balance < FreeTier.THRESHOLD && !this.funded(account.sheet())) {
+            account.fund(
+                new Dollars(-FreeTier.THRESHOLD),
+                String.format(
+                    "Balance is lower than %s and no funds were added in the last %d days",
+                    new Dollars(FreeTier.THRESHOLD),
+                    FreeTier.PERIOD
+                )
+            );
+        }
     }
 
     /**
-     * {@inheritDoc}
+     * Was it already funded recently?
+     * @param sheet Sheet to check
+     * @return TRUE if it was already funded
      */
-    @Override
-    public URN urn() {
-        return this.origin.urn();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Units units() {
-        return new AuditUnits(
-            this.origin.units(),
-            this.account().balance().points() > AuditUser.THRESHOLD
+    private boolean funded(final Sheet sheet) {
+        final Time start = new Time(
+            new Date().getTime() - TimeUnit.DAYS.toMillis(FreeTier.PERIOD)
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Stands stands() {
-        return this.origin.stands();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Account account() {
-        return this.origin.account();
+        return sheet
+            .between(start, new Time())
+            .where().equalTo("ct", Account.BANK.toString()).sheet()
+            .iterator()
+            .hasNext();
     }
 
 }

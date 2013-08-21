@@ -27,83 +27,71 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer.audit;
+package com.rultor.users.pgsql;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.jcabi.urn.URN;
-import com.rultor.spi.Account;
-import com.rultor.spi.Stands;
-import com.rultor.spi.Units;
-import com.rultor.spi.User;
+import com.rultor.spi.Sheet;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.apache.commons.lang3.RandomStringUtils;
 
 /**
- * User with audit features.
+ * Condition in PostgreSQL.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = "origin")
+@EqualsAndHashCode(of = { "parent", "clause" })
 @Loggable(Loggable.DEBUG)
-final class AuditUser implements User {
+final class PgCondition implements Sheet.Condition {
 
     /**
-     * Minimum threshold in points.
+     * Sheet.
      */
-    private static final long THRESHOLD = -Tv.FIVE * Tv.MILLION;
+    private final transient PgSheet parent;
 
     /**
-     * Original user.
+     * Query.
      */
-    private final transient User origin;
+    private final transient String clause;
 
     /**
      * Public ctor.
-     * @param user User
+     * @param clnt Client
+     * @param urn URN of the owner
      */
-    protected AuditUser(final User user) {
-        this.origin = user;
+    protected PgCondition(final PgSheet sheet, final String sql) {
+        this.parent = sheet;
+        this.clause = sql;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public URN urn() {
-        return this.origin.urn();
+    public Sheet sheet() {
+        return this.parent.with(this.clause);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Units units() {
-        return new AuditUnits(
-            this.origin.units(),
-            this.account().balance().points() > AuditUser.THRESHOLD
+    public Sheet.Condition equalTo(final String column, final String value) {
+        String tag;
+        do {
+            tag = RandomStringUtils.randomAlphanumeric(Tv.TEN);
+        } while (value.contains(tag));
+        return new PgCondition(
+            this.parent,
+            String.format(
+                "%s `%s` = $%s$%s$%3$s$",
+                this.clause, column, tag, value
+            )
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Stands stands() {
-        return this.origin.stands();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Account account() {
-        return this.origin.account();
     }
 
 }

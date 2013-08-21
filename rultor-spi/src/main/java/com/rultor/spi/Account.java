@@ -30,6 +30,7 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.urn.URN;
 import com.rultor.tools.Dollars;
 import javax.validation.constraints.NotNull;
 
@@ -42,6 +43,11 @@ import javax.validation.constraints.NotNull;
  */
 @Immutable
 public interface Account {
+
+    /**
+     * Who is sending funds when account is funded.
+     */
+    URN BANK = URN.create("urn:rultor:1");
 
     /**
      * Balance.
