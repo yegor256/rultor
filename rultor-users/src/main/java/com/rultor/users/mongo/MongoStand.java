@@ -31,7 +31,6 @@ package com.rultor.users.mongo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -318,7 +317,7 @@ final class MongoStand implements Stand {
                     cursor.close();
                 }
             },
-            TimeUnit.SECONDS.toMillis(Tv.TEN)
+            TimeUnit.MINUTES.toMillis(1)
         );
         cursor.sort(new BasicDBObject(MongoStand.ATTR_UPDATED, -1));
         // @checkstyle AnonInnerLength (50 lines)
