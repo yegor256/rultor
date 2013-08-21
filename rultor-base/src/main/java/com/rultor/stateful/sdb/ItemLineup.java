@@ -201,6 +201,7 @@ public final class ItemLineup implements Lineup {
      */
     @RetryOnFailure
     private boolean exists() {
+        final long start = System.currentTimeMillis();
         final GetAttributesResult result = this.client.get().getAttributes(
             new GetAttributesRequest()
                 .withConsistentRead(true)
@@ -208,10 +209,11 @@ public final class ItemLineup implements Lineup {
                 .withItemName(this.name)
         );
         this.wallet.charge(
-            String.format(
-                "checked existence of AWS SimpleDB item `%s` in `%s` domain",
-                this.name,
-                this.client.domain()
+            Logger.format(
+                // @checkstyle LineLength (1 line)
+                "checked existence of AWS SimpleDB item `%s` in `%s` domain in %[ms]s",
+                this.name, this.client.domain(),
+                System.currentTimeMillis() - start
             ),
             new Dollars(Tv.FIVE)
         );
@@ -224,6 +226,7 @@ public final class ItemLineup implements Lineup {
      */
     @RetryOnFailure
     private void save(final String content) {
+        final long start = System.currentTimeMillis();
         this.client.get().putAttributes(
             new PutAttributesRequest()
                 .withDomainName(this.client.domain())
@@ -240,10 +243,10 @@ public final class ItemLineup implements Lineup {
                 )
         );
         this.wallet.charge(
-            String.format(
-                "put AWS SimpleDB item `%s` into `%s` domain",
-                this.name,
-                this.client.domain()
+            Logger.format(
+                "put AWS SimpleDB item `%s` into `%s` domain in %[ms]s",
+                this.name, this.client.domain(),
+                System.currentTimeMillis() - start
             ),
             new Dollars(Tv.FIVE)
         );
@@ -255,6 +258,7 @@ public final class ItemLineup implements Lineup {
      */
     @RetryOnFailure
     private String load() {
+        final long start = System.currentTimeMillis();
         final GetAttributesResult result = this.client.get().getAttributes(
             new GetAttributesRequest()
                 .withConsistentRead(true)
@@ -263,10 +267,10 @@ public final class ItemLineup implements Lineup {
                 .withAttributeNames(ItemLineup.IDENTIFIER)
         );
         this.wallet.charge(
-            String.format(
-                "loaded AWS SimpleDB item `%s` from `%s` domain",
-                this.name,
-                this.client.domain()
+            Logger.format(
+                "loaded AWS SimpleDB item `%s` from `%s` domain in %[ms]s",
+                this.name, this.client.domain(),
+                System.currentTimeMillis() - start
             ),
             new Dollars(Tv.FIVE)
         );
@@ -284,16 +288,17 @@ public final class ItemLineup implements Lineup {
      */
     @RetryOnFailure
     private void remove() {
+        final long start = System.currentTimeMillis();
         this.client.get().deleteAttributes(
             new DeleteAttributesRequest()
                 .withDomainName(this.client.domain())
                 .withItemName(this.name)
         );
         this.wallet.charge(
-            String.format(
-                "removed AWS SimpleDB item `%s` from `%s` domain",
-                this.name,
-                this.client.domain()
+            Logger.format(
+                "removed AWS SimpleDB item `%s` from `%s` domain in %[ms]s",
+                this.name, this.client.domain(),
+                System.currentTimeMillis() - start
             ),
             new Dollars(Tv.FIVE)
         );

@@ -128,7 +128,7 @@ final class SQSWallet implements Wallet {
                 );
                 Logger.info(
                     this,
-                    "charged %s from %s to %s for `%s`",
+                    "charged %s from %s to %s for \"%s\"",
                     amount, this.creditor, this.debitor, details
                 );
             } finally {
