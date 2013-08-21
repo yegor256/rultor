@@ -34,6 +34,7 @@ sudo /sbin/mkswap /swapfile
 sudo chown root:root /swapfile
 sudo chmod 0600 /swapfile
 sudo /sbin/swapon /swapfile
+df
 
 export M2_HOME="/usr/local/share/apache-maven"
 export PATH="${M2_HOME}/bin:/usr/local/bin:${PATH}"
