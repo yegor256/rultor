@@ -38,6 +38,7 @@ import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
 import com.rultor.aws.SQSClient;
+import com.rultor.conveyer.audit.AuditUsers;
 import com.rultor.queue.SQSQueue;
 import com.rultor.repo.ClasspathRepo;
 import com.rultor.spi.Queue;
@@ -254,7 +255,7 @@ public final class Main {
             }
         }
         return new SimpleConveyer(
-            queue, new ClasspathRepo(), users,
+            queue, new ClasspathRepo(), new AuditUsers(users),
             Integer.parseInt(options.valueOf("threads").toString())
         );
     }

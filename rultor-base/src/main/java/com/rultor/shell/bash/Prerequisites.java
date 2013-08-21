@@ -102,9 +102,8 @@ public final class Prerequisites implements Shells {
     @Override
     public String toString() {
         return Logger.format(
-            "%s with %d bash prerequisites",
-            this.origin,
-            this.map.size()
+            "%s with %d bash prerequisite(s)",
+            this.origin, this.map.size()
         );
     }
 
