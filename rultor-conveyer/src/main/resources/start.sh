@@ -28,6 +28,13 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# add swap disk
+dd if=/dev/zero of=/swapfile bs=1024 count=1048576
+mkswap /swapfile
+chown root:root /swapfile
+chmod 0600 /swapfile
+swapon /swapfile
+
 export M2_HOME="/usr/local/share/apache-maven"
 export PATH="${M2_HOME}/bin:/usr/local/bin:${PATH}"
 export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=256m"
