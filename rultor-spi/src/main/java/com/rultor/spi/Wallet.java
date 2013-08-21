@@ -60,10 +60,36 @@ public interface Wallet {
      * @param urn URN of another user
      * @param unit Name of the unit
      * @return New wallet
+     * @throws Wallet.NotEnoughFundsException If not enough
      */
     Wallet delegate(
         @NotNull(message = "URN can't be NULL") URN urn,
-        @NotNull(message = "unit name can't be NULL") String unit);
+        @NotNull(message = "unit name can't be NULL") String unit)
+        throws Wallet.NotEnoughFundsException;
+
+    /**
+     * When not enough funds in the wallet.
+     */
+    final class NotEnoughFundsException extends Exception {
+        /**
+         * Serialization marker.
+         */
+        private static final long serialVersionUID = 0x65c4cafe3f528092L;
+        /**
+         * Public ctor.
+         * @param cause Cause of it
+         */
+        public NotEnoughFundsException(final String cause) {
+            super(cause);
+        }
+        /**
+         * Public ctor.
+         * @param cause Cause of it
+         */
+        public NotEnoughFundsException(final Exception cause) {
+            super(cause);
+        }
+    }
 
     /**
      * Empty wallet doing nothing.

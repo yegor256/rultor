@@ -100,9 +100,10 @@ final class AuditUnit implements Unit {
      * {@inheritDoc}
      */
     @Override
-    public Wallet wallet(final Work work, final URN taker, final String unit) {
+    public Wallet wallet(final Work work, final URN taker, final String unit)
+        throws Wallet.NotEnoughFundsException {
         if (!this.funded) {
-            throw new IllegalStateException(
+            throw new Wallet.NotEnoughFundsException(
                 "not enough funds in the account"
             );
         }

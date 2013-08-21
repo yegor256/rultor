@@ -89,7 +89,8 @@ final class OwnWallet implements Wallet {
      * {@inheritDoc}
      */
     @Override
-    public Wallet delegate(final URN urn, final String name) {
+    public Wallet delegate(final URN urn, final String name)
+        throws Wallet.NotEnoughFundsException {
         return this.unit.wallet(this.work, urn, name);
     }
 

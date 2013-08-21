@@ -71,9 +71,11 @@ public interface Unit {
      * @param taker Who is going to take money from my wallet?
      * @param unit What this money is for?
      * @return Wallet
+     * @throws Wallet.NotEnoughFundsException If not enough funds
      */
     @NotNull(message = "wallet is never NULL")
-    Wallet wallet(Work work, URN taker, String unit);
+    Wallet wallet(Work work, URN taker, String unit)
+        throws Wallet.NotEnoughFundsException;
 
     /**
      * Always empty Unit.
