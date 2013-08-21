@@ -298,7 +298,7 @@ final class PgSheet implements Sheet {
             .append("SELECT ")
             .append(this.select())
             .append("\nFROM receipt")
-            .append('\n').append(this.where())
+            .append('\n').append(this.whereOn())
             .append(this.groupBy())
             .append(this.orderBy())
             .append('\n').append(this.limit())
