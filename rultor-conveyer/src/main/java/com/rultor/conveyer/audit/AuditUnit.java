@@ -98,6 +98,7 @@ final class AuditUnit implements Unit {
 
     /**
      * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
     public Wallet wallet(final Work work, final URN taker, final String unit)
