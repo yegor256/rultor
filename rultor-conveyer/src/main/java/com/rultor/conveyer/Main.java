@@ -273,7 +273,6 @@ public final class Main {
                 },
                 users
             );
-
         }
         return new SimpleConveyer(
             queue, new ClasspathRepo(), new AuditUsers(users),
