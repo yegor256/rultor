@@ -284,7 +284,7 @@
                             <xsl:text>label-warning</xsl:text>
                         </xsl:when>
                         <xsl:when test="level = 'SEVERE'">
-                            <xsl:text>label-important</xsl:text>
+                            <xsl:text>label-danger</xsl:text>
                         </xsl:when>
                     </xsl:choose>
                 </xsl:attribute>
