@@ -152,7 +152,9 @@ final class SQSWallet implements Wallet {
                 SQSWallet.this.charge(details, amount);
             }
             @Override
-            public Wallet delegate(final URN urn, final String unit) {
+            public Wallet delegate(final URN urn, final String unit)
+                // @checkstyle RedundantThrows (1 line)
+                throws Wallet.NotEnoughFundsException {
                 return delegate.delegate(urn, unit);
             }
         };
