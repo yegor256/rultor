@@ -182,10 +182,10 @@ public final class ItemLineup implements Lineup {
      */
     private String saveAndLoad(final String marker) {
         while (this.exists()) {
+            final long msec = ItemLineup.RAND.nextInt(Tv.THOUSAND);
+            Logger.info(this, "sleeping for %[ms]s...", msec);
             try {
-                TimeUnit.MILLISECONDS.sleep(
-                    ItemLineup.RAND.nextInt(Tv.THOUSAND)
-                );
+                TimeUnit.MILLISECONDS.sleep(msec);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 throw new IllegalStateException(ex);
