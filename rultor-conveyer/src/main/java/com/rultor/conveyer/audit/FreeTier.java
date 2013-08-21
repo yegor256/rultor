@@ -74,6 +74,7 @@ final class FreeTier {
             account.fund(
                 new Dollars(-FreeTier.THRESHOLD),
                 String.format(
+                    // @checkstyle LineLength (1 line)
                     "Balance is lower than %s and no funds were added in the last %d days",
                     new Dollars(FreeTier.THRESHOLD),
                     FreeTier.PERIOD
