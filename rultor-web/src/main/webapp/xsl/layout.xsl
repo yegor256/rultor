@@ -206,7 +206,18 @@
                 <i class="icon-github"><xsl:comment>github icon</xsl:comment></i>
             </a>
         </li>
-        <li class="hidden-phone hidden-tablet">
+        <li>
+            <xsl:attribute name="class">
+                <xsl:text>hidden-phone hidden-tablet</xsl:text>
+                <xsl:choose>
+                    <xsl:when test="millis &gt; 5000">
+                        <xsl:text> text-danger</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="millis &gt; 1000">
+                        <xsl:text> text-warning</xsl:text>
+                    </xsl:when>
+                </xsl:choose>
+            </xsl:attribute>
             <xsl:call-template name="millis">
                 <xsl:with-param name="millis" select="/page/millis"/>
             </xsl:call-template>

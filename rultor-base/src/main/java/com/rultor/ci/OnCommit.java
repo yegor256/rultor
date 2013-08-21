@@ -112,7 +112,6 @@ public final class OnCommit implements Instance {
     /**
      * Build.
      * @param head Head of the branch
-     * @return TRUE if success
      * @throws IOException If some IO problem
      */
     @Step(
