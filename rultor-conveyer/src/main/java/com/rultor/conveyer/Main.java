@@ -143,6 +143,8 @@ public final class Main {
     private static OptionParser parser() {
         final OptionParser parser = new OptionParser();
         parser.accepts("help", "Show detailed instructions").forHelp();
+        parser.accepts("threads", "In how many threads to run")
+            .withRequiredArg().defaultsTo("5").ofType(String.class);
         parser.accepts("spec", "Text file with work specification")
             .withRequiredArg().ofType(String.class);
         parser.accepts("lifetime", "Maximum lifetime of the daemon, in millis")
@@ -251,7 +253,10 @@ public final class Main {
                 );
             }
         }
-        return new SimpleConveyer(queue, new ClasspathRepo(), users);
+        return new SimpleConveyer(
+            queue, new ClasspathRepo(), users,
+            Integer.parseInt(options.valueOf("threads").toString())
+        );
     }
 
     /**

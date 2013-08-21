@@ -119,7 +119,9 @@ public final class SimpleConveyerTest {
         Mockito.doReturn(user).when(users).get(owner);
         Mockito.doReturn(Arrays.asList(user).iterator())
             .when(users).iterator();
-        final SimpleConveyer conveyer = new SimpleConveyer(queue, repo, users);
+        final SimpleConveyer conveyer = new SimpleConveyer(
+            queue, repo, users, Tv.FIVE
+        );
         try {
             conveyer.start();
             MatcherAssert.assertThat(

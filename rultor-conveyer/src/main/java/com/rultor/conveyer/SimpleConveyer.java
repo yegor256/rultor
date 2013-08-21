@@ -81,8 +81,7 @@ final class SimpleConveyer implements Closeable {
     /**
      * How many threads to run in parallel.
      */
-    private static final int THREADS =
-        Runtime.getRuntime().availableProcessors() * Tv.TWENTY;
+    private final transient int total;
 
     /**
      * Queue.
@@ -112,31 +111,35 @@ final class SimpleConveyer implements Closeable {
     /**
      * Threads.
      */
-    private final transient ConveyerThreads threads = new ConveyerThreads();
+    private final transient ConveyerThreads threads;
 
     /**
      * Consumer and executer of new specs from Queue.
      */
-    private final transient ScheduledExecutorService svc =
-        Executors.newScheduledThreadPool(SimpleConveyer.THREADS, this.threads);
+    private final transient ScheduledExecutorService svc;
 
     /**
      * Public ctor.
      * @param que The queue of specs
      * @param rep Repo
      * @param usrs Users
+     * @param max Total number of threads
      * @throws IOException If fails
      * @checkstyle ParameterNumber (4 lines)
      */
     protected SimpleConveyer(
         @NotNull(message = "queue can't be NULL") final Queue que,
         @NotNull(message = "repo can't be NULL") final Repo rep,
-        @NotNull(message = "users can't be NULL") final Users usrs)
+        @NotNull(message = "users can't be NULL") final Users usrs,
+        final int max)
         throws IOException {
         this.queue = que;
         this.repo = rep;
         this.users = usrs;
+        this.total = max;
         this.server = new HttpServer(this.streams, SimpleConveyer.PORT);
+        this.threads = new ConveyerThreads();
+        this.svc = Executors.newScheduledThreadPool(this.total, this.threads);
     }
 
     /**
@@ -153,7 +156,7 @@ final class SimpleConveyer implements Closeable {
             },
             true, false
         );
-        for (int thread = 0; thread < SimpleConveyer.THREADS; ++thread) {
+        for (int thread = 0; thread < this.total; ++thread) {
             this.svc.scheduleWithFixedDelay(
                 runnable,
                 TimeUnit.SECONDS.toMicros(1), 1, TimeUnit.MICROSECONDS
