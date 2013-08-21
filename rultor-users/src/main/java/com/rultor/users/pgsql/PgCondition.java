@@ -60,10 +60,18 @@ final class PgCondition implements Sheet.Condition {
 
     /**
      * Public ctor.
-     * @param clnt Client
-     * @param urn URN of the owner
+     * @param sheet Parent sheet
      */
-    protected PgCondition(final PgSheet sheet, final String sql) {
+    protected PgCondition(final PgSheet sheet) {
+        this(sheet, "");
+    }
+
+    /**
+     * Public ctor.
+     * @param sheet Parent sheet
+     * @param sql Inherited SQL query
+     */
+    private PgCondition(final PgSheet sheet, final String sql) {
         this.parent = sheet;
         this.clause = sql;
     }

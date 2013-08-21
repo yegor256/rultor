@@ -307,7 +307,7 @@ final class PgSheet implements Sheet {
 
     @Override
     public Sheet.Condition where() {
-        return new PgCondition(this, "");
+        return new PgCondition(this);
     }
 
     /**
@@ -344,7 +344,7 @@ final class PgSheet implements Sheet {
      * @return Statement
      */
     private String whereOn() {
-        return new StringBuilder()
+        final StringBuilder sql = new StringBuilder()
             .append("WHERE (ct='")
             .append(this.owner)
             .append("' OR dt='")
@@ -353,9 +353,11 @@ final class PgSheet implements Sheet {
             .append(this.start)
             .append("' AND time <= '")
             .append(this.end)
-            .append("'")
-            .append(this.clause)
-            .toString();
+            .append("'");
+        if (!this.clause.isEmpty()) {
+            sql.append(" AND ").append(this.clause);
+        }
+        return sql.toString();
     }
 
     /**
