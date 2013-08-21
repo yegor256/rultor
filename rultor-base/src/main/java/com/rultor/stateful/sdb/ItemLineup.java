@@ -184,7 +184,7 @@ public final class ItemLineup implements Lineup {
         while (this.exists()) {
             try {
                 TimeUnit.MILLISECONDS.sleep(
-                    ItemLineup.RAND.nextInt(Tv.TEN * Tv.THOUSAND)
+                    ItemLineup.RAND.nextInt(Tv.THOUSAND)
                 );
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
