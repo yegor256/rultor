@@ -79,7 +79,7 @@
                     <xsl:text>In the nearest future we'll make possible recurring credit card payments and funds withdrawal (refunds).</xsl:text>
                 </li>
                 <li>
-                    <xsl:text>On the first of every month all negative accounts are funded by $5.00 (gift from us).</xsl:text>
+                    <xsl:text>If your account gets below $5.00 we compensate it (but this may happen only once in every 30 days).</xsl:text>
                 </li>
                 <li>
                     <xsl:text>Please </xsl:text>
