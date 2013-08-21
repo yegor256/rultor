@@ -89,10 +89,11 @@ public interface PgClient {
             src.setDriverClass("org.postgresql.Driver");
             src.setJdbcUrl(this.jdbc);
             src.setPassword(this.password);
-            src.setPartitionCount(Tv.FOUR);
-            src.setMaxConnectionsPerPartition(Tv.FIVE);
+            src.setPartitionCount(Tv.THREE);
+            src.setMaxConnectionsPerPartition(Tv.THREE);
             src.setMinConnectionsPerPartition(1);
             src.setAcquireIncrement(2);
+            src.setDisableConnectionTracking(true);
             return src;
         }
     }
