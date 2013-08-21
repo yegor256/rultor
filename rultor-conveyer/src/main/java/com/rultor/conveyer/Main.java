@@ -34,9 +34,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.log.Logger;
-import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
-import com.rexsl.test.RestTester;
 import com.rultor.aws.SQSClient;
 import com.rultor.conveyer.audit.AuditUsers;
 import com.rultor.queue.SQSQueue;
@@ -47,8 +45,6 @@ import com.rultor.spi.Users;
 import com.rultor.spi.Work;
 import com.rultor.users.AwsUsers;
 import java.io.File;
-import java.net.HttpURLConnection;
-import java.net.URI;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -127,7 +123,7 @@ public final class Main {
             );
             alive = System.currentTimeMillis() - start < lifetime;
         } else {
-            if (Main.same()) {
+            if (new Version().same()) {
                 TimeUnit.SECONDS.sleep(Main.RND.nextInt(Tv.HUNDRED));
                 alive = true;
             } else {
@@ -258,37 +254,6 @@ public final class Main {
             queue, new ClasspathRepo(), new AuditUsers(users),
             Integer.parseInt(options.valueOf("threads").toString())
         );
-    }
-
-    /**
-     * Get revision from the web server.
-     * @return Revision found there
-     */
-    private static boolean same() {
-        boolean same;
-        final String mine = Manifests.read("Rultor-Revision");
-        try {
-            final String base = RestTester
-                .start(URI.create("http://www.rultor.com/misc/version"))
-                .get("read revision from web node")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .getBody();
-            if (mine.equals(base) || !base.matches("[a-f0-9]+")) {
-                same = true;
-            } else {
-                same = false;
-                Logger.info(
-                    Main.class,
-                    "#same(): we're in %s while %s is the newest one",
-                    mine,
-                    base
-                );
-            }
-        } catch (AssertionError ex) {
-            Logger.warn(Main.class, "#same(): %s", ex);
-            same = true;
-        }
-        return same;
     }
 
 }
