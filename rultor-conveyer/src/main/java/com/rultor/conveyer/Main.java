@@ -29,6 +29,7 @@
  */
 package com.rultor.conveyer;
 
+import com.amazonaws.services.sqs.AmazonSQS;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Credentials;
@@ -44,6 +45,8 @@ import com.rultor.spi.Spec;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
 import com.rultor.users.AwsUsers;
+import com.rultor.users.pgsql.PgClient;
+import com.rultor.users.pgsql.PgUsers;
 import java.io.File;
 import java.security.SecureRandom;
 import java.util.Random;
@@ -161,6 +164,10 @@ public final class Main {
             .withRequiredArg().ofType(String.class);
         parser.accepts("sqs-wallet-url", "Amazon SQS URL for wallets")
             .withRequiredArg().ofType(String.class);
+        parser.accepts("pgsql-url", "PostgreSQL JDBC URL")
+            .withRequiredArg().ofType(String.class);
+        parser.accepts("pgsql-password", "PostgreSQL password")
+            .withRequiredArg().ofType(String.class);
         return parser;
     }
 
@@ -174,7 +181,7 @@ public final class Main {
     private static SimpleConveyer conveyer(final OptionSet options)
         throws Exception {
         final Queue queue;
-        final Users users;
+        Users users;
         if (options.has("spec")) {
             final Work work = new Work.Simple(
                 URN.create("urn:facebook:1"),
@@ -249,6 +256,24 @@ public final class Main {
                     )
                 );
             }
+            users = new PgUsers(
+                new PgClient.Simple(
+                    options.valueOf("pgsql-url").toString(),
+                    options.valueOf("pgsql-password").toString()
+                ),
+                new SQSClient() {
+                    @Override
+                    public AmazonSQS get() {
+                        throw new UnsupportedOperationException();
+                    }
+                    @Override
+                    public String url() {
+                        throw new UnsupportedOperationException();
+                    }
+                },
+                users
+            );
+
         }
         return new SimpleConveyer(
             queue, new ClasspathRepo(), new AuditUsers(users),

@@ -37,7 +37,7 @@ $ as-create-launch-config rultor-conveyer-16 \
   --image-id ami-80a0d9e9 --instance-type t1.micro \
   --group rultor-conveyer --monitoring-disabled \
   --iam-instance-profile rultor-conveyer \
-  --user-data '{"url":"...","wallet_url":"","prefix":"..."}'
+  --user-data '{"url":"...","wallet_url":"","prefix":"...","pgsql_url":"...","pgsql_password":"..."}'
 ```
 
 Create AS group:
