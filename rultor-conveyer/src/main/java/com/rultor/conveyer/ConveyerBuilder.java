@@ -152,9 +152,7 @@ final class ConveyerBuilder {
                         this.options.valueOf("pgsql-url").toString(),
                         this.options.valueOf("pgsql-password").toString()
                     ),
-                    new SQSClient.Assumed(
-                        this.options.valueOf("sqs-receipts-url").toString()
-                    ),
+                    receipts,
                     new AwsUsers(region, receipts)
                 )
             ),
