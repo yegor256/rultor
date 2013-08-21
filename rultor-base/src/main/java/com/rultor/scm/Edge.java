@@ -84,7 +84,7 @@ public final class Edge implements SCM {
      * {@inheritDoc}
      */
     @Override
-    @Step("`${result.size()}` branch(es) at the edge")
+    @Step("${result.size()} branch(es) at the edge")
     public List<String> branches() throws IOException {
         final List<String> branches = new LinkedList<String>();
         final List<String> all = Lists.newLinkedList(this.scm.branches());
