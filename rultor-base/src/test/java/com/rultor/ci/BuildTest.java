@@ -90,7 +90,7 @@ public final class BuildTest {
             ).xml(),
             XhtmlMatchers.hasXPaths(
                 "/snapshot[test='привет']",
-                "/snapshot/tags/tag[label='hey' and level='INFO']"
+                "/snapshot/tags/tag[label='hey' and level='FINE']"
             )
         );
     }

@@ -160,7 +160,7 @@ public final class OnPullRequest implements Instance {
         boolean success = false;
         try {
             success ^= snapshot.xml()
-                .nodes(String.format("//tag[label='%s' and level='INFO']", tag))
+                .nodes(String.format("//tag[label='%s' and level='FINE']", tag))
                 .isEmpty();
         } catch (ImpossibleModificationException ex) {
             Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
