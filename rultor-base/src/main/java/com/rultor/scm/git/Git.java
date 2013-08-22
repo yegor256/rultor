@@ -204,7 +204,7 @@ public final class Git implements SCM {
             .append(" && cd $DIR/repo")
             .append(" && git remote set-url origin $URL")
             .append(" && git remote update -p")
-            .append(" && git fetch")
+            .append(" && git fetch origin --prune --tags")
             .append(" && git reset --hard")
             .append(" && git clean -f -d")
             .toString();
