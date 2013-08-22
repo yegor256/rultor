@@ -35,6 +35,7 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.conveyer.audit.AuditUsers;
+import com.rultor.conveyer.fake.FakeUsers;
 import com.rultor.queue.SQSQueue;
 import com.rultor.repo.ClasspathRepo;
 import com.rultor.spi.Queue;

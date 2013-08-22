@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer;
+package com.rultor.conveyer.fake;
 
 import com.jcabi.urn.URN;
 import com.rultor.spi.Account;

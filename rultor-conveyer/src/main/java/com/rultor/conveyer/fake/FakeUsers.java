@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer;
+package com.rultor.conveyer.fake;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
@@ -52,7 +52,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode
-final class FakeUsers implements Users {
+public final class FakeUsers implements Users {
 
     /**
      * Work to return.
@@ -69,7 +69,7 @@ final class FakeUsers implements Users {
      * @param wrk Work
      * @param spc Spec
      */
-    protected FakeUsers(final Work wrk, final Spec spc) {
+    public FakeUsers(final Work wrk, final Spec spc) {
         this.work = wrk;
         this.spec = spc;
     }
