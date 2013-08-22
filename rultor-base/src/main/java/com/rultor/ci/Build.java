@@ -114,7 +114,7 @@ public final class Build {
     private String tag(final int code) {
         final Level level;
         if (code == 0) {
-            level = Level.INFO;
+            level = Level.FINE;
         } else {
             level = Level.SEVERE;
         }
