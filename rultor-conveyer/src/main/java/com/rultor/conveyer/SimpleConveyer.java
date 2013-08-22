@@ -66,11 +66,7 @@ import lombok.ToString;
 @Loggable(Loggable.INFO)
 @ToString
 @EqualsAndHashCode(of = "queue")
-@SuppressWarnings({
-    "PMD.DoNotUseThreads",
-    "PMD.TooManyMethods",
-    "PMD.ExcessiveImports"
-})
+@SuppressWarnings("PMD.DoNotUseThreads")
 final class SimpleConveyer implements Closeable {
 
     /**
