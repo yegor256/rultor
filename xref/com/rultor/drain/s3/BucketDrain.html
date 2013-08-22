@@ -43,9 +43,9 @@
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Loggable;
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.aws.S3Client;
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Drain;
-<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Pulses;
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Time;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Pageable;
+<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> java.io.InputStream;
 <a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> java.io.SequenceInputStream;
@@ -103,7 +103,7 @@
 <a class="jxr_linenumber" name="93" href="#93">93</a>  <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
 <a class="jxr_linenumber" name="94" href="#94">94</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="95" href="#95">95</a>      @Override
-<a class="jxr_linenumber" name="96" href="#96">96</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../com/rultor/spi/Pulses.html">Pulses</a> pulses() {
+<a class="jxr_linenumber" name="96" href="#96">96</a>      <strong class="jxr_keyword">public</strong> Pageable&lt;Time, Time&gt; pulses() {
 <a class="jxr_linenumber" name="97" href="#97">97</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/drain/s3/BucketPulses.html">BucketPulses</a>(<strong class="jxr_keyword">this</strong>.client, <strong class="jxr_keyword">this</strong>.prefix(), <strong class="jxr_keyword">new</strong> Time());
 <a class="jxr_linenumber" name="98" href="#98">98</a>      }
 <a class="jxr_linenumber" name="99" href="#99">99</a>  
@@ -142,7 +142,7 @@
 <a class="jxr_linenumber" name="132" href="#132">132</a>             String.format(
 <a class="jxr_linenumber" name="133" href="#133">133</a>                 <span class="jxr_string">"%s%s"</span>,
 <a class="jxr_linenumber" name="134" href="#134">134</a>                 <strong class="jxr_keyword">this</strong>.prefix(),
-<a class="jxr_linenumber" name="135" href="#135">135</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/drain/s3/Key.html">Key</a>(<strong class="jxr_keyword">this</strong>.work.started()).toString()
+<a class="jxr_linenumber" name="135" href="#135">135</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/drain/s3/Key.html">Key</a>(<strong class="jxr_keyword">this</strong>.work.scheduled()).toString()
 <a class="jxr_linenumber" name="136" href="#136">136</a>             )
 <a class="jxr_linenumber" name="137" href="#137">137</a>         );
 <a class="jxr_linenumber" name="138" href="#138">138</a>     }

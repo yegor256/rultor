@@ -41,8 +41,8 @@
 <a class="jxr_linenumber" name="31" href="#31">31</a>  
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Tv;
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Instance;
-<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Time;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> java.util.Calendar;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> java.util.TimeZone;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.TimeUnit;
@@ -142,27 +142,27 @@
 <a class="jxr_linenumber" name="132" href="#132">132</a>         );
 <a class="jxr_linenumber" name="133" href="#133">133</a>         MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="134" href="#134">134</a>             <strong class="jxr_keyword">new</strong> Crontab(work, <span class="jxr_string">"12 * * * *"</span>, org)
-<a class="jxr_linenumber" name="135" href="#135">135</a>                 .lag(<strong class="jxr_keyword">new</strong> Time(<span class="jxr_string">"2013-05-03T10:10Z"</span>)),
+<a class="jxr_linenumber" name="135" href="#135">135</a>                 .lag(<strong class="jxr_keyword">new</strong> Time(<span class="jxr_string">"2013-05-03T10:10:00Z"</span>)),
 <a class="jxr_linenumber" name="136" href="#136">136</a>             Matchers.equalTo(TimeUnit.MINUTES.toMillis(2))
 <a class="jxr_linenumber" name="137" href="#137">137</a>         );
 <a class="jxr_linenumber" name="138" href="#138">138</a>         MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="139" href="#139">139</a>             <strong class="jxr_keyword">new</strong> Crontab(work, <span class="jxr_string">"*/15 * * * *"</span>, org)
-<a class="jxr_linenumber" name="140" href="#140">140</a>                 .lag(<strong class="jxr_keyword">new</strong> Time(<span class="jxr_string">"2013-05-04T10:13Z"</span>)),
+<a class="jxr_linenumber" name="140" href="#140">140</a>                 .lag(<strong class="jxr_keyword">new</strong> Time(<span class="jxr_string">"2013-05-04T10:13:00Z"</span>)),
 <a class="jxr_linenumber" name="141" href="#141">141</a>             Matchers.equalTo(TimeUnit.MINUTES.toMillis(2))
 <a class="jxr_linenumber" name="142" href="#142">142</a>         );
 <a class="jxr_linenumber" name="143" href="#143">143</a>         MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="144" href="#144">144</a>             <strong class="jxr_keyword">new</strong> Crontab(work, <span class="jxr_string">"*/16 * * * *"</span>, org)
-<a class="jxr_linenumber" name="145" href="#145">145</a>                 .lag(<strong class="jxr_keyword">new</strong> Time(<span class="jxr_string">"2013-05-04T10:11Z"</span>)),
+<a class="jxr_linenumber" name="145" href="#145">145</a>                 .lag(<strong class="jxr_keyword">new</strong> Time(<span class="jxr_string">"2013-05-04T10:11:00Z"</span>)),
 <a class="jxr_linenumber" name="146" href="#146">146</a>             Matchers.equalTo(TimeUnit.MINUTES.toMillis(Tv.FIVE))
 <a class="jxr_linenumber" name="147" href="#147">147</a>         );
 <a class="jxr_linenumber" name="148" href="#148">148</a>         MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="149" href="#149">149</a>             <strong class="jxr_keyword">new</strong> Crontab(work, <span class="jxr_string">"0 */2 * * *"</span>, org)
-<a class="jxr_linenumber" name="150" href="#150">150</a>                 .lag(<strong class="jxr_keyword">new</strong> Time(<span class="jxr_string">"2013-05-04T09:00Z"</span>)),
+<a class="jxr_linenumber" name="150" href="#150">150</a>                 .lag(<strong class="jxr_keyword">new</strong> Time(<span class="jxr_string">"2013-05-04T09:00:00Z"</span>)),
 <a class="jxr_linenumber" name="151" href="#151">151</a>             Matchers.equalTo(TimeUnit.HOURS.toMillis(1))
 <a class="jxr_linenumber" name="152" href="#152">152</a>         );
 <a class="jxr_linenumber" name="153" href="#153">153</a>         MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="154" href="#154">154</a>             <strong class="jxr_keyword">new</strong> Crontab(work, <span class="jxr_string">"0 0 3-5 * *"</span>, org)
-<a class="jxr_linenumber" name="155" href="#155">155</a>                 .lag(<strong class="jxr_keyword">new</strong> Time(<span class="jxr_string">"2013-05-02T00:00Z"</span>)),
+<a class="jxr_linenumber" name="155" href="#155">155</a>                 .lag(<strong class="jxr_keyword">new</strong> Time(<span class="jxr_string">"2013-05-02T00:00:00Z"</span>)),
 <a class="jxr_linenumber" name="156" href="#156">156</a>             Matchers.equalTo(TimeUnit.DAYS.toMillis(1))
 <a class="jxr_linenumber" name="157" href="#157">157</a>         );
 <a class="jxr_linenumber" name="158" href="#158">158</a>     }

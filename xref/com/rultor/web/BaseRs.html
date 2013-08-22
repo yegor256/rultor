@@ -40,35 +40,35 @@
 <a class="jxr_linenumber" name="30" href="#30">30</a>  <strong class="jxr_keyword">package</strong> com.rultor.web;
 <a class="jxr_linenumber" name="31" href="#31">31</a>  
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Loggable;
-<a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.manifests.Manifests;
-<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.urn.URN;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.BasePage;
-<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.BaseResource;
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.Inset;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.JaxbBundle;
-<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.Link;
-<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.Resource;
-<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.auth.AuthInset;
-<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.auth.Facebook;
-<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.auth.Github;
-<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.auth.Google;
-<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.auth.HttpBasic;
-<a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.auth.Identity;
-<a class="jxr_linenumber" name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.auth.Provider;
-<a class="jxr_linenumber" name="48" href="#48">48</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.inset.FlashInset;
-<a class="jxr_linenumber" name="49" href="#49">49</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.inset.LinksInset;
-<a class="jxr_linenumber" name="50" href="#50">50</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.inset.VersionInset;
-<a class="jxr_linenumber" name="51" href="#51">51</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Dollars;
+<a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Timeable;
+<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.manifests.Manifests;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.jcabi.urn.URN;
+<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.BasePage;
+<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.BaseResource;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.Inset;
+<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.JaxbBundle;
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.Link;
+<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.Resource;
+<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.auth.AuthInset;
+<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.auth.Facebook;
+<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.auth.Github;
+<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.auth.Google;
+<a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.auth.HttpBasic;
+<a class="jxr_linenumber" name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.auth.Identity;
+<a class="jxr_linenumber" name="48" href="#48">48</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.auth.Provider;
+<a class="jxr_linenumber" name="49" href="#49">49</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.inset.FlashInset;
+<a class="jxr_linenumber" name="50" href="#50">50</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.inset.LinksInset;
+<a class="jxr_linenumber" name="51" href="#51">51</a>  <strong class="jxr_keyword">import</strong> com.rexsl.page.inset.VersionInset;
 <a class="jxr_linenumber" name="52" href="#52">52</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Repo;
 <a class="jxr_linenumber" name="53" href="#53">53</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Spec;
-<a class="jxr_linenumber" name="54" href="#54">54</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Statement;
-<a class="jxr_linenumber" name="55" href="#55">55</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Time;
-<a class="jxr_linenumber" name="56" href="#56">56</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.User;
-<a class="jxr_linenumber" name="57" href="#57">57</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Users;
-<a class="jxr_linenumber" name="58" href="#58">58</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="54" href="#54">54</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.User;
+<a class="jxr_linenumber" name="55" href="#55">55</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Users;
+<a class="jxr_linenumber" name="56" href="#56">56</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="57" href="#57">57</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Dollars;
+<a class="jxr_linenumber" name="58" href="#58">58</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
 <a class="jxr_linenumber" name="59" href="#59">59</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
 <a class="jxr_linenumber" name="60" href="#60">60</a>  <strong class="jxr_keyword">import</strong> java.net.URI;
-<a class="jxr_linenumber" name="61" href="#61">61</a>  <strong class="jxr_keyword">import</strong> java.util.Iterator;
+<a class="jxr_linenumber" name="61" href="#61">61</a>  <strong class="jxr_keyword">import</strong> java.util.logging.Level;
 <a class="jxr_linenumber" name="62" href="#62">62</a>  <strong class="jxr_keyword">import</strong> javax.validation.constraints.NotNull;
 <a class="jxr_linenumber" name="63" href="#63">63</a>  <strong class="jxr_keyword">import</strong> javax.ws.rs.core.HttpHeaders;
 <a class="jxr_linenumber" name="64" href="#64">64</a>  <strong class="jxr_keyword">import</strong> javax.ws.rs.core.MediaType;
@@ -151,146 +151,194 @@
 <a class="jxr_linenumber" name="141" href="#141">141</a>             @Override
 <a class="jxr_linenumber" name="142" href="#142">142</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> render(<strong class="jxr_keyword">final</strong> BasePage&lt;?, ?&gt; page,
 <a class="jxr_linenumber" name="143" href="#143">143</a>                 <strong class="jxr_keyword">final</strong> Response.ResponseBuilder builder) {
-<a class="jxr_linenumber" name="144" href="#144">144</a>                 page.link(
-<a class="jxr_linenumber" name="145" href="#145">145</a>                     <strong class="jxr_keyword">new</strong> Link(
-<a class="jxr_linenumber" name="146" href="#146">146</a>                         <span class="jxr_string">"finances"</span>,
-<a class="jxr_linenumber" name="147" href="#147">147</a>                         BaseRs.<strong class="jxr_keyword">this</strong>.uriInfo().getBaseUriBuilder()
-<a class="jxr_linenumber" name="148" href="#148">148</a>                             .clone()
-<a class="jxr_linenumber" name="149" href="#149">149</a>                             .path(FinancesRs.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="150" href="#150">150</a>                             .build()
-<a class="jxr_linenumber" name="151" href="#151">151</a>                     )
-<a class="jxr_linenumber" name="152" href="#152">152</a>                 );
-<a class="jxr_linenumber" name="153" href="#153">153</a>                 <strong class="jxr_keyword">final</strong> Iterator&lt;Statement&gt; stmts = BaseRs.<strong class="jxr_keyword">this</strong>.user()
-<a class="jxr_linenumber" name="154" href="#154">154</a>                     .statements().iterator();
-<a class="jxr_linenumber" name="155" href="#155">155</a>                 <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Dollars.html">Dollars</a> balance;
-<a class="jxr_linenumber" name="156" href="#156">156</a>                 <strong class="jxr_keyword">if</strong> (stmts.hasNext()) {
-<a class="jxr_linenumber" name="157" href="#157">157</a>                     balance = stmts.next().balance();
-<a class="jxr_linenumber" name="158" href="#158">158</a>                 } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="159" href="#159">159</a>                     balance = <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/Dollars.html">Dollars</a>(0);
+<a class="jxr_linenumber" name="144" href="#144">144</a>                 <strong class="jxr_keyword">if</strong> (!BaseRs.<strong class="jxr_keyword">this</strong>.auth().identity().equals(Identity.ANONYMOUS)) {
+<a class="jxr_linenumber" name="145" href="#145">145</a>                     page.link(
+<a class="jxr_linenumber" name="146" href="#146">146</a>                         <strong class="jxr_keyword">new</strong> Link(
+<a class="jxr_linenumber" name="147" href="#147">147</a>                             <span class="jxr_string">"account"</span>,
+<a class="jxr_linenumber" name="148" href="#148">148</a>                             BaseRs.<strong class="jxr_keyword">this</strong>.uriInfo().getBaseUriBuilder()
+<a class="jxr_linenumber" name="149" href="#149">149</a>                                 .clone()
+<a class="jxr_linenumber" name="150" href="#150">150</a>                                 .path(AccountRs.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="151" href="#151">151</a>                                 .build()
+<a class="jxr_linenumber" name="152" href="#152">152</a>                         )
+<a class="jxr_linenumber" name="153" href="#153">153</a>                     );
+<a class="jxr_linenumber" name="154" href="#154">154</a>                     page.append(
+<a class="jxr_linenumber" name="155" href="#155">155</a>                         <strong class="jxr_keyword">new</strong> JaxbBundle(
+<a class="jxr_linenumber" name="156" href="#156">156</a>                             <span class="jxr_string">"balance"</span>,
+<a class="jxr_linenumber" name="157" href="#157">157</a>                             BaseRs.<strong class="jxr_keyword">this</strong>.balance().toString()
+<a class="jxr_linenumber" name="158" href="#158">158</a>                         )
+<a class="jxr_linenumber" name="159" href="#159">159</a>                     );
 <a class="jxr_linenumber" name="160" href="#160">160</a>                 }
-<a class="jxr_linenumber" name="161" href="#161">161</a>                 page.append(<strong class="jxr_keyword">new</strong> JaxbBundle(<span class="jxr_string">"balance"</span>, balance.toString()));
-<a class="jxr_linenumber" name="162" href="#162">162</a>             }
-<a class="jxr_linenumber" name="163" href="#163">163</a>         };
-<a class="jxr_linenumber" name="164" href="#164">164</a>     }
-<a class="jxr_linenumber" name="165" href="#165">165</a> 
-<a class="jxr_linenumber" name="166" href="#166">166</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="167" href="#167">167</a> <em class="jxr_javadoccomment">     * Authentication key inset.</em>
-<a class="jxr_linenumber" name="168" href="#168">168</a> <em class="jxr_javadoccomment">     * @return The inset</em>
-<a class="jxr_linenumber" name="169" href="#169">169</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="170" href="#170">170</a>     @Inset.Runtime
-<a class="jxr_linenumber" name="171" href="#171">171</a>     @NotNull(message = <span class="jxr_string">"auth key inset can never be NULL"</span>)
-<a class="jxr_linenumber" name="172" href="#172">172</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> Inset insetAuthKey() {
+<a class="jxr_linenumber" name="161" href="#161">161</a>             }
+<a class="jxr_linenumber" name="162" href="#162">162</a>         };
+<a class="jxr_linenumber" name="163" href="#163">163</a>     }
+<a class="jxr_linenumber" name="164" href="#164">164</a> 
+<a class="jxr_linenumber" name="165" href="#165">165</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="166" href="#166">166</a> <em class="jxr_javadoccomment">     * Nagivation links.</em>
+<a class="jxr_linenumber" name="167" href="#167">167</a> <em class="jxr_javadoccomment">     * @return The inset</em>
+<a class="jxr_linenumber" name="168" href="#168">168</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="169" href="#169">169</a>     @Inset.Runtime
+<a class="jxr_linenumber" name="170" href="#170">170</a>     @NotNull(message = <span class="jxr_string">"navigation inset can never be NULL"</span>)
+<a class="jxr_linenumber" name="171" href="#171">171</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> Inset insetNavigation() {
+<a class="jxr_linenumber" name="172" href="#172">172</a>         <em class="jxr_comment">// @checkstyle AnonInnerLength (50 lines)</em>
 <a class="jxr_linenumber" name="173" href="#173">173</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Inset() {
 <a class="jxr_linenumber" name="174" href="#174">174</a>             @Override
 <a class="jxr_linenumber" name="175" href="#175">175</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> render(<strong class="jxr_keyword">final</strong> BasePage&lt;?, ?&gt; page,
 <a class="jxr_linenumber" name="176" href="#176">176</a>                 <strong class="jxr_keyword">final</strong> Response.ResponseBuilder builder) {
-<a class="jxr_linenumber" name="177" href="#177">177</a>                 <strong class="jxr_keyword">final</strong> Identity identity = BaseRs.<strong class="jxr_keyword">this</strong>.auth().identity();
-<a class="jxr_linenumber" name="178" href="#178">178</a>                 <strong class="jxr_keyword">if</strong> (!identity.equals(Identity.ANONYMOUS)) {
-<a class="jxr_linenumber" name="179" href="#179">179</a>                     page.append(
-<a class="jxr_linenumber" name="180" href="#180">180</a>                         <strong class="jxr_keyword">new</strong> JaxbBundle(<span class="jxr_string">"api-key"</span>, BaseRs.KEYS.make(identity))
-<a class="jxr_linenumber" name="181" href="#181">181</a>                     );
-<a class="jxr_linenumber" name="182" href="#182">182</a>                 }
-<a class="jxr_linenumber" name="183" href="#183">183</a>             }
-<a class="jxr_linenumber" name="184" href="#184">184</a>         };
-<a class="jxr_linenumber" name="185" href="#185">185</a>     }
-<a class="jxr_linenumber" name="186" href="#186">186</a> 
-<a class="jxr_linenumber" name="187" href="#187">187</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="188" href="#188">188</a> <em class="jxr_javadoccomment">     * Authentication inset.</em>
-<a class="jxr_linenumber" name="189" href="#189">189</a> <em class="jxr_javadoccomment">     * @return The inset</em>
-<a class="jxr_linenumber" name="190" href="#190">190</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="191" href="#191">191</a>     @Inset.Runtime
-<a class="jxr_linenumber" name="192" href="#192">192</a>     @NotNull(message = <span class="jxr_string">"auth inset can never be NULL"</span>)
-<a class="jxr_linenumber" name="193" href="#193">193</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> AuthInset auth() {
-<a class="jxr_linenumber" name="194" href="#194">194</a>         <em class="jxr_comment">// @checkstyle LineLength (4 lines)</em>
-<a class="jxr_linenumber" name="195" href="#195">195</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> AuthInset(<strong class="jxr_keyword">this</strong>, Manifests.read(<span class="jxr_string">"Rultor-SecurityKey"</span>))
-<a class="jxr_linenumber" name="196" href="#196">196</a>             .with(<strong class="jxr_keyword">new</strong> Facebook(<strong class="jxr_keyword">this</strong>, Manifests.read(<span class="jxr_string">"Rultor-FbId"</span>), Manifests.read(<span class="jxr_string">"Rultor-FbSecret"</span>)))
-<a class="jxr_linenumber" name="197" href="#197">197</a>             .with(<strong class="jxr_keyword">new</strong> Github(<strong class="jxr_keyword">this</strong>, Manifests.read(<span class="jxr_string">"Rultor-GithubId"</span>), Manifests.read(<span class="jxr_string">"Rultor-GithubSecret"</span>)))
-<a class="jxr_linenumber" name="198" href="#198">198</a>             .with(<strong class="jxr_keyword">new</strong> Google(<strong class="jxr_keyword">this</strong>, Manifests.read(<span class="jxr_string">"Rultor-GoogleId"</span>), Manifests.read(<span class="jxr_string">"Rultor-GoogleSecret"</span>)))
-<a class="jxr_linenumber" name="199" href="#199">199</a>             .with(
-<a class="jxr_linenumber" name="200" href="#200">200</a>                 <strong class="jxr_keyword">new</strong> Provider() {
-<a class="jxr_linenumber" name="201" href="#201">201</a>                     @Override
-<a class="jxr_linenumber" name="202" href="#202">202</a>                     <strong class="jxr_keyword">public</strong> Identity identity() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="203" href="#203">203</a>                         Identity identity;
-<a class="jxr_linenumber" name="204" href="#204">204</a>                         <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"12345"</span>.equals(Manifests.read(<span class="jxr_string">"Rultor-Revision"</span>))) {
-<a class="jxr_linenumber" name="205" href="#205">205</a>                             identity = <strong class="jxr_keyword">new</strong> Identity.Simple(
-<a class="jxr_linenumber" name="206" href="#206">206</a>                                 URN.create(<span class="jxr_string">"urn:facebook:1"</span>),
-<a class="jxr_linenumber" name="207" href="#207">207</a>                                 <span class="jxr_string">"Local Host"</span>,
-<a class="jxr_linenumber" name="208" href="#208">208</a>                                 URI.create(<span class="jxr_string">"http://img.rultor.com/none.png"</span>)
-<a class="jxr_linenumber" name="209" href="#209">209</a>                             );
-<a class="jxr_linenumber" name="210" href="#210">210</a>                         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="211" href="#211">211</a>                             identity = Identity.ANONYMOUS;
-<a class="jxr_linenumber" name="212" href="#212">212</a>                         }
-<a class="jxr_linenumber" name="213" href="#213">213</a>                         <strong class="jxr_keyword">return</strong> identity;
-<a class="jxr_linenumber" name="214" href="#214">214</a>                     }
-<a class="jxr_linenumber" name="215" href="#215">215</a>                 }
-<a class="jxr_linenumber" name="216" href="#216">216</a>             )
-<a class="jxr_linenumber" name="217" href="#217">217</a>             .with(<strong class="jxr_keyword">new</strong> HttpBasic(<strong class="jxr_keyword">this</strong>, BaseRs.KEYS));
-<a class="jxr_linenumber" name="218" href="#218">218</a>     }
-<a class="jxr_linenumber" name="219" href="#219">219</a> 
-<a class="jxr_linenumber" name="220" href="#220">220</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="221" href="#221">221</a> <em class="jxr_javadoccomment">     * Get currently logged in user.</em>
-<a class="jxr_linenumber" name="222" href="#222">222</a> <em class="jxr_javadoccomment">     * @return The user</em>
-<a class="jxr_linenumber" name="223" href="#223">223</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="224" href="#224">224</a>     @NotNull(message = <span class="jxr_string">"User can't be NULL"</span>)
-<a class="jxr_linenumber" name="225" href="#225">225</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/User.html">User</a> user() {
-<a class="jxr_linenumber" name="226" href="#226">226</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.users().get(<strong class="jxr_keyword">this</strong>.auth().identity().urn());
-<a class="jxr_linenumber" name="227" href="#227">227</a>     }
-<a class="jxr_linenumber" name="228" href="#228">228</a> 
-<a class="jxr_linenumber" name="229" href="#229">229</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="230" href="#230">230</a> <em class="jxr_javadoccomment">     * Get all users.</em>
-<a class="jxr_linenumber" name="231" href="#231">231</a> <em class="jxr_javadoccomment">     * @return The users</em>
-<a class="jxr_linenumber" name="232" href="#232">232</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="233" href="#233">233</a>     @NotNull(message = <span class="jxr_string">"USERS is not injected into servlet context"</span>)
-<a class="jxr_linenumber" name="234" href="#234">234</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Users.html">Users</a> users() {
-<a class="jxr_linenumber" name="235" href="#235">235</a>         <strong class="jxr_keyword">return</strong> Users.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(
-<a class="jxr_linenumber" name="236" href="#236">236</a>             <strong class="jxr_keyword">this</strong>.servletContext().getAttribute(Users.<strong class="jxr_keyword">class</strong>.getName())
-<a class="jxr_linenumber" name="237" href="#237">237</a>         );
-<a class="jxr_linenumber" name="238" href="#238">238</a>     }
-<a class="jxr_linenumber" name="239" href="#239">239</a> 
-<a class="jxr_linenumber" name="240" href="#240">240</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="241" href="#241">241</a> <em class="jxr_javadoccomment">     * Get repo.</em>
-<a class="jxr_linenumber" name="242" href="#242">242</a> <em class="jxr_javadoccomment">     * @return Repo</em>
-<a class="jxr_linenumber" name="243" href="#243">243</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="244" href="#244">244</a>     @NotNull(message = <span class="jxr_string">"REPO is not injected into servlet context"</span>)
-<a class="jxr_linenumber" name="245" href="#245">245</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Repo.html">Repo</a> repo() {
-<a class="jxr_linenumber" name="246" href="#246">246</a>         <strong class="jxr_keyword">return</strong> Repo.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(
-<a class="jxr_linenumber" name="247" href="#247">247</a>             <strong class="jxr_keyword">this</strong>.servletContext().getAttribute(Repo.<strong class="jxr_keyword">class</strong>.getName())
-<a class="jxr_linenumber" name="248" href="#248">248</a>         );
-<a class="jxr_linenumber" name="249" href="#249">249</a>     }
-<a class="jxr_linenumber" name="250" href="#250">250</a> 
-<a class="jxr_linenumber" name="251" href="#251">251</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="252" href="#252">252</a> <em class="jxr_javadoccomment">     * The work we're in (while rendering).</em>
-<a class="jxr_linenumber" name="253" href="#253">253</a> <em class="jxr_javadoccomment">     * @param unit Unit being rendered</em>
-<a class="jxr_linenumber" name="254" href="#254">254</a> <em class="jxr_javadoccomment">     * @param spec Its spec</em>
-<a class="jxr_linenumber" name="255" href="#255">255</a> <em class="jxr_javadoccomment">     * @return The work</em>
-<a class="jxr_linenumber" name="256" href="#256">256</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="257" href="#257">257</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Work.html">Work</a> work(<strong class="jxr_keyword">final</strong> String unit, <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec) {
-<a class="jxr_linenumber" name="258" href="#258">258</a>         <em class="jxr_comment">// @checkstyle AnonInnerLength (50 lines)</em>
-<a class="jxr_linenumber" name="259" href="#259">259</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/Work.html">Work</a>() {
-<a class="jxr_linenumber" name="260" href="#260">260</a>             @Override
-<a class="jxr_linenumber" name="261" href="#261">261</a>             <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Time.html">Time</a> started() {
-<a class="jxr_linenumber" name="262" href="#262">262</a>                 <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/Time.html">Time</a>();
-<a class="jxr_linenumber" name="263" href="#263">263</a>             }
-<a class="jxr_linenumber" name="264" href="#264">264</a>             @Override
-<a class="jxr_linenumber" name="265" href="#265">265</a>             <strong class="jxr_keyword">public</strong> URN owner() {
-<a class="jxr_linenumber" name="266" href="#266">266</a>                 <strong class="jxr_keyword">return</strong> BaseRs.<strong class="jxr_keyword">this</strong>.user().urn();
-<a class="jxr_linenumber" name="267" href="#267">267</a>             }
-<a class="jxr_linenumber" name="268" href="#268">268</a>             @Override
-<a class="jxr_linenumber" name="269" href="#269">269</a>             <strong class="jxr_keyword">public</strong> String unit() {
-<a class="jxr_linenumber" name="270" href="#270">270</a>                 <strong class="jxr_keyword">return</strong> unit;
-<a class="jxr_linenumber" name="271" href="#271">271</a>             }
-<a class="jxr_linenumber" name="272" href="#272">272</a>             @Override
-<a class="jxr_linenumber" name="273" href="#273">273</a>             <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec() {
-<a class="jxr_linenumber" name="274" href="#274">274</a>                 <strong class="jxr_keyword">return</strong> spec;
-<a class="jxr_linenumber" name="275" href="#275">275</a>             }
-<a class="jxr_linenumber" name="276" href="#276">276</a>             @Override
-<a class="jxr_linenumber" name="277" href="#277">277</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> charge(<strong class="jxr_keyword">final</strong> String details, <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Dollars.html">Dollars</a> amount) {
-<a class="jxr_linenumber" name="278" href="#278">278</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException();
-<a class="jxr_linenumber" name="279" href="#279">279</a>             }
-<a class="jxr_linenumber" name="280" href="#280">280</a>         };
+<a class="jxr_linenumber" name="177" href="#177">177</a>                 <strong class="jxr_keyword">if</strong> (!BaseRs.<strong class="jxr_keyword">this</strong>.auth().identity().equals(Identity.ANONYMOUS)) {
+<a class="jxr_linenumber" name="178" href="#178">178</a>                     page.link(
+<a class="jxr_linenumber" name="179" href="#179">179</a>                         <strong class="jxr_keyword">new</strong> Link(
+<a class="jxr_linenumber" name="180" href="#180">180</a>                             <span class="jxr_string">"stands"</span>,
+<a class="jxr_linenumber" name="181" href="#181">181</a>                             BaseRs.<strong class="jxr_keyword">this</strong>.uriInfo().getBaseUriBuilder()
+<a class="jxr_linenumber" name="182" href="#182">182</a>                                 .clone()
+<a class="jxr_linenumber" name="183" href="#183">183</a>                                 .path(StandsRs.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="184" href="#184">184</a>                                 .build()
+<a class="jxr_linenumber" name="185" href="#185">185</a>                         )
+<a class="jxr_linenumber" name="186" href="#186">186</a>                     );
+<a class="jxr_linenumber" name="187" href="#187">187</a>                     page.link(
+<a class="jxr_linenumber" name="188" href="#188">188</a>                         <strong class="jxr_keyword">new</strong> Link(
+<a class="jxr_linenumber" name="189" href="#189">189</a>                             <span class="jxr_string">"units"</span>,
+<a class="jxr_linenumber" name="190" href="#190">190</a>                             BaseRs.<strong class="jxr_keyword">this</strong>.uriInfo().getBaseUriBuilder()
+<a class="jxr_linenumber" name="191" href="#191">191</a>                                 .clone()
+<a class="jxr_linenumber" name="192" href="#192">192</a>                                 .path(UnitsRs.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="193" href="#193">193</a>                                 .build()
+<a class="jxr_linenumber" name="194" href="#194">194</a>                         )
+<a class="jxr_linenumber" name="195" href="#195">195</a>                     );
+<a class="jxr_linenumber" name="196" href="#196">196</a>                 }
+<a class="jxr_linenumber" name="197" href="#197">197</a>             }
+<a class="jxr_linenumber" name="198" href="#198">198</a>         };
+<a class="jxr_linenumber" name="199" href="#199">199</a>     }
+<a class="jxr_linenumber" name="200" href="#200">200</a> 
+<a class="jxr_linenumber" name="201" href="#201">201</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="202" href="#202">202</a> <em class="jxr_javadoccomment">     * Authentication key inset.</em>
+<a class="jxr_linenumber" name="203" href="#203">203</a> <em class="jxr_javadoccomment">     * @return The inset</em>
+<a class="jxr_linenumber" name="204" href="#204">204</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="205" href="#205">205</a>     @Inset.Runtime
+<a class="jxr_linenumber" name="206" href="#206">206</a>     @NotNull(message = <span class="jxr_string">"auth key inset can never be NULL"</span>)
+<a class="jxr_linenumber" name="207" href="#207">207</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> Inset insetAuthKey() {
+<a class="jxr_linenumber" name="208" href="#208">208</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Inset() {
+<a class="jxr_linenumber" name="209" href="#209">209</a>             @Override
+<a class="jxr_linenumber" name="210" href="#210">210</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> render(<strong class="jxr_keyword">final</strong> BasePage&lt;?, ?&gt; page,
+<a class="jxr_linenumber" name="211" href="#211">211</a>                 <strong class="jxr_keyword">final</strong> Response.ResponseBuilder builder) {
+<a class="jxr_linenumber" name="212" href="#212">212</a>                 <strong class="jxr_keyword">final</strong> Identity identity = BaseRs.<strong class="jxr_keyword">this</strong>.auth().identity();
+<a class="jxr_linenumber" name="213" href="#213">213</a>                 <strong class="jxr_keyword">if</strong> (!identity.equals(Identity.ANONYMOUS)) {
+<a class="jxr_linenumber" name="214" href="#214">214</a>                     page.append(
+<a class="jxr_linenumber" name="215" href="#215">215</a>                         <strong class="jxr_keyword">new</strong> JaxbBundle(<span class="jxr_string">"api-key"</span>, BaseRs.KEYS.make(identity))
+<a class="jxr_linenumber" name="216" href="#216">216</a>                     );
+<a class="jxr_linenumber" name="217" href="#217">217</a>                 }
+<a class="jxr_linenumber" name="218" href="#218">218</a>             }
+<a class="jxr_linenumber" name="219" href="#219">219</a>         };
+<a class="jxr_linenumber" name="220" href="#220">220</a>     }
+<a class="jxr_linenumber" name="221" href="#221">221</a> 
+<a class="jxr_linenumber" name="222" href="#222">222</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="223" href="#223">223</a> <em class="jxr_javadoccomment">     * Authentication inset.</em>
+<a class="jxr_linenumber" name="224" href="#224">224</a> <em class="jxr_javadoccomment">     * @return The inset</em>
+<a class="jxr_linenumber" name="225" href="#225">225</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="226" href="#226">226</a>     @Inset.Runtime
+<a class="jxr_linenumber" name="227" href="#227">227</a>     @NotNull(message = <span class="jxr_string">"auth inset can never be NULL"</span>)
+<a class="jxr_linenumber" name="228" href="#228">228</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> AuthInset auth() {
+<a class="jxr_linenumber" name="229" href="#229">229</a>         <em class="jxr_comment">// @checkstyle LineLength (4 lines)</em>
+<a class="jxr_linenumber" name="230" href="#230">230</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> AuthInset(<strong class="jxr_keyword">this</strong>, Manifests.read(<span class="jxr_string">"Rultor-SecurityKey"</span>))
+<a class="jxr_linenumber" name="231" href="#231">231</a>             .with(<strong class="jxr_keyword">new</strong> Facebook(<strong class="jxr_keyword">this</strong>, Manifests.read(<span class="jxr_string">"Rultor-FbId"</span>), Manifests.read(<span class="jxr_string">"Rultor-FbSecret"</span>)))
+<a class="jxr_linenumber" name="232" href="#232">232</a>             .with(<strong class="jxr_keyword">new</strong> Github(<strong class="jxr_keyword">this</strong>, Manifests.read(<span class="jxr_string">"Rultor-GithubId"</span>), Manifests.read(<span class="jxr_string">"Rultor-GithubSecret"</span>)))
+<a class="jxr_linenumber" name="233" href="#233">233</a>             .with(<strong class="jxr_keyword">new</strong> Google(<strong class="jxr_keyword">this</strong>, Manifests.read(<span class="jxr_string">"Rultor-GoogleId"</span>), Manifests.read(<span class="jxr_string">"Rultor-GoogleSecret"</span>)))
+<a class="jxr_linenumber" name="234" href="#234">234</a>             .with(
+<a class="jxr_linenumber" name="235" href="#235">235</a>                 <strong class="jxr_keyword">new</strong> Provider() {
+<a class="jxr_linenumber" name="236" href="#236">236</a>                     @Override
+<a class="jxr_linenumber" name="237" href="#237">237</a>                     <strong class="jxr_keyword">public</strong> Identity identity() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="238" href="#238">238</a>                         Identity identity;
+<a class="jxr_linenumber" name="239" href="#239">239</a>                         <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"12345"</span>.equals(Manifests.read(<span class="jxr_string">"Rultor-Revision"</span>))) {
+<a class="jxr_linenumber" name="240" href="#240">240</a>                             identity = <strong class="jxr_keyword">new</strong> Identity.Simple(
+<a class="jxr_linenumber" name="241" href="#241">241</a>                                 URN.create(<span class="jxr_string">"urn:facebook:1"</span>),
+<a class="jxr_linenumber" name="242" href="#242">242</a>                                 <span class="jxr_string">"Local Host"</span>,
+<a class="jxr_linenumber" name="243" href="#243">243</a>                                 URI.create(<span class="jxr_string">"http://img.rultor.com/none.png"</span>)
+<a class="jxr_linenumber" name="244" href="#244">244</a>                             );
+<a class="jxr_linenumber" name="245" href="#245">245</a>                         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="246" href="#246">246</a>                             identity = Identity.ANONYMOUS;
+<a class="jxr_linenumber" name="247" href="#247">247</a>                         }
+<a class="jxr_linenumber" name="248" href="#248">248</a>                         <strong class="jxr_keyword">return</strong> identity;
+<a class="jxr_linenumber" name="249" href="#249">249</a>                     }
+<a class="jxr_linenumber" name="250" href="#250">250</a>                 }
+<a class="jxr_linenumber" name="251" href="#251">251</a>             )
+<a class="jxr_linenumber" name="252" href="#252">252</a>             .with(<strong class="jxr_keyword">new</strong> HttpBasic(<strong class="jxr_keyword">this</strong>, BaseRs.KEYS));
+<a class="jxr_linenumber" name="253" href="#253">253</a>     }
+<a class="jxr_linenumber" name="254" href="#254">254</a> 
+<a class="jxr_linenumber" name="255" href="#255">255</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="256" href="#256">256</a> <em class="jxr_javadoccomment">     * Get currently logged in user.</em>
+<a class="jxr_linenumber" name="257" href="#257">257</a> <em class="jxr_javadoccomment">     * @return The user</em>
+<a class="jxr_linenumber" name="258" href="#258">258</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="259" href="#259">259</a>     @NotNull(message = <span class="jxr_string">"User can't be NULL"</span>)
+<a class="jxr_linenumber" name="260" href="#260">260</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/User.html">User</a> user() {
+<a class="jxr_linenumber" name="261" href="#261">261</a>         <strong class="jxr_keyword">final</strong> Identity self = <strong class="jxr_keyword">this</strong>.auth().identity();
+<a class="jxr_linenumber" name="262" href="#262">262</a>         <strong class="jxr_keyword">if</strong> (self.equals(Identity.ANONYMOUS)) {
+<a class="jxr_linenumber" name="263" href="#263">263</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">this</strong>.flash().redirect(
+<a class="jxr_linenumber" name="264" href="#264">264</a>                 <strong class="jxr_keyword">this</strong>.uriInfo().getBaseUri(),
+<a class="jxr_linenumber" name="265" href="#265">265</a>                 <span class="jxr_string">"please login first"</span>,
+<a class="jxr_linenumber" name="266" href="#266">266</a>                 Level.WARNING
+<a class="jxr_linenumber" name="267" href="#267">267</a>             );
+<a class="jxr_linenumber" name="268" href="#268">268</a>         }
+<a class="jxr_linenumber" name="269" href="#269">269</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.users().get(self.urn());
+<a class="jxr_linenumber" name="270" href="#270">270</a>     }
+<a class="jxr_linenumber" name="271" href="#271">271</a> 
+<a class="jxr_linenumber" name="272" href="#272">272</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="273" href="#273">273</a> <em class="jxr_javadoccomment">     * Get all users.</em>
+<a class="jxr_linenumber" name="274" href="#274">274</a> <em class="jxr_javadoccomment">     * @return The users</em>
+<a class="jxr_linenumber" name="275" href="#275">275</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="276" href="#276">276</a>     @NotNull(message = <span class="jxr_string">"USERS is not injected into servlet context"</span>)
+<a class="jxr_linenumber" name="277" href="#277">277</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Users.html">Users</a> users() {
+<a class="jxr_linenumber" name="278" href="#278">278</a>         <strong class="jxr_keyword">return</strong> Users.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(
+<a class="jxr_linenumber" name="279" href="#279">279</a>             <strong class="jxr_keyword">this</strong>.servletContext().getAttribute(Users.<strong class="jxr_keyword">class</strong>.getName())
+<a class="jxr_linenumber" name="280" href="#280">280</a>         );
 <a class="jxr_linenumber" name="281" href="#281">281</a>     }
 <a class="jxr_linenumber" name="282" href="#282">282</a> 
-<a class="jxr_linenumber" name="283" href="#283">283</a> }
+<a class="jxr_linenumber" name="283" href="#283">283</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="284" href="#284">284</a> <em class="jxr_javadoccomment">     * Get repo.</em>
+<a class="jxr_linenumber" name="285" href="#285">285</a> <em class="jxr_javadoccomment">     * @return Repo</em>
+<a class="jxr_linenumber" name="286" href="#286">286</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="287" href="#287">287</a>     @NotNull(message = <span class="jxr_string">"REPO is not injected into servlet context"</span>)
+<a class="jxr_linenumber" name="288" href="#288">288</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Repo.html">Repo</a> repo() {
+<a class="jxr_linenumber" name="289" href="#289">289</a>         <strong class="jxr_keyword">return</strong> Repo.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(
+<a class="jxr_linenumber" name="290" href="#290">290</a>             <strong class="jxr_keyword">this</strong>.servletContext().getAttribute(Repo.<strong class="jxr_keyword">class</strong>.getName())
+<a class="jxr_linenumber" name="291" href="#291">291</a>         );
+<a class="jxr_linenumber" name="292" href="#292">292</a>     }
+<a class="jxr_linenumber" name="293" href="#293">293</a> 
+<a class="jxr_linenumber" name="294" href="#294">294</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="295" href="#295">295</a> <em class="jxr_javadoccomment">     * The work we're in (while rendering).</em>
+<a class="jxr_linenumber" name="296" href="#296">296</a> <em class="jxr_javadoccomment">     * @param unit Unit being rendered</em>
+<a class="jxr_linenumber" name="297" href="#297">297</a> <em class="jxr_javadoccomment">     * @param spec Its spec</em>
+<a class="jxr_linenumber" name="298" href="#298">298</a> <em class="jxr_javadoccomment">     * @return The work</em>
+<a class="jxr_linenumber" name="299" href="#299">299</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="300" href="#300">300</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Work.html">Work</a> work(<strong class="jxr_keyword">final</strong> String unit, <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec) {
+<a class="jxr_linenumber" name="301" href="#301">301</a>         <em class="jxr_comment">// @checkstyle AnonInnerLength (50 lines)</em>
+<a class="jxr_linenumber" name="302" href="#302">302</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/Work.html">Work</a>() {
+<a class="jxr_linenumber" name="303" href="#303">303</a>             @Override
+<a class="jxr_linenumber" name="304" href="#304">304</a>             <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/tools/Time.html">Time</a> scheduled() {
+<a class="jxr_linenumber" name="305" href="#305">305</a>                 <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/tools/Time.html">Time</a>();
+<a class="jxr_linenumber" name="306" href="#306">306</a>             }
+<a class="jxr_linenumber" name="307" href="#307">307</a>             @Override
+<a class="jxr_linenumber" name="308" href="#308">308</a>             <strong class="jxr_keyword">public</strong> URN owner() {
+<a class="jxr_linenumber" name="309" href="#309">309</a>                 <strong class="jxr_keyword">return</strong> BaseRs.<strong class="jxr_keyword">this</strong>.user().urn();
+<a class="jxr_linenumber" name="310" href="#310">310</a>             }
+<a class="jxr_linenumber" name="311" href="#311">311</a>             @Override
+<a class="jxr_linenumber" name="312" href="#312">312</a>             <strong class="jxr_keyword">public</strong> String unit() {
+<a class="jxr_linenumber" name="313" href="#313">313</a>                 <strong class="jxr_keyword">return</strong> unit;
+<a class="jxr_linenumber" name="314" href="#314">314</a>             }
+<a class="jxr_linenumber" name="315" href="#315">315</a>             @Override
+<a class="jxr_linenumber" name="316" href="#316">316</a>             <strong class="jxr_keyword">public</strong> URI stdout() {
+<a class="jxr_linenumber" name="317" href="#317">317</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException();
+<a class="jxr_linenumber" name="318" href="#318">318</a>             }
+<a class="jxr_linenumber" name="319" href="#319">319</a>         };
+<a class="jxr_linenumber" name="320" href="#320">320</a>     }
+<a class="jxr_linenumber" name="321" href="#321">321</a> 
+<a class="jxr_linenumber" name="322" href="#322">322</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="323" href="#323">323</a> <em class="jxr_javadoccomment">     * Get balance of the current user.</em>
+<a class="jxr_linenumber" name="324" href="#324">324</a> <em class="jxr_javadoccomment">     * @return His balance</em>
+<a class="jxr_linenumber" name="325" href="#325">325</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="326" href="#326">326</a>     @Timeable
+<a class="jxr_linenumber" name="327" href="#327">327</a>     <strong class="jxr_keyword">private</strong> <a href="../../../com/rultor/tools/Dollars.html">Dollars</a> balance() {
+<a class="jxr_linenumber" name="328" href="#328">328</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.user().account().balance();
+<a class="jxr_linenumber" name="329" href="#329">329</a>     }
+<a class="jxr_linenumber" name="330" href="#330">330</a> 
+<a class="jxr_linenumber" name="331" href="#331">331</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

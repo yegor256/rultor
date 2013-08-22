@@ -41,9 +41,9 @@
 <a class="jxr_linenumber" name="31" href="#31">31</a>  
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.urn.URN;
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Drain;
-<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Pulses;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Time;
-<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Pageable;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.io.FilenameUtils;
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.io.IOUtils;
@@ -102,8 +102,8 @@
 <a class="jxr_linenumber" name="92" href="#92">92</a>              work, <strong class="jxr_keyword">this</strong>.host, <strong class="jxr_keyword">this</strong>.login, <strong class="jxr_keyword">this</strong>.password, <strong class="jxr_keyword">this</strong>.dir
 <a class="jxr_linenumber" name="93" href="#93">93</a>          );
 <a class="jxr_linenumber" name="94" href="#94">94</a>          drain.append(Arrays.asList(msg));
-<a class="jxr_linenumber" name="95" href="#95">95</a>          <strong class="jxr_keyword">final</strong> Pulses names = drain.pulses();
-<a class="jxr_linenumber" name="96" href="#96">96</a>          MatcherAssert.assertThat(names, Matchers.hasItem(work.started()));
+<a class="jxr_linenumber" name="95" href="#95">95</a>          <strong class="jxr_keyword">final</strong> Pageable&lt;Time, Time&gt; names = drain.pulses();
+<a class="jxr_linenumber" name="96" href="#96">96</a>          MatcherAssert.assertThat(names, Matchers.hasItem(work.scheduled()));
 <a class="jxr_linenumber" name="97" href="#97">97</a>          MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="98" href="#98">98</a>              IOUtils.toString(drain.read(), CharEncoding.UTF_8),
 <a class="jxr_linenumber" name="99" href="#99">99</a>              Matchers.containsString(msg)

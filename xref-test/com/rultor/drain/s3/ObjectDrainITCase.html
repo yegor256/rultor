@@ -45,9 +45,9 @@
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.drain.NoiseReduction;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.drain.Trash;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Drain;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Pulses;
-<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Time;
-<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Pageable;
+<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
 <a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
 <a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.io.IOUtils;
 <a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.lang3.CharEncoding;
@@ -97,7 +97,7 @@
 <a class="jxr_linenumber" name="87" href="#87">87</a>              <strong class="jxr_keyword">this</strong>.client, <span class="jxr_string">"S3DrainITCase/test.txt"</span>
 <a class="jxr_linenumber" name="88" href="#88">88</a>          );
 <a class="jxr_linenumber" name="89" href="#89">89</a>          drain.append(Arrays.asList(msg));
-<a class="jxr_linenumber" name="90" href="#90">90</a>          <strong class="jxr_keyword">final</strong> Pulses names = drain.pulses();
+<a class="jxr_linenumber" name="90" href="#90">90</a>          <strong class="jxr_keyword">final</strong> Pageable&lt;Time, Time&gt; names = drain.pulses();
 <a class="jxr_linenumber" name="91" href="#91">91</a>          MatcherAssert.assertThat(names, Matchers.&lt;Time&gt;iterableWithSize(0));
 <a class="jxr_linenumber" name="92" href="#92">92</a>          MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="93" href="#93">93</a>              IOUtils.toString(drain.read(), CharEncoding.UTF_8),

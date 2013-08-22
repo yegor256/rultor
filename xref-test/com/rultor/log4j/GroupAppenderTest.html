@@ -42,7 +42,7 @@
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Tv;
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.log.VerboseRunnable;
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Drain;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Time;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> java.util.Collection;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.Callable;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.CopyOnWriteArrayList;
@@ -96,119 +96,121 @@
 <a class="jxr_linenumber" name="86" href="#86">86</a>          };
 <a class="jxr_linenumber" name="87" href="#87">87</a>          publisher.start();
 <a class="jxr_linenumber" name="88" href="#88">88</a>          publisher.join();
-<a class="jxr_linenumber" name="89" href="#89">89</a>          Mockito.verify(drain).append(
-<a class="jxr_linenumber" name="90" href="#90">90</a>              Mockito.argThat(
-<a class="jxr_linenumber" name="91" href="#91">91</a>                  Matchers.everyItem(
-<a class="jxr_linenumber" name="92" href="#92">92</a>                      Matchers.endsWith(
-<a class="jxr_linenumber" name="93" href="#93">93</a>                          <span class="jxr_string">" INFO test message to see in log"</span>
-<a class="jxr_linenumber" name="94" href="#94">94</a>                      )
-<a class="jxr_linenumber" name="95" href="#95">95</a>                  )
-<a class="jxr_linenumber" name="96" href="#96">96</a>              )
-<a class="jxr_linenumber" name="97" href="#97">97</a>          );
-<a class="jxr_linenumber" name="98" href="#98">98</a>      }
-<a class="jxr_linenumber" name="99" href="#99">99</a>  
-<a class="jxr_linenumber" name="100" href="#100">100</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="101" href="#101">101</a> <em class="jxr_javadoccomment">     * GroupAppender can log slf4j messages in the same thread.</em>
-<a class="jxr_linenumber" name="102" href="#102">102</a> <em class="jxr_javadoccomment">     * @throws Exception If some problem inside</em>
-<a class="jxr_linenumber" name="103" href="#103">103</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="104" href="#104">104</a>     @Test
-<a class="jxr_linenumber" name="105" href="#105">105</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="106" href="#106">106</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> logsMessagesInSameThread() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="107" href="#107">107</a>         <strong class="jxr_keyword">final</strong> Drain drain = Mockito.mock(Drain.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="108" href="#108">108</a>         <strong class="jxr_keyword">final</strong> GroupAppender appender =
-<a class="jxr_linenumber" name="109" href="#109">109</a>             <strong class="jxr_keyword">new</strong> GroupAppender(<strong class="jxr_keyword">new</strong> Time(), drain);
-<a class="jxr_linenumber" name="110" href="#110">110</a>         appender.setLayout(<strong class="jxr_keyword">new</strong> PatternLayout(<span class="jxr_string">" %m"</span>));
-<a class="jxr_linenumber" name="111" href="#111">111</a>         Logger.getRootLogger().addAppender(appender);
-<a class="jxr_linenumber" name="112" href="#112">112</a>         appender.append(
-<a class="jxr_linenumber" name="113" href="#113">113</a>             <strong class="jxr_keyword">new</strong> LoggingEvent(
-<a class="jxr_linenumber" name="114" href="#114">114</a>                 <span class="jxr_string">""</span>,
-<a class="jxr_linenumber" name="115" href="#115">115</a>                 Logger.getLogger(<strong class="jxr_keyword">this</strong>.getClass()),
-<a class="jxr_linenumber" name="116" href="#116">116</a>                 org.apache.log4j.Level.INFO,
-<a class="jxr_linenumber" name="117" href="#117">117</a>                 <span class="jxr_string">"some text to log"</span>,
-<a class="jxr_linenumber" name="118" href="#118">118</a>                 <strong class="jxr_keyword">new</strong> IllegalArgumentException()
-<a class="jxr_linenumber" name="119" href="#119">119</a>             )
-<a class="jxr_linenumber" name="120" href="#120">120</a>         );
-<a class="jxr_linenumber" name="121" href="#121">121</a>         Logger.getRootLogger().removeAppender(appender);
-<a class="jxr_linenumber" name="122" href="#122">122</a>         appender.close();
-<a class="jxr_linenumber" name="123" href="#123">123</a>         Mockito.verify(drain).append(
-<a class="jxr_linenumber" name="124" href="#124">124</a>             (Iterable&lt;String&gt;) Mockito.any(Object.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="125" href="#125">125</a>         );
-<a class="jxr_linenumber" name="126" href="#126">126</a>     }
-<a class="jxr_linenumber" name="127" href="#127">127</a> 
-<a class="jxr_linenumber" name="128" href="#128">128</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="129" href="#129">129</a> <em class="jxr_javadoccomment">     * GroupAppender can log in multiple threads.</em>
-<a class="jxr_linenumber" name="130" href="#130">130</a> <em class="jxr_javadoccomment">     * @throws Exception If some problem inside</em>
-<a class="jxr_linenumber" name="131" href="#131">131</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="132" href="#132">132</a>     @Test
-<a class="jxr_linenumber" name="133" href="#133">133</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> logsMessagesInMultipleThreads() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="134" href="#134">134</a>         <strong class="jxr_keyword">final</strong> String text = <span class="jxr_string">"test message to see \u20ac"</span>;
-<a class="jxr_linenumber" name="135" href="#135">135</a>         <strong class="jxr_keyword">final</strong> CountDownLatch start = <strong class="jxr_keyword">new</strong> CountDownLatch(1);
-<a class="jxr_linenumber" name="136" href="#136">136</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> threads = Tv.TEN;
-<a class="jxr_linenumber" name="137" href="#137">137</a>         <strong class="jxr_keyword">final</strong> CountDownLatch done = <strong class="jxr_keyword">new</strong> CountDownLatch(threads);
-<a class="jxr_linenumber" name="138" href="#138">138</a>         <strong class="jxr_keyword">final</strong> CountDownLatch ready = <strong class="jxr_keyword">new</strong> CountDownLatch(threads);
-<a class="jxr_linenumber" name="139" href="#139">139</a>         <strong class="jxr_keyword">final</strong> Collection&lt;GroupAppender&gt; appenders =
-<a class="jxr_linenumber" name="140" href="#140">140</a>             <strong class="jxr_keyword">new</strong> CopyOnWriteArrayList&lt;GroupAppender&gt;();
-<a class="jxr_linenumber" name="141" href="#141">141</a>         <strong class="jxr_keyword">final</strong> Runnable runnable = <strong class="jxr_keyword">new</strong> VerboseRunnable(
-<a class="jxr_linenumber" name="142" href="#142">142</a>             <em class="jxr_comment">// @checkstyle AnonInnerLength (50 lines)</em>
-<a class="jxr_linenumber" name="143" href="#143">143</a>             <strong class="jxr_keyword">new</strong> Callable&lt;Void&gt;() {
-<a class="jxr_linenumber" name="144" href="#144">144</a>                 @Override
-<a class="jxr_linenumber" name="145" href="#145">145</a>                 <strong class="jxr_keyword">public</strong> Void call() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="146" href="#146">146</a>                     <strong class="jxr_keyword">final</strong> Drain drain = Mockito.mock(Drain.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="147" href="#147">147</a>                     <strong class="jxr_keyword">final</strong> GroupAppender appender =
-<a class="jxr_linenumber" name="148" href="#148">148</a>                         <strong class="jxr_keyword">new</strong> GroupAppender(<strong class="jxr_keyword">new</strong> Time(), drain);
-<a class="jxr_linenumber" name="149" href="#149">149</a>                     appender.setLayout(<strong class="jxr_keyword">new</strong> PatternLayout(<span class="jxr_string">"%m%n"</span>));
-<a class="jxr_linenumber" name="150" href="#150">150</a>                     appenders.add(appender);
-<a class="jxr_linenumber" name="151" href="#151">151</a>                     ready.countDown();
-<a class="jxr_linenumber" name="152" href="#152">152</a>                     assert start.await(1, TimeUnit.SECONDS);
-<a class="jxr_linenumber" name="153" href="#153">153</a>                     <strong class="jxr_keyword">final</strong> LoggingEvent event = <strong class="jxr_keyword">new</strong> LoggingEvent(
-<a class="jxr_linenumber" name="154" href="#154">154</a>                         <span class="jxr_string">""</span>,
-<a class="jxr_linenumber" name="155" href="#155">155</a>                         Logger.getLogger(<strong class="jxr_keyword">this</strong>.getClass()),
-<a class="jxr_linenumber" name="156" href="#156">156</a>                         org.apache.log4j.Level.INFO,
-<a class="jxr_linenumber" name="157" href="#157">157</a>                         text,
-<a class="jxr_linenumber" name="158" href="#158">158</a>                         <strong class="jxr_keyword">new</strong> IllegalArgumentException()
-<a class="jxr_linenumber" name="159" href="#159">159</a>                     );
-<a class="jxr_linenumber" name="160" href="#160">160</a>                     <strong class="jxr_keyword">for</strong> (GroupAppender app : appenders) {
-<a class="jxr_linenumber" name="161" href="#161">161</a>                         app.append(event);
-<a class="jxr_linenumber" name="162" href="#162">162</a>                     }
-<a class="jxr_linenumber" name="163" href="#163">163</a>                     Mockito.verify(drain).append(
-<a class="jxr_linenumber" name="164" href="#164">164</a>                         Mockito.argThat(Matchers.&lt;String&gt;iterableWithSize(1))
-<a class="jxr_linenumber" name="165" href="#165">165</a>                     );
-<a class="jxr_linenumber" name="166" href="#166">166</a>                     done.countDown();
-<a class="jxr_linenumber" name="167" href="#167">167</a>                     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="168" href="#168">168</a>                 }
-<a class="jxr_linenumber" name="169" href="#169">169</a>             }
-<a class="jxr_linenumber" name="170" href="#170">170</a>         );
-<a class="jxr_linenumber" name="171" href="#171">171</a>         <strong class="jxr_keyword">final</strong> ExecutorService svc = Executors.newFixedThreadPool(
-<a class="jxr_linenumber" name="172" href="#172">172</a>             threads,
-<a class="jxr_linenumber" name="173" href="#173">173</a>             <strong class="jxr_keyword">new</strong> ThreadFactory() {
-<a class="jxr_linenumber" name="174" href="#174">174</a>                 <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> AtomicLong group = <strong class="jxr_keyword">new</strong> AtomicLong();
-<a class="jxr_linenumber" name="175" href="#175">175</a>                 @Override
-<a class="jxr_linenumber" name="176" href="#176">176</a>                 <strong class="jxr_keyword">public</strong> Thread newThread(<strong class="jxr_keyword">final</strong> Runnable runnable) {
-<a class="jxr_linenumber" name="177" href="#177">177</a>                     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Thread(
-<a class="jxr_linenumber" name="178" href="#178">178</a>                         <strong class="jxr_keyword">new</strong> ThreadGroup(
-<a class="jxr_linenumber" name="179" href="#179">179</a>                             Long.toString(<strong class="jxr_keyword">this</strong>.group.incrementAndGet())
-<a class="jxr_linenumber" name="180" href="#180">180</a>                         ),
-<a class="jxr_linenumber" name="181" href="#181">181</a>                         runnable,
-<a class="jxr_linenumber" name="182" href="#182">182</a>                         String.format(<span class="jxr_string">"app-%d"</span>, <strong class="jxr_keyword">this</strong>.group.get())
-<a class="jxr_linenumber" name="183" href="#183">183</a>                     );
-<a class="jxr_linenumber" name="184" href="#184">184</a>                 }
-<a class="jxr_linenumber" name="185" href="#185">185</a>             }
-<a class="jxr_linenumber" name="186" href="#186">186</a>         );
-<a class="jxr_linenumber" name="187" href="#187">187</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> thread = 0; thread &lt; threads; ++thread) {
-<a class="jxr_linenumber" name="188" href="#188">188</a>             svc.submit(runnable);
-<a class="jxr_linenumber" name="189" href="#189">189</a>         }
-<a class="jxr_linenumber" name="190" href="#190">190</a>         MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="191" href="#191">191</a>             ready.await(1, TimeUnit.SECONDS),
-<a class="jxr_linenumber" name="192" href="#192">192</a>             Matchers.is(<strong class="jxr_keyword">true</strong>)
-<a class="jxr_linenumber" name="193" href="#193">193</a>         );
-<a class="jxr_linenumber" name="194" href="#194">194</a>         start.countDown();
-<a class="jxr_linenumber" name="195" href="#195">195</a>         MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="196" href="#196">196</a>             done.await(1, TimeUnit.SECONDS),
-<a class="jxr_linenumber" name="197" href="#197">197</a>             Matchers.is(<strong class="jxr_keyword">true</strong>)
-<a class="jxr_linenumber" name="198" href="#198">198</a>         );
-<a class="jxr_linenumber" name="199" href="#199">199</a>     }
-<a class="jxr_linenumber" name="200" href="#200">200</a> 
-<a class="jxr_linenumber" name="201" href="#201">201</a> }
+<a class="jxr_linenumber" name="89" href="#89">89</a>          appender.close();
+<a class="jxr_linenumber" name="90" href="#90">90</a>          Mockito.verify(drain).append(
+<a class="jxr_linenumber" name="91" href="#91">91</a>              Mockito.argThat(
+<a class="jxr_linenumber" name="92" href="#92">92</a>                  Matchers.everyItem(
+<a class="jxr_linenumber" name="93" href="#93">93</a>                      Matchers.endsWith(
+<a class="jxr_linenumber" name="94" href="#94">94</a>                          <span class="jxr_string">" INFO test message to see in log"</span>
+<a class="jxr_linenumber" name="95" href="#95">95</a>                      )
+<a class="jxr_linenumber" name="96" href="#96">96</a>                  )
+<a class="jxr_linenumber" name="97" href="#97">97</a>              )
+<a class="jxr_linenumber" name="98" href="#98">98</a>          );
+<a class="jxr_linenumber" name="99" href="#99">99</a>      }
+<a class="jxr_linenumber" name="100" href="#100">100</a> 
+<a class="jxr_linenumber" name="101" href="#101">101</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="102" href="#102">102</a> <em class="jxr_javadoccomment">     * GroupAppender can log slf4j messages in the same thread.</em>
+<a class="jxr_linenumber" name="103" href="#103">103</a> <em class="jxr_javadoccomment">     * @throws Exception If some problem inside</em>
+<a class="jxr_linenumber" name="104" href="#104">104</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="105" href="#105">105</a>     @Test
+<a class="jxr_linenumber" name="106" href="#106">106</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="107" href="#107">107</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> logsMessagesInSameThread() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="108" href="#108">108</a>         <strong class="jxr_keyword">final</strong> Drain drain = Mockito.mock(Drain.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="109" href="#109">109</a>         <strong class="jxr_keyword">final</strong> GroupAppender appender =
+<a class="jxr_linenumber" name="110" href="#110">110</a>             <strong class="jxr_keyword">new</strong> GroupAppender(<strong class="jxr_keyword">new</strong> Time(), drain);
+<a class="jxr_linenumber" name="111" href="#111">111</a>         appender.setLayout(<strong class="jxr_keyword">new</strong> PatternLayout(<span class="jxr_string">" %m"</span>));
+<a class="jxr_linenumber" name="112" href="#112">112</a>         Logger.getRootLogger().addAppender(appender);
+<a class="jxr_linenumber" name="113" href="#113">113</a>         appender.append(
+<a class="jxr_linenumber" name="114" href="#114">114</a>             <strong class="jxr_keyword">new</strong> LoggingEvent(
+<a class="jxr_linenumber" name="115" href="#115">115</a>                 <span class="jxr_string">""</span>,
+<a class="jxr_linenumber" name="116" href="#116">116</a>                 Logger.getLogger(<strong class="jxr_keyword">this</strong>.getClass()),
+<a class="jxr_linenumber" name="117" href="#117">117</a>                 org.apache.log4j.Level.INFO,
+<a class="jxr_linenumber" name="118" href="#118">118</a>                 <span class="jxr_string">"some text to log"</span>,
+<a class="jxr_linenumber" name="119" href="#119">119</a>                 <strong class="jxr_keyword">new</strong> IllegalArgumentException()
+<a class="jxr_linenumber" name="120" href="#120">120</a>             )
+<a class="jxr_linenumber" name="121" href="#121">121</a>         );
+<a class="jxr_linenumber" name="122" href="#122">122</a>         Logger.getRootLogger().removeAppender(appender);
+<a class="jxr_linenumber" name="123" href="#123">123</a>         appender.close();
+<a class="jxr_linenumber" name="124" href="#124">124</a>         Mockito.verify(drain).append(
+<a class="jxr_linenumber" name="125" href="#125">125</a>             (Iterable&lt;String&gt;) Mockito.any(Object.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="126" href="#126">126</a>         );
+<a class="jxr_linenumber" name="127" href="#127">127</a>     }
+<a class="jxr_linenumber" name="128" href="#128">128</a> 
+<a class="jxr_linenumber" name="129" href="#129">129</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="130" href="#130">130</a> <em class="jxr_javadoccomment">     * GroupAppender can log in multiple threads.</em>
+<a class="jxr_linenumber" name="131" href="#131">131</a> <em class="jxr_javadoccomment">     * @throws Exception If some problem inside</em>
+<a class="jxr_linenumber" name="132" href="#132">132</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="133" href="#133">133</a>     @Test
+<a class="jxr_linenumber" name="134" href="#134">134</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> logsMessagesInMultipleThreads() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="135" href="#135">135</a>         <strong class="jxr_keyword">final</strong> String text = <span class="jxr_string">"test message to see \u20ac"</span>;
+<a class="jxr_linenumber" name="136" href="#136">136</a>         <strong class="jxr_keyword">final</strong> CountDownLatch start = <strong class="jxr_keyword">new</strong> CountDownLatch(1);
+<a class="jxr_linenumber" name="137" href="#137">137</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> threads = Tv.TEN;
+<a class="jxr_linenumber" name="138" href="#138">138</a>         <strong class="jxr_keyword">final</strong> CountDownLatch done = <strong class="jxr_keyword">new</strong> CountDownLatch(threads);
+<a class="jxr_linenumber" name="139" href="#139">139</a>         <strong class="jxr_keyword">final</strong> CountDownLatch ready = <strong class="jxr_keyword">new</strong> CountDownLatch(threads);
+<a class="jxr_linenumber" name="140" href="#140">140</a>         <strong class="jxr_keyword">final</strong> Collection&lt;GroupAppender&gt; appenders =
+<a class="jxr_linenumber" name="141" href="#141">141</a>             <strong class="jxr_keyword">new</strong> CopyOnWriteArrayList&lt;GroupAppender&gt;();
+<a class="jxr_linenumber" name="142" href="#142">142</a>         <strong class="jxr_keyword">final</strong> Runnable runnable = <strong class="jxr_keyword">new</strong> VerboseRunnable(
+<a class="jxr_linenumber" name="143" href="#143">143</a>             <em class="jxr_comment">// @checkstyle AnonInnerLength (50 lines)</em>
+<a class="jxr_linenumber" name="144" href="#144">144</a>             <strong class="jxr_keyword">new</strong> Callable&lt;Void&gt;() {
+<a class="jxr_linenumber" name="145" href="#145">145</a>                 @Override
+<a class="jxr_linenumber" name="146" href="#146">146</a>                 <strong class="jxr_keyword">public</strong> Void call() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="147" href="#147">147</a>                     <strong class="jxr_keyword">final</strong> Drain drain = Mockito.mock(Drain.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="148" href="#148">148</a>                     <strong class="jxr_keyword">final</strong> GroupAppender appender =
+<a class="jxr_linenumber" name="149" href="#149">149</a>                         <strong class="jxr_keyword">new</strong> GroupAppender(<strong class="jxr_keyword">new</strong> Time(), drain);
+<a class="jxr_linenumber" name="150" href="#150">150</a>                     appender.setLayout(<strong class="jxr_keyword">new</strong> PatternLayout(<span class="jxr_string">"%m%n"</span>));
+<a class="jxr_linenumber" name="151" href="#151">151</a>                     appenders.add(appender);
+<a class="jxr_linenumber" name="152" href="#152">152</a>                     ready.countDown();
+<a class="jxr_linenumber" name="153" href="#153">153</a>                     assert start.await(1, TimeUnit.SECONDS);
+<a class="jxr_linenumber" name="154" href="#154">154</a>                     <strong class="jxr_keyword">final</strong> LoggingEvent event = <strong class="jxr_keyword">new</strong> LoggingEvent(
+<a class="jxr_linenumber" name="155" href="#155">155</a>                         <span class="jxr_string">""</span>,
+<a class="jxr_linenumber" name="156" href="#156">156</a>                         Logger.getLogger(<strong class="jxr_keyword">this</strong>.getClass()),
+<a class="jxr_linenumber" name="157" href="#157">157</a>                         org.apache.log4j.Level.INFO,
+<a class="jxr_linenumber" name="158" href="#158">158</a>                         text,
+<a class="jxr_linenumber" name="159" href="#159">159</a>                         <strong class="jxr_keyword">new</strong> IllegalArgumentException()
+<a class="jxr_linenumber" name="160" href="#160">160</a>                     );
+<a class="jxr_linenumber" name="161" href="#161">161</a>                     <strong class="jxr_keyword">for</strong> (GroupAppender app : appenders) {
+<a class="jxr_linenumber" name="162" href="#162">162</a>                         app.append(event);
+<a class="jxr_linenumber" name="163" href="#163">163</a>                         app.run();
+<a class="jxr_linenumber" name="164" href="#164">164</a>                     }
+<a class="jxr_linenumber" name="165" href="#165">165</a>                     Mockito.verify(drain).append(
+<a class="jxr_linenumber" name="166" href="#166">166</a>                         Mockito.argThat(Matchers.&lt;String&gt;iterableWithSize(1))
+<a class="jxr_linenumber" name="167" href="#167">167</a>                     );
+<a class="jxr_linenumber" name="168" href="#168">168</a>                     done.countDown();
+<a class="jxr_linenumber" name="169" href="#169">169</a>                     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="170" href="#170">170</a>                 }
+<a class="jxr_linenumber" name="171" href="#171">171</a>             }
+<a class="jxr_linenumber" name="172" href="#172">172</a>         );
+<a class="jxr_linenumber" name="173" href="#173">173</a>         <strong class="jxr_keyword">final</strong> ExecutorService svc = Executors.newFixedThreadPool(
+<a class="jxr_linenumber" name="174" href="#174">174</a>             threads,
+<a class="jxr_linenumber" name="175" href="#175">175</a>             <strong class="jxr_keyword">new</strong> ThreadFactory() {
+<a class="jxr_linenumber" name="176" href="#176">176</a>                 <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> AtomicLong group = <strong class="jxr_keyword">new</strong> AtomicLong();
+<a class="jxr_linenumber" name="177" href="#177">177</a>                 @Override
+<a class="jxr_linenumber" name="178" href="#178">178</a>                 <strong class="jxr_keyword">public</strong> Thread newThread(<strong class="jxr_keyword">final</strong> Runnable runnable) {
+<a class="jxr_linenumber" name="179" href="#179">179</a>                     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Thread(
+<a class="jxr_linenumber" name="180" href="#180">180</a>                         <strong class="jxr_keyword">new</strong> ThreadGroup(
+<a class="jxr_linenumber" name="181" href="#181">181</a>                             Long.toString(<strong class="jxr_keyword">this</strong>.group.incrementAndGet())
+<a class="jxr_linenumber" name="182" href="#182">182</a>                         ),
+<a class="jxr_linenumber" name="183" href="#183">183</a>                         runnable,
+<a class="jxr_linenumber" name="184" href="#184">184</a>                         String.format(<span class="jxr_string">"app-%d"</span>, <strong class="jxr_keyword">this</strong>.group.get())
+<a class="jxr_linenumber" name="185" href="#185">185</a>                     );
+<a class="jxr_linenumber" name="186" href="#186">186</a>                 }
+<a class="jxr_linenumber" name="187" href="#187">187</a>             }
+<a class="jxr_linenumber" name="188" href="#188">188</a>         );
+<a class="jxr_linenumber" name="189" href="#189">189</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> thread = 0; thread &lt; threads; ++thread) {
+<a class="jxr_linenumber" name="190" href="#190">190</a>             svc.submit(runnable);
+<a class="jxr_linenumber" name="191" href="#191">191</a>         }
+<a class="jxr_linenumber" name="192" href="#192">192</a>         MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="193" href="#193">193</a>             ready.await(1, TimeUnit.SECONDS),
+<a class="jxr_linenumber" name="194" href="#194">194</a>             Matchers.is(<strong class="jxr_keyword">true</strong>)
+<a class="jxr_linenumber" name="195" href="#195">195</a>         );
+<a class="jxr_linenumber" name="196" href="#196">196</a>         start.countDown();
+<a class="jxr_linenumber" name="197" href="#197">197</a>         MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="198" href="#198">198</a>             done.await(1, TimeUnit.SECONDS),
+<a class="jxr_linenumber" name="199" href="#199">199</a>             Matchers.is(<strong class="jxr_keyword">true</strong>)
+<a class="jxr_linenumber" name="200" href="#200">200</a>         );
+<a class="jxr_linenumber" name="201" href="#201">201</a>     }
+<a class="jxr_linenumber" name="202" href="#202">202</a> 
+<a class="jxr_linenumber" name="203" href="#203">203</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
