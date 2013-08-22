@@ -28,29 +28,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<project xmlns="http://maven.apache.org/DECORATION/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0     http://maven.apache.org/xsd/decoration-1.0.0.xsd" name="rultor">
-    <skin>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
         <groupId>com.rultor</groupId>
-        <artifactId>rultor-maven-skin</artifactId>
-        <version>${project.version}</version>
-    </skin>
-    <googleAnalyticsAccountId>UA-1963507-10</googleAnalyticsAccountId>
-    <bannerLeft>
-        <name>rultor.com</name>
-        <src>http://img.rultor.com/logo-64x64.png</src>
-        <href>http://doc.rultor.com/</href>
-    </bannerLeft>
-    <body>
-        <head>
-            <link href="http://img.rultor.com/favicon.ico" rel="shortcut icon"/>
-        </head>
-        <breadcrumbs>
-            <item name="rultor.com" href="http://doc.rultor.com"/>
-        </breadcrumbs>
-        <menu name="Overview">
-            <item name="Introduction" href="./index.html"/>
-        </menu>
-        <menu ref="modules"/>
-        <menu ref="reports"/>
-    </body>
+        <artifactId>rultor</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>rultor-maven-skin</artifactId>
+    <packaging>jar</packaging>
+    <name>rultor-maven-skin</name>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <configuration>
+                        <delimiters>
+                            <delimiter>@</delimiter>
+                        </delimiters>
+                        <useDefaultDelimiters>false</useDefaultDelimiters>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
