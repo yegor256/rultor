@@ -70,7 +70,7 @@
                                 <arg>-classpath</arg>
                                 <classpath/>
                                 <arg>com.rultor.conveyer.Main</arg>
-                                <arg>--threads=20</arg>
+                                <arg>--threads=50</arg>
                                 <arg>--sqs-url=${sqs-url}</arg>
                                 <arg>--sqs-wallet-url=${sqs-wallet-url}</arg>
                                 <arg>--dynamo-prefix=${dynamo-prefix}</arg>
