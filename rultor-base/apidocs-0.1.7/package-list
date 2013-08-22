@@ -1,0 +1,16 @@
+com.rultor.acl
+com.rultor.base
+com.rultor.board
+com.rultor.ci
+com.rultor.env
+com.rultor.env.ec2
+com.rultor.guard
+com.rultor.guard.github
+com.rultor.log4j
+com.rultor.scm
+com.rultor.scm.git
+com.rultor.shell
+com.rultor.shell.bash
+com.rultor.shell.ssh
+com.rultor.stateful.s3
+com.rultor.stateful.sdb
