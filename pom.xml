@@ -46,6 +46,7 @@
         <module>rultor-client</module>
         <module>rultor-drain</module>
         <module>rultor-queue</module>
+        <module>rultor-maven-skin</module>
         <module>rultor-repo</module>
         <module>rultor-spi</module>
         <module>rultor-web</module>
