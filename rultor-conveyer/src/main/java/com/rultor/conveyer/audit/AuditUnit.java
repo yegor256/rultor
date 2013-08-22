@@ -27,93 +27,88 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.conveyer.audit;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
-import javax.validation.constraints.NotNull;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Unit;
+import com.rultor.spi.Wallet;
+import com.rultor.spi.Work;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Unit.
+ * Unit with audit features.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Unit {
+@ToString
+@EqualsAndHashCode(of = { "origin", "funded" })
+@Loggable(Loggable.DEBUG)
+final class AuditUnit implements Unit {
 
     /**
-     * Get its name.
-     * @return Name of it
+     * Original unit.
      */
-    @NotNull(message = "name of unit is never NULL")
-    String name();
+    private final transient Unit origin;
 
     /**
-     * Save specification.
-     * @param spec Specification to save
+     * Wallet is available, account is properly funded.
      */
-    void update(@NotNull(message = "spec can't be NULL") Spec spec);
+    private final transient boolean funded;
 
     /**
-     * Get specification.
-     * @return Specification
+     * Public ctor.
+     * @param unit Unit
+     * @param fnd Funded
      */
-    @NotNull(message = "spec is never NULL")
-    Spec spec();
+    protected AuditUnit(final Unit unit, final boolean fnd) {
+        this.origin = unit;
+        this.funded = fnd;
+    }
 
     /**
-     * Wallet of the unit.
-     * @param work Which work for
-     * @param taker Who is going to take money from my wallet?
-     * @param unit What this money is for?
-     * @return Wallet
-     * @throws Wallet.NotEnoughFundsException If not enough funds
+     * {@inheritDoc}
      */
-    @NotNull(message = "wallet is never NULL")
-    Wallet wallet(Work work, URN taker, String unit)
-        throws Wallet.NotEnoughFundsException;
+    @Override
+    public String name() {
+        return this.origin.name();
+    }
 
     /**
-     * Always empty Unit.
+     * {@inheritDoc}
      */
-    @Immutable
-    @ToString
-    @EqualsAndHashCode
-    final class Empty implements Unit {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String name() {
-            return "empty";
+    @Override
+    public void update(final Spec spec) {
+        this.origin.update(spec);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spec spec() {
+        return this.origin.spec();
+    }
+
+    /**
+     * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
+     */
+    @Override
+    public Wallet wallet(final Work work, final URN taker, final String unit)
+        throws Wallet.NotEnoughFundsException {
+        if (!this.funded) {
+            throw new Wallet.NotEnoughFundsException(
+                "not enough funds in the account"
+            );
         }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void update(@NotNull(message = "spec can't be NULL")
-            final Spec spec) {
-            assert spec != null;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @NotNull(message = "spec of an empty unit is never NULL")
-        public Spec spec() {
-            return new Spec.Simple();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Wallet wallet(final Work work, final URN urn, final String unt) {
-            throw new UnsupportedOperationException();
-        }
+        return this.origin.wallet(work, taker, unit);
     }
 
 }

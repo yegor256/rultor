@@ -94,6 +94,7 @@ public final class StepAspect {
                 .addIfAbsent("steps").strict(1)
                 .add("step").strict(1)
                 .attr("id", label)
+                // @checkstyle MultipleStringLiterals (1 line)
                 .attr("class", method.getDeclaringClass().getCanonicalName())
                 .attr("method", method.getName())
                 .add("start").set(new Time().toString()).up()
@@ -122,7 +123,11 @@ public final class StepAspect {
                     // @checkstyle MultipleStringLiterals (1 line)
                     .xpath(String.format("/snapshot/steps/step[@id=%s]", label))
                     .add("exception")
-                    .set(ExceptionUtils.getRootCauseMessage(ex))
+                    .add("class")
+                    .set(ex.getClass().getCanonicalName()).up()
+                    .add("stacktrace")
+                    .set(ExceptionUtils.getStackTrace(ex)).up()
+                    .add("cause").set(ExceptionUtils.getRootCauseMessage(ex))
             ).log();
             throw ex;
         } finally {

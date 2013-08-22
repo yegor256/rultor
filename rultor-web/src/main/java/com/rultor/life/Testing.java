@@ -251,6 +251,10 @@ final class Testing implements Profile {
                         public Iterator<List<Object>> iterator() {
                             return new ArrayList<List<Object>>(0).iterator();
                         }
+                        @Override
+                        public Sheet.Condition where() {
+                            throw new UnsupportedOperationException();
+                        }
                     };
                 }
                 @Override

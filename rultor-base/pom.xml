@@ -165,6 +165,7 @@
                             <failsafe.github.repo>${failsafe.github.repo}</failsafe.github.repo>
                             <failsafe.git.url>${failsafe.git.url}</failsafe.git.url>
                             <failsafe.git.tag>${failsafe.git.tag}</failsafe.git.tag>
+                            <failsafe.git.branch>${failsafe.git.tag}</failsafe.git.branch>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

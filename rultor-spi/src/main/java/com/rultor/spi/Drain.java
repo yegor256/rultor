@@ -30,7 +30,6 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rultor.tools.Time;
 import java.io.IOException;
@@ -111,7 +110,6 @@ public interface Drain {
          * Simple.
          */
         @Immutable
-        @Loggable(Loggable.DEBUG)
         @EqualsAndHashCode(of = { "when", "lvl", "msg" })
         final class Simple implements Drain.Line {
             /**

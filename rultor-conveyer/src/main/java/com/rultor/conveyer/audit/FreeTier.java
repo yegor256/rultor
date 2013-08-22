@@ -27,91 +27,76 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.conveyer.audit;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.urn.URN;
+import com.jcabi.aspects.Tv;
+import com.rultor.spi.Account;
+import com.rultor.spi.Sheet;
 import com.rultor.tools.Dollars;
-import javax.validation.constraints.NotNull;
+import com.rultor.tools.Time;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Wallet.
+ * Free tier.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Wallet {
+@ToString
+@EqualsAndHashCode
+@Loggable(Loggable.DEBUG)
+final class FreeTier {
 
     /**
-     * Charge some money.
-     * @param details Description of operation
-     * @param amount Amount of money to charge
+     * Minimum threshold in points.
      */
-    void charge(
-        @NotNull(message = "details can't be NULL") String details,
-        @NotNull(message = "amount can't be NULL") Dollars amount);
+    private static final long THRESHOLD = -Tv.FIVE * Tv.MILLION;
 
     /**
-     * Delegate to another user/unit.
-     * @param urn URN of another user
-     * @param unit Name of the unit
-     * @return New wallet
-     * @throws Wallet.NotEnoughFundsException If not enough
+     * Period of silence in order to qualified for free tier, in days.
      */
-    Wallet delegate(
-        @NotNull(message = "URN can't be NULL") URN urn,
-        @NotNull(message = "unit name can't be NULL") String unit)
-        throws Wallet.NotEnoughFundsException;
+    private static final int PERIOD = 30;
 
     /**
-     * When not enough funds in the wallet.
+     * Add funds if necessary.
+     * @param account Account to fund
      */
-    final class NotEnoughFundsException extends Exception {
-        /**
-         * Serialization marker.
-         */
-        private static final long serialVersionUID = 0x65c4cafe3f528092L;
-        /**
-         * Public ctor.
-         * @param cause Cause of it
-         */
-        public NotEnoughFundsException(final String cause) {
-            super(cause);
-        }
-        /**
-         * Public ctor.
-         * @param cause Cause of it
-         */
-        public NotEnoughFundsException(final Exception cause) {
-            super(cause);
+    public void fund(final Account account) {
+        final long balance = account.balance().points();
+        if (balance < FreeTier.THRESHOLD && !this.funded(account.sheet())) {
+            account.fund(
+                new Dollars(-FreeTier.THRESHOLD),
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    "Balance is lower than %s and no funds were added in the last %d days",
+                    new Dollars(FreeTier.THRESHOLD),
+                    FreeTier.PERIOD
+                )
+            );
         }
     }
 
     /**
-     * Empty wallet doing nothing.
+     * Was it already funded recently?
+     * @param sheet Sheet to check
+     * @return TRUE if it was already funded
      */
-    @Immutable
-    @EqualsAndHashCode
-    @Loggable(Loggable.INFO)
-    final class Empty implements Wallet {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void charge(final String details, final Dollars amount) {
-            assert details != null;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Wallet delegate(final URN urn, final String unit) {
-            return this;
-        }
+    private boolean funded(final Sheet sheet) {
+        final Time start = new Time(
+            new Date().getTime() - TimeUnit.DAYS.toMillis(FreeTier.PERIOD)
+        );
+        return sheet
+            .between(start, new Time())
+            .where().equalTo("ct", Account.BANK.toString()).sheet()
+            .iterator()
+            .hasNext();
     }
 
 }

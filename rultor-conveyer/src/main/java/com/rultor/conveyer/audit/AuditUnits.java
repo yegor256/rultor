@@ -27,71 +27,101 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.scm;
+package com.rultor.conveyer.audit;
 
-import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.snapshot.Step;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import javax.validation.constraints.NotNull;
+import com.rultor.spi.Unit;
+import com.rultor.spi.Units;
+import java.util.Iterator;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Edge of development (latest branch in the list).
+ * Units with audit features.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = "scm")
+@ToString
+@EqualsAndHashCode(of = { "origin", "funded" })
 @Loggable(Loggable.DEBUG)
-public final class Edge implements SCM {
+final class AuditUnits implements Units {
 
     /**
-     * SCM.
+     * Original units.
      */
-    private final transient SCM scm;
+    private final transient Units origin;
+
+    /**
+     * Wallet is available, account is properly funded.
+     */
+    private final transient boolean funded;
 
     /**
      * Public ctor.
-     * @param src SCM
+     * @param units Units
+     * @param fnd Funded
      */
-    public Edge(@NotNull(message = "SCM can't be NULL") final SCM src) {
-        this.scm = src;
+    protected AuditUnits(final Units units, final boolean fnd) {
+        this.origin = units;
+        this.funded = fnd;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return String.format("edge in %s", this.scm);
+    public boolean contains(final String name) {
+        return this.origin.contains(name);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Branch checkout(final String name) throws IOException {
-        return this.scm.checkout(name);
+    public Unit get(final String name) {
+        return new AuditUnit(this.origin.get(name), this.funded);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Step("${result.size()} branch(es) at the edge")
-    public List<String> branches() throws IOException {
-        final List<String> branches = new LinkedList<String>();
-        final List<String> all = Lists.newLinkedList(this.scm.branches());
-        if (!all.isEmpty()) {
-            branches.add(all.get(all.size() - 1));
-        }
-        return branches;
+    public void remove(final String name) {
+        this.origin.remove(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void create(final String name) {
+        this.origin.create(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterator<Unit> iterator() {
+        final Iterator<Unit> iterator = this.origin.iterator();
+        return new Iterator<Unit>() {
+            @Override
+            public boolean hasNext() {
+                return iterator.hasNext();
+            }
+            @Override
+            public Unit next() {
+                return new AuditUnit(iterator.next(), AuditUnits.this.funded);
+            }
+            @Override
+            public void remove() {
+                iterator.remove();
+            }
+        };
     }
 
 }

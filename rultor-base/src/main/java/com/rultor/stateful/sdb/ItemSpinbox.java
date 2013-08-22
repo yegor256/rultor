@@ -36,6 +36,7 @@ import com.amazonaws.services.simpledb.model.PutAttributesRequest;
 import com.amazonaws.services.simpledb.model.ReplaceableAttribute;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.rultor.aws.SDBClient;
 import com.rultor.spi.Wallet;
@@ -114,6 +115,7 @@ public final class ItemSpinbox implements Spinbox {
      * {@inheritDoc}
      */
     @Override
+    @RetryOnFailure
     public long add(final long value) {
         final AmazonSimpleDB aws = this.client.get();
         final GetAttributesResult result = aws.getAttributes(
@@ -150,7 +152,7 @@ public final class ItemSpinbox implements Spinbox {
                 "added %d to spinbox in AWS SimpleDB item `%s` in `%s` domain",
                 value, this.name, this.client.domain()
             ),
-            new Dollars(Tv.TEN)
+            new Dollars(Tv.FIVE)
         );
         return after;
     }

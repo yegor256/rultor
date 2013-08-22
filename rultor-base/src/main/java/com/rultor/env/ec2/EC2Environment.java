@@ -179,9 +179,10 @@ final class EC2Environment implements Environment {
             );
             this.wallet.charge(
                 Logger.format(
-                    "%[ms]s of AWS EC2 `%s` instance",
-                    age,
-                    instance.getInstanceType()
+                    "%[ms]s of AWS EC2 `%s` instance `%s` in `%s` AZ",
+                    age, instance.getInstanceType(),
+                    instance.getInstanceId(),
+                    instance.getPlacement().getAvailabilityZone()
                 ),
                 cost
             );

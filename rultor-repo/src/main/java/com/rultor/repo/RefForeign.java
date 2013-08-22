@@ -38,6 +38,7 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import com.rultor.spi.Wallet;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -175,11 +176,15 @@ final class RefForeign implements Variable<Object> {
         for (Variable<?> var : this.children) {
             values.add(var.instantiate(users, args));
         }
-        return new Arguments(
-            args.work(),
-            args.wallet().delegate(this.owner, this.name),
-            values
-        );
+        try {
+            return new Arguments(
+                args.work(),
+                args.wallet().delegate(this.owner, this.name),
+                values
+            );
+        } catch (Wallet.NotEnoughFundsException ex) {
+            throw new SpecException(ex);
+        }
     }
 
     /**

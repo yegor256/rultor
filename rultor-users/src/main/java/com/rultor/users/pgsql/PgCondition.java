@@ -27,93 +27,79 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.users.pgsql;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
-import javax.validation.constraints.NotNull;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
+import com.rultor.spi.Sheet;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.apache.commons.lang3.RandomStringUtils;
 
 /**
- * Unit.
+ * Condition in PostgreSQL.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Unit {
+@EqualsAndHashCode(of = { "parent", "clause" })
+@Loggable(Loggable.DEBUG)
+final class PgCondition implements Sheet.Condition {
 
     /**
-     * Get its name.
-     * @return Name of it
+     * Sheet.
      */
-    @NotNull(message = "name of unit is never NULL")
-    String name();
+    private final transient PgSheet parent;
 
     /**
-     * Save specification.
-     * @param spec Specification to save
+     * Query.
      */
-    void update(@NotNull(message = "spec can't be NULL") Spec spec);
+    private final transient String clause;
 
     /**
-     * Get specification.
-     * @return Specification
+     * Public ctor.
+     * @param sheet Parent sheet
      */
-    @NotNull(message = "spec is never NULL")
-    Spec spec();
+    protected PgCondition(final PgSheet sheet) {
+        this(sheet, "");
+    }
 
     /**
-     * Wallet of the unit.
-     * @param work Which work for
-     * @param taker Who is going to take money from my wallet?
-     * @param unit What this money is for?
-     * @return Wallet
-     * @throws Wallet.NotEnoughFundsException If not enough funds
+     * Public ctor.
+     * @param sheet Parent sheet
+     * @param sql Inherited SQL query
      */
-    @NotNull(message = "wallet is never NULL")
-    Wallet wallet(Work work, URN taker, String unit)
-        throws Wallet.NotEnoughFundsException;
+    private PgCondition(final PgSheet sheet, final String sql) {
+        this.parent = sheet;
+        this.clause = sql;
+    }
 
     /**
-     * Always empty Unit.
+     * {@inheritDoc}
      */
-    @Immutable
-    @ToString
-    @EqualsAndHashCode
-    final class Empty implements Unit {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String name() {
-            return "empty";
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void update(@NotNull(message = "spec can't be NULL")
-            final Spec spec) {
-            assert spec != null;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @NotNull(message = "spec of an empty unit is never NULL")
-        public Spec spec() {
-            return new Spec.Simple();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Wallet wallet(final Work work, final URN urn, final String unt) {
-            throw new UnsupportedOperationException();
-        }
+    @Override
+    public Sheet sheet() {
+        return this.parent.with(this.clause);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Sheet.Condition equalTo(final String column, final String value) {
+        String tag;
+        do {
+            tag = RandomStringUtils.randomAlphanumeric(Tv.TEN);
+        } while (value.contains(tag));
+        return new PgCondition(
+            this.parent,
+            String.format(
+                "%s %s = $%s$%s$%3$s$",
+                this.clause, column, tag, value
+            )
+        );
     }
 
 }

@@ -86,6 +86,7 @@ public final class GroupAppenderTest {
         };
         publisher.start();
         publisher.join();
+        appender.close();
         Mockito.verify(drain).append(
             Mockito.argThat(
                 Matchers.everyItem(
@@ -159,6 +160,7 @@ public final class GroupAppenderTest {
                     );
                     for (GroupAppender app : appenders) {
                         app.append(event);
+                        app.run();
                     }
                     Mockito.verify(drain).append(
                         Mockito.argThat(Matchers.<String>iterableWithSize(1))

@@ -137,8 +137,7 @@ public final class Bash implements Batch {
     public String toString() {
         return Logger.format(
             "bash batch `%[text]s` through %s",
-            this.script,
-            this.shells
+            this.script, this.shells
         );
     }
 

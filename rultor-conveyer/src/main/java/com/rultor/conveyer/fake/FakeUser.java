@@ -27,10 +27,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer;
+package com.rultor.conveyer.fake;
 
 import com.jcabi.urn.URN;
 import com.rultor.spi.Account;
+import com.rultor.spi.Sheet;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stands;
 import com.rultor.spi.Unit;
@@ -154,7 +155,20 @@ final class FakeUser implements User {
      */
     @Override
     public Account account() {
-        throw new UnsupportedOperationException();
+        return new Account() {
+            @Override
+            public Dollars balance() {
+                return new Dollars(1);
+            }
+            @Override
+            public Sheet sheet() {
+                throw new UnsupportedOperationException();
+            }
+            @Override
+            public void fund(final Dollars amount, final String details) {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
 }

@@ -31,34 +31,15 @@ package com.rultor.conveyer;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.jcabi.dynamo.Credentials;
-import com.jcabi.dynamo.Region;
 import com.jcabi.log.Logger;
-import com.jcabi.manifests.Manifests;
-import com.jcabi.urn.URN;
-import com.rexsl.test.RestTester;
-import com.rultor.aws.SQSClient;
-import com.rultor.queue.SQSQueue;
-import com.rultor.repo.ClasspathRepo;
-import com.rultor.spi.Queue;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Users;
-import com.rultor.spi.Work;
-import com.rultor.users.AwsUsers;
-import java.io.File;
-import java.net.HttpURLConnection;
-import java.net.URI;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.codec.CharEncoding;
-import org.apache.commons.io.FileUtils;
 
 /**
  * Main entry point to the JAR.
@@ -99,8 +80,8 @@ public final class Main {
         if (options.has("help")) {
             parser.printHelpOn(Logger.stream(Level.INFO, Main.class));
         } else {
-            final SimpleConveyer conveyer = Main.conveyer(options);
-            Logger.info(Main.class, "Starting %s", conveyer);
+            final SimpleConveyer conveyer =
+                new ConveyerBuilder(options).build();
             final long start = System.currentTimeMillis();
             conveyer.start();
             while (Main.alive(start, options)) {
@@ -126,7 +107,7 @@ public final class Main {
             );
             alive = System.currentTimeMillis() - start < lifetime;
         } else {
-            if (Main.same()) {
+            if (new Version().same()) {
                 TimeUnit.SECONDS.sleep(Main.RND.nextInt(Tv.HUNDRED));
                 alive = true;
             } else {
@@ -143,6 +124,8 @@ public final class Main {
     private static OptionParser parser() {
         final OptionParser parser = new OptionParser();
         parser.accepts("help", "Show detailed instructions").forHelp();
+        parser.accepts("threads", "In how many threads to run")
+            .withRequiredArg().defaultsTo("5").ofType(String.class);
         parser.accepts("spec", "Text file with work specification")
             .withRequiredArg().ofType(String.class);
         parser.accepts("lifetime", "Maximum lifetime of the daemon, in millis")
@@ -162,127 +145,11 @@ public final class Main {
             .withRequiredArg().ofType(String.class);
         parser.accepts("sqs-wallet-url", "Amazon SQS URL for wallets")
             .withRequiredArg().ofType(String.class);
+        parser.accepts("pgsql-url", "PostgreSQL JDBC URL")
+            .withRequiredArg().ofType(String.class);
+        parser.accepts("pgsql-password", "PostgreSQL password")
+            .withRequiredArg().ofType(String.class);
         return parser;
-    }
-
-    /**
-     * Create conveyer as requested in the options.
-     * @param options Options
-     * @return Conveyer
-     * @throws Exception If fails
-     */
-    @Loggable(Loggable.INFO)
-    private static SimpleConveyer conveyer(final OptionSet options)
-        throws Exception {
-        final Queue queue;
-        final Users users;
-        if (options.has("spec")) {
-            final Work work = new Work.Simple(
-                URN.create("urn:facebook:1"),
-                "default"
-            );
-            queue = new Queue() {
-                private final transient AtomicBoolean done =
-                    new AtomicBoolean();
-                @Override
-                public void push(final Work work) {
-                    throw new UnsupportedOperationException();
-                }
-                @Override
-                public Work pull(final int limit, final TimeUnit unit) {
-                    final Work pulled;
-                    if (done.compareAndSet(false, true)) {
-                        pulled = work;
-                        done.set(true);
-                    } else {
-                        pulled = new Work.None();
-                    }
-                    return pulled;
-                }
-            };
-            users = new FakeUsers(
-                work,
-                new Spec.Simple(
-                    FileUtils.readFileToString(
-                        new File(options.valueOf("spec").toString()),
-                        CharEncoding.UTF_8
-                    )
-                )
-            );
-        } else {
-            final String sqs = options.valueOf("sqs-url").toString();
-            if (options.has("sqs-key")) {
-                queue = new SQSQueue(
-                    new SQSClient.Simple(
-                        options.valueOf("sqs-key").toString(),
-                        options.valueOf("sqs-secret").toString(),
-                        sqs
-                    )
-                );
-            } else {
-                queue = new SQSQueue(new SQSClient.Assumed(sqs));
-            }
-            if (options.has("dynamo-key")) {
-                users = new AwsUsers(
-                    new Region.Prefixed(
-                        new Region.Simple(
-                            new Credentials.Simple(
-                                options.valueOf("dynamo-key").toString(),
-                                options.valueOf("dynamo-secret").toString()
-                            )
-                        ),
-                        options.valueOf("dynamo-prefix").toString()
-                    ),
-                    new SQSClient.Simple(
-                        options.valueOf("sqs-key").toString(),
-                        options.valueOf("sqs-secret").toString(),
-                        options.valueOf("sqs-wallet-url").toString()
-                    )
-                );
-            } else {
-                users = new AwsUsers(
-                    new Region.Prefixed(
-                        new Region.Simple(new Credentials.Assumed()),
-                        options.valueOf("dynamo-prefix").toString()
-                    ),
-                    new SQSClient.Assumed(
-                        options.valueOf("sqs-wallet-url").toString()
-                    )
-                );
-            }
-        }
-        return new SimpleConveyer(queue, new ClasspathRepo(), users);
-    }
-
-    /**
-     * Get revision from the web server.
-     * @return Revision found there
-     */
-    private static boolean same() {
-        boolean same;
-        final String mine = Manifests.read("Rultor-Revision");
-        try {
-            final String base = RestTester
-                .start(URI.create("http://www.rultor.com/misc/version"))
-                .get("read revision from web node")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .getBody();
-            if (mine.equals(base) || !base.matches("[a-f0-9]+")) {
-                same = true;
-            } else {
-                same = false;
-                Logger.info(
-                    Main.class,
-                    "#same(): we're in %s while %s is the newest one",
-                    mine,
-                    base
-                );
-            }
-        } catch (AssertionError ex) {
-            Logger.warn(Main.class, "#same(): %s", ex);
-            same = true;
-        }
-        return same;
     }
 
 }

@@ -28,6 +28,14 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# add swap disk
+sudo dd if=/dev/zero of=/swapfile bs=1024 count=1048576
+sudo /sbin/mkswap /swapfile
+sudo chown root:root /swapfile
+sudo chmod 0600 /swapfile
+sudo /sbin/swapon /swapfile
+df
+
 export M2_HOME="/usr/local/share/apache-maven"
 export PATH="${M2_HOME}/bin:/usr/local/bin:${PATH}"
 export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=256m"
@@ -35,6 +43,8 @@ export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=256m"
 SQS_URL=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.url'`
 SQS_WALLET_URL=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.wallet_url'`
 DYNAMO_PREFIX=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.prefix'`
+PGSQL_URL=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.pgsql_url'`
+PGSQL_PASSWORD=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.pgsql_password'`
 INSTANCE=`curl --silent http://169.254.169.254/latest/meta-data/instance-id`
 
 # to update the version of dynamic-dynamo
@@ -70,6 +80,8 @@ curl --silent https://raw.github.com/rultor/rultor/master/rultor-conveyer/src/ma
 mvn test --quiet --update-snapshots \
     "-Dsqs-url=${SQS_URL}" \
     "-Dsqs-wallet-url=${SQS_WALLET_URL}" \
-    "-Ddynamo-prefix=${DYNAMO_PREFIX}"
+    "-Ddynamo-prefix=${DYNAMO_PREFIX}" \
+    "-Dpgsql-url=${PGSQL_URL}" \
+    "-Dpgsql-password=${PGSQL_PASSWORD}"
 
 ec2-terminate-instances "${INSTANCE}"

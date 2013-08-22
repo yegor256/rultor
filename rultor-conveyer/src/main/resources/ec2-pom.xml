@@ -70,9 +70,12 @@
                                 <arg>-classpath</arg>
                                 <classpath/>
                                 <arg>com.rultor.conveyer.Main</arg>
+                                <arg>--threads=50</arg>
                                 <arg>--sqs-url=${sqs-url}</arg>
                                 <arg>--sqs-wallet-url=${sqs-wallet-url}</arg>
                                 <arg>--dynamo-prefix=${dynamo-prefix}</arg>
+                                <arg>--pgsql-url=${pgsql-url}</arg>
+                                <arg>--pgsql-password=${pgsql-password}</arg>
                             </arguments>
                         </configuration>
                     </execution>

@@ -27,12 +27,58 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.conveyer;
 
-def log = new File(basedir, 'build.log')
-assert log.exists()
-assert log.text.contains('INFO: main #start():')
-assert log.text.contains('CONSOLE: ')
-assert log.text.contains('INFO χemβly ')
-assert log.text.contains('INFO nothing to do')
-assert log.text.contains('INFO: main #close():')
+import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
+import com.jcabi.manifests.Manifests;
+import com.rexsl.test.RestTester;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+/**
+ * Version of running conveyer.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+@ToString
+@EqualsAndHashCode
+@Loggable(Loggable.DEBUG)
+final class Version {
+
+    /**
+     * Get revision from the web server.
+     * @return Revision found there
+     */
+    public boolean same() {
+        boolean same;
+        final String mine = Manifests.read("Rultor-Revision");
+        try {
+            final String base = RestTester
+                .start(URI.create("http://www.rultor.com/misc/version"))
+                .get("read revision from web node")
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .getBody();
+            if (mine.equals(base) || !base.matches("[a-f0-9]+")) {
+                same = true;
+            } else {
+                same = false;
+                Logger.info(
+                    Main.class,
+                    "#same(): we're in %s while %s is the newest one",
+                    mine,
+                    base
+                );
+            }
+        } catch (AssertionError ex) {
+            Logger.warn(Main.class, "#same(): %s", ex);
+            same = true;
+        }
+        return same;
+    }
+
+}

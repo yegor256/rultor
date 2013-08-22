@@ -27,12 +27,75 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.conveyer.fake;
 
-def log = new File(basedir, 'build.log')
-assert log.exists()
-assert log.text.contains('INFO: main #start():')
-assert log.text.contains('CONSOLE: ')
-assert log.text.contains('INFO χemβly ')
-assert log.text.contains('INFO nothing to do')
-assert log.text.contains('INFO: main #close():')
+import com.jcabi.aspects.Immutable;
+import com.jcabi.urn.URN;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Stand;
+import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import com.rultor.spi.Work;
+import java.util.Iterator;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+/**
+ * Fake users that always return one unit.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @checkstyle MultipleStringLiterals (500 lines)
+ */
+@Immutable
+@ToString
+@EqualsAndHashCode
+public final class FakeUsers implements Users {
+
+    /**
+     * Work to return.
+     */
+    private final transient Work work;
+
+    /**
+     * Spec to use.
+     */
+    private final transient Spec spec;
+
+    /**
+     * Public ctor.
+     * @param wrk Work
+     * @param spc Spec
+     */
+    public FakeUsers(final Work wrk, final Spec spc) {
+        this.work = wrk;
+        this.spec = spc;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterator<User> iterator() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public User get(final URN name) {
+        return new FakeUser(this.work, this.spec);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stand stand(final String name) {
+        throw new UnsupportedOperationException();
+    }
+
+}

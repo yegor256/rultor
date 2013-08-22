@@ -33,7 +33,7 @@
     <parent>
         <groupId>com.jcabi</groupId>
         <artifactId>parent</artifactId>
-        <version>0.7.21</version>
+        <version>0.7.22</version>
     </parent>
     <groupId>com.rultor</groupId>
     <artifactId>rultor</artifactId>
@@ -61,7 +61,7 @@
     <licenses>
         <license>
             <name>BSD</name>
-            <url>http://maven.rultor.com/LICENSE.txt</url>
+            <url>http://doc.rultor.com/LICENSE.txt</url>
             <distribution>site</distribution>
         </license>
     </licenses>
@@ -90,7 +90,7 @@
     </scm>
     <ciManagement>
         <system>rultor</system>
-        <url>http://timeline.rultor.com/t/rultor</url>
+        <url>http://www.rultor.com/s/rultor</url>
     </ciManagement>
     <distributionManagement>
         <site>
@@ -99,8 +99,8 @@
         </site>
     </distributionManagement>
     <properties>
-        <jcabi.version>1.0-SNAPSHOT</jcabi.version>
-        <rexsl.version>1.0-SNAPSHOT</rexsl.version>
+        <jcabi.version>0.7.22</jcabi.version>
+        <rexsl.version>0.4.15</rexsl.version>
         <jersey.version>1.17.1</jersey.version>
         <github.global.server>github</github.global.server>
     </properties>

@@ -27,12 +27,48 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.ci;
 
-def log = new File(basedir, 'build.log')
-assert log.exists()
-assert log.text.contains('INFO: main #start():')
-assert log.text.contains('CONSOLE: ')
-assert log.text.contains('INFO χemβly ')
-assert log.text.contains('INFO nothing to do')
-assert log.text.contains('INFO: main #close():')
+import com.rultor.board.Billboard;
+import com.rultor.scm.Branch;
+import com.rultor.scm.Commit;
+import com.rultor.scm.SCM;
+import com.rultor.shell.Batch;
+import com.rultor.spi.Instance;
+import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.Map;
+import org.junit.Test;
+import org.mockito.Mockito;
 
+/**
+ * Test case for {@link OnTag}.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ */
+public final class OnTagTest {
+
+    /**
+     * OnTag can build when tag is available.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void buildsOnNewTag() throws Exception {
+        final SCM scm = Mockito.mock(SCM.class);
+        Mockito.doReturn(Arrays.asList("rultor")).when(scm).branches();
+        final Branch branch = Mockito.mock(Branch.class);
+        Mockito.doReturn("master").when(branch).name();
+        Mockito.doReturn(branch).when(scm).checkout(Mockito.anyString());
+        final Commit commit = Mockito.mock(Commit.class);
+        Mockito.doReturn(Arrays.asList(commit)).when(branch).log();
+        final Batch batch = Mockito.mock(Batch.class);
+        final Billboard board = Mockito.mock(Billboard.class);
+        final Instance instance = new OnTag(scm, batch, board);
+        instance.pulse();
+        Mockito.verify(batch).exec(
+            Mockito.any(Map.class), Mockito.any(OutputStream.class)
+        );
+    }
+
+}

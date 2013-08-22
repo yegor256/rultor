@@ -28,11 +28,11 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-def log = new File(basedir, 'build.log')
-assert log.exists()
-assert log.text.contains('INFO: main #start():')
-assert log.text.contains('CONSOLE: ')
-assert log.text.contains('INFO χemβly ')
-assert log.text.contains('INFO nothing to do')
-assert log.text.contains('INFO: main #close():')
-
+/**
+ * Fake users.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+package com.rultor.conveyer.fake;

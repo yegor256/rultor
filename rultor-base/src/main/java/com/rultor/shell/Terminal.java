@@ -124,9 +124,7 @@ public final class Terminal {
                 Logger.format(
                     // @checkstyle LineLength (1 line)
                     "non-zero exit code %d after executing `%s` at %s, stdout='%[text]s', stderr='%[text]s'",
-                    code,
-                    command,
-                    this.shell,
+                    code, command, this.shell,
                     stdout.toString(CharEncoding.UTF_8),
                     stderr.toString(CharEncoding.UTF_8)
                 )

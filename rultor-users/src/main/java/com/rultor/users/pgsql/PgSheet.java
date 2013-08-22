@@ -125,6 +125,11 @@ final class PgSheet implements Sheet {
     private final transient ArraySortedSet<String> groups;
 
     /**
+     * Extra WHERE clause.
+     */
+    private final transient String clause;
+
+    /**
      * Public ctor.
      * @param clnt Client
      * @param urn URN of the owner
@@ -135,7 +140,7 @@ final class PgSheet implements Sheet {
             new ArrayMap<String, Boolean>(), new ArrayList<String>(0),
             new Time(new Date().getTime() - TimeUnit.DAYS.toMillis(Tv.SEVEN)),
             new Time(),
-            0
+            0, ""
         );
     }
 
@@ -148,17 +153,20 @@ final class PgSheet implements Sheet {
      * @param left Start of interval
      * @param right End of interval
      * @param first Which line to show first
+     * @param where Extra WHERE clause
      * @checkstyle ParameterNumber (5 lines)
      */
     protected PgSheet(final PgClient clnt, final URN urn,
         final Map<String, Boolean> ords, final Collection<String> grps,
-        final Time left, final Time right, final int first) {
+        final Time left, final Time right, final int first,
+        final String where) {
         this.client = clnt;
         this.owner = urn;
         this.orders = new ArrayMap<String, Boolean>(ords);
         this.groups = new ArraySortedSet<String>(
             grps, new ArraySortedSet.Comparator.Default<String>()
         );
+        this.clause = where;
         this.start = left;
         this.end = right;
         this.since = first;
@@ -179,7 +187,7 @@ final class PgSheet implements Sheet {
     public Sheet orderBy(final String column, final boolean asc) {
         return new PgSheet(
             this.client, this.owner, this.orders.with(column, asc), this.groups,
-            this.start, this.end, this.since
+            this.start, this.end, this.since, this.clause
         );
     }
 
@@ -190,7 +198,7 @@ final class PgSheet implements Sheet {
     public Sheet groupBy(final String column) {
         return new PgSheet(
             this.client, this.owner, this.orders, this.groups.with(column),
-            this.start, this.end, this.since
+            this.start, this.end, this.since, this.clause
         );
     }
 
@@ -202,7 +210,7 @@ final class PgSheet implements Sheet {
         throws IOException {
         return new PgSheet(
             this.client, this.owner, this.orders, this.groups,
-            this.start, this.end, head
+            this.start, this.end, head, this.clause
         );
     }
 
@@ -250,7 +258,19 @@ final class PgSheet implements Sheet {
     public Sheet between(final Time left, final Time right) {
         return new PgSheet(
             this.client, this.owner, this.orders, this.groups,
-            left, right, this.since
+            left, right, this.since, this.clause
+        );
+    }
+
+    /**
+     * With this extra WHERE clause.
+     * @param where WHERE clause
+     * @return New sheet
+     */
+    public Sheet with(final String where) {
+        return new PgSheet(
+            this.client, this.owner, this.orders, this.groups,
+            this.start, this.end, this.since, where
         );
     }
 
@@ -279,11 +299,16 @@ final class PgSheet implements Sheet {
             .append("SELECT ")
             .append(this.select())
             .append("\nFROM receipt")
-            .append('\n').append(this.where())
+            .append('\n').append(this.whereOn())
             .append(this.groupBy())
             .append(this.orderBy())
             .append('\n').append(this.limit())
             .toString();
+    }
+
+    @Override
+    public Sheet.Condition where() {
+        return new PgCondition(this);
     }
 
     /**
@@ -319,8 +344,8 @@ final class PgSheet implements Sheet {
      * Get WHERE statement.
      * @return Statement
      */
-    private String where() {
-        return new StringBuilder()
+    private String whereOn() {
+        final StringBuilder sql = new StringBuilder()
             .append("WHERE (ct='")
             .append(this.owner)
             .append("' OR dt='")
@@ -329,8 +354,11 @@ final class PgSheet implements Sheet {
             .append(this.start)
             .append("' AND time <= '")
             .append(this.end)
-            .append("'")
-            .toString();
+            .append("'");
+        if (!this.clause.isEmpty()) {
+            sql.append(" AND ").append(this.clause);
+        }
+        return sql.toString();
     }
 
     /**

@@ -31,6 +31,7 @@ package com.rultor.guard.github;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.log.Logger;
 import com.rultor.guard.MergeRequest;
 import com.rultor.guard.MergeRequests;
@@ -168,6 +169,7 @@ public final class GhRequests implements MergeRequests {
      * @throws IOException If fails
      */
     @Step("found ${result.size()} pull request(s) in Github")
+    @RetryOnFailure
     private Collection<PullRequest> fetch() throws IOException {
         final GitHubClient client = this.github.client();
         final PullRequestService svc = new PullRequestService(client);

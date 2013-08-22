@@ -51,12 +51,20 @@ public final class GitITCase {
     /**
      * URL of test Git repository.
      */
-    private static final String URL = System.getProperty("failsafe.git.url");
+    private static final String URL =
+        System.getProperty("failsafe.git.url");
 
     /**
      * Tag of test Git repository.
      */
-    private static final String TAG = System.getProperty("failsafe.git.tag");
+    private static final String TAG =
+        System.getProperty("failsafe.git.tag");
+
+    /**
+     * Branch of test Git repository.
+     */
+    private static final String BRANCH =
+        System.getProperty("failsafe.git.branch");
 
     /**
      * Git can checkout a branch.
@@ -96,6 +104,38 @@ public final class GitITCase {
             git.branches(),
             Matchers.hasItems("HEAD", GitITCase.TAG)
         );
+    }
+
+    /**
+     * Git can fetch a tag.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void fetchesTag() throws Exception {
+        Assume.assumeNotNull(GitITCase.URL);
+        final File dir = Files.createTempDir();
+        final SCM git = new Git(
+            new ShellMocker.Bash(dir),
+            new URL(GitITCase.URL),
+            "foo-4"
+        );
+        git.checkout(GitITCase.TAG);
+    }
+
+    /**
+     * Git can fetch a branch.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void fetchesBranch() throws Exception {
+        Assume.assumeNotNull(GitITCase.URL);
+        final File dir = Files.createTempDir();
+        final SCM git = new Git(
+            new ShellMocker.Bash(dir),
+            new URL(GitITCase.URL),
+            "foo-ff"
+        );
+        git.checkout(GitITCase.BRANCH);
     }
 
 }

@@ -89,7 +89,8 @@ public final class Git implements SCM {
      * @param folder Directory to use for clone
      * @checkstyle ParameterNumber (5 lines)
      */
-    public Git(@NotNull(message = "shell can't be NULL") final Shell shl,
+    public Git(
+        @NotNull(message = "shell can't be NULL") final Shell shl,
         @NotNull(message = "URL can't be NULL") final URL addr,
         @NotNull(message = "folder can't be NULL") final String folder) {
         this(
@@ -144,9 +145,9 @@ public final class Git implements SCM {
             new StringBuilder(this.reset())
                 .append(" && BRANCH=")
                 .append(Terminal.escape(name))
-                // @checkstyle LineLength (1 line)
+                // @checkstyle LineLength (2 lines)
                 .append(" && if [ `git rev-parse --abbrev-ref HEAD` != $BRANCH ]; then git checkout $BRANCH; fi")
-                .append(" && git pull")
+                .append(" && if git for-each-ref refs/heads/$BRANCH | grep commit; then git pull; fi")
                 .toString(),
             this.key.asText()
         );
@@ -203,6 +204,7 @@ public final class Git implements SCM {
             .append(" && cd $DIR/repo")
             .append(" && git remote set-url origin $URL")
             .append(" && git remote update -p")
+            .append(" && git fetch origin --prune --tags")
             .append(" && git reset --hard")
             .append(" && git clean -f -d")
             .toString();

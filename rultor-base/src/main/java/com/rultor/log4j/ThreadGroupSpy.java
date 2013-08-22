@@ -147,6 +147,7 @@ public final class ThreadGroupSpy implements Instance, Drain.Source {
         try {
             this.origin.pulse();
         } finally {
+            appender.close();
             root.removeAppender(appender);
         }
     }

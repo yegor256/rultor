@@ -30,14 +30,16 @@
 package com.rultor.ci;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
+import com.rultor.snapshot.Step;
 import com.rultor.stateful.Notepad;
 import java.io.IOException;
+import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
@@ -99,15 +101,25 @@ public final class UnseenCommits implements Branch {
      */
     @Override
     public Iterable<Commit> log() throws IOException {
-        return Iterables.filter(
-            this.origin.log(),
-            new Predicate<Commit>() {
-                @Override
-                public boolean apply(final Commit commit) {
-                    return !UnseenCommits.this.seen(commit);
-                }
+        final Iterator<Commit> iterator = this.origin.log().iterator();
+        return new Iterable<Commit>() {
+            @Override
+            public Iterator<Commit> iterator() {
+                return Iterators.filter(
+                    iterator,
+                    new Predicate<Commit>() {
+                        @Override
+                        public boolean apply(final Commit commit) {
+                            return !UnseenCommits.this.seen(commit);
+                        }
+                    }
+                );
             }
-        );
+            @Override
+            public String toString() {
+                return "unseen commits";
+            }
+        };
     }
 
     /**
@@ -115,6 +127,7 @@ public final class UnseenCommits implements Branch {
      * @param head HEAD commit
      * @return TRUE if seen
      */
+    @Step("commit `${args[0]}` #if(!$result)NOT#end seen before")
     private boolean seen(final Commit head) {
         final String name;
         try {

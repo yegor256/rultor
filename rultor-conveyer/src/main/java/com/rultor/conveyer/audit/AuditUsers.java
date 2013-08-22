@@ -27,92 +27,94 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.conveyer.audit;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.urn.URN;
-import javax.validation.constraints.NotNull;
+import com.rultor.spi.Stand;
+import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Unit.
+ * Users with finance audit functions.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Unit {
+@ToString
+@EqualsAndHashCode(of = "origin")
+@Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.DoNotUseThreads")
+@ScheduleWithFixedDelay(threads = 2, delay = 1, unit = TimeUnit.HOURS)
+public final class AuditUsers implements Users, Runnable {
 
     /**
-     * Get its name.
-     * @return Name of it
+     * Original users.
      */
-    @NotNull(message = "name of unit is never NULL")
-    String name();
+    private final transient Users origin;
 
     /**
-     * Save specification.
-     * @param spec Specification to save
+     * Public ctor.
+     * @param users Users
      */
-    void update(@NotNull(message = "spec can't be NULL") Spec spec);
+    public AuditUsers(final Users users) {
+        this.origin = users;
+    }
 
     /**
-     * Get specification.
-     * @return Specification
+     * {@inheritDoc}
      */
-    @NotNull(message = "spec is never NULL")
-    Spec spec();
+    @Override
+    public Iterator<User> iterator() {
+        final Iterator<User> iter = this.origin.iterator();
+        return new Iterator<User>() {
+            @Override
+            public boolean hasNext() {
+                return iter.hasNext();
+            }
+            @Override
+            public User next() {
+                return new AuditUser(iter.next());
+            }
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
 
     /**
-     * Wallet of the unit.
-     * @param work Which work for
-     * @param taker Who is going to take money from my wallet?
-     * @param unit What this money is for?
-     * @return Wallet
-     * @throws Wallet.NotEnoughFundsException If not enough funds
+     * {@inheritDoc}
      */
-    @NotNull(message = "wallet is never NULL")
-    Wallet wallet(Work work, URN taker, String unit)
-        throws Wallet.NotEnoughFundsException;
+    @Override
+    public User get(final URN name) {
+        return new AuditUser(this.origin.get(name));
+    }
 
     /**
-     * Always empty Unit.
+     * {@inheritDoc}
      */
-    @Immutable
-    @ToString
-    @EqualsAndHashCode
-    final class Empty implements Unit {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String name() {
-            return "empty";
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void update(@NotNull(message = "spec can't be NULL")
-            final Spec spec) {
-            assert spec != null;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @NotNull(message = "spec of an empty unit is never NULL")
-        public Spec spec() {
-            return new Spec.Simple();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Wallet wallet(final Work work, final URN urn, final String unt) {
-            throw new UnsupportedOperationException();
+    @Override
+    public Stand stand(final String name) {
+        return this.origin.stand(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void run() {
+        final FreeTier tier = new FreeTier();
+        for (User user : this) {
+            tier.fund(user.account());
         }
     }
 

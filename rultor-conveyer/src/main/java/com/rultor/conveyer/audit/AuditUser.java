@@ -27,75 +27,83 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer;
+package com.rultor.conveyer.audit;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Stand;
+import com.rultor.spi.Account;
+import com.rultor.spi.Stands;
+import com.rultor.spi.Units;
 import com.rultor.spi.User;
-import com.rultor.spi.Users;
-import com.rultor.spi.Work;
-import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Fake users that always return one unit.
+ * User with audit features.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
- * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Immutable
 @ToString
-@EqualsAndHashCode
-final class FakeUsers implements Users {
+@EqualsAndHashCode(of = "origin")
+@Loggable(Loggable.DEBUG)
+final class AuditUser implements User {
 
     /**
-     * Work to return.
+     * Minimum threshold in points.
      */
-    private final transient Work work;
+    private static final long THRESHOLD = -Tv.FIVE * Tv.MILLION;
 
     /**
-     * Spec to use.
+     * Original user.
      */
-    private final transient Spec spec;
+    private final transient User origin;
 
     /**
      * Public ctor.
-     * @param wrk Work
-     * @param spc Spec
+     * @param user User
      */
-    protected FakeUsers(final Work wrk, final Spec spc) {
-        this.work = wrk;
-        this.spec = spc;
+    protected AuditUser(final User user) {
+        this.origin = user;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Iterator<User> iterator() {
-        throw new UnsupportedOperationException();
+    public URN urn() {
+        return this.origin.urn();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public User get(final URN name) {
-        return new FakeUser(this.work, this.spec);
+    public Units units() {
+        return new AuditUnits(
+            this.origin.units(),
+            this.account().balance().points() > AuditUser.THRESHOLD
+        );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Stand stand(final String name) {
-        throw new UnsupportedOperationException();
+    public Stands stands() {
+        return this.origin.stands();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Account account() {
+        return this.origin.account();
     }
 
 }

@@ -130,7 +130,7 @@ final class SQSReceipts {
         final JsonObject work = json.getJsonObject("work");
         new JdbcSession(this.client.get())
             // @checkstyle LineLength (1 line)
-            .sql("INSERT INTO receipt (wowner, wunit, wscheduled, ct, ctunit, dt, dtunit, details, amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
+            .sql("INSERT INTO receipt (time, wowner, wunit, wscheduled, ct, ctunit, dt, dtunit, details, amount) VALUES (now(), ?, ?, ?, ?, ?, ?, ?, ?, ?)")
             .set(work.getString("owner"))
             .set(work.getString("unit"))
             .set(new Time(work.getString("scheduled")).toString())

@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.board.Billboard;
+import com.rultor.scm.Head;
 import com.rultor.scm.SCM;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Step;
@@ -117,7 +118,7 @@ public final class OnTag implements Instance {
     @Tag("ci")
     private void build(final String tag) throws Exception {
         new OnCommit(
-            this.scm.checkout(tag),
+            new Head(this.scm.checkout(tag)),
             this.batch, this.board
         ).pulse();
     }

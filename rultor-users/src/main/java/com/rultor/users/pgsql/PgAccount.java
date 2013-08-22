@@ -53,7 +53,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "client")
+@EqualsAndHashCode(of = { "client", "owner" })
 @Loggable(Loggable.DEBUG)
 final class PgAccount implements Account {
 
@@ -116,7 +116,7 @@ final class PgAccount implements Account {
             new JdbcSession(this.client.get())
                 // @checkstyle LineLength (1 line)
                 .sql("INSERT INTO receipt (ct, ctunit, dt, dtunit, details, amount) VALUES (?, ?, ?, ?, ?, ?)")
-                .set("urn:rultor:1")
+                .set(Account.BANK)
                 .set("")
                 .set(this.owner)
                 .set("")

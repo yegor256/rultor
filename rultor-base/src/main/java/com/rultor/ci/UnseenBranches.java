@@ -30,14 +30,16 @@
 package com.rultor.ci;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.scm.Branch;
 import com.rultor.scm.SCM;
+import com.rultor.snapshot.Step;
 import com.rultor.stateful.Notepad;
 import java.io.IOException;
+import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
@@ -99,15 +101,25 @@ public final class UnseenBranches implements SCM {
      */
     @Override
     public Iterable<String> branches() throws IOException {
-        return Iterables.filter(
-            this.origin.branches(),
-            new Predicate<String>() {
-                @Override
-                public boolean apply(final String branch) {
-                    return !UnseenBranches.this.seen(branch);
-                }
+        final Iterator<String> iterator = this.origin.branches().iterator();
+        return new Iterable<String>() {
+            @Override
+            public Iterator<String> iterator() {
+                return Iterators.filter(
+                    iterator,
+                    new Predicate<String>() {
+                        @Override
+                        public boolean apply(final String branch) {
+                            return !UnseenBranches.this.seen(branch);
+                        }
+                    }
+                );
             }
-        );
+            @Override
+            public String toString() {
+                return "unseen branches";
+            }
+        };
     }
 
     /**
@@ -115,6 +127,7 @@ public final class UnseenBranches implements SCM {
      * @param branch Branch name
      * @return TRUE if seen
      */
+    @Step("tag `${args[0]}` #if(!$result)NOT#end seen before")
     private boolean seen(final String branch) {
         final boolean seen = this.notepad.contains(branch);
         if (!seen) {
