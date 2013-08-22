@@ -210,10 +210,10 @@
             <xsl:attribute name="class">
                 <xsl:text>hidden-phone hidden-tablet</xsl:text>
                 <xsl:choose>
-                    <xsl:when test="millis &gt; 5000">
+                    <xsl:when test="/page/millis &gt; 5000">
                         <xsl:text> text-danger</xsl:text>
                     </xsl:when>
-                    <xsl:when test="millis &gt; 1000">
+                    <xsl:when test="/page/millis &gt; 1000">
                         <xsl:text> text-warning</xsl:text>
                     </xsl:when>
                 </xsl:choose>
