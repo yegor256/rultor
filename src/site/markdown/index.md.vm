@@ -1,342 +1,46 @@
-Quick Start
+Programmable Enforcer of a Software Development Process
 ===========
 
-"Unit of work" is an active component that is receiving control
-every minute and does something with your project on your behalf.
-A simple scenario would be to monitor your Git `master` branch
-and run automated build every time a new commit appears there
-(aka **continuous integration**).
+Rultor is an integration platform of a new generation. Continuous Integration,
+in its modern understanding, is just a small element of a properly organized
+and disciplined software development process. Rultor lets you define
+and technically enforce rules of work in your team. Rultor allows you,
+a project architect or a manager:
 
-Let's create a unit of work for the continuous integration mechanism,
-with the following Specification:
+ * Continuously integrate source code changes
+   using on-demand AWS EC2 instances (similar to Jenkins,
+   but with flexible on-demand cloud servers that run jobs);
 
-```
-urn:github:526301:git-on-commit(
-  "https://github.com/jcabi/jcabi.git",
-  "mvn test -e -Pci --settings /home/ubuntu/settings.xml",
-  ["me@example.com"],
-  "m1.small",
-  "example",
-  "super-secret",
-  {
-    "settings.xml": """
-    <settings>
-      <profiles>
-        <profile>
-          <id>ci</id>
-          <properties>
-            <my.secret>hello, everybody!</my.secret>
-          </properties>
-        </profile>
-      </profiles>
-    </settings>
-    """
-  }
-)
-```
+ * Prevent master branch conflicts by preventive automated testing
+   of pull requests;
 
-Save it and in a few minutes you will see its first result.
+ * Deploy your web app to on-demand AWS CloudFormation environments
+   per tester and developer requests (pool of
+   environments is managed by Rultor);
 
-The specification defines how to construct an object that should
-receive control
-(see [full syntax description](./rultor-spi/apidocs-${project.version}/com/rultor/spi/Spec.html)).
-In this example, the object will be constructed from
-a template defined by user `urn:github:526301` with `git-on-commit` name.
-The template requires eight parameters. The first one is the URL
-of Git repository, as a Java string:
+ * Keep programmers aware of source code changes and conflicts
+   by notifications automatically communicated through issue tracking system;
 
-```
-"https://github.com/jcabi/jcabi.git"
-```
+ * Enforce changes approval workflow in any ticket tracking system
+   (for example, with a list of mandatory steps of code reviews and acceptations);
 
-The second one is a bash command that will be executed if a new commit
-is found in `master` branch of the repo:
+ * Publish build artifacts like ZIP/JAR archives, test HTML reports,
+   code coverage and static analysis reports in custom destinations,
+   like AWS S3 or FTP;
 
-```
-"mvn test -e -Pci --settings /home/ubuntu/settings.xml"
-```
+ * Aggregate statistics and metrics from all processes in a fluid
+   web "stand".
 
-The third one is a list of email addresses that will receive notifications
-when build is complete (either with success or failure). In the example,
-the list contains just one element, but you can use it with many:
+We do not provide any computing or storage resources, like servers. Instead, we
+integrate your existing components and help you to manage them.
+At the moment, we support out-of-the-box: Github, JIRA, Git,
+AWS EC2, AWS CloudFormation, AWS S3, FTP. The list is growing...
 
-```
-["me@example.com", "you@example.com"]
-```
+[Quick Start](./start.html)
+manual will help you to get your first unit of work
+up and running in 60 seconds.
 
-The fourth one is an EC2 instance type, which will be used for build
-script execution. When a new commit is found in your `master` branch, the
-unit will create a new Amazon Web Services EC2 instance, execute your script, and
-terminate the instance. Your account will be charged for the price of the
-instance. Prices and instance types are listed in
-[AWS documention](http://aws.amazon.com/ec2/pricing/).
-
-There is an allowance of $5.00 automatically added to your account every
-30 days, if you don't fund it otherwise. Thus, if you have just one continuous
-integration unit of work which runs, say three times per working day, using `m1.small`
-type of EC2 instance, your total cost will be $3.60 per month. This is less
-than the allowance you get automatically from us and you don't need to fund
-the account at all.
-
-The fifth and the sixth parameters are access credentials for a Stand, which
-is a public showcase of all units in a project (will be discussed a bit later). In
-the example, credentials are not valid since you haven't create a stand yet.
-Stand name is `example` and authentication key is `super-secret`.
-
-The last parameter is a map of files to be uploaded to the EC2 instance
-before running the build script. They will be uploaded into `/home/ubuntu` directory,
-which is a home directory of the EC2 user for Ubuntu images.
-The map may contain more elements, for example:
-
-```
-{
-  "secret.txt": "... content of the file ...",
-  "settings.xml": """
-  <settings/>
-  """,
-  "file-2.txt": "... another text file ..."
-}
-```
-
-Triple quotes are used to specify a long text that constitues
-more than one line, similar to
-[Groovy multi-line strings](http://groovy.codehaus.org/Strings+and+GString).
-
-Stand
------
-
-Now it's time to create a "stand", where project members will see the
-progress of your units. Stand specification is much simplier, for
-example this one can be used for a public project:
-
-```
-com.rultor.acl.Either(
-  [
-    com.rultor.acl.OpenView(),
-    com.rultor.acl.MD5Keyed("0682f007844a0266990df1b2912f95bc")
-  ]
-)
-```
-
-Instantiated stand specification implements
-[`ACL`](./rultor-spi/apidocs-${project.version}/com/rultor/spi/ACL.html) interface,
-which decides who is allowed to read your stand and who is allowed to
-post into it. Your units of work post into the stand and your project
-members read the stand at `http://www.rultor.com/s/example`
-(if the name of the stand is `example`).
-
-In this specification we instantiate
-[`Either`](./rultor-base/apidocs-${project.version}/com/rultor/acl/Either.html) class with
-one argument of its constructor, which is a list of instances of class `ACL`.
-As the name implies, the class allows access if any of the encapsulated
-ACLs do so.
-
-[`OpenView`](./rultor-base/apidocs-${project.version}/com/rultor/acl/OpenView.html)
-allows read access to everybody, which means that page
-`http://www.rultor.com/s/example` will be readable in public web and indexable
-by Google.
-
-[`MD5Keyed`](./rultor-base/apidocs-${project.version}/com/rultor/acl/MD5Keyed.html)
-allows write access only for providers of `super-secret` authentication key.
-As you already understood, `0682f007844a0266990df1b2912f95bc` is its MD5 hash.
-
-If you want to close access to your stand, use
-[`Prohibited`](./rultor-base/apidocs-${project.version}/com/rultor/acl/Prohibited.html)
-without arguments:
-
-```
-com.rultor.acl.Either()
-```
-
-Continuous Integration of Master Branch
----
-
-In the example above, every new commit made to your Git `master` branch
-triggers a script, which builds the product and validates its
-consistency (you should use unit tests, integration tests, and
-static analysis as validating instruments).
-
-Template `git-on-commit` provided by user `urn:github:526301` does it all in
-a smart way. Let's break it down into components.
-
-As you already know, a unit of work receives control every minute.
-Technically it's even more interesting. Every minute a unit of work is
-instantiated as a Java object, according to its specification and then receives control.
-We call this object an Instance. The module that instantiates a unit and
-controls instances is called a Conveyer.
-
-When the instance's lifespan comes to end, it looses control and gets destroyed
-by Java Virtual Machine. More to this, all instances are stateless immutable
-objects, which are not aware about each others existence.
-This models gives a lot of benefits in concurrency and traceability. However,
-it requires more accurate and precise configuration.
-
-The first problem that `git-on-commit` template solves is a possibility
-of concurrent execution of multiple instances. When a new commit appears
-in Git branch, Conveyer creates an instance and lets it do its job, which
-is building the product. This process may take more than a minute. We don't
-want to start a new build until the first one is finished. This problem is
-solved by `git-on-commit` using semaphores in Amazon SimpleDB. When
-using the template you pay for its usage of SimpleDB, but the price is
-very small (less than $0.00001 per request).
-
-As you have probably already understood, there is no way to manually "trigger" execution
-of a unit. This is where Rultor differs from other continuous integration
-systems, like Jenkins. A new instance of every unit is created and executed
-every minute, 24 hours per day, 7 days per week.
-The only way to stop this process is to either delete the unit
-or enclose its specification into
-[`Empty`](./rultor-base/apidocs-${project.version}/com/rultor/base/Empty.html):
-
-```
-com.rultor.base.Empty(
-  urn:github:526301:git-on-commit(
-    "https://github.com/jcabi/jcabi.git",
-    "mvn test -e -Pci --settings /home/ubuntu/settings.xml",
-    ... skipped ...
-  )
-)
-```
-
-In order to detect new commits, `git-on-commit` clones your repository
-to a supplementary server and runs `git pull` on every execution (every minute).
-In most cases, sensitivy of one minute is not required, that's why `git-on-commit`
-ignores four executions out of five.
-
-Let's say, you want to execute it even less often, every hour instead of every
-five minutes, to save money. You can use the same class
-[`Crontab`](./rultor-base/apidocs-${project.version}/com/rultor/base/Crontab.html)
-that is used by `git-on-commit`:
-
-```
-com.rultor.base.Crontab(
-  ${work}, "0 * * * *",
-  urn:github:526301:git-on-commit(
-    "https://github.com/jcabi/jcabi.git",
-    "mvn test -e -Pci --settings /home/ubuntu/settings.xml",
-    ... skipped ...
-  )
-)
-```
-
-Constructor of class
-[`Crontab`](./rultor-base/apidocs-${project.version}/com/rultor/base/Crontab.html)
-accepts three parameters, where the first one is the Work being executed
-at the moment, the second one is
-[crontab specification](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html),
-and the third one is your original instance.
-
-This is how
-[`Crontab`](./rultor-base/apidocs-${project.version}/com/rultor/base/Crontab.html)
-is designed (it is a [Decorator pattern](http://en.wikipedia.org/wiki/Decorator_pattern)):
-
-```
-public class Crontab implements Instance {
-  private Work work;
-  private String spec;
-  private Instance origin;
-  public Crontab(Work wrk, String spc, Instance org) {
-     this.work = wrk
-     this.spec = spc;
-     this.origin = org;
-  }
-  @Override
-  public void pulse() {
-    if (this.allowed()) {
-      this.origin.pulse();
-    }
-  }
-  private boolean allowed() {
-    // return TRUE if the time of Work#scheduled()
-    // satisfies the requirements of the encapsulated
-    // crontab specification, otherwise FALSE
-  }
-}
-```
-
-Most of the classes that you will use in your specifications are
-using Decorator pattern, so get used to it.
-
-When a new commit is detected, build script is executed in a newly created
-Amazon EC2 instance. When execution is finished and build succeeded or
-failed we don't want to execute the same operation on the same commit. We
-want our unit to remember that given commit has already been seen and should
-be ignored in the future. This check is also implemented by `git-on-commit`.
-
-When execution is finished, `git-on-commit` uploads full output of the
-script to Amazon S3 and publishes a link to the file in the stand.
-
-Release Every New Tag
-------
-
-Another popular scenario in almost any software project should be
-releasing of the next version. When your next version is stable enough
-to reach the market you tag its latest commit and document
-it in release notes. You can specify a unit of work in Rultor that will
-find such tags and run build script on them:
-
-```
-urn:github:526301:git-on-tag(
-  "https://github.com/jcabi/jcabi.git",
-  "mvn deploy -e -Pci --settings /home/ubuntu/settings.xml",
-  ["me@example.com"],
-  "m1.small",
-  "example",
-  "super-secret",
-  {
-    "settings.xml": """
-    <settings>
-      <profiles>
-        <profile>
-          <id>ci</id>
-          <properties>
-            <my.secret>hello, everybody!</my.secret>
-          </properties>
-        </profile>
-      </profiles>
-    </settings>
-    """
-  }
-)
-```
-
-The specification looks almost identical to the one discussed above, with
-two important differences. First, we're using `git-on-tag` template
-provided by user `urn:github:526301`. Second, we're instructing Maven to
-deploy our artifacts, not just test them:
-
-```
-"mvn deploy -e -Pci --settings /home/ubuntu/settings.xml"
-```
-
-Template `git-on-tag` expects you to name your tags according to
-[Semantic Versioning](http://semver.org/)
-convention and prefix them with a single word, for example:
-
-```
-rultor-0.1.5
-rultor-5.3-beta
-example-2.0.3.GA
-```
-
-Guard Your Master Branch
------
-
-It is a very good practice to test changes submitted to your code base
-before merging. When you receive a pull request from one of your
-project contributor, you should review the code for its logical validity and
-then run build automation script with all quality checks turned on.
-If build fails, you should reject this pull request and explain why.
-
-Read this article published by Yegor Bugayenko in php|Architect managazine
-on August 2010:
-["Prevent Conflicts in Distributed Agile PHP Projects"](http://img.rultor.com/guard-article.pdf)
-
-The process can be automated using `github-on-pull-request` provided by
-user `urn:github:526301`:
-
-```
-urn:github:526301:github-on-pull-request(
-  // not yet defined
-)
-```
+Rultor is an open source project hosted at [Gihub](https://github.com/rultor/rultor).
+You're very welcome to suggest new features, report bugs, and ask
+questions in [Github Issue Tracker](https://github.com/rultor/rultor/issues).
+The project is still in alpha state.
