@@ -32,7 +32,7 @@
     <skin>
         <groupId>com.rultor</groupId>
         <artifactId>rultor-maven-skin</artifactId>
-        <version>${project.version}</version>
+        <version>1.0-SNAPSHOT</version>
     </skin>
     <googleAnalyticsAccountId>UA-1963507-10</googleAnalyticsAccountId>
     <bannerLeft>
