@@ -1,3 +1,0 @@
-# Repository in Classpath
-
-To be continued...

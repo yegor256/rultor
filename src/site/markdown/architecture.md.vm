@@ -21,7 +21,7 @@ Rultor is a Java7 multi-module cloud-ready application. Core modules include:
    Persistence layer responsible for users, stands, and units
 
  * [rultor-queue](./rultor-queue/index.html):
-   Implementation of of
+   Implementation of the
    [`Queue`](./rultor-spi/apidocs-${project.version}/com/rultor/spi/Queue.html)
 
  * [rultor-web](./rultor-web/index.html):
