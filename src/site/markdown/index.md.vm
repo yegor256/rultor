@@ -147,3 +147,75 @@ without arguments:
 ```
 com.rultor.acl.Either()
 ```
+
+Continuous Integration of Master Branch
+---
+
+In the example above, every new commit made to your Git `master` branch
+triggers a build script, which builds the code and validates its
+consistency (you should use unit tests, integration tests, and
+static analysis as validator instruments).
+
+Template `git-on-commit` provided by user `urn:github:526301` does is in
+a smart way. Let's break it down into components.
+
+As you already know, a unit of work receives control every minute.
+Technically it's even more interesting. Every minute a unit of work is
+instantiated as a Java object, according to its specification and then receives control.
+We call this object an Instance. The module that instantiates a unit and
+controls instances is called a Conveyer.
+
+When the instance's lifespan comes to end, it looses control and gets destroyed
+by Java Virtual Machine. More to this, all instances are stateless immutable
+objects, which are not aware about each others existence.
+This models gives a lot of benefits in concurrency and traceability. However,
+it requires accuracy in configuration.
+
+The first problem that `git-on-commit` template solves is a possibility
+of concurrent execution of multiple instances. When a new commit appears
+in the Git branch Conveyer creates an instance and let it do its job, which
+is building the product. This process may take more than a minute. We don't
+want to start a new build until the first one is running. This problem is
+solved by `git-on-commit` using semaphores in Amazon SimpleDB. When
+using the template you pay for its usage of SimpleDB, but the price is
+very small (less than $0.00001 per request).
+
+As you probably already understood, there is no way to "trigger" execution
+of a unit. This is where Rultor differs from other continuous integration
+systems like Jenkins. A new instance of every unit is created and executed
+every minute, 24 hours per day, 7 days per week.
+The only way to stop this process is to either delete the unit
+or enclose its specification into
+[`com.rultor.base.Empty`](./rultor-spi/apidocs-${project.version}/com/rultor/spi/Empty.html):
+
+```
+com.rultor.base.Empty(
+  urn:github:526301:git-on-commit(
+    "https://github.com/jcabi/jcabi.git",
+    "mvn test -e -Pci --settings /home/ubuntu/settings.xml",
+    ... skipped ...
+  )
+)
+```
+
+In order to detect new commits, `git-on-commit` clones your repository
+to a supplementary server and runs `git pull` on every execution (every minute).
+In most cases, sensitivy of one minute is not required, that's why `git-on-commit`
+ignores four executions out of five.
+
+
+
+
+Release Every New Tag
+------
+
+Another popular scenario in almost any software project should be
+releasing of the next version. When your next version is stable enough
+to reach the market you tag certain commit in your repository and document
+it in release notes. You can specify a unit of work in Rultor that will
+find such tags and run build script on them.
+
+On Pull Request
+-----
+
+
