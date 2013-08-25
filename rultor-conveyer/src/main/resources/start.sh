@@ -34,7 +34,6 @@ sudo /sbin/mkswap /swapfile
 sudo chown root:root /swapfile
 sudo chmod 0600 /swapfile
 sudo /sbin/swapon /swapfile
-df
 
 export M2_HOME="/usr/local/share/apache-maven"
 export PATH="${M2_HOME}/bin:/usr/local/bin:${PATH}"
@@ -77,7 +76,7 @@ do
 done
 
 curl --silent https://raw.github.com/rultor/rultor/master/rultor-conveyer/src/main/resources/ec2-pom.xml > pom.xml
-mvn test --quiet --update-snapshots \
+mvn test --batch-mode --strict-checksums --quiet --update-snapshots \
     "-Dsqs-url=${SQS_URL}" \
     "-Dsqs-wallet-url=${SQS_WALLET_URL}" \
     "-Ddynamo-prefix=${DYNAMO_PREFIX}" \
