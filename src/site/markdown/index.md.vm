@@ -1,15 +1,19 @@
-# Quick Start
+Quick Start
+===========
 
 "Unit of work" is an active component that is receiving control
 every minute and does something with your project on your behalf.
 A simple scenario would be to monitor your Git `master` branch
-and run automated build every time a new commit appears there. Let's
-create a unit of work for it with the following Specification:
+and run automated build every time a new commit appears there
+(aka **continuous integration**).
+
+Let's create a unit of work for the continuous integration mechanism,
+with the following Specification:
 
 ```
 urn:github:526301:git-on-commit(
   "https://github.com/jcabi/jcabi.git",
-  "mvn test -e -Pci --settings ../settings.xml",
+  "mvn test -e -Pci --settings /home/ubuntu/settings.xml",
   ["me@example.com"],
   "m1.small",
   "example",
@@ -49,7 +53,7 @@ The second one is a bash command that will be executed if a new commit
 is found in `master` branch of the repo:
 
 ```
-"mvn test -e -Pci --settings ../settings.xml"
+"mvn test -e -Pci --settings /home/ubuntu/settings.xml"
 ```
 
 The third one is a list of email addresses that will receive notifications
@@ -80,7 +84,9 @@ the example, credentials are not valid since you haven't create a stand yet.
 Stand name is `example` and authentication key is `super-secret`.
 
 The last parameter is a map of files to be uploaded to the EC2 instance
-before running the build script. The map may contain more elements, for example:
+before running the build script. They will be uploaded into `/home/ubuntu` directory,
+which is a home directory of the EC2 user for Ubuntu images.
+The map may contain more elements, for example:
 
 ```
 {
@@ -96,10 +102,11 @@ Triple quotes are used to specify a long text that constitues
 more than one line, similar to
 [Groovy multi-line strings](http://groovy.codehaus.org/Strings+and+GString).
 
-## Stand
+Stand
+-----
 
-Now it's time to create a stand, where project members will see the
-progress of your units of work. Stand specification is much simplier, for
+Now it's time to create a "stand", where project members will see the
+progress of your units. Stand specification is much simplier, for
 example this one can be used for a public project:
 
 ```
@@ -118,6 +125,25 @@ post into it. Your units of work post into the stand and your project
 members read the stand at `http://www.rultor.com/s/example`
 (if the name of the stand is `example`).
 
-In this specification we instantiate `com.rultor.acl.Either` class with
+In this specification we instantiate
+[`com.rultor.acl.Either`](./rultor-base/apidocs-${project.version}/com/rultor/acl/Either.html) class with
 one argument of its constructor, which is a list of instances of class `ACL`.
+As the name implies, the class allows access if any of the encapsulated
+ACLs do so.
 
+[`com.rultor.acl.OpenView`](./rultor-base/apidocs-${project.version}/com/rultor/acl/OpenView.html)
+allows read access to everybody, which means that page
+`http://www.rultor.com/s/example` will be readable in public web and indexable
+by Google.
+
+[`com.rultor.acl.MD5Keyed`](./rultor-base/apidocs-${project.version}/com/rultor/acl/MD5Keyed.html)
+allows write access only for providers of `super-secret` authentication key.
+As you already understood, `0682f007844a0266990df1b2912f95bc` is its MD5 hash.
+
+If you want to close access to your stand, use
+[`com.rultor.acl.Prohibited`](./rultor-base/apidocs-${project.version}/com/rultor/acl/Prohibited.html)
+without arguments:
+
+```
+com.rultor.acl.Either()
+```

@@ -1,0 +1,33 @@
+Architecture
+============
+
+Rultor is a Java7 multi-module cloud-ready application. Core modules include:
+
+ * [rultor-spi](./rultor-spi/index.html):
+   Service Programming Interface with public interfaces and utility classes
+
+ * [rultor-base](./rultor-base/index.html):
+   Collection of pre-defined units of work and their components
+
+ * [rultor-conveyer](./rultor-conveyer/index.html):
+   Command line JAR that instantiates units of work,
+   gives them control, and monitors them during their lifetime
+
+ * [rultor-drain](./rultor-drain/index.html):
+   Most popular implementations of
+   [`Drain`](./rultor-spi/apidocs-${project.version}/com/rultor/spi/Drain.html)
+
+ * [rultor-users](./rultor-users/index.html):
+   Persistence layer responsible for users, stands, and units
+
+ * [rultor-queue](./rultor-queue/index.html):
+   Implementation of of
+   [`Queue`](./rultor-spi/apidocs-${project.version}/com/rultor/spi/Queue.html)
+
+ * [rultor-web](./rultor-web/index.html):
+   Web User Interface
+
+ * [rultor-client](./rultor-client/index.html):
+   RESTful Java client for Rultor web front-end
+
+
