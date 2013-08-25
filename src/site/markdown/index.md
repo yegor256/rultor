@@ -1,3 +1,123 @@
-# Rultor.com, Lightweight Integration Platform as a Service
+# Quick Start
 
-To be continued...
+"Unit of work" is an active component that is receiving control
+every minute and does something with your project on your behalf.
+A simple scenario would be to monitor your Git `master` branch
+and run automated build every time a new commit appears there. Let's
+create a unit of work for it with the following Specification:
+
+```
+urn:github:526301:git-on-commit(
+  "https://github.com/jcabi/jcabi.git",
+  "mvn test -e -Pci --settings ../settings.xml",
+  ["me@example.com"],
+  "m1.small",
+  "example",
+  "super-secret",
+  {
+    "settings.xml": """
+    <settings>
+      <profiles>
+        <profile>
+          <id>ci</id>
+          <properties>
+            <my.secret>hello, everybody!</my.secret>
+          </properties>
+        </profile>
+      </profiles>
+    </settings>
+    """
+  }
+)
+```
+
+Save it and in a few minutes you will see its first result.
+
+The specification defines how to construct an object that should
+receive control
+(see [full syntax description](./rultor-spi/apidocs-${project.version}/com/rultor/spi/Spec.html)).
+In this example, the object will be constructed from
+a template defined by user `urn:github:526301` with `git-on-commit` name.
+The template requires eight parameters. The first one is the URL
+of Git repository, as a Java string:
+
+```
+"https://github.com/jcabi/jcabi.git"
+```
+
+The second one is a bash command that will be executed if a new commit
+is found in `master` branch of the repo:
+
+```
+"mvn test -e -Pci --settings ../settings.xml"
+```
+
+The third one is a list of email addresses that will receive notifications
+when build is complete (either with success or failure). In the example,
+the list contains just one element, but you can use it with many:
+
+```
+["me@example.com", "you@example.com"]
+```
+
+The fourth one is an EC2 instance type, which will be used for build
+script execution. When a new commit is found in your `master` branch, the
+unit will create a new Amazon Web Services EC2 instance, execute your script, and
+terminate the instance. Your account will be charged for the price of the
+instance. Prices and instance types are listed in
+[AWS documention](http://aws.amazon.com/ec2/pricing/).
+
+There is an allowance of $5.00 automatically added to your account every
+30 days, if you don't fund it otherwise. Thus, if you have just one continuous
+integration unit of work which runs, say three times per working day, using `m1.small`
+type of EC2 instance, your total cost will be $3.60 per month. This is less
+than the allowance you get automatically from us and you don't need to fund
+the account at all.
+
+The fifth and the sixth parameters are access credentials for a Stand, which
+is a public showcase of all units in a project (will be discussed a bit later). In
+the example, credentials are not valid since you haven't create a stand yet.
+Stand name is `example` and authentication key is `super-secret`.
+
+The last parameter is a map of files to be uploaded to the EC2 instance
+before running the build script. The map may contain more elements, for example:
+
+```
+{
+  "secret.txt": "... content of the file ...",
+  "settings.xml": """
+  <settings/>
+  """,
+  "file-2.txt": "... another text file ..."
+}
+```
+
+Triple quotes are used to specify a long text that constitues
+more than one line, similar to
+[Groovy multi-line strings](http://groovy.codehaus.org/Strings+and+GString).
+
+## Stand
+
+Now it's time to create a stand, where project members will see the
+progress of your units of work. Stand specification is much simplier, for
+example this one can be used for a public project:
+
+```
+com.rultor.acl.Either(
+  [
+    com.rultor.acl.OpenView(),
+    com.rultor.acl.MD5Keyed("0682f007844a0266990df1b2912f95bc")
+  ]
+)
+```
+
+Instantiated stand specification implements
+[`ACL`](./rultor-spi/apidocs-${project.version}/com/rultor/spi/ACL.html) interface,
+which decides who is allowed to read your stand and who is allowed to
+post into it. Your units of work post into the stand and your project
+members read the stand at `http://www.rultor.com/s/example`
+(if the name of the stand is `example`).
+
+In this specification we instantiate `com.rultor.acl.Either` class with
+one argument of its constructor, which is a list of instances of class `ACL`.
+
