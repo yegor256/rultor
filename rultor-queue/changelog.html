@@ -1,159 +1,67 @@
 <!DOCTYPE html>
-<!--
- * Copyright (c) 2012-2013, JCabi.com
- * All rights reserved.
- -->
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Programmable Enforcer of a Software Development Process"/>
+        <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
+        <meta name="author" content="rultor.com"/>
         <title>rultor-queue - Change Log Report</title>
-        <link media="all" rel="stylesheet" type="text/css" href="./css/jcabi.css"/>
-                                                                                                                        
-<link rel="shortcut icon" href="http://img.rultor.com/favicon.ico"/>
-                                            <link rel="stylesheet" href="./css/highlight.css" />
-        <script src="./js/jquery-1.8.3.min.js"></script>
-        <script src="./js/highlight-7.3.min.js"></script>
+        <link rel="shortcut icon" type="image/gif" href="http://img.rultor.com/favicon.ico" />
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet" />
+        <link href="http://www.rultor.com/css/main.css" rel="stylesheet" />
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script>
-            $(document).ready(
-                function() {
-                    $('div.source pre').each(
-                        function (idx, element) {
-                            hljs.highlightBlock(element);
-                        }
-                    );
-                }
-            );
+        $(document).ready(
+            function() {
+                $('tt').replaceWith(
+                    function() {
+                        return '<code>' + $(this).text() + '</code>';
+                    }
+                )
+            }
+        );
+        </script>
+        <script>
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-1963507-10']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
         </script>
     </head>
     <body>
-                <ul id="menu">
-                                                    <li>
-                    Parent Project
-                                            <ul>
-                                                                            <li>
-                                                                    <a href="../index.html" title="rultor">rultor</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                            <li>
-                    Overview
-                                            <ul>
-                                                                            <li>
-                                                                    <a href="index.html" title="Introduction">Introduction</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="apidocs-0.1.7/index.html" title="JavaDoc 0.1.7">JavaDoc 0.1.7</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="cobertura/index.html" title="Test Coverage">Test Coverage</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="changes-report.html" title="Release History">Release History</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                            <li>
-                    Project Documentation
-                                            <ul>
-                                                                            <li>
-                                                                    <a href="project-info.html" title="Project Information">Project Information</a>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </li>
-                                                                                        <li>
-                                                                    <a href="project-reports.html" title="Project Reports">Project Reports</a>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <ul>
-                                                                            <li>
-                                                                    <a href="surefire-report.html" title="Surefire Report">Surefire Report</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                            <strong>                        <a href="changelog.html" title="Change Log">Change Log</a>
-        </strong>
-                                                                                                                <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="dev-activity.html" title="Developer Activity">Developer Activity</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="file-activity.html" title="File Activity">File Activity</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="dependency-updates-report.html" title="Dependency Updates Report">Dependency Updates Report</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="plugin-updates-report.html" title="Plugin Updates Report">Plugin Updates Report</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="apidocs-0.1.7/index.html" title="JavaDocs">JavaDocs</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="cobertura/index.html" title="Cobertura Test Coverage">Cobertura Test Coverage</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                    </ul>
-        <div id="content">
-                            <a href="https://github.com/rultor/rultor/rultor-queue">
-                    <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
-                        src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
-                        alt="Fork me on GitHub" />
-                </a>
-                        <a href="http://doc.rultor.com/" title="${decoration.bannerLeft.title}">
-                <img src="http://img.rultor.com/logo-64x64.png"
-                    alt="rultor.com"
-                                                        />
+        <aside>
+            <a href="https://github.com/rultor/rultor" class="hidden-phone">
+                <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
+                    src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
+                    alt="Fork me on GitHub" />
             </a>
-                            <ul id="breadcrumbs">
-                                            <li>                        <a href="http://doc.rultor.com" title="rultor.com">rultor.com</a>
-        </li>
-                                            <li>                                    <a href="./" title="rultor-queue">rultor-queue</a>
-        </li>
-                                    </ul>
-                        <p>
+        </aside>
+        <ul class="list-inline">
+            <li>
+                <a class="logo" href="//doc.rultor.com/index.html">R</a>
+            </li>
+            <li>
+                0.1
+            </li>
+            <li>
                 
-                22-Aug-2013
-                0.1.7
-            </p>
-            <article>
-                <div class="section"><h2>Change Log Report<a name="Change_Log_Report"></a></h2><p>Total number of changed sets: 1</p><div class="section"><h3>Changes between 2013-07-23 and 2013-08-23<a name="Changes_between_2013-07-23_and_2013-08-23"></a></h3><p>Total commits: 16<br />Total number of files changed: 6</p><table border="0" class="bodyTable"><tr class="a"><th>Timestamp</th><th>Author</th><th>Details</th></tr><tr class="b"><td>2013-08-22 06:39:42</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=138b5a54062a2ddcd00a3b5207d5e2a392ed7cf9&amp;content-type=text/vnd.viewcvs-markup">v 138b5a54062a2ddcd00a3b5207d5e2a392ed7cf9</a><br /><br />0.1.7</td></tr><tr class="a"><td>2013-08-21 08:15:25</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=9926ac3de07922efdc92287bcefe35b8f28f3d63&amp;content-type=text/vnd.viewcvs-markup">v 9926ac3de07922efdc92287bcefe35b8f28f3d63</a><br /><br />back to snapshot</td></tr><tr class="b"><td>2013-08-20 20:20:54</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=1f345d40c617ec707c413ac4daad942db8b63b1e&amp;content-type=text/vnd.viewcvs-markup">v 1f345d40c617ec707c413ac4daad942db8b63b1e</a><br /><br />polished</td></tr><tr class="a"><td>2013-08-20 20:08:48</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=4ddaf533854283b02c8f445a0520ef69d8026203&amp;content-type=text/vnd.viewcvs-markup">v 4ddaf533854283b02c8f445a0520ef69d8026203</a><br /><br />back to snapshot</td></tr><tr class="b"><td>2013-08-20 20:07:22</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=e63ea0d9c41201ad0ba5b760ccf924d8825fc2e6&amp;content-type=text/vnd.viewcvs-markup">v e63ea0d9c41201ad0ba5b760ccf924d8825fc2e6</a><br /><br />0.1.5</td></tr><tr class="a"><td>2013-08-16 14:24:27</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=6d4ae645dbf0d4a6ad45a7bf85a2334275f81ea4&amp;content-type=text/vnd.viewcvs-markup">v 6d4ae645dbf0d4a6ad45a7bf85a2334275f81ea4</a><br /><br />snapshot</td></tr><tr class="b"><td>2013-08-16 14:23:42</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=c5ddc44b5d3651f250ab5a0b312cc0d69acc8bb5&amp;content-type=text/vnd.viewcvs-markup">v c5ddc44b5d3651f250ab5a0b312cc0d69acc8bb5</a><br /><br />0.1.2</td></tr><tr class="a"><td>2013-08-15 19:18:24</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=94ec3ee7370c5f01e1ac78769924b09fe5e4a508&amp;content-type=text/vnd.viewcvs-markup">v 94ec3ee7370c5f01e1ac78769924b09fe5e4a508</a><br /><br />snapshot</td></tr><tr class="b"><td>2013-08-15 19:15:11</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=5b28c314b660bb3a8b0c73b838a927d4fb4a7580&amp;content-type=text/vnd.viewcvs-markup">v 5b28c314b660bb3a8b0c73b838a927d4fb4a7580</a><br /><br />version 0.1</td></tr><tr class="a"><td>2013-08-15 11:11:17</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/java/com/rultor/queue/SQSQueue.java">rultor-queue/src/main/java/com/rultor/queue/<b>SQSQueue.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/java/com/rultor/queue/SQSQueue.java?rev=3c599c14d98d9722f984d3bdd1132fbcee87eca9&amp;content-type=text/vnd.viewcvs-markup">v 3c599c14d98d9722f984d3bdd1132fbcee87eca9</a><br /><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/resources/com/rultor/queue/work.json">rultor-queue/src/main/resources/com/rultor/queue/<b>work.json</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/resources/com/rultor/queue/work.json?rev=3c599c14d98d9722f984d3bdd1132fbcee87eca9&amp;content-type=text/vnd.viewcvs-markup">v 3c599c14d98d9722f984d3bdd1132fbcee87eca9</a><br /><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueITCase.java">rultor-queue/src/test/java/com/rultor/queue/<b>SQSQueueITCase.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueITCase.java?rev=3c599c14d98d9722f984d3bdd1132fbcee87eca9&amp;content-type=text/vnd.viewcvs-markup">v 3c599c14d98d9722f984d3bdd1132fbcee87eca9</a><br /><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueTest.java">rultor-queue/src/test/java/com/rultor/queue/<b>SQSQueueTest.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueTest.java?rev=3c599c14d98d9722f984d3bdd1132fbcee87eca9&amp;content-type=text/vnd.viewcvs-markup">v 3c599c14d98d9722f984d3bdd1132fbcee87eca9</a><br /><br />#112 fixed</td></tr><tr class="b"><td>2013-08-14 14:44:19</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=5caae482a936247a5f1c7e88485bf9413cf45ff2&amp;content-type=text/vnd.viewcvs-markup">v 5caae482a936247a5f1c7e88485bf9413cf45ff2</a><br /><br />polished</td></tr><tr class="a"><td>2013-08-14 13:33:15</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=2366d8123538131588f6ba55459a960d664e8c1d&amp;content-type=text/vnd.viewcvs-markup">v 2366d8123538131588f6ba55459a960d664e8c1d</a><br /><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/java/com/rultor/queue/SQSQueue.java">rultor-queue/src/main/java/com/rultor/queue/<b>SQSQueue.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/java/com/rultor/queue/SQSQueue.java?rev=2366d8123538131588f6ba55459a960d664e8c1d&amp;content-type=text/vnd.viewcvs-markup">v 2366d8123538131588f6ba55459a960d664e8c1d</a><br /><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/resources/com/rultor/queue/work.json">rultor-queue/src/main/resources/com/rultor/queue/<b>work.json</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/resources/com/rultor/queue/work.json?rev=2366d8123538131588f6ba55459a960d664e8c1d&amp;content-type=text/vnd.viewcvs-markup">v 2366d8123538131588f6ba55459a960d664e8c1d</a><br /><br />#126 queue validates JSON with NormJson</td></tr><tr class="b"><td>2013-08-13 17:34:31</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/java/com/rultor/queue/SQSQueue.java">rultor-queue/src/main/java/com/rultor/queue/<b>SQSQueue.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/java/com/rultor/queue/SQSQueue.java?rev=5997dda3b083ba9d867936b852521457c7dcc71c&amp;content-type=text/vnd.viewcvs-markup">v 5997dda3b083ba9d867936b852521457c7dcc71c</a><br /><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueTest.java">rultor-queue/src/test/java/com/rultor/queue/<b>SQSQueueTest.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueTest.java?rev=5997dda3b083ba9d867936b852521457c7dcc71c&amp;content-type=text/vnd.viewcvs-markup">v 5997dda3b083ba9d867936b852521457c7dcc71c</a><br /><br />#111 renamed</td></tr><tr class="a"><td>2013-08-09 07:16:20</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/resources/log4j.properties">rultor-queue/src/test/resources/<b>log4j.properties</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/resources/log4j.properties?rev=72e23c796397394e129f416c21f85dfcb9c2574a&amp;content-type=text/vnd.viewcvs-markup">v 72e23c796397394e129f416c21f85dfcb9c2574a</a><br /><br />disable xembly output in test logs</td></tr><tr class="b"><td>2013-08-04 08:18:06</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueTest.java">rultor-queue/src/test/java/com/rultor/queue/<b>SQSQueueTest.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueTest.java?rev=758c0c1853340d1c83bfd5ccf14cabec2fa9883a&amp;content-type=text/vnd.viewcvs-markup">v 758c0c1853340d1c83bfd5ccf14cabec2fa9883a</a><br /><br />fixes #103</td></tr><tr class="a"><td>2013-07-26 15:27:25</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/java/com/rultor/queue/SQSQueue.java">rultor-queue/src/main/java/com/rultor/queue/<b>SQSQueue.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/java/com/rultor/queue/SQSQueue.java?rev=22e5cd8668e723bc4287fac15171951d2cb30dbf&amp;content-type=text/vnd.viewcvs-markup">v 22e5cd8668e723bc4287fac15171951d2cb30dbf</a><br /><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueITCase.java">rultor-queue/src/test/java/com/rultor/queue/<b>SQSQueueITCase.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueITCase.java?rev=22e5cd8668e723bc4287fac15171951d2cb30dbf&amp;content-type=text/vnd.viewcvs-markup">v 22e5cd8668e723bc4287fac15171951d2cb30dbf</a><br /><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueTest.java">rultor-queue/src/test/java/com/rultor/queue/<b>SQSQueueTest.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueTest.java?rev=22e5cd8668e723bc4287fac15171951d2cb30dbf&amp;content-type=text/vnd.viewcvs-markup">v 22e5cd8668e723bc4287fac15171951d2cb30dbf</a><br /><br />#89 com.rultor.tools introduced</td></tr></table></div></div>
-            </article>
-            <p style="margin-bottom: 3em; margin-top: 2em;">
-                Copyright &#169;
-                                                    2009-2013
-                                Rultor Inc., All Rights Reserved.
-                <a href="http://maven.apache.org/privacy-policy.html">Privacy Policy</a>.
-            </p>
-            <a href="http://maven.apache.org" title="site is built by Apache Maven"
-                style='position: absolute; bottom: 1em; right: 1em;'>
-                <img src='images/built-by-maven.png' style='width: 50px; height: 17px;'
+                25-Aug-2013
+            </li>
+            <li>
+                <img src='http://img.jcabi.com/built-by-maven.png' style='width: 50px; height: 17px;'
                     alt='site is built by Apache Maven'/>
-            </a>
+            </li>
+        </ul>
+        <div>
+            <article class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                <div class="section"><h2>Change Log Report<a name="Change_Log_Report"></a></h2><p>Total number of changed sets: 1</p><div class="section"><h3>Changes between 2013-07-26 and 2013-08-26<a name="Changes_between_2013-07-26_and_2013-08-26"></a></h3><p>Total commits: 19<br />Total number of files changed: 8</p><table border="0" class="bodyTable"><tr class="a"><th>Timestamp</th><th>Author</th><th>Details</th></tr><tr class="b"><td>2013-08-25 18:00:50</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=1196c37fc8145fa6a967773dbab7eafa81ac0a33&amp;content-type=text/vnd.viewcvs-markup">v 1196c37fc8145fa6a967773dbab7eafa81ac0a33</a><br /><br />0.1</td></tr><tr class="a"><td>2013-08-25 16:23:02</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/site/markdown/index.md.vm">rultor-queue/src/site/markdown/<b>index.md.vm</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/site/markdown/index.md.vm?rev=b1c0c2210ca7ab6072a46eaa3c60f3b0792622a2&amp;content-type=text/vnd.viewcvs-markup">v b1c0c2210ca7ab6072a46eaa3c60f3b0792622a2</a><br /><br />#143 MD files</td></tr><tr class="b"><td>2013-08-25 15:12:46</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/site/markdown/index.md">rultor-queue/src/site/markdown/<b>index.md</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/site/markdown/index.md?rev=adbf42b8ecc9a6f3c3fcd4902e05a1ac6d95d038&amp;content-type=text/vnd.viewcvs-markup">v adbf42b8ecc9a6f3c3fcd4902e05a1ac6d95d038</a><br /><br />#143 .md files renamed to .md.vm</td></tr><tr class="a"><td>2013-08-22 20:50:36</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=d13673531c8b76dcb355c9d88ba21f0293b1b68f&amp;content-type=text/vnd.viewcvs-markup">v d13673531c8b76dcb355c9d88ba21f0293b1b68f</a><br /><br />snapshot</td></tr><tr class="b"><td>2013-08-22 20:35:12</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=62edb1b777ec5de26e7bb48285bb8c88abe90177&amp;content-type=text/vnd.viewcvs-markup">v 62edb1b777ec5de26e7bb48285bb8c88abe90177</a><br /><br />0.1</td></tr><tr class="a"><td>2013-08-21 08:15:25</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=9926ac3de07922efdc92287bcefe35b8f28f3d63&amp;content-type=text/vnd.viewcvs-markup">v 9926ac3de07922efdc92287bcefe35b8f28f3d63</a><br /><br />back to snapshot</td></tr><tr class="b"><td>2013-08-20 20:20:54</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=1f345d40c617ec707c413ac4daad942db8b63b1e&amp;content-type=text/vnd.viewcvs-markup">v 1f345d40c617ec707c413ac4daad942db8b63b1e</a><br /><br />polished</td></tr><tr class="a"><td>2013-08-20 20:08:48</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=4ddaf533854283b02c8f445a0520ef69d8026203&amp;content-type=text/vnd.viewcvs-markup">v 4ddaf533854283b02c8f445a0520ef69d8026203</a><br /><br />back to snapshot</td></tr><tr class="b"><td>2013-08-20 20:07:22</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=e63ea0d9c41201ad0ba5b760ccf924d8825fc2e6&amp;content-type=text/vnd.viewcvs-markup">v e63ea0d9c41201ad0ba5b760ccf924d8825fc2e6</a><br /><br />0.1.5</td></tr><tr class="a"><td>2013-08-16 14:24:27</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=6d4ae645dbf0d4a6ad45a7bf85a2334275f81ea4&amp;content-type=text/vnd.viewcvs-markup">v 6d4ae645dbf0d4a6ad45a7bf85a2334275f81ea4</a><br /><br />snapshot</td></tr><tr class="b"><td>2013-08-16 14:23:42</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=c5ddc44b5d3651f250ab5a0b312cc0d69acc8bb5&amp;content-type=text/vnd.viewcvs-markup">v c5ddc44b5d3651f250ab5a0b312cc0d69acc8bb5</a><br /><br />0.1.2</td></tr><tr class="a"><td>2013-08-15 19:18:24</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=94ec3ee7370c5f01e1ac78769924b09fe5e4a508&amp;content-type=text/vnd.viewcvs-markup">v 94ec3ee7370c5f01e1ac78769924b09fe5e4a508</a><br /><br />snapshot</td></tr><tr class="b"><td>2013-08-15 19:15:11</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=5b28c314b660bb3a8b0c73b838a927d4fb4a7580&amp;content-type=text/vnd.viewcvs-markup">v 5b28c314b660bb3a8b0c73b838a927d4fb4a7580</a><br /><br />version 0.1</td></tr><tr class="a"><td>2013-08-15 11:11:17</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/java/com/rultor/queue/SQSQueue.java">rultor-queue/src/main/java/com/rultor/queue/<b>SQSQueue.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/java/com/rultor/queue/SQSQueue.java?rev=3c599c14d98d9722f984d3bdd1132fbcee87eca9&amp;content-type=text/vnd.viewcvs-markup">v 3c599c14d98d9722f984d3bdd1132fbcee87eca9</a><br /><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/resources/com/rultor/queue/work.json">rultor-queue/src/main/resources/com/rultor/queue/<b>work.json</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/resources/com/rultor/queue/work.json?rev=3c599c14d98d9722f984d3bdd1132fbcee87eca9&amp;content-type=text/vnd.viewcvs-markup">v 3c599c14d98d9722f984d3bdd1132fbcee87eca9</a><br /><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueITCase.java">rultor-queue/src/test/java/com/rultor/queue/<b>SQSQueueITCase.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueITCase.java?rev=3c599c14d98d9722f984d3bdd1132fbcee87eca9&amp;content-type=text/vnd.viewcvs-markup">v 3c599c14d98d9722f984d3bdd1132fbcee87eca9</a><br /><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueTest.java">rultor-queue/src/test/java/com/rultor/queue/<b>SQSQueueTest.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueTest.java?rev=3c599c14d98d9722f984d3bdd1132fbcee87eca9&amp;content-type=text/vnd.viewcvs-markup">v 3c599c14d98d9722f984d3bdd1132fbcee87eca9</a><br /><br />#112 fixed</td></tr><tr class="b"><td>2013-08-14 14:44:19</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=5caae482a936247a5f1c7e88485bf9413cf45ff2&amp;content-type=text/vnd.viewcvs-markup">v 5caae482a936247a5f1c7e88485bf9413cf45ff2</a><br /><br />polished</td></tr><tr class="a"><td>2013-08-14 13:33:15</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml">rultor-queue/<b>pom.xml</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/pom.xml?rev=2366d8123538131588f6ba55459a960d664e8c1d&amp;content-type=text/vnd.viewcvs-markup">v 2366d8123538131588f6ba55459a960d664e8c1d</a><br /><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/java/com/rultor/queue/SQSQueue.java">rultor-queue/src/main/java/com/rultor/queue/<b>SQSQueue.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/java/com/rultor/queue/SQSQueue.java?rev=2366d8123538131588f6ba55459a960d664e8c1d&amp;content-type=text/vnd.viewcvs-markup">v 2366d8123538131588f6ba55459a960d664e8c1d</a><br /><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/resources/com/rultor/queue/work.json">rultor-queue/src/main/resources/com/rultor/queue/<b>work.json</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/resources/com/rultor/queue/work.json?rev=2366d8123538131588f6ba55459a960d664e8c1d&amp;content-type=text/vnd.viewcvs-markup">v 2366d8123538131588f6ba55459a960d664e8c1d</a><br /><br />#126 queue validates JSON with NormJson</td></tr><tr class="b"><td>2013-08-13 17:34:31</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/java/com/rultor/queue/SQSQueue.java">rultor-queue/src/main/java/com/rultor/queue/<b>SQSQueue.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/main/java/com/rultor/queue/SQSQueue.java?rev=5997dda3b083ba9d867936b852521457c7dcc71c&amp;content-type=text/vnd.viewcvs-markup">v 5997dda3b083ba9d867936b852521457c7dcc71c</a><br /><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueTest.java">rultor-queue/src/test/java/com/rultor/queue/<b>SQSQueueTest.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueTest.java?rev=5997dda3b083ba9d867936b852521457c7dcc71c&amp;content-type=text/vnd.viewcvs-markup">v 5997dda3b083ba9d867936b852521457c7dcc71c</a><br /><br />#111 renamed</td></tr><tr class="a"><td>2013-08-09 07:16:20</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/resources/log4j.properties">rultor-queue/src/test/resources/<b>log4j.properties</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/resources/log4j.properties?rev=72e23c796397394e129f416c21f85dfcb9c2574a&amp;content-type=text/vnd.viewcvs-markup">v 72e23c796397394e129f416c21f85dfcb9c2574a</a><br /><br />disable xembly output in test logs</td></tr><tr class="b"><td>2013-08-04 08:18:06</td><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueTest.java">rultor-queue/src/test/java/com/rultor/queue/<b>SQSQueueTest.java</b></a> <a class="externalLink" href="https://github.com/rultor/rultor/rultor-queue/src/test/java/com/rultor/queue/SQSQueueTest.java?rev=758c0c1853340d1c83bfd5ccf14cabec2fa9883a&amp;content-type=text/vnd.viewcvs-markup">v 758c0c1853340d1c83bfd5ccf14cabec2fa9883a</a><br /><br />fixes #103</td></tr></table></div></div>
+            </article>
         </div>
     </body>
 </html>
