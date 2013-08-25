@@ -93,8 +93,10 @@ public final class Dollars {
     public String toString() {
         final double usd = Math.abs((double) this.amount / Tv.MILLION);
         String body;
+        if (usd == 0) {
+            body = "0.00";
         // @checkstyle MagicNumber (8 lines)
-        if (usd < 0.00001d) {
+        } else if (usd < 0.00001d) {
             body = String.format("$%.6f", usd);
         } else if (usd < 0.0001d) {
             body = String.format("$%.5f", usd);

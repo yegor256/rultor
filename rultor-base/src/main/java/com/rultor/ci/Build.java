@@ -57,7 +57,7 @@ import org.xembly.XemblySyntaxException;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "batch")
+@EqualsAndHashCode(of = { "batch", "product" })
 @Loggable(Loggable.DEBUG)
 public final class Build {
 
