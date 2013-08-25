@@ -1,159 +1,67 @@
 <!DOCTYPE html>
-<!--
- * Copyright (c) 2012-2013, JCabi.com
- * All rights reserved.
- -->
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Programmable Enforcer of a Software Development Process"/>
+        <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
+        <meta name="author" content="rultor.com"/>
         <title>rultor-repo - Developer Activity Report</title>
-        <link media="all" rel="stylesheet" type="text/css" href="./css/jcabi.css"/>
-                                                                                                                        
-<link rel="shortcut icon" href="http://img.rultor.com/favicon.ico"/>
-                                            <link rel="stylesheet" href="./css/highlight.css" />
-        <script src="./js/jquery-1.8.3.min.js"></script>
-        <script src="./js/highlight-7.3.min.js"></script>
+        <link rel="shortcut icon" type="image/gif" href="http://img.rultor.com/favicon.ico" />
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet" />
+        <link href="http://www.rultor.com/css/main.css" rel="stylesheet" />
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script>
-            $(document).ready(
-                function() {
-                    $('div.source pre').each(
-                        function (idx, element) {
-                            hljs.highlightBlock(element);
-                        }
-                    );
-                }
-            );
+        $(document).ready(
+            function() {
+                $('tt').replaceWith(
+                    function() {
+                        return '<code>' + $(this).text() + '</code>';
+                    }
+                )
+            }
+        );
+        </script>
+        <script>
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-1963507-10']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
         </script>
     </head>
     <body>
-                <ul id="menu">
-                                                    <li>
-                    Parent Project
-                                            <ul>
-                                                                            <li>
-                                                                    <a href="../index.html" title="rultor">rultor</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                            <li>
-                    Overview
-                                            <ul>
-                                                                            <li>
-                                                                    <a href="index.html" title="Introduction">Introduction</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="apidocs-0.1.7/index.html" title="JavaDoc 0.1.7">JavaDoc 0.1.7</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="cobertura/index.html" title="Test Coverage">Test Coverage</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="changes-report.html" title="Release History">Release History</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                            <li>
-                    Project Documentation
-                                            <ul>
-                                                                            <li>
-                                                                    <a href="project-info.html" title="Project Information">Project Information</a>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </li>
-                                                                                        <li>
-                                                                    <a href="project-reports.html" title="Project Reports">Project Reports</a>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <ul>
-                                                                            <li>
-                                                                    <a href="surefire-report.html" title="Surefire Report">Surefire Report</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="changelog.html" title="Change Log">Change Log</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                            <strong>                        <a href="dev-activity.html" title="Developer Activity">Developer Activity</a>
-        </strong>
-                                                                                                                <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="file-activity.html" title="File Activity">File Activity</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="dependency-updates-report.html" title="Dependency Updates Report">Dependency Updates Report</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="plugin-updates-report.html" title="Plugin Updates Report">Plugin Updates Report</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="apidocs-0.1.7/index.html" title="JavaDocs">JavaDocs</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="cobertura/index.html" title="Cobertura Test Coverage">Cobertura Test Coverage</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                    </ul>
-        <div id="content">
-                            <a href="https://github.com/rultor/rultor/rultor-repo">
-                    <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
-                        src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
-                        alt="Fork me on GitHub" />
-                </a>
-                        <a href="http://doc.rultor.com/" title="${decoration.bannerLeft.title}">
-                <img src="http://img.rultor.com/logo-64x64.png"
-                    alt="rultor.com"
-                                                        />
+        <aside>
+            <a href="https://github.com/rultor/rultor" class="hidden-phone">
+                <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
+                    src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
+                    alt="Fork me on GitHub" />
             </a>
-                            <ul id="breadcrumbs">
-                                            <li>                        <a href="http://doc.rultor.com" title="rultor.com">rultor.com</a>
-        </li>
-                                            <li>                                    <a href="./" title="rultor-repo">rultor-repo</a>
-        </li>
-                                    </ul>
-                        <p>
+        </aside>
+        <ul class="list-inline">
+            <li>
+                <a class="logo" href="//doc.rultor.com/index.html">R</a>
+            </li>
+            <li>
+                0.1
+            </li>
+            <li>
                 
-                22-Aug-2013
-                0.1.7
-            </p>
-            <article>
-                <div class="section"><h2>Developer Activity Report<a name="Developer_Activity_Report"></a></h2><div class="section"><h3>Changes between 2013-07-23 and 2013-08-23<a name="Changes_between_2013-07-23_and_2013-08-23"></a></h3><p>Total commits: 24<br />Total number of files changed: 26</p><table border="0" class="bodyTable"><tr class="a"><th>Developer</th><th>Total commits</th><th>Total Number of Files Changed</th></tr><tr class="b"><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td>24</td><td>26</td></tr></table></div></div>
-            </article>
-            <p style="margin-bottom: 3em; margin-top: 2em;">
-                Copyright &#169;
-                                                    2009-2013
-                                Rultor Inc., All Rights Reserved.
-                <a href="http://maven.apache.org/privacy-policy.html">Privacy Policy</a>.
-            </p>
-            <a href="http://maven.apache.org" title="site is built by Apache Maven"
-                style='position: absolute; bottom: 1em; right: 1em;'>
-                <img src='images/built-by-maven.png' style='width: 50px; height: 17px;'
+                25-Aug-2013
+            </li>
+            <li>
+                <img src='http://img.jcabi.com/built-by-maven.png' style='width: 50px; height: 17px;'
                     alt='site is built by Apache Maven'/>
-            </a>
+            </li>
+        </ul>
+        <div>
+            <article class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                <div class="section"><h2>Developer Activity Report<a name="Developer_Activity_Report"></a></h2><div class="section"><h3>Changes between 2013-07-26 and 2013-08-26<a name="Changes_between_2013-07-26_and_2013-08-26"></a></h3><p>Total commits: 24<br />Total number of files changed: 20</p><table border="0" class="bodyTable"><tr class="a"><th>Developer</th><th>Total commits</th><th>Total Number of Files Changed</th></tr><tr class="b"><td>Yegor Bugayenko &lt;yegor@tpc2.com&gt;</td><td>24</td><td>20</td></tr></table></div></div>
+            </article>
         </div>
     </body>
 </html>
