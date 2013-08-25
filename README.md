@@ -2,6 +2,11 @@
 
 Rultor.com is a Programmable Enforcer of a Software Development Process.
 
+Documentation in under construction, but these pages may help:
+
+* [Quick Start](http://doc.rultor.com/index.html)
+* [Architecture](http://doc.rultor.com/architecture.html)
+
 ## How to contribute
 
 Fork repository, make changes, send us a pull request. We will review

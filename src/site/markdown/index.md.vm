@@ -126,22 +126,22 @@ members read the stand at `http://www.rultor.com/s/example`
 (if the name of the stand is `example`).
 
 In this specification we instantiate
-[`com.rultor.acl.Either`](./rultor-base/apidocs-${project.version}/com/rultor/acl/Either.html) class with
+[`Either`](./rultor-base/apidocs-${project.version}/com/rultor/acl/Either.html) class with
 one argument of its constructor, which is a list of instances of class `ACL`.
 As the name implies, the class allows access if any of the encapsulated
 ACLs do so.
 
-[`com.rultor.acl.OpenView`](./rultor-base/apidocs-${project.version}/com/rultor/acl/OpenView.html)
+[`OpenView`](./rultor-base/apidocs-${project.version}/com/rultor/acl/OpenView.html)
 allows read access to everybody, which means that page
 `http://www.rultor.com/s/example` will be readable in public web and indexable
 by Google.
 
-[`com.rultor.acl.MD5Keyed`](./rultor-base/apidocs-${project.version}/com/rultor/acl/MD5Keyed.html)
+[`MD5Keyed`](./rultor-base/apidocs-${project.version}/com/rultor/acl/MD5Keyed.html)
 allows write access only for providers of `super-secret` authentication key.
 As you already understood, `0682f007844a0266990df1b2912f95bc` is its MD5 hash.
 
 If you want to close access to your stand, use
-[`com.rultor.acl.Prohibited`](./rultor-base/apidocs-${project.version}/com/rultor/acl/Prohibited.html)
+[`Prohibited`](./rultor-base/apidocs-${project.version}/com/rultor/acl/Prohibited.html)
 without arguments:
 
 ```
@@ -152,11 +152,11 @@ Continuous Integration of Master Branch
 ---
 
 In the example above, every new commit made to your Git `master` branch
-triggers a build script, which builds the code and validates its
+triggers a script, which builds the product and validates its
 consistency (you should use unit tests, integration tests, and
-static analysis as validator instruments).
+static analysis as validating instruments).
 
-Template `git-on-commit` provided by user `urn:github:526301` does is in
+Template `git-on-commit` provided by user `urn:github:526301` does it all in
 a smart way. Let's break it down into components.
 
 As you already know, a unit of work receives control every minute.
@@ -169,24 +169,24 @@ When the instance's lifespan comes to end, it looses control and gets destroyed
 by Java Virtual Machine. More to this, all instances are stateless immutable
 objects, which are not aware about each others existence.
 This models gives a lot of benefits in concurrency and traceability. However,
-it requires accuracy in configuration.
+it requires more accurate and precise configuration.
 
 The first problem that `git-on-commit` template solves is a possibility
 of concurrent execution of multiple instances. When a new commit appears
-in the Git branch Conveyer creates an instance and let it do its job, which
+in Git branch, Conveyer creates an instance and lets it do its job, which
 is building the product. This process may take more than a minute. We don't
-want to start a new build until the first one is running. This problem is
+want to start a new build until the first one is finished. This problem is
 solved by `git-on-commit` using semaphores in Amazon SimpleDB. When
 using the template you pay for its usage of SimpleDB, but the price is
 very small (less than $0.00001 per request).
 
-As you probably already understood, there is no way to "trigger" execution
+As you have probably already understood, there is no way to manually "trigger" execution
 of a unit. This is where Rultor differs from other continuous integration
-systems like Jenkins. A new instance of every unit is created and executed
+systems, like Jenkins. A new instance of every unit is created and executed
 every minute, 24 hours per day, 7 days per week.
 The only way to stop this process is to either delete the unit
 or enclose its specification into
-[`com.rultor.base.Empty`](./rultor-spi/apidocs-${project.version}/com/rultor/spi/Empty.html):
+[`Empty`](./rultor-base/apidocs-${project.version}/com/rultor/base/Empty.html):
 
 ```
 com.rultor.base.Empty(
@@ -203,19 +203,140 @@ to a supplementary server and runs `git pull` on every execution (every minute).
 In most cases, sensitivy of one minute is not required, that's why `git-on-commit`
 ignores four executions out of five.
 
+Let's say, you want to execute it even less often, every hour instead of every
+five minutes, to save money. You can use the same class
+[`Crontab`](./rultor-base/apidocs-${project.version}/com/rultor/base/Crontab.html)
+that is used by `git-on-commit`:
 
+```
+com.rultor.base.Crontab(
+  ${work}, "0 * * * *",
+  urn:github:526301:git-on-commit(
+    "https://github.com/jcabi/jcabi.git",
+    "mvn test -e -Pci --settings /home/ubuntu/settings.xml",
+    ... skipped ...
+  )
+)
+```
 
+Constructor of class
+[`Crontab`](./rultor-base/apidocs-${project.version}/com/rultor/base/Crontab.html)
+accepts three parameters, where the first one is the Work being executed
+at the moment, the second one is
+[crontab specification](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html),
+and the third one is your original instance.
+
+This is how
+[`Crontab`](./rultor-base/apidocs-${project.version}/com/rultor/base/Crontab.html)
+is designed (it is a [Decorator pattern](http://en.wikipedia.org/wiki/Decorator_pattern)):
+
+```
+public class Crontab implements Instance {
+  private Work work;
+  private String spec;
+  private Instance origin;
+  public Crontab(Work wrk, String spc, Instance org) {
+     this.work = wrk
+     this.spec = spc;
+     this.origin = org;
+  }
+  @Override
+  public void pulse() {
+    if (this.allowed()) {
+      this.origin.pulse();
+    }
+  }
+  private boolean allowed() {
+    // return TRUE if the time of Work#scheduled()
+    // satisfies the requirements of the encapsulated
+    // crontab specification, otherwise FALSE
+  }
+}
+```
+
+Most of the classes that you will use in your specifications are
+using Decorator pattern, so get used to it.
+
+When a new commit is detected, build script is executed in a newly created
+Amazon EC2 instance. When execution is finished and build succeeded or
+failed we don't want to execute the same operation on the same commit. We
+want our unit to remember that given commit has already been seen and should
+be ignored in the future. This check is also implemented by `git-on-commit`.
+
+When execution is finished, `git-on-commit` uploads full output of the
+script to Amazon S3 and publishes a link to the file in the stand.
 
 Release Every New Tag
 ------
 
 Another popular scenario in almost any software project should be
 releasing of the next version. When your next version is stable enough
-to reach the market you tag certain commit in your repository and document
+to reach the market you tag its latest commit and document
 it in release notes. You can specify a unit of work in Rultor that will
-find such tags and run build script on them.
+find such tags and run build script on them:
 
-On Pull Request
+```
+urn:github:526301:git-on-tag(
+  "https://github.com/jcabi/jcabi.git",
+  "mvn deploy -e -Pci --settings /home/ubuntu/settings.xml",
+  ["me@example.com"],
+  "m1.small",
+  "example",
+  "super-secret",
+  {
+    "settings.xml": """
+    <settings>
+      <profiles>
+        <profile>
+          <id>ci</id>
+          <properties>
+            <my.secret>hello, everybody!</my.secret>
+          </properties>
+        </profile>
+      </profiles>
+    </settings>
+    """
+  }
+)
+```
+
+The specification looks almost identical to the one discussed above, with
+two important differences. First, we're using `git-on-tag` template
+provided by user `urn:github:526301`. Second, we're instructing Maven to
+deploy our artifacts, not just test them:
+
+```
+"mvn deploy -e -Pci --settings /home/ubuntu/settings.xml"
+```
+
+Template `git-on-tag` expects you to name your tags according to
+[Semantic Versioning](http://semver.org/)
+convention and prefix them with a single word, for example:
+
+```
+rultor-0.1.5
+rultor-5.3-beta
+example-2.0.3.GA
+```
+
+Guard Your Master Branch
 -----
 
+It is a very good practice to test changes submitted to your code base
+before merging. When you receive a pull request from one of your
+project contributor, you should review the code for its logical validity and
+then run build automation script with all quality checks turned on.
+If build fails, you should reject this pull request and explain why.
 
+Read this article published by Yegor Bugayenko in php|Architect managazine
+on August 2010:
+["Prevent Conflicts in Distributed Agile PHP Projects"](http://img.rultor.com/guard-article.pdf)
+
+The process can be automated using `github-on-pull-request` provided by
+user `urn:github:526301`:
+
+```
+urn:github:526301:github-on-pull-request(
+  // not yet defined
+)
+```
