@@ -1,146 +1,76 @@
 <!DOCTYPE html>
-<!--
- * Copyright (c) 2012-2013, JCabi.com
- * All rights reserved.
- -->
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Programmable Enforcer of a Software Development Process"/>
+        <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
+        <meta name="author" content="rultor.com"/>
         <title>rultor - </title>
-        <link media="all" rel="stylesheet" type="text/css" href="./css/jcabi.css"/>
-                            <script>
-                var _gaq = _gaq || [];
-                _gaq.push(['_setAccount', 'UA-1963507-10']);
-                _gaq.push(['_trackPageview']);
-                (function() {
-                    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-                })();
-            </script>
-                                                                                                                
-<link rel="shortcut icon" href="http://img.rultor.com/favicon.ico"/>
-                                            <link rel="stylesheet" href="./css/highlight.css" />
-        <script src="./js/jquery-1.8.3.min.js"></script>
-        <script src="./js/highlight-7.3.min.js"></script>
+        <link rel="shortcut icon" type="image/gif" href="http://img.rultor.com/favicon.ico" />
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet" />
+        <link href="http://www.rultor.com/css/main.css" rel="stylesheet" />
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script>
-            $(document).ready(
-                function() {
-                    $('div.source pre').each(
-                        function (idx, element) {
-                            hljs.highlightBlock(element);
-                        }
-                    );
-                }
-            );
+        $(document).ready(
+            function() {
+                $('tt').replaceWith(
+                    function() {
+                        return '<code>' + $(this).text() + '</code>';
+                    }
+                )
+            }
+        );
+        </script>
+        <script>
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-1963507-10']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
         </script>
     </head>
     <body>
-                <ul id="menu">
-                                                    <li>
-                    Overview
-                                            <ul>
-                                                                            <li>
-                                            <strong>                        <a href="index.html" title="Introduction">Introduction</a>
-        </strong>
-                                                                                                                <ul>
-                                                    </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                            <li>
-                    Modules
-                                            <ul>
-                                                                            <li>
-                                                                    <a href="rultor-base/index.html" title="rultor-base">rultor-base</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="rultor-conveyer/index.html" title="rultor-conveyer">rultor-conveyer</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="rultor-client/index.html" title="rultor-client">rultor-client</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="rultor-drain/index.html" title="rultor-drain">rultor-drain</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="rultor-queue/index.html" title="rultor-queue">rultor-queue</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="rultor-repo/index.html" title="rultor-repo">rultor-repo</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="rultor-spi/index.html" title="rultor-spi">rultor-spi</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="rultor-web/index.html" title="rultor-web">rultor-web</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="rultor-users/index.html" title="rultor-users">rultor-users</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                            <li>
-                    Project Documentation
-                                            <ul>
-                                                                            <li>
-                                                                    <a href="project-info.html" title="Project Information">Project Information</a>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </li>
-                                                                                        <li>
-                                                                    <a href="project-reports.html" title="Project Reports">Project Reports</a>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </li>
-                                                                </ul>
-                                    </li>
-                    </ul>
-        <div id="content">
-                            <a href="https://github.com/rultor/rultor">
-                    <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
-                        src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
-                        alt="Fork me on GitHub" />
-                </a>
-                        <a href="http://doc.rultor.com/" title="${decoration.bannerLeft.title}">
-                <img src="http://img.rultor.com/logo-64x64.png"
-                    alt="rultor.com"
-                                                        />
+        <aside>
+            <a href="https://github.com/rultor/rultor" class="hidden-phone">
+                <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
+                    src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
+                    alt="Fork me on GitHub" />
             </a>
-                        <p>
+        </aside>
+        <ul class="list-inline">
+            <li>
+                <a class="logo" href="//doc.rultor.com/index.html">R</a>
+            </li>
+            <li>
+                0.1
+            </li>
+            <li>
                 
-                22-Aug-2013
-                0.1.7
-            </p>
-            <article>
-                <h1>Rultor.com, Lightweight Integration Platform as a Service</h1><p>To be continued</p>
-            </article>
-            <p style="margin-bottom: 3em; margin-top: 2em;">
-                Copyright &#169;
-                                                    2009-2013
-                                Rultor Inc., All Rights Reserved.
-                <a href="http://maven.apache.org/privacy-policy.html">Privacy Policy</a>.
-            </p>
-            <a href="http://maven.apache.org" title="site is built by Apache Maven"
-                style='position: absolute; bottom: 1em; right: 1em;'>
-                <img src='images/built-by-maven.png' style='width: 50px; height: 17px;'
+                25-Aug-2013
+            </li>
+            <li>
+                <img src='http://img.jcabi.com/built-by-maven.png' style='width: 50px; height: 17px;'
                     alt='site is built by Apache Maven'/>
-            </a>
+            </li>
+        </ul>
+        <div>
+            <article class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                <h1>Programmable Enforcer of a Software Development Process</h1><p>Rultor is an integration platform of a new generation. Continuous Integration, in its modern understanding, is just a small element of a properly organized and disciplined software development process. Rultor lets you define and technically enforce rules of work in your team. Rultor allows you, a project architect or a manager:</p>
+<ul>
+  <li><p>Continuously integrate source code changes  using on-demand AWS EC2 instances (similar to Jenkins,  but with flexible on-demand cloud servers that run jobs);</p></li>
+  <li><p>Prevent master branch conflicts by preventive automated testing  of pull requests;</p></li>
+  <li><p>Deploy your web app to on-demand AWS CloudFormation environments  per tester and developer requests (pool of  environments is managed by Rultor);</p></li>
+  <li><p>Keep programmers aware of source code changes and conflicts  by notifications automatically communicated through issue tracking system;</p></li>
+  <li><p>Enforce changes approval workflow in any ticket tracking system  (for example, with a list of mandatory steps of code reviews and acceptations);</p></li>
+  <li><p>Publish build artifacts like ZIP/JAR archives, test HTML reports,  code coverage and static analysis reports in custom destinations,  like AWS S3 or FTP;</p></li>
+  <li><p>Aggregate statistics and metrics from all processes in a fluid  web stand.</p></li>
+</ul><p>We do not provide any computing or storage resources, like servers. Instead, we integrate your existing components and help you to manage them. At the moment, we support out-of-the-box: Github, JIRA, Git, AWS EC2, AWS CloudFormation, AWS S3, FTP. The list is growing</p><p><a href="./start.html">Quick Start</a> manual will help you to get your first unit of work up and running in 60 seconds.</p><p>Rultor is an open source project hosted at <a class="externalLink" href="https://github.com/rultor/rultor">Gihub</a>. Youre very welcome to suggest new features, report bugs, and ask questions in <a class="externalLink" href="https://github.com/rultor/rultor/issues">Github Issue Tracker</a>. The project is still in alpha state.</p>
+            </article>
         </div>
     </body>
 </html>

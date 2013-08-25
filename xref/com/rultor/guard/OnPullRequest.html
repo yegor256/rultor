@@ -170,7 +170,7 @@
 <a class="jxr_linenumber" name="160" href="#160">160</a>         <strong class="jxr_keyword">boolean</strong> success = false;
 <a class="jxr_linenumber" name="161" href="#161">161</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="162" href="#162">162</a>             success ^= snapshot.xml()
-<a class="jxr_linenumber" name="163" href="#163">163</a>                 .nodes(String.format(<span class="jxr_string">"//tag[label='%s' and level='INFO']"</span>, tag))
+<a class="jxr_linenumber" name="163" href="#163">163</a>                 .nodes(String.format(<span class="jxr_string">"//tag[label='%s' and level='FINE']"</span>, tag))
 <a class="jxr_linenumber" name="164" href="#164">164</a>                 .isEmpty();
 <a class="jxr_linenumber" name="165" href="#165">165</a>         } <strong class="jxr_keyword">catch</strong> (ImpossibleModificationException ex) {
 <a class="jxr_linenumber" name="166" href="#166">166</a>             Logger.warn(<strong class="jxr_keyword">this</strong>, ExceptionUtils.getRootCauseMessage(ex));

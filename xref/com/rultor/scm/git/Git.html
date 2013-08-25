@@ -214,7 +214,7 @@
 <a class="jxr_linenumber" name="204" href="#204">204</a>             .append(<span class="jxr_string">" &amp;&amp; cd $DIR/repo"</span>)
 <a class="jxr_linenumber" name="205" href="#205">205</a>             .append(<span class="jxr_string">" &amp;&amp; git remote set-url origin $URL"</span>)
 <a class="jxr_linenumber" name="206" href="#206">206</a>             .append(<span class="jxr_string">" &amp;&amp; git remote update -p"</span>)
-<a class="jxr_linenumber" name="207" href="#207">207</a>             .append(<span class="jxr_string">" &amp;&amp; git fetch"</span>)
+<a class="jxr_linenumber" name="207" href="#207">207</a>             .append(<span class="jxr_string">" &amp;&amp; git fetch origin --prune --tags"</span>)
 <a class="jxr_linenumber" name="208" href="#208">208</a>             .append(<span class="jxr_string">" &amp;&amp; git reset --hard"</span>)
 <a class="jxr_linenumber" name="209" href="#209">209</a>             .append(<span class="jxr_string">" &amp;&amp; git clean -f -d"</span>)
 <a class="jxr_linenumber" name="210" href="#210">210</a>             .toString();
