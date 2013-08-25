@@ -1,146 +1,65 @@
 <!DOCTYPE html>
-<!--
- * Copyright (c) 2012-2013, JCabi.com
- * All rights reserved.
- -->
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Programmable Enforcer of a Software Development Process"/>
+        <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
+        <meta name="author" content="rultor.com"/>
         <title>rultor-spi - Surefire Report</title>
-        <link media="all" rel="stylesheet" type="text/css" href="./css/jcabi.css"/>
-                                                                                                                        
-<link rel="shortcut icon" href="http://img.rultor.com/favicon.ico"/>
-                                            <link rel="stylesheet" href="./css/highlight.css" />
-        <script src="./js/jquery-1.8.3.min.js"></script>
-        <script src="./js/highlight-7.3.min.js"></script>
+        <link rel="shortcut icon" type="image/gif" href="http://img.rultor.com/favicon.ico" />
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet" />
+        <link href="http://www.rultor.com/css/main.css" rel="stylesheet" />
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script>
-            $(document).ready(
-                function() {
-                    $('div.source pre').each(
-                        function (idx, element) {
-                            hljs.highlightBlock(element);
-                        }
-                    );
-                }
-            );
+        $(document).ready(
+            function() {
+                $('tt').replaceWith(
+                    function() {
+                        return '<code>' + $(this).text() + '</code>';
+                    }
+                )
+            }
+        );
+        </script>
+        <script>
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-1963507-10']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
         </script>
     </head>
     <body>
-                <ul id="menu">
-                                                    <li>
-                    Parent Project
-                                            <ul>
-                                                                            <li>
-                                                                    <a href="../index.html" title="rultor">rultor</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                            <li>
-                    Overview
-                                            <ul>
-                                                                            <li>
-                                                                    <a href="index.html" title="Introduction">Introduction</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="apidocs-0.1.7/index.html" title="JavaDoc 0.1.7">JavaDoc 0.1.7</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="cobertura/index.html" title="Test Coverage">Test Coverage</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="changes-report.html" title="Release History">Release History</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                            <li>
-                    Project Documentation
-                                            <ul>
-                                                                            <li>
-                                                                    <a href="project-info.html" title="Project Information">Project Information</a>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </li>
-                                                                                        <li>
-                                                                    <a href="project-reports.html" title="Project Reports">Project Reports</a>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <ul>
-                                                                            <li>
-                                            <strong>                        <a href="surefire-report.html" title="Surefire Report">Surefire Report</a>
-        </strong>
-                                                                                                                <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="changelog.html" title="Change Log">Change Log</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="dev-activity.html" title="Developer Activity">Developer Activity</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="file-activity.html" title="File Activity">File Activity</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="dependency-updates-report.html" title="Dependency Updates Report">Dependency Updates Report</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="plugin-updates-report.html" title="Plugin Updates Report">Plugin Updates Report</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="apidocs-0.1.7/index.html" title="JavaDocs">JavaDocs</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="cobertura/index.html" title="Cobertura Test Coverage">Cobertura Test Coverage</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                    </ul>
-        <div id="content">
-                            <a href="https://github.com/rultor/rultor/rultor-spi">
-                    <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
-                        src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
-                        alt="Fork me on GitHub" />
-                </a>
-                        <a href="http://doc.rultor.com/" title="${decoration.bannerLeft.title}">
-                <img src="http://img.rultor.com/logo-64x64.png"
-                    alt="rultor.com"
-                                                        />
+        <aside>
+            <a href="https://github.com/rultor/rultor" class="hidden-phone">
+                <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
+                    src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
+                    alt="Fork me on GitHub" />
             </a>
-                            <ul id="breadcrumbs">
-                                            <li>                        <a href="http://doc.rultor.com" title="rultor.com">rultor.com</a>
-        </li>
-                                            <li>                                    <a href="./" title="rultor-spi">rultor-spi</a>
-        </li>
-                                    </ul>
-                        <p>
+        </aside>
+        <ul class="list-inline">
+            <li>
+                <a class="logo" href="//doc.rultor.com/index.html">R</a>
+            </li>
+            <li>
+                0.1
+            </li>
+            <li>
                 
-                22-Aug-2013
-                0.1.7
-            </p>
-            <article>
+                25-Aug-2013
+            </li>
+            <li>
+                <img src='http://img.jcabi.com/built-by-maven.png' style='width: 50px; height: 17px;'
+                    alt='site is built by Apache Maven'/>
+            </li>
+        </ul>
+        <div>
+            <article class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
                 <script type="text/javascript">
 //<![CDATA[
 function toggleDisplay(elementId) {
@@ -157,19 +76,8 @@ function toggleDisplay(elementId) {
  } 
  }
 //]]>
-</script><div class="section"><h2>Surefire Report<a name="Surefire_Report"></a></h2></div><div class="section"><h2>Summary<a name="Summary"></a></h2><a name="Summary"></a><p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br /><table border="1" class="bodyTable"><tr class="a"><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td>20</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>4.103</td></tr></table><br /><p>Note: failures are anticipated and checked for with assertions while errors are unanticipated.</p><br /></div><div class="section"><h2>Package List<a name="Package_List"></a></h2><a name="Package_List"></a><p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br /><table border="1" class="bodyTable"><tr class="a"><th>Package</th><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td><a href="#com.rultor.tools">com.rultor.tools</a></td><td>9</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>2.221</td></tr><tr class="a"><td><a href="#com.rultor.spi">com.rultor.spi</a></td><td>6</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.363</td></tr><tr class="b"><td><a href="#com.rultor.snapshot">com.rultor.snapshot</a></td><td>5</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>1.519</td></tr></table><br /><p>Note: package statistics are not computed recursively, they only sum up all of its testsuites numbers.</p><div class="section"><h3>com.rultor.tools<a name="com.rultor.tools"></a></h3><a name="com.rultor.tools"></a><table border="1" class="bodyTable"><tr class="a"><th></th><th>Class</th><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td><a href="#com.rultor.toolsMarkdownTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.toolsMarkdownTest">MarkdownTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.007</td></tr><tr class="a"><td><a href="#com.rultor.toolsVextTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.toolsVextTest">VextTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.091</td></tr><tr class="b"><td><a href="#com.rultor.toolsTimeTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.toolsTimeTest">TimeTest</a></td><td>2</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.002</td></tr><tr class="a"><td><a href="#com.rultor.toolsNormJsonTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.toolsNormJsonTest">NormJsonTest</a></td><td>4</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>2.089</td></tr><tr class="b"><td><a href="#com.rultor.toolsDollarsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.toolsDollarsTest">DollarsTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.032</td></tr></table></div><div class="section"><h3>com.rultor.spi<a name="com.rultor.spi"></a></h3><a name="com.rultor.spi"></a><table border="1" class="bodyTable"><tr class="a"><th></th><th>Class</th><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td><a href="#com.rultor.spiPageableTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.spiPageableTest">PageableTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.05</td></tr><tr class="a"><td><a href="#com.rultor.spiArgumentsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.spiArgumentsTest">ArgumentsTest</a></td><td>3</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.298</td></tr><tr class="b"><td><a href="#com.rultor.spiDrainTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.spiDrainTest">DrainTest</a></td><td>2</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.015</td></tr></table></div><div class="section"><h3>com.rultor.snapshot<a name="com.rultor.snapshot"></a></h3><a name="com.rultor.snapshot"></a><table border="1" class="bodyTable"><tr class="a"><th></th><th>Class</th><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td><a href="#com.rultor.snapshotStepAspectTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.snapshotStepAspectTest">StepAspectTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.429</td></tr><tr class="a"><td><a href="#com.rultor.snapshotXSLTTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.snapshotXSLTTest">XSLTTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.468</td></tr><tr class="b"><td><a href="#com.rultor.snapshotTagAspectTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.snapshotTagAspectTest">TagAspectTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.012</td></tr><tr class="a"><td><a href="#com.rultor.snapshotSnapshotTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.snapshotSnapshotTest">SnapshotTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.592</td></tr><tr class="b"><td><a href="#com.rultor.snapshotXemblyLineTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.snapshotXemblyLineTest">XemblyLineTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.018</td></tr></table></div><br /></div><div class="section"><h2>Test Cases<a name="Test_Cases"></a></h2><a name="Test_Cases"></a><p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><div class="section"><h3>StepAspectTest<a name="StepAspectTest"></a></h3><a name="com.rultor.snapshotStepAspectTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>reportsMethodProgressInLog</td><td>0.429</td></tr></table></div><div class="section"><h3>MarkdownTest<a name="MarkdownTest"></a></h3><a name="com.rultor.toolsMarkdownTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>convertsToHtml</td><td>0.007</td></tr></table></div><div class="section"><h3>VextTest<a name="VextTest"></a></h3><a name="com.rultor.toolsVextTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>printsWithArguments</td><td>0.091</td></tr></table></div><div class="section"><h3>PageableTest<a name="PageableTest"></a></h3><a name="com.rultor.spiPageableTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>sortsElementsInRightOrder</td><td>0.05</td></tr></table></div><div class="section"><h3>TimeTest<a name="TimeTest"></a></h3><a name="com.rultor.toolsTimeTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>printsAndParses</td><td>0.001</td></tr><tr class="b"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>parsesIsoFormat</td><td>0.001</td></tr></table></div><div class="section"><h3>ArgumentsTest<a name="ArgumentsTest"></a></h3><a name="com.rultor.spiArgumentsTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>replacesItemByIndex</td><td>0.252</td></tr><tr class="b"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>addsItemsByIndex</td><td>0.031</td></tr><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>retrievesItemByIndex</td><td>0.015</td></tr></table></div><div class="section"><h3>XSLTTest<a name="XSLTTest"></a></h3><a name="com.rultor.snapshotXSLTTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>transformsSnapshot</td><td>0.468</td></tr></table></div><div class="section"><h3>NormJsonTest<a name="NormJsonTest"></a></h3><a name="com.rultor.toolsNormJsonTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>throwsOnBrokenJson</td><td>1.932</td></tr><tr class="b"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>readsValidJson</td><td>0.128</td></tr><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>throwsOnArrayInsteadOfObject</td><td>0.004</td></tr><tr class="b"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>throwsOnSchemaViolations</td><td>0.025</td></tr></table></div><div class="section"><h3>TagAspectTest<a name="TagAspectTest"></a></h3><a name="com.rultor.snapshotTagAspectTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>reportsMethodProgressInLog</td><td>0.012</td></tr></table></div><div class="section"><h3>DollarsTest<a name="DollarsTest"></a></h3><a name="com.rultor.toolsDollarsTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>printsItselfToString</td><td>0.032</td></tr></table></div><div class="section"><h3>SnapshotTest<a name="SnapshotTest"></a></h3><a name="com.rultor.snapshotSnapshotTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>fetchesSnapshotFromStream</td><td>0.592</td></tr></table></div><div class="section"><h3>XemblyLineTest<a name="XemblyLineTest"></a></h3><a name="com.rultor.snapshotXemblyLineTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>printsAndParses</td><td>0.018</td></tr></table></div><div class="section"><h3>DrainTest<a name="DrainTest"></a></h3><a name="com.rultor.spiDrainTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>makesString</td><td>0.01</td></tr><tr class="b"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>buildsDatesCorrectly</td><td>0.005</td></tr></table></div><br /></div>
+</script><div class="section"><h2>Surefire Report<a name="Surefire_Report"></a></h2></div><div class="section"><h2>Summary<a name="Summary"></a></h2><a name="Summary"></a><p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br /><table border="1" class="bodyTable"><tr class="a"><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td>20</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>3.895</td></tr></table><br /><p>Note: failures are anticipated and checked for with assertions while errors are unanticipated.</p><br /></div><div class="section"><h2>Package List<a name="Package_List"></a></h2><a name="Package_List"></a><p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br /><table border="1" class="bodyTable"><tr class="a"><th>Package</th><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td><a href="#com.rultor.tools">com.rultor.tools</a></td><td>9</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>2.185</td></tr><tr class="a"><td><a href="#com.rultor.spi">com.rultor.spi</a></td><td>6</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.35</td></tr><tr class="b"><td><a href="#com.rultor.snapshot">com.rultor.snapshot</a></td><td>5</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>1.36</td></tr></table><br /><p>Note: package statistics are not computed recursively, they only sum up all of its testsuites numbers.</p><div class="section"><h3>com.rultor.tools<a name="com.rultor.tools"></a></h3><a name="com.rultor.tools"></a><table border="1" class="bodyTable"><tr class="a"><th></th><th>Class</th><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td><a href="#com.rultor.toolsMarkdownTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.toolsMarkdownTest">MarkdownTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.029</td></tr><tr class="a"><td><a href="#com.rultor.toolsVextTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.toolsVextTest">VextTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>1.227</td></tr><tr class="b"><td><a href="#com.rultor.toolsTimeTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.toolsTimeTest">TimeTest</a></td><td>2</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.05</td></tr><tr class="a"><td><a href="#com.rultor.toolsNormJsonTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.toolsNormJsonTest">NormJsonTest</a></td><td>4</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.862</td></tr><tr class="b"><td><a href="#com.rultor.toolsDollarsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.toolsDollarsTest">DollarsTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.017</td></tr></table></div><div class="section"><h3>com.rultor.spi<a name="com.rultor.spi"></a></h3><a name="com.rultor.spi"></a><table border="1" class="bodyTable"><tr class="a"><th></th><th>Class</th><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td><a href="#com.rultor.spiPageableTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.spiPageableTest">PageableTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.03</td></tr><tr class="a"><td><a href="#com.rultor.spiArgumentsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.spiArgumentsTest">ArgumentsTest</a></td><td>3</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.283</td></tr><tr class="b"><td><a href="#com.rultor.spiDrainTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.spiDrainTest">DrainTest</a></td><td>2</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.037</td></tr></table></div><div class="section"><h3>com.rultor.snapshot<a name="com.rultor.snapshot"></a></h3><a name="com.rultor.snapshot"></a><table border="1" class="bodyTable"><tr class="a"><th></th><th>Class</th><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td><a href="#com.rultor.snapshotStepAspectTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.snapshotStepAspectTest">StepAspectTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.179</td></tr><tr class="a"><td><a href="#com.rultor.snapshotXSLTTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.snapshotXSLTTest">XSLTTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>1.039</td></tr><tr class="b"><td><a href="#com.rultor.snapshotTagAspectTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.snapshotTagAspectTest">TagAspectTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.034</td></tr><tr class="a"><td><a href="#com.rultor.snapshotSnapshotTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.snapshotSnapshotTest">SnapshotTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.1</td></tr><tr class="b"><td><a href="#com.rultor.snapshotXemblyLineTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.snapshotXemblyLineTest">XemblyLineTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.008</td></tr></table></div><br /></div><div class="section"><h2>Test Cases<a name="Test_Cases"></a></h2><a name="Test_Cases"></a><p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><div class="section"><h3>StepAspectTest<a name="StepAspectTest"></a></h3><a name="com.rultor.snapshotStepAspectTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>reportsMethodProgressInLog</td><td>0.179</td></tr></table></div><div class="section"><h3>MarkdownTest<a name="MarkdownTest"></a></h3><a name="com.rultor.toolsMarkdownTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>convertsToHtml</td><td>0.029</td></tr></table></div><div class="section"><h3>VextTest<a name="VextTest"></a></h3><a name="com.rultor.toolsVextTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>printsWithArguments</td><td>1.227</td></tr></table></div><div class="section"><h3>PageableTest<a name="PageableTest"></a></h3><a name="com.rultor.spiPageableTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>sortsElementsInRightOrder</td><td>0.03</td></tr></table></div><div class="section"><h3>TimeTest<a name="TimeTest"></a></h3><a name="com.rultor.toolsTimeTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>printsAndParses</td><td>0.049</td></tr><tr class="b"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>parsesIsoFormat</td><td>0.001</td></tr></table></div><div class="section"><h3>ArgumentsTest<a name="ArgumentsTest"></a></h3><a name="com.rultor.spiArgumentsTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>replacesItemByIndex</td><td>0.255</td></tr><tr class="b"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>addsItemsByIndex</td><td>0.01</td></tr><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>retrievesItemByIndex</td><td>0.018</td></tr></table></div><div class="section"><h3>XSLTTest<a name="XSLTTest"></a></h3><a name="com.rultor.snapshotXSLTTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>transformsSnapshot</td><td>1.039</td></tr></table></div><div class="section"><h3>NormJsonTest<a name="NormJsonTest"></a></h3><a name="com.rultor.toolsNormJsonTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>throwsOnBrokenJson</td><td>0.758</td></tr><tr class="b"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>readsValidJson</td><td>0.064</td></tr><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>throwsOnArrayInsteadOfObject</td><td>0.028</td></tr><tr class="b"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>throwsOnSchemaViolations</td><td>0.012</td></tr></table></div><div class="section"><h3>TagAspectTest<a name="TagAspectTest"></a></h3><a name="com.rultor.snapshotTagAspectTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>reportsMethodProgressInLog</td><td>0.034</td></tr></table></div><div class="section"><h3>DollarsTest<a name="DollarsTest"></a></h3><a name="com.rultor.toolsDollarsTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>printsItselfToString</td><td>0.017</td></tr></table></div><div class="section"><h3>SnapshotTest<a name="SnapshotTest"></a></h3><a name="com.rultor.snapshotSnapshotTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>fetchesSnapshotFromStream</td><td>0.1</td></tr></table></div><div class="section"><h3>XemblyLineTest<a name="XemblyLineTest"></a></h3><a name="com.rultor.snapshotXemblyLineTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>printsAndParses</td><td>0.008</td></tr></table></div><div class="section"><h3>DrainTest<a name="DrainTest"></a></h3><a name="com.rultor.spiDrainTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>makesString</td><td>0.032</td></tr><tr class="b"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>buildsDatesCorrectly</td><td>0.005</td></tr></table></div><br /></div>
             </article>
-            <p style="margin-bottom: 3em; margin-top: 2em;">
-                Copyright &#169;
-                                                    2009-2013
-                                Rultor Inc., All Rights Reserved.
-                <a href="http://maven.apache.org/privacy-policy.html">Privacy Policy</a>.
-            </p>
-            <a href="http://maven.apache.org" title="site is built by Apache Maven"
-                style='position: absolute; bottom: 1em; right: 1em;'>
-                <img src='images/built-by-maven.png' style='width: 50px; height: 17px;'
-                    alt='site is built by Apache Maven'/>
-            </a>
         </div>
     </body>
 </html>
