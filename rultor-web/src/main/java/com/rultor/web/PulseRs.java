@@ -38,6 +38,7 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
+import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.io.InputStream;
@@ -112,7 +113,7 @@ public final class PulseRs extends BaseRs {
                     .build(this.name),
                 String.format(
                     "Can't read this pulse: %s",
-                    ExceptionUtils.getRootCauseMessage(ex)
+                    Exceptions.message(ex)
                 ),
                 Level.SEVERE
             );
@@ -171,7 +172,7 @@ public final class PulseRs extends BaseRs {
                 String.format(
                     "Can't instantiate drain of \"%s\": %s",
                     this.name,
-                    ExceptionUtils.getRootCauseMessage(ex)
+                    Exceptions.message(ex)
                 ),
                 Level.SEVERE
             );

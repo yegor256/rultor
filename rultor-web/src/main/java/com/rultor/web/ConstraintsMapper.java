@@ -33,6 +33,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.inset.FlashInset;
+import com.rultor.tools.Exceptions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -81,7 +82,7 @@ public final class ConstraintsMapper extends BaseResource
                 ),
                 Level.WARNING
             ).getResponse()
-        ).entity(ExceptionUtils.getRootCauseStackTrace(violation)).build();
+        ).entity(Exceptions.stacktrace(violation)).build();
     }
 
 }

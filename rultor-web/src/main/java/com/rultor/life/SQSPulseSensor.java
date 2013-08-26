@@ -49,6 +49,7 @@ import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
+import com.rultor.tools.Exceptions;
 import com.rultor.tools.NormJson;
 import java.io.Closeable;
 import java.io.IOException;
@@ -148,12 +149,12 @@ public final class SQSPulseSensor implements Runnable, Closeable {
             try {
                 this.post(SQSPulseSensor.NORM.readObject(msg.getBody()));
             } catch (SecurityException ex) {
-                Logger.info(this, ExceptionUtils.getRootCauseMessage(ex));
+                Exceptions.info(this, ex);
             // @checkstyle IllegalCatch (1 line)
             } catch (Stand.BrokenXemblyException ex) {
-                Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+                Exceptions.warn(this, ex);
             } catch (NormJson.JsonException ex) {
-                Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+                Exceptions.warn(this, ex);
             } finally {
                 aws.deleteMessage(
                     new DeleteMessageRequest()

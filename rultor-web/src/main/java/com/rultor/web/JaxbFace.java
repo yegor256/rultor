@@ -43,14 +43,12 @@ import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
+import com.rultor.tools.Exceptions;
 import com.rultor.tools.Markdown;
 import com.rultor.tools.Time;
 import java.net.URI;
-import java.util.Collection;
-import java.util.LinkedList;
+
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Face of {@link Spec} in JAXB.
@@ -122,7 +120,7 @@ final class JaxbFace {
         // @checkstyle IllegalCatch (1 line)
         } catch (Exception ex) {
             bundle = bundle.add(
-                "exception", JaxbFace.clean(ExceptionUtils.getStackTrace(ex))
+                "exception", Exceptions.stacktrace(ex)
             ).up();
         }
         return bundle;
@@ -177,34 +175,6 @@ final class JaxbFace {
                 throw new UnsupportedOperationException();
             }
         };
-    }
-
-    /**
-     * Clean the exception stacktrace.
-     * @param trace Raw trace
-     * @return Clean one
-     */
-    private static String clean(final String trace) {
-        final Collection<String> lines = new LinkedList<String>();
-        final String[] markers = new String[] {
-            "org.aspectj.runtime",
-            "com.jcabi.aspects.aj",
-            "_aroundBody",
-            "AjcClosure",
-        };
-        for (String line : trace.split("\n")) {
-            boolean found = false;
-            for (String marker : markers) {
-                if (line.contains(marker)) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                lines.add(line);
-            }
-        }
-        return StringUtils.join(lines, "\n");
     }
 
 }
