@@ -39,15 +39,14 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.jdbc.JdbcSession;
 import com.jcabi.jdbc.VoidHandler;
-import com.jcabi.log.Logger;
 import com.rultor.aws.SQSClient;
+import com.rultor.tools.Exceptions;
 import com.rultor.tools.NormJson;
 import com.rultor.tools.Time;
 import java.sql.SQLException;
 import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Receipts coming from SQS.
@@ -108,7 +107,7 @@ final class SQSReceipts {
             try {
                 this.process(SQSReceipts.NORM.readObject(msg.getBody()));
             } catch (NormJson.JsonException ex) {
-                Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+                Exceptions.warn(this, ex);
             } finally {
                 aws.deleteMessage(
                     new DeleteMessageRequest()

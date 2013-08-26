@@ -37,6 +37,7 @@ import com.rexsl.page.inset.FlashInset;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Unit;
+import com.rultor.tools.Exceptions;
 import java.net.HttpURLConnection;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
@@ -47,7 +48,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Pulses.
@@ -143,7 +143,7 @@ public final class UnitRs extends BaseRs {
                         .up()
                         .add(
                             "exception",
-                            ExceptionUtils.getRootCauseMessage(ex)
+                            Exceptions.message(ex)
                         )
                         .up()
                 )

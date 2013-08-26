@@ -39,13 +39,13 @@ import com.rultor.guard.MergeRequest;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.Step;
 import com.rultor.snapshot.XSLT;
+import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.Map;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.RequestException;
@@ -167,7 +167,7 @@ final class GhRequest implements MergeRequest {
                 this.repository, this.issue,
                 String.format(
                     "Failed to merge:\n\n```\n%s\n```",
-                    ExceptionUtils.getStackTrace(ex)
+                    Exceptions.stacktrace(ex)
                 )
             );
             throw ex;
