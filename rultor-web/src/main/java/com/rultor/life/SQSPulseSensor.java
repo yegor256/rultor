@@ -36,7 +36,6 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
 import com.rultor.aws.SQSClient;
@@ -58,7 +57,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Sensor to pulses in SQS queue.

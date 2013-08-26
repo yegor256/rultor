@@ -59,7 +59,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.xml.transform.TransformerException;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
 

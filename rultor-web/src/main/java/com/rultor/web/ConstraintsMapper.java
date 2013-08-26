@@ -42,7 +42,6 @@ import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Maps constraint violations to JAX-RS responses.

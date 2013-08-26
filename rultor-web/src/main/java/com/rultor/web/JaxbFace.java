@@ -47,7 +47,6 @@ import com.rultor.tools.Exceptions;
 import com.rultor.tools.Markdown;
 import com.rultor.tools.Time;
 import java.net.URI;
-
 import lombok.EqualsAndHashCode;
 
 /**

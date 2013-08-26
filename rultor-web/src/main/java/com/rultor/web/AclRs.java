@@ -50,7 +50,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Edit ACL of stand.
