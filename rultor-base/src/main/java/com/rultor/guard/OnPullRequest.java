@@ -40,11 +40,11 @@ import com.rultor.snapshot.Step;
 import com.rultor.snapshot.Tag;
 import com.rultor.spi.Instance;
 import com.rultor.stateful.ConcurrentNotepad;
+import com.rultor.tools.Exceptions;
 import java.io.IOException;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.xembly.ImpossibleModificationException;
 
 /**
@@ -163,7 +163,7 @@ public final class OnPullRequest implements Instance {
                 .nodes(String.format("//tag[label='%s' and level='FINE']", tag))
                 .isEmpty();
         } catch (ImpossibleModificationException ex) {
-            Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+            Exceptions.warn(this, ex);
         }
         return success;
     }

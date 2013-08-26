@@ -31,7 +31,6 @@ package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.PageBuilder;
@@ -45,6 +44,7 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
+import com.rultor.tools.Exceptions;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -55,7 +55,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.xml.transform.TransformerException;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
@@ -197,7 +196,7 @@ public final class StandRs extends BaseRs {
                     )
             );
         } catch (SpecException ex) {
-            Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+            Exceptions.warn(this, ex);
             acl = new ACL() {
                 @Override
                 public boolean canView(final URN urn) {

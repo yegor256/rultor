@@ -39,6 +39,7 @@ import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Work;
+import com.rultor.tools.Exceptions;
 import java.net.HttpURLConnection;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
@@ -125,7 +126,7 @@ public final class AclRs extends BaseRs {
                         .up()
                         .add(
                             "exception",
-                            ExceptionUtils.getRootCauseMessage(ex)
+                            Exceptions.message(ex)
                         )
                         .up()
                 )

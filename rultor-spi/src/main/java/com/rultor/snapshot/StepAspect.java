@@ -30,6 +30,7 @@
 package com.rultor.snapshot;
 
 import com.google.common.collect.ImmutableMap;
+import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
 import com.rultor.tools.Vext;
 import java.lang.reflect.Field;
@@ -37,7 +38,6 @@ import java.lang.reflect.Method;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.logging.Level;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -126,8 +126,8 @@ public final class StepAspect {
                     .add("class")
                     .set(ex.getClass().getCanonicalName()).up()
                     .add("stacktrace")
-                    .set(ExceptionUtils.getStackTrace(ex)).up()
-                    .add("cause").set(ExceptionUtils.getRootCauseMessage(ex))
+                    .set(Exceptions.stacktrace(ex)).up()
+                    .add("cause").set(Exceptions.message(ex))
             ).log();
             throw ex;
         } finally {

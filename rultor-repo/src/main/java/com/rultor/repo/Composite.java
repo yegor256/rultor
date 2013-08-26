@@ -37,6 +37,7 @@ import com.rultor.spi.Proxy;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import com.rultor.tools.Exceptions;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -55,7 +56,6 @@ import javassist.NotFoundException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Composite.
@@ -128,7 +128,7 @@ final class Composite implements Variable<Object> {
                 String.format(
                     "failed to instantiate using \"%s\" constructor: %s",
                     ctor,
-                    ExceptionUtils.getRootCauseMessage(ex)
+                    Exceptions.message(ex)
                 ),
                 ex
             );
@@ -137,7 +137,7 @@ final class Composite implements Variable<Object> {
                 String.format(
                     "failed to access \"%s\": %s",
                     ctor,
-                    ExceptionUtils.getRootCauseMessage(ex)
+                    Exceptions.message(ex)
                 ),
                 ex
             );
@@ -146,7 +146,7 @@ final class Composite implements Variable<Object> {
                 String.format(
                     "failed to invoke \"%s\": %s",
                     ctor,
-                    ExceptionUtils.getRootCauseMessage(ex)
+                    Exceptions.message(ex)
                 ),
                 ex
             );
@@ -345,7 +345,7 @@ final class Composite implements Variable<Object> {
                 String.format(
                     "can't compile \"%s\": %s",
                     name,
-                    ExceptionUtils.getRootCauseMessage(ex)
+                    Exceptions.message(ex)
                 ),
                 ex
             );
@@ -354,7 +354,7 @@ final class Composite implements Variable<Object> {
                 String.format(
                     "class \"%s\" not found: %s",
                     name,
-                    ExceptionUtils.getRootCauseMessage(ex)
+                    Exceptions.message(ex)
                 ), ex
             );
         }

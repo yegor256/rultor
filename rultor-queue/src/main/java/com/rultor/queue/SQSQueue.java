@@ -46,6 +46,7 @@ import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Work;
+import com.rultor.tools.Exceptions;
 import com.rultor.tools.NormJson;
 import com.rultor.tools.Time;
 import java.io.StringWriter;
@@ -56,7 +57,6 @@ import javax.json.stream.JsonGenerator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Queue in Amazon SQS.
@@ -187,7 +187,7 @@ public final class SQSQueue implements Queue {
                 try {
                     work = SQSQueue.unserialize(msg.getBody());
                 } catch (NormJson.JsonException ex) {
-                    Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+                    Exceptions.warn(this, ex);
                 } finally {
                     aws.deleteMessage(
                         new DeleteMessageRequest()
