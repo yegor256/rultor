@@ -31,13 +31,13 @@ package com.rultor.drain;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
 import com.rexsl.test.RestTester;
 import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Work;
+import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,7 +51,6 @@ import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpHeaders;
 import org.xembly.XemblySyntaxException;
 
@@ -136,7 +135,7 @@ public final class Standed implements Drain {
                 try {
                     this.send(XemblyLine.parse(line).xembly());
                 } catch (XemblySyntaxException ex) {
-                    Logger.warn(this, ExceptionUtils.getRootCauseMessage(ex));
+                    Exceptions.warn(this, ex);
                 }
             }
         }

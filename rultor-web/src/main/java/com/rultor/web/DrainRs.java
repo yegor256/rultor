@@ -44,6 +44,7 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
+import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.Collection;
@@ -138,7 +139,7 @@ public final class DrainRs extends BaseRs {
                     String.format(
                         "I/O problem with the tail of drain of \"%s\": %s",
                         this.name,
-                        ExceptionUtils.getRootCauseMessage(ex)
+                        Exceptions.message(ex)
                     ),
                     Level.SEVERE
                 );
@@ -186,7 +187,7 @@ public final class DrainRs extends BaseRs {
                 String.format(
                     "Can't render drain of \"%s\": %s",
                     this.name,
-                    ExceptionUtils.getRootCauseMessage(ex)
+                    Exceptions.message(ex)
                 ),
                 Level.SEVERE
             );
@@ -207,7 +208,7 @@ public final class DrainRs extends BaseRs {
                 String.format(
                     "I/O problem with the drain of \"%s\": %s",
                     this.name,
-                    ExceptionUtils.getRootCauseMessage(ex)
+                    Exceptions.message(ex)
                 ),
                 Level.SEVERE
             );
@@ -312,7 +313,7 @@ public final class DrainRs extends BaseRs {
                             .up()
                             .add(
                                 "message",
-                                ExceptionUtils.getRootCauseMessage(bug)
+                                Exceptions.message(bug)
                             )
                             .up();
                     }
