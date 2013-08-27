@@ -48,6 +48,7 @@ import org.junit.Test;
  * Test case for {@link IncrementalBash}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class IncrementalBashTest {
 
@@ -63,7 +64,7 @@ public final class IncrementalBashTest {
         final int code = new IncrementalBash(
             new Permanent(new ShellMocker.Bash(dir)),
             Arrays.asList(
-                "echo 'hello!'",
+                "echo 'hello!'; sleep 1",
                 "find . -name 'a.txt' | grep txt | wc -l",
                 "if [ -f a.txt ]; then echo 'exists!'; fi",
                 "/usr/bin/broken-name"
@@ -77,10 +78,14 @@ public final class IncrementalBashTest {
                 ).dom()
             ),
             XhtmlMatchers.hasXPaths(
-                "/snapshot/steps/step[summary=\"echo 'hello!'\"]/start",
+                "/snapshot/steps/step",
+                "//step[summary=\"echo 'hello!'; sleep 1\"]/start",
                 "//step[summary='/usr/bin/broken-name']/exception",
                 // @checkstyle LineLength (1 line)
-                "//step[summary='/usr/bin/broken-name']/exception[stacktrace='bash: /usr/bin/broken-name: No such file or directory']"
+                "//step[summary='/usr/bin/broken-name']/exception[stacktrace='bash: /usr/bin/broken-name: No such file or directory']",
+                "//steps[count(step[start]) = 4]",
+                "//steps[count(step[finish]) = 4]",
+                "//steps[count(step[duration = '']) = 0]"
             )
         );
     }

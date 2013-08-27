@@ -114,6 +114,7 @@ public final class IncrementalBash implements Batch {
      */
     private String script(final Map<String, Object> args) {
         final StringBuilder script = new StringBuilder()
+            .append("#set($dollar='$')")
             .append("set -o pipefail; ");
         for (Vext cmd : this.commands) {
             script.append(this.script(args, cmd));
@@ -130,7 +131,7 @@ public final class IncrementalBash implements Batch {
     private String script(final Map<String, Object> args, final Vext cmd) {
         final String uid = String.format("bash-%d", System.nanoTime());
         return new StringBuilder()
-            .append("echo '$' \"")
+            .append("echo; echo '${dollar}' \"")
             .append(this.escape(cmd.velocity()))
             .append("\"; ")
             .append(
@@ -144,41 +145,45 @@ public final class IncrementalBash implements Batch {
                         .set(cmd.print(args))
                         .up()
                         .add("start")
-                        .set("?")
+                        .set("`date  -u +%Y-%m-%dT%H:%M:%SZ`")
                 )
             )
+            .append("START=`date +%s%N | tr -d N`; ")
             .append("STDERR=`mktemp /tmp/bash-XXXX`; ")
             .append("( ")
             .append(cmd.velocity())
             .append(" ) 2> >( cat | tee $STDERR ) | col -b; ")
-            .append("CODE=$?; ")
+            .append("CODE=${dollar}?; ")
+            .append("FINISH=`date +%s%N | tr -d N`; ")
             .append("if [ $CODE != 0 ]; then ")
             .append(
                 this.xembly(
                     new Directives()
-                        .xpath(String.format("/snapshot/steps/step[@id='%s']", uid))
+                        // @checkstyle LineLength (1 line)
+                        .xpath(String.format("/snapshot/steps/step[@id = '%s']", uid))
                         .add("exception")
                         .add("cause")
-                        .set("exit code ${CODE}")
+                        .set("exit code ${dollar}{CODE}")
                         .up()
                         .add("stacktrace")
-                        .set("`cat ${STDERR}`")
+                        .set("`cat ${dollar}{STDERR}`")
                 )
             )
             .append("fi; ")
             .append(
                 this.xembly(
                     new Directives()
+                        // @checkstyle LineLength (1 line)
                         .xpath(String.format("/snapshot/steps/step[@id='%s']", uid))
                         .add("finish")
-                        .set("?")
+                        .set("`date -u +%Y-%m-%dT%H:%M:%SZ`")
                         .up()
                         .add("duration")
-                        .set("?")
+                        .set("`echo ${dollar}(((FINISH-START)/1000000))`")
                 )
             )
-            .append("rm -f $STDERR; ")
-            .append("if [ $CODE != 0 ]; then exit $CODE; fi; ")
+            .append("rm -f ${dollar}{STDERR}; ")
+            .append("if [ ${dollar}CODE != 0 ]; then exit ${dollar}CODE; fi; ")
             .toString();
     }
 
