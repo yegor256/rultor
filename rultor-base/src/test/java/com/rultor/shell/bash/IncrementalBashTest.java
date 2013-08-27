@@ -31,12 +31,17 @@ package com.rultor.shell.bash;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
+import com.rexsl.test.XhtmlMatchers;
 import com.rultor.shell.Permanent;
 import com.rultor.shell.ShellMocker;
+import com.rultor.snapshot.Snapshot;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Arrays;
 import org.apache.commons.io.FileUtils;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
@@ -55,12 +60,23 @@ public final class IncrementalBashTest {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final File dir = Files.createTempDir();
         FileUtils.write(new File(dir, "a.txt"), "first\nsecond");
-        new IncrementalBash(
+        final int code = new IncrementalBash(
             new Permanent(new ShellMocker.Bash(dir)),
             Arrays.asList(
-                "echo 'hello!'"
+                "echo 'hello!'",
+                "find . -name 'a.txt' | grep txt | wc -l",
+                "if [ -f a.txt]; then echo 'exists!'; fi"
             )
         ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
+        MatcherAssert.assertThat(code, Matchers.equalTo(0));
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(
+                new Snapshot(
+                    new ByteArrayInputStream(stdout.toByteArray())
+                ).dom()
+            ),
+            XhtmlMatchers.hasXPath("/snapshot/steps")
+        );
     }
 
 }
