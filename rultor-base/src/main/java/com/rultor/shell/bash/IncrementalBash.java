@@ -150,7 +150,7 @@ public final class IncrementalBash implements Batch {
             .append("STDERR=`mktemp /tmp/bash-XXXX`; ")
             .append("( ")
             .append(cmd.velocity())
-            .append(" ) | col -b 2> >( cat | tee $STDERR ); ")
+            .append(" ) 2> >( cat | tee $STDERR ) | col -b; ")
             .append("CODE=$?; ")
             .append("if [ $CODE != 0 ]; then ")
             .append(

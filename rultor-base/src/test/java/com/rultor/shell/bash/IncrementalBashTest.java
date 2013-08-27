@@ -79,7 +79,8 @@ public final class IncrementalBashTest {
             XhtmlMatchers.hasXPaths(
                 "/snapshot/steps/step[summary=\"echo 'hello!'\"]/start",
                 "//step[summary='/usr/bin/broken-name']/exception",
-                "//step[summary='/usr/bin/broken-name']/exception[stacktrace='ff']"
+                // @checkstyle LineLength (1 line)
+                "//step[summary='/usr/bin/broken-name']/exception[stacktrace='bash: /usr/bin/broken-name: No such file or directory']"
             )
         );
     }
