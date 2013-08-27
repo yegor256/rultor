@@ -36,6 +36,7 @@ import com.jcabi.log.Logger;
 import com.rultor.shell.Batch;
 import com.rultor.shell.Shells;
 import com.rultor.shell.Terminal;
+import com.rultor.snapshot.XemblyLine;
 import com.rultor.tools.Vext;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -133,9 +134,9 @@ public final class IncrementalBash implements Batch {
     private String script(final Map<String, Object> args, final Vext cmd) {
         final String uid = String.format("bash-%d", System.nanoTime());
         return new StringBuilder()
-            .append("echo; echo '${dollar}' \"")
+            .append("echo; echo ${dollar} ")
             .append(Terminal.escape(cmd.velocity()))
-            .append("\"; ")
+            .append("; ")
             .append(
                 this.xembly(
                     new Directives()
@@ -144,7 +145,7 @@ public final class IncrementalBash implements Batch {
                         .add("step")
                         .attr("id", uid)
                         .add("summary")
-                        .set(cmd.print(args))
+                        .set(this.summary(cmd.print(args)))
                         .up()
                         .add("start")
                         .set("`date  -u +%Y-%m-%dT%H:%M:%SZ`")
@@ -196,8 +197,19 @@ public final class IncrementalBash implements Batch {
      */
     private String xembly(final Directives dirs) {
         return String.format(
-            "echo \"χemβly '%s'\"; ",
-            Terminal.escape(dirs.toString().replace("\n", ""))
+            "echo \"%s\"; ",
+            new XemblyLine(dirs).toString().replace("\"", "\\\"")
+        );
+    }
+
+    /**
+     * Print and escape summary.
+     * @param summary Raw summary
+     * @return Xembly ready summary
+     */
+    private String summary(final String summary) {
+        return String.format(
+            "\\`%s\\`", summary.replace("$", "\\$").replace("`", "\\\\\\`")
         );
     }
 
