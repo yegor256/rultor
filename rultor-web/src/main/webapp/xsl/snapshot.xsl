@@ -208,7 +208,7 @@
             </xsl:if>
             <span class="step">
                 <xsl:if test="exception">
-                    <i class="text-danger icon-warning-sign"
+                    <i class="text-danger icon-warning-sign" style="cursor:pointer;"
                         onclick="$(this).parent().parent().find('pre.exception').toggle();">
                         <xsl:attribute name="title">
                             <xsl:value-of select="exception/class"/>

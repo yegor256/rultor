@@ -35,12 +35,14 @@ import com.jcabi.immutable.ArrayMap;
 import com.jcabi.log.Logger;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
+import com.rultor.shell.Terminal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 
@@ -87,7 +89,7 @@ public final class Prerequisites implements Shells {
         final Shell shell = this.origin.acquire();
         for (Map.Entry<String, Object> pair : this.map.entrySet()) {
             shell.exec(
-                String.format("cat > %s", pair.getKey()),
+                this.script(pair.getKey()),
                 Prerequisites.toInputStream(pair.getValue()),
                 Logger.stream(Level.INFO, this),
                 Logger.stream(Level.WARNING, this)
@@ -105,6 +107,23 @@ public final class Prerequisites implements Shells {
             "%s with %d bash prerequisite(s)",
             this.origin, this.map.size()
         );
+    }
+
+    /**
+     * Make bash command that saves input stream to the path specified.
+     * @param path Path specified
+     * @return Bash command
+     */
+    private String script(final String path) {
+        final StringBuilder script = new StringBuilder();
+        final String dir = FilenameUtils.getFullPathNoEndSeparator(path);
+        if (!dir.isEmpty()) {
+            script.append("mkdir -p ").append(Terminal.escape(dir)).append(";");
+        }
+        return script
+            .append("cat > ")
+            .append(Terminal.escape(path))
+            .toString();
     }
 
     /**

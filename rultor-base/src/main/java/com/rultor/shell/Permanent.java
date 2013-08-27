@@ -27,44 +27,38 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.tools;
+package com.rultor.shell;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
-import java.io.StringWriter;
-import java.util.Map;
+import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.Validate;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.context.Context;
-import org.apache.velocity.runtime.RuntimeConstants;
 
 /**
- * Velocity text.
+ * Permanent shell.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = "template")
+@EqualsAndHashCode(of = "shell")
 @Loggable(Loggable.DEBUG)
-public final class Vext {
+public final class Permanent implements Shells {
 
     /**
-     * Template encapsulated.
+     * Shell.
      */
-    private final transient String template;
+    private final transient Shell shell;
 
     /**
      * Public ctor.
-     * @param text Template to encapsulate
+     * @param shl Shell
      */
-    public Vext(final String text) {
-        this.template = text;
+    public Permanent(
+        @NotNull(message = "shell can't be NULL") final Shell shl) {
+        this.shell = shl;
     }
 
     /**
@@ -72,45 +66,15 @@ public final class Vext {
      */
     @Override
     public String toString() {
-        return Logger.format("`%[text]s`", this.template);
+        return String.format("permanent shell at %s", this.shell);
     }
 
     /**
-     * Get velocity source.
-     * @return The text/template
+     * {@inheritDoc}
      */
-    public String velocity() {
-        return this.template;
-    }
-
-    /**
-     * Print using these arguments.
-     * @param args Arguments
-     * @return Text printed
-     */
-    public String print(@NotNull(message = "args can't be NULL")
-        final Map<String, Object> args) {
-        final StringWriter writer = new StringWriter();
-        final Context context = new VelocityContext();
-        for (Map.Entry<String, Object> entry : args.entrySet()) {
-            context.put(entry.getKey(), entry.getValue());
-        }
-        final VelocityEngine engine = new VelocityEngine();
-        engine.setProperty(
-            RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
-            "org.apache.velocity.runtime.log.Log4JLogChute"
-        );
-        engine.setProperty(
-            "runtime.log.logsystem.log4j.logger",
-            "org.apache.velocity"
-        );
-        engine.init();
-        final boolean success = engine.evaluate(
-            context, writer,
-            this.getClass().getName(), this.template
-        );
-        Validate.isTrue(success, "failed to compile VTL");
-        return writer.toString();
+    @Override
+    public Shell acquire() throws IOException {
+        return this.shell;
     }
 
 }

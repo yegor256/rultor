@@ -33,6 +33,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.rultor.scm.Branch;
 import com.rultor.scm.SCM;
@@ -140,6 +141,7 @@ public final class Git implements SCM {
     @Override
     @Tag("git")
     @Step("Git branch `${args[0]}` checked out")
+    @RetryOnFailure
     public Branch checkout(final String name) throws IOException {
         this.terminal.exec(
             new StringBuilder(this.reset())
@@ -160,6 +162,7 @@ public final class Git implements SCM {
     @Override
     @Tag("git")
     @Step("found ${result.size()} refs in Git")
+    @RetryOnFailure
     public Collection<String> branches() throws IOException {
         return Collections2.transform(
             Arrays.asList(
