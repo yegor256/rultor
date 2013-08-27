@@ -35,6 +35,7 @@ import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import com.rultor.shell.Batch;
 import com.rultor.shell.Shells;
+import com.rultor.shell.Terminal;
 import com.rultor.tools.Vext;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -133,7 +134,7 @@ public final class IncrementalBash implements Batch {
         final String uid = String.format("bash-%d", System.nanoTime());
         return new StringBuilder()
             .append("echo; echo '${dollar}' \"")
-            .append(this.escape(cmd.velocity()))
+            .append(Terminal.escape(cmd.velocity()))
             .append("\"; ")
             .append(
                 this.xembly(
@@ -196,17 +197,8 @@ public final class IncrementalBash implements Batch {
     private String xembly(final Directives dirs) {
         return String.format(
             "echo \"χemβly '%s'\"; ",
-            this.escape(dirs.toString().replace("\n", ""))
+            Terminal.escape(dirs.toString().replace("\n", ""))
         );
-    }
-
-    /**
-     * Escape text.
-     * @param text Original
-     * @return Safe for bash
-     */
-    private String escape(final String text) {
-        return text.replace("\"", "\\\"");
     }
 
 }
