@@ -65,17 +65,22 @@ public final class IncrementalBashTest {
             Arrays.asList(
                 "echo 'hello!'",
                 "find . -name 'a.txt' | grep txt | wc -l",
-                "if [ -f a.txt]; then echo 'exists!'; fi"
+                "if [ -f a.txt ]; then echo 'exists!'; fi",
+                "/usr/bin/broken-name"
             )
         ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
-        MatcherAssert.assertThat(code, Matchers.equalTo(0));
+        MatcherAssert.assertThat(code, Matchers.not(Matchers.equalTo(0)));
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
                 new Snapshot(
                     new ByteArrayInputStream(stdout.toByteArray())
                 ).dom()
             ),
-            XhtmlMatchers.hasXPath("/snapshot/steps")
+            XhtmlMatchers.hasXPaths(
+                "/snapshot/steps/step[summary=\"echo 'hello!'\"]/start",
+                "//step[summary='/usr/bin/broken-name']/exception",
+                "//step[summary='/usr/bin/broken-name']/exception[stacktrace='ff']"
+            )
         );
     }
 

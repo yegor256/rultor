@@ -76,6 +76,14 @@ public final class Vext {
     }
 
     /**
+     * Get velocity source.
+     * @return The text/template
+     */
+    public String velocity() {
+        return this.template;
+    }
+
+    /**
      * Print using these arguments.
      * @param args Arguments
      * @return Text printed

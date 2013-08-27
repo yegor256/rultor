@@ -43,6 +43,7 @@ import java.util.Collection;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.xembly.Directives;
 
 /**
  * Incremental bash batch.
@@ -92,7 +93,7 @@ public final class IncrementalBash implements Batch {
         @NotNull(message = "args can't be NULL") final Map<String, Object> args,
         @NotNull(message = "stream can't be NULL") final OutputStream output)
         throws IOException {
-        return new Bash(this.shells, this.script()).exec(args, output);
+        return new Bash(this.shells, this.script(args)).exec(args, output);
     }
 
     /**
@@ -108,10 +109,98 @@ public final class IncrementalBash implements Batch {
 
     /**
      * Make a script.
+     * @param args All args
      * @return Bash script
      */
-    private String script() {
-        return "";
+    private String script(final Map<String, Object> args) {
+        final StringBuilder script = new StringBuilder()
+            .append("set -o pipefail; ");
+        for (Vext cmd : this.commands) {
+            script.append(this.script(args, cmd));
+        }
+        return script.toString();
+    }
+
+    /**
+     * Make a script of one command.
+     * @param args All args
+     * @param cmd Command
+     * @return Bash script
+     */
+    private String script(final Map<String, Object> args, final Vext cmd) {
+        final String uid = String.format("bash-%d", System.nanoTime());
+        return new StringBuilder()
+            .append("echo '$' \"")
+            .append(this.escape(cmd.velocity()))
+            .append("\"; ")
+            .append(
+                this.xembly(
+                    new Directives()
+                        .xpath("/snapshot")
+                        .addIfAbsent("steps")
+                        .add("step")
+                        .attr("id", uid)
+                        .add("summary")
+                        .set(cmd.print(args))
+                        .up()
+                        .add("start")
+                        .set("?")
+                )
+            )
+            .append("STDERR=`mktemp /tmp/bash-XXXX`; ")
+            .append("( ")
+            .append(cmd.velocity())
+            .append(" ) | col -b 2> >( cat | tee $STDERR ); ")
+            .append("CODE=$?; ")
+            .append("if [ $CODE != 0 ]; then ")
+            .append(
+                this.xembly(
+                    new Directives()
+                        .xpath(String.format("/snapshot/steps/step[@id='%s']", uid))
+                        .add("exception")
+                        .add("cause")
+                        .set("exit code ${CODE}")
+                        .up()
+                        .add("stacktrace")
+                        .set("`cat ${STDERR}`")
+                )
+            )
+            .append("fi; ")
+            .append(
+                this.xembly(
+                    new Directives()
+                        .xpath(String.format("/snapshot/steps/step[@id='%s']", uid))
+                        .add("finish")
+                        .set("?")
+                        .up()
+                        .add("duration")
+                        .set("?")
+                )
+            )
+            .append("rm -f $STDERR; ")
+            .append("if [ $CODE != 0 ]; then exit $CODE; fi; ")
+            .toString();
+    }
+
+    /**
+     * Make xembly line.
+     * @param dirs Directives
+     * @return Bash command
+     */
+    private String xembly(final Directives dirs) {
+        return String.format(
+            "echo \"χemβly '%s'\"; ",
+            this.escape(dirs.toString().replace("\n", ""))
+        );
+    }
+
+    /**
+     * Escape text.
+     * @param text Original
+     * @return Safe for bash
+     */
+    private String escape(final String text) {
+        return text.replace("\"", "\\\"");
     }
 
 }
