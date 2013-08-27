@@ -85,7 +85,7 @@ public final class ShellMocker {
         }
         @Override
         public void close() throws IOException {
-            throw new UnsupportedOperationException();
+            assert this.dir != null;
         }
     }
 

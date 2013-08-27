@@ -122,7 +122,7 @@
                             </xsl:attribute>
                             <xsl:choose>
                                 <xsl:when test="contains(/page/version/name, 'SNAPSHOT')">
-                                    <xsl:text>r</xsl:text>
+                                    <xsl:text>b</xsl:text>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:text>R</xsl:text>
