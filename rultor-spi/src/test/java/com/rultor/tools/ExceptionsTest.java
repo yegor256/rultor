@@ -29,8 +29,7 @@
  */
 package com.rultor.tools;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
+import java.io.IOException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -38,24 +37,10 @@ import org.junit.Test;
 /**
  * Test case for {@link Exceptions}.
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-@SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
 public final class ExceptionsTest {
-    /**
-     * Message of the exception.
-     */
-    private static final String MESSAGE = "Message";
-
-    /**
-     * Message of the cause.
-     */
-    private static final String CAUSE = "Cause";
-
-    /**
-     * Format of exception messages for Throwable.
-     */
-    private static final String MSG_FORMAT = "Throwable: %s";
 
     /**
      * Handling of null exception.
@@ -63,7 +48,7 @@ public final class ExceptionsTest {
     @Test
     public void nullExceptionMessage() {
         MatcherAssert.assertThat(
-            Exceptions.message(null), Matchers.equalTo(StringUtils.EMPTY)
+            Exceptions.message(null), Matchers.equalTo("")
         );
     }
 
@@ -72,15 +57,9 @@ public final class ExceptionsTest {
      */
     @Test
     public void singleExceptionMessage() {
-        final Throwable single = new Throwable(ExceptionsTest.MESSAGE);
         MatcherAssert.assertThat(
-            Exceptions.message(single),
-            Matchers.equalTo(
-                String.format(
-                    ExceptionsTest.MSG_FORMAT,
-                    ExceptionsTest.MESSAGE
-                )
-            )
+            Exceptions.message(new IOException("hello, world!")),
+            Matchers.equalTo("IOException: hello, world!")
         );
     }
 
@@ -89,24 +68,15 @@ public final class ExceptionsTest {
      */
     @Test
     public void twoExceptionMessage() {
-        final Throwable cause = new Throwable(ExceptionsTest.CAUSE);
-        final Throwable first = new Throwable(ExceptionsTest.MESSAGE, cause);
         MatcherAssert.assertThat(
-            Exceptions.message(first),
-            Matchers.equalTo(
-                StringUtils.join(
-                    new String[] {
-                        String.format(
-                            ExceptionsTest.MSG_FORMAT,
-                            ExceptionsTest.MESSAGE
-                        ),
-                        String.format(
-                            ExceptionsTest.MSG_FORMAT,
-                            ExceptionsTest.CAUSE
-                        ),
-                    },
-                    SystemUtils.LINE_SEPARATOR
+            Exceptions.message(
+                new IllegalArgumentException(
+                    "hey",
+                    new IOException("file not found")
                 )
+            ),
+            Matchers.equalTo(
+                "IllegalArgumentException: hey\nIOException: file not found"
             )
         );
     }
