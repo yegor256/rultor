@@ -72,6 +72,7 @@ public final class IncrementalBash implements Batch {
      * @param shls Shells
      * @param cmds Commands
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public IncrementalBash(
         @NotNull(message = "shells can't be NULL") final Shells shls,
         @NotNull(message = "list of commands can't be NULL")
