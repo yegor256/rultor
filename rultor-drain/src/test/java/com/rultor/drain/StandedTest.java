@@ -32,18 +32,21 @@ package com.rultor.drain;
 import com.jcabi.urn.URN;
 import com.rexsl.test.TestClient;
 import com.rexsl.test.TestResponse;
+import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.xembly.Directives;
 
 /**
  * Tests for {@link Standed}.
@@ -190,7 +193,8 @@ public final class StandedTest {
             .thenReturn(response);
         Mockito.when(response.assertStatus(Mockito.anyInt()))
             .thenReturn(response);
-        Mockito.when(response.xpath(Mockito.anyString())).thenReturn(null);
+        Mockito.when(response.xpath(Mockito.anyString()))
+            .thenReturn(Collections.<String>emptyList());
         return client;
     }
 
@@ -202,8 +206,16 @@ public final class StandedTest {
     private Iterable<String> xemblyList(final int count) {
         final Collection<String> xemblies = new ArrayList<String>();
         for (int idx = 0; idx < count; ++idx) {
-            xemblies.add("χemβly 'line");
+            xemblies.add(this.xembly());
         }
         return xemblies;
+    }
+
+    /**
+     * Simple xembly.
+     * @return Xembly created.
+     */
+    private String xembly() {
+        return new XemblyLine(new Directives().set("line")).toString();
     }
 }

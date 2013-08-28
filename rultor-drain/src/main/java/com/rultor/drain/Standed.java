@@ -34,11 +34,14 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rexsl.test.RestTester;
 import com.rexsl.test.TestClient;
 import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
+import com.rultor.spi.Stand;
 import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
@@ -66,14 +69,26 @@ import org.xembly.XemblySyntaxException;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
- * @todo #162:1hr This class should me immutable, for this TestClient has to be
- *  replaced with other kind of HTTP client.
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @EqualsAndHashCode(of = { "origin", "work", "stand", "key" })
 @Loggable(Loggable.DEBUG)
+@Immutable
 @SuppressWarnings("PMD.ExcessiveImports")
 public final class Standed implements Drain {
+
+    /**
+     * SQS client connection container.
+     */
+    @Immutable
+    private interface SQSEntry {
+
+        /**
+         * Provide SQS connection.
+         * @return SQS connection.
+         */
+        TestClient get();
+    }
 
     /**
      * Max message batch size.
@@ -103,7 +118,32 @@ public final class Standed implements Drain {
     /**
      * HTTP queue that will receive data.
      */
-    private final transient TestClient queue;
+    private final transient Standed.SQSEntry entry;
+
+    /**
+     * Public ctor.
+     * @param wrk Work we're in
+     * @param name Name of stand
+     * @param secret Secret key of the stand
+     * @param drain Main drain
+     * @checkstyle ParameterNumber (8 lines)
+     */
+    public Standed(
+        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "name of stand can't be NULL") final String name,
+        @NotNull(message = "key can't be NULL") final String secret,
+        @NotNull(message = "drain can't be NULL") final Drain drain) {
+        this.work = wrk;
+        this.stand = name;
+        this.key = secret;
+        this.origin = drain;
+        this.entry = new Standed.SQSEntry() {
+            @Override
+            public TestClient get() {
+                return RestTester.start(Stand.QUEUE);
+            }
+        };
+    }
 
     /**
      * Public ctor.
@@ -114,17 +154,18 @@ public final class Standed implements Drain {
      * @param client HTTP queue
      * @checkstyle ParameterNumber (8 lines)
      */
-    public Standed(
-        @NotNull(message = "work can't be NULL") final Work wrk,
-        @NotNull(message = "name of stand can't be NULL") final String name,
-        @NotNull(message = "key can't be NULL") final String secret,
-        @NotNull(message = "drain can't be NULL") final Drain drain,
-        @NotNull(message = "queue can't be NULL") final TestClient client) {
+    public Standed(final Work wrk, final String name, final String secret,
+        final Drain drain, final TestClient client) {
         this.work = wrk;
         this.stand = name;
         this.key = secret;
         this.origin = drain;
-        this.queue = client;
+        this.entry = new Standed.SQSEntry() {
+            @Override
+            public TestClient get() {
+                return client;
+            }
+        };
     }
 
     /**
@@ -152,8 +193,8 @@ public final class Standed implements Drain {
     @Override
     public void append(final Iterable<String> lines) throws IOException {
         final Iterable<List<String>> batches =
-            Iterables.partition(FluentIterable
-                .from(lines)
+            Iterables.partition(
+                FluentIterable.from(lines)
                     .filter(
                         new Predicate<String>() {
                             @Override
@@ -206,15 +247,15 @@ public final class Standed implements Drain {
      * @throws IOException If fails
      */
     private void send(final Iterable<String> xemblies) throws IOException {
-        final StringBuilder bodyBuilder =
+        final StringBuilder builder =
             new StringBuilder("Action=SendMessageBatch&Version=2011-10-01&");
         final List<String> postMessages = new ArrayList<String>();
-        final List<String> messages = this.jsonMessages(xemblies);
+        final List<String> messages = this.jsons(xemblies);
         for (int identifier = 0; identifier < messages.size(); ++identifier) {
             postMessages.add(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "SendMessageBatchRequestEntry.%1$d.Id=%1$d&SendMessageBatchRequestEntry.%1$d.MessageBody=%2$s",
+                    "SendMessageBatchRequestEntry.%d.Id=%<d&SendMessageBatchRequestEntry.%<d.MessageBody=%s",
                     identifier + 1,
                     URLEncoder.encode(
                         messages.get(identifier), CharEncoding.UTF_8
@@ -222,10 +263,10 @@ public final class Standed implements Drain {
                 )
             );
         }
-        bodyBuilder.append(StringUtils.join(postMessages, '&'));
-        final String body = bodyBuilder.toString();
+        builder.append(StringUtils.join(postMessages, '&'));
+        final String body = builder.toString();
         try {
-            final List<String> idsNotSent = this.queue
+            final List<String> missed = this.entry.get()
                 .header(HttpHeaders.CONTENT_ENCODING, CharEncoding.UTF_8)
                 .header(
                     HttpHeaders.CONTENT_LENGTH,
@@ -244,10 +285,10 @@ public final class Standed implements Drain {
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 // @checkstyle LineLength (1 line)
                 .xpath("/SendMessageBatchResponse/BatchResultError/BatchResultErrorEntry/Id/text()");
-            if ((idsNotSent != null) && !idsNotSent.isEmpty()) {
+            if (!missed.isEmpty()) {
                 throw new IOException(
                     String.format(
-                        "Problem sending %d messages", idsNotSent.size()
+                        "Problem sending %d messages", missed.size()
                     )
                 );
             }
@@ -261,27 +302,35 @@ public final class Standed implements Drain {
      * @param xemblies List to messages.
      * @return List of JSONs.
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    private List<String> jsonMessages(final Iterable<String> xemblies) {
+    private List<String> jsons(final Iterable<String> xemblies) {
         final List<String> messages = new ArrayList<String>();
         for (String xembly : xemblies) {
-            final StringWriter writer = new StringWriter();
-            Json.createGenerator(writer)
-                .writeStartObject()
-                .write("nano", System.nanoTime())
-                .write("stand", this.stand)
-                .write("key", this.key)
-                .write("xembly", xembly)
-                .writeStartObject("work")
-                .write("owner", this.work.owner().toString())
-                .write("unit", this.work.unit())
-                .write("scheduled", this.work.scheduled().toString())
-                .writeEnd()
-                .writeEnd()
-                .close();
-            messages.add(writer.toString());
+            messages.add(this.json(xembly));
         }
         return messages;
+    }
+
+    /**
+     * Create a JSON representation of xembly.
+     * @param xembly Xembly to change into json.
+     * @return JSON of xembly.
+     */
+    private String json(final String xembly) {
+        final StringWriter writer = new StringWriter();
+        Json.createGenerator(writer)
+            .writeStartObject()
+            .write("nano", System.nanoTime())
+            .write("stand", this.stand)
+            .write("key", this.key)
+            .write("xembly", xembly)
+            .writeStartObject("work")
+            .write("owner", this.work.owner().toString())
+            .write("unit", this.work.unit())
+            .write("scheduled", this.work.scheduled().toString())
+            .writeEnd()
+            .writeEnd()
+            .close();
+        return writer.toString();
     }
 
 }
