@@ -34,7 +34,6 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import com.rexsl.test.SimpleXml;
@@ -45,15 +44,10 @@ import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
 import com.rultor.tools.Time;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.TimeUnit;
 import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -129,13 +123,29 @@ final class MongoStand implements Stand {
     private final transient Stand origin;
 
     /**
+     * Head of the list.
+     */
+    private final transient String head;
+
+    /**
      * Public ctor.
      * @param mng Mongo container
      * @param stand Original
      */
     protected MongoStand(final Mongo mng, final Stand stand) {
+        this(mng, stand, "");
+    }
+
+    /**
+     * Private ctor.
+     * @param mng Mongo container
+     * @param stand Original
+     * @param top Head of the list
+     */
+    protected MongoStand(final Mongo mng, final Stand stand, final String top) {
         this.mongo = mng;
         this.origin = stand;
+        this.head = top;
     }
 
     /**
@@ -156,16 +166,7 @@ final class MongoStand implements Stand {
      */
     @Override
     public Pageable<Pulse, String> pulses() {
-        return new Pageable<Pulse, String>() {
-            @Override
-            public Iterator<Pulse> iterator() {
-                return MongoStand.this.iterator();
-            }
-            @Override
-            public Pageable<Pulse, String> tail(final String head) {
-                throw new UnsupportedOperationException();
-            }
-        };
+        return new MongoPulses(this.mongo, this.origin);
     }
 
     /**
@@ -303,68 +304,11 @@ final class MongoStand implements Stand {
     }
 
     /**
-     * Iterator of pulses.
-     * @return Iterator
-     */
-    private Iterator<Pulse> iterator() {
-        final DBCursor cursor = this.collection().find(
-            new BasicDBObject(MongoStand.ATTR_STAND, this.name())
-        );
-        new Timer().schedule(
-            new TimerTask() {
-                @Override
-                public void run() {
-                    cursor.close();
-                }
-            },
-            TimeUnit.MINUTES.toMillis(1)
-        );
-        cursor.sort(new BasicDBObject(MongoStand.ATTR_UPDATED, -1));
-        // @checkstyle AnonInnerLength (50 lines)
-        return new Iterator<Pulse>() {
-            @Override
-            public boolean hasNext() {
-                return cursor.hasNext();
-            }
-            @Override
-            public Pulse next() {
-                final DBObject next = cursor.next();
-                return new Pulse() {
-                    @Override
-                    public String xembly() throws IOException {
-                        final String xembly = next
-                            .get(MongoStand.ATTR_XEMBLY).toString();
-                        return new StringBuilder()
-                            .append(MongoStand.decode(xembly))
-                            .append("XPATH '/snapshot'; ADDIF 'updated';")
-                            .append("SET '")
-                            .append(next.get(MongoStand.ATTR_UPDATED))
-                            .append("';")
-                            .toString();
-                    }
-                    @Override
-                    public InputStream stream() throws IOException {
-                        throw new UnsupportedOperationException();
-                    }
-                    @Override
-                    public String identifier() {
-                        return next.get(MongoStand.ATTR_PULSE).toString();
-                    }
-                };
-            }
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
-    }
-
-    /**
      * Decode the text into clean xembly.
      * @param script Script with prefixes
      * @return Clean xembly
      */
-    private static String decode(final String script) {
+    public static String decode(final String script) {
         final ConcurrentMap<Long, String> lines =
             new ConcurrentSkipListMap<Long, String>();
         for (String line : script.split("\n+")) {
