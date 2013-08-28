@@ -1,1 +1,3 @@
 com.rultor.users
+com.rultor.users.mongo
+com.rultor.users.pgsql
