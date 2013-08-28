@@ -116,27 +116,27 @@
 <tr>  <td class="numLine">&nbsp;48</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> com.rultor.spi.Work;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;49</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> com.rultor.tools.NormJson;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> com.rultor.tools.Exceptions;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;50</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> com.rultor.tools.Time;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> com.rultor.tools.NormJson;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;51</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> java.io.StringWriter;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> com.rultor.tools.Time;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;52</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> java.util.concurrent.TimeUnit;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> java.io.StringWriter;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;53</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> javax.json.Json;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> java.util.concurrent.TimeUnit;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;54</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> javax.json.JsonObject;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> javax.json.Json;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;55</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> javax.json.stream.JsonGenerator;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> javax.json.JsonObject;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;56</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> javax.validation.constraints.NotNull;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> javax.json.stream.JsonGenerator;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;57</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> lombok.EqualsAndHashCode;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> javax.validation.constraints.NotNull;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;58</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> lombok.ToString;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> lombok.EqualsAndHashCode;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;59</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> org.apache.commons.lang3.exception.ExceptionUtils;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> lombok.ToString;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;60</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;61</td>  <td class="nbHits">&nbsp;</td>
@@ -366,7 +366,7 @@
   <td class="src"><pre class="src">&nbsp;                <span class="keyword">try</span> {</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;188</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;                    work = SQSQueue.unserialize(msg.getBody());</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;189</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                } <span class="keyword">catch</span> (NormJson.JsonException ex) {</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;190</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                    Logger.warn(<span class="keyword">this</span>, ExceptionUtils.getRootCauseMessage(ex));</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;190</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                    Exceptions.warn(<span class="keyword">this</span>, ex);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;191</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                } <span class="keyword">finally</span> {</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;192</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;                    aws.deleteMessage(</pre></td></tr>
@@ -456,6 +456,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 8/25/13 6:22 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 8/28/13 9:24 AM.</div>
 </body>
 </html>
