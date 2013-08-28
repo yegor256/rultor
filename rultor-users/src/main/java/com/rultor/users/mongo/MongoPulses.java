@@ -59,6 +59,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "mongo", "origin" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.TooManyMethods")
 final class MongoPulses implements Pageable<Pulse, String> {
 
     /**

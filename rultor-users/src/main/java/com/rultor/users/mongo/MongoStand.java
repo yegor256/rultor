@@ -79,6 +79,7 @@ import org.xembly.XemblySyntaxException;
 @ToString
 @EqualsAndHashCode(of = { "mongo", "origin" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.TooManyMethods")
 final class MongoStand implements Stand {
 
     /**
@@ -122,29 +123,13 @@ final class MongoStand implements Stand {
     private final transient Stand origin;
 
     /**
-     * Head of the list.
-     */
-    private final transient String head;
-
-    /**
      * Public ctor.
      * @param mng Mongo container
      * @param stand Original
      */
     protected MongoStand(final Mongo mng, final Stand stand) {
-        this(mng, stand, "");
-    }
-
-    /**
-     * Private ctor.
-     * @param mng Mongo container
-     * @param stand Original
-     * @param top Head of the list
-     */
-    protected MongoStand(final Mongo mng, final Stand stand, final String top) {
         this.mongo = mng;
         this.origin = stand;
-        this.head = top;
     }
 
     /**
