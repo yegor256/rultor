@@ -44,15 +44,13 @@
                     return;
                 }
                 $div.find('.heart').show();
-                $.ajax(entry)
-                    .done(
-                        function(html) {
-                            $div.find('.body').html(html);
-                            $div.find('.heart').hide();
-                            console.log('Loaded ' + html.length + ' from ' + entry);
-                        }
-                    )
-                    .fail(function() { alert('failed'); });
+                $div.find('.body').load(
+                    entry,
+                    function(text, status, xhr) {
+                        $div.find('.heart').hide();
+                        console.log(status + ': loaded ' + text.length + ' bytes');
+                    }
+                );
                 setTimeout(function() { fetch($div); }, 5000);
             }
             $(document).ready(
@@ -125,7 +123,7 @@
                         <xsl:attribute name="href">
                             <xsl:value-of select="links/link[@rel='close']/@href"/>
                         </xsl:attribute>
-                        <i class="icon-hand-down"><xsl:comment>close</xsl:comment></i>
+                        <i class="icon-remove"><xsl:comment>close</xsl:comment></i>
                     </a>
                 </li>
             </ul>
@@ -140,7 +138,7 @@
                 <xsl:attribute name="href">
                     <xsl:value-of select="links/link[@rel='open']/@href"/>
                 </xsl:attribute>
-                <i class="icon-hand-up"><xsl:comment>open</xsl:comment></i>
+                <i class="icon-zoom-in"><xsl:comment>open</xsl:comment></i>
             </a>
             <xsl:value-of select="identifier"/>
         </div>

@@ -118,7 +118,7 @@
                 </steps>
             </snapshot>
             <links>
-                <link href="/xml/stand.xml" rel="fetch" type="text/xml"/>
+                <link href="/xml/index.xml" rel="fetch" type="text/xml"/>
                 <link href="/xml/stand.xml" rel="close" type="text/xml"/>
             </links>
         </pulse>

@@ -30,16 +30,22 @@
 package com.rultor.snapshot;
 
 import com.jcabi.aspects.Loggable;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
@@ -114,7 +120,7 @@ public final class XSLT {
     /**
      * Get new document.
      * @return DOM
-     * @throws TransformerException If
+     * @throws TransformerException If fails
      */
     public Document dom() throws TransformerException {
         final Transformer trans = XSLT.FACTORY.newTransformer(this.xsl);
@@ -126,6 +132,30 @@ public final class XSLT {
         }
         trans.transform(this.source, new DOMResult(dom));
         return dom;
+    }
+
+    /**
+     * Get XML.
+     * @return XML
+     * @throws TransformerException If fails
+     */
+    public String xml() throws TransformerException {
+        final Transformer trans = XSLT.FACTORY.newTransformer();
+        trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        trans.setOutputProperty(OutputKeys.METHOD, "xml");
+        trans.setOutputProperty(OutputKeys.ENCODING, CharEncoding.UTF_8);
+        final ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            trans.transform(
+                new DOMSource(this.dom()),
+                new StreamResult(
+                    new OutputStreamWriter(output, CharEncoding.UTF_8)
+                )
+            );
+            return output.toString(CharEncoding.UTF_8);
+        } catch (UnsupportedEncodingException ex) {
+            throw new TransformerException(ex);
+        }
     }
 
 }

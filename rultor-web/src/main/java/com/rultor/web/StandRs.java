@@ -48,6 +48,8 @@ import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
 import java.io.IOException;
+import java.net.URI;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -62,6 +64,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.xml.transform.TransformerException;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
@@ -115,7 +118,7 @@ public final class StandRs extends BaseRs {
      * Inject it from query.
      * @param names Names of pulses
      */
-    @PathParam(StandRs.QUERY_OPEN)
+    @QueryParam(StandRs.QUERY_OPEN)
     public void setPulses(final List<String> names) {
         if (names != null) {
             this.open.addAll(names);
@@ -162,7 +165,7 @@ public final class StandRs extends BaseRs {
      */
     @GET
     @Path("/fetch")
-    @Produces(MediaType.APPLICATION_XML)
+    @Produces(MediaType.TEXT_HTML)
     public Response fetch(@QueryParam(StandRs.QUERY_ID) final String uid) {
         Response resp;
         try {
@@ -173,7 +176,7 @@ public final class StandRs extends BaseRs {
                             .iterator().next().xembly()
                     ),
                     this.getClass().getResourceAsStream("fetch.xsl")
-                ).dom()
+                ).xml()
             ).build();
         } catch (TransformerException ex) {
             resp = Response.serverError()
@@ -237,23 +240,15 @@ public final class StandRs extends BaseRs {
      * @return Bundle
      */
     private JaxbBundle pulse(final Pulse pulse) {
+        final String uid = pulse.identifier();
         JaxbBundle bundle = new JaxbBundle("pulse")
-            .add("identifier", pulse.identifier())
+            .add("identifier", uid)
             .up();
         final ArraySet<String> now = new ArraySet<String>(this.open);
-        if (this.open.contains(pulse.identifier())) {
+        if (this.open.contains(uid)) {
             bundle = this
                 .render(bundle, pulse)
-                .link(
-                    new Link(
-                        "close",
-                        this.uriInfo().getBaseUriBuilder()
-                            .clone()
-                            .path(StandRs.class)
-                            .queryParam(StandRs.QUERY_OPEN, "{a}")
-                            .build(this.name, now.without(pulse.identifier()))
-                    )
-                )
+                .link(new Link("close", this.self(now.without(uid))))
                 .link(
                     new Link(
                         "fetch",
@@ -262,22 +257,36 @@ public final class StandRs extends BaseRs {
                             .path(StandRs.class)
                             .path(StandRs.class, "fetch")
                             .queryParam(StandRs.QUERY_ID, "{id}")
-                            .build(this.name, pulse.identifier())
+                            .build(this.name, uid)
                     )
                 );
         } else {
-            bundle = bundle.link(
-                new Link(
-                    "open",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(StandRs.class)
-                        .queryParam(StandRs.QUERY_OPEN, "{b}")
-                        .build(this.name, now.with(pulse.identifier()))
-                )
-            );
+            bundle = bundle.link(new Link("open", this.self(now.with(uid))));
         }
         return bundle;
+    }
+
+    /**
+     * Build URI to itself with new list of open pulses.
+     * @param names Names of pulses
+     * @return URI
+     */
+    private URI self(final Collection<String> names) {
+        final UriBuilder builder = this.uriInfo().getBaseUriBuilder()
+            .clone()
+            .path(StandRs.class);
+        final Object[] args = new Object[names.size() + 1];
+        final Object[] labels = new String[names.size()];
+        args[0] = this.name;
+        int idx = 0;
+        for (String txt : names) {
+            labels[idx] = String.format("{arg%d}", idx);
+            args[idx + 1] = txt;
+            ++idx;
+        }
+        return builder
+            .queryParam(StandRs.QUERY_OPEN, labels)
+            .build(args);
     }
 
     /**
