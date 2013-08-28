@@ -202,7 +202,7 @@ public final class StandedTest {
     private Iterable<String> xemblyList(final int count) {
         final Collection<String> xemblies = new ArrayList<String>();
         for (int idx = 0; idx < count; ++idx) {
-            xemblies.add("χemβly: 'line'");
+            xemblies.add("χemβly 'line");
         }
         return xemblies;
     }
