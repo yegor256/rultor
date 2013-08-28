@@ -79,7 +79,6 @@ import org.xembly.XemblySyntaxException;
 @ToString
 @EqualsAndHashCode(of = { "mongo", "origin" })
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings({ "PMD.TooManyMethods", "PMD.ExcessiveImports" })
 final class MongoStand implements Stand {
 
     /**

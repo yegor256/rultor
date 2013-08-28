@@ -59,7 +59,6 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "mongo", "origin" })
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings({ "PMD.TooManyMethods", "PMD.ExcessiveImports" })
 final class MongoPulses implements Pageable<Pulse, String> {
 
     /**
@@ -103,9 +102,7 @@ final class MongoPulses implements Pageable<Pulse, String> {
      */
     @Override
     public Iterator<Pulse> iterator() {
-        final DBCursor cursor = this.collection().find(
-            new BasicDBObject(MongoStand.ATTR_STAND, this.origin.name())
-        );
+        final DBCursor cursor = this.collection().find(this.query());
         cursor.sort(new BasicDBObject(MongoStand.ATTR_UPDATED, -1));
         this.close(cursor);
         // @checkstyle AnonInnerLength (50 lines)
@@ -151,8 +148,24 @@ final class MongoPulses implements Pageable<Pulse, String> {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, String> tail(final String head) {
-        return new MongoPulses(this.mongo, this.origin, head);
+    public Pageable<Pulse, String> tail(final String top) {
+        return new MongoPulses(this.mongo, this.origin, top);
+    }
+
+    /**
+     * Build query.
+     * @return Query
+     */
+    private DBObject query() {
+        final BasicDBObject query = new BasicDBObject()
+            .append(MongoStand.ATTR_STAND, this.origin.name());
+        if (!this.head.isEmpty()) {
+            query.append(
+                MongoStand.ATTR_PULSE,
+                new BasicDBObject("$lte", this.head)
+            );
+        }
+        return query;
     }
 
     /**

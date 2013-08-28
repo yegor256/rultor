@@ -158,7 +158,9 @@ public final class MongoStandITCase {
         final Document dom = DocumentBuilderFactory.newInstance()
             .newDocumentBuilder().newDocument();
         dom.appendChild(dom.createElement("a0"));
-        new Snapshot(stand.pulses().iterator().next().xembly()).apply(dom);
+        new Snapshot(
+            stand.pulses().tail(pulse).iterator().next().xembly()
+        ).apply(dom);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(dom),
             XhtmlMatchers.hasXPath("/a0/a1/a2/a3/a4")
