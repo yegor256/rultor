@@ -45,6 +45,12 @@ import javax.validation.constraints.NotNull;
 public interface Pulse {
 
     /**
+     * Unique ID of it.
+     * @return Identifier
+     */
+    String identifier();
+
+    /**
      * Snapshot in Xembly.
      * @return The snapshot
      * @throws IOException If IO error

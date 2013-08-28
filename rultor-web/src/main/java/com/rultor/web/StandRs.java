@@ -31,6 +31,7 @@ package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.immutable.ArraySet;
 import com.jcabi.urn.URN;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
@@ -48,7 +49,10 @@ import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -75,9 +79,19 @@ import org.xembly.XemblySyntaxException;
 public final class StandRs extends BaseRs {
 
     /**
+     * List of open pulses.
+     */
+    private static final String QUERY_OPEN = "open";
+
+    /**
      * Stand name.
      */
     private transient String name;
+
+    /**
+     * Names of pulses to show open.
+     */
+    private transient Set<String> open = new TreeSet<String>();
 
     /**
      * Inject it from query.
@@ -87,6 +101,17 @@ public final class StandRs extends BaseRs {
     public void setName(@NotNull(message = "stand name can't be NULL")
         final String stand) {
         this.name = stand;
+    }
+
+    /**
+     * Inject it from query.
+     * @param names Names of pulses
+     */
+    @PathParam(StandRs.QUERY_OPEN)
+    public void setPulses(final List<String> names) {
+        if (names != null) {
+            this.open.addAll(names);
+        }
     }
 
     /**
@@ -168,7 +193,52 @@ public final class StandRs extends BaseRs {
      * @return Bundle
      */
     private JaxbBundle pulse(final Pulse pulse) {
-        JaxbBundle bundle = new JaxbBundle("pulse");
+        JaxbBundle bundle = new JaxbBundle("pulse")
+            .add("identifier", pulse.identifier())
+            .up();
+        if (this.open.contains(pulse.identifier())) {
+            bundle = this.render(bundle, pulse)
+                .link(
+                    new Link(
+                        "close",
+                        this.uriInfo().getBaseUriBuilder()
+                            .clone()
+                            .path(StandRs.class)
+                            .queryParam(StandRs.QUERY_OPEN, "{a}")
+                            .build(
+                                this.name,
+                                new ArraySet<String>(this.open)
+                                    .without(pulse.identifier())
+                            )
+                    )
+                );
+        } else {
+            bundle = bundle.link(
+                new Link(
+                    "open",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(StandRs.class)
+                        .queryParam(StandRs.QUERY_OPEN, "{b}")
+                        .build(
+                            this.name,
+                            new ArraySet<String>(this.open)
+                                .with(pulse.identifier())
+                        )
+                )
+            );
+        }
+        return bundle;
+    }
+
+    /**
+     * Render snapshot into bundle.
+     * @param bundle Bundle to render into
+     * @param pulse The pulse
+     * @return Bundle
+     */
+    private JaxbBundle render(final JaxbBundle bundle, final Pulse pulse) {
+        JaxbBundle output = bundle;
         try {
             final Snapshot snapshot = new Snapshot(
                 new Directives(pulse.xembly())
@@ -177,23 +247,23 @@ public final class StandRs extends BaseRs {
                     .toString()
             );
             try {
-                bundle = bundle.add(
+                output = output.add(
                     new XSLT(
                         snapshot,
                         this.getClass().getResourceAsStream("post.xsl")
                     ).dom().getDocumentElement()
                 );
             } catch (ImpossibleModificationException ex) {
-                assert ex != null;
+                output = output.add("exception", Exceptions.message(ex));
             } catch (TransformerException ex) {
-                assert ex != null;
+                output = output.add("exception", Exceptions.message(ex));
             }
         } catch (IOException ex) {
-            assert ex != null;
+            output = output.add("exception", Exceptions.message(ex));
         } catch (XemblySyntaxException ex) {
-            assert ex != null;
+            output = output.add("exception", Exceptions.message(ex));
         }
-        return bundle;
+        return output;
     }
 
     /**

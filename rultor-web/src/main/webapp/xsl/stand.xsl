@@ -61,7 +61,8 @@
                         </ul>
                     </div>
                 </xsl:if>
-                <xsl:apply-templates select="/page/pulses/pulse[snapshot]"/>
+                <xsl:apply-templates select="/page/pulses/pulse[snapshot]" mode="open"/>
+                <xsl:apply-templates select="/page/pulses/pulse[not(snapshot)]" mode="closed"/>
                 <xsl:if test="//links/link[@rel='more']">
                     <div class="spacious">
                         <xsl:text>See </xsl:text>
@@ -82,9 +83,33 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <xsl:template match="pulse">
+    <xsl:template match="pulse" mode="open">
         <div class="panel spacious">
+            <ul class="list-inline" style="float:right">
+                <li>
+                    <xsl:value-of select="identifier"/>
+                </li>
+                <li>
+                    <a title="close">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='close']/@href"/>
+                        </xsl:attribute>
+                        <i class="icon-hand-down"><xsl:comment>close</xsl:comment></i>
+                    </a>
+                </li>
+            </ul>
             <xsl:apply-templates select="snapshot"/>
+        </div>
+    </xsl:template>
+    <xsl:template match="pulse" mode="closed">
+        <div class="panel spacious">
+            <a title="open" style="float: right">
+                <xsl:attribute name="href">
+                    <xsl:value-of select="links/link[@rel='open']/@href"/>
+                </xsl:attribute>
+                <i class="icon-hand-up"><xsl:comment>open</xsl:comment></i>
+            </a>
+            <xsl:value-of select="identifier"/>
         </div>
     </xsl:template>
 </xsl:stylesheet>
