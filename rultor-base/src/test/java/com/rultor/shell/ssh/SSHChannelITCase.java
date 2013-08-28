@@ -48,6 +48,17 @@ import org.junit.Test;
 public final class SSHChannelITCase {
 
     /**
+     * Host name of the server to check (change it manually for every run).
+     */
+    private static final String HOST =
+        "ec2-54-234-247-79.compute-1.amazonaws.com";
+
+    /**
+     * Private SSH key.
+     */
+    private static final String KEY = System.getProperty("failsafe.ec2.priv");
+
+    /**
      * EC2 can execute bash scripts remotely (to enable the test you should
      * get a real IP address of a running EC2 environment, created with
      * rultor-test key pair and in rultor-test security group).
@@ -56,11 +67,10 @@ public final class SSHChannelITCase {
     @Test
     @org.junit.Ignore
     public void makesInstanceAndConnectsToIt() throws Exception {
-        final String host = "ec2-54-234-247-79.compute-1.amazonaws.com";
         final SSHChannel channel = new SSHChannel(
-            InetAddress.getByName(host),
+            InetAddress.getByName(SSHChannelITCase.HOST),
             "ubuntu",
-            new PrivateKey(System.getProperty("failsafe.ec2.priv"))
+            new PrivateKey(SSHChannelITCase.KEY)
         );
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
