@@ -36,7 +36,6 @@ import com.jcabi.urn.URN;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
-import com.rexsl.test.SimpleXml;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
 import com.rultor.spi.ACL;
@@ -64,8 +63,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.dom.DOMSource;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
@@ -159,31 +156,39 @@ public final class StandRs extends BaseRs {
     }
 
     /**
-     * Get snapshot XML for a pulse.
+     * Get snapshot HTML for a pulse.
      * @param uid Unique identifier of a pulse
      * @return The JAX-RS response
      */
     @GET
     @Path("/fetch")
     @Produces(MediaType.APPLICATION_XML)
-    public String fetch(@QueryParam(StandRs.QUERY_ID) final String uid) {
-        String xml;
+    public Response fetch(@QueryParam(StandRs.QUERY_ID) final String uid) {
+        Response resp;
         try {
-            xml = new SimpleXml(
-                new DOMSource(
-                    this.render(
-                        new JaxbBundle("pulse"),
-                        this.stand().pulses().tail(uid).iterator().next()
-                    ).element()
-                )
-            ).toString();
+            resp = Response.ok().entity(
+                new XSLT(
+                    this.snapshot(
+                        this.stand().pulses().tail(uid)
+                            .iterator().next().xembly()
+                    ),
+                    this.getClass().getResourceAsStream("fetch.xsl")
+                ).dom()
+            ).build();
+        } catch (TransformerException ex) {
+            resp = Response.serverError()
+                .entity(Exceptions.stacktrace(ex)).build();
+        } catch (XemblySyntaxException ex) {
+            resp = Response.serverError()
+                .entity(Exceptions.stacktrace(ex)).build();
         } catch (IOException ex) {
-            xml = String.format(
-                "<error>%s</error>",
-                StringEscapeUtils.escapeXml(Exceptions.stacktrace(ex))
-            );
+            resp = Response.serverError()
+                .entity(Exceptions.stacktrace(ex)).build();
+        } catch (ImpossibleModificationException ex) {
+            resp = Response.serverError()
+                .entity(Exceptions.stacktrace(ex)).build();
         }
-        return xml;
+        return resp;
     }
 
     /**
@@ -284,12 +289,7 @@ public final class StandRs extends BaseRs {
     private JaxbBundle render(final JaxbBundle bundle, final Pulse pulse) {
         JaxbBundle output = bundle;
         try {
-            final Snapshot snapshot = new Snapshot(
-                new Directives(pulse.xembly())
-                    .xpath("/snapshot/spec")
-                    .remove()
-                    .toString()
-            );
+            final Snapshot snapshot = this.snapshot(pulse.xembly());
             try {
                 output = output.add(
                     new XSLT(
@@ -308,6 +308,22 @@ public final class StandRs extends BaseRs {
             output = this.bug(output, ex);
         }
         return output;
+    }
+
+    /**
+     * Get snapshot from xembly.
+     * @param xembly Xembly script
+     * @return Its snapshot
+     * @throws XemblySyntaxException If fails
+     */
+    private Snapshot snapshot(final String xembly)
+        throws XemblySyntaxException {
+        return new Snapshot(
+            new Directives(xembly)
+                .xpath("/snapshot/spec")
+                .remove()
+                .toString()
+        );
     }
 
     /**
