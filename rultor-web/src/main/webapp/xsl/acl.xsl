@@ -37,9 +37,6 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <h2>
-            <xsl:value-of select="/page/stand/name"/>
-        </h2>
         <form method="post" class="spacious">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
@@ -47,7 +44,8 @@
             <fieldset>
                 <div class="form-group">
                     <label for="spec" class="hidden-phone">
-                        <xsl:text>Access Control List</xsl:text>
+                        <xsl:text>Access Control List of </xsl:text>
+                        <code><xsl:value-of select="/page/stand/name"/></code>
                     </label>
                     <textarea name="spec" id="spec" rows="18" class="form-control">
                         <xsl:value-of select="/page/stand/acl"/>
