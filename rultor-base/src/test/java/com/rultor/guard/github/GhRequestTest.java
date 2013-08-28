@@ -31,12 +31,16 @@ package com.rultor.guard.github;
 
 import com.rultor.guard.MergeRequest;
 import com.rultor.snapshot.Snapshot;
+import java.net.HttpURLConnection;
 import java.util.Date;
+import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.PullRequestMarker;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.client.GitHubRequest;
+import org.eclipse.egit.github.core.client.GitHubResponse;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -56,6 +60,12 @@ public final class GhRequestTest {
     public void closesPullRequestOnSuccess() throws Exception {
         final Github github = Mockito.mock(Github.class);
         final GitHubClient client = Mockito.mock(GitHubClient.class);
+        Mockito.doReturn(
+            new GitHubResponse(
+                Mockito.mock(HttpURLConnection.class),
+                new Issue()
+            )
+        ).when(client).get(Mockito.any(GitHubRequest.class));
         Mockito.doReturn(client).when(github).client();
         final PullRequest req = new PullRequest();
         final PullRequestMarker marker = new PullRequestMarker();

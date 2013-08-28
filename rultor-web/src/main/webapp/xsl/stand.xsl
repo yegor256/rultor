@@ -36,6 +36,31 @@
         <title>
             <xsl:value-of select="/page/stand"/>
         </title>
+        <script type="text/javascript"><![CDATA[
+            function fetch($div) {
+                var entry = $div.attr('data-fetch-url');
+                if (!entry) {
+                    console.log('fetch URL is absent!');
+                    return;
+                }
+                $div.find('.heart').show();
+                $.ajax(entry)
+                    .done(
+                        function(html) {
+                            $div.find('.body').html(html);
+                            $div.find('.heart').hide();
+                            console.log('Loaded ' + html.length + ' from ' + entry);
+                        }
+                    )
+                    .fail(function() { alert('failed'); });
+                setTimeout(function() { fetch($div); }, 5000);
+            }
+            $(document).ready(
+                function() {
+                    $('div:has(.body)').each(function () { fetch($(this)); });
+                }
+            );
+        ]]></script>
     </xsl:template>
     <xsl:template name="content">
         <h2>
@@ -61,7 +86,8 @@
                         </ul>
                     </div>
                 </xsl:if>
-                <xsl:apply-templates select="/page/pulses/pulse[snapshot]"/>
+                <xsl:apply-templates select="/page/pulses/pulse[snapshot]" mode="open"/>
+                <xsl:apply-templates select="/page/pulses/pulse[not(snapshot)]" mode="closed"/>
                 <xsl:if test="//links/link[@rel='more']">
                     <div class="spacious">
                         <xsl:text>See </xsl:text>
@@ -82,9 +108,41 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <xsl:template match="pulse">
+    <xsl:template match="pulse" mode="open">
+        <div class="panel spacious" style="min-height: 4em;">
+            <xsl:attribute name="data-fetch-url">
+                <xsl:value-of select="links/link[@rel='fetch']/@href"/>
+            </xsl:attribute>
+            <ul class="list-inline" style="float:right">
+                <li class="heart text-muted" style="display:none">
+                    <i class="icon-cloud-download"><xsl:comment>heart</xsl:comment></i>
+                </li>
+                <li>
+                    <xsl:value-of select="identifier"/>
+                </li>
+                <li>
+                    <a title="close">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='close']/@href"/>
+                        </xsl:attribute>
+                        <i class="icon-hand-down"><xsl:comment>close</xsl:comment></i>
+                    </a>
+                </li>
+            </ul>
+            <div class="body">
+                <xsl:apply-templates select="snapshot"/>
+            </div>
+        </div>
+    </xsl:template>
+    <xsl:template match="pulse" mode="closed">
         <div class="panel spacious">
-            <xsl:apply-templates select="snapshot"/>
+            <a title="open" style="float: right">
+                <xsl:attribute name="href">
+                    <xsl:value-of select="links/link[@rel='open']/@href"/>
+                </xsl:attribute>
+                <i class="icon-hand-up"><xsl:comment>open</xsl:comment></i>
+            </a>
+            <xsl:value-of select="identifier"/>
         </div>
     </xsl:template>
 </xsl:stylesheet>

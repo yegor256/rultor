@@ -160,7 +160,11 @@ final class GhRequest implements MergeRequest {
             final PullRequestService svc = new PullRequestService(client);
             svc.merge(
                 this.repository, this.issue,
-                String.format("#%d: pull request", this.issue)
+                String.format(
+                    "#%d: pull request %s",
+                    this.issue,
+                    issues.getIssue(this.repository, this.issue).getTitle()
+                )
             );
         } catch (RequestException ex) {
             issues.createComment(

@@ -139,6 +139,10 @@ public final class PulseRs extends BaseRs {
             public InputStream stream() throws IOException {
                 return PulseRs.this.read(unit);
             }
+            @Override
+            public String identifier() {
+                throw new UnsupportedOperationException();
+            }
         };
     }
 
