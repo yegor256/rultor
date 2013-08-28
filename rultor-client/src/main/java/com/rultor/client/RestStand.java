@@ -156,7 +156,7 @@ final class RestStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, Integer> pulses() {
+    public Pageable<Pulse, String> pulses() {
         throw new UnsupportedOperationException();
     }
 

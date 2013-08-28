@@ -31,6 +31,7 @@ package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.immutable.ArraySet;
 import com.jcabi.urn.URN;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
@@ -48,12 +49,18 @@ import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.transform.TransformerException;
 import org.xembly.Directives;
@@ -71,13 +78,28 @@ import org.xembly.XemblySyntaxException;
  */
 @Path("/s/{stand:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.ExcessiveImports")
+@SuppressWarnings({ "PMD.ExcessiveImports", "PMD.TooManyMethods" })
 public final class StandRs extends BaseRs {
+
+    /**
+     * List of open pulses.
+     */
+    private static final String QUERY_OPEN = "open";
+
+    /**
+     * ID of pulse.
+     */
+    private static final String QUERY_ID = "id";
 
     /**
      * Stand name.
      */
     private transient String name;
+
+    /**
+     * Names of pulses to show open.
+     */
+    private final transient Set<String> open = new TreeSet<String>();
 
     /**
      * Inject it from query.
@@ -87,6 +109,17 @@ public final class StandRs extends BaseRs {
     public void setName(@NotNull(message = "stand name can't be NULL")
         final String stand) {
         this.name = stand;
+    }
+
+    /**
+     * Inject it from query.
+     * @param names Names of pulses
+     */
+    @PathParam(StandRs.QUERY_OPEN)
+    public void setPulses(final List<String> names) {
+        if (names != null) {
+            this.open.addAll(names);
+        }
     }
 
     /**
@@ -120,6 +153,42 @@ public final class StandRs extends BaseRs {
             .append(this.pulses(this.stand().pulses().iterator(), Tv.TWENTY))
             .render()
             .build();
+    }
+
+    /**
+     * Get snapshot HTML for a pulse.
+     * @param uid Unique identifier of a pulse
+     * @return The JAX-RS response
+     */
+    @GET
+    @Path("/fetch")
+    @Produces(MediaType.APPLICATION_XML)
+    public Response fetch(@QueryParam(StandRs.QUERY_ID) final String uid) {
+        Response resp;
+        try {
+            resp = Response.ok().entity(
+                new XSLT(
+                    this.snapshot(
+                        this.stand().pulses().tail(uid)
+                            .iterator().next().xembly()
+                    ),
+                    this.getClass().getResourceAsStream("fetch.xsl")
+                ).dom()
+            ).build();
+        } catch (TransformerException ex) {
+            resp = Response.serverError()
+                .entity(Exceptions.stacktrace(ex)).build();
+        } catch (XemblySyntaxException ex) {
+            resp = Response.serverError()
+                .entity(Exceptions.stacktrace(ex)).build();
+        } catch (IOException ex) {
+            resp = Response.serverError()
+                .entity(Exceptions.stacktrace(ex)).build();
+        } catch (ImpossibleModificationException ex) {
+            resp = Response.serverError()
+                .entity(Exceptions.stacktrace(ex)).build();
+        }
+        return resp;
     }
 
     /**
@@ -168,32 +237,104 @@ public final class StandRs extends BaseRs {
      * @return Bundle
      */
     private JaxbBundle pulse(final Pulse pulse) {
-        JaxbBundle bundle = new JaxbBundle("pulse");
-        try {
-            final Snapshot snapshot = new Snapshot(
-                new Directives(pulse.xembly())
-                    .xpath("/snapshot/spec")
-                    .remove()
-                    .toString()
+        JaxbBundle bundle = new JaxbBundle("pulse")
+            .add("identifier", pulse.identifier())
+            .up();
+        final ArraySet<String> now = new ArraySet<String>(this.open);
+        if (this.open.contains(pulse.identifier())) {
+            bundle = this
+                .render(bundle, pulse)
+                .link(
+                    new Link(
+                        "close",
+                        this.uriInfo().getBaseUriBuilder()
+                            .clone()
+                            .path(StandRs.class)
+                            .queryParam(StandRs.QUERY_OPEN, "{a}")
+                            .build(this.name, now.without(pulse.identifier()))
+                    )
+                )
+                .link(
+                    new Link(
+                        "fetch",
+                        this.uriInfo().getBaseUriBuilder()
+                            .clone()
+                            .path(StandRs.class)
+                            .path(StandRs.class, "fetch")
+                            .queryParam(StandRs.QUERY_ID, "{id}")
+                            .build(this.name, pulse.identifier())
+                    )
+                );
+        } else {
+            bundle = bundle.link(
+                new Link(
+                    "open",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(StandRs.class)
+                        .queryParam(StandRs.QUERY_OPEN, "{b}")
+                        .build(this.name, now.with(pulse.identifier()))
+                )
             );
+        }
+        return bundle;
+    }
+
+    /**
+     * Render snapshot into bundle.
+     * @param bundle Bundle to render into
+     * @param pulse The pulse
+     * @return Bundle
+     */
+    private JaxbBundle render(final JaxbBundle bundle, final Pulse pulse) {
+        JaxbBundle output = bundle;
+        try {
+            final Snapshot snapshot = this.snapshot(pulse.xembly());
             try {
-                bundle = bundle.add(
+                output = output.add(
                     new XSLT(
                         snapshot,
                         this.getClass().getResourceAsStream("post.xsl")
                     ).dom().getDocumentElement()
                 );
             } catch (ImpossibleModificationException ex) {
-                assert ex != null;
+                output = this.bug(output, ex);
             } catch (TransformerException ex) {
-                assert ex != null;
+                output = this.bug(output, ex);
             }
         } catch (IOException ex) {
-            assert ex != null;
+            output = this.bug(output, ex);
         } catch (XemblySyntaxException ex) {
-            assert ex != null;
+            output = this.bug(output, ex);
         }
-        return bundle;
+        return output;
+    }
+
+    /**
+     * Get snapshot from xembly.
+     * @param xembly Xembly script
+     * @return Its snapshot
+     * @throws XemblySyntaxException If fails
+     * @checkstyle RedundantThrows (5 lines)
+     */
+    private Snapshot snapshot(final String xembly)
+        throws XemblySyntaxException {
+        return new Snapshot(
+            new Directives(xembly)
+                .xpath("/snapshot/spec")
+                .remove()
+                .toString()
+        );
+    }
+
+    /**
+     * Add bug to bundle.
+     * @param bundle Bundle to render into
+     * @param exc Exception
+     * @return Bundle
+     */
+    private JaxbBundle bug(final JaxbBundle bundle, final Exception exc) {
+        return bundle.add("exception", Exceptions.message(exc)).up();
     }
 
     /**

@@ -29,7 +29,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 <?xml-stylesheet type='text/xsl' href='/xsl/stand.xsl'?>
-<page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
+<page identifier="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
     <identity>
         <urn>urn:facebook:1</urn>
         <name>Jeff Lebowski</name>
@@ -38,7 +38,7 @@
     <version>
         <name>1.0-SNAPSHOT</name>
         <revision>123</revision>
-        <date>22-Aug-2012</date>
+        <identifier>22-Aug-2012</identifier>
     </version>
     <links>
         <link href="/xml/drain.xml" rel="self" type="text/xml"/>
@@ -64,9 +64,9 @@
     <balance>$0.45</balance>
     <pulses>
         <pulse>
-            <date>2012-08-23T13:23Z</date>
+            <identifier>2012-08-23T13:23Z</identifier>
             <snapshot>
-                <updated>2012-08-23T13:25Z</updated>
+                <upidentifierd>2012-08-23T13:25Z</upidentifierd>
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
                 <work>
                     <owner>urn:test:1</owner>
@@ -118,20 +118,37 @@
                 </steps>
             </snapshot>
             <links>
-                <link href="/xml/drain.xml" rel="stream" type="text/xml"/>
-                <link href="/xml/drain.xml" rel="stop" type="text/xml"/>
+                <link href="/xml/stand.xml" rel="fetch" type="text/xml"/>
+                <link href="/xml/stand.xml" rel="close" type="text/xml"/>
             </links>
         </pulse>
         <pulse>
-            <date>2012-08-23T13:23Z</date>
+            <identifier>2012-08-23T13:23Z</identifier>
             <snapshot>
-                <updated>2012-08-23T13:25Z</updated>
+                <upidentifierd>2012-08-23T13:25Z</upidentifierd>
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
                 <start>2012-08-23T13:25Z</start>
             </snapshot>
             <links>
-                <link href="/xml/drain.xml" rel="stream" type="text/xml"/>
-                <link href="/xml/drain.xml" rel="stop" type="text/xml"/>
+                <link href="/xml/stand.xml" rel="close" type="text/xml"/>
+            </links>
+        </pulse>
+        <pulse>
+            <identifier>2012-08-23T13:25Z</identifier>
+            <links>
+                <link href="/xml/stand.xml?open=abc" rel="open" type="text/xml"/>
+            </links>
+        </pulse>
+        <pulse>
+            <identifier>2012-08-23T13:27Z</identifier>
+            <links>
+                <link href="/xml/stand.xml" rel="open" type="text/xml"/>
+            </links>
+        </pulse>
+        <pulse>
+            <identifier>2012-08-23T13:29Z</identifier>
+            <links>
+                <link href="/xml/stand.xml" rel="open" type="text/xml"/>
             </links>
         </pulse>
     </pulses>

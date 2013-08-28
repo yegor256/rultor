@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -26,44 +27,23 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.rultor.spi;
-
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.validation.constraints.NotNull;
-
-/**
- * Pulse.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- */
-@Immutable
-public interface Pulse {
-
-    /**
-     * Unique ID of it.
-     * @return Identifier
-     */
-    String identifier();
-
-    /**
-     * Snapshot in Xembly.
-     * @return The snapshot
-     * @throws IOException If IO error
-     */
-    @NotNull(message = "story is never NULL")
-    String xembly() throws IOException;
-
-    /**
-     * Read it as a stream.
-     * @return Stream to stream from
-     * @throws IOException If fails
-     */
-    @NotNull(message = "stream is never NULL")
-    InputStream stream() throws IOException;
-
-}
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+    <xsl:template name="millis">
+        <xsl:param name="millis" as="xs:integer"/>
+        <xsl:choose>
+            <xsl:when test="$millis &gt; 60000">
+                <xsl:value-of select="format-number($millis div 60000, '0')"/>
+                <xsl:text>min</xsl:text>
+            </xsl:when>
+            <xsl:when test="$millis &gt; 1000">
+                <xsl:value-of select="format-number($millis div 1000, '0.0')"/>
+                <xsl:text>s</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="format-number($millis, '#')"/>
+                <xsl:text>ms</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+</xsl:stylesheet>

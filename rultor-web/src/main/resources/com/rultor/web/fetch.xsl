@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -26,44 +27,17 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.rultor.spi;
-
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.validation.constraints.NotNull;
-
-/**
- * Pulse.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- */
-@Immutable
-public interface Pulse {
-
-    /**
-     * Unique ID of it.
-     * @return Identifier
-     */
-    String identifier();
-
-    /**
-     * Snapshot in Xembly.
-     * @return The snapshot
-     * @throws IOException If IO error
-     */
-    @NotNull(message = "story is never NULL")
-    String xembly() throws IOException;
-
-    /**
-     * Read it as a stream.
-     * @return Stream to stream from
-     * @throws IOException If fails
-     */
-    @NotNull(message = "stream is never NULL")
-    InputStream stream() throws IOException;
-
-}
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    version="2.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    exclude-result-prefixes="xs">
+    <xsl:output method="xml" indent="yes"/>
+    <xsl:include href="http://www.rultor.com/xsl/common.xsl"/>
+    <xsl:include href="http://www.rultor.com/xsl/snapshot.xsl"/>
+    <xsl:template match="/">
+        <div>
+            <xsl:apply-templates select="/snapshot" />
+        </div>
+    </xsl:template>
+</xsl:stylesheet>

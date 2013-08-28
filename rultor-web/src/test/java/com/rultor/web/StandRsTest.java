@@ -27,43 +27,57 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.web;
 
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.validation.constraints.NotNull;
+import com.rexsl.test.XhtmlMatchers;
+import com.rultor.snapshot.Snapshot;
+import com.rultor.snapshot.XSLT;
+import org.hamcrest.MatcherAssert;
+import org.junit.Test;
+import org.xembly.Directives;
 
 /**
- * Pulse.
- *
+ * Test case for {@link StandRs}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-public interface Pulse {
+public final class StandRsTest {
 
     /**
-     * Unique ID of it.
-     * @return Identifier
+     * StandRs can fetch snapshot in HTML.
+     * @throws Exception If some problem inside
      */
-    String identifier();
+    @Test
+    @org.junit.Ignore
+    public void fetchesSnapshotInHtml() throws Exception {
+        // todo
+    }
 
     /**
-     * Snapshot in Xembly.
-     * @return The snapshot
-     * @throws IOException If IO error
+     * StandRs can process snapshot with XSLT.
+     * @throws Exception If some problem inside
      */
-    @NotNull(message = "story is never NULL")
-    String xembly() throws IOException;
-
-    /**
-     * Read it as a stream.
-     * @return Stream to stream from
-     * @throws IOException If fails
-     */
-    @NotNull(message = "stream is never NULL")
-    InputStream stream() throws IOException;
+    @Test
+    @org.junit.Ignore
+    public void processesSnapshotWithXslt() throws Exception {
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(
+                new XSLT(
+                    new Snapshot(
+                        new Directives()
+                            .xpath("/snapshot")
+                            .add("start")
+                            .set("2012-08-23T15:00:00Z")
+                            .toString()
+                    ),
+                    this.getClass().getResourceAsStream("fetch.xsl")
+                ).dom()
+            ),
+            XhtmlMatchers.hasXPaths(
+                "/xhtml:div",
+                "/xhtml:div/xhtml:ul"
+            )
+        );
+    }
 
 }

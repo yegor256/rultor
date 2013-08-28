@@ -38,7 +38,7 @@ import org.junit.Test;
 import org.xembly.Directives;
 
 /**
- * Test case for {@link PostSnapshot}.
+ * Test case for {@link DrainRs}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle MultipleStringLiterals (500 lines)
