@@ -62,6 +62,7 @@ public final class IndexRs extends BaseRs {
                 .stylesheet("/xsl/front.xsl")
                 .build(EmptyPage.class)
                 .init(this)
+                .append(new Breadcrumbs().with("self", "home").bundle())
                 .render()
                 .build();
         } else {
@@ -69,6 +70,7 @@ public final class IndexRs extends BaseRs {
                 .stylesheet("/xsl/index.xsl")
                 .build(EmptyPage.class)
                 .init(this)
+                .append(new Breadcrumbs().with("self", "home").bundle())
                 .render()
                 .build();
         }

@@ -30,54 +30,47 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
-import com.rexsl.page.PageBuilder;
-import java.net.HttpURLConnection;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import com.rexsl.page.JaxbBundle;
 
 /**
- * Error-catching resource.
+ * Breadcrumbs.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Path("/error")
 @Loggable(Loggable.DEBUG)
-public final class ErrorRs extends BaseRs {
+final class Breadcrumbs {
 
     /**
-     * Show error, on GET.
-     * @return The JAX-RS response
+     * Bundle to show.
      */
-    @GET
-    @Path("/")
-    public Response get() {
-        return new PageBuilder()
-            .stylesheet("/xsl/error.xsl")
-            .build(EmptyPage.class)
-            .init(this)
-            .append(new Breadcrumbs().with("self", "error").bundle())
-            .render()
-            .status(HttpURLConnection.HTTP_NOT_FOUND)
-            .build();
+    private transient JaxbBundle crumbs = new JaxbBundle("breadcrumbs");
+
+    /**
+     * With this new crumb.
+     * @param rel Rel
+     * @param title Title
+     */
+    public Breadcrumbs with(final String rel, final String title) {
+        this.crumbs = this.crumbs.add("crumb", title).attr("rel", rel).up();
+        return this;
     }
 
     /**
-     * Show error, on POST.
-     * @return The JAX-RS response
+     * With this new crumb.
+     * @param rel Rel (same as title)
      */
-    @POST
-    @Path("/")
-    public Response post() {
-        return Response.status(Response.Status.SEE_OTHER).location(
-            this.uriInfo().getBaseUriBuilder()
-                .clone()
-                .path(ErrorRs.class)
-                .build()
-        ).build();
+    public Breadcrumbs with(final String rel) {
+        return this.with(rel, rel);
+    }
+
+    /**
+     * Get its bundle.
+     * @return Bundle
+     */
+    public JaxbBundle bundle() {
+        return this.crumbs;
     }
 
 }

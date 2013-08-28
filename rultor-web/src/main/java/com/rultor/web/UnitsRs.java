@@ -65,6 +65,7 @@ public final class UnitsRs extends BaseRs {
             .stylesheet("/xsl/units.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .append(new Breadcrumbs().with("self", "units").bundle())
             .append(this.mine())
             .link(new Link("create", "./create"))
             .render()

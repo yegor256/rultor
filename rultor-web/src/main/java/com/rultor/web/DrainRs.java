@@ -123,6 +123,22 @@ public final class DrainRs extends BaseRs {
             .stylesheet("/xsl/drain.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .link(
+                new Link(
+                    "edit",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(UnitRs.class)
+                        .build(this.name)
+                )
+            )
+            .append(
+                new Breadcrumbs()
+                    .with("units")
+                    .with("edit", this.name)
+                    .with("self", "drain")
+                    .bundle()
+            )
             .append(new JaxbBundle("unit", this.name));
         final Drain drain = this.drain(new Time());
         Pageable<Time, Time> pulses = this.pulses(drain);

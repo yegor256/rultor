@@ -94,6 +94,12 @@ public final class AclRs extends BaseRs {
                     .add("acl", this.stand().acl().asText())
                     .up()
             )
+            .append(
+                new Breadcrumbs()
+                    .with("stands")
+                    .with("self", this.name)
+                    .bundle()
+            )
             .render()
             .build();
     }

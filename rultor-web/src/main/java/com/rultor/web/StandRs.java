@@ -33,6 +33,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
@@ -99,6 +100,22 @@ public final class StandRs extends BaseRs {
             .stylesheet("/xsl/stand.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .link(
+                new Link(
+                    "edit",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(AclRs.class)
+                        .build(this.name)
+                )
+            )
+            .append(
+                new Breadcrumbs()
+                    .with("stands")
+                    .with("edit", this.name)
+                    .with("self", "stand")
+                    .bundle()
+            )
             .append(new JaxbBundle("stand", this.name))
             .append(this.pulses(this.stand().pulses().iterator(), Tv.TWENTY))
             .render()

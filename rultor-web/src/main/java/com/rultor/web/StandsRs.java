@@ -65,6 +65,7 @@ public final class StandsRs extends BaseRs {
             .stylesheet("/xsl/stands.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .append(new Breadcrumbs().with("self", "stands").bundle())
             .append(this.mine())
             .link(new Link("create", "./create"))
             .render()
