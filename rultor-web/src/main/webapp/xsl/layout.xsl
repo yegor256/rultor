@@ -116,7 +116,10 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             </head>
             <body>
-                <div class="overlay" onclick="$('.overlay').hide();$('.menu').hide();"/>
+                <div class="overlay" onclick="$('.overlay').hide();$('.menu').hide();">
+                    <!-- this is for W3C compliance -->
+                    <xsl:text> </xsl:text>
+                </div>
                 <aside>
                     <a href="https://github.com/rultor/rultor" class="hidden-phone">
                         <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"

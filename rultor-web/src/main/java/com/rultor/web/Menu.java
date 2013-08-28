@@ -33,19 +33,19 @@ import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 
 /**
- * Breadcrumbs.
+ * Menu.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Loggable(Loggable.DEBUG)
-final class Breadcrumbs {
+final class Menu {
 
     /**
      * Bundle to show.
      */
-    private transient JaxbBundle crumbs = new JaxbBundle("breadcrumbs");
+    private transient JaxbBundle crumbs = new JaxbBundle("nav");
 
     /**
      * With this new crumb.
@@ -53,18 +53,9 @@ final class Breadcrumbs {
      * @param title Title
      * @return This object
      */
-    public Breadcrumbs with(final String rel, final String title) {
-        this.crumbs = this.crumbs.add("crumb", title).attr("rel", rel).up();
+    public Menu with(final String rel, final String title) {
+        this.crumbs = this.crumbs.add("item", title).attr("rel", rel).up();
         return this;
-    }
-
-    /**
-     * With this new crumb.
-     * @param rel Rel (same as title)
-     * @return This object
-     */
-    public Breadcrumbs with(final String rel) {
-        return this.with(rel, rel);
     }
 
     /**

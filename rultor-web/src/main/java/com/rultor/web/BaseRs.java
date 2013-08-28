@@ -193,6 +193,14 @@ public class BaseRs extends BaseResource {
                                 .build()
                         )
                     );
+                    page.append(
+                        new Menu()
+                            .with("home", "Home")
+                            .with("units", "Units of Work")
+                            .with("stands", "Web Stands")
+                            .with("auth-logout", "Log out")
+                            .bundle()
+                    );
                 }
             }
         };
