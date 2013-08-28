@@ -58,40 +58,50 @@
 <a class="jxr_linenumber" name="48" href="#48">48</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../com/rultor/shell/ssh/SSHChannelITCase.html">SSHChannelITCase</a> {
 <a class="jxr_linenumber" name="49" href="#49">49</a>  
 <a class="jxr_linenumber" name="50" href="#50">50</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="51" href="#51">51</a>  <em class="jxr_javadoccomment">     * EC2 can execute bash scripts remotely (to enable the test you should</em>
-<a class="jxr_linenumber" name="52" href="#52">52</a>  <em class="jxr_javadoccomment">     * get a real IP address of a running EC2 environment, created with</em>
-<a class="jxr_linenumber" name="53" href="#53">53</a>  <em class="jxr_javadoccomment">     * rultor-test key pair and in rultor-test security group).</em>
-<a class="jxr_linenumber" name="54" href="#54">54</a>  <em class="jxr_javadoccomment">     * @throws Exception If some problem inside</em>
-<a class="jxr_linenumber" name="55" href="#55">55</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="56" href="#56">56</a>      @Test
-<a class="jxr_linenumber" name="57" href="#57">57</a>      @org.junit.Ignore
-<a class="jxr_linenumber" name="58" href="#58">58</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> makesInstanceAndConnectsToIt() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="59" href="#59">59</a>          <strong class="jxr_keyword">final</strong> String host = <span class="jxr_string">"ec2-54-234-247-79.compute-1.amazonaws.com"</span>;
-<a class="jxr_linenumber" name="60" href="#60">60</a>          <strong class="jxr_keyword">final</strong> SSHChannel channel = <strong class="jxr_keyword">new</strong> SSHChannel(
-<a class="jxr_linenumber" name="61" href="#61">61</a>              InetAddress.getByName(host),
-<a class="jxr_linenumber" name="62" href="#62">62</a>              <span class="jxr_string">"ubuntu"</span>,
-<a class="jxr_linenumber" name="63" href="#63">63</a>              <strong class="jxr_keyword">new</strong> PrivateKey(System.getProperty(<span class="jxr_string">"failsafe.ec2.priv"</span>))
-<a class="jxr_linenumber" name="64" href="#64">64</a>          );
-<a class="jxr_linenumber" name="65" href="#65">65</a>          <strong class="jxr_keyword">final</strong> ByteArrayOutputStream stdout = <strong class="jxr_keyword">new</strong> ByteArrayOutputStream();
-<a class="jxr_linenumber" name="66" href="#66">66</a>          <strong class="jxr_keyword">final</strong> ByteArrayOutputStream stderr = <strong class="jxr_keyword">new</strong> ByteArrayOutputStream();
-<a class="jxr_linenumber" name="67" href="#67">67</a>          <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> code = channel.exec(
-<a class="jxr_linenumber" name="68" href="#68">68</a>              <span class="jxr_string">"#!/bin/bash\nfor i in '1 2 3 4'\ndo\necho $i\ndone"</span>,
-<a class="jxr_linenumber" name="69" href="#69">69</a>              IOUtils.toInputStream(<span class="jxr_string">""</span>),
-<a class="jxr_linenumber" name="70" href="#70">70</a>              <strong class="jxr_keyword">new</strong> TeeOutputStream(stdout, Logger.stream(Level.INFO, <strong class="jxr_keyword">this</strong>)),
-<a class="jxr_linenumber" name="71" href="#71">71</a>              <strong class="jxr_keyword">new</strong> TeeOutputStream(stderr, Logger.stream(Level.SEVERE, <strong class="jxr_keyword">this</strong>))
-<a class="jxr_linenumber" name="72" href="#72">72</a>          );
-<a class="jxr_linenumber" name="73" href="#73">73</a>          MatcherAssert.assertThat(code, Matchers.equalTo(0));
-<a class="jxr_linenumber" name="74" href="#74">74</a>          MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="75" href="#75">75</a>              stderr.toString(CharEncoding.UTF_8),
-<a class="jxr_linenumber" name="76" href="#76">76</a>              Matchers.equalTo(<span class="jxr_string">""</span>)
-<a class="jxr_linenumber" name="77" href="#77">77</a>          );
-<a class="jxr_linenumber" name="78" href="#78">78</a>          MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="79" href="#79">79</a>              stdout.toString(CharEncoding.UTF_8),
-<a class="jxr_linenumber" name="80" href="#80">80</a>              Matchers.equalTo(<span class="jxr_string">"1 2 3 4\n"</span>)
-<a class="jxr_linenumber" name="81" href="#81">81</a>          );
-<a class="jxr_linenumber" name="82" href="#82">82</a>      }
-<a class="jxr_linenumber" name="83" href="#83">83</a>  
-<a class="jxr_linenumber" name="84" href="#84">84</a>  }
+<a class="jxr_linenumber" name="51" href="#51">51</a>  <em class="jxr_javadoccomment">     * Host name of the server to check (change it manually for every run).</em>
+<a class="jxr_linenumber" name="52" href="#52">52</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="53" href="#53">53</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String HOST =
+<a class="jxr_linenumber" name="54" href="#54">54</a>          <span class="jxr_string">"ec2-54-234-247-79.compute-1.amazonaws.com"</span>;
+<a class="jxr_linenumber" name="55" href="#55">55</a>  
+<a class="jxr_linenumber" name="56" href="#56">56</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="57" href="#57">57</a>  <em class="jxr_javadoccomment">     * Private SSH key.</em>
+<a class="jxr_linenumber" name="58" href="#58">58</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="59" href="#59">59</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String KEY = System.getProperty(<span class="jxr_string">"failsafe.ec2.priv"</span>);
+<a class="jxr_linenumber" name="60" href="#60">60</a>  
+<a class="jxr_linenumber" name="61" href="#61">61</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="62" href="#62">62</a>  <em class="jxr_javadoccomment">     * EC2 can execute bash scripts remotely (to enable the test you should</em>
+<a class="jxr_linenumber" name="63" href="#63">63</a>  <em class="jxr_javadoccomment">     * get a real IP address of a running EC2 environment, created with</em>
+<a class="jxr_linenumber" name="64" href="#64">64</a>  <em class="jxr_javadoccomment">     * rultor-test key pair and in rultor-test security group).</em>
+<a class="jxr_linenumber" name="65" href="#65">65</a>  <em class="jxr_javadoccomment">     * @throws Exception If some problem inside</em>
+<a class="jxr_linenumber" name="66" href="#66">66</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="67" href="#67">67</a>      @Test
+<a class="jxr_linenumber" name="68" href="#68">68</a>      @org.junit.Ignore
+<a class="jxr_linenumber" name="69" href="#69">69</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> makesInstanceAndConnectsToIt() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="70" href="#70">70</a>          <strong class="jxr_keyword">final</strong> SSHChannel channel = <strong class="jxr_keyword">new</strong> SSHChannel(
+<a class="jxr_linenumber" name="71" href="#71">71</a>              InetAddress.getByName(SSHChannelITCase.HOST),
+<a class="jxr_linenumber" name="72" href="#72">72</a>              <span class="jxr_string">"ubuntu"</span>,
+<a class="jxr_linenumber" name="73" href="#73">73</a>              <strong class="jxr_keyword">new</strong> PrivateKey(SSHChannelITCase.KEY)
+<a class="jxr_linenumber" name="74" href="#74">74</a>          );
+<a class="jxr_linenumber" name="75" href="#75">75</a>          <strong class="jxr_keyword">final</strong> ByteArrayOutputStream stdout = <strong class="jxr_keyword">new</strong> ByteArrayOutputStream();
+<a class="jxr_linenumber" name="76" href="#76">76</a>          <strong class="jxr_keyword">final</strong> ByteArrayOutputStream stderr = <strong class="jxr_keyword">new</strong> ByteArrayOutputStream();
+<a class="jxr_linenumber" name="77" href="#77">77</a>          <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> code = channel.exec(
+<a class="jxr_linenumber" name="78" href="#78">78</a>              <span class="jxr_string">"#!/bin/bash\nfor i in '1 2 3 4'\ndo\necho $i\ndone"</span>,
+<a class="jxr_linenumber" name="79" href="#79">79</a>              IOUtils.toInputStream(<span class="jxr_string">""</span>),
+<a class="jxr_linenumber" name="80" href="#80">80</a>              <strong class="jxr_keyword">new</strong> TeeOutputStream(stdout, Logger.stream(Level.INFO, <strong class="jxr_keyword">this</strong>)),
+<a class="jxr_linenumber" name="81" href="#81">81</a>              <strong class="jxr_keyword">new</strong> TeeOutputStream(stderr, Logger.stream(Level.SEVERE, <strong class="jxr_keyword">this</strong>))
+<a class="jxr_linenumber" name="82" href="#82">82</a>          );
+<a class="jxr_linenumber" name="83" href="#83">83</a>          MatcherAssert.assertThat(code, Matchers.equalTo(0));
+<a class="jxr_linenumber" name="84" href="#84">84</a>          MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="85" href="#85">85</a>              stderr.toString(CharEncoding.UTF_8),
+<a class="jxr_linenumber" name="86" href="#86">86</a>              Matchers.equalTo(<span class="jxr_string">""</span>)
+<a class="jxr_linenumber" name="87" href="#87">87</a>          );
+<a class="jxr_linenumber" name="88" href="#88">88</a>          MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="89" href="#89">89</a>              stdout.toString(CharEncoding.UTF_8),
+<a class="jxr_linenumber" name="90" href="#90">90</a>              Matchers.equalTo(<span class="jxr_string">"1 2 3 4\n"</span>)
+<a class="jxr_linenumber" name="91" href="#91">91</a>          );
+<a class="jxr_linenumber" name="92" href="#92">92</a>      }
+<a class="jxr_linenumber" name="93" href="#93">93</a>  
+<a class="jxr_linenumber" name="94" href="#94">94</a>  }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

@@ -40,14 +40,14 @@
 <a class="jxr_linenumber" name="30" href="#30">30</a>  <strong class="jxr_keyword">package</strong> com.rultor.snapshot;
 <a class="jxr_linenumber" name="31" href="#31">31</a>  
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.google.common.collect.ImmutableMap;
-<a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
-<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Vext;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.Field;
-<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.Method;
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> java.security.SecureRandom;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> java.util.Random;
-<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> java.util.logging.Level;
-<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.lang3.exception.ExceptionUtils;
+<a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Exceptions;
+<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Vext;
+<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.Field;
+<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.Method;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> java.security.SecureRandom;
+<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> java.util.Random;
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> java.util.logging.Level;
 <a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> org.aspectj.lang.ProceedingJoinPoint;
 <a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> org.aspectj.lang.annotation.Around;
 <a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> org.aspectj.lang.annotation.Aspect;
@@ -136,8 +136,8 @@
 <a class="jxr_linenumber" name="126" href="#126">126</a>                     .add(<span class="jxr_string">"class"</span>)
 <a class="jxr_linenumber" name="127" href="#127">127</a>                     .set(ex.getClass().getCanonicalName()).up()
 <a class="jxr_linenumber" name="128" href="#128">128</a>                     .add(<span class="jxr_string">"stacktrace"</span>)
-<a class="jxr_linenumber" name="129" href="#129">129</a>                     .set(ExceptionUtils.getStackTrace(ex)).up()
-<a class="jxr_linenumber" name="130" href="#130">130</a>                     .add(<span class="jxr_string">"cause"</span>).set(ExceptionUtils.getRootCauseMessage(ex))
+<a class="jxr_linenumber" name="129" href="#129">129</a>                     .set(Exceptions.stacktrace(ex)).up()
+<a class="jxr_linenumber" name="130" href="#130">130</a>                     .add(<span class="jxr_string">"cause"</span>).set(Exceptions.message(ex))
 <a class="jxr_linenumber" name="131" href="#131">131</a>             ).log();
 <a class="jxr_linenumber" name="132" href="#132">132</a>             <strong class="jxr_keyword">throw</strong> ex;
 <a class="jxr_linenumber" name="133" href="#133">133</a>         } <strong class="jxr_keyword">finally</strong> {

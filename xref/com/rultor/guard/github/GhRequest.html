@@ -49,13 +49,13 @@
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.snapshot.Snapshot;
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rultor.snapshot.Step;
 <a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> com.rultor.snapshot.XSLT;
-<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
-<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
-<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
-<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> javax.xml.transform.TransformerException;
-<a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> javax.xml.transform.dom.DOMSource;
-<a class="jxr_linenumber" name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
-<a class="jxr_linenumber" name="48" href="#48">48</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.lang3.exception.ExceptionUtils;
+<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Exceptions;
+<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
+<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
+<a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> javax.xml.transform.TransformerException;
+<a class="jxr_linenumber" name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> javax.xml.transform.dom.DOMSource;
+<a class="jxr_linenumber" name="48" href="#48">48</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
 <a class="jxr_linenumber" name="49" href="#49">49</a>  <strong class="jxr_keyword">import</strong> org.eclipse.egit.github.core.PullRequest;
 <a class="jxr_linenumber" name="50" href="#50">50</a>  <strong class="jxr_keyword">import</strong> org.eclipse.egit.github.core.client.GitHubClient;
 <a class="jxr_linenumber" name="51" href="#51">51</a>  <strong class="jxr_keyword">import</strong> org.eclipse.egit.github.core.client.RequestException;
@@ -177,7 +177,7 @@
 <a class="jxr_linenumber" name="167" href="#167">167</a>                 <strong class="jxr_keyword">this</strong>.repository, <strong class="jxr_keyword">this</strong>.issue,
 <a class="jxr_linenumber" name="168" href="#168">168</a>                 String.format(
 <a class="jxr_linenumber" name="169" href="#169">169</a>                     <span class="jxr_string">"Failed to merge:\n\n```\n%s\n```"</span>,
-<a class="jxr_linenumber" name="170" href="#170">170</a>                     ExceptionUtils.getStackTrace(ex)
+<a class="jxr_linenumber" name="170" href="#170">170</a>                     Exceptions.stacktrace(ex)
 <a class="jxr_linenumber" name="171" href="#171">171</a>                 )
 <a class="jxr_linenumber" name="172" href="#172">172</a>             );
 <a class="jxr_linenumber" name="173" href="#173">173</a>             <strong class="jxr_keyword">throw</strong> ex;
@@ -207,23 +207,25 @@
 <a class="jxr_linenumber" name="197" href="#197">197</a> <em class="jxr_javadoccomment">     * @return Summary</em>
 <a class="jxr_linenumber" name="198" href="#198">198</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="199" href="#199">199</a>     <strong class="jxr_keyword">private</strong> String summary(<strong class="jxr_keyword">final</strong> <a href="../../../../com/rultor/snapshot/Snapshot.html">Snapshot</a> snapshot) {
-<a class="jxr_linenumber" name="200" href="#200">200</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="201" href="#201">201</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> SimpleXml(
-<a class="jxr_linenumber" name="202" href="#202">202</a>                 <strong class="jxr_keyword">new</strong> DOMSource(
-<a class="jxr_linenumber" name="203" href="#203">203</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/snapshot/XSLT.html">XSLT</a>(
-<a class="jxr_linenumber" name="204" href="#204">204</a>                         snapshot,
-<a class="jxr_linenumber" name="205" href="#205">205</a>                         <strong class="jxr_keyword">this</strong>.getClass().getResourceAsStream(<span class="jxr_string">"summary.xsl"</span>)
-<a class="jxr_linenumber" name="206" href="#206">206</a>                     ).dom()
-<a class="jxr_linenumber" name="207" href="#207">207</a>                 )
-<a class="jxr_linenumber" name="208" href="#208">208</a>             ).xpath(<span class="jxr_string">"/markdown/text()"</span>).get(0);
-<a class="jxr_linenumber" name="209" href="#209">209</a>         } <strong class="jxr_keyword">catch</strong> (TransformerException ex) {
-<a class="jxr_linenumber" name="210" href="#210">210</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(ex);
-<a class="jxr_linenumber" name="211" href="#211">211</a>         } <strong class="jxr_keyword">catch</strong> (ImpossibleModificationException ex) {
-<a class="jxr_linenumber" name="212" href="#212">212</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(ex);
-<a class="jxr_linenumber" name="213" href="#213">213</a>         }
-<a class="jxr_linenumber" name="214" href="#214">214</a>     }
-<a class="jxr_linenumber" name="215" href="#215">215</a> 
-<a class="jxr_linenumber" name="216" href="#216">216</a> }
+<a class="jxr_linenumber" name="200" href="#200">200</a>         String summary;
+<a class="jxr_linenumber" name="201" href="#201">201</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="202" href="#202">202</a>             summary = <strong class="jxr_keyword">new</strong> SimpleXml(
+<a class="jxr_linenumber" name="203" href="#203">203</a>                 <strong class="jxr_keyword">new</strong> DOMSource(
+<a class="jxr_linenumber" name="204" href="#204">204</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/snapshot/XSLT.html">XSLT</a>(
+<a class="jxr_linenumber" name="205" href="#205">205</a>                         snapshot,
+<a class="jxr_linenumber" name="206" href="#206">206</a>                         <strong class="jxr_keyword">this</strong>.getClass().getResourceAsStream(<span class="jxr_string">"summary.xsl"</span>)
+<a class="jxr_linenumber" name="207" href="#207">207</a>                     ).dom()
+<a class="jxr_linenumber" name="208" href="#208">208</a>                 )
+<a class="jxr_linenumber" name="209" href="#209">209</a>             ).xpath(<span class="jxr_string">"/markdown/text()"</span>).get(0);
+<a class="jxr_linenumber" name="210" href="#210">210</a>         } <strong class="jxr_keyword">catch</strong> (TransformerException ex) {
+<a class="jxr_linenumber" name="211" href="#211">211</a>             summary = Exceptions.stacktrace(ex);
+<a class="jxr_linenumber" name="212" href="#212">212</a>         } <strong class="jxr_keyword">catch</strong> (ImpossibleModificationException ex) {
+<a class="jxr_linenumber" name="213" href="#213">213</a>             summary = Exceptions.stacktrace(ex);
+<a class="jxr_linenumber" name="214" href="#214">214</a>         }
+<a class="jxr_linenumber" name="215" href="#215">215</a>         <strong class="jxr_keyword">return</strong> summary;
+<a class="jxr_linenumber" name="216" href="#216">216</a>     }
+<a class="jxr_linenumber" name="217" href="#217">217</a> 
+<a class="jxr_linenumber" name="218" href="#218">218</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

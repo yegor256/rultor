@@ -47,25 +47,25 @@
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.SpecException;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Users;
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Variable;
-<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.Constructor;
-<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.InvocationTargetException;
-<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.Method;
-<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
-<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> java.util.Collection;
-<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
-<a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.ConcurrentMap;
-<a class="jxr_linenumber" name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.ConcurrentSkipListMap;
-<a class="jxr_linenumber" name="48" href="#48">48</a>  <strong class="jxr_keyword">import</strong> javassist.CannotCompileException;
-<a class="jxr_linenumber" name="49" href="#49">49</a>  <strong class="jxr_keyword">import</strong> javassist.ClassPool;
-<a class="jxr_linenumber" name="50" href="#50">50</a>  <strong class="jxr_keyword">import</strong> javassist.CtClass;
-<a class="jxr_linenumber" name="51" href="#51">51</a>  <strong class="jxr_keyword">import</strong> javassist.CtField;
-<a class="jxr_linenumber" name="52" href="#52">52</a>  <strong class="jxr_keyword">import</strong> javassist.CtMethod;
-<a class="jxr_linenumber" name="53" href="#53">53</a>  <strong class="jxr_keyword">import</strong> javassist.Modifier;
-<a class="jxr_linenumber" name="54" href="#54">54</a>  <strong class="jxr_keyword">import</strong> javassist.NotFoundException;
-<a class="jxr_linenumber" name="55" href="#55">55</a>  <strong class="jxr_keyword">import</strong> javax.validation.constraints.NotNull;
-<a class="jxr_linenumber" name="56" href="#56">56</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
-<a class="jxr_linenumber" name="57" href="#57">57</a>  <strong class="jxr_keyword">import</strong> lombok.ToString;
-<a class="jxr_linenumber" name="58" href="#58">58</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.lang3.exception.ExceptionUtils;
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Exceptions;
+<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.Constructor;
+<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.InvocationTargetException;
+<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.Method;
+<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
+<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> java.util.Collection;
+<a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
+<a class="jxr_linenumber" name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.ConcurrentMap;
+<a class="jxr_linenumber" name="48" href="#48">48</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.ConcurrentSkipListMap;
+<a class="jxr_linenumber" name="49" href="#49">49</a>  <strong class="jxr_keyword">import</strong> javassist.CannotCompileException;
+<a class="jxr_linenumber" name="50" href="#50">50</a>  <strong class="jxr_keyword">import</strong> javassist.ClassPool;
+<a class="jxr_linenumber" name="51" href="#51">51</a>  <strong class="jxr_keyword">import</strong> javassist.CtClass;
+<a class="jxr_linenumber" name="52" href="#52">52</a>  <strong class="jxr_keyword">import</strong> javassist.CtField;
+<a class="jxr_linenumber" name="53" href="#53">53</a>  <strong class="jxr_keyword">import</strong> javassist.CtMethod;
+<a class="jxr_linenumber" name="54" href="#54">54</a>  <strong class="jxr_keyword">import</strong> javassist.Modifier;
+<a class="jxr_linenumber" name="55" href="#55">55</a>  <strong class="jxr_keyword">import</strong> javassist.NotFoundException;
+<a class="jxr_linenumber" name="56" href="#56">56</a>  <strong class="jxr_keyword">import</strong> javax.validation.constraints.NotNull;
+<a class="jxr_linenumber" name="57" href="#57">57</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
+<a class="jxr_linenumber" name="58" href="#58">58</a>  <strong class="jxr_keyword">import</strong> lombok.ToString;
 <a class="jxr_linenumber" name="59" href="#59">59</a>  
 <a class="jxr_linenumber" name="60" href="#60">60</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="61" href="#61">61</a>  <em class="jxr_javadoccomment"> * Composite.</em>
@@ -138,7 +138,7 @@
 <a class="jxr_linenumber" name="128" href="#128">128</a>                 String.format(
 <a class="jxr_linenumber" name="129" href="#129">129</a>                     <span class="jxr_string">"failed to instantiate using \&quot;%s\&quot; constructor: %s"</span>,
 <a class="jxr_linenumber" name="130" href="#130">130</a>                     ctor,
-<a class="jxr_linenumber" name="131" href="#131">131</a>                     ExceptionUtils.getRootCauseMessage(ex)
+<a class="jxr_linenumber" name="131" href="#131">131</a>                     Exceptions.message(ex)
 <a class="jxr_linenumber" name="132" href="#132">132</a>                 ),
 <a class="jxr_linenumber" name="133" href="#133">133</a>                 ex
 <a class="jxr_linenumber" name="134" href="#134">134</a>             );
@@ -147,7 +147,7 @@
 <a class="jxr_linenumber" name="137" href="#137">137</a>                 String.format(
 <a class="jxr_linenumber" name="138" href="#138">138</a>                     <span class="jxr_string">"failed to access \&quot;%s\&quot;: %s"</span>,
 <a class="jxr_linenumber" name="139" href="#139">139</a>                     ctor,
-<a class="jxr_linenumber" name="140" href="#140">140</a>                     ExceptionUtils.getRootCauseMessage(ex)
+<a class="jxr_linenumber" name="140" href="#140">140</a>                     Exceptions.message(ex)
 <a class="jxr_linenumber" name="141" href="#141">141</a>                 ),
 <a class="jxr_linenumber" name="142" href="#142">142</a>                 ex
 <a class="jxr_linenumber" name="143" href="#143">143</a>             );
@@ -156,7 +156,7 @@
 <a class="jxr_linenumber" name="146" href="#146">146</a>                 String.format(
 <a class="jxr_linenumber" name="147" href="#147">147</a>                     <span class="jxr_string">"failed to invoke \&quot;%s\&quot;: %s"</span>,
 <a class="jxr_linenumber" name="148" href="#148">148</a>                     ctor,
-<a class="jxr_linenumber" name="149" href="#149">149</a>                     ExceptionUtils.getRootCauseMessage(ex)
+<a class="jxr_linenumber" name="149" href="#149">149</a>                     Exceptions.message(ex)
 <a class="jxr_linenumber" name="150" href="#150">150</a>                 ),
 <a class="jxr_linenumber" name="151" href="#151">151</a>                 ex
 <a class="jxr_linenumber" name="152" href="#152">152</a>             );
@@ -355,7 +355,7 @@
 <a class="jxr_linenumber" name="345" href="#345">345</a>                 String.format(
 <a class="jxr_linenumber" name="346" href="#346">346</a>                     <span class="jxr_string">"can't compile \&quot;%s\&quot;: %s"</span>,
 <a class="jxr_linenumber" name="347" href="#347">347</a>                     name,
-<a class="jxr_linenumber" name="348" href="#348">348</a>                     ExceptionUtils.getRootCauseMessage(ex)
+<a class="jxr_linenumber" name="348" href="#348">348</a>                     Exceptions.message(ex)
 <a class="jxr_linenumber" name="349" href="#349">349</a>                 ),
 <a class="jxr_linenumber" name="350" href="#350">350</a>                 ex
 <a class="jxr_linenumber" name="351" href="#351">351</a>             );
@@ -364,7 +364,7 @@
 <a class="jxr_linenumber" name="354" href="#354">354</a>                 String.format(
 <a class="jxr_linenumber" name="355" href="#355">355</a>                     <span class="jxr_string">"class \&quot;%s\&quot; not found: %s"</span>,
 <a class="jxr_linenumber" name="356" href="#356">356</a>                     name,
-<a class="jxr_linenumber" name="357" href="#357">357</a>                     ExceptionUtils.getRootCauseMessage(ex)
+<a class="jxr_linenumber" name="357" href="#357">357</a>                     Exceptions.message(ex)
 <a class="jxr_linenumber" name="358" href="#358">358</a>                 ), ex
 <a class="jxr_linenumber" name="359" href="#359">359</a>             );
 <a class="jxr_linenumber" name="360" href="#360">360</a>         }

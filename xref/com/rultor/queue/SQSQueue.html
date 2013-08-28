@@ -56,17 +56,17 @@
 <a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> com.rultor.aws.SQSClient;
 <a class="jxr_linenumber" name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Queue;
 <a class="jxr_linenumber" name="48" href="#48">48</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
-<a class="jxr_linenumber" name="49" href="#49">49</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.NormJson;
-<a class="jxr_linenumber" name="50" href="#50">50</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
-<a class="jxr_linenumber" name="51" href="#51">51</a>  <strong class="jxr_keyword">import</strong> java.io.StringWriter;
-<a class="jxr_linenumber" name="52" href="#52">52</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.TimeUnit;
-<a class="jxr_linenumber" name="53" href="#53">53</a>  <strong class="jxr_keyword">import</strong> javax.json.Json;
-<a class="jxr_linenumber" name="54" href="#54">54</a>  <strong class="jxr_keyword">import</strong> javax.json.JsonObject;
-<a class="jxr_linenumber" name="55" href="#55">55</a>  <strong class="jxr_keyword">import</strong> javax.json.stream.JsonGenerator;
-<a class="jxr_linenumber" name="56" href="#56">56</a>  <strong class="jxr_keyword">import</strong> javax.validation.constraints.NotNull;
-<a class="jxr_linenumber" name="57" href="#57">57</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
-<a class="jxr_linenumber" name="58" href="#58">58</a>  <strong class="jxr_keyword">import</strong> lombok.ToString;
-<a class="jxr_linenumber" name="59" href="#59">59</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.lang3.exception.ExceptionUtils;
+<a class="jxr_linenumber" name="49" href="#49">49</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Exceptions;
+<a class="jxr_linenumber" name="50" href="#50">50</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.NormJson;
+<a class="jxr_linenumber" name="51" href="#51">51</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
+<a class="jxr_linenumber" name="52" href="#52">52</a>  <strong class="jxr_keyword">import</strong> java.io.StringWriter;
+<a class="jxr_linenumber" name="53" href="#53">53</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.TimeUnit;
+<a class="jxr_linenumber" name="54" href="#54">54</a>  <strong class="jxr_keyword">import</strong> javax.json.Json;
+<a class="jxr_linenumber" name="55" href="#55">55</a>  <strong class="jxr_keyword">import</strong> javax.json.JsonObject;
+<a class="jxr_linenumber" name="56" href="#56">56</a>  <strong class="jxr_keyword">import</strong> javax.json.stream.JsonGenerator;
+<a class="jxr_linenumber" name="57" href="#57">57</a>  <strong class="jxr_keyword">import</strong> javax.validation.constraints.NotNull;
+<a class="jxr_linenumber" name="58" href="#58">58</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
+<a class="jxr_linenumber" name="59" href="#59">59</a>  <strong class="jxr_keyword">import</strong> lombok.ToString;
 <a class="jxr_linenumber" name="60" href="#60">60</a>  
 <a class="jxr_linenumber" name="61" href="#61">61</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="62" href="#62">62</a>  <em class="jxr_javadoccomment"> * Queue in Amazon SQS.</em>
@@ -197,7 +197,7 @@
 <a class="jxr_linenumber" name="187" href="#187">187</a>                 <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="188" href="#188">188</a>                     work = SQSQueue.unserialize(msg.getBody());
 <a class="jxr_linenumber" name="189" href="#189">189</a>                 } <strong class="jxr_keyword">catch</strong> (NormJson.JsonException ex) {
-<a class="jxr_linenumber" name="190" href="#190">190</a>                     Logger.warn(<strong class="jxr_keyword">this</strong>, ExceptionUtils.getRootCauseMessage(ex));
+<a class="jxr_linenumber" name="190" href="#190">190</a>                     Exceptions.warn(<strong class="jxr_keyword">this</strong>, ex);
 <a class="jxr_linenumber" name="191" href="#191">191</a>                 } <strong class="jxr_keyword">finally</strong> {
 <a class="jxr_linenumber" name="192" href="#192">192</a>                     aws.deleteMessage(
 <a class="jxr_linenumber" name="193" href="#193">193</a>                         <strong class="jxr_keyword">new</strong> DeleteMessageRequest()
