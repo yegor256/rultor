@@ -43,6 +43,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.xembly.Directives;
@@ -158,12 +159,25 @@ public final class IncrementalBash implements Batch {
             .append(" ) 2> >( cat | tee $STDERR ) | col -b; ")
             .append("CODE=${dollar}?; ")
             .append("FINISH=`date +%s%N | tr -d N`; ")
-            .append("if [ $CODE != 0 ]; then ")
+            .append("if [ $CODE = 0 ]; then ")
+            .append(
+                this.xembly(
+                    new Directives()
+                        // @checkstyle LineLength (1 line)
+                        .xpath(String.format("/snapshot/steps/step[@id= '%s']", uid))
+                        .add("level")
+                        .set(Level.INFO.toString())
+                )
+            )
+            .append(" else ")
             .append(
                 this.xembly(
                     new Directives()
                         // @checkstyle LineLength (1 line)
                         .xpath(String.format("/snapshot/steps/step[@id = '%s']", uid))
+                        .add("level")
+                        .set(Level.SEVERE.toString())
+                        .up()
                         .add("exception")
                         .add("cause")
                         .set("exit code ${dollar}{CODE}")

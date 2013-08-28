@@ -83,6 +83,8 @@ public final class IncrementalBashTest {
                 "//step[summary=\"`MSG='$A'; echo \\`date\\` $A; sleep 1;`\"]/start",
                 "//step[summary='`/usr/bin/broken-name`']/exception",
                 "//step/exception[stacktrace='bash: /usr/bin/broken-name: No such file or directory']",
+                "//steps[count(step[level='INFO']) = 3]",
+                "//steps[count(step[level='SEVERE']) = 1]",
                 "//steps[count(step[start]) = 4]",
                 "//steps[count(step[finish]) = 4]",
                 "//steps[count(step[duration = '']) = 0]"
