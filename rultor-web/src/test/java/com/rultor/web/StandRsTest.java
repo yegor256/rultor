@@ -50,6 +50,7 @@ public final class StandRsTest {
     @Test
     @org.junit.Ignore
     public void fetchesSnapshotInHtml() throws Exception {
+        // todo
     }
 
     /**
