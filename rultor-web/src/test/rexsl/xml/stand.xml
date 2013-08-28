@@ -45,9 +45,19 @@
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
         <link href="/xml/drain.xml" rel="more" type="text/xml"/>
         <link href="/xml/finances.xml" rel="finances" type="text/xml"/>
-        <link href="/xml/index.xml" rel="units" type="text/xml"/>
+        <link href="/xml/units.xml" rel="units" type="text/xml"/>
         <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
     </links>
+    <breadcrumbs>
+        <crumb rel="stands">stands</crumb>
+        <crumb rel="edit">nightly-build</crumb>
+        <crumb rel="self">stand</crumb>
+    </breadcrumbs>
+    <nav>
+        <item rel="units">Units</item>
+        <item rel="stands">Stands</item>
+        <item rel="account">Account</item>
+    </nav>
     <millis>16</millis>
     <stand>nightly-build</stand>
     <since>2012-08-23T13:25:33Z</since>

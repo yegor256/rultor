@@ -82,6 +82,15 @@
                                     $(this).html(markdown.toHTML($(this).text()).replace(/<\/?p *>/g,''));
                                 }
                             );
+
+                        }
+                    );
+                    $(document).keyup(
+                        function(event) {
+                            if (event.keyCode == 27) {
+                                $('.overlay').hide();
+                                $('.menu').hide();
+                            }
                         }
                     );
                 ]]></script>
@@ -107,6 +116,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             </head>
             <body>
+                <div class="overlay" onclick="$('.overlay').hide();$('.menu').hide();"/>
                 <aside>
                     <a href="https://github.com/rultor/rultor" class="hidden-phone">
                         <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
@@ -115,20 +125,15 @@
                     </a>
                 </aside>
                 <ul class="list-inline">
-                    <li>
-                        <a class="logo">
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
-                            </xsl:attribute>
-                            <xsl:choose>
-                                <xsl:when test="contains(/page/version/name, 'SNAPSHOT')">
-                                    <xsl:text>b</xsl:text>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:text>R</xsl:text>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </a>
+                    <li class="logo" onclick="$('.overlay').show();$('.menu').toggle();">
+                        <xsl:choose>
+                            <xsl:when test="contains(/page/version/name, 'SNAPSHOT')">
+                                <xsl:text>b</xsl:text>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:text>R</xsl:text>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </li>
                     <xsl:if test="not(contains(/page/version/name, 'SNAPSHOT'))">
                         <li class="hidden-phone">
@@ -137,33 +142,21 @@
                             </a>
                         </li>
                     </xsl:if>
-                    <xsl:apply-templates select="version"/>
-                    <xsl:if test="/page/links/link[@rel='units']">
-                        <li>
-                            <a title="units">
-                                <xsl:attribute name="href">
-                                    <xsl:value-of select="/page/links/link[@rel='units']/@href"/>
-                                </xsl:attribute>
-                                <i class="icon-cogs"><xsl:comment>units</xsl:comment></i>
-                            </a>
-                        </li>
-                    </xsl:if>
-                    <xsl:if test="/page/links/link[@rel='stands']">
-                        <li>
-                            <a title="stands">
-                                <xsl:attribute name="href">
-                                    <xsl:value-of select="/page/links/link[@rel='stands']/@href"/>
-                                </xsl:attribute>
-                                <i class="icon-bullhorn"><xsl:comment>stands</xsl:comment></i>
-                            </a>
-                        </li>
-                    </xsl:if>
+                    <xsl:apply-templates select="breadcrumbs/crumb"/>
                     <xsl:apply-templates select="identity"/>
                 </ul>
+                <xsl:if test="nav">
+                    <aside class="menu panel panel-default">
+                        <div class="panel-body">
+                            <xsl:apply-templates select="nav"/>
+                        </div>
+                    </aside>
+                </xsl:if>
                 <xsl:apply-templates select="flash"/>
                 <article>
                     <xsl:call-template name="content"/>
                 </article>
+                <xsl:apply-templates select="version"/>
             </body>
         </html>
     </xsl:template>
@@ -184,44 +177,86 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <xsl:template match="version">
+    <xsl:template match="crumb">
         <li>
-            <xsl:attribute name="class">
-                <xsl:text>hidden-phone hidden-tablet</xsl:text>
-                <xsl:if test="contains(name, 'SNAPSHOT')">
-                    <xsl:text> text-danger</xsl:text>
-                </xsl:if>
-            </xsl:attribute>
-            <xsl:value-of select="name"/>
+            <xsl:variable name="title" select="concat('/',.)"/>
+            <xsl:variable name="rel" select="@rel"/>
+            <xsl:choose>
+                <xsl:when test="/page/links/link[@rel=$rel]">
+                    <a>
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="/page/links/link[@rel=$rel]/@href"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="$title"/>
+                    </a>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$title"/>
+                </xsl:otherwise>
+            </xsl:choose>
         </li>
-        <li class="hidden-phone hidden-tablet">
+    </xsl:template>
+    <xsl:template match="nav">
+        <ul class="nav nav-pills nav-stacked">
+            <xsl:apply-templates select="item"/>
+        </ul>
+    </xsl:template>
+    <xsl:template match="item">
+        <xsl:variable name="rel" select="@rel"/>
+        <li>
+            <xsl:if test="/page/links/link[@rel=$rel]/@href = /page/links/link[@rel='self']/@href">
+                <xsl:attribute name="class">
+                    <xsl:text>active</xsl:text>
+                </xsl:attribute>
+            </xsl:if>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:text>https://github.com/rultor/rultor/commit/</xsl:text>
-                    <xsl:value-of select="revision"/>
+                    <xsl:value-of select="/page/links/link[@rel=$rel]/@href"/>
                 </xsl:attribute>
-                <xsl:attribute name="title">
-                    <xsl:value-of select="revision"/>
-                </xsl:attribute>
-                <i class="icon-github"><xsl:comment>github icon</xsl:comment></i>
+                <xsl:value-of select="."/>
             </a>
         </li>
-        <li>
-            <xsl:attribute name="class">
-                <xsl:text>hidden-phone hidden-tablet</xsl:text>
-                <xsl:choose>
-                    <xsl:when test="/page/millis &gt; 5000">
-                        <xsl:text> text-danger</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="/page/millis &gt; 1000">
-                        <xsl:text> text-warning</xsl:text>
-                    </xsl:when>
-                </xsl:choose>
-            </xsl:attribute>
-            <xsl:call-template name="millis">
-                <xsl:with-param name="millis" select="/page/millis"/>
-            </xsl:call-template>
-        </li>
+    </xsl:template>
+    <xsl:template match="version">
+        <aside class="version hidden-phone">
+            <ul class="list-inline">
+                <li>
+                    <xsl:attribute name="class">
+                        <xsl:if test="contains(name, 'SNAPSHOT')">
+                            <xsl:text> text-danger</xsl:text>
+                        </xsl:if>
+                    </xsl:attribute>
+                    <xsl:value-of select="name"/>
+                </li>
+                <li>
+                    <a>
+                        <xsl:attribute name="href">
+                            <xsl:text>https://github.com/rultor/rultor/commit/</xsl:text>
+                            <xsl:value-of select="revision"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="title">
+                            <xsl:value-of select="revision"/>
+                        </xsl:attribute>
+                        <i class="icon-github"><xsl:comment>github icon</xsl:comment></i>
+                    </a>
+                </li>
+                <li>
+                    <xsl:attribute name="class">
+                        <xsl:choose>
+                            <xsl:when test="/page/millis &gt; 5000">
+                                <xsl:text> text-danger</xsl:text>
+                            </xsl:when>
+                            <xsl:when test="/page/millis &gt; 1000">
+                                <xsl:text> text-warning</xsl:text>
+                            </xsl:when>
+                        </xsl:choose>
+                    </xsl:attribute>
+                    <xsl:call-template name="millis">
+                        <xsl:with-param name="millis" select="/page/millis"/>
+                    </xsl:call-template>
+                </li>
+            </ul>
+        </aside>
     </xsl:template>
     <xsl:template match="flash">
         <p>

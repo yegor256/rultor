@@ -47,6 +47,15 @@
         <link href="/xml/index.xml" rel="units" type="text/xml"/>
         <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
     </links>
+    <breadcrumbs>
+        <crumb rel="stands">stands</crumb>
+        <crumb rel="self">nightly-build</crumb>
+    </breadcrumbs>
+    <nav>
+        <item rel="units">Units</item>
+        <item rel="stands">Stands</item>
+        <item rel="account">Account</item>
+    </nav>
     <balance>$5.90</balance>
     <millis>1869</millis>
     <stand>

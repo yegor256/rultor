@@ -53,6 +53,14 @@
         <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
         <link href="/xml/account.xml" rel="account" type="text/xml"/>
     </links>
+    <breadcrumbs>
+        <crumb rel="self">stands</crumb>
+    </breadcrumbs>
+    <nav>
+        <item rel="units">Units</item>
+        <item rel="stands">Stands</item>
+        <item rel="account">Account</item>
+    </nav>
     <millis>16</millis>
     <balance>$0.45</balance>
     <stands>
