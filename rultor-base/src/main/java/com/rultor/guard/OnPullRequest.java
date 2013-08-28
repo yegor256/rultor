@@ -134,6 +134,7 @@ public final class OnPullRequest implements Instance {
         // @checkstyle LineLength (1 line)
         value = "merge request ${args[0].name()} #if($result)built successfully#{else}failed to build#end"
     )
+    @Loggable
     private boolean merge(final MergeRequest request) throws IOException {
         final String tag = "on-pull-request";
         final Snapshot snapshot = new Build(tag, this.batch).exec(
@@ -141,31 +142,32 @@ public final class OnPullRequest implements Instance {
                 .putAll(request.params())
                 .build()
         );
-        final boolean success = this.success(snapshot, tag);
-        if (success) {
-            request.accept(snapshot);
-        } else {
+        final boolean failure = this.failure(snapshot, tag);
+        if (failure) {
             request.reject(snapshot);
+        } else {
+            request.accept(snapshot);
         }
-        return success;
+        return failure;
     }
 
     /**
-     * Was it a successful merge?
+     * Was it a failed merge?
      * @param snapshot Snapshot received
      * @param tag Tag to look for
-     * @return TRUE if success
+     * @return TRUE if it was a failure
      */
-    private boolean success(final Snapshot snapshot, final String tag) {
-        boolean success = false;
+    @Loggable
+    private boolean failure(final Snapshot snapshot, final String tag) {
+        boolean failure = true;
         try {
-            success ^= snapshot.xml()
+            failure = snapshot.xml()
                 .nodes(String.format("//tag[label='%s' and level='FINE']", tag))
                 .isEmpty();
         } catch (ImpossibleModificationException ex) {
             Exceptions.warn(this, ex);
         }
-        return success;
+        return !failure;
     }
 
 }

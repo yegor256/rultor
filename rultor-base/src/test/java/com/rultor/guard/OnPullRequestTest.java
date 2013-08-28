@@ -33,7 +33,9 @@ import com.rultor.shell.Batch;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.spi.Instance;
 import com.rultor.stateful.ConcurrentNotepad;
+import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Map;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -49,7 +51,32 @@ public final class OnPullRequestTest {
      * @throws Exception If some problem inside
      */
     @Test
-    public void buildsOnNewPullRequest() throws Exception {
+    @SuppressWarnings("unchecked")
+    public void failsOnNewPullRequest() throws Exception {
+        final MergeRequests requests = Mockito.mock(MergeRequests.class);
+        final MergeRequest request = Mockito.mock(MergeRequest.class);
+        Mockito.doReturn(Arrays.asList(request).iterator())
+            .when(requests).iterator();
+        final Batch batch = Mockito.mock(Batch.class);
+        Mockito.doReturn(1).when(batch)
+            .exec(Mockito.any(Map.class), Mockito.any(OutputStream.class));
+        final ConcurrentNotepad notepad = Mockito.mock(ConcurrentNotepad.class);
+        Mockito.doReturn(true).when(notepad).addIfAbsent(Mockito.anyString());
+        final Instance instance = new OnPullRequest(requests, notepad, batch);
+        instance.pulse();
+        Mockito.verify(batch).exec(
+            Mockito.any(Map.class), Mockito.any(OutputStream.class)
+        );
+        Mockito.verify(request).reject(Mockito.any(Snapshot.class));
+    }
+
+    /**
+     * OnPullRequest can build when request is available.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void succeedsOnNewPullRequest() throws Exception {
         final MergeRequests requests = Mockito.mock(MergeRequests.class);
         final MergeRequest request = Mockito.mock(MergeRequest.class);
         Mockito.doReturn(Arrays.asList(request).iterator())
@@ -59,7 +86,10 @@ public final class OnPullRequestTest {
         Mockito.doReturn(true).when(notepad).addIfAbsent(Mockito.anyString());
         final Instance instance = new OnPullRequest(requests, notepad, batch);
         instance.pulse();
-        Mockito.verify(request).reject(Mockito.any(Snapshot.class));
+        Mockito.verify(batch).exec(
+            Mockito.any(Map.class), Mockito.any(OutputStream.class)
+        );
+        Mockito.verify(request).accept(Mockito.any(Snapshot.class));
     }
 
 }
