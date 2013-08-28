@@ -197,8 +197,9 @@ final class GhRequest implements MergeRequest {
      * @return Summary
      */
     private String summary(final Snapshot snapshot) {
+        String summary;
         try {
-            return new SimpleXml(
+            summary = new SimpleXml(
                 new DOMSource(
                     new XSLT(
                         snapshot,
@@ -207,10 +208,11 @@ final class GhRequest implements MergeRequest {
                 )
             ).xpath("/markdown/text()").get(0);
         } catch (TransformerException ex) {
-            throw new IllegalStateException(ex);
+            summary = Exceptions.stacktrace(ex);
         } catch (ImpossibleModificationException ex) {
-            throw new IllegalStateException(ex);
+            summary = Exceptions.stacktrace(ex);
         }
+        return summary;
     }
 
 }

@@ -37,9 +37,11 @@ import com.rultor.board.Billboard;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
 import com.rultor.shell.Batch;
+import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.Step;
 import com.rultor.snapshot.Tag;
 import com.rultor.spi.Instance;
+import com.rultor.tools.Exceptions;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -120,18 +122,22 @@ public final class OnCommit implements Instance {
     )
     @Tag("ci")
     private void build(final Commit head) throws IOException {
+        final Snapshot snapshot = new Build("on-commit", this.batch).exec(
+            new ImmutableMap.Builder<String, Object>()
+                .put("branch", this.branch.name())
+                .put("head", head)
+                .build()
+        );
+        String xml;
         try {
-            this.announce(
-                new Build("on-commit", this.batch).exec(
-                    new ImmutableMap.Builder<String, Object>()
-                        .put("branch", this.branch.name())
-                        .put("head", head)
-                        .build()
-                ).xml().toString()
-            );
+            xml = snapshot.xml().toString();
         } catch (ImpossibleModificationException ex) {
-            throw new IllegalStateException(ex);
+            xml = String.format(
+                "<snapshot><error>%s</error></snapshot>",
+                Exceptions.stacktrace(ex)
+            );
         }
+        this.announce(xml);
     }
 
     /**
