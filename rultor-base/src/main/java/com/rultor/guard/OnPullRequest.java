@@ -148,7 +148,7 @@ public final class OnPullRequest implements Instance {
         } else {
             request.accept(snapshot);
         }
-        return failure;
+        return !failure;
     }
 
     /**
@@ -167,7 +167,7 @@ public final class OnPullRequest implements Instance {
         } catch (ImpossibleModificationException ex) {
             Exceptions.warn(this, ex);
         }
-        return !failure;
+        return failure;
     }
 
 }
