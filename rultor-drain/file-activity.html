@@ -1,159 +1,67 @@
 <!DOCTYPE html>
-<!--
- * Copyright (c) 2012-2013, JCabi.com
- * All rights reserved.
- -->
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Programmable Enforcer of a Software Development Process"/>
+        <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
+        <meta name="author" content="rultor.com"/>
         <title>rultor - File Activity Report</title>
-        <link media="all" rel="stylesheet" type="text/css" href="./css/jcabi.css"/>
-                                                                                                                        
-<link rel="shortcut icon" href="http://img.rultor.com/favicon.ico"/>
-                                            <link rel="stylesheet" href="./css/highlight.css" />
-        <script src="./js/jquery-1.8.3.min.js"></script>
-        <script src="./js/highlight-7.3.min.js"></script>
+        <link rel="shortcut icon" type="image/gif" href="http://img.rultor.com/favicon.ico" />
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet" />
+        <link href="http://www.rultor.com/css/main.css" rel="stylesheet" />
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script>
-            $(document).ready(
-                function() {
-                    $('div.source pre').each(
-                        function (idx, element) {
-                            hljs.highlightBlock(element);
-                        }
-                    );
-                }
-            );
+        $(document).ready(
+            function() {
+                $('tt').replaceWith(
+                    function() {
+                        return '<code>' + $(this).text() + '</code>';
+                    }
+                )
+            }
+        );
+        </script>
+        <script>
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-1963507-10']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
         </script>
     </head>
     <body>
-                <ul id="menu">
-                                                    <li>
-                    Parent Project
-                                            <ul>
-                                                                            <li>
-                                                                    <a href="../index.html" title="rultor">rultor</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                            <li>
-                    Overview
-                                            <ul>
-                                                                            <li>
-                                                                    <a href="index.html" title="Introduction">Introduction</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="apidocs-1.0-SNAPSHOT/index.html" title="JavaDoc 1.0-SNAPSHOT">JavaDoc 1.0-SNAPSHOT</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="cobertura/index.html" title="Test Coverage">Test Coverage</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="changes-report.html" title="Release History">Release History</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                            <li>
-                    Project Documentation
-                                            <ul>
-                                                                            <li>
-                                                                    <a href="project-info.html" title="Project Information">Project Information</a>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </li>
-                                                                                        <li>
-                                                                    <a href="project-reports.html" title="Project Reports">Project Reports</a>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <ul>
-                                                                            <li>
-                                                                    <a href="surefire-report.html" title="Surefire Report">Surefire Report</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="changelog.html" title="Change Log">Change Log</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="dev-activity.html" title="Developer Activity">Developer Activity</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                            <strong>                        <a href="file-activity.html" title="File Activity">File Activity</a>
-        </strong>
-                                                                                                                <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="dependency-updates-report.html" title="Dependency Updates Report">Dependency Updates Report</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="plugin-updates-report.html" title="Plugin Updates Report">Plugin Updates Report</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="apidocs-1.0-SNAPSHOT/index.html" title="JavaDocs">JavaDocs</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                                        <li>
-                                                                    <a href="cobertura/index.html" title="Cobertura Test Coverage">Cobertura Test Coverage</a>
-                                                                                                                        <ul>
-                                                    </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                                                                </ul>
-                                    </li>
-                    </ul>
-        <div id="content">
-                            <a href="https://github.com/rultor/rultor/rultor-drain">
-                    <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
-                        src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
-                        alt="Fork me on GitHub" />
-                </a>
-                        <a href="http://doc.rultor.com/" title="${decoration.bannerLeft.title}">
-                <img src="http://img.rultor.com/logo-64x64.png"
-                    alt="rultor.com"
-                                                        />
+        <aside>
+            <a href="https://github.com/rultor/rultor" class="hidden-phone">
+                <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
+                    src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
+                    alt="Fork me on GitHub" />
             </a>
-                            <ul id="breadcrumbs">
-                                            <li>                        <a href="http://doc.rultor.com" title="rultor.com">rultor.com</a>
-        </li>
-                                            <li>                                    <a href="./" title="rultor">rultor</a>
-        </li>
-                                    </ul>
-                        <p>
-                
-                24-Jul-2013
+        </aside>
+        <ul class="list-inline">
+            <li>
+                <a class="logo" href="//doc.rultor.com/index.html">R</a>
+            </li>
+            <li>
                 1.0-SNAPSHOT
-            </p>
-            <article>
-                <div class="section"><h2>File Activity Report<a name="File_Activity_Report"></a></h2><div class="section"><h3>Changes between 2013-06-24 and 2013-07-25<a name="Changes_between_2013-06-24_and_2013-07-25"></a></h3><p>Total commits: 61<br />Total number of files changed: 53</p><table border="0" class="bodyTable"><tr class="a"><th>Filename</th><th>Number of Times Changed</th></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/s3/ObjectDrain.java">rultor-drain/src/main/java/com/rultor/drain/s3/<b>ObjectDrain.java</b></a> </td><td>13</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/NoiseReduction.java">rultor-drain/src/main/java/com/rultor/drain/<b>NoiseReduction.java</b></a> </td><td>11</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/s3/S3Drain.java">rultor-drain/src/main/java/com/rultor/drain/s3/<b>S3Drain.java</b></a> </td><td>9</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/files/BufferedDrain.java">rultor-drain/src/main/java/com/rultor/drain/files/<b>BufferedDrain.java</b></a> </td><td>9</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/BufferedWrite.java">rultor-drain/src/main/java/com/rultor/drain/<b>BufferedWrite.java</b></a> </td><td>8</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/Syslog.java">rultor-drain/src/main/java/com/rultor/drain/<b>Syslog.java</b></a> </td><td>8</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/Temporary.java">rultor-drain/src/main/java/com/rultor/drain/<b>Temporary.java</b></a> </td><td>7</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/files/DirectoryDrain.java">rultor-drain/src/main/java/com/rultor/drain/files/<b>DirectoryDrain.java</b></a> </td><td>7</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/ftp/FtpBatch.java">rultor-drain/src/main/java/com/rultor/drain/ftp/<b>FtpBatch.java</b></a> </td><td>7</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/s3/BucketPulses.java">rultor-drain/src/main/java/com/rultor/drain/s3/<b>BucketPulses.java</b></a> </td><td>6</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/files/DirectoryDrainTest.java">rultor-drain/src/test/java/com/rultor/drain/files/<b>DirectoryDrainTest.java</b></a> </td><td>6</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/NoiseReductionTest.java">rultor-drain/src/test/java/com/rultor/drain/<b>NoiseReductionTest.java</b></a> </td><td>5</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/pom.xml">rultor-drain/<b>pom.xml</b></a> </td><td>5</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/BufferedWriteTest.java">rultor-drain/src/test/java/com/rultor/drain/<b>BufferedWriteTest.java</b></a> </td><td>5</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/Trash.java">rultor-drain/src/main/java/com/rultor/drain/<b>Trash.java</b></a> </td><td>5</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/Tailed.java">rultor-drain/src/main/java/com/rultor/drain/<b>Tailed.java</b></a> </td><td>4</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/BufferedRead.java">rultor-drain/src/main/java/com/rultor/drain/<b>BufferedRead.java</b></a> </td><td>4</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/s3/ObjectDrainITCase.java">rultor-drain/src/test/java/com/rultor/drain/s3/<b>ObjectDrainITCase.java</b></a> </td><td>4</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/s3/S3DrainITCase.java">rultor-drain/src/test/java/com/rultor/drain/s3/<b>S3DrainITCase.java</b></a> </td><td>4</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/files/BufferedDrainTest.java">rultor-drain/src/test/java/com/rultor/drain/files/<b>BufferedDrainTest.java</b></a> </td><td>4</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/ftp/FileDrain.java">rultor-drain/src/main/java/com/rultor/drain/ftp/<b>FileDrain.java</b></a> </td><td>4</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/ftp/DirectoryDrain.java">rultor-drain/src/main/java/com/rultor/drain/ftp/<b>DirectoryDrain.java</b></a> </td><td>4</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/SyslogITCase.java">rultor-drain/src/test/java/com/rultor/drain/<b>SyslogITCase.java</b></a> </td><td>4</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/s3/BucketDrain.java">rultor-drain/src/main/java/com/rultor/drain/s3/<b>BucketDrain.java</b></a> </td><td>3</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/s3/BucketDrainITCase.java">rultor-drain/src/test/java/com/rultor/drain/s3/<b>BucketDrainITCase.java</b></a> </td><td>3</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/NoiseReductionDrainTest.java">rultor-drain/src/test/java/com/rultor/drain/<b>NoiseReductionDrainTest.java</b></a> </td><td>3</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/tmp/BufferedDrain.java">rultor-drain/src/main/java/com/rultor/drain/tmp/<b>BufferedDrain.java</b></a> </td><td>3</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/site/site.xml">rultor-drain/src/site/<b>site.xml</b></a> </td><td>2</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/site/markdown/index.md">rultor-drain/src/site/markdown/<b>index.md</b></a> </td><td>2</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/NoiseReductionDrain.java">rultor-drain/src/main/java/com/rultor/drain/<b>NoiseReductionDrain.java</b></a> </td><td>2</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/BufferedReadTest.java">rultor-drain/src/test/java/com/rultor/drain/<b>BufferedReadTest.java</b></a> </td><td>2</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/TemporaryTest.java">rultor-drain/src/test/java/com/rultor/drain/<b>TemporaryTest.java</b></a> </td><td>2</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/ftp/FileDrainITCase.java">rultor-drain/src/test/java/com/rultor/drain/ftp/<b>FileDrainITCase.java</b></a> </td><td>2</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/resources/log4j.properties">rultor-drain/src/test/resources/<b>log4j.properties</b></a> </td><td>2</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/s3/Key.java">rultor-drain/src/main/java/com/rultor/drain/s3/<b>Key.java</b></a> </td><td>2</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/s3/KeyTest.java">rultor-drain/src/test/java/com/rultor/drain/s3/<b>KeyTest.java</b></a> </td><td>2</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/ASCII.java">rultor-drain/src/main/java/com/rultor/drain/<b>ASCII.java</b></a> </td><td>2</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/ASCIITest.java">rultor-drain/src/test/java/com/rultor/drain/<b>ASCIITest.java</b></a> </td><td>2</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/files/package-info.java">rultor-drain/src/main/java/com/rultor/drain/files/<b>package-info.java</b></a> </td><td>2</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/files/package-info.java">rultor-drain/src/test/java/com/rultor/drain/files/<b>package-info.java</b></a> </td><td>2</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/tmp/BufferedDrainTest.java">rultor-drain/src/test/java/com/rultor/drain/tmp/<b>BufferedDrainTest.java</b></a> </td><td>2</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/tmp/package-info.java">rultor-drain/src/test/java/com/rultor/drain/tmp/<b>package-info.java</b></a> </td><td>2</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/tmp/package-info.java">rultor-drain/src/main/java/com/rultor/drain/tmp/<b>package-info.java</b></a> </td><td>2</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/LICENSE.txt">rultor-drain/<b>LICENSE.txt</b></a> </td><td>1</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/aspect/README.txt">rultor-drain/src/main/aspect/<b>README.txt</b></a> </td><td>1</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/s3/package-info.java">rultor-drain/src/main/java/com/rultor/drain/s3/<b>package-info.java</b></a> </td><td>1</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/s3/package-info.java">rultor-drain/src/test/java/com/rultor/drain/s3/<b>package-info.java</b></a> </td><td>1</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/ftp/package-info.java">rultor-drain/src/main/java/com/rultor/drain/ftp/<b>package-info.java</b></a> </td><td>1</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/ftp/DirectoryDrainITCase.java">rultor-drain/src/test/java/com/rultor/drain/ftp/<b>DirectoryDrainITCase.java</b></a> </td><td>1</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/ftp/package-info.java">rultor-drain/src/test/java/com/rultor/drain/ftp/<b>package-info.java</b></a> </td><td>1</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/TrashTest.java">rultor-drain/src/test/java/com/rultor/drain/<b>TrashTest.java</b></a> </td><td>1</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/package-info.java">rultor-drain/src/main/java/com/rultor/drain/<b>package-info.java</b></a> </td><td>1</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/package-info.java">rultor-drain/src/test/java/com/rultor/drain/<b>package-info.java</b></a> </td><td>1</td></tr></table></div></div>
-            </article>
-            <p style="margin-bottom: 3em; margin-top: 2em;">
-                Copyright &#169;
-                                                    2009-2013
-                                Rultor Inc., All Rights Reserved.
-                <a href="http://maven.apache.org/privacy-policy.html">Privacy Policy</a>.
-            </p>
-            <a href="http://maven.apache.org" title="site is built by Apache Maven"
-                style='position: absolute; bottom: 1em; right: 1em;'>
-                <img src='images/built-by-maven.png' style='width: 50px; height: 17px;'
+            </li>
+            <li>
+                
+                28-Aug-2013
+            </li>
+            <li>
+                <img src='http://img.jcabi.com/built-by-maven.png' style='width: 50px; height: 17px;'
                     alt='site is built by Apache Maven'/>
-            </a>
+            </li>
+        </ul>
+        <div>
+            <article class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                <div class="section"><h2>File Activity Report<a name="File_Activity_Report"></a></h2><div class="section"><h3>Changes between 2013-07-29 and 2013-08-29<a name="Changes_between_2013-07-29_and_2013-08-29"></a></h3><p>Total commits: 55<br />Total number of files changed: 29</p><table border="0" class="bodyTable"><tr class="a"><th>Filename</th><th>Number of Times Changed</th></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/Standed.java">rultor-drain/src/main/java/com/rultor/drain/<b>Standed.java</b></a> </td><td>15</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/pom.xml">rultor-drain/<b>pom.xml</b></a> </td><td>14</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/BufferedWrite.java">rultor-drain/src/main/java/com/rultor/drain/<b>BufferedWrite.java</b></a> </td><td>10</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/xembly/LinesSensor.java">rultor-drain/src/main/java/com/rultor/drain/xembly/<b>LinesSensor.java</b></a> </td><td>10</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/NoiseReduction.java">rultor-drain/src/main/java/com/rultor/drain/<b>NoiseReduction.java</b></a> </td><td>8</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/ftp/FileDrain.java">rultor-drain/src/main/java/com/rultor/drain/ftp/<b>FileDrain.java</b></a> </td><td>6</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/BufferedRead.java">rultor-drain/src/main/java/com/rultor/drain/<b>BufferedRead.java</b></a> </td><td>5</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/BufferedWriteTest.java">rultor-drain/src/test/java/com/rultor/drain/<b>BufferedWriteTest.java</b></a> </td><td>4</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/Temporary.java">rultor-drain/src/main/java/com/rultor/drain/<b>Temporary.java</b></a> </td><td>4</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/ftp/DirectoryDrain.java">rultor-drain/src/main/java/com/rultor/drain/ftp/<b>DirectoryDrain.java</b></a> </td><td>4</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/s3/BucketDrain.java">rultor-drain/src/main/java/com/rultor/drain/s3/<b>BucketDrain.java</b></a> </td><td>3</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/ftp/DirectoryDrainITCase.java">rultor-drain/src/test/java/com/rultor/drain/ftp/<b>DirectoryDrainITCase.java</b></a> </td><td>3</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/s3/BucketDrainITCase.java">rultor-drain/src/test/java/com/rultor/drain/s3/<b>BucketDrainITCase.java</b></a> </td><td>3</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/resources/log4j.properties">rultor-drain/src/test/resources/<b>log4j.properties</b></a> </td><td>3</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/Tailed.java">rultor-drain/src/main/java/com/rultor/drain/<b>Tailed.java</b></a> </td><td>3</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/s3/ObjectDrain.java">rultor-drain/src/main/java/com/rultor/drain/s3/<b>ObjectDrain.java</b></a> </td><td>3</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/ASCII.java">rultor-drain/src/main/java/com/rultor/drain/<b>ASCII.java</b></a> </td><td>3</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/Console.java">rultor-drain/src/main/java/com/rultor/drain/<b>Console.java</b></a> </td><td>2</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/Syslog.java">rultor-drain/src/main/java/com/rultor/drain/<b>Syslog.java</b></a> </td><td>2</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/Trash.java">rultor-drain/src/main/java/com/rultor/drain/<b>Trash.java</b></a> </td><td>2</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/s3/BucketPulses.java">rultor-drain/src/main/java/com/rultor/drain/s3/<b>BucketPulses.java</b></a> </td><td>2</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/ftp/FileDrainITCase.java">rultor-drain/src/test/java/com/rultor/drain/ftp/<b>FileDrainITCase.java</b></a> </td><td>2</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/s3/ObjectDrainITCase.java">rultor-drain/src/test/java/com/rultor/drain/s3/<b>ObjectDrainITCase.java</b></a> </td><td>2</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/BufferedReadTest.java">rultor-drain/src/test/java/com/rultor/drain/<b>BufferedReadTest.java</b></a> </td><td>2</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/TemporaryTest.java">rultor-drain/src/test/java/com/rultor/drain/<b>TemporaryTest.java</b></a> </td><td>1</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/main/java/com/rultor/drain/xembly/package-info.java">rultor-drain/src/main/java/com/rultor/drain/xembly/<b>package-info.java</b></a> </td><td>1</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/site/markdown/index.md">rultor-drain/src/site/markdown/<b>index.md</b></a> </td><td>1</td></tr><tr class="a"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/site/markdown/index.md.vm">rultor-drain/src/site/markdown/<b>index.md.vm</b></a> </td><td>1</td></tr><tr class="b"><td><a class="externalLink" href="https://github.com/rultor/rultor/rultor-drain/src/test/java/com/rultor/drain/NoiseReductionTest.java">rultor-drain/src/test/java/com/rultor/drain/<b>NoiseReductionTest.java</b></a> </td><td>1</td></tr></table></div></div>
+            </article>
         </div>
     </body>
 </html>
