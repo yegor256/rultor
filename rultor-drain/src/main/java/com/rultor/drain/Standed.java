@@ -66,7 +66,7 @@ import org.xembly.XemblySyntaxException;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
- * @todo #162 This class should me immutable, for this TestClient has to be
+ * @todo #162:1hr This class should me immutable, for this TestClient has to be
  *  replaced with other kind of HTTP client.
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
