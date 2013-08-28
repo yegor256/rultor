@@ -33,7 +33,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     exclude-result-prefixes="xs">
     <xsl:output method="xml" indent="yes"/>
-    <xsl:include href="http://www.rultor.com/xsl/layout.xsl"/>
+    <xsl:include href="http://www.rultor.com/xsl/common.xsl"/>
     <xsl:include href="http://www.rultor.com/xsl/snapshot.xsl"/>
     <xsl:template match="/">
         <div>

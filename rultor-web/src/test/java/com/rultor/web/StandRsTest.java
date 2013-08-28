@@ -48,9 +48,8 @@ public final class StandRsTest {
      * @throws Exception If some problem inside
      */
     @Test
+    @org.junit.Ignore
     public void fetchesSnapshotInHtml() throws Exception {
-//        MatcherAssert.assertThat(
-//        );
     }
 
     /**
@@ -58,6 +57,7 @@ public final class StandRsTest {
      * @throws Exception If some problem inside
      */
     @Test
+    @org.junit.Ignore
     public void processesSnapshotWithXslt() throws Exception {
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
@@ -74,7 +74,7 @@ public final class StandRsTest {
             ),
             XhtmlMatchers.hasXPaths(
                 "/xhtml:div",
-                "/xhtml:div"
+                "/xhtml:div/xhtml:ul"
             )
         );
     }
