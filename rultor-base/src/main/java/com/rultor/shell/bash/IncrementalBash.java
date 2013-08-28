@@ -165,6 +165,7 @@ public final class IncrementalBash implements Batch {
                     new Directives()
                         // @checkstyle LineLength (1 line)
                         .xpath(String.format("/snapshot/steps/step[@id= '%s']", uid))
+                        // @checkstyle MultipleStringLiterals (1 line)
                         .add("level")
                         .set(Level.INFO.toString())
                 )
