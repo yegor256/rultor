@@ -71,6 +71,7 @@ import javax.ws.rs.core.Response;
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Resource.Forwarded
 @Loggable(Loggable.DEBUG)
