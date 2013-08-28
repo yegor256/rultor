@@ -37,9 +37,6 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <h2>
-            <xsl:text>Units of Work</xsl:text>
-        </h2>
         <form method="post" class="form-inline spacious">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='create']/@href"/>

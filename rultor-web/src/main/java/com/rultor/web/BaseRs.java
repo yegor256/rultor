@@ -199,6 +199,7 @@ public class BaseRs extends BaseResource {
                             .with("home", "Home")
                             .with("units", "Units of Work")
                             .with("stands", "Web Stands")
+                            .with("account", "Account Statistics")
                             .with("auth-logout", "Log out")
                             .bundle()
                     );

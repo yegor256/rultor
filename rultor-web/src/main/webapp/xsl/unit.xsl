@@ -37,9 +37,6 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <h2>
-            <xsl:value-of select="/page/unit/name"/>
-        </h2>
         <xsl:apply-templates select="/page/face"/>
         <form method="post" class="spacious">
             <xsl:attribute name="action">
@@ -48,7 +45,8 @@
             <fieldset>
                 <div class="form-group">
                     <label for="spec" class="hidden-phone">
-                        <xsl:text>Specification</xsl:text>
+                        <xsl:text>Specification of </xsl:text>
+                        <code><xsl:value-of select="/page/unit/name"/></code>
                     </label>
                     <textarea name="spec" id="spec" rows="18" class="form-control">
                         <xsl:value-of select="/page/unit/spec"/>
