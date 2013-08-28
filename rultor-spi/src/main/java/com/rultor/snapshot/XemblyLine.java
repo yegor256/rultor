@@ -96,7 +96,7 @@ public final class XemblyLine {
      * @return TRUE if yes (no strong guarantee though)
      */
     public static boolean existsIn(final String line) {
-        return line.contains("χemβly");
+        return line.contains("χemβly '");
     }
 
     /**
