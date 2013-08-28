@@ -155,14 +155,14 @@ final class MongoStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, Integer> pulses() {
-        return new Pageable<Pulse, Integer>() {
+    public Pageable<Pulse, String> pulses() {
+        return new Pageable<Pulse, String>() {
             @Override
             public Iterator<Pulse> iterator() {
                 return MongoStand.this.iterator();
             }
             @Override
-            public Pageable<Pulse, Integer> tail(final Integer head) {
+            public Pageable<Pulse, String> tail(final String head) {
                 throw new UnsupportedOperationException();
             }
         };
@@ -328,10 +328,10 @@ final class MongoStand implements Stand {
             }
             @Override
             public Pulse next() {
+                final DBObject next = cursor.next();
                 return new Pulse() {
                     @Override
                     public String xembly() throws IOException {
-                        final DBObject next = cursor.next();
                         final String xembly = next
                             .get(MongoStand.ATTR_XEMBLY).toString();
                         return new StringBuilder()
@@ -345,6 +345,10 @@ final class MongoStand implements Stand {
                     @Override
                     public InputStream stream() throws IOException {
                         throw new UnsupportedOperationException();
+                    }
+                    @Override
+                    public String identifier() {
+                        return next.get(MongoStand.ATTR_PULSE).toString();
                     }
                 };
             }

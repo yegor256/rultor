@@ -36,6 +36,7 @@ import com.jcabi.urn.URN;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rexsl.test.SimpleXml;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
 import com.rultor.spi.ACL;
@@ -58,8 +59,13 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.dom.DOMSource;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
@@ -84,6 +90,11 @@ public final class StandRs extends BaseRs {
     private static final String QUERY_OPEN = "open";
 
     /**
+     * ID of pulse.
+     */
+    private static final String QUERY_ID = "id";
+
+    /**
      * Stand name.
      */
     private transient String name;
@@ -91,7 +102,7 @@ public final class StandRs extends BaseRs {
     /**
      * Names of pulses to show open.
      */
-    private transient Set<String> open = new TreeSet<String>();
+    private final transient Set<String> open = new TreeSet<String>();
 
     /**
      * Inject it from query.
@@ -148,6 +159,34 @@ public final class StandRs extends BaseRs {
     }
 
     /**
+     * Get snapshot XML for a pulse.
+     * @param uid Unique identifier of a pulse
+     * @return The JAX-RS response
+     */
+    @GET
+    @Path("/fetch")
+    @Produces(MediaType.APPLICATION_XML)
+    public String fetch(@QueryParam(StandRs.QUERY_ID) final String uid) {
+        String xml;
+        try {
+            xml = new SimpleXml(
+                new DOMSource(
+                    this.render(
+                        new JaxbBundle("pulse"),
+                        this.stand().pulses().tail(uid).iterator().next()
+                    ).element()
+                )
+            ).toString();
+        } catch (IOException ex) {
+            xml = String.format(
+                "<error>%s</error>",
+                StringEscapeUtils.escapeXml(Exceptions.stacktrace(ex))
+            );
+        }
+        return xml;
+    }
+
+    /**
      * Get stand.
      * @return The stand
      */
@@ -196,8 +235,10 @@ public final class StandRs extends BaseRs {
         JaxbBundle bundle = new JaxbBundle("pulse")
             .add("identifier", pulse.identifier())
             .up();
+        final ArraySet<String> now = new ArraySet<String>(this.open);
         if (this.open.contains(pulse.identifier())) {
-            bundle = this.render(bundle, pulse)
+            bundle = this
+                .render(bundle, pulse)
                 .link(
                     new Link(
                         "close",
@@ -205,11 +246,18 @@ public final class StandRs extends BaseRs {
                             .clone()
                             .path(StandRs.class)
                             .queryParam(StandRs.QUERY_OPEN, "{a}")
-                            .build(
-                                this.name,
-                                new ArraySet<String>(this.open)
-                                    .without(pulse.identifier())
-                            )
+                            .build(this.name, now.without(pulse.identifier()))
+                    )
+                )
+                .link(
+                    new Link(
+                        "fetch",
+                        this.uriInfo().getBaseUriBuilder()
+                            .clone()
+                            .path(StandRs.class)
+                            .path(StandRs.class, "fetch")
+                            .queryParam(StandRs.QUERY_ID, "{id}")
+                            .build(this.name, pulse.identifier())
                     )
                 );
         } else {
@@ -220,11 +268,7 @@ public final class StandRs extends BaseRs {
                         .clone()
                         .path(StandRs.class)
                         .queryParam(StandRs.QUERY_OPEN, "{b}")
-                        .build(
-                            this.name,
-                            new ArraySet<String>(this.open)
-                                .with(pulse.identifier())
-                        )
+                        .build(this.name, now.with(pulse.identifier()))
                 )
             );
         }
@@ -254,16 +298,26 @@ public final class StandRs extends BaseRs {
                     ).dom().getDocumentElement()
                 );
             } catch (ImpossibleModificationException ex) {
-                output = output.add("exception", Exceptions.message(ex));
+                output = this.bug(output, ex);
             } catch (TransformerException ex) {
-                output = output.add("exception", Exceptions.message(ex));
+                output = this.bug(output, ex);
             }
         } catch (IOException ex) {
-            output = output.add("exception", Exceptions.message(ex));
+            output = this.bug(output, ex);
         } catch (XemblySyntaxException ex) {
-            output = output.add("exception", Exceptions.message(ex));
+            output = this.bug(output, ex);
         }
         return output;
+    }
+
+    /**
+     * Add bug to bundle.
+     * @param bundle Bundle to render into
+     * @param exc Exception
+     * @return Bundle
+     */
+    private JaxbBundle bug(final JaxbBundle bundle, final Exception exc) {
+        return bundle.add("exception", Exceptions.message(exc)).up();
     }
 
     /**
