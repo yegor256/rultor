@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -27,17 +26,57 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    version="2.0"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    exclude-result-prefixes="xs">
-    <xsl:output method="xml" indent="yes"/>
-    <xsl:include href="http://www.rultor.com/xsl/layout.xsl"/>
-    <xsl:include href="http://www.rultor.com/xsl/snapshot.xsl"/>
-    <xsl:template match="/">
-        <div>
-            <xsl:apply-templates select="/snapshot" />
-        </div>
-    </xsl:template>
-</xsl:stylesheet>
+ */
+package com.rultor.web;
+
+import com.rexsl.test.XhtmlMatchers;
+import com.rultor.snapshot.Snapshot;
+import com.rultor.snapshot.XSLT;
+import org.hamcrest.MatcherAssert;
+import org.junit.Test;
+import org.xembly.Directives;
+
+/**
+ * Test case for {@link StandRs}.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ */
+public final class StandRsTest {
+
+    /**
+     * StandRs can fetch snapshot in HTML.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void fetchesSnapshotInHtml() throws Exception {
+//        MatcherAssert.assertThat(
+//        );
+    }
+
+    /**
+     * StandRs can process snapshot with XSLT.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void processesSnapshotWithXslt() throws Exception {
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(
+                new XSLT(
+                    new Snapshot(
+                        new Directives()
+                            .xpath("/snapshot")
+                            .add("start")
+                            .set("2012-08-23T15:00:00Z")
+                            .toString()
+                    ),
+                    this.getClass().getResourceAsStream("fetch.xsl")
+                ).dom()
+            ),
+            XhtmlMatchers.hasXPaths(
+                "/xhtml:div",
+                "/xhtml:div"
+            )
+        );
+    }
+
+}

@@ -78,7 +78,7 @@ import org.xembly.XemblySyntaxException;
  */
 @Path("/s/{stand:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.ExcessiveImports")
+@SuppressWarnings({ "PMD.ExcessiveImports", "PMD.TooManyMethods" })
 public final class StandRs extends BaseRs {
 
     /**

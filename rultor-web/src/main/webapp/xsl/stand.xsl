@@ -36,6 +36,31 @@
         <title>
             <xsl:value-of select="/page/stand"/>
         </title>
+        <script type="text/javascript"><![CDATA[
+            function fetch($div) {
+                var entry = $div.attr('data-fetch-url');
+                if (!entry) {
+                    console.log('fetch URL is absent!');
+                    return;
+                }
+                $div.find('.heart').show();
+                $.ajax(entry)
+                    .done(
+                        function(html) {
+                            $div.find('.body').html(html);
+                            $div.find('.heart').hide();
+                            console.log('Loaded ' + html.length + ' from ' + entry);
+                        }
+                    )
+                    .fail(function() { alert('failed'); });
+                setTimeout(function() { fetch($div); }, 5000);
+            }
+            $(document).ready(
+                function() {
+                    $('div:has(.body)').each(function () { fetch($(this)); });
+                }
+            );
+        ]]></script>
     </xsl:template>
     <xsl:template name="content">
         <h2>
@@ -84,8 +109,14 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="pulse" mode="open">
-        <div class="panel spacious">
+        <div class="panel spacious" style="min-height: 4em;">
+            <xsl:attribute name="data-fetch-url">
+                <xsl:value-of select="links/link[@rel='fetch']/@href"/>
+            </xsl:attribute>
             <ul class="list-inline" style="float:right">
+                <li class="heart text-muted" style="display:none">
+                    <i class="icon-cloud-download"><xsl:comment>heart</xsl:comment></i>
+                </li>
                 <li>
                     <xsl:value-of select="identifier"/>
                 </li>
@@ -98,7 +129,9 @@
                     </a>
                 </li>
             </ul>
-            <xsl:apply-templates select="snapshot"/>
+            <div class="body">
+                <xsl:apply-templates select="snapshot"/>
+            </div>
         </div>
     </xsl:template>
     <xsl:template match="pulse" mode="closed">

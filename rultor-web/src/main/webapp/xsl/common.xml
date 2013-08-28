@@ -28,16 +28,22 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    version="2.0"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    exclude-result-prefixes="xs">
-    <xsl:output method="xml" indent="yes"/>
-    <xsl:include href="http://www.rultor.com/xsl/layout.xsl"/>
-    <xsl:include href="http://www.rultor.com/xsl/snapshot.xsl"/>
-    <xsl:template match="/">
-        <div>
-            <xsl:apply-templates select="/snapshot" />
-        </div>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+    <xsl:template name="millis">
+        <xsl:param name="millis" as="xs:integer"/>
+        <xsl:choose>
+            <xsl:when test="$millis &gt; 60000">
+                <xsl:value-of select="format-number($millis div 60000, '0')"/>
+                <xsl:text>min</xsl:text>
+            </xsl:when>
+            <xsl:when test="$millis &gt; 1000">
+                <xsl:value-of select="format-number($millis div 1000, '0.0')"/>
+                <xsl:text>s</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="format-number($millis, '#')"/>
+                <xsl:text>ms</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 </xsl:stylesheet>

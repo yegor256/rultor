@@ -29,6 +29,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+    <xsl:include href="/xsl/common.xsl"/>
     <xsl:template match="/">
         <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html&gt;</xsl:text>
         <xsl:apply-templates select="page"/>
@@ -54,7 +55,6 @@
                         <xsl:value-of select="/page/version/revision"/>
                     </xsl:attribute>
                 </link>
-                <xsl:call-template name="head"/>
                 <script type="text/javascript" src="//img.rultor.com/markdown.js">
                     <!-- this is for W3C compliance -->
                     <xsl:text> </xsl:text>
@@ -114,6 +114,7 @@
                 })();
                 ]]></script>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <xsl:call-template name="head"/>
             </head>
             <body>
                 <xsl:if test="/page/nav/item">
@@ -169,23 +170,6 @@
                 <xsl:apply-templates select="version"/>
             </body>
         </html>
-    </xsl:template>
-    <xsl:template name="millis">
-        <xsl:param name="millis" as="xs:integer"/>
-        <xsl:choose>
-            <xsl:when test="$millis &gt; 60000">
-                <xsl:value-of select="format-number($millis div 60000, '0')"/>
-                <xsl:text>min</xsl:text>
-            </xsl:when>
-            <xsl:when test="$millis &gt; 1000">
-                <xsl:value-of select="format-number($millis div 1000, '0.0')"/>
-                <xsl:text>s</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="format-number($millis, '#')"/>
-                <xsl:text>ms</xsl:text>
-            </xsl:otherwise>
-        </xsl:choose>
     </xsl:template>
     <xsl:template match="crumb">
         <li>
