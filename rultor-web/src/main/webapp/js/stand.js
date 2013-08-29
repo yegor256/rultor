@@ -38,12 +38,16 @@ function fetch($div) {
     $div.find('.body').load(
         entry,
         function(text, status, xhr) {
-            $div.find('.heart').hide();
-            RULTOR.format($div);
-            console.log(status + ': loaded ' + text.length + ' bytes');
+            if (status == "error") {
+                $div.find('.heart').addClass('text-danger');
+                $div.find('.heart').attr('title', text);
+            } else {
+                $div.find('.heart').hide();
+                RULTOR.format($div);
+                setTimeout(function() { fetch($div); }, 5000);
+            }
         }
     );
-    setTimeout(function() { fetch($div); }, 5000);
 }
 
 $(document).ready(
