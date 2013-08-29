@@ -30,49 +30,31 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 
 /**
- * Pulse.
+ * Tag of a {@link Pulse}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Pulse {
+public interface Tag {
 
     /**
-     * Unique ID of it.
-     * @return Identifier
+     * Label of it.
+     * @return Label
      */
-    @NotNull(message = "identifier is never NULL")
-    String identifier();
+    @NotNull(message = "label is never NULL")
+    String label();
 
     /**
-     * All its tags.
-     * @return List of tags
+     * Level.
+     * @return Level
      */
-    @NotNull(message = "collection of tags is never NULL")
-    Collection<Tag> tags();
-
-    /**
-     * Snapshot in Xembly.
-     * @return The snapshot
-     * @throws IOException If IO error
-     */
-    @NotNull(message = "story is never NULL")
-    String xembly() throws IOException;
-
-    /**
-     * Read it as a stream.
-     * @return Stream to stream from
-     * @throws IOException If fails
-     */
-    @NotNull(message = "stream is never NULL")
-    InputStream stream() throws IOException;
+    @NotNull(message = "level is never NULL")
+    Level level();
 
 }
