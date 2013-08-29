@@ -61,16 +61,20 @@ public final class IncrementalBashTest {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final File dir = Files.createTempDir();
         FileUtils.write(new File(dir, "a.txt"), "first\nsecond");
+        final ImmutableMap<String, Object> args =
+            new ImmutableMap.Builder<String, Object>()
+                .put("file", "file-name.txt")
+                .build();
         final int code = new IncrementalBash(
             new Permanent(new ShellMocker.Bash(dir)),
             Arrays.asList(
                 "MSG='$A'; echo `date` $A; sleep 1; pwd;",
                 "find . -name \"a.txt\" | grep txt | wc -l;",
-                "mkdir -p foo; cd foo; touch b.txt; pwd",
-                "pwd; if [ ! -f b.txt ]; then exit 1; fi",
+                "mkdir -p foo; cd foo; touch ${file}; pwd",
+                "pwd; if [ ! -f ${file} ]; then exit 1; fi",
                 "/usr/bin/broken-name"
             )
-        ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
+        ).exec(args, stdout);
         MatcherAssert.assertThat(code, Matchers.not(Matchers.equalTo(0)));
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
