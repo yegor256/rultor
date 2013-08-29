@@ -38,6 +38,7 @@
     </xsl:template>
     <xsl:template name="content">
         <xsl:apply-templates select="/page/face"/>
+        <xsl:apply-templates select="/page/unit/exception"/>
         <form method="post" class="spacious">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
@@ -65,20 +66,16 @@
         </form>
     </xsl:template>
     <xsl:template match="face">
-        <p class="spacious">
-            <xsl:choose>
-                <xsl:when test="exception">
-                    <pre class="text-danger"><xsl:value-of select="exception"/></pre>
-                </xsl:when>
-                <xsl:when test="type and html">
-                    <code><xsl:value-of select="type"/></code>
-                    <xsl:text> </xsl:text>
-                    <xsl:value-of disable-output-escaping="yes" select="html"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <!-- nothing to show -->
-                </xsl:otherwise>
-            </xsl:choose>
-        </p>
+        <xsl:apply-templates select="exception"/>
+        <xsl:if test="type and html">
+            <p class="spacious">
+                <code><xsl:value-of select="type"/></code>
+                <xsl:text> </xsl:text>
+                <xsl:value-of disable-output-escaping="yes" select="html"/>
+            </p>
+        </xsl:if>
+    </xsl:template>
+    <xsl:template match="exception">
+        <pre class="text-danger"><xsl:value-of select="."/></pre>
     </xsl:template>
 </xsl:stylesheet>

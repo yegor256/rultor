@@ -142,17 +142,14 @@ public final class UnitRs extends BaseRs {
             );
         } catch (SpecException ex) {
             return this.head()
-                .append(FlashInset.bundle(Level.SEVERE, ex.getMessage(), 0L))
+                .append(FlashInset.bundle(Level.SEVERE, Exceptions.message(ex)))
                 .append(
                     new JaxbBundle("unit")
                         .add("name", this.name)
                         .up()
                         .add("spec", spec)
                         .up()
-                        .add(
-                            "exception",
-                            Exceptions.message(ex)
-                        )
+                        .add("exception", Exceptions.message(ex))
                         .up()
                 )
                 .render()
