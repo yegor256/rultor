@@ -29,11 +29,22 @@
  */
 package com.rultor.web;
 
+import com.jcabi.urn.URN;
+import com.rexsl.page.HttpHeadersMocker;
+import com.rexsl.page.ServletContextMocker;
+import com.rexsl.page.UriInfoMocker;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
+import com.rultor.spi.Pageable;
+import com.rultor.spi.Pulse;
+import com.rultor.spi.Stand;
+import com.rultor.spi.User;
+import com.rultor.spi.Users;
+import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.xembly.Directives;
 
 /**
@@ -48,8 +59,40 @@ public final class StandRsTest {
      * @throws Exception If some problem inside
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void fetchesSnapshotInHtml() throws Exception {
-        // todo
+        final StandRs rest = new StandRs();
+        final Stand stand = Mockito.mock(Stand.class);
+        final URN owner = new URN("urn:test:1");
+        Mockito.doReturn(owner).when(stand).owner();
+        final Pageable<Pulse, String> pulses = Mockito.mock(Pageable.class);
+        Mockito.doReturn(pulses).when(stand).pulses();
+        final String name = "some-pulse identifier";
+        final Pulse pulse = Mockito.mock(Pulse.class);
+        Mockito.doReturn(
+            new Directives()
+                .add("spec").set("some text").up()
+                .add("tags").add("tag").add("label").set("tag label")
+                .toString()
+        ).when(pulse).xembly();
+        Mockito.doReturn(Arrays.asList(pulse).iterator())
+            .when(pulses).iterator();
+        Mockito.doReturn(pulses).when(pulses).tail(name);
+        final Users users = Mockito.mock(Users.class);
+        final User user = Mockito.mock(User.class);
+        Mockito.doReturn(owner).when(user).urn();
+        Mockito.doReturn(user).when(users).get(Mockito.any(URN.class));
+        Mockito.doReturn(stand).when(users).stand(Mockito.anyString());
+        rest.setServletContext(
+            new ServletContextMocker()
+                .withAttribute(Users.class.getName(), users).mock()
+        );
+        rest.setHttpHeaders(new HttpHeadersMocker().mock());
+        rest.setUriInfo(new UriInfoMocker().mock());
+        MatcherAssert.assertThat(
+            rest.fetch(name).getEntity().toString(),
+            XhtmlMatchers.hasXPath("//xhtml:div")
+        );
     }
 
     /**
