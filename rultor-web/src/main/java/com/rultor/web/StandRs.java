@@ -181,11 +181,13 @@ public final class StandRs extends BaseRs {
                 ).xml()
             ).build();
         } catch (TransformerException ex) {
-            resp = Response.serverError()
-                .entity(Exceptions.stacktrace(ex)).build();
+            resp = Response.serverError().entity(
+                Exceptions.stacktrace(ex)
+            ).build();
         } catch (IOException ex) {
-            resp = Response.serverError()
-                .entity(Exceptions.stacktrace(ex)).build();
+            resp = Response.serverError().entity(
+                Exceptions.stacktrace(ex)
+            ).build();
         }
         return resp;
     }
