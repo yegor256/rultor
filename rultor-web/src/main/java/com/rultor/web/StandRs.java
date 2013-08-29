@@ -79,6 +79,7 @@ import org.xembly.XemblySyntaxException;
  * @since 1.0
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @checkstyle ClassFanOutComplexity (500 lines)
  */
 @Path("/s/{stand:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
