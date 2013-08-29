@@ -36,29 +36,10 @@
         <title>
             <xsl:value-of select="/page/stand"/>
         </title>
-        <script type="text/javascript"><![CDATA[
-            function fetch($div) {
-                var entry = $div.attr('data-fetch-url');
-                if (!entry) {
-                    console.log('fetch URL is absent!');
-                    return;
-                }
-                $div.find('.heart').show();
-                $div.find('.body').load(
-                    entry,
-                    function(text, status, xhr) {
-                        $div.find('.heart').hide();
-                        console.log(status + ': loaded ' + text.length + ' bytes');
-                    }
-                );
-                setTimeout(function() { fetch($div); }, 5000);
-            }
-            $(document).ready(
-                function() {
-                    $('div:has(.body)').each(function () { fetch($(this)); });
-                }
-            );
-        ]]></script>
+        <script type="text/javascript" src="/js/stand.js">
+            <!-- this is for W3C compliance -->
+            <xsl:text> </xsl:text>
+        </script>
     </xsl:template>
     <xsl:template name="content">
         <h2>

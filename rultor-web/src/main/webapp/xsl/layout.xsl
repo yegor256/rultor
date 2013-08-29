@@ -67,33 +67,10 @@
                     <!-- this is for W3C compliance -->
                     <xsl:text> </xsl:text>
                 </script>
-                <script type="text/javascript"><![CDATA[
-                    $(document).ready(
-                        function() {
-                            $('span.timeago').each(
-                                function (span) {
-                                    var iso = $(this).text();
-                                    $(this).text(moment(iso).fromNow());
-                                    $(this).attr('title', iso);
-                                }
-                            );
-                            $('span.markdown').each(
-                                function (span) {
-                                    $(this).html(markdown.toHTML($(this).text()).replace(/<\/?p *>/g,''));
-                                }
-                            );
-
-                        }
-                    );
-                    $(document).keyup(
-                        function(event) {
-                            if (event.keyCode == 27) {
-                                $('.overlay').hide();
-                                $('.menu').hide();
-                            }
-                        }
-                    );
-                ]]></script>
+                <script type="text/javascript" src="/js/layout.js">
+                    <!-- this is for W3C compliance -->
+                    <xsl:text> </xsl:text>
+                </script>
                 <script type="text/javascript"><![CDATA[
                     var _gaq = _gaq || [];
                     _gaq.push(['_setAccount', 'UA-1963507-10']);
