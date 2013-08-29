@@ -69,6 +69,8 @@ import org.xembly.XemblySyntaxException;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @todo #162:0.5hr As soon as rexsl #716 is resolved remove
+ *  SQSEntry interface and use TestClient directly.
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
