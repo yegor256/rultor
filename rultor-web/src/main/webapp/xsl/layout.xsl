@@ -189,8 +189,8 @@
         </li>
     </xsl:template>
     <xsl:template match="version">
-        <aside class="version hidden-phone">
-            <ul class="list-inline">
+        <aside class="version hidden-phone" style="padding: 0.2em 0.5em;">
+            <ul class="list-inline" style="margin:0">
                 <li>
                     <xsl:attribute name="class">
                         <xsl:if test="contains(name, 'SNAPSHOT')">
