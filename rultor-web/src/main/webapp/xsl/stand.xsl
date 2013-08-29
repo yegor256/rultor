@@ -88,26 +88,28 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="pulse" mode="open">
-        <div class="panel spacious" style="min-height: 4em;">
+        <div class="panel">
             <xsl:attribute name="data-fetch-url">
                 <xsl:value-of select="links/link[@rel='fetch']/@href"/>
             </xsl:attribute>
-            <ul class="list-inline" style="float:right">
-                <li class="heart text-muted" style="display:none">
-                    <i class="icon-cloud-download"><xsl:comment>heart</xsl:comment></i>
-                </li>
-                <li>
-                    <xsl:value-of select="identifier"/>
-                </li>
-                <li>
-                    <a title="close">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='close']/@href"/>
-                        </xsl:attribute>
-                        <i class="icon-remove"><xsl:comment>close</xsl:comment></i>
-                    </a>
-                </li>
-            </ul>
+            <div class="panel-heading">
+                <ul class="list-inline">
+                    <li>
+                        <xsl:value-of select="identifier"/>
+                    </li>
+                    <li class="heart text-muted" style="display:none">
+                        <i class="icon-cloud-download"><xsl:comment>heart</xsl:comment></i>
+                    </li>
+                    <li class="pull-right">
+                        <a title="close">
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="links/link[@rel='close']/@href"/>
+                            </xsl:attribute>
+                            <i class="icon-remove"><xsl:comment>close</xsl:comment></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
             <div class="body">
                 <xsl:apply-templates select="snapshot"/>
             </div>
