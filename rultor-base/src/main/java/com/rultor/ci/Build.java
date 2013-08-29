@@ -111,7 +111,6 @@ public final class Build {
      * @param code The code
      * @return Marker
      */
-    @Loggable
     private String tag(final int code) {
         final Level level;
         if (code == 0) {

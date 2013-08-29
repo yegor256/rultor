@@ -134,7 +134,6 @@ public final class OnPullRequest implements Instance {
         // @checkstyle LineLength (1 line)
         value = "merge request ${args[0].name()} #if($result)built successfully#{else}failed to build#end"
     )
-    @Loggable
     private boolean merge(final MergeRequest request) throws IOException {
         final String tag = "on-pull-request";
         final Snapshot snapshot = new Build(tag, this.batch).exec(
@@ -157,7 +156,6 @@ public final class OnPullRequest implements Instance {
      * @param tag Tag to look for
      * @return TRUE if it was a failure
      */
-    @Loggable
     private boolean failure(final Snapshot snapshot, final String tag) {
         boolean failure = true;
         try {
