@@ -121,7 +121,12 @@
                 </xsl:attribute>
                 <i class="icon-zoom-in"><xsl:comment>open</xsl:comment></i>
             </a>
-            <xsl:value-of select="identifier"/>
+            <ul class="list-inline">
+                <li>
+                    <xsl:value-of select="identifier"/>
+                </li>
+                <xsl:apply-templates select="tags/tag"/>
+            </ul>
         </div>
     </xsl:template>
 </xsl:stylesheet>

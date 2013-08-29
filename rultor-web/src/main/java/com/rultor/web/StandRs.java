@@ -44,6 +44,7 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Stand;
+import com.rultor.spi.Tag;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
@@ -78,6 +79,7 @@ import org.xembly.XemblySyntaxException;
  * @since 1.0
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @checkstyle ClassFanOutComplexity (500 lines)
  */
 @Path("/s/{stand:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
@@ -255,7 +257,19 @@ public final class StandRs extends BaseRs {
                     )
                 );
         } else {
-            bundle = bundle.link(new Link("open", this.self(now.with(uid))));
+            bundle = bundle
+                .link(new Link("open", this.self(now.with(uid))))
+                .add("tags")
+                .add(
+                    new JaxbBundle.Group<Tag>(pulse.tags()) {
+                        @Override
+                        public JaxbBundle bundle(final Tag tag) {
+                            return new JaxbBundle("tag")
+                                .add("label", tag.label()).up()
+                                .add("level", tag.level().toString()).up();
+                        }
+                    }
+                );
         }
         return bundle;
     }

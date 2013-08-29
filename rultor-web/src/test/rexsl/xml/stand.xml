@@ -139,6 +139,20 @@
         </pulse>
         <pulse>
             <identifier>2012-08-23T13:27Z</identifier>
+            <tags>
+                <tag>
+                    <level>FINE</level>
+                    <label>success</label>
+                </tag>
+                <tag>
+                    <level>INFO</level>
+                    <label>#324</label>
+                </tag>
+                <tag>
+                    <level>INFO</level>
+                    <label>pull-request</label>
+                </tag>
+            </tags>
             <links>
                 <link href="/xml/stand.xml" rel="open" type="text/xml"/>
             </links>
