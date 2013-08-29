@@ -29,9 +29,15 @@
  */
 package com.rultor.drain;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
+import com.rexsl.test.TestClient;
 import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
@@ -45,12 +51,15 @@ import java.io.SequenceInputStream;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.xembly.XemblySyntaxException;
 
@@ -60,12 +69,33 @@ import org.xembly.XemblySyntaxException;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @todo #162:0.5hr As soon as rexsl #716 is resolved remove
+ *  SQSEntry interface and use TestClient directly.
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @EqualsAndHashCode(of = { "origin", "work", "stand", "key" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class Standed implements Drain {
+
+    /**
+     * SQS client connection container.
+     */
+    @Immutable
+    private interface SQSEntry {
+
+        /**
+         * Provide SQS connection.
+         * @return SQS connection.
+         */
+        TestClient get();
+    }
+
+    /**
+     * Max message batch size.
+     */
+    private static final int MAX_BATCH_SIZE = 10;
 
     /**
      * Work we're in.
@@ -88,6 +118,11 @@ public final class Standed implements Drain {
     private final transient String key;
 
     /**
+     * HTTP queue that will receive data.
+     */
+    private final transient Standed.SQSEntry entry;
+
+    /**
      * Public ctor.
      * @param wrk Work we're in
      * @param name Name of stand
@@ -104,6 +139,35 @@ public final class Standed implements Drain {
         this.stand = name;
         this.key = secret;
         this.origin = drain;
+        this.entry = new Standed.SQSEntry() {
+            @Override
+            public TestClient get() {
+                return RestTester.start(Stand.QUEUE);
+            }
+        };
+    }
+
+    /**
+     * Public ctor.
+     * @param wrk Work we're in
+     * @param name Name of stand
+     * @param secret Secret key of the stand
+     * @param drain Main drain
+     * @param client HTTP queue
+     * @checkstyle ParameterNumber (8 lines)
+     */
+    public Standed(final Work wrk, final String name, final String secret,
+        final Drain drain, final TestClient client) {
+        this.work = wrk;
+        this.stand = name;
+        this.key = secret;
+        this.origin = drain;
+        this.entry = new Standed.SQSEntry() {
+            @Override
+            public TestClient get() {
+                return client;
+            }
+        };
     }
 
     /**
@@ -130,14 +194,34 @@ public final class Standed implements Drain {
      */
     @Override
     public void append(final Iterable<String> lines) throws IOException {
-        for (String line : lines) {
-            if (XemblyLine.existsIn(line)) {
-                try {
-                    this.send(XemblyLine.parse(line).xembly());
-                } catch (XemblySyntaxException ex) {
-                    Exceptions.warn(this, ex);
-                }
-            }
+        final Iterable<List<String>> batches =
+            Iterables.partition(
+                FluentIterable.from(lines)
+                    .filter(
+                        new Predicate<String>() {
+                            @Override
+                            public boolean apply(final String line) {
+                                return XemblyLine.existsIn(line);
+                            }
+                        }
+                    )
+                    .transform(
+                        new Function<String, String>() {
+                            @Override
+                            public String apply(final String line) {
+                                try {
+                                    return XemblyLine.parse(line).xembly();
+                                } catch (XemblySyntaxException ex) {
+                                    Exceptions.warn(this, ex);
+                                }
+                                return null;
+                            }
+                        }
+                    )
+                    .filter(Predicates.notNull()), Standed.MAX_BATCH_SIZE
+            );
+        for (List<String> batchLines : batches) {
+            this.send(batchLines);
         }
         this.origin.append(lines);
     }
@@ -160,11 +244,80 @@ public final class Standed implements Drain {
     }
 
     /**
-     * Send line to stand.
-     * @param xembly The xembly script
+     * Send lines to stand.
+     * @param xemblies The xembly scripts
      * @throws IOException If fails
      */
-    private void send(final String xembly) throws IOException {
+    private void send(final Iterable<String> xemblies) throws IOException {
+        final StringBuilder builder =
+            new StringBuilder("Action=SendMessageBatch&Version=2011-10-01&");
+        final List<String> postMessages = new ArrayList<String>();
+        final List<String> messages = this.jsons(xemblies);
+        for (int identifier = 0; identifier < messages.size(); ++identifier) {
+            postMessages.add(
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    "SendMessageBatchRequestEntry.%d.Id=%<d&SendMessageBatchRequestEntry.%<d.MessageBody=%s",
+                    identifier + 1,
+                    URLEncoder.encode(
+                        messages.get(identifier), CharEncoding.UTF_8
+                    )
+                )
+            );
+        }
+        builder.append(StringUtils.join(postMessages, '&'));
+        final String body = builder.toString();
+        try {
+            final List<String> missed = this.entry.get()
+                .header(HttpHeaders.CONTENT_ENCODING, CharEncoding.UTF_8)
+                .header(
+                    HttpHeaders.CONTENT_LENGTH,
+                    body.getBytes(CharEncoding.UTF_8).length
+                )
+                .header(
+                    HttpHeaders.CONTENT_TYPE,
+                    MediaType.APPLICATION_FORM_URLENCODED
+                )
+                .post(
+                    String.format(
+                        "sending %d lines to stand SQS queue", messages.size()
+                    ),
+                    body
+                )
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                // @checkstyle LineLength (1 line)
+                .xpath("/SendMessageBatchResponse/BatchResultError/BatchResultErrorEntry/Id/text()");
+            if (!missed.isEmpty()) {
+                throw new IOException(
+                    String.format(
+                        "Problem sending %d messages", missed.size()
+                    )
+                );
+            }
+        } catch (AssertionError ex) {
+            throw new IOException(ex);
+        }
+    }
+
+    /**
+     * Prepare list of messages in JSON format.
+     * @param xemblies List to messages.
+     * @return List of JSONs.
+     */
+    private List<String> jsons(final Iterable<String> xemblies) {
+        final List<String> messages = new ArrayList<String>();
+        for (String xembly : xemblies) {
+            messages.add(this.json(xembly));
+        }
+        return messages;
+    }
+
+    /**
+     * Create a JSON representation of xembly.
+     * @param xembly Xembly to change into json.
+     * @return JSON of xembly.
+     */
+    private String json(final String xembly) {
         final StringWriter writer = new StringWriter();
         Json.createGenerator(writer)
             .writeStartObject()
@@ -179,27 +332,6 @@ public final class Standed implements Drain {
             .writeEnd()
             .writeEnd()
             .close();
-        final String body = String.format(
-            "Action=SendMessage&Version=2011-10-01&MessageBody=%s",
-            URLEncoder.encode(writer.toString(), CharEncoding.UTF_8)
-        );
-        try {
-            RestTester
-                .start(Stand.QUEUE)
-                .header(HttpHeaders.CONTENT_ENCODING, CharEncoding.UTF_8)
-                .header(
-                    HttpHeaders.CONTENT_LENGTH,
-                    body.getBytes(CharEncoding.UTF_8).length
-                )
-                .header(
-                    HttpHeaders.CONTENT_TYPE,
-                    MediaType.APPLICATION_FORM_URLENCODED
-                )
-                .post("sending one line to stand SQS queue", body)
-                .assertStatus(HttpURLConnection.HTTP_OK);
-        } catch (AssertionError ex) {
-            throw new IOException(ex);
-        }
+        return writer.toString();
     }
-
 }
