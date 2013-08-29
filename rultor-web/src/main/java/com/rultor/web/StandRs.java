@@ -171,23 +171,17 @@ public final class StandRs extends BaseRs {
         try {
             resp = Response.ok().entity(
                 new XSLT(
-                    this.snapshot(
-                        this.stand().pulses().tail(uid)
-                            .iterator().next().xembly()
-                    ),
+                    this.render(
+                        new JaxbBundle("container"),
+                        this.stand().pulses().tail(uid).iterator().next()
+                    ).element(),
                     this.getClass().getResourceAsStream("fetch.xsl")
                 ).xml()
             ).build();
         } catch (TransformerException ex) {
             resp = Response.serverError()
                 .entity(Exceptions.stacktrace(ex)).build();
-        } catch (XemblySyntaxException ex) {
-            resp = Response.serverError()
-                .entity(Exceptions.stacktrace(ex)).build();
         } catch (IOException ex) {
-            resp = Response.serverError()
-                .entity(Exceptions.stacktrace(ex)).build();
-        } catch (ImpossibleModificationException ex) {
             resp = Response.serverError()
                 .entity(Exceptions.stacktrace(ex)).build();
         }

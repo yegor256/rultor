@@ -49,6 +49,7 @@ import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.xembly.ImpossibleModificationException;
 
 /**
@@ -105,6 +106,16 @@ public final class XSLT {
     public XSLT(final Snapshot snapshot, final InputStream stream)
         throws ImpossibleModificationException {
         this(new DOMSource(snapshot.dom()), new StreamSource(stream));
+    }
+
+    /**
+     * Ctor.
+     * @param dom DOM source
+     * @param stream XSL
+     * @checkstyle RedundantThrows (5 lines)
+     */
+    public XSLT(final Node dom, final InputStream stream) {
+        this(new DOMSource(dom), new StreamSource(stream));
     }
 
     /**

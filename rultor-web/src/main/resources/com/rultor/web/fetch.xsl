@@ -38,7 +38,7 @@
     <xsl:include href="http://www.rultor.com/xsl/snapshot.xsl"/>
     <xsl:template match="/">
         <div>
-            <xsl:apply-templates select="/snapshot" />
+            <xsl:apply-templates select="//snapshot" />
         </div>
     </xsl:template>
 </xsl:stylesheet>
