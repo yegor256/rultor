@@ -65,8 +65,8 @@ public final class IncrementalBashTest {
             new Permanent(new ShellMocker.Bash(dir)),
             Arrays.asList(
                 "MSG='$A'; echo `date` $A; sleep 1;",
-                "find . -name \"a.txt\" | grep txt | wc -l; mkdir alpha",
-                "cd alpha && if [ -f a.txt ]; then echo 'exists!'; fi",
+                "find . -name \"a.txt\" | grep txt | wc -l; mkdir foo; cd foo; touch b.txt",
+                "if [ ! -f b.txt ]; then exit 1; fi",
                 "/usr/bin/broken-name"
             )
         ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
