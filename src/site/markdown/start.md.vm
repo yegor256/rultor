@@ -340,6 +340,23 @@ user `urn:github:526301`:
 
 ```
 urn:github:526301:github-on-pull-request(
-  // not yet defined
+  "rultor/rultor",
+  "rultor-guard",
+  "... our secret password to Github ...",
+  "m1.small",
+  "mvn clean install -B -C",
+  "rultor",
+  "... authentication code for the stand ...",
+  ["yegor256"],
+  ".*good.*",
+  {".ssh/id_rsa": github-ssh-key()}
 )
 ```
+
+Once a new pull request is ready user `yegor256` has to review the code
+and post a message that matches `.*good.*` regular expression to its
+issue. Unit of work will pick this pull request up, will merge it with
+master its destination branch and merge, if succeeded. Otherwise it will
+post a negative message to the Github issue and won't try again, until a new
+comment "good" comment is posted by `yegor256`.
+
