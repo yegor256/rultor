@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XemblyLine;
+import com.rultor.tools.Exceptions;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -94,16 +95,20 @@ public final class Build {
         final Map<String, Object> args) throws IOException {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final int code = this.batch.exec(args, stdout);
+        Snapshot snapshot;
         try {
-            return new Snapshot(
+            snapshot = new Snapshot(
                 new SequenceInputStream(
                     new ByteArrayInputStream(stdout.toByteArray()),
                     IOUtils.toInputStream(this.tag(code), Charsets.UTF_8)
                 )
             );
         } catch (XemblySyntaxException ex) {
-            throw new IOException(ex);
+            snapshot = new Snapshot(
+                new Directives().add("error").set(Exceptions.stacktrace(ex))
+            );
         }
+        return snapshot;
     }
 
     /**

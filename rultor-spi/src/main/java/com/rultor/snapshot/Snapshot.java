@@ -96,7 +96,7 @@ public final class Snapshot {
      * Public ctor.
      * @param dirs Directives
      */
-    private Snapshot(final Directives dirs) {
+    public Snapshot(final Directives dirs) {
         this.directives = new Array<Directive>(dirs);
     }
 

@@ -95,4 +95,39 @@ public final class BuildTest {
         );
     }
 
+    /**
+     * Build can handle broken xembly gracefully.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void gracefullyHandlesBrokenXembly() throws Exception {
+        final Batch batch = Mockito.mock(Batch.class);
+        Mockito.doAnswer(
+            new Answer<Void>() {
+                @Override
+                public Void answer(final InvocationOnMock inv)
+                    throws Exception {
+                    final PrintWriter stdout = new PrintWriter(
+                        OutputStream.class.cast(inv.getArguments()[1]), true
+                    );
+                    stdout.println("χemβly 'broken content'");
+                    stdout.close();
+                    return null;
+                }
+            }
+        )
+            .when(batch)
+            .exec(
+                Mockito.any(Map.class), Mockito.any(OutputStream.class)
+            );
+        final Build build = new Build("hey-5", batch);
+        MatcherAssert.assertThat(
+            build.exec(
+                new ImmutableMap.Builder<String, Object>().build()
+            ).xml(),
+            XhtmlMatchers.hasXPath("/snapshot/error")
+        );
+    }
+
 }

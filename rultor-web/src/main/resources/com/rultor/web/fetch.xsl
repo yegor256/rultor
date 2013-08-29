@@ -28,17 +28,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    version="2.0"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    exclude-result-prefixes="xs">
-    <xsl:output method="xml" indent="yes"/>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xmlns="http://www.w3.org/1999/xhtml" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs">
+    <xsl:output method="xml" indent="no"/>
     <xsl:include href="http://www.rultor.com/xsl/common.xsl"/>
     <xsl:include href="http://www.rultor.com/xsl/snapshot.xsl"/>
+    <xsl:template match="@*|node()">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+    </xsl:template>
     <xsl:template match="/">
         <div>
-            <xsl:apply-templates select="/snapshot" />
+            <xsl:apply-templates select="node()" />
         </div>
     </xsl:template>
 </xsl:stylesheet>

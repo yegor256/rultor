@@ -27,45 +27,35 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.snapshot;
 
-import com.rexsl.test.XhtmlMatchers;
-import org.hamcrest.MatcherAssert;
-import org.junit.Test;
-import org.xembly.Directives;
-
-/**
- * Test case for {@link XSLT}.
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- */
-public final class XSLTTest {
-
-    /**
-     * XSLT can transform a snapshot.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void transformsSnapshot() throws Exception {
-        MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(
-                new XSLT(
-                    new Snapshot(
-                        new Directives()
-                            .xpath("/snapshot")
-                            .add("start")
-                            .set("2012-08-23T13:00:00Z")
-                    ),
-                    // @checkstyle StringLiteralsConcatenation (5 lines)
-                    "<xsl:stylesheet"
-                    + " xmlns:xsl='http://www.w3.org/1999/XSL/Transform'"
-                    + " version='2.0'>"
-                    + "<xsl:template match='snapshot'><test/>"
-                    + "</xsl:template></xsl:stylesheet>"
-                ).dom()
-            ),
-            XhtmlMatchers.hasXPath("/test")
+var RULTOR = {
+    format: function($block) {
+        $block.find('span.timeago').each(
+            function (span) {
+                var iso = $(this).text();
+                $(this).text(moment(iso).fromNow());
+                $(this).attr('title', iso);
+            }
+        );
+        $block.find('span.markdown').each(
+            function (span) {
+                $(this).html(markdown.toHTML($(this).text()).replace(/<\/?p *>/g,''));
+            }
         );
     }
+};
 
-}
+$(document).ready(
+    function() {
+        RULTOR.format($('body'));
+    }
+);
+
+$(document).keyup(
+    function(event) {
+        if (event.keyCode == 27) {
+            $('.overlay').hide();
+            $('.menu').hide();
+        }
+    }
+);
