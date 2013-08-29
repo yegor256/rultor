@@ -172,7 +172,7 @@ public final class StandRs extends BaseRs {
             resp = Response.ok().entity(
                 new XSLT(
                     this.render(
-                        new JaxbBundle("container"),
+                        new JaxbBundle("div"),
                         this.stand().pulses().tail(uid).iterator().next()
                     ).element(),
                     this.getClass().getResourceAsStream("fetch.xsl")

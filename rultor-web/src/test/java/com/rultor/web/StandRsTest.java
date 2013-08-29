@@ -51,6 +51,7 @@ import org.xembly.Directives;
  * Test case for {@link StandRs}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class StandRsTest {
 
@@ -91,7 +92,7 @@ public final class StandRsTest {
         rest.setUriInfo(new UriInfoMocker().mock());
         MatcherAssert.assertThat(
             rest.fetch(name).getEntity().toString(),
-            XhtmlMatchers.hasXPath("//xhtml:div")
+            XhtmlMatchers.hasXPath("/div//xhtml:ul")
         );
     }
 
@@ -106,16 +107,16 @@ public final class StandRsTest {
                 new XSLT(
                     new Snapshot(
                         new Directives()
-                            .xpath("/snapshot")
-                            .add("start")
-                            .set("2012-08-23T15:00:00Z")
+                            .add("start").set("2012-08-23T15:00:00Z").up()
+                            .add("products").add("product")
+                            .add("markdown").set("hello!")
                     ),
                     this.getClass().getResourceAsStream("fetch.xsl")
                 ).dom()
             ),
             XhtmlMatchers.hasXPaths(
                 "/xhtml:div",
-                "/xhtml:div/xhtml:ul"
+                "//xhtml:ul"
             )
         );
     }
