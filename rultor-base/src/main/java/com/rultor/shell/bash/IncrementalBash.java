@@ -46,6 +46,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directives;
 
 /**
@@ -134,9 +135,10 @@ public final class IncrementalBash implements Batch {
      */
     private String script(final Map<String, Object> args, final Vext cmd) {
         final String uid = String.format("bash-%d", System.nanoTime());
+        final String velocity = StringUtils.strip(cmd.velocity(), " ;");
         return new StringBuilder()
             .append("echo; echo ${dollar} ")
-            .append(Terminal.escape(cmd.velocity()))
+            .append(Terminal.escape(velocity))
             .append("; ")
             .append(
                 this.xembly(
@@ -152,14 +154,14 @@ public final class IncrementalBash implements Batch {
                         .set("`date  -u +%Y-%m-%dT%H:%M:%SZ`")
                 )
             )
-            .append("START=`date +%s%N | tr -d N`; ")
+            .append("; START=`date +%s%N | tr -d N`; ")
             .append("STDERR=`mktemp /tmp/bash-XXXX`; ")
-            .append("( ")
-            .append(cmd.velocity())
-            .append(" ) 2> >( cat | tee $STDERR ) | col -b; ")
+            .append("{ ")
+            .append(velocity)
+            .append("; } 2> >( cat | tee ${dollar}STDERR ); ")
             .append("CODE=${dollar}?; ")
-            .append("FINISH=`date +%s%N | tr -d N`; ")
-            .append("if [ $CODE = 0 ]; then ")
+            .append("pwd; FINISH=`date +%s%N | tr -d N`; ")
+            .append("if [ ${dollar}CODE = 0 ]; then ")
             .append(
                 this.xembly(
                     new Directives()
@@ -170,7 +172,7 @@ public final class IncrementalBash implements Batch {
                         .set(Level.INFO.toString())
                 )
             )
-            .append(" else ")
+            .append("; else ")
             .append(
                 this.xembly(
                     new Directives()
@@ -187,7 +189,7 @@ public final class IncrementalBash implements Batch {
                         .set("`cat ${dollar}{STDERR}`")
                 )
             )
-            .append("fi; ")
+            .append("; fi; ")
             .append(
                 this.xembly(
                     new Directives()
@@ -200,7 +202,7 @@ public final class IncrementalBash implements Batch {
                         .set("`echo ${dollar}(((FINISH-START)/1000000))`")
                 )
             )
-            .append("rm -f ${dollar}{STDERR}; ")
+            .append("; rm -f ${dollar}{STDERR}; ")
             .append("if [ ${dollar}CODE != 0 ]; then exit ${dollar}CODE; fi; ")
             .toString();
     }
@@ -212,7 +214,7 @@ public final class IncrementalBash implements Batch {
      */
     private String xembly(final Directives dirs) {
         return String.format(
-            "echo \"%s\"; ",
+            "echo \"%s\"",
             new XemblyLine(dirs).toString().replace("\"", "\\\"")
         );
     }
