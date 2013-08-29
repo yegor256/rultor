@@ -65,7 +65,7 @@
                         </ul>
                     </div>
                 </xsl:if>
-                <xsl:apply-templates select="/page/pulses/pulse[snapshot]" mode="open"/>
+                <xsl:apply-templates select="/page/pulses/pulse[snapshot or error]" mode="open"/>
                 <xsl:apply-templates select="/page/pulses/pulse[not(snapshot)]" mode="closed"/>
                 <xsl:if test="//links/link[@rel='more']">
                     <div class="spacious">
@@ -111,6 +111,9 @@
                 </ul>
             </div>
             <div class="body">
+                <xsl:if test="error">
+                    <pre class="text-danger"><xsl:value-of select="error"/></pre>
+                </xsl:if>
                 <xsl:apply-templates select="snapshot"/>
             </div>
         </div>
