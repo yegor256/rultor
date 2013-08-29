@@ -35,6 +35,7 @@ import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
 import com.rultor.spi.SpecException;
+import com.rultor.spi.Tag;
 import com.rultor.spi.Unit;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
@@ -42,6 +43,7 @@ import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -141,6 +143,10 @@ public final class PulseRs extends BaseRs {
             }
             @Override
             public String identifier() {
+                throw new UnsupportedOperationException();
+            }
+            @Override
+            public Collection<Tag> tags() {
                 throw new UnsupportedOperationException();
             }
         };
