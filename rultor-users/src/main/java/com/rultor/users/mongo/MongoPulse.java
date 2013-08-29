@@ -108,9 +108,8 @@ final class MongoPulse implements Pulse {
     @Override
     @SuppressWarnings("unchecked")
     public Collection<Tag> tags() {
-        final Collection<String> names = Collection.class.cast(
-            this.map.get(MongoStand.ATTR_TAGS)
-        );
+        final Collection<String> names =
+            (Collection<String>) this.map.get(MongoStand.ATTR_TAGS);
         final Collection<Tag> tags = new ArrayList<Tag>(names.size());
         for (String name : names) {
             tags.add(MongoPulse.tag(name));
