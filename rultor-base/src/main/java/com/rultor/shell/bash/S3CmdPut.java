@@ -143,10 +143,10 @@ public final class S3CmdPut implements Sequel {
                 )
                 .append(" && cd ")
                 .append(Terminal.escape(dir))
-                .append(" && for f in `find ")
+                .append(" && FILES=`find ")
                 .append(mask)
                 // @checkstyle LineLength (1 line)
-                .append(" -type f`; do s3cmd --config=$CONFIG put $f \"$HEAD$f\" > /dev/null; echo $f; done")
+                .append(" -type f` && for f in $FILES; do s3cmd --config=$CONFIG put $f \"$HEAD$f\" > /dev/null; echo $f; done")
                 .toString(),
             new StringBuilder()
                 .append("[default]\n")
