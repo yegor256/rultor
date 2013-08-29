@@ -52,6 +52,10 @@ function fetch($div) {
 
 $(document).ready(
     function() {
-        $('div:has(.body)').each(function () { fetch($(this)); });
+        $('div:has(.body)').each(
+            function () {
+                fetch($(this));
+            }
+        );
     }
 );
