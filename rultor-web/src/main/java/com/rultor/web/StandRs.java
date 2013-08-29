@@ -50,6 +50,7 @@ import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -147,11 +148,12 @@ public final class StandRs extends BaseRs {
                         .build(this.name)
                 )
             )
+            .link(new Link("collapse", this.self(new ArrayList<String>(0))))
             .append(
                 new Breadcrumbs()
                     .with("stands")
                     .with("edit", this.name)
-                    .with("self", "stand")
+                    .with("collapse", "stand")
                     .bundle()
             )
             .append(new JaxbBundle("stand", this.name))
