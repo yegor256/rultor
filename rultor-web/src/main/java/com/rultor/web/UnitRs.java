@@ -116,7 +116,9 @@ public final class UnitRs extends BaseRs {
     public Response remove() {
         this.user().units().remove(this.name);
         throw this.flash().redirect(
-            this.uriInfo().getBaseUri(),
+            this.uriInfo().getBaseUriBuilder()
+                .path(UnitsRs.class)
+                .build(),
             String.format("Unit `%s` successfully removed", this.name),
             Level.INFO
         );
