@@ -39,7 +39,6 @@ import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -114,29 +113,7 @@ final class MongoPulses implements Pageable<Pulse, String> {
             }
             @Override
             public Pulse next() {
-                final DBObject next = cursor.next();
-                return new Pulse() {
-                    @Override
-                    public String xembly() throws IOException {
-                        final String xembly = next
-                            .get(MongoStand.ATTR_XEMBLY).toString();
-                        return new StringBuilder()
-                            .append(MongoStand.decode(xembly))
-                            .append("XPATH '/snapshot'; ADDIF 'updated';")
-                            .append("SET '")
-                            .append(next.get(MongoStand.ATTR_UPDATED))
-                            .append("';")
-                            .toString();
-                    }
-                    @Override
-                    public InputStream stream() throws IOException {
-                        throw new UnsupportedOperationException();
-                    }
-                    @Override
-                    public String identifier() {
-                        return next.get(MongoStand.ATTR_PULSE).toString();
-                    }
-                };
+                return new MongoPulse(cursor.next());
             }
             @Override
             public void remove() {
