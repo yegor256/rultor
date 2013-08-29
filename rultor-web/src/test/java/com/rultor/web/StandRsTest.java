@@ -66,7 +66,6 @@ public final class StandRsTest {
                             .xpath("/snapshot")
                             .add("start")
                             .set("2012-08-23T15:00:00Z")
-                            .toString()
                     ),
                     this.getClass().getResourceAsStream("fetch.xsl")
                 ).dom()

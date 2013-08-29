@@ -332,7 +332,6 @@ public final class StandRs extends BaseRs {
             new Directives(xembly)
                 .xpath("/snapshot/spec")
                 .remove()
-                .toString()
         );
     }
 

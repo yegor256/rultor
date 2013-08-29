@@ -55,7 +55,6 @@ public final class XSLTTest {
                             .xpath("/snapshot")
                             .add("start")
                             .set("2012-08-23T13:00:00Z")
-                            .toString()
                     ),
                     // @checkstyle StringLiteralsConcatenation (5 lines)
                     "<xsl:stylesheet"
