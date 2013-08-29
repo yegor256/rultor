@@ -69,13 +69,11 @@ import org.xembly.XemblySyntaxException;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
- * @todo #162:1hr This class should me immutable, for this TestClient has to be
- *  replaced with other kind of HTTP client.
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
+@Immutable
 @EqualsAndHashCode(of = { "origin", "work", "stand", "key" })
 @Loggable(Loggable.DEBUG)
-@Immutable
 @SuppressWarnings("PMD.ExcessiveImports")
 public final class Standed implements Drain {
 
@@ -128,15 +126,13 @@ public final class Standed implements Drain {
      * @param name Name of stand
      * @param secret Secret key of the stand
      * @param drain Main drain
-     * @param client HTTP queue
      * @checkstyle ParameterNumber (8 lines)
      */
     public Standed(
         @NotNull(message = "work can't be NULL") final Work wrk,
         @NotNull(message = "name of stand can't be NULL") final String name,
         @NotNull(message = "key can't be NULL") final String secret,
-        @NotNull(message = "drain can't be NULL") final Drain drain,
-        @NotNull(message = "queue can't be NULL") final TestClient client) {
+        @NotNull(message = "drain can't be NULL") final Drain drain) {
         this.work = wrk;
         this.stand = name;
         this.key = secret;
@@ -336,33 +332,4 @@ public final class Standed implements Drain {
             .close();
         return writer.toString();
     }
-
-    /**
-     * Prepare list of messages in JSON format.
-     * @param xemblies List to messages.
-     * @return List of JSONs.
-     */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    private List<String> jsonMessages(final Iterable<String> xemblies) {
-        final List<String> messages = new ArrayList<String>();
-        for (String xembly : xemblies) {
-            final StringWriter writer = new StringWriter();
-            Json.createGenerator(writer)
-                .writeStartObject()
-                .write("nano", System.nanoTime())
-                .write("stand", this.stand)
-                .write("key", this.key)
-                .write("xembly", xembly)
-                .writeStartObject("work")
-                .write("owner", this.work.owner().toString())
-                .write("unit", this.work.unit())
-                .write("scheduled", this.work.scheduled().toString())
-                .writeEnd()
-                .writeEnd()
-                .close();
-            messages.add(writer.toString());
-        }
-        return messages;
-    }
-
 }
