@@ -66,7 +66,6 @@
         <pulse>
             <identifier>2012-08-23T13:23Z</identifier>
             <snapshot>
-                <upidentifierd>2012-08-23T13:25Z</upidentifierd>
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
                 <work>
                     <owner>urn:test:1</owner>
@@ -101,14 +100,14 @@
                 <steps>
                     <step>
                         <id>ec2-instance</id>
-                        <start>2013-08-23T17:57Z</start>
+                        <start at="0.3">2012-08-23T13:25Z</start>
                         <finish>2013-08-23T17:57Z</finish>
                         <summary>created EC2 instance `i-09aeb44` of `m1.small` type</summary>
                         <level>INFO</level>
                     </step>
                     <step>
                         <id>build</id>
-                        <start>2013-08-23T17:59Z</start>
+                        <start at="0.7">2013-08-23T17:59Z</start>
                         <summary>running bash build script</summary>
                     </step>
                     <step>
@@ -125,7 +124,6 @@
         <pulse>
             <identifier>2012-08-23T13:23Z</identifier>
             <snapshot>
-                <upidentifierd>2012-08-23T13:25Z</upidentifierd>
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
                 <start>2012-08-23T13:25Z</start>
             </snapshot>
