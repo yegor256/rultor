@@ -34,9 +34,12 @@ import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.HostKey;
+import com.jcraft.jsch.HostKeyRepository;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.UserInfo;
 import com.rultor.shell.Shell;
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +50,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -58,6 +62,7 @@ import org.apache.commons.lang3.Validate;
  */
 @EqualsAndHashCode(of = { "addr", "login", "key" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.TooManyMethods")
 public final class SSHChannel implements Shell {
 
     /**
@@ -237,6 +242,7 @@ public final class SSHChannel implements Shell {
             JSch.setLogger(SSHChannel.LOGGER);
             final JSch jsch = new JSch();
             final File file = this.key.asFile();
+            jsch.setHostKeyRepository(new SSHChannel.AcceptAll());
             jsch.addIdentity(file.getAbsolutePath());
             Logger.info(
                 this,
@@ -256,4 +262,66 @@ public final class SSHChannel implements Shell {
         }
     }
 
+    /**
+     * Host key repository that accepts all hosts.
+     */
+    private static class AcceptAll implements HostKeyRepository {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int check(final String host, final byte[] key) {
+            return HostKeyRepository.OK;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void add(final HostKey hostkey, final UserInfo info) {
+            // do nothing
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void remove(final String host, final String type) {
+            // do nothing
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void remove(final String host, final String type,
+            final byte[] key) {
+            // do nothing
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String getKnownHostsRepositoryID() {
+            return StringUtils.EMPTY;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public HostKey[] getHostKey() {
+            return new HostKey[0];
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public HostKey[] getHostKey(final String host, final String type) {
+            return new HostKey[0];
+        }
+    }
 }
