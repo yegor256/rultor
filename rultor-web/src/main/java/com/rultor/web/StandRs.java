@@ -354,7 +354,7 @@ public final class StandRs extends BaseRs {
      * @return Bundle
      */
     private JaxbBundle bug(final JaxbBundle bundle, final Exception exc) {
-        return bundle.add("exception", Exceptions.message(exc)).up();
+        return bundle.add("error", Exceptions.message(exc)).up();
     }
 
     /**
