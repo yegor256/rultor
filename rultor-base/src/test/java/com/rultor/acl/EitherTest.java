@@ -29,27 +29,24 @@
  */
 package com.rultor.acl;
 
+import com.jcabi.urn.URN;
+import com.rultor.spi.ACL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.validation.ConstraintViolationException;
-
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
-import com.jcabi.urn.URN;
-import com.rultor.spi.ACL;
-
 /**
  * Test case for {@link Either}.
- * @author Gangababu (gangababu.t@gmail.com)
+ * @author Gangababu Tirumalanadhuni (gangababu.t@gmail.com)
  * @version $Id$
  */
 public final class EitherTest {
 
-	/**
+    /**
      * Either should not have null ACLs list.
      * @throws Exception If some problem inside
      */
@@ -57,7 +54,7 @@ public final class EitherTest {
     public void aclsCantBeNull() throws Exception {
         new Either(null);
     }
-    
+
     /**
      * Either can view when any URN matches.
      * @throws Exception If some problem inside
@@ -65,26 +62,27 @@ public final class EitherTest {
     @Test
     public void canViewWhenEitherACLMatches() throws Exception {
         final String urn = "urn:github:555";
-        List<ACL> acls = new ArrayList<ACL>();
+        final List<ACL> acls = new ArrayList<ACL>();
         acls.add(new Prohibited());
         acls.add(new OpenView());
         acls.add(new WhiteList(Arrays.asList(urn)));
-        MatcherAssert.assertThat(new Either(acls).canView(URN.create(urn)),
-            Matchers.equalTo(true)
+        MatcherAssert.assertThat(
+        new Either(acls).canView(URN.create(urn)), Matchers.equalTo(true)
         );
     }
-    
+
     /**
      * Either does not allow to view when no URN matches.
      * @throws Exception If some problem inside
      */
     @Test
     public void cantViewWhenAnyACLDoesNotMatch() throws Exception {
-        List<ACL> acls = new ArrayList<ACL>();
+        final String test = "urn:test:2";
+        final List<ACL> acls = new ArrayList<ACL>();
         acls.add(new Prohibited());
         acls.add(new WhiteList(Arrays.asList("urn:test:1")));
-        MatcherAssert.assertThat(new Either(acls).canView(URN.create("urn:test:2")),
-            Matchers.equalTo(false)
+        MatcherAssert.assertThat(
+        new Either(acls).canView(URN.create(test)), Matchers.equalTo(false)
         );
     }
 
@@ -94,47 +92,47 @@ public final class EitherTest {
      */
     @Test
     public void canViewWhenAtleastOneOpenViewACL() throws Exception {
-        List<ACL> acls = new ArrayList<ACL>();
+        final String test = "urn:test:4";
+        final List<ACL> acls = new ArrayList<ACL>();
         acls.add(new Prohibited());
-        acls.add(new WhiteList(Arrays.asList("urn:test:1")));
-        acls.add(new MD5Keyed("a64cad1db8be410c666716f680e8a135"));
+        acls.add(new WhiteList(Arrays.asList("urn:test:3")));
+        acls.add(new MD5Keyed("a64cad1db8be410c666716f680e8a1234"));
         acls.add(new OpenView());
         acls.add(new Prohibited());
-        MatcherAssert.assertThat(new Either(acls).canView(URN.create("urn:test:2")),
-            Matchers.equalTo(true)
+        MatcherAssert.assertThat(
+        new Either(acls).canView(URN.create(test)), Matchers.equalTo(true)
         );
     }
 
-    
     /**
      * Either can post when any key matches.
      * @throws Exception If some problem inside
      */
     @Test
     public void canPostWhenEitherACLMatches() throws Exception {
-        final String urn = "urn:github:555";
-        List<ACL> acls = new ArrayList<ACL>();
+        final String urn = "urn:github:999";
+        final List<ACL> acls = new ArrayList<ACL>();
         acls.add(new Prohibited());
         acls.add(new OpenView());
         acls.add(new MD5Keyed("a64cad1db8be410c666716f680e8a135"));
         acls.add(new WhiteList(Arrays.asList(urn)));
-        MatcherAssert.assertThat(new Either(acls).canPost("valid-key"),
-            Matchers.equalTo(true)
+        MatcherAssert.assertThat(
+        new Either(acls).canPost("valid-key"), Matchers.equalTo(true)
         );
     }
-    
+
     /**
      * Either does not allow to post when no URN matches.
      * @throws Exception If some problem inside
      */
     @Test
     public void cannotPostWhenAnyACLDoesNotMatch() throws Exception {
-        List<ACL> acls = new ArrayList<ACL>();
+        final List<ACL> acls = new ArrayList<ACL>();
         acls.add(new Prohibited());
-        acls.add(new MD5Keyed("a64cad1db8be410c666716f680e8a135"));
-        acls.add(new WhiteList(Arrays.asList("urn:test:1")));
-        MatcherAssert.assertThat(new Either(acls).canPost("invalid-key"),
-            Matchers.equalTo(false)
+        acls.add(new MD5Keyed("a64cad1db8be410c666716f680e8a1345"));
+        acls.add(new WhiteList(Arrays.asList("urn:test:5")));
+        MatcherAssert.assertThat(
+        new Either(acls).canPost("invalid-key"), Matchers.equalTo(false)
         );
     }
 }
