@@ -87,7 +87,7 @@
             <div class="panel-heading">
                 <ul class="list-inline">
                     <li><xsl:value-of select="time"/></li>
-                    <li>
+                    <li class="icon">
                         <a title="stream">
                             <xsl:attribute name="href">
                                 <xsl:value-of select="links/link[@rel='stream']/@href"/>
@@ -96,14 +96,14 @@
                         </a>
                     </li>
                     <xsl:if test="xembly">
-                        <li>
-                            <i class="icon-wrench" style="cursor:pointer;" title="show xembly"
+                        <li class="icon">
+                            <i class="icon-wrench" title="show xembly"
                                 onclick="$(this).parent().parent().parent().parent().find('.xembly').toggle();"><xsl:comment>xembly</xsl:comment></i>
                         </li>
                     </xsl:if>
                     <xsl:if test="exceptions/exception">
-                        <li>
-                            <i class="icon-warning-sign text-danger" style="cursor:pointer;" title="show exceptions"
+                        <li class="icon">
+                            <i class="icon-warning-sign text-danger" title="show exceptions"
                                 onclick="$(this).parent().parent().parent().parent().find('.exceptions').toggle();"><xsl:comment>exceptions</xsl:comment></i>
                         </li>
                     </xsl:if>

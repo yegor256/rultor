@@ -34,7 +34,7 @@ function fetch($div) {
         console.log('fetch URL is absent!');
         return;
     }
-    $div.find('.heart').show();
+    $div.find('.heart').addClass('text-warning');
     $div.find('.body').load(
         entry,
         function(text, status, xhr) {
@@ -42,7 +42,7 @@ function fetch($div) {
                 $div.find('.heart').addClass('text-danger');
                 $div.find('.heart').attr('title', text);
             } else {
-                $div.find('.heart').hide();
+                $div.find('.heart').removeClass('text-warning');
                 RULTOR.format($div);
                 setTimeout(function() { fetch($div); }, 5000);
             }
@@ -55,6 +55,20 @@ $(document).ready(
         $('div:has(.body)').each(
             function () {
                 fetch($(this));
+            }
+        );
+        $('.heart').each(
+            function () {
+                $(this).click(
+                    function() {
+                        var $div = $(this).parent().parent().parent();
+                        if ($div.attr('data-fetch-stop')) {
+                        } else {
+                            $div.attr('data-fetch-stop', 'yes');
+                            $(this).addClass('text-danger');
+                        }
+                    }
+                );
             }
         );
     }

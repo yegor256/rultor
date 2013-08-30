@@ -82,6 +82,13 @@ textarea {
     z-index: 1002;
 }
 
+.icon {
+    cursor: pointer;
+}
+    .icon a {
+        text-decoration: none;
+    }
+
 .logo {
     font-family: 'Rultor-Logo';
     font-size: 4em;

@@ -125,7 +125,54 @@
             <identifier>2012-08-23T13:23Z</identifier>
             <snapshot>
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
+                <work>
+                    <owner>urn:test:1</owner>
+                    <unit>nightly-build</unit>
+                    <scheduled>2012-08-23T13:25Z</scheduled>
+                </work>
+                <stdout>http://127.0.0.1/s4378h9892fu8i9890</stdout>
                 <start>2012-08-23T13:25Z</start>
+                <eta>2013-08-23T17:57Z</eta>
+                <spec>some specificiation</spec>
+                <lines>6473</lines>
+                <tags>
+                    <tag>
+                        <level>FINE</level>
+                        <label>success</label>
+                    </tag>
+                    <tag>
+                        <level>INFO</level>
+                        <label>#324</label>
+                    </tag>
+                    <tag>
+                        <level>INFO</level>
+                        <label>pull-request</label>
+                    </tag>
+                </tags>
+                <products>
+                    <product>
+                        <name>stdout</name>
+                        <markdown>[1 file](http://google.com)</markdown>
+                    </product>
+                </products>
+                <steps>
+                    <step>
+                        <id>ec2-instance</id>
+                        <start at="0.3">2012-08-23T13:25Z</start>
+                        <finish>2013-08-23T17:57Z</finish>
+                        <summary>created EC2 instance `i-09aeb44` of `m1.small` type</summary>
+                        <level>INFO</level>
+                    </step>
+                    <step>
+                        <id>build</id>
+                        <start at="0.7">2013-08-23T17:59Z</start>
+                        <summary>running bash build script</summary>
+                    </step>
+                    <step>
+                        <id>announce</id>
+                        <summary>announce results</summary>
+                    </step>
+                </steps>
             </snapshot>
             <links>
                 <link href="/xml/stand.xml" rel="close" type="text/xml"/>

@@ -44,8 +44,8 @@
         </xsl:if>
         <ul class="list-inline" style="margin: 5px 0px;">
             <xsl:if test="spec">
-                <li>
-                    <i class="icon-beaker" style="cursor:pointer;" title="show specification"
+                <li class="icon">
+                    <i class="icon-beaker" title="show specification"
                         onclick="$(this).parent().parent().parent().parent().find('pre.spec').toggle();"><xsl:comment>spec</xsl:comment></i>
                 </li>
             </xsl:if>
@@ -98,24 +98,30 @@
         <xsl:choose>
             <xsl:when test="stdout">
                 <div class="progress progress-striped active">
-                    <small>
-                        <a style="margin-right: .5em;" class="pull-right text-danger" title="stop execution immediately">
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="stdout"/>
-                                <xsl:text>?interrupt</xsl:text>
-                            </xsl:attribute>
-                            <i class="icon-off"><xsl:comment>off</xsl:comment></i>
-                        </a>
-                    </small>
-                    <small>
-                        <a style="margin-right: .5em;" class="pull-right" title="server statistics">
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="stdout"/>
-                                <xsl:text>/stats</xsl:text>
-                            </xsl:attribute>
-                            <i class="icon-cloud"><xsl:comment>cloud</xsl:comment></i>
-                        </a>
-                    </small>
+                    <ul class="list-inline pull-right">
+                        <li>
+                            <small class="icon">
+                                <a class="text-danger" title="stop execution immediately">
+                                    <xsl:attribute name="href">
+                                        <xsl:value-of select="stdout"/>
+                                        <xsl:text>?interrupt</xsl:text>
+                                    </xsl:attribute>
+                                    <i class="icon-off"><xsl:comment>off</xsl:comment></i>
+                                </a>
+                            </small>
+                        </li>
+                        <li>
+                            <small class="icon">
+                                <a title="server statistics">
+                                    <xsl:attribute name="href">
+                                        <xsl:value-of select="stdout"/>
+                                        <xsl:text>/stats</xsl:text>
+                                    </xsl:attribute>
+                                    <i class="icon-cloud"><xsl:comment>cloud</xsl:comment></i>
+                                </a>
+                            </small>
+                        </li>
+                    </ul>
                     <a title="click to tail the output">
                         <xsl:attribute name="href">
                             <xsl:value-of select="stdout"/>
@@ -159,7 +165,7 @@
         </li>
     </xsl:template>
     <xsl:template match="version" mode="compact">
-        <li>
+        <li class="icon">
             <a>
                 <xsl:attribute name="href">
                     <xsl:text>https://github.com/rultor/rultor/commit/</xsl:text>
@@ -212,7 +218,7 @@
             </xsl:if>
             <span class="step">
                 <xsl:if test="exception">
-                    <i class="text-danger icon-warning-sign" style="cursor:pointer;"
+                    <i class="text-danger icon-warning-sign icon"
                         onclick="$(this).parent().parent().find('pre.exception').toggle();">
                         <xsl:attribute name="title">
                             <xsl:value-of select="exception/class"/>

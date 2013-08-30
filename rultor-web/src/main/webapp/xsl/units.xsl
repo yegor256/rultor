@@ -100,7 +100,7 @@
                     </a>
                 </li>
                 <xsl:if test="face/drainable = 'true'">
-                    <li>
+                    <li class="icon">
                         <a title="view drain of the unit">
                             <xsl:attribute name="href">
                                 <xsl:value-of select="links/link[@rel='drain']/@href"/>
@@ -109,7 +109,7 @@
                         </a>
                     </li>
                 </xsl:if>
-                <li>
+                <li class="icon">
                     <a onclick="return confirm('Are you sure?');"
                         title="delete this unit">
                         <xsl:attribute name="href">
@@ -119,8 +119,8 @@
                     </a>
                 </li>
                 <xsl:if test="face/exception">
-                    <li>
-                        <i class="icon-warning-sign text-danger" style="cursor:pointer;" title="show exception"
+                    <li class="icon">
+                        <i class="icon-warning-sign text-danger" title="show exception"
                             onclick="$(this).parent().parent().parent().find('.exception').toggle();"><xsl:comment>exception</xsl:comment></i>
                     </li>
                 </xsl:if>
