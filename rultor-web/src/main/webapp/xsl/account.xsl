@@ -166,7 +166,7 @@
     </xsl:template>
     <xsl:template match="column">
         <th>
-            <ul class="list-inline" style="margin:0;">
+            <ul class="list-inline">
                 <li>
                     <xsl:value-of select="title"/>
                 </li>

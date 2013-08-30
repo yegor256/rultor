@@ -108,6 +108,9 @@ p,
 .list-inline li:first-child {
     padding-left: 0;
 }
+.list-inline {
+    margin-bottom: 0;
+}
 
 /* for snapshot.xsl */
 .step-item {
