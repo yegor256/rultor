@@ -34,6 +34,9 @@ function fetch($div) {
         console.log('fetch URL is absent!');
         return;
     }
+    if ($div.attr('data-fetch-stop')) {
+        return;
+    }
     $div.find('.heart').addClass('text-warning');
     $div.find('.body').load(
         entry,
@@ -63,6 +66,9 @@ $(document).ready(
                     function() {
                         var $div = $(this).parent().parent().parent();
                         if ($div.attr('data-fetch-stop')) {
+                            $div.removeAttr('data-fetch-stop');
+                            $(this).removeClass('text-danger');
+                            fetch($div);
                         } else {
                             $div.attr('data-fetch-stop', 'yes');
                             $(this).addClass('text-danger');
