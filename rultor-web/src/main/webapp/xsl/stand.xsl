@@ -100,12 +100,12 @@
                     <li class="heart text-muted icon" title="click to stop fetching">
                         <i class="icon-cloud-download"><xsl:comment>heart</xsl:comment></i>
                     </li>
-                    <li class="pull-right">
-                        <a title="close">
+                    <li class="pull-right icon">
+                        <a title="close and stop fetching" class="close">
                             <xsl:attribute name="href">
                                 <xsl:value-of select="links/link[@rel='close']/@href"/>
                             </xsl:attribute>
-                            <button type="button" class="close" aria-hidden="true">&#215;</button>
+                            <xsl:text>&#215;</xsl:text>
                         </a>
                     </li>
                 </ul>

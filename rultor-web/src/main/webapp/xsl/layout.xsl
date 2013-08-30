@@ -174,19 +174,21 @@
     </xsl:template>
     <xsl:template match="item">
         <xsl:variable name="rel" select="@rel"/>
-        <li>
-            <xsl:if test="/page/links/link[@rel=$rel]/@href = /page/links/link[@rel='self']/@href">
-                <xsl:attribute name="class">
-                    <xsl:text>active</xsl:text>
-                </xsl:attribute>
-            </xsl:if>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel=$rel]/@href"/>
-                </xsl:attribute>
-                <xsl:value-of select="."/>
-            </a>
-        </li>
+        <xsl:if test="/page/links/link[@rel=$rel]">
+            <li>
+                <xsl:if test="/page/links/link[@rel=$rel]/@href = /page/links/link[@rel='self']/@href">
+                    <xsl:attribute name="class">
+                        <xsl:text>active</xsl:text>
+                    </xsl:attribute>
+                </xsl:if>
+                <a>
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="/page/links/link[@rel=$rel]/@href"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="."/>
+                </a>
+            </li>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="version">
         <aside class="version hidden-phone" style="padding: 0.2em 0.5em;">
