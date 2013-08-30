@@ -54,10 +54,15 @@ import org.xembly.XemblySyntaxException;
 public final class XemblyLine {
 
     /**
+     * Mark.
+     */
+    public static final String MARK = "χemβly";
+
+    /**
      * Pattern to use for matching.
      */
     private static final Pattern PTN = Pattern.compile(
-        ".*χemβly '([^']+)'.*"
+        String.format(".*%s '([^']+)'.*", Pattern.quote(XemblyLine.MARK))
     );
 
     /**
@@ -78,7 +83,7 @@ public final class XemblyLine {
      */
     @Override
     public String toString() {
-        return String.format("χemβly '%s'", this.xembly());
+        return String.format("%s '%s'", XemblyLine.MARK, this.xembly());
     }
 
     /**
@@ -96,7 +101,7 @@ public final class XemblyLine {
      * @return TRUE if yes (no strong guarantee though)
      */
     public static boolean existsIn(final String line) {
-        return line.contains("χemβly '");
+        return line.contains(XemblyLine.MARK);
     }
 
     /**
