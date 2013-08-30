@@ -36,6 +36,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Shells followed on closing.
@@ -90,6 +91,10 @@ public final class Followed implements Shells {
     /**
      * Followed with sequel.
      */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = { "origin", "sequel" })
+    @Loggable(Loggable.DEBUG)
     private static final class Sequeled implements Shell {
         /**
          * Original.
@@ -123,8 +128,11 @@ public final class Followed implements Shells {
          */
         @Override
         public void close() throws IOException {
-            this.sequel.exec(this.origin);
-            this.origin.close();
+            try {
+                this.sequel.exec(this.origin);
+            } finally {
+                this.origin.close();
+            }
         }
 
     }
