@@ -36,7 +36,9 @@ import com.rultor.shell.Batch;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
 import com.rultor.snapshot.XemblyLine;
+import com.rultor.tools.Time;
 import com.rultor.tools.Vext;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
@@ -46,6 +48,7 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.TeeOutputStream;
+import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directives;
 
@@ -103,13 +106,20 @@ public final class Bash implements Batch {
         throws IOException {
         final Shell shell = this.shells.acquire();
         final String command = this.script.print(args);
+        final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
         final int code;
         try {
             code = shell.exec(
                 command,
                 IOUtils.toInputStream(""),
                 new TeeOutputStream(output, Logger.stream(Level.INFO, this)),
-                new TeeOutputStream(output, Logger.stream(Level.WARNING, this))
+                new TeeOutputStream(
+                    output,
+                    new TeeOutputStream(
+                        stderr,
+                        Logger.stream(Level.WARNING, this)
+                    )
+                )
             );
         } finally {
             shell.close();
@@ -119,12 +129,13 @@ public final class Bash implements Batch {
                 new Directives()
                     .xpath("/snapshot")
                     .addIfAbsent("steps")
-                    .add("step")
-                    .add("summary")
-                    .set(String.format("bash error code #%d", code))
-                    .up()
-                    .add("level")
-                    .set(Level.SEVERE.toString())
+                    .add("step").add("summary")
+                    .set(String.format("bash error code #%d", code)).up()
+                    .add("finish").set(new Time().toString()).up()
+                    .add("level").set(Level.SEVERE.toString()).up()
+                    .add("exception")
+                    .add("cause").set(Integer.toString(code)).up()
+                    .add("stacktrace").set(stderr.toString(CharEncoding.UTF_8))
             ).log();
         }
         return code;
