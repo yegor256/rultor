@@ -30,6 +30,7 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:template match="snapshot">
+        <xsl:apply-templates select="error"/>
         <xsl:if test="tags/tag">
             <ul class="list-inline">
                 <xsl:apply-templates select="tags/tag"/>
@@ -140,6 +141,9 @@
                 <xsl:apply-templates select="steps/step"/>
             </ul>
         </xsl:if>
+    </xsl:template>
+    <xsl:template match="error">
+        <pre class="text-danger"><xsl:value-of select="."/></pre>
     </xsl:template>
     <xsl:template match="work">
         <li>

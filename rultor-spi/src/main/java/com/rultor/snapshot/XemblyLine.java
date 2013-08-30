@@ -62,7 +62,7 @@ public final class XemblyLine {
      * Pattern to use for matching.
      */
     private static final Pattern PTN = Pattern.compile(
-        String.format(".*%s '([^']+)'.*", Pattern.quote(XemblyLine.MARK))
+        String.format(".*%s '([^']+)'", Pattern.quote(XemblyLine.MARK))
     );
 
     /**
@@ -101,7 +101,7 @@ public final class XemblyLine {
      * @return TRUE if yes (no strong guarantee though)
      */
     public static boolean existsIn(final String line) {
-        return line.contains(XemblyLine.MARK);
+        return line.contains(XemblyLine.MARK) && line.endsWith("'");
     }
 
     /**
