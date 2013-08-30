@@ -84,7 +84,7 @@
                         <xsl:value-of select="name"/>
                     </a>
                 </li>
-                <li>
+                <li class="icon">
                     <a title="view pulses of the stand">
                         <xsl:attribute name="href">
                             <xsl:value-of select="links/link[@rel='see']/@href"/>

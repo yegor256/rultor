@@ -182,7 +182,7 @@
                         </li>
                     </xsl:when>
                     <xsl:when test="@sorted = 'asc'">
-                        <li>
+                        <li class="icon">
                             <a title="click to sort in DESC order">
                                 <xsl:attribute name="href">
                                     <xsl:value-of select="links/link[@rel='desc']/@href"/>
@@ -192,7 +192,7 @@
                         </li>
                     </xsl:when>
                     <xsl:when test="@sorted = 'desc'">
-                        <li>
+                        <li class="icon">
                             <a title="click to sort in ASC order">
                                 <xsl:attribute name="href">
                                     <xsl:value-of select="links/link[@rel='asc']/@href"/>
@@ -204,7 +204,7 @@
                 </xsl:choose>
                 <xsl:choose>
                     <xsl:when test="not(@grouped) and links/link[@rel='group']">
-                        <li>
+                        <li class="icon">
                             <a class="text-muted" title="click to group">
                                 <xsl:attribute name="href">
                                     <xsl:value-of select="links/link[@rel='group']/@href"/>
@@ -214,7 +214,7 @@
                         </li>
                     </xsl:when>
                     <xsl:when test="@grouped">
-                        <li>
+                        <li class="icon">
                             <i class="icon-expand"><xsl:comment>group</xsl:comment></i>
                         </li>
                     </xsl:when>

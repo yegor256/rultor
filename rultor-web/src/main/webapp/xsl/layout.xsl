@@ -302,7 +302,7 @@
                 <xsl:comment>authenticated</xsl:comment>
             </i>
         </li>
-        <li>
+        <li class="icon">
             <a title="log out">
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-logout']/@href"/>

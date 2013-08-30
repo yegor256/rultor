@@ -97,7 +97,7 @@
                     <li>
                         <xsl:value-of select="identifier"/>
                     </li>
-                    <li class="heart text-muted" style="display:none">
+                    <li class="heart text-muted icon" title="click to stop fetching">
                         <i class="icon-cloud-download"><xsl:comment>heart</xsl:comment></i>
                     </li>
                     <li class="pull-right">
@@ -105,7 +105,7 @@
                             <xsl:attribute name="href">
                                 <xsl:value-of select="links/link[@rel='close']/@href"/>
                             </xsl:attribute>
-                            <i class="icon-remove"><xsl:comment>close</xsl:comment></i>
+                            <button type="button" class="close" aria-hidden="true">&#215;</button>
                         </a>
                     </li>
                 </ul>
@@ -120,7 +120,7 @@
     </xsl:template>
     <xsl:template match="pulse" mode="closed">
         <div class="panel spacious">
-            <a title="open" style="float: right">
+            <a class="pull-right icon" title="open for full view">
                 <xsl:attribute name="href">
                     <xsl:value-of select="links/link[@rel='open']/@href"/>
                 </xsl:attribute>
