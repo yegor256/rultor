@@ -32,7 +32,7 @@
     <xsl:template match="snapshot">
         <xsl:apply-templates select="error"/>
         <xsl:if test="tags/tag">
-            <ul class="list-inline">
+            <ul class="list-inline" style="margin: 5px 0px;">
                 <xsl:apply-templates select="tags/tag"/>
                 <xsl:if test="updated">
                     <li class="text-muted">
@@ -42,7 +42,7 @@
                 </xsl:if>
             </ul>
         </xsl:if>
-        <ul class="list-inline">
+        <ul class="list-inline" style="margin: 5px 0px;">
             <xsl:if test="spec">
                 <li>
                     <i class="icon-beaker" style="cursor:pointer;" title="show specification"

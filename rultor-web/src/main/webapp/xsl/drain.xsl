@@ -85,7 +85,7 @@
     <xsl:template match="pulse">
         <div class="panel">
             <div class="panel-heading">
-                <ul class="list-inline" style="margin:0;">
+                <ul class="list-inline">
                     <li><xsl:value-of select="time"/></li>
                     <li>
                         <a title="stream">
