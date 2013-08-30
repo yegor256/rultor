@@ -34,9 +34,12 @@ import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.HostKey;
+import com.jcraft.jsch.HostKeyRepository;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.UserInfo;
 import com.rultor.shell.Shell;
 import java.io.File;
 import java.io.IOException;
@@ -58,6 +61,7 @@ import org.apache.commons.lang3.Validate;
  */
 @EqualsAndHashCode(of = { "addr", "login", "key" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.TooManyMethods")
 public final class SSHChannel implements Shell {
 
     /**
@@ -87,6 +91,49 @@ public final class SSHChannel implements Shell {
                 Logger.log(jul, SSHChannel.class, msg);
             }
         };
+
+    /**
+     * Host key repository that accepts all hosts.
+     * @checkstyle AnonInnerLengthCheck (40 lines)
+     */
+    private static final HostKeyRepository REPO = new HostKeyRepository() {
+
+        @Override
+        public int check(final String host, final byte[] bkey) {
+            return HostKeyRepository.OK;
+        }
+
+        @Override
+        public void add(final HostKey hostkey, final UserInfo info) {
+            // do nothing
+        }
+
+        @Override
+        public void remove(final String host, final String type) {
+            // do nothing
+        }
+
+        @Override
+        public void remove(final String host, final String type,
+            final byte[] bkey) {
+            // do nothing
+        }
+
+        @Override
+        public String getKnownHostsRepositoryID() {
+            return "";
+        }
+
+        @Override
+        public HostKey[] getHostKey() {
+            return new HostKey[0];
+        }
+
+        @Override
+        public HostKey[] getHostKey(final String host, final String type) {
+            return new HostKey[0];
+        }
+    };
 
     /**
      * IP address of the server.
@@ -237,6 +284,7 @@ public final class SSHChannel implements Shell {
             JSch.setLogger(SSHChannel.LOGGER);
             final JSch jsch = new JSch();
             final File file = this.key.asFile();
+            jsch.setHostKeyRepository(SSHChannel.REPO);
             jsch.addIdentity(file.getAbsolutePath());
             Logger.info(
                 this,
