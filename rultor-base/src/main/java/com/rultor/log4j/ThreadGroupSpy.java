@@ -33,8 +33,10 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Work;
+import com.rultor.tools.Exceptions;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.log4j.Appender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
@@ -147,7 +149,7 @@ public final class ThreadGroupSpy implements Instance, Drain.Source {
         try {
             this.origin.pulse();
         } finally {
-            appender.close();
+            this.close(appender);
             root.removeAppender(appender);
         }
     }
@@ -171,6 +173,22 @@ public final class ThreadGroupSpy implements Instance, Drain.Source {
     @Override
     public Drain drain() {
         return this.drn;
+    }
+
+    /**
+     * Close the appender.
+     * @param appender The appender to close
+     */
+    @SuppressWarnings("PMD.AvoidCatchingThrowable")
+    private void close(final Appender appender) {
+        try {
+            appender.close();
+        // @checkstyle IllegalCatch (1 line)
+        } catch (Throwable ex) {
+            com.jcabi.log.Logger.error(
+                this, "#close(): %s", Exceptions.message(ex)
+            );
+        }
     }
 
 }
