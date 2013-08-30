@@ -273,7 +273,8 @@ public final class StandRs extends BaseRs {
                                 .add("level", tag.level().toString()).up();
                         }
                     }
-                );
+                )
+                .up();
         }
         return bundle;
     }
