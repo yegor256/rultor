@@ -106,9 +106,8 @@ final class MongoPulse implements Pulse {
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("unchecked")
     public Collection<Tag> tags() {
-        final Collection<Object> names =
+        final Collection<?> names =
             Collection.class.cast(this.map.get(MongoStand.ATTR_TAGS));
         final Collection<Tag> tags = new ArrayList<Tag>(names.size());
         for (Object name : names) {
