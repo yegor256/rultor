@@ -58,7 +58,7 @@ import javax.ws.rs.core.Response;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Path("/unit/{name:[\\w\\-]+}")
+@Path("/rule/{name:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
 public final class RuleRs extends BaseRs {
 
@@ -179,7 +179,7 @@ public final class RuleRs extends BaseRs {
      */
     private EmptyPage head() {
         return new PageBuilder()
-            .stylesheet("/xsl/unit.xsl")
+            .stylesheet("/xsl/rule.xsl")
             .build(EmptyPage.class)
             .init(this)
             .append(

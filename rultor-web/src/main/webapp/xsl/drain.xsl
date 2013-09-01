@@ -34,12 +34,12 @@
     <xsl:include href="/xsl/snapshot.xsl"/>
     <xsl:template name="head">
         <title>
-            <xsl:apply-templates select="/page/unit"/>
+            <xsl:apply-templates select="/page/rule"/>
         </title>
     </xsl:template>
     <xsl:template name="content">
         <h2>
-            <xsl:value-of select="/page/unit"/>
+            <xsl:value-of select="/page/rule"/>
         </h2>
         <xsl:choose>
             <xsl:when test="/page/pulses/pulse">

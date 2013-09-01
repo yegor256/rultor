@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<?xml-stylesheet type='text/xsl' href='/xsl/unit.xsl'?>
+<?xml-stylesheet type='text/xsl' href='/xsl/rule.xsl'?>
 <page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
     <identity>
         <urn>urn:facebook:1</urn>
@@ -41,9 +41,9 @@
         <date>22-Aug-2012</date>
     </version>
     <links>
-        <link href="/xml/unit.xml" rel="self" type="text/xml"/>
+        <link href="/xml/rule.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
-        <link href="/xml/unit.xml" rel="save" type="text/xml"/>
+        <link href="/xml/rule.xml" rel="save" type="text/xml"/>
         <link href="/xml/rules.xml" rel="rules" type="text/xml"/>
         <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
         <link href="/xml/front.xml" rel="auth-logout" type="text/xml"/>
@@ -64,12 +64,12 @@
         <drainable>true</drainable>
         <html>some very long text to show, some very &lt;code&gt;long text&lt;/code&gt; to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, </html>
     </face>
-    <unit>
+    <rule>
         <name>nightly-build</name>
         <spec>com.rultor.ci.NightlyBuild(
     git,
     ec2,
     "ant"
 )</spec>
-    </unit>
+    </rule>
 </page>

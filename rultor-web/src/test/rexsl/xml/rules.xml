@@ -60,7 +60,7 @@
     <balance>$5.90</balance>
     <millis>1869</millis>
     <rules>
-        <unit>
+        <rule>
             <name>git-rultor</name>
             <face>
                 <type>com.rultor.Something</type>
@@ -68,23 +68,23 @@
                 <html>some very long text to show, some very &lt;code&gt;long text&lt;/code&gt; to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, </html>
             </face>
             <links>
-                <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
+                <link href="/xml/rule.xml" rel="edit" type="text/xml"/>
                 <link href="/xml/drain.xml" rel="drain" type="text/xml"/>
                 <link href="/xml/index.xml" rel="remove" type="text/xml"/>
             </links>
-        </unit>
-        <unit>
+        </rule>
+        <rule>
             <name>nightly-build-rultor</name>
             <face>
                 <exception>invalid text somewhere</exception>
             </face>
             <links>
-                <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
+                <link href="/xml/rule.xml" rel="edit" type="text/xml"/>
                 <link href="/xml/drain.xml" rel="drain" type="text/xml"/>
                 <link href="/xml/index.xml" rel="remove" type="text/xml"/>
             </links>
-        </unit>
-        <unit>
+        </rule>
+        <rule>
             <name>git-template</name>
             <face>
                 <arguments>
@@ -93,10 +93,10 @@
                 </arguments>
             </face>
             <links>
-                <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
+                <link href="/xml/rule.xml" rel="edit" type="text/xml"/>
                 <link href="/xml/drain.xml" rel="drain" type="text/xml"/>
                 <link href="/xml/index.xml" rel="remove" type="text/xml"/>
             </links>
-        </unit>
+        </rule>
     </rules>
 </page>
