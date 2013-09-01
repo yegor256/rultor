@@ -97,12 +97,6 @@ public final class UnitRs extends BaseRs {
                 new JaxbFace(this.repo(), this.users())
                     .bundle(this.user(), unit)
             )
-            .append(
-                new Breadcrumbs()
-                    .with("units")
-                    .with("self", this.name)
-                    .bundle()
-            )
             .render()
             .build();
     }
@@ -188,6 +182,12 @@ public final class UnitRs extends BaseRs {
             .stylesheet("/xsl/unit.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .append(
+                new Breadcrumbs()
+                    .with("units")
+                    .with("self", this.name)
+                    .bundle()
+            )
             .link(
                 new Link(
                     "save",
