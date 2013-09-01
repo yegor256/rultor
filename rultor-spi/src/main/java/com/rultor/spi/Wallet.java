@@ -56,7 +56,7 @@ public interface Wallet {
         @NotNull(message = "amount can't be NULL") Dollars amount);
 
     /**
-     * Delegate to another user/unit.
+     * Delegate to another user/rule.
      * @param urn URN of another user
      * @param unit Name of the unit
      * @return New wallet

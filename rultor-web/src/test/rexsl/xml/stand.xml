@@ -69,7 +69,7 @@
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
                 <work>
                     <owner>urn:test:1</owner>
-                    <unit>nightly-build</unit>
+                    <rule>nightly-build</rule>
                     <scheduled>2012-08-23T13:25Z</scheduled>
                 </work>
                 <stdout>http://127.0.0.1/s4378h9892fu8i9890</stdout>
@@ -127,7 +127,7 @@
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
                 <work>
                     <owner>urn:test:1</owner>
-                    <unit>nightly-build</unit>
+                    <rule>nightly-build</rule>
                     <scheduled>2012-08-23T13:25Z</scheduled>
                 </work>
                 <stdout>http://127.0.0.1/s4378h9892fu8i9890</stdout>

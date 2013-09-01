@@ -104,7 +104,7 @@ final class RestRules implements Rules {
                 .xpath(
                     String.format(
                         // @checkstyle LineLength (1 line)
-                        "/page/rules/unit[name='%s']/links/link[@rel='edit']/@href",
+                        "/page/rules/rule[name='%s']/links/link[@rel='edit']/@href",
                         name
                     )
                 )
@@ -152,7 +152,7 @@ final class RestRules implements Rules {
             .rel(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "/page/rules/unit[name='%s']/links/link[@rel='remove']/@href",
+                    "/page/rules/rule[name='%s']/links/link[@rel='remove']/@href",
                     name
                 )
             )
@@ -170,7 +170,7 @@ final class RestRules implements Rules {
             .header(HttpHeaders.AUTHORIZATION, this.token)
             .get(String.format("#contains(%s)", name))
             .assertStatus(HttpURLConnection.HTTP_OK)
-            .xpath(String.format("/page/rules/unit[name='%s']", name))
+            .xpath(String.format("/page/rules/rule[name='%s']", name))
             .isEmpty();
     }
 

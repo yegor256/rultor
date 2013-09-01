@@ -41,7 +41,7 @@ import lombok.EqualsAndHashCode;
  * S3 key.
  *
  * <p>Every log is stored as a plain text object in Amazon S3, named as
- * <code>owner/unit/year/month/day/uid.txt</code>, where all
+ * <code>owner/rule/year/month/day/uid.txt</code>, where all
  * time values are in numbers. For example:
  * <code>urn:facebook:5463/nighly-build/8987/88/74/7843.txt</code>. In this
  * example: 8987 is year 2013, reverted towards 9999, 88 is December (99 minus

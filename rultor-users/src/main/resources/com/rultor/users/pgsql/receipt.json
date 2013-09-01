@@ -5,9 +5,9 @@
     "additionalProperties": false,
     "properties": {
         "ct": { "$ref": "#/definitions/urn" },
-        "ctunit": { "$ref": "#/definitions/unit" },
+        "ctunit": { "$ref": "#/definitions/rule" },
         "dt": { "$ref": "#/definitions/urn" },
-        "dtunit": { "$ref": "#/definitions/unit" },
+        "dtunit": { "$ref": "#/definitions/rule" },
         "details": { "type": "string" },
         "amount": {
             "type": "integer",
@@ -32,7 +32,7 @@
         "work": {
             "properties": {
                 "owner": { "$ref": "#/definitions/urn" },
-                "unit": { "$ref": "#/definitions/unit" },
+                "unit": { "$ref": "#/definitions/rule" },
                 "scheduled": {
                     "type": "string",
                     "format": "date-time"

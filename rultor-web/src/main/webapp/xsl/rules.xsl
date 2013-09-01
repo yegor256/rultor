@@ -57,8 +57,8 @@
             </fieldset>
         </form>
         <xsl:choose>
-            <xsl:when test="/page/rules/unit">
-                <xsl:apply-templates select="/page/rules/unit"/>
+            <xsl:when test="/page/rules/rule">
+                <xsl:apply-templates select="/page/rules/rule"/>
             </xsl:when>
             <xsl:otherwise>
                 <p>

@@ -117,7 +117,7 @@ final class RestRule implements Rule {
                 .header(HttpHeaders.AUTHORIZATION, this.token)
                 .get("#spec()")
                 .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath("/page/unit/spec/text()")
+                .xpath("/page/rule/spec/text()")
                 .get(0)
         );
     }
@@ -132,7 +132,7 @@ final class RestRule implements Rule {
             .header(HttpHeaders.AUTHORIZATION, this.token)
             .get("#name()")
             .assertStatus(HttpURLConnection.HTTP_OK)
-            .xpath("/page/unit/name/text()")
+            .xpath("/page/rule/name/text()")
             .get(0);
     }
 
