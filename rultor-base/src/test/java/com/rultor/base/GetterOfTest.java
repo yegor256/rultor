@@ -52,11 +52,18 @@ public final class GetterOfTest {
         private final transient Integer number;
 
         /**
+         * Arbitrary names.
+         */
+        private final transient String names;
+
+        /**
          * Constructor.
          * @param num Number to store.
+         * @param nam Name to store
          */
-        private Correct(final Integer num) {
+        private Correct(final Integer num, final String nam) {
             this.number = num;
+            this.names = nam;
         }
 
         /**
@@ -65,6 +72,23 @@ public final class GetterOfTest {
          */
         public Integer getNumber() {
             return this.number;
+        }
+
+        /**
+         * Getter for name.
+         * @return Stored name.
+         */
+        public String name() {
+            return this.names;
+        }
+
+        /**
+         * Simple method.
+         * @param num Number.
+         * @return Stored name.
+         */
+        public String nameParams(final int num) {
+            return this.names;
         }
     }
 
@@ -75,7 +99,20 @@ public final class GetterOfTest {
     public void correct() {
         final Integer value = 1;
         MatcherAssert.assertThat(
-            new GetterOf(new GetterOfTest.Correct(value), "number").object(),
+            new GetterOf(new GetterOfTest.Correct(value, ""), "number")
+                .object(),
+            Matchers.is((Object) value)
+        );
+    }
+
+    /**
+     * Test for short format of getter.
+     */
+    @Test
+    public void shortGetter() {
+        final String value = "short";
+        MatcherAssert.assertThat(
+            new GetterOf(new GetterOfTest.Correct(0, value), "name").object(),
             Matchers.is((Object) value)
         );
     }
@@ -85,6 +122,14 @@ public final class GetterOfTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void invalidName() {
-        new GetterOf(new GetterOfTest.Correct(1), "wrong").object();
+        new GetterOf(new GetterOfTest.Correct(1, ""), "wrong").object();
+    }
+
+    /**
+     * Call a method, not a getter.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void methodWithParams() {
+        new GetterOf(new GetterOfTest.Correct(1, ""), "nameParams").object();
     }
 }
