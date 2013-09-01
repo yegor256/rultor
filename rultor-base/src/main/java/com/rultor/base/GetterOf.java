@@ -102,4 +102,13 @@ public final class GetterOf implements Proxy<Object> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format(
+            "Gets '%s' property from %s", this.property, this.source
+        );
+    }
 }

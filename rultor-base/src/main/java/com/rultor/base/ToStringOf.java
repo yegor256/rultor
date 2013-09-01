@@ -70,4 +70,13 @@ public final class ToStringOf implements Proxy<String> {
         return this.source.toString();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format(
+            "toString value '%s'", this.source
+        );
+    }
 }
