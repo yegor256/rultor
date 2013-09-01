@@ -62,9 +62,11 @@ import lombok.ToString;
 final class AwsRule implements Rule {
 
     /**
-     * Dynamo DB table name.
+     * Dynamo DB table name (the table has this name for historical
+     * reason, and we can't change it since there is no table renaming
+     * feature in DynamoDB).
      */
-    public static final String TABLE = "rules";
+    public static final String TABLE = "units";
 
     /**
      * Dynamo DB table column.
