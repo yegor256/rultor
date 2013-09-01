@@ -30,43 +30,90 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.urn.URN;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Units.
+ * Rule.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Units extends Iterable<Unit> {
+public interface Rule {
 
     /**
-     * Contains a unit with this name?
-     * @param name The name of it
-     * @return TRUE if it already exists
+     * Get its name.
+     * @return Name of it
      */
-    boolean contains(@NotNull(message = "name can't be NULL") String name);
+    @NotNull(message = "name of unit is never NULL")
+    String name();
 
     /**
-     * Get unit by name (runtime exception if it's absent).
-     * @param name The name of it
-     * @return The unit
+     * Save specification.
+     * @param spec Specification to save
      */
-    @NotNull(message = "unit is never NULL")
-    Unit get(@NotNull(message = "unit name can't be NULL") String name);
+    void update(@NotNull(message = "spec can't be NULL") Spec spec);
 
     /**
-     * Remove unit by name (runtime exception if it's absent).
-     * @param name The name of it
+     * Get specification.
+     * @return Specification
      */
-    void remove(@NotNull(message = "name can't be NULL") String name);
+    @NotNull(message = "spec is never NULL")
+    Spec spec();
 
     /**
-     * Create empty default unit with this name.
-     * @param name The name of it
+     * Wallet of the unit.
+     * @param work Which work for
+     * @param taker Who is going to take money from my wallet?
+     * @param unit What this money is for?
+     * @return Wallet
+     * @throws Wallet.NotEnoughFundsException If not enough funds
      */
-    void create(@NotNull(message = "name can't be NULL") String name);
+    @NotNull(message = "wallet is never NULL")
+    Wallet wallet(Work work, URN taker, String unit)
+        throws Wallet.NotEnoughFundsException;
+
+    /**
+     * Always empty Rule.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode
+    final class Empty implements Rule {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String name() {
+            return "empty";
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void update(@NotNull(message = "spec can't be NULL")
+            final Spec spec) {
+            assert spec != null;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull(message = "spec of an empty unit is never NULL")
+        public Spec spec() {
+            return new Spec.Simple();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Wallet wallet(final Work work, final URN urn, final String unt) {
+            throw new UnsupportedOperationException();
+        }
+    }
 
 }

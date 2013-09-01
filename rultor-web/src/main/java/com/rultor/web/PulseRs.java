@@ -36,7 +36,7 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Tag;
-import com.rultor.spi.Unit;
+import com.rultor.spi.Rule;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
@@ -67,7 +67,7 @@ import org.apache.commons.io.IOUtils;
 public final class PulseRs extends BaseRs {
 
     /**
-     * Unit name.
+     * Rule name.
      */
     private transient String name;
 
@@ -78,7 +78,7 @@ public final class PulseRs extends BaseRs {
 
     /**
      * Inject it from query.
-     * @param unit Unit name
+     * @param unit Rule name
      */
     @PathParam("name")
     public void setName(@NotNull(message = "unit name is mandatory")
@@ -126,7 +126,7 @@ public final class PulseRs extends BaseRs {
      * @return The pulse
      */
     private Pulse pulse() {
-        final Unit unit;
+        final Rule unit;
         try {
             unit = this.user().units().get(this.name);
         } catch (NoSuchElementException ex) {
@@ -154,11 +154,11 @@ public final class PulseRs extends BaseRs {
 
     /**
      * Read stream of the drain.
-     * @param unit Unit to read from
+     * @param unit Rule to read from
      * @return Stream
      * @throws IOException If fails
      */
-    private InputStream read(final Unit unit) throws IOException {
+    private InputStream read(final Rule unit) throws IOException {
         try {
             return Drain.Source.class.cast(
                 new Repo.Cached(

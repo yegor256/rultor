@@ -36,7 +36,7 @@ import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
-import com.rultor.spi.Unit;
+import com.rultor.spi.Rule;
 import com.rultor.tools.Exceptions;
 import java.net.HttpURLConnection;
 import java.util.NoSuchElementException;
@@ -63,13 +63,13 @@ import javax.ws.rs.core.Response;
 public final class UnitRs extends BaseRs {
 
     /**
-     * Unit name.
+     * Rule name.
      */
     private transient String name;
 
     /**
      * Inject it from query.
-     * @param unit Unit name (or NULL)
+     * @param unit Rule name (or NULL)
      */
     @PathParam("name")
     public void setName(@NotNull(message = "unit name is mandatory")
@@ -84,7 +84,7 @@ public final class UnitRs extends BaseRs {
     @GET
     @Path("/")
     public Response index() {
-        final Unit unit = this.unit();
+        final Rule unit = this.unit();
         return this.head()
             .append(
                 new JaxbBundle("unit")
@@ -162,10 +162,10 @@ public final class UnitRs extends BaseRs {
     }
 
     /**
-     * Get Unit.
-     * @return Unit
+     * Get Rule.
+     * @return Rule
      */
-    private Unit unit() {
+    private Rule unit() {
         try {
             return this.user().units().get(this.name);
         } catch (NoSuchElementException ex) {

@@ -37,7 +37,7 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Unit;
+import com.rultor.spi.Rule;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
@@ -86,11 +86,11 @@ final class JaxbFace {
     /**
      * Build bundle.
      * @param user URN of the user
-     * @param unit Unit of the user
+     * @param unit Rule of the user
      * @return Bundle
      */
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    public JaxbBundle bundle(final User user, final Unit unit) {
+    public JaxbBundle bundle(final User user, final Rule unit) {
         final Spec spec = unit.spec();
         JaxbBundle bundle = new JaxbBundle("face");
         try {

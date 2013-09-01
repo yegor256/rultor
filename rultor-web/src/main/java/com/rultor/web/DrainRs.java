@@ -41,7 +41,7 @@ import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.SpecException;
-import com.rultor.spi.Unit;
+import com.rultor.spi.Rule;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
@@ -82,7 +82,7 @@ public final class DrainRs extends BaseRs {
     private static final String QUERY_SINCE = "since";
 
     /**
-     * Unit name.
+     * Rule name.
      */
     private transient String name;
 
@@ -93,7 +93,7 @@ public final class DrainRs extends BaseRs {
 
     /**
      * Inject it from query.
-     * @param unit Unit name
+     * @param unit Rule name
      */
     @PathParam("unit")
     public void setName(@NotNull(message = "unit name can't be NULL")
@@ -234,7 +234,7 @@ public final class DrainRs extends BaseRs {
      * Get unit.
      * @return The unit
      */
-    private Unit unit() {
+    private Rule unit() {
         try {
             return this.user().units().get(this.name);
         } catch (NoSuchElementException ex) {

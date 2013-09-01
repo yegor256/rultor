@@ -42,8 +42,8 @@ import com.rultor.spi.Sheet;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
-import com.rultor.spi.Unit;
-import com.rultor.spi.Units;
+import com.rultor.spi.Rule;
+import com.rultor.spi.Rules;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Wallet;
@@ -84,8 +84,8 @@ final class Testing implements Profile {
     /**
      * All units.
      */
-    private static final ConcurrentMap<String, Unit> UNITS =
-        new ConcurrentHashMap<String, Unit>(0);
+    private static final ConcurrentMap<String, Rule> UNITS =
+        new ConcurrentHashMap<String, Rule>(0);
 
     /**
      * All stands.
@@ -165,14 +165,14 @@ final class Testing implements Profile {
             return URN.create(this.name.toString());
         }
         @Override
-        public Units units() {
-            return new Units() {
+        public Rules units() {
+            return new Rules() {
                 @Override
-                public Iterator<Unit> iterator() {
+                public Iterator<Rule> iterator() {
                     return Testing.UNITS.values().iterator();
                 }
                 @Override
-                public Unit get(final String unit) {
+                public Rule get(final String unit) {
                     return Testing.UNITS.get(unit);
                 }
                 @Override
@@ -269,7 +269,7 @@ final class Testing implements Profile {
      * In-memory unit.
      */
     @Immutable
-    private static final class MemoryUnit implements Unit {
+    private static final class MemoryUnit implements Rule {
         /**
          * Name of the unit.
          */

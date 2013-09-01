@@ -40,8 +40,8 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Unit;
-import com.rultor.spi.Units;
+import com.rultor.spi.Rule;
+import com.rultor.spi.Rules;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -52,7 +52,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Units in DynamoDB.
+ * Rules in DynamoDB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -62,7 +62,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "region", "owner" })
 @Loggable(Loggable.DEBUG)
-final class AwsUnits implements Units {
+final class AwsUnits implements Rules {
 
     /**
      * Dynamo.
@@ -96,15 +96,15 @@ final class AwsUnits implements Units {
      */
     @Override
     @NotNull(message = "list of units of a user is never NULL")
-    public Iterator<Unit> iterator() {
+    public Iterator<Rule> iterator() {
         final Iterator<Item> items = this.fetch().iterator();
-        return new Iterator<Unit>() {
+        return new Iterator<Rule>() {
             @Override
             public boolean hasNext() {
                 return items.hasNext();
             }
             @Override
-            public Unit next() {
+            public Rule next() {
                 return new AwsUnit(AwsUnits.this.client, items.next());
             }
             @Override
@@ -165,7 +165,7 @@ final class AwsUnits implements Units {
      */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-    public Unit get(@NotNull(message = "unit name can't be NULL")
+    public Rule get(@NotNull(message = "unit name can't be NULL")
         final String unit) {
         final Collection<Item> items = this.region.table(AwsUnit.TABLE)
             .frame()
@@ -196,7 +196,7 @@ final class AwsUnits implements Units {
 
     /**
      * Fetch them all.
-     * @return All Units
+     * @return All Rules
      */
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     private Collection<Item> fetch() {

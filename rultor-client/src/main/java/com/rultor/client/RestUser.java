@@ -35,7 +35,7 @@ import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
 import com.rultor.spi.Account;
 import com.rultor.spi.Stands;
-import com.rultor.spi.Units;
+import com.rultor.spi.Rules;
 import com.rultor.spi.User;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -130,7 +130,7 @@ public final class RestUser implements User {
      * {@inheritDoc}
      */
     @Override
-    public Units units() {
+    public Rules units() {
         return new RestUnits(
             URI.create(
                 RestTester.start(UriBuilder.fromUri(this.home))

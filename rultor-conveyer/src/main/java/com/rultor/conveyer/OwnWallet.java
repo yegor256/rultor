@@ -31,7 +31,7 @@ package com.rultor.conveyer;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Unit;
+import com.rultor.spi.Rule;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
@@ -57,16 +57,16 @@ final class OwnWallet implements Wallet {
     private final transient Work work;
 
     /**
-     * Unit.
+     * Rule.
      */
-    private final transient Unit unit;
+    private final transient Rule unit;
 
     /**
      * Public ctor.
      * @param wrk Work we're in
-     * @param unt Unit that owns it
+     * @param unt Rule that owns it
      */
-    protected OwnWallet(final Work wrk, final Unit unt) {
+    protected OwnWallet(final Work wrk, final Rule unt) {
         this.work = wrk;
         this.unit = unt;
     }

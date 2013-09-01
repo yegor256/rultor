@@ -34,7 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Unit;
+import com.rultor.spi.Rule;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import java.io.UnsupportedEncodingException;
@@ -48,7 +48,7 @@ import lombok.ToString;
 import org.apache.commons.lang3.CharEncoding;
 
 /**
- * RESTful Unit.
+ * RESTful Rule.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -58,7 +58,7 @@ import org.apache.commons.lang3.CharEncoding;
 @ToString
 @EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
-final class RestUnit implements Unit {
+final class RestUnit implements Rule {
 
     /**
      * Home URI.
