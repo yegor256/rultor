@@ -269,7 +269,7 @@ public final class StandedTest {
     private Standed standed(final TestClient client) {
         final Work work = Mockito.mock(Work.class);
         Mockito.when(work.owner()).thenReturn(new URN());
-        Mockito.when(work.unit()).thenReturn(StringUtils.EMPTY);
+        Mockito.when(work.rule()).thenReturn(StringUtils.EMPTY);
         Mockito.when(work.scheduled()).thenReturn(new Time());
         return new Standed(
             work,

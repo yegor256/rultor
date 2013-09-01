@@ -187,7 +187,7 @@ public final class DrainRs extends BaseRs {
         try {
             return Drain.Source.class.cast(
                 new Repo.Cached(
-                    this.repo(), this.user(), this.unit().spec()
+                    this.repo(), this.user(), this.rule().spec()
                 ).get().instantiate(
                     this.users(),
                     new Arguments(
@@ -234,7 +234,7 @@ public final class DrainRs extends BaseRs {
      * Get unit.
      * @return The unit
      */
-    private Rule unit() {
+    private Rule rule() {
         try {
             return this.user().units().get(this.name);
         } catch (NoSuchElementException ex) {

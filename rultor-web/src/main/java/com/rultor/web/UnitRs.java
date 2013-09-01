@@ -84,7 +84,7 @@ public final class UnitRs extends BaseRs {
     @GET
     @Path("/")
     public Response index() {
-        final Rule unit = this.unit();
+        final Rule unit = this.rule();
         return this.head()
             .append(
                 new JaxbBundle("unit")
@@ -128,7 +128,7 @@ public final class UnitRs extends BaseRs {
     public Response save(@NotNull(message = "spec form param is mandatory")
         @FormParam("spec") final String spec) {
         try {
-            this.unit().update(
+            this.rule().update(
                 new Spec.Strict(
                     spec, this.repo(), this.user(), this.users(),
                     this.work(this.name, new Spec.Simple(spec)), Object.class
@@ -165,7 +165,7 @@ public final class UnitRs extends BaseRs {
      * Get Rule.
      * @return Rule
      */
-    private Rule unit() {
+    private Rule rule() {
         try {
             return this.user().units().get(this.name);
         } catch (NoSuchElementException ex) {

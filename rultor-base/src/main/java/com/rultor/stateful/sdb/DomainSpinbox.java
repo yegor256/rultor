@@ -102,7 +102,7 @@ public final class DomainSpinbox implements Spinbox {
             String.format(
                 "%s %s %s",
                 this.work.owner(),
-                this.work.unit(),
+                this.work.rule(),
                 this.work.scheduled()
             ),
             this.client

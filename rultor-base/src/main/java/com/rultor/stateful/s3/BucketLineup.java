@@ -127,7 +127,7 @@ public final class BucketLineup implements Lineup {
                 "%s%s/%s.lineup",
                 this.prefix,
                 this.work.owner(),
-                this.work.unit()
+                this.work.rule()
             ),
             this.client
         );

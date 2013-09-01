@@ -166,7 +166,7 @@ final class JaxbFace {
                 return owner;
             }
             @Override
-            public String unit() {
+            public String rule() {
                 return unit;
             }
             @Override

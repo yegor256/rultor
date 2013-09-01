@@ -68,7 +68,7 @@ public interface Work {
      * @return The unit
      */
     @NotNull(message = "unit name is never NULL")
-    String unit();
+    String rule();
 
     /**
      * Instant access to running logs/stdout.
@@ -104,7 +104,7 @@ public interface Work {
          */
         @NotNull
         @Override
-        public String unit() {
+        public String rule() {
             throw new UnsupportedOperationException();
         }
         /**
@@ -195,7 +195,7 @@ public interface Work {
          */
         @Override
         @NotNull(message = "unit name of work is never NULL")
-        public String unit() {
+        public String rule() {
             return this.label;
         }
         /**
