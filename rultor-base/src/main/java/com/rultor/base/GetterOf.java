@@ -32,10 +32,13 @@ package com.rultor.base;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Proxy;
+import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
+import java.beans.MethodDescriptor;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
@@ -75,24 +78,47 @@ public final class GetterOf implements Proxy<Object> {
     }
 
     /**
-     * {@inheritDoc}
+     * Find method with getter.
+     * @param info Bean info.
+     * @return Found method.
      */
-    @Override
-    public Object object() {
-        try {
-            for (PropertyDescriptor descr : Introspector
-                .getBeanInfo(this.source.getClass()).getPropertyDescriptors()) {
+    private Method find(final BeanInfo info) {
+        Method found = null;
+        for (PropertyDescriptor descr : info.getPropertyDescriptors()) {
+            if (descr.getName().equals(this.property)
+                && (descr.getReadMethod() != null)) {
+                found = descr.getReadMethod();
+                break;
+            }
+        }
+        if (found == null) {
+            for (MethodDescriptor descr : info.getMethodDescriptors()) {
                 if (descr.getName().equals(this.property)
-                    && (descr.getReadMethod() != null)) {
-                    return descr.getReadMethod().invoke(this.source);
+                    && (descr.getMethod().getParameterTypes().length == 0)) {
+                    found = descr.getMethod();
+                    break;
                 }
             }
+        }
+        if (found == null) {
             throw new IllegalArgumentException(
                 String.format(
                     "Object should have a getter for property '%s'",
                     this.property
                 )
             );
+        }
+        return found;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object object() {
+        try {
+            return this.find(Introspector.getBeanInfo(this.source.getClass()))
+                .invoke(this.source);
         } catch (IntrospectionException ex) {
             throw new IllegalArgumentException(ex);
         } catch (InvocationTargetException ex) {
