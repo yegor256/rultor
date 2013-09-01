@@ -33,7 +33,7 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
-            <xsl:text>units</xsl:text>
+            <xsl:text>rules</xsl:text>
         </title>
     </xsl:template>
     <xsl:template name="content">
@@ -57,8 +57,8 @@
             </fieldset>
         </form>
         <xsl:choose>
-            <xsl:when test="/page/units/unit">
-                <xsl:apply-templates select="/page/units/unit"/>
+            <xsl:when test="/page/rules/unit">
+                <xsl:apply-templates select="/page/rules/unit"/>
             </xsl:when>
             <xsl:otherwise>
                 <p>

@@ -95,8 +95,8 @@ final class AwsUser implements User {
      * {@inheritDoc}
      */
     @Override
-    @NotNull(message = "units of a user is never NULL")
-    public Rules units() {
+    @NotNull(message = "rules of a user is never NULL")
+    public Rules rules() {
         return new AwsRules(this.region, this.client, this.name);
     }
 

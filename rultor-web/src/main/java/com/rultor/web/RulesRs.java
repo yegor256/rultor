@@ -43,14 +43,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
 /**
- * List of units.
+ * List of rules.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  * @checkstyle MultipleStringLiterals (500 lines)
  */
-@Path("/units")
+@Path("/rules")
 @Loggable(Loggable.DEBUG)
 public final class RulesRs extends BaseRs {
 
@@ -62,10 +62,10 @@ public final class RulesRs extends BaseRs {
     @Path("/")
     public Response index() {
         return new PageBuilder()
-            .stylesheet("/xsl/units.xsl")
+            .stylesheet("/xsl/rules.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(new Breadcrumbs().with("self", "units").bundle())
+            .append(new Breadcrumbs().with("self", "rules").bundle())
             .append(this.mine())
             .link(new Link("create", "./create"))
             .render()
@@ -81,14 +81,14 @@ public final class RulesRs extends BaseRs {
     @Path("/create")
     public Response create(@NotNull(message = "unit name is mandatory")
         @FormParam("name") final String name) {
-        if (this.user().units().contains(name)) {
+        if (this.user().rules().contains(name)) {
             throw this.flash().redirect(
                 this.uriInfo().getRequestUri(),
                 String.format("Unit `%s` already exists", name),
                 Level.WARNING
             );
         }
-        this.user().units().create(name);
+        this.user().rules().create(name);
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()
                 .clone()
@@ -100,12 +100,12 @@ public final class RulesRs extends BaseRs {
     }
 
     /**
-     * All my units.
-     * @return Collection of JAXB units
+     * All my rules.
+     * @return Collection of JAXB rules
      */
     private JaxbBundle mine() {
-        return new JaxbBundle("units").add(
-            new JaxbBundle.Group<Rule>(this.user().units()) {
+        return new JaxbBundle("rules").add(
+            new JaxbBundle.Group<Rule>(this.user().rules()) {
                 @Override
                 public JaxbBundle bundle(final Rule unit) {
                     return RulesRs.this.unit(unit);

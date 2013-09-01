@@ -64,7 +64,7 @@ final class AwsRule implements Rule {
     /**
      * Dynamo DB table name.
      */
-    public static final String TABLE = "units";
+    public static final String TABLE = "rules";
 
     /**
      * Dynamo DB table column.

@@ -82,7 +82,7 @@ import lombok.ToString;
 final class Testing implements Profile {
 
     /**
-     * All units.
+     * All rules.
      */
     private static final ConcurrentMap<String, Rule> UNITS =
         new ConcurrentHashMap<String, Rule>(0);
@@ -165,7 +165,7 @@ final class Testing implements Profile {
             return URN.create(this.name.toString());
         }
         @Override
-        public Rules units() {
+        public Rules rules() {
             return new Rules() {
                 @Override
                 public Iterator<Rule> iterator() {

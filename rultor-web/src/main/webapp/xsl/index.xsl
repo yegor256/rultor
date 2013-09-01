@@ -45,9 +45,9 @@
             </xsl:text>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='units']/@href"/>
+                    <xsl:value-of select="/page/links/link[@rel='rules']/@href"/>
                 </xsl:attribute>
-                <xsl:text>units</xsl:text>
+                <xsl:text>rules</xsl:text>
             </a>
             <xsl:text> or </xsl:text>
             <a>

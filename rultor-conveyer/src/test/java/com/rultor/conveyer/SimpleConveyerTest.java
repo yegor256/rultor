@@ -110,10 +110,10 @@ public final class SimpleConveyerTest {
         );
         final User user = Mockito.mock(User.class);
         final Rule unit = Mockito.mock(Rule.class);
-        final Rules units = Mockito.mock(Rules.class);
-        Mockito.doReturn(units).when(user).units();
-        Mockito.doReturn(Arrays.asList(unit).iterator()).when(units).iterator();
-        Mockito.doReturn(unit).when(units).get(name);
+        final Rules rules = Mockito.mock(Rules.class);
+        Mockito.doReturn(rules).when(user).rules();
+        Mockito.doReturn(Arrays.asList(unit).iterator()).when(rules).iterator();
+        Mockito.doReturn(unit).when(rules).get(name);
         Mockito.doReturn(new Spec.Simple()).when(unit).spec();
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(owner);

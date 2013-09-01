@@ -128,7 +128,7 @@ public final class PulseRs extends BaseRs {
     private Pulse pulse() {
         final Rule unit;
         try {
-            unit = this.user().units().get(this.name);
+            unit = this.user().rules().get(this.name);
         } catch (NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }

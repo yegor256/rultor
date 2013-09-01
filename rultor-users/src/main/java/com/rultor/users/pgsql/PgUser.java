@@ -84,8 +84,8 @@ final class PgUser implements User {
      * {@inheritDoc}
      */
     @Override
-    public Rules units() {
-        return this.origin.units();
+    public Rules rules() {
+        return this.origin.rules();
     }
 
     /**

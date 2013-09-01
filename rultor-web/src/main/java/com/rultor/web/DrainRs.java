@@ -134,7 +134,7 @@ public final class DrainRs extends BaseRs {
             )
             .append(
                 new Breadcrumbs()
-                    .with("units")
+                    .with("rules")
                     .with("edit", this.name)
                     .with("self", "drain")
                     .bundle()
@@ -236,7 +236,7 @@ public final class DrainRs extends BaseRs {
      */
     private Rule rule() {
         try {
-            return this.user().units().get(this.name);
+            return this.user().rules().get(this.name);
         } catch (NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
@@ -246,7 +246,7 @@ public final class DrainRs extends BaseRs {
      * All pulses of the unit.
      * @param pulses All pulses to show
      * @param maximum Maximum to show
-     * @return Collection of JAXB units
+     * @return Collection of JAXB rules
      */
     private JaxbBundle pulses(final Iterator<Time> pulses, final int maximum) {
         JaxbBundle bundle = new JaxbBundle("pulses");

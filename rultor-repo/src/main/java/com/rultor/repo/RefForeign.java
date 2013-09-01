@@ -117,7 +117,7 @@ final class RefForeign implements Variable<Object> {
         try {
             return this.alter(
                 this.grammar.parse(
-                    user.urn(), user.units().get(this.name).spec().asText()
+                    user.urn(), user.rules().get(this.name).spec().asText()
                 ).instantiate(users, this.mapping(users, args)),
                 args
             );

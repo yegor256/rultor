@@ -158,9 +158,9 @@ public final class ClasspathRepoTest {
         Mockito.doReturn(multiply).when(unit).spec();
         final String name = "multiply-by-two";
         final User user = Mockito.mock(User.class);
-        final Rules units = Mockito.mock(Rules.class);
-        Mockito.doReturn(units).when(user).units();
-        Mockito.doReturn(unit).when(units).get(name);
+        final Rules rules = Mockito.mock(Rules.class);
+        Mockito.doReturn(rules).when(user).rules();
+        Mockito.doReturn(unit).when(rules).get(name);
         final URN urn = new URN("urn:facebook:77");
         Mockito.doReturn(urn).when(user).urn();
         final Users users = Mockito.mock(Users.class);
