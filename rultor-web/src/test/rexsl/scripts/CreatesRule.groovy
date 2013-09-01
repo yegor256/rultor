@@ -44,18 +44,18 @@ def key = new AuthKeys().make(identity)
 def user = new RestUser(rexsl.home, identity.urn(), key)
 MatcherAssert.assertThat(user.urn(), Matchers.equalTo(identity.urn()))
 
-def name = 'sample-unit'
+def name = 'sample-rule'
 if (!user.rules().contains(name)) {
     user.rules().create(name)
 }
-def unit = user.rules().get(name)
+def rule = user.rules().get(name)
 
 [
     'java.lang.Double ( -55.0 )': 'java.lang.Double(-55.0)',
     '"some text  \u20ac "  ': '"some text  \\u20AC "',
 ].each {
     rule.update(new Spec.Simple(it.key))
-    MatcherAssert.assertThat(unit.spec().asText(), Matchers.equalTo(it.value))
+    MatcherAssert.assertThat(rule.spec().asText(), Matchers.equalTo(it.value))
 }
 [
     'com.rultor.base.Empty()',
