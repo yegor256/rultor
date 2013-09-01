@@ -163,24 +163,10 @@ public final class Standed implements Drain {
         @NotNull(message = "name of stand can't be NULL") final String name,
         @NotNull(message = "key can't be NULL") final String secret,
         @NotNull(message = "drain can't be NULL") final Drain drain) {
-        this.work = wrk;
-        this.stand = name;
-        this.key = secret;
-        this.origin = drain;
-        this.entry = new Standed.SQSEntry() {
-            @Override
-            public TestClient get() {
-                return RestTester.start(Stand.QUEUE);
-            }
-        };
-        this.exec = new Standed.Exec() {
-            @Override
-            public ExecutorService get() {
-                return Executors.newFixedThreadPool(
-                    Standed.THREADS, new VerboseThreads()
-                );
-            }
-        };
+        this(
+            wrk, name, secret, drain, RestTester.start(Stand.QUEUE),
+            Executors.newFixedThreadPool(Standed.THREADS, new VerboseThreads())
+        );
     }
 
     /**
