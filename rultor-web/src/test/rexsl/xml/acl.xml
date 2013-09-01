@@ -46,6 +46,7 @@
         <link href="/xml/acl.xml" rel="save" type="text/xml"/>
         <link href="/xml/index.xml" rel="units" type="text/xml"/>
         <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
+        <link href="/xml/front.xml" rel="auth-logout" type="text/xml"/>
     </links>
     <breadcrumbs>
         <crumb rel="stands">stands</crumb>

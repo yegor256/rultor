@@ -37,8 +37,26 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <h2>
-            <xsl:text>Hello!</xsl:text>
-        </h2>
+        <p class="text-warning col-lg-6 col-sm-8 col-xs-12">
+            <xsl:text>
+                This page is under construction. We're going to
+                have a fluid stream of events here, aggregated from
+                all your stands. In the meantime, go to the list of your
+            </xsl:text>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='units']/@href"/>
+                </xsl:attribute>
+                <xsl:text>units</xsl:text>
+            </a>
+            <xsl:text> or </xsl:text>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='stands']/@href"/>
+                </xsl:attribute>
+                <xsl:text>stands</xsl:text>
+            </a>
+            <xsl:text>. Click the log to see full navigation menu.</xsl:text>
+        </p>
     </xsl:template>
 </xsl:stylesheet>
