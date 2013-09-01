@@ -140,7 +140,7 @@ public final class S3CmdRelics implements Sequel {
                 this.bucket,
                 String.format(
                     "%s%s/%s/%s/%s/", this.prefix,
-                    this.work.owner(), this.work.unit(),
+                    this.work.owner(), this.work.rule(),
                     entry.getKey(), this.work.scheduled()
                 ),
                 this.key, this.secret

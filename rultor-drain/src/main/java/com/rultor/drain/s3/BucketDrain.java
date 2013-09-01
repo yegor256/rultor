@@ -145,7 +145,7 @@ public final class BucketDrain implements Drain {
         return String.format(
             "%s/%s/",
             this.work.owner(),
-            this.work.unit()
+            this.work.rule()
         );
     }
 

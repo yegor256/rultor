@@ -319,7 +319,7 @@ public class BaseRs extends BaseResource {
                 return BaseRs.this.user().urn();
             }
             @Override
-            public String unit() {
+            public String rule() {
                 return unit;
             }
             @Override

@@ -213,7 +213,7 @@ public final class SQSQueue implements Queue {
         generator.writeStartObject()
             .write(SQSQueue.KEY_OWNER, work.owner().toString())
             .write(SQSQueue.KEY_SCHEDULED, work.scheduled().toString())
-            .write(SQSQueue.KEY_UNIT, work.unit())
+            .write(SQSQueue.KEY_UNIT, work.rule())
             .writeEnd()
             .close();
         return writer.toString();

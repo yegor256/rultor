@@ -98,7 +98,7 @@ public final class Descriptive implements Instance {
                 .set(this.work.owner().toString())
                 .up()
                 .add("unit")
-                .set(this.work.unit())
+                .set(this.work.rule())
                 .up()
                 .add("scheduled")
                 .set(this.work.scheduled().toString())

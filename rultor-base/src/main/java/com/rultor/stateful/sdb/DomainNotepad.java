@@ -186,7 +186,7 @@ public final class DomainNotepad implements Notepad {
             DomainNotepad.ATTR_OWNER,
             this.work.owner(),
             DomainNotepad.ATTR_UNIT,
-            this.work.unit()
+            this.work.rule()
         );
         final long start = System.currentTimeMillis();
         final SelectResult result = this.client.get().select(
@@ -252,7 +252,7 @@ public final class DomainNotepad implements Notepad {
                         .withReplace(true),
                     new ReplaceableAttribute()
                         .withName(DomainNotepad.ATTR_UNIT)
-                        .withValue(this.work.unit())
+                        .withValue(this.work.rule())
                         .withReplace(true),
                     new ReplaceableAttribute()
                         .withName(DomainNotepad.ATTR_TIME)
@@ -360,7 +360,7 @@ public final class DomainNotepad implements Notepad {
             String.format(
                 "%s %s %s",
                 this.work.owner(),
-                this.work.unit(),
+                this.work.rule(),
                 text
             )
         );
