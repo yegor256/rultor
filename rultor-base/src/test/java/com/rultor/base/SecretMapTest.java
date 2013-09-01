@@ -32,7 +32,6 @@ package com.rultor.base;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -48,7 +47,9 @@ public class SecretMapTest {
 
 	/***
 	 * SecretMap basic operations test.
-	 * @throws Exception If some problem inside
+	 * 
+	 * @throws Exception
+	 *             If some problem inside
 	 */
 	@Test
 	public void testBasicMethods() {
@@ -58,45 +59,22 @@ public class SecretMapTest {
 		MatcherAssert.assertThat(secretMap.isEmpty(), Matchers.is(true));
 		MatcherAssert.assertThat(secretMap.size(), Matchers.is(0));
 		MatcherAssert.assertThat(secretMap.get("a"), Matchers.nullValue());
-		MatcherAssert.assertThat(secretMap.containsKey("b"), Matchers.is(false));
+		MatcherAssert
+				.assertThat(secretMap.containsKey("b"), Matchers.is(false));
 
 		map.put("a", "1");
 		SecretMap secretMap1 = new SecretMap(map);
 		MatcherAssert.assertThat(secretMap1.isEmpty(), Matchers.is(false));
 		MatcherAssert.assertThat(secretMap1.size(), Matchers.is(1));
-		MatcherAssert.assertThat(secretMap1.containsValue("1"), Matchers.is(true));
-		
-		secretMap1.put("b", "2");
-		MatcherAssert.assertThat(secretMap1.size(), Matchers.is(2));
-		MatcherAssert.assertThat(secretMap1.containsValue("2"), Matchers.is(true));
-		
-		secretMap1.clear();
-		MatcherAssert.assertThat(secretMap1.isEmpty(), Matchers.is(true));
-		
-	}
-	
-	/***
-	 * SecretMap equals and hashcode.
-	 * @throws Exception If some problem inside
-	 */
-	@Test
-	public void testEqualsHashCodeMethod(){
-		Map<String, Object> map1 = new HashMap<String, Object>(2);
-		map1.put("a", "1");
-		map1.put("b", "2");
-		SecretMap secretMap1 = new SecretMap(map1);
-
-		Map<String, Object> map2 = new ConcurrentHashMap<String, Object>(2);
-		map2.put("b", "2");
-		map2.put("a", "1");
-		SecretMap secretMap2 = new SecretMap(map2);
-
-		MatcherAssert.assertThat(secretMap1, Matchers.equalTo(secretMap2));
+		MatcherAssert.assertThat(secretMap1.containsValue("1"),
+				Matchers.is(true));
 	}
 
 	/***
 	 * SecretMap toString test.
-	 * @throws Exception If some problem inside
+	 * 
+	 * @throws Exception
+	 *             If some problem inside
 	 */
 	@Test
 	public void testToString() {
