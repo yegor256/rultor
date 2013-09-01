@@ -71,8 +71,8 @@ public final class SQSQuartzTest {
         Mockito.doReturn(Arrays.asList(user).iterator())
             .when(users).iterator();
         Mockito.doReturn(new URN("urn:github:1")).when(user).urn();
-        final Rule unit = Mockito.mock(Rule.class);
-        Mockito.doReturn("some-unit").when(unit).name();
+        final Rule rule = Mockito.mock(Rule.class);
+        Mockito.doReturn("some-rule").when(unit).name();
         final Rules rules = Mockito.mock(Rules.class);
         Mockito.doReturn(rules).when(user).rules();
         Mockito.doReturn(Arrays.asList(unit).iterator())

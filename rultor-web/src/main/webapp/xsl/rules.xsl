@@ -75,7 +75,7 @@
         <div class="spacious">
             <ul class="list-inline">
                 <li>
-                    <a title="edit this unit">
+                    <a title="edit this rule">
                         <xsl:if test="face/exception">
                             <xsl:attribute name="class">
                                 <xsl:text>text-danger</xsl:text>
@@ -101,7 +101,7 @@
                 </li>
                 <xsl:if test="face/drainable = 'true'">
                     <li class="icon">
-                        <a title="view drain of the unit">
+                        <a title="view drain of the rule">
                             <xsl:attribute name="href">
                                 <xsl:value-of select="links/link[@rel='drain']/@href"/>
                             </xsl:attribute>
@@ -111,7 +111,7 @@
                 </xsl:if>
                 <li class="icon">
                     <a onclick="return confirm('Are you sure?');"
-                        title="delete this unit">
+                        title="delete this rule">
                         <xsl:attribute name="href">
                             <xsl:value-of select="links/link[@rel='remove']/@href"/>
                         </xsl:attribute>

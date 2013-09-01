@@ -90,8 +90,8 @@ final class JaxbFace {
      * @return Bundle
      */
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    public JaxbBundle bundle(final User user, final Rule unit) {
-        final Spec spec = unit.spec();
+    public JaxbBundle bundle(final User user, final Rule rule) {
+        final Spec spec = rule.spec();
         JaxbBundle bundle = new JaxbBundle("face");
         try {
             final Variable<?> var = new Repo.Cached(
@@ -101,7 +101,7 @@ final class JaxbFace {
                 final Object object = var.instantiate(
                     this.users,
                     new Arguments(
-                        this.work(user.urn(), unit.name()),
+                        this.work(user.urn(), rule.name()),
                         new Wallet.Empty()
                     )
                 );

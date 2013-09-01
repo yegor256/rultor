@@ -120,7 +120,7 @@ final class AwsRules implements Rules {
     @Override
     @Cacheable.FlushAfter
     public void create(
-        @NotNull(message = "unit name is mandatory when creating new unit")
+        @NotNull(message = "unit name is mandatory when creating new rule")
         @Pattern(
             regexp = "[a-z][-a-z0-9]{2,}",
             message = "Only numbers, letters, and dashes are allowed"

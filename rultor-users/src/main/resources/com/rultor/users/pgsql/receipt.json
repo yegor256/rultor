@@ -1,13 +1,13 @@
 {
     "description": "receipts from wallets",
     "type":"object",
-    "required": ["work", "ct", "ctunit", "dt", "dtunit", "details", "amount"],
+    "required": ["work", "ct", "ctrule", "dt", "dtrule", "details", "amount"],
     "additionalProperties": false,
     "properties": {
         "ct": { "$ref": "#/definitions/urn" },
-        "ctunit": { "$ref": "#/definitions/rule" },
+        "ctrule": { "$ref": "#/definitions/rule" },
         "dt": { "$ref": "#/definitions/urn" },
-        "dtunit": { "$ref": "#/definitions/rule" },
+        "dtrule": { "$ref": "#/definitions/rule" },
         "details": { "type": "string" },
         "amount": {
             "type": "integer",

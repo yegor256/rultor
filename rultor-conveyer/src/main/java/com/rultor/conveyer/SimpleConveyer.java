@@ -218,9 +218,9 @@ final class SimpleConveyer implements Closeable {
      */
     private void process(final Work work) throws Exception {
         final User owner = this.users.get(work.owner());
-        final Rule unit = owner.rules().get(work.rule());
+        final Rule rule = owner.rules().get(work.rule());
         final Variable<?> var =
-            new Repo.Cached(this.repo, owner, unit.spec()).get();
+            new Repo.Cached(this.repo, owner, rule.spec()).get();
         if (var.arguments().isEmpty()) {
             final Object object = var.instantiate(
                 this.users,

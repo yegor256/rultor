@@ -139,7 +139,7 @@ public interface Work {
          * Public ctor.
          */
         public Simple() {
-            this(URN.create("urn:facebook:1"), "test-unit");
+            this(URN.create("urn:facebook:1"), "test-rule");
         }
         /**
          * Public ctor.

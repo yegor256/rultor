@@ -174,8 +174,8 @@ public final class SQSQuartz implements Runnable, Closeable {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private void publish(final Time time) {
         for (User user : this.users) {
-            for (Rule unit : user.rules()) {
-                this.queue.push(new Work.Simple(user.urn(), unit.name(), time));
+            for (Rule rule : user.rules()) {
+                this.queue.push(new Work.Simple(user.urn(), rule.name(), time));
             }
         }
     }

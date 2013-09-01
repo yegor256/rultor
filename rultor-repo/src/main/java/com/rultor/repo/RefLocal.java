@@ -64,7 +64,7 @@ final class RefLocal implements Variable<Object> {
     private final transient Grammar grammar;
 
     /**
-     * Owner of the unit.
+     * Owner of the rule.
      */
     private final transient URN owner;
 

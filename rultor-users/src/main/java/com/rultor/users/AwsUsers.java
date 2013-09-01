@@ -89,7 +89,7 @@ public final class AwsUsers implements Users {
                 .withTableName(reg.table(AwsRule.TABLE).name())
         );
         Logger.info(
-            AwsUsers.class, "Amazon DynamoDB is ready with %d unit(s)",
+            AwsUsers.class, "Amazon DynamoDB is ready with %d rule(s)",
             result.getTable().getItemCount()
         );
         this.region = reg;

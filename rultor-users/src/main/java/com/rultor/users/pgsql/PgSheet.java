@@ -82,9 +82,9 @@ final class PgSheet implements Sheet {
         new Column.Simple("id", false, false),
         new Column.Simple("time", false, false),
         new Column.Simple("ct", true, false),
-        new Column.Simple("ctunit", true, false),
+        new Column.Simple("ctrule", true, false),
         new Column.Simple("dt", true, false),
-        new Column.Simple("dtunit", true, false),
+        new Column.Simple("dtrule", true, false),
         new Column.Simple("details", false, false),
         new Column.Simple("amount", false, true)
     );

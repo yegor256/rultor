@@ -73,7 +73,7 @@ public final class RulesRs extends BaseRs {
     }
 
     /**
-     * Create new empty unit.
+     * Create new empty rule.
      * @param name Name of the unit to create
      * @return The JAX-RS response
      */
@@ -107,8 +107,8 @@ public final class RulesRs extends BaseRs {
         return new JaxbBundle("rules").add(
             new JaxbBundle.Group<Rule>(this.user().rules()) {
                 @Override
-                public JaxbBundle bundle(final Rule unit) {
-                    return RulesRs.this.unit(unit);
+                public JaxbBundle bundle(final Rule rule) {
+                    return RulesRs.this.rule(unit);
                 }
             }
         );
@@ -119,9 +119,9 @@ public final class RulesRs extends BaseRs {
      * @param rule Name of unit
      * @return Bundle
      */
-    private JaxbBundle unit(final Rule unit) {
+    private JaxbBundle rule(final Rule rule) {
         return new JaxbBundle("rule")
-            .add("name", unit.name())
+            .add("name", rule.name())
             .up()
             .add(
                 new JaxbFace(this.repo(), this.users())

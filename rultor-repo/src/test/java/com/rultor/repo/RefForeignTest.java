@@ -60,7 +60,7 @@ public final class RefForeignTest {
     @Test
     public void makesInstance() throws Exception {
         final String name = "some-ref-name";
-        final Rule unit = Mockito.mock(Rule.class);
+        final Rule rule = Mockito.mock(Rule.class);
         final Spec spec = new Spec.Simple("java.lang.Long(1L)");
         Mockito.doReturn(spec).when(unit).spec();
         final User user = Mockito.mock(User.class);

@@ -154,7 +154,7 @@ public final class ClasspathRepoTest {
             + "  com.rultor.repo.ClasspathRepoTest$Const(${0:test again})"
             + ")"
         );
-        final Rule unit = Mockito.mock(Rule.class);
+        final Rule rule = Mockito.mock(Rule.class);
         Mockito.doReturn(multiply).when(unit).spec();
         final String name = "multiply-by-two";
         final User user = Mockito.mock(User.class);

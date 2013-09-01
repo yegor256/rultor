@@ -63,7 +63,7 @@ import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
 
 /**
- * Drain of a unit.
+ * Drain of a rule.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -231,7 +231,7 @@ public final class DrainRs extends BaseRs {
     }
 
     /**
-     * Get unit.
+     * Get rule.
      * @return The unit
      */
     private Rule rule() {
@@ -243,7 +243,7 @@ public final class DrainRs extends BaseRs {
     }
 
     /**
-     * All pulses of the unit.
+     * All pulses of the rule.
      * @param pulses All pulses to show
      * @param maximum Maximum to show
      * @return Collection of JAXB rules
