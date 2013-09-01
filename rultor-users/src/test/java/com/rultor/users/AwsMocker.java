@@ -29,70 +29,59 @@
  */
 package com.rultor.users;
 
-import com.jcabi.urn.URN;
-import javax.validation.ConstraintViolationException;
-import org.hamcrest.MatcherAssert;
+import com.amazonaws.AmazonServiceException;
+import com.jcabi.dynamo.Frame;
+import com.jcabi.dynamo.Item;
+import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.Table;
+import com.jcabi.dynamo.Valve;
+import java.util.Iterator;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Tests for {@link AwsStand}.
+ * Utility mocking methods for AWS.
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
  */
-public final class AwsStandsTest {
+public final class AwsMocker {
 
     /**
-     * Check that null constrain is enforced for normal contains call.
+     * Utility class shouldn't have a public constructor.
      */
-    @Test
-    public void containsNotEmpty() {
-        MatcherAssert.assertThat(
-            new AwsStands(AwsMocker.region(), new URN()).contains("test"),
-            Matchers.is(true)
-        );
+    private AwsMocker() {
     }
 
     /**
-     * Check that null constrain is enforced for blank contains call.
+     * Create a mocked region that throws exception in case of wrong arguments.
+     * @return Mocked region.
      */
-    @Test(expected = ConstraintViolationException.class)
-    public void containsBlank() {
-        new AwsStands(AwsMocker.region(), new URN()).contains("");
-    }
-
-    /**
-     * Check that null constrain is enforced for null contains call.
-     */
-    @Test(expected = ConstraintViolationException.class)
-    public void containsNull() {
-        new AwsStands(AwsMocker.region(), new URN()).contains(null);
-    }
-
-    /**
-     * Check that null constrain is enforced for normal get call.
-     */
-    @Test
-    public void getNormal() {
-        MatcherAssert.assertThat(
-            new AwsStands(AwsMocker.region(), new URN()).get("other"),
-            Matchers.notNullValue()
-        );
-    }
-
-    /**
-     * Check that null constrain is enforced for null get call.
-     */
-    @Test(expected = ConstraintViolationException.class)
-    public void getNull() {
-        new AwsStands(AwsMocker.region(), new URN()).get(null);
-    }
-
-    /**
-     * Check that null constrain is enforced for blank get call.
-     */
-    @Test(expected = ConstraintViolationException.class)
-    public void getBlank() {
-        new AwsStands(AwsMocker.region(), new URN()).get("");
+    @SuppressWarnings("unchecked")
+    public static Region region() {
+        final Region region = Mockito.mock(Region.class);
+        final Table table = Mockito.mock(Table.class);
+        final Frame frame = Mockito.mock(Frame.class);
+        Mockito.when(region.table(Mockito.anyString())).thenReturn(table);
+        Mockito.when(table.frame()).thenReturn(frame);
+        Mockito.when(frame.isEmpty()).thenReturn(false);
+        final Iterator<Item> iterator = Mockito.mock(Iterator.class);
+        Mockito.when(frame.iterator()).thenReturn(iterator);
+        Mockito.when(iterator.next()).thenReturn(null);
+        Mockito.when(frame.through(Mockito.any(Valve.class))).thenReturn(frame);
+        Mockito.when(
+            frame.where(
+                Mockito.anyString(),
+                Mockito.argThat(Matchers.not(Matchers.isEmptyString()))
+            )
+        )
+            .thenReturn(frame);
+        Mockito.when(
+            frame.where(
+                Mockito.anyString(),
+                Mockito.argThat(Matchers.isEmptyString())
+            )
+        )
+            .thenThrow(new AmazonServiceException(""));
+        return region;
     }
 }
