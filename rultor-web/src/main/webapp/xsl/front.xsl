@@ -43,11 +43,6 @@
             </xsl:text>
         </p>
         <p>
-            <xsl:text>
-                Read
-            </xsl:text>
-        </p>
-        <p>
             <xsl:text>To start, login using one of your accounts: </xsl:text>
         </p>
         <ul class="list-inline">

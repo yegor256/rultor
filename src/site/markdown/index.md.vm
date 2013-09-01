@@ -13,7 +13,7 @@ quality checks before merging into `master`"
 
 "A staging request (submitted through IRC, Skype, or tickets) should
 automatically lead to a new staging environment with
-a feature branche deployed into it"
+a feature branch deployed into it"
 
 "Unit test failures and quality defects should become visible in
 feature branch tickets before code review or merge starts
@@ -27,8 +27,7 @@ nearest future we'll support Subversion, Mercurial, Trac, DigitalOcean,
 Windows Azure, Rackspace, etc. (you can help us by contributing).
 
 [Quick Start](./start.html)
-manual will help you to get your first unit of work
-up and running in 60 seconds.
+manual will help you to get your first rule up and running in 60 seconds.
 
 Rultor is an open source project hosted at [Gihub](https://github.com/rultor/rultor).
 You're very welcome to suggest new features, report bugs, and ask

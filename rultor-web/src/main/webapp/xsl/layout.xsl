@@ -95,7 +95,7 @@
             </head>
             <body>
                 <xsl:if test="/page/nav/item">
-                    <div class="overlay" onclick="$('.overlay').hide();$('.menu').hide();">
+                    <div class="overlay" onclick="$('.menu').hide();">
                         <!-- this is for W3C compliance -->
                         <xsl:text> </xsl:text>
                     </div>
@@ -111,7 +111,7 @@
                     <li class="logo">
                         <xsl:if test="/page/nav/item">
                             <xsl:attribute name="onclick">
-                                <xsl:text>$('.overlay').show();$('.menu').toggle();</xsl:text>
+                                <xsl:text>$('.menu').toggle();</xsl:text>
                             </xsl:attribute>
                         </xsl:if>
                         <xsl:choose>
@@ -123,13 +123,11 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </li>
-                    <xsl:if test="not(contains(/page/version/name, 'SNAPSHOT'))">
-                        <li class="hidden-phone">
-                            <a href="//blog.rultor.com/">
-                                <xsl:text>how it works?</xsl:text>
-                            </a>
-                        </li>
-                    </xsl:if>
+                    <li class="hidden-phone">
+                        <a href="//doc.rultor.com/">
+                            <xsl:text>how it works?</xsl:text>
+                        </a>
+                    </li>
                     <xsl:apply-templates select="breadcrumbs/crumb"/>
                     <xsl:apply-templates select="identity"/>
                 </ul>

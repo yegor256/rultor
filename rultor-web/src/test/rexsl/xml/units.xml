@@ -47,6 +47,7 @@
         <link href="/xml/units.xml" rel="units" type="text/xml"/>
         <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
         <link href="/xml/account.xml" rel="account" type="text/xml"/>
+        <link href="/xml/front.xml" rel="auth-logout" type="text/xml"/>
     </links>
     <breadcrumbs>
         <crumb rel="self">units</crumb>
