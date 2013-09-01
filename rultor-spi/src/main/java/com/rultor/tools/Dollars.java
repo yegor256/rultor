@@ -94,7 +94,7 @@ public final class Dollars {
         final double usd = Math.abs((double) this.amount / Tv.MILLION);
         String body;
         if (usd == 0) {
-            body = "0.00";
+            body = "$0.00";
         // @checkstyle MagicNumber (8 lines)
         } else if (usd < 0.00001d) {
             body = String.format("$%.6f", usd);
