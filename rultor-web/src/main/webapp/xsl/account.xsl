@@ -165,7 +165,7 @@
         </tr>
     </xsl:template>
     <xsl:template match="column">
-        <th>
+        <th style="min-width: 8em;">
             <ul class="list-inline">
                 <li>
                     <xsl:value-of select="title"/>

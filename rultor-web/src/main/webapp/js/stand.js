@@ -38,7 +38,7 @@ function fetch($div) {
         return;
     }
     $div.find('.heart').addClass('text-warning');
-    $div.find('.body').load(
+    $div.find('.snapshot').load(
         entry,
         function(text, status, xhr) {
             if (status == "error") {
@@ -55,7 +55,7 @@ function fetch($div) {
 
 $(document).ready(
     function() {
-        $('div:has(.body)').each(
+        $('div:has(.snapshot)').each(
             function () {
                 fetch($(this));
             }
