@@ -41,7 +41,7 @@
                 <meta name="description" content="Programmable Enforcer of a Software Development Process"/>
                 <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
                 <meta name="author" content="rultor.com"/>
-                <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" rel="stylesheet" />
+                <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
                 <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet" />
                 <link rel="stylesheet" type="text/css" media="all">
                     <xsl:attribute name="href">

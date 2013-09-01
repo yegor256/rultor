@@ -62,12 +62,12 @@ public final class EitherTest {
     @Test
     public void canViewWhenEitherACLMatches() throws Exception {
         final String urn = "urn:github:555";
-        final List<ACL> acls = new ArrayList<ACL>();
+        final List<ACL> acls = new ArrayList<ACL>(0);
         acls.add(new Prohibited());
         acls.add(new OpenView());
         acls.add(new WhiteList(Arrays.asList(urn)));
         MatcherAssert.assertThat(
-        new Either(acls).canView(URN.create(urn)), Matchers.equalTo(true)
+            new Either(acls).canView(URN.create(urn)), Matchers.equalTo(true)
         );
     }
 
@@ -78,11 +78,11 @@ public final class EitherTest {
     @Test
     public void cantViewWhenAnyACLDoesNotMatch() throws Exception {
         final String test = "urn:test:2";
-        final List<ACL> acls = new ArrayList<ACL>();
+        final List<ACL> acls = new ArrayList<ACL>(0);
         acls.add(new Prohibited());
         acls.add(new WhiteList(Arrays.asList("urn:test:1")));
         MatcherAssert.assertThat(
-        new Either(acls).canView(URN.create(test)), Matchers.equalTo(false)
+            new Either(acls).canView(URN.create(test)), Matchers.equalTo(false)
         );
     }
 
@@ -93,14 +93,14 @@ public final class EitherTest {
     @Test
     public void canViewWhenAtleastOneOpenViewACL() throws Exception {
         final String test = "urn:test:4";
-        final List<ACL> acls = new ArrayList<ACL>();
+        final List<ACL> acls = new ArrayList<ACL>(0);
         acls.add(new Prohibited());
         acls.add(new WhiteList(Arrays.asList("urn:test:3")));
         acls.add(new MD5Keyed("a64cad1db8be410c666716f680e8a1234"));
         acls.add(new OpenView());
         acls.add(new Prohibited());
         MatcherAssert.assertThat(
-        new Either(acls).canView(URN.create(test)), Matchers.equalTo(true)
+            new Either(acls).canView(URN.create(test)), Matchers.equalTo(true)
         );
     }
 
@@ -111,13 +111,13 @@ public final class EitherTest {
     @Test
     public void canPostWhenEitherACLMatches() throws Exception {
         final String urn = "urn:github:999";
-        final List<ACL> acls = new ArrayList<ACL>();
+        final List<ACL> acls = new ArrayList<ACL>(0);
         acls.add(new Prohibited());
         acls.add(new OpenView());
         acls.add(new MD5Keyed("a64cad1db8be410c666716f680e8a135"));
         acls.add(new WhiteList(Arrays.asList(urn)));
         MatcherAssert.assertThat(
-        new Either(acls).canPost("valid-key"), Matchers.equalTo(true)
+            new Either(acls).canPost("valid-key"), Matchers.equalTo(true)
         );
     }
 
@@ -127,12 +127,12 @@ public final class EitherTest {
      */
     @Test
     public void cannotPostWhenAnyACLDoesNotMatch() throws Exception {
-        final List<ACL> acls = new ArrayList<ACL>();
+        final List<ACL> acls = new ArrayList<ACL>(0);
         acls.add(new Prohibited());
         acls.add(new MD5Keyed("a64cad1db8be410c666716f680e8a1345"));
         acls.add(new WhiteList(Arrays.asList("urn:test:5")));
         MatcherAssert.assertThat(
-        new Either(acls).canPost("invalid-key"), Matchers.equalTo(false)
+            new Either(acls).canPost("invalid-key"), Matchers.equalTo(false)
         );
     }
 }
