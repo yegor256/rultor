@@ -7,21 +7,20 @@
         <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
         <meta name="author" content="rultor.com"/>
         <title>rultor - </title>
-        <link rel="shortcut icon" type="image/gif" href="http://img.rultor.com/favicon.ico" />
-        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet" />
+        <link rel="shortcut icon" type="image/gif" href="//img.rultor.com/favicon.ico" />
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
         <link href="http://www.rultor.com/css/main.css" rel="stylesheet" />
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script>
-        $(document).ready(
-            function() {
-                $('tt').replaceWith(
-                    function() {
-                        return '<code>' + $(this).text() + '</code>';
-                    }
-                )
-            }
-        );
+            $(document).ready(
+                function() {
+                    $('tt').replaceWith(
+                        function() {
+                            return '<code>' + $(this).text() + '</code>';
+                        }
+                    )
+                }
+            );
         </script>
         <script>
             var _gaq = _gaq || [];
@@ -35,42 +34,38 @@
         </script>
     </head>
     <body>
-        <aside>
-            <a href="https://github.com/rultor/rultor" class="hidden-phone">
-                <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
-                    src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
-                    alt="Fork me on GitHub" />
-            </a>
-        </aside>
-        <ul class="list-inline">
-            <li>
-                <a class="logo" href="//doc.rultor.com/index.html">R</a>
-            </li>
-            <li>
-                1.0-SNAPSHOT
-            </li>
-            <li>
-                
-                28-Aug-2013
-            </li>
-            <li>
-                <img src='http://img.jcabi.com/built-by-maven.png' style='width: 50px; height: 17px;'
-                    alt='site is built by Apache Maven'/>
-            </li>
-        </ul>
-        <div>
-            <article class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-                <h1>Programmable Enforcer of a Software Development Process</h1><p>Rultor is an integration platform of a new generation. Continuous Integration, in its modern understanding, is just a small element of a properly organized and disciplined software development process. Rultor lets you define and technically enforce rules of work in your team. Rultor allows you, a project architect or a manager:</p>
-<ul>
-  <li><p>Continuously integrate source code changes  using on-demand AWS EC2 instances (similar to Jenkins,  but with flexible on-demand cloud servers that run jobs);</p></li>
-  <li><p>Prevent master branch conflicts by preventive automated testing  of pull requests;</p></li>
-  <li><p>Deploy your web app to on-demand AWS CloudFormation environments  per tester and developer requests (pool of  environments is managed by Rultor);</p></li>
-  <li><p>Keep programmers aware of source code changes and conflicts  by notifications automatically communicated through issue tracking system;</p></li>
-  <li><p>Enforce changes approval workflow in any ticket tracking system  (for example, with a list of mandatory steps of code reviews and acceptations);</p></li>
-  <li><p>Publish build artifacts like ZIP/JAR archives, test HTML reports,  code coverage and static analysis reports in custom destinations,  like AWS S3 or FTP;</p></li>
-  <li><p>Aggregate statistics and metrics from all processes in a fluid  web stand.</p></li>
-</ul><p>We do not provide any computing or storage resources, like servers. Instead, we integrate your existing components and help you to manage them. At the moment, we support out-of-the-box: Github, JIRA, Git, AWS EC2, AWS CloudFormation, AWS S3, FTP. The list is growing</p><p><a href="./start.html">Quick Start</a> manual will help you to get your first unit of work up and running in 60 seconds.</p><p>Rultor is an open source project hosted at <a class="externalLink" href="https://github.com/rultor/rultor">Gihub</a>. Youre very welcome to suggest new features, report bugs, and ask questions in <a class="externalLink" href="https://github.com/rultor/rultor/issues">Github Issue Tracker</a>. The project is still in alpha state.</p>
-            </article>
+        <div class="container-fluid">
+            <header>
+                <p class="text-center">
+                    <a class="logo" href="/index.html">R</a>
+                </p>
+            </header>
+            <div class="row">
+                <article class="col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-8 col-sm-12 col-xs-12">
+                    <h1>Quality Means Strict Rules</h1>
+<p>Rultor.com lets you configure and enforce basic rules of your software development project, for example:</p>
+<p>&#x201c;Every new commit to our Git repository should trigger a new build on a new on-demand Amazon EC2 instance (aka <b>continuous integration</b>)&#x201d;</p>
+<p>&#x201c;Every Github pull request should pass all unit tests and other automated quality checks before merging into <tt>master</tt>&#x201d;</p>
+<p>&#x201c;A staging request (submitted through IRC, Skype, or tickets) should automatically lead to a new staging environment with a feature branche deployed into it&#x201d;</p>
+<p>&#x201c;Unit test failures and quality defects should become visible in feature branch tickets before code review or merge starts (aka <b>preventive builds</b>)&#x201d;</p>
+<p>We do not provide any computing or storage resources, like servers. Instead, we integrate your existing components and help you to manage them. At the moment, we support out-of-the-box: Github, JIRA, Git, AWS EC2, AWS CloudFormation, AWS S3, FTP. The list is growing, and in the nearest future we&#x2019;ll support Subversion, Mercurial, Trac, DigitalOcean, Windows Azure, Rackspace, etc. (you can help us by contributing).</p>
+<p><a href="./start.html">Quick Start</a> manual will help you to get your first unit of work up and running in 60 seconds.</p>
+<p>Rultor is an open source project hosted at <a class="externalLink" href="https://github.com/rultor/rultor">Gihub</a>. You&#x2019;re very welcome to suggest new features, report bugs, and ask questions in <a class="externalLink" href="https://github.com/rultor/rultor/issues">Github Issue Tracker</a>. The project is still in &#x201c;pre-beta&#x201d; state.</p>
+                </article>
+            </div>
+            <footer class="text-muted">
+                <ul class="list-inline text-center">
+                    <li>
+                        <small>1.0-SNAPSHOT</small>
+                    </li>
+                    <li>
+                        <small>
+                            
+                            01-Sep-2013
+                        </small>
+                    </li>
+                </ul>
+            </footer>
         </div>
     </body>
 </html>
