@@ -38,6 +38,7 @@ import java.lang.reflect.Method;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.logging.Level;
+import lombok.EqualsAndHashCode;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -159,6 +160,7 @@ public final class StepAspect {
     /**
      * Open object for velocity rendering of all private properties.
      */
+    @EqualsAndHashCode(of = "subject")
     public static final class Open {
         /**
          * The subject.
@@ -170,6 +172,13 @@ public final class StepAspect {
          */
         protected Open(final Object subj) {
             this.subject = subj;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return this.subject.toString();
         }
         /**
          * Get property.
