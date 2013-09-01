@@ -43,7 +43,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.time.DateUtils;
 
 /**
- * Drain of a unit.
+ * Drain of a rule.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$

@@ -38,9 +38,9 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Queue;
+import com.rultor.spi.Rule;
+import com.rultor.spi.Rules;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Unit;
-import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
@@ -71,13 +71,13 @@ public final class SQSQuartzTest {
         Mockito.doReturn(Arrays.asList(user).iterator())
             .when(users).iterator();
         Mockito.doReturn(new URN("urn:github:1")).when(user).urn();
-        final Unit unit = Mockito.mock(Unit.class);
-        Mockito.doReturn("some-unit").when(unit).name();
-        final Units units = Mockito.mock(Units.class);
-        Mockito.doReturn(units).when(user).units();
-        Mockito.doReturn(Arrays.asList(unit).iterator())
-            .when(units).iterator();
-        Mockito.doReturn(new Spec.Simple()).when(unit).spec();
+        final Rule rule = Mockito.mock(Rule.class);
+        Mockito.doReturn("some-rule").when(rule).name();
+        final Rules rules = Mockito.mock(Rules.class);
+        Mockito.doReturn(rules).when(user).rules();
+        Mockito.doReturn(Arrays.asList(rule).iterator())
+            .when(rules).iterator();
+        Mockito.doReturn(new Spec.Simple()).when(rule).spec();
         final Queue queue = Mockito.mock(Queue.class);
         final SQSClient client = Mockito.mock(SQSClient.class);
         final AmazonSQS aws = Mockito.mock(AmazonSQS.class);

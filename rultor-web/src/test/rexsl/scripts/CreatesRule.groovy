@@ -27,75 +27,40 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.web.rexsl.scripts
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.urn.URN;
-import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
+import com.jcabi.manifests.Manifests
+import com.jcabi.urn.URN
+import com.rexsl.page.auth.Identity
+import com.rultor.client.RestUser
+import com.rultor.spi.Spec
+import com.rultor.web.AuthKeys
+import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
 
-/**
- * User.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- */
-@Immutable
-public interface User {
+Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
+def identity = new Identity.Simple(new URN('urn:facebook:1'), '', new URI('#'))
+def key = new AuthKeys().make(identity)
+def user = new RestUser(rexsl.home, identity.urn(), key)
+MatcherAssert.assertThat(user.urn(), Matchers.equalTo(identity.urn()))
 
-    /**
-     * His URN.
-     * @return URN
-     */
-    @NotNull(message = "URN of user is never NULL")
-    URN urn();
-
-    /**
-     * Get user's account.
-     * @return All receipts
-     */
-    @NotNull(message = "account is never NULL")
-    Account account();
-
-    /**
-     * Names of all his rules.
-     * @return Collection of rules
-     */
-    @NotNull(message = "set of rules of user is never NULL")
-    Rules rules();
-
-    /**
-     * Names of all his stands.
-     * @return Collection of stand names
-     */
-    @NotNull(message = "set of stands of user is never NULL")
-    Stands stands();
-
-    /**
-     * Nobody.
-     */
-    @Immutable
-    @Loggable(Loggable.DEBUG)
-    @EqualsAndHashCode
-    final class Nobody implements User {
-        @Override
-        public URN urn() {
-            return URN.create("urn:test:0");
-        }
-        @Override
-        public Account account() {
-            throw new UnsupportedOperationException();
-        }
-        @Override
-        public Rules rules() {
-            throw new UnsupportedOperationException();
-        }
-        @Override
-        public Stands stands() {
-            throw new UnsupportedOperationException();
-        }
-    }
-
+def name = 'sample-rule'
+if (!user.rules().contains(name)) {
+    user.rules().create(name)
 }
+def rule = user.rules().get(name)
+
+[
+    'java.lang.Double ( -55.0 )': 'java.lang.Double(-55.0)',
+    '"some text  \u20ac "  ': '"some text  \\u20AC "',
+].each {
+    rule.update(new Spec.Simple(it.key))
+    MatcherAssert.assertThat(rule.spec().asText(), Matchers.equalTo(it.value))
+}
+[
+    'com.rultor.base.Empty()',
+    'com.rultor.base.Restrictive(${work}, ["*"], com.rultor.base.Empty())',
+].each {
+    rule.update(new Spec.Simple(it))
+}
+user.rules().remove(name)

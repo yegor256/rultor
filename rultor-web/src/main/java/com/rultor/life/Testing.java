@@ -38,12 +38,12 @@ import com.rultor.spi.Column;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Rule;
+import com.rultor.spi.Rules;
 import com.rultor.spi.Sheet;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
-import com.rultor.spi.Unit;
-import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Wallet;
@@ -82,10 +82,10 @@ import lombok.ToString;
 final class Testing implements Profile {
 
     /**
-     * All units.
+     * All rules.
      */
-    private static final ConcurrentMap<String, Unit> UNITS =
-        new ConcurrentHashMap<String, Unit>(0);
+    private static final ConcurrentMap<String, Rule> RULES =
+        new ConcurrentHashMap<String, Rule>(0);
 
     /**
      * All stands.
@@ -165,27 +165,27 @@ final class Testing implements Profile {
             return URN.create(this.name.toString());
         }
         @Override
-        public Units units() {
-            return new Units() {
+        public Rules rules() {
+            return new Rules() {
                 @Override
-                public Iterator<Unit> iterator() {
-                    return Testing.UNITS.values().iterator();
+                public Iterator<Rule> iterator() {
+                    return Testing.RULES.values().iterator();
                 }
                 @Override
-                public Unit get(final String unit) {
-                    return Testing.UNITS.get(unit);
+                public Rule get(final String rule) {
+                    return Testing.RULES.get(rule);
                 }
                 @Override
                 public void create(final String txt) {
-                    Testing.UNITS.put(txt, new MemoryUnit(txt));
+                    Testing.RULES.put(txt, new MemoryUnit(txt));
                 }
                 @Override
                 public void remove(final String txt) {
-                    Testing.UNITS.remove(txt);
+                    Testing.RULES.remove(txt);
                 }
                 @Override
                 public boolean contains(final String txt) {
-                    return Testing.UNITS.containsKey(txt);
+                    return Testing.RULES.containsKey(txt);
                 }
             };
         }
@@ -224,7 +224,7 @@ final class Testing implements Profile {
                         public List<Column> columns() {
                             return Arrays.<Column>asList(
                                 new Column.Simple("ct", true, false),
-                                new Column.Simple("ctunit", true, false),
+                                new Column.Simple("ctrule", true, false),
                                 new Column.Simple("amount", false, true)
                             );
                         }
@@ -266,21 +266,21 @@ final class Testing implements Profile {
     }
 
     /**
-     * In-memory unit.
+     * In-memory rule.
      */
     @Immutable
-    private static final class MemoryUnit implements Unit {
+    private static final class MemoryUnit implements Rule {
         /**
-         * Name of the unit.
+         * Name of the rule.
          */
         private final transient String label;
         /**
          * Public ctor.
-         * @param unit Name of it
+         * @param rule Name of it
          */
-        protected MemoryUnit(final String unit) {
-            Testing.SPECS.put(unit, new Spec.Simple());
-            this.label = unit;
+        protected MemoryUnit(final String rule) {
+            Testing.SPECS.put(rule, new Spec.Simple());
+            this.label = rule;
         }
         @Override
         public void update(final Spec spec) {

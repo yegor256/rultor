@@ -233,7 +233,7 @@ public final class AccountRs extends BaseRs {
      * Show receipts.
      * @param receipts Receipts
      * @param maximum Maximum to show
-     * @return Collection of JAXB units
+     * @return Collection of JAXB rules
      */
     private JaxbBundle receipts(final Iterator<List<Object>> receipts,
         final int maximum) {

@@ -65,10 +65,10 @@ public interface Work {
 
     /**
      * Name of the work (unique for the user).
-     * @return The unit
+     * @return The rule
      */
-    @NotNull(message = "unit name is never NULL")
-    String unit();
+    @NotNull(message = "rule name is never NULL")
+    String rule();
 
     /**
      * Instant access to running logs/stdout.
@@ -104,7 +104,7 @@ public interface Work {
          */
         @NotNull
         @Override
-        public String unit() {
+        public String rule() {
             throw new UnsupportedOperationException();
         }
         /**
@@ -139,7 +139,7 @@ public interface Work {
          * Public ctor.
          */
         public Simple() {
-            this(URN.create("urn:facebook:1"), "test-unit");
+            this(URN.create("urn:facebook:1"), "test-rule");
         }
         /**
          * Public ctor.
@@ -156,7 +156,7 @@ public interface Work {
          * @param when When it should start
          */
         public Simple(@NotNull(message = "owner can't be NULL") final URN owner,
-            @NotNull(message = "unit name can't be NULL") final String name,
+            @NotNull(message = "rule name can't be NULL") final String name,
             @NotNull(message = "time can't be NULL") final Time when) {
             this.urn = owner;
             this.label = name;
@@ -194,8 +194,8 @@ public interface Work {
          * {@inheritDoc}
          */
         @Override
-        @NotNull(message = "unit name of work is never NULL")
-        public String unit() {
+        @NotNull(message = "rule name of work is never NULL")
+        public String rule() {
             return this.label;
         }
         /**

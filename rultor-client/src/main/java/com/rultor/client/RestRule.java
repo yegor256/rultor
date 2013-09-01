@@ -33,8 +33,8 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
+import com.rultor.spi.Rule;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Unit;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import java.io.UnsupportedEncodingException;
@@ -48,7 +48,7 @@ import lombok.ToString;
 import org.apache.commons.lang3.CharEncoding;
 
 /**
- * RESTful Unit.
+ * RESTful Rule.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -58,7 +58,7 @@ import org.apache.commons.lang3.CharEncoding;
 @ToString
 @EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
-final class RestUnit implements Unit {
+final class RestRule implements Rule {
 
     /**
      * Home URI.
@@ -75,7 +75,7 @@ final class RestUnit implements Unit {
      * @param uri URI of home page
      * @param auth Authentication token
      */
-    protected RestUnit(final String uri, final String auth) {
+    protected RestRule(final String uri, final String auth) {
         this.home = uri;
         this.token = auth;
     }
@@ -117,7 +117,7 @@ final class RestUnit implements Unit {
                 .header(HttpHeaders.AUTHORIZATION, this.token)
                 .get("#spec()")
                 .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath("/page/unit/spec/text()")
+                .xpath("/page/rule/spec/text()")
                 .get(0)
         );
     }
@@ -132,7 +132,7 @@ final class RestUnit implements Unit {
             .header(HttpHeaders.AUTHORIZATION, this.token)
             .get("#name()")
             .assertStatus(HttpURLConnection.HTTP_OK)
-            .xpath("/page/unit/name/text()")
+            .xpath("/page/rule/name/text()")
             .get(0);
     }
 
@@ -140,7 +140,7 @@ final class RestUnit implements Unit {
      * {@inheritDoc}
      */
     @Override
-    public Wallet wallet(final Work work, final URN urn, final String unit) {
+    public Wallet wallet(final Work work, final URN urn, final String rule) {
         throw new UnsupportedOperationException();
     }
 

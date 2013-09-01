@@ -31,14 +31,14 @@ package com.rultor.conveyer.audit;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Unit;
-import com.rultor.spi.Units;
+import com.rultor.spi.Rule;
+import com.rultor.spi.Rules;
 import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Units with audit features.
+ * Rules with audit features.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -48,12 +48,12 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "origin", "funded" })
 @Loggable(Loggable.DEBUG)
-final class AuditUnits implements Units {
+final class AuditRules implements Rules {
 
     /**
-     * Original units.
+     * Original rules.
      */
-    private final transient Units origin;
+    private final transient Rules origin;
 
     /**
      * Wallet is available, account is properly funded.
@@ -62,11 +62,11 @@ final class AuditUnits implements Units {
 
     /**
      * Public ctor.
-     * @param units Units
+     * @param rules Rules
      * @param fnd Funded
      */
-    protected AuditUnits(final Units units, final boolean fnd) {
-        this.origin = units;
+    protected AuditRules(final Rules rules, final boolean fnd) {
+        this.origin = rules;
         this.funded = fnd;
     }
 
@@ -82,8 +82,8 @@ final class AuditUnits implements Units {
      * {@inheritDoc}
      */
     @Override
-    public Unit get(final String name) {
-        return new AuditUnit(this.origin.get(name), this.funded);
+    public Rule get(final String name) {
+        return new AuditRule(this.origin.get(name), this.funded);
     }
 
     /**
@@ -106,16 +106,16 @@ final class AuditUnits implements Units {
      * {@inheritDoc}
      */
     @Override
-    public Iterator<Unit> iterator() {
-        final Iterator<Unit> iterator = this.origin.iterator();
-        return new Iterator<Unit>() {
+    public Iterator<Rule> iterator() {
+        final Iterator<Rule> iterator = this.origin.iterator();
+        return new Iterator<Rule>() {
             @Override
             public boolean hasNext() {
                 return iterator.hasNext();
             }
             @Override
-            public Unit next() {
-                return new AuditUnit(iterator.next(), AuditUnits.this.funded);
+            public Rule next() {
+                return new AuditRule(iterator.next(), AuditRules.this.funded);
             }
             @Override
             public void remove() {

@@ -64,7 +64,7 @@ public final class SQSQueueTest {
     public void savesJson() throws Exception {
         final Work work = new Work.Simple(
             new URN("urn:facebook:1"),
-            "some-test-unit",
+            "some-test-rule",
             new Time(Tv.MILLION)
         );
         final SQSClient client = Mockito.mock(SQSClient.class);
@@ -84,7 +84,7 @@ public final class SQSQueueTest {
                     "messageBody",
                     Matchers.equalTo(
                         // @checkstyle LineLength (1 line)
-                        "{\"urn\":\"urn:facebook:1\",\"scheduled\":\"1970-01-01T00:16:40Z\",\"unit\":\"some-test-unit\"}"
+                        "{\"urn\":\"urn:facebook:1\",\"scheduled\":\"1970-01-01T00:16:40Z\",\"rule\":\"some-test-rule\"}"
                     )
                 )
             )
@@ -108,7 +108,7 @@ public final class SQSQueueTest {
             new ReceiveMessageResult().withMessages(
                 new Message().withBody(
                     // @checkstyle LineLength (1 line)
-                    "{\"urn\":\"urn:facebook:65\",\"unit\":\"test-877\",\"scheduled\":\"1970-01-01T00:16:40Z\"}"
+                    "{\"urn\":\"urn:facebook:65\",\"rule\":\"test-877\",\"scheduled\":\"1970-01-01T00:16:40Z\"}"
                 )
             )
         ).when(aws).receiveMessage(Mockito.any(ReceiveMessageRequest.class));
@@ -116,7 +116,7 @@ public final class SQSQueueTest {
         MatcherAssert.assertThat(
             work.owner(), Matchers.equalTo(new URN("urn:facebook:65"))
         );
-        MatcherAssert.assertThat(work.unit(), Matchers.equalTo("test-877"));
+        MatcherAssert.assertThat(work.rule(), Matchers.equalTo("test-877"));
         MatcherAssert.assertThat(
             work.scheduled().toString(),
             Matchers.equalTo(new Time(Tv.MILLION).toString())

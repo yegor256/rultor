@@ -56,15 +56,15 @@ public interface Wallet {
         @NotNull(message = "amount can't be NULL") Dollars amount);
 
     /**
-     * Delegate to another user/unit.
+     * Delegate to another user/rule.
      * @param urn URN of another user
-     * @param unit Name of the unit
+     * @param rule Name of the rule
      * @return New wallet
      * @throws Wallet.NotEnoughFundsException If not enough
      */
     Wallet delegate(
         @NotNull(message = "URN can't be NULL") URN urn,
-        @NotNull(message = "unit name can't be NULL") String unit)
+        @NotNull(message = "rule name can't be NULL") String rule)
         throws Wallet.NotEnoughFundsException;
 
     /**
@@ -109,7 +109,7 @@ public interface Wallet {
          * {@inheritDoc}
          */
         @Override
-        public Wallet delegate(final URN urn, final String unit) {
+        public Wallet delegate(final URN urn, final String rule) {
             return this;
         }
     }

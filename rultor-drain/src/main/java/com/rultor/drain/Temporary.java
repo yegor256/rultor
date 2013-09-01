@@ -245,7 +245,7 @@ public final class Temporary implements Drain {
      */
     private boolean similar(final Temporary drain) {
         return this.work.owner().equals(drain.work.owner())
-            && this.work.unit().equals(drain.work.unit())
+            && this.work.rule().equals(drain.work.rule())
             && this.marker.equals(drain.marker);
     }
 

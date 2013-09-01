@@ -31,7 +31,7 @@ package com.rultor.conveyer;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Unit;
+import com.rultor.spi.Rule;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
@@ -48,7 +48,7 @@ import lombok.ToString;
  */
 @ToString
 @Loggable(Loggable.DEBUG)
-@EqualsAndHashCode(of = { "work", "unit" })
+@EqualsAndHashCode(of = { "work", "rule" })
 final class OwnWallet implements Wallet {
 
     /**
@@ -57,18 +57,18 @@ final class OwnWallet implements Wallet {
     private final transient Work work;
 
     /**
-     * Unit.
+     * Rule.
      */
-    private final transient Unit unit;
+    private final transient Rule rule;
 
     /**
      * Public ctor.
      * @param wrk Work we're in
-     * @param unt Unit that owns it
+     * @param rle Rule that owns it
      */
-    protected OwnWallet(final Work wrk, final Unit unt) {
+    protected OwnWallet(final Work wrk, final Rule rle) {
         this.work = wrk;
-        this.unit = unt;
+        this.rule = rle;
     }
 
     /**
@@ -80,7 +80,7 @@ final class OwnWallet implements Wallet {
             String.format(
                 // @checkstyle LineLength (1 line)
                 "you can't charge yourself: work=%s, unit=%s, details=%s, amount=%s",
-                this.work, this.unit, details, amount
+                this.work, this.rule, details, amount
             )
         );
     }
@@ -92,7 +92,7 @@ final class OwnWallet implements Wallet {
     @Override
     public Wallet delegate(final URN urn, final String name)
         throws Wallet.NotEnoughFundsException {
-        return this.unit.wallet(this.work, urn, name);
+        return this.rule.wallet(this.work, urn, name);
     }
 
 }

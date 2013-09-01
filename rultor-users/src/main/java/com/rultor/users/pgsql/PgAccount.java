@@ -115,7 +115,7 @@ final class PgAccount implements Account {
         try {
             new JdbcSession(this.client.get())
                 // @checkstyle LineLength (1 line)
-                .sql("INSERT INTO receipt (ct, ctunit, dt, dtunit, details, amount) VALUES (?, ?, ?, ?, ?, ?)")
+                .sql("INSERT INTO receipt (ct, ctrule, dt, dtrule, details, amount) VALUES (?, ?, ?, ?, ?, ?)")
                 .set(Account.BANK)
                 .set("")
                 .set(this.owner)

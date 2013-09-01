@@ -45,7 +45,7 @@
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
         <link href="/xml/drain.xml" rel="more" type="text/xml"/>
         <link href="/xml/account.xml" rel="account" type="text/xml"/>
-        <link href="/xml/units.xml" rel="units" type="text/xml"/>
+        <link href="/xml/rules.xml" rel="rules" type="text/xml"/>
         <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
     </links>
     <breadcrumbs>
@@ -54,7 +54,7 @@
         <crumb rel="self">stand</crumb>
     </breadcrumbs>
     <nav>
-        <item rel="units">Units</item>
+        <item rel="rules">Rules</item>
         <item rel="stands">Stands</item>
         <item rel="account">Account</item>
     </nav>
@@ -69,7 +69,7 @@
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
                 <work>
                     <owner>urn:test:1</owner>
-                    <unit>nightly-build</unit>
+                    <rule>nightly-build</rule>
                     <scheduled>2012-08-23T13:25Z</scheduled>
                 </work>
                 <stdout>http://127.0.0.1/s4378h9892fu8i9890</stdout>
@@ -127,7 +127,7 @@
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
                 <work>
                     <owner>urn:test:1</owner>
-                    <unit>nightly-build</unit>
+                    <rule>nightly-build</rule>
                     <scheduled>2012-08-23T13:25Z</scheduled>
                 </work>
                 <stdout>http://127.0.0.1/s4378h9892fu8i9890</stdout>
