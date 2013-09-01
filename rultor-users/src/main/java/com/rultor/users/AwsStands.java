@@ -130,7 +130,8 @@ final class AwsStands implements Stands {
      */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-    public boolean contains(final String name) {
+    public boolean contains(
+        @NotNull @Pattern(regexp = ".+") final String name) {
         return !this.region.table(AwsStand.TABLE).frame()
             .where(AwsStand.HASH_OWNER, this.owner.toString())
             .where(AwsStand.RANGE_STAND, name)
@@ -141,7 +142,7 @@ final class AwsStands implements Stands {
      * {@inheritDoc}
      */
     @Override
-    public Stand get(final String name) {
+    public Stand get(@NotNull @Pattern(regexp = ".+")final String name) {
         final Collection<Item> items = this.region.table(AwsStand.TABLE)
             .frame()
             .where(AwsStand.HASH_OWNER, this.owner.toString())
