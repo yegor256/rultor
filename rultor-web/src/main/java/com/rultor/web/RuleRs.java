@@ -72,13 +72,13 @@ public final class RuleRs extends BaseRs {
      * @param rule Rule name (or NULL)
      */
     @PathParam("name")
-    public void setName(@NotNull(message = "unit name is mandatory")
+    public void setName(@NotNull(message = "rule name is mandatory")
         final String rule) {
         this.name = rule;
     }
 
     /**
-     * View an existing unit or an empty one.
+     * View an existing rule or an empty one.
      * @return The JAX-RS response
      */
     @GET
@@ -102,7 +102,7 @@ public final class RuleRs extends BaseRs {
     }
 
     /**
-     * Remove unit by name.
+     * Remove rule by name.
      * @return The JAX-RS response
      */
     @GET
@@ -119,7 +119,7 @@ public final class RuleRs extends BaseRs {
     }
 
     /**
-     * Save new or existing unit rule.
+     * Save new or existing rule.
      * @param spec Spec to save
      * @return The JAX-RS response
      */

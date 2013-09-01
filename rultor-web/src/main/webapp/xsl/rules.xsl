@@ -62,8 +62,8 @@
             </xsl:when>
             <xsl:otherwise>
                 <p>
-                    <xsl:text>Now create your first management unit and configure it as </xsl:text>
-                    <a href="http://blog.rultor.com">
+                    <xsl:text>Now create your first rule and configure it as </xsl:text>
+                    <a href="//doc.rultor.com/start.html">
                         <xsl:text>this article</xsl:text>
                     </a>
                     <xsl:text> explains.</xsl:text>

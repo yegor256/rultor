@@ -71,7 +71,7 @@ import org.xembly.XemblySyntaxException;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Path("/drain/{unit:[\\w\\-]+}")
+@Path("/drain/{rule:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.ExcessiveImports")
 public final class DrainRs extends BaseRs {
@@ -96,7 +96,7 @@ public final class DrainRs extends BaseRs {
      * @param rule Rule name
      */
     @PathParam("rule")
-    public void setName(@NotNull(message = "unit name can't be NULL")
+    public void setName(@NotNull(message = "rule name can't be NULL")
         final String rule) {
         this.name = rule;
     }
@@ -232,7 +232,7 @@ public final class DrainRs extends BaseRs {
 
     /**
      * Get rule.
-     * @return The unit
+     * @return The rule
      */
     private Rule rule() {
         try {

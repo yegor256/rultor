@@ -49,7 +49,7 @@ public interface Rule {
      * Get its name.
      * @return Name of it
      */
-    @NotNull(message = "name of unit is never NULL")
+    @NotNull(message = "name of rule is never NULL")
     String name();
 
     /**
@@ -103,7 +103,7 @@ public interface Rule {
          * {@inheritDoc}
          */
         @Override
-        @NotNull(message = "spec of an empty unit is never NULL")
+        @NotNull(message = "spec of an empty rule is never NULL")
         public Spec spec() {
             return new Spec.Simple();
         }

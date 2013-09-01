@@ -74,12 +74,12 @@ public final class RulesRs extends BaseRs {
 
     /**
      * Create new empty rule.
-     * @param name Name of the unit to create
+     * @param name Name of the rule to create
      * @return The JAX-RS response
      */
     @POST
     @Path("/create")
-    public Response create(@NotNull(message = "unit name is mandatory")
+    public Response create(@NotNull(message = "rule name is mandatory")
         @FormParam("name") final String name) {
         if (this.user().rules().contains(name)) {
             throw this.flash().redirect(
@@ -115,8 +115,8 @@ public final class RulesRs extends BaseRs {
     }
 
     /**
-     * Convert unit to JaxbBundle.
-     * @param rule Name of unit
+     * Convert rule to JaxbBundle.
+     * @param rule The rule
      * @return Bundle
      */
     private JaxbBundle rule(final Rule rule) {

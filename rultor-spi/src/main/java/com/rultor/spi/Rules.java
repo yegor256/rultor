@@ -43,28 +43,28 @@ import javax.validation.constraints.NotNull;
 public interface Rules extends Iterable<Rule> {
 
     /**
-     * Contains a unit with this name?
+     * Contains a rule with this name?
      * @param name The name of it
      * @return TRUE if it already exists
      */
     boolean contains(@NotNull(message = "name can't be NULL") String name);
 
     /**
-     * Get unit by name (runtime exception if it's absent).
+     * Get rule by name (runtime exception if it's absent).
      * @param name The name of it
      * @return The unit
      */
-    @NotNull(message = "unit is never NULL")
+    @NotNull(message = "rule is never NULL")
     Rule get(@NotNull(message = "unit name can't be NULL") String name);
 
     /**
-     * Remove unit by name (runtime exception if it's absent).
+     * Remove rule by name (runtime exception if it's absent).
      * @param name The name of it
      */
     void remove(@NotNull(message = "name can't be NULL") String name);
 
     /**
-     * Create empty default unit with this name.
+     * Create empty default rule with this name.
      * @param name The name of it
      */
     void create(@NotNull(message = "name can't be NULL") String name);

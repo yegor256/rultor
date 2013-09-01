@@ -65,9 +65,9 @@ public interface Work {
 
     /**
      * Name of the work (unique for the user).
-     * @return The unit
+     * @return The rule
      */
-    @NotNull(message = "unit name is never NULL")
+    @NotNull(message = "rule name is never NULL")
     String rule();
 
     /**
@@ -156,7 +156,7 @@ public interface Work {
          * @param when When it should start
          */
         public Simple(@NotNull(message = "owner can't be NULL") final URN owner,
-            @NotNull(message = "unit name can't be NULL") final String name,
+            @NotNull(message = "rule name can't be NULL") final String name,
             @NotNull(message = "time can't be NULL") final Time when) {
             this.urn = owner;
             this.label = name;
@@ -194,7 +194,7 @@ public interface Work {
          * {@inheritDoc}
          */
         @Override
-        @NotNull(message = "unit name of work is never NULL")
+        @NotNull(message = "rule name of work is never NULL")
         public String rule() {
             return this.label;
         }

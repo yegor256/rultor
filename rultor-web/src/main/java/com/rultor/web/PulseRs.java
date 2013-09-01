@@ -81,7 +81,7 @@ public final class PulseRs extends BaseRs {
      * @param rule Rule name
      */
     @PathParam("name")
-    public void setName(@NotNull(message = "unit name is mandatory")
+    public void setName(@NotNull(message = "rule name is mandatory")
         final String rule) {
         this.name = rule;
     }
