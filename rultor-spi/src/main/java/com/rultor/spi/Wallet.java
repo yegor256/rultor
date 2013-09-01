@@ -58,13 +58,13 @@ public interface Wallet {
     /**
      * Delegate to another user/rule.
      * @param urn URN of another user
-     * @param rule Name of the unit
+     * @param rule Name of the rule
      * @return New wallet
      * @throws Wallet.NotEnoughFundsException If not enough
      */
     Wallet delegate(
         @NotNull(message = "URN can't be NULL") URN urn,
-        @NotNull(message = "unit name can't be NULL") String unit)
+        @NotNull(message = "unit name can't be NULL") String rule)
         throws Wallet.NotEnoughFundsException;
 
     /**
