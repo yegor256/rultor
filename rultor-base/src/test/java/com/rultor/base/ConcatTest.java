@@ -57,6 +57,10 @@ public final class ConcatTest {
             concat.object(),
             Matchers.equalTo("test1,test2,test3")
         );
+        MatcherAssert.assertThat(
+            concat.toString(),
+            Matchers.equalTo("3 part(s)")
+        );
     }
 
     /**
@@ -68,12 +72,17 @@ public final class ConcatTest {
         list.add("test4");
         list.add("test5");
         list.add("test6");
+        list.add("test7");
         final Concat concat = new Concat(
             list
         );
         MatcherAssert.assertThat(
             concat.object(),
-            Matchers.equalTo("test4test5test6")
+            Matchers.equalTo("test4test5test6test7")
+        );
+        MatcherAssert.assertThat(
+            concat.toString(),
+            Matchers.equalTo("4 part(s)")
         );
     }
 }
