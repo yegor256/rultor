@@ -14,6 +14,7 @@ Rultor-DynamoPrefix: ${failsafe.dynamo.prefix}
 Rultor-SQSKey: ${failsafe.sqs.key}
 Rultor-SQSSecret: ${failsafe.sqs.secret}
 Rultor-SQSUrl: ${failsafe.sqs.url}
+Rultor-SQSWalletUrl: ${failsafe.sqs.url}
 Rultor-PgsqlJdbc: ${failsafe.pgsql.jdbc}
 Rultor-PgsqlPassword: ${failsafe.pgsql.password}
 Rultor-MongoHost: ${failsafe.mongo.host}
