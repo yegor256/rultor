@@ -147,19 +147,20 @@ final class GhRequest implements MergeRequest {
     @Override
     @Step("notified GitHub pull request that merging started")
     public void started() throws IOException {
-        final StringBuilder text = new StringBuilder();
+        final StringBuilder text = new StringBuilder()
+            .append("Let me test your branch first (may take a few):\n\n")
+            .append("<table><tbody>\n");
         for (Map.Entry<String, Object> entry : this.parameters.entrySet()) {
-            text.append(entry.getKey())
-                .append(": ")
+            text.append("<tr><td>")
+                .append(entry.getKey())
+                .append("</td></td>")
                 .append(entry.getValue())
-                .append('\n');
+                .append("</td></tr>\n");
         }
+        text.append("</tbody></table>");
         final GitHubClient client = this.github.client();
         final IssueService issues = new IssueService(client);
-        issues.createComment(
-            this.repository, this.issue,
-            String.format("Let me test your branch first:\n\n```\n%s```", text)
-        );
+        issues.createComment(this.repository, this.issue, text.toString());
     }
 
     /**
