@@ -97,7 +97,7 @@ final class AwsUser implements User {
     @Override
     @NotNull(message = "units of a user is never NULL")
     public Rules units() {
-        return new AwsUnits(this.region, this.client, this.name);
+        return new AwsRules(this.region, this.client, this.name);
     }
 
     /**

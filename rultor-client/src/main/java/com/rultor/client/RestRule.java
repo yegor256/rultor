@@ -58,7 +58,7 @@ import org.apache.commons.lang3.CharEncoding;
 @ToString
 @EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
-final class RestUnit implements Rule {
+final class RestRule implements Rule {
 
     /**
      * Home URI.
@@ -75,7 +75,7 @@ final class RestUnit implements Rule {
      * @param uri URI of home page
      * @param auth Authentication token
      */
-    protected RestUnit(final String uri, final String auth) {
+    protected RestRule(final String uri, final String auth) {
         this.home = uri;
         this.token = auth;
     }

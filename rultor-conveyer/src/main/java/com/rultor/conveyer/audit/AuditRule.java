@@ -50,7 +50,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "origin", "funded" })
 @Loggable(Loggable.DEBUG)
-final class AuditUnit implements Rule {
+final class AuditRule implements Rule {
 
     /**
      * Original unit.
@@ -67,7 +67,7 @@ final class AuditUnit implements Rule {
      * @param unit Rule
      * @param fnd Funded
      */
-    protected AuditUnit(final Rule unit, final boolean fnd) {
+    protected AuditRule(final Rule unit, final boolean fnd) {
         this.origin = unit;
         this.funded = fnd;
     }

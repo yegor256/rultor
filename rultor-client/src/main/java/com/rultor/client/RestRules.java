@@ -58,7 +58,7 @@ import org.apache.commons.lang3.CharEncoding;
 @ToString
 @EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
-final class RestUnits implements Rules {
+final class RestRules implements Rules {
 
     /**
      * Home URI.
@@ -75,7 +75,7 @@ final class RestUnits implements Rules {
      * @param entry Entry point (URI)
      * @param tkn Token
      */
-    protected RestUnits(
+    protected RestRules(
         @NotNull(message = "URI can't be NULL") final URI entry,
         @NotNull(message = "token can't be NULL") final String tkn) {
         this.home = entry.toString();
@@ -95,7 +95,7 @@ final class RestUnits implements Rules {
      */
     @Override
     public Rule get(final String name) {
-        return new RestUnit(
+        return new RestRule(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
