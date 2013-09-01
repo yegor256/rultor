@@ -35,8 +35,8 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Account;
+import com.rultor.spi.Rules;
 import com.rultor.spi.Stands;
-import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -95,9 +95,9 @@ final class AwsUser implements User {
      * {@inheritDoc}
      */
     @Override
-    @NotNull(message = "units of a user is never NULL")
-    public Units units() {
-        return new AwsUnits(this.region, this.client, this.name);
+    @NotNull(message = "rules of a user is never NULL")
+    public Rules rules() {
+        return new AwsRules(this.region, this.client, this.name);
     }
 
     /**

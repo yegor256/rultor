@@ -187,18 +187,18 @@ public class BaseRs extends BaseResource {
                     );
                     page.link(
                         new Link(
-                            "units",
+                            "rules",
                             BaseRs.this.uriInfo().getBaseUriBuilder()
                                 .clone()
-                                .path(UnitsRs.class)
+                                .path(RulesRs.class)
                                 .build()
                         )
                     );
                     page.append(
                         new Menu()
                             .with("home", "Home")
-                            .with("units", "Units of Work")
-                            .with("stands", "Web Stands")
+                            .with("rules", "Rules")
+                            .with("stands", "Stands")
                             .with("account", "Account Statistics")
                             .with("auth-logout", "Log out")
                             .bundle()
@@ -303,11 +303,11 @@ public class BaseRs extends BaseResource {
 
     /**
      * The work we're in (while rendering).
-     * @param unit Unit being rendered
+     * @param rule Unit being rendered
      * @param spec Its spec
      * @return The work
      */
-    protected final Work work(final String unit, final Spec spec) {
+    protected final Work work(final String rule, final Spec spec) {
         // @checkstyle AnonInnerLength (50 lines)
         return new Work() {
             @Override
@@ -319,8 +319,8 @@ public class BaseRs extends BaseResource {
                 return BaseRs.this.user().urn();
             }
             @Override
-            public String unit() {
-                return unit;
+            public String rule() {
+                return rule;
             }
             @Override
             public URI stdout() {

@@ -34,8 +34,8 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
 import com.rultor.spi.Account;
+import com.rultor.spi.Rules;
 import com.rultor.spi.Stands;
-import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -130,16 +130,16 @@ public final class RestUser implements User {
      * {@inheritDoc}
      */
     @Override
-    public Units units() {
-        return new RestUnits(
+    public Rules rules() {
+        return new RestRules(
             URI.create(
                 RestTester.start(UriBuilder.fromUri(this.home))
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                     .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .get("#units()")
+                    .get("#rules()")
                     .assertStatus(HttpURLConnection.HTTP_OK)
-                    .assertXPath("/page/links/link[@rel='units']")
-                    .xpath("/page/links/link[@rel='units']/@href")
+                    .assertXPath("/page/links/link[@rel='rules']")
+                    .xpath("/page/links/link[@rel='rules']/@href")
                     .get(0)
             ),
             this.token

@@ -32,15 +32,15 @@ package com.rultor.conveyer.audit;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Rule;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Unit;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Unit with audit features.
+ * Rule with audit features.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -50,12 +50,12 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "origin", "funded" })
 @Loggable(Loggable.DEBUG)
-final class AuditUnit implements Unit {
+final class AuditRule implements Rule {
 
     /**
-     * Original unit.
+     * Original rule.
      */
-    private final transient Unit origin;
+    private final transient Rule origin;
 
     /**
      * Wallet is available, account is properly funded.
@@ -64,11 +64,11 @@ final class AuditUnit implements Unit {
 
     /**
      * Public ctor.
-     * @param unit Unit
+     * @param rule Rule
      * @param fnd Funded
      */
-    protected AuditUnit(final Unit unit, final boolean fnd) {
-        this.origin = unit;
+    protected AuditRule(final Rule rule, final boolean fnd) {
+        this.origin = rule;
         this.funded = fnd;
     }
 
@@ -101,14 +101,14 @@ final class AuditUnit implements Unit {
      * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public Wallet wallet(final Work work, final URN taker, final String unit)
+    public Wallet wallet(final Work work, final URN taker, final String rule)
         throws Wallet.NotEnoughFundsException {
         if (!this.funded) {
             throw new Wallet.NotEnoughFundsException(
                 "not enough funds in the account"
             );
         }
-        return this.origin.wallet(work, taker, unit);
+        return this.origin.wallet(work, taker, rule);
     }
 
 }

@@ -213,7 +213,7 @@ public final class BucketNotepad implements Notepad {
                 "%s%s/%s.notepad",
                 this.prefix,
                 this.work.owner(),
-                this.work.unit()
+                this.work.rule()
             ),
             this.client
         );

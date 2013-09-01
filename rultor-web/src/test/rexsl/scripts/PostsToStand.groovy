@@ -51,6 +51,6 @@ if (!user.stands().contains(name)) {
 def stand = user.stands().get(name)
 stand.acl(new Spec.Simple('com.rultor.acl.MD5Keyed("test")'))
 stand.post(name, 'ADD "test"; SET "works fine!";')
-def pulse = user.units().pulses().iterator().next()
+def pulse = user.rules().pulses().iterator().next()
 MatcherAssert.assertThat(pulse.xembly(), Matchers.containsString('works fine'))
 */

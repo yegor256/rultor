@@ -82,7 +82,7 @@ public final class BucketDrainITCase {
         final String msg = "some test log message \u20ac";
         final Time date = new Time();
         final Drain drain = new BucketDrain(
-            new Work.Simple(new URN("urn:facebook:1"), "test-unit", date),
+            new Work.Simple(new URN("urn:facebook:1"), "test-rule", date),
             this.client
         );
         drain.append(Arrays.asList(msg));

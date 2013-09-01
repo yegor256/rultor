@@ -223,10 +223,10 @@ public final class EC2 implements Environments {
                 .withTags(
                     new Tag()
                         .withKey("Name")
-                        .withValue(this.work.unit()),
+                        .withValue(this.work.rule()),
                     new Tag()
-                        .withKey("rultor:work:unit")
-                        .withValue(this.work.unit()),
+                        .withKey("rultor:work:rule")
+                        .withValue(this.work.rule()),
                     new Tag()
                         .withKey("rultor:work:owner")
                         .withValue(this.work.owner().toString()),

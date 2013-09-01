@@ -51,7 +51,7 @@ sudo pip install -U dynamic-dynamodb
 
 # https://github.com/sebdah/dynamic-dynamodb
 dynamic-dynamodb --version
-for table in units stands
+for table in rules stands
 do
     while true
     do
@@ -61,8 +61,8 @@ do
             --decrease-reads-with 1 \
             --increase-writes-with 1 \
             --decrease-writes-with 1 \
-            --increase-reads-unit units \
-            --decrease-reads-unit units \
+            --increase-reads-unit rules \
+            --decrease-reads-unit rules \
             --reads-upper-threshold 90 \
             --reads-lower-threshold 30 \
             --writes-upper-threshold 90 \

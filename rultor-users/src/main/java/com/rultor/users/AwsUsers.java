@@ -86,10 +86,10 @@ public final class AwsUsers implements Users {
         final DescribeTableResult result = aws.describeTable(
             new DescribeTableRequest()
                 // @checkstyle MultipleStringLiterals (1 line)
-                .withTableName(reg.table(AwsUnit.TABLE).name())
+                .withTableName(reg.table(AwsRule.TABLE).name())
         );
         Logger.info(
-            AwsUsers.class, "Amazon DynamoDB is ready with %d unit(s)",
+            AwsUsers.class, "Amazon DynamoDB is ready with %d rule(s)",
             result.getTable().getItemCount()
         );
         this.region = reg;
@@ -104,12 +104,12 @@ public final class AwsUsers implements Users {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Iterator<User> iterator() {
         final Collection<User> users = new HashSet<User>(0);
-        for (Item item : this.region.table(AwsUnit.TABLE).frame()) {
+        for (Item item : this.region.table(AwsRule.TABLE).frame()) {
             users.add(
                 new AwsUser(
                     AwsUsers.this.region,
                     AwsUsers.this.client,
-                    URN.create(item.get(AwsUnit.HASH_OWNER).getS())
+                    URN.create(item.get(AwsRule.HASH_OWNER).getS())
                 )
             );
         }

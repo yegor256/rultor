@@ -36,8 +36,8 @@ import com.rexsl.page.JaxbBundle;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Rule;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Unit;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
@@ -86,12 +86,12 @@ final class JaxbFace {
     /**
      * Build bundle.
      * @param user URN of the user
-     * @param unit Unit of the user
+     * @param rule Rule of the user
      * @return Bundle
      */
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    public JaxbBundle bundle(final User user, final Unit unit) {
-        final Spec spec = unit.spec();
+    public JaxbBundle bundle(final User user, final Rule rule) {
+        final Spec spec = rule.spec();
         JaxbBundle bundle = new JaxbBundle("face");
         try {
             final Variable<?> var = new Repo.Cached(
@@ -101,7 +101,7 @@ final class JaxbFace {
                 final Object object = var.instantiate(
                     this.users,
                     new Arguments(
-                        this.work(user.urn(), unit.name()),
+                        this.work(user.urn(), rule.name()),
                         new Wallet.Empty()
                     )
                 );
@@ -150,11 +150,11 @@ final class JaxbFace {
 
     /**
      * The work we're in (while rendering).
-     * @param owner Owner of the unit
-     * @param unit Name of the unit we're rendering now
+     * @param owner Owner of the rule
+     * @param rule Name of the rule we're rendering now
      * @return The work
      */
-    private Work work(final URN owner, final String unit) {
+    private Work work(final URN owner, final String rule) {
         // @checkstyle AnonInnerLength (50 lines)
         return new Work() {
             @Override
@@ -166,8 +166,8 @@ final class JaxbFace {
                 return owner;
             }
             @Override
-            public String unit() {
-                return unit;
+            public String rule() {
+                return rule;
             }
             @Override
             public URI stdout() {
