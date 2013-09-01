@@ -64,7 +64,7 @@ public final class SQSQueueTest {
     public void savesJson() throws Exception {
         final Work work = new Work.Simple(
             new URN("urn:facebook:1"),
-            "some-test-unit",
+            "some-test-rule",
             new Time(Tv.MILLION)
         );
         final SQSClient client = Mockito.mock(SQSClient.class);

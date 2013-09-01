@@ -224,7 +224,7 @@ final class Testing implements Profile {
                         public List<Column> columns() {
                             return Arrays.<Column>asList(
                                 new Column.Simple("ct", true, false),
-                                new Column.Simple("ctunit", true, false),
+                                new Column.Simple("ctrule", true, false),
                                 new Column.Simple("amount", false, true)
                             );
                         }
@@ -266,12 +266,12 @@ final class Testing implements Profile {
     }
 
     /**
-     * In-memory unit.
+     * In-memory rule.
      */
     @Immutable
     private static final class MemoryUnit implements Rule {
         /**
-         * Name of the unit.
+         * Name of the rule.
          */
         private final transient String label;
         /**

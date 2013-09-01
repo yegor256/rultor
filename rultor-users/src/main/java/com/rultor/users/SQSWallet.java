@@ -74,9 +74,9 @@ final class SQSWallet implements Wallet {
     private final transient URN creditor;
 
     /**
-     * Credit unit.
+     * Credit rule.
      */
-    private final transient String ctunit;
+    private final transient String ctrule;
 
     /**
      * Debitor.
@@ -84,9 +84,9 @@ final class SQSWallet implements Wallet {
     private final transient URN debitor;
 
     /**
-     * Debit unit.
+     * Debit rule.
      */
-    private final transient String dtunit;
+    private final transient String dtrule;
 
     /**
      * Ctor.
@@ -108,9 +108,9 @@ final class SQSWallet implements Wallet {
             ctr, cunit, dtr, dunit
         );
         this.creditor = ctr;
-        this.ctunit = cunit;
+        this.ctrule = cunit;
         this.debitor = dtr;
-        this.dtunit = dunit;
+        this.dtrule = dunit;
     }
 
     /**
@@ -143,7 +143,7 @@ final class SQSWallet implements Wallet {
     @Override
     public Wallet delegate(final URN urn, final String rule) {
         final Wallet delegate = new SQSWallet(
-            this.client, this.work, this.debitor, this.dtunit, urn, rule
+            this.client, this.work, this.debitor, this.dtrule, urn, rule
         );
         return new Wallet() {
             @Override
@@ -171,9 +171,9 @@ final class SQSWallet implements Wallet {
         Json.createGenerator(writer)
             .writeStartObject()
             .write("ct", this.creditor.toString())
-            .write("ctunit", this.ctunit)
+            .write("ctrule", this.ctrule)
             .write("dt", this.debitor.toString())
-            .write("dtunit", this.dtunit)
+            .write("dtrule", this.dtrule)
             .write("details", details)
             .write("amount", amount.points())
             .writeStartObject("work")

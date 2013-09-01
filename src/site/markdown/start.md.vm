@@ -184,7 +184,7 @@ using the template you pay for its usage of SimpleDB, but the price is
 very small (less than $0.00001 per request).
 
 As you have probably already understood, there is no way to manually "trigger" execution
-of a unit. This is where Rultor differs from other continuous integration
+of a rule. This is where Rultor differs from other continuous integration
 systems, like Jenkins. A new instance of every unit is created and executed
 every minute, 24 hours per day, 7 days per week.
 The only way to stop this process is to either delete the unit

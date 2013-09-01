@@ -77,7 +77,7 @@ public final class DomainNotepad implements Notepad {
     private static final String ATTR_OWNER = "owner";
 
     /**
-     * Attribute name for the unit.
+     * Attribute name for the rule.
      */
     private static final String ATTR_RULE = "rule";
 

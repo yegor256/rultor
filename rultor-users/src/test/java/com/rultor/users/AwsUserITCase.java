@@ -145,10 +145,10 @@ public final class AwsUserITCase {
             this.region, Mockito.mock(SQSClient.class), urn
         );
         MatcherAssert.assertThat(user.urn(), Matchers.equalTo(urn));
-        for (Rule unit : user.rules()) {
+        for (Rule rule : user.rules()) {
             user.rules().remove(unit.name());
         }
-        final String name = "simple-unit";
+        final String name = "simple-rule";
         user.rules().create(name);
         MatcherAssert.assertThat(
             user.rules(),

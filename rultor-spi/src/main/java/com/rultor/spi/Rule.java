@@ -66,7 +66,7 @@ public interface Rule {
     Spec spec();
 
     /**
-     * Wallet of the unit.
+     * Wallet of the rule.
      * @param work Which work for
      * @param taker Who is going to take money from my wallet?
      * @param rule What this money is for?

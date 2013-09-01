@@ -109,7 +109,7 @@ public final class SimpleConveyerTest {
             Mockito.any(Users.class), Mockito.any(Arguments.class)
         );
         final User user = Mockito.mock(User.class);
-        final Rule unit = Mockito.mock(Rule.class);
+        final Rule rule = Mockito.mock(Rule.class);
         final Rules rules = Mockito.mock(Rules.class);
         Mockito.doReturn(rules).when(user).rules();
         Mockito.doReturn(Arrays.asList(unit).iterator()).when(rules).iterator();

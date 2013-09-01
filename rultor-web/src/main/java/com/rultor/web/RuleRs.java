@@ -84,13 +84,13 @@ public final class RuleRs extends BaseRs {
     @GET
     @Path("/")
     public Response index() {
-        final Rule unit = this.rule();
+        final Rule rule = this.rule();
         return this.head()
             .append(
                 new JaxbBundle("rule")
                     .add("name", this.name)
                     .up()
-                    .add("spec", unit.spec().asText())
+                    .add("spec", rule.spec().asText())
                     .up()
             )
             .append(
@@ -119,7 +119,7 @@ public final class RuleRs extends BaseRs {
     }
 
     /**
-     * Save new or existing unit unit.
+     * Save new or existing unit rule.
      * @param spec Spec to save
      * @return The JAX-RS response
      */

@@ -126,7 +126,7 @@ public final class PulseRs extends BaseRs {
      * @return The pulse
      */
     private Pulse pulse() {
-        final Rule unit;
+        final Rule rule;
         try {
             unit = this.user().rules().get(this.name);
         } catch (NoSuchElementException ex) {
@@ -158,11 +158,11 @@ public final class PulseRs extends BaseRs {
      * @return Stream
      * @throws IOException If fails
      */
-    private InputStream read(final Rule unit) throws IOException {
+    private InputStream read(final Rule rule) throws IOException {
         try {
             return Drain.Source.class.cast(
                 new Repo.Cached(
-                    this.repo(), this.user(), unit.spec()
+                    this.repo(), this.user(), rule.spec()
                 ).get().instantiate(
                     this.users(),
                     new Arguments(

@@ -84,7 +84,7 @@
             </links>
         </column>
         <column>
-            <title>ctunit</title>
+            <title>ctrule</title>
             <links>
                 <link href="/xml/account.xml" rel="group" type="text/xml"/>
                 <link href="/xml/account.xml" rel="asc" type="text/xml"/>
@@ -100,7 +100,7 @@
             </links>
         </column>
         <column sorted="desc" grouped="yes">
-            <title>dtunit</title>
+            <title>dtrule</title>
             <links>
                 <link href="/xml/account.xml" rel="group" type="text/xml"/>
                 <link href="/xml/account.xml" rel="asc" type="text/xml"/>
