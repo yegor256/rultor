@@ -37,8 +37,8 @@ import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Unit;
-import com.rultor.spi.Units;
+import com.rultor.spi.Rule;
+import com.rultor.spi.Rules;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
@@ -109,8 +109,8 @@ public final class SimpleConveyerTest {
             Mockito.any(Users.class), Mockito.any(Arguments.class)
         );
         final User user = Mockito.mock(User.class);
-        final Unit unit = Mockito.mock(Unit.class);
-        final Units units = Mockito.mock(Units.class);
+        final Rule unit = Mockito.mock(Rule.class);
+        final Rules units = Mockito.mock(Rules.class);
         Mockito.doReturn(units).when(user).units();
         Mockito.doReturn(Arrays.asList(unit).iterator()).when(units).iterator();
         Mockito.doReturn(unit).when(units).get(name);

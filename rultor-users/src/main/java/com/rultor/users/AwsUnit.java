@@ -39,7 +39,7 @@ import com.jcabi.dynamo.Item;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Unit;
+import com.rultor.spi.Rule;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import java.util.concurrent.TimeUnit;
@@ -59,7 +59,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "item")
 @Loggable(Loggable.DEBUG)
-final class AwsUnit implements Unit {
+final class AwsUnit implements Rule {
 
     /**
      * Dynamo DB table name.

@@ -39,7 +39,7 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
-import com.rultor.spi.Unit;
+import com.rultor.spi.Rule;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
@@ -218,7 +218,7 @@ final class SimpleConveyer implements Closeable {
      */
     private void process(final Work work) throws Exception {
         final User owner = this.users.get(work.owner());
-        final Unit unit = owner.units().get(work.unit());
+        final Rule unit = owner.units().get(work.unit());
         final Variable<?> var =
             new Repo.Cached(this.repo, owner, unit.spec()).get();
         if (var.arguments().isEmpty()) {

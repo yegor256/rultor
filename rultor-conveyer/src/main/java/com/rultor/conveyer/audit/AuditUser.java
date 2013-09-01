@@ -35,7 +35,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Account;
 import com.rultor.spi.Stands;
-import com.rultor.spi.Units;
+import com.rultor.spi.Rules;
 import com.rultor.spi.User;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -83,7 +83,7 @@ final class AuditUser implements User {
      * {@inheritDoc}
      */
     @Override
-    public Units units() {
+    public Rules units() {
         return new AuditUnits(
             this.origin.units(),
             this.account().balance().points() > AuditUser.THRESHOLD

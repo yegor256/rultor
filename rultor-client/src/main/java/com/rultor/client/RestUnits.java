@@ -32,8 +32,8 @@ package com.rultor.client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
-import com.rultor.spi.Unit;
-import com.rultor.spi.Units;
+import com.rultor.spi.Rule;
+import com.rultor.spi.Rules;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -48,7 +48,7 @@ import lombok.ToString;
 import org.apache.commons.lang3.CharEncoding;
 
 /**
- * RESTful Units.
+ * RESTful Rules.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -58,7 +58,7 @@ import org.apache.commons.lang3.CharEncoding;
 @ToString
 @EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
-final class RestUnits implements Units {
+final class RestUnits implements Rules {
 
     /**
      * Home URI.
@@ -86,7 +86,7 @@ final class RestUnits implements Units {
      * {@inheritDoc}
      */
     @Override
-    public Iterator<Unit> iterator() {
+    public Iterator<Rule> iterator() {
         throw new UnsupportedOperationException();
     }
 
@@ -94,7 +94,7 @@ final class RestUnits implements Units {
      * {@inheritDoc}
      */
     @Override
-    public Unit get(final String name) {
+    public Rule get(final String name) {
         return new RestUnit(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)

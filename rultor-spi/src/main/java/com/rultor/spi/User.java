@@ -64,7 +64,7 @@ public interface User {
      * @return Collection of units
      */
     @NotNull(message = "set of units of user is never NULL")
-    Units units();
+    Rules units();
 
     /**
      * Names of all his stands.
@@ -89,7 +89,7 @@ public interface User {
             throw new UnsupportedOperationException();
         }
         @Override
-        public Units units() {
+        public Rules units() {
             throw new UnsupportedOperationException();
         }
         @Override

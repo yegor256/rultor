@@ -33,7 +33,7 @@ import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
-import com.rultor.spi.Unit;
+import com.rultor.spi.Rule;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
@@ -105,9 +105,9 @@ public final class UnitsRs extends BaseRs {
      */
     private JaxbBundle mine() {
         return new JaxbBundle("units").add(
-            new JaxbBundle.Group<Unit>(this.user().units()) {
+            new JaxbBundle.Group<Rule>(this.user().units()) {
                 @Override
-                public JaxbBundle bundle(final Unit unit) {
+                public JaxbBundle bundle(final Rule unit) {
                     return UnitsRs.this.unit(unit);
                 }
             }
@@ -119,7 +119,7 @@ public final class UnitsRs extends BaseRs {
      * @param unit Name of unit
      * @return Bundle
      */
-    private JaxbBundle unit(final Unit unit) {
+    private JaxbBundle unit(final Rule unit) {
         return new JaxbBundle("unit")
             .add("name", unit.name())
             .up()

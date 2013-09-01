@@ -40,7 +40,7 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.TableMocker;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
-import com.rultor.spi.Unit;
+import com.rultor.spi.Rule;
 import com.rultor.spi.User;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -145,14 +145,14 @@ public final class AwsUserITCase {
             this.region, Mockito.mock(SQSClient.class), urn
         );
         MatcherAssert.assertThat(user.urn(), Matchers.equalTo(urn));
-        for (Unit unit : user.units()) {
+        for (Rule unit : user.units()) {
             user.units().remove(unit.name());
         }
         final String name = "simple-unit";
         user.units().create(name);
         MatcherAssert.assertThat(
             user.units(),
-            Matchers.<Unit>iterableWithSize(1)
+            Matchers.<Rule>iterableWithSize(1)
         );
         MatcherAssert.assertThat(
             user.units().contains(name),
