@@ -128,7 +128,7 @@ public final class PulseRs extends BaseRs {
     private Pulse pulse() {
         final Rule rule;
         try {
-            unit = this.user().rules().get(this.name);
+            rule = this.user().rules().get(this.name);
         } catch (NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
@@ -139,7 +139,7 @@ public final class PulseRs extends BaseRs {
             }
             @Override
             public InputStream stream() throws IOException {
-                return PulseRs.this.read(unit);
+                return PulseRs.this.read(rule);
             }
             @Override
             public String identifier() {

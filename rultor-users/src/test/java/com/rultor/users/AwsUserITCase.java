@@ -146,7 +146,7 @@ public final class AwsUserITCase {
         );
         MatcherAssert.assertThat(user.urn(), Matchers.equalTo(urn));
         for (Rule rule : user.rules()) {
-            user.rules().remove(unit.name());
+            user.rules().remove(rule.name());
         }
         final String name = "simple-rule";
         user.rules().create(name);

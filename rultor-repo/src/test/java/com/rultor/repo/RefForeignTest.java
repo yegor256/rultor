@@ -31,9 +31,9 @@ package com.rultor.repo;
 
 import com.jcabi.urn.URN;
 import com.rultor.spi.Arguments;
-import com.rultor.spi.Spec;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Rules;
+import com.rultor.spi.Spec;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
@@ -62,11 +62,11 @@ public final class RefForeignTest {
         final String name = "some-ref-name";
         final Rule rule = Mockito.mock(Rule.class);
         final Spec spec = new Spec.Simple("java.lang.Long(1L)");
-        Mockito.doReturn(spec).when(unit).spec();
+        Mockito.doReturn(spec).when(rule).spec();
         final User user = Mockito.mock(User.class);
         final Rules rules = Mockito.mock(Rules.class);
         Mockito.doReturn(rules).when(user).rules();
-        Mockito.doReturn(unit).when(rules).get(name);
+        Mockito.doReturn(rule).when(rules).get(name);
         final URN urn = new URN("urn:facebook:1");
         Mockito.doReturn(urn).when(user).urn();
         final Variable<Object> var = new RefForeign(

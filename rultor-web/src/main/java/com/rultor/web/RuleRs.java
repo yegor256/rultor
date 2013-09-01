@@ -95,7 +95,7 @@ public final class RuleRs extends BaseRs {
             )
             .append(
                 new JaxbFace(this.repo(), this.users())
-                    .bundle(this.user(), unit)
+                    .bundle(this.user(), rule)
             )
             .render()
             .build();
