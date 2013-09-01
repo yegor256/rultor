@@ -4,7 +4,8 @@ Rultor.com is a Programmable Enforcer of a Software Development Process.
 
 Documentation in under construction, but these pages may help:
 
-* [Quick Start](http://doc.rultor.com/index.html)
+* [What Is It About?](http://doc.rultor.com/index.html)
+* [Quick Start](http://doc.rultor.com/start.html)
 * [Architecture](http://doc.rultor.com/architecture.html)
 
 ## How to contribute
