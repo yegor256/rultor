@@ -94,7 +94,7 @@ public final class AwsUserITCase {
         this.table = new TableMocker(
             this.region,
             new CreateTableRequest()
-                .withTableName(String.format("%srules", prefix))
+                .withTableName(String.format("%s%s", prefix, AwsRule.TABLE))
                 .withProvisionedThroughput(
                     new ProvisionedThroughput()
                         .withReadCapacityUnits(1L)
