@@ -84,7 +84,7 @@ final class AuditUser implements User {
      */
     @Override
     public Rules units() {
-        return new AuditUnits(
+        return new AuditRules(
             this.origin.units(),
             this.account().balance().points() > AuditUser.THRESHOLD
         );

@@ -59,7 +59,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "item")
 @Loggable(Loggable.DEBUG)
-final class AwsUnit implements Rule {
+final class AwsRule implements Rule {
 
     /**
      * Dynamo DB table name.
@@ -96,7 +96,7 @@ final class AwsUnit implements Rule {
      * @param sqs SQS client
      * @param itm Item from Dynamo
      */
-    protected AwsUnit(final SQSClient sqs, final Item itm) {
+    protected AwsRule(final SQSClient sqs, final Item itm) {
         this.client = sqs;
         this.item = itm;
     }
@@ -111,7 +111,7 @@ final class AwsUnit implements Rule {
         this.item.put(
             new Attributes()
                 .with(
-                    AwsUnit.FIELD_SPEC,
+                    AwsRule.FIELD_SPEC,
                     new AttributeValue(spec.asText())
             )
         );
@@ -125,8 +125,8 @@ final class AwsUnit implements Rule {
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Spec spec() {
         Spec spec;
-        if (this.item.has(AwsUnit.FIELD_SPEC)) {
-            spec = new Spec.Simple(this.item.get(AwsUnit.FIELD_SPEC).getS());
+        if (this.item.has(AwsRule.FIELD_SPEC)) {
+            spec = new Spec.Simple(this.item.get(AwsRule.FIELD_SPEC).getS());
         } else {
             spec = new Spec.Simple();
         }
@@ -138,7 +138,7 @@ final class AwsUnit implements Rule {
      */
     @Override
     public String name() {
-        return this.item.get(AwsUnit.RANGE_NAME).getS();
+        return this.item.get(AwsRule.RANGE_NAME).getS();
     }
 
     /**
@@ -158,7 +158,7 @@ final class AwsUnit implements Rule {
      * @return URN of the owner
      */
     private URN owner() {
-        return URN.create(this.item.get(AwsUnit.HASH_OWNER).getS());
+        return URN.create(this.item.get(AwsRule.HASH_OWNER).getS());
     }
 
 }

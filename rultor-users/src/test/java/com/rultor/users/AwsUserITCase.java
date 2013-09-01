@@ -102,18 +102,18 @@ public final class AwsUserITCase {
                 )
                 .withAttributeDefinitions(
                     new AttributeDefinition()
-                        .withAttributeName(AwsUnit.HASH_OWNER)
+                        .withAttributeName(AwsRule.HASH_OWNER)
                         .withAttributeType(ScalarAttributeType.S),
                     new AttributeDefinition()
-                        .withAttributeName(AwsUnit.RANGE_NAME)
+                        .withAttributeName(AwsRule.RANGE_NAME)
                         .withAttributeType(ScalarAttributeType.S)
                 )
                 .withKeySchema(
                     new KeySchemaElement()
-                        .withAttributeName(AwsUnit.HASH_OWNER)
+                        .withAttributeName(AwsRule.HASH_OWNER)
                         .withKeyType(KeyType.HASH),
                     new KeySchemaElement()
-                        .withAttributeName(AwsUnit.RANGE_NAME)
+                        .withAttributeName(AwsRule.RANGE_NAME)
                         .withKeyType(KeyType.RANGE)
                 )
         );

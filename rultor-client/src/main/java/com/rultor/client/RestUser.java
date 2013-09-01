@@ -131,7 +131,7 @@ public final class RestUser implements User {
      */
     @Override
     public Rules units() {
-        return new RestUnits(
+        return new RestRules(
             URI.create(
                 RestTester.start(UriBuilder.fromUri(this.home))
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)

@@ -62,7 +62,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "region", "owner" })
 @Loggable(Loggable.DEBUG)
-final class AwsUnits implements Rules {
+final class AwsRules implements Rules {
 
     /**
      * Dynamo.
@@ -85,7 +85,7 @@ final class AwsUnits implements Rules {
      * @param sqs SQS client
      * @param urn URN of the user
      */
-    protected AwsUnits(final Region reg, final SQSClient sqs, final URN urn) {
+    protected AwsRules(final Region reg, final SQSClient sqs, final URN urn) {
         this.region = reg;
         this.client = sqs;
         this.owner = urn;
@@ -105,7 +105,7 @@ final class AwsUnits implements Rules {
             }
             @Override
             public Rule next() {
-                return new AwsUnit(AwsUnits.this.client, items.next());
+                return new AwsRule(AwsRules.this.client, items.next());
             }
             @Override
             public void remove() {
@@ -131,11 +131,11 @@ final class AwsUnits implements Rules {
                 String.format("Unit `%s` already exists", unt)
             );
         }
-        this.region.table(AwsUnit.TABLE).put(
+        this.region.table(AwsRule.TABLE).put(
             new Attributes()
-                .with(AwsUnit.HASH_OWNER, this.owner.toString())
-                .with(AwsUnit.RANGE_NAME, unt)
-                .with(AwsUnit.FIELD_SPEC, new Spec.Simple().asText())
+                .with(AwsRule.HASH_OWNER, this.owner.toString())
+                .with(AwsRule.RANGE_NAME, unt)
+                .with(AwsRule.FIELD_SPEC, new Spec.Simple().asText())
         );
     }
 
@@ -146,9 +146,9 @@ final class AwsUnits implements Rules {
     @Cacheable.FlushAfter
     public void remove(@NotNull(message = "unit name is mandatory")
         final String unit) {
-        final Iterator<Item> items = this.region.table(AwsUnit.TABLE).frame()
-            .where(AwsUnit.HASH_OWNER, this.owner.toString())
-            .where(AwsUnit.RANGE_NAME, unit)
+        final Iterator<Item> items = this.region.table(AwsRule.TABLE).frame()
+            .where(AwsRule.HASH_OWNER, this.owner.toString())
+            .where(AwsRule.RANGE_NAME, unit)
             .through(new QueryValve())
             .iterator();
         if (!items.hasNext()) {
@@ -167,17 +167,17 @@ final class AwsUnits implements Rules {
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Rule get(@NotNull(message = "unit name can't be NULL")
         final String unit) {
-        final Collection<Item> items = this.region.table(AwsUnit.TABLE)
+        final Collection<Item> items = this.region.table(AwsRule.TABLE)
             .frame()
-            .where(AwsUnit.HASH_OWNER, this.owner.toString())
-            .where(AwsUnit.RANGE_NAME, unit)
+            .where(AwsRule.HASH_OWNER, this.owner.toString())
+            .where(AwsRule.RANGE_NAME, unit)
             .through(new QueryValve());
         if (items.isEmpty()) {
             throw new NoSuchElementException(
                 String.format("Unit `%s` doesn't exist", unit)
             );
         }
-        return new AwsUnit(this.client, items.iterator().next());
+        return new AwsRule(this.client, items.iterator().next());
     }
 
     /**
@@ -186,10 +186,10 @@ final class AwsUnits implements Rules {
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public boolean contains(final String unit) {
-        return !this.region.table(AwsUnit.TABLE)
+        return !this.region.table(AwsRule.TABLE)
             .frame()
-            .where(AwsUnit.HASH_OWNER, this.owner.toString())
-            .where(AwsUnit.RANGE_NAME, unit)
+            .where(AwsRule.HASH_OWNER, this.owner.toString())
+            .where(AwsRule.RANGE_NAME, unit)
             .through(new QueryValve())
             .isEmpty();
     }
@@ -200,9 +200,9 @@ final class AwsUnits implements Rules {
      */
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     private Collection<Item> fetch() {
-        return this.region.table(AwsUnit.TABLE)
+        return this.region.table(AwsRule.TABLE)
             .frame()
-            .where(AwsUnit.HASH_OWNER, this.owner.toString())
+            .where(AwsRule.HASH_OWNER, this.owner.toString())
             .through(new QueryValve());
     }
 
