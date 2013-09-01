@@ -136,6 +136,7 @@ public final class OnPullRequest implements Instance {
     )
     private boolean merge(final MergeRequest request) throws IOException {
         final String tag = "on-pull-request";
+        request.started();
         final Snapshot snapshot = new Build(tag, this.batch).exec(
             new ImmutableMap.Builder<String, Object>()
                 .putAll(request.params())

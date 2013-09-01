@@ -57,6 +57,12 @@ public interface MergeRequest {
     Map<String, Object> params();
 
     /**
+     * Notify when started to merge.
+     * @throws IOException If fails
+     */
+    void started() throws IOException;
+
+    /**
      * Accept and merge.
      * @param snapshot Snapshot
      * @throws IOException If fails
