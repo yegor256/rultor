@@ -29,6 +29,7 @@
  */
 package com.rultor.drain;
 
+import com.google.common.util.concurrent.MoreExecutors;
 import com.jcabi.urn.URN;
 import com.rexsl.test.TestClient;
 import com.rexsl.test.TestResponse;
@@ -41,10 +42,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -59,131 +56,7 @@ import org.xembly.Directives;
  * @version $Id$
  * @since 1.0
  */
-@SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.TooManyMethods" })
 public final class StandedTest {
-
-    /**
-     * Executor that executes Callable in main thread.
-     * @checkstyle AnonInnerLengthCheck (120 lines)
-     */
-    private static final ExecutorService NO_THREADS = new ExecutorService() {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void shutdown() {
-            // do nothing
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public List<Runnable> shutdownNow() {
-            return Collections.emptyList();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public boolean isShutdown() {
-            return false;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public boolean isTerminated() {
-            return false;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public boolean awaitTermination(
-            final long timeout, final TimeUnit unit) {
-            return false;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @SuppressWarnings({ "unchecked", "PMD.AvoidCatchingGenericException" })
-        @Override
-        public <T> Future<T> submit(final Callable<T> task) {
-            try {
-                task.call();
-                // @checkstyle IllegalCatchCheck (1 line)
-            } catch (Exception ex) {
-                throw new IllegalStateException(ex);
-            }
-            return Mockito.mock(Future.class);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @SuppressWarnings("unchecked")
-        @Override
-        public <T> Future<T> submit(final Runnable task, final T result) {
-            return Mockito.mock(Future.class);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Future<?> submit(final Runnable task) {
-            return Mockito.mock(Future.class);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public <T> List<Future<T>> invokeAll(
-            final Collection<? extends Callable<T>> tasks) {
-            return Collections.emptyList();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public <T> List<Future<T>> invokeAll(
-            final Collection<? extends Callable<T>> tasks, final long timeout,
-            final TimeUnit unit) {
-            return Collections.emptyList();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public <T> T invokeAny(final Collection<? extends Callable<T>> tasks) {
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public <T> T invokeAny(final Collection<? extends Callable<T>> tasks,
-            final long timeout, final TimeUnit unit) {
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void execute(final Runnable command) {
-            // do nothing
-        }
-    };
 
     /**
      * Send of a single message.
@@ -276,7 +149,7 @@ public final class StandedTest {
             "name", "pass",
             Mockito.mock(Drain.class),
             client,
-            StandedTest.NO_THREADS
+            MoreExecutors.sameThreadExecutor()
         );
     }
 
