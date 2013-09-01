@@ -30,66 +30,60 @@
 
 package com.rultor.base;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.concurrent.ConcurrentHashMap;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
  * Test case for {@link SecretMap}.
- * 
- * @author bharathbolisetty
+ * @author Bharath Bolisetty (bharathbolisetty@gmail.com)
  * @version $Id$
  */
-public class SecretMapTest {
+public final class SecretMapTest {
 
-	/***
-	 * SecretMap basic operations test.
-	 * 
-	 * @throws Exception
-	 *             If some problem inside
-	 */
-	@Test
-	public void testBasicMethods() {
-		Map<String, Object> map = new HashMap<String, Object>(2);
-		SecretMap secretMap = new SecretMap(map);
+    /**
+     * SecretMap basic operations test.
+     */
+    @Test
+    public void testBasicMethods() {
+        final ConcurrentHashMap<String, Object> map =
+            new ConcurrentHashMap<String, Object>(2);
+        final SecretMap secretmap = new SecretMap(map);
+        MatcherAssert.assertThat(secretmap.isEmpty(), Matchers.is(true));
+        MatcherAssert.assertThat(secretmap.size(), Matchers.is(0));
+        MatcherAssert.assertThat(secretmap.get("a"), Matchers.nullValue());
+        MatcherAssert.assertThat(
+            secretmap.containsKey("b"), Matchers.is(false)
+        );
+        final String value = "1";
+        map.put("c", value);
+        final SecretMap smap = new SecretMap(map);
+        MatcherAssert.assertThat(smap.isEmpty(), Matchers.is(false));
+        MatcherAssert.assertThat(smap.size(), Matchers.is(1));
+        MatcherAssert.assertThat(
+            smap.containsValue(value), Matchers.is(true)
+        );
+    }
 
-		MatcherAssert.assertThat(secretMap.isEmpty(), Matchers.is(true));
-		MatcherAssert.assertThat(secretMap.size(), Matchers.is(0));
-		MatcherAssert.assertThat(secretMap.get("a"), Matchers.nullValue());
-		MatcherAssert
-				.assertThat(secretMap.containsKey("b"), Matchers.is(false));
-
-		map.put("a", "1");
-		SecretMap secretMap1 = new SecretMap(map);
-		MatcherAssert.assertThat(secretMap1.isEmpty(), Matchers.is(false));
-		MatcherAssert.assertThat(secretMap1.size(), Matchers.is(1));
-		MatcherAssert.assertThat(secretMap1.containsValue("1"),
-				Matchers.is(true));
-	}
-
-	/***
-	 * SecretMap toString test.
-	 * 
-	 * @throws Exception
-	 *             If some problem inside
-	 */
-	@Test
-	public void testToString() {
-		Map<String, Object> map = new HashMap<String, Object>(2);
-		SecretMap secretMap = new SecretMap(map);
-		MatcherAssert.assertThat(secretMap.toString(), Matchers.is("{}"));
-
-		map.put("a", "1");
-		SecretMap secretMap1 = new SecretMap(map);
-		MatcherAssert.assertThat(secretMap1.toString(),
-				Matchers.is("{1 pair(s)}"));
-
-		map.put("b", "2");
-		SecretMap secretMap2 = new SecretMap(map);
-		MatcherAssert.assertThat(secretMap2.toString(),
-				Matchers.is("{2 pair(s)}"));
-	}
+    /**
+     * SecretMap toString test.
+     */
+    @Test
+    public void testToString() {
+        final ConcurrentHashMap<String, Object> map =
+            new ConcurrentHashMap<String, Object>(2);
+        final SecretMap secretmap = new SecretMap(map);
+        MatcherAssert.assertThat(secretmap.toString(), Matchers.is("{}"));
+        map.put("d", "2");
+        final SecretMap smap = new SecretMap(map);
+        MatcherAssert.assertThat(
+            smap.toString(), Matchers.is("{1 pair(s)}")
+        );
+        map.put("e", "3");
+        final SecretMap scmap = new SecretMap(map);
+        MatcherAssert.assertThat(
+            scmap.toString(), Matchers.is("{2 pair(s)}")
+        );
+    }
 }
