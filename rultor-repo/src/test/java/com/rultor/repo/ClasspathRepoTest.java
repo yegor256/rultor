@@ -33,9 +33,9 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Rule;
+import com.rultor.spi.Rules;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Unit;
-import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Wallet;
@@ -154,13 +154,13 @@ public final class ClasspathRepoTest {
             + "  com.rultor.repo.ClasspathRepoTest$Const(${0:test again})"
             + ")"
         );
-        final Unit unit = Mockito.mock(Unit.class);
-        Mockito.doReturn(multiply).when(unit).spec();
+        final Rule rule = Mockito.mock(Rule.class);
+        Mockito.doReturn(multiply).when(rule).spec();
         final String name = "multiply-by-two";
         final User user = Mockito.mock(User.class);
-        final Units units = Mockito.mock(Units.class);
-        Mockito.doReturn(units).when(user).units();
-        Mockito.doReturn(unit).when(units).get(name);
+        final Rules rules = Mockito.mock(Rules.class);
+        Mockito.doReturn(rules).when(user).rules();
+        Mockito.doReturn(rule).when(rules).get(name);
         final URN urn = new URN("urn:facebook:77");
         Mockito.doReturn(urn).when(user).urn();
         final Users users = Mockito.mock(Users.class);

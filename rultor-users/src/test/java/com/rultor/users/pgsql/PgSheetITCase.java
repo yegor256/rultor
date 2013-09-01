@@ -83,7 +83,7 @@ public final class PgSheetITCase {
         final Sheet sheet = this.sheet();
         MatcherAssert.assertThat(
             sheet.groupBy("dt")
-                .groupBy("dtunit")
+                .groupBy("dtrule")
                 .orderBy("time", true)
                 .orderBy("id", false)
                 .where().equalTo("amount", "1").sheet()

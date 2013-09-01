@@ -41,7 +41,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Fake users that always return one unit.
+ * Fake users that always return one rule.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$

@@ -241,7 +241,7 @@ public final class DirectoryDrain implements Drain {
             "%s/%s/%s",
             this.dir,
             this.work.owner(),
-            this.work.unit()
+            this.work.rule()
         );
     }
 

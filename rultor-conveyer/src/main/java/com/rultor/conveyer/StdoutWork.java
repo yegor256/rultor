@@ -113,8 +113,8 @@ final class StdoutWork implements Work {
      * {@inheritDoc}
      */
     @Override
-    public String unit() {
-        return this.origin.unit();
+    public String rule() {
+        return this.origin.rule();
     }
 
     /**

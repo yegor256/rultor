@@ -34,9 +34,9 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Rule;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Tag;
-import com.rultor.spi.Unit;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
@@ -67,7 +67,7 @@ import org.apache.commons.io.IOUtils;
 public final class PulseRs extends BaseRs {
 
     /**
-     * Unit name.
+     * Rule name.
      */
     private transient String name;
 
@@ -78,12 +78,12 @@ public final class PulseRs extends BaseRs {
 
     /**
      * Inject it from query.
-     * @param unit Unit name
+     * @param rule Rule name
      */
     @PathParam("name")
-    public void setName(@NotNull(message = "unit name is mandatory")
-        final String unit) {
-        this.name = unit;
+    public void setName(@NotNull(message = "rule name is mandatory")
+        final String rule) {
+        this.name = rule;
     }
 
     /**
@@ -126,9 +126,9 @@ public final class PulseRs extends BaseRs {
      * @return The pulse
      */
     private Pulse pulse() {
-        final Unit unit;
+        final Rule rule;
         try {
-            unit = this.user().units().get(this.name);
+            rule = this.user().rules().get(this.name);
         } catch (NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
@@ -139,7 +139,7 @@ public final class PulseRs extends BaseRs {
             }
             @Override
             public InputStream stream() throws IOException {
-                return PulseRs.this.read(unit);
+                return PulseRs.this.read(rule);
             }
             @Override
             public String identifier() {
@@ -154,15 +154,15 @@ public final class PulseRs extends BaseRs {
 
     /**
      * Read stream of the drain.
-     * @param unit Unit to read from
+     * @param rule Rule to read from
      * @return Stream
      * @throws IOException If fails
      */
-    private InputStream read(final Unit unit) throws IOException {
+    private InputStream read(final Rule rule) throws IOException {
         try {
             return Drain.Source.class.cast(
                 new Repo.Cached(
-                    this.repo(), this.user(), unit.spec()
+                    this.repo(), this.user(), rule.spec()
                 ).get().instantiate(
                     this.users(),
                     new Arguments(

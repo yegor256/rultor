@@ -86,7 +86,7 @@ public final class DirectoryDrainITCase {
         Assume.assumeNotNull(this.host);
         final String msg = "some test log message \u20ac";
         final Work work = new Work.Simple(
-            new URN("urn:test:1"), "some-unit", new Time(1)
+            new URN("urn:test:1"), "some-rule", new Time(1)
         );
         final Drain drain = new DirectoryDrain(
             work, this.host, this.login, this.password, this.dir

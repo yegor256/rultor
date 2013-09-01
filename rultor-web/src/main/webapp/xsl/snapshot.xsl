@@ -161,7 +161,7 @@
             </i>
         </li>
         <li>
-            <xsl:value-of select="unit"/>
+            <xsl:value-of select="rule"/>
         </li>
     </xsl:template>
     <xsl:template match="version" mode="compact">

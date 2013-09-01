@@ -88,7 +88,7 @@ public final class SQSQueue implements Queue {
     /**
      * JSON key.
      */
-    private static final String KEY_UNIT = "unit";
+    private static final String KEY_RULE = "rule";
 
     /**
      * JSON key.
@@ -213,7 +213,7 @@ public final class SQSQueue implements Queue {
         generator.writeStartObject()
             .write(SQSQueue.KEY_OWNER, work.owner().toString())
             .write(SQSQueue.KEY_SCHEDULED, work.scheduled().toString())
-            .write(SQSQueue.KEY_UNIT, work.unit())
+            .write(SQSQueue.KEY_RULE, work.rule())
             .writeEnd()
             .close();
         return writer.toString();
@@ -231,7 +231,7 @@ public final class SQSQueue implements Queue {
         final JsonObject object = SQSQueue.NORM.readObject(text);
         return new Work.Simple(
             URN.create(object.getString(SQSQueue.KEY_OWNER)),
-            object.getString(SQSQueue.KEY_UNIT),
+            object.getString(SQSQueue.KEY_RULE),
             new Time(object.getString(SQSQueue.KEY_SCHEDULED))
         );
     }

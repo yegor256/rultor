@@ -36,9 +36,9 @@ import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Rule;
+import com.rultor.spi.Rules;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Unit;
-import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
@@ -109,12 +109,12 @@ public final class SimpleConveyerTest {
             Mockito.any(Users.class), Mockito.any(Arguments.class)
         );
         final User user = Mockito.mock(User.class);
-        final Unit unit = Mockito.mock(Unit.class);
-        final Units units = Mockito.mock(Units.class);
-        Mockito.doReturn(units).when(user).units();
-        Mockito.doReturn(Arrays.asList(unit).iterator()).when(units).iterator();
-        Mockito.doReturn(unit).when(units).get(name);
-        Mockito.doReturn(new Spec.Simple()).when(unit).spec();
+        final Rule rule = Mockito.mock(Rule.class);
+        final Rules rules = Mockito.mock(Rules.class);
+        Mockito.doReturn(rules).when(user).rules();
+        Mockito.doReturn(Arrays.asList(rule).iterator()).when(rules).iterator();
+        Mockito.doReturn(rule).when(rules).get(name);
+        Mockito.doReturn(new Spec.Simple()).when(rule).spec();
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(owner);
         Mockito.doReturn(Arrays.asList(user).iterator())

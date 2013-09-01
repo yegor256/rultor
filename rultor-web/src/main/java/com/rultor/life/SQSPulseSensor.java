@@ -196,7 +196,7 @@ public final class SQSPulseSensor implements Runnable, Closeable {
                 "%s %s %s",
                 work.getString("scheduled"),
                 work.getString("owner"),
-                work.getString("unit")
+                work.getString("rule")
             ),
             json.getJsonNumber("nano").longValue(),
             json.getString("xembly")

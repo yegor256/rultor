@@ -122,7 +122,7 @@ public final class DomainLineup implements Lineup {
             String.format(
                 "%s %s",
                 this.work.owner(),
-                this.work.unit()
+                this.work.rule()
             ),
             this.client
         );
