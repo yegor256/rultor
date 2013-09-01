@@ -165,7 +165,9 @@ final class AwsRules implements Rules {
      */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-    public Rule get(@NotNull(message = "rule name can't be NULL")
+    public Rule get(
+        @NotNull(message = "rule name can't be NULL")
+        @Pattern(regexp = ".+", message = "rule shouldn't be blank")
         final String rule) {
         final Collection<Item> items = this.region.table(AwsRule.TABLE)
             .frame()
@@ -185,7 +187,10 @@ final class AwsRules implements Rules {
      */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-    public boolean contains(final String rule) {
+    public boolean contains(
+        @NotNull(message = "rule name can't be NULL")
+        @Pattern(regexp = ".+", message = "rule shouldn't be blank")
+        final String rule) {
         return !this.region.table(AwsRule.TABLE)
             .frame()
             .where(AwsRule.HASH_OWNER, this.owner.toString())
