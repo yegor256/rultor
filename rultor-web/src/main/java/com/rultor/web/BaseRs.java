@@ -187,7 +187,7 @@ public class BaseRs extends BaseResource {
                     );
                     page.link(
                         new Link(
-                            "units",
+                            "rules",
                             BaseRs.this.uriInfo().getBaseUriBuilder()
                                 .clone()
                                 .path(RulesRs.class)
@@ -197,8 +197,8 @@ public class BaseRs extends BaseResource {
                     page.append(
                         new Menu()
                             .with("home", "Home")
-                            .with("units", "Units of Work")
-                            .with("stands", "Web Stands")
+                            .with("rules", "Rules")
+                            .with("stands", "Stands")
                             .with("account", "Account Statistics")
                             .with("auth-logout", "Log out")
                             .bundle()

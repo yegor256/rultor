@@ -51,7 +51,7 @@ import lombok.ToString;
 final class AuditRules implements Rules {
 
     /**
-     * Original units.
+     * Original rules.
      */
     private final transient Rules origin;
 
@@ -62,11 +62,11 @@ final class AuditRules implements Rules {
 
     /**
      * Public ctor.
-     * @param units Rules
+     * @param rules Rules
      * @param fnd Funded
      */
-    protected AuditRules(final Rules units, final boolean fnd) {
-        this.origin = units;
+    protected AuditRules(final Rules rules, final boolean fnd) {
+        this.origin = rules;
         this.funded = fnd;
     }
 

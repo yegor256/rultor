@@ -108,7 +108,7 @@ public final class RuleRs extends BaseRs {
     @GET
     @Path("/remove")
     public Response remove() {
-        this.user().units().remove(this.name);
+        this.user().rules().remove(this.name);
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()
                 .path(RulesRs.class)
@@ -167,7 +167,7 @@ public final class RuleRs extends BaseRs {
      */
     private Rule rule() {
         try {
-            return this.user().units().get(this.name);
+            return this.user().rules().get(this.name);
         } catch (NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
@@ -184,7 +184,7 @@ public final class RuleRs extends BaseRs {
             .init(this)
             .append(
                 new Breadcrumbs()
-                    .with("units")
+                    .with("rules")
                     .with("self", this.name)
                     .bundle()
             )

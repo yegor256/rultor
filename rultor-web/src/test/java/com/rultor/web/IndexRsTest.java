@@ -67,10 +67,10 @@ public final class IndexRsTest {
         res.setHttpHeaders(new HttpHeadersMocker().mock());
         res.setSecurityContext(Mockito.mock(SecurityContext.class));
         final User user = Mockito.mock(User.class);
-        final Rules units = Mockito.mock(Rules.class);
-        Mockito.doReturn(units).when(user).units();
+        final Rules rules = Mockito.mock(Rules.class);
+        Mockito.doReturn(rules).when(user).rules();
         Mockito.doReturn(new ArrayList<Rule>(0).iterator())
-            .when(units).iterator();
+            .when(rules).iterator();
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(Mockito.any(URN.class));
         final Account account = Mockito.mock(Account.class);

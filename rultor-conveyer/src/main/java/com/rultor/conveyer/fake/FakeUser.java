@@ -79,7 +79,7 @@ final class FakeUser implements User {
     }
 
     @Override
-    public Rules units() {
+    public Rules rules() {
         // @checkstyle AnonInnerLength (50 lines)
         return new Rules() {
             @Override

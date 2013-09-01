@@ -94,7 +94,7 @@ public final class AwsUserITCase {
         this.table = new TableMocker(
             this.region,
             new CreateTableRequest()
-                .withTableName(String.format("%sunits", prefix))
+                .withTableName(String.format("%srules", prefix))
                 .withProvisionedThroughput(
                     new ProvisionedThroughput()
                         .withReadCapacityUnits(1L)
@@ -145,17 +145,17 @@ public final class AwsUserITCase {
             this.region, Mockito.mock(SQSClient.class), urn
         );
         MatcherAssert.assertThat(user.urn(), Matchers.equalTo(urn));
-        for (Rule unit : user.units()) {
-            user.units().remove(unit.name());
+        for (Rule unit : user.rules()) {
+            user.rules().remove(unit.name());
         }
         final String name = "simple-unit";
-        user.units().create(name);
+        user.rules().create(name);
         MatcherAssert.assertThat(
-            user.units(),
+            user.rules(),
             Matchers.<Rule>iterableWithSize(1)
         );
         MatcherAssert.assertThat(
-            user.units().contains(name),
+            user.rules().contains(name),
             Matchers.is(true)
         );
     }

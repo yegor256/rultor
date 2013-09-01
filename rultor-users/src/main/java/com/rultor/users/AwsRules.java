@@ -95,7 +95,7 @@ final class AwsRules implements Rules {
      * {@inheritDoc}
      */
     @Override
-    @NotNull(message = "list of units of a user is never NULL")
+    @NotNull(message = "list of rules of a user is never NULL")
     public Iterator<Rule> iterator() {
         final Iterator<Item> items = this.fetch().iterator();
         return new Iterator<Rule>() {

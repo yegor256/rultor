@@ -64,9 +64,9 @@ public final class RefForeignTest {
         final Spec spec = new Spec.Simple("java.lang.Long(1L)");
         Mockito.doReturn(spec).when(unit).spec();
         final User user = Mockito.mock(User.class);
-        final Rules units = Mockito.mock(Rules.class);
-        Mockito.doReturn(units).when(user).units();
-        Mockito.doReturn(unit).when(units).get(name);
+        final Rules rules = Mockito.mock(Rules.class);
+        Mockito.doReturn(rules).when(user).rules();
+        Mockito.doReturn(unit).when(rules).get(name);
         final URN urn = new URN("urn:facebook:1");
         Mockito.doReturn(urn).when(user).urn();
         final Variable<Object> var = new RefForeign(
