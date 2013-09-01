@@ -190,7 +190,7 @@ public class BaseRs extends BaseResource {
                             "units",
                             BaseRs.this.uriInfo().getBaseUriBuilder()
                                 .clone()
-                                .path(UnitsRs.class)
+                                .path(RulesRs.class)
                                 .build()
                         )
                     );
