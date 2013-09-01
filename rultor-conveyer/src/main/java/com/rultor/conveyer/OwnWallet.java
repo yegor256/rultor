@@ -48,7 +48,7 @@ import lombok.ToString;
  */
 @ToString
 @Loggable(Loggable.DEBUG)
-@EqualsAndHashCode(of = { "work", "unit" })
+@EqualsAndHashCode(of = { "work", "rule" })
 final class OwnWallet implements Wallet {
 
     /**

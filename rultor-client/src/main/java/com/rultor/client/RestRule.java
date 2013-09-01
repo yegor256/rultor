@@ -140,7 +140,7 @@ final class RestRule implements Rule {
      * {@inheritDoc}
      */
     @Override
-    public Wallet wallet(final Work work, final URN urn, final String unit) {
+    public Wallet wallet(final Work work, final URN urn, final String rule) {
         throw new UnsupportedOperationException();
     }
 

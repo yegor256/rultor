@@ -39,9 +39,9 @@ import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
-import com.rultor.spi.Spec;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Rules;
+import com.rultor.spi.Spec;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -145,15 +145,15 @@ final class AwsRules implements Rules {
     @Override
     @Cacheable.FlushAfter
     public void remove(@NotNull(message = "unit name is mandatory")
-        final String unit) {
+        final String rule) {
         final Iterator<Item> items = this.region.table(AwsRule.TABLE).frame()
             .where(AwsRule.HASH_OWNER, this.owner.toString())
-            .where(AwsRule.RANGE_NAME, unit)
+            .where(AwsRule.RANGE_NAME, rule)
             .through(new QueryValve())
             .iterator();
         if (!items.hasNext()) {
             throw new NoSuchElementException(
-                String.format("Unit `%s` not found", unit)
+                String.format("Unit `%s` not found", rule)
             );
         }
         items.next();
@@ -166,15 +166,15 @@ final class AwsRules implements Rules {
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Rule get(@NotNull(message = "unit name can't be NULL")
-        final String unit) {
+        final String rule) {
         final Collection<Item> items = this.region.table(AwsRule.TABLE)
             .frame()
             .where(AwsRule.HASH_OWNER, this.owner.toString())
-            .where(AwsRule.RANGE_NAME, unit)
+            .where(AwsRule.RANGE_NAME, rule)
             .through(new QueryValve());
         if (items.isEmpty()) {
             throw new NoSuchElementException(
-                String.format("Unit `%s` doesn't exist", unit)
+                String.format("Unit `%s` doesn't exist", rule)
             );
         }
         return new AwsRule(this.client, items.iterator().next());
@@ -185,11 +185,11 @@ final class AwsRules implements Rules {
      */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-    public boolean contains(final String unit) {
+    public boolean contains(final String rule) {
         return !this.region.table(AwsRule.TABLE)
             .frame()
             .where(AwsRule.HASH_OWNER, this.owner.toString())
-            .where(AwsRule.RANGE_NAME, unit)
+            .where(AwsRule.RANGE_NAME, rule)
             .through(new QueryValve())
             .isEmpty();
     }

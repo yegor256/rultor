@@ -38,12 +38,12 @@ import com.rultor.spi.Column;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Rule;
+import com.rultor.spi.Rules;
 import com.rultor.spi.Sheet;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
-import com.rultor.spi.Rule;
-import com.rultor.spi.Rules;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Wallet;
@@ -84,7 +84,7 @@ final class Testing implements Profile {
     /**
      * All rules.
      */
-    private static final ConcurrentMap<String, Rule> UNITS =
+    private static final ConcurrentMap<String, Rule> RULES =
         new ConcurrentHashMap<String, Rule>(0);
 
     /**
@@ -169,23 +169,23 @@ final class Testing implements Profile {
             return new Rules() {
                 @Override
                 public Iterator<Rule> iterator() {
-                    return Testing.UNITS.values().iterator();
+                    return Testing.RULES.values().iterator();
                 }
                 @Override
-                public Rule get(final String unit) {
-                    return Testing.UNITS.get(unit);
+                public Rule get(final String rule) {
+                    return Testing.RULES.get(rule);
                 }
                 @Override
                 public void create(final String txt) {
-                    Testing.UNITS.put(txt, new MemoryUnit(txt));
+                    Testing.RULES.put(txt, new MemoryUnit(txt));
                 }
                 @Override
                 public void remove(final String txt) {
-                    Testing.UNITS.remove(txt);
+                    Testing.RULES.remove(txt);
                 }
                 @Override
                 public boolean contains(final String txt) {
-                    return Testing.UNITS.containsKey(txt);
+                    return Testing.RULES.containsKey(txt);
                 }
             };
         }
@@ -276,11 +276,11 @@ final class Testing implements Profile {
         private final transient String label;
         /**
          * Public ctor.
-         * @param unit Name of it
+         * @param rule Name of it
          */
-        protected MemoryUnit(final String unit) {
-            Testing.SPECS.put(unit, new Spec.Simple());
-            this.label = unit;
+        protected MemoryUnit(final String rule) {
+            Testing.SPECS.put(rule, new Spec.Simple());
+            this.label = rule;
         }
         @Override
         public void update(final Spec spec) {

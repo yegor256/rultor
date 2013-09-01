@@ -40,8 +40,8 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Repo;
-import com.rultor.spi.SpecException;
 import com.rultor.spi.Rule;
+import com.rultor.spi.SpecException;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
@@ -93,12 +93,12 @@ public final class DrainRs extends BaseRs {
 
     /**
      * Inject it from query.
-     * @param unit Rule name
+     * @param rule Rule name
      */
-    @PathParam("unit")
+    @PathParam("rule")
     public void setName(@NotNull(message = "unit name can't be NULL")
-        final String unit) {
-        this.name = unit;
+        final String rule) {
+        this.name = rule;
     }
 
     /**
@@ -139,7 +139,7 @@ public final class DrainRs extends BaseRs {
                     .with("self", "drain")
                     .bundle()
             )
-            .append(new JaxbBundle("unit", this.name));
+            .append(new JaxbBundle("rule", this.name));
         final Drain drain = this.drain(new Time());
         Pageable<Time, Time> pulses = this.pulses(drain);
         final int total;

@@ -116,11 +116,11 @@ public final class RulesRs extends BaseRs {
 
     /**
      * Convert unit to JaxbBundle.
-     * @param unit Name of unit
+     * @param rule Name of unit
      * @return Bundle
      */
     private JaxbBundle unit(final Rule unit) {
-        return new JaxbBundle("unit")
+        return new JaxbBundle("rule")
             .add("name", unit.name())
             .up()
             .add(

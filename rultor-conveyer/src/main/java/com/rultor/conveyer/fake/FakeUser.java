@@ -95,7 +95,7 @@ final class FakeUser implements User {
                     }
                     @Override
                     public Wallet wallet(final Work wrk, final URN urn,
-                        final String unit) {
+                        final String rule) {
                         return new Wallet() {
                             @Override
                             public void charge(final String details,
@@ -104,7 +104,7 @@ final class FakeUser implements User {
                             }
                             @Override
                             public Wallet delegate(final URN urn,
-                                final String unit) {
+                                final String rule) {
                                 throw new UnsupportedOperationException();
                             }
                         };

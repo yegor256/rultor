@@ -32,8 +32,8 @@ package com.rultor.conveyer.audit;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Spec;
 import com.rultor.spi.Rule;
+import com.rultor.spi.Spec;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import lombok.EqualsAndHashCode;
@@ -64,7 +64,7 @@ final class AuditRule implements Rule {
 
     /**
      * Public ctor.
-     * @param unit Rule
+     * @param rule Rule
      * @param fnd Funded
      */
     protected AuditRule(final Rule unit, final boolean fnd) {
@@ -101,14 +101,14 @@ final class AuditRule implements Rule {
      * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public Wallet wallet(final Work work, final URN taker, final String unit)
+    public Wallet wallet(final Work work, final URN taker, final String rule)
         throws Wallet.NotEnoughFundsException {
         if (!this.funded) {
             throw new Wallet.NotEnoughFundsException(
                 "not enough funds in the account"
             );
         }
-        return this.origin.wallet(work, taker, unit);
+        return this.origin.wallet(work, taker, rule);
     }
 
 }
