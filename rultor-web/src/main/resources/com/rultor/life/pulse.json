@@ -28,7 +28,7 @@
                     "type": "string",
                     "pattern": "^urn:[a-z]+:[0-9]+$"
                 },
-                "unit": {
+                "rule": {
                     "type": "string",
                     "pattern": "^[a-z0-9\\-]+$"
                 },
@@ -37,7 +37,7 @@
                     "format": "date-time"
                 }
             },
-            "required": ["owner", "unit", "scheduled"],
+            "required": ["owner", "rule", "scheduled"],
             "additionalProperties": false
         }
     }

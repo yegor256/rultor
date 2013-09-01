@@ -34,9 +34,9 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
+import com.rultor.spi.Rule;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
-import com.rultor.spi.Rule;
 import com.rultor.tools.Exceptions;
 import java.net.HttpURLConnection;
 import java.util.NoSuchElementException;
@@ -69,12 +69,12 @@ public final class RuleRs extends BaseRs {
 
     /**
      * Inject it from query.
-     * @param unit Rule name (or NULL)
+     * @param rule Rule name (or NULL)
      */
     @PathParam("name")
     public void setName(@NotNull(message = "unit name is mandatory")
-        final String unit) {
-        this.name = unit;
+        final String rule) {
+        this.name = rule;
     }
 
     /**
@@ -87,7 +87,7 @@ public final class RuleRs extends BaseRs {
         final Rule unit = this.rule();
         return this.head()
             .append(
-                new JaxbBundle("unit")
+                new JaxbBundle("rule")
                     .add("name", this.name)
                     .up()
                     .add("spec", unit.spec().asText())
@@ -138,7 +138,7 @@ public final class RuleRs extends BaseRs {
             return this.head()
                 .append(FlashInset.bundle(Level.SEVERE, Exceptions.message(ex)))
                 .append(
-                    new JaxbBundle("unit")
+                    new JaxbBundle("rule")
                         .add("name", this.name)
                         .up()
                         .add("spec", spec)

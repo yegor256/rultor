@@ -79,7 +79,7 @@ public final class DomainNotepad implements Notepad {
     /**
      * Attribute name for the unit.
      */
-    private static final String ATTR_UNIT = "unit";
+    private static final String ATTR_RULE = "rule";
 
     /**
      * Attribute name for the text.
@@ -185,7 +185,7 @@ public final class DomainNotepad implements Notepad {
             this.client.domain(),
             DomainNotepad.ATTR_OWNER,
             this.work.owner(),
-            DomainNotepad.ATTR_UNIT,
+            DomainNotepad.ATTR_RULE,
             this.work.rule()
         );
         final long start = System.currentTimeMillis();
@@ -251,7 +251,7 @@ public final class DomainNotepad implements Notepad {
                         .withValue(this.work.owner().toString())
                         .withReplace(true),
                     new ReplaceableAttribute()
-                        .withName(DomainNotepad.ATTR_UNIT)
+                        .withName(DomainNotepad.ATTR_RULE)
                         .withValue(this.work.rule())
                         .withReplace(true),
                     new ReplaceableAttribute()
@@ -287,7 +287,7 @@ public final class DomainNotepad implements Notepad {
                     new Attribute().withName(DomainNotepad.ATTR_OWNER),
                     new Attribute().withName(DomainNotepad.ATTR_TEXT),
                     new Attribute().withName(DomainNotepad.ATTR_TIME),
-                    new Attribute().withName(DomainNotepad.ATTR_UNIT)
+                    new Attribute().withName(DomainNotepad.ATTR_RULE)
                 )
         );
         this.wallet.charge(

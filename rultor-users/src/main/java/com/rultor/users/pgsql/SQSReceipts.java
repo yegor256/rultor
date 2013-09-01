@@ -131,7 +131,7 @@ final class SQSReceipts {
             // @checkstyle LineLength (1 line)
             .sql("INSERT INTO receipt (time, wowner, wunit, wscheduled, ct, ctunit, dt, dtunit, details, amount) VALUES (now(), ?, ?, ?, ?, ?, ?, ?, ?, ?)")
             .set(work.getString("owner"))
-            .set(work.getString("unit"))
+            .set(work.getString("rule"))
             .set(new Time(work.getString("scheduled")).toString())
             .set(json.getString("ct"))
             .set(json.getString("ctunit"))

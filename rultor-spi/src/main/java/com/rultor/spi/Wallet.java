@@ -58,7 +58,7 @@ public interface Wallet {
     /**
      * Delegate to another user/rule.
      * @param urn URN of another user
-     * @param unit Name of the unit
+     * @param rule Name of the unit
      * @return New wallet
      * @throws Wallet.NotEnoughFundsException If not enough
      */
@@ -109,7 +109,7 @@ public interface Wallet {
          * {@inheritDoc}
          */
         @Override
-        public Wallet delegate(final URN urn, final String unit) {
+        public Wallet delegate(final URN urn, final String rule) {
             return this;
         }
     }

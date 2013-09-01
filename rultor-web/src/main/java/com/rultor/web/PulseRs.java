@@ -34,9 +34,9 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Rule;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Tag;
-import com.rultor.spi.Rule;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
@@ -78,12 +78,12 @@ public final class PulseRs extends BaseRs {
 
     /**
      * Inject it from query.
-     * @param unit Rule name
+     * @param rule Rule name
      */
     @PathParam("name")
     public void setName(@NotNull(message = "unit name is mandatory")
-        final String unit) {
-        this.name = unit;
+        final String rule) {
+        this.name = rule;
     }
 
     /**
@@ -154,7 +154,7 @@ public final class PulseRs extends BaseRs {
 
     /**
      * Read stream of the drain.
-     * @param unit Rule to read from
+     * @param rule Rule to read from
      * @return Stream
      * @throws IOException If fails
      */

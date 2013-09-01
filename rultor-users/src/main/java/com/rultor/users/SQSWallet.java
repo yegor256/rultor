@@ -141,9 +141,9 @@ final class SQSWallet implements Wallet {
      * {@inheritDoc}
      */
     @Override
-    public Wallet delegate(final URN urn, final String unit) {
+    public Wallet delegate(final URN urn, final String rule) {
         final Wallet delegate = new SQSWallet(
-            this.client, this.work, this.debitor, this.dtunit, urn, unit
+            this.client, this.work, this.debitor, this.dtunit, urn, rule
         );
         return new Wallet() {
             @Override
@@ -152,10 +152,10 @@ final class SQSWallet implements Wallet {
                 SQSWallet.this.charge(details, amount);
             }
             @Override
-            public Wallet delegate(final URN urn, final String unit)
+            public Wallet delegate(final URN urn, final String rule)
                 // @checkstyle RedundantThrows (1 line)
                 throws Wallet.NotEnoughFundsException {
-                return delegate.delegate(urn, unit);
+                return delegate.delegate(urn, rule);
             }
         };
     }
@@ -178,7 +178,7 @@ final class SQSWallet implements Wallet {
             .write("amount", amount.points())
             .writeStartObject("work")
             .write("owner", this.work.owner().toString())
-            .write("unit", this.work.rule())
+            .write("rule", this.work.rule())
             .write("scheduled", this.work.scheduled().toString())
             .writeEnd()
             .writeEnd()

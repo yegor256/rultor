@@ -36,8 +36,8 @@ import com.rexsl.page.JaxbBundle;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
 import com.rultor.spi.Rule;
+import com.rultor.spi.Spec;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
@@ -86,7 +86,7 @@ final class JaxbFace {
     /**
      * Build bundle.
      * @param user URN of the user
-     * @param unit Rule of the user
+     * @param rule Rule of the user
      * @return Bundle
      */
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
@@ -151,10 +151,10 @@ final class JaxbFace {
     /**
      * The work we're in (while rendering).
      * @param owner Owner of the unit
-     * @param unit Name of the unit we're rendering now
+     * @param rule Name of the unit we're rendering now
      * @return The work
      */
-    private Work work(final URN owner, final String unit) {
+    private Work work(final URN owner, final String rule) {
         // @checkstyle AnonInnerLength (50 lines)
         return new Work() {
             @Override
@@ -167,7 +167,7 @@ final class JaxbFace {
             }
             @Override
             public String rule() {
-                return unit;
+                return rule;
             }
             @Override
             public URI stdout() {

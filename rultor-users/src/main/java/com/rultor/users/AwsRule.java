@@ -38,8 +38,8 @@ import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
-import com.rultor.spi.Spec;
 import com.rultor.spi.Rule;
+import com.rultor.spi.Spec;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import java.util.concurrent.TimeUnit;
@@ -145,11 +145,11 @@ final class AwsRule implements Rule {
      * {@inheritDoc}
      */
     @Override
-    public Wallet wallet(final Work work, final URN taker, final String unit) {
+    public Wallet wallet(final Work work, final URN taker, final String rule) {
         return new SQSWallet(
             this.client, work,
             this.owner(), this.name(),
-            taker, unit
+            taker, rule
         );
     }
 

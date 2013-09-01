@@ -71,7 +71,7 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <xsl:template match="unit">
+    <xsl:template match="rule">
         <div class="spacious">
             <ul class="list-inline">
                 <li>

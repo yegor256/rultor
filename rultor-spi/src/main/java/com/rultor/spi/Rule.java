@@ -69,7 +69,7 @@ public interface Rule {
      * Wallet of the unit.
      * @param work Which work for
      * @param taker Who is going to take money from my wallet?
-     * @param unit What this money is for?
+     * @param rule What this money is for?
      * @return Wallet
      * @throws Wallet.NotEnoughFundsException If not enough funds
      */

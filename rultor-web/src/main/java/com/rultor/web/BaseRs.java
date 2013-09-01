@@ -303,11 +303,11 @@ public class BaseRs extends BaseResource {
 
     /**
      * The work we're in (while rendering).
-     * @param unit Unit being rendered
+     * @param rule Unit being rendered
      * @param spec Its spec
      * @return The work
      */
-    protected final Work work(final String unit, final Spec spec) {
+    protected final Work work(final String rule, final Spec spec) {
         // @checkstyle AnonInnerLength (50 lines)
         return new Work() {
             @Override
@@ -320,7 +320,7 @@ public class BaseRs extends BaseResource {
             }
             @Override
             public String rule() {
-                return unit;
+                return rule;
             }
             @Override
             public URI stdout() {
