@@ -123,7 +123,7 @@ final class AwsRule implements Rule {
      * {@inheritDoc}
      */
     @Override
-    @NotNull(message = "spec of a unit is never NULL")
+    @NotNull(message = "spec of a rule is never NULL")
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Spec spec() {
         Spec spec;

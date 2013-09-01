@@ -93,24 +93,24 @@ final class SQSWallet implements Wallet {
      * @param sqs SQS client
      * @param wrk Work that is using us
      * @param ctr Creditor
-     * @param cunit Credit unit
+     * @param crule Credit unit
      * @param dtr Debitor
-     * @param dunit Debit unit
+     * @param drule Debit unit
      * @checkstyle ParameterNumber (5 lines)
      */
     protected SQSWallet(final SQSClient sqs, final Work wrk,
-        final URN ctr, final String cunit, final URN dtr, final String dunit) {
+        final URN ctr, final String crule, final URN dtr, final String drule) {
         this.client = sqs;
         this.work = wrk;
         Validate.isTrue(
-            !(ctr.equals(dtr) && cunit.equals(dunit)),
+            !(ctr.equals(dtr) && crule.equals(drule)),
             "credit '%s/%s' can't be the same as debit '%s/%s'",
-            ctr, cunit, dtr, dunit
+            ctr, crule, dtr, drule
         );
         this.creditor = ctr;
-        this.ctrule = cunit;
+        this.ctrule = crule;
         this.debitor = dtr;
-        this.dtrule = dunit;
+        this.dtrule = drule;
     }
 
     /**

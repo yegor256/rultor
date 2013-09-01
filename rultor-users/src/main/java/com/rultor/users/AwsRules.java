@@ -120,7 +120,7 @@ final class AwsRules implements Rules {
     @Override
     @Cacheable.FlushAfter
     public void create(
-        @NotNull(message = "unit name is mandatory when creating new rule")
+        @NotNull(message = "rule name is mandatory when creating new rule")
         @Pattern(
             regexp = "[a-z][-a-z0-9]{2,}",
             message = "Only numbers, letters, and dashes are allowed"
@@ -144,7 +144,7 @@ final class AwsRules implements Rules {
      */
     @Override
     @Cacheable.FlushAfter
-    public void remove(@NotNull(message = "unit name is mandatory")
+    public void remove(@NotNull(message = "rule name is mandatory")
         final String rule) {
         final Iterator<Item> items = this.region.table(AwsRule.TABLE).frame()
             .where(AwsRule.HASH_OWNER, this.owner.toString())
@@ -165,7 +165,7 @@ final class AwsRules implements Rules {
      */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-    public Rule get(@NotNull(message = "unit name can't be NULL")
+    public Rule get(@NotNull(message = "rule name can't be NULL")
         final String rule) {
         final Collection<Item> items = this.region.table(AwsRule.TABLE)
             .frame()

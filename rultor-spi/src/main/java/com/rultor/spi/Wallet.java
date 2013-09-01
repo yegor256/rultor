@@ -64,7 +64,7 @@ public interface Wallet {
      */
     Wallet delegate(
         @NotNull(message = "URN can't be NULL") URN urn,
-        @NotNull(message = "unit name can't be NULL") String rule)
+        @NotNull(message = "rule name can't be NULL") String rule)
         throws Wallet.NotEnoughFundsException;
 
     /**

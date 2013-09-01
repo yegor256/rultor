@@ -127,9 +127,9 @@
             <cell>5433</cell>
             <cell>2012-08-23T13:25:23</cell>
             <cell>urn:github:1</cell>
-            <cell>my-test-unit</cell>
+            <cell>my-test-rule</cell>
             <cell>urn:facebook:65774</cell>
-            <cell>rented-unit</cell>
+            <cell>rented-rule</cell>
             <cell>some transaction details</cell>
             <cell>$0.12</cell>
         </receipt>
@@ -137,9 +137,9 @@
             <cell>5435</cell>
             <cell>2012-08-23T13:25:23</cell>
             <cell>urn:facebook:65774</cell>
-            <cell>my-test-unit</cell>
+            <cell>my-test-rule</cell>
             <cell>urn:github:1</cell>
-            <cell>rented-unit</cell>
+            <cell>rented-rule</cell>
             <cell>some other transaction details in a few lines of text, some other transaction details in a few lines of text</cell>
             <cell>$0.09</cell>
         </receipt>

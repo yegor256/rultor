@@ -150,8 +150,8 @@ final class JaxbFace {
 
     /**
      * The work we're in (while rendering).
-     * @param owner Owner of the unit
-     * @param rule Name of the unit we're rendering now
+     * @param owner Owner of the rule
+     * @param rule Name of the rule we're rendering now
      * @return The work
      */
     private Work work(final URN owner, final String rule) {
