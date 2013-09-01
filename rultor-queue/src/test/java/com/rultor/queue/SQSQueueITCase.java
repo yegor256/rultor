@@ -97,7 +97,7 @@ public final class SQSQueueITCase {
         try {
             final String rule = "some-test-rule";
             final URN owner = new URN("urn:facebook:1");
-            final Time time = new Time("2013-07-19T14:05Z");
+            final Time time = new Time("2013-07-19T14:05:00Z");
             final Work work = new Work.Simple(owner, rule, time);
             final Queue queue = new SQSQueue(
                 new SQSClient.Simple(this.key, this.secret, url)
