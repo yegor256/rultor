@@ -296,6 +296,9 @@
                         <xsl:when test="level = 'SEVERE'">
                             <xsl:text>label-danger</xsl:text>
                         </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:text>label-default</xsl:text>
+                        </xsl:otherwise>
                     </xsl:choose>
                 </xsl:attribute>
                 <xsl:value-of select="label"/>
