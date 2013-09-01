@@ -43,10 +43,10 @@ import org.junit.Test;
 public final class SecretMapTest {
 
     /**
-     * SecretMap basic operations test.
+     * SecretMap can do basic operations.
      */
     @Test
-    public void testBasicMethods() {
+    public void basicOperations() {
         final ConcurrentHashMap<String, Object> map =
             new ConcurrentHashMap<String, Object>(2);
         final SecretMap secretmap = new SecretMap(map);
@@ -67,10 +67,10 @@ public final class SecretMapTest {
     }
 
     /**
-     * SecretMap toString test.
+     * SecretMap toString prints how many pairs it has.
      */
     @Test
-    public void testToString() {
+    public void canPrintBasedOnsize() {
         final ConcurrentHashMap<String, Object> map =
             new ConcurrentHashMap<String, Object>(2);
         final SecretMap secretmap = new SecretMap(map);
