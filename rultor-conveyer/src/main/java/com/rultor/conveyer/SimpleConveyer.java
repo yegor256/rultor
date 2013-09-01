@@ -224,7 +224,7 @@ final class SimpleConveyer implements Closeable {
         if (var.arguments().isEmpty()) {
             final Object object = var.instantiate(
                 this.users,
-                new Arguments(work, new OwnWallet(work, unit))
+                new Arguments(work, new OwnWallet(work, rule))
             );
             if (object instanceof Instance) {
                 Instance.class.cast(object).pulse();

@@ -108,7 +108,7 @@ public final class RulesRs extends BaseRs {
             new JaxbBundle.Group<Rule>(this.user().rules()) {
                 @Override
                 public JaxbBundle bundle(final Rule rule) {
-                    return RulesRs.this.rule(unit);
+                    return RulesRs.this.rule(rule);
                 }
             }
         );
@@ -125,7 +125,7 @@ public final class RulesRs extends BaseRs {
             .up()
             .add(
                 new JaxbFace(this.repo(), this.users())
-                    .bundle(this.user(), unit)
+                    .bundle(this.user(), rule)
             )
             .link(
                 new Link(
@@ -135,7 +135,7 @@ public final class RulesRs extends BaseRs {
                         .clone()
                         .path(RuleRs.class)
                         .path(RuleRs.class, "remove")
-                        .build(unit.name())
+                        .build(rule.name())
                 )
             )
             .link(
@@ -144,7 +144,7 @@ public final class RulesRs extends BaseRs {
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(RuleRs.class)
-                        .build(unit.name())
+                        .build(rule.name())
                 )
             )
             .link(
@@ -153,7 +153,7 @@ public final class RulesRs extends BaseRs {
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(DrainRs.class)
-                        .build(unit.name())
+                        .build(rule.name())
                 )
             );
     }

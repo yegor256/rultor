@@ -154,11 +154,11 @@ public final class SQSQueue implements Queue {
         Work work;
         while (true) {
             final long delay = System.currentTimeMillis() - start;
-            if (delay > rule.toMillis(limit)) {
+            if (delay > unit.toMillis(limit)) {
                 work = new Work.None();
                 break;
             }
-            work = this.fetch((int) rule.toSeconds(limit));
+            work = this.fetch((int) unit.toSeconds(limit));
             if (!work.equals(new Work.None())) {
                 break;
             }

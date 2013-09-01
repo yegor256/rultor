@@ -68,7 +68,7 @@ final class AuditRule implements Rule {
      * @param fnd Funded
      */
     protected AuditRule(final Rule rule, final boolean fnd) {
-        this.origin = unit;
+        this.origin = rule;
         this.funded = fnd;
     }
 
