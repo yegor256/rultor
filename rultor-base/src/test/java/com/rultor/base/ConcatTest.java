@@ -1,52 +1,79 @@
+/**
+ * Copyright (c) 2009-2013, rultor.com
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met: 1) Redistributions of source code must retain the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer. 2) Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3) Neither the name of the rultor.com nor
+ * the names of its contributors may be used to endorse or promote
+ * products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+ * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package com.rultor.base;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.validation.ConstraintViolationException;
-
-import org.junit.Assert;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link Parallel}.
- * 
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * Test case for {@link Concat}.
+ * @author Vaibhav Paliwal (vaibhavpaliwal99@gmail.com)
  * @version $Id$
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public class ConcatTest {
-	/**
-	 * Test Concatenation of Strings
-	 * 
-	 * @checkstyle ExecutableStatementCount (200 lines)
-	 */
-	@Test
-	public void testConcat() {
-		List<String> listString = new ArrayList<String>();
-		listString.add("test1");
-		listString.add("test2");
-		listString.add("test3");
-		final Concat concatWithoutSeperator = new Concat(listString);
-		Assert.assertEquals(concatWithoutSeperator.object(), "test1test2test3");
-		Assert.assertEquals(concatWithoutSeperator.toString(),
-				listString.size() + " part(s)");
-		final Concat concatWithSeperator = new Concat(listString, ",");
-		Assert.assertEquals(concatWithSeperator.object(), "test1,test2,test3");
-		Assert.assertEquals(concatWithoutSeperator.toString(),
-				listString.size() + " part(s)");
+public final class ConcatTest {
+    /**
+     * Concat ArrayList of String with Separator.
+     */
+    @Test
+    public void concatWithSeparator() {
+        final List<String> list = new ArrayList<String>();
+        list.add("test1");
+        list.add("test2");
+        list.add("test3");
+        final Concat concat = new Concat(
+            list, ","
+        );
+        MatcherAssert.assertThat(
+            concat.object(),
+            Matchers.equalTo("test1,test2,test3")
+        );
+    }
 
-	}
-
-	/**
-	 * Test Concat when constructor parameters are null. It should throw
-	 * ConstraintViolationException.
-	 * 
-	 * @checkstyle ExecutableStatementCount (200 lines)
-	 */
-	@Test(expected = ConstraintViolationException.class)
-	public void testConcatWithConstructorParamNull() {
-		new Concat(null, null);
-	}
-
+    /**
+     * Concat ArrayList of String without Separator.
+     */
+    @Test
+    public void concatWithoutSeparator() {
+        final List<String> list = new ArrayList<String>();
+        list.add("test4");
+        list.add("test5");
+        list.add("test6");
+        final Concat concat = new Concat(
+            list
+        );
+        MatcherAssert.assertThat(
+            concat.object(),
+            Matchers.equalTo("test4test5test6")
+        );
+    }
 }
