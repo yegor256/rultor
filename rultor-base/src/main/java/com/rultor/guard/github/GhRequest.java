@@ -145,6 +145,27 @@ final class GhRequest implements MergeRequest {
      * {@inheritDoc}
      */
     @Override
+    @Step("notified GitHub pull request that merging started")
+    public void started() throws IOException {
+        final StringBuilder text = new StringBuilder();
+        for (Map.Entry<String, Object> entry : this.parameters.entrySet()) {
+            text.append(entry.getKey())
+                .append(": ")
+                .append(entry.getValue())
+                .append('\n');
+        }
+        final GitHubClient client = this.github.client();
+        final IssueService issues = new IssueService(client);
+        issues.createComment(
+            this.repository, this.issue,
+            String.format("Let me test your branch first:\n\n```\n%s```", text)
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     @Step("accepted GitHub pull request #${this.issue}")
     public void accept(final Snapshot snapshot) throws IOException {
         final GitHubClient client = this.github.client();
