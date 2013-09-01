@@ -52,7 +52,7 @@ import javax.ws.rs.core.Response;
  */
 @Path("/units")
 @Loggable(Loggable.DEBUG)
-public final class UnitsRs extends BaseRs {
+public final class RulesRs extends BaseRs {
 
     /**
      * Get entrance page JAX-RS response.
@@ -92,7 +92,7 @@ public final class UnitsRs extends BaseRs {
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()
                 .clone()
-                .path(UnitRs.class)
+                .path(RuleRs.class)
                 .build(name),
             String.format("Unit `%s` successfully created", name),
             Level.INFO
@@ -108,7 +108,7 @@ public final class UnitsRs extends BaseRs {
             new JaxbBundle.Group<Rule>(this.user().units()) {
                 @Override
                 public JaxbBundle bundle(final Rule unit) {
-                    return UnitsRs.this.unit(unit);
+                    return RulesRs.this.unit(unit);
                 }
             }
         );
@@ -133,8 +133,8 @@ public final class UnitsRs extends BaseRs {
                     "remove",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
-                        .path(UnitRs.class)
-                        .path(UnitRs.class, "remove")
+                        .path(RuleRs.class)
+                        .path(RuleRs.class, "remove")
                         .build(unit.name())
                 )
             )
@@ -143,7 +143,7 @@ public final class UnitsRs extends BaseRs {
                     "edit",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
-                        .path(UnitRs.class)
+                        .path(RuleRs.class)
                         .build(unit.name())
                 )
             )

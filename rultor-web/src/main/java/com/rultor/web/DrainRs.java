@@ -128,7 +128,7 @@ public final class DrainRs extends BaseRs {
                     "edit",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
-                        .path(UnitRs.class)
+                        .path(RuleRs.class)
                         .build(this.name)
                 )
             )

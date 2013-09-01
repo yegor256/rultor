@@ -60,7 +60,7 @@ import javax.ws.rs.core.Response;
  */
 @Path("/unit/{name:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
-public final class UnitRs extends BaseRs {
+public final class RuleRs extends BaseRs {
 
     /**
      * Rule name.
@@ -111,7 +111,7 @@ public final class UnitRs extends BaseRs {
         this.user().units().remove(this.name);
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()
-                .path(UnitsRs.class)
+                .path(RulesRs.class)
                 .build(),
             String.format("Unit `%s` successfully removed", this.name),
             Level.INFO
@@ -193,8 +193,8 @@ public final class UnitRs extends BaseRs {
                     "save",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
-                        .path(UnitRs.class)
-                        .path(UnitRs.class, "save")
+                        .path(RuleRs.class)
+                        .path(RuleRs.class, "save")
                         .build(this.name)
                 )
             )
@@ -203,8 +203,8 @@ public final class UnitRs extends BaseRs {
                     "remove",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
-                        .path(UnitRs.class)
-                        .path(UnitRs.class, "remove")
+                        .path(RuleRs.class)
+                        .path(RuleRs.class, "remove")
                         .build(this.name)
                 )
             );
