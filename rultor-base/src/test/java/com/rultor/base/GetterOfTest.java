@@ -43,36 +43,9 @@ import org.junit.Test;
 public final class GetterOfTest {
 
     /**
-     * Correct bean class with string property.
+     * Correct bean class with property getter.
      */
     private static final class Correct {
-        /**
-         * Arbitrary name.
-         */
-        private final transient String name;
-
-        /**
-         * Constructor.
-         * @param nam Name to store.
-         */
-        private Correct(final String nam) {
-            this.name = nam;
-        }
-
-        /**
-         * Getter for name.
-         * @return Stored name.
-         */
-        public String getName() {
-            return this.name;
-        }
-
-    }
-
-    /**
-     * Class with non-string property.
-     */
-    private static final class WrongType {
         /**
          * Arbitrary number.
          */
@@ -82,7 +55,7 @@ public final class GetterOfTest {
          * Constructor.
          * @param num Number to store.
          */
-        private WrongType(final Integer num) {
+        private Correct(final Integer num) {
             this.number = num;
         }
 
@@ -100,10 +73,10 @@ public final class GetterOfTest {
      */
     @Test
     public void correct() {
-        final String value = "value";
+        final Integer value = 1;
         MatcherAssert.assertThat(
-            new GetterOf(new GetterOfTest.Correct(value), "name").object(),
-            Matchers.equalTo(value)
+            new GetterOf(new GetterOfTest.Correct(value), "number").object(),
+            Matchers.is((Object) value)
         );
     }
 
@@ -112,14 +85,6 @@ public final class GetterOfTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void invalidName() {
-        new GetterOf(new GetterOfTest.Correct("other"), "wrong").object();
-    }
-
-    /**
-     * Wrong type of the property.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void wrongType() {
-        new GetterOf(new GetterOfTest.WrongType(1), "number").object();
+        new GetterOf(new GetterOfTest.Correct(1), "wrong").object();
     }
 }

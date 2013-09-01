@@ -49,7 +49,7 @@ import lombok.EqualsAndHashCode;
 @Immutable
 @EqualsAndHashCode(of = { "source", "property" })
 @Loggable(Loggable.DEBUG)
-public final class GetterOf implements Proxy<String> {
+public final class GetterOf implements Proxy<Object> {
 
     /**
      * Object from which to get property.
@@ -78,19 +78,18 @@ public final class GetterOf implements Proxy<String> {
      * {@inheritDoc}
      */
     @Override
-    public String object() {
+    public Object object() {
         try {
             for (PropertyDescriptor descr : Introspector
                 .getBeanInfo(this.source.getClass()).getPropertyDescriptors()) {
                 if (descr.getName().equals(this.property)
-                    && (descr.getReadMethod() != null)
-                    && (descr.getPropertyType() == String.class)) {
-                    return (String) descr.getReadMethod().invoke(this.source);
+                    && (descr.getReadMethod() != null)) {
+                    return descr.getReadMethod().invoke(this.source);
                 }
             }
             throw new IllegalArgumentException(
                 String.format(
-                    "Object should have a getter for a String property '%s'",
+                    "Object should have a getter for property '%s'",
                     this.property
                 )
             );
