@@ -29,7 +29,6 @@
  */
 package com.rultor.users;
 
-import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import javax.validation.ConstraintViolationException;
@@ -50,10 +49,13 @@ public final class AwsRulesTest {
      */
     @Test
     public void containsNotEmpty() {
-        final Region region = AwsMocker.region();
         MatcherAssert.assertThat(
-            new AwsRules(region, Mockito.mock(SQSClient.class), new URN())
-                .contains("test"), Matchers.is(true)
+            new AwsRules(
+                new RegionMocker().mock(),
+                Mockito.mock(SQSClient.class),
+                new URN()
+            ).contains("test"),
+            Matchers.is(true)
         );
     }
 
@@ -63,9 +65,8 @@ public final class AwsRulesTest {
     @Test(expected = ConstraintViolationException.class)
     public void containsBlank() {
         new AwsRules(
-            AwsMocker.region(), Mockito.mock(SQSClient.class), new URN()
-        )
-            .contains("");
+            new RegionMocker().mock(), Mockito.mock(SQSClient.class), new URN()
+        ).contains("");
     }
 
     /**
@@ -74,9 +75,10 @@ public final class AwsRulesTest {
     @Test(expected = ConstraintViolationException.class)
     public void containsNull() {
         new AwsRules(
-            AwsMocker.region(), Mockito.mock(SQSClient.class), new URN()
-        )
-            .contains(null);
+            new RegionMocker().mock(),
+            Mockito.mock(SQSClient.class),
+            new URN()
+        ).contains(null);
     }
 
     /**
@@ -86,9 +88,10 @@ public final class AwsRulesTest {
     public void getNormal() {
         MatcherAssert.assertThat(
             new AwsRules(
-                AwsMocker.region(), Mockito.mock(SQSClient.class), new URN()
-            )
-                .get("other"),
+                new RegionMocker().mock(),
+                Mockito.mock(SQSClient.class),
+                new URN()
+            ).get("other"),
             Matchers.notNullValue()
         );
     }
@@ -99,9 +102,10 @@ public final class AwsRulesTest {
     @Test(expected = ConstraintViolationException.class)
     public void getNull() {
         new AwsRules(
-            AwsMocker.region(), Mockito.mock(SQSClient.class), new URN()
-        )
-            .get(null);
+            new RegionMocker().mock(),
+            Mockito.mock(SQSClient.class),
+            new URN()
+        ).get(null);
     }
 
     /**
@@ -110,8 +114,9 @@ public final class AwsRulesTest {
     @Test(expected = ConstraintViolationException.class)
     public void getBlank() {
         new AwsRules(
-            AwsMocker.region(), Mockito.mock(SQSClient.class), new URN()
-        )
-            .get("");
+            new RegionMocker().mock(),
+            Mockito.mock(SQSClient.class),
+            new URN()
+        ).get("");
     }
 }

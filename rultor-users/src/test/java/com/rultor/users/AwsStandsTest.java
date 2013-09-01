@@ -48,7 +48,10 @@ public final class AwsStandsTest {
     @Test
     public void containsNotEmpty() {
         MatcherAssert.assertThat(
-            new AwsStands(AwsMocker.region(), new URN()).contains("test"),
+            new AwsStands(
+                new RegionMocker().mock(),
+                new URN()
+            ).contains("test"),
             Matchers.is(true)
         );
     }
@@ -58,7 +61,7 @@ public final class AwsStandsTest {
      */
     @Test(expected = ConstraintViolationException.class)
     public void containsBlank() {
-        new AwsStands(AwsMocker.region(), new URN()).contains("");
+        new AwsStands(new RegionMocker().mock(), new URN()).contains("");
     }
 
     /**
@@ -66,7 +69,7 @@ public final class AwsStandsTest {
      */
     @Test(expected = ConstraintViolationException.class)
     public void containsNull() {
-        new AwsStands(AwsMocker.region(), new URN()).contains(null);
+        new AwsStands(new RegionMocker().mock(), new URN()).contains(null);
     }
 
     /**
@@ -75,7 +78,7 @@ public final class AwsStandsTest {
     @Test
     public void getNormal() {
         MatcherAssert.assertThat(
-            new AwsStands(AwsMocker.region(), new URN()).get("other"),
+            new AwsStands(new RegionMocker().mock(), new URN()).get("other"),
             Matchers.notNullValue()
         );
     }
@@ -85,7 +88,7 @@ public final class AwsStandsTest {
      */
     @Test(expected = ConstraintViolationException.class)
     public void getNull() {
-        new AwsStands(AwsMocker.region(), new URN()).get(null);
+        new AwsStands(new RegionMocker().mock(), new URN()).get(null);
     }
 
     /**
@@ -93,6 +96,6 @@ public final class AwsStandsTest {
      */
     @Test(expected = ConstraintViolationException.class)
     public void getBlank() {
-        new AwsStands(AwsMocker.region(), new URN()).get("");
+        new AwsStands(new RegionMocker().mock(), new URN()).get("");
     }
 }

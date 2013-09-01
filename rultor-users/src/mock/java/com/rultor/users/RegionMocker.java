@@ -40,24 +40,17 @@ import org.hamcrest.Matchers;
 import org.mockito.Mockito;
 
 /**
- * Utility mocking methods for AWS.
+ * Mocker for {@link Region}.
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
  */
-public final class AwsMocker {
-
-    /**
-     * Utility class shouldn't have a public constructor.
-     */
-    private AwsMocker() {
-    }
-
+public final class RegionMocker {
     /**
      * Create a mocked region that throws exception in case of wrong arguments.
      * @return Mocked region.
      */
     @SuppressWarnings("unchecked")
-    public static Region region() {
+    public Region mock() {
         final Region region = Mockito.mock(Region.class);
         final Table table = Mockito.mock(Table.class);
         final Frame frame = Mockito.mock(Frame.class);
@@ -73,15 +66,13 @@ public final class AwsMocker {
                 Mockito.anyString(),
                 Mockito.argThat(Matchers.not(Matchers.isEmptyString()))
             )
-        )
-            .thenReturn(frame);
+        ).thenReturn(frame);
         Mockito.when(
             frame.where(
                 Mockito.anyString(),
                 Mockito.argThat(Matchers.isEmptyString())
             )
-        )
-            .thenThrow(new AmazonServiceException(""));
+        ).thenThrow(new AmazonServiceException(""));
         return region;
     }
 }
