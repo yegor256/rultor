@@ -9,7 +9,7 @@ new build on a new on-demand Amazon EC2 instance
 (aka **continuous integration**)"
 
 "Every Github pull request should pass all unit tests and other automated
-quality checks before merging into `master`"
+quality checks before merging into `master` (aka **preflight build**)"
 
 "A staging request (submitted through IRC, Skype, or tickets) should
 automatically lead to a new staging environment with
