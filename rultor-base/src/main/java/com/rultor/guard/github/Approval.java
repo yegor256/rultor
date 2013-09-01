@@ -87,4 +87,96 @@ public interface Approval {
         }
     }
 
+    /**
+     * Logical OR.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode
+    @Loggable(Loggable.DEBUG)
+    final class Or implements Approval {
+        /**
+         * First approval to ask.
+         */
+        private final transient Approval first;
+        /**
+         * Second approval to ask.
+         */
+        private final transient Approval second;
+        /**
+         * Public ctor.
+         * @param left Left
+         * @param right Right
+         */
+        public Or(final Approval left, final Approval right) {
+            this.first = left;
+            this.second = right;
+        }
+        @Override
+        public boolean has(final PullRequest request, final Github client,
+            final Github.Repo repo) throws IOException {
+            return this.first.has(request, client, repo)
+                || this.second.has(request, client, repo);
+        }
+    }
+
+    /**
+     * Logical AND.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode
+    @Loggable(Loggable.DEBUG)
+    final class And implements Approval {
+        /**
+         * First approval to ask.
+         */
+        private final transient Approval first;
+        /**
+         * Second approval to ask.
+         */
+        private final transient Approval second;
+        /**
+         * Public ctor.
+         * @param left Left
+         * @param right Right
+         */
+        public And(final Approval left, final Approval right) {
+            this.first = left;
+            this.second = right;
+        }
+        @Override
+        public boolean has(final PullRequest request, final Github client,
+            final Github.Repo repo) throws IOException {
+            return this.first.has(request, client, repo)
+                && this.second.has(request, client, repo);
+        }
+    }
+
+    /**
+     * Logical NOT.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode
+    @Loggable(Loggable.DEBUG)
+    final class Not implements Approval {
+        /**
+         * The approval to reverse.
+         */
+        private final transient Approval approval;
+        /**
+         * Public ctor.
+         * @param app Approval to negate
+         */
+        public Not(final Approval app) {
+            this.approval = app;
+        }
+        @Override
+        public boolean has(final PullRequest request, final Github client,
+            final Github.Repo repo) throws IOException {
+            return !this.approval.has(request, client, repo);
+        }
+    }
+
 }
