@@ -83,29 +83,24 @@ public final class GetterOf implements Proxy<Object> {
      * @return Found method.
      */
     private Method find(final BeanInfo info) {
-        Method foundMethod = null;
-        boolean found = false;
+        Method found = null;
         for (PropertyDescriptor descr : info.getPropertyDescriptors()) {
             if (descr.getName().equals(this.property)
                 && (descr.getReadMethod() != null)) {
-                foundMethod = descr.getReadMethod();
-                found = true;
+                found = descr.getReadMethod();
                 break;
             }
         }
-        if (!found) {
+        if (found == null) {
             for (MethodDescriptor descr : info.getMethodDescriptors()) {
                 if (descr.getName().equals(this.property)
                     && (descr.getMethod().getParameterTypes().length == 0)) {
-                    foundMethod = descr.getMethod();
-                    found = true;
+                    found = descr.getMethod();
                     break;
                 }
             }
         }
-        if (found) {
-            return foundMethod;
-        } else {
+        if (found == null) {
             throw new IllegalArgumentException(
                 String.format(
                     "Object should have a getter for property '%s'",
@@ -113,6 +108,7 @@ public final class GetterOf implements Proxy<Object> {
                 )
             );
         }
+        return found;
     }
 
     /**
