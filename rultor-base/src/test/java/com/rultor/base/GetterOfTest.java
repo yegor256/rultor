@@ -29,6 +29,7 @@
  */
 package com.rultor.base;
 
+import com.rultor.base.test.InvokerTestHelper;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -41,7 +42,6 @@ import org.junit.Test;
  * @since 1.0
  */
 public final class GetterOfTest {
-
     /**
      * Correct bean class with property getter.
      */
@@ -78,7 +78,7 @@ public final class GetterOfTest {
          * Getter for name.
          * @return Stored name.
          */
-        public String name() {
+        public String txt() {
             return this.names;
         }
 
@@ -106,13 +106,26 @@ public final class GetterOfTest {
     }
 
     /**
+     * Correct call for anonymous from other package.
+     */
+    @Test
+    public void anonymous() {
+        final String value = "val";
+        MatcherAssert.assertThat(
+            new GetterOf(new InvokerTestHelper().make(value), "name")
+                .object(),
+            Matchers.is((Object) value)
+        );
+    }
+
+    /**
      * Test for short format of getter.
      */
     @Test
     public void shortGetter() {
         final String value = "short";
         MatcherAssert.assertThat(
-            new GetterOf(new GetterOfTest.Correct(0, value), "name").object(),
+            new GetterOf(new GetterOfTest.Correct(0, value), "txt").object(),
             Matchers.is((Object) value)
         );
     }
