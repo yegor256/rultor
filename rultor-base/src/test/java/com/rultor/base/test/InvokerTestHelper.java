@@ -31,6 +31,9 @@ package com.rultor.base.test;
 
 /**
  * Helper class for {@link com.rultor.base.GetterOfTest}.
+ * This class has to be placed in package other then GetterOf so it can
+ * test invocation of methods that require setAccessible(true) in
+ * {@link java.beans.Introspector}.
  *
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$

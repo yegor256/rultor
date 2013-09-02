@@ -29,9 +29,9 @@
  */
 
 /**
- * Base classes, tests.
+ * Classes for testing GetterOf with other classes from other packages.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
  * @since 1.0
  */
