@@ -37,6 +37,7 @@ import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -99,24 +100,30 @@ public final class Explicit implements Approval {
         final Github.Repo repo) throws IOException {
         final Time latest = this.latest(request, github, repo);
         boolean found = false;
-        for (Comment comment : this.comments(request, github, repo)) {
+        final Collection<Comment> comments =
+            this.comments(request, github, repo);
+        final Pattern ptn = Pattern.compile(
+            this.regex, Pattern.DOTALL | Pattern.MULTILINE
+        );
+        for (Comment comment : comments) {
             if (latest.date().compareTo(comment.getUpdatedAt()) > 0) {
                 continue;
             }
-            if (!comment.getBody().matches(this.regex)) {
+            if (!ptn.matcher(comment.getBody()).matches()) {
                 continue;
             }
             final String login = comment.getUser().getLogin();
             if (!this.people.contains(login)) {
                 Logger.info(
                     this,
-                    "`%s` is not one of those we're listening to: %[list]s",
+                    // @checkstyle LineLength (1 line)
+                    "message from `%s` matches `%s`, but we're listening to %[list]s",
                     login, this.people
                 );
                 continue;
             }
             Logger.info(
-                this, "pull request #%d is approved by %s with %[text]s",
+                this, "pull request #%d is approved by %s with \"%[text]s\"",
                 request.getId(), login, comment.getBody()
             );
             found = true;
@@ -124,8 +131,9 @@ public final class Explicit implements Approval {
         }
         if (!found) {
             Logger.info(
-                this, "pull request #%d is NOT approved by any of %[list]s",
-                request.getId(), this.people
+                // @checkstyle LineLength (1 line)
+                this, "pull request #%d is NOT approved by any of %[list]s (%d comments)",
+                request.getId(), this.people, comments.size()
             );
         }
         return found;
