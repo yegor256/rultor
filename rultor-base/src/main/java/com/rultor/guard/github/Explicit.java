@@ -32,6 +32,7 @@ package com.rultor.guard.github;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
+import com.jcabi.log.Logger;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.Collection;
@@ -93,6 +94,10 @@ public final class Explicit implements Approval {
                 continue;
             }
             if (!this.people.contains(comment.getUser().getLogin())) {
+                Logger.info(
+                    this, "`%s` is not among the users we're listening to",
+                    comment.getUser().getLogin()
+                );
                 continue;
             }
             if (!comment.getBody().matches(this.regex)) {
