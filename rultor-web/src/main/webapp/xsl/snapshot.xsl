@@ -273,7 +273,7 @@
             <xsl:if test="not($left)">
                 <i class="icon-chevron-left"><xsl:comment>start</xsl:comment></i>
             </xsl:if>
-            <xsl:if test="exception">
+            <xsl:if test="exception/stacktrace">
                 <pre style="display:none" class="text-danger text-left exception"><xsl:value-of select="exception/stacktrace"/></pre>
             </xsl:if>
         </li>
