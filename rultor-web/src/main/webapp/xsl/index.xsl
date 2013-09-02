@@ -56,7 +56,7 @@
                 </xsl:attribute>
                 <xsl:text>stands</xsl:text>
             </a>
-            <xsl:text>. Click the log to see full navigation menu.</xsl:text>
+            <xsl:text>. Click the logo to see full navigation menu.</xsl:text>
         </p>
     </xsl:template>
 </xsl:stylesheet>
