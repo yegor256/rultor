@@ -51,7 +51,7 @@
         </markdown>
     </xsl:template>
     <xsl:template match="step">
-        <xsl:text>&#x0A;&#x0A;</xsl:text>
+        <xsl:text>&#x0A;</xsl:text>
         <xsl:text>$ </xsl:text>
         <xsl:value-of select="summary"/>
         <xsl:text>&#x0A;  </xsl:text>
