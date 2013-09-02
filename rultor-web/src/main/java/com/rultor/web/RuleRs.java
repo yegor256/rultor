@@ -113,7 +113,7 @@ public final class RuleRs extends BaseRs {
             this.uriInfo().getBaseUriBuilder()
                 .path(RulesRs.class)
                 .build(),
-            String.format("Unit `%s` successfully removed", this.name),
+            String.format("Rule `%s` successfully removed", this.name),
             Level.INFO
         );
     }
@@ -154,7 +154,7 @@ public final class RuleRs extends BaseRs {
             this.uriInfo().getRequestUri(),
             String.format(
                 // @checkstyle LineLength (1 line)
-                "Unit `%s` successfully updated, will take a few minutes to propagate to all servers",
+                "Rule `%s` successfully updated, will take a few minutes to propagate to all servers",
                 this.name
             ),
             Level.INFO
