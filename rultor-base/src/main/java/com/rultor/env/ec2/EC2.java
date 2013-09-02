@@ -29,6 +29,8 @@
  */
 package com.rultor.env.ec2;
 
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.Instance;
@@ -52,6 +54,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Amazon EC2 environments.
@@ -169,6 +172,14 @@ public final class EC2 implements Environments {
         @NotNull(message = "key pair can't be NULL") final String par,
         @NotNull(message = "av.zone can't be NULL") final String azone,
         @NotNull(message = "AWS client can't be NULL") final EC2Client clnt) {
+        Validate.isTrue(
+            image.matches("ami-[a-f0-9]{8}"),
+            "AMI name `%s` is in wrong format", image
+        );
+        Validate.isTrue(
+            azone.matches("[a-z]{2}\\-[a-z]+\\-\\d+[a-z]"),
+            "availability zone `%s` is in wrong format", azone
+        );
         this.work = wrk;
         this.wallet = wlt;
         this.type = tpe;
@@ -215,6 +226,13 @@ public final class EC2 implements Environments {
     @com.rultor.snapshot.Tag("ec2")
     private Instance create() {
         final AmazonEC2 aws = this.client.get();
+        aws.setRegion(
+            Region.getRegion(
+                Regions.valueOf(
+                    this.zone.substring(0, this.zone.length() - 1)
+                )
+            )
+        );
         try {
             final RunInstancesResult result = aws.runInstances(
                 new RunInstancesRequest()
