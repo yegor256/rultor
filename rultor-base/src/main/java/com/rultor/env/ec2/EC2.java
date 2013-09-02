@@ -32,6 +32,7 @@ package com.rultor.env.ec2;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.Placement;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.Tag;
@@ -95,6 +96,11 @@ public final class EC2 implements Environments {
     private final transient String pair;
 
     /**
+     * Availability zone to run in.
+     */
+    private final transient String zone;
+
+    /**
      * EC2 client.
      */
     private final transient EC2Client client;
@@ -114,7 +120,10 @@ public final class EC2 implements Environments {
     public EC2(final Work wrk, final Wallet wlt, final String tpe,
         final String image, final String grp, final String par,
         final String akey, final String scrt) {
-        this(wrk, wlt, tpe, image, grp, par, new EC2Client.Simple(akey, scrt));
+        this(
+            wrk, wlt, tpe, image, grp, par, "us-east-1a",
+            new EC2Client.Simple(akey, scrt)
+        );
     }
 
     /**
@@ -125,8 +134,31 @@ public final class EC2 implements Environments {
      * @param image AMI name
      * @param grp Security group
      * @param par Key pair
-     * @param clnt EC2 client
+     * @param azone Availability zone
+     * @param akey AWS key
+     * @param scrt AWS secret
      * @checkstyle ParameterNumber (5 lines)
+     */
+    public EC2(final Work wrk, final Wallet wlt, final String tpe,
+        final String image, final String grp, final String par,
+        final String azone, final String akey, final String scrt) {
+        this(
+            wrk, wlt, tpe, image, grp, par,
+            azone, new EC2Client.Simple(akey, scrt)
+        );
+    }
+
+    /**
+     * Public ctor.
+     * @param wrk Work we're in
+     * @param wlt Wallet to charge
+     * @param tpe Instance type, for example "t1.micro"
+     * @param image AMI name
+     * @param grp Security group
+     * @param par Key pair
+     * @param azone Availability zone
+     * @param clnt EC2 client
+     * @checkstyle ParameterNumber (10 lines)
      */
     public EC2(
         @NotNull(message = "work can't be NULL") final Work wrk,
@@ -135,6 +167,7 @@ public final class EC2 implements Environments {
         @NotNull(message = "AMI can't be NULL") final String image,
         @NotNull(message = "security group can't be NULL") final String grp,
         @NotNull(message = "key pair can't be NULL") final String par,
+        @NotNull(message = "av.zone can't be NULL") final String azone,
         @NotNull(message = "AWS client can't be NULL") final EC2Client clnt) {
         this.work = wrk;
         this.wallet = wlt;
@@ -142,6 +175,7 @@ public final class EC2 implements Environments {
         this.ami = image;
         this.group = grp;
         this.pair = par;
+        this.zone = azone;
         this.client = clnt;
     }
 
@@ -176,7 +210,7 @@ public final class EC2 implements Environments {
     @Step(
         before = "creating EC2 instance `${this.type}` from `${this.ami}`",
         // @checkstyle LineLength (1 line)
-        value = "EC2 `${result.instanceType}` instance `${result.instanceId}` created"
+        value = "EC2 `${result.instanceType}` instance `${result.instanceId}` created in `${this.zone}`"
     )
     @com.rultor.snapshot.Tag("ec2")
     private Instance create() {
@@ -188,6 +222,9 @@ public final class EC2 implements Environments {
                     .withImageId(this.ami)
                     .withSecurityGroups(this.group)
                     .withKeyName(this.pair)
+                    .withPlacement(
+                        new Placement().withAvailabilityZone(this.zone)
+                    )
                     .withMinCount(1)
                     .withMaxCount(1)
             );
