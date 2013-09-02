@@ -85,8 +85,8 @@ public final class IncrementalBashTest {
             XhtmlMatchers.hasXPaths(
                 "/snapshot/steps/step",
                 // @checkstyle LineLength (5 lines)
-                "//step[summary=\"`MSG='$A'; echo `date` $A; sleep 1; pwd;`\"]/start",
-                "//step[summary='`/usr/bin/broken-name`']/exception",
+                "//step[summary=\"MSG='$A'; echo `date` $A; sleep 1; pwd;\"]/start",
+                "//step[summary='/usr/bin/broken-name']/exception",
                 "//step/exception[contains(stacktrace,'/usr/bin/broken-name: No such file or directory')]",
                 "//steps[count(step[level='INFO']) = 4]",
                 "//steps[count(step[level='SEVERE']) = 1]",
