@@ -95,8 +95,8 @@ public final class Explicit implements Approval {
             }
             if (!this.people.contains(comment.getUser().getLogin())) {
                 Logger.info(
-                    this, "`%s` is not among the users we're listening to",
-                    comment.getUser().getLogin()
+                    this, "`%s` is not among the users we're listening to: %s",
+                    comment.getUser().getLogin(), this.people
                 );
                 continue;
             }
