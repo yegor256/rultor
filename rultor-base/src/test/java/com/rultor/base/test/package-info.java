@@ -27,55 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.base;
-
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
 
 /**
- * Tests for {@link ToStringOf}.
+ * Classes for testing GetterOf with other classes from other packages.
  *
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
  * @since 1.0
  */
-public final class ToStringOfTest {
-    /**
-     * Class with overridden toString.
-     */
-    private static final class Overrider {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString() {
-            return "to string";
-        }
-    }
-
-    /**
-     * Behaviour for overridden toString.
-     */
-    @Test
-    public void overridden() {
-        final ToStringOfTest.Overrider overridden =
-            new ToStringOfTest.Overrider();
-        MatcherAssert.assertThat(
-            new ToStringOf(overridden).object(),
-            Matchers.equalTo(overridden.toString())
-        );
-    }
-
-    /**
-     * Test behaviour for non-overridden toString.
-     */
-    @Test
-    public void defaultToString() {
-        final Object def = new Object();
-        MatcherAssert.assertThat(
-            new ToStringOf(def).object(),
-            Matchers.equalTo(def.toString())
-        );
-    }
-}
+package com.rultor.base.test;

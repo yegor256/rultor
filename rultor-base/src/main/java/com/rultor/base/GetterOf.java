@@ -117,8 +117,10 @@ public final class GetterOf implements Proxy<Object> {
     @Override
     public Object object() {
         try {
-            return this.find(Introspector.getBeanInfo(this.source.getClass()))
-                .invoke(this.source);
+            final Method method =
+                this.find(Introspector.getBeanInfo(this.source.getClass()));
+            method.setAccessible(true);
+            return method.invoke(this.source);
         } catch (IntrospectionException ex) {
             throw new IllegalArgumentException(ex);
         } catch (InvocationTargetException ex) {
