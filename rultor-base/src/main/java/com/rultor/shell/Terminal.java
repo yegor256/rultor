@@ -85,8 +85,10 @@ public final class Terminal {
         return new StringBuilder()
             .append('"')
             .append(
-                arg.replace("\"", "\\\"")
+                arg.replace("\\", "\\\\")
+                    .replace("\"", "\\\"")
                     .replace("$", "\\$")
+                    .replace("!", "\"'!'\"")
                     .replace("`", "\\`")
             )
             .append('"')
