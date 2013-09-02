@@ -35,6 +35,7 @@ import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import com.rultor.tools.Time;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -68,6 +69,15 @@ public final class Explicit implements Approval {
      * Regular expression for the message.
      */
     private final transient String regex;
+
+    /**
+     * Public ctor.
+     * @param login Login of a single user we should listen to
+     * @param reg Regular expression
+     */
+    public Explicit(final String login, final String reg) {
+        this(Arrays.asList(login), reg);
+    }
 
     /**
      * Public ctor.
