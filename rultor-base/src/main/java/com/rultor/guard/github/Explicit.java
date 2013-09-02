@@ -103,18 +103,30 @@ public final class Explicit implements Approval {
             if (latest.date().compareTo(comment.getUpdatedAt()) > 0) {
                 continue;
             }
-            if (!this.people.contains(comment.getUser().getLogin())) {
+            final String login = comment.getUser().getLogin();
+            if (!this.people.contains(login)) {
                 Logger.info(
-                    this, "`%s` is not among the users we're listening to: %s",
-                    comment.getUser().getLogin(), this.people
+                    this,
+                    "`%s` is not one of those we're listening to: %[list]s",
+                    login, this.people
                 );
                 continue;
             }
             if (!comment.getBody().matches(this.regex)) {
                 continue;
             }
+            Logger.info(
+                this, "pull request #%d is approved by %s with %[text]s",
+                request.getId(), login, comment.getBody()
+            );
             found = true;
             break;
+        }
+        if (!found) {
+            Logger.info(
+                this, "pull request #%d is NOT approved by any of %[list]s",
+                request.getId(), this.people
+            );
         }
         return found;
     }
