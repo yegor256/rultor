@@ -234,12 +234,7 @@ public final class IncrementalBash implements Batch {
             new Directives()
                 .xpath(this.xpath(uid))
                 .add("summary")
-                .set(
-                    String.format(
-                        "`%s`",
-                        summary.replace("\\", "\\\\")
-                    )
-                )
+                .set(summary.replace("\\", "\\\\"))
         ).toString();
         return String.format(
             "echo -e '%s'",
