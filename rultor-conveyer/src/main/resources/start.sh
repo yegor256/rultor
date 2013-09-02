@@ -61,8 +61,8 @@ do
             --decrease-reads-with 1 \
             --increase-writes-with 1 \
             --decrease-writes-with 1 \
-            --increase-reads-unit rules \
-            --decrease-reads-unit rules \
+            --increase-reads-unit units \
+            --decrease-reads-unit units \
             --reads-upper-threshold 90 \
             --reads-lower-threshold 30 \
             --writes-upper-threshold 90 \
