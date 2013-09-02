@@ -145,7 +145,7 @@ If you want to close access to your stand, use
 without arguments:
 
 ```
-com.rultor.acl.Either()
+com.rultor.acl.Prohibited()
 ```
 
 This is a link to a stand we use to publish the progress of
