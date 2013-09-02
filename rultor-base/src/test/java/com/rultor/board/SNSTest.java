@@ -29,11 +29,54 @@
  */
 package com.rultor.board;
 
+import javax.validation.ConstraintViolationException;
+import org.junit.Test;
+import org.mockito.Mockito;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.PublishResult;
+import com.rultor.aws.SNSClient;
+
 /**
  * Test case for {@link SNS}.
+ *
  * @author Gangababu Tirumalanadhuni (gangababu.t@gmail.com)
  * @version $Id$
  */
 public final class SNSTest {
+    /**
+     * SNS announce's body can not be null.
+     *
+     * @throws Exception
+     * If some problem inside
+     */
+     @Test(expected = ConstraintViolationException.class)
+     public void bodyCantBeNull() throws Exception {
+       new SNS("arn", "key", "secret").announce(null);
+     }
 
+    /**
+     * Send notification message to topic.
+     */
+    @Test
+    public void sentNotification() {
+        String body = "Subject \n message body";
+        String topicArn = "Test Topic";
+        String sub = "Test Subject";
+        String strBody = "Test Body";
+
+        final AmazonSNS aws = Mockito.mock(AmazonSNS.class);
+        final SNSClient client = Mockito.mock(SNSClient.class);
+        final PublishResult publishResult = Mockito.mock(PublishResult.class);
+        PublishRequest publishRequest = Mockito.mock(PublishRequest.class);
+        Mockito.doReturn(publishRequest).when(publishRequest)
+               .withTopicArn(topicArn);
+        Mockito.doReturn(publishRequest).when(publishRequest)
+               .withMessage(strBody);
+        Mockito.doReturn(publishRequest).when(publishRequest).withSubject(sub);
+        Mockito.doReturn(aws).when(client).get();
+        Mockito.doReturn(publishResult).when(aws).publish(publishRequest);
+
+        new SNS(topicArn, client).announce(body);
+      }
 }
