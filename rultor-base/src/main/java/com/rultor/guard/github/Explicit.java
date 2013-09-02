@@ -118,7 +118,7 @@ public final class Explicit implements Approval {
                     this,
                     // @checkstyle LineLength (1 line)
                     "message from `%s` matches `%s`, but we're listening to %[list]s",
-                    login, this.people
+                    login, this.regex, this.people
                 );
                 continue;
             }
