@@ -84,7 +84,7 @@ public final class RulesRs extends BaseRs {
         if (this.user().rules().contains(name)) {
             throw this.flash().redirect(
                 this.uriInfo().getRequestUri(),
-                String.format("Unit `%s` already exists", name),
+                String.format("Rule `%s` already exists", name),
                 Level.WARNING
             );
         }
@@ -94,7 +94,7 @@ public final class RulesRs extends BaseRs {
                 .clone()
                 .path(RuleRs.class)
                 .build(name),
-            String.format("Unit `%s` successfully created", name),
+            String.format("Rule `%s` successfully created", name),
             Level.INFO
         );
     }

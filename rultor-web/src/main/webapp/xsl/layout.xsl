@@ -241,8 +241,11 @@
                         <xsl:text> alert-info</xsl:text>
                     </xsl:when>
                     <xsl:when test="level = 'ERROR'">
-                        <xsl:text> alert-error</xsl:text>
+                        <xsl:text> alert-danger</xsl:text>
                     </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text> alert-default</xsl:text>
+                    </xsl:otherwise>
                 </xsl:choose>
             </xsl:attribute>
             <xsl:value-of select="message"/>

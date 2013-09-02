@@ -128,7 +128,7 @@ final class AwsRules implements Rules {
         final String unt) {
         if (this.contains(unt)) {
             throw new IllegalArgumentException(
-                String.format("Unit `%s` already exists", unt)
+                String.format("Rule `%s` already exists", unt)
             );
         }
         this.region.table(AwsRule.TABLE).put(
@@ -153,7 +153,7 @@ final class AwsRules implements Rules {
             .iterator();
         if (!items.hasNext()) {
             throw new NoSuchElementException(
-                String.format("Unit `%s` not found", rule)
+                String.format("Rule `%s` not found", rule)
             );
         }
         items.next();
@@ -176,7 +176,7 @@ final class AwsRules implements Rules {
             .through(new QueryValve());
         if (items.isEmpty()) {
             throw new NoSuchElementException(
-                String.format("Unit `%s` doesn't exist", rule)
+                String.format("Rule `%s` doesn't exist", rule)
             );
         }
         return new AwsRule(this.client, items.iterator().next());
