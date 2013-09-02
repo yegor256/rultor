@@ -29,8 +29,7 @@
  */
 package com.rultor.env.ec2;
 
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
+import com.amazonaws.regions.RegionUtils;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.Instance;
@@ -227,10 +226,8 @@ public final class EC2 implements Environments {
     private Instance create() {
         final AmazonEC2 aws = this.client.get();
         aws.setRegion(
-            Region.getRegion(
-                Regions.valueOf(
-                    this.zone.substring(0, this.zone.length() - 1)
-                )
+            RegionUtils.getRegion(
+                this.zone.substring(0, this.zone.length() - 1)
             )
         );
         try {
