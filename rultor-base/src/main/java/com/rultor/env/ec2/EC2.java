@@ -29,7 +29,6 @@
  */
 package com.rultor.env.ec2;
 
-import com.amazonaws.regions.RegionUtils;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.Instance;
@@ -186,7 +185,9 @@ public final class EC2 implements Environments {
         this.group = grp;
         this.pair = par;
         this.zone = azone;
-        this.client = clnt;
+        this.client = new EC2Client.Regional(
+            azone.substring(0, azone.length() - 1), clnt
+        );
     }
 
     /**
@@ -225,11 +226,6 @@ public final class EC2 implements Environments {
     @com.rultor.snapshot.Tag("ec2")
     private Instance create() {
         final AmazonEC2 aws = this.client.get();
-        aws.setRegion(
-            RegionUtils.getRegion(
-                this.zone.substring(0, this.zone.length() - 1)
-            )
-        );
         try {
             final RunInstancesResult result = aws.runInstances(
                 new RunInstancesRequest()
