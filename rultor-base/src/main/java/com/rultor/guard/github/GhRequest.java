@@ -153,7 +153,7 @@ final class GhRequest implements MergeRequest {
         for (Map.Entry<String, Object> entry : this.parameters.entrySet()) {
             text.append("<tr><td>")
                 .append(entry.getKey())
-                .append("</td></td>")
+                .append("</td><td>")
                 .append(entry.getValue())
                 .append("</td></tr>\n");
         }
