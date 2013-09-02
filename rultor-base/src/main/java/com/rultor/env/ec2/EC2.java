@@ -29,6 +29,7 @@
  */
 package com.rultor.env.ec2;
 
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.Instance;
@@ -60,6 +61,7 @@ import org.apache.commons.lang3.Validate;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @EqualsAndHashCode(of = { "type", "ami", "group", "client" })
@@ -122,7 +124,7 @@ public final class EC2 implements Environments {
         final String image, final String grp, final String par,
         final String akey, final String scrt) {
         this(
-            wrk, wlt, tpe, image, grp, par, "us-east-1a",
+            wrk, wlt, tpe, image, grp, par, Regions.US_EAST_1.getName(),
             new EC2Client.Simple(akey, scrt)
         );
     }
