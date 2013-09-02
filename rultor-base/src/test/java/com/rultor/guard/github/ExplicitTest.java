@@ -96,16 +96,28 @@ public final class ExplicitTest {
     public void filtersOutUnapprovedPullRequest() throws Exception {
         final Github github = Mockito.mock(Github.class);
         final GitHubClient client = Mockito.mock(GitHubClient.class);
+        final Comment comment = new Comment();
+        comment.setBody("hey, it's a good code, merge it!");
+        final User author = new User();
+        author.setLogin("william");
+        comment.setUser(author);
+        comment.setUpdatedAt(new Date());
         Mockito.when(client.get(Mockito.any(GitHubRequest.class)))
             .thenReturn(
                 new GitHubResponse(
                     Mockito.mock(HttpURLConnection.class),
                     new ArrayList<Object>(0)
                 )
+            )
+            .thenReturn(
+                new GitHubResponse(
+                    Mockito.mock(HttpURLConnection.class),
+                    Arrays.asList(comment)
+                )
             );
         Mockito.doReturn(client).when(github).client();
         final PullRequest req = new PullRequest();
-        final Approval approval = new Explicit("anyone", ".*");
+        final Approval approval = new Explicit("maria", ".*");
         MatcherAssert.assertThat(
             approval.has(req, github, new Github.Repo("foo/foo")),
             Matchers.is(false)
