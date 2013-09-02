@@ -103,6 +103,9 @@ public final class Explicit implements Approval {
             if (latest.date().compareTo(comment.getUpdatedAt()) > 0) {
                 continue;
             }
+            if (!comment.getBody().matches(this.regex)) {
+                continue;
+            }
             final String login = comment.getUser().getLogin();
             if (!this.people.contains(login)) {
                 Logger.info(
@@ -110,9 +113,6 @@ public final class Explicit implements Approval {
                     "`%s` is not one of those we're listening to: %[list]s",
                     login, this.people
                 );
-                continue;
-            }
-            if (!comment.getBody().matches(this.regex)) {
                 continue;
             }
             Logger.info(
