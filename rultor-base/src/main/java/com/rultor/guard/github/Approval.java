@@ -63,7 +63,7 @@ public interface Approval {
     @Immutable
     @ToString
     @EqualsAndHashCode
-    @Loggable(Loggable.DEBUG)
+    @Loggable(Loggable.INFO)
     final class Always implements Approval {
         @Override
         public boolean has(final PullRequest request, final Github client,
@@ -78,7 +78,7 @@ public interface Approval {
     @Immutable
     @ToString
     @EqualsAndHashCode
-    @Loggable(Loggable.DEBUG)
+    @Loggable(Loggable.INFO)
     final class Never implements Approval {
         @Override
         public boolean has(final PullRequest request, final Github client,
@@ -93,7 +93,7 @@ public interface Approval {
     @Immutable
     @ToString
     @EqualsAndHashCode
-    @Loggable(Loggable.DEBUG)
+    @Loggable(Loggable.INFO)
     final class Or implements Approval {
         /**
          * First approval to ask.
@@ -126,7 +126,7 @@ public interface Approval {
     @Immutable
     @ToString
     @EqualsAndHashCode
-    @Loggable(Loggable.DEBUG)
+    @Loggable(Loggable.INFO)
     final class And implements Approval {
         /**
          * First approval to ask.
@@ -159,7 +159,7 @@ public interface Approval {
     @Immutable
     @ToString
     @EqualsAndHashCode
-    @Loggable(Loggable.DEBUG)
+    @Loggable(Loggable.INFO)
     final class Not implements Approval {
         /**
          * The approval to reverse.
