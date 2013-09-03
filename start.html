@@ -111,7 +111,57 @@
 </pre></div>
 <p>Triple quotes are used to specify a long text that constitues more than one line, similar to <a class="externalLink" href="http://groovy.codehaus.org/Strings+and+GString">Groovy multi-line strings</a>.</p>
 <div class="section">
-<h2>Stand<a name="Stand"></a></h2>
+<div class="section">
+<h3><a name="private-repo"></a> What if my repository is private?<a name="What_if_my_repository_is_private"></a></h3>
+<p>If your git repository requires authentication, we would recommend to use SSH private key, that&#x2019;s how:</p>
+
+<div class="source">
+<pre>urn:github:526301:git-on-commit(
+  ...
+  {
+    &quot;~/.ssh/id_rsa&quot;: &quot;&quot;&quot;
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEowIBAAKCAQEAw93hQPucIa0D5nVhKHkHuyeBptzG6U7Lig4BbUAPjtSSsC2n
+    lVykSB24SnYTR+PcZhYepIdPF4BPYB13MSvLidNeS7vGWHOj9vt5daDCoOgCauRZ
+    2RCJwO6ToaVnG8IHMiGRkXgFqKr1rd9unuPLZFi/HTYMkf0SYdoJc3GL9Ywt0pam
+    ...
+    2g2QQQKBgAQBp0FuT2o0KbxGnejYiU9T4SKMW3X3n2UWipx+TbntNNlGDP55NNYY
+    a/pLWlmOF47jYTpc6j1Ws1JsxX+x6qrnN72P93dwjdNBgcgR3H3XtYVDSm3myMt6
+    N9d/UY1o9c4kuhwbe9KlJGW8KBrZAS4j1RlvrBS8DVPjx18+xPyN
+    -----END RSA PRIVATE KEY-----
+    &quot;&quot;&quot;
+  }
+)
+</pre></div>
+<p>Your private key will be uploaded to <tt>~/.ssh/id_rsa</tt> and picked up by Git while cloning of your repository.</p>
+<p>If you are planning to use your private key for other rules, we recommend to move it to its own &#x201c;passive&#x201d; rule named, say, <tt>github-ssh-key</tt>:</p>
+
+<div class="source">
+<pre>&quot;&quot;&quot;
+-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAw93hQPucIa0D5nVhKHkHuyeBptzG6U7Lig4BbUAPjtSSsC2n
+lVykSB24SnYTR+PcZhYepIdPF4BPYB13MSvLidNeS7vGWHOj9vt5daDCoOgCauRZ
+2RCJwO6ToaVnG8IHMiGRkXgFqKr1rd9unuPLZFi/HTYMkf0SYdoJc3GL9Ywt0pam
+...
+2g2QQQKBgAQBp0FuT2o0KbxGnejYiU9T4SKMW3X3n2UWipx+TbntNNlGDP55NNYY
+a/pLWlmOF47jYTpc6j1Ws1JsxX+x6qrnN72P93dwjdNBgcgR3H3XtYVDSm3myMt6
+N9d/UY1o9c4kuhwbe9KlJGW8KBrZAS4j1RlvrBS8DVPjx18+xPyN
+-----END RSA PRIVATE KEY-----
+&quot;&quot;&quot;
+</pre></div>
+<p>Yes, it&#x2019;s possible to define a rule of just one plain text value. It won&#x2019;t get a pulse every minute, but can be used in other rules:</p>
+
+<div class="source">
+<pre>urn:github:526301:git-on-commit(
+  ...
+  {
+    &quot;~/.ssh/id_rsa&quot;: github-ssh-key()
+  }
+)
+</pre></div>
+<p>That&#x2019;s how you avoid duplication and keep data in one place - by defining your own &#x201c;passive&#x201d; rules that don&#x2019;t get every-minute pulses, but hold some data shared between other rules.</p></div></div>
+<div class="section">
+<h2><a name="stand"></a> Stand<a name="Stand"></a></h2>
 <p>Now it&#x2019;s time to create a &#x201c;stand&#x201d;, where project members will see the progress of your rules. Stand specification is much simplier, for example this one can be used for a public project:</p>
 
 <div class="source">
@@ -133,7 +183,7 @@
 </pre></div>
 <p>This is a link to a stand we use to publish the progress of development of Rultor itself: <a class="externalLink" href="http://www.rultor.com/s/rultor">www.rultor.com/s/rultor</a>.</p></div>
 <div class="section">
-<h2>Continuous Integration of Master Branch<a name="Continuous_Integration_of_Master_Branch"></a></h2>
+<h2><a name="ci"></a> Continuous Integration of Master Branch<a name="Continuous_Integration_of_Master_Branch"></a></h2>
 <p>In the example above, every new commit made to your Git <tt>master</tt> branch triggers a script, which builds the product and validates its consistency (you should use unit tests, integration tests, and static analysis as validating instruments).</p>
 <p>Template <tt>git-on-commit</tt> provided by user <tt>urn:github:526301</tt> does it all in a smart way. Let&#x2019;s break it down into components.</p>
 <p>As you already know, a rule receives control every minute. Technically it&#x2019;s even more interesting. Every minute a rule is instantiated as a Java object, according to its specification and then receives control. We call this object an Instance. The module that instantiates a rule and controls instances is called a Conveyer.</p>
@@ -193,7 +243,7 @@
 <p>When a new commit is detected, build script is executed in a newly created Amazon EC2 instance. When execution is finished and build succeeded or failed we don&#x2019;t want to execute the same operation on the same commit. We want our rule to remember that given commit has already been seen and should be ignored in the future. This check is also implemented by <tt>git-on-commit</tt>.</p>
 <p>When execution is finished, <tt>git-on-commit</tt> uploads full output of the script to Amazon S3 and publishes a link to the file in the stand.</p></div>
 <div class="section">
-<h2>Release Every New Tag<a name="Release_Every_New_Tag"></a></h2>
+<h2><a name="on-tag"></a> Release Every New Tag<a name="Release_Every_New_Tag"></a></h2>
 <p>Another popular scenario in almost any software project should be releasing of the next version. When your next version is stable enough to reach the market you tag its latest commit and document it in release notes. You can specify a rule in Rultor that will find such tags and run build script on them:</p>
 
 <div class="source">
@@ -233,7 +283,7 @@ rultor-5.3-beta
 example-2.0.3.GA
 </pre></div></div>
 <div class="section">
-<h2>Guard Your Master Branch<a name="Guard_Your_Master_Branch"></a></h2>
+<h2><a name="on-pull-request"></a> Guard Your Master Branch<a name="Guard_Your_Master_Branch"></a></h2>
 <p>It is a very good practice to test changes submitted to your code base before merging. When you receive a pull request from one of your project contributor, you should review the code for its logical validity and then run build automation script with all quality checks turned on. If build fails, you should reject this pull request and explain why.</p>
 <p>Read this article published by Yegor Bugayenko in php|Architect managazine on August 2010: <a class="externalLink" href="http://img.rultor.com/guard-article.pdf">&#x201c;Prevent Conflicts in Distributed Agile PHP Projects&#x201d;</a></p>
 <p>The process can be automated using <tt>github-on-pull-request</tt> provided by user <tt>urn:github:526301</tt>:</p>
@@ -252,7 +302,7 @@ example-2.0.3.GA
   {&quot;.ssh/id_rsa&quot;: github-ssh-key()}
 )
 </pre></div>
-<p>Once a new pull request is ready user <tt>yegor256</tt> has to review the code and post a message that matches <tt>.*good.*</tt> regular expression to its issue. Unit of work will pick this pull request up, will merge it with master its destination branch and merge, if succeeded. Otherwise it will post a negative message to the Github issue and won&#x2019;t try again, until a new comment &#x201c;good&#x201d; comment is posted by <tt>yegor256</tt>.</p></div>
+<p>Once a new pull request is ready user <tt>yegor256</tt> has to review the code and post a message that matches <tt>.*good.*</tt> regular expression to its issue. The rule will pick this pull request up, will merge it with master its destination branch and merge, if succeeded. Otherwise it will post a negative message to the Github issue and won&#x2019;t try again, until a new comment &#x201c;good&#x201d; comment is posted by <tt>yegor256</tt>.</p></div>
                 </article>
             </div>
             <footer class="text-muted">
@@ -263,7 +313,7 @@ example-2.0.3.GA
                     <li>
                         <small>
                             
-                            02-Sep-2013
+                            03-Sep-2013
                         </small>
                     </li>
                 </ul>
