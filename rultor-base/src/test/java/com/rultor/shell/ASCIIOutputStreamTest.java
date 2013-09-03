@@ -29,6 +29,7 @@
  */
 package com.rultor.shell;
 
+import com.google.common.base.Charsets;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -54,11 +55,11 @@ public final class ASCIIOutputStreamTest {
         final PrintWriter writer = new PrintWriter(
             new OutputStreamWriter(
                 new ASCIIOutputStream(baos),
-                CharEncoding.UTF_8
+                Charsets.UTF_8
             ), true
         );
         writer.print("first line to be removed completely\r");
-        writer.println("hi\u0008ello,\u0009world!");
+        writer.print("hi\u0008ello,\u0009world!\n");
         writer.close();
         MatcherAssert.assertThat(
             baos.toString(CharEncoding.UTF_8),
