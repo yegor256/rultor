@@ -72,13 +72,6 @@ terminate the instance. Your account will be charged for the price of the
 instance. Prices and instance types are listed in
 [AWS documention](http://aws.amazon.com/ec2/pricing/).
 
-There is an allowance of $5.00 automatically added to your account every
-30 days, if you don't fund it otherwise. Thus, if you have just one continuous
-integration rule which runs, say three times per working day, using `m1.small`
-type of EC2 instance, your total cost will be $3.60 per month. This is less
-than the allowance you get automatically from us and you don't need to fund
-the account at all.
-
 The fifth and the sixth parameters are access credentials for a Stand, which
 is a public showcase of all rules in a project (will be discussed a bit later). In
 the example, credentials are not valid since you haven't create a stand yet.
@@ -162,6 +155,27 @@ urn:github:526301:git-on-commit(
 That's how you avoid duplication and keep data in one place - by
 defining your own "passive" rules that don't get every-minute pulses,
 but hold some data shared between other rules.
+
+${hash}${hash}${hash} #anchor("cost") How much does it cost?
+
+Rultor.com is an open source and completely free service. It is sponsored
+by [TPC2.com](http://www.tpc2.com). You don't pay anything for
+creating an account and defining your rules and stands.
+
+However, you can fund your account using PayPal and use the money to compensate
+other users for rule templates they provide you. Together with rule
+templates they provide you access to their computing and storage resources
+(like Amazon EC2 instances or FTP logging). Rultor.com charges your
+account automatically and transfers money to their accounts. A detailed
+statistics of your expenses is available at
+[account page](http://www.rultor.com/account).
+
+There is an allowance of $5.00 automatically added to your account every
+30 days, if you don't fund it otherwise. Thus, if you have just one continuous
+integration rule which runs, say three times per working day, using `m1.small`
+type of EC2 instance, your total cost will be $3.60 per month. This is less
+than the allowance you get automatically from us and you don't need to fund
+the account at all.
 
 ${hash}${hash} #anchor("stand") Stand
 
