@@ -29,6 +29,7 @@
  */
 package com.rultor.conveyer.http;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.lang.management.LockInfo;
 import java.lang.management.ManagementFactory;
@@ -50,6 +51,7 @@ import org.apache.commons.lang3.CharUtils;
  * @version $Id$
  * @since 1.0
  */
+@Immutable
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
 final class Statistics {
