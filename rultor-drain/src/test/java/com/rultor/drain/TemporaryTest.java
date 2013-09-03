@@ -34,6 +34,7 @@ import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.util.Arrays;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -72,7 +73,8 @@ public final class TemporaryTest {
         new Temporary(work).append(Arrays.asList(line));
         MatcherAssert.assertThat(
             IOUtils.toString(
-                new Temporary(new Work.Simple(owner, rule, time)).read()
+                new Temporary(new Work.Simple(owner, rule, time)).read(),
+                CharEncoding.UTF_8
             ),
             Matchers.containsString(line)
         );

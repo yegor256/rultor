@@ -219,7 +219,8 @@ public final class Temporary implements Drain {
                     new OutputStreamWriter(this.data, Charsets.UTF_8)
                 );
                 for (String line : lines) {
-                    writer.println(line);
+                    writer.print(line);
+                    writer.print('\n');
                 }
                 writer.flush();
                 writer.close();
