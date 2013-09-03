@@ -1,5 +1,6 @@
-Quick Start
-===========
+#macro(anchor $name) <a name="${name}"></a> #end
+#set($hash = "#")
+${hash} Quick Start
 
 "Rule" is an active component that is receiving control
 every minute and does something with your project on your behalf.
@@ -102,8 +103,67 @@ Triple quotes are used to specify a long text that constitues
 more than one line, similar to
 [Groovy multi-line strings](http://groovy.codehaus.org/Strings+and+GString).
 
-Stand
------
+${hash}${hash}${hash} #anchor("private-repo") What if my repository is private?
+
+If your git repository requires authentication, we would
+recommend to use SSH private key, that's how:
+
+```
+urn:github:526301:git-on-commit(
+  ...
+  {
+    "~/.ssh/id_rsa": """
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEowIBAAKCAQEAw93hQPucIa0D5nVhKHkHuyeBptzG6U7Lig4BbUAPjtSSsC2n
+    lVykSB24SnYTR+PcZhYepIdPF4BPYB13MSvLidNeS7vGWHOj9vt5daDCoOgCauRZ
+    2RCJwO6ToaVnG8IHMiGRkXgFqKr1rd9unuPLZFi/HTYMkf0SYdoJc3GL9Ywt0pam
+    ...
+    2g2QQQKBgAQBp0FuT2o0KbxGnejYiU9T4SKMW3X3n2UWipx+TbntNNlGDP55NNYY
+    a/pLWlmOF47jYTpc6j1Ws1JsxX+x6qrnN72P93dwjdNBgcgR3H3XtYVDSm3myMt6
+    N9d/UY1o9c4kuhwbe9KlJGW8KBrZAS4j1RlvrBS8DVPjx18+xPyN
+    -----END RSA PRIVATE KEY-----
+    """
+  }
+)
+```
+
+Your private key will be uploaded to `~/.ssh/id_rsa` and picked up
+by Git while cloning of your repository.
+
+If you are planning to use your private key for other rules, we
+recommend to move it to its own "passive" rule named, say, `github-ssh-key`:
+
+```
+"""
+-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAw93hQPucIa0D5nVhKHkHuyeBptzG6U7Lig4BbUAPjtSSsC2n
+lVykSB24SnYTR+PcZhYepIdPF4BPYB13MSvLidNeS7vGWHOj9vt5daDCoOgCauRZ
+2RCJwO6ToaVnG8IHMiGRkXgFqKr1rd9unuPLZFi/HTYMkf0SYdoJc3GL9Ywt0pam
+...
+2g2QQQKBgAQBp0FuT2o0KbxGnejYiU9T4SKMW3X3n2UWipx+TbntNNlGDP55NNYY
+a/pLWlmOF47jYTpc6j1Ws1JsxX+x6qrnN72P93dwjdNBgcgR3H3XtYVDSm3myMt6
+N9d/UY1o9c4kuhwbe9KlJGW8KBrZAS4j1RlvrBS8DVPjx18+xPyN
+-----END RSA PRIVATE KEY-----
+"""
+```
+
+Yes, it's possible to define a rule of just one plain text value. It
+won't get a pulse every minute, but can be used in other rules:
+
+```
+urn:github:526301:git-on-commit(
+  ...
+  {
+    "~/.ssh/id_rsa": github-ssh-key()
+  }
+)
+```
+
+That's how you avoid duplication and keep data in one place - by
+defining your own "passive" rules that don't get every-minute pulses,
+but hold some data shared between other rules.
+
+${hash}${hash} #anchor("stand") Stand
 
 Now it's time to create a "stand", where project members will see the
 progress of your rules. Stand specification is much simplier, for
@@ -151,8 +211,7 @@ com.rultor.acl.Prohibited()
 This is a link to a stand we use to publish the progress of
 development of Rultor itself: [www.rultor.com/s/rultor](http://www.rultor.com/s/rultor).
 
-Continuous Integration of Master Branch
----
+${hash}${hash} #anchor("ci") Continuous Integration of Master Branch
 
 In the example above, every new commit made to your Git `master` branch
 triggers a script, which builds the product and validates its
@@ -269,8 +328,7 @@ be ignored in the future. This check is also implemented by `git-on-commit`.
 When execution is finished, `git-on-commit` uploads full output of the
 script to Amazon S3 and publishes a link to the file in the stand.
 
-Release Every New Tag
-------
+${hash}${hash} #anchor("on-tag") Release Every New Tag
 
 Another popular scenario in almost any software project should be
 releasing of the next version. When your next version is stable enough
@@ -322,8 +380,7 @@ rultor-5.3-beta
 example-2.0.3.GA
 ```
 
-Guard Your Master Branch
------
+${hash}${hash} #anchor("on-pull-request") Guard Your Master Branch
 
 It is a very good practice to test changes submitted to your code base
 before merging. When you receive a pull request from one of your
