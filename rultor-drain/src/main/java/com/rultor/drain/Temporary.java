@@ -29,6 +29,7 @@
  */
 package com.rultor.drain;
 
+import com.google.common.base.Charsets;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
@@ -41,6 +42,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.SequenceInputStream;
 import java.util.Collection;
@@ -213,7 +215,9 @@ public final class Temporary implements Drain {
          */
         public void append(final Iterable<String> lines) {
             synchronized (this.start) {
-                final PrintWriter writer = new PrintWriter(this.data);
+                final PrintWriter writer = new PrintWriter(
+                    new OutputStreamWriter(this.data, Charsets.UTF_8)
+                );
                 for (String line : lines) {
                     writer.println(line);
                 }
