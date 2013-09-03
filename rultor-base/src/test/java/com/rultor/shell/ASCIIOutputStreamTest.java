@@ -30,6 +30,7 @@
 package com.rultor.shell;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
@@ -51,7 +52,10 @@ public final class ASCIIOutputStreamTest {
     public void processesAsciiCommandCodes() throws Exception {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final PrintWriter writer = new PrintWriter(
-            new ASCIIOutputStream(baos), true
+            new OutputStreamWriter(
+                new ASCIIOutputStream(baos),
+                CharEncoding.UTF_8
+            ), true
         );
         writer.print("first line to be removed completely\r");
         writer.println("hi\u0008ello,\u0009world!");
