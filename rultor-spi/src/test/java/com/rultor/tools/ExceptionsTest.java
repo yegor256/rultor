@@ -72,11 +72,14 @@ public final class ExceptionsTest {
             Exceptions.message(
                 new IllegalArgumentException(
                     "hey",
-                    new IOException("file not found")
+                    new IOException("not found")
                 )
             ),
             Matchers.equalTo(
-                "IllegalArgumentException: hey\nIOException: file not found"
+                String.format(
+                    "IllegalArgumentException: hey%sIOException: not found",
+                    System.getProperty("line.separator")
+                )
             )
         );
     }
