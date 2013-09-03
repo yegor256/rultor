@@ -43,7 +43,6 @@ import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.List;
 import org.hamcrest.MatcherAssert;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
@@ -55,91 +54,6 @@ import org.mockito.Mockito;
  * @version $Id$
  */
 public final class EC2Test {
-    /**
-     * Work.
-     */
-    private transient Work work;
-    /**
-     * Wallet.
-     */
-    private transient Wallet wallet;
-    /**
-     * Client.
-     */
-    private transient EC2Client client;
-    /**
-     * AmazonEC2.
-     */
-    private transient AmazonEC2 aws;
-    /**
-     * RunInstancesResult.
-     */
-    private transient RunInstancesResult result;
-    /**
-     * Reservation.
-     */
-    private transient Reservation reservation;
-    /**
-     * Instance.
-     */
-    private transient Instance instance;
-    /**
-     * Instances.
-     */
-    private transient List<Instance> instances;
-
-    /**
-     * Mock The objects.
-     */
-    @SuppressWarnings("unchecked")
-    @Before
-    public void setUp() {
-        this.work = Mockito.mock(Work.class);
-        this.wallet = Mockito.mock(Wallet.class);
-        this.client = Mockito.mock(EC2Client.class);
-        this.aws = Mockito.mock(AmazonEC2.class);
-        this.result = Mockito.mock(RunInstancesResult.class);
-        this.reservation = Mockito.mock(Reservation.class);
-        this.instance = Mockito.mock(Instance.class);
-        this.instances = (List<Instance>) Mockito.mock(List.class);
-        this.mockMethods();
-    }
-    /**
-     * Mock methods.
-     */
-    private void mockMethods() {
-        Mockito.when(
-            this.client.get()
-        ).thenReturn(this.aws);
-        Mockito.when(
-            this.aws.runInstances(
-                Matchers.any(RunInstancesRequest.class)
-            )
-        ).thenReturn(this.result);
-        Mockito.when(
-            this.result.getReservation()
-        ).thenReturn(this.reservation);
-        Mockito.when(this.reservation.getInstances())
-            .thenReturn(this.instances);
-        Mockito.when(
-            this.instances.isEmpty()
-        ).thenReturn(false);
-        Mockito.when(
-            this.instances.get(0)
-        ).thenReturn(this.instance);
-        Mockito.when(
-            this.instance.getInstanceId()
-        ).thenReturn("InstanceId");
-        Mockito.when(
-            this.work.unit()
-        ).thenReturn("Unit");
-        Mockito.when(
-            this.work.owner()
-        ).thenReturn(new URN());
-        Mockito.when(
-            this.work.scheduled()
-        ).thenReturn(new Time());
-    }
 
     /**
      * Acquire Test.
@@ -148,12 +62,63 @@ public final class EC2Test {
      */
     @Test
     public void acquire() throws IOException {
-        final EC2 ectwo = new EC2(this.work, this.wallet, "type", "image",
-            "group", "par", this.client);
+        final EC2 ectwo = this.prepareTestData();
         final Environment environment = ectwo.acquire();
         MatcherAssert.assertThat(
             environment,
             org.hamcrest.Matchers.notNullValue()
         );
+    }
+    /**
+     * Prepare test data.
+     *
+     * @return EC2.
+     */
+    @SuppressWarnings("unchecked")
+    private EC2 prepareTestData() {
+        final Work work = Mockito.mock(Work.class);
+        final Wallet wallet = Mockito.mock(Wallet.class);
+        final EC2Client client = Mockito.mock(EC2Client.class);
+        final AmazonEC2 aws = Mockito.mock(AmazonEC2.class);
+        final RunInstancesResult result =
+            Mockito.mock(RunInstancesResult.class);
+        final Reservation reservation = Mockito.mock(Reservation.class);
+        final Instance instance = Mockito.mock(Instance.class);
+        final List<Instance> instances =
+            (List<Instance>) Mockito.mock(List.class);
+        Mockito.when(
+            client.get()
+        ).thenReturn(aws);
+        Mockito.when(
+            aws.runInstances(
+                Matchers.any(RunInstancesRequest.class)
+            )
+        ).thenReturn(result);
+        Mockito.when(
+            result.getReservation()
+        ).thenReturn(reservation);
+        Mockito.when(reservation.getInstances())
+            .thenReturn(instances);
+        Mockito.when(
+            instances.isEmpty()
+        ).thenReturn(false);
+        Mockito.when(
+            instances.get(0)
+        ).thenReturn(instance);
+        Mockito.when(
+            instance.getInstanceId()
+        ).thenReturn("InstanceId");
+        Mockito.when(
+            work.unit()
+        ).thenReturn("Unit");
+        Mockito.when(
+            work.owner()
+        ).thenReturn(new URN());
+        Mockito.when(
+            work.scheduled()
+        ).thenReturn(new Time());
+        final EC2 ectwo =
+            new EC2(work, wallet, "type", "image", "group", "par", client);
+        return ectwo;
     }
 }

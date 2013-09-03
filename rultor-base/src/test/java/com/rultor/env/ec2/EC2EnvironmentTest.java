@@ -47,7 +47,6 @@ import java.net.InetAddress;
 import java.util.Date;
 import java.util.List;
 import org.hamcrest.MatcherAssert;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
@@ -59,145 +58,6 @@ import org.mockito.Mockito;
  * @version $Id$
  */
 public final class EC2EnvironmentTest {
-    /**
-     * Work.
-     */
-    private transient Work work;
-    /**
-     * Wallet.
-     */
-    private transient Wallet wallet;
-    /**
-     * Client.
-     */
-    private transient EC2Client client;
-    /**
-     * AmazonEC2.
-     */
-    private transient AmazonEC2 aws;
-    /**
-     * DescribeInstancesResult.
-     */
-    private transient DescribeInstancesResult instanceresult;
-    /**
-     * Reservations.
-     */
-    private transient List<Reservation> reservations;
-    /**
-     * Reservation.
-     */
-    private transient Reservation reservation;
-    /**
-     * Instances.
-     */
-    private transient List<Instance> instances;
-    /**
-     * Instance.
-     */
-    private transient Instance instance;
-    /**
-     * Placement.
-     */
-    private transient Placement placement;
-    /**
-     * InstanceState.
-     */
-    private transient InstanceState instanceState;
-    /**
-     * Result.
-     */
-    private transient TerminateInstancesResult result;
-    /**
-     * InstanceStateChange.
-     */
-    private transient InstanceStateChange stateChange;
-    /**
-     * InstanceStateChanges.
-     */
-    private transient List<InstanceStateChange> stateChanges;
-
-    /**
-     * Mock The objects.
-     */
-    @SuppressWarnings("unchecked")
-    @Before
-    public void setUp() {
-        this.work = Mockito.mock(Work.class);
-        this.wallet = Mockito.mock(Wallet.class);
-        this.client = Mockito.mock(EC2Client.class);
-        this.aws = Mockito.mock(AmazonEC2.class);
-        this.instanceresult = Mockito
-            .mock(DescribeInstancesResult.class);
-        this.reservations = (List<Reservation>) Mockito.mock(List.class);
-        this.reservation = Mockito.mock(Reservation.class);
-        this.instances = (List<Instance>) Mockito.mock(List.class);
-        this.instance = Mockito.mock(Instance.class);
-        this.placement = Mockito.mock(Placement.class);
-        this.instanceState = Mockito.mock(InstanceState.class);
-        this.result = Mockito.mock(TerminateInstancesResult.class);
-        this.stateChange = Mockito.mock(InstanceStateChange.class);
-        this.stateChanges = (List<InstanceStateChange>) Mockito
-            .mock(List.class);
-        this.mockMethods();
-    }
-    /**
-     * Mock methods.
-     */
-    private void mockMethods() {
-        Mockito.when(this.client.get()).thenReturn(this.aws);
-        Mockito.when(
-            this.aws.describeInstances(
-                Matchers.any(
-                    DescribeInstancesRequest.class
-                )
-            )
-        ).thenReturn(this.instanceresult);
-        Mockito.when(
-            this.instanceresult.getReservations()
-        ).thenReturn(this.reservations);
-        Mockito.when(
-            this.reservations.get(0)
-        ).thenReturn(this.reservation);
-        Mockito.when(
-            this.reservation.getInstances()
-        ).thenReturn(this.instances);
-        Mockito.when(
-            this.instances.isEmpty()
-        ).thenReturn(false);
-        Mockito.when(
-            this.instances.get(0)
-        ).thenReturn(this.instance);
-        Mockito.when(
-            this.instance.getPlacement()
-        ).thenReturn(this.placement);
-        Mockito.when(
-            this.instance.getState()
-        ).thenReturn(this.instanceState);
-        Mockito.when(
-            this.instanceState.getName()
-        ).thenReturn("running");
-        Mockito.when(
-            this.aws.terminateInstances(
-                Matchers
-                    .any(TerminateInstancesRequest.class)
-            )
-        ).thenReturn(this.result);
-        Mockito.when(
-            this.result.getTerminatingInstances()
-        ).thenReturn(this.stateChanges);
-        Mockito.when(
-            this.stateChanges.get(0)
-        ).thenReturn(this.stateChange);
-        Mockito.when(
-            this.instance.getLaunchTime()
-        ).thenReturn(new Date());
-        Mockito.when(
-            this.instance.getInstanceType()
-        ).thenReturn("InstanceType");
-        Mockito.when(
-            this.placement.getAvailabilityZone()
-        ).thenReturn("ZONE");
-    }
 
     /**
      * Creation of the InetAddress test.
@@ -206,8 +66,7 @@ public final class EC2EnvironmentTest {
      */
     @Test
     public void address() throws IOException {
-        final EC2Environment eC2Environment = new EC2Environment(this.work,
-            this.wallet, "instance", this.client);
+        final EC2Environment eC2Environment = this.prepareTestData();
         final InetAddress inetAddress = eC2Environment.address();
         MatcherAssert.assertThat(
             inetAddress,
@@ -222,8 +81,66 @@ public final class EC2EnvironmentTest {
      */
     @Test
     public void close() throws IOException {
-        final EC2Environment eC2Environment = new EC2Environment(this.work,
-            this.wallet, "instance2", this.client);
+        final EC2Environment eC2Environment = this.prepareTestData();
         eC2Environment.close();
+    }
+
+    /**
+     * Prepare Test Data.
+     * @return EC2Environment
+     * @checkstyle ExecutableStatementCount (50 lines)
+     */
+    @SuppressWarnings("unchecked")
+    private EC2Environment prepareTestData() {
+        final Work work = Mockito.mock(Work.class);
+        final Wallet wallet = Mockito.mock(Wallet.class);
+        final EC2Client client = Mockito.mock(EC2Client.class);
+        final AmazonEC2 aws = Mockito.mock(AmazonEC2.class);
+        final DescribeInstancesResult instanceresult =
+            Mockito.mock(DescribeInstancesResult.class);
+        final List<Reservation> reservations =
+            (List<Reservation>) Mockito.mock(List.class);
+        final Reservation reservation = Mockito.mock(Reservation.class);
+        final List<Instance> instances =
+            (List<Instance>) Mockito.mock(List.class);
+        final Instance instance = Mockito.mock(Instance.class);
+        final Placement placement = Mockito.mock(Placement.class);
+        final InstanceState instanceState = Mockito.mock(InstanceState.class);
+        final TerminateInstancesResult result =
+            Mockito.mock(TerminateInstancesResult.class);
+        final InstanceStateChange stateChange =
+            Mockito.mock(InstanceStateChange.class);
+        final List<InstanceStateChange> stateChanges =
+            (List<InstanceStateChange>) Mockito.mock(List.class);
+        Mockito.when(client.get()).thenReturn(aws);
+        Mockito
+            .when(
+                aws.describeInstances(
+                    Matchers.any(DescribeInstancesRequest.class)
+            )
+        ).thenReturn(instanceresult);
+        Mockito.when(
+            instanceresult.getReservations()
+        ).thenReturn(reservations);
+        Mockito.when(reservations.get(0)).thenReturn(reservation);
+        Mockito.when(reservation.getInstances()).thenReturn(instances);
+        Mockito.when(instances.isEmpty()).thenReturn(false);
+        Mockito.when(instances.get(0)).thenReturn(instance);
+        Mockito.when(instance.getPlacement()).thenReturn(placement);
+        Mockito.when(instance.getState()).thenReturn(instanceState);
+        Mockito.when(instanceState.getName()).thenReturn("running");
+        Mockito.when(
+            aws.terminateInstances(
+                Matchers.any(TerminateInstancesRequest.class)
+            )
+        ).thenReturn(result);
+        Mockito.when(result.getTerminatingInstances()).thenReturn(stateChanges);
+        Mockito.when(stateChanges.get(0)).thenReturn(stateChange);
+        Mockito.when(instance.getLaunchTime()).thenReturn(new Date());
+        Mockito.when(instance.getInstanceType()).thenReturn("InstanceType");
+        Mockito.when(placement.getAvailabilityZone()).thenReturn("ZONE");
+        final EC2Environment eC2Environment =
+            new EC2Environment(work, wallet, "instance", client);
+        return eC2Environment;
     }
 }
