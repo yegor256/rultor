@@ -126,10 +126,9 @@ public final class IncrementalBash implements Batch {
             .append("#set($dollar='$')")
             .append("set -o pipefail;\n")
             .append("set +o histexpand;\n")
-            .append("ESCAPE=`mktemp /tmp/escape-XXXX`;\n")
-            .append("echo ")
+            .append("ESCAPE=")
             .append(Terminal.escape(IncrementalBash.escape()))
-            .append(" > $ESCAPE;\n");
+            .append(';').append('\n');
         for (Vext cmd : this.commands) {
             script.append(this.script(args, cmd));
         }
@@ -149,7 +148,7 @@ public final class IncrementalBash implements Batch {
         return new StringBuilder()
             .append("echo; echo ${dollar} ")
             .append(Terminal.escape(command))
-            .append("; \n")
+            .append(';').append('\n')
             .append(
                 this.xembly(
                     new Directives()
@@ -161,13 +160,13 @@ public final class IncrementalBash implements Batch {
                         .set("`date  -u +%Y-%m-%dT%H:%M:%SZ`")
                 )
             )
-            .append(";\n")
+            .append(';').append('\n')
             .append(this.summary(uid, command))
             .append(";\nSTART=${dollar}(date +%s%N | tr -d N);\n")
             .append("STDERR=${dollar}(mktemp /tmp/bash-XXXX);\n")
             .append("{ ")
             .append(velocity)
-            .append("; } 2> >( cat | source $ESCAPE | tee ${dollar}STDERR );\n")
+            .append("; } 2> >( cat | eval $ESCAPE | tee ${dollar}STDERR );\n")
             .append("CODE=${dollar}?;\n")
             .append("FINISH=${dollar}(date +%s%N | tr -d N);\n")
             .append("if [ ${dollar}CODE = 0 ]; then\n  ")
