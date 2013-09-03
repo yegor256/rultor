@@ -36,6 +36,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.SystemUtils;
+import org.junit.Assume;
 
 /**
  * Mocker of {@link Shell}.
@@ -58,6 +60,7 @@ public final class ShellMocker {
          * @param folder Where to work
          */
         public Bash(final File folder) {
+            Assume.assumeFalse(SystemUtils.IS_OS_WINDOWS);
             this.dir = folder.getAbsolutePath();
         }
         // @checkstyle ParameterNumber (5 lines)
