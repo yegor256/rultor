@@ -4,23 +4,23 @@ Quality Means Strict Rules
 Rultor.com lets you configure and enforce basic rules of your
 software development project, for example:
 
-"Every new commit to our Git repository should trigger a
-new build on a new on-demand Amazon EC2 instance
-(aka **continuous integration**)"
+ - "Every new commit to our Git repository should trigger a
+   new build on a new on-demand Amazon EC2 instance
+   (aka **continuous integration**)"
 
-"Every Github pull request should pass all unit tests and other automated
-quality checks before merging into `master` (aka **preflight build**)"
+ - "Every Github pull request should pass all unit tests and other automated
+   quality checks before merging into `master` (aka **preflight build**)"
 
-"A staging request (submitted through IRC, Skype, or tickets) should
-automatically lead to a new staging environment with
-a feature branch deployed into it"
+ - "A staging request (submitted through IRC, Skype, or tickets) should
+   automatically lead to a new staging environment with
+   a feature branch deployed into it"
 
-"Unit test failures and quality defects should become visible in
-feature branch tickets before code review or merge starts
-(aka **preventive builds**)"
+ - "Unit test failures and quality defects should become visible in
+   feature branch tickets before code review or merge starts
+   (aka **preventive builds**)"
 
-We do not provide any computing or storage resources, like servers. Instead, we
-integrate your existing components and help you to manage them.
+We do not provide any computing or storage resources, like servers.
+Instead, we integrate your existing components and help you to manage them.
 At the moment, we support out-of-the-box: Github, JIRA, Git,
 AWS EC2, AWS CloudFormation, AWS S3, FTP. The list is growing, and in the
 nearest future we'll support Subversion, Mercurial, Trac, DigitalOcean,
