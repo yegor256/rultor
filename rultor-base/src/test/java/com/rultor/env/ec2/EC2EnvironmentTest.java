@@ -83,6 +83,13 @@ public final class EC2EnvironmentTest {
     public void close() throws IOException {
         final EC2Environment eC2Environment = this.prepareTestData();
         eC2Environment.close();
+        MatcherAssert.assertThat(
+            eC2Environment.toString(),
+            org.hamcrest.Matchers
+            .containsString(
+                "EC2 `instance` instance accessed with Mock for EC2Client"
+            )
+        );
     }
 
     /**
