@@ -29,6 +29,7 @@
  */
 package com.rultor.conveyer;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Rule;
@@ -47,6 +48,7 @@ import lombok.ToString;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @ToString
+@Immutable
 @Loggable(Loggable.DEBUG)
 @EqualsAndHashCode(of = { "work", "rule" })
 final class OwnWallet implements Wallet {
