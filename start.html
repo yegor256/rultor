@@ -96,7 +96,6 @@
 <pre>[&quot;me@example.com&quot;, &quot;you@example.com&quot;]
 </pre></div>
 <p>The fourth one is an EC2 instance type, which will be used for build script execution. When a new commit is found in your <tt>master</tt> branch, the rule will create a new Amazon Web Services EC2 instance, execute your script, and terminate the instance. Your account will be charged for the price of the instance. Prices and instance types are listed in <a class="externalLink" href="http://aws.amazon.com/ec2/pricing/">AWS documention</a>.</p>
-<p>There is an allowance of $5.00 automatically added to your account every 30 days, if you don&#x2019;t fund it otherwise. Thus, if you have just one continuous integration rule which runs, say three times per working day, using <tt>m1.small</tt> type of EC2 instance, your total cost will be $3.60 per month. This is less than the allowance you get automatically from us and you don&#x2019;t need to fund the account at all.</p>
 <p>The fifth and the sixth parameters are access credentials for a Stand, which is a public showcase of all rules in a project (will be discussed a bit later). In the example, credentials are not valid since you haven&#x2019;t create a stand yet. Stand name is <tt>example</tt> and authentication key is <tt>super-secret</tt>.</p>
 <p>The last parameter is a map of files to be uploaded to the EC2 instance before running the build script. They will be uploaded into <tt>/home/ubuntu</tt> directory, which is a home directory of the EC2 user for Ubuntu images. The map may contain more elements, for example:</p>
 
@@ -159,7 +158,12 @@ N9d/UY1o9c4kuhwbe9KlJGW8KBrZAS4j1RlvrBS8DVPjx18+xPyN
   }
 )
 </pre></div>
-<p>That&#x2019;s how you avoid duplication and keep data in one place - by defining your own &#x201c;passive&#x201d; rules that don&#x2019;t get every-minute pulses, but hold some data shared between other rules.</p></div></div>
+<p>That&#x2019;s how you avoid duplication and keep data in one place - by defining your own &#x201c;passive&#x201d; rules that don&#x2019;t get every-minute pulses, but hold some data shared between other rules.</p></div>
+<div class="section">
+<h3><a name="cost"></a> How much does it cost?<a name="How_much_does_it_cost"></a></h3>
+<p>Rultor.com is an open source and completely free service. It is sponsored by <a class="externalLink" href="http://www.tpc2.com">TPC2.com</a>. You don&#x2019;t pay anything for creating an account and defining your rules and stands.</p>
+<p>However, you can fund your account using PayPal and use the money to compensate other users for rule templates they provide you. Together with rule templates they provide you access to their computing and storage resources (like Amazon EC2 instances or FTP logging). Rultor.com charges your account automatically and transfers money to their accounts. A detailed statistics of your expenses is available at <a class="externalLink" href="http://www.rultor.com/account">account page</a>.</p>
+<p>There is an allowance of $5.00 automatically added to your account every 30 days, if you don&#x2019;t fund it otherwise. Thus, if you have just one continuous integration rule which runs, say three times per working day, using <tt>m1.small</tt> type of EC2 instance, your total cost will be $3.60 per month. This is less than the allowance you get automatically from us and you don&#x2019;t need to fund the account at all.</p></div></div>
 <div class="section">
 <h2><a name="stand"></a> Stand<a name="Stand"></a></h2>
 <p>Now it&#x2019;s time to create a &#x201c;stand&#x201d;, where project members will see the progress of your rules. Stand specification is much simplier, for example this one can be used for a public project:</p>
