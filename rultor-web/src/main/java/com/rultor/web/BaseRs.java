@@ -85,6 +85,26 @@ public class BaseRs extends BaseResource {
     private static final AuthKeys KEYS = new AuthKeys();
 
     /**
+     * Test authentication provider.
+     */
+    private static final Provider TEST_PROVIDER = new Provider() {
+        @Override
+        public Identity identity() throws IOException {
+            final Identity identity;
+            if ("12345".equals(Manifests.read("Rultor-Revision"))) {
+                identity = new Identity.Simple(
+                    URN.create("urn:facebook:1"),
+                    "Local Host",
+                    URI.create("http://img.rultor.com/none.png")
+                );
+            } else {
+                identity = Identity.ANONYMOUS;
+            }
+            return identity;
+        }
+    };
+
+    /**
      * Flash.
      * @return The inset with flash
      */
@@ -241,25 +261,8 @@ public class BaseRs extends BaseResource {
             .with(new Facebook(this, Manifests.read("Rultor-FbId"), Manifests.read("Rultor-FbSecret")))
             .with(new Github(this, Manifests.read("Rultor-GithubId"), Manifests.read("Rultor-GithubSecret")))
             .with(new Google(this, Manifests.read("Rultor-GoogleId"), Manifests.read("Rultor-GoogleSecret")))
-            .with(
-                new Provider() {
-                    @Override
-                    public Identity identity() throws IOException {
-                        Identity identity;
-                        if ("12345".equals(Manifests.read("Rultor-Revision"))) {
-                            identity = new Identity.Simple(
-                                URN.create("urn:facebook:1"),
-                                "Local Host",
-                                URI.create("http://img.rultor.com/none.png")
-                            );
-                        } else {
-                            identity = Identity.ANONYMOUS;
-                        }
-                        return identity;
-                    }
-                }
-            )
-            .with(new HttpBasic(this, BaseRs.KEYS));
+            .with(new HttpBasic(this, BaseRs.KEYS))
+            .with(BaseRs.TEST_PROVIDER);
     }
 
     /**
