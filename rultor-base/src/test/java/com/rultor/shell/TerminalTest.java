@@ -24,7 +24,7 @@ public final class TerminalTest {
 	 */
 	@Test
 	@SuppressWarnings("unchecked")
-	public void returnsLatestBranch() throws Exception {
+	public void returnsNonZeroreturnsCode() throws Exception {
 		final Shell shell = Mockito.mock(Shell.class);
 
 		Mockito.doReturn(1)
