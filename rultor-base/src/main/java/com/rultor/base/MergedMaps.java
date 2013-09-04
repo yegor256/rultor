@@ -53,10 +53,9 @@ import lombok.EqualsAndHashCode;
 @SuppressWarnings("PMD.TooManyMethods")
 public final class MergedMaps<K, V> implements Map<K, V> {
 
-    // @checkstyle CascadeIndentationCheck (115 line)
     /**
-    * Underlying map.
-    */
+     * Underlying map.
+     */
     private final transient ArrayMap<K, V> map;
 
     /**
