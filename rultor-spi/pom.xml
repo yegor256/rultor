@@ -44,6 +44,17 @@
             <artifactId>xembly</artifactId>
         </dependency>
         <dependency>
+        <groupId>org.sonatype.aether</groupId>
+        <artifactId>aether-api</artifactId>
+        <version>1.13.1</version>
+        </dependency>
+        <dependency>
+        <groupId>org.sonatype.aether</groupId>
+        <artifactId>aether-impl</artifactId>
+        <version>1.13.1</version>
+        </dependency>
+        
+        <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
         </dependency>
