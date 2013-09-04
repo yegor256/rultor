@@ -108,16 +108,20 @@
         </xsl:if>
         <xsl:choose>
             <xsl:when test="/page/receipts/receipt">
-                <table class="table table-striped table-hover table-condensed" style="font-size: 80%;">
-                    <thead>
-                        <tr>
-                            <xsl:apply-templates select="/page/columns/column"/>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <xsl:apply-templates select="/page/receipts/receipt"/>
-                    </tbody>
-                </table>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class="table table-striped table-hover table-condensed" style="font-size: 80%;">
+                            <thead>
+                                <tr>
+                                    <xsl:apply-templates select="/page/columns/column"/>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <xsl:apply-templates select="/page/receipts/receipt"/>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 <xsl:if test="//links/link[@rel='more']">
                     <p>
                         <xsl:text>See </xsl:text>

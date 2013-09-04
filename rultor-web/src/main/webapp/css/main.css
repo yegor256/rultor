@@ -41,6 +41,7 @@ body {
     font-size: 16px;
     padding: .5em;
     clear: both;
+    background-image: url('//img.rultor.com/background.png');
 }
 @media only screen and (min-width: 768px) {
     body { padding: 1em; }
