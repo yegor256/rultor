@@ -206,6 +206,7 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-manifests</artifactId>
+            <version>0.8</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

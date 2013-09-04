@@ -29,11 +29,14 @@
  */
 package com.rultor.web;
 
+import com.jcabi.manifests.Manifests;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
+import java.io.IOException;
 import javax.xml.transform.Source;
 import org.hamcrest.MatcherAssert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xembly.Directives;
 
@@ -45,6 +48,15 @@ import org.xembly.Directives;
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class DrainRsTest {
+
+    /**
+     * Pre-load test MANIFEST.MF.
+     * @throws IOException If fails
+     */
+    @BeforeClass
+    public static void manifests() throws IOException {
+        Manifests.inject("Rultor-Revision", "12345");
+    }
 
     /**
      * PostSnapshot can post-process a snapshot with ETA.
