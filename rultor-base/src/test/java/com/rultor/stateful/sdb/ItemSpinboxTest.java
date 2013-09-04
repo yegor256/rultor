@@ -61,11 +61,10 @@ public final class ItemSpinboxTest {
         final AmazonSimpleDB aws = Mockito.mock(AmazonSimpleDB.class);
         Mockito.doReturn(aws).when(client).get();
         final GetAttributesResult gar = Mockito.mock(GetAttributesResult.class);
-        Mockito.doReturn(gar).when(aws)
-        .getAttributes(
+        Mockito.doReturn(gar).when(aws).getAttributes(
             Mockito.any(GetAttributesRequest.class)
         );
-        Mockito.doReturn(new ArrayList<Attribute>()).when(gar).getAttributes();
+        Mockito.doReturn(new ArrayList<Attribute>(0)).when(gar).getAttributes();
         Mockito.doNothing().when(aws).putAttributes(
             Mockito.any(
                 PutAttributesRequest.class
@@ -97,8 +96,7 @@ public final class ItemSpinboxTest {
         final AmazonSimpleDB aws = Mockito.mock(AmazonSimpleDB.class);
         Mockito.doReturn(aws).when(client).get();
         final GetAttributesResult gar = Mockito.mock(GetAttributesResult.class);
-        Mockito.doReturn(gar).when(aws)
-        .getAttributes(
+        Mockito.doReturn(gar).when(aws).getAttributes(
             Mockito.any(GetAttributesRequest.class)
         );
         final Attribute atr = Mockito.mock(Attribute.class);
