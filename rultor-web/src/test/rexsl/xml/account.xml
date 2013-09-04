@@ -45,14 +45,15 @@
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
         <link href="/xml/account.xml" rel="more" type="text/xml"/>
         <link href="/xml/account.xml" rel="account" type="text/xml"/>
-        <link href="/xml/units.xml" rel="units" type="text/xml"/>
+        <link href="/xml/rules.xml" rel="rules" type="text/xml"/>
         <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
+        <link href="/xml/front.xml" rel="auth-logout" type="text/xml"/>
     </links>
     <breadcrumbs>
         <crumb rel="self">account</crumb>
     </breadcrumbs>
     <nav>
-        <item rel="units">Units</item>
+        <item rel="rules">Rules</item>
         <item rel="stands">Stands</item>
         <item rel="account">Account</item>
     </nav>
@@ -83,7 +84,7 @@
             </links>
         </column>
         <column>
-            <title>ctunit</title>
+            <title>ctrule</title>
             <links>
                 <link href="/xml/account.xml" rel="group" type="text/xml"/>
                 <link href="/xml/account.xml" rel="asc" type="text/xml"/>
@@ -99,7 +100,7 @@
             </links>
         </column>
         <column sorted="desc" grouped="yes">
-            <title>dtunit</title>
+            <title>dtrule</title>
             <links>
                 <link href="/xml/account.xml" rel="group" type="text/xml"/>
                 <link href="/xml/account.xml" rel="asc" type="text/xml"/>
@@ -126,9 +127,9 @@
             <cell>5433</cell>
             <cell>2012-08-23T13:25:23</cell>
             <cell>urn:github:1</cell>
-            <cell>my-test-unit</cell>
+            <cell>my-test-rule</cell>
             <cell>urn:facebook:65774</cell>
-            <cell>rented-unit</cell>
+            <cell>rented-rule</cell>
             <cell>some transaction details</cell>
             <cell>$0.12</cell>
         </receipt>
@@ -136,9 +137,9 @@
             <cell>5435</cell>
             <cell>2012-08-23T13:25:23</cell>
             <cell>urn:facebook:65774</cell>
-            <cell>my-test-unit</cell>
+            <cell>my-test-rule</cell>
             <cell>urn:github:1</cell>
-            <cell>rented-unit</cell>
+            <cell>rented-rule</cell>
             <cell>some other transaction details in a few lines of text, some other transaction details in a few lines of text</cell>
             <cell>$0.09</cell>
         </receipt>

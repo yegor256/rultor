@@ -40,8 +40,8 @@ import lombok.EqualsAndHashCode;
  * reports nothing.
  *
  * <p>It is convenient to use this instance wrapper when you want to
- * disable the execution of an entire unit, but don't want to loose the
- * code. Consider it a way to comment out your code in a unit.
+ * disable the execution of an entire rule, but don't want to loose the
+ * code. Consider it a way to comment out your code in a rule.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$

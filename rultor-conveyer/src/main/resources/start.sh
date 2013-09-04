@@ -51,7 +51,7 @@ sudo pip install -U dynamic-dynamodb
 
 # https://github.com/sebdah/dynamic-dynamodb
 dynamic-dynamodb --version
-for table in units stands
+for table in rules stands
 do
     while true
     do

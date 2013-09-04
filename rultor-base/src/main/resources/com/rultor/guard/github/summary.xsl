@@ -33,13 +33,16 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     exclude-result-prefixes="xs">
     <xsl:output method="xml"/>
+    <xsl:include href="http://www.rultor.com/xsl/common.xsl"/>
     <xsl:template match="/snapshot">
         <markdown>
             <xsl:choose>
                 <xsl:when test="steps/step">
+                    <xsl:text>```&#x0A;</xsl:text>
                     <xsl:value-of select="count(steps/step)"/>
                     <xsl:text> step(s) in total:</xsl:text>
                     <xsl:apply-templates select="steps/step"/>
+                    <xsl:text>&#x0A;```</xsl:text>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:text>No steps to describe</xsl:text>
@@ -48,31 +51,31 @@
         </markdown>
     </xsl:template>
     <xsl:template match="step">
-        <xsl:text>&#x0A;&#x0A;</xsl:text>
+        <xsl:text>&#x0A;</xsl:text>
+        <xsl:text>$ </xsl:text>
         <xsl:value-of select="summary"/>
-        <xsl:text>: </xsl:text>
+        <xsl:text>&#x0A;  </xsl:text>
         <xsl:choose>
             <xsl:when test="level = 'INFO'">
-                <xsl:text>success</xsl:text>
+                <xsl:text>SUCCESS</xsl:text>
             </xsl:when>
             <xsl:when test="level = 'SEVERE'">
-                <xsl:text>failure</xsl:text>
+                <xsl:text>FAILURE</xsl:text>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="level"/>
             </xsl:otherwise>
         </xsl:choose>
-        <xsl:text> in </xsl:text>
-        <xsl:value-of select="format-number(duration div 1000, '0.0')"/>
-        <xsl:text>s</xsl:text>
+        <xsl:text> </xsl:text>
+        <xsl:call-template name="millis">
+            <xsl:with-param name="millis" select="duration"/>
+        </xsl:call-template>
         <xsl:apply-templates select="exception"/>
     </xsl:template>
     <xsl:template match="exception">
-        <xsl:text>&#x0A;&#x0A;</xsl:text>
-        <xsl:text>```&#x0A;</xsl:text>
+        <xsl:text> </xsl:text>
         <xsl:value-of select="cause"/>
         <xsl:text>&#x0A;&#x0A;</xsl:text>
         <xsl:value-of select="stacktrace"/>
-        <xsl:text>&#x0A;```</xsl:text>
     </xsl:template>
 </xsl:stylesheet>

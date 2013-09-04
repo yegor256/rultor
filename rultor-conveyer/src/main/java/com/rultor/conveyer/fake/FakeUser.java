@@ -31,11 +31,11 @@ package com.rultor.conveyer.fake;
 
 import com.jcabi.urn.URN;
 import com.rultor.spi.Account;
+import com.rultor.spi.Rule;
+import com.rultor.spi.Rules;
 import com.rultor.spi.Sheet;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stands;
-import com.rultor.spi.Unit;
-import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
@@ -45,7 +45,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Fake users that always return one unit.
+ * Fake users that always return one rule.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -79,12 +79,12 @@ final class FakeUser implements User {
     }
 
     @Override
-    public Units units() {
+    public Rules rules() {
         // @checkstyle AnonInnerLength (50 lines)
-        return new Units() {
+        return new Rules() {
             @Override
-            public Unit get(final String name) {
-                return new Unit() {
+            public Rule get(final String name) {
+                return new Rule() {
                     @Override
                     public void update(final Spec spc) {
                         throw new UnsupportedOperationException();
@@ -95,7 +95,7 @@ final class FakeUser implements User {
                     }
                     @Override
                     public Wallet wallet(final Work wrk, final URN urn,
-                        final String unit) {
+                        final String rule) {
                         return new Wallet() {
                             @Override
                             public void charge(final String details,
@@ -104,7 +104,7 @@ final class FakeUser implements User {
                             }
                             @Override
                             public Wallet delegate(final URN urn,
-                                final String unit) {
+                                final String rule) {
                                 throw new UnsupportedOperationException();
                             }
                         };
@@ -124,7 +124,7 @@ final class FakeUser implements User {
                 throw new UnsupportedOperationException();
             }
             @Override
-            public Iterator<Unit> iterator() {
+            public Iterator<Rule> iterator() {
                 throw new UnsupportedOperationException();
             }
             @Override

@@ -74,9 +74,9 @@ final class SQSWallet implements Wallet {
     private final transient URN creditor;
 
     /**
-     * Credit unit.
+     * Credit rule.
      */
-    private final transient String ctunit;
+    private final transient String ctrule;
 
     /**
      * Debitor.
@@ -84,33 +84,33 @@ final class SQSWallet implements Wallet {
     private final transient URN debitor;
 
     /**
-     * Debit unit.
+     * Debit rule.
      */
-    private final transient String dtunit;
+    private final transient String dtrule;
 
     /**
      * Ctor.
      * @param sqs SQS client
      * @param wrk Work that is using us
      * @param ctr Creditor
-     * @param cunit Credit unit
+     * @param crule Credit unit
      * @param dtr Debitor
-     * @param dunit Debit unit
+     * @param drule Debit unit
      * @checkstyle ParameterNumber (5 lines)
      */
     protected SQSWallet(final SQSClient sqs, final Work wrk,
-        final URN ctr, final String cunit, final URN dtr, final String dunit) {
+        final URN ctr, final String crule, final URN dtr, final String drule) {
         this.client = sqs;
         this.work = wrk;
         Validate.isTrue(
-            !(ctr.equals(dtr) && cunit.equals(dunit)),
+            !(ctr.equals(dtr) && crule.equals(drule)),
             "credit '%s/%s' can't be the same as debit '%s/%s'",
-            ctr, cunit, dtr, dunit
+            ctr, crule, dtr, drule
         );
         this.creditor = ctr;
-        this.ctunit = cunit;
+        this.ctrule = crule;
         this.debitor = dtr;
-        this.dtunit = dunit;
+        this.dtrule = drule;
     }
 
     /**
@@ -141,9 +141,9 @@ final class SQSWallet implements Wallet {
      * {@inheritDoc}
      */
     @Override
-    public Wallet delegate(final URN urn, final String unit) {
+    public Wallet delegate(final URN urn, final String rule) {
         final Wallet delegate = new SQSWallet(
-            this.client, this.work, this.debitor, this.dtunit, urn, unit
+            this.client, this.work, this.debitor, this.dtrule, urn, rule
         );
         return new Wallet() {
             @Override
@@ -152,10 +152,10 @@ final class SQSWallet implements Wallet {
                 SQSWallet.this.charge(details, amount);
             }
             @Override
-            public Wallet delegate(final URN urn, final String unit)
+            public Wallet delegate(final URN urn, final String rule)
                 // @checkstyle RedundantThrows (1 line)
                 throws Wallet.NotEnoughFundsException {
-                return delegate.delegate(urn, unit);
+                return delegate.delegate(urn, rule);
             }
         };
     }
@@ -171,14 +171,14 @@ final class SQSWallet implements Wallet {
         Json.createGenerator(writer)
             .writeStartObject()
             .write("ct", this.creditor.toString())
-            .write("ctunit", this.ctunit)
+            .write("ctrule", this.ctrule)
             .write("dt", this.debitor.toString())
-            .write("dtunit", this.dtunit)
+            .write("dtrule", this.dtrule)
             .write("details", details)
             .write("amount", amount.points())
             .writeStartObject("work")
             .write("owner", this.work.owner().toString())
-            .write("unit", this.work.unit())
+            .write("rule", this.work.rule())
             .write("scheduled", this.work.scheduled().toString())
             .writeEnd()
             .writeEnd()

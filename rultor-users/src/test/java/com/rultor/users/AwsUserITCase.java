@@ -40,7 +40,7 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.TableMocker;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
-import com.rultor.spi.Unit;
+import com.rultor.spi.Rule;
 import com.rultor.spi.User;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -94,7 +94,7 @@ public final class AwsUserITCase {
         this.table = new TableMocker(
             this.region,
             new CreateTableRequest()
-                .withTableName(String.format("%sunits", prefix))
+                .withTableName(String.format("%s%s", prefix, AwsRule.TABLE))
                 .withProvisionedThroughput(
                     new ProvisionedThroughput()
                         .withReadCapacityUnits(1L)
@@ -102,18 +102,18 @@ public final class AwsUserITCase {
                 )
                 .withAttributeDefinitions(
                     new AttributeDefinition()
-                        .withAttributeName(AwsUnit.HASH_OWNER)
+                        .withAttributeName(AwsRule.HASH_OWNER)
                         .withAttributeType(ScalarAttributeType.S),
                     new AttributeDefinition()
-                        .withAttributeName(AwsUnit.RANGE_NAME)
+                        .withAttributeName(AwsRule.RANGE_NAME)
                         .withAttributeType(ScalarAttributeType.S)
                 )
                 .withKeySchema(
                     new KeySchemaElement()
-                        .withAttributeName(AwsUnit.HASH_OWNER)
+                        .withAttributeName(AwsRule.HASH_OWNER)
                         .withKeyType(KeyType.HASH),
                     new KeySchemaElement()
-                        .withAttributeName(AwsUnit.RANGE_NAME)
+                        .withAttributeName(AwsRule.RANGE_NAME)
                         .withKeyType(KeyType.RANGE)
                 )
         );
@@ -145,17 +145,17 @@ public final class AwsUserITCase {
             this.region, Mockito.mock(SQSClient.class), urn
         );
         MatcherAssert.assertThat(user.urn(), Matchers.equalTo(urn));
-        for (Unit unit : user.units()) {
-            user.units().remove(unit.name());
+        for (Rule rule : user.rules()) {
+            user.rules().remove(rule.name());
         }
-        final String name = "simple-unit";
-        user.units().create(name);
+        final String name = "simple-rule";
+        user.rules().create(name);
         MatcherAssert.assertThat(
-            user.units(),
-            Matchers.<Unit>iterableWithSize(1)
+            user.rules(),
+            Matchers.<Rule>iterableWithSize(1)
         );
         MatcherAssert.assertThat(
-            user.units().contains(name),
+            user.rules().contains(name),
             Matchers.is(true)
         );
     }

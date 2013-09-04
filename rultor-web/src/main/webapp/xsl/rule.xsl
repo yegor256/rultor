@@ -33,12 +33,12 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
-            <xsl:value-of select="/page/unit/name"/>
+            <xsl:value-of select="/page/rule/name"/>
         </title>
     </xsl:template>
     <xsl:template name="content">
         <xsl:apply-templates select="/page/face"/>
-        <xsl:apply-templates select="/page/unit/exception"/>
+        <xsl:apply-templates select="/page/rule/exception"/>
         <form method="post" class="spacious">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
@@ -47,10 +47,10 @@
                 <div class="form-group">
                     <label for="spec" class="hidden-phone">
                         <xsl:text>Specification of </xsl:text>
-                        <code><xsl:value-of select="/page/unit/name"/></code>
+                        <code><xsl:value-of select="/page/rule/name"/></code>
                     </label>
                     <textarea name="spec" id="spec" rows="18" class="form-control">
-                        <xsl:value-of select="/page/unit/spec"/>
+                        <xsl:value-of select="/page/rule/spec"/>
                     </textarea>
                 </div>
                 <div class="form-group">
@@ -67,6 +67,8 @@
     </xsl:template>
     <xsl:template match="face">
         <xsl:apply-templates select="exception"/>
+        <!--
+        Doesn't look nice so far, that's why disabling it...
         <xsl:if test="type and html">
             <p class="spacious">
                 <code><xsl:value-of select="type"/></code>
@@ -74,6 +76,7 @@
                 <xsl:value-of disable-output-escaping="yes" select="html"/>
             </p>
         </xsl:if>
+        -->
     </xsl:template>
     <xsl:template match="exception">
         <pre class="text-danger"><xsl:value-of select="."/></pre>

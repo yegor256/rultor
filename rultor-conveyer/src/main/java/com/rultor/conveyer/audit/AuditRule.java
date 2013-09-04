@@ -31,14 +31,16 @@ package com.rultor.conveyer.audit;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.spi.Unit;
-import com.rultor.spi.Units;
-import java.util.Iterator;
+import com.jcabi.urn.URN;
+import com.rultor.spi.Rule;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Wallet;
+import com.rultor.spi.Work;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Units with audit features.
+ * Rule with audit features.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -48,12 +50,12 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "origin", "funded" })
 @Loggable(Loggable.DEBUG)
-final class AuditUnits implements Units {
+final class AuditRule implements Rule {
 
     /**
-     * Original units.
+     * Original rule.
      */
-    private final transient Units origin;
+    private final transient Rule origin;
 
     /**
      * Wallet is available, account is properly funded.
@@ -62,11 +64,11 @@ final class AuditUnits implements Units {
 
     /**
      * Public ctor.
-     * @param units Units
+     * @param rule Rule
      * @param fnd Funded
      */
-    protected AuditUnits(final Units units, final boolean fnd) {
-        this.origin = units;
+    protected AuditRule(final Rule rule, final boolean fnd) {
+        this.origin = rule;
         this.funded = fnd;
     }
 
@@ -74,54 +76,39 @@ final class AuditUnits implements Units {
      * {@inheritDoc}
      */
     @Override
-    public boolean contains(final String name) {
-        return this.origin.contains(name);
+    public String name() {
+        return this.origin.name();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Unit get(final String name) {
-        return new AuditUnit(this.origin.get(name), this.funded);
+    public void update(final Spec spec) {
+        this.origin.update(spec);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void remove(final String name) {
-        this.origin.remove(name);
+    public Spec spec() {
+        return this.origin.spec();
     }
 
     /**
      * {@inheritDoc}
+     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public void create(final String name) {
-        this.origin.create(name);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterator<Unit> iterator() {
-        final Iterator<Unit> iterator = this.origin.iterator();
-        return new Iterator<Unit>() {
-            @Override
-            public boolean hasNext() {
-                return iterator.hasNext();
-            }
-            @Override
-            public Unit next() {
-                return new AuditUnit(iterator.next(), AuditUnits.this.funded);
-            }
-            @Override
-            public void remove() {
-                iterator.remove();
-            }
-        };
+    public Wallet wallet(final Work work, final URN taker, final String rule)
+        throws Wallet.NotEnoughFundsException {
+        if (!this.funded) {
+            throw new Wallet.NotEnoughFundsException(
+                "not enough funds in the account"
+            );
+        }
+        return this.origin.wallet(work, taker, rule);
     }
 
 }

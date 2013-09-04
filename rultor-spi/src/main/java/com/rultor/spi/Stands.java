@@ -59,7 +59,7 @@ public interface Stands extends Iterable<Stand> {
     /**
      * Get stand by name (runtime exception if it's absent).
      * @param name The name of it
-     * @return The unit
+     * @return The stand
      */
     @NotNull(message = "stand is never NULL")
     Stand get(@NotNull(message = "stand name can't be NULL") String name);

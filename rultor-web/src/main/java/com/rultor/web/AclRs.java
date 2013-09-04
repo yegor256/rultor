@@ -94,12 +94,6 @@ public final class AclRs extends BaseRs {
                     .add("acl", this.stand().acl().asText())
                     .up()
             )
-            .append(
-                new Breadcrumbs()
-                    .with("stands")
-                    .with("self", this.name)
-                    .bundle()
-            )
             .render()
             .build();
     }
@@ -177,6 +171,12 @@ public final class AclRs extends BaseRs {
             .stylesheet("/xsl/acl.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .append(
+                new Breadcrumbs()
+                    .with("stands")
+                    .with("self", this.name)
+                    .bundle()
+            )
             .link(
                 new Link(
                     "save",

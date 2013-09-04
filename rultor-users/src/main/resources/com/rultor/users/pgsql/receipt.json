@@ -1,13 +1,13 @@
 {
     "description": "receipts from wallets",
     "type":"object",
-    "required": ["work", "ct", "ctunit", "dt", "dtunit", "details", "amount"],
+    "required": ["work", "ct", "ctrule", "dt", "dtrule", "details", "amount"],
     "additionalProperties": false,
     "properties": {
         "ct": { "$ref": "#/definitions/urn" },
-        "ctunit": { "$ref": "#/definitions/unit" },
+        "ctrule": { "$ref": "#/definitions/rule" },
         "dt": { "$ref": "#/definitions/urn" },
-        "dtunit": { "$ref": "#/definitions/unit" },
+        "dtrule": { "$ref": "#/definitions/rule" },
         "details": { "type": "string" },
         "amount": {
             "type": "integer",
@@ -25,20 +25,20 @@
             "type": "string",
             "pattern": "^urn:[a-z]+:[0-9]+$"
         },
-        "unit": {
+        "rule": {
             "type": "string",
             "pattern": "^[a-z0-9\\-]+$"
         },
         "work": {
             "properties": {
                 "owner": { "$ref": "#/definitions/urn" },
-                "unit": { "$ref": "#/definitions/unit" },
+                "rule": { "$ref": "#/definitions/rule" },
                 "scheduled": {
                     "type": "string",
                     "format": "date-time"
                 }
             },
-            "required": ["owner", "unit", "scheduled"],
+            "required": ["owner", "rule", "scheduled"],
             "additionalProperties": false
         }
     }

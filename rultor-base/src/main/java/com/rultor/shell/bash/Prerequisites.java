@@ -36,6 +36,7 @@ import com.jcabi.log.Logger;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
 import com.rultor.shell.Terminal;
+import com.rultor.snapshot.Step;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -88,11 +89,9 @@ public final class Prerequisites implements Shells {
     public Shell acquire() throws IOException {
         final Shell shell = this.origin.acquire();
         for (Map.Entry<String, Object> pair : this.map.entrySet()) {
-            shell.exec(
-                this.script(pair.getKey()),
-                Prerequisites.toInputStream(pair.getValue()),
-                Logger.stream(Level.INFO, this),
-                Logger.stream(Level.WARNING, this)
+            this.upload(
+                shell, pair.getKey(),
+                Prerequisites.toInputStream(pair.getValue())
             );
         }
         return shell;
@@ -106,6 +105,24 @@ public final class Prerequisites implements Shells {
         return Logger.format(
             "%s with %d bash prerequisite(s)",
             this.origin, this.map.size()
+        );
+    }
+
+    /**
+     * Upload one file.
+     * @param shell Shell to use
+     * @param file File name to upload
+     * @param stream File content
+     * @throws IOException If fails
+     */
+    @Step("uploaded `${args[1]}`")
+    private void upload(final Shell shell, final String file,
+        final InputStream stream) throws IOException {
+        shell.exec(
+            this.script(file),
+            stream,
+            Logger.stream(Level.INFO, this),
+            Logger.stream(Level.WARNING, this)
         );
     }
 

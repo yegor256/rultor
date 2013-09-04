@@ -30,6 +30,7 @@
 package com.rultor.conveyer;
 
 import com.jcabi.aspects.Cacheable;
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
@@ -47,6 +48,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
+@Immutable
 @Loggable(Loggable.DEBUG)
 @EqualsAndHashCode(of = { "port", "key", "origin" })
 final class StdoutWork implements Work {
@@ -113,8 +115,8 @@ final class StdoutWork implements Work {
      * {@inheritDoc}
      */
     @Override
-    public String unit() {
-        return this.origin.unit();
+    public String rule() {
+        return this.origin.rule();
     }
 
     /**

@@ -36,6 +36,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.VerboseThreads;
 import com.rexsl.test.RestTester;
 import com.rexsl.test.TestClient;
 import com.rultor.snapshot.XemblyLine;
@@ -49,10 +50,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
@@ -80,6 +85,16 @@ import org.xembly.XemblySyntaxException;
 public final class Standed implements Drain {
 
     /**
+     * Number of threads to use for sending to queue.
+     */
+    public static final int THREADS = 10;
+
+    /**
+     * Max message batch size.
+     */
+    private static final int MAX_BATCH_SIZE = 10;
+
+    /**
      * SQS client connection container.
      */
     @Immutable
@@ -93,9 +108,17 @@ public final class Standed implements Drain {
     }
 
     /**
-     * Max message batch size.
+     * Executor container.
      */
-    private static final int MAX_BATCH_SIZE = 10;
+    @Immutable
+    private interface Exec {
+
+        /**
+         * Provide executor.
+         * @return ExecutorService
+         */
+        ExecutorService get();
+    }
 
     /**
      * Work we're in.
@@ -123,6 +146,11 @@ public final class Standed implements Drain {
     private final transient Standed.SQSEntry entry;
 
     /**
+     * Executor that run tasks.
+     */
+    private final transient Standed.Exec exec;
+
+    /**
      * Public ctor.
      * @param wrk Work we're in
      * @param name Name of stand
@@ -135,29 +163,25 @@ public final class Standed implements Drain {
         @NotNull(message = "name of stand can't be NULL") final String name,
         @NotNull(message = "key can't be NULL") final String secret,
         @NotNull(message = "drain can't be NULL") final Drain drain) {
-        this.work = wrk;
-        this.stand = name;
-        this.key = secret;
-        this.origin = drain;
-        this.entry = new Standed.SQSEntry() {
-            @Override
-            public TestClient get() {
-                return RestTester.start(Stand.QUEUE);
-            }
-        };
+        this(
+            wrk, name, secret, drain, RestTester.start(Stand.QUEUE),
+            Executors.newFixedThreadPool(Standed.THREADS, new VerboseThreads())
+        );
     }
 
     /**
-     * Public ctor.
+     * Constructor for tests.
      * @param wrk Work we're in
      * @param name Name of stand
      * @param secret Secret key of the stand
      * @param drain Main drain
      * @param client HTTP queue
+     * @param executor Executor to use
      * @checkstyle ParameterNumber (8 lines)
      */
     public Standed(final Work wrk, final String name, final String secret,
-        final Drain drain, final TestClient client) {
+        final Drain drain, final TestClient client,
+        final ExecutorService executor) {
         this.work = wrk;
         this.stand = name;
         this.key = secret;
@@ -166,6 +190,12 @@ public final class Standed implements Drain {
             @Override
             public TestClient get() {
                 return client;
+            }
+        };
+        this.exec = new Standed.Exec() {
+            @Override
+            public ExecutorService get() {
+                return executor;
             }
         };
     }
@@ -249,10 +279,13 @@ public final class Standed implements Drain {
      * @throws IOException If fails
      */
     private void send(final Iterable<String> xemblies) throws IOException {
+        final List<String> messages = new ArrayList<String>();
+        for (String xembly : xemblies) {
+            messages.add(this.json(xembly));
+        }
         final StringBuilder builder =
             new StringBuilder("Action=SendMessageBatch&Version=2011-10-01&");
         final List<String> postMessages = new ArrayList<String>();
-        final List<String> messages = this.jsons(xemblies);
         for (int identifier = 0; identifier < messages.size(); ++identifier) {
             postMessages.add(
                 String.format(
@@ -267,49 +300,57 @@ public final class Standed implements Drain {
         }
         builder.append(StringUtils.join(postMessages, '&'));
         final String body = builder.toString();
-        try {
-            final List<String> missed = this.entry.get()
-                .header(HttpHeaders.CONTENT_ENCODING, CharEncoding.UTF_8)
-                .header(
-                    HttpHeaders.CONTENT_LENGTH,
-                    body.getBytes(CharEncoding.UTF_8).length
-                )
-                .header(
-                    HttpHeaders.CONTENT_TYPE,
-                    MediaType.APPLICATION_FORM_URLENCODED
-                )
-                .post(
-                    String.format(
-                        "sending %d lines to stand SQS queue", messages.size()
-                    ),
-                    body
-                )
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                // @checkstyle LineLength (1 line)
-                .xpath("/SendMessageBatchResponse/BatchResultError/BatchResultErrorEntry/Id/text()");
-            if (!missed.isEmpty()) {
-                throw new IOException(
-                    String.format(
-                        "Problem sending %d messages", missed.size()
-                    )
-                );
+        final TestClient client = this.entry.get();
+        this.exec.get().submit(
+            new Callable<Void>() {
+                @Override
+                public Void call() throws IOException {
+                    try {
+                        final List<String> missed = Standed.this.enqueue(
+                            client, body, messages.size()
+                        );
+                        if (!missed.isEmpty()) {
+                            throw new IOException(
+                                String.format(
+                                    "Problem sending %d messages", missed.size()
+                                )
+                            );
+                        }
+                    } catch (AssertionError ex) {
+                        throw new IOException(ex);
+                    }
+                    return null;
+                }
             }
-        } catch (AssertionError ex) {
-            throw new IOException(ex);
-        }
+        );
     }
 
     /**
-     * Prepare list of messages in JSON format.
-     * @param xemblies List to messages.
-     * @return List of JSONs.
+     * Put messages on SQS.
+     * @param client HTTP client to use.
+     * @param body Body of the POST.
+     * @param size Number of messages sent.
+     * @return List of message IDs that were not enqueued.
+     * @throws UnsupportedEncodingException When unable to find UTF-8 encoding.
      */
-    private List<String> jsons(final Iterable<String> xemblies) {
-        final List<String> messages = new ArrayList<String>();
-        for (String xembly : xemblies) {
-            messages.add(this.json(xembly));
-        }
-        return messages;
+    private List<String> enqueue(final TestClient client, final String body,
+        final int size) throws UnsupportedEncodingException {
+        return client.header(HttpHeaders.CONTENT_ENCODING, CharEncoding.UTF_8)
+            .header(
+                HttpHeaders.CONTENT_LENGTH,
+                body.getBytes(CharEncoding.UTF_8).length
+            )
+            .header(
+                HttpHeaders.CONTENT_TYPE,
+                MediaType.APPLICATION_FORM_URLENCODED
+            )
+            .post(
+                String.format("sending %d lines to stand SQS queue", size),
+                body
+            )
+            .assertStatus(HttpURLConnection.HTTP_OK)
+                // @checkstyle LineLength (1 line)
+            .xpath("/SendMessageBatchResponse/BatchResultError/BatchResultErrorEntry/Id/text()");
     }
 
     /**
@@ -327,7 +368,7 @@ public final class Standed implements Drain {
             .write("xembly", xembly)
             .writeStartObject("work")
             .write("owner", this.work.owner().toString())
-            .write("unit", this.work.unit())
+            .write("rule", this.work.rule())
             .write("scheduled", this.work.scheduled().toString())
             .writeEnd()
             .writeEnd()

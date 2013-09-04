@@ -27,40 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web.rexsl.scripts
 
-import com.jcabi.manifests.Manifests
-import com.jcabi.urn.URN
-import com.rexsl.page.auth.Identity
-import com.rultor.client.RestUser
-import com.rultor.spi.Spec
-import com.rultor.web.AuthKeys
-import org.hamcrest.MatcherAssert
-import org.hamcrest.Matchers
-
-Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
-def identity = new Identity.Simple(new URN('urn:facebook:1'), '', new URI('#'))
-def key = new AuthKeys().make(identity)
-def user = new RestUser(rexsl.home, identity.urn(), key)
-MatcherAssert.assertThat(user.urn(), Matchers.equalTo(identity.urn()))
-
-def name = 'sample-unit'
-if (!user.units().contains(name)) {
-    user.units().create(name)
-}
-def unit = user.units().get(name)
-
-[
-    'java.lang.Double ( -55.0 )': 'java.lang.Double(-55.0)',
-    '"some text  \u20ac "  ': '"some text  \\u20AC "',
-].each {
-    unit.update(new Spec.Simple(it.key))
-    MatcherAssert.assertThat(unit.spec().asText(), Matchers.equalTo(it.value))
-}
-[
-    'com.rultor.base.Empty()',
-    'com.rultor.base.Restrictive(${work}, ["*"], com.rultor.base.Empty())',
-].each {
-    unit.update(new Spec.Simple(it))
-}
-user.units().remove(name)
+/**
+ * Shells, tests.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+package com.rultor.users;

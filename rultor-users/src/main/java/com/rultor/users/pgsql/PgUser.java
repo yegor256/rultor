@@ -33,8 +33,8 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Account;
+import com.rultor.spi.Rules;
 import com.rultor.spi.Stands;
-import com.rultor.spi.Units;
 import com.rultor.spi.User;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -84,8 +84,8 @@ final class PgUser implements User {
      * {@inheritDoc}
      */
     @Override
-    public Units units() {
-        return this.origin.units();
+    public Rules rules() {
+        return this.origin.rules();
     }
 
     /**

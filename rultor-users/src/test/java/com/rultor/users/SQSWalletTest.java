@@ -64,8 +64,8 @@ public final class SQSWalletTest {
         Mockito.doReturn(aws).when(client).get();
         final Wallet wallet = new SQSWallet(
             client, new Work.Simple(),
-            new URN("urn:creditor:1"), "credit-unit",
-            new URN("urn:debitor:1"), "debit-unit"
+            new URN("urn:creditor:1"), "credit-rule",
+            new URN("urn:debitor:1"), "debit-rule"
         );
         wallet.charge("payment детали", new Dollars(Tv.MILLION));
         Mockito.verify(aws).sendMessage(

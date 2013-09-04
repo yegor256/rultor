@@ -29,6 +29,7 @@
  */
 package com.rultor.conveyer;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
@@ -46,6 +47,7 @@ import lombok.ToString;
  * @since 1.0
  */
 @ToString
+@Immutable
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
 final class Version {

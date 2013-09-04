@@ -161,7 +161,7 @@
             </i>
         </li>
         <li>
-            <xsl:value-of select="unit"/>
+            <xsl:value-of select="rule"/>
         </li>
     </xsl:template>
     <xsl:template match="version" mode="compact">
@@ -273,7 +273,7 @@
             <xsl:if test="not($left)">
                 <i class="icon-chevron-left"><xsl:comment>start</xsl:comment></i>
             </xsl:if>
-            <xsl:if test="exception">
+            <xsl:if test="exception/stacktrace">
                 <pre style="display:none" class="text-danger text-left exception"><xsl:value-of select="exception/stacktrace"/></pre>
             </xsl:if>
         </li>
@@ -296,6 +296,9 @@
                         <xsl:when test="level = 'SEVERE'">
                             <xsl:text>label-danger</xsl:text>
                         </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:text>label-default</xsl:text>
+                        </xsl:otherwise>
                     </xsl:choose>
                 </xsl:attribute>
                 <xsl:value-of select="label"/>

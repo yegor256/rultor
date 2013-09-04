@@ -27,88 +27,44 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer.audit;
+package com.rultor.aws;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.urn.URN;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Unit;
-import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Unit with audit features.
- *
+ * Test case for {@link EC2Client}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-@ToString
-@EqualsAndHashCode(of = { "origin", "funded" })
-@Loggable(Loggable.DEBUG)
-final class AuditUnit implements Unit {
+public final class EC2ClientTest {
 
     /**
-     * Original unit.
+     * EC2Client.Simple can make an AWS client.
+     * @throws Exception If some problem inside
      */
-    private final transient Unit origin;
-
-    /**
-     * Wallet is available, account is properly funded.
-     */
-    private final transient boolean funded;
-
-    /**
-     * Public ctor.
-     * @param unit Unit
-     * @param fnd Funded
-     */
-    protected AuditUnit(final Unit unit, final boolean fnd) {
-        this.origin = unit;
-        this.funded = fnd;
+    @Test
+    public void makesAwsClient() throws Exception {
+        MatcherAssert.assertThat(
+            new EC2Client.Simple("key", "secret").get(),
+            Matchers.notNullValue()
+        );
     }
 
     /**
-     * {@inheritDoc}
+     * EC2Client.Regional can make an AWS client.
+     * @throws Exception If some problem inside
      */
-    @Override
-    public String name() {
-        return this.origin.name();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update(final Spec spec) {
-        this.origin.update(spec);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Spec spec() {
-        return this.origin.spec();
-    }
-
-    /**
-     * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
-     */
-    @Override
-    public Wallet wallet(final Work work, final URN taker, final String unit)
-        throws Wallet.NotEnoughFundsException {
-        if (!this.funded) {
-            throw new Wallet.NotEnoughFundsException(
-                "not enough funds in the account"
-            );
-        }
-        return this.origin.wallet(work, taker, unit);
+    @Test
+    public void makesRegionalAwsClient() throws Exception {
+        MatcherAssert.assertThat(
+            new EC2Client.Regional(
+                "eu-west-1",
+                new EC2Client.Simple("AAA", "FFF")
+            ).get(),
+            Matchers.notNullValue()
+        );
     }
 
 }

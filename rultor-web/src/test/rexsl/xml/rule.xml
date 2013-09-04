@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<?xml-stylesheet type='text/xsl' href='/xsl/units.xsl'?>
+<?xml-stylesheet type='text/xsl' href='/xsl/rule.xsl'?>
 <page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
     <identity>
         <urn>urn:facebook:1</urn>
@@ -41,61 +41,35 @@
         <date>22-Aug-2012</date>
     </version>
     <links>
-        <link href="/xml/units.xml" rel="self" type="text/xml"/>
+        <link href="/xml/rule.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
-        <link href="/xml/units.xml" rel="create" type="text/xml"/>
-        <link href="/xml/units.xml" rel="units" type="text/xml"/>
+        <link href="/xml/rule.xml" rel="save" type="text/xml"/>
+        <link href="/xml/rules.xml" rel="rules" type="text/xml"/>
         <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
-        <link href="/xml/account.xml" rel="account" type="text/xml"/>
+        <link href="/xml/front.xml" rel="auth-logout" type="text/xml"/>
     </links>
     <breadcrumbs>
-        <crumb rel="self">units</crumb>
+        <crumb rel="rules">rules</crumb>
+        <crumb rel="self">nightly-build</crumb>
     </breadcrumbs>
     <nav>
-        <item rel="units">Units</item>
+        <item rel="rules">Rules</item>
         <item rel="stands">Stands</item>
         <item rel="account">Account</item>
     </nav>
     <balance>$5.90</balance>
     <millis>1869</millis>
-    <units>
-        <unit>
-            <name>git-rultor</name>
-            <face>
-                <type>com.rultor.Something</type>
-                <drainable>true</drainable>
-                <html>some very long text to show, some very &lt;code&gt;long text&lt;/code&gt; to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, </html>
-            </face>
-            <links>
-                <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
-                <link href="/xml/drain.xml" rel="drain" type="text/xml"/>
-                <link href="/xml/index.xml" rel="remove" type="text/xml"/>
-            </links>
-        </unit>
-        <unit>
-            <name>nightly-build-rultor</name>
-            <face>
-                <exception>invalid text somewhere</exception>
-            </face>
-            <links>
-                <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
-                <link href="/xml/drain.xml" rel="drain" type="text/xml"/>
-                <link href="/xml/index.xml" rel="remove" type="text/xml"/>
-            </links>
-        </unit>
-        <unit>
-            <name>git-template</name>
-            <face>
-                <arguments>
-                    <argument>first</argument>
-                    <argument>second</argument>
-                </arguments>
-            </face>
-            <links>
-                <link href="/xml/unit.xml" rel="edit" type="text/xml"/>
-                <link href="/xml/drain.xml" rel="drain" type="text/xml"/>
-                <link href="/xml/index.xml" rel="remove" type="text/xml"/>
-            </links>
-        </unit>
-    </units>
+    <face>
+        <type>com.rultor.Something</type>
+        <drainable>true</drainable>
+        <html>some very long text to show, some very &lt;code&gt;long text&lt;/code&gt; to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, </html>
+    </face>
+    <rule>
+        <name>nightly-build</name>
+        <spec>com.rultor.ci.NightlyBuild(
+    git,
+    ec2,
+    "ant"
+)</spec>
+    </rule>
 </page>

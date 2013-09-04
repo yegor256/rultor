@@ -29,6 +29,7 @@
  */
 package com.rultor.conveyer;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
@@ -51,6 +52,7 @@ import lombok.ToString;
  * @checkstyle MultipleStringLiterals (500 lines)
  */
 @ToString
+@Immutable
 @EqualsAndHashCode
 @SuppressWarnings({ "PMD.ExcessiveImports", "PMD.AvoidDuplicateLiterals" })
 @Loggable(Loggable.DEBUG)

@@ -88,7 +88,7 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="pulse" mode="open">
-        <div class="panel">
+        <div class="panel panel-default">
             <xsl:attribute name="data-fetch-url">
                 <xsl:value-of select="links/link[@rel='fetch']/@href"/>
             </xsl:attribute>
@@ -110,7 +110,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="body">
+            <div class="panel-body snapshot">
                 <xsl:if test="error">
                     <pre class="text-danger"><xsl:value-of select="error"/></pre>
                 </xsl:if>
@@ -119,19 +119,21 @@
         </div>
     </xsl:template>
     <xsl:template match="pulse" mode="closed">
-        <div class="panel spacious">
-            <a class="pull-right icon" title="open for full view">
-                <xsl:attribute name="href">
-                    <xsl:value-of select="links/link[@rel='open']/@href"/>
-                </xsl:attribute>
-                <i class="icon-zoom-in"><xsl:comment>open</xsl:comment></i>
-            </a>
-            <ul class="list-inline">
-                <li>
-                    <xsl:value-of select="identifier"/>
-                </li>
-                <xsl:apply-templates select="tags/tag"/>
-            </ul>
+        <div class="panel panel-default spacious">
+            <div class="panel-body">
+                <a class="pull-right icon" title="open for full view">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="links/link[@rel='open']/@href"/>
+                    </xsl:attribute>
+                    <i class="icon-zoom-in"><xsl:comment>open</xsl:comment></i>
+                </a>
+                <ul class="list-inline">
+                    <li>
+                        <xsl:value-of select="identifier"/>
+                    </li>
+                    <xsl:apply-templates select="tags/tag"/>
+                </ul>
+            </div>
         </div>
     </xsl:template>
 </xsl:stylesheet>

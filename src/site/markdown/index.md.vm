@@ -1,46 +1,35 @@
-Programmable Enforcer of a Software Development Process
+Quality Means Strict Rules
 ===========
 
-Rultor is an integration platform of a new generation. Continuous Integration,
-in its modern understanding, is just a small element of a properly organized
-and disciplined software development process. Rultor lets you define
-and technically enforce rules of work in your team. Rultor allows you,
-a project architect or a manager:
+Rultor.com lets you configure and enforce basic rules of your
+software development project, for example:
 
- * Continuously integrate source code changes
-   using on-demand AWS EC2 instances (similar to Jenkins,
-   but with flexible on-demand cloud servers that run jobs);
+ - "Every new commit to our Git repository should trigger a
+   new build on a new on-demand Amazon EC2 instance
+   (aka **continuous integration**)"
 
- * Prevent master branch conflicts by preventive automated testing
-   of pull requests;
+ - "Every Github pull request should pass all unit tests and other automated
+   quality checks before merging into `master` (aka **preflight build**)"
 
- * Deploy your web app to on-demand AWS CloudFormation environments
-   per tester and developer requests (pool of
-   environments is managed by Rultor);
+ - "A staging request (submitted through IRC, Skype, or tickets) should
+   automatically lead to a new staging environment with
+   a feature branch deployed into it"
 
- * Keep programmers aware of source code changes and conflicts
-   by notifications automatically communicated through issue tracking system;
+ - "Unit test failures and quality defects should become visible in
+   feature branch tickets before code review or merge starts
+   (aka **preventive builds**)"
 
- * Enforce changes approval workflow in any ticket tracking system
-   (for example, with a list of mandatory steps of code reviews and acceptations);
-
- * Publish build artifacts like ZIP/JAR archives, test HTML reports,
-   code coverage and static analysis reports in custom destinations,
-   like AWS S3 or FTP;
-
- * Aggregate statistics and metrics from all processes in a fluid
-   web "stand".
-
-We do not provide any computing or storage resources, like servers. Instead, we
-integrate your existing components and help you to manage them.
+We do not provide any computing or storage resources, like servers.
+Instead, we integrate your existing components and help you to manage them.
 At the moment, we support out-of-the-box: Github, JIRA, Git,
-AWS EC2, AWS CloudFormation, AWS S3, FTP. The list is growing...
+AWS EC2, AWS CloudFormation, AWS S3, FTP. The list is growing, and in the
+nearest future we'll support Subversion, Mercurial, Trac, DigitalOcean,
+Windows Azure, Rackspace, etc. (you can help us by contributing).
 
 [Quick Start](./start.html)
-manual will help you to get your first unit of work
-up and running in 60 seconds.
+manual will help you to get your first rule up and running in 60 seconds.
 
 Rultor is an open source project hosted at [Gihub](https://github.com/rultor/rultor).
 You're very welcome to suggest new features, report bugs, and ask
 questions in [Github Issue Tracker](https://github.com/rultor/rultor/issues).
-The project is still in alpha state.
+The project is still in "pre-beta" state.

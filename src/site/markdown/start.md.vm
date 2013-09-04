@@ -1,13 +1,14 @@
-Quick Start
-===========
+#macro(anchor $name) <a name="${name}"></a> #end
+#set($hash = "#")
+${hash} Quick Start
 
-"Unit of work" is an active component that is receiving control
+"Rule" is an active component that is receiving control
 every minute and does something with your project on your behalf.
 A simple scenario would be to monitor your Git `master` branch
 and run automated build every time a new commit appears there
 (aka **continuous integration**).
 
-Let's create a unit of work for the continuous integration mechanism,
+Let's create a rule for continuous integration mechanism,
 with the following Specification:
 
 ```
@@ -66,20 +67,13 @@ the list contains just one element, but you can use it with many:
 
 The fourth one is an EC2 instance type, which will be used for build
 script execution. When a new commit is found in your `master` branch, the
-unit will create a new Amazon Web Services EC2 instance, execute your script, and
+rule will create a new Amazon Web Services EC2 instance, execute your script, and
 terminate the instance. Your account will be charged for the price of the
 instance. Prices and instance types are listed in
 [AWS documention](http://aws.amazon.com/ec2/pricing/).
 
-There is an allowance of $5.00 automatically added to your account every
-30 days, if you don't fund it otherwise. Thus, if you have just one continuous
-integration unit of work which runs, say three times per working day, using `m1.small`
-type of EC2 instance, your total cost will be $3.60 per month. This is less
-than the allowance you get automatically from us and you don't need to fund
-the account at all.
-
 The fifth and the sixth parameters are access credentials for a Stand, which
-is a public showcase of all units in a project (will be discussed a bit later). In
+is a public showcase of all rules in a project (will be discussed a bit later). In
 the example, credentials are not valid since you haven't create a stand yet.
 Stand name is `example` and authentication key is `super-secret`.
 
@@ -102,11 +96,91 @@ Triple quotes are used to specify a long text that constitues
 more than one line, similar to
 [Groovy multi-line strings](http://groovy.codehaus.org/Strings+and+GString).
 
-Stand
------
+${hash}${hash}${hash} #anchor("private-repo") What if my repository is private?
+
+If your git repository requires authentication, we would
+recommend to use SSH private key, that's how:
+
+```
+urn:github:526301:git-on-commit(
+  ...
+  {
+    "~/.ssh/id_rsa": """
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEowIBAAKCAQEAw93hQPucIa0D5nVhKHkHuyeBptzG6U7Lig4BbUAPjtSSsC2n
+    lVykSB24SnYTR+PcZhYepIdPF4BPYB13MSvLidNeS7vGWHOj9vt5daDCoOgCauRZ
+    2RCJwO6ToaVnG8IHMiGRkXgFqKr1rd9unuPLZFi/HTYMkf0SYdoJc3GL9Ywt0pam
+    ...
+    2g2QQQKBgAQBp0FuT2o0KbxGnejYiU9T4SKMW3X3n2UWipx+TbntNNlGDP55NNYY
+    a/pLWlmOF47jYTpc6j1Ws1JsxX+x6qrnN72P93dwjdNBgcgR3H3XtYVDSm3myMt6
+    N9d/UY1o9c4kuhwbe9KlJGW8KBrZAS4j1RlvrBS8DVPjx18+xPyN
+    -----END RSA PRIVATE KEY-----
+    """
+  }
+)
+```
+
+Your private key will be uploaded to `~/.ssh/id_rsa` and picked up
+by Git while cloning of your repository.
+
+If you are planning to use your private key for other rules, we
+recommend to move it to its own "passive" rule named, say, `github-ssh-key`:
+
+```
+"""
+-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAw93hQPucIa0D5nVhKHkHuyeBptzG6U7Lig4BbUAPjtSSsC2n
+lVykSB24SnYTR+PcZhYepIdPF4BPYB13MSvLidNeS7vGWHOj9vt5daDCoOgCauRZ
+2RCJwO6ToaVnG8IHMiGRkXgFqKr1rd9unuPLZFi/HTYMkf0SYdoJc3GL9Ywt0pam
+...
+2g2QQQKBgAQBp0FuT2o0KbxGnejYiU9T4SKMW3X3n2UWipx+TbntNNlGDP55NNYY
+a/pLWlmOF47jYTpc6j1Ws1JsxX+x6qrnN72P93dwjdNBgcgR3H3XtYVDSm3myMt6
+N9d/UY1o9c4kuhwbe9KlJGW8KBrZAS4j1RlvrBS8DVPjx18+xPyN
+-----END RSA PRIVATE KEY-----
+"""
+```
+
+Yes, it's possible to define a rule of just one plain text value. It
+won't get a pulse every minute, but can be used in other rules:
+
+```
+urn:github:526301:git-on-commit(
+  ...
+  {
+    "~/.ssh/id_rsa": github-ssh-key()
+  }
+)
+```
+
+That's how you avoid duplication and keep data in one place - by
+defining your own "passive" rules that don't get every-minute pulses,
+but hold some data shared between other rules.
+
+${hash}${hash}${hash} #anchor("cost") How much does it cost?
+
+Rultor.com is an open source and completely free service. It is sponsored
+by [TPC2.com](http://www.tpc2.com). You don't pay anything for
+creating an account and defining your rules and stands.
+
+However, you can fund your account using PayPal and use the money to compensate
+other users for rule templates they provide you. Together with rule
+templates they provide you access to their computing and storage resources
+(like Amazon EC2 instances or FTP logging). Rultor.com charges your
+account automatically and transfers money to their accounts. A detailed
+statistics of your expenses is available at
+[account page](http://www.rultor.com/account).
+
+There is an allowance of $5.00 automatically added to your account every
+30 days, if you don't fund it otherwise. Thus, if you have just one continuous
+integration rule which runs, say three times per working day, using `m1.small`
+type of EC2 instance, your total cost will be $3.60 per month. This is less
+than the allowance you get automatically from us and you don't need to fund
+the account at all.
+
+${hash}${hash} #anchor("stand") Stand
 
 Now it's time to create a "stand", where project members will see the
-progress of your units. Stand specification is much simplier, for
+progress of your rules. Stand specification is much simplier, for
 example this one can be used for a public project:
 
 ```
@@ -121,7 +195,7 @@ com.rultor.acl.Either(
 Instantiated stand specification implements
 [`ACL`](./rultor-spi/apidocs-${project.version}/com/rultor/spi/ACL.html) interface,
 which decides who is allowed to read your stand and who is allowed to
-post into it. Your units of work post into the stand and your project
+post into it. Your rules of work post into the stand and your project
 members read the stand at `http://www.rultor.com/s/example`
 (if the name of the stand is `example`).
 
@@ -145,14 +219,13 @@ If you want to close access to your stand, use
 without arguments:
 
 ```
-com.rultor.acl.Either()
+com.rultor.acl.Prohibited()
 ```
 
 This is a link to a stand we use to publish the progress of
 development of Rultor itself: [www.rultor.com/s/rultor](http://www.rultor.com/s/rultor).
 
-Continuous Integration of Master Branch
----
+${hash}${hash} #anchor("ci") Continuous Integration of Master Branch
 
 In the example above, every new commit made to your Git `master` branch
 triggers a script, which builds the product and validates its
@@ -162,10 +235,10 @@ static analysis as validating instruments).
 Template `git-on-commit` provided by user `urn:github:526301` does it all in
 a smart way. Let's break it down into components.
 
-As you already know, a unit of work receives control every minute.
-Technically it's even more interesting. Every minute a unit of work is
+As you already know, a rule receives control every minute.
+Technically it's even more interesting. Every minute a rule is
 instantiated as a Java object, according to its specification and then receives control.
-We call this object an Instance. The module that instantiates a unit and
+We call this object an Instance. The module that instantiates a rule and
 controls instances is called a Conveyer.
 
 When the instance's lifespan comes to end, it looses control and gets destroyed
@@ -184,10 +257,10 @@ using the template you pay for its usage of SimpleDB, but the price is
 very small (less than $0.00001 per request).
 
 As you have probably already understood, there is no way to manually "trigger" execution
-of a unit. This is where Rultor differs from other continuous integration
-systems, like Jenkins. A new instance of every unit is created and executed
+of a rule. This is where Rultor differs from other continuous integration
+systems, like Jenkins. A new instance of every rule is created and executed
 every minute, 24 hours per day, 7 days per week.
-The only way to stop this process is to either delete the unit
+The only way to stop this process is to either delete the rule
 or enclose its specification into
 [`Empty`](./rultor-base/apidocs-${project.version}/com/rultor/base/Empty.html):
 
@@ -263,19 +336,18 @@ using Decorator pattern, so get used to it.
 When a new commit is detected, build script is executed in a newly created
 Amazon EC2 instance. When execution is finished and build succeeded or
 failed we don't want to execute the same operation on the same commit. We
-want our unit to remember that given commit has already been seen and should
+want our rule to remember that given commit has already been seen and should
 be ignored in the future. This check is also implemented by `git-on-commit`.
 
 When execution is finished, `git-on-commit` uploads full output of the
 script to Amazon S3 and publishes a link to the file in the stand.
 
-Release Every New Tag
-------
+${hash}${hash} #anchor("on-tag") Release Every New Tag
 
 Another popular scenario in almost any software project should be
 releasing of the next version. When your next version is stable enough
 to reach the market you tag its latest commit and document
-it in release notes. You can specify a unit of work in Rultor that will
+it in release notes. You can specify a rule in Rultor that will
 find such tags and run build script on them:
 
 ```
@@ -322,8 +394,7 @@ rultor-5.3-beta
 example-2.0.3.GA
 ```
 
-Guard Your Master Branch
------
+${hash}${hash} #anchor("on-pull-request") Guard Your Master Branch
 
 It is a very good practice to test changes submitted to your code base
 before merging. When you receive a pull request from one of your
@@ -355,7 +426,7 @@ urn:github:526301:github-on-pull-request(
 
 Once a new pull request is ready user `yegor256` has to review the code
 and post a message that matches `.*good.*` regular expression to its
-issue. Unit of work will pick this pull request up, will merge it with
+issue. The rule will pick this pull request up, will merge it with
 master its destination branch and merge, if succeeded. Otherwise it will
 post a negative message to the Github issue and won't try again, until a new
 comment "good" comment is posted by `yegor256`.

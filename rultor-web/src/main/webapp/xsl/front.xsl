@@ -39,12 +39,11 @@
     <xsl:template name="content">
         <p>
             <xsl:text>
-                Rultor.com is a lightweight integration platform
-                for sofware development teams.
+                Rultor.com is a Programmable Enforcer of a Software Development Process.
             </xsl:text>
         </p>
         <p>
-            <xsl:text>To start, login using one of your accounts at: </xsl:text>
+            <xsl:text>To start, login using one of your accounts: </xsl:text>
         </p>
         <ul class="list-inline">
             <xsl:if test="/page/links/link[@rel='auth-facebook']">

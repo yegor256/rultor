@@ -65,17 +65,6 @@ textarea {
     right: 0;
     font-size: 80%;
 }
-.overlay {
-    position: fixed;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    background-color: rgb(255, 255, 255);
-    opacity: 0.7;
-    display: none;
-    z-index: 1001;
-}
 .menu {
     position: absolute;
     display: none;

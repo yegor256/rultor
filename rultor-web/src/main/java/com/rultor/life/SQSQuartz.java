@@ -41,7 +41,7 @@ import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Tv;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Queue;
-import com.rultor.spi.Unit;
+import com.rultor.spi.Rule;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Work;
@@ -174,8 +174,8 @@ public final class SQSQuartz implements Runnable, Closeable {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private void publish(final Time time) {
         for (User user : this.users) {
-            for (Unit unit : user.units()) {
-                this.queue.push(new Work.Simple(user.urn(), unit.name(), time));
+            for (Rule rule : user.rules()) {
+                this.queue.push(new Work.Simple(user.urn(), rule.name(), time));
             }
         }
     }

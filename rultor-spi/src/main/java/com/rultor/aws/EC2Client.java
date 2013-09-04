@@ -30,12 +30,14 @@
 package com.rultor.aws;
 
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.RegionUtils;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.Validate;
 
 /**
  * EC2 client.
@@ -94,6 +96,54 @@ public interface EC2Client {
             return new AmazonEC2Client(
                 new BasicAWSCredentials(this.key, this.secret)
             );
+        }
+    }
+
+    /**
+     * With custom region.
+     */
+    @Immutable
+    @EqualsAndHashCode(of = { "region", "origin" })
+    @Loggable(Loggable.DEBUG)
+    final class Regional implements EC2Client {
+        /**
+         * Original client.
+         */
+        private final transient EC2Client origin;
+        /**
+         * Region to use.
+         */
+        private final transient String region;
+        /**
+         * Public ctor.
+         * @param reg Region we're in
+         * @param client Original client
+         */
+        public Regional(
+            @NotNull(message = "region can't be NULL") final String reg,
+            @NotNull(message = "client can't be NULL") final EC2Client client) {
+            Validate.isTrue(
+                reg.matches("[a-z]{2}\\-[a-z]+\\-\\d+"),
+                "AWS region `%s` is in wrong format", reg
+            );
+            this.region = reg;
+            this.origin = client;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return String.format("%s in %s", this.origin, this.region);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public AmazonEC2 get() {
+            final AmazonEC2 aws = this.origin.get();
+            aws.setRegion(RegionUtils.getRegion(this.region));
+            return aws;
         }
     }
 

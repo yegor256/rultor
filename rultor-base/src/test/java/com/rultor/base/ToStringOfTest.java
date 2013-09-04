@@ -27,46 +27,55 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.base;
 
-import com.jcabi.aspects.Immutable;
-import javax.validation.constraints.NotNull;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Units.
+ * Tests for {@link ToStringOf}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Units extends Iterable<Unit> {
+public final class ToStringOfTest {
+    /**
+     * Class with overridden toString.
+     */
+    private static final class Overrider {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return "to string";
+        }
+    }
 
     /**
-     * Contains a unit with this name?
-     * @param name The name of it
-     * @return TRUE if it already exists
+     * Behaviour for overridden toString.
      */
-    boolean contains(@NotNull(message = "name can't be NULL") String name);
+    @Test
+    public void overridden() {
+        final ToStringOfTest.Overrider overridden =
+            new ToStringOfTest.Overrider();
+        MatcherAssert.assertThat(
+            new ToStringOf(overridden).object(),
+            Matchers.equalTo(overridden.toString())
+        );
+    }
 
     /**
-     * Get unit by name (runtime exception if it's absent).
-     * @param name The name of it
-     * @return The unit
+     * Test behaviour for non-overridden toString.
      */
-    @NotNull(message = "unit is never NULL")
-    Unit get(@NotNull(message = "unit name can't be NULL") String name);
-
-    /**
-     * Remove unit by name (runtime exception if it's absent).
-     * @param name The name of it
-     */
-    void remove(@NotNull(message = "name can't be NULL") String name);
-
-    /**
-     * Create empty default unit with this name.
-     * @param name The name of it
-     */
-    void create(@NotNull(message = "name can't be NULL") String name);
-
+    @Test
+    public void defaultToString() {
+        final Object def = new Object();
+        MatcherAssert.assertThat(
+            new ToStringOf(def).object(),
+            Matchers.equalTo(def.toString())
+        );
+    }
 }

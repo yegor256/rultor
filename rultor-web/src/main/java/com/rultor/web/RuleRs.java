@@ -34,9 +34,9 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
+import com.rultor.spi.Rule;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
-import com.rultor.spi.Unit;
 import com.rultor.tools.Exceptions;
 import java.net.HttpURLConnection;
 import java.util.NoSuchElementException;
@@ -58,74 +58,68 @@ import javax.ws.rs.core.Response;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Path("/unit/{name:[\\w\\-]+}")
+@Path("/rule/{name:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
-public final class UnitRs extends BaseRs {
+public final class RuleRs extends BaseRs {
 
     /**
-     * Unit name.
+     * Rule name.
      */
     private transient String name;
 
     /**
      * Inject it from query.
-     * @param unit Unit name (or NULL)
+     * @param rule Rule name (or NULL)
      */
     @PathParam("name")
-    public void setName(@NotNull(message = "unit name is mandatory")
-        final String unit) {
-        this.name = unit;
+    public void setName(@NotNull(message = "rule name is mandatory")
+        final String rule) {
+        this.name = rule;
     }
 
     /**
-     * View an existing unit or an empty one.
+     * View an existing rule or an empty one.
      * @return The JAX-RS response
      */
     @GET
     @Path("/")
     public Response index() {
-        final Unit unit = this.unit();
+        final Rule rule = this.rule();
         return this.head()
             .append(
-                new JaxbBundle("unit")
+                new JaxbBundle("rule")
                     .add("name", this.name)
                     .up()
-                    .add("spec", unit.spec().asText())
+                    .add("spec", rule.spec().asText())
                     .up()
             )
             .append(
                 new JaxbFace(this.repo(), this.users())
-                    .bundle(this.user(), unit)
-            )
-            .append(
-                new Breadcrumbs()
-                    .with("units")
-                    .with("self", this.name)
-                    .bundle()
+                    .bundle(this.user(), rule)
             )
             .render()
             .build();
     }
 
     /**
-     * Remove unit by name.
+     * Remove rule by name.
      * @return The JAX-RS response
      */
     @GET
     @Path("/remove")
     public Response remove() {
-        this.user().units().remove(this.name);
+        this.user().rules().remove(this.name);
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()
-                .path(UnitsRs.class)
+                .path(RulesRs.class)
                 .build(),
-            String.format("Unit `%s` successfully removed", this.name),
+            String.format("Rule `%s` successfully removed", this.name),
             Level.INFO
         );
     }
 
     /**
-     * Save new or existing unit unit.
+     * Save new or existing rule.
      * @param spec Spec to save
      * @return The JAX-RS response
      */
@@ -134,7 +128,7 @@ public final class UnitRs extends BaseRs {
     public Response save(@NotNull(message = "spec form param is mandatory")
         @FormParam("spec") final String spec) {
         try {
-            this.unit().update(
+            this.rule().update(
                 new Spec.Strict(
                     spec, this.repo(), this.user(), this.users(),
                     this.work(this.name, new Spec.Simple(spec)), Object.class
@@ -144,7 +138,7 @@ public final class UnitRs extends BaseRs {
             return this.head()
                 .append(FlashInset.bundle(Level.SEVERE, Exceptions.message(ex)))
                 .append(
-                    new JaxbBundle("unit")
+                    new JaxbBundle("rule")
                         .add("name", this.name)
                         .up()
                         .add("spec", spec)
@@ -160,7 +154,7 @@ public final class UnitRs extends BaseRs {
             this.uriInfo().getRequestUri(),
             String.format(
                 // @checkstyle LineLength (1 line)
-                "Unit `%s` successfully updated, will take a few minutes to propagate to all servers",
+                "Rule `%s` successfully updated, will take a few minutes to propagate to all servers",
                 this.name
             ),
             Level.INFO
@@ -168,12 +162,12 @@ public final class UnitRs extends BaseRs {
     }
 
     /**
-     * Get Unit.
-     * @return Unit
+     * Get Rule.
+     * @return Rule
      */
-    private Unit unit() {
+    private Rule rule() {
         try {
-            return this.user().units().get(this.name);
+            return this.user().rules().get(this.name);
         } catch (NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
@@ -185,16 +179,22 @@ public final class UnitRs extends BaseRs {
      */
     private EmptyPage head() {
         return new PageBuilder()
-            .stylesheet("/xsl/unit.xsl")
+            .stylesheet("/xsl/rule.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .append(
+                new Breadcrumbs()
+                    .with("rules")
+                    .with("self", this.name)
+                    .bundle()
+            )
             .link(
                 new Link(
                     "save",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
-                        .path(UnitRs.class)
-                        .path(UnitRs.class, "save")
+                        .path(RuleRs.class)
+                        .path(RuleRs.class, "save")
                         .build(this.name)
                 )
             )
@@ -203,8 +203,8 @@ public final class UnitRs extends BaseRs {
                     "remove",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
-                        .path(UnitRs.class)
-                        .path(UnitRs.class, "remove")
+                        .path(RuleRs.class)
+                        .path(RuleRs.class, "remove")
                         .build(this.name)
                 )
             );

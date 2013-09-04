@@ -60,11 +60,11 @@ public interface User {
     Account account();
 
     /**
-     * Names of all his units.
-     * @return Collection of units
+     * Names of all his rules.
+     * @return Collection of rules
      */
-    @NotNull(message = "set of units of user is never NULL")
-    Units units();
+    @NotNull(message = "set of rules of user is never NULL")
+    Rules rules();
 
     /**
      * Names of all his stands.
@@ -89,7 +89,7 @@ public interface User {
             throw new UnsupportedOperationException();
         }
         @Override
-        public Units units() {
+        public Rules rules() {
             throw new UnsupportedOperationException();
         }
         @Override

@@ -29,6 +29,7 @@
  */
 package com.rultor.drain;
 
+import com.google.common.util.concurrent.MoreExecutors;
 import com.jcabi.urn.URN;
 import com.rexsl.test.TestClient;
 import com.rexsl.test.TestResponse;
@@ -141,13 +142,14 @@ public final class StandedTest {
     private Standed standed(final TestClient client) {
         final Work work = Mockito.mock(Work.class);
         Mockito.when(work.owner()).thenReturn(new URN());
-        Mockito.when(work.unit()).thenReturn(StringUtils.EMPTY);
+        Mockito.when(work.rule()).thenReturn(StringUtils.EMPTY);
         Mockito.when(work.scheduled()).thenReturn(new Time());
         return new Standed(
             work,
             "name", "pass",
             Mockito.mock(Drain.class),
-            client
+            client,
+            MoreExecutors.sameThreadExecutor()
         );
     }
 

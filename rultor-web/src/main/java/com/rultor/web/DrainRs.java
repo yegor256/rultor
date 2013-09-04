@@ -31,6 +31,7 @@ package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.Logger;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
@@ -40,8 +41,8 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Rule;
 import com.rultor.spi.SpecException;
-import com.rultor.spi.Unit;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
@@ -63,7 +64,7 @@ import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
 
 /**
- * Drain of a unit.
+ * Drain of a rule.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -71,7 +72,7 @@ import org.xembly.XemblySyntaxException;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Path("/drain/{unit:[\\w\\-]+}")
+@Path("/drain/{rule:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.ExcessiveImports")
 public final class DrainRs extends BaseRs {
@@ -82,7 +83,7 @@ public final class DrainRs extends BaseRs {
     private static final String QUERY_SINCE = "since";
 
     /**
-     * Unit name.
+     * Rule name.
      */
     private transient String name;
 
@@ -93,12 +94,12 @@ public final class DrainRs extends BaseRs {
 
     /**
      * Inject it from query.
-     * @param unit Unit name
+     * @param rule Rule name
      */
-    @PathParam("unit")
-    public void setName(@NotNull(message = "unit name can't be NULL")
-        final String unit) {
-        this.name = unit;
+    @PathParam("rule")
+    public void setName(@NotNull(message = "rule name can't be NULL")
+        final String rule) {
+        this.name = rule;
     }
 
     /**
@@ -128,18 +129,18 @@ public final class DrainRs extends BaseRs {
                     "edit",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
-                        .path(UnitRs.class)
+                        .path(RuleRs.class)
                         .build(this.name)
                 )
             )
             .append(
                 new Breadcrumbs()
-                    .with("units")
+                    .with("rules")
                     .with("edit", this.name)
                     .with("self", "drain")
                     .bundle()
             )
-            .append(new JaxbBundle("unit", this.name));
+            .append(new JaxbBundle("rule", this.name));
         final Drain drain = this.drain(new Time());
         Pageable<Time, Time> pulses = this.pulses(drain);
         final int total;
@@ -184,18 +185,17 @@ public final class DrainRs extends BaseRs {
      * @return The drain
      */
     private Drain drain(final Time time) {
+        final Object src;
         try {
-            return Drain.Source.class.cast(
-                new Repo.Cached(
-                    this.repo(), this.user(), this.unit().spec()
-                ).get().instantiate(
-                    this.users(),
-                    new Arguments(
-                        new Work.Simple(this.user().urn(), this.name, time),
-                        new Wallet.Empty()
-                    )
+            src = new Repo.Cached(
+                this.repo(), this.user(), this.rule().spec()
+            ).get().instantiate(
+                this.users(),
+                new Arguments(
+                    new Work.Simple(this.user().urn(), this.name, time),
+                    new Wallet.Empty()
                 )
-            ).drain();
+            );
         } catch (SpecException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
@@ -207,6 +207,16 @@ public final class DrainRs extends BaseRs {
                 Level.SEVERE
             );
         }
+        if (!(src instanceof Drain.Source)) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                Logger.format(
+                    "Rule `%[type]s` is not an instance of `Drain.Source`", src
+                ),
+                Level.SEVERE
+            );
+        }
+        return Drain.Source.class.cast(src).drain();
     }
 
     /**
@@ -231,22 +241,22 @@ public final class DrainRs extends BaseRs {
     }
 
     /**
-     * Get unit.
-     * @return The unit
+     * Get rule.
+     * @return The rule
      */
-    private Unit unit() {
+    private Rule rule() {
         try {
-            return this.user().units().get(this.name);
+            return this.user().rules().get(this.name);
         } catch (NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
     }
 
     /**
-     * All pulses of the unit.
+     * All pulses of the rule.
      * @param pulses All pulses to show
      * @param maximum Maximum to show
-     * @return Collection of JAXB units
+     * @return Collection of JAXB rules
      */
     private JaxbBundle pulses(final Iterator<Time> pulses, final int maximum) {
         JaxbBundle bundle = new JaxbBundle("pulses");

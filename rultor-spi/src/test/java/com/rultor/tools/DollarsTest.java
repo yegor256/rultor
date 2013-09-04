@@ -51,6 +51,7 @@ public final class DollarsTest {
     public void printsItselfToString() throws Exception {
         final ImmutableMap<Dollars, String> map =
             new ImmutableMap.Builder<Dollars, String>()
+                .put(new Dollars(0L), "$0.00")
                 .put(new Dollars(Tv.MILLION), "$1.00")
                 .put(new Dollars(Tv.FIVE * Tv.MILLION), "$5.00")
                 .put(new Dollars(Tv.THOUSAND), "$0.001")

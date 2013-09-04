@@ -32,8 +32,8 @@ package com.rultor.client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
-import com.rultor.spi.Unit;
-import com.rultor.spi.Units;
+import com.rultor.spi.Rule;
+import com.rultor.spi.Rules;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -48,7 +48,7 @@ import lombok.ToString;
 import org.apache.commons.lang3.CharEncoding;
 
 /**
- * RESTful Units.
+ * RESTful Rules.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -58,7 +58,7 @@ import org.apache.commons.lang3.CharEncoding;
 @ToString
 @EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
-final class RestUnits implements Units {
+final class RestRules implements Rules {
 
     /**
      * Home URI.
@@ -75,7 +75,7 @@ final class RestUnits implements Units {
      * @param entry Entry point (URI)
      * @param tkn Token
      */
-    protected RestUnits(
+    protected RestRules(
         @NotNull(message = "URI can't be NULL") final URI entry,
         @NotNull(message = "token can't be NULL") final String tkn) {
         this.home = entry.toString();
@@ -86,7 +86,7 @@ final class RestUnits implements Units {
      * {@inheritDoc}
      */
     @Override
-    public Iterator<Unit> iterator() {
+    public Iterator<Rule> iterator() {
         throw new UnsupportedOperationException();
     }
 
@@ -94,8 +94,8 @@ final class RestUnits implements Units {
      * {@inheritDoc}
      */
     @Override
-    public Unit get(final String name) {
-        return new RestUnit(
+    public Rule get(final String name) {
+        return new RestRule(
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
@@ -104,7 +104,7 @@ final class RestUnits implements Units {
                 .xpath(
                     String.format(
                         // @checkstyle LineLength (1 line)
-                        "/page/units/unit[name='%s']/links/link[@rel='edit']/@href",
+                        "/page/rules/rule[name='%s']/links/link[@rel='edit']/@href",
                         name
                     )
                 )
@@ -152,7 +152,7 @@ final class RestUnits implements Units {
             .rel(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "/page/units/unit[name='%s']/links/link[@rel='remove']/@href",
+                    "/page/rules/rule[name='%s']/links/link[@rel='remove']/@href",
                     name
                 )
             )
@@ -170,7 +170,7 @@ final class RestUnits implements Units {
             .header(HttpHeaders.AUTHORIZATION, this.token)
             .get(String.format("#contains(%s)", name))
             .assertStatus(HttpURLConnection.HTTP_OK)
-            .xpath(String.format("/page/units/unit[name='%s']", name))
+            .xpath(String.format("/page/rules/rule[name='%s']", name))
             .isEmpty();
     }
 
