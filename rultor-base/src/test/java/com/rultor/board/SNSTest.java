@@ -34,7 +34,8 @@ import com.amazonaws.services.sns.model.PublishRequest;
 import com.amazonaws.services.sns.model.PublishResult;
 import com.rultor.aws.SNSClient;
 import javax.validation.ConstraintViolationException;
-import org.junit.Assert;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -59,29 +60,35 @@ public final class SNSTest {
      */
     @Test
     public void sentNotification() {
-        final String body = "Subject \n message body";
+        final String message = "Subject \n message body";
         final String topic = "Test Topic";
         final String sub = "Test Subject";
-        final String strBody = "Test Body";
+        final String body = "Test Body";
         final AmazonSNS aws = Mockito.mock(AmazonSNS.class);
         final SNSClient client = Mockito.mock(SNSClient.class);
-        final PublishResult publishResult = Mockito.mock(PublishResult.class);
-        final PublishRequest publishRequest = Mockito
+        final PublishResult result = Mockito.mock(PublishResult.class);
+        final PublishRequest request = Mockito
         .mock(PublishRequest.class);
-        Mockito.doReturn(publishRequest).when(publishRequest)
+        Mockito.doReturn(request).when(request)
         .withTopicArn(topic);
-        Mockito.doReturn(publishRequest).when(publishRequest)
-        .withMessage(strBody);
-        Mockito.doReturn(publishRequest).when(publishRequest).withSubject(sub);
+        Mockito.doReturn(request).when(request)
+        .withMessage(body);
+        Mockito.doReturn(request).when(request).withSubject(sub);
         Mockito.doReturn(aws).when(client).get();
-        Mockito.doReturn(publishResult).when(aws).publish(publishRequest);
-        new SNS(topic, client).announce(body);
-        Assert.assertEquals(publishResult, aws.publish(publishRequest));
-        Assert.assertEquals(publishRequest, publishRequest.withTopicArn(topic));
-        Assert.assertEquals(
-            publishRequest, publishRequest.withMessage(strBody)
+        Mockito.doReturn(result).when(aws).publish(request);
+        new SNS(topic, client).announce(message);
+        MatcherAssert.assertThat(
+            result, Matchers.equalTo(aws.publish(request))
         );
-        Assert.assertEquals(publishRequest, publishRequest.withSubject(sub));
-        Mockito.verify(aws, Mockito.atLeast(1)).publish(publishRequest);
+        MatcherAssert.assertThat(
+            request, Matchers.equalTo(request.withTopicArn(topic))
+        );
+        MatcherAssert.assertThat(
+            request, Matchers.equalTo(request.withMessage(body))
+        );
+        MatcherAssert.assertThat(
+            request, Matchers.equalTo(request.withSubject(sub))
+        );
+        Mockito.verify(aws, Mockito.atLeast(1)).publish(request);
     }
 }
