@@ -41,6 +41,7 @@ import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -56,26 +57,24 @@ import org.mockito.Mockito;
 public final class EC2Test {
 
     /**
-     * Acquire Test.
+     * Acquire Environment from EC2.
      *
      * @throws IOException If some problem inside.
      */
     @Test
-    public void acquire() throws IOException {
-        final EC2 ectwo = this.prepareTestData();
-        final Environment environment = ectwo.acquire();
+    public void acquireEnvironment() throws IOException {
+        final EC2 envs = this.mockEnvironment();
+        final Environment environment = envs.acquire();
         MatcherAssert.assertThat(
             environment,
             org.hamcrest.Matchers.notNullValue()
         );
     }
     /**
-     * Prepare test data.
-     *
+     * Mock the Environment.
      * @return EC2.
      */
-    @SuppressWarnings("unchecked")
-    private EC2 prepareTestData() {
+    private EC2 mockEnvironment() {
         final Work work = Mockito.mock(Work.class);
         final Wallet wallet = Mockito.mock(Wallet.class);
         final EC2Client client = Mockito.mock(EC2Client.class);
@@ -85,7 +84,7 @@ public final class EC2Test {
         final Reservation reservation = Mockito.mock(Reservation.class);
         final Instance instance = Mockito.mock(Instance.class);
         final List<Instance> instances =
-            (List<Instance>) Mockito.mock(List.class);
+            Arrays.asList(instance);
         Mockito.when(
             client.get()
         ).thenReturn(aws);
@@ -100,12 +99,6 @@ public final class EC2Test {
         Mockito.when(reservation.getInstances())
             .thenReturn(instances);
         Mockito.when(
-            instances.isEmpty()
-        ).thenReturn(false);
-        Mockito.when(
-            instances.get(0)
-        ).thenReturn(instance);
-        Mockito.when(
             instance.getInstanceId()
         ).thenReturn("InstanceId");
         Mockito.when(
@@ -117,8 +110,8 @@ public final class EC2Test {
         Mockito.when(
             work.scheduled()
         ).thenReturn(new Time());
-        final EC2 ectwo =
+        final EC2 envs =
             new EC2(work, wallet, "type", "image", "group", "par", client);
-        return ectwo;
+        return envs;
     }
 }

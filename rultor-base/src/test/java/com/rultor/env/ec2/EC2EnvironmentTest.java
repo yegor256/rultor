@@ -44,6 +44,7 @@ import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.hamcrest.MatcherAssert;
@@ -60,31 +61,31 @@ import org.mockito.Mockito;
 public final class EC2EnvironmentTest {
 
     /**
-     * Creation of the InetAddress test.
+     * Get InetAddress from EC2Environment.
      *
      * @throws IOException If some problem inside.
      */
     @Test
-    public void address() throws IOException {
-        final EC2Environment eC2Environment = this.prepareTestData();
-        final InetAddress inetAddress = eC2Environment.address();
+    public void createInetAddress() throws IOException {
+        final EC2Environment env = this.mockEnvironment();
+        final InetAddress address = env.address();
         MatcherAssert.assertThat(
-            inetAddress,
+            address,
             org.hamcrest.Matchers.notNullValue()
         );
     }
 
     /**
-     * Test method for close.
+     * Close EC2Environment.
      *
      * @throws IOException If some problem inside.
      */
     @Test
-    public void close() throws IOException {
-        final EC2Environment eC2Environment = this.prepareTestData();
-        eC2Environment.close();
+    public void closeEnvironment() throws IOException {
+        final EC2Environment env = this.mockEnvironment();
+        env.close();
         MatcherAssert.assertThat(
-            eC2Environment.toString(),
+            env.toString(),
             org.hamcrest.Matchers
             .containsString(
                 "EC2 `instance` instance accessed with Mock for EC2Client"
@@ -93,24 +94,22 @@ public final class EC2EnvironmentTest {
     }
 
     /**
-     * Prepare Test Data.
+     * Mock the Environment.
      * @return EC2Environment
      * @checkstyle ExecutableStatementCount (50 lines)
      */
-    @SuppressWarnings("unchecked")
-    private EC2Environment prepareTestData() {
+    private EC2Environment mockEnvironment() {
         final Work work = Mockito.mock(Work.class);
         final Wallet wallet = Mockito.mock(Wallet.class);
         final EC2Client client = Mockito.mock(EC2Client.class);
         final AmazonEC2 aws = Mockito.mock(AmazonEC2.class);
         final DescribeInstancesResult instanceresult =
             Mockito.mock(DescribeInstancesResult.class);
-        final List<Reservation> reservations =
-            (List<Reservation>) Mockito.mock(List.class);
         final Reservation reservation = Mockito.mock(Reservation.class);
-        final List<Instance> instances =
-            (List<Instance>) Mockito.mock(List.class);
+        final List<Reservation> reservations = Arrays.asList(reservation);
         final Instance instance = Mockito.mock(Instance.class);
+        final List<Instance> instances =
+            Arrays.asList(instance);
         final Placement placement = Mockito.mock(Placement.class);
         final InstanceState instanceState = Mockito.mock(InstanceState.class);
         final TerminateInstancesResult result =
@@ -118,7 +117,7 @@ public final class EC2EnvironmentTest {
         final InstanceStateChange stateChange =
             Mockito.mock(InstanceStateChange.class);
         final List<InstanceStateChange> stateChanges =
-            (List<InstanceStateChange>) Mockito.mock(List.class);
+            Arrays.asList(stateChange);
         Mockito.when(client.get()).thenReturn(aws);
         Mockito
             .when(
@@ -129,10 +128,7 @@ public final class EC2EnvironmentTest {
         Mockito.when(
             instanceresult.getReservations()
         ).thenReturn(reservations);
-        Mockito.when(reservations.get(0)).thenReturn(reservation);
         Mockito.when(reservation.getInstances()).thenReturn(instances);
-        Mockito.when(instances.isEmpty()).thenReturn(false);
-        Mockito.when(instances.get(0)).thenReturn(instance);
         Mockito.when(instance.getPlacement()).thenReturn(placement);
         Mockito.when(instance.getState()).thenReturn(instanceState);
         Mockito.when(instanceState.getName()).thenReturn("running");
@@ -142,12 +138,11 @@ public final class EC2EnvironmentTest {
             )
         ).thenReturn(result);
         Mockito.when(result.getTerminatingInstances()).thenReturn(stateChanges);
-        Mockito.when(stateChanges.get(0)).thenReturn(stateChange);
         Mockito.when(instance.getLaunchTime()).thenReturn(new Date());
         Mockito.when(instance.getInstanceType()).thenReturn("InstanceType");
         Mockito.when(placement.getAvailabilityZone()).thenReturn("ZONE");
-        final EC2Environment eC2Environment =
+        final EC2Environment env =
             new EC2Environment(work, wallet, "instance", client);
-        return eC2Environment;
+        return env;
     }
 }
