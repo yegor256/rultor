@@ -84,6 +84,12 @@ public final class EC2EnvironmentTest {
     public void closeEnvironment() throws IOException {
         final EC2Environment env = this.mockEnvironment();
         env.close();
+    }
+    /**
+     * Implementaion EC2Environment's toString() method.
+     */
+    public void toStringImplementaion() {
+        final EC2Environment env = this.mockEnvironment();
         MatcherAssert.assertThat(
             env.toString(),
             Matchers
