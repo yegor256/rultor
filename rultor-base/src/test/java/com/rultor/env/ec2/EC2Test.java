@@ -44,8 +44,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 /**
@@ -58,7 +58,6 @@ public final class EC2Test {
 
     /**
      * Acquire Environment from EC2.
-     *
      * @throws IOException If some problem inside.
      */
     @Test
@@ -67,7 +66,7 @@ public final class EC2Test {
         final Environment environment = envs.acquire();
         MatcherAssert.assertThat(
             environment,
-            org.hamcrest.Matchers.notNullValue()
+            Matchers.notNullValue()
         );
     }
     /**
@@ -90,7 +89,7 @@ public final class EC2Test {
         ).thenReturn(aws);
         Mockito.when(
             aws.runInstances(
-                Matchers.any(RunInstancesRequest.class)
+                Mockito.any(RunInstancesRequest.class)
             )
         ).thenReturn(result);
         Mockito.when(

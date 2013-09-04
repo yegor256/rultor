@@ -48,8 +48,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 /**
@@ -61,7 +61,7 @@ import org.mockito.Mockito;
 public final class EC2EnvironmentTest {
 
     /**
-     * Get InetAddress from EC2Environment.
+     * Create InetAddress from EC2Environment.
      *
      * @throws IOException If some problem inside.
      */
@@ -71,7 +71,7 @@ public final class EC2EnvironmentTest {
         final InetAddress address = env.address();
         MatcherAssert.assertThat(
             address,
-            org.hamcrest.Matchers.notNullValue()
+            Matchers.notNullValue()
         );
     }
 
@@ -86,7 +86,7 @@ public final class EC2EnvironmentTest {
         env.close();
         MatcherAssert.assertThat(
             env.toString(),
-            org.hamcrest.Matchers
+            Matchers
             .containsString(
                 "EC2 `instance` instance accessed with Mock for EC2Client"
             )
@@ -122,7 +122,7 @@ public final class EC2EnvironmentTest {
         Mockito
             .when(
                 aws.describeInstances(
-                    Matchers.any(DescribeInstancesRequest.class)
+                    Mockito.any(DescribeInstancesRequest.class)
             )
         ).thenReturn(instanceresult);
         Mockito.when(
@@ -134,7 +134,7 @@ public final class EC2EnvironmentTest {
         Mockito.when(instanceState.getName()).thenReturn("running");
         Mockito.when(
             aws.terminateInstances(
-                Matchers.any(TerminateInstancesRequest.class)
+                Mockito.any(TerminateInstancesRequest.class)
             )
         ).thenReturn(result);
         Mockito.when(result.getTerminatingInstances()).thenReturn(stateChanges);
