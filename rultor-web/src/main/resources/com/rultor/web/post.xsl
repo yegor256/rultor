@@ -78,7 +78,7 @@
     </xsl:variable>
     <xsl:variable name="length" select="$finish - $start" />
     <xsl:template match="steps/step/start|steps/step/finish|updated">
-        <xsl:variable name="ratio" select="(r:epoch(.) - $start) div $length" />
+        <xsl:variable name="ratio" select="format-number(r:epoch(.) - $start) div $length, '0.000')" />
         <xsl:variable name="at">
             <xsl:choose>
                 <xsl:when test="$ratio &gt; 1">
