@@ -46,23 +46,25 @@ public final class MergedMapsTest {
      */
     @Test
     public void containsKeysOfBothMaps() {
+        final String keya = "a";
+        final String keyb = "b";
+        final String keyc = "c";
         final ImmutableMap<String, String> first =
             new ImmutableMap.Builder<String, String>()
-                // @checkstyle MultipleStringLiterals (7 line)
-                .put("a", "firstA")
-                .put("b", "firstB")
+                .put(keya, "firstA")
+                .put(keyb, "firstB")
                 .build();
         final ImmutableMap<String, String> second =
             new ImmutableMap.Builder<String, String>()
-                .put("b", "secondB")
-                .put("c", "secondC")
+                .put(keyb, "secondB")
+                .put(keyc, "secondC")
                 .build();
         final MergedMaps<String, String> map = new MergedMaps<String, String>(
             first,
             second);
-        MatcherAssert.assertThat(map.containsKey("a"), Matchers.is(true));
-        MatcherAssert.assertThat(map.containsKey("b"), Matchers.is(true));
-        MatcherAssert.assertThat(map.containsKey("c"), Matchers.is(true));
+        MatcherAssert.assertThat(map.containsKey(keya), Matchers.is(true));
+        MatcherAssert.assertThat(map.containsKey(keyb), Matchers.is(true));
+        MatcherAssert.assertThat(map.containsKey(keyc), Matchers.is(true));
     }
 
     /**
@@ -70,19 +72,20 @@ public final class MergedMapsTest {
      */
     @Test
     public void secondMapHasHigherPriority() {
+        final String key = "e";
+        final String val = "secondE";
         final ImmutableMap<String, String> first =
             new ImmutableMap.Builder<String, String>()
-                // @checkstyle MultipleStringLiterals (5 line)
-                .put("e", "firstE")
+                .put(key, "firstE")
                 .build();
         final ImmutableMap<String, String> second =
             new ImmutableMap.Builder<String, String>()
-                .put("e", "secondE")
+                .put(key, val)
                 .build();
         final MergedMaps<String, String> map = new MergedMaps<String, String>(
             first,
             second);
-        MatcherAssert.assertThat(map.get("e"), Matchers.is("secondE"));
+        MatcherAssert.assertThat(map.get(key), Matchers.is(val));
     }
 
     /**
@@ -90,16 +93,18 @@ public final class MergedMapsTest {
      */
     @Test
     public void size() {
+        final String keyf = "f";
+        final String keyg = "g";
+        final String keyh = "h";
         final ImmutableMap<String, String> first =
             new ImmutableMap.Builder<String, String>()
-                .put("f", "firstF")
-                // @checkstyle MultipleStringLiterals (1 line)
-                .put("g", "firstG")
+                .put(keyf, "firstF")
+                .put(keyg, "firstG")
                 .build();
         final ImmutableMap<String, String> second =
             new ImmutableMap.Builder<String, String>()
-                .put("g", "secondG")
-                .put("h", "secondH")
+                .put(keyg, "secondG")
+                .put(keyh, "secondH")
                 .build();
         final MergedMaps<String, String> map = new MergedMaps<String, String>(
             first,
