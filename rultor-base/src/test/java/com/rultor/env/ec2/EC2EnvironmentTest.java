@@ -114,8 +114,7 @@ public final class EC2EnvironmentTest {
         final Reservation reservation = Mockito.mock(Reservation.class);
         final List<Reservation> reservations = Arrays.asList(reservation);
         final Instance instance = Mockito.mock(Instance.class);
-        final List<Instance> instances =
-            Arrays.asList(instance);
+        final List<Instance> instances =  Arrays.asList(instance);
         final Placement placement = Mockito.mock(Placement.class);
         final InstanceState instanceState = Mockito.mock(InstanceState.class);
         final TerminateInstancesResult result =

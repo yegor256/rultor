@@ -64,11 +64,9 @@ public final class EC2Test {
     public void acquireEnvironment() throws IOException {
         final EC2 envs = this.mockEnvironment();
         final Environment environment = envs.acquire();
-        MatcherAssert.assertThat(
-            environment,
-            Matchers.notNullValue()
-        );
+        MatcherAssert.assertThat(environment, Matchers.notNullValue());
     }
+
     /**
      * Mock the Environment.
      * @return EC2.
@@ -82,35 +80,19 @@ public final class EC2Test {
             Mockito.mock(RunInstancesResult.class);
         final Reservation reservation = Mockito.mock(Reservation.class);
         final Instance instance = Mockito.mock(Instance.class);
-        final List<Instance> instances =
-            Arrays.asList(instance);
-        Mockito.when(
-            client.get()
-        ).thenReturn(aws);
-        Mockito.when(
-            aws.runInstances(
-                Mockito.any(RunInstancesRequest.class)
-            )
-        ).thenReturn(result);
-        Mockito.when(
-            result.getReservation()
-        ).thenReturn(reservation);
-        Mockito.when(reservation.getInstances())
-            .thenReturn(instances);
-        Mockito.when(
-            instance.getInstanceId()
-        ).thenReturn("InstanceId");
-        Mockito.when(
-            work.unit()
-        ).thenReturn("Unit");
-        Mockito.when(
-            work.owner()
-        ).thenReturn(new URN());
-        Mockito.when(
-            work.scheduled()
-        ).thenReturn(new Time());
+        final List<Instance> instances = Arrays.asList(instance);
+        Mockito.when(client.get()).thenReturn(aws);
+        Mockito.when(aws.runInstances(Mockito.any(RunInstancesRequest.class)))
+            .thenReturn(result);
+        Mockito.when(result.getReservation()).thenReturn(reservation);
+        Mockito.when(reservation.getInstances()).thenReturn(instances);
+        Mockito.when(instance.getInstanceId()).thenReturn("InstanceId");
+        Mockito.when(work.owner()).thenReturn(new URN());
+        Mockito.when(work.scheduled()).thenReturn(new Time());
         final EC2 envs =
-            new EC2(work, wallet, "type", "image", "group", "par", client);
+            new EC2(
+                work, wallet, "type", "ami-ef9f2f1e", "group", "par",
+                "eu-west-123t", client);
         return envs;
     }
 }
