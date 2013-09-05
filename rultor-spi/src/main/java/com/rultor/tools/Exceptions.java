@@ -45,6 +45,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
  * @version $Id$
  * @since 1.0
  */
+@SuppressWarnings("PMD.CyclomaticComplexity")
 public final class Exceptions {
 
     /**
@@ -88,12 +89,14 @@ public final class Exceptions {
      */
     public static String message(final Throwable exception) {
         Throwable cause = exception;
-        final List<String> messages = new ArrayList<String>();
+        final List<String> messages = new ArrayList<String>(0);
         while (cause != null) {
             messages.add(ExceptionUtils.getMessage(cause));
             cause = cause.getCause();
         }
-        return StringUtils.join(messages, SystemUtils.LINE_SEPARATOR);
+        return Exceptions.escape(
+            StringUtils.join(messages, SystemUtils.LINE_SEPARATOR)
+        );
     }
 
     /**
@@ -122,6 +125,42 @@ public final class Exceptions {
                 lines.add(line);
             }
         }
-        return StringUtils.join(lines, SystemUtils.LINE_SEPARATOR);
+        return Exceptions.escape(
+            StringUtils.join(lines, SystemUtils.LINE_SEPARATOR)
+        );
     }
+
+    /**
+     * Escape all toxic characters (they are not suitable for XML documents).
+     * @param text Text to escape
+     * @return Clean one
+     */
+    public static String escape(final String text) {
+        final StringBuilder output = new StringBuilder();
+        for (char chr : text.toCharArray()) {
+            output.append(Exceptions.escape(chr));
+        }
+        return output.toString();
+    }
+
+    /**
+     * Escape one character.
+     * @param chr Char to escape
+     * @return Clean one
+     * @see <a href="http://www.w3.org/TR/2004/REC-xml11-20040204/#charsets">restricted XML chars</a>
+     */
+    public static char escape(final char chr) {
+        final char output;
+        // @checkstyle BooleanExpressionComplexity (5 lines)
+        if (chr < '\u0009' || (chr >= '\u000b' && chr <= '\u000c')
+            || (chr >= '\u000e' && chr <= '\u001f')
+            || (chr >= '\u007f' && chr <= '\u0084')
+            || (chr >= '\u0086' && chr <= '\u009f')) {
+            output = '?';
+        } else {
+            output = chr;
+        }
+        return output;
+    }
+
 }

@@ -154,8 +154,7 @@ public final class DrainRs extends BaseRs {
                     this.uriInfo().getBaseUri(),
                     String.format(
                         "I/O problem with the tail of drain of \"%s\": %s",
-                        this.name,
-                        Exceptions.message(ex)
+                        this.name, Exceptions.message(ex)
                     ),
                     Level.SEVERE
                 );
@@ -200,8 +199,7 @@ public final class DrainRs extends BaseRs {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 String.format(
-                    "Can't render drain of \"%s\": %s",
-                    this.name,
+                    "Can't render drain of \"%s\": %s", this.name,
                     Exceptions.message(ex)
                 ),
                 Level.SEVERE
@@ -275,10 +273,7 @@ public final class DrainRs extends BaseRs {
                         .getBaseUriBuilder()
                         .clone()
                         .path(DrainRs.class)
-                        .queryParam(
-                            DrainRs.QUERY_SINCE,
-                            pulses.next().millis()
-                        )
+                        .queryParam(DrainRs.QUERY_SINCE, pulses.next().millis())
                         .build(this.name)
                 )
             );
@@ -336,10 +331,7 @@ public final class DrainRs extends BaseRs {
                         return new JaxbBundle("exception")
                             .add("class", bug.getClass().getCanonicalName())
                             .up()
-                            .add(
-                                "message",
-                                Exceptions.message(bug)
-                            )
+                            .add("message", Exceptions.message(bug))
                             .up();
                     }
                 }
