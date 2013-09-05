@@ -72,7 +72,7 @@ public final class IncrementalBashTest {
                 "find . -name \"a.txt\" | grep txt | wc -l;",
                 "mkdir -p foo; cd foo; touch ${file}; pwd",
                 "pwd; if [ ! -f ${file.toString()} ]; then exit 1; fi",
-                "/usr/bin/--broken-name; /usr/bin/--again"
+                "echo -e \"\\x1b\" >&2; /usr/bin/--broken-name; /usr/bin/--again"
             )
         ).exec(args, stdout);
         MatcherAssert.assertThat(code, Matchers.not(Matchers.equalTo(0)));
