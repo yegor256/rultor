@@ -54,9 +54,9 @@ import org.xembly.XemblySyntaxException;
 public final class XemblyLine {
 
     /**
-     * Mark.
+     * Mark (reads as "χemβly").
      */
-    public static final String MARK = "χemβly";
+    public static final String MARK = "\u03c7em\u03b2ly";
 
     /**
      * Pattern to use for matching.

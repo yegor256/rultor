@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
@@ -126,20 +127,22 @@ final class HttpThread {
      */
     private void process(final String query, final OutputStream output)
         throws IOException {
-        final PrintWriter writer = new PrintWriter(output);
-        writer.println("HTTP/1.1 200 OK");
-        writer.println("Content-Type: text/plain; charset=UTF-8");
-        writer.println("Cache-Control: no-cache");
-        writer.println("");
+        final PrintWriter writer = new PrintWriter(
+            new OutputStreamWriter(output, CharEncoding.UTF_8)
+        );
+        writer.print("HTTP/1.1 200 OK\n");
+        writer.print("Content-Type: text/plain; charset=UTF-8\n");
+        writer.print("Cache-Control: no-cache\n");
+        writer.print("\n");
         writer.flush();
         if (query.endsWith("?interrupt")) {
             writer.println(
                 this.streams.interrupt(query.substring(0, query.indexOf('?')))
             );
         } else if (query.endsWith("/stats")) {
-            writer.println(new Statistics().toString());
+            writer.print(new Statistics().toString());
         } else if (query.isEmpty()) {
-            writer.println(this.streams.toString());
+            writer.print(this.streams.toString());
         } else {
             HttpThread.copy(this.streams.stream(query), output);
         }

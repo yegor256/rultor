@@ -37,12 +37,14 @@ import com.rultor.tools.Time;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.io.Charsets;
 
 /**
  * Syslog.
@@ -160,7 +162,9 @@ public final class Syslog implements Drain {
      */
     private byte[] compose(final String text) {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final PrintWriter writer = new PrintWriter(baos);
+        final PrintWriter writer = new PrintWriter(
+            new OutputStreamWriter(baos, Charsets.UTF_8)
+        );
         writer.append(String.format("<%d>1 - - - - - - ", this.priority));
         writer.flush();
         // @checkstyle MagicNumber (3 lines)

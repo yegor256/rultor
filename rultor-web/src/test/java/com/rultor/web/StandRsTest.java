@@ -29,6 +29,7 @@
  */
 package com.rultor.web;
 
+import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.rexsl.page.HttpHeadersMocker;
 import com.rexsl.page.ServletContextMocker;
@@ -41,8 +42,10 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import java.io.IOException;
 import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xembly.Directives;
@@ -54,6 +57,15 @@ import org.xembly.Directives;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class StandRsTest {
+
+    /**
+     * Pre-load test MANIFEST.MF.
+     * @throws IOException If fails
+     */
+    @BeforeClass
+    public static void manifests() throws IOException {
+        Manifests.inject("Rultor-Revision", "12345");
+    }
 
     /**
      * StandRs can fetch snapshot in HTML.

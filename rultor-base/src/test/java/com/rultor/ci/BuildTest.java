@@ -34,8 +34,10 @@ import com.rexsl.test.XhtmlMatchers;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.XemblyLine;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Map;
+import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -59,19 +61,22 @@ public final class BuildTest {
     public void buildsAndReturnsSnapshot() throws Exception {
         final Batch batch = Mockito.mock(Batch.class);
         Mockito.doAnswer(
+            // @checkstyle AnonInnerLength (50 lines)
             new Answer<Void>() {
                 @Override
                 public Void answer(final InvocationOnMock inv)
                     throws Exception {
                     final PrintWriter stdout = new PrintWriter(
-                        OutputStream.class.cast(inv.getArguments()[1]), true
+                        new OutputStreamWriter(
+                            OutputStream.class.cast(inv.getArguments()[1]),
+                            CharEncoding.UTF_8
+                        ), true
                     );
                     stdout.println(
                         new XemblyLine(
                             new Directives()
-                                .xpath("/snapshot")
-                                .add("test")
-                                .set("привет")
+                                .xpath("/snapshot").add("test")
+                                .set("\u0433\u0444")
                         )
                     );
                     stdout.close();
@@ -89,7 +94,7 @@ public final class BuildTest {
                 new ImmutableMap.Builder<String, Object>().build()
             ).xml(),
             XhtmlMatchers.hasXPaths(
-                "/snapshot[test='привет']",
+                "/snapshot[test='\u0433\u0444']",
                 "/snapshot/tags/tag[label='hey' and level='FINE']"
             )
         );
@@ -109,18 +114,20 @@ public final class BuildTest {
                 public Void answer(final InvocationOnMock inv)
                     throws Exception {
                     final PrintWriter stdout = new PrintWriter(
-                        OutputStream.class.cast(inv.getArguments()[1]), true
+                        new OutputStreamWriter(
+                            OutputStream.class.cast(inv.getArguments()[1]),
+                            CharEncoding.UTF_8
+                        ), true
                     );
-                    stdout.println("χemβly 'broken content'");
+                    stdout.print(XemblyLine.MARK);
+                    stdout.println(" 'broken content'");
                     stdout.close();
                     return null;
                 }
             }
         )
             .when(batch)
-            .exec(
-                Mockito.any(Map.class), Mockito.any(OutputStream.class)
-            );
+            .exec(Mockito.any(Map.class), Mockito.any(OutputStream.class));
         final Build build = new Build("hey-5", batch);
         MatcherAssert.assertThat(
             build.exec(

@@ -33,6 +33,7 @@ import com.rultor.spi.Drain;
 import com.rultor.spi.Work;
 import java.util.Arrays;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -67,7 +68,10 @@ public final class NoiseReductionTest {
         Mockito.verify(dirty, Mockito.times(1))
             .append(Mockito.any(Iterable.class));
         Mockito.doReturn(
-            IOUtils.toInputStream(String.format("%s\n%s\n", bad, good))
+            IOUtils.toInputStream(
+                String.format("%s\n%s\n", bad, good),
+                CharEncoding.UTF_8
+            )
         ).when(dirty).read();
         drain.append(Arrays.asList(good));
         Mockito.verify(clean, Mockito.times(1)).append(

@@ -30,12 +30,12 @@
 package com.rultor.conveyer;
 
 import com.jcabi.log.Logger;
-import com.rultor.conveyer.http.Streams;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.CharEncoding;
+import org.apache.log4j.PatternLayout;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -54,7 +54,8 @@ public final class Log4jStreamsTest {
      */
     @Test
     public void writesAndReads() throws Exception {
-        final Streams streams = new Log4jStreams();
+        final Log4jStreams streams = new Log4jStreams();
+        streams.setLayout(new PatternLayout("%p %m\n"));
         final String key = streams.register();
         try {
             Logger.info(this, "first");

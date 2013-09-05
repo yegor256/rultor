@@ -33,6 +33,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Work;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.IOUtils;
@@ -65,7 +66,10 @@ public final class BufferedReadTest {
             IOUtils.toInputStream(text, CharEncoding.UTF_8)
         ).when(drain).read();
         MatcherAssert.assertThat(
-            IOUtils.toString(new BufferedRead(work, 2, drain).read()),
+            IOUtils.toString(
+                new BufferedRead(work, 2, drain).read(),
+                CharEncoding.UTF_8
+            ),
             Matchers.containsString(text)
         );
         Mockito.verify(drain).read();
@@ -89,13 +93,19 @@ public final class BufferedReadTest {
      */
     @Test
     public void readsAndFlushes() throws Exception {
-        final String content = "hey, привет!";
+        final String content = "hey, \u0443!";
         final Drain origin = Mockito.mock(Drain.class);
         Mockito.doAnswer(
             new Answer<InputStream>() {
                 @Override
                 public InputStream answer(final InvocationOnMock inv) {
-                    return IOUtils.toInputStream(content);
+                    try {
+                        return IOUtils.toInputStream(
+                            content, CharEncoding.UTF_8
+                        );
+                    } catch (IOException ex) {
+                        throw new IllegalStateException(ex);
+                    }
                 }
             }
         ).when(origin).read();
@@ -105,7 +115,7 @@ public final class BufferedReadTest {
         final long total = TimeUnit.SECONDS.toMillis(Tv.FIVE);
         for (int idx = 0; idx < total; ++idx) {
             MatcherAssert.assertThat(
-                IOUtils.toString(drain.read()),
+                IOUtils.toString(drain.read(), CharEncoding.UTF_8),
                 Matchers.containsString(content)
             );
             TimeUnit.MILLISECONDS.sleep(1);

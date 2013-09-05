@@ -29,6 +29,7 @@
  */
 package com.rultor.web;
 
+import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.rexsl.page.HttpHeadersMocker;
 import com.rexsl.page.ServletContextMocker;
@@ -41,10 +42,12 @@ import com.rultor.spi.Rules;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.tools.Dollars;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.hamcrest.MatcherAssert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -54,6 +57,15 @@ import org.mockito.Mockito;
  * @version $Id$
  */
 public final class IndexRsTest {
+
+    /**
+     * Pre-load test MANIFEST.MF.
+     * @throws IOException If fails
+     */
+    @Before
+    public void manifests() throws IOException {
+        Manifests.inject("Rultor-Revision", "12345");
+    }
 
     /**
      * IndexRs can render front page.
