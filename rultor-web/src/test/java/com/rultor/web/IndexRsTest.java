@@ -47,7 +47,7 @@ import java.util.ArrayList;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.hamcrest.MatcherAssert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -62,8 +62,8 @@ public final class IndexRsTest {
      * Pre-load test MANIFEST.MF.
      * @throws IOException If fails
      */
-    @BeforeClass
-    public static void manifests() throws IOException {
+    @Before
+    public void manifests() throws IOException {
         Manifests.inject("Rultor-Revision", "12345");
     }
 

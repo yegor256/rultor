@@ -61,6 +61,7 @@ public final class BuildTest {
     public void buildsAndReturnsSnapshot() throws Exception {
         final Batch batch = Mockito.mock(Batch.class);
         Mockito.doAnswer(
+            // @checkstyle AnonInnerLength (50 lines)
             new Answer<Void>() {
                 @Override
                 public Void answer(final InvocationOnMock inv)
@@ -74,8 +75,7 @@ public final class BuildTest {
                     stdout.println(
                         new XemblyLine(
                             new Directives()
-                                .xpath("/snapshot")
-                                .add("test")
+                                .xpath("/snapshot").add("test")
                                 .set("\u0433\u0444")
                         )
                     );

@@ -100,7 +100,9 @@ public final class BufferedReadTest {
                 @Override
                 public InputStream answer(final InvocationOnMock inv) {
                     try {
-                        return IOUtils.toInputStream(content, CharEncoding.UTF_8);
+                        return IOUtils.toInputStream(
+                            content, CharEncoding.UTF_8
+                        );
                     } catch (IOException ex) {
                         throw new IllegalStateException(ex);
                     }

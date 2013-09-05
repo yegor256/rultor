@@ -34,7 +34,6 @@ import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
-import org.w3c.dom.Document;
 import org.xembly.Directives;
 
 /**
@@ -50,29 +49,55 @@ public final class SnapshotTest {
      */
     @Test
     public void fetchesSnapshotFromStream() throws Exception {
-        final Document dom = Snapshot.empty();
-        new Snapshot(
-            IOUtils.toInputStream(
-                new StringBuilder()
-                    .append("hey dude!\n")
-                    .append(
-                        new XemblyLine(
-                            new Directives()
-                                .xpath("/snapshot")
-                                .strict(1)
-                                .add("test")
-                                .strict(1)
-                                .set("hello, друг!")
-                        ).toString()
-                    )
-                    .append("\nHow are you?\n")
-                    .toString(),
-                CharEncoding.UTF_8
-            )
-        ).apply(dom);
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(dom),
-            XhtmlMatchers.hasXPath("/snapshot/test[.='hello, друг!']")
+            new Snapshot(
+                IOUtils.toInputStream(
+                    new StringBuilder()
+                        .append("hey dude!\n")
+                        .append(
+                            new XemblyLine(
+                                new Directives()
+                                    .xpath("/snapshot")
+                                    .strict(1)
+                                    .add("test")
+                                    .strict(1)
+                                    .set("how are you, dude?!")
+                            ).toString()
+                        )
+                        .append("\nHow are you?\n")
+                        .toString(),
+                    CharEncoding.UTF_8
+                )
+            ).xml().toString(),
+            XhtmlMatchers.hasXPath(
+                "/snapshot/test[.='how are you, dude?!']"
+            )
+        );
+    }
+
+    /**
+     * SnapshotInStream can properly handle special characters.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    @org.junit.Ignore
+    public void gracefullyHandlesSpecialCharacters() throws Exception {
+        MatcherAssert.assertThat(
+            new Snapshot(
+                IOUtils.toInputStream(
+                    new StringBuilder().append(
+                        new XemblyLine(
+                            new Directives().add("foo").set(
+                                "<&>'\"\u20ac\u001b!"
+                            )
+                        ).toString()
+                    ).toString(),
+                    CharEncoding.UTF_8
+                )
+            ).xml().toString(),
+            XhtmlMatchers.hasXPath(
+                "/snapshot/foo[.='&lt;&amp;&gt;&apos;&quot;\u20ac\u001b!']"
+            )
         );
     }
 
