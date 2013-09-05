@@ -31,8 +31,7 @@ package com.rultor.shell;
 
 import java.io.IOException;
 import java.io.InputStream;
-import org.apache.commons.io.output.TeeOutputStream;
-import org.junit.Assert;
+import java.io.OutputStream;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -48,22 +47,16 @@ public final class TerminalTest {
      * shell.exec() terminate with non-zero exit code.
      * @throws Exception If some problem inside
      */
-    @Test
-    @SuppressWarnings("unchecked")
+    @Test(expected = IOException.class)
     public void returnsNonZeroreturnsCode() throws Exception {
         final Shell shell = Mockito.mock(Shell.class);
         Mockito.doReturn(1).when(shell).exec(
             Mockito.anyString(),
             Mockito.any(InputStream.class),
-            Mockito.any(TeeOutputStream.class),
-            Mockito.any(TeeOutputStream.class)
+            Mockito.any(OutputStream.class),
+            Mockito.any(OutputStream.class)
         );
         final Terminal terminal = new Terminal(shell);
-        try {
-            terminal.exec("", "");
-            Assert.fail("should throw IOException");
-        } catch (IOException ex) {
-            Assert.assertTrue(true);
-        }
+        terminal.exec("", "");
     }
 }
