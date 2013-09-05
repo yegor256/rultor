@@ -72,7 +72,7 @@ public final class IncrementalBashTest {
                 "find . -name \"a.txt\" | grep txt | wc -l;",
                 "mkdir -p foo; cd foo; touch ${file}; pwd",
                 "pwd; if [ ! -f ${file.toString()} ]; then exit 1; fi",
-                "echo -e \"\\x1b\" >&2; /usr/bin/--broken-name; /usr/bin/--again"
+                "echo -e \"A\\x1b\\x09\\x9B\" >&2; /usr/--broken; /usr/--again"
             )
         ).exec(args, stdout);
         MatcherAssert.assertThat(code, Matchers.not(Matchers.equalTo(0)));
@@ -86,8 +86,8 @@ public final class IncrementalBashTest {
                 "/snapshot/steps/step",
                 // @checkstyle LineLength (5 lines)
                 "//step[summary=\"MSG='$A'; echo `date` $A; sleep 1; pwd;\"]/start",
-                "//step[summary='/usr/bin/--broken-name; /usr/bin/--again']/exception",
-                "//step/exception[contains(stacktrace,'/usr/bin/--broken-name: No such file or directory')]",
+                "//step[contains(summary, '/usr/--broken; /usr/--again')]/exception",
+                "//step/exception[contains(stacktrace,'/usr/--broken: No such file or directory')]",
                 "//steps[count(step[level='INFO']) = 4]",
                 "//steps[count(step[level='SEVERE']) = 1]",
                 "//steps[count(step[start]) = 5]",

@@ -286,16 +286,17 @@ public final class IncrementalBash implements Batch {
                 .put("<", "&lt;")
                 .put(">", "&gt;")
                 .build();
-        final StringBuilder script = new StringBuilder()
-            .append("cat");
+        final StringBuilder script = new StringBuilder().append("cat");
         for (Map.Entry<String, String> pair : pairs.entrySet()) {
-            script.append(" | sed -e ':a' -e 'N' -e '$!ba' -e 's/")
+            script.append(" | LANG=C sed -e 's/")
                 .append(pair.getKey())
                 .append("/\\")
                 .append(pair.getValue())
                 .append("/g'");
         }
-        return script.append(" | awk 1 ORS='&#10;'").toString();
+        return script.append(" | awk 1 ORS='&#10;'")
+            .append(" | LANG=C tr -cd '[:print:]'")
+            .toString();
     }
 
 }
