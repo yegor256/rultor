@@ -30,7 +30,6 @@
 package com.rultor.base;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.concurrent.ConcurrentHashMap;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -41,36 +40,6 @@ import org.junit.Test;
  * @version $Id$
  */
 public final class MergedMapsTest {
-
-    /**
-     * MergedMaps size equals to the size of producing maps keys union.
-     */
-    @Test
-    public void size() {
-        final MergedMaps<String, String> empty = new MergedMaps<String, String>(
-            new ConcurrentHashMap<String, String>(),
-            new ConcurrentHashMap<String, String>()
-        );
-        MatcherAssert.assertThat(empty.isEmpty(), Matchers.is(true));
-        MatcherAssert.assertThat(empty.containsKey("f"), Matchers.is(false));
-        MatcherAssert.assertThat(empty.size(), Matchers.is(0));
-        final ImmutableMap<String, String> first =
-            new ImmutableMap.Builder<String, String>()
-                // @checkstyle MultipleStringLiterals (7 line)
-                .put("a", "firstA")
-                .put("b", "firstB")
-                .build();
-        final ImmutableMap<String, String> second =
-            new ImmutableMap.Builder<String, String>()
-                .put("b", "secondB")
-                .put("c", "secondC")
-                .build();
-        final MergedMaps<String, String> map = new MergedMaps<String, String>(
-            first,
-            second);
-        // @checkstyle MagicNumberCheck (1 line)
-        MatcherAssert.assertThat(map.size(), Matchers.is(3));
-    }
 
     /**
      * MergedMaps contains keys of both producing maps.
@@ -114,5 +83,30 @@ public final class MergedMapsTest {
             first,
             second);
         MatcherAssert.assertThat(map.get("e"), Matchers.is("secondE"));
+    }
+
+    /**
+     * MergedMaps size equals to the size of producing maps keys union.
+     */
+    @Test
+    public void size() {
+        final ImmutableMap<String, String> first =
+            new ImmutableMap.Builder<String, String>()
+                .put("f", "firstF")
+                // @checkstyle MultipleStringLiterals (1 line)
+                .put("g", "firstG")
+                .build();
+        final ImmutableMap<String, String> second =
+            new ImmutableMap.Builder<String, String>()
+                .put("g", "secondG")
+                .put("h", "secondH")
+                .build();
+        final MergedMaps<String, String> map = new MergedMaps<String, String>(
+            first,
+            second);
+        MatcherAssert.assertThat(
+            map.size(),
+            Matchers.is(com.jcabi.aspects.Tv.THREE)
+        );
     }
 }
