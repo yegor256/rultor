@@ -31,110 +31,123 @@ package com.rultor.users.mongo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.immutable.ArrayMap;
+import com.jcabi.urn.URN;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pulse;
-import com.rultor.spi.Tag;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.logging.Level;
+import com.rultor.tools.Time;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Single pulse in Mongo.
+ * Coordinates in Mongo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "map")
+@EqualsAndHashCode(of = { "urn", "name", "time" })
 @Loggable(Loggable.DEBUG)
-final class MongoPulse implements Pulse {
+final class MongoCoords implements Coordinates {
 
     /**
-     * Mongo data map.
+     * MongoDB table column.
      */
-    private final transient ArrayMap<String, Object> map;
+    private static final String ATTR_RULE = "rule";
+
+    /**
+     * MongoDB table column.
+     */
+    private static final String ATTR_OWNER = "owner";
+
+    /**
+     * MongoDB table column.
+     */
+    private static final String ATTR_SCHEDULED = "scheduled";
+
+    /**
+     * Owner.
+     */
+    private final transient URN urn;
+
+    /**
+     * Name of the rule.
+     */
+    private final transient String name;
+
+    /**
+     * Scheduled time.
+     */
+    private final transient Time time;
 
     /**
      * Public ctor.
      * @param object The object
      */
-    @SuppressWarnings("unchecked")
-    protected MongoPulse(final DBObject object) {
-        this.map = new ArrayMap<String, Object>(object.toMap());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String xembly() throws IOException {
-        final String xembly = this.map.get(MongoStand.ATTR_XEMBLY).toString();
-        return new StringBuilder()
-            .append(MongoStand.decode(xembly))
-            .append("XPATH '/snapshot'; ADDIF 'updated';")
-            .append("SET '")
-            .append(this.map.get(MongoStand.ATTR_UPDATED))
-            .append("';")
-            .toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public InputStream stream() throws IOException {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Coordinates coordinates() {
-        return new MongoCoords(
-            DBObject.class.cast(this.map.get(MongoStand.ATTR_COORDS))
+    protected MongoCoords(final DBObject object) {
+        this(
+            URN.create(object.get(MongoCoords.ATTR_OWNER).toString()),
+            object.get(MongoCoords.ATTR_RULE).toString(),
+            new Time(object.get(MongoCoords.ATTR_OWNER).toString())
         );
     }
 
     /**
-     * {@inheritDoc}
+     * Public ctor.
+     * @param coords Other coordinates
      */
-    @Override
-    public Collection<Tag> tags() {
-        final Collection<?> names =
-            Collection.class.cast(this.map.get(MongoStand.ATTR_TAGS));
-        final Collection<Tag> tags = new ArrayList<Tag>(names.size());
-        for (Object name : names) {
-            tags.add(MongoPulse.tag(name.toString()));
-        }
-        return tags;
+    protected MongoCoords(final Coordinates coords) {
+        this(coords.owner(), coords.rule(), coords.scheduled());
     }
 
     /**
-     * Turn name into tag.
-     * @param name Name of it
-     * @return Tag
+     * Public ctor.
+     * @param owner Owner
+     * @param rule Rule
+     * @param scheduled Scheduled
      */
-    private static Tag tag(final String name) {
-        return new Tag() {
-            @Override
-            public String label() {
-                return name;
-            }
-            @Override
-            public Level level() {
-                return Level.INFO;
-            }
-        };
+    private MongoCoords(final URN owner, final String rule,
+        final Time scheduled) {
+        this.urn = owner;
+        this.name = rule;
+        this.time = scheduled;
+    }
+
+    /**
+     * Make Mongo DBObject out of it.
+     * @return Object
+     */
+    public DBObject asObject()  {
+        return new BasicDBObject()
+            .append(MongoCoords.ATTR_OWNER, this.owner().toString())
+            .append(MongoCoords.ATTR_RULE, this.rule())
+            .append(MongoCoords.ATTR_SCHEDULED, this.scheduled().toString());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Time scheduled() {
+        return this.time;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public URN owner() {
+        return this.urn;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String rule() {
+        return this.name;
     }
 
 }

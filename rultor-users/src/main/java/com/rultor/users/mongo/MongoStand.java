@@ -96,7 +96,7 @@ final class MongoStand implements Stand {
     /**
      * MongoDB table column.
      */
-    public static final String ATTR_PULSE = "pulse";
+    public static final String ATTR_COORDS = "coordinates";
 
     /**
      * MongoDB table column.
@@ -197,13 +197,15 @@ final class MongoStand implements Stand {
     @SuppressWarnings("unchecked")
     private boolean save(final Coordinates pulse, final long nano,
         final String xembly) {
-        final Coordinates coords = new Coordinates.Simple(pulse);
         final DBObject object = this.collection().findAndModify(
             new BasicDBObject()
-                .append(MongoStand.ATTR_PULSE, coords)
-                .append(MongoStand.ATTR_STAND, this.name()),
+                .append(MongoStand.ATTR_STAND, this.name())
+                .append(
+                    MongoStand.ATTR_COORDS,
+                    new MongoCoords(pulse).asObject()
+                ),
             new BasicDBObject()
-                .append(MongoStand.ATTR_PULSE, 1)
+                .append(MongoStand.ATTR_COORDS, 1)
                 .append(MongoStand.ATTR_STAND, 1)
                 .append(MongoStand.ATTR_TAGS, 1)
                 .append(MongoStand.ATTR_XEMBLY, 1),
@@ -223,10 +225,13 @@ final class MongoStand implements Stand {
         final WriteResult result = this.collection().update(
             object,
             new BasicDBObject()
-                .append(MongoStand.ATTR_PULSE, coords)
                 .append(MongoStand.ATTR_STAND, this.name())
                 .append(MongoStand.ATTR_UPDATED, new Time().toString())
                 .append(MongoStand.ATTR_XEMBLY, after)
+                .append(
+                    MongoStand.ATTR_COORDS,
+                    new MongoCoords(pulse).asObject()
+                )
                 .append(
                     MongoStand.ATTR_TAGS,
                     this.tags(
@@ -238,7 +243,7 @@ final class MongoStand implements Stand {
         Validate.isTrue(
             result.getLastError().ok(),
             "failed to update pulse `%s`: %s",
-            coords, result.getLastError().getErrorMessage()
+            pulse, result.getLastError().getErrorMessage()
         );
         return result.getN() == 1;
     }

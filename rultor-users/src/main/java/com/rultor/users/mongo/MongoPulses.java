@@ -141,8 +141,8 @@ final class MongoPulses implements Pageable<Pulse, Coordinates> {
             .append(MongoStand.ATTR_STAND, this.origin.name());
         if (!this.head.equals(new Coordinates.None())) {
             query.append(
-                MongoStand.ATTR_PULSE,
-                new BasicDBObject("$lte", this.head)
+                MongoStand.ATTR_COORDS,
+                new MongoCoords(this.head).asObject()
             );
         }
         return query;

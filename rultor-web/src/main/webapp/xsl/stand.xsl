@@ -94,15 +94,7 @@
             </xsl:attribute>
             <div class="panel-heading">
                 <ul class="list-inline">
-                    <li>
-                        <xsl:value-of select="coordinates/owner"/>
-                    </li>
-                    <li>
-                        <xsl:value-of select="coordinates/rule"/>
-                    </li>
-                    <li>
-                        <xsl:value-of select="coordinates/scheduled"/>
-                    </li>
+                    <xsl:apply-templates select="coordinates"/>
                     <li class="heart text-muted icon" title="click to stop fetching">
                         <i class="icon-cloud-download"><xsl:comment>heart</xsl:comment></i>
                     </li>
@@ -134,12 +126,21 @@
                     <i class="icon-zoom-in"><xsl:comment>open</xsl:comment></i>
                 </a>
                 <ul class="list-inline">
-                    <li>
-                        <xsl:value-of select="identifier"/>
-                    </li>
+                    <xsl:apply-templates select="coordinates"/>
                     <xsl:apply-templates select="tags/tag"/>
                 </ul>
             </div>
         </div>
+    </xsl:template>
+    <xsl:template match="coordinates">
+        <li>
+            <xsl:value-of select="coordinates/owner"/>
+        </li>
+        <li>
+            <xsl:value-of select="coordinates/rule"/>
+        </li>
+        <li>
+            <xsl:value-of select="coordinates/scheduled"/>
+        </li>
     </xsl:template>
 </xsl:stylesheet>
