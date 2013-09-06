@@ -76,7 +76,7 @@
                     <xsl:text>At the moment you can fund your account with one-time non-refundable PayPal payments.</xsl:text>
                 </li>
                 <li>
-                    <xsl:text>In the nearest future we'll make possible recurring credit card payments and funds withdrawal (refunds).</xsl:text>
+                    <xsl:text>In the nearest future we'll make possible recurring credit card payments and fund withdrawals (refunds).</xsl:text>
                 </li>
                 <li>
                     <xsl:text>If your account gets below $5.00 we compensate it (but this may happen only once in every 30 days).</xsl:text>

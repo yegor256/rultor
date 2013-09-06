@@ -68,7 +68,7 @@ public final class IncrementalBashTest {
         final int code = new IncrementalBash(
             new Permanent(new ShellMocker.Bash(dir)),
             Arrays.asList(
-                "MSG='$A'; echo `date` $A; sleep 1; pwd;",
+                "MSG='$A'; echo $(date) $A; sleep 1; pwd;",
                 "find . -name \"a.txt\" | grep txt | wc -l;",
                 "mkdir -p foo; cd foo; touch ${file}; pwd",
                 "pwd; if [ ! -f ${file.toString()} ]; then exit 1; fi",
@@ -85,7 +85,7 @@ public final class IncrementalBashTest {
             XhtmlMatchers.hasXPaths(
                 "/snapshot/steps/step",
                 // @checkstyle LineLength (5 lines)
-                "//step[summary=\"MSG='$A'; echo `date` $A; sleep 1; pwd;\"]/start",
+                "//step[summary=\"MSG='$A'; echo $(date) $A; sleep 1; pwd;\"]/start",
                 "//step[contains(summary, '/usr/--broken; /usr/--again')]/exception",
                 "//step/exception[contains(stacktrace,'/usr/--broken: No such file or directory')]",
                 "//steps[count(step[level='INFO']) = 4]",
@@ -93,6 +93,32 @@ public final class IncrementalBashTest {
                 "//steps[count(step[start]) = 5]",
                 "//steps[count(step[finish]) = 5]",
                 "//steps[count(step[duration = '']) = 0]"
+            )
+        );
+    }
+
+    /**
+     * IncrementalBash can escape command summary as Markdown.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    @org.junit.Ignore
+    public void escapesMarkdownInCommandSummary() throws Exception {
+        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        final File dir = Files.createTempDir();
+        final int code = new IncrementalBash(
+            new Permanent(new ShellMocker.Bash(dir)),
+            Arrays.asList("echo \"_*\" `date`")
+        ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
+        MatcherAssert.assertThat(code, Matchers.equalTo(0));
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(
+                new Snapshot(
+                    new ByteArrayInputStream(stdout.toByteArray())
+                ).dom()
+            ),
+            XhtmlMatchers.hasXPath(
+                "//step[summary='echo \"\\_\\*\" \\`date\\`;']/start"
             )
         );
     }
