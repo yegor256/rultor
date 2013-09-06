@@ -36,6 +36,7 @@ import com.jcabi.urn.URN;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rexsl.page.auth.Identity;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
 import com.rultor.spi.ACL;
@@ -138,7 +139,7 @@ public final class StandRs extends BaseRs {
     @GET
     @Path("/")
     public Response index() {
-        return new PageBuilder()
+        EmptyPage page = new PageBuilder()
             .stylesheet("/xsl/stand.xsl")
             .build(EmptyPage.class)
             .init(this)
@@ -156,14 +157,19 @@ public final class StandRs extends BaseRs {
                     "collapse",
                     this.self(new ArrayList<Coordinates>(0))
                 )
-            )
-            .append(
+            );
+        if (this.auth().identity().equals(Identity.ANONYMOUS)) {
+            page = page.append(new Breadcrumbs().with("home").bundle());
+        } else {
+            page = page.append(
                 new Breadcrumbs()
                     .with("stands")
                     .with("edit", this.name)
                     .with("collapse", "stand")
                     .bundle()
-            )
+            );
+        }
+        return page
             .append(new JaxbBundle("stand", this.name))
             .append(this.pulses(this.stand().pulses().iterator(), Tv.TWENTY))
             .render()
