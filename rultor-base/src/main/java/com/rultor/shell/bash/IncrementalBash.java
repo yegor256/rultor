@@ -224,7 +224,7 @@ public final class IncrementalBash implements Batch {
                         .set("exit code ${dollar}{CODE}")
                         .up()
                         .add("stacktrace")
-                        .set("${dollar}(cat ${dollar}{STDERR})")
+                        .set("${dollar}(cat -v ${dollar}{STDERR})")
                 )
             )
             .append(";\nfi;\n")
