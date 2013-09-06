@@ -133,7 +133,7 @@ public final class IncrementalBashTest {
         final File dir = Files.createTempDir();
         new IncrementalBash(
             new Permanent(new ShellMocker.Bash(dir)),
-            Arrays.asList("( for i in {0..200}; do echo $i; done; exit 1 ) >&2")
+            Arrays.asList("( for i in {100..300}; do echo $i; done; exit 1 ) >&2")
         ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
@@ -142,8 +142,9 @@ public final class IncrementalBashTest {
                 ).dom()
             ),
             XhtmlMatchers.hasXPaths(
-                "//exception[not(contains(stacktrace, '1\\n2\\n3'))]",
-                "//exception[contains(stacktrace, '198\\n199\\n200')]"
+                "//level[.='SEVERE']",
+                "//exception[not(contains(stacktrace, '199'))]",
+                "//exception[contains(stacktrace, '300')]"
             )
         );
     }

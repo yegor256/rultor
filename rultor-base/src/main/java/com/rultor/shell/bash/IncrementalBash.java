@@ -187,7 +187,7 @@ public final class IncrementalBash implements Batch {
                         .add("step")
                         .attr("id", uid)
                         .add("start")
-                        .set("`date  -u +%Y-%m-%dT%H:%M:%SZ`")
+                        .set("${dollar}(date  -u +%Y-%m-%dT%H:%M:%SZ)")
                 )
             )
             .append(';').append('\n')
@@ -196,7 +196,9 @@ public final class IncrementalBash implements Batch {
             .append("STDERR=${dollar}(mktemp /tmp/bash-XXXX);\n")
             .append("{ ")
             .append(velocity)
-            .append("; } 2> >( cat | eval $ESCAPE | tee ${dollar}STDERR );\n")
+            .append(
+                "; } 2> >( tail -100 | eval $ESCAPE | tee ${dollar}STDERR );\n"
+            )
             .append("CODE=${dollar}?;\n")
             .append("FINISH=${dollar}(date +%s%N | tr -d N);\n")
             .append("if [ ${dollar}CODE = 0 ]; then\n  ")
@@ -222,7 +224,7 @@ public final class IncrementalBash implements Batch {
                         .set("exit code ${dollar}{CODE}")
                         .up()
                         .add("stacktrace")
-                        .set("${dollar}(tail -100 ${dollar}{STDERR})")
+                        .set("${dollar}(cat ${dollar}{STDERR})")
                 )
             )
             .append(";\nfi;\n")
@@ -237,7 +239,8 @@ public final class IncrementalBash implements Batch {
                         .set("${dollar}(((FINISH-START)/1000000))")
                 )
             )
-            .append(";\nrm -f ${dollar}{STDERR};\n")
+            .append(";\n")
+            .append("rm -f ${dollar}{STDERR};\n")
             .append("if [ ${dollar}CODE != 0 ]; then\n  ")
             .append("exit ${dollar}CODE;\nfi;\n\n")
             .toString();
