@@ -205,8 +205,8 @@ public final class StandRs extends BaseRs {
         } catch (NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
-        if (!stand.owner().equals(this.user().urn())
-            && !this.acl(stand).canView(this.user().urn())) {
+        if (!stand.owner().equals(this.auth().identity().urn())
+            && !this.acl(stand).canView(this.auth().identity().urn())) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 String.format("access denied to stand `%s`", this.name),
