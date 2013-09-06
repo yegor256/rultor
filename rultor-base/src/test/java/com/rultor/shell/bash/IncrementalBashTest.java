@@ -133,7 +133,9 @@ public final class IncrementalBashTest {
         final File dir = Files.createTempDir();
         new IncrementalBash(
             new Permanent(new ShellMocker.Bash(dir)),
-            Arrays.asList("( for i in {100..300}; do echo $i; done; exit 1 ) >&2")
+            Arrays.asList(
+                "( for i in {100..300}; do echo $i; done; exit 1 ) >&2"
+            )
         ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(

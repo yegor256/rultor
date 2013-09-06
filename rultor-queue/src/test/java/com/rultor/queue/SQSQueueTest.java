@@ -108,7 +108,7 @@ public final class SQSQueueTest {
             new ReceiveMessageResult().withMessages(
                 new Message().withBody(
                     // @checkstyle LineLength (1 line)
-                    "{\"urn\":\"urn:facebook:65\",\"rule\":\"test-877\",\"scheduled\":\"1970-01-01T00:16:40Z\"}"
+                    "{\"urn\":\"urn:facebook:65\",\"rule\":\"test-rule\",\"scheduled\":\"1970-01-01T00:16:40Z\"}"
                 )
             )
         ).when(aws).receiveMessage(Mockito.any(ReceiveMessageRequest.class));
