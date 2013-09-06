@@ -123,4 +123,29 @@ public final class IncrementalBashTest {
         );
     }
 
+    /**
+     * IncrementalBash can show only TAIL of stderr.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void showsTailOfStderr() throws Exception {
+        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        final File dir = Files.createTempDir();
+        new IncrementalBash(
+            new Permanent(new ShellMocker.Bash(dir)),
+            Arrays.asList("( for i in {0..200}; do echo $i; done; exit 1 ) >&2")
+        ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(
+                new Snapshot(
+                    new ByteArrayInputStream(stdout.toByteArray())
+                ).dom()
+            ),
+            XhtmlMatchers.hasXPaths(
+                "//exception[not(contains(stacktrace, '1\\n2\\n3'))]",
+                "//exception[contains(stacktrace, '198\\n199\\n200')]"
+            )
+        );
+    }
+
 }
