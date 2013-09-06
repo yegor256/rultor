@@ -64,42 +64,10 @@ public final class DescriptiveTest {
             }
         ).when(origin).pulse();
         final Work work = Mockito.mock(Work.class);
-        Mockito.doAnswer(
-            new Answer<URI>() {
-                @Override
-                public URI answer(final InvocationOnMock inv)
-                    throws Exception {
-                    return URI.create("urn:facebook:1");
-                }
-            }
-        ).when(work).stdout();
-        Mockito.doAnswer(
-            new Answer<Time>() {
-                @Override
-                public Time answer(final InvocationOnMock inv)
-                    throws Exception {
-                    return scheduled;
-                }
-            }
-        ).when(work).scheduled();
-        Mockito.doAnswer(
-            new Answer<URN>() {
-                @Override
-                public URN answer(final InvocationOnMock inv)
-                    throws Exception {
-                    return URN.create("urn:facebook:2");
-                }
-            }
-        ).when(work).owner();
-        Mockito.doAnswer(
-            new Answer<String>() {
-                @Override
-                public String answer(final InvocationOnMock inv)
-                    throws Exception {
-                    return "test-rule";
-                }
-            }
-        ).when(work).rule();
+        Mockito.doReturn(URI.create("urn:facebook:1")).when(work).stdout();
+        Mockito.doReturn(scheduled).when(work).scheduled();
+        Mockito.doReturn(URN.create("urn:facebook:2")).when(work).owner();
+        Mockito.doReturn("test-rule").when(work).rule();
         final Descriptive descriptive = new Descriptive(
             work,
             origin
