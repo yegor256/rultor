@@ -79,6 +79,12 @@ import org.xembly.Directives;
 public final class IncrementalBash implements Batch {
 
     /**
+     * Escaped Xembly mark.
+     */
+    private static final String ESCAPED_MARK =
+        IncrementalBash.escape(XemblyLine.MARK);
+
+    /**
      * Shells to be used for actual execution of bash script.
      */
     private final transient Shells shells;
@@ -254,7 +260,7 @@ public final class IncrementalBash implements Batch {
                 // @checkstyle MultipleStringLiterals (2 lines)
                 .replace("\\", "\\\\\\")
                 .replace("\"", "\\\"")
-                .replace(XemblyLine.MARK, this.escape(XemblyLine.MARK))
+                .replace(XemblyLine.MARK, IncrementalBash.ESCAPED_MARK)
         );
     }
 
@@ -280,7 +286,7 @@ public final class IncrementalBash implements Batch {
         return String.format(
             "echo -e '%s'",
             xembly.replace("'", "\\x27").replace(
-                XemblyLine.MARK, IncrementalBash.escape(XemblyLine.MARK)
+                XemblyLine.MARK, IncrementalBash.ESCAPED_MARK
             )
         );
     }
