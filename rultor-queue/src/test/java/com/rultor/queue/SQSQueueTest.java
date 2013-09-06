@@ -116,7 +116,7 @@ public final class SQSQueueTest {
         MatcherAssert.assertThat(
             work.owner(), Matchers.equalTo(new URN("urn:facebook:65"))
         );
-        MatcherAssert.assertThat(work.rule(), Matchers.equalTo("test-877"));
+        MatcherAssert.assertThat(work.rule(), Matchers.equalTo("test-rule"));
         MatcherAssert.assertThat(
             work.scheduled().toString(),
             Matchers.equalTo(new Time(Tv.MILLION).toString())
