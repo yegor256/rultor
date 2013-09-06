@@ -36,8 +36,6 @@ import com.rultor.tools.Time;
 import java.net.URI;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link Descriptive}.
@@ -54,15 +52,6 @@ public final class DescriptiveTest {
     public void testDescriptiveInXemblyLog() throws Exception {
         final Time scheduled = new Time();
         final Instance origin = Mockito.mock(Instance.class);
-        Mockito.doAnswer(
-            new Answer<Void>() {
-                @Override
-                public Void answer(final InvocationOnMock inv)
-                    throws Exception {
-                    return null;
-                }
-            }
-        ).when(origin).pulse();
         final Work work = Mockito.mock(Work.class);
         Mockito.doReturn(URI.create("urn:facebook:1")).when(work).stdout();
         Mockito.doReturn(scheduled).when(work).scheduled();
@@ -73,11 +62,11 @@ public final class DescriptiveTest {
             origin
         );
         descriptive.pulse();
-        Mockito.verify(origin, Mockito.times(1)).pulse();
-        Mockito.verify(work, Mockito.times(1)).rule();
-        Mockito.verify(work, Mockito.times(1)).scheduled();
-        Mockito.verify(work, Mockito.times(1)).stdout();
-        Mockito.verify(work, Mockito.times(1)).owner();
+        Mockito.verify(origin).pulse();
+        Mockito.verify(work).rule();
+        Mockito.verify(work).scheduled();
+        Mockito.verify(work).stdout();
+        Mockito.verify(work).owner();
     }
 
 }
