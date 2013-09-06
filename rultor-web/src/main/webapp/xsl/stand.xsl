@@ -134,13 +134,13 @@
     </xsl:template>
     <xsl:template match="coordinates">
         <li>
-            <xsl:value-of select="coordinates/owner"/>
+            <xsl:value-of select="owner"/>
         </li>
         <li>
-            <xsl:value-of select="coordinates/rule"/>
+            <xsl:value-of select="rule"/>
         </li>
         <li>
-            <xsl:value-of select="coordinates/scheduled"/>
+            <xsl:value-of select="scheduled"/>
         </li>
     </xsl:template>
 </xsl:stylesheet>
