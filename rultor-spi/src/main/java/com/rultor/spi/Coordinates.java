@@ -153,7 +153,7 @@ public interface Coordinates {
          */
         public Simple(@NotNull(message = "owner can't be NULL") final URN owner,
             @NotNull(message = "rule name can't be NULL")
-            @Pattern(regexp="[a-z\\-]+") final String name,
+            @Pattern(regexp = "[a-z\\-]+") final String name,
             @NotNull(message = "time can't be NULL") final Time when) {
             this.urn = owner;
             this.label = name;
