@@ -45,6 +45,7 @@ import com.rultor.spi.Repo;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Tag;
+import com.rultor.spi.User;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
@@ -367,7 +368,7 @@ public final class StandRs extends BaseRs {
         ACL acl;
         try {
             acl = ACL.class.cast(
-                new Repo.Cached(this.repo(), this.user(), stand.acl())
+                new Repo.Cached(this.repo(), new User.Nobody(), stand.acl())
                     .get()
                     .instantiate(
                         this.users(),
