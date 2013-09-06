@@ -40,6 +40,7 @@ import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
 import com.rultor.spi.ACL;
 import com.rultor.spi.Arguments;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
 import com.rultor.spi.SpecException;
@@ -47,7 +48,6 @@ import com.rultor.spi.Stand;
 import com.rultor.spi.Tag;
 import com.rultor.spi.User;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
 import java.io.IOException;
 import java.net.URI;
@@ -372,7 +372,9 @@ public final class StandRs extends BaseRs {
                     .get()
                     .instantiate(
                         this.users(),
-                        new Arguments(new Work.None(), new Wallet.Empty())
+                        new Arguments(
+                            new Coordinates.None(), new Wallet.Empty()
+                        )
                     )
             );
         } catch (SpecException ex) {

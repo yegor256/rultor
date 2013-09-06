@@ -31,10 +31,10 @@ package com.rultor.repo;
 
 import com.jcabi.aspects.Tv;
 import com.rultor.spi.Arguments;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import java.util.Arrays;
 import java.util.List;
 import org.hamcrest.MatcherAssert;
@@ -61,7 +61,7 @@ public final class ChainTest {
         MatcherAssert.assertThat(
             var.instantiate(
                 Mockito.mock(Users.class),
-                new Arguments(new Work.None(), new Wallet.Empty())
+                new Arguments(new Coordinates.None(), new Wallet.Empty())
             ).get(0),
             Matchers.<Object>equalTo(Tv.TEN)
         );

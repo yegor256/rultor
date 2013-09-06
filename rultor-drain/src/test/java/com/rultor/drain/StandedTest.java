@@ -34,8 +34,8 @@ import com.jcabi.urn.URN;
 import com.rexsl.test.TestClient;
 import com.rexsl.test.TestResponse;
 import com.rultor.snapshot.XemblyLine;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -140,7 +140,7 @@ public final class StandedTest {
      * @return Standed instance
      */
     private Standed standed(final TestClient client) {
-        final Work work = Mockito.mock(Work.class);
+        final Coordinates work = Mockito.mock(Coordinates.class);
         Mockito.when(work.owner()).thenReturn(new URN());
         Mockito.when(work.rule()).thenReturn(StringUtils.EMPTY);
         Mockito.when(work.scheduled()).thenReturn(new Time());

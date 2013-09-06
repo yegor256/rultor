@@ -32,7 +32,7 @@ package com.rultor.stateful.s3;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.aws.S3Client;
-import com.rultor.spi.Work;
+import com.rultor.spi.Coordinates;
 import com.rultor.stateful.Lineup;
 import java.util.concurrent.Callable;
 import javax.validation.constraints.NotNull;
@@ -52,9 +52,9 @@ import lombok.EqualsAndHashCode;
 public final class BucketLineup implements Lineup {
 
     /**
-     * Work we're in.
+     * Coordinates we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * S3 client.
@@ -68,11 +68,12 @@ public final class BucketLineup implements Lineup {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param pfx Prefix
      * @param clnt Client
      */
-    public BucketLineup(@NotNull(message = "work can't be NULL") final Work wrk,
+    public BucketLineup(
+        @NotNull(message = "work can't be NULL") final Coordinates wrk,
         @NotNull(message = "S3 prefix can't be NULL") final String pfx,
         @NotNull(message = "S3 client can't be NULL") final S3Client clnt) {
         this.work = wrk;
@@ -82,10 +83,10 @@ public final class BucketLineup implements Lineup {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param clnt Client
      */
-    public BucketLineup(final Work wrk, final S3Client clnt) {
+    public BucketLineup(final Coordinates wrk, final S3Client clnt) {
         this(wrk, "", clnt);
     }
 

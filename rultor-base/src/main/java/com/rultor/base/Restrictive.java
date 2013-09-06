@@ -32,8 +32,8 @@ package com.rultor.base;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Proxy;
-import com.rultor.spi.Work;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -51,9 +51,9 @@ import lombok.EqualsAndHashCode;
 public final class Restrictive implements Proxy<Object> {
 
     /**
-     * Work we're in.
+     * Coordinates we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Origin.
@@ -67,13 +67,13 @@ public final class Restrictive implements Proxy<Object> {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param frnds List of friends
      * @param instance Original instance
      * @checkstyle ParameterNumber (10 lines)
      */
     public Restrictive(
-        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "work can't be NULL") final Coordinates wrk,
         @NotNull(message = "friends can't be NULL")
         final Collection<String> frnds,
         @NotNull(message = "instance can't be NULL") final Object instance) {

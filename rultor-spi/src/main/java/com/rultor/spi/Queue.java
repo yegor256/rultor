@@ -52,17 +52,17 @@ public interface Queue {
      * Push new work into it.
      * @param work The work to do
      */
-    void push(@NotNull(message = "work can't be NULL") Work work);
+    void push(@NotNull(message = "work can't be NULL") Coordinates work);
 
     /**
      * Pull the next available work (waits until it is available).
      * @param limit How many time rules to wait for, maximum
      * @param unit Time unit
-     * @return The work available or Work.None if nothing is available now
+     * @return The work available or Coordinates.None if nothing is available now
      * @throws InterruptedException If interrupted while waiting
      */
     @NotNull(message = "work is never NULL")
-    Work pull(int limit, @NotNull(message = "time unit can't be NULL")
+    Coordinates pull(int limit, @NotNull(message = "time unit can't be NULL")
         TimeUnit unit) throws InterruptedException;
 
     /**
@@ -75,14 +75,14 @@ public interface Queue {
         /**
          * Queue of them.
          */
-        private final transient BlockingQueue<Work> list =
-            new LinkedBlockingQueue<Work>();
+        private final transient BlockingQueue<Coordinates> list =
+            new LinkedBlockingQueue<Coordinates>();
         /**
          * {@inheritDoc}
          */
         @Override
         public void push(@NotNull(message = "work can't be NULL")
-            final Work work) {
+            final Coordinates work) {
             this.list.add(work);
         }
         /**
@@ -91,7 +91,7 @@ public interface Queue {
         @Override
         @NotNull
         @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-        public Work pull(final int limit,
+        public Coordinates pull(final int limit,
             @NotNull(message = "time unit can't be NULL") final TimeUnit unit)
             throws InterruptedException {
             return this.list.poll(limit, unit);

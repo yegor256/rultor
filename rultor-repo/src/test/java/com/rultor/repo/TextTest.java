@@ -30,10 +30,10 @@
 package com.rultor.repo;
 
 import com.rultor.spi.Arguments;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -57,7 +57,9 @@ public final class TextTest {
         MatcherAssert.assertThat(
             var.instantiate(
                 Mockito.mock(Users.class),
-                new Arguments(Mockito.mock(Work.class), new Wallet.Empty())
+                new Arguments(
+                    Mockito.mock(Coordinates.class), new Wallet.Empty()
+                )
             ),
             Matchers.equalTo(text)
         );

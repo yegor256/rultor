@@ -32,8 +32,8 @@ package com.rultor.stateful.sdb;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.aws.SDBClient;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.stateful.Lineup;
 import java.util.concurrent.Callable;
 import javax.validation.constraints.NotNull;
@@ -53,9 +53,9 @@ import lombok.EqualsAndHashCode;
 public final class DomainLineup implements Lineup {
 
     /**
-     * Work we're in.
+     * Coordinates we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Wallet to charge.
@@ -69,12 +69,12 @@ public final class DomainLineup implements Lineup {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param wlt Wallet to charge
      * @param clnt Client
      */
     public DomainLineup(
-        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "work can't be NULL") final Coordinates wrk,
         @NotNull(message = "wallet can't be NULL") final Wallet wlt,
         @NotNull(message = "SimpleDB client can't be NULL")
         final SDBClient clnt) {

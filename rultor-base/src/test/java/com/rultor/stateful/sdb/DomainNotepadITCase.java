@@ -30,8 +30,8 @@
 package com.rultor.stateful.sdb;
 
 import com.rultor.aws.SDBClient;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.stateful.Notepad;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -70,7 +70,7 @@ public final class DomainNotepadITCase {
     @Test
     public void storesAndRetrievesLines() throws Exception {
         final Notepad notepad = new DomainNotepad(
-            new Work.Simple(), new Wallet.Empty(), this.client()
+            new Coordinates.Simple(), new Wallet.Empty(), this.client()
         );
         final String first = "some \u20ac\t\n\r\n\n\n test";
         final String second = "AAA - some \u20ac\t\n\r\n\n\n test";
@@ -92,7 +92,7 @@ public final class DomainNotepadITCase {
     @Test
     public void cleansItself() throws Exception {
         final Notepad notepad = new DomainNotepad(
-            new Work.Simple(), new Wallet.Empty(), this.client()
+            new Coordinates.Simple(), new Wallet.Empty(), this.client()
         );
         notepad.add("some test line\t\nпривет");
         MatcherAssert.assertThat(notepad, Matchers.not(Matchers.empty()));
@@ -107,7 +107,7 @@ public final class DomainNotepadITCase {
     @Test
     public void checksLineExistence() throws Exception {
         final Notepad notepad = new DomainNotepad(
-            new Work.Simple(), new Wallet.Empty(), this.client()
+            new Coordinates.Simple(), new Wallet.Empty(), this.client()
         );
         final String text = "да test line\t\nпривет";
         notepad.add(text);

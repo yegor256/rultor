@@ -41,13 +41,13 @@ import com.jcabi.log.VerboseThreads;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.ACL;
 import com.rultor.spi.Arguments;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Repo;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.NormJson;
 import java.io.Closeable;
@@ -215,7 +215,9 @@ public final class SQSPulseSensor implements Runnable, Closeable {
                     .get()
                     .instantiate(
                         this.users,
-                        new Arguments(new Work.None(), new Wallet.Empty())
+                        new Arguments(
+                            new Coordinates.None(), new Wallet.Empty()
+                        )
                     )
             );
         } catch (SpecException ex) {

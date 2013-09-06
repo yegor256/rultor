@@ -30,7 +30,6 @@
 package com.rultor.web;
 
 import com.jcabi.manifests.Manifests;
-import com.jcabi.urn.URN;
 import com.rexsl.page.HttpHeadersMocker;
 import com.rexsl.page.ServletContextMocker;
 import com.rexsl.page.UriInfoMocker;
@@ -40,7 +39,6 @@ import com.rultor.snapshot.XSLT;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
-import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import java.io.IOException;
 import java.util.Arrays;
@@ -76,8 +74,7 @@ public final class StandRsTest {
     public void fetchesSnapshotInHtml() throws Exception {
         final StandRs rest = new StandRs();
         final Stand stand = Mockito.mock(Stand.class);
-        final URN owner = new URN("urn:test:1");
-        Mockito.doReturn(owner).when(stand).owner();
+        Mockito.doReturn(BaseRs.TEST_URN).when(stand).owner();
         final Pageable<Pulse, String> pulses = Mockito.mock(Pageable.class);
         Mockito.doReturn(pulses).when(stand).pulses();
         final String name = "some-pulse identifier";
@@ -92,9 +89,6 @@ public final class StandRsTest {
             .when(pulses).iterator();
         Mockito.doReturn(pulses).when(pulses).tail(name);
         final Users users = Mockito.mock(Users.class);
-        final User user = Mockito.mock(User.class);
-        Mockito.doReturn(owner).when(user).urn();
-        Mockito.doReturn(user).when(users).get(Mockito.any(URN.class));
         Mockito.doReturn(stand).when(users).stand(Mockito.anyString());
         rest.setServletContext(
             new ServletContextMocker()

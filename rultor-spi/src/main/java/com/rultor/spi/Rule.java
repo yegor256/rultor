@@ -74,7 +74,7 @@ public interface Rule {
      * @throws Wallet.NotEnoughFundsException If not enough funds
      */
     @NotNull(message = "wallet is never NULL")
-    Wallet wallet(Work work, URN taker, String rule)
+    Wallet wallet(Coordinates work, URN taker, String rule)
         throws Wallet.NotEnoughFundsException;
 
     /**
@@ -111,7 +111,8 @@ public interface Rule {
          * {@inheritDoc}
          */
         @Override
-        public Wallet wallet(final Work work, final URN urn, final String rle) {
+        public Wallet wallet(final Coordinates work,
+            final URN urn, final String rle) {
             throw new UnsupportedOperationException();
         }
     }

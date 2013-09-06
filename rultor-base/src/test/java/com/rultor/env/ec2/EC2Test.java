@@ -37,8 +37,8 @@ import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.jcabi.urn.URN;
 import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.Arrays;
@@ -72,7 +72,7 @@ public final class EC2Test {
      * @return EC2.
      */
     private EC2 mockEnvironment() {
-        final Work work = Mockito.mock(Work.class);
+        final Coordinates work = Mockito.mock(Coordinates.class);
         final Wallet wallet = Mockito.mock(Wallet.class);
         final EC2Client client = Mockito.mock(EC2Client.class);
         final AmazonEC2 aws = Mockito.mock(AmazonEC2.class);

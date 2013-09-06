@@ -62,7 +62,7 @@ import org.xembly.Directives;
 public final class Descriptive implements Instance {
 
     /**
-     * Work we're in.
+     * Coordinates we're in.
      */
     private final transient Work work;
 
@@ -73,7 +73,7 @@ public final class Descriptive implements Instance {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param instance Original instance
      */
     public Descriptive(final Work wrk, final Instance instance) {
