@@ -120,13 +120,13 @@ public final class StandRs extends BaseRs {
 
     /**
      * Inject it from query.
-     * @param names Names of pulses
+     * @param pulses Names of pulses
      */
     @QueryParam(StandRs.QUERY_OPEN)
-    public void setPulses(final List<String> names) {
-        if (names != null) {
-            for (String name : names) {
-                this.open.add(Coordinates.Simple.valueOf(name));
+    public void setPulses(final List<String> pulses) {
+        if (pulses != null) {
+            for (String pulse : pulses) {
+                this.open.add(Coordinates.Simple.valueOf(pulse));
             }
         }
     }

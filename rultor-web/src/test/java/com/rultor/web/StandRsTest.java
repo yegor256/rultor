@@ -77,7 +77,8 @@ public final class StandRsTest {
         final StandRs rest = new StandRs();
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(BaseRs.TEST_URN).when(stand).owner();
-        final Pageable<Pulse, Coordinates> pulses = Mockito.mock(Pageable.class);
+        final Pageable<Pulse, Coordinates> pulses =
+            Mockito.mock(Pageable.class);
         Mockito.doReturn(pulses).when(stand).pulses();
         final Coordinates coords = new Coordinates.Simple(
             new URN("urn:test:888"), "some-rule-identifier"
