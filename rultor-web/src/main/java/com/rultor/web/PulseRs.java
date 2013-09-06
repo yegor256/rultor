@@ -142,7 +142,7 @@ public final class PulseRs extends BaseRs {
                 return PulseRs.this.read(rule);
             }
             @Override
-            public String identifier() {
+            public Coordinates coordinates() {
                 throw new UnsupportedOperationException();
             }
             @Override

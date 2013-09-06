@@ -31,11 +31,14 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.tools.Time;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Coordinates to do.
@@ -129,6 +132,13 @@ public interface Coordinates {
         }
         /**
          * Public ctor.
+         * @param coords Other coordinates
+         */
+        public Simple(final Coordinates coords) {
+            this(coords.owner(), coords.rule(), coords.scheduled());
+        }
+        /**
+         * Public ctor.
          * @param owner Owner
          * @param name Name
          */
@@ -142,7 +152,8 @@ public interface Coordinates {
          * @param when When it should start
          */
         public Simple(@NotNull(message = "owner can't be NULL") final URN owner,
-            @NotNull(message = "rule name can't be NULL") final String name,
+            @NotNull(message = "rule name can't be NULL")
+            @Pattern(regexp="[a-z\\-]+") final String name,
             @NotNull(message = "time can't be NULL") final Time when) {
             this.urn = owner;
             this.label = name;
@@ -154,10 +165,25 @@ public interface Coordinates {
         @Override
         public String toString() {
             return String.format(
-                "at %s in %s for %s",
+                "%s %s %s",
                 this.time,
                 this.label,
                 this.urn
+            );
+        }
+        /**
+         * Create from a string.
+         * @param text Text form
+         * @return Coordinates found in text
+         */
+        public static Coordinates valueOf(final String text) {
+            final String[] parts = text.split(" ");
+            Validate.isTrue(
+                parts.length == Tv.THREE,
+                "invalid coordinates `%s`", text
+            );
+            return new Coordinates.Simple(
+                URN.create(parts[2]), parts[1], new Time(parts[0])
             );
         }
         /**

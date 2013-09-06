@@ -106,7 +106,7 @@ public final class StandRs extends BaseRs {
     /**
      * Names of pulses to show open.
      */
-    private final transient Set<String> open = new TreeSet<String>();
+    private final transient Set<Coordinates> open = new TreeSet<Coordinates>();
 
     /**
      * Inject it from query.
@@ -125,7 +125,9 @@ public final class StandRs extends BaseRs {
     @QueryParam(StandRs.QUERY_OPEN)
     public void setPulses(final List<String> names) {
         if (names != null) {
-            this.open.addAll(names);
+            for (String name : names) {
+                this.open.add(Coordinates.Simple.valueOf(name));
+            }
         }
     }
 
@@ -149,7 +151,12 @@ public final class StandRs extends BaseRs {
                         .build(this.name)
                 )
             )
-            .link(new Link("collapse", this.self(new ArrayList<String>(0))))
+            .link(
+                new Link(
+                    "collapse",
+                    this.self(new ArrayList<Coordinates>(0))
+                )
+            )
             .append(
                 new Breadcrumbs()
                     .with("stands")
@@ -172,13 +179,14 @@ public final class StandRs extends BaseRs {
     @Path("/fetch")
     @Produces(MediaType.TEXT_HTML)
     public Response fetch(@QueryParam(StandRs.QUERY_ID) final String uid) {
+        final Coordinates coords = Coordinates.Simple.valueOf(uid);
         Response resp;
         try {
             resp = Response.ok().entity(
                 new XSLT(
                     this.render(
                         new JaxbBundle("div"),
-                        this.stand().pulses().tail(uid).iterator().next()
+                        this.stand().pulses().tail(coords).iterator().next()
                     ).element(),
                     this.getClass().getResourceAsStream("fetch.xsl")
                 ).xml()
@@ -241,15 +249,18 @@ public final class StandRs extends BaseRs {
      * @return Bundle
      */
     private JaxbBundle pulse(final Pulse pulse) {
-        final String uid = pulse.identifier();
+        final Coordinates coords = pulse.coordinates();
         JaxbBundle bundle = new JaxbBundle("pulse")
-            .add("identifier", uid)
+            .add("coordinates")
+            .add("rule", coords.rule()).up()
+            .add("owner", coords.owner().toString()).up()
+            .add("scheduled", coords.scheduled().toString()).up()
             .up();
-        final ArraySet<String> now = new ArraySet<String>(this.open);
-        if (this.open.contains(uid)) {
+        final ArraySet<Coordinates> now = new ArraySet<Coordinates>(this.open);
+        if (this.open.contains(coords)) {
             bundle = this
                 .render(bundle, pulse)
-                .link(new Link("close", this.self(now.without(uid))))
+                .link(new Link("close", this.self(now.without(coords))))
                 .link(
                     new Link(
                         "fetch",
@@ -258,12 +269,12 @@ public final class StandRs extends BaseRs {
                             .path(StandRs.class)
                             .path(StandRs.class, "fetch")
                             .queryParam(StandRs.QUERY_ID, "{id}")
-                            .build(this.name, uid)
+                            .build(this.name, coords)
                     )
                 );
         } else {
             bundle = bundle
-                .link(new Link("open", this.self(now.with(uid))))
+                .link(new Link("open", this.self(now.with(coords))))
                 .add("tags")
                 .add(
                     new JaxbBundle.Group<Tag>(pulse.tags()) {
@@ -282,20 +293,20 @@ public final class StandRs extends BaseRs {
 
     /**
      * Build URI to itself with new list of open pulses.
-     * @param names Names of pulses
+     * @param coords Names of pulses
      * @return URI
      */
-    private URI self(final Collection<String> names) {
+    private URI self(final Collection<Coordinates> coords) {
         final UriBuilder builder = this.uriInfo().getBaseUriBuilder()
             .clone()
             .path(StandRs.class);
-        final Object[] args = new Object[names.size() + 1];
-        final Object[] labels = new String[names.size()];
+        final Object[] args = new Object[coords.size() + 1];
+        final Object[] labels = new String[coords.size()];
         args[0] = this.name;
         int idx = 0;
-        for (String txt : names) {
+        for (Coordinates coord : coords) {
             labels[idx] = String.format("{arg%d}", idx);
-            args[idx + 1] = txt;
+            args[idx + 1] = coord.toString();
             ++idx;
         }
         return builder

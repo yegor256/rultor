@@ -30,12 +30,14 @@
 package com.rultor.web;
 
 import com.jcabi.manifests.Manifests;
+import com.jcabi.urn.URN;
 import com.rexsl.page.HttpHeadersMocker;
 import com.rexsl.page.ServletContextMocker;
 import com.rexsl.page.UriInfoMocker;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
@@ -75,9 +77,11 @@ public final class StandRsTest {
         final StandRs rest = new StandRs();
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(BaseRs.TEST_URN).when(stand).owner();
-        final Pageable<Pulse, String> pulses = Mockito.mock(Pageable.class);
+        final Pageable<Pulse, Coordinates> pulses = Mockito.mock(Pageable.class);
         Mockito.doReturn(pulses).when(stand).pulses();
-        final String name = "some-pulse identifier";
+        final Coordinates coords = new Coordinates.Simple(
+            new URN("urn:test:888"), "some-rule-identifier"
+        );
         final Pulse pulse = Mockito.mock(Pulse.class);
         Mockito.doReturn(
             new Directives()
@@ -87,7 +91,8 @@ public final class StandRsTest {
         ).when(pulse).xembly();
         Mockito.doReturn(Arrays.asList(pulse).iterator())
             .when(pulses).iterator();
-        Mockito.doReturn(pulses).when(pulses).tail(name);
+        Mockito.doReturn(pulses).when(pulses)
+            .tail(Mockito.any(Coordinates.class));
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(stand).when(users).stand(Mockito.anyString());
         rest.setServletContext(
@@ -97,7 +102,7 @@ public final class StandRsTest {
         rest.setHttpHeaders(new HttpHeadersMocker().mock());
         rest.setUriInfo(new UriInfoMocker().mock());
         MatcherAssert.assertThat(
-            rest.fetch(name).getEntity().toString(),
+            rest.fetch(coords.toString()).getEntity().toString(),
             XhtmlMatchers.hasXPath("/div//xhtml:ul")
         );
     }

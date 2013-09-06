@@ -29,50 +29,32 @@
  */
 package com.rultor.spi;
 
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
-import javax.validation.constraints.NotNull;
+import com.jcabi.urn.URN;
+import com.rultor.tools.Time;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Pulse.
- *
+ * Test case for {@link Coordinates}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-public interface Pulse {
+public final class CoordinatesTest {
 
     /**
-     * Coordinates of it.
-     * @return Identifier
+     * Coordinates.Simple can produce string and parse it.
+     * @throws Exception If some problem inside
      */
-    @NotNull(message = "coordinates is never NULL")
-    Coordinates coordinates();
-
-    /**
-     * All its tags.
-     * @return List of tags
-     */
-    @NotNull(message = "collection of tags is never NULL")
-    Collection<Tag> tags();
-
-    /**
-     * Snapshot in Xembly.
-     * @return The snapshot
-     * @throws IOException If IO error
-     */
-    @NotNull(message = "story is never NULL")
-    String xembly() throws IOException;
-
-    /**
-     * Read it as a stream.
-     * @return Stream to stream from
-     * @throws IOException If fails
-     */
-    @NotNull(message = "stream is never NULL")
-    InputStream stream() throws IOException;
+    @Test
+    public void makesStringAndParsesIt() throws Exception {
+        final Coordinates coords = new Coordinates.Simple(
+            new URN("urn:test:88979"), "some-rule", new Time()
+        );
+        MatcherAssert.assertThat(
+            Coordinates.Simple.valueOf(coords.toString()),
+            Matchers.hasToString(coords.toString())
+        );
+    }
 
 }

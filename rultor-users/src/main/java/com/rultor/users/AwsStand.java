@@ -37,6 +37,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
@@ -145,7 +146,7 @@ final class AwsStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, String> pulses() {
+    public Pageable<Pulse, Coordinates> pulses() {
         throw new UnsupportedOperationException();
     }
 
@@ -153,7 +154,8 @@ final class AwsStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public void post(final String pulse, final long nano, final String xembly) {
+    public void post(final Coordinates pulse, final long nano,
+        final String xembly) {
         throw new UnsupportedOperationException();
     }
 

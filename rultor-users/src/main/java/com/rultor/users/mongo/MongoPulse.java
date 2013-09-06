@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArrayMap;
 import com.mongodb.DBObject;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Tag;
 import java.io.IOException;
@@ -98,8 +99,10 @@ final class MongoPulse implements Pulse {
      * {@inheritDoc}
      */
     @Override
-    public String identifier() {
-        return this.map.get(MongoStand.ATTR_PULSE).toString();
+    public Coordinates coordinates() {
+        return Coordinates.Simple.valueOf(
+            this.map.get(MongoStand.ATTR_PULSE).toString()
+        );
     }
 
     /**
