@@ -134,9 +134,6 @@
     </xsl:template>
     <xsl:template match="coordinates">
         <li>
-            <xsl:value-of select="owner"/>
-        </li>
-        <li>
             <xsl:value-of select="rule"/>
         </li>
         <li>
