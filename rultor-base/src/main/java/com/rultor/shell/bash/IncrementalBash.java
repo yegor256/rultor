@@ -170,6 +170,7 @@ public final class IncrementalBash implements Batch {
      * @param args All arguments to inject into Velocity script
      * @param cmd Command in Vext format
      * @return Bash script ready for execution
+     * @see http://stackoverflow.com/questions/18665603
      */
     private String script(final Map<String, Object> args, final Vext cmd) {
         final String uid = String.format("bash-%d", System.nanoTime());
@@ -200,7 +201,6 @@ public final class IncrementalBash implements Batch {
                 "; } 2> >( tail -100 | eval $ESCAPE | tee ${dollar}STDERR );\n"
             )
             .append("CODE=${dollar}?;\n")
-            // @see http://stackoverflow.com/questions/18665603
             .append("sync; wait;\n")
             .append("FINISH=${dollar}(date +%s%N | tr -d N);\n")
             .append("if [ ${dollar}CODE = 0 ]; then\n  ")
