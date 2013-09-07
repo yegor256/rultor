@@ -150,9 +150,28 @@ public final class IncrementalBashTest {
                 "//exception[contains(stacktrace, '300')]"
             )
         );
+    }
+
+    /**
+     * IncrementalBash can output stderr and stdout correctly.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void correctlyPrintsStderrAndStdout() throws Exception {
+        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        final File dir = Files.createTempDir();
+        new IncrementalBash(
+            new Permanent(new ShellMocker.Bash(dir)),
+            Arrays.asList(
+                "echo -e 'first\\nsecond' >&2; echo -e 'foo-1\\nfoo-2'"
+            )
+        ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
         MatcherAssert.assertThat(
             new String(stdout.toByteArray(), CharEncoding.UTF_8),
-            Matchers.containsString("298\n299\n300")
+            Matchers.allOf(
+                Matchers.containsString("first\nsecond"),
+                Matchers.containsString("foo-1\nfoo-2")
+            )
         );
     }
 
