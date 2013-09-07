@@ -75,14 +75,14 @@
         <div class="spacious">
             <ul class="list-inline">
                 <li>
-                    <a title="edit this rule">
+                    <a title="view drain of the rule">
                         <xsl:if test="face/exception">
                             <xsl:attribute name="class">
                                 <xsl:text>text-danger</xsl:text>
                             </xsl:attribute>
                         </xsl:if>
                         <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='edit']/@href"/>
+                            <xsl:value-of select="links/link[@rel='drain']/@href"/>
                         </xsl:attribute>
                         <xsl:value-of select="name"/>
                         <xsl:if test="face/arguments">
@@ -99,16 +99,14 @@
                         </xsl:if>
                     </a>
                 </li>
-                <xsl:if test="face/drainable = 'true'">
-                    <li class="icon">
-                        <a title="view drain of the rule">
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="links/link[@rel='drain']/@href"/>
-                            </xsl:attribute>
-                            <i class="icon-chevron-sign-right"><xsl:comment>drain</xsl:comment></i>
-                        </a>
-                    </li>
-                </xsl:if>
+                <li class="icon">
+                    <a title="edit specification">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='edit']/@href"/>
+                        </xsl:attribute>
+                        <i class="icon-beaker"><xsl:comment>edit</xsl:comment></i>
+                    </a>
+                </li>
                 <li class="icon">
                     <a onclick="return confirm('Are you sure?');"
                         title="delete this rule">

@@ -77,19 +77,19 @@
         <li class="spacious">
             <ul class="list-inline">
                 <li>
-                    <a title="edit this stand">
+                    <a title="view pulses of the stand">
                         <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='edit']/@href"/>
+                            <xsl:value-of select="links/link[@rel='see']/@href"/>
                         </xsl:attribute>
                         <xsl:value-of select="name"/>
                     </a>
                 </li>
                 <li class="icon">
-                    <a title="view pulses of the stand">
+                    <a title="edit ACL">
                         <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='see']/@href"/>
+                            <xsl:value-of select="links/link[@rel='edit']/@href"/>
                         </xsl:attribute>
-                        <i class="icon-chevron-sign-right"><xsl:comment>pulses</xsl:comment></i>
+                        <i class="icon-key"><xsl:comment>acl</xsl:comment></i>
                     </a>
                 </li>
             </ul>
