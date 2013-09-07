@@ -55,17 +55,17 @@ final class MongoCoords implements Coordinates {
     /**
      * MongoDB table column.
      */
-    private static final String ATTR_RULE = "rule";
+    public static final String ATTR_RULE = "rule";
 
     /**
      * MongoDB table column.
      */
-    private static final String ATTR_OWNER = "owner";
+    public static final String ATTR_OWNER = "owner";
 
     /**
      * MongoDB table column.
      */
-    private static final String ATTR_SCHEDULED = "scheduled";
+    public static final String ATTR_SCHEDULED = "scheduled";
 
     /**
      * Owner.
