@@ -134,13 +134,12 @@ SET "some text to set"; STRICT "1";</xembly>
                         <level>INFO</level>
                         <label>pull-request</label>
                     </tag>
-                </tags>
-                <products>
-                    <product>
-                        <name>stdout</name>
+                    <tag>
+                        <level>INFO</level>
+                        <label>stdout</label>
                         <markdown>[1 file](http://google.com)</markdown>
-                    </product>
-                </products>
+                    </tag>
+                </tags>
                 <steps>
                     <step id="3235">
                         <start at="0.2">2013-08-23T17:57Z</start>

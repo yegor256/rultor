@@ -90,11 +90,6 @@
         <xsl:if test="spec">
             <pre style="display:none;" class="spec"><xsl:value-of select="spec"/></pre>
         </xsl:if>
-        <xsl:if test="products/product">
-            <ul class="list-unstyled">
-                <xsl:apply-templates select="products/product"/>
-            </ul>
-        </xsl:if>
         <xsl:choose>
             <xsl:when test="stdout">
                 <div class="progress progress-striped active">
@@ -303,11 +298,6 @@
                 </xsl:attribute>
                 <xsl:value-of select="label"/>
             </span>
-        </li>
-    </xsl:template>
-    <xsl:template match="product">
-        <li>
-            <span class="markdown"><xsl:value-of select="markdown"/></span>
         </li>
     </xsl:template>
     <xsl:template name="bar">

@@ -94,13 +94,12 @@
                         <level>INFO</level>
                         <label>pull-request</label>
                     </tag>
-                </tags>
-                <products>
-                    <product>
-                        <name>stdout</name>
+                    <tag>
+                        <level>FINE</level>
+                        <label>stdout</label>
                         <markdown>[1 file](http://google.com)</markdown>
-                    </product>
-                </products>
+                    </tag>
+                </tags>
                 <steps>
                     <step>
                         <id>ec2-instance</id>
@@ -157,12 +156,6 @@
                         <label>pull-request</label>
                     </tag>
                 </tags>
-                <products>
-                    <product>
-                        <name>stdout</name>
-                        <markdown>[1 file](http://google.com)</markdown>
-                    </product>
-                </products>
                 <steps>
                     <step>
                         <id>ec2-instance</id>

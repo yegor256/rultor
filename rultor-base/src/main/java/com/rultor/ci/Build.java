@@ -70,17 +70,17 @@ public final class Build {
     /**
      * Name of the product we're building.
      */
-    private final transient String product;
+    private final transient String tag;
 
     /**
      * Public ctor.
-     * @param pdt Product name
+     * @param name Tag name
      * @param btch Batch to use
      */
     public Build(
-        @NotNull(message = "product name can't be NULL") final String pdt,
+        @NotNull(message = "product name can't be NULL") final String name,
         @NotNull(message = "batch can't be NULL") final Batch btch) {
-        this.product = pdt;
+        this.tag = name;
         this.batch = btch;
     }
 
@@ -126,9 +126,9 @@ public final class Build {
         final XemblyLine line = new XemblyLine(
             new Directives()
                 .xpath("/snapshot").strict(1).addIfAbsent("tags")
-                .xpath(String.format("tag[label='%s']", this.product))
+                .xpath(String.format("tag[label='%s']", this.tag))
                 .remove().xpath("/snapshot/tags").strict(1)
-                .add("tag").add("label").set(this.product).up()
+                .add("tag").add("label").set(this.tag).up()
                 .add("level").set(level.toString())
         );
         line.log();
