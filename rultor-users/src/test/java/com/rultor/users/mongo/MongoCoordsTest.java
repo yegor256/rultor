@@ -31,6 +31,7 @@ package com.rultor.users.mongo;
 
 import com.jcabi.urn.URN;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.rultor.spi.Coordinates;
 import com.rultor.tools.Time;
 import org.hamcrest.MatcherAssert;
@@ -62,7 +63,33 @@ public final class MongoCoordsTest {
         MatcherAssert.assertThat(coords.rule(), Matchers.equalTo(rule));
         MatcherAssert.assertThat(coords.owner(), Matchers.equalTo(owner));
         MatcherAssert.assertThat(
-            coords.scheduled(), Matchers.equalTo(scheduled)
+            coords.scheduled(), Matchers.hasToString(scheduled.toString())
+        );
+    }
+
+    /**
+     * MongoCoords can build Mongo DBObject.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void buildsMongoDbObject() throws Exception {
+        final String rule = "test-rule-a";
+        final Time scheduled = new Time();
+        final URN owner = new URN("urn:test:896666");
+        final DBObject object = new MongoCoords(
+            new Coordinates.Simple(owner, rule, scheduled)
+        ).asObject();
+        MatcherAssert.assertThat(
+            object.get(MongoCoords.ATTR_OWNER),
+            Matchers.hasToString(owner.toString())
+        );
+        MatcherAssert.assertThat(
+            object.get(MongoCoords.ATTR_RULE),
+            Matchers.hasToString(rule)
+        );
+        MatcherAssert.assertThat(
+            object.get(MongoCoords.ATTR_SCHEDULED),
+            Matchers.hasToString(scheduled.toString())
         );
     }
 
