@@ -39,8 +39,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.SequenceInputStream;
+import java.io.StringWriter;
 import java.util.Map;
 import java.util.logging.Level;
+import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -58,7 +60,7 @@ import org.xembly.XemblySyntaxException;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "batch", "product" })
+@EqualsAndHashCode(of = { "batch", "tag" })
 @Loggable(Loggable.DEBUG)
 public final class Build {
 
@@ -94,13 +96,23 @@ public final class Build {
     public Snapshot exec(@NotNull(message = "args can't be NULL")
         final Map<String, Object> args) throws IOException {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        final long start = System.currentTimeMillis();
         final int code = this.batch.exec(args, stdout);
+        final StringWriter data = new StringWriter();
+        Json.createGenerator(data)
+            .writeStartObject()
+            .write("code", code)
+            .write("time", System.currentTimeMillis() - start)
+            .writeEnd()
+            .close();
         Snapshot snapshot;
         try {
             snapshot = new Snapshot(
                 new SequenceInputStream(
                     new ByteArrayInputStream(stdout.toByteArray()),
-                    IOUtils.toInputStream(this.tag(code), Charsets.UTF_8)
+                    IOUtils.toInputStream(
+                        this.tag(code, data.toString()), Charsets.UTF_8
+                    )
                 )
             );
         } catch (XemblySyntaxException ex) {
@@ -114,9 +126,10 @@ public final class Build {
     /**
      * Make a xembly tag when done.
      * @param code The code
+     * @param data Data in JSON format
      * @return Marker
      */
-    private String tag(final int code) {
+    private String tag(final int code, final String data) {
         final Level level;
         if (code == 0) {
             level = Level.FINE;
@@ -129,7 +142,8 @@ public final class Build {
                 .xpath(String.format("tag[label='%s']", this.tag))
                 .remove().xpath("/snapshot/tags").strict(1)
                 .add("tag").add("label").set(this.tag).up()
-                .add("level").set(level.toString())
+                .add("level").set(level.toString()).up()
+                .add("data").set(data)
         );
         line.log();
         return line.toString();
