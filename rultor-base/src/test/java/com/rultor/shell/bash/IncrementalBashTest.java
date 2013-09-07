@@ -40,6 +40,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Arrays;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -148,6 +149,10 @@ public final class IncrementalBashTest {
                 "//exception[not(contains(stacktrace, '199'))]",
                 "//exception[contains(stacktrace, '300')]"
             )
+        );
+        MatcherAssert.assertThat(
+            new String(stdout.toByteArray(), CharEncoding.UTF_8),
+            Matchers.containsString("298\n299\n300")
         );
     }
 
