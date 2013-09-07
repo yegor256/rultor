@@ -90,7 +90,7 @@ final class MongoCoords implements Coordinates {
         this(
             URN.create(object.get(MongoCoords.ATTR_OWNER).toString()),
             object.get(MongoCoords.ATTR_RULE).toString(),
-            new Time(object.get(MongoCoords.ATTR_OWNER).toString())
+            new Time(object.get(MongoCoords.ATTR_SCHEDULED).toString())
         );
     }
 
