@@ -32,7 +32,7 @@ package com.rultor.stateful.s3;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.aws.S3Client;
-import com.rultor.spi.Work;
+import com.rultor.spi.Coordinates;
 import com.rultor.stateful.Notepad;
 import java.util.Collection;
 import java.util.Iterator;
@@ -53,9 +53,9 @@ import lombok.EqualsAndHashCode;
 public final class BucketNotepad implements Notepad {
 
     /**
-     * Work we're in.
+     * Coordinates we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * S3 client.
@@ -69,12 +69,12 @@ public final class BucketNotepad implements Notepad {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param pfx Prefix
      * @param clnt Client
      */
     public BucketNotepad(@NotNull(message = "work can't be NULL")
-        final Work wrk,
+        final Coordinates wrk,
         @NotNull(message = "S3 prefix can't be NULL") final String pfx,
         @NotNull(message = "S3 client can't be NULL") final S3Client clnt) {
         this.work = wrk;
@@ -84,10 +84,10 @@ public final class BucketNotepad implements Notepad {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param clnt Client
      */
-    public BucketNotepad(final Work wrk, final S3Client clnt) {
+    public BucketNotepad(final Coordinates wrk, final S3Client clnt) {
         this(wrk, "", clnt);
     }
 

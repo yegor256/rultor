@@ -38,18 +38,20 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
+import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.ACL;
 import com.rultor.spi.Arguments;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Repo;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.NormJson;
+import com.rultor.tools.Time;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -192,11 +194,10 @@ public final class SQSPulseSensor implements Runnable, Closeable {
         }
         final JsonObject work = json.getJsonObject("work");
         stand.post(
-            String.format(
-                "%s %s %s",
-                work.getString("scheduled"),
-                work.getString("owner"),
-                work.getString("rule")
+            new Coordinates.Simple(
+                URN.create(work.getString("owner")),
+                work.getString("rule"),
+                new Time(work.getString("scheduled"))
             ),
             json.getJsonNumber("nano").longValue(),
             json.getString("xembly")
@@ -215,7 +216,9 @@ public final class SQSPulseSensor implements Runnable, Closeable {
                     .get()
                     .instantiate(
                         this.users,
-                        new Arguments(new Work.None(), new Wallet.Empty())
+                        new Arguments(
+                            new Coordinates.None(), new Wallet.Empty()
+                        )
                     )
             );
         } catch (SpecException ex) {

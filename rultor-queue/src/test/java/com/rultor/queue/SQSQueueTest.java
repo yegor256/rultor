@@ -40,7 +40,7 @@ import com.amazonaws.services.sqs.model.SendMessageResult;
 import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
-import com.rultor.spi.Work;
+import com.rultor.spi.Coordinates;
 import com.rultor.tools.Time;
 import java.util.concurrent.TimeUnit;
 import org.hamcrest.MatcherAssert;
@@ -62,7 +62,7 @@ public final class SQSQueueTest {
      */
     @Test
     public void savesJson() throws Exception {
-        final Work work = new Work.Simple(
+        final Coordinates work = new Coordinates.Simple(
             new URN("urn:facebook:1"),
             "some-test-rule",
             new Time(Tv.MILLION)
@@ -108,15 +108,15 @@ public final class SQSQueueTest {
             new ReceiveMessageResult().withMessages(
                 new Message().withBody(
                     // @checkstyle LineLength (1 line)
-                    "{\"urn\":\"urn:facebook:65\",\"rule\":\"test-877\",\"scheduled\":\"1970-01-01T00:16:40Z\"}"
+                    "{\"urn\":\"urn:facebook:65\",\"rule\":\"test-rule\",\"scheduled\":\"1970-01-01T00:16:40Z\"}"
                 )
             )
         ).when(aws).receiveMessage(Mockito.any(ReceiveMessageRequest.class));
-        final Work work = queue.pull(1, TimeUnit.SECONDS);
+        final Coordinates work = queue.pull(1, TimeUnit.SECONDS);
         MatcherAssert.assertThat(
             work.owner(), Matchers.equalTo(new URN("urn:facebook:65"))
         );
-        MatcherAssert.assertThat(work.rule(), Matchers.equalTo("test-877"));
+        MatcherAssert.assertThat(work.rule(), Matchers.equalTo("test-rule"));
         MatcherAssert.assertThat(
             work.scheduled().toString(),
             Matchers.equalTo(new Time(Tv.MILLION).toString())

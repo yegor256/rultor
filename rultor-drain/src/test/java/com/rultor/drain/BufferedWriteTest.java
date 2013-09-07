@@ -31,8 +31,8 @@ package com.rultor.drain;
 
 import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Work;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -59,7 +59,7 @@ public final class BufferedWriteTest {
     @Test
     public void printsItselfInString() throws Exception {
         MatcherAssert.assertThat(
-            new BufferedWrite(new Work.None(), 2, new Trash()),
+            new BufferedWrite(new Coordinates.None(), 2, new Trash()),
             Matchers.hasToString(Matchers.notNullValue())
         );
     }
@@ -72,11 +72,11 @@ public final class BufferedWriteTest {
     public void sendsLinesThrough() throws Exception {
         final Drain drain = Mockito.mock(Drain.class);
         final BufferedWrite first = new BufferedWrite(
-            new Work.Simple(new URN("urn:facebook:8"), "test-99"),
+            new Coordinates.Simple(new URN("urn:facebook:8"), "test-99"),
             2, drain
         );
         final BufferedWrite second = new BufferedWrite(
-            new Work.Simple(new URN("urn:facebook:9"), "test-88"),
+            new Coordinates.Simple(new URN("urn:facebook:9"), "test-88"),
             Tv.FIVE, Mockito.mock(Drain.class)
         );
         final String line = "some \t\u20ac\tfdsfs9980 Hello878";
@@ -131,7 +131,7 @@ public final class BufferedWriteTest {
             }
         ).when(origin).append(Mockito.any(Iterable.class));
         final BufferedWrite drain = new BufferedWrite(
-            new Work.Simple(new URN("urn:test:9"), "f"), 2, origin
+            new Coordinates.Simple(new URN("urn:test:9"), "f"), 2, origin
         );
         final long total = TimeUnit.SECONDS.toMillis(Tv.FIVE);
         for (int idx = 0; idx < total; ++idx) {

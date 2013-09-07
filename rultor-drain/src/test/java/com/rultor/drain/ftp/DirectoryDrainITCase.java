@@ -30,9 +30,9 @@
 package com.rultor.drain.ftp;
 
 import com.jcabi.urn.URN;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.util.Arrays;
 import org.apache.commons.io.FilenameUtils;
@@ -85,7 +85,7 @@ public final class DirectoryDrainITCase {
     public void logsMessages() throws Exception {
         Assume.assumeNotNull(this.host);
         final String msg = "some test log message \u20ac";
-        final Work work = new Work.Simple(
+        final Coordinates work = new Coordinates.Simple(
             new URN("urn:test:1"), "some-rule", new Time(1)
         );
         final Drain drain = new DirectoryDrain(

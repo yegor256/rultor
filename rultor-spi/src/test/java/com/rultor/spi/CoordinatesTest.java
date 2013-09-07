@@ -27,75 +27,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer.fake;
+package com.rultor.spi;
 
-import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Coordinates;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Stand;
-import com.rultor.spi.User;
-import com.rultor.spi.Users;
-import java.util.Iterator;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.rultor.tools.Time;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Fake users that always return one rule.
- *
+ * Test case for {@link Coordinates}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
- * @checkstyle MultipleStringLiterals (500 lines)
  */
-@Immutable
-@ToString
-@EqualsAndHashCode
-public final class FakeUsers implements Users {
+public final class CoordinatesTest {
 
     /**
-     * Coordinates to return.
+     * Coordinates.Simple can produce string and parse it.
+     * @throws Exception If some problem inside
      */
-    private final transient Coordinates work;
-
-    /**
-     * Spec to use.
-     */
-    private final transient Spec spec;
-
-    /**
-     * Public ctor.
-     * @param wrk Coordinates
-     * @param spc Spec
-     */
-    public FakeUsers(final Coordinates wrk, final Spec spc) {
-        this.work = wrk;
-        this.spec = spc;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterator<User> iterator() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public User get(final URN name) {
-        return new FakeUser(this.work, this.spec);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Stand stand(final String name) {
-        throw new UnsupportedOperationException();
+    @Test
+    public void makesStringAndParsesIt() throws Exception {
+        final Coordinates coords = new Coordinates.Simple(
+            new URN("urn:test:88979"), "some-rule", new Time()
+        );
+        MatcherAssert.assertThat(
+            Coordinates.Simple.valueOf(coords.toString()),
+            Matchers.hasToString(coords.toString())
+        );
     }
 
 }

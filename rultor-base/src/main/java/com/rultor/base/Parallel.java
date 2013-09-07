@@ -33,8 +33,8 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.snapshot.Step;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Work;
 import com.rultor.stateful.Lineup;
 import com.rultor.stateful.Notepad;
 import javax.validation.constraints.NotNull;
@@ -55,9 +55,9 @@ import org.apache.commons.lang3.Validate;
 public final class Parallel implements Instance {
 
     /**
-     * Work we're in.
+     * Coordinates we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Origin.
@@ -81,7 +81,7 @@ public final class Parallel implements Instance {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param max Maximum
      * @param lnp Lineup
      * @param atv List of active threads
@@ -89,7 +89,7 @@ public final class Parallel implements Instance {
      * @checkstyle ParameterNumber (10 lines)
      */
     public Parallel(
-        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "work can't be NULL") final Coordinates wrk,
         final int max,
         @NotNull(message = "lineup can't be NULL") final Lineup lnp,
         @NotNull(message = "notepad can't be NULL") final Notepad atv,

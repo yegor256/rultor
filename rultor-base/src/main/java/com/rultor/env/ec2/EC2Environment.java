@@ -46,8 +46,8 @@ import com.jcabi.log.Logger;
 import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
 import com.rultor.snapshot.Step;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -84,9 +84,9 @@ final class EC2Environment implements Environment {
             .build();
 
     /**
-     * Work we're in.
+     * Coordinates we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Wallet to charge.
@@ -105,13 +105,13 @@ final class EC2Environment implements Environment {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param wlt Wallet to charge
      * @param instance Instance ID
      * @param clnt EC2 client
      * @checkstyle ParameterNumber (5 lines)
      */
-    protected EC2Environment(final Work wrk, final Wallet wlt,
+    protected EC2Environment(final Coordinates wrk, final Wallet wlt,
         final String instance, final EC2Client clnt) {
         this.work = wrk;
         this.wallet = wlt;

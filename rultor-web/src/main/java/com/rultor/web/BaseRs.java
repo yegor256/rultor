@@ -49,11 +49,11 @@ import com.rexsl.page.auth.Provider;
 import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
-import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
 import java.io.IOException;
@@ -80,6 +80,11 @@ import javax.ws.rs.core.Response;
 public class BaseRs extends BaseResource {
 
     /**
+     * Test user.
+     */
+    public static final URN TEST_URN = URN.create("urn:facebook:1");
+
+    /**
      * Authentication keys.
      */
     private static final AuthKeys KEYS = new AuthKeys();
@@ -93,7 +98,7 @@ public class BaseRs extends BaseResource {
             final Identity identity;
             if ("12345".equals(Manifests.read("Rultor-Revision"))) {
                 identity = new Identity.Simple(
-                    URN.create("urn:facebook:1"),
+                    BaseRs.TEST_URN,
                     "Local Host",
                     URI.create("http://img.rultor.com/none.png")
                 );
@@ -310,9 +315,9 @@ public class BaseRs extends BaseResource {
      * @param spec Its spec
      * @return The work
      */
-    protected final Work work(final String rule, final Spec spec) {
+    protected final Coordinates work(final String rule, final Spec spec) {
         // @checkstyle AnonInnerLength (50 lines)
-        return new Work() {
+        return new Coordinates() {
             @Override
             public Time scheduled() {
                 return new Time();
@@ -324,10 +329,6 @@ public class BaseRs extends BaseResource {
             @Override
             public String rule() {
                 return rule;
-            }
-            @Override
-            public URI stdout() {
-                throw new UnsupportedOperationException();
             }
         };
     }

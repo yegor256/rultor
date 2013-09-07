@@ -30,9 +30,9 @@
 package com.rultor.repo;
 
 import com.rultor.spi.Arguments;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Users;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -65,7 +65,7 @@ public final class ArgTest {
     @Test
     public void makesInstance() throws Exception {
         final Users users = Mockito.mock(Users.class);
-        final Work work = Mockito.mock(Work.class);
+        final Coordinates work = Mockito.mock(Coordinates.class);
         final Wallet wallet = Mockito.mock(Wallet.class);
         final String first = "первый";
         final String second = "второй";

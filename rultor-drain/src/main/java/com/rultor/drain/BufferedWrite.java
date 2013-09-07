@@ -34,9 +34,9 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.log.Logger;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.Closeable;
 import java.io.IOException;
@@ -86,9 +86,9 @@ public final class BufferedWrite implements Drain, Closeable {
     private final transient Long lifetime;
 
     /**
-     * Work we're in.
+     * Coordinates we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Original drain.
@@ -97,12 +97,13 @@ public final class BufferedWrite implements Drain, Closeable {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param sec How often should be flush, in seconds
      * @param drain Original drain
      */
     public BufferedWrite(
-        @NotNull(message = "work can't be NULL") final Work wrk, final long sec,
+        @NotNull(message = "work can't be NULL") final Coordinates wrk,
+        final long sec,
         @NotNull(message = "drain can't be NULL") final Drain drain) {
         assert BufferedWrite.FLUSH != null;
         Validate.isTrue(

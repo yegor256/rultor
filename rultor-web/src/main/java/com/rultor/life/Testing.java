@@ -35,6 +35,7 @@ import com.jcabi.urn.URN;
 import com.rultor.repo.ClasspathRepo;
 import com.rultor.spi.Account;
 import com.rultor.spi.Column;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
@@ -47,7 +48,6 @@ import com.rultor.spi.Stands;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
 import java.io.IOException;
@@ -295,7 +295,8 @@ final class Testing implements Profile {
             return this.label;
         }
         @Override
-        public Wallet wallet(final Work work, final URN urn, final String unt) {
+        public Wallet wallet(final Coordinates work, final URN urn,
+            final String unt) {
             throw new UnsupportedOperationException();
         }
     }

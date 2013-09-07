@@ -40,8 +40,8 @@ import com.amazonaws.services.ec2.model.Reservation;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 import com.rultor.aws.EC2Client;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Arrays;
@@ -105,7 +105,7 @@ public final class EC2EnvironmentTest {
      * @checkstyle ExecutableStatementCount (50 lines)
      */
     private EC2Environment mockEnvironment() {
-        final Work work = Mockito.mock(Work.class);
+        final Coordinates work = Mockito.mock(Coordinates.class);
         final Wallet wallet = Mockito.mock(Wallet.class);
         final EC2Client client = Mockito.mock(EC2Client.class);
         final AmazonEC2 aws = Mockito.mock(AmazonEC2.class);

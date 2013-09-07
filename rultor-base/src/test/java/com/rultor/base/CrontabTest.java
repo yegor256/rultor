@@ -30,8 +30,8 @@
 package com.rultor.base;
 
 import com.jcabi.aspects.Tv;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -76,7 +76,7 @@ public final class CrontabTest {
         for (String text : texts) {
             final Instance origin = Mockito.mock(Instance.class);
             final Crontab crontab = new Crontab(
-                new Work.Simple(), text, origin
+                new Coordinates.Simple(), text, origin
             );
             crontab.pulse();
         }
@@ -95,7 +95,9 @@ public final class CrontabTest {
             this.today.get(Calendar.MONTH) + 1
         );
         final Instance origin = Mockito.mock(Instance.class);
-        final Crontab crontab = new Crontab(new Work.Simple(), text, origin);
+        final Crontab crontab = new Crontab(
+            new Coordinates.Simple(), text, origin
+        );
         crontab.pulse();
         Mockito.verify(origin, Mockito.times(1)).pulse();
     }
@@ -113,7 +115,9 @@ public final class CrontabTest {
             this.today.get(Calendar.MONTH) + 1
         );
         final Instance origin = Mockito.mock(Instance.class);
-        final Crontab crontab = new Crontab(new Work.Simple(), text, origin);
+        final Crontab crontab = new Crontab(
+            new Coordinates.Simple(), text, origin
+        );
         crontab.pulse();
         Mockito.verify(origin, Mockito.times(0)).pulse();
     }
@@ -125,7 +129,7 @@ public final class CrontabTest {
     @Test
     public void calculatesLagCorrectly() throws Exception {
         final Instance org = Mockito.mock(Instance.class);
-        final Work work = new Work.Simple();
+        final Coordinates work = new Coordinates.Simple();
         MatcherAssert.assertThat(
             new Crontab(work, "* * * * *", org).lag(new Time()),
             Matchers.equalTo(0L)
@@ -165,7 +169,9 @@ public final class CrontabTest {
     public void printsRulesAsText() throws Exception {
         final Instance origin = Mockito.mock(Instance.class);
         MatcherAssert.assertThat(
-            new Crontab(new Work.Simple(), "0 * 2-3,5 * *", origin).rules(),
+            new Crontab(
+                new Coordinates.Simple(), "0 * 2-3,5 * *", origin
+            ).rules(),
             Matchers.equalTo("0 * 2-3|5 * *")
         );
     }

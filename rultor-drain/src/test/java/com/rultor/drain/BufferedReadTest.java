@@ -31,8 +31,8 @@ package com.rultor.drain;
 
 import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Work;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
@@ -59,7 +59,7 @@ public final class BufferedReadTest {
      */
     @Test
     public void loadsDataAndRenders() throws Exception {
-        final Work work = new Work.Simple();
+        final Coordinates work = new Coordinates.Simple();
         final Drain drain = Mockito.mock(Drain.class);
         final String text = "\u20ac\n\n\n test \u0433";
         Mockito.doReturn(
@@ -82,7 +82,7 @@ public final class BufferedReadTest {
     @Test
     public void printsItselfInString() throws Exception {
         MatcherAssert.assertThat(
-            new BufferedRead(new Work.None(), 2, new Trash()),
+            new BufferedRead(new Coordinates.None(), 2, new Trash()),
             Matchers.hasToString(Matchers.notNullValue())
         );
     }
@@ -110,7 +110,7 @@ public final class BufferedReadTest {
             }
         ).when(origin).read();
         final Drain drain = new BufferedRead(
-            new Work.Simple(new URN("urn:test:9"), "f"), 2, origin
+            new Coordinates.Simple(new URN("urn:test:9"), "f"), 2, origin
         );
         final long total = TimeUnit.SECONDS.toMillis(Tv.FIVE);
         for (int idx = 0; idx < total; ++idx) {

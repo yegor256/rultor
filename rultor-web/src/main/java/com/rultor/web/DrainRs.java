@@ -38,13 +38,13 @@ import com.rexsl.page.PageBuilder;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
 import com.rultor.spi.Arguments;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Rule;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
 import java.io.IOException;
@@ -191,7 +191,7 @@ public final class DrainRs extends BaseRs {
             ).get().instantiate(
                 this.users(),
                 new Arguments(
-                    new Work.Simple(this.user().urn(), this.name, time),
+                    new Coordinates.Simple(this.user().urn(), this.name, time),
                     new Wallet.Empty()
                 )
             );

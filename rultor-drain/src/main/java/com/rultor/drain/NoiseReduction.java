@@ -34,9 +34,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,9 +76,9 @@ public final class NoiseReduction implements Drain {
     private static final Set<Drain> BAD = new CopyOnWriteArraySet<Drain>();
 
     /**
-     * Work we're in.
+     * Coordinates we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Regular expression pattern to match.
@@ -102,7 +102,7 @@ public final class NoiseReduction implements Drain {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param ptn Regular
      * @param vsbl How many items should be visible from dirty drain
      * @param drt Dirty drain
@@ -110,7 +110,7 @@ public final class NoiseReduction implements Drain {
      * @checkstyle ParameterNumber (10 lines)
      */
     public NoiseReduction(
-        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "work can't be NULL") final Coordinates wrk,
         @NotNull(message = "pattern can't be NULL") final String ptn,
         final int vsbl,
         @NotNull(message = "dirty drain can't be NULL") final Drain drt,

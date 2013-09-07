@@ -40,6 +40,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Arrays;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -119,6 +120,57 @@ public final class IncrementalBashTest {
             ),
             XhtmlMatchers.hasXPath(
                 "//step[summary='echo \"\\_\\*\" \\`date\\`;']/start"
+            )
+        );
+    }
+
+    /**
+     * IncrementalBash can show only TAIL of stderr.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void showsTailOfStderr() throws Exception {
+        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        final File dir = Files.createTempDir();
+        new IncrementalBash(
+            new Permanent(new ShellMocker.Bash(dir)),
+            Arrays.asList(
+                "( for i in {100..300}; do echo $i; done; exit 1 ) >&2"
+            )
+        ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(
+                new Snapshot(
+                    new ByteArrayInputStream(stdout.toByteArray())
+                ).dom()
+            ),
+            XhtmlMatchers.hasXPaths(
+                "//level[.='SEVERE']",
+                "//exception[not(contains(stacktrace, '199'))]",
+                "//exception[contains(stacktrace, '300')]"
+            )
+        );
+    }
+
+    /**
+     * IncrementalBash can output stderr and stdout correctly.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void correctlyPrintsStderrAndStdout() throws Exception {
+        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        final File dir = Files.createTempDir();
+        new IncrementalBash(
+            new Permanent(new ShellMocker.Bash(dir)),
+            Arrays.asList(
+                "echo -e 'one\\ntwo' >&2; echo -e 'foo-1\\nfoo-2'"
+            )
+        ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
+        MatcherAssert.assertThat(
+            new String(stdout.toByteArray(), CharEncoding.UTF_8),
+            Matchers.allOf(
+                Matchers.containsString("one\ntwo"),
+                Matchers.containsString("foo-1\nfoo-2")
             )
         );
     }

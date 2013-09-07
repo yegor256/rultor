@@ -54,9 +54,9 @@ import org.apache.commons.lang3.Validate;
 public final class Arguments {
 
     /**
-     * Work.
+     * Coordinates.
      */
-    private final transient Work wrk;
+    private final transient Coordinates wrk;
 
     /**
      * Wallet.
@@ -70,21 +70,21 @@ public final class Arguments {
 
     /**
      * Public ctor.
-     * @param work Work we're in
+     * @param work Coordinates we're in
      * @param wallet Wallet with money
      */
-    public Arguments(final Work work, final Wallet wallet) {
+    public Arguments(final Coordinates work, final Wallet wallet) {
         this(work, wallet, new ArrayList<Object>(0));
     }
 
     /**
      * Public ctor.
-     * @param work Work we're in
+     * @param work Coordinates we're in
      * @param wallet Wallet with money
      * @param vals Other values
      */
     public Arguments(
-        @NotNull(message = "work can't be NULL") final Work work,
+        @NotNull(message = "work can't be NULL") final Coordinates work,
         @NotNull(message = "wallet can't be NULL") final Wallet wallet,
         @NotNull(message = "tail is NULL") final Iterable<Object> vals) {
         this.wrk = work;
@@ -104,7 +104,7 @@ public final class Arguments {
      * Get work.
      * @return The work
      */
-    public Work work() {
+    public Coordinates work() {
         return this.wrk;
     }
 

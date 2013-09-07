@@ -32,10 +32,10 @@ package com.rultor.conveyer.audit;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -101,8 +101,8 @@ final class AuditRule implements Rule {
      * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public Wallet wallet(final Work work, final URN taker, final String rule)
-        throws Wallet.NotEnoughFundsException {
+    public Wallet wallet(final Coordinates work, final URN taker,
+        final String rule) throws Wallet.NotEnoughFundsException {
         if (!this.funded) {
             throw new Wallet.NotEnoughFundsException(
                 "not enough funds in the account"

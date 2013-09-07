@@ -38,8 +38,8 @@ import com.amazonaws.services.sqs.model.DeleteQueueRequest;
 import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Queue;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -98,7 +98,7 @@ public final class SQSQueueITCase {
             final String rule = "some-test-rule";
             final URN owner = new URN("urn:facebook:1");
             final Time time = new Time("2013-07-19T14:05:00Z");
-            final Work work = new Work.Simple(owner, rule, time);
+            final Coordinates work = new Coordinates.Simple(owner, rule, time);
             final Queue queue = new SQSQueue(
                 new SQSClient.Simple(this.key, this.secret, url)
             );

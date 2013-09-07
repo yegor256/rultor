@@ -34,9 +34,9 @@ import com.rultor.aws.S3Client;
 import com.rultor.drain.BufferedWrite;
 import com.rultor.drain.NoiseReduction;
 import com.rultor.drain.Trash;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.util.Arrays;
 import org.apache.commons.io.IOUtils;
@@ -106,7 +106,7 @@ public final class ObjectDrainITCase {
             this.client, "S3DrainITCase/test-2.txt"
         );
         clean.append(Arrays.asList("hello, how are you \u20ac?"));
-        final Work work = new Work.Simple();
+        final Coordinates work = new Coordinates.Simple();
         final Drain dirty = new BufferedWrite(work, Tv.TEN, new Trash());
         final Drain drain = new NoiseReduction(
             work,
