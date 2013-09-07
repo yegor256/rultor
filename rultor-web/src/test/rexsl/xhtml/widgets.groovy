@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -27,45 +26,15 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<?xml-stylesheet type='text/xsl' href='/xsl/acl.xsl'?>
-<page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
-    <identity>
-        <urn>urn:facebook:1</urn>
-        <name>Jeff Lebowski</name>
-        <photo>http://images.sodahead.com/polls/002320349/200261278_The_Big_Lebowski___Jeff_Bridges_answer_9_xlarge.jpeg</photo>
-    </identity>
-    <version>
-        <name>1.5</name>
-        <revision>123</revision>
-        <date>22-Aug-2012</date>
-    </version>
-    <links>
-        <link href="/" rel="root" type="text/xml"/>
-        <link href="/xml/acl.xml" rel="self" type="text/xml"/>
-        <link href="/xml/index.xml" rel="home" type="text/xml"/>
-        <link href="/xml/acl.xml" rel="save" type="text/xml"/>
-        <link href="/xml/index.xml" rel="rules" type="text/xml"/>
-        <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
-        <link href="/xml/front.xml" rel="auth-logout" type="text/xml"/>
-    </links>
-    <breadcrumbs>
-        <crumb rel="stands">stands</crumb>
-        <crumb rel="self">nightly-build</crumb>
-    </breadcrumbs>
-    <nav>
-        <item rel="rules">Rules</item>
-        <item rel="stands">Stands</item>
-        <item rel="account">Account</item>
-    </nav>
-    <balance>$5.90</balance>
-    <millis>1869</millis>
-    <stand>
-        <name>nightly-build</name>
-        <acl>com.rultor.ci.NightlyBuild(
-    git,
-    ec2,
-    "ant"
-)</acl>
-    </stand>
-</page>
+ */
+package com.rultor.web.rexsl.xhtml
+
+import com.rexsl.test.XhtmlMatchers
+import org.hamcrest.MatcherAssert
+
+MatcherAssert.assertThat(
+    rexsl.document,
+    XhtmlMatchers.hasXPaths(
+        '//xhtml:html/xhtml:head/xhtml:title'
+    )
+)

@@ -52,7 +52,7 @@ public interface Widget {
      * Stylesheet related to this widget.
      */
     @Documented
-    @Target(ElementType.METHOD)
+    @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Stylesheet {
         /**

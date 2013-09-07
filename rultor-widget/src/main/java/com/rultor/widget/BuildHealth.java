@@ -31,12 +31,8 @@ package com.rultor.widget;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.immutable.Array;
-import com.rultor.spi.ACL;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Widget;
-import java.util.Collection;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.xembly.Directives;
 
@@ -48,23 +44,10 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = "acls")
+@EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
+@Widget.Stylesheet("build-health.xsl")
 public final class BuildHealth implements Widget {
-
-    /**
-     * Friends.
-     */
-    private final transient Array<ACL> acls;
-
-    /**
-     * Public ctor.
-     * @param list ACLs to check
-     */
-    public Either(@NotNull(message = "list of ACLs can't be NULL")
-        final Collection<ACL> list) {
-        this.acls = new Array<ACL>(list);
-    }
 
     /**
      * {@inheritDoc}

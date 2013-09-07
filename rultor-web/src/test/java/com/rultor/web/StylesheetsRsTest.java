@@ -29,62 +29,32 @@
  */
 package com.rultor.web;
 
-import com.google.common.collect.ImmutableMap;
-import com.jcabi.aspects.Cacheable;
-import com.jcabi.aspects.Loggable;
-import com.rultor.tools.Vext;
-import java.io.IOException;
-import java.util.Map;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharEncoding;
+import com.rexsl.page.HttpHeadersMocker;
+import com.rexsl.page.UriInfoMocker;
+import com.rexsl.test.XhtmlMatchers;
+import org.hamcrest.MatcherAssert;
+import org.junit.Test;
 
 /**
- * Widget.
- *
+ * Test case for {@link StylesheetRs}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Path("/widget")
-@Loggable(Loggable.DEBUG)
-public final class WidgetRs extends BaseRs {
+public final class StylesheetsRsTest {
 
     /**
-     * Get entrance page JAX-RS response.
-     * @return The JAX-RS response
-     * @throws IOException If fails
+     * StylesheetRs can pre-load XSL.
+     * @throws Exception If some problem inside
      */
-    @GET
-    @Path("/all.xsl")
-    @Produces("text/xsl")
-    public String stylesheet() throws IOException {
-        final Vext vext = new Vext(
-            IOUtils.toString(
-                this.getClass().getResourceAsStream("widget.xsl.vm"),
-                CharEncoding.UTF_8
-            )
+    @Test
+    public void loadsXslStylesheet() throws Exception {
+        final StylesheetsRs rest = new StylesheetsRs();
+        rest.setUriInfo(new UriInfoMocker().mock());
+        rest.setHttpHeaders(new HttpHeadersMocker().mock());
+        MatcherAssert.assertThat(
+            rest.aggregation(),
+            XhtmlMatchers.hasXPath("/xsl:stylesheet")
         );
-        return vext.print(
-            new ImmutableMap.Builder<String, Object>()
-                .put("stylesheets", WidgetRs.stylesheets())
-                .build()
-        );
-    }
-
-    /**
-     * Find and collect all stylesheets.
-     * @return Map of classes and their stylesheets
-     * @throws IOException If fails
-     */
-    @Cacheable(forever = true)
-    private static Map<String, String> stylesheets() {
-        final ImmutableMap.Builder<String, String> stylesheets =
-            new ImmutableMap.Builder<String, String>();
-        stylesheets.put("com.rultor.widget.Alpha", "");
-        return stylesheets.build();
     }
 
 }

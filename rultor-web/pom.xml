@@ -78,6 +78,11 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>rultor-widget</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.jcabi.incubator</groupId>
             <artifactId>xembly</artifactId>
         </dependency>
@@ -131,7 +136,7 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-dynamo</artifactId>
-            <version>${jcabi.version}</version>
+            <version>0.8</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
@@ -212,6 +217,17 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.9-RC1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -318,7 +334,7 @@
                     <dependency>
                         <groupId>com.jcabi</groupId>
                         <artifactId>jcabi-aspects</artifactId>
-                        <version>${jcabi.version}</version>
+                        <version>0.8</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -410,7 +426,7 @@
                     <plugin>
                         <groupId>com.jcabi</groupId>
                         <artifactId>jcabi-heroku-maven-plugin</artifactId>
-                        <version>${jcabi.version}</version>
+                        <version>0.8</version>
                         <configuration>
                             <server>heroku.com</server>
                             <name>rultor-master</name>

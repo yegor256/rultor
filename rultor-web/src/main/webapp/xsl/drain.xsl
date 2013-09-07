@@ -31,7 +31,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:include href="./layout.xsl"/>
-    <xsl:include href="/xsl/snapshot.xsl"/>
+    <xsl:include href="./snapshot.xsl"/>
     <xsl:template name="head">
         <title>
             <xsl:apply-templates select="/page/rule"/>

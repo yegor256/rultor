@@ -40,9 +40,6 @@
     </links>
     <widgets>
         <widget class="com.rultor.widget.BuildHealth">
-            <links>
-                <link href="/xml/account.xml" rel="self" type="text/xml"/>
-            </links>
             <title>Build Health</title>
             <width>4</width>
             <builds>

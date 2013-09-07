@@ -87,9 +87,17 @@
                 <li class="icon">
                     <a title="edit ACL">
                         <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='edit']/@href"/>
+                            <xsl:value-of select="links/link[@rel='acl']/@href"/>
                         </xsl:attribute>
                         <i class="icon-key"><xsl:comment>acl</xsl:comment></i>
+                    </a>
+                </li>
+                <li class="icon">
+                    <a title="edit specification of widgets">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='widgets']/@href"/>
+                        </xsl:attribute>
+                        <i class="icon-gears"><xsl:comment>widgets</xsl:comment></i>
                     </a>
                 </li>
             </ul>

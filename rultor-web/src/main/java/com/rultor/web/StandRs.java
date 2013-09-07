@@ -52,6 +52,7 @@ import com.rultor.spi.User;
 import com.rultor.spi.Wallet;
 import com.rultor.spi.Widget;
 import com.rultor.tools.Exceptions;
+import com.rultor.widget.Alert;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -435,7 +436,7 @@ public final class StandRs extends BaseRs {
                     )
             );
         } catch (SpecException ex) {
-            list = Arrays.asList(new ExceptionWidget(ex));
+            list = Arrays.<Widget>asList(new Alert(Exceptions.stacktrace(ex)));
         }
         return list;
     }

@@ -41,6 +41,7 @@
         <identifier>22-Aug-2012</identifier>
     </version>
     <links>
+        <link href="/" rel="root" type="text/xml"/>
         <link href="/xml/drain.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
         <link href="/xml/drain.xml" rel="more" type="text/xml"/>
@@ -63,15 +64,55 @@
     <since>2012-08-23T13:25:33Z</since>
     <balance>$0.45</balance>
     <widgets>
-        <widget class="com.rultor.widget.Alpha">
-            <title>Build Status</title>
+        <widget class="com.rultor.widget.BuildHealth">
+            <title>Build Health</title>
             <width>4</width>
-            <links>
-                <link href="/xml/stand.xml" rel="more" type="text/xml"/>
-            </links>
-            <body>test</body>
+            <builds>
+                <build>
+                    <coordinates>
+                        <rule>rultor-on-commit</rule>
+                        <owner>urn:github:1</owner>
+                    </coordinates>
+                    <health>0.78</health>
+                    <commit>
+                        <name>09ae8f5</name>
+                        <time>2012-08-23T13:25:33Z</time>
+                        <author>Jeff Lebowski</author>
+                    </commit>
+                    <duration>473783</duration>
+                    <code>0</code>
+                </build>
+                <build>
+                    <coordinates>
+                        <rule>rultor-skin-on-commit</rule>
+                        <owner>urn:github:1</owner>
+                    </coordinates>
+                    <health>0.97</health>
+                    <commit>
+                        <name>89775e5</name>
+                        <time>2012-07-20T13:25:33Z</time>
+                        <author>Walter</author>
+                    </commit>
+                    <duration>93838</duration>
+                    <code>0</code>
+                </build>
+                <build>
+                    <coordinates>
+                        <rule>rultor-other-on-commit</rule>
+                        <owner>urn:github:1</owner>
+                    </coordinates>
+                    <health>0.14</health>
+                    <commit>
+                        <name>89ff5c3</name>
+                        <time>2012-07-20T07:13:33Z</time>
+                        <author>Dunny</author>
+                    </commit>
+                    <duration>88782</duration>
+                    <code>127</code>
+                </build>
+            </builds>
         </widget>
-        <widget class="com.rultor.widget.Beta">
+        <widget class="com.rultor.widget.RecentBuilds">
             <title>Recent Builds</title>
             <width>6</width>
             <links>

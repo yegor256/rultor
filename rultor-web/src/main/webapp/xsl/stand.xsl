@@ -32,14 +32,14 @@
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:include href="./layout.xsl"/>
     <xsl:include href="./snapshot.xsl"/>
-    <!-- <xsl:include href="/widget/all.xsl"/> -->
+    <xsl:include href="/stylesheets/all.xsl"/>
     <xsl:template name="head">
         <title>
             <xsl:value-of select="/page/stand"/>
         </title>
         <script type="text/javascript">
             <xsl:attribute name="src">
-                <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
+                <xsl:value-of select="/page/links/link[@rel='root']/@href"/>
                 <xsl:text>js/stand.js?</xsl:text>
                 <xsl:value-of select="/page/version/revision"/>
             </xsl:attribute>

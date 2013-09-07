@@ -65,7 +65,7 @@
                 </link>
                 <link rel="stylesheet" type="text/css" media="all">
                     <xsl:attribute name="href">
-                        <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
+                        <xsl:value-of select="/page/links/link[@rel='root']/@href"/>
                         <xsl:text>css/main.css?</xsl:text>
                         <xsl:value-of select="/page/version/revision"/>
                     </xsl:attribute>
@@ -103,7 +103,7 @@
                 </script>
                 <script type="text/javascript">
                     <xsl:attribute name="src">
-                        <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
+                        <xsl:value-of select="/page/links/link[@rel='root']/@href"/>
                         <xsl:text>js/layout.js?</xsl:text>
                         <xsl:value-of select="/page/version/revision"/>
                     </xsl:attribute>
