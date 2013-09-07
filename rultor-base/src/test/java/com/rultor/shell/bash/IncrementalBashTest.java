@@ -163,13 +163,13 @@ public final class IncrementalBashTest {
         new IncrementalBash(
             new Permanent(new ShellMocker.Bash(dir)),
             Arrays.asList(
-                "echo -e 'first\\nsecond' >&2; echo -e 'foo-1\\nfoo-2'"
+                "echo -e 'one\\ntwo' >&2; echo -e 'foo-1\\nfoo-2'"
             )
         ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
         MatcherAssert.assertThat(
             new String(stdout.toByteArray(), CharEncoding.UTF_8),
             Matchers.allOf(
-                Matchers.containsString("first\nsecond"),
+                Matchers.containsString("one\ntwo"),
                 Matchers.containsString("foo-1\nfoo-2")
             )
         );

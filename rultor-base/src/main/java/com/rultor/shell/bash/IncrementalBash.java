@@ -198,7 +198,7 @@ public final class IncrementalBash implements Batch {
             .append("{ ")
             .append(velocity)
             .append(
-                "; } 2> >( tail -100 | eval $ESCAPE | tee ${dollar}STDERR );\n"
+                "; } 2> >(tee ${dollar}STDERR);\n"
             )
             .append("CODE=${dollar}?;\n")
             .append("sync; wait;\n")
@@ -223,10 +223,11 @@ public final class IncrementalBash implements Batch {
                         .up()
                         .add("exception")
                         .add("cause")
-                        .set("exit code ${dollar}{CODE}")
+                        .set("exit code ${dollar}CODE")
                         .up()
                         .add("stacktrace")
-                        .set("${dollar}(cat -v ${dollar}{STDERR})")
+                        // @checkstyle LineLength (1 line)
+                        .set("${dollar}(tail -100 ${dollar}STDERR | eval ${dollar}ESCAPE)")
                 )
             )
             .append(";\nfi;\n")
@@ -242,7 +243,7 @@ public final class IncrementalBash implements Batch {
                 )
             )
             .append(";\n")
-            .append("rm -f ${dollar}{STDERR};\n")
+            .append("rm -f ${dollar}STDERR;\n")
             .append("if [ ${dollar}CODE != 0 ]; then\n  ")
             .append("exit ${dollar}CODE;\nfi;\n\n")
             .toString();
