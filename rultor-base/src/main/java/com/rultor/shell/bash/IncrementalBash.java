@@ -200,6 +200,8 @@ public final class IncrementalBash implements Batch {
                 "; } 2> >( tail -100 | eval $ESCAPE | tee ${dollar}STDERR );\n"
             )
             .append("CODE=${dollar}?;\n")
+            // @see http://stackoverflow.com/questions/18665603
+            .append("sync; wait;\n")
             .append("FINISH=${dollar}(date +%s%N | tr -d N);\n")
             .append("if [ ${dollar}CODE = 0 ]; then\n  ")
             .append(
