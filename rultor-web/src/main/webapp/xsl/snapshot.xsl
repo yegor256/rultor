@@ -32,17 +32,9 @@
     <xsl:template match="snapshot">
         <xsl:apply-templates select="error"/>
         <xsl:if test="tags/tag">
-            <ul class="list-inline" style="margin: 5px 0px;">
-                <xsl:apply-templates select="tags/tag"/>
-                <xsl:if test="updated">
-                    <li class="text-muted">
-                        <xsl:text>updated </xsl:text>
-                        <span class="timeago"><xsl:value-of select="updated"/></span>
-                    </li>
-                </xsl:if>
-            </ul>
+            <xsl:apply-templates select="tags"/>
         </xsl:if>
-        <ul class="list-inline" style="margin: 5px 0px;">
+        <ul class="list-inline spacious-inline-list">
             <xsl:if test="spec">
                 <li class="icon">
                     <i class="icon-beaker" title="show specification"
@@ -273,6 +265,28 @@
             </xsl:if>
         </li>
     </xsl:template>
+    <xsl:template match="tags">
+        <ul class="list-inline spacious-inline-list">
+            <xsl:if test="tag/markdown">
+                <li class="icon">
+                    <i class="icon-plus-sign"
+                        onclick="$(this).parent().parent().parent().find('.detailed').toggle();"><xsl:comment>show</xsl:comment></i>
+                </li>
+            </xsl:if>
+            <xsl:apply-templates select="tag"/>
+            <xsl:if test="updated">
+                <li class="text-muted">
+                    <xsl:text>updated </xsl:text>
+                    <span class="timeago"><xsl:value-of select="updated"/></span>
+                </li>
+            </xsl:if>
+        </ul>
+        <xsl:if test="tag/markdown">
+            <ul class="detailed list-unstyled tag-detailed-list" style="display: none;">
+                <xsl:apply-templates select="tag[markdown]" mode="detailed"/>
+            </ul>
+        </xsl:if>
+    </xsl:template>
     <xsl:template match="tag">
         <li>
             <span>
@@ -298,6 +312,20 @@
                 </xsl:attribute>
                 <xsl:value-of select="label"/>
             </span>
+        </li>
+    </xsl:template>
+    <xsl:template match="tag" mode="detailed">
+        <li>
+            <ul class="list-inline">
+                <li>
+                    <span class="label label-default">
+                        <xsl:value-of select="label"/>
+                    </span>
+                </li>
+                <li>
+                    <span class="markdown"><xsl:value-of select="markdown"/></span>
+                </li>
+            </ul>
         </li>
     </xsl:template>
     <xsl:template name="bar">

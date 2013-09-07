@@ -199,6 +199,7 @@
                 <tag>
                     <level>FINE</level>
                     <label>success</label>
+                    <markdown>commit `4e56ba43` built successfully in 23min</markdown>
                 </tag>
                 <tag>
                     <level>INFO</level>
@@ -222,6 +223,16 @@
             <links>
                 <link href="/xml/stand.xml" rel="open" type="text/xml"/>
             </links>
+            <tags>
+                <tag>
+                    <level>INFO</level>
+                    <label>#324</label>
+                </tag>
+                <tag>
+                    <level>INFO</level>
+                    <label>pull-request</label>
+                </tag>
+            </tags>
         </pulse>
     </pulses>
 </page>

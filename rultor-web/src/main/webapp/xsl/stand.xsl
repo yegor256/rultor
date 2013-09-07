@@ -125,10 +125,15 @@
                     </xsl:attribute>
                     <i class="icon-zoom-in"><xsl:comment>open</xsl:comment></i>
                 </a>
-                <ul class="list-inline">
+                <ul class="list-inline spacious-inline-list">
                     <xsl:apply-templates select="coordinates"/>
                     <xsl:apply-templates select="tags/tag"/>
                 </ul>
+                <xsl:if test="tags/tag/markdown">
+                    <ul class="list-unstyled tag-detailed-list">
+                        <xsl:apply-templates select="tags/tag[markdown]" mode="detailed"/>
+                    </ul>
+                </xsl:if>
             </div>
         </div>
     </xsl:template>

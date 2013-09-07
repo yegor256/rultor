@@ -137,7 +137,7 @@ SET "some text to set"; STRICT "1";</xembly>
                     <tag>
                         <level>INFO</level>
                         <label>stdout</label>
-                        <markdown>[1 file](http://google.com)</markdown>
+                        <markdown>download this [file](http://google.com) to see full stdout/stderr</markdown>
                     </tag>
                 </tags>
                 <steps>
