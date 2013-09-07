@@ -302,22 +302,20 @@ public final class StandRs extends BaseRs {
      * @param coords Names of pulses
      * @return URI
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private URI self(final Collection<Coordinates> coords) {
         final UriBuilder builder = this.uriInfo().getBaseUriBuilder()
-            .clone()
-            .path(StandRs.class);
+            .clone().path(StandRs.class);
         final Object[] args = new Object[coords.size() + 1];
         final Object[] labels = new String[coords.size()];
         args[0] = this.name;
         int idx = 0;
         for (Coordinates coord : coords) {
             labels[idx] = String.format("{arg%d}", idx);
-            args[idx + 1] = coord.toString();
+            args[idx + 1] = new Coordinates.Simple(coord).toString();
             ++idx;
         }
-        return builder
-            .queryParam(StandRs.QUERY_OPEN, labels)
-            .build(args);
+        return builder.queryParam(StandRs.QUERY_OPEN, labels).build(args);
     }
 
     /**
@@ -360,9 +358,7 @@ public final class StandRs extends BaseRs {
     private Snapshot snapshot(final String xembly)
         throws XemblySyntaxException {
         return new Snapshot(
-            new Directives(xembly)
-                .xpath("/snapshot/spec")
-                .remove()
+            new Directives(xembly).xpath("/snapshot/spec").remove()
         );
     }
 
