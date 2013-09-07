@@ -150,4 +150,12 @@ final class StdoutWork implements Work {
         return address;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int compareTo(final Coordinates coords) {
+        return 1;
+    }
+
 }

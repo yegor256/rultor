@@ -51,7 +51,6 @@ import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Repo;
-import com.rultor.spi.Spec;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.tools.Dollars;
@@ -312,25 +311,10 @@ public class BaseRs extends BaseResource {
     /**
      * The work we're in (while rendering).
      * @param rule Unit being rendered
-     * @param spec Its spec
      * @return The work
      */
-    protected final Coordinates work(final String rule, final Spec spec) {
-        // @checkstyle AnonInnerLength (50 lines)
-        return new Coordinates() {
-            @Override
-            public Time scheduled() {
-                return new Time();
-            }
-            @Override
-            public URN owner() {
-                return BaseRs.this.user().urn();
-            }
-            @Override
-            public String rule() {
-                return rule;
-            }
-        };
+    protected final Coordinates coordinates(final String rule) {
+        return new Coordinates.Simple(this.user().urn(), rule, new Time());
     }
 
     /**

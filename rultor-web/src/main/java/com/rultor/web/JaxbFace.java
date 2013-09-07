@@ -100,7 +100,7 @@ final class JaxbFace {
                 final Object object = var.instantiate(
                     this.users,
                     new Arguments(
-                        this.work(user.urn(), rule.name()),
+                        this.coordinates(user.urn(), rule.name()),
                         new Wallet.Empty()
                     )
                 );
@@ -153,21 +153,8 @@ final class JaxbFace {
      * @param rule Name of the rule we're rendering now
      * @return The work
      */
-    private Coordinates work(final URN owner, final String rule) {
-        return new Coordinates() {
-            @Override
-            public Time scheduled() {
-                return new Time();
-            }
-            @Override
-            public URN owner() {
-                return owner;
-            }
-            @Override
-            public String rule() {
-                return rule;
-            }
-        };
+    private Coordinates coordinates(final URN owner, final String rule) {
+        return new Coordinates.Simple(owner, rule, new Time());
     }
 
 }

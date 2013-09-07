@@ -133,4 +133,18 @@ public final class StandRsTest {
         );
     }
 
+    /**
+     * StandRs can open certain pulses.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void opensPulsesOnDemand() throws Exception {
+        final StandRs rest = new StandRs();
+        rest.setPulses(
+            Arrays.asList(
+                new Coordinates.Simple(new URN("urn:test:8"), "test").toString()
+            )
+        );
+    }
+
 }

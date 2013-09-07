@@ -150,4 +150,12 @@ final class MongoCoords implements Coordinates {
         return this.name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int compareTo(final Coordinates coords) {
+        return this.time.compareTo(coords.scheduled());
+    }
+
 }

@@ -49,7 +49,7 @@ import org.apache.commons.lang3.Validate;
  */
 @Immutable
 @SuppressWarnings("PMD.TooManyMethods")
-public interface Coordinates {
+public interface Coordinates extends Comparable<Coordinates> {
 
     /**
      * When scheduled, in milliseconds.
@@ -102,6 +102,13 @@ public interface Coordinates {
         @Override
         public String rule() {
             throw new UnsupportedOperationException();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int compareTo(final Coordinates coords) {
+            return 1;
         }
     }
 
@@ -185,6 +192,13 @@ public interface Coordinates {
             return new Coordinates.Simple(
                 URN.create(parts[2]), parts[1], new Time(parts[0])
             );
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int compareTo(final Coordinates coords) {
+            return this.time.compareTo(coords.scheduled());
         }
         /**
          * {@inheritDoc}
