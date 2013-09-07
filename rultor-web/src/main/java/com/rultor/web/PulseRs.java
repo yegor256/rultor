@@ -31,6 +31,7 @@ package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Arguments;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
@@ -38,7 +39,6 @@ import com.rultor.spi.Rule;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Tag;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
 import java.io.IOException;
@@ -142,7 +142,7 @@ public final class PulseRs extends BaseRs {
                 return PulseRs.this.read(rule);
             }
             @Override
-            public String identifier() {
+            public Coordinates coordinates() {
                 throw new UnsupportedOperationException();
             }
             @Override
@@ -166,7 +166,7 @@ public final class PulseRs extends BaseRs {
                 ).get().instantiate(
                     this.users(),
                     new Arguments(
-                        new Work.Simple(
+                        new Coordinates.Simple(
                             this.user().urn(),
                             this.name,
                             this.date

@@ -37,13 +37,13 @@ import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Rules;
 import com.rultor.spi.Spec;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.util.Arrays;
 import org.hamcrest.CustomMatcher;
@@ -114,10 +114,11 @@ public final class SQSQuartzTest {
         );
         Mockito.verify(queue).push(
             Mockito.argThat(
-                new CustomMatcher<Work>("expected work") {
+                new CustomMatcher<Coordinates>("expected work") {
                     @Override
                     public boolean matches(final Object work) {
-                        return Work.class.cast(work).scheduled().equals(time);
+                        return Coordinates.class.cast(work)
+                            .scheduled().equals(time);
                     }
                 }
             )

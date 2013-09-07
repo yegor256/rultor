@@ -40,10 +40,10 @@ import com.jcabi.log.VerboseThreads;
 import com.rexsl.test.RestTester;
 import com.rexsl.test.TestClient;
 import com.rultor.snapshot.XemblyLine;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Stand;
-import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
 import java.io.IOException;
@@ -121,9 +121,9 @@ public final class Standed implements Drain {
     }
 
     /**
-     * Work we're in.
+     * Coordinates we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Original drain.
@@ -152,14 +152,14 @@ public final class Standed implements Drain {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param name Name of stand
      * @param secret Secret key of the stand
      * @param drain Main drain
      * @checkstyle ParameterNumber (8 lines)
      */
     public Standed(
-        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "work can't be NULL") final Coordinates wrk,
         @NotNull(message = "name of stand can't be NULL") final String name,
         @NotNull(message = "key can't be NULL") final String secret,
         @NotNull(message = "drain can't be NULL") final Drain drain) {
@@ -171,7 +171,7 @@ public final class Standed implements Drain {
 
     /**
      * Constructor for tests.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param name Name of stand
      * @param secret Secret key of the stand
      * @param drain Main drain
@@ -179,7 +179,8 @@ public final class Standed implements Drain {
      * @param executor Executor to use
      * @checkstyle ParameterNumber (8 lines)
      */
-    public Standed(final Work wrk, final String name, final String secret,
+    public Standed(final Coordinates wrk, final String name,
+        final String secret,
         final Drain drain, final TestClient client,
         final ExecutorService executor) {
         this.work = wrk;

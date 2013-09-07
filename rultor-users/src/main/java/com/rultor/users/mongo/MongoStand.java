@@ -38,6 +38,7 @@ import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import com.rexsl.test.SimpleXml;
 import com.rultor.snapshot.Snapshot;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
@@ -95,7 +96,7 @@ final class MongoStand implements Stand {
     /**
      * MongoDB table column.
      */
-    public static final String ATTR_PULSE = "pulse";
+    public static final String ATTR_COORDS = "coordinates";
 
     /**
      * MongoDB table column.
@@ -137,7 +138,8 @@ final class MongoStand implements Stand {
      * @checkstyle RedundantThrows (5 lines)
      */
     @Override
-    public void post(final String pulse, final long nano, final String xembly) {
+    public void post(final Coordinates pulse, final long nano,
+        final String xembly) {
         while (true) {
             if (this.save(pulse, nano, xembly)) {
                 break;
@@ -149,7 +151,7 @@ final class MongoStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, String> pulses() {
+    public Pageable<Pulse, Coordinates> pulses() {
         return new MongoPulses(this.mongo, this.origin);
     }
 
@@ -193,14 +195,17 @@ final class MongoStand implements Stand {
      * @return TRUE if success
      */
     @SuppressWarnings("unchecked")
-    private boolean save(final String pulse, final long nano,
+    private boolean save(final Coordinates pulse, final long nano,
         final String xembly) {
         final DBObject object = this.collection().findAndModify(
             new BasicDBObject()
-                .append(MongoStand.ATTR_PULSE, pulse)
-                .append(MongoStand.ATTR_STAND, this.name()),
+                .append(MongoStand.ATTR_STAND, this.name())
+                .append(
+                    MongoStand.ATTR_COORDS,
+                    new MongoCoords(pulse).asObject()
+                ),
             new BasicDBObject()
-                .append(MongoStand.ATTR_PULSE, 1)
+                .append(MongoStand.ATTR_COORDS, 1)
                 .append(MongoStand.ATTR_STAND, 1)
                 .append(MongoStand.ATTR_TAGS, 1)
                 .append(MongoStand.ATTR_XEMBLY, 1),
@@ -220,10 +225,13 @@ final class MongoStand implements Stand {
         final WriteResult result = this.collection().update(
             object,
             new BasicDBObject()
-                .append(MongoStand.ATTR_PULSE, pulse)
                 .append(MongoStand.ATTR_STAND, this.name())
                 .append(MongoStand.ATTR_UPDATED, new Time().toString())
                 .append(MongoStand.ATTR_XEMBLY, after)
+                .append(
+                    MongoStand.ATTR_COORDS,
+                    new MongoCoords(pulse).asObject()
+                )
                 .append(
                     MongoStand.ATTR_TAGS,
                     this.tags(

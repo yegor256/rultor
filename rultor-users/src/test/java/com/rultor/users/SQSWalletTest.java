@@ -34,8 +34,8 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
 import java.io.StringReader;
@@ -63,7 +63,7 @@ public final class SQSWalletTest {
         final AmazonSQS aws = Mockito.mock(AmazonSQS.class);
         Mockito.doReturn(aws).when(client).get();
         final Wallet wallet = new SQSWallet(
-            client, new Work.Simple(),
+            client, new Coordinates.Simple(),
             new URN("urn:creditor:1"), "credit-rule",
             new URN("urn:debitor:1"), "debit-rule"
         );

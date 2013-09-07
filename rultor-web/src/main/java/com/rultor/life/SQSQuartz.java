@@ -40,11 +40,11 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Tv;
 import com.rultor.aws.SQSClient;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Rule;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.Closeable;
 import java.io.IOException;
@@ -175,7 +175,9 @@ public final class SQSQuartz implements Runnable, Closeable {
     private void publish(final Time time) {
         for (User user : this.users) {
             for (Rule rule : user.rules()) {
-                this.queue.push(new Work.Simple(user.urn(), rule.name(), time));
+                this.queue.push(
+                    new Coordinates.Simple(user.urn(), rule.name(), time)
+                );
             }
         }
     }

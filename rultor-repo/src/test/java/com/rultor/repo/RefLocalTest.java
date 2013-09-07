@@ -31,6 +31,7 @@ package com.rultor.repo;
 
 import com.jcabi.urn.URN;
 import com.rultor.spi.Arguments;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Rules;
 import com.rultor.spi.Spec;
@@ -38,7 +39,6 @@ import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import java.util.ArrayList;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -77,7 +77,7 @@ public final class RefLocalTest {
         Mockito.doReturn(user).when(users).get(urn);
         MatcherAssert.assertThat(
             var.instantiate(
-                users, new Arguments(new Work.None(), new Wallet.Empty())
+                users, new Arguments(new Coordinates.None(), new Wallet.Empty())
             ),
             Matchers.<Object>equalTo(1L)
         );

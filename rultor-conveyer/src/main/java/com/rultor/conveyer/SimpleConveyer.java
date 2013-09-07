@@ -36,6 +36,7 @@ import com.jcabi.log.VerboseRunnable;
 import com.rultor.conveyer.http.HttpServer;
 import com.rultor.conveyer.http.Streams;
 import com.rultor.spi.Arguments;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
@@ -43,7 +44,6 @@ import com.rultor.spi.Rule;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
-import com.rultor.spi.Work;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Random;
@@ -198,8 +198,8 @@ final class SimpleConveyer implements Closeable {
      * @throws Exception If fails
      */
     private void process() throws Exception {
-        final Work work = this.queue.pull(1, TimeUnit.SECONDS);
-        if (!work.equals(new Work.None())) {
+        final Coordinates work = this.queue.pull(1, TimeUnit.SECONDS);
+        if (!work.equals(new Coordinates.None())) {
             this.threads.label(work.toString());
             final String key = this.streams.register();
             try {
@@ -216,7 +216,7 @@ final class SimpleConveyer implements Closeable {
      * @param work The work to process
      * @throws Exception If fails
      */
-    private void process(final Work work) throws Exception {
+    private void process(final Coordinates work) throws Exception {
         final User owner = this.users.get(work.owner());
         final Rule rule = owner.rules().get(work.rule());
         final Variable<?> var =

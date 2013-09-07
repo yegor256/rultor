@@ -36,8 +36,8 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
 import java.io.StringWriter;
 import javax.json.Json;
@@ -64,9 +64,9 @@ final class SQSWallet implements Wallet {
     private final transient SQSClient client;
 
     /**
-     * Work we're in.
+     * Coordinates we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Creditor.
@@ -91,14 +91,14 @@ final class SQSWallet implements Wallet {
     /**
      * Ctor.
      * @param sqs SQS client
-     * @param wrk Work that is using us
+     * @param wrk Coordinates that is using us
      * @param ctr Creditor
      * @param crule Credit unit
      * @param dtr Debitor
      * @param drule Debit unit
      * @checkstyle ParameterNumber (5 lines)
      */
-    protected SQSWallet(final SQSClient sqs, final Work wrk,
+    protected SQSWallet(final SQSClient sqs, final Coordinates wrk,
         final URN ctr, final String crule, final URN dtr, final String drule) {
         this.client = sqs;
         this.work = wrk;

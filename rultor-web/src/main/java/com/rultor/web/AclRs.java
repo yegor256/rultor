@@ -35,10 +35,10 @@ import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
 import com.rultor.spi.ACL;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Stand;
-import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
 import java.net.HttpURLConnection;
 import java.util.NoSuchElementException;
@@ -111,7 +111,7 @@ public final class AclRs extends BaseRs {
             this.stand().acl(
                 new Spec.Strict(
                     spec, this.repo(), this.user(), this.users(),
-                    new Work.None(), ACL.class
+                    new Coordinates.None(), ACL.class
                 )
             );
         } catch (SpecException ex) {

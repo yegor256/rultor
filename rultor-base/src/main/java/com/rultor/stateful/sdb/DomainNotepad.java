@@ -45,8 +45,8 @@ import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.aws.SDBClient;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.stateful.Notepad;
 import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
@@ -97,9 +97,9 @@ public final class DomainNotepad implements Notepad {
     private final transient SDBClient client;
 
     /**
-     * Work we're in.
+     * Coordinates we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Wallet to charge.
@@ -108,12 +108,12 @@ public final class DomainNotepad implements Notepad {
 
     /**
      * Public ctor.
-     * @param wrk Work
+     * @param wrk Coordinates
      * @param wlt Wallet to charge
      * @param clnt Client
      */
     public DomainNotepad(
-        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "work can't be NULL") final Coordinates wrk,
         @NotNull(message = "wallet can't be NULL") final Wallet wlt,
         @NotNull(message = "SimpleDB client can't be NULL")
         final SDBClient clnt) {

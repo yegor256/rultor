@@ -44,8 +44,8 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Queue;
-import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.NormJson;
 import com.rultor.tools.Time;
@@ -122,7 +122,8 @@ public final class SQSQueue implements Queue {
      * {@inheritDoc}
      */
     @Override
-    public void push(@NotNull(message = "work can't be NULL") final Work work) {
+    public void push(
+        @NotNull(message = "work can't be NULL") final Coordinates work) {
         final AmazonSQS aws = this.client.get();
         try {
             final SendMessageResult result = aws.sendMessage(
@@ -147,19 +148,19 @@ public final class SQSQueue implements Queue {
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    public Work pull(final int limit,
+    public Coordinates pull(final int limit,
         @NotNull(message = "unit can't be NULL") final TimeUnit unit)
         throws InterruptedException {
         final long start = System.currentTimeMillis();
-        Work work;
+        Coordinates work;
         while (true) {
             final long delay = System.currentTimeMillis() - start;
             if (delay > unit.toMillis(limit)) {
-                work = new Work.None();
+                work = new Coordinates.None();
                 break;
             }
             work = this.fetch((int) unit.toSeconds(limit));
-            if (!work.equals(new Work.None())) {
+            if (!work.equals(new Coordinates.None())) {
                 break;
             }
             TimeUnit.SECONDS.sleep(Tv.FIVE);
@@ -170,11 +171,11 @@ public final class SQSQueue implements Queue {
     /**
      * Fetch next available work or NONE if nothing found.
      * @param sec Seconds to wait
-     * @return Work or Work.None
+     * @return Coordinates or Coordinates.None
      */
-    private Work fetch(final int sec) {
+    private Coordinates fetch(final int sec) {
         final AmazonSQS aws = this.client.get();
-        Work work = new Work.None();
+        Coordinates work = new Coordinates.None();
         try {
             final ReceiveMessageResult result = aws.receiveMessage(
                 new ReceiveMessageRequest()
@@ -207,7 +208,7 @@ public final class SQSQueue implements Queue {
      * @param work The work to serialize
      * @return Text
      */
-    private static String serialize(final Work work) {
+    private static String serialize(final Coordinates work) {
         final StringWriter writer = new StringWriter();
         final JsonGenerator generator = Json.createGenerator(writer);
         generator.writeStartObject()
@@ -222,14 +223,14 @@ public final class SQSQueue implements Queue {
     /**
      * Un-serialize text to work.
      * @param text Text to un-serialize
-     * @return Work
+     * @return Coordinates
      * @throws NormJson.JsonException If can't parse it
      * @checkstyle RedundantThrows (5 lines)
      */
-    private static Work unserialize(final String text)
+    private static Coordinates unserialize(final String text)
         throws NormJson.JsonException {
         final JsonObject object = SQSQueue.NORM.readObject(text);
-        return new Work.Simple(
+        return new Coordinates.Simple(
             URN.create(object.getString(SQSQueue.KEY_OWNER)),
             object.getString(SQSQueue.KEY_RULE),
             new Time(object.getString(SQSQueue.KEY_SCHEDULED))

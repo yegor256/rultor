@@ -35,7 +35,7 @@ import com.jcabi.immutable.ArrayMap;
 import com.jcabi.log.Logger;
 import com.rultor.shell.Sequel;
 import com.rultor.shell.Shell;
-import com.rultor.spi.Work;
+import com.rultor.spi.Coordinates;
 import java.io.IOException;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
@@ -58,9 +58,9 @@ import org.apache.commons.lang3.Validate;
 public final class S3CmdRelics implements Sequel {
 
     /**
-     * Work we're in.
+     * Coordinates we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Name/path map.
@@ -89,7 +89,7 @@ public final class S3CmdRelics implements Sequel {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param map Map of names/paths
      * @param bkt Bucket name
      * @param pfx Prefix in S3 bucket
@@ -98,7 +98,7 @@ public final class S3CmdRelics implements Sequel {
      * @checkstyle ParameterNumber (8 lines)
      */
     public S3CmdRelics(
-        @NotNull(message = "map can't be NULL") final Work wrk,
+        @NotNull(message = "map can't be NULL") final Coordinates wrk,
         @NotNull(message = "map can't be NULL") final Map<String, String> map,
         @NotNull(message = "bucket can't be NULL") final String bkt,
         @NotNull(message = "prefix can't be NULL") final String pfx,

@@ -32,9 +32,9 @@ package com.rultor.drain.s3;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.aws.S3Client;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,7 +59,7 @@ public final class BucketDrain implements Drain {
     /**
      * The work it is busy with at the moment.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * S3 client.
@@ -69,10 +69,10 @@ public final class BucketDrain implements Drain {
     /**
      * Public ctor.
      * @param clnt S3 client
-     * @param wrk Work we're in now
+     * @param wrk Coordinates we're in now
      */
     public BucketDrain(
-        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "work can't be NULL") final Coordinates wrk,
         @NotNull(message = "S3 client can't be NULL") final S3Client clnt) {
         this.client = clnt;
         this.work = wrk;

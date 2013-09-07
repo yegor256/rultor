@@ -35,6 +35,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
@@ -59,7 +60,7 @@ import lombok.ToString;
 @EqualsAndHashCode(of = { "mongo", "origin" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
-final class MongoPulses implements Pageable<Pulse, String> {
+final class MongoPulses implements Pageable<Pulse, Coordinates> {
 
     /**
      * Mongo container.
@@ -74,7 +75,7 @@ final class MongoPulses implements Pageable<Pulse, String> {
     /**
      * Head of the list.
      */
-    private final transient String head;
+    private final transient Coordinates head;
 
     /**
      * Public ctor.
@@ -82,7 +83,7 @@ final class MongoPulses implements Pageable<Pulse, String> {
      * @param stnd Original
      */
     protected MongoPulses(final Mongo mng, final Stand stnd) {
-        this(mng, stnd, "");
+        this(mng, stnd, new Coordinates.None());
     }
 
     /**
@@ -91,7 +92,8 @@ final class MongoPulses implements Pageable<Pulse, String> {
      * @param stnd Original
      * @param top Head of the list
      */
-    private MongoPulses(final Mongo mng, final Stand stnd, final String top) {
+    private MongoPulses(final Mongo mng, final Stand stnd,
+        final Coordinates top) {
         this.mongo = mng;
         this.origin = stnd;
         this.head = top;
@@ -126,7 +128,7 @@ final class MongoPulses implements Pageable<Pulse, String> {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, String> tail(final String top) {
+    public Pageable<Pulse, Coordinates> tail(final Coordinates top) {
         return new MongoPulses(this.mongo, this.origin, top);
     }
 
@@ -137,10 +139,10 @@ final class MongoPulses implements Pageable<Pulse, String> {
     private DBObject query() {
         final BasicDBObject query = new BasicDBObject()
             .append(MongoStand.ATTR_STAND, this.origin.name());
-        if (!this.head.isEmpty()) {
+        if (!this.head.equals(new Coordinates.None())) {
             query.append(
-                MongoStand.ATTR_PULSE,
-                new BasicDBObject("$lte", this.head)
+                MongoStand.ATTR_COORDS,
+                new MongoCoords(this.head).asObject()
             );
         }
         return query;

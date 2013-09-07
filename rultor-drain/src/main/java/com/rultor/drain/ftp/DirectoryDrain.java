@@ -31,9 +31,9 @@ package com.rultor.drain.ftp;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,7 +65,7 @@ public final class DirectoryDrain implements Drain {
     /**
      * The work it is busy with at the moment.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Host name.
@@ -94,21 +94,21 @@ public final class DirectoryDrain implements Drain {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param hst FTP host name (or IP address)
      * @param user FTP user name for login
      * @param pwd FTP password
      * @param name FTP directory name
      * @checkstyle ParameterNumber (10 lines)
      */
-    public DirectoryDrain(final Work wrk, final String hst, final String user,
-        final String pwd, final String name) {
+    public DirectoryDrain(final Coordinates wrk, final String hst,
+        final String user, final String pwd, final String name) {
         this(wrk, hst, user, pwd, FTP.DEFAULT_PORT, name);
     }
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param hst FTP host name (or IP address)
      * @param user FTP user name for login
      * @param pwd FTP password
@@ -117,7 +117,7 @@ public final class DirectoryDrain implements Drain {
      * @checkstyle ParameterNumber (10 lines)
      */
     public DirectoryDrain(
-        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "work can't be NULL") final Coordinates wrk,
         @NotNull(message = "FTP host can't be NULL") final String hst,
         @NotNull(message = "FTP user name can't be NULL") final String user,
         @NotNull(message = "FTP password can't be NULL") final String pwd,

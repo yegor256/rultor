@@ -29,8 +29,8 @@
  */
 package com.rultor.drain;
 
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
-import com.rultor.spi.Work;
 import java.util.Arrays;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
@@ -56,7 +56,7 @@ public final class NoiseReductionTest {
         final Drain dirty = Mockito.mock(Drain.class);
         final Drain clean = Mockito.mock(Drain.class);
         final Drain drain = new NoiseReduction(
-            new Work.Simple(),
+            new Coordinates.Simple(),
             ".*Hello[0-9]+.*",
             1,
             dirty,
@@ -87,7 +87,7 @@ public final class NoiseReductionTest {
     public void printsItselfInString() throws Exception {
         MatcherAssert.assertThat(
             new NoiseReduction(
-                new Work.Simple(),
+                new Coordinates.Simple(),
                 "some regular expression",
                 1,
                 Mockito.mock(Drain.class),

@@ -170,6 +170,7 @@ public final class IncrementalBash implements Batch {
      * @param args All arguments to inject into Velocity script
      * @param cmd Command in Vext format
      * @return Bash script ready for execution
+     * @see http://stackoverflow.com/questions/18665603
      */
     private String script(final Map<String, Object> args, final Vext cmd) {
         final String uid = String.format("bash-%d", System.nanoTime());
@@ -187,7 +188,7 @@ public final class IncrementalBash implements Batch {
                         .add("step")
                         .attr("id", uid)
                         .add("start")
-                        .set("`date  -u +%Y-%m-%dT%H:%M:%SZ`")
+                        .set("${dollar}(date  -u +%Y-%m-%dT%H:%M:%SZ)")
                 )
             )
             .append(';').append('\n')
@@ -196,8 +197,11 @@ public final class IncrementalBash implements Batch {
             .append("STDERR=${dollar}(mktemp /tmp/bash-XXXX);\n")
             .append("{ ")
             .append(velocity)
-            .append("; } 2> >( cat | eval $ESCAPE | tee ${dollar}STDERR );\n")
+            .append(
+                "; } 2> >(tee ${dollar}STDERR);\n"
+            )
             .append("CODE=${dollar}?;\n")
+            .append("sync; wait;\n")
             .append("FINISH=${dollar}(date +%s%N | tr -d N);\n")
             .append("if [ ${dollar}CODE = 0 ]; then\n  ")
             .append(
@@ -219,10 +223,11 @@ public final class IncrementalBash implements Batch {
                         .up()
                         .add("exception")
                         .add("cause")
-                        .set("exit code ${dollar}{CODE}")
+                        .set("exit code ${dollar}CODE")
                         .up()
                         .add("stacktrace")
-                        .set("${dollar}(tail -100 ${dollar}{STDERR})")
+                        // @checkstyle LineLength (1 line)
+                        .set("${dollar}(tail -100 ${dollar}STDERR | eval ${dollar}ESCAPE)")
                 )
             )
             .append(";\nfi;\n")
@@ -237,7 +242,8 @@ public final class IncrementalBash implements Batch {
                         .set("${dollar}(((FINISH-START)/1000000))")
                 )
             )
-            .append(";\nrm -f ${dollar}{STDERR};\n")
+            .append(";\n")
+            .append("rm -f ${dollar}STDERR;\n")
             .append("if [ ${dollar}CODE != 0 ]; then\n  ")
             .append("exit ${dollar}CODE;\nfi;\n\n")
             .toString();

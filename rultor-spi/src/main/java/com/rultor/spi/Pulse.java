@@ -46,11 +46,11 @@ import javax.validation.constraints.NotNull;
 public interface Pulse {
 
     /**
-     * Unique ID of it.
+     * Coordinates of it.
      * @return Identifier
      */
-    @NotNull(message = "identifier is never NULL")
-    String identifier();
+    @NotNull(message = "coordinates is never NULL")
+    Coordinates coordinates();
 
     /**
      * All its tags.

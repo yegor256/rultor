@@ -64,7 +64,11 @@
     <balance>$0.45</balance>
     <pulses>
         <pulse>
-            <identifier>2012-08-23T13:23Z</identifier>
+            <coordinates>
+                <owner>urn:test:111</owner>
+                <rule>on-commit</rule>
+                <scheduled>2012-08-23T13:23Z</scheduled>
+            </coordinates>
             <snapshot>
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
                 <work>
@@ -122,7 +126,11 @@
             </links>
         </pulse>
         <pulse>
-            <identifier>2012-08-23T13:23Z</identifier>
+            <coordinates>
+                <owner>urn:test:55</owner>
+                <rule>on-commit</rule>
+                <scheduled>2012-08-31T13:23Z</scheduled>
+            </coordinates>
             <snapshot>
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
                 <work>
@@ -179,13 +187,21 @@
             </links>
         </pulse>
         <pulse>
-            <identifier>2012-08-23T13:25Z</identifier>
+            <coordinates>
+                <owner>urn:test:111</owner>
+                <rule>on-commit</rule>
+                <scheduled>2012-08-23T13:23Z</scheduled>
+            </coordinates>
             <links>
                 <link href="/xml/stand.xml?open=abc" rel="open" type="text/xml"/>
             </links>
         </pulse>
         <pulse>
-            <identifier>2012-08-23T13:27Z</identifier>
+            <coordinates>
+                <owner>urn:test:111</owner>
+                <rule>on-commit</rule>
+                <scheduled>2012-08-23T13:23Z</scheduled>
+            </coordinates>
             <tags>
                 <tag>
                     <level>FINE</level>
@@ -205,7 +221,11 @@
             </links>
         </pulse>
         <pulse>
-            <identifier>2012-08-23T13:29Z</identifier>
+            <coordinates>
+                <owner>urn:test:111</owner>
+                <rule>on-commit</rule>
+                <scheduled>2012-08-23T13:23Z</scheduled>
+            </coordinates>
             <links>
                 <link href="/xml/stand.xml" rel="open" type="text/xml"/>
             </links>

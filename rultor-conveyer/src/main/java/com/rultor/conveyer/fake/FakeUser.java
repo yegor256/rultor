@@ -31,6 +31,7 @@ package com.rultor.conveyer.fake;
 
 import com.jcabi.urn.URN;
 import com.rultor.spi.Account;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Rules;
 import com.rultor.spi.Sheet;
@@ -38,7 +39,6 @@ import com.rultor.spi.Spec;
 import com.rultor.spi.Stands;
 import com.rultor.spi.User;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
 import java.util.Iterator;
 import lombok.EqualsAndHashCode;
@@ -59,9 +59,9 @@ import lombok.ToString;
 final class FakeUser implements User {
 
     /**
-     * Work to return.
+     * Coordinates to return.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Spec to use.
@@ -70,10 +70,10 @@ final class FakeUser implements User {
 
     /**
      * Public ctor.
-     * @param wrk Work
+     * @param wrk Coordinates
      * @param spc Spec
      */
-    protected FakeUser(final Work wrk, final Spec spc) {
+    protected FakeUser(final Coordinates wrk, final Spec spc) {
         this.work = wrk;
         this.specification = spc;
     }
@@ -94,7 +94,7 @@ final class FakeUser implements User {
                         return name;
                     }
                     @Override
-                    public Wallet wallet(final Work wrk, final URN urn,
+                    public Wallet wallet(final Coordinates wrk, final URN urn,
                         final String rule) {
                         return new Wallet() {
                             @Override

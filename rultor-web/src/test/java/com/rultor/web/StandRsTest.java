@@ -37,10 +37,10 @@ import com.rexsl.page.UriInfoMocker;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
-import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import java.io.IOException;
 import java.util.Arrays;
@@ -76,11 +76,13 @@ public final class StandRsTest {
     public void fetchesSnapshotInHtml() throws Exception {
         final StandRs rest = new StandRs();
         final Stand stand = Mockito.mock(Stand.class);
-        final URN owner = new URN("urn:test:1");
-        Mockito.doReturn(owner).when(stand).owner();
-        final Pageable<Pulse, String> pulses = Mockito.mock(Pageable.class);
+        Mockito.doReturn(BaseRs.TEST_URN).when(stand).owner();
+        final Pageable<Pulse, Coordinates> pulses =
+            Mockito.mock(Pageable.class);
         Mockito.doReturn(pulses).when(stand).pulses();
-        final String name = "some-pulse identifier";
+        final Coordinates coords = new Coordinates.Simple(
+            new URN("urn:test:888"), "some-rule-identifier"
+        );
         final Pulse pulse = Mockito.mock(Pulse.class);
         Mockito.doReturn(
             new Directives()
@@ -90,11 +92,9 @@ public final class StandRsTest {
         ).when(pulse).xembly();
         Mockito.doReturn(Arrays.asList(pulse).iterator())
             .when(pulses).iterator();
-        Mockito.doReturn(pulses).when(pulses).tail(name);
+        Mockito.doReturn(pulses).when(pulses)
+            .tail(Mockito.any(Coordinates.class));
         final Users users = Mockito.mock(Users.class);
-        final User user = Mockito.mock(User.class);
-        Mockito.doReturn(owner).when(user).urn();
-        Mockito.doReturn(user).when(users).get(Mockito.any(URN.class));
         Mockito.doReturn(stand).when(users).stand(Mockito.anyString());
         rest.setServletContext(
             new ServletContextMocker()
@@ -103,7 +103,7 @@ public final class StandRsTest {
         rest.setHttpHeaders(new HttpHeadersMocker().mock());
         rest.setUriInfo(new UriInfoMocker().mock());
         MatcherAssert.assertThat(
-            rest.fetch(name).getEntity().toString(),
+            rest.fetch(coords.toString()).getEntity().toString(),
             XhtmlMatchers.hasXPath("/div//xhtml:ul")
         );
     }

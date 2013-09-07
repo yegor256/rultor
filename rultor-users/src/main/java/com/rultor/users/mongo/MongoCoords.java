@@ -27,74 +27,103 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer;
+package com.rultor.users.mongo;
 
-import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
-import com.rexsl.test.RestTester;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
-import java.net.URI;
-import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Coordinates with STDOUT specified.
+ * Coordinates in Mongo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(of = { "urn", "name", "time" })
 @Loggable(Loggable.DEBUG)
-@EqualsAndHashCode(of = { "port", "key", "origin" })
-final class StdoutWork implements Work {
+final class MongoCoords implements Coordinates {
 
     /**
-     * Where to get public IP from EC2.
+     * MongoDB table column.
      */
-    private static final URI META_IP = URI.create(
-        "http://169.254.169.254/latest/meta-data/public-ipv4"
-    );
+    private static final String ATTR_RULE = "rule";
 
     /**
-     * Port we're listening to.
+     * MongoDB table column.
      */
-    private final transient int port;
+    private static final String ATTR_OWNER = "owner";
 
     /**
-     * Streaming key.
+     * MongoDB table column.
      */
-    private final transient String key;
+    private static final String ATTR_SCHEDULED = "scheduled";
 
     /**
-     * Original work.
+     * Owner.
      */
-    private final transient Coordinates origin;
+    private final transient URN urn;
+
+    /**
+     * Name of the rule.
+     */
+    private final transient String name;
+
+    /**
+     * Scheduled time.
+     */
+    private final transient Time time;
 
     /**
      * Public ctor.
-     * @param prt Port we're at
-     * @param auth Stream authentication key
-     * @param wrk Original work
+     * @param object The object
      */
-    protected StdoutWork(final int prt, final String auth,
-        final Coordinates wrk) {
-        this.port = prt;
-        this.key = auth;
-        this.origin = wrk;
+    protected MongoCoords(final DBObject object) {
+        this(
+            URN.create(object.get(MongoCoords.ATTR_OWNER).toString()),
+            object.get(MongoCoords.ATTR_RULE).toString(),
+            new Time(object.get(MongoCoords.ATTR_OWNER).toString())
+        );
     }
 
     /**
-     * {@inheritDoc}
+     * Public ctor.
+     * @param coords Other coordinates
      */
-    @Override
-    public String toString() {
-        return this.origin.toString();
+    protected MongoCoords(final Coordinates coords) {
+        this(coords.owner(), coords.rule(), coords.scheduled());
+    }
+
+    /**
+     * Public ctor.
+     * @param owner Owner
+     * @param rule Rule
+     * @param scheduled Scheduled
+     */
+    private MongoCoords(final URN owner, final String rule,
+        final Time scheduled) {
+        this.urn = owner;
+        this.name = rule;
+        this.time = scheduled;
+    }
+
+    /**
+     * Make Mongo DBObject out of it.
+     * @return Object
+     */
+    public DBObject asObject()  {
+        return new BasicDBObject()
+            .append(MongoCoords.ATTR_OWNER, this.owner().toString())
+            .append(MongoCoords.ATTR_RULE, this.rule())
+            .append(MongoCoords.ATTR_SCHEDULED, this.scheduled().toString());
     }
 
     /**
@@ -102,7 +131,7 @@ final class StdoutWork implements Work {
      */
     @Override
     public Time scheduled() {
-        return this.origin.scheduled();
+        return this.time;
     }
 
     /**
@@ -110,7 +139,7 @@ final class StdoutWork implements Work {
      */
     @Override
     public URN owner() {
-        return this.origin.owner();
+        return this.urn;
     }
 
     /**
@@ -118,36 +147,7 @@ final class StdoutWork implements Work {
      */
     @Override
     public String rule() {
-        return this.origin.rule();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public URI stdout() {
-        return UriBuilder.fromUri("http://localhost/")
-            .path("{key}")
-            .host(StdoutWork.address())
-            .port(this.port)
-            .build(this.key);
-    }
-
-    /**
-     * Fetch my public IP.
-     * @return IP
-     * @see http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#using-instance-addressing-common
-     */
-    @Cacheable(forever = true)
-    private static String address() {
-        String address;
-        try {
-            address = RestTester.start(StdoutWork.META_IP)
-                .get("fetch EC2 public IP").getBody();
-        } catch (AssertionError ex) {
-            address = "localhost";
-        }
-        return address;
+        return this.name;
     }
 
 }

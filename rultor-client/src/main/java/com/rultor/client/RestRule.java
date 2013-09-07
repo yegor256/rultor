@@ -33,10 +33,10 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
@@ -140,7 +140,8 @@ final class RestRule implements Rule {
      * {@inheritDoc}
      */
     @Override
-    public Wallet wallet(final Work work, final URN urn, final String rule) {
+    public Wallet wallet(final Coordinates work, final URN urn,
+        final String rule) {
         throw new UnsupportedOperationException();
     }
 
