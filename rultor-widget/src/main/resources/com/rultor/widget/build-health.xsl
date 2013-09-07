@@ -30,37 +30,51 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="./layout.xsl"/>
-    <xsl:template name="head">
-        <title>
-            <xsl:value-of select="/page/stand/name"/>
-        </title>
+    <xsl:template match="widget[@class='com.rultor.widget.BuildHealth']">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>St.</th>
+                    <th>Rule</th>
+                    <th>By</th>
+                </tr>
+            </thead>
+            <tbody>
+                <xsl:apply-templates select="builds/build" mode="build-health"/>
+            </tbody>
+        </table>
     </xsl:template>
-    <xsl:template name="content">
-        <form method="post" class="spacious">
-            <xsl:attribute name="action">
-                <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
+    <xsl:template match="build" mode="build-health">
+        <tr>
+            <xsl:attribute name="class">
+                <xsl:choose>
+                    <xsl:when test="health &gt; 0.8">
+                        <xsl:text>success</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="health &gt; 0.5">
+                        <xsl:text>warning</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>danger</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:attribute>
-            <fieldset>
-                <div class="form-group">
-                    <label for="spec" class="hidden-phone">
-                        <xsl:text>Access Control List of </xsl:text>
-                        <code><xsl:value-of select="/page/stand/name"/></code>
-                    </label>
-                    <textarea name="spec" id="spec" rows="18" class="form-control">
-                        <xsl:value-of select="/page/stand/acl"/>
-                    </textarea>
-                </div>
-                <div class="form-group">
-                    <label><xsl:comment>for the submit button below</xsl:comment></label>
-                    <button type="submit" class="btn btn-primary">
-                        <xsl:text>Save</xsl:text>
-                    </button>
-                    <span class="help-block hidden-phone">
-                        <xsl:text>Takes up to five minutes to update all servers</xsl:text>
-                    </span>
-                </div>
-            </fieldset>
-        </form>
+            <td>
+                <xsl:choose>
+                    <xsl:when test="code = 0">
+                        <i class="icon-thumbs-up text-success"><xsl:comment>ok</xsl:comment></i>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <i class="icon-thumbs-down text-danger"><xsl:comment>fail</xsl:comment></i>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </td>
+            <td>
+                <xsl:value-of select="coordinates/rule"/>
+            </td>
+            <td>
+                <xsl:value-of select="commit/author"/>
+            </td>
+        </tr>
     </xsl:template>
 </xsl:stylesheet>

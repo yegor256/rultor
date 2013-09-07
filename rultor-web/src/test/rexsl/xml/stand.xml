@@ -62,6 +62,26 @@
     <stand>nightly-build</stand>
     <since>2012-08-23T13:25:33Z</since>
     <balance>$0.45</balance>
+    <widgets>
+        <widget class="com.rultor.widget.Alpha">
+            <title>Build Status</title>
+            <width>4</width>
+            <links>
+                <link href="/xml/stand.xml" rel="more" type="text/xml"/>
+            </links>
+            <body>test</body>
+        </widget>
+        <widget class="com.rultor.widget.Beta">
+            <title>Recent Builds</title>
+            <width>6</width>
+            <links>
+                <link href="/xml/stand.xml" rel="more" type="text/xml"/>
+            </links>
+            <body>
+                test
+            </body>
+        </widget>
+    </widgets>
     <pulses>
         <pulse>
             <coordinates>

@@ -30,13 +30,19 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="/xsl/layout.xsl"/>
-    <xsl:include href="/xsl/snapshot.xsl"/>
+    <xsl:include href="./layout.xsl"/>
+    <xsl:include href="./snapshot.xsl"/>
+    <!-- <xsl:include href="/widget/all.xsl"/> -->
     <xsl:template name="head">
         <title>
             <xsl:value-of select="/page/stand"/>
         </title>
-        <script type="text/javascript" src="/js/stand.js">
+        <script type="text/javascript">
+            <xsl:attribute name="src">
+                <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
+                <xsl:text>js/stand.js?</xsl:text>
+                <xsl:value-of select="/page/version/revision"/>
+            </xsl:attribute>
             <!-- this is for W3C compliance -->
             <xsl:text> </xsl:text>
         </script>
@@ -45,6 +51,7 @@
         <h2>
             <xsl:value-of select="/page/stand"/>
         </h2>
+        <xsl:apply-templates select="/page/widgets"/>
         <xsl:choose>
             <xsl:when test="/page/pulses/pulse">
                 <xsl:if test="/page/since">
@@ -86,6 +93,31 @@
                 </p>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
+    <xsl:template match="widgets">
+        <div class="row">
+            <xsl:for-each select="widget">
+                <div>
+                    <xsl:attribute name="class">
+                        <xsl:text>col-lg-</xsl:text>
+                        <xsl:value-of select="width"/>
+                        <xsl:text> col-md-</xsl:text>
+                        <xsl:value-of select="width"/>
+                        <xsl:text> col-sm-</xsl:text>
+                        <xsl:value-of select="width"/>
+                        <xsl:text> col-xs-12</xsl:text>
+                    </xsl:attribute>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <xsl:value-of select="title"/>
+                        </div>
+                        <div class="panel-body">
+                            <xsl:apply-templates select="." />
+                        </div>
+                    </div>
+                </div>
+            </xsl:for-each>
+        </div>
     </xsl:template>
     <xsl:template match="pulse" mode="open">
         <div class="panel panel-default">

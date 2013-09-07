@@ -44,15 +44,18 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Tag;
 import com.rultor.spi.User;
 import com.rultor.spi.Wallet;
+import com.rultor.spi.Widget;
 import com.rultor.tools.Exceptions;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -69,9 +72,14 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
+import org.xembly.Xembler;
 import org.xembly.XemblySyntaxException;
 
 /**
@@ -171,6 +179,7 @@ public final class StandRs extends BaseRs {
         }
         return page
             .append(new JaxbBundle("stand", this.name))
+            .append(this.widgets(this.widgets(this.stand().widgets())))
             .append(this.pulses(this.stand().pulses().iterator(), Tv.TWENTY))
             .render()
             .build();
@@ -404,6 +413,68 @@ public final class StandRs extends BaseRs {
             };
         }
         return acl;
+    }
+
+    /**
+     * All widgets of the stand.
+     * @param spec Spec of array of widgets
+     * @return Collection of JAXB widgets
+     */
+    @SuppressWarnings("unchecked")
+    private Collection<Widget> widgets(final Spec spec) {
+        Collection<Widget> list;
+        try {
+            list = Collection.class.cast(
+                new Repo.Cached(this.repo(), new User.Nobody(), spec)
+                    .get()
+                    .instantiate(
+                        this.users(),
+                        new Arguments(
+                            new Coordinates.None(), new Wallet.Empty()
+                        )
+                    )
+            );
+        } catch (SpecException ex) {
+            list = Arrays.asList(new ExceptionWidget(ex));
+        }
+        return list;
+    }
+
+    /**
+     * All widgets of the stand.
+     * @param spec Spec of array of widgets
+     * @return Collection of JAXB widgets
+     */
+    private JaxbBundle widgets(final Collection<Widget> widgets) {
+        JaxbBundle bundle = new JaxbBundle("widgets");
+        for (Widget widget : widgets) {
+            bundle = bundle.add(this.widget(widget));
+        }
+        return bundle;
+    }
+
+    /**
+     * Render one widget.
+     * @param widget Widget to render
+     * @return DOM element
+     */
+    private Element widget(final Widget widget) {
+        final Document dom;
+        try {
+            dom = DocumentBuilderFactory.newInstance()
+                .newDocumentBuilder().newDocument();
+        } catch (ParserConfigurationException ex) {
+            throw new IllegalStateException(ex);
+        }
+        dom.appendChild(dom.createElement("widget"));
+        try {
+            new Xembler(widget.render(this.stand())).apply(dom);
+        } catch (ImpossibleModificationException ex) {
+            final Element error = dom.createElement("error");
+            error.setTextContent(Exceptions.stacktrace(ex));
+            dom.getDocumentElement().appendChild(error);
+        }
+        return dom.getDocumentElement();
     }
 
 }

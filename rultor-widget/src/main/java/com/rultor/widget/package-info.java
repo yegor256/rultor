@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -27,21 +26,13 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
-    <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="./layout.xsl"/>
-    <xsl:template name="head">
-        <title>
-            <xsl:text>page not found</xsl:text>
-        </title>
-    </xsl:template>
-    <xsl:template name="content">
-        <h1>
-            <xsl:text>Page not found</xsl:text>
-        </h1>
-        <p>
-            <xsl:text>Invalid request or page not found.</xsl:text>
-        </p>
-    </xsl:template>
-</xsl:stylesheet>
+ */
+
+/**
+ * Basic widgets.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+package com.rultor.widget;
