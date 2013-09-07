@@ -188,6 +188,22 @@ final class MongoStand implements Stand {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spec widgets() {
+        return this.origin.widgets();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void widgets(final Spec spec) {
+        this.origin.widgets(spec);
+    }
+
+    /**
      * Attempt to save.
      * @param pulse The pulse name
      * @param nano Nano ID

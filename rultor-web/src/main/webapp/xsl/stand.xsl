@@ -100,12 +100,21 @@
                 <div>
                     <xsl:attribute name="class">
                         <xsl:text>col-lg-</xsl:text>
-                        <xsl:value-of select="width"/>
+                        <xsl:call-template name="grid">
+                            <xsl:with-param name="width" select="width"/>
+                        </xsl:call-template>
                         <xsl:text> col-md-</xsl:text>
-                        <xsl:value-of select="width"/>
+                        <xsl:call-template name="grid">
+                            <xsl:with-param name="width" select="width * 1.3"/>
+                        </xsl:call-template>
                         <xsl:text> col-sm-</xsl:text>
-                        <xsl:value-of select="width"/>
-                        <xsl:text> col-xs-12</xsl:text>
+                        <xsl:call-template name="grid">
+                            <xsl:with-param name="width" select="width * 2"/>
+                        </xsl:call-template>
+                        <xsl:text> col-xs-</xsl:text>
+                        <xsl:call-template name="grid">
+                            <xsl:with-param name="width" select="width * 4"/>
+                        </xsl:call-template>
                     </xsl:attribute>
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -118,6 +127,17 @@
                 </div>
             </xsl:for-each>
         </div>
+    </xsl:template>
+    <xsl:template name="grid">
+        <xsl:param name="width" as="xs:integer"/>
+        <xsl:choose>
+            <xsl:when test="$width &gt; 12">
+                <xsl:text>12</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="round($width)"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template match="pulse" mode="open">
         <div class="panel panel-default">
