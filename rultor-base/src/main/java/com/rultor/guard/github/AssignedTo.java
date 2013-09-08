@@ -38,7 +38,7 @@ import lombok.ToString;
 import org.eclipse.egit.github.core.PullRequest;
 
 /**
- * Test case for {@link SecretMap}.
+ * Approves assigned user.
  * @author Bharath Bolisetty (bharathbolisetty@gmail.com)
  * @version $Id$
  */
