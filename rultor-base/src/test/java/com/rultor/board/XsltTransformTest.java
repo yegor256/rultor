@@ -30,9 +30,8 @@
 package com.rultor.board;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link XsltTransform}.
@@ -40,28 +39,6 @@ import org.junit.Test;
  * @version $Id$
  */
 public final class XsltTransformTest {
-    private static class SavingBillBoard implements Billboard {
-        /**
-         * Body data received.
-         */
-        private transient String data = "";
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void announce(final String body) {
-            this.data = body;
-        }
-
-        /**
-         * Retrieve stored data.
-         * @return Data stored.
-         */
-        private String getData() {
-            return this.data;
-        }
-    }
 
     /**
      * Simple transformation test.
@@ -69,8 +46,7 @@ public final class XsltTransformTest {
      */
     @Test
     public void simple() throws Exception {
-        final XsltTransformTest.SavingBillBoard board =
-            new XsltTransformTest.SavingBillBoard();
+        final Billboard board = Mockito.mock(Billboard.class);
         new XsltTransform(
             StringUtils.join(
                 "<?xml version=\"1.0\"?>",
@@ -83,8 +59,7 @@ public final class XsltTransformTest {
             ),
             board
         ).announce("<body><value>Text</value></body>");
-        MatcherAssert
-            .assertThat(board.getData(), Matchers.equalTo("<test>Text</test>"));
+        Mockito.verify(board).announce(Mockito.eq("<test>Text</test>"));
     }
 
     /**
@@ -95,7 +70,7 @@ public final class XsltTransformTest {
     public void wrongArgument() throws Exception {
         new XsltTransform(
             "",
-            new XsltTransformTest.SavingBillBoard()
+            Mockito.mock(Billboard.class)
         ).announce("<value>Text</value>");
     }
 }
