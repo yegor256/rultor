@@ -466,7 +466,9 @@ public final class StandRs extends BaseRs {
         } catch (ParserConfigurationException ex) {
             throw new IllegalStateException(ex);
         }
-        dom.appendChild(dom.createElement("widget"));
+        final Element root = dom.createElement("widget");
+        root.setAttribute("class", widget.getClass().getCanonicalName());
+        dom.appendChild(root);
         try {
             new Xembler(widget.render(this.stand())).apply(dom);
         } catch (ImpossibleModificationException ex) {
