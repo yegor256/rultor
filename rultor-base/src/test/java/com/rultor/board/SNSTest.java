@@ -62,33 +62,17 @@ public final class SNSTest {
     public void sentNotification() {
         final String message = "Subject \n message body";
         final String topic = "Test Topic";
-        final String sub = "Test Subject";
-        final String body = "Test Body";
         final AmazonSNS aws = Mockito.mock(AmazonSNS.class);
         final SNSClient client = Mockito.mock(SNSClient.class);
         final PublishResult result = Mockito.mock(PublishResult.class);
         final PublishRequest request = Mockito
         .mock(PublishRequest.class);
-        Mockito.doReturn(request).when(request)
-        .withTopicArn(topic);
-        Mockito.doReturn(request).when(request)
-        .withMessage(body);
-        Mockito.doReturn(request).when(request).withSubject(sub);
         Mockito.doReturn(aws).when(client).get();
         Mockito.doReturn(result).when(aws).publish(request);
         new SNS(topic, client).announce(message);
         MatcherAssert.assertThat(
-            result, Matchers.equalTo(aws.publish(request))
+            aws.publish(request) , Matchers.equalTo(result)
         );
-        MatcherAssert.assertThat(
-            request, Matchers.equalTo(request.withTopicArn(topic))
-        );
-        MatcherAssert.assertThat(
-            request, Matchers.equalTo(request.withMessage(body))
-        );
-        MatcherAssert.assertThat(
-            request, Matchers.equalTo(request.withSubject(sub))
-        );
-        Mockito.verify(aws, Mockito.atLeast(1)).publish(request);
+        Mockito.verify(aws);
     }
 }
