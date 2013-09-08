@@ -139,7 +139,6 @@ final class PgAccount implements Account {
         try {
             final Dollars amount = new Dollars(
                 new JdbcSession(this.client.get())
-                    // @checkstyle LineLength (1 line)
                     .sql("SELECT amount FROM coupon WHERE code=?")
                     .set(code)
                     .select(new SingleHandler<Long>(Long.class))

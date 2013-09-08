@@ -34,7 +34,7 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
     <changeSet author="Krzysztof.Krason@gmail.com" id="207">
         <createTable remarks="coupons for account funding" schemaName="public" tableName="coupon">
-            <column name="code" type="VARCHAR(250)" remarks="creditor">
+            <column name="code" type="VARCHAR(32)" remarks="coupon code">
                 <constraints nullable="false" primaryKey="true" unique="true"/>
             </column>
             <column name="amount" type="INTEGER" remarks="amount in points">
