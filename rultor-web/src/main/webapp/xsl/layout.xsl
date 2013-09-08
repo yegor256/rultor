@@ -288,7 +288,7 @@
                     <xsl:when test="level = 'WARNING'">
                         <xsl:text> alert-info</xsl:text>
                     </xsl:when>
-                    <xsl:when test="level = 'ERROR'">
+                    <xsl:when test="level = 'SEVERE'">
                         <xsl:text> alert-danger</xsl:text>
                     </xsl:when>
                     <xsl:otherwise>
