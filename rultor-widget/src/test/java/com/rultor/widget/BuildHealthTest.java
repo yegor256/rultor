@@ -125,7 +125,7 @@ public final class BuildHealthTest {
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(dom),
             XhtmlMatchers.hasXPaths(
-                "/widget[title='Builds Health']",
+                "/widget[not(title)]",
                 "/widget[width='4']",
                 "/widget/builds/build/coordinates[owner='urn:test:3']",
                 "/widget/builds/build/coordinates[rule='rule-a']",

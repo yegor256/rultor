@@ -75,7 +75,6 @@ public final class BuildHealth implements Widget {
     @Override
     public Directives render(final Stand stand) {
         Directives dirs = new Directives()
-            .add("title").set("Builds Health").up()
             .add("width").set("4").up()
             .add("builds");
         final Collection<BuildHealth.Build> builds = this.builds(

@@ -29,7 +29,6 @@
  */
 package com.rultor.users;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -108,10 +107,8 @@ final class AwsStand implements Stand {
         final Spec spec) {
         this.item.put(
             new Attributes()
-                .with(
-                    AwsStand.FIELD_ACL,
-                    new AttributeValue(spec.asText())
-            )
+                .with(AwsStand.FIELD_ACL, spec.asText())
+                .with(AwsStand.FIELD_WIDGETS, this.widgets().asText())
         );
     }
 
@@ -126,7 +123,7 @@ final class AwsStand implements Stand {
         if (this.item.has(AwsStand.FIELD_ACL)) {
             spec = new Spec.Simple(this.item.get(AwsStand.FIELD_ACL).getS());
         } else {
-            spec = new Spec.Simple();
+            spec = new Spec.Simple("com.rultor.acl.Prohibited()");
         }
         return spec;
     }
@@ -140,10 +137,8 @@ final class AwsStand implements Stand {
         final Spec spec) {
         this.item.put(
             new Attributes()
-                .with(
-                    AwsStand.FIELD_WIDGETS,
-                    new AttributeValue(spec.asText())
-            )
+                .with(AwsStand.FIELD_WIDGETS, spec.asText())
+                .with(AwsStand.FIELD_ACL, this.acl().asText())
         );
     }
 
