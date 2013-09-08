@@ -37,7 +37,9 @@ import com.rultor.shell.Shell;
 import com.rultor.shell.Terminal;
 import com.rultor.snapshot.XemblyLine;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.logging.Level;
+import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.FilenameUtils;
@@ -155,21 +157,36 @@ public final class S3CmdPut implements Sequel {
                 .append("secret_key=").append(this.secret).append('\n')
                 .toString()
         ).split("\n").length;
-        final String markdown;
         if (mask.contains("*")) {
-            markdown = String.format(
-                "see [%d files](%sindex.html)", files, url
-            );
+            final String href = String.format("%sindex.html", url);
+            this.tag(String.format("see [%d files](%s)", files, href), href);
         } else {
-            markdown = String.format("see [%s](%s%1$s) file", mask, url);
+            final String href = String.format("%s%s", url, mask);
+            this.tag(String.format("see [%s](%s) file", mask, href), href);
         }
+    }
+
+    /**
+     * Log a tag.
+     * @param desc Markdown description
+     * @param href URL of content
+     * @throws IOException If fails
+     */
+    private void tag(final String desc, final String href) throws IOException {
+        final StringWriter data = new StringWriter();
+        Json.createGenerator(data)
+            .writeStartObject()
+            .write("href", href)
+            .writeEnd()
+            .close();
         new XemblyLine(
             new Directives()
                 .xpath("/snapshot").addIfAbsent("tags").strict(1)
                 .add("tag")
                 .add("label").set(this.name).up()
                 .add("level").set(Level.FINE.toString()).up()
-                .add("markdown").set(markdown)
+                .add("data").set(data.toString()).up()
+                .add("markdown").set(desc)
         ).log();
     }
 
