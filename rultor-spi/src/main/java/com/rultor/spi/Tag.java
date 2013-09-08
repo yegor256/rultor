@@ -30,8 +30,15 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.logging.Level;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonWriter;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 
 /**
  * Tag of a {@link Pulse}.
@@ -56,5 +63,113 @@ public interface Tag {
      */
     @NotNull(message = "level is never NULL")
     Level level();
+
+    /**
+     * Data (may be empty).
+     * @return Data
+     */
+    @NotNull(message = "data is never NULL")
+    JsonObject data();
+
+    /**
+     * Description in Markdown (may be empty), preferably one line.
+     * @return Markdown
+     */
+    @NotNull(message = "markdown is never NULL")
+    String markdown();
+
+    /**
+     * Simple implementation.
+     */
+    @Immutable
+    @Loggable(Loggable.DEBUG)
+    @EqualsAndHashCode(of = { "name", "lvl", "json", "text" })
+    final class Simple implements Tag {
+        /**
+         * Label.
+         */
+        private final transient String name;
+        /**
+         * Level of it.
+         */
+        private final transient String lvl;
+        /**
+         * Data in JSON.
+         */
+        private final transient String json;
+        /**
+         * Markdown.
+         */
+        private final transient String text;
+        /**
+         * Public ctor.
+         * @param label Label
+         * @param level Level
+         */
+        public Simple(final String label, final Level level) {
+            this(label, level, Json.createObjectBuilder().build(), "");
+        }
+        /**
+         * Public ctor.
+         * @param label Label of it
+         * @param level Level of tag
+         * @param data Data in JSON object
+         * @param txt Markdown details
+         * @checkstyle ParameterNumber (6 lines)
+         */
+        public Simple(
+            @NotNull(message = "label can't be NULL") final String label,
+            @NotNull(message = "level can't be NULL") final Level level,
+            @NotNull(message = "data can't be NULL") final JsonObject data,
+            @NotNull(message = "markdown can't be NULL") final String txt) {
+            this.name = label;
+            this.lvl = level.toString();
+            final StringWriter writer = new StringWriter();
+            final JsonWriter wrt = Json.createWriter(writer);
+            wrt.writeObject(data);
+            wrt.close();
+            this.json = writer.toString();
+            this.text = txt;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return String.format("%s:%s", this.name, this.lvl);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull(message = "label is never NULL")
+        public String label() {
+            return this.name;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull(message = "level is never NULL")
+        public Level level() {
+            return Level.parse(this.lvl);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull(message = "data is never NULL")
+        public JsonObject data() {
+            return Json.createReader(new StringReader(this.json)).readObject();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull(message = "markdown is never NULL")
+        public String markdown() {
+            return this.text;
+        }
+    }
 
 }

@@ -30,8 +30,8 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="/xsl/layout.xsl"/>
-    <xsl:include href="/xsl/snapshot.xsl"/>
+    <xsl:include href="./layout.xsl"/>
+    <xsl:include href="./snapshot.xsl"/>
     <xsl:template name="head">
         <title>
             <xsl:apply-templates select="/page/rule"/>
@@ -53,7 +53,7 @@
                             <li>
                                 <a title="back to start">
                                     <xsl:attribute name="href">
-                                        <xsl:value-of select="//links/link[@rel='latest']/@href"/>
+                                        <xsl:value-of select="/page/links/link[@rel='latest']/@href"/>
                                     </xsl:attribute>
                                     <xsl:text>back to start</xsl:text>
                                 </a>
@@ -62,12 +62,12 @@
                     </div>
                 </xsl:if>
                 <xsl:apply-templates select="/page/pulses/pulse"/>
-                <xsl:if test="//links/link[@rel='more']">
+                <xsl:if test="/page/links/link[@rel='more']">
                     <p>
                         <xsl:text>See </xsl:text>
                         <a title="more">
                             <xsl:attribute name="href">
-                                <xsl:value-of select="//links/link[@rel='more']/@href"/>
+                                <xsl:value-of select="/page/links/link[@rel='more']/@href"/>
                             </xsl:attribute>
                             <xsl:text>more</xsl:text>
                         </a>

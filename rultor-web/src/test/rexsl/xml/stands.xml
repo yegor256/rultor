@@ -46,10 +46,11 @@
         <date>22-Aug-2012</date>
     </version>
     <links>
+        <link href="/" rel="root" type="text/xml"/>
         <link href="/xml/stands.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
         <link href="/xml/stands.xml" rel="create" type="text/xml"/>
-        <link href="/xml/index.xml" rel="rules" type="text/xml"/>
+        <link href="/xml/rules.xml" rel="rules" type="text/xml"/>
         <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
         <link href="/xml/account.xml" rel="account" type="text/xml"/>
     </links>
@@ -67,21 +68,24 @@
         <stand>
             <name>git-rultor</name>
             <links>
-                <link href="/xml/acl.xml" rel="edit" type="text/xml"/>
+                <link href="/xml/acl.xml" rel="acl" type="text/xml"/>
+                <link href="/xml/widgets.xml" rel="widgets" type="text/xml"/>
                 <link href="/xml/stand.xml" rel="see" type="text/xml"/>
             </links>
         </stand>
         <stand>
             <name>nightly-build-rultor</name>
             <links>
-                <link href="/xml/acl.xml" rel="edit" type="text/xml"/>
+                <link href="/xml/acl.xml" rel="acl" type="text/xml"/>
+                <link href="/xml/widgets.xml" rel="widgets" type="text/xml"/>
                 <link href="/xml/stand.xml" rel="see" type="text/xml"/>
             </links>
         </stand>
         <stand>
             <name>git-template</name>
             <links>
-                <link href="/xml/acl.xml" rel="edit" type="text/xml"/>
+                <link href="/xml/acl.xml" rel="acl" type="text/xml"/>
+                <link href="/xml/widgets.xml" rel="widgets" type="text/xml"/>
                 <link href="/xml/stand.xml" rel="see" type="text/xml"/>
             </links>
         </stand>

@@ -37,6 +37,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import com.rexsl.test.SimpleXml;
+import com.rexsl.test.XmlDocument;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pageable;
@@ -47,8 +48,11 @@ import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.logging.Level;
 import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -75,12 +79,13 @@ import org.xembly.XemblySyntaxException;
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @checkstyle ClassFanOutComplexity (500 lines)
  */
 @Immutable
 @ToString
 @EqualsAndHashCode(of = { "mongo", "origin" })
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({ "PMD.TooManyMethods", "PMD.ExcessiveImports" })
 final class MongoStand implements Stand {
 
     /**
@@ -188,6 +193,22 @@ final class MongoStand implements Stand {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spec widgets() {
+        return this.origin.widgets();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void widgets(final Spec spec) {
+        this.origin.widgets(spec);
+    }
+
+    /**
      * Attempt to save.
      * @param pulse The pulse name
      * @param nano Nano ID
@@ -234,10 +255,7 @@ final class MongoStand implements Stand {
                 )
                 .append(
                     MongoStand.ATTR_TAGS,
-                    this.tags(
-                        MongoStand.decode(after),
-                        (Collection<String>) object.get(MongoStand.ATTR_TAGS)
-                    )
+                    this.tags(MongoStand.decode(after))
                 )
         );
         Validate.isTrue(
@@ -275,22 +293,22 @@ final class MongoStand implements Stand {
     /**
      * Fetch all visible tags.
      * @param after Xembly after changes
-     * @param before List of existing tags
      * @return Array of tags
      */
-    private Collection<String> tags(final String after,
-        final Collection<String> before) {
-        final Collection<String> tags = new HashSet<String>(0);
-        if (before != null) {
-            tags.addAll(before);
-        }
+    private Collection<DBObject> tags(final String after) {
+        final Collection<DBObject> tags = new HashSet<DBObject>(0);
+        final List<XmlDocument> nodes = new LinkedList<XmlDocument>();
         try {
-            tags.addAll(
-                new SimpleXml(new DOMSource(this.dom(after)))
-                    .xpath("/snapshot/tags/tag/label/text()")
+            nodes.addAll(
+                new SimpleXml(new DOMSource(this.dom(after))).nodes(
+                    "/snapshot/tags/tag"
+                )
             );
         } catch (BrokenXemblyException ex) {
             assert ex != null;
+        }
+        for (XmlDocument node : nodes) {
+            tags.add(this.tag(node).asObject());
         }
         return tags;
     }
@@ -308,6 +326,31 @@ final class MongoStand implements Stand {
             lines.put(Long.parseLong(parts[0]), parts[1]);
         }
         return StringUtils.join(lines.values(), "\n");
+    }
+
+    /**
+     * Make Mongo Tag from XML node.
+     * @param node XML node
+     * @return Mongo tag
+     */
+    private MongoTag tag(final XmlDocument node) {
+        final String data;
+        if (node.nodes("data").isEmpty()) {
+            data = "{}";
+        } else {
+            data = node.xpath("data/text()").get(0);
+        }
+        final String markdown;
+        if (node.nodes("markdown").isEmpty()) {
+            markdown = "";
+        } else {
+            markdown = node.xpath("markdown/text()").get(0);
+        }
+        return new MongoTag(
+            node.xpath("label/text()").get(0),
+            Level.parse(node.xpath("level/text()").get(0)),
+            data, markdown
+        );
     }
 
     /**

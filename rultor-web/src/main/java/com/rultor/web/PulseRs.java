@@ -37,13 +37,12 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Rule;
 import com.rultor.spi.SpecException;
-import com.rultor.spi.Tag;
+import com.rultor.spi.Tags;
 import com.rultor.spi.Wallet;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -146,7 +145,7 @@ public final class PulseRs extends BaseRs {
                 throw new UnsupportedOperationException();
             }
             @Override
-            public Collection<Tag> tags() {
+            public Tags tags() {
                 throw new UnsupportedOperationException();
             }
         };

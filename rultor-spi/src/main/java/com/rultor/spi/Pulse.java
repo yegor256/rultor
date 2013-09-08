@@ -32,7 +32,6 @@ package com.rultor.spi;
 import com.jcabi.aspects.Immutable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -57,7 +56,7 @@ public interface Pulse {
      * @return List of tags
      */
     @NotNull(message = "collection of tags is never NULL")
-    Collection<Tag> tags();
+    Tags tags();
 
     /**
      * Snapshot in Xembly.
