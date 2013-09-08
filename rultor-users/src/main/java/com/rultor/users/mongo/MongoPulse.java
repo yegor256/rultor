@@ -36,11 +36,11 @@ import com.mongodb.DBObject;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Tag;
+import com.rultor.spi.Tags;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -109,32 +109,14 @@ final class MongoPulse implements Pulse {
      * {@inheritDoc}
      */
     @Override
-    public Collection<Tag> tags() {
-        final Collection<?> names =
+    public Tags tags() {
+        final Collection<?> objects =
             Collection.class.cast(this.map.get(MongoStand.ATTR_TAGS));
-        final Collection<Tag> tags = new ArrayList<Tag>(names.size());
-        for (Object name : names) {
-            tags.add(MongoPulse.tag(name.toString()));
+        final Collection<Tag> tags = new ArrayList<Tag>(objects.size());
+        for (Object object : objects) {
+            tags.add(new MongoTag(DBObject.class.cast(object)));
         }
-        return tags;
-    }
-
-    /**
-     * Turn name into tag.
-     * @param name Name of it
-     * @return Tag
-     */
-    private static Tag tag(final String name) {
-        return new Tag() {
-            @Override
-            public String label() {
-                return name;
-            }
-            @Override
-            public Level level() {
-                return Level.INFO;
-            }
-        };
+        return new Tags.Simple(tags);
     }
 
 }
