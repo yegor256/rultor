@@ -164,9 +164,9 @@ public final class BuildHealth implements Widget {
                 this.code = commit.data().getInt("code", 0);
             }
             if (commit.data().getInt("code", 0) == 0) {
-                this.codes.add(0d);
-            } else {
                 this.codes.add(1d);
+            } else {
+                this.codes.add(0d);
             }
         }
         /**

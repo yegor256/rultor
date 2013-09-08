@@ -176,7 +176,7 @@ public final class BuildHealthTest {
                 "/widget/builds/build/commit[author='unknown']",
                 "/widget/builds/build[duration='0']",
                 "/widget/builds/build[code='0']",
-                "/widget/builds/build[health='0.0']"
+                "/widget/builds/build[health='1.0']"
             )
         );
     }
