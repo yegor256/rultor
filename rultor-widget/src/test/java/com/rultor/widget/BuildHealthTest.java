@@ -55,7 +55,9 @@ import org.xembly.Xembler;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle MultipleStringLiterals (500 lines)
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class BuildHealthTest {
 
     /**

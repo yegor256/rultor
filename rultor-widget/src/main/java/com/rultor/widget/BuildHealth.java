@@ -82,7 +82,7 @@ public final class BuildHealth implements Widget {
             Iterators.limit(stand.pulses().iterator(), Tv.TWENTY)
         );
         for (BuildHealth.Build build : builds) {
-            dirs = dirs.append(build.directives());
+            dirs = dirs.append(build.directives()).up();
         }
         return dirs;
     }
