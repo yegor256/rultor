@@ -116,7 +116,7 @@ public final class StandRs extends BaseRs {
     /**
      * Names of pulses to show open.
      */
-    private final transient Set<Coordinates> open = new TreeSet<Coordinates>();
+    private final transient Set<String> open = new TreeSet<String>();
 
     /**
      * Inject it from query.
@@ -135,9 +135,7 @@ public final class StandRs extends BaseRs {
     @QueryParam(StandRs.QUERY_OPEN)
     public void setPulses(final List<String> pulses) {
         if (pulses != null) {
-            for (String pulse : pulses) {
-                this.open.add(Coordinates.Simple.valueOf(pulse));
-            }
+            this.open.addAll(pulses);
         }
     }
 
@@ -164,7 +162,7 @@ public final class StandRs extends BaseRs {
             .link(
                 new Link(
                     "collapse",
-                    this.self(new ArrayList<Coordinates>(0))
+                    this.self(new ArrayList<String>(0))
                 )
             );
         if (this.auth().identity().equals(Identity.ANONYMOUS)) {
@@ -272,11 +270,12 @@ public final class StandRs extends BaseRs {
             .add("owner", coords.owner().toString()).up()
             .add("scheduled", coords.scheduled().toString()).up()
             .up();
-        final ArraySet<Coordinates> now = new ArraySet<Coordinates>(this.open);
-        if (this.open.contains(coords)) {
+        final String label = new Coordinates.Simple(coords).toString();
+        final ArraySet<String> now = new ArraySet<String>(this.open);
+        if (this.open.contains(label)) {
             bundle = this
                 .render(bundle, pulse)
-                .link(new Link("close", this.self(now.without(coords))))
+                .link(new Link("close", this.self(now.without(label))))
                 .link(
                     new Link(
                         "fetch",
@@ -290,7 +289,7 @@ public final class StandRs extends BaseRs {
                 );
         } else {
             bundle = bundle
-                .link(new Link("open", this.self(now.with(coords))))
+                .link(new Link("open", this.self(now.with(label))))
                 .add("tags")
                 .add(
                     new JaxbBundle.Group<Tag>(pulse.tags()) {
@@ -313,16 +312,16 @@ public final class StandRs extends BaseRs {
      * @return URI
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    private URI self(final Collection<Coordinates> coords) {
+    private URI self(final Collection<String> coords) {
         final UriBuilder builder = this.uriInfo().getBaseUriBuilder()
             .clone().path(StandRs.class);
         final Object[] args = new Object[coords.size() + 1];
         final Object[] labels = new String[coords.size()];
         args[0] = this.name;
         int idx = 0;
-        for (Coordinates coord : coords) {
+        for (String coord : coords) {
             labels[idx] = String.format("{arg%d}", idx);
-            args[idx + 1] = new Coordinates.Simple(coord).toString();
+            args[idx + 1] = coord;
             ++idx;
         }
         return builder.queryParam(StandRs.QUERY_OPEN, labels).build(args);
