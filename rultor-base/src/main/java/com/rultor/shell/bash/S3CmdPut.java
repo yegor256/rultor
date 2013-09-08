@@ -157,9 +157,11 @@ public final class S3CmdPut implements Sequel {
         ).split("\n").length;
         final String markdown;
         if (mask.contains("*")) {
-            markdown = String.format("[%d files](%sindex.html)", files, url);
+            markdown = String.format(
+                "see [%d files](%sindex.html)", files, url
+            );
         } else {
-            markdown = String.format("[%s](%s%1$s)", mask, url);
+            markdown = String.format("see [%s](%s%1$s) file", mask, url);
         }
         new XemblyLine(
             new Directives()
