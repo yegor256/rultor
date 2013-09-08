@@ -37,14 +37,20 @@ import com.rultor.ci.Build;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.Step;
-import com.rultor.snapshot.Tag;
+import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Instance;
 import com.rultor.stateful.ConcurrentNotepad;
 import com.rultor.tools.Exceptions;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.logging.Level;
+import javax.json.Json;
+import javax.json.stream.JsonGenerator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 
 /**
@@ -128,7 +134,6 @@ public final class OnPullRequest implements Instance {
      * @return TRUE if success
      * @throws IOException If IO problem
      */
-    @Tag("merge")
     @Step(
         before = "building merge request ${args[0].name()}",
         // @checkstyle LineLength (1 line)
@@ -148,6 +153,7 @@ public final class OnPullRequest implements Instance {
         } else {
             request.accept(snapshot);
         }
+        this.tag(request, failure);
         return !failure;
     }
 
@@ -167,6 +173,43 @@ public final class OnPullRequest implements Instance {
             Exceptions.warn(this, ex);
         }
         return failure;
+    }
+
+    /**
+     * Log a tag.
+     * @param request Request
+     * @param failure TRUE if failed
+     * @throws IOException If fails
+     */
+    private void tag(final MergeRequest request, final boolean failure)
+        throws IOException {
+        final StringWriter data = new StringWriter();
+        final JsonGenerator json = Json.createGenerator(data)
+            .writeStartObject()
+            .write("request", request.name())
+            .writeStartObject("params");
+        for (Map.Entry<String, Object> entry : request.params().entrySet()) {
+            json.write(entry.getKey(), entry.getValue().toString());
+        }
+        json.writeEnd()
+            .write("failure", Boolean.toString(failure))
+            .writeEnd()
+            .close();
+        final StringBuilder desc = new StringBuilder();
+        desc.append("merge request ").append(request.name());
+        if (failure) {
+            desc.append(" failed");
+        } else {
+            desc.append(" succeeded");
+        }
+        new XemblyLine(
+            new Directives()
+                .xpath("/snapshot").strict(1).addIfAbsent("tags")
+                .add("tag").add("label").set("merge").up()
+                .add("level").set(Level.INFO.toString()).up()
+                .add("data").set(data.toString()).up()
+                .add("markdown").set(desc.toString())
+        ).log();
     }
 
 }
