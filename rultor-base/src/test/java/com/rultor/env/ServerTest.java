@@ -64,11 +64,11 @@ public final class ServerTest {
         Mockito.doReturn(env).when(server).acquire();
         Mockito.doReturn(address).when(env).address();
         MatcherAssert.assertThat(
-            env, Matchers.equalTo(server.acquire())
+            server.acquire(), Matchers.equalTo(env)
         );
         MatcherAssert.assertThat(
-            address, Matchers.equalTo(env.address())
+        	env.address() , Matchers.equalTo(address)
         );
-        Mockito.verify(env, Mockito.times(1)).address();
+        Mockito.verify(env);
     }
 }
