@@ -144,7 +144,7 @@ public class BaseRs extends BaseResource {
             @Override
             public void render(final BasePage<?, ?> page,
                 final Response.ResponseBuilder builder) {
-                page.link(new Link("root", "."));
+                page.link(new Link("root", "/"));
                 builder.type(MediaType.TEXT_XML);
                 builder.header(HttpHeaders.VARY, "Cookie");
                 builder.header(

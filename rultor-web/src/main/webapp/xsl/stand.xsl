@@ -40,8 +40,11 @@
         <script type="text/javascript">
             <xsl:attribute name="src">
                 <xsl:value-of select="/page/links/link[@rel='root']/@href"/>
-                <xsl:text>js/stand.js?</xsl:text>
-                <xsl:value-of select="/page/version/revision"/>
+                <xsl:text>js/stand.js</xsl:text>
+                <xsl:if test="/page/@ip">
+                    <xsl:text>?</xsl:text>
+                    <xsl:value-of select="/page/version/revision"/>
+                </xsl:if>
             </xsl:attribute>
             <!-- this is for W3C compliance -->
             <xsl:text> </xsl:text>

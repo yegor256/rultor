@@ -31,20 +31,81 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:template match="widget[@class='com.rultor.widget.BuildHealth']">
-        <table class="table table-condensed">
-            <thead>
-                <tr>
-                    <th>St.</th>
-                    <th>Rule</th>
-                    <th>By</th>
-                </tr>
-            </thead>
-            <tbody>
-                <xsl:apply-templates select="builds/build" mode="build-health"/>
-            </tbody>
-        </table>
+        <xsl:choose>
+            <xsl:when test="not(builds) or builds[count(build) = 0]">
+                <p>
+                    <span class="pull-left" style="font-size: 3em; margin-right: .2em;">
+                        <i class="icon-microphone-off text-muted"><xsl:comment>nothing</xsl:comment></i>
+                    </span>
+                    <xsl:text>No builds found in this stand yet...</xsl:text>
+                </p>
+            </xsl:when>
+            <xsl:when test="builds[count(build) = 1]">
+                <xsl:apply-templates select="builds/build" mode="single"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th><xsl:text>St.</xsl:text></th>
+                            <th><xsl:text>Rule</xsl:text></th>
+                            <th><xsl:text>By</xsl:text></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates select="builds/build" mode="table-row"/>
+                    </tbody>
+                </table>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
-    <xsl:template match="build" mode="build-health">
+    <xsl:template match="build" mode="single">
+        <p>
+            <span class="pull-left" style="font-size: 3em; margin-right: .2em;">
+                <xsl:choose>
+                    <xsl:when test="code = 0">
+                        <i class="icon-thumbs-up text-success"><xsl:comment>ok</xsl:comment></i>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <i class="icon-thumbs-down text-danger"><xsl:comment>fail</xsl:comment></i>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </span>
+            <xsl:text>Latest commit </xsl:text>
+            <code><xsl:value-of select="commit/name"/></code>
+            <xsl:text> by </xsl:text>
+            <xsl:value-of select="commit/author"/>
+            <xsl:text> </xsl:text>
+            <xsl:choose>
+                <xsl:when test="code = 0">
+                    <xsl:text>was built </xsl:text>
+                    <strong><xsl:text>successfully</xsl:text></strong>
+                </xsl:when>
+                <xsl:otherwise>
+                    <strong><xsl:text>failed</xsl:text></strong>
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:text> </xsl:text>
+            <span class="timeago"><xsl:value-of select="coordinates/scheduled"/></span>
+            <xsl:text>. </xsl:text>
+            <xsl:text>Overall build health is </xsl:text>
+            <xsl:choose>
+                <xsl:when test="health &gt; 0.8">
+                    <span class="text-success"><xsl:text>good</xsl:text></span>
+                </xsl:when>
+                <xsl:when test="health &gt; 0.5">
+                    <span class="text-warning"><xsl:text>average</xsl:text></span>
+                </xsl:when>
+                <xsl:otherwise>
+                    <span class="text-danger"><xsl:text>critical</xsl:text></span>
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:text> (</xsl:text>
+            <xsl:value-of select="health"/>
+            <xsl:text>).</xsl:text>
+        </p>
+    </xsl:template>
+    <xsl:template match="build" mode="table-row">
         <tr>
             <xsl:attribute name="class">
                 <xsl:choose>

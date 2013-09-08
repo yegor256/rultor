@@ -170,6 +170,7 @@ public final class BuildHealth implements Widget {
                 .add("coordinates")
                 .add("rule").set(this.coords.rule()).up()
                 .add("owner").set(this.coords.owner().toString()).up()
+                .add("scheduled").set(this.coords.scheduled().toString()).up()
                 .up()
                 .add("commit")
                 .add("name").set(this.head).up()

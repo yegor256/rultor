@@ -36,7 +36,7 @@
         <identifier>22-Aug-2012</identifier>
     </version>
     <links>
-        <link rel="home" href="../../../../../../../rultor-web/src/main/webapp/" />
+        <link rel="root" href="../../../../../../../rultor-web/src/main/webapp/" />
     </links>
     <widgets>
         <widget class="com.rultor.widget.BuildHealth">
@@ -47,6 +47,7 @@
                     <coordinates>
                         <rule>rultor-on-commit</rule>
                         <owner>urn:github:1</owner>
+                        <scheduled>2012-07-20T07:13:33Z</scheduled>
                     </coordinates>
                     <health>0.78</health>
                     <commit>
@@ -61,6 +62,7 @@
                     <coordinates>
                         <rule>rultor-skin-on-commit</rule>
                         <owner>urn:github:1</owner>
+                        <scheduled>2012-07-20T07:13:33Z</scheduled>
                     </coordinates>
                     <health>0.97</health>
                     <commit>
@@ -75,6 +77,7 @@
                     <coordinates>
                         <rule>rultor-other-on-commit</rule>
                         <owner>urn:github:1</owner>
+                        <scheduled>2012-07-20T07:13:33Z</scheduled>
                     </coordinates>
                     <health>0.14</health>
                     <commit>
@@ -86,6 +89,29 @@
                     <code>127</code>
                 </build>
             </builds>
+        </widget>
+        <widget class="com.rultor.widget.BuildHealth">
+            <width>4</width>
+            <builds>
+                <build>
+                    <coordinates>
+                        <rule>rultor-on-commit</rule>
+                        <owner>urn:github:1</owner>
+                        <scheduled>2012-07-20T07:13:33Z</scheduled>
+                    </coordinates>
+                    <health>0.78</health>
+                    <commit>
+                        <name>09ae8f5</name>
+                        <time>2012-08-23T13:25:33Z</time>
+                        <author>Jeff Lebowski</author>
+                    </commit>
+                    <duration>473783</duration>
+                    <code>0</code>
+                </build>
+            </builds>
+        </widget>
+        <widget class="com.rultor.widget.BuildHealth">
+            <width>4</width>
         </widget>
     </widgets>
 </page>

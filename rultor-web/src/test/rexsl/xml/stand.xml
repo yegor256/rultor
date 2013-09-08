@@ -29,7 +29,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 <?xml-stylesheet type='text/xsl' href='/xsl/stand.xsl'?>
-<page identifier="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
+<page identifier="2012-08-23T13:25:33.968+02:00">
     <identity>
         <urn>urn:facebook:1</urn>
         <name>Jeff Lebowski</name>
@@ -72,6 +72,7 @@
                     <coordinates>
                         <rule>rultor-on-commit</rule>
                         <owner>urn:github:1</owner>
+                        <scheduled>2012-07-20T07:13:33Z</scheduled>
                     </coordinates>
                     <health>0.78</health>
                     <commit>
@@ -86,6 +87,7 @@
                     <coordinates>
                         <rule>rultor-skin-on-commit</rule>
                         <owner>urn:github:1</owner>
+                        <scheduled>2012-07-20T07:13:33Z</scheduled>
                     </coordinates>
                     <health>0.97</health>
                     <commit>
@@ -95,20 +97,6 @@
                     </commit>
                     <duration>93838</duration>
                     <code>0</code>
-                </build>
-                <build>
-                    <coordinates>
-                        <rule>rultor-other-on-commit</rule>
-                        <owner>urn:github:1</owner>
-                    </coordinates>
-                    <health>0.14</health>
-                    <commit>
-                        <name>89ff5c3</name>
-                        <time>2012-07-20T07:13:33Z</time>
-                        <author>Dunny</author>
-                    </commit>
-                    <duration>88782</duration>
-                    <code>127</code>
                 </build>
             </builds>
         </widget>
