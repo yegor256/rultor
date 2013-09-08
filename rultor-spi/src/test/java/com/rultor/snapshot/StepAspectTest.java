@@ -54,6 +54,32 @@ public final class StepAspectTest {
     }
 
     /**
+     * Retrieve data from field.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void retrieveField() throws Exception {
+        final String getter = "getter";
+        MatcherAssert.assertThat(
+            (String) new StepAspect.Open(new Bar(null, getter)).get("field"),
+            Matchers.equalTo(getter)
+        );
+    }
+
+    /**
+     * Retrieve data from short getter.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void retrieveMethod() throws Exception {
+        final String method = "found";
+        MatcherAssert.assertThat(
+            (String) new StepAspect.Open(new Bar(method, null)).get("method"),
+            Matchers.equalTo(method)
+        );
+    }
+
+    /**
      * Dummy class for testing.
      */
     private static final class Foo {
@@ -85,4 +111,36 @@ public final class StepAspectTest {
         }
     }
 
+    /**
+     * Another dummy class for testing.
+     */
+    @SuppressWarnings("PMD.UnusedPrivateField")
+    private static final class Bar {
+        /**
+         * Method value.
+         */
+        private final transient String met;
+        /**
+         * Field value.
+         */
+        private final transient String field;
+
+        /**
+         * Ctor.
+         * @param mtd Data to store in method.
+         * @param fld Data to store in field.
+         */
+        protected Bar(final String mtd, final String fld) {
+            this.met = mtd;
+            this.field = fld;
+        }
+
+        /**
+         * Short getter.
+         * @return Value for this method.
+         */
+        private String method() {
+            return this.met;
+        }
+    }
 }
