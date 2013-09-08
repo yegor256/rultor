@@ -31,6 +31,7 @@ package com.rultor.ci;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XemblyLine;
@@ -98,20 +99,14 @@ public final class Build {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final long start = System.currentTimeMillis();
         final int code = this.batch.exec(args, stdout);
-        final StringWriter data = new StringWriter();
-        Json.createGenerator(data)
-            .writeStartObject()
-            .write("code", code)
-            .write("time", System.currentTimeMillis() - start)
-            .writeEnd()
-            .close();
         Snapshot snapshot;
         try {
             snapshot = new Snapshot(
                 new SequenceInputStream(
                     new ByteArrayInputStream(stdout.toByteArray()),
                     IOUtils.toInputStream(
-                        this.makeTag(code, data.toString()), Charsets.UTF_8
+                        this.makeTag(code, System.currentTimeMillis() - start),
+                        Charsets.UTF_8
                     )
                 )
             );
@@ -126,24 +121,33 @@ public final class Build {
     /**
      * Make a xembly tag when done.
      * @param code The code
-     * @param data Data in JSON format
+     * @param millis Time in milliseconds it took
      * @return Marker
      */
-    private String makeTag(final int code, final String data) {
+    private String makeTag(final int code, final long millis) {
         final Level level;
         if (code == 0) {
             level = Level.FINE;
         } else {
             level = Level.SEVERE;
         }
+        final StringWriter data = new StringWriter();
+        Json.createGenerator(data)
+            .writeStartObject()
+            .write("code", code)
+            .write("time", millis)
+            .writeEnd()
+            .close();
+        final String desc = Logger.format(
+            "exit code %d in %[ms]s", code, millis
+        );
         final XemblyLine line = new XemblyLine(
             new Directives()
-                .xpath("/snapshot").strict(1).addIfAbsent("tags")
-                .xpath(String.format("tag[label='%s']", this.tag))
-                .remove().xpath("/snapshot/tags").strict(1)
-                .add("tag").add("label").set(this.tag).up()
+                .xpath("/snapshot").strict(1).addIfAbsent("tags").add("tag")
+                .add("label").set(this.tag).up()
                 .add("level").set(level.toString()).up()
-                .add("data").set(data)
+                .add("data").set(data.toString()).up()
+                .add("markdown").set(desc)
         );
         line.log();
         return line.toString();
