@@ -55,9 +55,8 @@ db.stands.find({coordinates: {"$exists": false}}).forEach(
  */
 db.stands.find({tags: {"$exists": true}}).forEach(
     function(item) {
-        var pulse = item.pulse;
         var tags = new Array();
-        pulse.tags.forEach(
+        item.tags.forEach(
             function(tag) {
                 if (typeof tag === 'string') {
                     tags.push(
@@ -81,6 +80,6 @@ db.stands.find({tags: {"$exists": true}}).forEach(
                 }
             }
         );
-        print("converted " + tags.length + " tag(s) in " + pulse.coordinates.rule);
+        print("converted " + tags.length + " tag(s) in " + item.coordinates.rule);
     }
 );
