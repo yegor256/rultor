@@ -37,6 +37,7 @@ import com.rultor.shell.Shell;
 import com.rultor.shell.Terminal;
 import com.rultor.snapshot.XemblyLine;
 import java.io.IOException;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.FilenameUtils;
@@ -56,7 +57,7 @@ import org.xembly.Directives;
 public final class S3CmdPut implements Sequel {
 
     /**
-     * Product name.
+     * Tag name.
      */
     private final transient String name;
 
@@ -162,15 +163,11 @@ public final class S3CmdPut implements Sequel {
         }
         new XemblyLine(
             new Directives()
-                .xpath("/snapshot")
-                .addIfAbsent("products")
-                .strict(1)
-                .add("product")
-                .add("name")
-                .set(this.name)
-                .up()
-                .add("markdown")
-                .set(markdown)
+                .xpath("/snapshot").addIfAbsent("tags").strict(1)
+                .add("tag")
+                .add("label").set(this.name).up()
+                .add("level").set(Level.FINE.toString()).up()
+                .add("markdown").set(markdown)
         ).log();
     }
 

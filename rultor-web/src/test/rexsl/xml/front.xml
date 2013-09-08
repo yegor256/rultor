@@ -36,6 +36,7 @@
         <date>22-Aug-2012</date>
     </version>
     <links>
+        <link href="/" rel="root" type="text/xml"/>
         <link href="/xml/front.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
         <link href="/xml/index.xml" rel="auth-github" type="text/xml"/>

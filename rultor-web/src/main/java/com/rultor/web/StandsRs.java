@@ -125,10 +125,19 @@ public final class StandsRs extends BaseRs {
             .up()
             .link(
                 new Link(
-                    "edit",
+                    "acl",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(AclRs.class)
+                        .build(stand.name())
+                )
+            )
+            .link(
+                new Link(
+                    "widgets",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(WidgetsRs.class)
                         .build(stand.name())
                 )
             )

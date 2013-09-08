@@ -30,7 +30,7 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="/xsl/layout.xsl"/>
+    <xsl:include href="./layout.xsl"/>
     <xsl:template name="head">
         <title>
             <xsl:text>stands</xsl:text>
@@ -77,19 +77,27 @@
         <li class="spacious">
             <ul class="list-inline">
                 <li>
-                    <a title="edit this stand">
+                    <a title="view pulses of the stand">
                         <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='edit']/@href"/>
+                            <xsl:value-of select="links/link[@rel='see']/@href"/>
                         </xsl:attribute>
                         <xsl:value-of select="name"/>
                     </a>
                 </li>
                 <li class="icon">
-                    <a title="view pulses of the stand">
+                    <a title="edit ACL">
                         <xsl:attribute name="href">
-                            <xsl:value-of select="links/link[@rel='see']/@href"/>
+                            <xsl:value-of select="links/link[@rel='acl']/@href"/>
                         </xsl:attribute>
-                        <i class="icon-chevron-sign-right"><xsl:comment>pulses</xsl:comment></i>
+                        <i class="icon-key"><xsl:comment>acl</xsl:comment></i>
+                    </a>
+                </li>
+                <li class="icon">
+                    <a title="edit specification of widgets">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="links/link[@rel='widgets']/@href"/>
+                        </xsl:attribute>
+                        <i class="icon-gears"><xsl:comment>widgets</xsl:comment></i>
                     </a>
                 </li>
             </ul>

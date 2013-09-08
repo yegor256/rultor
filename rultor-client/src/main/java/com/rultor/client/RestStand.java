@@ -170,4 +170,20 @@ final class RestStand implements Stand {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spec widgets() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void widgets(final Spec spec) {
+        throw new UnsupportedOperationException();
+    }
+
 }

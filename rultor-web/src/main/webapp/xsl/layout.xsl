@@ -29,7 +29,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
-    <xsl:include href="/xsl/common.xsl"/>
+    <xsl:include href="./common.xsl"/>
     <xsl:template match="/">
         <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html&gt;</xsl:text>
         <xsl:apply-templates select="page"/>
@@ -41,33 +41,81 @@
                 <meta name="description" content="Programmable Enforcer of a Software Development Process"/>
                 <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
                 <meta name="author" content="rultor.com"/>
-                <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
-                <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet" />
+                <xsl:variable name="proto">
+                    <xsl:choose>
+                        <xsl:when test="/page/@ssl = 'true'">
+                            <xsl:text>https</xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:text>http</xsl:text>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <link rel="stylesheet">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="$proto"/>
+                        <xsl:text>://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css</xsl:text>
+                    </xsl:attribute>
+                </link>
+                <link rel="stylesheet">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="$proto"/>
+                        <xsl:text>://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css</xsl:text>
+                    </xsl:attribute>
+                </link>
                 <link rel="stylesheet" type="text/css" media="all">
                     <xsl:attribute name="href">
-                        <xsl:text>/css/main.css?</xsl:text>
-                        <xsl:value-of select="/page/version/revision"/>
+                        <xsl:value-of select="/page/links/link[@rel='root']/@href"/>
+                        <xsl:text>css/main.css</xsl:text>
+                        <xsl:if test="/page/@ip">
+                            <xsl:text>?</xsl:text>
+                            <xsl:value-of select="/page/version/revision"/>
+                        </xsl:if>
                     </xsl:attribute>
                 </link>
                 <link rel="icon" type="image/gif">
                     <xsl:attribute name="href">
-                        <xsl:text>//img.rultor.com/favicon.ico?</xsl:text>
-                        <xsl:value-of select="/page/version/revision"/>
+                        <xsl:value-of select="$proto"/>
+                        <xsl:text>://img.rultor.com/favicon.ico</xsl:text>
+                        <xsl:if test="/page/@ip">
+                            <xsl:text>?</xsl:text>
+                            <xsl:value-of select="/page/version/revision"/>
+                        </xsl:if>
                     </xsl:attribute>
                 </link>
-                <script type="text/javascript" src="//img.rultor.com/markdown.js">
+                <script type="text/javascript">
+                    <xsl:attribute name="src">
+                        <xsl:value-of select="$proto"/>
+                        <xsl:text>://img.rultor.com/markdown.js</xsl:text>
+                    </xsl:attribute>
                     <!-- this is for W3C compliance -->
                     <xsl:text> </xsl:text>
                 </script>
-                <script type="text/javascript" src="//code.jquery.com/jquery-2.0.3.min.js">
+                <script type="text/javascript">
+                    <xsl:attribute name="src">
+                        <xsl:value-of select="$proto"/>
+                        <xsl:text>://code.jquery.com/jquery-2.0.3.min.js</xsl:text>
+                    </xsl:attribute>
                     <!-- this is for W3C compliance -->
                     <xsl:text> </xsl:text>
                 </script>
-                <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.1.0/moment.min.js">
+                <script type="text/javascript">
+                    <xsl:attribute name="src">
+                        <xsl:value-of select="$proto"/>
+                        <xsl:text>://cdnjs.cloudflare.com/ajax/libs/moment.js/2.1.0/moment.min.js</xsl:text>
+                    </xsl:attribute>
                     <!-- this is for W3C compliance -->
                     <xsl:text> </xsl:text>
                 </script>
-                <script type="text/javascript" src="/js/layout.js">
+                <script type="text/javascript">
+                    <xsl:attribute name="src">
+                        <xsl:value-of select="/page/links/link[@rel='root']/@href"/>
+                        <xsl:text>js/layout.js</xsl:text>
+                        <xsl:if test="/page/@ip">
+                            <xsl:text>?</xsl:text>
+                            <xsl:value-of select="/page/version/revision"/>
+                        </xsl:if>
+                    </xsl:attribute>
                     <!-- this is for W3C compliance -->
                     <xsl:text> </xsl:text>
                 </script>
@@ -82,13 +130,13 @@
                     })();
                 ]]></script>
                 <script type="text/javascript"><![CDATA[
-                var _prum = [['id', '51fcbb82abe53dcf27000000'], ['mark', 'firstbyte', (new Date()).getTime()]];
-                (function() {
-                    var s = document.getElementsByTagName('script')[0], p = document.createElement('script');
-                    p.async = 'async';
-                    p.src = '//rum-static.pingdom.net/prum.min.js';
-                    s.parentNode.insertBefore(p, s);
-                })();
+                    var _prum = [['id', '51fcbb82abe53dcf27000000'], ['mark', 'firstbyte', (new Date()).getTime()]];
+                    (function() {
+                        var s = document.getElementsByTagName('script')[0], p = document.createElement('script');
+                        p.async = 'async';
+                        p.src = '//rum-static.pingdom.net/prum.min.js';
+                        s.parentNode.insertBefore(p, s);
+                    })();
                 ]]></script>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <xsl:call-template name="head"/>

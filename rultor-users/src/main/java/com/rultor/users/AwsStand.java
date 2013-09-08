@@ -82,6 +82,11 @@ final class AwsStand implements Stand {
     public static final String FIELD_ACL = "acl";
 
     /**
+     * Dynamo DB table column.
+     */
+    public static final String FIELD_WIDGETS = "widgets";
+
+    /**
      * Item.
      */
     private final transient Item item;
@@ -122,6 +127,40 @@ final class AwsStand implements Stand {
             spec = new Spec.Simple(this.item.get(AwsStand.FIELD_ACL).getS());
         } else {
             spec = new Spec.Simple();
+        }
+        return spec;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Cacheable.FlushAfter
+    public void widgets(@NotNull(message = "widgets and can't be NULL")
+        final Spec spec) {
+        this.item.put(
+            new Attributes()
+                .with(
+                    AwsStand.FIELD_WIDGETS,
+                    new AttributeValue(spec.asText())
+            )
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NotNull(message = "widgets of a stand is never NULL")
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    public Spec widgets() {
+        Spec spec;
+        if (this.item.has(AwsStand.FIELD_WIDGETS)) {
+            spec = new Spec.Simple(
+                this.item.get(AwsStand.FIELD_WIDGETS).getS()
+            );
+        } else {
+            spec = new Spec.Simple("[]");
         }
         return spec;
     }

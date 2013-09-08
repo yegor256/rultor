@@ -55,6 +55,7 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 public final class StandRsTest {
 
@@ -120,7 +121,7 @@ public final class StandRsTest {
                     new Snapshot(
                         new Directives()
                             .add("start").set("2012-08-23T15:00:00Z").up()
-                            .add("products").add("product")
+                            .add("tags").add("tag")
                             .add("markdown").set("hello!")
                     ),
                     this.getClass().getResourceAsStream("fetch.xsl")
