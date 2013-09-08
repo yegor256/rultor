@@ -74,6 +74,7 @@ textarea {
 
 .icon {
     cursor: pointer;
+    text-decoration: none;
 }
     .icon a {
         text-decoration: none;
