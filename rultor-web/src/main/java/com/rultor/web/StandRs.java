@@ -284,7 +284,7 @@ public final class StandRs extends BaseRs {
                             .path(StandRs.class)
                             .path(StandRs.class, "fetch")
                             .queryParam(StandRs.QUERY_ID, "{id}")
-                            .build(this.name, coords)
+                            .build(this.name, label)
                     )
                 );
         } else {
