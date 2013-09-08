@@ -64,7 +64,7 @@
                             <li>
                                 <a title="back to start">
                                     <xsl:attribute name="href">
-                                        <xsl:value-of select="//links/link[@rel='latest']/@href"/>
+                                        <xsl:value-of select="/page/links/link[@rel='latest']/@href"/>
                                     </xsl:attribute>
                                     <xsl:text>back to start</xsl:text>
                                 </a>
@@ -74,12 +74,12 @@
                 </xsl:if>
                 <xsl:apply-templates select="/page/pulses/pulse[snapshot or error]" mode="open"/>
                 <xsl:apply-templates select="/page/pulses/pulse[not(snapshot)]" mode="closed"/>
-                <xsl:if test="//links/link[@rel='more']">
+                <xsl:if test="/page/links/link[@rel='more']">
                     <div class="spacious">
                         <xsl:text>See </xsl:text>
                         <a title="more">
                             <xsl:attribute name="href">
-                                <xsl:value-of select="//links/link[@rel='more']/@href"/>
+                                <xsl:value-of select="/page/links/link[@rel='more']/@href"/>
                             </xsl:attribute>
                             <xsl:text>more</xsl:text>
                         </a>
@@ -99,27 +99,36 @@
             <xsl:for-each select="widget">
                 <div>
                     <xsl:attribute name="class">
-                        <xsl:text>col-lg-</xsl:text>
-                        <xsl:call-template name="grid">
-                            <xsl:with-param name="width" select="width"/>
-                        </xsl:call-template>
-                        <xsl:text> col-md-</xsl:text>
-                        <xsl:call-template name="grid">
-                            <xsl:with-param name="width" select="width * 1.3"/>
-                        </xsl:call-template>
-                        <xsl:text> col-sm-</xsl:text>
-                        <xsl:call-template name="grid">
-                            <xsl:with-param name="width" select="width * 2"/>
-                        </xsl:call-template>
-                        <xsl:text> col-xs-</xsl:text>
-                        <xsl:call-template name="grid">
-                            <xsl:with-param name="width" select="width * 4"/>
-                        </xsl:call-template>
+                        <xsl:choose>
+                            <xsl:when test="width">
+                                <xsl:text>col-lg-</xsl:text>
+                                <xsl:call-template name="grid-width">
+                                    <xsl:with-param name="w" select="width"/>
+                                </xsl:call-template>
+                                <xsl:text> col-md-</xsl:text>
+                                <xsl:call-template name="grid-width">
+                                    <xsl:with-param name="w" select="width * 1.3"/>
+                                </xsl:call-template>
+                                <xsl:text> col-sm-</xsl:text>
+                                <xsl:call-template name="grid-width">
+                                    <xsl:with-param name="w" select="width * 2"/>
+                                </xsl:call-template>
+                                <xsl:text> col-xs-</xsl:text>
+                                <xsl:call-template name="grid-width">
+                                    <xsl:with-param name="w" select="width * 4"/>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:text>col-lg-12 col-md-12 col-sm-12 col-xs-12</xsl:text>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:attribute>
                     <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <xsl:value-of select="title"/>
-                        </div>
+                        <xsl:if test="title">
+                            <div class="panel-heading">
+                                <xsl:value-of select="title"/>
+                            </div>
+                        </xsl:if>
                         <div class="panel-body">
                             <xsl:apply-templates select="." />
                         </div>
@@ -128,14 +137,14 @@
             </xsl:for-each>
         </div>
     </xsl:template>
-    <xsl:template name="grid">
-        <xsl:param name="width" as="xs:integer"/>
+    <xsl:template name="grid-width">
+        <xsl:param name="w" as="xs:double"/>
         <xsl:choose>
-            <xsl:when test="$width &gt; 12">
+            <xsl:when test="$w &gt; 12">
                 <xsl:text>12</xsl:text>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="round($width)"/>
+                <xsl:value-of select="round($w)"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
