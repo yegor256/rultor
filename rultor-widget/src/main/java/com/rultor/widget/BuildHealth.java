@@ -66,6 +66,11 @@ public final class BuildHealth implements Widget {
 
     /**
      * {@inheritDoc}
+     *
+     * @todo #201 If we increase the amount of elements to be
+     *  processes, an OutOfMemory exception will be thrown. I don't understand
+     *  why and how memory leakage is happening...
+     *  http://stackoverflow.com/questions/18684598
      */
     @Override
     public Directives render(final Stand stand) {
@@ -74,7 +79,7 @@ public final class BuildHealth implements Widget {
             .add("width").set("4").up()
             .add("builds");
         final Collection<BuildHealth.Build> builds = this.builds(
-            Iterators.limit(stand.pulses().iterator(), Tv.THOUSAND)
+            Iterators.limit(stand.pulses().iterator(), Tv.TWENTY)
         );
         for (BuildHealth.Build build : builds) {
             dirs = dirs.append(build.directives());
