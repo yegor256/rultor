@@ -123,15 +123,15 @@ public final class BuildHealth implements Widget {
         /**
          * Commit name.
          */
-        private transient String head;
+        private transient String head = "--";
         /**
          * Commit time.
          */
-        private transient Time time;
+        private transient Time time = new Time();
         /**
          * Commit author.
          */
-        private transient String author;
+        private transient String author = "anonymous";
         /**
          * Build duration.
          */

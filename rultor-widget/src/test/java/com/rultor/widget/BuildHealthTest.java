@@ -39,6 +39,7 @@ import com.rultor.spi.Tag;
 import com.rultor.spi.Tags;
 import com.rultor.spi.Widget;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 import javax.json.Json;
@@ -175,6 +176,77 @@ public final class BuildHealthTest {
                 "/widget/builds/build[code='0']",
                 "/widget/builds/build[health='0.0']"
             )
+        );
+    }
+
+    /**
+     * BuildHealth can find multiple builds.
+     * @throws Exception If fails
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void findsMultipleBuilds() throws Exception {
+        final Widget widget = new BuildHealth();
+        final Document dom = DocumentBuilderFactory.newInstance()
+            .newDocumentBuilder().newDocument();
+        dom.appendChild(dom.createElement("widget"));
+        final Pulse first = Mockito.mock(Pulse.class);
+        Mockito.doReturn(
+            new Coordinates.Simple(new URN("urn:test:44"), "rule-x")
+        ).when(first).coordinates();
+        Mockito.doReturn(
+            new Tags.Simple(
+                Arrays.<Tag>asList(new Tag.Simple("on-commit", Level.SEVERE))
+            )
+        ).when(first).tags();
+        final Pulse second = Mockito.mock(Pulse.class);
+        Mockito.doReturn(
+            new Coordinates.Simple(new URN("urn:test:55"), "rule-y")
+        ).when(second).coordinates();
+        Mockito.doReturn(
+            new Tags.Simple(
+                Arrays.<Tag>asList(new Tag.Simple("on-commit", Level.INFO))
+            )
+        ).when(second).tags();
+        final Pageable<Pulse, Coordinates> pulses =
+            Mockito.mock(Pageable.class);
+        Mockito.doReturn(
+            Arrays.asList(first, second).iterator()
+        ).when(pulses).iterator();
+        final Stand stand = Mockito.mock(Stand.class);
+        Mockito.doReturn(pulses).when(stand).pulses();
+        new Xembler(widget.render(stand)).apply(dom);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(dom),
+            XhtmlMatchers.hasXPaths(
+                "/widget/builds[count(build) = 2]",
+                "/widget/builds/build/coordinates[rule='rule-x']",
+                "/widget/builds/build/coordinates[rule='rule-y']"
+            )
+        );
+    }
+
+    /**
+     * BuildHealth can report empty widget.
+     * @throws Exception If fails
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void reportsEmptyWidgetWhenNoTagsFound() throws Exception {
+        final Widget widget = new BuildHealth();
+        final Document dom = DocumentBuilderFactory.newInstance()
+            .newDocumentBuilder().newDocument();
+        dom.appendChild(dom.createElement("widget"));
+        final Pageable<Pulse, Coordinates> pulses =
+            Mockito.mock(Pageable.class);
+        Mockito.doReturn(new ArrayList<Pulse>(0).iterator())
+            .when(pulses).iterator();
+        final Stand stand = Mockito.mock(Stand.class);
+        Mockito.doReturn(pulses).when(stand).pulses();
+        new Xembler(widget.render(stand)).apply(dom);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(dom),
+            XhtmlMatchers.hasXPath("/widget/builds[count(build) = 0]")
         );
     }
 
