@@ -187,9 +187,19 @@ public final class StepAspect {
          * @throws Exception If fails
          */
         public Object get(final String name) throws Exception {
-            final Field field = this.subject.getClass().getDeclaredField(name);
-            field.setAccessible(true);
-            return field.get(this.subject);
+            Object value;
+            try {
+                final Method method = this.subject.getClass()
+                    .getDeclaredMethod(name);
+                method.setAccessible(true);
+                value = method.invoke(this.subject);
+            } catch (NoSuchMethodException ex) {
+                final Field field = this.subject.getClass()
+                    .getDeclaredField(name);
+                field.setAccessible(true);
+                value = field.get(this.subject);
+            }
+            return value;
         }
     }
 
