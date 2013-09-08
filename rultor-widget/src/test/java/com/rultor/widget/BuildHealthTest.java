@@ -53,6 +53,7 @@ import org.xembly.Xembler;
  * Tests for {@link BuildHealth}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 public final class BuildHealthTest {
 
@@ -79,6 +80,7 @@ public final class BuildHealthTest {
                         "git", Level.INFO,
                         Json.createReader(
                             new StringReader(
+                                // @checkstyle LineLength (1 line)
                                 "{\"hash\":\"98aeb7d\",\"author\":\"Jeff\",\"time\":\"2011-07-21T12:15:00Z\"}"
                             )
                         ).readObject(),

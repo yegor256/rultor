@@ -79,6 +79,7 @@ public interface Tags extends Collection<Tag> {
          * @param tags Tags to encapsulate
          */
         public Simple(final Collection<Tag> tags) {
+            super();
             this.list = new Array<Tag>(tags);
         }
         /**

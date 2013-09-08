@@ -1,12 +1,12 @@
 /**
  * Execute it like this:
- * $ mongo -u rultor -p ... ds037688.mongolab.com:37688/pulses rultor-users/src/main/mongo/update.js
+ * $ mongo -u rultor -p ... ds037688.mongolab.com:37688/pulses rultor-users/src/main/mongo/normalize.js
  */
 
 /**
- * This script converts PULSE into COORDINATES.
+ * Convert PULSE into COORDINATES.
  */
-db.stands.find().forEach(
+db.stands.find({coordinates: {"$exists": false}}).forEach(
     function(item) {
         var pulse = item.pulse;
         var owner;
@@ -47,5 +47,40 @@ db.stands.find().forEach(
             }
         );
         print("changed " + pulse + " to {owner:" + owner + ", rule:" + rule + ", scheduled:" + scheduled + "}");
+    }
+);
+
+/**
+ * Convert plain-text tags to objects.
+ */
+db.stands.find({tags: {"$exists": true}}).forEach(
+    function(item) {
+        var pulse = item.pulse;
+        var tags = new Array();
+        pulse.tags.forEach(
+            function(tag) {
+                if (typeof tag === 'string') {
+                    tags.push(
+                        {
+                            "label": tag,
+                            "level": "INFO",
+                            "data": "{}",
+                            "markdown": ""
+                        }
+                    );
+                } else {
+                    tags.push(tag);
+                }
+            }
+        );
+        db.stands.update(
+            { "_id": item._id },
+            {
+                "$set": {
+                    "tags": tags
+                }
+            }
+        );
+        print("converted " + tags.length + " tag(s) in " + pulse.coordinates.rule);
     }
 );

@@ -110,9 +110,11 @@ final class MongoTag implements Tag {
 
     /**
      * Public ctor.
-     * @param owner Owner
-     * @param rule Rule
-     * @param scheduled Scheduled
+     * @param label Label
+     * @param level Level
+     * @param data Data
+     * @param markdown Markdown
+     * @checkstyle ParameterNumber (5 lines)
      */
     protected MongoTag(final String label, final Level level,
         final String data, final String markdown) {

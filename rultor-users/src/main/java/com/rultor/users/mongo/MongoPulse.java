@@ -109,6 +109,7 @@ final class MongoPulse implements Pulse {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Tags tags() {
         final Collection<?> objects =
             Collection.class.cast(this.map.get(MongoStand.ATTR_TAGS));

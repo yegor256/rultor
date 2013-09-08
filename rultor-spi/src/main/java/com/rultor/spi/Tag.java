@@ -115,6 +115,7 @@ public interface Tag {
          * @param level Level of tag
          * @param data Data in JSON object
          * @param txt Markdown details
+         * @checkstyle ParameterNumber (6 lines)
          */
         public Simple(
             @NotNull(message = "label can't be NULL") final String label,

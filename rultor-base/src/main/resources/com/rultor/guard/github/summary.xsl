@@ -38,9 +38,7 @@
         <markdown>
             <xsl:choose>
                 <xsl:when test="steps/step">
-                    <xsl:text>```&#x0A;</xsl:text>
-                    <xsl:value-of select="count(steps/step)"/>
-                    <xsl:text> step(s) in total:</xsl:text>
+                    <xsl:text>```</xsl:text>
                     <xsl:apply-templates select="steps/step"/>
                     <xsl:text>&#x0A;```</xsl:text>
                 </xsl:when>

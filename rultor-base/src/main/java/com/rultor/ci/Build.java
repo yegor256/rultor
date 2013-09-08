@@ -111,7 +111,7 @@ public final class Build {
                 new SequenceInputStream(
                     new ByteArrayInputStream(stdout.toByteArray()),
                     IOUtils.toInputStream(
-                        this.tag(code, data.toString()), Charsets.UTF_8
+                        this.makeTag(code, data.toString()), Charsets.UTF_8
                     )
                 )
             );
@@ -129,7 +129,7 @@ public final class Build {
      * @param data Data in JSON format
      * @return Marker
      */
-    private String tag(final int code, final String data) {
+    private String makeTag(final int code, final String data) {
         final Level level;
         if (code == 0) {
             level = Level.FINE;

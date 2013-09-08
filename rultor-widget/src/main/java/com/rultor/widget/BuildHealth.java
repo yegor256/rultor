@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.stat.StatUtils;
 import org.xembly.Directives;
 
@@ -56,6 +56,7 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Immutable
 @EqualsAndHashCode
@@ -76,7 +77,7 @@ public final class BuildHealth implements Widget {
             Iterators.limit(stand.pulses().iterator(), Tv.THOUSAND)
         );
         for (BuildHealth.Build build : builds) {
-            dirs.append(build.directives());
+            dirs = dirs.append(build.directives());
         }
         return dirs;
     }
@@ -86,6 +87,7 @@ public final class BuildHealth implements Widget {
      * @param pulses Iterator of pulses
      * @return Collection of builds
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Collection<BuildHealth.Build> builds(final Iterator<Pulse> pulses) {
         final ConcurrentMap<Coordinates, BuildHealth.Build> builds =
             new ConcurrentSkipListMap<Coordinates, BuildHealth.Build>();
@@ -133,7 +135,7 @@ public final class BuildHealth implements Widget {
         /**
          * All codes, in reverse-chronological order.
          */
-        private transient List<Double> codes = new LinkedList<Double>();
+        private final transient List<Double> codes = new LinkedList<Double>();
         /**
          * Append new pulse to it.
          * @param pulse Pulse seen
@@ -144,7 +146,8 @@ public final class BuildHealth implements Widget {
                 this.coords = pulse.coordinates();
                 if (pulse.tags().contains("git")) {
                     final Tag git = pulse.tags().get("git");
-                    this.head = git.data().getString("hash").substring(0, Tv.SEVEN);
+                    this.head = git.data().getString("hash")
+                        .substring(0, Tv.SEVEN);
                     this.author = git.data().getString("author");
                     this.time = new Time(git.data().getString("time"));
                 }
@@ -184,6 +187,7 @@ public final class BuildHealth implements Widget {
         private double health() {
             final double health;
             if (this.codes.isEmpty()) {
+                // @checkstyle MagicNumber (1 line)
                 health = 0.5d;
             } else {
                 health = StatUtils.mean(
