@@ -192,7 +192,7 @@
                     <xsl:apply-templates select="coordinates"/>
                     <xsl:apply-templates select="tags/tag"/>
                 </ul>
-                <xsl:if test="tags/tag/markdown">
+                <xsl:if test="tags/tag[markdown != '']">
                     <ul class="list-unstyled tag-detailed-list">
                         <xsl:apply-templates select="tags/tag[markdown]" mode="detailed"/>
                     </ul>

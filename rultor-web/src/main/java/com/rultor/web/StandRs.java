@@ -300,7 +300,8 @@ public final class StandRs extends BaseRs {
                         public JaxbBundle bundle(final Tag tag) {
                             return new JaxbBundle("tag")
                                 .add("label", tag.label()).up()
-                                .add("level", tag.level().toString()).up();
+                                .add("level", tag.level().toString()).up()
+                                .add("markdown", tag.markdown()).up();
                         }
                     }
                 )
