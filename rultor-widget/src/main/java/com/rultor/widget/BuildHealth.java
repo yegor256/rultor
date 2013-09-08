@@ -29,11 +29,25 @@
  */
 package com.rultor.widget;
 
+import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
+import com.rultor.spi.Coordinates;
+import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
+import com.rultor.spi.Tag;
 import com.rultor.spi.Widget;
+import com.rultor.tools.Time;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.math3.stat.StatUtils;
 import org.xembly.Directives;
 
 /**
@@ -54,7 +68,132 @@ public final class BuildHealth implements Widget {
      */
     @Override
     public Directives render(final Stand stand) {
-        throw new UnsupportedOperationException();
+        Directives dirs = new Directives()
+            .add("title").set("Builds Health").up()
+            .add("width").set("4").up()
+            .add("builds");
+        final Collection<BuildHealth.Build> builds = this.builds(
+            Iterators.limit(stand.pulses().iterator(), Tv.THOUSAND)
+        );
+        for (BuildHealth.Build build : builds) {
+            dirs.append(build.directives());
+        }
+        return dirs;
+    }
+
+    /**
+     * Find all builds.
+     * @param pulses Iterator of pulses
+     * @return Collection of builds
+     */
+    private Collection<BuildHealth.Build> builds(final Iterator<Pulse> pulses) {
+        final ConcurrentMap<Coordinates, BuildHealth.Build> builds =
+            new ConcurrentSkipListMap<Coordinates, BuildHealth.Build>();
+        while (pulses.hasNext()) {
+            final Pulse pulse = pulses.next();
+            if (!pulse.tags().contains("on-commit")) {
+                continue;
+            }
+            builds.putIfAbsent(pulse.coordinates(), new BuildHealth.Build());
+            builds.get(pulse.coordinates()).append(pulse);
+        }
+        return builds.values();
+    }
+
+    /**
+     * Mutable single build.
+     */
+    @EqualsAndHashCode
+    @Loggable(Loggable.DEBUG)
+    private static final class Build {
+        /**
+         * Coordinates.
+         */
+        private transient Coordinates coords;
+        /**
+         * Commit name.
+         */
+        private transient String head;
+        /**
+         * Commit time.
+         */
+        private transient Time time;
+        /**
+         * Commit author.
+         */
+        private transient String author;
+        /**
+         * Build duration.
+         */
+        private transient long duration;
+        /**
+         * Build exit code.
+         */
+        private transient int code;
+        /**
+         * All codes, in reverse-chronological order.
+         */
+        private transient List<Double> codes = new LinkedList<Double>();
+        /**
+         * Append new pulse to it.
+         * @param pulse Pulse seen
+         */
+        public void append(final Pulse pulse) {
+            final Tag commit = pulse.tags().get("on-commit");
+            if (this.coords == null) {
+                this.coords = pulse.coordinates();
+                if (pulse.tags().contains("git")) {
+                    final Tag git = pulse.tags().get("git");
+                    this.head = git.data().getString("hash").substring(0, Tv.SEVEN);
+                    this.author = git.data().getString("author");
+                    this.time = new Time(git.data().getString("time"));
+                }
+                this.duration = commit.data().getInt("duration");
+                this.code = commit.data().getInt("code");
+            }
+            if (commit.data().getInt("code") == 0) {
+                this.codes.add(0d);
+            } else {
+                this.codes.add(1d);
+            }
+        }
+        /**
+         * Get its directives.
+         * @return Directives
+         */
+        public Directives directives() {
+            return new Directives()
+                .add("build")
+                .add("coordinates")
+                .add("rule").set(this.coords.rule()).up()
+                .add("owner").set(this.coords.owner().toString()).up()
+                .up()
+                .add("commit")
+                .add("name").set(this.head).up()
+                .add("time").set(this.time.toString()).up()
+                .add("author").set(this.author).up()
+                .up()
+                .add("duration").set(Long.toString(this.duration)).up()
+                .add("code").set(Integer.toString(this.code)).up()
+                .add("health").set(Double.toString(this.health())).up();
+        }
+        /**
+         * Calculate its health.
+         * @return Health
+         */
+        private double health() {
+            final double health;
+            if (this.codes.isEmpty()) {
+                health = 0.5d;
+            } else {
+                health = StatUtils.mean(
+                    ArrayUtils.toPrimitive(
+                        this.codes.toArray(new Double[this.codes.size()])
+                    )
+                );
+            }
+            return health;
+        }
     }
 
 }

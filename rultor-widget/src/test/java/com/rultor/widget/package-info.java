@@ -27,51 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
-
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.validation.constraints.NotNull;
 
 /**
- * Pulse.
+ * Basic widgets, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Pulse {
-
-    /**
-     * Coordinates of it.
-     * @return Identifier
-     */
-    @NotNull(message = "coordinates is never NULL")
-    Coordinates coordinates();
-
-    /**
-     * All its tags.
-     * @return List of tags
-     */
-    @NotNull(message = "collection of tags is never NULL")
-    Tags tags();
-
-    /**
-     * Snapshot in Xembly.
-     * @return The snapshot
-     * @throws IOException If IO error
-     */
-    @NotNull(message = "story is never NULL")
-    String xembly() throws IOException;
-
-    /**
-     * Read it as a stream.
-     * @return Stream to stream from
-     * @throws IOException If fails
-     */
-    @NotNull(message = "stream is never NULL")
-    InputStream stream() throws IOException;
-
-}
+package com.rultor.widget;

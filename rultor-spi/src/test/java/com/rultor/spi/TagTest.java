@@ -29,49 +29,42 @@
  */
 package com.rultor.spi;
 
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.validation.constraints.NotNull;
+import java.io.StringReader;
+import java.util.logging.Level;
+import javax.json.Json;
+import javax.json.JsonObject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Pulse.
- *
+ * Test case for {@link Tag}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-public interface Pulse {
+public final class TagTest {
 
     /**
-     * Coordinates of it.
-     * @return Identifier
+     * Tag.Simple can encapsulate JSON.
+     * @throws Exception If some problem inside
      */
-    @NotNull(message = "coordinates is never NULL")
-    Coordinates coordinates();
-
-    /**
-     * All its tags.
-     * @return List of tags
-     */
-    @NotNull(message = "collection of tags is never NULL")
-    Tags tags();
-
-    /**
-     * Snapshot in Xembly.
-     * @return The snapshot
-     * @throws IOException If IO error
-     */
-    @NotNull(message = "story is never NULL")
-    String xembly() throws IOException;
-
-    /**
-     * Read it as a stream.
-     * @return Stream to stream from
-     * @throws IOException If fails
-     */
-    @NotNull(message = "stream is never NULL")
-    InputStream stream() throws IOException;
+    @Test
+    public void encapsulatesJson() throws Exception {
+        final JsonObject json = Json.createReader(
+            new StringReader(
+                "{\"hash\":\"98aeb7d\",\"author\":\"Jeff\",\"code\":1}"
+            )
+        ).readObject();
+        MatcherAssert.assertThat(
+            json.getString("author"), Matchers.equalTo("Jeff")
+        );
+        final Tag tag = new Tag.Simple("hello", Level.INFO, json, "some text");
+        MatcherAssert.assertThat(
+            tag.data().getString("hash"), Matchers.equalTo("98aeb7d")
+        );
+        MatcherAssert.assertThat(
+            tag.data().getInt("code"), Matchers.equalTo(1)
+        );
+    }
 
 }

@@ -27,51 +27,41 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.widget;
 
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.validation.constraints.NotNull;
+import com.rexsl.test.XhtmlMatchers;
+import com.rultor.spi.Stand;
+import com.rultor.spi.Widget;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.hamcrest.MatcherAssert;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.w3c.dom.Document;
+import org.xembly.Xembler;
 
 /**
- * Pulse.
- *
+ * Tests for {@link Alert}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-public interface Pulse {
+public final class AlertTest {
 
     /**
-     * Coordinates of it.
-     * @return Identifier
+     * Alert can show message.
+     * @throws Exception If fails
      */
-    @NotNull(message = "coordinates is never NULL")
-    Coordinates coordinates();
-
-    /**
-     * All its tags.
-     * @return List of tags
-     */
-    @NotNull(message = "collection of tags is never NULL")
-    Tags tags();
-
-    /**
-     * Snapshot in Xembly.
-     * @return The snapshot
-     * @throws IOException If IO error
-     */
-    @NotNull(message = "story is never NULL")
-    String xembly() throws IOException;
-
-    /**
-     * Read it as a stream.
-     * @return Stream to stream from
-     * @throws IOException If fails
-     */
-    @NotNull(message = "stream is never NULL")
-    InputStream stream() throws IOException;
+    @Test
+    public void showsMessageInWidget() throws Exception {
+        final Widget widget = new Alert("test message");
+        final Document dom = DocumentBuilderFactory.newInstance()
+            .newDocumentBuilder().newDocument();
+        dom.appendChild(dom.createElement("widget"));
+        final Stand stand = Mockito.mock(Stand.class);
+        new Xembler(widget.render(stand)).apply(dom);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(dom),
+            XhtmlMatchers.hasXPath("/widget[error='test message']")
+        );
+    }
 
 }

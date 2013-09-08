@@ -68,7 +68,7 @@ public final class Alert implements Widget {
      */
     @Override
     public Directives render(final Stand stand) {
-        return new Directives().add("text").set(this.text);
+        return new Directives().add("error").set(this.text);
     }
 
 }
