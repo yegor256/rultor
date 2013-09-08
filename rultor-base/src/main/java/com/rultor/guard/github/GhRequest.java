@@ -32,6 +32,7 @@ package com.rultor.guard.github;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.log.Logger;
 import com.rexsl.test.SimpleXml;
@@ -179,15 +180,7 @@ final class GhRequest implements MergeRequest {
             )
         );
         try {
-            final PullRequestService svc = new PullRequestService(client);
-            svc.merge(
-                this.repository, this.issue,
-                String.format(
-                    "#%d: pull request %s",
-                    this.issue,
-                    issues.getIssue(this.repository, this.issue).getTitle()
-                )
-            );
+            this.merge();
         } catch (RequestException ex) {
             issues.createComment(
                 this.repository, this.issue,
@@ -213,6 +206,25 @@ final class GhRequest implements MergeRequest {
             String.format(
                 "**Rejected**, not ready to merge.\n\n%s",
                 this.summary(snapshot)
+            )
+        );
+    }
+
+    /**
+     * Do the actual merging.
+     * @throws IOException If fails
+     */
+    @RetryOnFailure
+    private void merge() throws IOException {
+        final GitHubClient client = this.github.client();
+        final PullRequestService svc = new PullRequestService(client);
+        final IssueService issues = new IssueService(client);
+        svc.merge(
+            this.repository, this.issue,
+            String.format(
+                "#%d: pull request %s",
+                this.issue,
+                issues.getIssue(this.repository, this.issue).getTitle()
             )
         );
     }
