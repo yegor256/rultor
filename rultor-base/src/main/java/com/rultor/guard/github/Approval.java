@@ -32,6 +32,7 @@ package com.rultor.guard.github;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.io.IOException;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.eclipse.egit.github.core.PullRequest;
@@ -179,4 +180,32 @@ public interface Approval {
         }
     }
 
+    /**
+     * Assigned to.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "user")
+    @Loggable(Loggable.INFO)
+    final class AssignedTo implements Approval {
+        /**
+         * First approval to ask.
+         */
+        private final transient String user;
+        /**
+         * Public ctor.
+         * @param assignee Assignee
+         */
+        public AssignedTo(
+            @NotNull(message = "Assignee can't be NULL")
+            final String assignee) {
+            this.user = assignee;
+        }
+
+        @Override
+        public boolean has(final PullRequest request, final Github client,
+            final Github.Repo repo) throws IOException {
+            return this.user.equals(request.getAssignee().getLogin());
+        }
+    }
 }
