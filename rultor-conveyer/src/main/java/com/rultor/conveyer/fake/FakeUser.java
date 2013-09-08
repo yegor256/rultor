@@ -32,6 +32,7 @@ package com.rultor.conveyer.fake;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Account;
 import com.rultor.spi.Coordinates;
+import com.rultor.spi.InvalidCouponException;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Rules;
 import com.rultor.spi.Sheet;
@@ -155,6 +156,7 @@ final class FakeUser implements User {
      */
     @Override
     public Account account() {
+        // @checkstyle AnonInnerLengthCheck (1 line)
         return new Account() {
             @Override
             public Dollars balance() {
@@ -166,6 +168,14 @@ final class FakeUser implements User {
             }
             @Override
             public void fund(final Dollars amount, final String details) {
+                throw new UnsupportedOperationException();
+            }
+            /**
+             * {@inheritDoc}
+             * @checkstyle RedundantThrowsCheck (3 lines)
+             */
+            @Override
+            public void fund(final String code) throws InvalidCouponException {
                 throw new UnsupportedOperationException();
             }
         };

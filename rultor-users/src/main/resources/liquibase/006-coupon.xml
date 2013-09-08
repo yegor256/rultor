@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -26,55 +27,19 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.rultor.spi;
-
-import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
-import com.rultor.tools.Dollars;
-import javax.validation.constraints.NotNull;
-
-/**
- * User account.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- */
-@Immutable
-public interface Account {
-
-    /**
-     * Who is sending funds when account is funded.
-     */
-    URN BANK = URN.create("urn:rultor:1");
-
-    /**
-     * Balance.
-     * @return Balance
-     */
-    @NotNull(message = "Balance of account is never NULL")
-    Dollars balance();
-
-    /**
-     * Sheet.
-     * @return Sheet
-     */
-    @NotNull(message = "sheet is never NULL")
-    Sheet sheet();
-
-    /**
-     * Fund account.
-     * @param amount Amount to add/deduct
-     * @param details Explanation
-     */
-    @NotNull(message = "account is never NULL")
-    void fund(Dollars amount, String details);
-
-    /**
-     * Fund account with coupon.
-     * @param code Coupon code to use for funding.
-     * @throws InvalidCouponException When wrong coupon code is used.
-     */
-    void fund(String code) throws InvalidCouponException;
-}
+ -->
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <changeSet author="Krzysztof.Krason@gmail.com" id="207">
+        <createTable remarks="coupons for account funding" schemaName="public" tableName="coupon">
+            <column name="code" type="VARCHAR(250)" remarks="creditor">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="amount" type="INTEGER" remarks="amount in points">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -35,8 +35,10 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Column;
+import com.rultor.spi.InvalidCouponException;
 import com.rultor.spi.Sheet;
 import com.rultor.tools.Dollars;
+import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.Date;
@@ -45,7 +47,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
@@ -227,6 +233,36 @@ public final class AccountRs extends BaseRs {
             .append(this.receipts(sheet.tail(this.since).iterator(), Tv.TWENTY))
             .render()
             .build();
+    }
+
+    /**
+     * Fund account with coupon.
+     * @param code Coupon code to use.
+     * @return The JAX-RS response.
+     */
+    @POST
+    @Path("/coupon")
+    public Response coupon(
+        @NotNull(message = "coupon code is mandatory")
+        @FormParam("coupon") final String code
+    ) {
+        try {
+            this.user().account().fund(code);
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                String.format("Coupon `%s` successfully used", code),
+                Level.INFO
+            );
+        } catch (InvalidCouponException ex) {
+            throw this.flash().redirect(
+                this.uriInfo().getRequestUri(),
+                String.format(
+                    "Coupon code `%s` is invalid: %s",
+                    code, Exceptions.message(ex)
+                ),
+                Level.WARNING
+            );
+        }
     }
 
     /**

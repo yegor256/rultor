@@ -36,6 +36,7 @@ import com.rultor.repo.ClasspathRepo;
 import com.rultor.spi.Account;
 import com.rultor.spi.Column;
 import com.rultor.spi.Coordinates;
+import com.rultor.spi.InvalidCouponException;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
@@ -259,6 +260,15 @@ final class Testing implements Profile {
                 }
                 @Override
                 public void fund(final Dollars amount, final String details) {
+                    throw new UnsupportedOperationException();
+                }
+                /**
+                 * {@inheritDoc}
+                 * @checkstyle RedundantThrowsCheck (4 lines)
+                 */
+                @Override
+                public void fund(final String code)
+                    throws InvalidCouponException {
                     throw new UnsupportedOperationException();
                 }
             };
