@@ -77,7 +77,7 @@ public final class Descriptive implements Instance {
      * @param wrk Coordinates we're in
      * @param instance Original instance
      */
-    public Descriptive(final Work wrk, final Instance instance) {
+    public Descriptive(final Coordinates wrk, final Instance instance) {
         this.work = wrk;
         this.origin = instance;
     }
