@@ -55,6 +55,19 @@ import org.xembly.Directives;
 /**
  * Incremental bash batch.
  *
+ * <p>This class executes bash script, constructing it from the provided
+ * collection of Velocity templates. Internally it uses {@link Bash} in
+ * order to execute the script, built as an aggregation of provided lines.
+ * The main purpose of this class is to build a bash script that reports
+ * its execution steps in Xembly format, in order to make log more
+ * informative. Every line in the collection turns into a {@code step} in
+ * the {@link Snapshot} built from Xembly lines.
+ *
+ * <p>It is recommended to use this class instead of bare {@link Bash},
+ * because it provides much more logging information, in Xembly format. This
+ * means that the execution of the bash script will be visible in work
+ * {@link Snapshot} and rendered in stand and drain.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
@@ -66,19 +79,25 @@ import org.xembly.Directives;
 public final class IncrementalBash implements Batch {
 
     /**
-     * Shells.
+     * Escaped Xembly mark.
+     */
+    private static final String ESCAPED_MARK =
+        IncrementalBash.escape(XemblyLine.MARK);
+
+    /**
+     * Shells to be used for actual execution of bash script.
      */
     private final transient Shells shells;
 
     /**
-     * Commands to execute.
+     * Bash commands to execute, one by one in provided order.
      */
     private final transient Array<Vext> commands;
 
     /**
      * Public ctor.
-     * @param shls Shells
-     * @param cmds Commands
+     * @param shls Shells to encapsulate
+     * @param cmds Bash commands to encapsulate
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public IncrementalBash(
@@ -117,9 +136,16 @@ public final class IncrementalBash implements Batch {
     }
 
     /**
-     * Make a script.
-     * @param args All args
-     * @return Bash script
+     * Make a script using custom arguments provided.
+     *
+     * <p>The method returns a Vext script that is a composition of
+     * all commands encapsulated. This script when executed through BASH
+     * outputs Xembly log lines that, when parsed, produce a {@link Snapshot}
+     * with steps. Every step will have a summary, a log level, and
+     * an exception if its exit code is not zero.
+     *
+     * @param args All arguments to inject into Velocity script
+     * @return Bash script ready for execution
      */
     private String script(final Map<String, Object> args) {
         final StringBuilder script = new StringBuilder()
@@ -136,10 +162,15 @@ public final class IncrementalBash implements Batch {
     }
 
     /**
-     * Make a script of one command.
-     * @param args All args
-     * @param cmd Command
-     * @return Bash script
+     * Make a script of one BASH command.
+     *
+     * <p>The method converts one command in Vext format
+     * to a script ready for execution in bash.
+     *
+     * @param args All arguments to inject into Velocity script
+     * @param cmd Command in Vext format
+     * @return Bash script ready for execution
+     * @see http://stackoverflow.com/questions/18665603
      */
     private String script(final Map<String, Object> args, final Vext cmd) {
         final String uid = String.format("bash-%d", System.nanoTime());
@@ -150,28 +181,31 @@ public final class IncrementalBash implements Batch {
             .append(Terminal.escape(command))
             .append(';').append('\n')
             .append(
-                this.xembly(
+                this.echo(
                     new Directives()
                         .xpath("/snapshot")
                         .addIfAbsent("steps")
                         .add("step")
                         .attr("id", uid)
                         .add("start")
-                        .set("`date  -u +%Y-%m-%dT%H:%M:%SZ`")
+                        .set("${dollar}(date  -u +%Y-%m-%dT%H:%M:%SZ)")
                 )
             )
             .append(';').append('\n')
-            .append(this.summary(uid, command))
+            .append(this.echo(uid, command))
             .append(";\nSTART=${dollar}(date +%s%N | tr -d N);\n")
             .append("STDERR=${dollar}(mktemp /tmp/bash-XXXX);\n")
             .append("{ ")
             .append(velocity)
-            .append("; } 2> >( cat | eval $ESCAPE | tee ${dollar}STDERR );\n")
+            .append(
+                "; } 2> >(tee ${dollar}STDERR);\n"
+            )
             .append("CODE=${dollar}?;\n")
+            .append("sync; wait;\n")
             .append("FINISH=${dollar}(date +%s%N | tr -d N);\n")
             .append("if [ ${dollar}CODE = 0 ]; then\n  ")
             .append(
-                this.xembly(
+                this.echo(
                     new Directives()
                         .xpath(this.xpath(uid))
                         // @checkstyle MultipleStringLiterals (1 line)
@@ -181,7 +215,7 @@ public final class IncrementalBash implements Batch {
             )
             .append(";\nelse\n  ")
             .append(
-                this.xembly(
+                this.echo(
                     new Directives()
                         .xpath(this.xpath(uid))
                         .add("level")
@@ -189,15 +223,16 @@ public final class IncrementalBash implements Batch {
                         .up()
                         .add("exception")
                         .add("cause")
-                        .set("exit code ${dollar}{CODE}")
+                        .set("exit code ${dollar}CODE")
                         .up()
                         .add("stacktrace")
-                        .set("${dollar}(tail -100 ${dollar}{STDERR})")
+                        // @checkstyle LineLength (1 line)
+                        .set("${dollar}(tail -100 ${dollar}STDERR | eval ${dollar}ESCAPE)")
                 )
             )
             .append(";\nfi;\n")
             .append(
-                this.xembly(
+                this.echo(
                     new Directives()
                         .xpath(this.xpath(uid))
                         .add("finish")
@@ -207,18 +242,23 @@ public final class IncrementalBash implements Batch {
                         .set("${dollar}(((FINISH-START)/1000000))")
                 )
             )
-            .append(";\nrm -f ${dollar}{STDERR};\n")
+            .append(";\n")
+            .append("rm -f ${dollar}STDERR;\n")
             .append("if [ ${dollar}CODE != 0 ]; then\n  ")
             .append("exit ${dollar}CODE;\nfi;\n\n")
             .toString();
     }
 
     /**
-     * Make xembly line.
-     * @param dirs Directives
+     * Make bash command that ECHO Xembly log line with directives.
+     *
+     * <p>The method creates a bash ECHO command that outputs Xembly
+     * directives provided, properly escaping them before.
+     *
+     * @param dirs Xembly directives to be echoed
      * @return Bash command
      */
-    private String xembly(final Directives dirs) {
+    private String echo(final Directives dirs) {
         return String.format(
             "echo -e \"%s\"",
             new XemblyLine(dirs)
@@ -226,17 +266,23 @@ public final class IncrementalBash implements Batch {
                 // @checkstyle MultipleStringLiterals (2 lines)
                 .replace("\\", "\\\\\\")
                 .replace("\"", "\\\"")
-                .replace(XemblyLine.MARK, this.escape(XemblyLine.MARK))
+                .replace(XemblyLine.MARK, IncrementalBash.ESCAPED_MARK)
         );
     }
 
     /**
-     * Print and escape summary in Xembly format.
+     * Echo step summary in Xembly format.
+     *
+     * <p>The method creates a bash command that echos step summary
+     * in Xembly format. The Xembly directives echoed will add summary
+     * to the previously created step, finding it by its unique ID
+     * provided as the first parameter.
+     *
      * @param uid Unique ID of the step
      * @param summary Summary to add to the step
      * @return Bash command
      */
-    private String summary(final String uid, final String summary) {
+    private String echo(final String uid, final String summary) {
         final String xembly = new XemblyLine(
             new Directives()
                 .xpath(this.xpath(uid))
@@ -245,17 +291,18 @@ public final class IncrementalBash implements Batch {
         ).toString();
         return String.format(
             "echo -e '%s'",
-            xembly.replace("'", "\\x27")
-                .replace(XemblyLine.MARK, this.escape(XemblyLine.MARK))
+            xembly.replace("'", "\\x27").replace(
+                XemblyLine.MARK, IncrementalBash.ESCAPED_MARK
+            )
         );
     }
 
     /**
-     * Escape unicode chars for bash.
+     * Escape Unicode chars for bash command.
      * @param text Original text
      * @return Escaped
      */
-    private String escape(final String text) {
+    private static String escape(final String text) {
         final StringBuilder out = new StringBuilder();
         for (byte chr : text.getBytes(Charsets.UTF_8)) {
             out.append("\\x").append(String.format("%X", chr));
@@ -273,7 +320,12 @@ public final class IncrementalBash implements Batch {
     }
 
     /**
-     * Escaper.
+     * Escaping bash script.
+     *
+     * <p>The method creates a bash command that escapes sensitive characters
+     * in its standard input stream (stdin) and outputs a clean text as
+     * its output stream (stdout).
+     *
      * @return Bash script
      */
     @Cacheable(forever = true)
@@ -286,16 +338,17 @@ public final class IncrementalBash implements Batch {
                 .put("<", "&lt;")
                 .put(">", "&gt;")
                 .build();
-        final StringBuilder script = new StringBuilder()
-            .append("cat");
+        final StringBuilder script = new StringBuilder().append("cat");
         for (Map.Entry<String, String> pair : pairs.entrySet()) {
-            script.append(" | sed -e ':a' -e 'N' -e '$!ba' -e 's/")
+            script.append(" | LANG=C sed -e 's/")
                 .append(pair.getKey())
                 .append("/\\")
                 .append(pair.getValue())
                 .append("/g'");
         }
-        return script.append(" | awk 1 ORS='&#10;'").toString();
+        return script.append(" | awk 1 ORS='&#10;'")
+            .append(" | LANG=C tr -cd '[:print:]'")
+            .toString();
     }
 
 }

@@ -32,6 +32,7 @@ package com.rultor.conveyer;
 import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Arguments;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
@@ -42,7 +43,6 @@ import com.rultor.spi.Spec;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
-import com.rultor.spi.Work;
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -74,14 +74,14 @@ public final class SimpleConveyerTest {
         final String name = "unit-name";
         final AtomicBoolean pulled = new AtomicBoolean();
         Mockito.doAnswer(
-            new Answer<Work>() {
+            new Answer<Coordinates>() {
                 @Override
-                public Work answer(final InvocationOnMock inv) {
-                    final Work work;
+                public Coordinates answer(final InvocationOnMock inv) {
+                    final Coordinates work;
                     if (pulled.getAndSet(true)) {
-                        work = new Work.None();
+                        work = new Coordinates.None();
                     } else {
-                        work = new Work.Simple(owner, name);
+                        work = new Coordinates.Simple(owner, name);
                     }
                     return work;
                 }

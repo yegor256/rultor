@@ -105,7 +105,7 @@ public interface Spec {
          * @param repo Repo
          * @param user User
          * @param users Users
-         * @param work Work we're in
+         * @param work Coordinates we're in
          * @param type Type expected
          * @throws SpecException If fails
          * @checkstyle ParameterNumber (10 lines)
@@ -115,7 +115,7 @@ public interface Spec {
             @NotNull(message = "repo can't be NULL") final Repo repo,
             @NotNull(message = "user can't be NULL") final User user,
             @NotNull(message = "users can't be NULL") final Users users,
-            @NotNull(message = "work can't be NULL") final Work work,
+            @NotNull(message = "work can't be NULL") final Coordinates work,
             @NotNull(message = "type can't be NULL") final Class<?> type)
             throws SpecException {
             final Spec temp = new Spec.Simple(text);

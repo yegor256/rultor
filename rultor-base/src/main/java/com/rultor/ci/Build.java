@@ -39,8 +39,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.SequenceInputStream;
+import java.io.StringWriter;
 import java.util.Map;
 import java.util.logging.Level;
+import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -58,7 +60,7 @@ import org.xembly.XemblySyntaxException;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "batch", "product" })
+@EqualsAndHashCode(of = { "batch", "tag" })
 @Loggable(Loggable.DEBUG)
 public final class Build {
 
@@ -70,17 +72,17 @@ public final class Build {
     /**
      * Name of the product we're building.
      */
-    private final transient String product;
+    private final transient String tag;
 
     /**
      * Public ctor.
-     * @param pdt Product name
+     * @param name Tag name
      * @param btch Batch to use
      */
     public Build(
-        @NotNull(message = "product name can't be NULL") final String pdt,
+        @NotNull(message = "product name can't be NULL") final String name,
         @NotNull(message = "batch can't be NULL") final Batch btch) {
-        this.product = pdt;
+        this.tag = name;
         this.batch = btch;
     }
 
@@ -94,13 +96,23 @@ public final class Build {
     public Snapshot exec(@NotNull(message = "args can't be NULL")
         final Map<String, Object> args) throws IOException {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        final long start = System.currentTimeMillis();
         final int code = this.batch.exec(args, stdout);
+        final StringWriter data = new StringWriter();
+        Json.createGenerator(data)
+            .writeStartObject()
+            .write("code", code)
+            .write("time", System.currentTimeMillis() - start)
+            .writeEnd()
+            .close();
         Snapshot snapshot;
         try {
             snapshot = new Snapshot(
                 new SequenceInputStream(
                     new ByteArrayInputStream(stdout.toByteArray()),
-                    IOUtils.toInputStream(this.tag(code), Charsets.UTF_8)
+                    IOUtils.toInputStream(
+                        this.makeTag(code, data.toString()), Charsets.UTF_8
+                    )
                 )
             );
         } catch (XemblySyntaxException ex) {
@@ -114,9 +126,10 @@ public final class Build {
     /**
      * Make a xembly tag when done.
      * @param code The code
+     * @param data Data in JSON format
      * @return Marker
      */
-    private String tag(final int code) {
+    private String makeTag(final int code, final String data) {
         final Level level;
         if (code == 0) {
             level = Level.FINE;
@@ -126,10 +139,11 @@ public final class Build {
         final XemblyLine line = new XemblyLine(
             new Directives()
                 .xpath("/snapshot").strict(1).addIfAbsent("tags")
-                .xpath(String.format("tag[label='%s']", this.product))
+                .xpath(String.format("tag[label='%s']", this.tag))
                 .remove().xpath("/snapshot/tags").strict(1)
-                .add("tag").add("label").set(this.product).up()
-                .add("level").set(level.toString())
+                .add("tag").add("label").set(this.tag).up()
+                .add("level").set(level.toString()).up()
+                .add("data").set(data)
         );
         line.log();
         return line.toString();

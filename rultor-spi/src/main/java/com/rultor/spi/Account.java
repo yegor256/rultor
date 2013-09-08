@@ -71,4 +71,10 @@ public interface Account {
     @NotNull(message = "account is never NULL")
     void fund(Dollars amount, String details);
 
+    /**
+     * Fund account with coupon.
+     * @param code Coupon code to use for funding.
+     * @throws InvalidCouponException When wrong coupon code is used.
+     */
+    void fund(String code) throws InvalidCouponException;
 }

@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
@@ -156,7 +157,7 @@ final class RestStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, String> pulses() {
+    public Pageable<Pulse, Coordinates> pulses() {
         throw new UnsupportedOperationException();
     }
 
@@ -164,7 +165,24 @@ final class RestStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public void post(final String pulse, final long nano, final String xembly) {
+    public void post(final Coordinates pulse, final long nano,
+        final String xembly) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spec widgets() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void widgets(final Spec spec) {
         throw new UnsupportedOperationException();
     }
 

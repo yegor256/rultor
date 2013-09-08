@@ -32,6 +32,7 @@ package com.rultor.repo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Arguments;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Rules;
@@ -39,7 +40,6 @@ import com.rultor.spi.Spec;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -169,7 +169,7 @@ public final class ClasspathRepoTest {
             repo.make(user, spec).instantiate(
                 users,
                 new Arguments(
-                    new Work.None(), new Wallet.Empty(),
+                    new Coordinates.None(), new Wallet.Empty(),
                     Arrays.<Object>asList(-2)
                 )
             )

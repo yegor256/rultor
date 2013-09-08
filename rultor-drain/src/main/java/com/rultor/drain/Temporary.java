@@ -34,9 +34,9 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.log.Logger;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -86,9 +86,9 @@ public final class Temporary implements Drain {
     private static final Runnable CLEANER = new Temporary.Cleaner();
 
     /**
-     * Work we're in.
+     * Coordinates we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Optional marker.
@@ -97,11 +97,11 @@ public final class Temporary implements Drain {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param mrk Optional marker
      */
     public Temporary(
-        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "work can't be NULL") final Coordinates wrk,
         @NotNull(message = "marker can't be NULL") final String mrk) {
         assert Temporary.CLEANER != null;
         this.work = wrk;
@@ -110,9 +110,9 @@ public final class Temporary implements Drain {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      */
-    public Temporary(final Work wrk) {
+    public Temporary(final Coordinates wrk) {
         this(wrk, "def");
     }
 

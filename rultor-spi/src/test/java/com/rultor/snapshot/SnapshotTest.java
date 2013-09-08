@@ -75,30 +75,4 @@ public final class SnapshotTest {
         );
     }
 
-    /**
-     * SnapshotInStream can properly handle special characters.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    @org.junit.Ignore
-    public void gracefullyHandlesSpecialCharacters() throws Exception {
-        MatcherAssert.assertThat(
-            new Snapshot(
-                IOUtils.toInputStream(
-                    new StringBuilder().append(
-                        new XemblyLine(
-                            new Directives().add("foo").set(
-                                "<&>'\"\u20ac\u001b!"
-                            )
-                        ).toString()
-                    ).toString(),
-                    CharEncoding.UTF_8
-                )
-            ).xml().toString(),
-            XhtmlMatchers.hasXPath(
-                "/snapshot/foo[.='&lt;&amp;&gt;&apos;&quot;\u20ac\u001b!']"
-            )
-        );
-    }
-
 }

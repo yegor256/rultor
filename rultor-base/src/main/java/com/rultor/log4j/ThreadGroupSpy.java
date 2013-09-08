@@ -30,9 +30,9 @@
 package com.rultor.log4j;
 
 import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -71,7 +71,7 @@ public final class ThreadGroupSpy implements Instance, Drain.Source {
     /**
      * The work we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Log level to show.
@@ -95,7 +95,7 @@ public final class ThreadGroupSpy implements Instance, Drain.Source {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param lvl Level to show and higher
      * @param pttn Pattern
      * @param instance Original instance
@@ -103,7 +103,7 @@ public final class ThreadGroupSpy implements Instance, Drain.Source {
      * @checkstyle ParameterNumber (8 lines)
      */
     public ThreadGroupSpy(
-        @NotNull(message = "work can't be NULL") final Work wrk,
+        @NotNull(message = "work can't be NULL") final Coordinates wrk,
         @NotNull(message = "log level can't be NULL") final String lvl,
         @NotNull(message = "pattern can't be NULL") final String pttn,
         @NotNull(message = "instance can't be NULL") final Instance instance,
@@ -117,12 +117,12 @@ public final class ThreadGroupSpy implements Instance, Drain.Source {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param instance Original instance
      * @param drain Drain to use
      * @checkstyle ParameterNumber (4 lines)
      */
-    public ThreadGroupSpy(final Work wrk, final Instance instance,
+    public ThreadGroupSpy(final Coordinates wrk, final Instance instance,
         final Drain drain) {
         this(wrk, Level.INFO.toString(), "%m", instance, drain);
     }

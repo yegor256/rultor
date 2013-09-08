@@ -131,7 +131,7 @@ public final class RuleRs extends BaseRs {
             this.rule().update(
                 new Spec.Strict(
                     spec, this.repo(), this.user(), this.users(),
-                    this.work(this.name, new Spec.Simple(spec)), Object.class
+                    this.coordinates(this.name), Object.class
                 )
             );
         } catch (SpecException ex) {

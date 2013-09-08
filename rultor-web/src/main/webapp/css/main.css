@@ -108,6 +108,12 @@ p,
 .list-inline {
     margin-bottom: 0;
 }
+.spacious-inline-list {
+    margin: 5px 0px;
+}
+.tag-detailed-list {
+    margin-left: 2em;
+}
 
 /* for snapshot.xsl */
 .step-item {

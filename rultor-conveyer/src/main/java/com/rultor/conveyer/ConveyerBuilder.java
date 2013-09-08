@@ -38,9 +38,9 @@ import com.rultor.conveyer.audit.AuditUsers;
 import com.rultor.conveyer.fake.FakeUsers;
 import com.rultor.queue.SQSQueue;
 import com.rultor.repo.ClasspathRepo;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Work;
 import com.rultor.users.AwsUsers;
 import com.rultor.users.pgsql.PgClient;
 import com.rultor.users.pgsql.PgUsers;
@@ -167,7 +167,7 @@ final class ConveyerBuilder {
      * @throws Exception If fails
      */
     private SimpleConveyer local() throws Exception {
-        final Work work = new Work.Simple(
+        final Coordinates work = new Coordinates.Simple(
             URN.create("urn:facebook:1"), "default"
         );
         return new SimpleConveyer(
@@ -175,17 +175,17 @@ final class ConveyerBuilder {
                 private final transient AtomicBoolean done =
                     new AtomicBoolean();
                 @Override
-                public void push(final Work work) {
+                public void push(final Coordinates work) {
                     throw new UnsupportedOperationException();
                 }
                 @Override
-                public Work pull(final int limit, final TimeUnit unit) {
-                    final Work pulled;
+                public Coordinates pull(final int limit, final TimeUnit unit) {
+                    final Coordinates pulled;
                     if (done.compareAndSet(false, true)) {
                         pulled = work;
                         done.set(true);
                     } else {
-                        pulled = new Work.None();
+                        pulled = new Coordinates.None();
                     }
                     return pulled;
                 }

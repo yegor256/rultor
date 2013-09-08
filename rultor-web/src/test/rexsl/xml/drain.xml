@@ -41,6 +41,7 @@
         <date>22-Aug-2012</date>
     </version>
     <links>
+        <link href="/" rel="root" type="text/xml"/>
         <link href="/xml/drain.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
         <link href="/xml/drain.xml" rel="more" type="text/xml"/>
@@ -134,13 +135,12 @@ SET "some text to set"; STRICT "1";</xembly>
                         <level>INFO</level>
                         <label>pull-request</label>
                     </tag>
+                    <tag>
+                        <level>INFO</level>
+                        <label>stdout</label>
+                        <markdown>download this [file](http://google.com) to see full stdout/stderr</markdown>
+                    </tag>
                 </tags>
-                <products>
-                    <product>
-                        <name>stdout</name>
-                        <markdown>[1 file](http://google.com)</markdown>
-                    </product>
-                </products>
                 <steps>
                     <step id="3235">
                         <start at="0.2">2013-08-23T17:57Z</start>

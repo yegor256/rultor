@@ -30,13 +30,7 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.urn.URN;
-import com.rultor.tools.Time;
 import java.net.URI;
-import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Work to do.
@@ -46,165 +40,12 @@ import lombok.ToString;
  * @since 1.0
  */
 @Immutable
-@SuppressWarnings("PMD.TooManyMethods")
-public interface Work {
-
-    /**
-     * When scheduled, in milliseconds.
-     * @return Milliseconds
-     */
-    @NotNull(message = "time is never NULL")
-    Time scheduled();
-
-    /**
-     * Owner of this work.
-     * @return The owner
-     */
-    @NotNull(message = "URN of owner is never NULL")
-    URN owner();
-
-    /**
-     * Name of the work (unique for the user).
-     * @return The rule
-     */
-    @NotNull(message = "rule name is never NULL")
-    String rule();
+public interface Work extends Coordinates {
 
     /**
      * Instant access to running logs/stdout.
      * @return URI of it
      */
     URI stdout();
-
-    /**
-     * No work at all.
-     */
-    @Immutable
-    @ToString
-    @EqualsAndHashCode
-    final class None implements Work {
-        /**
-         * {@inheritDoc}
-         */
-        @NotNull
-        @Override
-        public Time scheduled() {
-            throw new UnsupportedOperationException();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @NotNull
-        @Override
-        public URN owner() {
-            throw new UnsupportedOperationException();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @NotNull
-        @Override
-        public String rule() {
-            throw new UnsupportedOperationException();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public URI stdout() {
-            throw new UnsupportedOperationException();
-        }
-    }
-
-    /**
-     * Simple implementation.
-     */
-    @Loggable(Loggable.DEBUG)
-    @EqualsAndHashCode(of = { "time", "urn", "label" })
-    @Immutable
-    final class Simple implements Work {
-        /**
-         * When scheduled.
-         */
-        private final transient Time time;
-        /**
-         * Owner of it.
-         */
-        private final transient URN urn;
-        /**
-         * Name of it.
-         */
-        private final transient String label;
-        /**
-         * Public ctor.
-         */
-        public Simple() {
-            this(URN.create("urn:facebook:1"), "test-rule");
-        }
-        /**
-         * Public ctor.
-         * @param owner Owner
-         * @param name Name
-         */
-        public Simple(final URN owner, final String name) {
-            this(owner, name, new Time());
-        }
-        /**
-         * Public ctor.
-         * @param owner Owner
-         * @param name Name
-         * @param when When it should start
-         */
-        public Simple(@NotNull(message = "owner can't be NULL") final URN owner,
-            @NotNull(message = "rule name can't be NULL") final String name,
-            @NotNull(message = "time can't be NULL") final Time when) {
-            this.urn = owner;
-            this.label = name;
-            this.time = when;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString() {
-            return String.format(
-                "at %s in %s for %s",
-                this.time,
-                this.label,
-                this.urn
-            );
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @NotNull(message = "time of work is never NULL")
-        public Time scheduled() {
-            return this.time;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @NotNull(message = "URN of owner of work is never NULL")
-        public URN owner() {
-            return this.urn;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @NotNull(message = "rule name of work is never NULL")
-        public String rule() {
-            return this.label;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public URI stdout() {
-            throw new UnsupportedOperationException();
-        }
-    }
 
 }

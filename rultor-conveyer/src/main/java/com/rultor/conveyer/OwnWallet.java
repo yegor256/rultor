@@ -32,9 +32,9 @@ package com.rultor.conveyer;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.tools.Dollars;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -54,9 +54,9 @@ import lombok.ToString;
 final class OwnWallet implements Wallet {
 
     /**
-     * Work.
+     * Coordinates.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Rule.
@@ -65,10 +65,10 @@ final class OwnWallet implements Wallet {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param rle Rule that owns it
      */
-    protected OwnWallet(final Work wrk, final Rule rle) {
+    protected OwnWallet(final Coordinates wrk, final Rule rle) {
         this.work = wrk;
         this.rule = rle;
     }

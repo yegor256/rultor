@@ -30,8 +30,8 @@
 package com.rultor.base;
 
 import com.jcabi.urn.URN;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Work;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.Test;
@@ -51,7 +51,9 @@ public final class RestrictiveTest {
     @Test
     public void passesThroughWhenAllowed() throws Exception {
         final Object origin = Mockito.mock(Object.class);
-        final Work work = new Work.Simple(new URN("urn:test:3"), "test-rule");
+        final Coordinates work = new Coordinates.Simple(
+            new URN("urn:test:3"), "test-rule"
+        );
         new Restrictive(work, Arrays.asList("urn:test:*"), origin).toString();
     }
 
@@ -63,7 +65,9 @@ public final class RestrictiveTest {
     public void passesThroughWhenAllowedForExactUrn() throws Exception {
         final Object origin = Mockito.mock(Object.class);
         final String owner = "urn:test:777";
-        final Work work = new Work.Simple(new URN(owner), "test-A");
+        final Coordinates work = new Coordinates.Simple(
+            new URN(owner), "test-A"
+        );
         new Restrictive(work, Arrays.asList(owner), origin).toString();
     }
 
@@ -74,7 +78,9 @@ public final class RestrictiveTest {
     @Test
     public void passesThroughWhenAllowedForAll() throws Exception {
         final Instance origin = Mockito.mock(Instance.class);
-        final Work work = new Work.Simple(new URN("urn:test:33"), "test-43");
+        final Coordinates work = new Coordinates.Simple(
+            new URN("urn:test:33"), "test-43"
+        );
         new Restrictive(work, Arrays.asList("*"), origin).object();
     }
 
@@ -85,7 +91,9 @@ public final class RestrictiveTest {
     @Test(expected = SecurityException.class)
     public void blocksWhenNotAllowed() throws Exception {
         final Instance origin = Mockito.mock(Instance.class);
-        final Work work = new Work.Simple(new URN("urn:test:6"), "test-44");
+        final Coordinates work = new Coordinates.Simple(
+            new URN("urn:test:6"), "test-44"
+        );
         new Restrictive(work, Arrays.asList("urn:facebook:2"), origin).object();
     }
 
@@ -96,7 +104,9 @@ public final class RestrictiveTest {
     @Test(expected = SecurityException.class)
     public void blocksEverybodyWhenRequested() throws Exception {
         final Instance origin = Mockito.mock(Instance.class);
-        final Work work = new Work.Simple(new URN("urn:test:998"), "test-8");
+        final Coordinates work = new Coordinates.Simple(
+            new URN("urn:test:998"), "test-8"
+        );
         new Restrictive(work, new ArrayList<String>(0), origin).toString();
     }
 

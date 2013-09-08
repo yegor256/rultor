@@ -29,7 +29,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 <?xml-stylesheet type='text/xsl' href='/xsl/stand.xsl'?>
-<page identifier="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
+<page identifier="2012-08-23T13:25:33.968+02:00">
     <identity>
         <urn>urn:facebook:1</urn>
         <name>Jeff Lebowski</name>
@@ -41,6 +41,7 @@
         <identifier>22-Aug-2012</identifier>
     </version>
     <links>
+        <link href="/" rel="root" type="text/xml"/>
         <link href="/xml/drain.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
         <link href="/xml/drain.xml" rel="more" type="text/xml"/>
@@ -62,9 +63,61 @@
     <stand>nightly-build</stand>
     <since>2012-08-23T13:25:33Z</since>
     <balance>$0.45</balance>
+    <widgets>
+        <widget class="com.rultor.widget.BuildHealth">
+            <title>Build Health</title>
+            <width>4</width>
+            <builds>
+                <build>
+                    <coordinates>
+                        <rule>rultor-on-commit</rule>
+                        <owner>urn:github:1</owner>
+                        <scheduled>2012-07-20T07:13:33Z</scheduled>
+                    </coordinates>
+                    <health>0.78</health>
+                    <commit>
+                        <name>09ae8f5</name>
+                        <time>2012-08-23T13:25:33Z</time>
+                        <author>Jeff Lebowski</author>
+                    </commit>
+                    <duration>473783</duration>
+                    <code>0</code>
+                </build>
+                <build>
+                    <coordinates>
+                        <rule>rultor-skin-on-commit</rule>
+                        <owner>urn:github:1</owner>
+                        <scheduled>2012-07-20T07:13:33Z</scheduled>
+                    </coordinates>
+                    <health>0.97</health>
+                    <commit>
+                        <name>89775e5</name>
+                        <time>2012-07-20T13:25:33Z</time>
+                        <author>Walter</author>
+                    </commit>
+                    <duration>93838</duration>
+                    <code>0</code>
+                </build>
+            </builds>
+        </widget>
+        <widget class="com.rultor.widget.RecentBuilds">
+            <title>Recent Builds</title>
+            <width>6</width>
+            <links>
+                <link href="/xml/stand.xml" rel="more" type="text/xml"/>
+            </links>
+            <body>
+                test
+            </body>
+        </widget>
+    </widgets>
     <pulses>
         <pulse>
-            <identifier>2012-08-23T13:23Z</identifier>
+            <coordinates>
+                <owner>urn:test:111</owner>
+                <rule>on-commit</rule>
+                <scheduled>2012-08-23T13:23Z</scheduled>
+            </coordinates>
             <snapshot>
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
                 <work>
@@ -90,13 +143,12 @@
                         <level>INFO</level>
                         <label>pull-request</label>
                     </tag>
-                </tags>
-                <products>
-                    <product>
-                        <name>stdout</name>
+                    <tag>
+                        <level>FINE</level>
+                        <label>stdout</label>
                         <markdown>[1 file](http://google.com)</markdown>
-                    </product>
-                </products>
+                    </tag>
+                </tags>
                 <steps>
                     <step>
                         <id>ec2-instance</id>
@@ -122,7 +174,11 @@
             </links>
         </pulse>
         <pulse>
-            <identifier>2012-08-23T13:23Z</identifier>
+            <coordinates>
+                <owner>urn:test:55</owner>
+                <rule>on-commit</rule>
+                <scheduled>2012-08-31T13:23Z</scheduled>
+            </coordinates>
             <snapshot>
                 <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
                 <work>
@@ -149,12 +205,6 @@
                         <label>pull-request</label>
                     </tag>
                 </tags>
-                <products>
-                    <product>
-                        <name>stdout</name>
-                        <markdown>[1 file](http://google.com)</markdown>
-                    </product>
-                </products>
                 <steps>
                     <step>
                         <id>ec2-instance</id>
@@ -179,17 +229,26 @@
             </links>
         </pulse>
         <pulse>
-            <identifier>2012-08-23T13:25Z</identifier>
+            <coordinates>
+                <owner>urn:test:111</owner>
+                <rule>on-commit</rule>
+                <scheduled>2012-08-23T13:23Z</scheduled>
+            </coordinates>
             <links>
                 <link href="/xml/stand.xml?open=abc" rel="open" type="text/xml"/>
             </links>
         </pulse>
         <pulse>
-            <identifier>2012-08-23T13:27Z</identifier>
+            <coordinates>
+                <owner>urn:test:111</owner>
+                <rule>on-commit</rule>
+                <scheduled>2012-08-23T13:23Z</scheduled>
+            </coordinates>
             <tags>
                 <tag>
                     <level>FINE</level>
                     <label>success</label>
+                    <markdown>commit `4e56ba43` built successfully in 23min</markdown>
                 </tag>
                 <tag>
                     <level>INFO</level>
@@ -205,10 +264,24 @@
             </links>
         </pulse>
         <pulse>
-            <identifier>2012-08-23T13:29Z</identifier>
+            <coordinates>
+                <owner>urn:test:111</owner>
+                <rule>on-commit</rule>
+                <scheduled>2012-08-23T13:23Z</scheduled>
+            </coordinates>
             <links>
                 <link href="/xml/stand.xml" rel="open" type="text/xml"/>
             </links>
+            <tags>
+                <tag>
+                    <level>INFO</level>
+                    <label>#324</label>
+                </tag>
+                <tag>
+                    <level>INFO</level>
+                    <label>pull-request</label>
+                </tag>
+            </tags>
         </pulse>
     </pulses>
 </page>

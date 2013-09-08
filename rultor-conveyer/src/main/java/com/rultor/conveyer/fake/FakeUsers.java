@@ -31,11 +31,11 @@ package com.rultor.conveyer.fake;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
-import com.rultor.spi.Work;
 import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -55,9 +55,9 @@ import lombok.ToString;
 public final class FakeUsers implements Users {
 
     /**
-     * Work to return.
+     * Coordinates to return.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Spec to use.
@@ -66,10 +66,10 @@ public final class FakeUsers implements Users {
 
     /**
      * Public ctor.
-     * @param wrk Work
+     * @param wrk Coordinates
      * @param spc Spec
      */
-    public FakeUsers(final Work wrk, final Spec spc) {
+    public FakeUsers(final Coordinates wrk, final Spec spc) {
         this.work = wrk;
         this.spec = spc;
     }

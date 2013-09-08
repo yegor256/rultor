@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rexsl.page.JaxbBundle;
 import com.rultor.spi.Arguments;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Rule;
@@ -42,11 +43,9 @@ import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Wallet;
-import com.rultor.spi.Work;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.Markdown;
 import com.rultor.tools.Time;
-import java.net.URI;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -101,7 +100,7 @@ final class JaxbFace {
                 final Object object = var.instantiate(
                     this.users,
                     new Arguments(
-                        this.work(user.urn(), rule.name()),
+                        this.coordinates(user.urn(), rule.name()),
                         new Wallet.Empty()
                     )
                 );
@@ -154,26 +153,8 @@ final class JaxbFace {
      * @param rule Name of the rule we're rendering now
      * @return The work
      */
-    private Work work(final URN owner, final String rule) {
-        // @checkstyle AnonInnerLength (50 lines)
-        return new Work() {
-            @Override
-            public Time scheduled() {
-                return new Time();
-            }
-            @Override
-            public URN owner() {
-                return owner;
-            }
-            @Override
-            public String rule() {
-                return rule;
-            }
-            @Override
-            public URI stdout() {
-                throw new UnsupportedOperationException();
-            }
-        };
+    private Coordinates coordinates(final URN owner, final String rule) {
+        return new Coordinates.Simple(owner, rule, new Time());
     }
 
 }

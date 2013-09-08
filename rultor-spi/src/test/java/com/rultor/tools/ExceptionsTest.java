@@ -83,4 +83,20 @@ public final class ExceptionsTest {
             )
         );
     }
+
+    /**
+     * Exceptions can filter out invalid XML characters.
+     */
+    @Test
+    public void filtersOutInvalidXmlCharacters() {
+        MatcherAssert.assertThat(
+            Exceptions.message(new IOException("this is bad: \u001b\n\u0000")),
+            Matchers.equalTo("IOException: this is bad: ?\n?")
+        );
+        MatcherAssert.assertThat(
+            Exceptions.stacktrace(new IOException("boom: \u001b\n\u0000")),
+            Matchers.containsString("boom: ?\n?")
+        );
+    }
+
 }

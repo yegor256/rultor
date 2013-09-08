@@ -32,8 +32,10 @@ package com.rultor.users.mongo;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
+import com.jcabi.urn.URN;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.snapshot.Snapshot;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
 import java.util.Iterator;
@@ -99,7 +101,7 @@ public final class MongoStandITCase {
     @Test
     public void managesDataInMongoDb() throws Exception {
         final Stand stand = this.stand();
-        final String pulse = RandomStringUtils.randomAlphabetic(Tv.TEN);
+        final Coordinates pulse = this.pulse();
         stand.post(pulse, 2, "ADD 'tags'; ADD 'tag'; ADD 'label'; SET 'foo';");
         stand.post(pulse, 1, "ADD 'test'; SET 'hello, world!';");
         final Iterator<Pulse> pulses = stand.pulses().iterator();
@@ -121,7 +123,7 @@ public final class MongoStandITCase {
     @SuppressWarnings("PMD.DoNotUseThreads")
     public void updatesSameStandConcurrently() throws Exception {
         final Stand stand = this.stand();
-        final String pulse = RandomStringUtils.randomAlphabetic(Tv.TEN);
+        final Coordinates pulse = this.pulse();
         final CountDownLatch start = new CountDownLatch(1);
         final AtomicLong nano = new AtomicLong(1);
         final Runnable runnable = new VerboseRunnable(
@@ -186,6 +188,17 @@ public final class MongoStandITCase {
                 MongoStandITCase.PWD
             ),
             origin
+        );
+    }
+
+    /**
+     * Make a random pulse.
+     * @return Pulse coordinates
+     */
+    private Coordinates pulse() {
+        return new Coordinates.Simple(
+            URN.create("urn:test:1"),
+            RandomStringUtils.randomAlphabetic(Tv.TEN)
         );
     }
 

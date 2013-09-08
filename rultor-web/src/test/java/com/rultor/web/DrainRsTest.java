@@ -88,9 +88,9 @@ public final class DrainRsTest {
                     .toString()
             ),
             XhtmlMatchers.hasXPaths(
-                "/snapshot/updated[@at='0.5']",
-                "/snapshot/steps/step[@id=7]/start[@at='0.1']",
-                "/snapshot/steps/step[@id=7]/finish[@at='0.25']"
+                "/snapshot/updated[@at='0.500']",
+                "/snapshot/steps/step[@id=7]/start[@at='0.100']",
+                "/snapshot/steps/step[@id=7]/finish[@at='0.250']"
             )
         );
     }
@@ -119,8 +119,8 @@ public final class DrainRsTest {
                     .toString()
             ),
             XhtmlMatchers.hasXPaths(
-                "/snapshot/steps/step[@id=19]/start[@at='0.1']",
-                "/snapshot/steps/step[@id=19]/finish[@at='0.25']"
+                "/snapshot/steps/step[@id=19]/start[@at='0.100']",
+                "/snapshot/steps/step[@id=19]/finish[@at='0.250']"
             )
         );
     }
@@ -145,9 +145,9 @@ public final class DrainRsTest {
                     .toString()
             ),
             XhtmlMatchers.hasXPaths(
-                "/snapshot/updated[@at='0.8']",
+                "/snapshot/updated[@at='0.800']",
                 "/snapshot/version[revision='ab4ed9f']",
-                "/snapshot/steps/step[@id=9]/start[@at='0.4']"
+                "/snapshot/steps/step[@id=9]/start[@at='0.400']"
             )
         );
     }
@@ -172,7 +172,7 @@ public final class DrainRsTest {
                     .toString()
             ),
             XhtmlMatchers.hasXPath(
-                "/snapshot/steps/step[@id=3]/start[@at='0']"
+                "/snapshot/steps/step[@id=3]/start[@at='0.000']"
             )
         );
     }

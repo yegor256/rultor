@@ -36,8 +36,8 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import com.rultor.snapshot.Step;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -88,9 +88,9 @@ public final class Crontab implements Instance {
             .build();
 
     /**
-     * Work we're in.
+     * Coordinates we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Origin.
@@ -104,11 +104,12 @@ public final class Crontab implements Instance {
 
     /**
      * Public ctor.
-     * @param wrk Work we're in
+     * @param wrk Coordinates we're in
      * @param text Mask to use
      * @param instance Original instance
      */
-    public Crontab(@NotNull(message = "work can't be NULL") final Work wrk,
+    public Crontab(
+        @NotNull(message = "work can't be NULL") final Coordinates wrk,
         @NotNull(message = "crontab text can't be NULL") final String text,
         @NotNull(message = "instance can't be NULL") final Instance instance) {
         this.work = wrk;

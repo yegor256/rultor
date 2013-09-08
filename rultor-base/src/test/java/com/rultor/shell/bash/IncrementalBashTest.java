@@ -40,6 +40,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Arrays;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -68,11 +69,11 @@ public final class IncrementalBashTest {
         final int code = new IncrementalBash(
             new Permanent(new ShellMocker.Bash(dir)),
             Arrays.asList(
-                "MSG='$A'; echo `date` $A; sleep 1; pwd;",
+                "MSG='$A'; echo $(date) $A; sleep 1; pwd;",
                 "find . -name \"a.txt\" | grep txt | wc -l;",
                 "mkdir -p foo; cd foo; touch ${file}; pwd",
                 "pwd; if [ ! -f ${file.toString()} ]; then exit 1; fi",
-                "/usr/bin/--broken-name; /usr/bin/--again"
+                "echo -e \"A\\x1b\\x09\\x9B\" >&2; /usr/--broken; /usr/--again"
             )
         ).exec(args, stdout);
         MatcherAssert.assertThat(code, Matchers.not(Matchers.equalTo(0)));
@@ -85,14 +86,91 @@ public final class IncrementalBashTest {
             XhtmlMatchers.hasXPaths(
                 "/snapshot/steps/step",
                 // @checkstyle LineLength (5 lines)
-                "//step[summary=\"MSG='$A'; echo `date` $A; sleep 1; pwd;\"]/start",
-                "//step[summary='/usr/bin/--broken-name; /usr/bin/--again']/exception",
-                "//step/exception[contains(stacktrace,'/usr/bin/--broken-name: No such file or directory')]",
+                "//step[summary=\"MSG='$A'; echo $(date) $A; sleep 1; pwd;\"]/start",
+                "//step[contains(summary, '/usr/--broken; /usr/--again')]/exception",
+                "//step/exception[contains(stacktrace,'/usr/--broken: No such file or directory')]",
                 "//steps[count(step[level='INFO']) = 4]",
                 "//steps[count(step[level='SEVERE']) = 1]",
                 "//steps[count(step[start]) = 5]",
                 "//steps[count(step[finish]) = 5]",
                 "//steps[count(step[duration = '']) = 0]"
+            )
+        );
+    }
+
+    /**
+     * IncrementalBash can escape command summary as Markdown.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    @org.junit.Ignore
+    public void escapesMarkdownInCommandSummary() throws Exception {
+        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        final File dir = Files.createTempDir();
+        final int code = new IncrementalBash(
+            new Permanent(new ShellMocker.Bash(dir)),
+            Arrays.asList("echo \"_*\" `date`")
+        ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
+        MatcherAssert.assertThat(code, Matchers.equalTo(0));
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(
+                new Snapshot(
+                    new ByteArrayInputStream(stdout.toByteArray())
+                ).dom()
+            ),
+            XhtmlMatchers.hasXPath(
+                "//step[summary='echo \"\\_\\*\" \\`date\\`;']/start"
+            )
+        );
+    }
+
+    /**
+     * IncrementalBash can show only TAIL of stderr.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void showsTailOfStderr() throws Exception {
+        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        final File dir = Files.createTempDir();
+        new IncrementalBash(
+            new Permanent(new ShellMocker.Bash(dir)),
+            Arrays.asList(
+                "( for i in {100..300}; do echo $i; done; exit 1 ) >&2"
+            )
+        ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(
+                new Snapshot(
+                    new ByteArrayInputStream(stdout.toByteArray())
+                ).dom()
+            ),
+            XhtmlMatchers.hasXPaths(
+                "//level[.='SEVERE']",
+                "//exception[not(contains(stacktrace, '199'))]",
+                "//exception[contains(stacktrace, '300')]"
+            )
+        );
+    }
+
+    /**
+     * IncrementalBash can output stderr and stdout correctly.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void correctlyPrintsStderrAndStdout() throws Exception {
+        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        final File dir = Files.createTempDir();
+        new IncrementalBash(
+            new Permanent(new ShellMocker.Bash(dir)),
+            Arrays.asList(
+                "echo -e 'one\\ntwo' >&2; echo -e 'foo-1\\nfoo-2'"
+            )
+        ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
+        MatcherAssert.assertThat(
+            new String(stdout.toByteArray(), CharEncoding.UTF_8),
+            Matchers.allOf(
+                Matchers.containsString("one\ntwo"),
+                Matchers.containsString("foo-1\nfoo-2")
             )
         );
     }

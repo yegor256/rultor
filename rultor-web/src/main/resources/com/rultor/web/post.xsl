@@ -94,7 +94,7 @@
         </xsl:variable>
         <xsl:element name="{local-name()}">
             <xsl:attribute name="at">
-                <xsl:value-of select="$at" />
+                <xsl:value-of select="format-number($at,'0.000')" />
             </xsl:attribute>
             <xsl:if test="$ratio != $at">
                 <xsl:attribute name="ratio">

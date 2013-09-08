@@ -30,7 +30,7 @@
 package com.rultor.drain;
 
 import com.jcabi.urn.URN;
-import com.rultor.spi.Work;
+import com.rultor.spi.Coordinates;
 import com.rultor.tools.Time;
 import java.util.Arrays;
 import org.apache.commons.io.IOUtils;
@@ -54,7 +54,7 @@ public final class TemporaryTest {
     @Test
     public void printsItselfInString() throws Exception {
         MatcherAssert.assertThat(
-            new Temporary(new Work.None()),
+            new Temporary(new Coordinates.None()),
             Matchers.hasToString(Matchers.notNullValue())
         );
     }
@@ -69,11 +69,11 @@ public final class TemporaryTest {
         final URN owner = new URN("urn:facebook:8789");
         final String rule = "some-test-rule";
         final String line = "some \t\u20ac\tfdsfs9980 Hello878";
-        final Work work = new Work.Simple(owner, rule, time);
+        final Coordinates work = new Coordinates.Simple(owner, rule, time);
         new Temporary(work).append(Arrays.asList(line));
         MatcherAssert.assertThat(
             IOUtils.toString(
-                new Temporary(new Work.Simple(owner, rule, time)).read(),
+                new Temporary(new Coordinates.Simple(owner, rule, time)).read(),
                 CharEncoding.UTF_8
             ),
             Matchers.containsString(line)

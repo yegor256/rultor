@@ -37,6 +37,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Spec;
@@ -79,6 +80,11 @@ final class AwsStand implements Stand {
      * Dynamo DB table column.
      */
     public static final String FIELD_ACL = "acl";
+
+    /**
+     * Dynamo DB table column.
+     */
+    public static final String FIELD_WIDGETS = "widgets";
 
     /**
      * Item.
@@ -129,6 +135,40 @@ final class AwsStand implements Stand {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable.FlushAfter
+    public void widgets(@NotNull(message = "widgets and can't be NULL")
+        final Spec spec) {
+        this.item.put(
+            new Attributes()
+                .with(
+                    AwsStand.FIELD_WIDGETS,
+                    new AttributeValue(spec.asText())
+            )
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NotNull(message = "widgets of a stand is never NULL")
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    public Spec widgets() {
+        Spec spec;
+        if (this.item.has(AwsStand.FIELD_WIDGETS)) {
+            spec = new Spec.Simple(
+                this.item.get(AwsStand.FIELD_WIDGETS).getS()
+            );
+        } else {
+            spec = new Spec.Simple("[]");
+        }
+        return spec;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String name() {
         return this.item.get(AwsStand.RANGE_STAND).getS();
     }
@@ -145,7 +185,7 @@ final class AwsStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, String> pulses() {
+    public Pageable<Pulse, Coordinates> pulses() {
         throw new UnsupportedOperationException();
     }
 
@@ -153,7 +193,8 @@ final class AwsStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public void post(final String pulse, final long nano, final String xembly) {
+    public void post(final Coordinates pulse, final long nano,
+        final String xembly) {
         throw new UnsupportedOperationException();
     }
 

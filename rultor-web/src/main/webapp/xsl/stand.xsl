@@ -30,13 +30,22 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="/xsl/layout.xsl"/>
-    <xsl:include href="/xsl/snapshot.xsl"/>
+    <xsl:include href="./layout.xsl"/>
+    <xsl:include href="./snapshot.xsl"/>
+    <xsl:include href="/stylesheets/all.xsl"/>
     <xsl:template name="head">
         <title>
             <xsl:value-of select="/page/stand"/>
         </title>
-        <script type="text/javascript" src="/js/stand.js">
+        <script type="text/javascript">
+            <xsl:attribute name="src">
+                <xsl:value-of select="/page/links/link[@rel='root']/@href"/>
+                <xsl:text>js/stand.js</xsl:text>
+                <xsl:if test="/page/@ip">
+                    <xsl:text>?</xsl:text>
+                    <xsl:value-of select="/page/version/revision"/>
+                </xsl:if>
+            </xsl:attribute>
             <!-- this is for W3C compliance -->
             <xsl:text> </xsl:text>
         </script>
@@ -45,6 +54,7 @@
         <h2>
             <xsl:value-of select="/page/stand"/>
         </h2>
+        <xsl:apply-templates select="/page/widgets"/>
         <xsl:choose>
             <xsl:when test="/page/pulses/pulse">
                 <xsl:if test="/page/since">
@@ -57,7 +67,7 @@
                             <li>
                                 <a title="back to start">
                                     <xsl:attribute name="href">
-                                        <xsl:value-of select="//links/link[@rel='latest']/@href"/>
+                                        <xsl:value-of select="/page/links/link[@rel='latest']/@href"/>
                                     </xsl:attribute>
                                     <xsl:text>back to start</xsl:text>
                                 </a>
@@ -67,12 +77,12 @@
                 </xsl:if>
                 <xsl:apply-templates select="/page/pulses/pulse[snapshot or error]" mode="open"/>
                 <xsl:apply-templates select="/page/pulses/pulse[not(snapshot)]" mode="closed"/>
-                <xsl:if test="//links/link[@rel='more']">
+                <xsl:if test="/page/links/link[@rel='more']">
                     <div class="spacious">
                         <xsl:text>See </xsl:text>
                         <a title="more">
                             <xsl:attribute name="href">
-                                <xsl:value-of select="//links/link[@rel='more']/@href"/>
+                                <xsl:value-of select="/page/links/link[@rel='more']/@href"/>
                             </xsl:attribute>
                             <xsl:text>more</xsl:text>
                         </a>
@@ -87,6 +97,60 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+    <xsl:template match="widgets">
+        <div class="row">
+            <xsl:for-each select="widget">
+                <div>
+                    <xsl:attribute name="class">
+                        <xsl:choose>
+                            <xsl:when test="width">
+                                <xsl:text>col-lg-</xsl:text>
+                                <xsl:call-template name="grid-width">
+                                    <xsl:with-param name="w" select="width"/>
+                                </xsl:call-template>
+                                <xsl:text> col-md-</xsl:text>
+                                <xsl:call-template name="grid-width">
+                                    <xsl:with-param name="w" select="width * 1.3"/>
+                                </xsl:call-template>
+                                <xsl:text> col-sm-</xsl:text>
+                                <xsl:call-template name="grid-width">
+                                    <xsl:with-param name="w" select="width * 2"/>
+                                </xsl:call-template>
+                                <xsl:text> col-xs-</xsl:text>
+                                <xsl:call-template name="grid-width">
+                                    <xsl:with-param name="w" select="width * 4"/>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:text>col-lg-12 col-md-12 col-sm-12 col-xs-12</xsl:text>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:attribute>
+                    <div class="panel panel-default">
+                        <xsl:if test="title">
+                            <div class="panel-heading">
+                                <xsl:value-of select="title"/>
+                            </div>
+                        </xsl:if>
+                        <div class="panel-body">
+                            <xsl:apply-templates select="." />
+                        </div>
+                    </div>
+                </div>
+            </xsl:for-each>
+        </div>
+    </xsl:template>
+    <xsl:template name="grid-width">
+        <xsl:param name="w" as="xs:double"/>
+        <xsl:choose>
+            <xsl:when test="$w &gt; 12">
+                <xsl:text>12</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="round($w)"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
     <xsl:template match="pulse" mode="open">
         <div class="panel panel-default">
             <xsl:attribute name="data-fetch-url">
@@ -94,9 +158,7 @@
             </xsl:attribute>
             <div class="panel-heading">
                 <ul class="list-inline">
-                    <li>
-                        <xsl:value-of select="identifier"/>
-                    </li>
+                    <xsl:apply-templates select="coordinates"/>
                     <li class="heart text-muted icon" title="click to stop fetching">
                         <i class="icon-cloud-download"><xsl:comment>heart</xsl:comment></i>
                     </li>
@@ -127,13 +189,24 @@
                     </xsl:attribute>
                     <i class="icon-zoom-in"><xsl:comment>open</xsl:comment></i>
                 </a>
-                <ul class="list-inline">
-                    <li>
-                        <xsl:value-of select="identifier"/>
-                    </li>
+                <ul class="list-inline spacious-inline-list">
+                    <xsl:apply-templates select="coordinates"/>
                     <xsl:apply-templates select="tags/tag"/>
                 </ul>
+                <xsl:if test="tags/tag/markdown">
+                    <ul class="list-unstyled tag-detailed-list">
+                        <xsl:apply-templates select="tags/tag[markdown]" mode="detailed"/>
+                    </ul>
+                </xsl:if>
             </div>
         </div>
+    </xsl:template>
+    <xsl:template match="coordinates">
+        <li>
+            <xsl:value-of select="rule"/>
+        </li>
+        <li>
+            <xsl:value-of select="scheduled"/>
+        </li>
     </xsl:template>
 </xsl:stylesheet>

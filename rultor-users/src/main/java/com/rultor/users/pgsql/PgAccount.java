@@ -37,10 +37,12 @@ import com.jcabi.jdbc.JdbcSession;
 import com.jcabi.jdbc.SingleHandler;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Account;
+import com.rultor.spi.InvalidCouponException;
 import com.rultor.spi.Sheet;
 import com.rultor.tools.Dollars;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -125,6 +127,31 @@ final class PgAccount implements Account {
                 .update();
         } catch (SQLException ex) {
             throw new IllegalStateException(ex);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * @checkstyle RedundantThrowsCheck (3 lines)
+     */
+    @Override
+    public void fund(@NotNull final String code) throws InvalidCouponException {
+        try {
+            final Dollars amount = new Dollars(
+                new JdbcSession(this.client.get())
+                    .sql("SELECT amount FROM coupon WHERE code=?")
+                    .set(code)
+                    .select(new SingleHandler<Long>(Long.class))
+            );
+            new JdbcSession(this.client.get())
+                .sql("DELETE FROM coupon WHERE code=?")
+                .set(code)
+                .update();
+            this.fund(
+                amount, String.format("account funded with coupon %s", code)
+            );
+        } catch (SQLException ex) {
+            throw new InvalidCouponException(ex);
         }
     }
 

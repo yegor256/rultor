@@ -34,6 +34,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import java.net.URI;
@@ -41,7 +42,7 @@ import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 
 /**
- * Work with STDOUT specified.
+ * Coordinates with STDOUT specified.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -73,7 +74,7 @@ final class StdoutWork implements Work {
     /**
      * Original work.
      */
-    private final transient Work origin;
+    private final transient Coordinates origin;
 
     /**
      * Public ctor.
@@ -81,7 +82,8 @@ final class StdoutWork implements Work {
      * @param auth Stream authentication key
      * @param wrk Original work
      */
-    protected StdoutWork(final int prt, final String auth, final Work wrk) {
+    protected StdoutWork(final int prt, final String auth,
+        final Coordinates wrk) {
         this.port = prt;
         this.key = auth;
         this.origin = wrk;
@@ -146,6 +148,14 @@ final class StdoutWork implements Work {
             address = "localhost";
         }
         return address;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int compareTo(final Coordinates coords) {
+        return 1;
     }
 
 }

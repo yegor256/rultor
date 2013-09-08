@@ -83,7 +83,7 @@ public interface Stand {
      * @return Pageable
      */
     @NotNull(message = "collection of pulses is never NULL")
-    Pageable<Pulse, String> pulses();
+    Pageable<Pulse, Coordinates> pulses();
 
     /**
      * Post new xembly script to the pulse of the stand.
@@ -92,9 +92,24 @@ public interface Stand {
      * @param xembly Xembly script
      */
     void post(
-        @NotNull(message = "pulse can't be NULL") String pulse,
+        @NotNull(message = "pulse can't be NULL") Coordinates pulse,
         long nano,
         @NotNull(message = "text can't be NULL") String xembly);
+
+    /**
+     * Get specification of widgets.
+     * @return Specification of array of widgets
+     */
+    @NotNull(message = "specification of widgets is never NULL")
+    Spec widgets();
+
+    /**
+     * Save specification of widgets.
+     * @param spec Spec to save
+     */
+    void widgets(
+        @NotNull(message = "specification of widgets is never NULL")
+        Spec spec);
 
     /**
      * When Xembly can't be accepted.

@@ -95,7 +95,8 @@ public final class BuildTest {
             ).xml(),
             XhtmlMatchers.hasXPaths(
                 "/snapshot[test='\u0433\u0444']",
-                "/snapshot/tags/tag[label='hey' and level='FINE']"
+                "/snapshot/tags/tag[label='hey' and level='FINE']",
+                "//tag/data"
             )
         );
     }

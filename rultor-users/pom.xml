@@ -93,12 +93,12 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-dynamo</artifactId>
-            <version>${jcabi.version}</version>
+            <version>0.8</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-dynamo</artifactId>
-            <version>${jcabi.version}</version>
+            <version>0.8</version>
             <scope>test</scope>
             <classifier>mock</classifier>
         </dependency>
