@@ -67,7 +67,7 @@ public final class ServerTest {
             server.acquire(), Matchers.equalTo(env)
         );
         MatcherAssert.assertThat(
-        	env.address() , Matchers.equalTo(address)
+            env.address() , Matchers.equalTo(address)
         );
         Mockito.verify(env);
     }
