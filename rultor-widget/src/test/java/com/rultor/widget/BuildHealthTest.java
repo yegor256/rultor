@@ -135,4 +135,47 @@ public final class BuildHealthTest {
         );
     }
 
+    /**
+     * BuildHealth can gracefully handle broken tags.
+     * @throws Exception If fails
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void gracefullyHandlesEmptyTags() throws Exception {
+        final Widget widget = new BuildHealth();
+        final Document dom = DocumentBuilderFactory.newInstance()
+            .newDocumentBuilder().newDocument();
+        dom.appendChild(dom.createElement("widget"));
+        final Pulse first = Mockito.mock(Pulse.class);
+        final Coordinates coords = new Coordinates.Simple(
+            new URN("urn:test:3"), "rule-a"
+        );
+        Mockito.doReturn(coords).when(first).coordinates();
+        Mockito.doReturn(
+            new Tags.Simple(
+                Arrays.<Tag>asList(
+                    new Tag.Simple("git", Level.INFO),
+                    new Tag.Simple("on-commit", Level.SEVERE)
+                )
+            )
+        ).when(first).tags();
+        final Pageable<Pulse, Coordinates> pulses =
+            Mockito.mock(Pageable.class);
+        Mockito.doReturn(Arrays.asList(first).iterator())
+            .when(pulses).iterator();
+        final Stand stand = Mockito.mock(Stand.class);
+        Mockito.doReturn(pulses).when(stand).pulses();
+        new Xembler(widget.render(stand)).apply(dom);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(dom),
+            XhtmlMatchers.hasXPaths(
+                "/widget/builds/build/commit[name='???????']",
+                "/widget/builds/build/commit[author='unknown']",
+                "/widget/builds/build[duration='0']",
+                "/widget/builds/build[code='0']",
+                "/widget/builds/build[health='0.0']"
+            )
+        );
+    }
+
 }

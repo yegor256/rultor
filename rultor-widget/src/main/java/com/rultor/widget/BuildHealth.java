@@ -89,15 +89,18 @@ public final class BuildHealth implements Widget {
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Collection<BuildHealth.Build> builds(final Iterator<Pulse> pulses) {
-        final ConcurrentMap<Coordinates, BuildHealth.Build> builds =
-            new ConcurrentSkipListMap<Coordinates, BuildHealth.Build>();
+        final ConcurrentMap<String, BuildHealth.Build> builds =
+            new ConcurrentSkipListMap<String, BuildHealth.Build>();
         while (pulses.hasNext()) {
             final Pulse pulse = pulses.next();
             if (!pulse.tags().contains("on-commit")) {
                 continue;
             }
-            builds.putIfAbsent(pulse.coordinates(), new BuildHealth.Build());
-            builds.get(pulse.coordinates()).append(pulse);
+            final String coord = String.format(
+                "%s %s", pulse.coordinates().owner(), pulse.coordinates().rule()
+            );
+            builds.putIfAbsent(coord, new BuildHealth.Build());
+            builds.get(coord).append(pulse);
         }
         return builds.values();
     }
@@ -146,15 +149,17 @@ public final class BuildHealth implements Widget {
                 this.coords = pulse.coordinates();
                 if (pulse.tags().contains("git")) {
                     final Tag git = pulse.tags().get("git");
-                    this.head = git.data().getString("hash")
+                    this.head = git.data().getString("hash", "???????")
                         .substring(0, Tv.SEVEN);
-                    this.author = git.data().getString("author");
-                    this.time = new Time(git.data().getString("time"));
+                    this.author = git.data().getString("author", "unknown");
+                    this.time = new Time(
+                        git.data().getString("time", new Time().toString())
+                    );
                 }
-                this.duration = commit.data().getInt("duration");
-                this.code = commit.data().getInt("code");
+                this.duration = commit.data().getInt("duration", 0);
+                this.code = commit.data().getInt("code", 0);
             }
-            if (commit.data().getInt("code") == 0) {
+            if (commit.data().getInt("code", 0) == 0) {
                 this.codes.add(0d);
             } else {
                 this.codes.add(1d);
