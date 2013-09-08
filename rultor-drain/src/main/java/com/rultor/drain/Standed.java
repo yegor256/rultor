@@ -36,6 +36,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.log.VerboseThreads;
 import com.rexsl.test.RestTester;
 import com.rexsl.test.TestClient;
@@ -280,13 +281,13 @@ public final class Standed implements Drain {
      * @throws IOException If fails
      */
     private void send(final Iterable<String> xemblies) throws IOException {
-        final List<String> messages = new ArrayList<String>();
+        final List<String> messages = new ArrayList<String>(0);
         for (String xembly : xemblies) {
             messages.add(this.json(xembly));
         }
         final StringBuilder builder =
             new StringBuilder("Action=SendMessageBatch&Version=2011-10-01&");
-        final List<String> postMessages = new ArrayList<String>();
+        final List<String> postMessages = new ArrayList<String>(0);
         for (int identifier = 0; identifier < messages.size(); ++identifier) {
             postMessages.add(
                 String.format(
@@ -334,6 +335,7 @@ public final class Standed implements Drain {
      * @return List of message IDs that were not enqueued.
      * @throws UnsupportedEncodingException When unable to find UTF-8 encoding.
      */
+    @RetryOnFailure
     private List<String> enqueue(final TestClient client, final String body,
         final int size) throws UnsupportedEncodingException {
         return client.header(HttpHeaders.CONTENT_ENCODING, CharEncoding.UTF_8)
