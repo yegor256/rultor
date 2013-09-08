@@ -39,12 +39,16 @@ import com.rultor.scm.Commit;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.Step;
-import com.rultor.snapshot.Tag;
+import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Instance;
 import com.rultor.tools.Exceptions;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.util.logging.Level;
+import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 
 /**
@@ -120,8 +124,8 @@ public final class OnCommit implements Instance {
         before = "building `${args[0]}`",
         value = "built successfully `${args[0]}`"
     )
-    @Tag("ci")
     private void build(final Commit head) throws IOException {
+        this.tag(head);
         final Snapshot snapshot = new Build("on-commit", this.batch).exec(
             new ImmutableMap.Builder<String, Object>()
                 .put("branch", this.branch.name())
@@ -148,6 +152,34 @@ public final class OnCommit implements Instance {
     @Step("announced result")
     private void announce(final String snapshot) throws IOException {
         this.board.announce(snapshot);
+    }
+
+    /**
+     * Log a tag.
+     * @param commit Commit we're integrating
+     * @throws IOException If fails
+     */
+    private void tag(final Commit commit) throws IOException {
+        final StringWriter data = new StringWriter();
+        Json.createGenerator(data)
+            .writeStartObject()
+            .write("name", commit.name())
+            .write("author", commit.author())
+            .write("time", commit.time().toString())
+            .writeEnd()
+            .close();
+        final String desc = String.format(
+            "commit `%s` by %s on %s",
+            commit.name(), commit.author(), commit.time()
+        );
+        new XemblyLine(
+            new Directives()
+                .xpath("/snapshot").strict(1).addIfAbsent("tags")
+                .add("tag").add("label").set("ci").up()
+                .add("level").set(Level.INFO.toString()).up()
+                .add("data").set(data.toString()).up()
+                .add("markdown").set(desc)
+        ).log();
     }
 
 }

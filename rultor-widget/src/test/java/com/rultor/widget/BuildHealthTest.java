@@ -77,11 +77,11 @@ public final class BuildHealthTest {
             new Tags.Simple(
                 Arrays.<Tag>asList(
                     new Tag.Simple(
-                        "git", Level.INFO,
+                        "ci", Level.INFO,
                         Json.createReader(
                             new StringReader(
                                 // @checkstyle LineLength (1 line)
-                                "{\"hash\":\"98aeb7d\",\"author\":\"Jeff\",\"time\":\"2011-07-21T12:15:00Z\"}"
+                                "{\"name\":\"98aeb7d\",\"author\":\"Jeff\",\"time\":\"2011-07-21T12:15:00Z\"}"
                             )
                         ).readObject(),
                         ""
@@ -154,7 +154,7 @@ public final class BuildHealthTest {
         Mockito.doReturn(
             new Tags.Simple(
                 Arrays.<Tag>asList(
-                    new Tag.Simple("git", Level.INFO),
+                    new Tag.Simple("ci", Level.INFO),
                     new Tag.Simple("on-commit", Level.SEVERE)
                 )
             )

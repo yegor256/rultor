@@ -152,9 +152,9 @@ public final class BuildHealth implements Widget {
             final Tag commit = pulse.tags().get("on-commit");
             if (this.coords == null) {
                 this.coords = pulse.coordinates();
-                if (pulse.tags().contains("git")) {
-                    final Tag git = pulse.tags().get("git");
-                    this.head = git.data().getString("hash", "???????")
+                if (pulse.tags().contains("ci")) {
+                    final Tag git = pulse.tags().get("ci");
+                    this.head = git.data().getString("name", "???????")
                         .substring(0, Tv.SEVEN);
                     this.author = git.data().getString("author", "unknown");
                     this.time = new Time(
