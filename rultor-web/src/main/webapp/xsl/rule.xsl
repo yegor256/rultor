@@ -48,11 +48,10 @@
                     <label for="spec" class="hidden-phone">
                         <xsl:text>Specification of </xsl:text>
                         <code><xsl:value-of select="/page/rule/name"/></code>
-                        <xsl:text> (</xsl:text>
+                        <xsl:text> </xsl:text>
                         <a href="http://doc.rultor.com/start.html#spec">
                             <xsl:text>what is it?</xsl:text>
                         </a>
-                        <xsl:text>)</xsl:text>
                     </label>
                     <textarea name="spec" id="spec" rows="18" class="form-control">
                         <xsl:value-of select="/page/rule/spec"/>
