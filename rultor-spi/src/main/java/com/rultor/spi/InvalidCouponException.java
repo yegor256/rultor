@@ -29,52 +29,25 @@
  */
 package com.rultor.spi;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
-import com.rultor.tools.Dollars;
-import javax.validation.constraints.NotNull;
-
 /**
- * User account.
+ * Exception thrown when invalid coupon code is used.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Account {
+public final class InvalidCouponException extends Exception {
 
     /**
-     * Who is sending funds when account is funded.
+     * Serialization marker.
      */
-    URN BANK = URN.create("urn:rultor:1");
+    private static final long serialVersionUID = -7174407824688649113L;
 
     /**
-     * Balance.
-     * @return Balance
+     * Public constructor.
+     * @param cause The cause of exception.
      */
-    @NotNull(message = "Balance of account is never NULL")
-    Dollars balance();
-
-    /**
-     * Sheet.
-     * @return Sheet
-     */
-    @NotNull(message = "sheet is never NULL")
-    Sheet sheet();
-
-    /**
-     * Fund account.
-     * @param amount Amount to add/deduct
-     * @param details Explanation
-     */
-    @NotNull(message = "account is never NULL")
-    void fund(Dollars amount, String details);
-
-    /**
-     * Fund account with coupon.
-     * @param code Coupon code to use for funding.
-     * @throws InvalidCouponException When wrong coupon code is used.
-     */
-    void fund(String code) throws InvalidCouponException;
+    public InvalidCouponException(final Throwable cause) {
+        super(cause);
+    }
 }
