@@ -68,6 +68,23 @@
                     <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1"/>
                 </fieldset>
             </form>
+            <form action="coupon" method="post" class="form-inline spacious">
+                <xsl:attribute name="action">
+                    <xsl:value-of select="/page/links/link[@rel='coupon']/@href"/>
+                </xsl:attribute>
+                <fieldset>
+                    <div class="row">
+                        <div class="col-6 col-sm-4 col-lg-2">
+                            <input type="text" name="code" id="code" class="form-control" placeholder="Coupon code"/>
+                        </div>
+                        <div class="col-6 col-sm-4 col-lg-2">
+                            <button type="submit" class="btn btn-primary">
+                                <xsl:text>Fund with coupon</xsl:text>
+                            </button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
             <ul class="list-unstyled" style="margin-bottom: 3em;">
                 <li>
                     <xsl:text>All payments are made between our customers, we don't charge any commission/margin.</xsl:text>

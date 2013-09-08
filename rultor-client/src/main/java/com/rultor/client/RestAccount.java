@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
 import com.rultor.spi.Account;
+import com.rultor.spi.InvalidCouponException;
 import com.rultor.spi.Sheet;
 import com.rultor.tools.Dollars;
 import java.net.HttpURLConnection;
@@ -119,6 +120,15 @@ final class RestAccount implements Account {
      */
     @Override
     public void fund(final Dollars amount, final String details) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     * @checkstyle RedundantThrowsCheck (3 lines)
+     */
+    @Override
+    public void fund(final String code) throws InvalidCouponException {
         throw new UnsupportedOperationException();
     }
 
