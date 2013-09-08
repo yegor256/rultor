@@ -34,6 +34,7 @@ import com.jcabi.aspects.LogExceptions;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import com.rultor.snapshot.XemblyLine;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Work;
 import com.rultor.tools.Time;
@@ -64,7 +65,7 @@ public final class Descriptive implements Instance {
     /**
      * Coordinates we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Origin.
@@ -110,13 +111,15 @@ public final class Descriptive implements Instance {
                 .add("start")
                 .set(new Time().toString())
         ).log();
-        new XemblyLine(
-            new Directives()
-                .xpath("/snapshot[not(stdout)]")
-                .strict(1)
-                .add("stdout")
-                .set(this.work.stdout().toString())
-        ).log();
+        if (this.work instanceof Work) {
+            new XemblyLine(
+                new Directives()
+                    .xpath("/snapshot[not(stdout)]")
+                    .strict(1)
+                    .add("stdout")
+                    .set(Work.class.cast(this.work).stdout().toString())
+            ).log();
+        }
         new XemblyLine(
             new Directives()
                 .xpath("/snapshot[not(version)]")
