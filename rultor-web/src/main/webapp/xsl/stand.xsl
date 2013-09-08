@@ -32,7 +32,6 @@
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:include href="./layout.xsl"/>
     <xsl:include href="./snapshot.xsl"/>
-    <xsl:include href="/stylesheets/all.xsl"/>
     <xsl:template name="head">
         <title>
             <xsl:value-of select="/page/stand"/>

@@ -63,54 +63,6 @@
     <stand>nightly-build</stand>
     <since>2012-08-23T13:25:33Z</since>
     <balance>$0.45</balance>
-    <widgets>
-        <widget class="com.rultor.widget.BuildHealth">
-            <title>Build Health</title>
-            <width>4</width>
-            <builds>
-                <build>
-                    <coordinates>
-                        <rule>rultor-on-commit</rule>
-                        <owner>urn:github:1</owner>
-                        <scheduled>2012-07-20T07:13:33Z</scheduled>
-                    </coordinates>
-                    <health>0.78</health>
-                    <commit>
-                        <name>09ae8f5</name>
-                        <time>2012-08-23T13:25:33Z</time>
-                        <author>Jeff Lebowski</author>
-                    </commit>
-                    <duration>473783</duration>
-                    <code>0</code>
-                </build>
-                <build>
-                    <coordinates>
-                        <rule>rultor-skin-on-commit</rule>
-                        <owner>urn:github:1</owner>
-                        <scheduled>2012-07-20T07:13:33Z</scheduled>
-                    </coordinates>
-                    <health>0.97</health>
-                    <commit>
-                        <name>89775e5</name>
-                        <time>2012-07-20T13:25:33Z</time>
-                        <author>Walter</author>
-                    </commit>
-                    <duration>93838</duration>
-                    <code>0</code>
-                </build>
-            </builds>
-        </widget>
-        <widget class="com.rultor.widget.RecentBuilds">
-            <title>Recent Builds</title>
-            <width>6</width>
-            <links>
-                <link href="/xml/stand.xml" rel="more" type="text/xml"/>
-            </links>
-            <body>
-                test
-            </body>
-        </widget>
-    </widgets>
     <pulses>
         <pulse>
             <coordinates>

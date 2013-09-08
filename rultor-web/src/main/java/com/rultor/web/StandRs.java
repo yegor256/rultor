@@ -147,7 +147,10 @@ public final class StandRs extends BaseRs {
     @Path("/")
     public Response index() {
         EmptyPage page = new PageBuilder()
-            .stylesheet("/xsl/stand.xsl")
+            .stylesheet(
+                this.uriInfo().getBaseUriBuilder()
+                    .clone().path(StylesheetsRs.class).build().toString()
+        )
             .build(EmptyPage.class)
             .init(this)
             .link(
