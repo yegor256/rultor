@@ -45,6 +45,7 @@
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
         <link href="/xml/account.xml" rel="more" type="text/xml"/>
         <link href="/xml/account.xml" rel="account" type="text/xml"/>
+        <link href="/xml/account.xml" rel="coupon" type="text/xml"/>
         <link href="/xml/rules.xml" rel="rules" type="text/xml"/>
         <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
         <link href="/xml/front.xml" rel="auth-logout" type="text/xml"/>
