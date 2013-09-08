@@ -57,6 +57,7 @@ import javax.ws.rs.core.Response;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Path("/widgets/{name:[\\w\\-]+}")
 @Loggable(Loggable.DEBUG)

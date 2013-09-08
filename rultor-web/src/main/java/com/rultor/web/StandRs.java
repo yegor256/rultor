@@ -443,7 +443,7 @@ public final class StandRs extends BaseRs {
 
     /**
      * All widgets of the stand.
-     * @param spec Spec of array of widgets
+     * @param widgets Collection of widgets
      * @return Collection of JAXB widgets
      */
     private JaxbBundle widgets(final Collection<Widget> widgets) {
