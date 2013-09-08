@@ -78,7 +78,7 @@
             <xsl:text> </xsl:text>
             <xsl:choose>
                 <xsl:when test="code = 0">
-                    <xsl:text>was built </xsl:text>
+                    <xsl:text>has been built </xsl:text>
                     <strong><xsl:text>successfully</xsl:text></strong>
                 </xsl:when>
                 <xsl:otherwise>
