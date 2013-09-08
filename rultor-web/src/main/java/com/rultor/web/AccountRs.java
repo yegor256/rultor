@@ -230,6 +230,7 @@ public final class AccountRs extends BaseRs {
                     this.home().replaceQueryParam(AccountRs.QUERY_SINCE, 0)
                 )
             )
+            .link(new Link("coupon", "./coupon"))
             .append(this.receipts(sheet.tail(this.since).iterator(), Tv.TWENTY))
             .render()
             .build();
@@ -244,7 +245,7 @@ public final class AccountRs extends BaseRs {
     @Path("/coupon")
     public Response coupon(
         @NotNull(message = "coupon code is mandatory")
-        @FormParam("coupon") final String code
+        @FormParam("code") final String code
     ) {
         try {
             this.user().account().fund(code);
