@@ -132,6 +132,7 @@ public final class SQSPulseSensor implements Runnable, Closeable {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void run() {
         final AmazonSQS aws = this.client.get();
         try {
