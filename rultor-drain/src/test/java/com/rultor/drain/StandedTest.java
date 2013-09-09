@@ -42,7 +42,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -135,17 +134,27 @@ public final class StandedTest {
     }
 
     /**
+     * Standed can make HTTP errors visible in logs (run this test
+     * individually and read logs, you should see the message there
+     * with WARN or higher priority).
+     * @throws IOException In case of error
+     */
+    @Test
+    public void httpSendingErrorsAreVisibleInLog() throws IOException {
+        final TestClient client = Mockito.mock(TestClient.class);
+        Mockito.doThrow(new IllegalStateException("failure!")).when(client)
+            .header(Mockito.anyString(), Mockito.anyString());
+        this.standed(client).append(this.xemblyList(1));
+    }
+
+    /**
      * Create instance of standed.
      * @param client TestClient to use
      * @return Standed instance
      */
     private Standed standed(final TestClient client) {
-        final Coordinates work = Mockito.mock(Coordinates.class);
-        Mockito.when(work.owner()).thenReturn(new URN());
-        Mockito.when(work.rule()).thenReturn(StringUtils.EMPTY);
-        Mockito.when(work.scheduled()).thenReturn(new Time());
         return new Standed(
-            work,
+            new Coordinates.Simple(new URN(), "simple-rule", new Time()),
             "name", "pass",
             Mockito.mock(Drain.class),
             client,
