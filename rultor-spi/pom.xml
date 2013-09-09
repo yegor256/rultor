@@ -113,6 +113,11 @@
             <artifactId>rexsl-test</artifactId>
             <version>${rexsl.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.cedarsoft.serialization.generator</groupId>
+            <artifactId>stax-mate</artifactId>
+            <version>1.0.3</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

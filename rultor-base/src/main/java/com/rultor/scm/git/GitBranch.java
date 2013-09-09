@@ -104,7 +104,7 @@ public final class GitBranch implements Branch {
         final String stdout = this.terminal.exec(
             new StringBuilder()
                 .append("DIR=`pwd`/")
-                .append(Terminal.escape(this.dir))
+                .append(Terminal.quotate(Terminal.escape(this.dir)))
                 .append(" && cd \"$DIR/repo\"")
                 .append(" && GIT_SSH=\"$DIR/git-ssh.sh\"")
                 // @checkstyle LineLength (1 line)

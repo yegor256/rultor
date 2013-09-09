@@ -77,20 +77,29 @@ public final class Terminal {
     /**
      * Escape argument.
      * @param arg Argument
-     * @return Escaped and bash-safe
+     * @return Escaped
      * @todo #34 This implementation is extremely bad
      */
     public static String escape(@NotNull(message = "argument can't be NULL")
         final String arg) {
+        return arg
+            .replace("\\", "\\\\")
+            .replace("\"", "\\\"")
+            .replace("$", "\\$")
+            .replace("!", "\"'!'\"")
+            .replace("`", "\\`");
+    }
+
+    /**
+     * Quotate argument.
+     * @param arg Argument
+     * @return Quotated
+     */
+    public static String quotate(@NotNull(message = "argument can't be NULL")
+        final String arg) {
         return new StringBuilder()
             .append('"')
-            .append(
-                arg.replace("\\", "\\\\")
-                    .replace("\"", "\\\"")
-                    .replace("$", "\\$")
-                    .replace("!", "\"'!'\"")
-                    .replace("`", "\\`")
-            )
+            .append(arg)
             .append('"')
             .toString();
     }

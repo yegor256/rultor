@@ -135,11 +135,14 @@ public final class Prerequisites implements Shells {
         final StringBuilder script = new StringBuilder();
         final String dir = FilenameUtils.getFullPathNoEndSeparator(path);
         if (!dir.isEmpty()) {
-            script.append("mkdir -p ").append(Terminal.escape(dir)).append(";");
+            script
+                .append("mkdir -p ")
+                .append(Terminal.quotate(Terminal.escape(dir)))
+                .append(";");
         }
         return script
             .append("cat > ")
-            .append(Terminal.escape(path))
+            .append(Terminal.quotate(Terminal.escape(path)))
             .toString();
     }
 
