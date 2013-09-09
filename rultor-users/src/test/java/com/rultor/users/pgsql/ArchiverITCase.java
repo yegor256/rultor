@@ -29,6 +29,7 @@
  */
 package com.rultor.users.pgsql;
 
+import org.junit.Assume;
 import org.junit.Test;
 
 /**
@@ -56,6 +57,7 @@ public final class ArchiverITCase {
      */
     @Test
     public void archivesDatabase() throws Exception {
+        Assume.assumeNotNull(ArchiverITCase.URL);
         final Archiver arch = new Archiver(
             new PgClient.Simple(ArchiverITCase.URL, ArchiverITCase.PASSWORD)
         );
