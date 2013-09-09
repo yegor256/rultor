@@ -31,7 +31,6 @@ package com.rultor.log4j;
 
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
-import com.jcabi.log.Logger;
 import com.rultor.spi.Drain;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
@@ -124,7 +123,7 @@ final class GroupAppender extends AppenderSkeleton
             this.drain.append(all);
         // @checkstyle IllegalCatch (1 line)
         } catch (Throwable ex) {
-            Logger.error(this, "#append(): %s", Exceptions.message(ex));
+            Exceptions.error(this, ex);
         }
     }
 

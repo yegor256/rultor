@@ -37,6 +37,7 @@ import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseThreads;
 import com.rexsl.test.RestTester;
 import com.rexsl.test.TestClient;
@@ -54,9 +55,10 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.json.Json;
@@ -82,8 +84,13 @@ import org.xembly.XemblySyntaxException;
 @Immutable
 @EqualsAndHashCode(of = { "origin", "work", "stand", "key" })
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.ExcessiveImports")
+@SuppressWarnings({ "PMD.ExcessiveImports", "PMD.DoNotUseThreads" })
 public final class Standed implements Drain {
+
+    /**
+     * Randomizer for nanos.
+     */
+    public static final Random RND = new SecureRandom();
 
     /**
      * Number of threads to use for sending to queue.
@@ -100,7 +107,6 @@ public final class Standed implements Drain {
      */
     @Immutable
     private interface SQSEntry {
-
         /**
          * Provide SQS connection.
          * @return SQS connection.
@@ -113,7 +119,6 @@ public final class Standed implements Drain {
      */
     @Immutable
     private interface Exec {
-
         /**
          * Provide executor.
          * @return ExecutorService
@@ -226,32 +231,31 @@ public final class Standed implements Drain {
      */
     @Override
     public void append(final Iterable<String> lines) throws IOException {
-        final Iterable<List<String>> batches =
-            Iterables.partition(
-                FluentIterable.from(lines)
-                    .filter(
-                        new Predicate<String>() {
-                            @Override
-                            public boolean apply(final String line) {
-                                return XemblyLine.existsIn(line);
-                            }
+        final Iterable<List<String>> batches = Iterables.partition(
+            FluentIterable.from(lines)
+                .filter(
+                    new Predicate<String>() {
+                        @Override
+                        public boolean apply(final String line) {
+                            return XemblyLine.existsIn(line);
                         }
-                    )
-                    .transform(
-                        new Function<String, String>() {
-                            @Override
-                            public String apply(final String line) {
-                                try {
-                                    return XemblyLine.parse(line).xembly();
-                                } catch (XemblySyntaxException ex) {
-                                    Exceptions.warn(this, ex);
-                                }
-                                return null;
+                    }
+                )
+                .transform(
+                    new Function<String, String>() {
+                        @Override
+                        public String apply(final String line) {
+                            try {
+                                return XemblyLine.parse(line).xembly();
+                            } catch (XemblySyntaxException ex) {
+                                Exceptions.warn(this, ex);
                             }
+                            return null;
                         }
-                    )
-                    .filter(Predicates.notNull()), Standed.MAX_BATCH_SIZE
-            );
+                    }
+                )
+                .filter(Predicates.notNull()), Standed.MAX_BATCH_SIZE
+        );
         for (List<String> batchLines : batches) {
             this.send(batchLines);
         }
@@ -281,35 +285,33 @@ public final class Standed implements Drain {
      * @throws IOException If fails
      */
     private void send(final Iterable<String> xemblies) throws IOException {
-        final List<String> messages = new ArrayList<String>(0);
+        final List<String> msgs = new ArrayList<String>(0);
         for (String xembly : xemblies) {
-            messages.add(this.json(xembly));
+            msgs.add(this.json(xembly));
         }
-        final StringBuilder builder =
-            new StringBuilder("Action=SendMessageBatch&Version=2011-10-01&");
-        final List<String> postMessages = new ArrayList<String>(0);
-        for (int identifier = 0; identifier < messages.size(); ++identifier) {
-            postMessages.add(
+        final StringBuilder body = new StringBuilder()
+            .append("Action=SendMessageBatch")
+            .append("&Version=2011-10-01");
+        final List<String> posts = new ArrayList<String>(0);
+        for (int idx = 0; idx < msgs.size(); ++idx) {
+            posts.add(
                 String.format(
                     // @checkstyle LineLength (1 line)
                     "SendMessageBatchRequestEntry.%d.Id=%<d&SendMessageBatchRequestEntry.%<d.MessageBody=%s",
-                    identifier + 1,
-                    URLEncoder.encode(
-                        messages.get(identifier), CharEncoding.UTF_8
-                    )
+                    idx + 1,
+                    URLEncoder.encode(msgs.get(idx), CharEncoding.UTF_8)
                 )
             );
         }
-        builder.append(StringUtils.join(postMessages, '&'));
-        final String body = builder.toString();
+        body.append('&').append(StringUtils.join(posts, '&'));
         final TestClient client = this.entry.get();
         this.exec.get().submit(
-            new Callable<Void>() {
+            new Runnable() {
                 @Override
-                public Void call() throws IOException {
+                public void run() {
                     try {
                         final List<String> missed = Standed.this.enqueue(
-                            client, body, messages.size()
+                            client, body.toString(), msgs.size()
                         );
                         if (!missed.isEmpty()) {
                             throw new IOException(
@@ -318,10 +320,9 @@ public final class Standed implements Drain {
                                 )
                             );
                         }
-                    } catch (AssertionError ex) {
-                        throw new IOException(ex);
+                    } catch (IOException ex) {
+                        throw new IllegalStateException(ex);
                     }
-                    return null;
                 }
             }
         );
@@ -348,25 +349,27 @@ public final class Standed implements Drain {
                 MediaType.APPLICATION_FORM_URLENCODED
             )
             .post(
-                String.format("sending %d lines to stand SQS queue", size),
+                String.format("sending %d line(s) to stand SQS queue", size),
                 body
             )
             .assertStatus(HttpURLConnection.HTTP_OK)
-                // @checkstyle LineLength (1 line)
+            // @checkstyle LineLength (1 line)
             .xpath("/SendMessageBatchResponse/BatchResultError/BatchResultErrorEntry/Id/text()");
     }
 
     /**
      * Create a JSON representation of xembly.
-     * @param xembly Xembly to change into json.
+     * @param xembly Xembly to change into JSON.
      * @return JSON of xembly.
      */
     private String json(final String xembly) {
         final StringWriter writer = new StringWriter();
+        final long nano = System.nanoTime() * Tv.HUNDRED
+            + Standed.RND.nextInt(Tv.HUNDRED);
         Json.createGenerator(writer)
             .writeStartObject()
-            .write("nano", System.nanoTime())
             .write("stand", this.stand)
+            .write("nano", nano)
             .write("key", this.key)
             .write("xembly", xembly)
             .writeStartObject("work")
