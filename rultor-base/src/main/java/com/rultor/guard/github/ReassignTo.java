@@ -29,6 +29,7 @@
  */
 package com.rultor.guard.github;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
@@ -42,6 +43,7 @@ import org.eclipse.egit.github.core.service.UserService;
  * @author Bharath Bolisetty (bharathbolisetty@gmail.com)
  * @version $Id$
  */
+@Immutable
 @ToString
 @EqualsAndHashCode(of = { "user" })
 @Loggable(Loggable.DEBUG)
@@ -50,11 +52,6 @@ final class ReassignTo implements Approval {
      * Reassigned to user.
      */
     private final transient String user;
-
-    /**
-     * Caches Github User object of user.
-     */
-    private transient User cachedasignee;
 
     /**
      * Public ctor.
@@ -78,10 +75,11 @@ final class ReassignTo implements Approval {
      * @throws IOException if fails.
      */
     private User getUser(final Github github) throws IOException {
-        if (!"".equals(this.user) && this.cachedasignee == null) {
+        User userobject = null;
+        if (!"".equals(this.user)) {
             final UserService usvc = new UserService(github.client());
-            this.cachedasignee = usvc.getUser(this.user);
+            userobject = usvc.getUser(this.user);
         }
-        return this.cachedasignee;
+        return userobject;
     }
 }
