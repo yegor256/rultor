@@ -301,7 +301,7 @@ final class MongoStand implements Stand {
         try {
             nodes.addAll(
                 new SimpleXml(new DOMSource(this.dom(after))).nodes(
-                    "/snapshot/tags/tag"
+                    "/snapshot/tags/tag[label and level]"
                 )
             );
         } catch (BrokenXemblyException ex) {

@@ -76,6 +76,7 @@ public final class Shallow implements Shell {
      * @checkstyle ParameterNumber (5 lines)
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public int exec(final String command, final InputStream stdin,
         final OutputStream stdout, final OutputStream stderr)
         throws IOException {

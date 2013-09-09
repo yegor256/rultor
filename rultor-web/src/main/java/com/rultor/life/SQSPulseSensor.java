@@ -132,38 +132,22 @@ public final class SQSPulseSensor implements Runnable, Closeable {
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings({
-        "PMD.AvoidInstantiatingObjectsInLoops",
-        "PMD.AvoidCatchingGenericException"
-    })
     public void run() {
         final AmazonSQS aws = this.client.get();
-        final ReceiveMessageResult result = aws.receiveMessage(
-            new ReceiveMessageRequest()
-                .withQueueUrl(this.client.url())
-                .withWaitTimeSeconds(Tv.TWENTY)
-                .withVisibilityTimeout(Tv.FIVE)
-                .withMaxNumberOfMessages(Tv.TEN)
-        );
-        for (Message msg : result.getMessages()) {
-            try {
-                this.post(SQSPulseSensor.NORM.readObject(msg.getBody()));
-            } catch (SecurityException ex) {
-                Exceptions.info(this, ex);
-            // @checkstyle IllegalCatch (1 line)
-            } catch (Stand.BrokenXemblyException ex) {
-                Exceptions.warn(this, ex);
-            } catch (NormJson.JsonException ex) {
-                Exceptions.warn(this, ex);
-            } finally {
-                aws.deleteMessage(
-                    new DeleteMessageRequest()
-                        .withQueueUrl(this.client.url())
-                        .withReceiptHandle(msg.getReceiptHandle())
-                );
+        try {
+            final ReceiveMessageResult result = aws.receiveMessage(
+                new ReceiveMessageRequest()
+                    .withQueueUrl(this.client.url())
+                    .withWaitTimeSeconds(Tv.FIVE)
+                    .withVisibilityTimeout(Tv.FIVE)
+                    .withMaxNumberOfMessages(Tv.TWENTY)
+            );
+            for (Message msg : result.getMessages()) {
+                this.process(aws, msg);
             }
+        } finally {
+            aws.shutdown();
         }
-        aws.shutdown();
     }
 
     /**
@@ -172,6 +156,29 @@ public final class SQSPulseSensor implements Runnable, Closeable {
     @Override
     public void close() throws IOException {
         this.service.shutdown();
+    }
+
+    /**
+     * Process one message.
+     * @param aws SQS client
+     * @param msg Message from SQS
+     */
+    private void process(final AmazonSQS aws, final Message msg) {
+        try {
+            this.post(SQSPulseSensor.NORM.readObject(msg.getBody()));
+        } catch (SecurityException ex) {
+            Exceptions.info(this, ex);
+        } catch (Stand.BrokenXemblyException ex) {
+            throw new IllegalArgumentException(ex);
+        } catch (NormJson.JsonException ex) {
+            throw new IllegalArgumentException(ex);
+        } finally {
+            aws.deleteMessage(
+                new DeleteMessageRequest()
+                    .withQueueUrl(this.client.url())
+                    .withReceiptHandle(msg.getReceiptHandle())
+            );
+        }
     }
 
     /**

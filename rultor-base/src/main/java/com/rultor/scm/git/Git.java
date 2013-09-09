@@ -142,6 +142,7 @@ public final class Git implements SCM {
     @Tag("git")
     @Step("Git branch `${args[0]}` checked out")
     @RetryOnFailure
+    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Branch checkout(final String name) throws IOException {
         this.terminal.exec(
             new StringBuilder(this.reset())
