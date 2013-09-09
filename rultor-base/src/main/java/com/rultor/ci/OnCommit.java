@@ -32,6 +32,7 @@ package com.rultor.ci;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.board.Billboard;
 import com.rultor.scm.Branch;
@@ -48,6 +49,7 @@ import java.util.logging.Level;
 import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang.StringUtils;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 
@@ -170,7 +172,8 @@ public final class OnCommit implements Instance {
             .close();
         final String desc = String.format(
             "commit `%s` by %s on %s",
-            commit.name(), commit.author(), commit.time()
+            StringUtils.substring(commit.name(), 0, Tv.SEVEN), 
+            commit.author(), commit.time()
         );
         new XemblyLine(
             new Directives()
