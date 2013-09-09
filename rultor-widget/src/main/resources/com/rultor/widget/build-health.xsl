@@ -62,14 +62,24 @@
     <xsl:template match="build" mode="build-health-single">
         <p>
             <span class="pull-left" style="font-size: 3em; margin-right: .2em;">
-                <xsl:choose>
-                    <xsl:when test="code = 0">
-                        <i class="icon-thumbs-up text-success"><xsl:comment>ok</xsl:comment></i>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <i class="icon-thumbs-down text-danger"><xsl:comment>fail</xsl:comment></i>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <a class="icon">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="/page/links/link[@rel='pulse-open']/@href"/>
+                        <xsl:value-of select="coordinates/scheduled"/>
+                        <xsl:text>+</xsl:text>
+                        <xsl:value-of select="coordinates/rule"/>
+                        <xsl:text>+</xsl:text>
+                        <xsl:value-of select="coordinates/owner"/>
+                    </xsl:attribute>
+                    <xsl:choose>
+                        <xsl:when test="code = 0">
+                            <i class="icon-thumbs-up text-success"><xsl:comment>ok</xsl:comment></i>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <i class="icon-thumbs-down text-danger"><xsl:comment>fail</xsl:comment></i>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </a>
             </span>
             <xsl:text>Latest commit </xsl:text>
             <code><xsl:value-of select="commit/name"/></code>
@@ -121,14 +131,24 @@
                 </xsl:choose>
             </xsl:attribute>
             <td>
-                <xsl:choose>
-                    <xsl:when test="code = 0">
-                        <i class="icon-thumbs-up text-success"><xsl:comment>ok</xsl:comment></i>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <i class="icon-thumbs-down text-danger"><xsl:comment>fail</xsl:comment></i>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <a class="icon">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="/page/links/link[@rel='pulse-open']/@href"/>
+                        <xsl:value-of select="coordinates/scheduled"/>
+                        <xsl:text>+</xsl:text>
+                        <xsl:value-of select="coordinates/rule"/>
+                        <xsl:text>+</xsl:text>
+                        <xsl:value-of select="coordinates/owner"/>
+                    </xsl:attribute>
+                    <xsl:choose>
+                        <xsl:when test="code = 0">
+                            <i class="icon-thumbs-up text-success"><xsl:comment>ok</xsl:comment></i>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <i class="icon-thumbs-down text-danger"><xsl:comment>fail</xsl:comment></i>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </a>
             </td>
             <td>
                 <xsl:value-of select="coordinates/rule"/>
