@@ -34,6 +34,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rultor.snapshot.Step;
 import java.io.IOException;
 import java.util.Collections;
@@ -92,6 +93,7 @@ public final class SemVer implements SCM {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Branch checkout(final String name) throws IOException {
         return this.scm.checkout(name);
     }
@@ -101,6 +103,7 @@ public final class SemVer implements SCM {
      */
     @Override
     @Step("${result.size()} branch(es) match `${this.regex}`")
+    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public List<String> branches() throws IOException {
         final List<String> ordered = new LinkedList<String>();
         final Pattern pattern = Pattern.compile(this.regex);
