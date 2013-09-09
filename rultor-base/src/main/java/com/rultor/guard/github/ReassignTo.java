@@ -32,6 +32,7 @@ package com.rultor.guard.github;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.io.IOException;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.eclipse.egit.github.core.PullRequest;
@@ -57,14 +58,15 @@ final class ReassignTo implements Approval {
      * Public ctor.
      * @param assignee Assignee
      */
-    public ReassignTo(final String assignee) {
+    public ReassignTo(
+        @NotNull(message = "asignee can not be null") final String assignee) {
         this.user = assignee;
     }
 
     @Override
     public boolean has(final PullRequest request, final Github client,
         final Github.Repo repo) throws IOException {
-        request.setAssignee(this.getUser(client));
+        request.setAssignee(this.assignee(client));
         return true;
     }
 
@@ -74,9 +76,9 @@ final class ReassignTo implements Approval {
      * @return User object of user.
      * @throws IOException if fails.
      */
-    private User getUser(final Github github) throws IOException {
-        User assignee = null;
-        if (this.user == null || this.user.isEmpty()) {
+    private User assignee(final Github github) throws IOException {
+        final User assignee;
+        if (this.user.isEmpty()) {
             assignee = new User();
             assignee.setLogin("");
         } else {
