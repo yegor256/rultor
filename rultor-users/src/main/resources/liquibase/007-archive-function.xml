@@ -36,7 +36,7 @@
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <changeSet author="yegor@tpc2.com" id="153">
         <sql splitStatements="false"><![CDATA[
-            CREATE OR REPLACE FUNCTION compress() RETURNS VOID AS $$
+            CREATE OR REPLACE FUNCTION archive() RETURNS VOID AS $$
             DECLARE
                 threshold TIMESTAMP;
             BEGIN
