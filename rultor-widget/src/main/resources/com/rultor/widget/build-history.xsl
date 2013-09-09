@@ -41,7 +41,9 @@
                 <table class="table table-condensed">
                     <thead>
                         <tr>
-                            <th><i class="icon-flag-alt"><xsl:comment>flag</xsl:comment></i></th>
+                            <th>
+                                <i class="icon-flag-alt"><xsl:comment>flag</xsl:comment></i>
+                            </th>
                             <th><xsl:text>Rule</xsl:text></th>
                             <th><xsl:text>Commit</xsl:text></th>
                             <th><xsl:text>By</xsl:text></th>
@@ -59,14 +61,24 @@
     <xsl:template match="build" mode="build-history-row">
         <tr>
             <td>
-                <xsl:choose>
-                    <xsl:when test="code = 0">
-                        <i class="icon-thumbs-up text-success"><xsl:comment>ok</xsl:comment></i>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <i class="icon-thumbs-down text-danger"><xsl:comment>fail</xsl:comment></i>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <a class="icon">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="/page/links/link[@rel='pulse-open']/@href"/>
+                        <xsl:value-of select="coordinates/scheduled"/>
+                        <xsl:text>+</xsl:text>
+                        <xsl:value-of select="coordinates/rule"/>
+                        <xsl:text>+</xsl:text>
+                        <xsl:value-of select="coordinates/owner"/>
+                    </xsl:attribute>
+                    <xsl:choose>
+                        <xsl:when test="code = 0">
+                            <i class="icon-thumbs-up text-success"><xsl:comment>ok</xsl:comment></i>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <i class="icon-thumbs-down text-danger"><xsl:comment>fail</xsl:comment></i>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </a>
             </td>
             <td>
                 <xsl:value-of select="coordinates/rule"/>
