@@ -37,6 +37,8 @@
     <changeSet author="yegor@tpc2.com" id="153.2">
         <sql splitStatements="false"><![CDATA[
             CREATE OR REPLACE FUNCTION compress() RETURNS TRIGGER AS $$
+            DECLARE
+                date TIMESTAMP;
             BEGIN
                 date := DATE_TRUNC('week', NOW()) - '1 s'::INTERVAL;
                 CREATE TEMPORARY TABLE t AS
@@ -54,5 +56,23 @@
             END;
             $$ LANGUAGE plpgsql
         ]]></sql>
+    </changeSet>
+    <changeSet author="yegor@tpc2.com" id="153.3" context="test" runAlways="true">
+        <insert schemaName="public" tableName="receipt">
+            <column name="dt" value="urn:test:1"/>
+            <column name="dtrule" value="first"/>
+            <column name="ct" value="urn:test:5"/>
+            <column name="ctrule" value="second"/>
+            <column name="amount" value="50"/>
+            <column name="details" value="first test transaction"/>
+        </insert>
+        <insert schemaName="public" tableName="receipt">
+            <column name="dt" value="urn:test:1"/>
+            <column name="dtrule" value="first"/>
+            <column name="ct" value="urn:test:6"/>
+            <column name="ctrule" value="second"/>
+            <column name="amount" value="500"/>
+            <column name="details" value="second test transaction"/>
+        </insert>
     </changeSet>
 </databaseChangeLog>
