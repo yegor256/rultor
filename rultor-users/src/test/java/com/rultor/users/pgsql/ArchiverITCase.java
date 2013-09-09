@@ -29,66 +29,37 @@
  */
 package com.rultor.users.pgsql;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.ScheduleWithFixedDelay;
-import com.jcabi.jdbc.JdbcSession;
-import com.jcabi.jdbc.VoidHandler;
-import java.io.Closeable;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.concurrent.TimeUnit;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.junit.Test;
 
 /**
- * Archives old data in PostgreSQL.
- *
+ * Integration case for {@link Archiver}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-@ToString
-@EqualsAndHashCode(of = "client")
-@Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.DoNotUseThreads")
-@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.HOURS)
-public final class Archiver implements Runnable, Closeable {
+public final class ArchiverITCase {
 
     /**
-     * PostgreSQL client.
+     * JDBC URL.
      */
-    private final transient PgClient client;
+    private static final String URL =
+        System.getProperty("failsafe.pgsql.jdbc");
 
     /**
-     * Public ctor.
-     * @param clnt Client
+     * JDBC password.
      */
-    public Archiver(final PgClient clnt) {
-        this.client = clnt;
-    }
+    private static final String PASSWORD =
+        System.getProperty("failsafe.pgsql.password");
 
     /**
-     * {@inheritDoc}
+     * Archiver can archive DB.
+     * @throws Exception If some problem inside
      */
-    @Override
-    public void run() {
-        try {
-            new JdbcSession(this.client.get())
-                .sql("SELECT archive()")
-                .select(new VoidHandler());
-        } catch (SQLException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void close() throws IOException {
-        // nothing to do now
+    @Test
+    public void archivesDatabase() throws Exception {
+        final Archiver arch = new Archiver(
+            new PgClient.Simple(ArchiverITCase.URL, ArchiverITCase.PASSWORD)
+        );
+        arch.run();
     }
 
 }
