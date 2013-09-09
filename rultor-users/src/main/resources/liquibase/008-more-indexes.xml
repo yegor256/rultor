@@ -44,9 +44,15 @@
             indexName="idx_amount" unique="false">
             <column name="amount" />
         </createIndex>
+        <createIndex schemaName="public" tableName="receipt"
+            indexName="idx_dtct" unique="false">
+            <column name="dt" />
+            <column name="ct" />
+        </createIndex>
         <rollback>
             <dropIndex schemaName="public" tableName="receipt" indexName="idx_time"/>
             <dropIndex schemaName="public" tableName="receipt" indexName="idx_amount"/>
+            <dropIndex schemaName="public" tableName="receipt" indexName="idx_dtct"/>
         </rollback>
     </changeSet>
 </databaseChangeLog>
