@@ -140,7 +140,7 @@ public final class SQSPulseSensor implements Runnable, Closeable {
                     .withQueueUrl(this.client.url())
                     .withWaitTimeSeconds(Tv.FIVE)
                     .withVisibilityTimeout(Tv.FIVE)
-                    .withMaxNumberOfMessages(Tv.TWENTY)
+                    .withMaxNumberOfMessages(Tv.TEN)
             );
             for (Message msg : result.getMessages()) {
                 this.process(aws, msg);
