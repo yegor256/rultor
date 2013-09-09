@@ -40,6 +40,7 @@ import com.rultor.spi.Widget;
 import com.rultor.tools.Time;
 import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directives;
 
 /**
@@ -93,7 +94,11 @@ public final class BuildHistory implements Widget {
             .up()
             .add("commit")
             .add("name")
-            .set(scm.getString("name", "???????").substring(0, Tv.SEVEN))
+            .set(
+                StringUtils.substring(
+                    scm.getString("name", "???????"), 0, Tv.SEVEN
+                )
+            )
             .up()
             .add("time")
             .set(

@@ -47,6 +47,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.stat.StatUtils;
 import org.xembly.Directives;
 
@@ -153,8 +154,9 @@ public final class BuildHealth implements Widget {
                 this.coords = pulse.coordinates();
                 if (pulse.tags().contains("ci")) {
                     final Tag scm = pulse.tags().get("ci");
-                    this.head = scm.data().getString("name", "???????")
-                        .substring(0, Tv.SEVEN);
+                    this.head = StringUtils.substring(
+                        scm.data().getString("name", "???????"), 0, Tv.SEVEN
+                    );
                     this.author = scm.data().getString("author", "unknown");
                     this.time = new Time(
                         scm.data().getString("time", new Time().toString())
