@@ -41,7 +41,7 @@
                 </p>
             </xsl:when>
             <xsl:when test="builds[count(build) = 1]">
-                <xsl:apply-templates select="builds/build" mode="single"/>
+                <xsl:apply-templates select="builds/build" mode="build-health-single"/>
             </xsl:when>
             <xsl:otherwise>
                 <table class="table table-condensed">
@@ -53,13 +53,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <xsl:apply-templates select="builds/build" mode="table-row"/>
+                        <xsl:apply-templates select="builds/build" mode="build-health-row"/>
                     </tbody>
                 </table>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <xsl:template match="build" mode="single">
+    <xsl:template match="build" mode="build-health-single">
         <p>
             <span class="pull-left" style="font-size: 3em; margin-right: .2em;">
                 <xsl:choose>
@@ -105,7 +105,7 @@
             <xsl:text>).</xsl:text>
         </p>
     </xsl:template>
-    <xsl:template match="build" mode="table-row">
+    <xsl:template match="build" mode="build-health-row">
         <tr>
             <xsl:attribute name="class">
                 <xsl:choose>
