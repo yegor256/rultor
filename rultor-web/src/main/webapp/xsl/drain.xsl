@@ -38,9 +38,6 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <h2>
-            <xsl:value-of select="/page/rule"/>
-        </h2>
         <xsl:choose>
             <xsl:when test="/page/pulses/pulse">
                 <xsl:if test="/page/since">
