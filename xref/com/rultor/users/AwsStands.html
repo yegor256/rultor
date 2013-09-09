@@ -140,44 +140,45 @@
 <a class="jxr_linenumber" name="130" href="#130">130</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="131" href="#131">131</a>     @Override
 <a class="jxr_linenumber" name="132" href="#132">132</a>     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-<a class="jxr_linenumber" name="133" href="#133">133</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> contains(<strong class="jxr_keyword">final</strong> String name) {
-<a class="jxr_linenumber" name="134" href="#134">134</a>         <strong class="jxr_keyword">return</strong> !<strong class="jxr_keyword">this</strong>.region.table(AwsStand.TABLE).frame()
-<a class="jxr_linenumber" name="135" href="#135">135</a>             .where(AwsStand.HASH_OWNER, <strong class="jxr_keyword">this</strong>.owner.toString())
-<a class="jxr_linenumber" name="136" href="#136">136</a>             .where(AwsStand.RANGE_STAND, name)
-<a class="jxr_linenumber" name="137" href="#137">137</a>             .isEmpty();
-<a class="jxr_linenumber" name="138" href="#138">138</a>     }
-<a class="jxr_linenumber" name="139" href="#139">139</a> 
-<a class="jxr_linenumber" name="140" href="#140">140</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="141" href="#141">141</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="142" href="#142">142</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="143" href="#143">143</a>     @Override
-<a class="jxr_linenumber" name="144" href="#144">144</a>     <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Stand.html">Stand</a> get(<strong class="jxr_keyword">final</strong> String name) {
-<a class="jxr_linenumber" name="145" href="#145">145</a>         <strong class="jxr_keyword">final</strong> Collection&lt;Item&gt; items = <strong class="jxr_keyword">this</strong>.region.table(AwsStand.TABLE)
-<a class="jxr_linenumber" name="146" href="#146">146</a>             .frame()
-<a class="jxr_linenumber" name="147" href="#147">147</a>             .where(AwsStand.HASH_OWNER, <strong class="jxr_keyword">this</strong>.owner.toString())
-<a class="jxr_linenumber" name="148" href="#148">148</a>             .where(AwsStand.RANGE_STAND, name)
-<a class="jxr_linenumber" name="149" href="#149">149</a>             .through(<strong class="jxr_keyword">new</strong> QueryValve());
-<a class="jxr_linenumber" name="150" href="#150">150</a>         <strong class="jxr_keyword">if</strong> (items.isEmpty()) {
-<a class="jxr_linenumber" name="151" href="#151">151</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NoSuchElementException(
-<a class="jxr_linenumber" name="152" href="#152">152</a>                 String.format(<span class="jxr_string">"Stand `%s` doesn't exist"</span>, name)
-<a class="jxr_linenumber" name="153" href="#153">153</a>             );
-<a class="jxr_linenumber" name="154" href="#154">154</a>         }
-<a class="jxr_linenumber" name="155" href="#155">155</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/users/AwsStand.html">AwsStand</a>(items.iterator().next());
-<a class="jxr_linenumber" name="156" href="#156">156</a>     }
-<a class="jxr_linenumber" name="157" href="#157">157</a> 
-<a class="jxr_linenumber" name="158" href="#158">158</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="159" href="#159">159</a> <em class="jxr_javadoccomment">     * Fetch all items.</em>
-<a class="jxr_linenumber" name="160" href="#160">160</a> <em class="jxr_javadoccomment">     * @return All stands</em>
-<a class="jxr_linenumber" name="161" href="#161">161</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="162" href="#162">162</a>     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-<a class="jxr_linenumber" name="163" href="#163">163</a>     <strong class="jxr_keyword">private</strong> Collection&lt;Item&gt; fetch() {
-<a class="jxr_linenumber" name="164" href="#164">164</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.region.table(AwsStand.TABLE)
-<a class="jxr_linenumber" name="165" href="#165">165</a>             .frame()
-<a class="jxr_linenumber" name="166" href="#166">166</a>             .where(AwsStand.HASH_OWNER, <strong class="jxr_keyword">this</strong>.owner.toString())
-<a class="jxr_linenumber" name="167" href="#167">167</a>             .through(<strong class="jxr_keyword">new</strong> QueryValve().withAttributeToGet(AwsStand.RANGE_STAND));
-<a class="jxr_linenumber" name="168" href="#168">168</a>     }
-<a class="jxr_linenumber" name="169" href="#169">169</a> 
-<a class="jxr_linenumber" name="170" href="#170">170</a> }
+<a class="jxr_linenumber" name="133" href="#133">133</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> contains(
+<a class="jxr_linenumber" name="134" href="#134">134</a>         @NotNull @Pattern(regexp = <span class="jxr_string">".+"</span>) <strong class="jxr_keyword">final</strong> String name) {
+<a class="jxr_linenumber" name="135" href="#135">135</a>         <strong class="jxr_keyword">return</strong> !<strong class="jxr_keyword">this</strong>.region.table(AwsStand.TABLE).frame()
+<a class="jxr_linenumber" name="136" href="#136">136</a>             .where(AwsStand.HASH_OWNER, <strong class="jxr_keyword">this</strong>.owner.toString())
+<a class="jxr_linenumber" name="137" href="#137">137</a>             .where(AwsStand.RANGE_STAND, name)
+<a class="jxr_linenumber" name="138" href="#138">138</a>             .isEmpty();
+<a class="jxr_linenumber" name="139" href="#139">139</a>     }
+<a class="jxr_linenumber" name="140" href="#140">140</a> 
+<a class="jxr_linenumber" name="141" href="#141">141</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="142" href="#142">142</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a class="jxr_linenumber" name="143" href="#143">143</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="144" href="#144">144</a>     @Override
+<a class="jxr_linenumber" name="145" href="#145">145</a>     <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Stand.html">Stand</a> get(@NotNull @Pattern(regexp = <span class="jxr_string">".+"</span>)<strong class="jxr_keyword">final</strong> String name) {
+<a class="jxr_linenumber" name="146" href="#146">146</a>         <strong class="jxr_keyword">final</strong> Collection&lt;Item&gt; items = <strong class="jxr_keyword">this</strong>.region.table(AwsStand.TABLE)
+<a class="jxr_linenumber" name="147" href="#147">147</a>             .frame()
+<a class="jxr_linenumber" name="148" href="#148">148</a>             .where(AwsStand.HASH_OWNER, <strong class="jxr_keyword">this</strong>.owner.toString())
+<a class="jxr_linenumber" name="149" href="#149">149</a>             .where(AwsStand.RANGE_STAND, name)
+<a class="jxr_linenumber" name="150" href="#150">150</a>             .through(<strong class="jxr_keyword">new</strong> QueryValve());
+<a class="jxr_linenumber" name="151" href="#151">151</a>         <strong class="jxr_keyword">if</strong> (items.isEmpty()) {
+<a class="jxr_linenumber" name="152" href="#152">152</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NoSuchElementException(
+<a class="jxr_linenumber" name="153" href="#153">153</a>                 String.format(<span class="jxr_string">"Stand `%s` doesn't exist"</span>, name)
+<a class="jxr_linenumber" name="154" href="#154">154</a>             );
+<a class="jxr_linenumber" name="155" href="#155">155</a>         }
+<a class="jxr_linenumber" name="156" href="#156">156</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/users/AwsStand.html">AwsStand</a>(items.iterator().next());
+<a class="jxr_linenumber" name="157" href="#157">157</a>     }
+<a class="jxr_linenumber" name="158" href="#158">158</a> 
+<a class="jxr_linenumber" name="159" href="#159">159</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="160" href="#160">160</a> <em class="jxr_javadoccomment">     * Fetch all items.</em>
+<a class="jxr_linenumber" name="161" href="#161">161</a> <em class="jxr_javadoccomment">     * @return All stands</em>
+<a class="jxr_linenumber" name="162" href="#162">162</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="163" href="#163">163</a>     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+<a class="jxr_linenumber" name="164" href="#164">164</a>     <strong class="jxr_keyword">private</strong> Collection&lt;Item&gt; fetch() {
+<a class="jxr_linenumber" name="165" href="#165">165</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.region.table(AwsStand.TABLE)
+<a class="jxr_linenumber" name="166" href="#166">166</a>             .frame()
+<a class="jxr_linenumber" name="167" href="#167">167</a>             .where(AwsStand.HASH_OWNER, <strong class="jxr_keyword">this</strong>.owner.toString())
+<a class="jxr_linenumber" name="168" href="#168">168</a>             .through(<strong class="jxr_keyword">new</strong> QueryValve().withAttributeToGet(AwsStand.RANGE_STAND));
+<a class="jxr_linenumber" name="169" href="#169">169</a>     }
+<a class="jxr_linenumber" name="170" href="#170">170</a> 
+<a class="jxr_linenumber" name="171" href="#171">171</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

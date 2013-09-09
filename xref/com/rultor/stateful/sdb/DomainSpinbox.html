@@ -42,8 +42,8 @@
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Immutable;
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Loggable;
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.aws.SDBClient;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Wallet;
-<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Coordinates;
+<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Wallet;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.stateful.Spinbox;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> javax.validation.constraints.NotNull;
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
@@ -61,9 +61,9 @@
 <a class="jxr_linenumber" name="51" href="#51">51</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../com/rultor/stateful/sdb/DomainSpinbox.html">DomainSpinbox</a> <strong class="jxr_keyword">implements</strong> <a href="../../../../com/rultor/stateful/Spinbox.html">Spinbox</a> {
 <a class="jxr_linenumber" name="52" href="#52">52</a>  
 <a class="jxr_linenumber" name="53" href="#53">53</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="54" href="#54">54</a>  <em class="jxr_javadoccomment">     * Work we're in.</em>
+<a class="jxr_linenumber" name="54" href="#54">54</a>  <em class="jxr_javadoccomment">     * Coordinates we're in.</em>
 <a class="jxr_linenumber" name="55" href="#55">55</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="56" href="#56">56</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> <a href="../../../../com/rultor/spi/Work.html">Work</a> work;
+<a class="jxr_linenumber" name="56" href="#56">56</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> <a href="../../../../com/rultor/spi/Coordinates.html">Coordinates</a> work;
 <a class="jxr_linenumber" name="57" href="#57">57</a>  
 <a class="jxr_linenumber" name="58" href="#58">58</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="59" href="#59">59</a>  <em class="jxr_javadoccomment">     * Wallet to charge.</em>
@@ -77,12 +77,12 @@
 <a class="jxr_linenumber" name="67" href="#67">67</a>  
 <a class="jxr_linenumber" name="68" href="#68">68</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="69" href="#69">69</a>  <em class="jxr_javadoccomment">     * Public ctor.</em>
-<a class="jxr_linenumber" name="70" href="#70">70</a>  <em class="jxr_javadoccomment">     * @param wrk Work we're in</em>
+<a class="jxr_linenumber" name="70" href="#70">70</a>  <em class="jxr_javadoccomment">     * @param wrk Coordinates we're in</em>
 <a class="jxr_linenumber" name="71" href="#71">71</a>  <em class="jxr_javadoccomment">     * @param wlt Wallet</em>
 <a class="jxr_linenumber" name="72" href="#72">72</a>  <em class="jxr_javadoccomment">     * @param clnt Client</em>
 <a class="jxr_linenumber" name="73" href="#73">73</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="74" href="#74">74</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../com/rultor/stateful/sdb/DomainSpinbox.html">DomainSpinbox</a>(
-<a class="jxr_linenumber" name="75" href="#75">75</a>          @NotNull(message = <span class="jxr_string">"work can't be NULL"</span>) <strong class="jxr_keyword">final</strong> <a href="../../../../com/rultor/spi/Work.html">Work</a> wrk,
+<a class="jxr_linenumber" name="75" href="#75">75</a>          @NotNull(message = <span class="jxr_string">"work can't be NULL"</span>) <strong class="jxr_keyword">final</strong> <a href="../../../../com/rultor/spi/Coordinates.html">Coordinates</a> wrk,
 <a class="jxr_linenumber" name="76" href="#76">76</a>          @NotNull(message = <span class="jxr_string">"wallet can't be NULL"</span>) <strong class="jxr_keyword">final</strong> <a href="../../../../com/rultor/spi/Wallet.html">Wallet</a> wlt,
 <a class="jxr_linenumber" name="77" href="#77">77</a>          @NotNull(message = <span class="jxr_string">"SimpleDB client can't be NULL"</span>)
 <a class="jxr_linenumber" name="78" href="#78">78</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../com/rultor/aws/SDBClient.html">SDBClient</a> clnt) {
@@ -112,7 +112,7 @@
 <a class="jxr_linenumber" name="102" href="#102">102</a>             String.format(
 <a class="jxr_linenumber" name="103" href="#103">103</a>                 <span class="jxr_string">"%s %s %s"</span>,
 <a class="jxr_linenumber" name="104" href="#104">104</a>                 <strong class="jxr_keyword">this</strong>.work.owner(),
-<a class="jxr_linenumber" name="105" href="#105">105</a>                 <strong class="jxr_keyword">this</strong>.work.unit(),
+<a class="jxr_linenumber" name="105" href="#105">105</a>                 <strong class="jxr_keyword">this</strong>.work.rule(),
 <a class="jxr_linenumber" name="106" href="#106">106</a>                 <strong class="jxr_keyword">this</strong>.work.scheduled()
 <a class="jxr_linenumber" name="107" href="#107">107</a>             ),
 <a class="jxr_linenumber" name="108" href="#108">108</a>             <strong class="jxr_keyword">this</strong>.client

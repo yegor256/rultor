@@ -46,14 +46,14 @@
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.conveyer.http.HttpServer;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.conveyer.http.Streams;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Arguments;
-<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Instance;
-<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Queue;
-<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Repo;
-<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Unit;
-<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.User;
-<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Users;
-<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Variable;
-<a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Coordinates;
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Instance;
+<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Queue;
+<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Repo;
+<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Rule;
+<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.User;
+<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Users;
+<a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Variable;
 <a class="jxr_linenumber" name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> java.io.Closeable;
 <a class="jxr_linenumber" name="48" href="#48">48</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
 <a class="jxr_linenumber" name="49" href="#49">49</a>  <strong class="jxr_keyword">import</strong> java.util.Random;
@@ -208,8 +208,8 @@
 <a class="jxr_linenumber" name="198" href="#198">198</a> <em class="jxr_javadoccomment">     * @throws Exception If fails</em>
 <a class="jxr_linenumber" name="199" href="#199">199</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="200" href="#200">200</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> process() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="201" href="#201">201</a>         <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Work.html">Work</a> work = <strong class="jxr_keyword">this</strong>.queue.pull(1, TimeUnit.SECONDS);
-<a class="jxr_linenumber" name="202" href="#202">202</a>         <strong class="jxr_keyword">if</strong> (!work.equals(<strong class="jxr_keyword">new</strong> Work.None())) {
+<a class="jxr_linenumber" name="201" href="#201">201</a>         <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Coordinates.html">Coordinates</a> work = <strong class="jxr_keyword">this</strong>.queue.pull(1, TimeUnit.SECONDS);
+<a class="jxr_linenumber" name="202" href="#202">202</a>         <strong class="jxr_keyword">if</strong> (!work.equals(<strong class="jxr_keyword">new</strong> Coordinates.None())) {
 <a class="jxr_linenumber" name="203" href="#203">203</a>             <strong class="jxr_keyword">this</strong>.threads.label(work.toString());
 <a class="jxr_linenumber" name="204" href="#204">204</a>             <strong class="jxr_keyword">final</strong> String key = <strong class="jxr_keyword">this</strong>.streams.register();
 <a class="jxr_linenumber" name="205" href="#205">205</a>             <strong class="jxr_keyword">try</strong> {
@@ -226,15 +226,15 @@
 <a class="jxr_linenumber" name="216" href="#216">216</a> <em class="jxr_javadoccomment">     * @param work The work to process</em>
 <a class="jxr_linenumber" name="217" href="#217">217</a> <em class="jxr_javadoccomment">     * @throws Exception If fails</em>
 <a class="jxr_linenumber" name="218" href="#218">218</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="219" href="#219">219</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> process(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Work.html">Work</a> work) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="219" href="#219">219</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> process(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Coordinates.html">Coordinates</a> work) <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="220" href="#220">220</a>         <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/User.html">User</a> owner = <strong class="jxr_keyword">this</strong>.users.get(work.owner());
-<a class="jxr_linenumber" name="221" href="#221">221</a>         <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Unit.html">Unit</a> unit = owner.units().get(work.unit());
+<a class="jxr_linenumber" name="221" href="#221">221</a>         <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Rule.html">Rule</a> rule = owner.rules().get(work.rule());
 <a class="jxr_linenumber" name="222" href="#222">222</a>         <strong class="jxr_keyword">final</strong> Variable&lt;?&gt; <strong class="jxr_keyword">var</strong> =
-<a class="jxr_linenumber" name="223" href="#223">223</a>             <strong class="jxr_keyword">new</strong> Repo.Cached(<strong class="jxr_keyword">this</strong>.repo, owner, unit.spec()).get();
+<a class="jxr_linenumber" name="223" href="#223">223</a>             <strong class="jxr_keyword">new</strong> Repo.Cached(<strong class="jxr_keyword">this</strong>.repo, owner, rule.spec()).get();
 <a class="jxr_linenumber" name="224" href="#224">224</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">var</strong>.arguments().isEmpty()) {
 <a class="jxr_linenumber" name="225" href="#225">225</a>             <strong class="jxr_keyword">final</strong> Object object = <strong class="jxr_keyword">var</strong>.instantiate(
 <a class="jxr_linenumber" name="226" href="#226">226</a>                 <strong class="jxr_keyword">this</strong>.users,
-<a class="jxr_linenumber" name="227" href="#227">227</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/Arguments.html">Arguments</a>(work, <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/conveyer/OwnWallet.html">OwnWallet</a>(work, unit))
+<a class="jxr_linenumber" name="227" href="#227">227</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/Arguments.html">Arguments</a>(work, <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/conveyer/OwnWallet.html">OwnWallet</a>(work, rule))
 <a class="jxr_linenumber" name="228" href="#228">228</a>             );
 <a class="jxr_linenumber" name="229" href="#229">229</a>             <strong class="jxr_keyword">if</strong> (object instanceof Instance) {
 <a class="jxr_linenumber" name="230" href="#230">230</a>                 Instance.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(object).pulse();

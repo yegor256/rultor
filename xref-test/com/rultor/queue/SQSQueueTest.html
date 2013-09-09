@@ -50,7 +50,7 @@
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Tv;
 <a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> com.jcabi.urn.URN;
 <a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> com.rultor.aws.SQSClient;
-<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Coordinates;
 <a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
 <a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.TimeUnit;
 <a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.MatcherAssert;
@@ -72,9 +72,9 @@
 <a class="jxr_linenumber" name="62" href="#62">62</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="63" href="#63">63</a>      @Test
 <a class="jxr_linenumber" name="64" href="#64">64</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> savesJson() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="65" href="#65">65</a>          <strong class="jxr_keyword">final</strong> Work work = <strong class="jxr_keyword">new</strong> Work.Simple(
+<a class="jxr_linenumber" name="65" href="#65">65</a>          <strong class="jxr_keyword">final</strong> Coordinates work = <strong class="jxr_keyword">new</strong> Coordinates.Simple(
 <a class="jxr_linenumber" name="66" href="#66">66</a>              <strong class="jxr_keyword">new</strong> URN(<span class="jxr_string">"urn:facebook:1"</span>),
-<a class="jxr_linenumber" name="67" href="#67">67</a>              <span class="jxr_string">"some-test-unit"</span>,
+<a class="jxr_linenumber" name="67" href="#67">67</a>              <span class="jxr_string">"some-test-rule"</span>,
 <a class="jxr_linenumber" name="68" href="#68">68</a>              <strong class="jxr_keyword">new</strong> Time(Tv.MILLION)
 <a class="jxr_linenumber" name="69" href="#69">69</a>          );
 <a class="jxr_linenumber" name="70" href="#70">70</a>          <strong class="jxr_keyword">final</strong> SQSClient client = Mockito.mock(SQSClient.<strong class="jxr_keyword">class</strong>);
@@ -94,7 +94,7 @@
 <a class="jxr_linenumber" name="84" href="#84">84</a>                      <span class="jxr_string">"messageBody"</span>,
 <a class="jxr_linenumber" name="85" href="#85">85</a>                      Matchers.equalTo(
 <a class="jxr_linenumber" name="86" href="#86">86</a>                          <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
-<a class="jxr_linenumber" name="87" href="#87">87</a>                          <span class="jxr_string">"{\&quot;urn\&quot;:\&quot;urn:facebook:1\&quot;,\&quot;scheduled\&quot;:\&quot;1970-01-01T00:16:40Z\&quot;,\&quot;unit\&quot;:\&quot;some-test-unit\&quot;}"</span>
+<a class="jxr_linenumber" name="87" href="#87">87</a>                          <span class="jxr_string">"{\&quot;urn\&quot;:\&quot;urn:facebook:1\&quot;,\&quot;scheduled\&quot;:\&quot;1970-01-01T00:16:40Z\&quot;,\&quot;rule\&quot;:\&quot;some-test-rule\&quot;}"</span>
 <a class="jxr_linenumber" name="88" href="#88">88</a>                      )
 <a class="jxr_linenumber" name="89" href="#89">89</a>                  )
 <a class="jxr_linenumber" name="90" href="#90">90</a>              )
@@ -118,15 +118,15 @@
 <a class="jxr_linenumber" name="108" href="#108">108</a>             <strong class="jxr_keyword">new</strong> ReceiveMessageResult().withMessages(
 <a class="jxr_linenumber" name="109" href="#109">109</a>                 <strong class="jxr_keyword">new</strong> Message().withBody(
 <a class="jxr_linenumber" name="110" href="#110">110</a>                     <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
-<a class="jxr_linenumber" name="111" href="#111">111</a>                     <span class="jxr_string">"{\&quot;urn\&quot;:\&quot;urn:facebook:65\&quot;,\&quot;unit\&quot;:\&quot;test-877\&quot;,\&quot;scheduled\&quot;:\&quot;1970-01-01T00:16:40Z\&quot;}"</span>
+<a class="jxr_linenumber" name="111" href="#111">111</a>                     <span class="jxr_string">"{\&quot;urn\&quot;:\&quot;urn:facebook:65\&quot;,\&quot;rule\&quot;:\&quot;test-rule\&quot;,\&quot;scheduled\&quot;:\&quot;1970-01-01T00:16:40Z\&quot;}"</span>
 <a class="jxr_linenumber" name="112" href="#112">112</a>                 )
 <a class="jxr_linenumber" name="113" href="#113">113</a>             )
 <a class="jxr_linenumber" name="114" href="#114">114</a>         ).when(aws).receiveMessage(Mockito.any(ReceiveMessageRequest.<strong class="jxr_keyword">class</strong>));
-<a class="jxr_linenumber" name="115" href="#115">115</a>         <strong class="jxr_keyword">final</strong> Work work = queue.pull(1, TimeUnit.SECONDS);
+<a class="jxr_linenumber" name="115" href="#115">115</a>         <strong class="jxr_keyword">final</strong> Coordinates work = queue.pull(1, TimeUnit.SECONDS);
 <a class="jxr_linenumber" name="116" href="#116">116</a>         MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="117" href="#117">117</a>             work.owner(), Matchers.equalTo(<strong class="jxr_keyword">new</strong> URN(<span class="jxr_string">"urn:facebook:65"</span>))
 <a class="jxr_linenumber" name="118" href="#118">118</a>         );
-<a class="jxr_linenumber" name="119" href="#119">119</a>         MatcherAssert.assertThat(work.unit(), Matchers.equalTo(<span class="jxr_string">"test-877"</span>));
+<a class="jxr_linenumber" name="119" href="#119">119</a>         MatcherAssert.assertThat(work.rule(), Matchers.equalTo(<span class="jxr_string">"test-rule"</span>));
 <a class="jxr_linenumber" name="120" href="#120">120</a>         MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="121" href="#121">121</a>             work.scheduled().toString(),
 <a class="jxr_linenumber" name="122" href="#122">122</a>             Matchers.equalTo(<strong class="jxr_keyword">new</strong> Time(Tv.MILLION).toString())

@@ -45,8 +45,8 @@
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.jcabi.urn.URN;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.aws.SQSClient;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Account;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Stands;
-<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Units;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Rules;
+<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Stands;
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.User;
 <a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> javax.validation.constraints.NotNull;
 <a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
@@ -105,9 +105,9 @@
 <a class="jxr_linenumber" name="95" href="#95">95</a>  <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
 <a class="jxr_linenumber" name="96" href="#96">96</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="97" href="#97">97</a>      @Override
-<a class="jxr_linenumber" name="98" href="#98">98</a>      @NotNull(message = <span class="jxr_string">"units of a user is never NULL"</span>)
-<a class="jxr_linenumber" name="99" href="#99">99</a>      <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Units.html">Units</a> units() {
-<a class="jxr_linenumber" name="100" href="#100">100</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/users/AwsUnits.html">AwsUnits</a>(<strong class="jxr_keyword">this</strong>.region, <strong class="jxr_keyword">this</strong>.client, <strong class="jxr_keyword">this</strong>.name);
+<a class="jxr_linenumber" name="98" href="#98">98</a>      @NotNull(message = <span class="jxr_string">"rules of a user is never NULL"</span>)
+<a class="jxr_linenumber" name="99" href="#99">99</a>      <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Rules.html">Rules</a> rules() {
+<a class="jxr_linenumber" name="100" href="#100">100</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/users/AwsRules.html">AwsRules</a>(<strong class="jxr_keyword">this</strong>.region, <strong class="jxr_keyword">this</strong>.client, <strong class="jxr_keyword">this</strong>.name);
 <a class="jxr_linenumber" name="101" href="#101">101</a>     }
 <a class="jxr_linenumber" name="102" href="#102">102</a> 
 <a class="jxr_linenumber" name="103" href="#103">103</a>     <em class="jxr_javadoccomment">/**</em>

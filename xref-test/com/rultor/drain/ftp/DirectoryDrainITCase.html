@@ -40,9 +40,9 @@
 <a class="jxr_linenumber" name="30" href="#30">30</a>  <strong class="jxr_keyword">package</strong> com.rultor.drain.ftp;
 <a class="jxr_linenumber" name="31" href="#31">31</a>  
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.urn.URN;
-<a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Drain;
-<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Pageable;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Coordinates;
+<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Drain;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Pageable;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.io.FilenameUtils;
@@ -95,8 +95,8 @@
 <a class="jxr_linenumber" name="85" href="#85">85</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> logsMessages() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="86" href="#86">86</a>          Assume.assumeNotNull(<strong class="jxr_keyword">this</strong>.host);
 <a class="jxr_linenumber" name="87" href="#87">87</a>          <strong class="jxr_keyword">final</strong> String msg = <span class="jxr_string">"some test log message \u20ac"</span>;
-<a class="jxr_linenumber" name="88" href="#88">88</a>          <strong class="jxr_keyword">final</strong> Work work = <strong class="jxr_keyword">new</strong> Work.Simple(
-<a class="jxr_linenumber" name="89" href="#89">89</a>              <strong class="jxr_keyword">new</strong> URN(<span class="jxr_string">"urn:test:1"</span>), <span class="jxr_string">"some-unit"</span>, <strong class="jxr_keyword">new</strong> Time(1)
+<a class="jxr_linenumber" name="88" href="#88">88</a>          <strong class="jxr_keyword">final</strong> Coordinates work = <strong class="jxr_keyword">new</strong> Coordinates.Simple(
+<a class="jxr_linenumber" name="89" href="#89">89</a>              <strong class="jxr_keyword">new</strong> URN(<span class="jxr_string">"urn:test:1"</span>), <span class="jxr_string">"some-rule"</span>, <strong class="jxr_keyword">new</strong> Time(1)
 <a class="jxr_linenumber" name="90" href="#90">90</a>          );
 <a class="jxr_linenumber" name="91" href="#91">91</a>          <strong class="jxr_keyword">final</strong> Drain drain = <strong class="jxr_keyword">new</strong> DirectoryDrain(
 <a class="jxr_linenumber" name="92" href="#92">92</a>              work, <strong class="jxr_keyword">this</strong>.host, <strong class="jxr_keyword">this</strong>.login, <strong class="jxr_keyword">this</strong>.password, <strong class="jxr_keyword">this</strong>.dir

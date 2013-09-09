@@ -45,7 +45,7 @@
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.jcabi.log.Logger;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.shell.Sequel;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.shell.Shell;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Coordinates;
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
 <a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> javax.validation.constraints.NotNull;
@@ -68,9 +68,9 @@
 <a class="jxr_linenumber" name="58" href="#58">58</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../com/rultor/shell/bash/S3CmdRelics.html">S3CmdRelics</a> <strong class="jxr_keyword">implements</strong> <a href="../../../../com/rultor/shell/Sequel.html">Sequel</a> {
 <a class="jxr_linenumber" name="59" href="#59">59</a>  
 <a class="jxr_linenumber" name="60" href="#60">60</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="61" href="#61">61</a>  <em class="jxr_javadoccomment">     * Work we're in.</em>
+<a class="jxr_linenumber" name="61" href="#61">61</a>  <em class="jxr_javadoccomment">     * Coordinates we're in.</em>
 <a class="jxr_linenumber" name="62" href="#62">62</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="63" href="#63">63</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> <a href="../../../../com/rultor/spi/Work.html">Work</a> work;
+<a class="jxr_linenumber" name="63" href="#63">63</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> <a href="../../../../com/rultor/spi/Coordinates.html">Coordinates</a> work;
 <a class="jxr_linenumber" name="64" href="#64">64</a>  
 <a class="jxr_linenumber" name="65" href="#65">65</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="66" href="#66">66</a>  <em class="jxr_javadoccomment">     * Name/path map.</em>
@@ -99,7 +99,7 @@
 <a class="jxr_linenumber" name="89" href="#89">89</a>  
 <a class="jxr_linenumber" name="90" href="#90">90</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="91" href="#91">91</a>  <em class="jxr_javadoccomment">     * Public ctor.</em>
-<a class="jxr_linenumber" name="92" href="#92">92</a>  <em class="jxr_javadoccomment">     * @param wrk Work we're in</em>
+<a class="jxr_linenumber" name="92" href="#92">92</a>  <em class="jxr_javadoccomment">     * @param wrk Coordinates we're in</em>
 <a class="jxr_linenumber" name="93" href="#93">93</a>  <em class="jxr_javadoccomment">     * @param map Map of names/paths</em>
 <a class="jxr_linenumber" name="94" href="#94">94</a>  <em class="jxr_javadoccomment">     * @param bkt Bucket name</em>
 <a class="jxr_linenumber" name="95" href="#95">95</a>  <em class="jxr_javadoccomment">     * @param pfx Prefix in S3 bucket</em>
@@ -108,7 +108,7 @@
 <a class="jxr_linenumber" name="98" href="#98">98</a>  <em class="jxr_javadoccomment">     * @checkstyle ParameterNumber (8 lines)</em>
 <a class="jxr_linenumber" name="99" href="#99">99</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="100" href="#100">100</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/rultor/shell/bash/S3CmdRelics.html">S3CmdRelics</a>(
-<a class="jxr_linenumber" name="101" href="#101">101</a>         @NotNull(message = <span class="jxr_string">"map can't be NULL"</span>) <strong class="jxr_keyword">final</strong> <a href="../../../../com/rultor/spi/Work.html">Work</a> wrk,
+<a class="jxr_linenumber" name="101" href="#101">101</a>         @NotNull(message = <span class="jxr_string">"map can't be NULL"</span>) <strong class="jxr_keyword">final</strong> <a href="../../../../com/rultor/spi/Coordinates.html">Coordinates</a> wrk,
 <a class="jxr_linenumber" name="102" href="#102">102</a>         @NotNull(message = <span class="jxr_string">"map can't be NULL"</span>) <strong class="jxr_keyword">final</strong> Map&lt;String, String&gt; map,
 <a class="jxr_linenumber" name="103" href="#103">103</a>         @NotNull(message = <span class="jxr_string">"bucket can't be NULL"</span>) <strong class="jxr_keyword">final</strong> String bkt,
 <a class="jxr_linenumber" name="104" href="#104">104</a>         @NotNull(message = <span class="jxr_string">"prefix can't be NULL"</span>) <strong class="jxr_keyword">final</strong> String pfx,
@@ -150,7 +150,7 @@
 <a class="jxr_linenumber" name="140" href="#140">140</a>                 <strong class="jxr_keyword">this</strong>.bucket,
 <a class="jxr_linenumber" name="141" href="#141">141</a>                 String.format(
 <a class="jxr_linenumber" name="142" href="#142">142</a>                     <span class="jxr_string">"%s%s/%s/%s/%s/"</span>, <strong class="jxr_keyword">this</strong>.prefix,
-<a class="jxr_linenumber" name="143" href="#143">143</a>                     <strong class="jxr_keyword">this</strong>.work.owner(), <strong class="jxr_keyword">this</strong>.work.unit(),
+<a class="jxr_linenumber" name="143" href="#143">143</a>                     <strong class="jxr_keyword">this</strong>.work.owner(), <strong class="jxr_keyword">this</strong>.work.rule(),
 <a class="jxr_linenumber" name="144" href="#144">144</a>                     entry.getKey(), <strong class="jxr_keyword">this</strong>.work.scheduled()
 <a class="jxr_linenumber" name="145" href="#145">145</a>                 ),
 <a class="jxr_linenumber" name="146" href="#146">146</a>                 <strong class="jxr_keyword">this</strong>.key, <strong class="jxr_keyword">this</strong>.secret

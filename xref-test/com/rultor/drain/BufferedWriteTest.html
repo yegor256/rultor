@@ -41,8 +41,8 @@
 <a class="jxr_linenumber" name="31" href="#31">31</a>  
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Tv;
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.urn.URN;
-<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Drain;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Coordinates;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Drain;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.TimeUnit;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.atomic.AtomicLong;
@@ -69,7 +69,7 @@
 <a class="jxr_linenumber" name="59" href="#59">59</a>      @Test
 <a class="jxr_linenumber" name="60" href="#60">60</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> printsItselfInString() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="61" href="#61">61</a>          MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="62" href="#62">62</a>              <strong class="jxr_keyword">new</strong> BufferedWrite(<strong class="jxr_keyword">new</strong> Work.None(), 2, <strong class="jxr_keyword">new</strong> Trash()),
+<a class="jxr_linenumber" name="62" href="#62">62</a>              <strong class="jxr_keyword">new</strong> BufferedWrite(<strong class="jxr_keyword">new</strong> Coordinates.None(), 2, <strong class="jxr_keyword">new</strong> Trash()),
 <a class="jxr_linenumber" name="63" href="#63">63</a>              Matchers.hasToString(Matchers.notNullValue())
 <a class="jxr_linenumber" name="64" href="#64">64</a>          );
 <a class="jxr_linenumber" name="65" href="#65">65</a>      }
@@ -82,11 +82,11 @@
 <a class="jxr_linenumber" name="72" href="#72">72</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> sendsLinesThrough() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="73" href="#73">73</a>          <strong class="jxr_keyword">final</strong> Drain drain = Mockito.mock(Drain.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="74" href="#74">74</a>          <strong class="jxr_keyword">final</strong> BufferedWrite first = <strong class="jxr_keyword">new</strong> BufferedWrite(
-<a class="jxr_linenumber" name="75" href="#75">75</a>              <strong class="jxr_keyword">new</strong> Work.Simple(<strong class="jxr_keyword">new</strong> URN(<span class="jxr_string">"urn:facebook:8"</span>), <span class="jxr_string">"test-99"</span>),
+<a class="jxr_linenumber" name="75" href="#75">75</a>              <strong class="jxr_keyword">new</strong> Coordinates.Simple(<strong class="jxr_keyword">new</strong> URN(<span class="jxr_string">"urn:facebook:8"</span>), <span class="jxr_string">"test-99"</span>),
 <a class="jxr_linenumber" name="76" href="#76">76</a>              2, drain
 <a class="jxr_linenumber" name="77" href="#77">77</a>          );
 <a class="jxr_linenumber" name="78" href="#78">78</a>          <strong class="jxr_keyword">final</strong> BufferedWrite second = <strong class="jxr_keyword">new</strong> BufferedWrite(
-<a class="jxr_linenumber" name="79" href="#79">79</a>              <strong class="jxr_keyword">new</strong> Work.Simple(<strong class="jxr_keyword">new</strong> URN(<span class="jxr_string">"urn:facebook:9"</span>), <span class="jxr_string">"test-88"</span>),
+<a class="jxr_linenumber" name="79" href="#79">79</a>              <strong class="jxr_keyword">new</strong> Coordinates.Simple(<strong class="jxr_keyword">new</strong> URN(<span class="jxr_string">"urn:facebook:9"</span>), <span class="jxr_string">"test-88"</span>),
 <a class="jxr_linenumber" name="80" href="#80">80</a>              Tv.FIVE, Mockito.mock(Drain.<strong class="jxr_keyword">class</strong>)
 <a class="jxr_linenumber" name="81" href="#81">81</a>          );
 <a class="jxr_linenumber" name="82" href="#82">82</a>          <strong class="jxr_keyword">final</strong> String line = <span class="jxr_string">"some \t\u20ac\tfdsfs9980 Hello878"</span>;
@@ -141,7 +141,7 @@
 <a class="jxr_linenumber" name="131" href="#131">131</a>             }
 <a class="jxr_linenumber" name="132" href="#132">132</a>         ).when(origin).append(Mockito.any(Iterable.<strong class="jxr_keyword">class</strong>));
 <a class="jxr_linenumber" name="133" href="#133">133</a>         <strong class="jxr_keyword">final</strong> BufferedWrite drain = <strong class="jxr_keyword">new</strong> BufferedWrite(
-<a class="jxr_linenumber" name="134" href="#134">134</a>             <strong class="jxr_keyword">new</strong> Work.Simple(<strong class="jxr_keyword">new</strong> URN(<span class="jxr_string">"urn:test:9"</span>), <span class="jxr_string">"f"</span>), 2, origin
+<a class="jxr_linenumber" name="134" href="#134">134</a>             <strong class="jxr_keyword">new</strong> Coordinates.Simple(<strong class="jxr_keyword">new</strong> URN(<span class="jxr_string">"urn:test:9"</span>), <span class="jxr_string">"f"</span>), 2, origin
 <a class="jxr_linenumber" name="135" href="#135">135</a>         );
 <a class="jxr_linenumber" name="136" href="#136">136</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> total = TimeUnit.SECONDS.toMillis(Tv.FIVE);
 <a class="jxr_linenumber" name="137" href="#137">137</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> idx = 0; idx &lt; total; ++idx) {

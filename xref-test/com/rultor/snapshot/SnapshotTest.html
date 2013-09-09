@@ -44,49 +44,48 @@
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.io.IOUtils;
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.MatcherAssert;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.Document;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> org.xembly.Directives;
-<a class="jxr_linenumber" name="39" href="#39">39</a>  
-<a class="jxr_linenumber" name="40" href="#40">40</a>  <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="41" href="#41">41</a>  <em class="jxr_javadoccomment"> * Test case for {@link SnapshotInStream}.</em>
-<a class="jxr_linenumber" name="42" href="#42">42</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@tpc2.com)</em>
-<a class="jxr_linenumber" name="43" href="#43">43</a>  <em class="jxr_javadoccomment"> * @version $Id$</em>
-<a class="jxr_linenumber" name="44" href="#44">44</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/snapshot/SnapshotTest.html">SnapshotTest</a> {
-<a class="jxr_linenumber" name="46" href="#46">46</a>  
-<a class="jxr_linenumber" name="47" href="#47">47</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="48" href="#48">48</a>  <em class="jxr_javadoccomment">     * SnapshotInStream can fetch snapshot from stream.</em>
-<a class="jxr_linenumber" name="49" href="#49">49</a>  <em class="jxr_javadoccomment">     * @throws Exception If some problem inside</em>
-<a class="jxr_linenumber" name="50" href="#50">50</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="51" href="#51">51</a>      @Test
-<a class="jxr_linenumber" name="52" href="#52">52</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> fetchesSnapshotFromStream() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="53" href="#53">53</a>          <strong class="jxr_keyword">final</strong> Document dom = Snapshot.empty();
-<a class="jxr_linenumber" name="54" href="#54">54</a>          <strong class="jxr_keyword">new</strong> Snapshot(
-<a class="jxr_linenumber" name="55" href="#55">55</a>              IOUtils.toInputStream(
-<a class="jxr_linenumber" name="56" href="#56">56</a>                  <strong class="jxr_keyword">new</strong> StringBuilder()
-<a class="jxr_linenumber" name="57" href="#57">57</a>                      .append(<span class="jxr_string">"hey dude!\n"</span>)
-<a class="jxr_linenumber" name="58" href="#58">58</a>                      .append(
-<a class="jxr_linenumber" name="59" href="#59">59</a>                          <strong class="jxr_keyword">new</strong> XemblyLine(
-<a class="jxr_linenumber" name="60" href="#60">60</a>                              <strong class="jxr_keyword">new</strong> Directives()
-<a class="jxr_linenumber" name="61" href="#61">61</a>                                  .xpath(<span class="jxr_string">"/snapshot"</span>)
-<a class="jxr_linenumber" name="62" href="#62">62</a>                                  .strict(1)
-<a class="jxr_linenumber" name="63" href="#63">63</a>                                  .add(<span class="jxr_string">"test"</span>)
-<a class="jxr_linenumber" name="64" href="#64">64</a>                                  .strict(1)
-<a class="jxr_linenumber" name="65" href="#65">65</a>                                  .set(<span class="jxr_string">"hello, друг!"</span>)
-<a class="jxr_linenumber" name="66" href="#66">66</a>                          ).toString()
-<a class="jxr_linenumber" name="67" href="#67">67</a>                      )
-<a class="jxr_linenumber" name="68" href="#68">68</a>                      .append(<span class="jxr_string">"\nHow are you?\n"</span>)
-<a class="jxr_linenumber" name="69" href="#69">69</a>                      .toString(),
-<a class="jxr_linenumber" name="70" href="#70">70</a>                  CharEncoding.UTF_8
-<a class="jxr_linenumber" name="71" href="#71">71</a>              )
-<a class="jxr_linenumber" name="72" href="#72">72</a>          ).apply(dom);
-<a class="jxr_linenumber" name="73" href="#73">73</a>          MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="74" href="#74">74</a>              XhtmlMatchers.xhtml(dom),
-<a class="jxr_linenumber" name="75" href="#75">75</a>              XhtmlMatchers.hasXPath(<span class="jxr_string">"/snapshot/test[.='hello, друг!']"</span>)
-<a class="jxr_linenumber" name="76" href="#76">76</a>          );
-<a class="jxr_linenumber" name="77" href="#77">77</a>      }
-<a class="jxr_linenumber" name="78" href="#78">78</a>  
-<a class="jxr_linenumber" name="79" href="#79">79</a>  }
+<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> org.xembly.Directives;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  
+<a class="jxr_linenumber" name="39" href="#39">39</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <em class="jxr_javadoccomment"> * Test case for {@link SnapshotInStream}.</em>
+<a class="jxr_linenumber" name="41" href="#41">41</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@tpc2.com)</em>
+<a class="jxr_linenumber" name="42" href="#42">42</a>  <em class="jxr_javadoccomment"> * @version $Id$</em>
+<a class="jxr_linenumber" name="43" href="#43">43</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/snapshot/SnapshotTest.html">SnapshotTest</a> {
+<a class="jxr_linenumber" name="45" href="#45">45</a>  
+<a class="jxr_linenumber" name="46" href="#46">46</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="47" href="#47">47</a>  <em class="jxr_javadoccomment">     * SnapshotInStream can fetch snapshot from stream.</em>
+<a class="jxr_linenumber" name="48" href="#48">48</a>  <em class="jxr_javadoccomment">     * @throws Exception If some problem inside</em>
+<a class="jxr_linenumber" name="49" href="#49">49</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="50" href="#50">50</a>      @Test
+<a class="jxr_linenumber" name="51" href="#51">51</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> fetchesSnapshotFromStream() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="52" href="#52">52</a>          MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="53" href="#53">53</a>              <strong class="jxr_keyword">new</strong> Snapshot(
+<a class="jxr_linenumber" name="54" href="#54">54</a>                  IOUtils.toInputStream(
+<a class="jxr_linenumber" name="55" href="#55">55</a>                      <strong class="jxr_keyword">new</strong> StringBuilder()
+<a class="jxr_linenumber" name="56" href="#56">56</a>                          .append(<span class="jxr_string">"hey dude!\n"</span>)
+<a class="jxr_linenumber" name="57" href="#57">57</a>                          .append(
+<a class="jxr_linenumber" name="58" href="#58">58</a>                              <strong class="jxr_keyword">new</strong> XemblyLine(
+<a class="jxr_linenumber" name="59" href="#59">59</a>                                  <strong class="jxr_keyword">new</strong> Directives()
+<a class="jxr_linenumber" name="60" href="#60">60</a>                                      .xpath(<span class="jxr_string">"/snapshot"</span>)
+<a class="jxr_linenumber" name="61" href="#61">61</a>                                      .strict(1)
+<a class="jxr_linenumber" name="62" href="#62">62</a>                                      .add(<span class="jxr_string">"test"</span>)
+<a class="jxr_linenumber" name="63" href="#63">63</a>                                      .strict(1)
+<a class="jxr_linenumber" name="64" href="#64">64</a>                                      .set(<span class="jxr_string">"how are you, dude?!"</span>)
+<a class="jxr_linenumber" name="65" href="#65">65</a>                              ).toString()
+<a class="jxr_linenumber" name="66" href="#66">66</a>                          )
+<a class="jxr_linenumber" name="67" href="#67">67</a>                          .append(<span class="jxr_string">"\nHow are you?\n"</span>)
+<a class="jxr_linenumber" name="68" href="#68">68</a>                          .toString(),
+<a class="jxr_linenumber" name="69" href="#69">69</a>                      CharEncoding.UTF_8
+<a class="jxr_linenumber" name="70" href="#70">70</a>                  )
+<a class="jxr_linenumber" name="71" href="#71">71</a>              ).xml().toString(),
+<a class="jxr_linenumber" name="72" href="#72">72</a>              XhtmlMatchers.hasXPath(
+<a class="jxr_linenumber" name="73" href="#73">73</a>                  <span class="jxr_string">"/snapshot/test[.='how are you, dude?!']"</span>
+<a class="jxr_linenumber" name="74" href="#74">74</a>              )
+<a class="jxr_linenumber" name="75" href="#75">75</a>          );
+<a class="jxr_linenumber" name="76" href="#76">76</a>      }
+<a class="jxr_linenumber" name="77" href="#77">77</a>  
+<a class="jxr_linenumber" name="78" href="#78">78</a>  }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

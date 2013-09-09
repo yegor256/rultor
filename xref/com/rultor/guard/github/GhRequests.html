@@ -178,8 +178,8 @@
 <a class="jxr_linenumber" name="168" href="#168">168</a> <em class="jxr_javadoccomment">     * @return Collection of them</em>
 <a class="jxr_linenumber" name="169" href="#169">169</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
 <a class="jxr_linenumber" name="170" href="#170">170</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="171" href="#171">171</a>     @Step(<span class="jxr_string">"found ${result.size()} pull request(s) in Github"</span>)
-<a class="jxr_linenumber" name="172" href="#172">172</a>     @RetryOnFailure
+<a class="jxr_linenumber" name="171" href="#171">171</a>     @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="172" href="#172">172</a>     @Step(<span class="jxr_string">"found ${result.size()} pull request(s) in Github"</span>)
 <a class="jxr_linenumber" name="173" href="#173">173</a>     <strong class="jxr_keyword">private</strong> Collection&lt;PullRequest&gt; fetch() <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="174" href="#174">174</a>         <strong class="jxr_keyword">final</strong> GitHubClient client = <strong class="jxr_keyword">this</strong>.github.client();
 <a class="jxr_linenumber" name="175" href="#175">175</a>         <strong class="jxr_keyword">final</strong> PullRequestService svc = <strong class="jxr_keyword">new</strong> PullRequestService(client);

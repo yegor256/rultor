@@ -40,9 +40,9 @@
 <a class="jxr_linenumber" name="30" href="#30">30</a>  <strong class="jxr_keyword">package</strong> com.rultor.repo;
 <a class="jxr_linenumber" name="31" href="#31">31</a>  
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Arguments;
-<a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Users;
-<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Wallet;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Coordinates;
+<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Users;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Wallet;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.MatcherAssert;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.Matchers;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
@@ -75,7 +75,7 @@
 <a class="jxr_linenumber" name="65" href="#65">65</a>      @Test
 <a class="jxr_linenumber" name="66" href="#66">66</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> makesInstance() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="67" href="#67">67</a>          <strong class="jxr_keyword">final</strong> Users users = Mockito.mock(Users.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="68" href="#68">68</a>          <strong class="jxr_keyword">final</strong> Work work = Mockito.mock(Work.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="68" href="#68">68</a>          <strong class="jxr_keyword">final</strong> Coordinates work = Mockito.mock(Coordinates.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="69" href="#69">69</a>          <strong class="jxr_keyword">final</strong> Wallet wallet = Mockito.mock(Wallet.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="70" href="#70">70</a>          <strong class="jxr_keyword">final</strong> Arguments arguments = <strong class="jxr_keyword">new</strong> Arguments(work, wallet);
 <a class="jxr_linenumber" name="71" href="#71">71</a>          MatcherAssert.assertThat(

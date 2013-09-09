@@ -139,14 +139,14 @@
 <a class="jxr_linenumber" name="129" href="#129">129</a>         <strong class="jxr_keyword">final</strong> JsonObject work = json.getJsonObject(<span class="jxr_string">"work"</span>);
 <a class="jxr_linenumber" name="130" href="#130">130</a>         <strong class="jxr_keyword">new</strong> JdbcSession(<strong class="jxr_keyword">this</strong>.client.get())
 <a class="jxr_linenumber" name="131" href="#131">131</a>             <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
-<a class="jxr_linenumber" name="132" href="#132">132</a>             .sql(<span class="jxr_string">"INSERT INTO receipt (time, wowner, wunit, wscheduled, ct, ctunit, dt, dtunit, details, amount) VALUES (now(), ?, ?, ?, ?, ?, ?, ?, ?, ?)"</span>)
+<a class="jxr_linenumber" name="132" href="#132">132</a>             .sql(<span class="jxr_string">"INSERT INTO receipt (time, wowner, wrule, wscheduled, ct, ctrule, dt, dtrule, details, amount) VALUES (now(), ?, ?, ?, ?, ?, ?, ?, ?, ?)"</span>)
 <a class="jxr_linenumber" name="133" href="#133">133</a>             .set(work.getString(<span class="jxr_string">"owner"</span>))
-<a class="jxr_linenumber" name="134" href="#134">134</a>             .set(work.getString(<span class="jxr_string">"unit"</span>))
+<a class="jxr_linenumber" name="134" href="#134">134</a>             .set(work.getString(<span class="jxr_string">"rule"</span>))
 <a class="jxr_linenumber" name="135" href="#135">135</a>             .set(<strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/tools/Time.html">Time</a>(work.getString(<span class="jxr_string">"scheduled"</span>)).toString())
 <a class="jxr_linenumber" name="136" href="#136">136</a>             .set(json.getString(<span class="jxr_string">"ct"</span>))
-<a class="jxr_linenumber" name="137" href="#137">137</a>             .set(json.getString(<span class="jxr_string">"ctunit"</span>))
+<a class="jxr_linenumber" name="137" href="#137">137</a>             .set(json.getString(<span class="jxr_string">"ctrule"</span>))
 <a class="jxr_linenumber" name="138" href="#138">138</a>             .set(json.getString(<span class="jxr_string">"dt"</span>))
-<a class="jxr_linenumber" name="139" href="#139">139</a>             .set(json.getString(<span class="jxr_string">"dtunit"</span>))
+<a class="jxr_linenumber" name="139" href="#139">139</a>             .set(json.getString(<span class="jxr_string">"dtrule"</span>))
 <a class="jxr_linenumber" name="140" href="#140">140</a>             .set(json.getString(<span class="jxr_string">"details"</span>))
 <a class="jxr_linenumber" name="141" href="#141">141</a>             .set(json.getJsonNumber(<span class="jxr_string">"amount"</span>).longValue())
 <a class="jxr_linenumber" name="142" href="#142">142</a>             .insert(<strong class="jxr_keyword">new</strong> VoidHandler());

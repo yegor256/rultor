@@ -61,25 +61,26 @@
 <a class="jxr_linenumber" name="51" href="#51">51</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> printsItselfToString() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="52" href="#52">52</a>          <strong class="jxr_keyword">final</strong> ImmutableMap&lt;Dollars, String&gt; map =
 <a class="jxr_linenumber" name="53" href="#53">53</a>              <strong class="jxr_keyword">new</strong> ImmutableMap.Builder&lt;Dollars, String&gt;()
-<a class="jxr_linenumber" name="54" href="#54">54</a>                  .put(<strong class="jxr_keyword">new</strong> Dollars(Tv.MILLION), <span class="jxr_string">"$1.00"</span>)
-<a class="jxr_linenumber" name="55" href="#55">55</a>                  .put(<strong class="jxr_keyword">new</strong> Dollars(Tv.FIVE * Tv.MILLION), <span class="jxr_string">"$5.00"</span>)
-<a class="jxr_linenumber" name="56" href="#56">56</a>                  .put(<strong class="jxr_keyword">new</strong> Dollars(Tv.THOUSAND), <span class="jxr_string">"$0.001"</span>)
-<a class="jxr_linenumber" name="57" href="#57">57</a>                  .put(<strong class="jxr_keyword">new</strong> Dollars(Tv.TEN * Tv.THOUSAND), <span class="jxr_string">"$0.01"</span>)
-<a class="jxr_linenumber" name="58" href="#58">58</a>                  .put(<strong class="jxr_keyword">new</strong> Dollars(-Tv.FIVE * Tv.MILLION), <span class="jxr_string">"($5.00)"</span>)
-<a class="jxr_linenumber" name="59" href="#59">59</a>                  .build();
-<a class="jxr_linenumber" name="60" href="#60">60</a>          <strong class="jxr_keyword">for</strong> (Map.Entry&lt;Dollars, String&gt; entry : map.entrySet()) {
-<a class="jxr_linenumber" name="61" href="#61">61</a>              MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="62" href="#62">62</a>                  entry.getKey(),
-<a class="jxr_linenumber" name="63" href="#63">63</a>                  Matchers.hasToString(entry.getValue())
-<a class="jxr_linenumber" name="64" href="#64">64</a>              );
-<a class="jxr_linenumber" name="65" href="#65">65</a>              MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="66" href="#66">66</a>                  Dollars.valueOf(entry.getValue()),
-<a class="jxr_linenumber" name="67" href="#67">67</a>                  Matchers.equalTo(entry.getKey())
-<a class="jxr_linenumber" name="68" href="#68">68</a>              );
-<a class="jxr_linenumber" name="69" href="#69">69</a>          }
-<a class="jxr_linenumber" name="70" href="#70">70</a>      }
-<a class="jxr_linenumber" name="71" href="#71">71</a>  
-<a class="jxr_linenumber" name="72" href="#72">72</a>  }
+<a class="jxr_linenumber" name="54" href="#54">54</a>                  .put(<strong class="jxr_keyword">new</strong> Dollars(0L), <span class="jxr_string">"$0.00"</span>)
+<a class="jxr_linenumber" name="55" href="#55">55</a>                  .put(<strong class="jxr_keyword">new</strong> Dollars(Tv.MILLION), <span class="jxr_string">"$1.00"</span>)
+<a class="jxr_linenumber" name="56" href="#56">56</a>                  .put(<strong class="jxr_keyword">new</strong> Dollars(Tv.FIVE * Tv.MILLION), <span class="jxr_string">"$5.00"</span>)
+<a class="jxr_linenumber" name="57" href="#57">57</a>                  .put(<strong class="jxr_keyword">new</strong> Dollars(Tv.THOUSAND), <span class="jxr_string">"$0.001"</span>)
+<a class="jxr_linenumber" name="58" href="#58">58</a>                  .put(<strong class="jxr_keyword">new</strong> Dollars(Tv.TEN * Tv.THOUSAND), <span class="jxr_string">"$0.01"</span>)
+<a class="jxr_linenumber" name="59" href="#59">59</a>                  .put(<strong class="jxr_keyword">new</strong> Dollars(-Tv.FIVE * Tv.MILLION), <span class="jxr_string">"($5.00)"</span>)
+<a class="jxr_linenumber" name="60" href="#60">60</a>                  .build();
+<a class="jxr_linenumber" name="61" href="#61">61</a>          <strong class="jxr_keyword">for</strong> (Map.Entry&lt;Dollars, String&gt; entry : map.entrySet()) {
+<a class="jxr_linenumber" name="62" href="#62">62</a>              MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="63" href="#63">63</a>                  entry.getKey(),
+<a class="jxr_linenumber" name="64" href="#64">64</a>                  Matchers.hasToString(entry.getValue())
+<a class="jxr_linenumber" name="65" href="#65">65</a>              );
+<a class="jxr_linenumber" name="66" href="#66">66</a>              MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="67" href="#67">67</a>                  Dollars.valueOf(entry.getValue()),
+<a class="jxr_linenumber" name="68" href="#68">68</a>                  Matchers.equalTo(entry.getKey())
+<a class="jxr_linenumber" name="69" href="#69">69</a>              );
+<a class="jxr_linenumber" name="70" href="#70">70</a>          }
+<a class="jxr_linenumber" name="71" href="#71">71</a>      }
+<a class="jxr_linenumber" name="72" href="#72">72</a>  
+<a class="jxr_linenumber" name="73" href="#73">73</a>  }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

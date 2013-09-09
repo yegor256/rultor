@@ -50,7 +50,7 @@
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.jcabi.dynamo.TableMocker;
 <a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> com.jcabi.urn.URN;
 <a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> com.rultor.aws.SQSClient;
-<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Unit;
+<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Rule;
 <a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.User;
 <a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.MatcherAssert;
 <a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.Matchers;
@@ -104,7 +104,7 @@
 <a class="jxr_linenumber" name="94" href="#94">94</a>          <strong class="jxr_keyword">this</strong>.table = <strong class="jxr_keyword">new</strong> TableMocker(
 <a class="jxr_linenumber" name="95" href="#95">95</a>              <strong class="jxr_keyword">this</strong>.region,
 <a class="jxr_linenumber" name="96" href="#96">96</a>              <strong class="jxr_keyword">new</strong> CreateTableRequest()
-<a class="jxr_linenumber" name="97" href="#97">97</a>                  .withTableName(String.format(<span class="jxr_string">"%sunits"</span>, prefix))
+<a class="jxr_linenumber" name="97" href="#97">97</a>                  .withTableName(String.format(<span class="jxr_string">"%s%s"</span>, prefix, AwsRule.TABLE))
 <a class="jxr_linenumber" name="98" href="#98">98</a>                  .withProvisionedThroughput(
 <a class="jxr_linenumber" name="99" href="#99">99</a>                      <strong class="jxr_keyword">new</strong> ProvisionedThroughput()
 <a class="jxr_linenumber" name="100" href="#100">100</a>                         .withReadCapacityUnits(1L)
@@ -112,18 +112,18 @@
 <a class="jxr_linenumber" name="102" href="#102">102</a>                 )
 <a class="jxr_linenumber" name="103" href="#103">103</a>                 .withAttributeDefinitions(
 <a class="jxr_linenumber" name="104" href="#104">104</a>                     <strong class="jxr_keyword">new</strong> AttributeDefinition()
-<a class="jxr_linenumber" name="105" href="#105">105</a>                         .withAttributeName(AwsUnit.HASH_OWNER)
+<a class="jxr_linenumber" name="105" href="#105">105</a>                         .withAttributeName(AwsRule.HASH_OWNER)
 <a class="jxr_linenumber" name="106" href="#106">106</a>                         .withAttributeType(ScalarAttributeType.S),
 <a class="jxr_linenumber" name="107" href="#107">107</a>                     <strong class="jxr_keyword">new</strong> AttributeDefinition()
-<a class="jxr_linenumber" name="108" href="#108">108</a>                         .withAttributeName(AwsUnit.RANGE_NAME)
+<a class="jxr_linenumber" name="108" href="#108">108</a>                         .withAttributeName(AwsRule.RANGE_NAME)
 <a class="jxr_linenumber" name="109" href="#109">109</a>                         .withAttributeType(ScalarAttributeType.S)
 <a class="jxr_linenumber" name="110" href="#110">110</a>                 )
 <a class="jxr_linenumber" name="111" href="#111">111</a>                 .withKeySchema(
 <a class="jxr_linenumber" name="112" href="#112">112</a>                     <strong class="jxr_keyword">new</strong> KeySchemaElement()
-<a class="jxr_linenumber" name="113" href="#113">113</a>                         .withAttributeName(AwsUnit.HASH_OWNER)
+<a class="jxr_linenumber" name="113" href="#113">113</a>                         .withAttributeName(AwsRule.HASH_OWNER)
 <a class="jxr_linenumber" name="114" href="#114">114</a>                         .withKeyType(KeyType.HASH),
 <a class="jxr_linenumber" name="115" href="#115">115</a>                     <strong class="jxr_keyword">new</strong> KeySchemaElement()
-<a class="jxr_linenumber" name="116" href="#116">116</a>                         .withAttributeName(AwsUnit.RANGE_NAME)
+<a class="jxr_linenumber" name="116" href="#116">116</a>                         .withAttributeName(AwsRule.RANGE_NAME)
 <a class="jxr_linenumber" name="117" href="#117">117</a>                         .withKeyType(KeyType.RANGE)
 <a class="jxr_linenumber" name="118" href="#118">118</a>                 )
 <a class="jxr_linenumber" name="119" href="#119">119</a>         );
@@ -155,17 +155,17 @@
 <a class="jxr_linenumber" name="145" href="#145">145</a>             <strong class="jxr_keyword">this</strong>.region, Mockito.mock(SQSClient.<strong class="jxr_keyword">class</strong>), urn
 <a class="jxr_linenumber" name="146" href="#146">146</a>         );
 <a class="jxr_linenumber" name="147" href="#147">147</a>         MatcherAssert.assertThat(user.urn(), Matchers.equalTo(urn));
-<a class="jxr_linenumber" name="148" href="#148">148</a>         <strong class="jxr_keyword">for</strong> (Unit unit : user.units()) {
-<a class="jxr_linenumber" name="149" href="#149">149</a>             user.units().remove(unit.name());
+<a class="jxr_linenumber" name="148" href="#148">148</a>         <strong class="jxr_keyword">for</strong> (Rule rule : user.rules()) {
+<a class="jxr_linenumber" name="149" href="#149">149</a>             user.rules().remove(rule.name());
 <a class="jxr_linenumber" name="150" href="#150">150</a>         }
-<a class="jxr_linenumber" name="151" href="#151">151</a>         <strong class="jxr_keyword">final</strong> String name = <span class="jxr_string">"simple-unit"</span>;
-<a class="jxr_linenumber" name="152" href="#152">152</a>         user.units().create(name);
+<a class="jxr_linenumber" name="151" href="#151">151</a>         <strong class="jxr_keyword">final</strong> String name = <span class="jxr_string">"simple-rule"</span>;
+<a class="jxr_linenumber" name="152" href="#152">152</a>         user.rules().create(name);
 <a class="jxr_linenumber" name="153" href="#153">153</a>         MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="154" href="#154">154</a>             user.units(),
-<a class="jxr_linenumber" name="155" href="#155">155</a>             Matchers.&lt;Unit&gt;iterableWithSize(1)
+<a class="jxr_linenumber" name="154" href="#154">154</a>             user.rules(),
+<a class="jxr_linenumber" name="155" href="#155">155</a>             Matchers.&lt;Rule&gt;iterableWithSize(1)
 <a class="jxr_linenumber" name="156" href="#156">156</a>         );
 <a class="jxr_linenumber" name="157" href="#157">157</a>         MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="158" href="#158">158</a>             user.units().contains(name),
+<a class="jxr_linenumber" name="158" href="#158">158</a>             user.rules().contains(name),
 <a class="jxr_linenumber" name="159" href="#159">159</a>             Matchers.is(<strong class="jxr_keyword">true</strong>)
 <a class="jxr_linenumber" name="160" href="#160">160</a>         );
 <a class="jxr_linenumber" name="161" href="#161">161</a>     }

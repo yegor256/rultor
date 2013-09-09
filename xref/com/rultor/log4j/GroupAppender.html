@@ -41,8 +41,8 @@
 <a class="jxr_linenumber" name="31" href="#31">31</a>  
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.google.common.collect.ImmutableMap;
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.ScheduleWithFixedDelay;
-<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.log.Logger;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Drain;
+<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Drain;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Exceptions;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> java.util.Collection;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> java.util.LinkedList;
@@ -133,7 +133,7 @@
 <a class="jxr_linenumber" name="123" href="#123">123</a>             <strong class="jxr_keyword">this</strong>.drain.append(all);
 <a class="jxr_linenumber" name="124" href="#124">124</a>         <em class="jxr_comment">// @checkstyle IllegalCatch (1 line)</em>
 <a class="jxr_linenumber" name="125" href="#125">125</a>         } <strong class="jxr_keyword">catch</strong> (Throwable ex) {
-<a class="jxr_linenumber" name="126" href="#126">126</a>             Logger.error(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"#append(): %s"</span>, ex);
+<a class="jxr_linenumber" name="126" href="#126">126</a>             Exceptions.error(<strong class="jxr_keyword">this</strong>, ex);
 <a class="jxr_linenumber" name="127" href="#127">127</a>         }
 <a class="jxr_linenumber" name="128" href="#128">128</a>     }
 <a class="jxr_linenumber" name="129" href="#129">129</a> 

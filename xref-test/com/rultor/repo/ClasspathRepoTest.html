@@ -42,14 +42,14 @@
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Immutable;
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.urn.URN;
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Arguments;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Repo;
-<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Spec;
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Unit;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Units;
-<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.User;
-<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Users;
-<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Wallet;
-<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Coordinates;
+<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Repo;
+<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Rule;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Rules;
+<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Spec;
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.User;
+<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Users;
+<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Wallet;
 <a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
 <a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.MatcherAssert;
 <a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.Matchers;
@@ -164,13 +164,13 @@
 <a class="jxr_linenumber" name="154" href="#154">154</a>             + <span class="jxr_string">"  com.rultor.repo.ClasspathRepoTest$Const(${0:test again})"</span>
 <a class="jxr_linenumber" name="155" href="#155">155</a>             + <span class="jxr_string">")"</span>
 <a class="jxr_linenumber" name="156" href="#156">156</a>         );
-<a class="jxr_linenumber" name="157" href="#157">157</a>         <strong class="jxr_keyword">final</strong> Unit unit = Mockito.mock(Unit.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="158" href="#158">158</a>         Mockito.doReturn(multiply).when(unit).spec();
+<a class="jxr_linenumber" name="157" href="#157">157</a>         <strong class="jxr_keyword">final</strong> Rule rule = Mockito.mock(Rule.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="158" href="#158">158</a>         Mockito.doReturn(multiply).when(rule).spec();
 <a class="jxr_linenumber" name="159" href="#159">159</a>         <strong class="jxr_keyword">final</strong> String name = <span class="jxr_string">"multiply-by-two"</span>;
 <a class="jxr_linenumber" name="160" href="#160">160</a>         <strong class="jxr_keyword">final</strong> User user = Mockito.mock(User.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="161" href="#161">161</a>         <strong class="jxr_keyword">final</strong> Units units = Mockito.mock(Units.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="162" href="#162">162</a>         Mockito.doReturn(units).when(user).units();
-<a class="jxr_linenumber" name="163" href="#163">163</a>         Mockito.doReturn(unit).when(units).get(name);
+<a class="jxr_linenumber" name="161" href="#161">161</a>         <strong class="jxr_keyword">final</strong> Rules rules = Mockito.mock(Rules.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="162" href="#162">162</a>         Mockito.doReturn(rules).when(user).rules();
+<a class="jxr_linenumber" name="163" href="#163">163</a>         Mockito.doReturn(rule).when(rules).get(name);
 <a class="jxr_linenumber" name="164" href="#164">164</a>         <strong class="jxr_keyword">final</strong> URN urn = <strong class="jxr_keyword">new</strong> URN(<span class="jxr_string">"urn:facebook:77"</span>);
 <a class="jxr_linenumber" name="165" href="#165">165</a>         Mockito.doReturn(urn).when(user).urn();
 <a class="jxr_linenumber" name="166" href="#166">166</a>         <strong class="jxr_keyword">final</strong> Users users = Mockito.mock(Users.<strong class="jxr_keyword">class</strong>);
@@ -179,7 +179,7 @@
 <a class="jxr_linenumber" name="169" href="#169">169</a>             repo.make(user, spec).instantiate(
 <a class="jxr_linenumber" name="170" href="#170">170</a>                 users,
 <a class="jxr_linenumber" name="171" href="#171">171</a>                 <strong class="jxr_keyword">new</strong> Arguments(
-<a class="jxr_linenumber" name="172" href="#172">172</a>                     <strong class="jxr_keyword">new</strong> Work.None(), <strong class="jxr_keyword">new</strong> Wallet.Empty(),
+<a class="jxr_linenumber" name="172" href="#172">172</a>                     <strong class="jxr_keyword">new</strong> Coordinates.None(), <strong class="jxr_keyword">new</strong> Wallet.Empty(),
 <a class="jxr_linenumber" name="173" href="#173">173</a>                     Arrays.&lt;Object&gt;asList(-2)
 <a class="jxr_linenumber" name="174" href="#174">174</a>                 )
 <a class="jxr_linenumber" name="175" href="#175">175</a>             )

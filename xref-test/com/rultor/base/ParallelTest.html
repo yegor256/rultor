@@ -41,8 +41,8 @@
 <a class="jxr_linenumber" name="31" href="#31">31</a>  
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Tv;
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.log.VerboseThreads;
-<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Instance;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Coordinates;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Instance;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.stateful.Lineup;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.stateful.Notepad;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> java.util.ArrayList;
@@ -117,7 +117,7 @@
 <a class="jxr_linenumber" name="107" href="#107">107</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> threads = 10;
 <a class="jxr_linenumber" name="108" href="#108">108</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> maximum = 3;
 <a class="jxr_linenumber" name="109" href="#109">109</a>         <strong class="jxr_keyword">final</strong> Parallel parallel = <strong class="jxr_keyword">new</strong> Parallel(
-<a class="jxr_linenumber" name="110" href="#110">110</a>             <strong class="jxr_keyword">new</strong> Work.Simple(),
+<a class="jxr_linenumber" name="110" href="#110">110</a>             <strong class="jxr_keyword">new</strong> Coordinates.Simple(),
 <a class="jxr_linenumber" name="111" href="#111">111</a>             maximum,
 <a class="jxr_linenumber" name="112" href="#112">112</a>             <strong class="jxr_keyword">new</strong> Lineup.Asynchronous(),
 <a class="jxr_linenumber" name="113" href="#113">113</a>             notepad,

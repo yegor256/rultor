@@ -41,10 +41,10 @@
 <a class="jxr_linenumber" name="31" href="#31">31</a>  
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Tv;
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Arguments;
-<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Users;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Variable;
-<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Wallet;
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Coordinates;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Users;
+<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Variable;
+<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Wallet;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> java.util.List;
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.MatcherAssert;
@@ -71,7 +71,7 @@
 <a class="jxr_linenumber" name="61" href="#61">61</a>          MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="62" href="#62">62</a>              <strong class="jxr_keyword">var</strong>.instantiate(
 <a class="jxr_linenumber" name="63" href="#63">63</a>                  Mockito.mock(Users.<strong class="jxr_keyword">class</strong>),
-<a class="jxr_linenumber" name="64" href="#64">64</a>                  <strong class="jxr_keyword">new</strong> Arguments(<strong class="jxr_keyword">new</strong> Work.None(), <strong class="jxr_keyword">new</strong> Wallet.Empty())
+<a class="jxr_linenumber" name="64" href="#64">64</a>                  <strong class="jxr_keyword">new</strong> Arguments(<strong class="jxr_keyword">new</strong> Coordinates.None(), <strong class="jxr_keyword">new</strong> Wallet.Empty())
 <a class="jxr_linenumber" name="65" href="#65">65</a>              ).get(0),
 <a class="jxr_linenumber" name="66" href="#66">66</a>              Matchers.&lt;Object&gt;equalTo(Tv.TEN)
 <a class="jxr_linenumber" name="67" href="#67">67</a>          );

@@ -44,8 +44,8 @@
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.urn.URN;
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rexsl.test.RestTester;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Account;
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Stands;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Units;
+<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Rules;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Stands;
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.User;
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> java.io.UnsupportedEncodingException;
 <a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> java.net.HttpURLConnection;
@@ -140,16 +140,16 @@
 <a class="jxr_linenumber" name="130" href="#130">130</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
 <a class="jxr_linenumber" name="131" href="#131">131</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="132" href="#132">132</a>     @Override
-<a class="jxr_linenumber" name="133" href="#133">133</a>     <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Units.html">Units</a> units() {
-<a class="jxr_linenumber" name="134" href="#134">134</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/client/RestUnits.html">RestUnits</a>(
+<a class="jxr_linenumber" name="133" href="#133">133</a>     <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Rules.html">Rules</a> rules() {
+<a class="jxr_linenumber" name="134" href="#134">134</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/client/RestRules.html">RestRules</a>(
 <a class="jxr_linenumber" name="135" href="#135">135</a>             URI.create(
 <a class="jxr_linenumber" name="136" href="#136">136</a>                 RestTester.start(UriBuilder.fromUri(<strong class="jxr_keyword">this</strong>.home))
 <a class="jxr_linenumber" name="137" href="#137">137</a>                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
 <a class="jxr_linenumber" name="138" href="#138">138</a>                     .header(HttpHeaders.AUTHORIZATION, <strong class="jxr_keyword">this</strong>.token)
-<a class="jxr_linenumber" name="139" href="#139">139</a>                     .get(<span class="jxr_string">"#units()"</span>)
+<a class="jxr_linenumber" name="139" href="#139">139</a>                     .get(<span class="jxr_string">"#rules()"</span>)
 <a class="jxr_linenumber" name="140" href="#140">140</a>                     .assertStatus(HttpURLConnection.HTTP_OK)
-<a class="jxr_linenumber" name="141" href="#141">141</a>                     .assertXPath(<span class="jxr_string">"/page/links/link[@rel='units']"</span>)
-<a class="jxr_linenumber" name="142" href="#142">142</a>                     .xpath(<span class="jxr_string">"/page/links/link[@rel='units']/@href"</span>)
+<a class="jxr_linenumber" name="141" href="#141">141</a>                     .assertXPath(<span class="jxr_string">"/page/links/link[@rel='rules']"</span>)
+<a class="jxr_linenumber" name="142" href="#142">142</a>                     .xpath(<span class="jxr_string">"/page/links/link[@rel='rules']/@href"</span>)
 <a class="jxr_linenumber" name="143" href="#143">143</a>                     .get(0)
 <a class="jxr_linenumber" name="144" href="#144">144</a>             ),
 <a class="jxr_linenumber" name="145" href="#145">145</a>             <strong class="jxr_keyword">this</strong>.token

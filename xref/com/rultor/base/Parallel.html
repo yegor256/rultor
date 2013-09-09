@@ -43,8 +43,8 @@
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Loggable;
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.log.Logger;
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.snapshot.Step;
-<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Instance;
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Coordinates;
+<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Instance;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.stateful.Lineup;
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.stateful.Notepad;
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> javax.validation.constraints.NotNull;
@@ -65,9 +65,9 @@
 <a class="jxr_linenumber" name="55" href="#55">55</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/base/Parallel.html">Parallel</a> <strong class="jxr_keyword">implements</strong> <a href="../../../com/rultor/spi/Instance.html">Instance</a> {
 <a class="jxr_linenumber" name="56" href="#56">56</a>  
 <a class="jxr_linenumber" name="57" href="#57">57</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="58" href="#58">58</a>  <em class="jxr_javadoccomment">     * Work we're in.</em>
+<a class="jxr_linenumber" name="58" href="#58">58</a>  <em class="jxr_javadoccomment">     * Coordinates we're in.</em>
 <a class="jxr_linenumber" name="59" href="#59">59</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="60" href="#60">60</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> <a href="../../../com/rultor/spi/Work.html">Work</a> work;
+<a class="jxr_linenumber" name="60" href="#60">60</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> <a href="../../../com/rultor/spi/Coordinates.html">Coordinates</a> work;
 <a class="jxr_linenumber" name="61" href="#61">61</a>  
 <a class="jxr_linenumber" name="62" href="#62">62</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="63" href="#63">63</a>  <em class="jxr_javadoccomment">     * Origin.</em>
@@ -91,7 +91,7 @@
 <a class="jxr_linenumber" name="81" href="#81">81</a>  
 <a class="jxr_linenumber" name="82" href="#82">82</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="83" href="#83">83</a>  <em class="jxr_javadoccomment">     * Public ctor.</em>
-<a class="jxr_linenumber" name="84" href="#84">84</a>  <em class="jxr_javadoccomment">     * @param wrk Work we're in</em>
+<a class="jxr_linenumber" name="84" href="#84">84</a>  <em class="jxr_javadoccomment">     * @param wrk Coordinates we're in</em>
 <a class="jxr_linenumber" name="85" href="#85">85</a>  <em class="jxr_javadoccomment">     * @param max Maximum</em>
 <a class="jxr_linenumber" name="86" href="#86">86</a>  <em class="jxr_javadoccomment">     * @param lnp Lineup</em>
 <a class="jxr_linenumber" name="87" href="#87">87</a>  <em class="jxr_javadoccomment">     * @param atv List of active threads</em>
@@ -99,7 +99,7 @@
 <a class="jxr_linenumber" name="89" href="#89">89</a>  <em class="jxr_javadoccomment">     * @checkstyle ParameterNumber (10 lines)</em>
 <a class="jxr_linenumber" name="90" href="#90">90</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="91" href="#91">91</a>      <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/base/Parallel.html">Parallel</a>(
-<a class="jxr_linenumber" name="92" href="#92">92</a>          @NotNull(message = <span class="jxr_string">"work can't be NULL"</span>) <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Work.html">Work</a> wrk,
+<a class="jxr_linenumber" name="92" href="#92">92</a>          @NotNull(message = <span class="jxr_string">"work can't be NULL"</span>) <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Coordinates.html">Coordinates</a> wrk,
 <a class="jxr_linenumber" name="93" href="#93">93</a>          <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> max,
 <a class="jxr_linenumber" name="94" href="#94">94</a>          @NotNull(message = <span class="jxr_string">"lineup can't be NULL"</span>) <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/stateful/Lineup.html">Lineup</a> lnp,
 <a class="jxr_linenumber" name="95" href="#95">95</a>          @NotNull(message = <span class="jxr_string">"notepad can't be NULL"</span>) <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/stateful/Notepad.html">Notepad</a> atv,

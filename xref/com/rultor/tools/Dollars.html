@@ -104,7 +104,7 @@
 <a class="jxr_linenumber" name="94" href="#94">94</a>          <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> usd = Math.abs((<strong class="jxr_keyword">double</strong>) <strong class="jxr_keyword">this</strong>.amount / Tv.MILLION);
 <a class="jxr_linenumber" name="95" href="#95">95</a>          String body;
 <a class="jxr_linenumber" name="96" href="#96">96</a>          <strong class="jxr_keyword">if</strong> (usd == 0) {
-<a class="jxr_linenumber" name="97" href="#97">97</a>              body = <span class="jxr_string">"0.00"</span>;
+<a class="jxr_linenumber" name="97" href="#97">97</a>              body = <span class="jxr_string">"$0.00"</span>;
 <a class="jxr_linenumber" name="98" href="#98">98</a>          <em class="jxr_comment">// @checkstyle MagicNumber (8 lines)</em>
 <a class="jxr_linenumber" name="99" href="#99">99</a>          } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (usd &lt; 0.00001d) {
 <a class="jxr_linenumber" name="100" href="#100">100</a>             body = String.format(<span class="jxr_string">"$%.6f"</span>, usd);

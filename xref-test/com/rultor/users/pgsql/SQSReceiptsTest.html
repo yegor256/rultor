@@ -74,10 +74,10 @@
 <a class="jxr_linenumber" name="64" href="#64">64</a>              <strong class="jxr_keyword">new</strong> ReceiveMessageResult().withMessages(
 <a class="jxr_linenumber" name="65" href="#65">65</a>                  <strong class="jxr_keyword">new</strong> Message().withBody(
 <a class="jxr_linenumber" name="66" href="#66">66</a>                      <em class="jxr_comment">// @checkstyle StringLiteralsConcatenation (5 lines)</em>
-<a class="jxr_linenumber" name="67" href="#67">67</a>                      <span class="jxr_string">"{\&quot;work\&quot;: {\&quot;owner\&quot;: \&quot;urn:test:1\&quot;, \&quot;unit\&quot;: \&quot;test\&quot;,"</span>
+<a class="jxr_linenumber" name="67" href="#67">67</a>                      <span class="jxr_string">"{\&quot;work\&quot;: {\&quot;owner\&quot;: \&quot;urn:test:1\&quot;, \&quot;rule\&quot;: \&quot;test\&quot;,"</span>
 <a class="jxr_linenumber" name="68" href="#68">68</a>                      + <span class="jxr_string">" \&quot;scheduled\&quot;: \&quot;2012-08-23T13:25:33Z\&quot;},"</span>
-<a class="jxr_linenumber" name="69" href="#69">69</a>                      + <span class="jxr_string">"\&quot;ct\&quot;:\&quot;urn:test:2\&quot;, \&quot;ctunit\&quot;:\&quot;some-other-2\&quot;,"</span>
-<a class="jxr_linenumber" name="70" href="#70">70</a>                      + <span class="jxr_string">"\&quot;dt\&quot;:\&quot;urn:test:3\&quot;, \&quot;dtunit\&quot;:\&quot;some-other-4\&quot;,"</span>
+<a class="jxr_linenumber" name="69" href="#69">69</a>                      + <span class="jxr_string">"\&quot;ct\&quot;:\&quot;urn:test:2\&quot;, \&quot;ctrule\&quot;:\&quot;some-other-2\&quot;,"</span>
+<a class="jxr_linenumber" name="70" href="#70">70</a>                      + <span class="jxr_string">"\&quot;dt\&quot;:\&quot;urn:test:3\&quot;, \&quot;dtrule\&quot;:\&quot;some-other-4\&quot;,"</span>
 <a class="jxr_linenumber" name="71" href="#71">71</a>                      + <span class="jxr_string">"\&quot;details\&quot;:\&quot;тест\&quot;, \&quot;amount\&quot;: 16458383}"</span>
 <a class="jxr_linenumber" name="72" href="#72">72</a>                  )
 <a class="jxr_linenumber" name="73" href="#73">73</a>              )
@@ -120,7 +120,7 @@
 <a class="jxr_linenumber" name="110" href="#110">110</a>         Mockito.doReturn(
 <a class="jxr_linenumber" name="111" href="#111">111</a>             <strong class="jxr_keyword">new</strong> ReceiveMessageResult().withMessages(
 <a class="jxr_linenumber" name="112" href="#112">112</a>                 <strong class="jxr_keyword">new</strong> Message().withBody(
-<a class="jxr_linenumber" name="113" href="#113">113</a>                     <span class="jxr_string">"{\&quot;work\&quot;: {\&quot;unit\&quot;:\&quot;x\&quot;,\&quot;owner\&quot;:\&quot;urn:test:1\&quot;}}"</span>
+<a class="jxr_linenumber" name="113" href="#113">113</a>                     <span class="jxr_string">"{\&quot;work\&quot;: {\&quot;rule\&quot;:\&quot;x\&quot;,\&quot;owner\&quot;:\&quot;urn:test:1\&quot;}}"</span>
 <a class="jxr_linenumber" name="114" href="#114">114</a>                 )
 <a class="jxr_linenumber" name="115" href="#115">115</a>             )
 <a class="jxr_linenumber" name="116" href="#116">116</a>         ).when(aws).receiveMessage(Mockito.any(ReceiveMessageRequest.<strong class="jxr_keyword">class</strong>));

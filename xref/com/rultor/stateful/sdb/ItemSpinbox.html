@@ -125,7 +125,7 @@
 <a class="jxr_linenumber" name="115" href="#115">115</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
 <a class="jxr_linenumber" name="116" href="#116">116</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="117" href="#117">117</a>     @Override
-<a class="jxr_linenumber" name="118" href="#118">118</a>     @RetryOnFailure
+<a class="jxr_linenumber" name="118" href="#118">118</a>     @RetryOnFailure(verbose = false)
 <a class="jxr_linenumber" name="119" href="#119">119</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">long</strong> add(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> value) {
 <a class="jxr_linenumber" name="120" href="#120">120</a>         <strong class="jxr_keyword">final</strong> AmazonSimpleDB aws = <strong class="jxr_keyword">this</strong>.client.get();
 <a class="jxr_linenumber" name="121" href="#121">121</a>         <strong class="jxr_keyword">final</strong> GetAttributesResult result = aws.getAttributes(

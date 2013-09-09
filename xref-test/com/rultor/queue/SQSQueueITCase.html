@@ -48,8 +48,8 @@
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Tv;
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.jcabi.urn.URN;
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rultor.aws.SQSClient;
-<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Queue;
-<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Coordinates;
+<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Queue;
 <a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
 <a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.TimeUnit;
 <a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.lang3.RandomStringUtils;
@@ -105,10 +105,10 @@
 <a class="jxr_linenumber" name="95" href="#95">95</a>          );
 <a class="jxr_linenumber" name="96" href="#96">96</a>          <strong class="jxr_keyword">final</strong> String url = result.getQueueUrl();
 <a class="jxr_linenumber" name="97" href="#97">97</a>          <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="98" href="#98">98</a>              <strong class="jxr_keyword">final</strong> String unit = <span class="jxr_string">"some-test-unit"</span>;
+<a class="jxr_linenumber" name="98" href="#98">98</a>              <strong class="jxr_keyword">final</strong> String rule = <span class="jxr_string">"some-test-rule"</span>;
 <a class="jxr_linenumber" name="99" href="#99">99</a>              <strong class="jxr_keyword">final</strong> URN owner = <strong class="jxr_keyword">new</strong> URN(<span class="jxr_string">"urn:facebook:1"</span>);
-<a class="jxr_linenumber" name="100" href="#100">100</a>             <strong class="jxr_keyword">final</strong> Time time = <strong class="jxr_keyword">new</strong> Time(<span class="jxr_string">"2013-07-19T14:05Z"</span>);
-<a class="jxr_linenumber" name="101" href="#101">101</a>             <strong class="jxr_keyword">final</strong> Work work = <strong class="jxr_keyword">new</strong> Work.Simple(owner, unit, time);
+<a class="jxr_linenumber" name="100" href="#100">100</a>             <strong class="jxr_keyword">final</strong> Time time = <strong class="jxr_keyword">new</strong> Time(<span class="jxr_string">"2013-07-19T14:05:00Z"</span>);
+<a class="jxr_linenumber" name="101" href="#101">101</a>             <strong class="jxr_keyword">final</strong> Coordinates work = <strong class="jxr_keyword">new</strong> Coordinates.Simple(owner, rule, time);
 <a class="jxr_linenumber" name="102" href="#102">102</a>             <strong class="jxr_keyword">final</strong> Queue queue = <strong class="jxr_keyword">new</strong> SQSQueue(
 <a class="jxr_linenumber" name="103" href="#103">103</a>                 <strong class="jxr_keyword">new</strong> SQSClient.Simple(<strong class="jxr_keyword">this</strong>.key, <strong class="jxr_keyword">this</strong>.secret, url)
 <a class="jxr_linenumber" name="104" href="#104">104</a>             );

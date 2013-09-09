@@ -42,17 +42,17 @@
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Tv;
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.urn.URN;
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Arguments;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Drain;
-<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Instance;
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Queue;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Repo;
-<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Spec;
-<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Unit;
-<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Units;
-<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.User;
-<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Users;
-<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Variable;
-<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Coordinates;
+<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Drain;
+<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Instance;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Queue;
+<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Repo;
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Rule;
+<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Rules;
+<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Spec;
+<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.User;
+<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Users;
+<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Variable;
 <a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
 <a class="jxr_linenumber" name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.CountDownLatch;
 <a class="jxr_linenumber" name="48" href="#48">48</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.TimeUnit;
@@ -84,14 +84,14 @@
 <a class="jxr_linenumber" name="74" href="#74">74</a>          <strong class="jxr_keyword">final</strong> String name = <span class="jxr_string">"unit-name"</span>;
 <a class="jxr_linenumber" name="75" href="#75">75</a>          <strong class="jxr_keyword">final</strong> AtomicBoolean pulled = <strong class="jxr_keyword">new</strong> AtomicBoolean();
 <a class="jxr_linenumber" name="76" href="#76">76</a>          Mockito.doAnswer(
-<a class="jxr_linenumber" name="77" href="#77">77</a>              <strong class="jxr_keyword">new</strong> Answer&lt;Work&gt;() {
+<a class="jxr_linenumber" name="77" href="#77">77</a>              <strong class="jxr_keyword">new</strong> Answer&lt;Coordinates&gt;() {
 <a class="jxr_linenumber" name="78" href="#78">78</a>                  @Override
-<a class="jxr_linenumber" name="79" href="#79">79</a>                  <strong class="jxr_keyword">public</strong> Work answer(<strong class="jxr_keyword">final</strong> InvocationOnMock inv) {
-<a class="jxr_linenumber" name="80" href="#80">80</a>                      <strong class="jxr_keyword">final</strong> Work work;
+<a class="jxr_linenumber" name="79" href="#79">79</a>                  <strong class="jxr_keyword">public</strong> Coordinates answer(<strong class="jxr_keyword">final</strong> InvocationOnMock inv) {
+<a class="jxr_linenumber" name="80" href="#80">80</a>                      <strong class="jxr_keyword">final</strong> Coordinates work;
 <a class="jxr_linenumber" name="81" href="#81">81</a>                      <strong class="jxr_keyword">if</strong> (pulled.getAndSet(<strong class="jxr_keyword">true</strong>)) {
-<a class="jxr_linenumber" name="82" href="#82">82</a>                          work = <strong class="jxr_keyword">new</strong> Work.None();
+<a class="jxr_linenumber" name="82" href="#82">82</a>                          work = <strong class="jxr_keyword">new</strong> Coordinates.None();
 <a class="jxr_linenumber" name="83" href="#83">83</a>                      } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="84" href="#84">84</a>                          work = <strong class="jxr_keyword">new</strong> Work.Simple(owner, name);
+<a class="jxr_linenumber" name="84" href="#84">84</a>                          work = <strong class="jxr_keyword">new</strong> Coordinates.Simple(owner, name);
 <a class="jxr_linenumber" name="85" href="#85">85</a>                      }
 <a class="jxr_linenumber" name="86" href="#86">86</a>                      <strong class="jxr_keyword">return</strong> work;
 <a class="jxr_linenumber" name="87" href="#87">87</a>                  }
@@ -119,12 +119,12 @@
 <a class="jxr_linenumber" name="109" href="#109">109</a>             Mockito.any(Users.<strong class="jxr_keyword">class</strong>), Mockito.any(Arguments.<strong class="jxr_keyword">class</strong>)
 <a class="jxr_linenumber" name="110" href="#110">110</a>         );
 <a class="jxr_linenumber" name="111" href="#111">111</a>         <strong class="jxr_keyword">final</strong> User user = Mockito.mock(User.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="112" href="#112">112</a>         <strong class="jxr_keyword">final</strong> Unit unit = Mockito.mock(Unit.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="113" href="#113">113</a>         <strong class="jxr_keyword">final</strong> Units units = Mockito.mock(Units.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="114" href="#114">114</a>         Mockito.doReturn(units).when(user).units();
-<a class="jxr_linenumber" name="115" href="#115">115</a>         Mockito.doReturn(Arrays.asList(unit).iterator()).when(units).iterator();
-<a class="jxr_linenumber" name="116" href="#116">116</a>         Mockito.doReturn(unit).when(units).get(name);
-<a class="jxr_linenumber" name="117" href="#117">117</a>         Mockito.doReturn(<strong class="jxr_keyword">new</strong> Spec.Simple()).when(unit).spec();
+<a class="jxr_linenumber" name="112" href="#112">112</a>         <strong class="jxr_keyword">final</strong> Rule rule = Mockito.mock(Rule.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="113" href="#113">113</a>         <strong class="jxr_keyword">final</strong> Rules rules = Mockito.mock(Rules.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="114" href="#114">114</a>         Mockito.doReturn(rules).when(user).rules();
+<a class="jxr_linenumber" name="115" href="#115">115</a>         Mockito.doReturn(Arrays.asList(rule).iterator()).when(rules).iterator();
+<a class="jxr_linenumber" name="116" href="#116">116</a>         Mockito.doReturn(rule).when(rules).get(name);
+<a class="jxr_linenumber" name="117" href="#117">117</a>         Mockito.doReturn(<strong class="jxr_keyword">new</strong> Spec.Simple()).when(rule).spec();
 <a class="jxr_linenumber" name="118" href="#118">118</a>         <strong class="jxr_keyword">final</strong> Users users = Mockito.mock(Users.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="119" href="#119">119</a>         Mockito.doReturn(user).when(users).get(owner);
 <a class="jxr_linenumber" name="120" href="#120">120</a>         Mockito.doReturn(Arrays.asList(user).iterator())

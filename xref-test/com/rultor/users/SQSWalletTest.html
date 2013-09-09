@@ -44,8 +44,8 @@
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Tv;
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.jcabi.urn.URN;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.aws.SQSClient;
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Wallet;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Work;
+<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Coordinates;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Wallet;
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Dollars;
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
 <a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> java.io.StringReader;
@@ -73,9 +73,9 @@
 <a class="jxr_linenumber" name="63" href="#63">63</a>          <strong class="jxr_keyword">final</strong> AmazonSQS aws = Mockito.mock(AmazonSQS.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="64" href="#64">64</a>          Mockito.doReturn(aws).when(client).get();
 <a class="jxr_linenumber" name="65" href="#65">65</a>          <strong class="jxr_keyword">final</strong> Wallet wallet = <strong class="jxr_keyword">new</strong> SQSWallet(
-<a class="jxr_linenumber" name="66" href="#66">66</a>              client, <strong class="jxr_keyword">new</strong> Work.Simple(),
-<a class="jxr_linenumber" name="67" href="#67">67</a>              <strong class="jxr_keyword">new</strong> URN(<span class="jxr_string">"urn:creditor:1"</span>), <span class="jxr_string">"credit-unit"</span>,
-<a class="jxr_linenumber" name="68" href="#68">68</a>              <strong class="jxr_keyword">new</strong> URN(<span class="jxr_string">"urn:debitor:1"</span>), <span class="jxr_string">"debit-unit"</span>
+<a class="jxr_linenumber" name="66" href="#66">66</a>              client, <strong class="jxr_keyword">new</strong> Coordinates.Simple(),
+<a class="jxr_linenumber" name="67" href="#67">67</a>              <strong class="jxr_keyword">new</strong> URN(<span class="jxr_string">"urn:creditor:1"</span>), <span class="jxr_string">"credit-rule"</span>,
+<a class="jxr_linenumber" name="68" href="#68">68</a>              <strong class="jxr_keyword">new</strong> URN(<span class="jxr_string">"urn:debitor:1"</span>), <span class="jxr_string">"debit-rule"</span>
 <a class="jxr_linenumber" name="69" href="#69">69</a>          );
 <a class="jxr_linenumber" name="70" href="#70">70</a>          wallet.charge(<span class="jxr_string">"payment детали"</span>, <strong class="jxr_keyword">new</strong> Dollars(Tv.MILLION));
 <a class="jxr_linenumber" name="71" href="#71">71</a>          Mockito.verify(aws).sendMessage(

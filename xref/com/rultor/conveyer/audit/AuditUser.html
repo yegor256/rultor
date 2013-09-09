@@ -44,8 +44,8 @@
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Tv;
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.jcabi.urn.URN;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Account;
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Stands;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Units;
+<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Rules;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Stands;
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.User;
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
 <a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> lombok.ToString;
@@ -93,9 +93,9 @@
 <a class="jxr_linenumber" name="83" href="#83">83</a>  <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
 <a class="jxr_linenumber" name="84" href="#84">84</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="85" href="#85">85</a>      @Override
-<a class="jxr_linenumber" name="86" href="#86">86</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../com/rultor/spi/Units.html">Units</a> units() {
-<a class="jxr_linenumber" name="87" href="#87">87</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/conveyer/audit/AuditUnits.html">AuditUnits</a>(
-<a class="jxr_linenumber" name="88" href="#88">88</a>              <strong class="jxr_keyword">this</strong>.origin.units(),
+<a class="jxr_linenumber" name="86" href="#86">86</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../com/rultor/spi/Rules.html">Rules</a> rules() {
+<a class="jxr_linenumber" name="87" href="#87">87</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/conveyer/audit/AuditRules.html">AuditRules</a>(
+<a class="jxr_linenumber" name="88" href="#88">88</a>              <strong class="jxr_keyword">this</strong>.origin.rules(),
 <a class="jxr_linenumber" name="89" href="#89">89</a>              <strong class="jxr_keyword">this</strong>.account().balance().points() &gt; AuditUser.THRESHOLD
 <a class="jxr_linenumber" name="90" href="#90">90</a>          );
 <a class="jxr_linenumber" name="91" href="#91">91</a>      }
