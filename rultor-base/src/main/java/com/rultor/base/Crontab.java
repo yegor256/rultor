@@ -166,7 +166,7 @@ public final class Crontab implements Instance {
      * Execution allowed?
      * @return TRUE if allowed
      */
-    @Step("Crontab `${this.rules()}` #if(!$result)NOT#end allowed execution")
+    @Step("Crontab `${this.rules}` #if(!$result)NOT#end allowed execution")
     private boolean allowed() {
         final Calendar today = Crontab.calendar(this.work.scheduled());
         Crontab.Gate<Calendar> denier = null;
