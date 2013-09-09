@@ -175,7 +175,7 @@ public final class FileDrain implements Drain {
      * @param lines Lines to append
      * @throws IOException If some I/O problem inside
      */
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     private void append(final FTPClient ftp, final Iterable<String> lines)
         throws IOException {
         final String name = FilenameUtils.getBaseName(this.file);

@@ -265,7 +265,12 @@ public final class EC2 implements Environments {
      * @param instance Instance running (maybe already)
      * @return The same instance
      */
-    @RetryOnFailure(attempts = Tv.TEN, delay = 2, unit = TimeUnit.MINUTES)
+    @RetryOnFailure(
+        attempts = Tv.TEN,
+        delay = 2,
+        unit = TimeUnit.MINUTES,
+        verbose = false
+    )
     private Instance wrap(final AmazonEC2 aws, final Instance instance) {
         aws.createTags(
             new CreateTagsRequest()

@@ -100,7 +100,7 @@ public final class GitBranch implements Branch {
      * {@inheritDoc}
      */
     @Override
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<Commit> log() throws IOException {
         final String stdout = this.terminal.exec(

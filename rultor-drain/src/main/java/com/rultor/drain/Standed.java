@@ -335,7 +335,7 @@ public final class Standed implements Drain {
      * @return List of message IDs that were not enqueued.
      * @throws UnsupportedEncodingException When unable to find UTF-8 encoding.
      */
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     private List<String> enqueue(final TestClient client, final String body,
         final int size) throws UnsupportedEncodingException {
         return client.header(HttpHeaders.CONTENT_ENCODING, CharEncoding.UTF_8)

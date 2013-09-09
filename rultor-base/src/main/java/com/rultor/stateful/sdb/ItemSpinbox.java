@@ -115,7 +115,7 @@ public final class ItemSpinbox implements Spinbox {
      * {@inheritDoc}
      */
     @Override
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     public long add(final long value) {
         final AmazonSimpleDB aws = this.client.get();
         final GetAttributesResult result = aws.getAttributes(
