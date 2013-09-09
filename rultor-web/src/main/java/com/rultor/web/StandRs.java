@@ -164,6 +164,16 @@ public final class StandRs extends BaseRs {
             )
             .link(
                 new Link(
+                    "pulse-open",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(StandRs.class)
+                        .queryParam(StandRs.QUERY_OPEN, "")
+                        .build(this.name)
+                )
+            )
+            .link(
+                new Link(
                     "collapse",
                     this.self(new ArrayList<String>(0))
                 )

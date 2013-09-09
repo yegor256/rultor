@@ -37,6 +37,7 @@
     </version>
     <links>
         <link rel="root" href="../../../../../../../rultor-web/src/main/webapp/" />
+        <link rel="pulse-open" href="./?open=" />
     </links>
     <widgets>
         <widget class="com.rultor.widget.BuildHistory">
