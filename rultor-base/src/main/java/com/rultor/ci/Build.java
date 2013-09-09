@@ -135,7 +135,7 @@ public final class Build {
         Json.createGenerator(data)
             .writeStartObject()
             .write("code", code)
-            .write("time", millis)
+            .write("duration", millis)
             .writeEnd()
             .close();
         final String desc = Logger.format(
