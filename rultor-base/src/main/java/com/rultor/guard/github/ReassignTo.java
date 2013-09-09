@@ -75,11 +75,14 @@ final class ReassignTo implements Approval {
      * @throws IOException if fails.
      */
     private User getUser(final Github github) throws IOException {
-        User userobject = null;
-        if (!"".equals(this.user)) {
+        User assignee = null;
+        if (this.user == null || this.user.isEmpty()) {
+            assignee = new User();
+            assignee.setLogin("");
+        } else {
             final UserService usvc = new UserService(github.client());
-            userobject = usvc.getUser(this.user);
+            assignee = usvc.getUser(this.user);
         }
-        return userobject;
+        return assignee;
     }
 }
