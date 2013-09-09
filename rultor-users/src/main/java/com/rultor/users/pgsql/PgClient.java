@@ -90,7 +90,7 @@ public interface PgClient {
             src.setJdbcUrl(this.jdbc);
             src.setPassword(this.password);
             src.setPartitionCount(Tv.THREE);
-            src.setMaxConnectionsPerPartition(2);
+            src.setMaxConnectionsPerPartition(Tv.THREE);
             src.setMinConnectionsPerPartition(1);
             src.setAcquireIncrement(1);
             src.setDisableConnectionTracking(true);
