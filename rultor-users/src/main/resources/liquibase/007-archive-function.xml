@@ -44,7 +44,7 @@
                 INSERT INTO receipt (time, ct, ctrule, dt, dtrule, amount, details)
                     SELECT threshold, ct, ctrule, dt, dtrule, SUM(amount), FORMAT('%s transaction(s)', COUNT(id))
                         FROM receipt
-                        WHERE time < threshold AND @ amount > 10000
+                        WHERE time < threshold AND @ amount < 10000
                         GROUP BY ct, ctrule, dt, dtrule;
                 DELETE FROM receipt WHERE time < threshold;
             END;
