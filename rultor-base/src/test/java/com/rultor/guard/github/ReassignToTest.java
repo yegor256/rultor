@@ -55,12 +55,12 @@ public final class ReassignToTest {
      */
     @Test
     public void canApproveAndReassign() throws IOException {
-        final String test = "test";
-        final Approval approval = new ReassignTo(test);
+        final String login = "test";
+        final Approval approval = new ReassignTo(login);
         final PullRequest request = new PullRequest();
         final Github github = Mockito.mock(Github.class);
         final User assignee = new User();
-        assignee.setLogin(test);
+        assignee.setLogin(login);
         final GitHubClient client = Mockito.mock(GitHubClient.class);
         Mockito.doReturn(client).when(github).client();
         Mockito.when(client.get(Mockito.any(GitHubRequest.class)))
@@ -72,38 +72,38 @@ public final class ReassignToTest {
             );
         MatcherAssert.assertThat(
             approval.has(
-                request ,
-                github ,
+                request,
+                github,
                 new Github.Repo("xembly/xembly")
             ),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(
             request.getAssignee().getLogin(),
-            Matchers.is(test)
+            Matchers.is(login)
         );
     }
 
     /**
-     * ReassignTo assigns to and approves.
+     * ReassignTo approves and unassigns if user is empty.
      * @throws IOException If some problem inside
      */
     @Test
-    public void rejectUnAssigned() throws IOException {
+    public void canApproveAndUnAssign() throws IOException {
         final Approval approval = new ReassignTo("");
         final PullRequest request = new PullRequest();
         final Github github = Mockito.mock(Github.class);
         MatcherAssert.assertThat(
             approval.has(
-                request ,
-                github ,
+                request,
+                github,
                 new Github.Repo("xembly1/xembly")
             ),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(
-            request.getAssignee(),
-            Matchers.nullValue()
+            request.getAssignee().getLogin(),
+            Matchers.isEmptyString()
         );
     }
 }
