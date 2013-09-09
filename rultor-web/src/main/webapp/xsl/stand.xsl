@@ -50,9 +50,6 @@
         </script>
     </xsl:template>
     <xsl:template name="content">
-        <h2>
-            <xsl:value-of select="/page/stand"/>
-        </h2>
         <xsl:apply-templates select="/page/widgets"/>
         <xsl:choose>
             <xsl:when test="/page/pulses/pulse">
