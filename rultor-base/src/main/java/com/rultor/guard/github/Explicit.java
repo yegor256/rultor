@@ -148,7 +148,7 @@ public final class Explicit implements Approval {
      * @return Time of latest commit in this pull request
      * @throws IOException If fails
      */
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     private Collection<Comment> comments(final PullRequest request,
         final Github github, final Github.Repo repo) throws IOException {
         final GitHubClient client = github.client();
@@ -166,7 +166,7 @@ public final class Explicit implements Approval {
      * @return Time of latest commit in this pull request
      * @throws IOException If fails
      */
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Time latest(final PullRequest request, final Github github,
         final Github.Repo repo) throws IOException {

@@ -168,8 +168,8 @@ public final class GhRequests implements MergeRequests {
      * @return Collection of them
      * @throws IOException If fails
      */
+    @RetryOnFailure(verbose = false)
     @Step("found ${result.size()} pull request(s) in Github")
-    @RetryOnFailure
     private Collection<PullRequest> fetch() throws IOException {
         final GitHubClient client = this.github.client();
         final PullRequestService svc = new PullRequestService(client);

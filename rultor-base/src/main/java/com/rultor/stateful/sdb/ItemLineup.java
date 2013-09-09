@@ -199,7 +199,7 @@ public final class ItemLineup implements Lineup {
      * Item exists in SimpleDB.
      * @return TRUE if it exists
      */
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     private boolean exists() {
         final long start = System.currentTimeMillis();
         final GetAttributesResult result = this.client.get().getAttributes(
@@ -224,7 +224,7 @@ public final class ItemLineup implements Lineup {
      * Save text to SimpleDB object.
      * @param content Content to save
      */
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     private void save(final String content) {
         final long start = System.currentTimeMillis();
         this.client.get().putAttributes(
@@ -256,7 +256,7 @@ public final class ItemLineup implements Lineup {
      * Load text from SimpleDB item (or empty if it doesn't exist).
      * @return The content loaded
      */
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     private String load() {
         final long start = System.currentTimeMillis();
         final GetAttributesResult result = this.client.get().getAttributes(
@@ -286,7 +286,7 @@ public final class ItemLineup implements Lineup {
     /**
      * Remove object from SimpleDB.
      */
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     private void remove() {
         final long start = System.currentTimeMillis();
         this.client.get().deleteAttributes(
