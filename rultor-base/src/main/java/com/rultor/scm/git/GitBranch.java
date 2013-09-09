@@ -32,6 +32,7 @@ package com.rultor.scm.git;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
@@ -100,6 +101,7 @@ public final class GitBranch implements Branch {
      */
     @Override
     @RetryOnFailure
+    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<Commit> log() throws IOException {
         final String stdout = this.terminal.exec(
             new StringBuilder()

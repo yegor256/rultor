@@ -33,6 +33,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
@@ -100,6 +101,7 @@ public final class UnseenCommits implements Branch {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<Commit> log() throws IOException {
         final Iterator<Commit> iterator = this.origin.log().iterator();
         return new Iterable<Commit>() {
