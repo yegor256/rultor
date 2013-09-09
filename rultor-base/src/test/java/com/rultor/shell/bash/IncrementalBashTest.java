@@ -86,7 +86,7 @@ public final class IncrementalBashTest {
             XhtmlMatchers.hasXPaths(
                 "/snapshot/steps/step",
                 // @checkstyle LineLength (5 lines)
-                "//step[summary=\"MSG='\\$A'; echo \\$(date) \\$A; sleep 1; pwd;\"]/start",
+                "//step[summary=\"MSG='$A'; echo $(date) $A; sleep 1; pwd;\"]/start",
                 "//step[contains(summary, '/usr/--broken; /usr/--again')]/exception",
                 "//step/exception[contains(stacktrace,'/usr/--broken: No such file or directory')]",
                 "//steps[count(step[level='INFO']) = 4]",
@@ -118,7 +118,7 @@ public final class IncrementalBashTest {
                 ).dom()
             ),
             XhtmlMatchers.hasXPath(
-                "//step[summary='echo \\\"_*\\\" \\`date\\`']/start"
+                "//step[summary='echo \"\\_\\*\" \\`date\\`;']/start"
             )
         );
     }
