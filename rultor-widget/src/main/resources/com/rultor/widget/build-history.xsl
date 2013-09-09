@@ -46,6 +46,7 @@
                             <th><xsl:text>Commit</xsl:text></th>
                             <th><xsl:text>By</xsl:text></th>
                             <th><xsl:text>When</xsl:text></th>
+                            <th><xsl:text>Time</xsl:text></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,13 +72,25 @@
                 <xsl:value-of select="coordinates/rule"/>
             </td>
             <td>
-                <code><xsl:value-of select="commit/name"/></code>
+                <code>
+                    <xsl:attribute name="class">
+                        <xsl:if test="code != 0">
+                            <xsl:text>text-danger</xsl:text>
+                        </xsl:if>
+                    </xsl:attribute>
+                    <xsl:value-of select="commit/name"/>
+                </code>
             </td>
             <td>
                 <xsl:value-of select="commit/author"/>
             </td>
             <td>
                 <span class="timeago"><xsl:value-of select="coordinates/scheduled"/></span>
+            </td>
+            <td>
+                <xsl:call-template name="millis">
+                    <xsl:with-param name="millis" select="duration"/>
+                </xsl:call-template>
             </td>
         </tr>
     </xsl:template>
