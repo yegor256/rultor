@@ -35,4 +35,5 @@
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:include href="../../../../../../../rultor-web/src/main/webapp/xsl/stand.xsl" />
     <xsl:include href="../../../../../main/resources/com/rultor/widget/build-health.xsl" />
+    <xsl:include href="../../../../../main/resources/com/rultor/widget/build-history.xsl" />
 </xsl:stylesheet>
