@@ -36,28 +36,37 @@
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <changeSet author="yegor@tpc2.com" id="153.2">
         <sql splitStatements="false"><![CDATA[
+            DROP TRIGGER compress_on_insert ON receipt;
+        ]]></sql>
+    </changeSet>
+    <changeSet author="yegor@tpc2.com" id="153.3">
+        <sql splitStatements="false"><![CDATA[
+            CREATE TRIGGER compress_on_insert
+            AFTER INSERT ON receipt
+            FOR EACH ROW
+            WHEN ( NEW.wrule IS NOT NULL )
+            EXECUTE PROCEDURE compress();
+        ]]></sql>
+    </changeSet>
+    <changeSet author="yegor@tpc2.com" id="153.4">
+        <sql splitStatements="false"><![CDATA[
             CREATE OR REPLACE FUNCTION compress() RETURNS TRIGGER AS $$
             DECLARE
-                date TIMESTAMP;
+                threshold TIMESTAMP;
             BEGIN
-                date := DATE_TRUNC('week', NOW()) - '1 s'::INTERVAL;
-                CREATE TEMPORARY TABLE t AS
-                    SELECT ct, ctrule, dt, dtrule, SUM(amount) AS amt, COUNT(id) AS cnt
-                    FROM receipt
-                    WHERE time < date AND @ amount > 10000
-                    GROUP BY ct, ctrule, dt, dtrule;
-                INSERT INTO receipt (ct, ctrule, dt, dtrule, amount, details)
-                    SELECT t.ct, t.ctrule, t.dt, t.dtrule, t.amt, FORMAT('%s transaction(s)', t.cnt)
-                    FROM t;
-                DROP TABLE t;
-                DELETE FROM receipt
-                    WHERE time < date;
+                threshold := DATE_TRUNC('week', NOW()) - '1 s'::INTERVAL;
+                INSERT INTO receipt (time, ct, ctrule, dt, dtrule, amount, details)
+                    SELECT threshold, ct, ctrule, dt, dtrule, SUM(amount), FORMAT('%s transaction(s)', COUNT(id))
+                        FROM receipt
+                        WHERE time < threshold AND @ amount > 10000
+                        GROUP BY ct, ctrule, dt, dtrule;
+                DELETE FROM receipt WHERE time < threshold;
                 RETURN NULL;
             END;
             $$ LANGUAGE plpgsql
         ]]></sql>
     </changeSet>
-    <changeSet author="yegor@tpc2.com" id="153.3" context="test" runAlways="true">
+    <changeSet author="yegor@tpc2.com" id="153.5" context="test" runAlways="true">
         <insert schemaName="public" tableName="receipt">
             <column name="dt" value="urn:test:1"/>
             <column name="dtrule" value="first"/>
