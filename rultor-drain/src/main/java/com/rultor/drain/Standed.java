@@ -152,7 +152,7 @@ public final class Standed implements Drain {
     private final transient Standed.SQSEntry entry;
 
     /**
-     * Executor that run tasks.
+     * Executor that runs tasks.
      */
     private final transient Standed.Exec exec;
 
@@ -256,8 +256,8 @@ public final class Standed implements Drain {
                 )
                 .filter(Predicates.notNull()), Standed.MAX_BATCH_SIZE
         );
-        for (List<String> batchLines : batches) {
-            this.send(batchLines);
+        for (List<String> batch : batches) {
+            this.send(batch);
         }
         this.origin.append(lines);
     }
