@@ -179,7 +179,12 @@ public final class StandRs extends BaseRs {
                 )
             );
         if (this.auth().identity().equals(Identity.ANONYMOUS)) {
-            page = page.append(new Breadcrumbs().with("home").bundle());
+            page = page.append(
+                new Breadcrumbs()
+                    .with("home")
+                    .with("self", this.name)
+                    .bundle()
+            );
         } else {
             page = page.append(
                 new Breadcrumbs()
