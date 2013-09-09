@@ -49,7 +49,7 @@ import java.util.logging.Level;
 import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 
@@ -172,7 +172,7 @@ public final class OnCommit implements Instance {
             .close();
         final String desc = String.format(
             "commit `%s` by %s on %s",
-            StringUtils.substring(commit.name(), 0, Tv.SEVEN), 
+            StringUtils.substring(commit.name(), 0, Tv.SEVEN),
             commit.author(), commit.time()
         );
         new XemblyLine(
