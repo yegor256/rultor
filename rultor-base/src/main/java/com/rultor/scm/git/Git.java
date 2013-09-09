@@ -141,7 +141,7 @@ public final class Git implements SCM {
     @Override
     @Tag("git")
     @Step("Git branch `${args[0]}` checked out")
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Branch checkout(final String name) throws IOException {
         this.terminal.exec(
@@ -163,7 +163,7 @@ public final class Git implements SCM {
     @Override
     @Tag("git")
     @Step("found ${result.size()} refs in Git")
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     public Collection<String> branches() throws IOException {
         return Collections2.transform(
             Arrays.asList(

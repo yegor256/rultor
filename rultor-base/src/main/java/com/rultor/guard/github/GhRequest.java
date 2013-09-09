@@ -214,7 +214,7 @@ final class GhRequest implements MergeRequest {
      * Do the actual merging.
      * @throws IOException If fails
      */
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     private void merge() throws IOException {
         final GitHubClient client = this.github.client();
         final PullRequestService svc = new PullRequestService(client);
