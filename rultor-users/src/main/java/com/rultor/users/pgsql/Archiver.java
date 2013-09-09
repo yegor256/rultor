@@ -32,20 +32,14 @@ package com.rultor.users.pgsql;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
-import com.jcabi.aspects.Tv;
-import com.jcabi.urn.URN;
-import com.rultor.aws.SQSClient;
-import com.rultor.spi.Stand;
-import com.rultor.spi.User;
-import com.rultor.spi.Users;
+import com.jcabi.jdbc.JdbcSession;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Users with extra features from PostgreSQL.
+ * Archives old data in PostgreSQL.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -53,11 +47,11 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "client", "origin" })
+@EqualsAndHashCode(of = "client")
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
-@ScheduleWithFixedDelay(threads = Tv.FIVE, delay = 1, unit = TimeUnit.SECONDS)
-public final class PgUsers implements Users, Runnable {
+@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.HOURS)
+public final class Archiver implements Runnable {
 
     /**
      * PostgreSQL client.
@@ -65,70 +59,11 @@ public final class PgUsers implements Users, Runnable {
     private final transient PgClient client;
 
     /**
-     * SQS receipts.
-     */
-    private final transient SQSReceipts receipts;
-
-    /**
-     * Original users.
-     */
-    private final transient Users origin;
-
-    /**
-     * Compressor.
-     */
-    private final transient Archiver archiver;
-
-    /**
      * Public ctor.
      * @param clnt Client
-     * @param sqs SQS queue
-     * @param users Users
      */
-    public PgUsers(final PgClient clnt, final SQSClient sqs,
-        final Users users) {
+    public Archiver(final PgClient clnt) {
         this.client = clnt;
-        this.receipts = new SQSReceipts(clnt, sqs);
-        this.archiver = new Archiver(this.client);
-        this.origin = users;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterator<User> iterator() {
-        final Iterator<User> iter = this.origin.iterator();
-        return new Iterator<User>() {
-            @Override
-            public boolean hasNext() {
-                return iter.hasNext();
-            }
-            @Override
-            public User next() {
-                return new PgUser(PgUsers.this.client, iter.next());
-            }
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public User get(final URN name) {
-        return new PgUser(this.client, this.origin.get(name));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Stand stand(final String name) {
-        return this.origin.stand(name);
     }
 
     /**
@@ -137,7 +72,7 @@ public final class PgUsers implements Users, Runnable {
     @Override
     public void run() {
         try {
-            this.receipts.process();
+            new JdbcSession(this.client.get()).sql("SELECT archive()").update();
         } catch (SQLException ex) {
             throw new IllegalStateException(ex);
         }
