@@ -78,19 +78,6 @@ public interface Drain {
     InputStream read() throws IOException;
 
     /**
-     * Source of the drain.
-     */
-    @Immutable
-    interface Source {
-        /**
-         * The drain.
-         * @return Drain
-         */
-        @NotNull(message = "drain is never NULL")
-        Drain drain();
-    }
-
-    /**
      * One line in the drain.
      */
     @Immutable

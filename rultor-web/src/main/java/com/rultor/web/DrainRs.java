@@ -31,7 +31,6 @@ package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.jcabi.log.Logger;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
@@ -187,7 +186,7 @@ public final class DrainRs extends BaseRs {
         final Object src;
         try {
             src = new Repo.Cached(
-                this.repo(), this.user(), this.rule().spec()
+                this.repo(), this.user(), this.rule().drain()
             ).get().instantiate(
                 this.users(),
                 new Arguments(
@@ -205,16 +204,7 @@ public final class DrainRs extends BaseRs {
                 Level.SEVERE
             );
         }
-        if (!(src instanceof Drain.Source)) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                Logger.format(
-                    "Rule `%[type]s` is not an instance of `Drain.Source`", src
-                ),
-                Level.SEVERE
-            );
-        }
-        return Drain.Source.class.cast(src).drain();
+        return Drain.class.cast(src);
     }
 
     /**
