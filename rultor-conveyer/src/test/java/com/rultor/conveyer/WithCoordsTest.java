@@ -30,10 +30,9 @@
 package com.rultor.conveyer;
 
 import com.jcabi.urn.URN;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
-import java.net.URI;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -52,8 +51,7 @@ public final class WithCoordsTest {
     public void testDescriptiveInXemblyLog() throws Exception {
         final Time scheduled = new Time();
         final Instance origin = Mockito.mock(Instance.class);
-        final Work work = Mockito.mock(Work.class);
-        Mockito.doReturn(URI.create("urn:facebook:1")).when(work).stdout();
+        final Coordinates work = Mockito.mock(Coordinates.class);
         Mockito.doReturn(scheduled).when(work).scheduled();
         Mockito.doReturn(URN.create("urn:facebook:2")).when(work).owner();
         Mockito.doReturn("test-rule").when(work).rule();
@@ -62,7 +60,6 @@ public final class WithCoordsTest {
         Mockito.verify(origin).pulse();
         Mockito.verify(work).rule();
         Mockito.verify(work).scheduled();
-        Mockito.verify(work).stdout();
         Mockito.verify(work).owner();
     }
 

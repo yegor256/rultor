@@ -43,6 +43,7 @@ import lombok.ToString;
  * @since 1.0
  */
 @Immutable
+@SuppressWarnings("PMD.TooManyMethods")
 public interface Rule {
 
     /**
