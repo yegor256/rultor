@@ -50,7 +50,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
- * Pulses.
+ * Rule.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -92,6 +92,8 @@ public final class RuleRs extends BaseRs {
                     .up()
                     .add("spec", rule.spec().asText())
                     .up()
+                    .add("drain", rule.drain().asText())
+                    .up()
             )
             .append(
                 new JaxbFace(this.repo(), this.users())
@@ -121,12 +123,16 @@ public final class RuleRs extends BaseRs {
     /**
      * Save new or existing rule.
      * @param spec Spec to save
+     * @param drain Drain spec to save
      * @return The JAX-RS response
      */
     @POST
     @Path("/")
-    public Response save(@NotNull(message = "spec form param is mandatory")
-        @FormParam("spec") final String spec) {
+    public Response save(
+        @NotNull(message = "spec form param is mandatory")
+        @FormParam("spec") final String spec,
+        @NotNull(message = "drain form param is mandatory")
+        @FormParam("drain") final String drain) {
         try {
             this.rule().spec(
                 new Spec.Strict(
@@ -142,6 +148,8 @@ public final class RuleRs extends BaseRs {
                         .add("name", this.name)
                         .up()
                         .add("spec", spec)
+                        .up()
+                        .add("drain", drain)
                         .up()
                         .add("exception", Exceptions.message(ex))
                         .up()

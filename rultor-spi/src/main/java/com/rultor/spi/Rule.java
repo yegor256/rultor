@@ -54,7 +54,7 @@ public interface Rule {
 
     /**
      * Save spec.
-     * @param spec Specification to save
+     * @param spec Spec to save
      */
     void spec(@NotNull(message = "spec can't be NULL") Spec spec);
 
