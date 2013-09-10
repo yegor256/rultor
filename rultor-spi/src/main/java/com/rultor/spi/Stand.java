@@ -67,13 +67,13 @@ public interface Stand {
 
     /**
      * Update ACL.
-     * @param spec Specification to save
+     * @param spec Spec to save
      */
     void acl(@NotNull(message = "ACL can't be NULL") Spec spec);
 
     /**
      * Get its ACL.
-     * @return Specification of ACL
+     * @return Spec of ACL
      */
     @NotNull(message = "ACL is never NULL")
     Spec acl();
@@ -98,7 +98,7 @@ public interface Stand {
 
     /**
      * Get spec of widgets.
-     * @return Specification of array of widgets
+     * @return Spec of array of widgets
      */
     @NotNull(message = "spec of widgets is never NULL")
     Spec widgets();

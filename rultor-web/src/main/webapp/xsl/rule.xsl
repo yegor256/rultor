@@ -46,15 +46,28 @@
             <fieldset>
                 <div class="form-group">
                     <label for="spec" class="hidden-phone">
-                        <xsl:text>Specification of </xsl:text>
+                        <xsl:text>Spec of </xsl:text>
                         <code><xsl:value-of select="/page/rule/name"/></code>
                         <xsl:text> </xsl:text>
                         <a href="http://doc.rultor.com/start.html#spec">
                             <xsl:text>what is it?</xsl:text>
                         </a>
                     </label>
-                    <textarea name="spec" id="spec" rows="18" class="form-control">
+                    <textarea name="spec" id="spec" rows="16" class="form-control">
                         <xsl:value-of select="/page/rule/spec"/>
+                    </textarea>
+                </div>
+                <div class="form-group">
+                    <label for="drain" class="hidden-phone">
+                        <xsl:text>Drain spec of </xsl:text>
+                        <code><xsl:value-of select="/page/rule/name"/></code>
+                        <xsl:text> </xsl:text>
+                        <a href="http://doc.rultor.com/start.html#drain">
+                            <xsl:text>what is it?</xsl:text>
+                        </a>
+                    </label>
+                    <textarea name="drain" id="drain" rows="8" class="form-control">
+                        <xsl:value-of select="/page/rule/drain"/>
                     </textarea>
                 </div>
                 <div class="form-group">
