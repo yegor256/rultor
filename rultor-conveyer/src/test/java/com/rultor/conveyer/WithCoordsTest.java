@@ -29,7 +29,6 @@
  */
 package com.rultor.conveyer;
 
-import com.rultor.conveyer.Descriptive;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Work;
@@ -39,11 +38,11 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test case for {@link Descriptive}.
+ * Test case for {@link WithCoords}.
  * @author Gangababu Tirumalanadhuni (gangababu.t@gmail.com)
  * @version $Id$
  */
-public final class DescriptiveTest {
+public final class WithCoordsTest {
 
     /**
      * Test descriptives in Xembly Log.
@@ -58,10 +57,7 @@ public final class DescriptiveTest {
         Mockito.doReturn(scheduled).when(work).scheduled();
         Mockito.doReturn(URN.create("urn:facebook:2")).when(work).owner();
         Mockito.doReturn("test-rule").when(work).rule();
-        final Descriptive descriptive = new Descriptive(
-            work,
-            origin
-        );
+        final WithCoords descriptive = new WithCoords(work, origin);
         descriptive.pulse();
         Mockito.verify(origin).pulse();
         Mockito.verify(work).rule();

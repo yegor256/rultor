@@ -31,15 +31,15 @@ package com.rultor.conveyer;
 
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.LogExceptions;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.urn.URN;
 import com.rexsl.test.RestTester;
-import com.rultor.spi.Coordinates;
-import com.rultor.spi.Work;
-import com.rultor.tools.Time;
+import com.rultor.snapshot.XemblyLine;
+import com.rultor.spi.Instance;
 import java.net.URI;
 import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
+import org.xembly.Directives;
 
 /**
  * Coordinates with STDOUT specified.
@@ -52,7 +52,7 @@ import lombok.EqualsAndHashCode;
 @Immutable
 @Loggable(Loggable.DEBUG)
 @EqualsAndHashCode(of = { "port", "key", "origin" })
-final class StdoutWork implements Work {
+final class WithStdout implements Instance {
 
     /**
      * Where to get public IP from EC2.
@@ -74,61 +74,52 @@ final class StdoutWork implements Work {
     /**
      * Original work.
      */
-    private final transient Coordinates origin;
+    private final transient Instance origin;
 
     /**
      * Public ctor.
      * @param prt Port we're at
      * @param auth Stream authentication key
-     * @param wrk Original work
+     * @param instance Original instance
      */
-    protected StdoutWork(final int prt, final String auth,
-        final Coordinates wrk) {
+    protected WithStdout(final int prt, final String auth,
+        final Instance instance) {
         this.port = prt;
         this.key = auth;
-        this.origin = wrk;
+        this.origin = instance;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return this.origin.toString();
+    @LogExceptions
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    public void pulse() throws Exception {
+        new XemblyLine(
+            new Directives()
+                .xpath("/snapshot[not(stdout)]")
+                .strict(1)
+                .add("stdout")
+                .set(this.stdout().toString())
+        ).log();
+        try {
+            this.origin.pulse();
+        } finally {
+            new XemblyLine(
+                new Directives().xpath("/snapshot/stdout").strict(1).remove()
+            ).log();
+        }
     }
 
     /**
-     * {@inheritDoc}
+     * Get URI.
+     * @return URI of stdout
      */
-    @Override
-    public Time scheduled() {
-        return this.origin.scheduled();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public URN owner() {
-        return this.origin.owner();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String rule() {
-        return this.origin.rule();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public URI stdout() {
+    private URI stdout() {
         return UriBuilder.fromUri("http://localhost/")
             .path("{key}")
-            .host(StdoutWork.address())
+            .host(WithStdout.address())
             .port(this.port)
             .build(this.key);
     }
@@ -142,20 +133,12 @@ final class StdoutWork implements Work {
     private static String address() {
         String address;
         try {
-            address = RestTester.start(StdoutWork.META_IP)
+            address = RestTester.start(WithStdout.META_IP)
                 .get("fetch EC2 public IP").getBody();
         } catch (AssertionError ex) {
             address = "localhost";
         }
         return address;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int compareTo(final Coordinates coords) {
-        return 1;
     }
 
 }
