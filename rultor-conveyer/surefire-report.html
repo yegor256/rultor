@@ -7,21 +7,32 @@
         <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
         <meta name="author" content="rultor.com"/>
         <title>rultor-conveyer - Surefire Report</title>
-        <link rel="shortcut icon" type="image/gif" href="http://img.rultor.com/favicon.ico" />
-        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet" />
-        <link href="http://www.rultor.com/css/main.css" rel="stylesheet" />
-        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-        <script>
-        $(document).ready(
-            function() {
-                $('tt').replaceWith(
-                    function() {
-                        return '<code>' + $(this).text() + '</code>';
-                    }
-                )
+        <link rel="shortcut icon" type="image/gif" href="//img.rultor.com/favicon.ico" />
+        <style>
+            body {
+                background-image: url('//img.rultor.com/background.png');
             }
-        );
+            .main {
+                text-align: justify;
+            }
+            h1,
+            h2 {
+                text-align: center;
+            }
+        </style>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="//www.rultor.com/css/main.css" rel="stylesheet" />
+        <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script>
+            $(document).ready(
+                function() {
+                    $('tt').replaceWith(
+                        function() {
+                            return '<code>' + $(this).text() + '</code>';
+                        }
+                    )
+                }
+            );
         </script>
         <script>
             var _gaq = _gaq || [];
@@ -35,32 +46,15 @@
         </script>
     </head>
     <body>
-        <aside>
-            <a href="https://github.com/rultor/rultor" class="hidden-phone">
-                <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
-                    src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
-                    alt="Fork me on GitHub" />
-            </a>
-        </aside>
-        <ul class="list-inline">
-            <li>
-                <a class="logo" href="//doc.rultor.com/index.html">R</a>
-            </li>
-            <li>
-                1.0-SNAPSHOT
-            </li>
-            <li>
-                
-                28-Aug-2013
-            </li>
-            <li>
-                <img src='http://img.jcabi.com/built-by-maven.png' style='width: 50px; height: 17px;'
-                    alt='site is built by Apache Maven'/>
-            </li>
-        </ul>
-        <div>
-            <article class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-                <script type="text/javascript">
+        <div class="container-fluid">
+            <header>
+                <p class="text-center">
+                    <a class="logo" href="/index.html">R</a>
+                </p>
+            </header>
+            <div class="row">
+                <article class="main col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-8 col-sm-12 col-xs-12">
+                    <script type="text/javascript">
 //<![CDATA[
 function toggleDisplay(elementId) {
  var elm = document.getElementById(elementId + 'error');
@@ -76,8 +70,22 @@ function toggleDisplay(elementId) {
  } 
  }
 //]]>
-</script><div class="section"><h2>Surefire Report<a name="Surefire_Report"></a></h2></div><div class="section"><h2>Summary<a name="Summary"></a></h2><a name="Summary"></a><p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br /><table border="1" class="bodyTable"><tr class="a"><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td>6</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>24.407</td></tr></table><br /><p>Note: failures are anticipated and checked for with assertions while errors are unanticipated.</p><br /></div><div class="section"><h2>Package List<a name="Package_List"></a></h2><a name="Package_List"></a><p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br /><table border="1" class="bodyTable"><tr class="a"><th>Package</th><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td><a href="#com.rultor.conveyer.http">com.rultor.conveyer.http</a></td><td>2</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>19.597</td></tr><tr class="a"><td><a href="#com.rultor.conveyer">com.rultor.conveyer</a></td><td>4</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>4.81</td></tr></table><br /><p>Note: package statistics are not computed recursively, they only sum up all of its testsuites numbers.</p><div class="section"><h3>com.rultor.conveyer.http<a name="com.rultor.conveyer.http"></a></h3><a name="com.rultor.conveyer.http"></a><table border="1" class="bodyTable"><tr class="a"><th></th><th>Class</th><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td><a href="#com.rultor.conveyer.httpStatisticsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.conveyer.httpStatisticsTest">StatisticsTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.105</td></tr><tr class="a"><td><a href="#com.rultor.conveyer.httpHttpServerTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.conveyer.httpHttpServerTest">HttpServerTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>19.492</td></tr></table></div><div class="section"><h3>com.rultor.conveyer<a name="com.rultor.conveyer"></a></h3><a name="com.rultor.conveyer"></a><table border="1" class="bodyTable"><tr class="a"><th></th><th>Class</th><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td><a href="#com.rultor.conveyerCircularBufferTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.conveyerCircularBufferTest">CircularBufferTest</a></td><td>2</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.004</td></tr><tr class="a"><td><a href="#com.rultor.conveyerLog4jStreamsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.conveyerLog4jStreamsTest">Log4jStreamsTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>1.505</td></tr><tr class="b"><td><a href="#com.rultor.conveyerSimpleConveyerTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.conveyerSimpleConveyerTest">SimpleConveyerTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>3.301</td></tr></table></div><br /></div><div class="section"><h2>Test Cases<a name="Test_Cases"></a></h2><a name="Test_Cases"></a><p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><div class="section"><h3>StatisticsTest<a name="StatisticsTest"></a></h3><a name="com.rultor.conveyer.httpStatisticsTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>makesTextReport</td><td>0.105</td></tr></table></div><div class="section"><h3>CircularBufferTest<a name="CircularBufferTest"></a></h3><a name="com.rultor.conveyerCircularBufferTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>writesAndReads</td><td>0.003</td></tr><tr class="b"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>writesAndReadsWithOverflow</td><td>0.001</td></tr></table></div><div class="section"><h3>HttpServerTest<a name="HttpServerTest"></a></h3><a name="com.rultor.conveyer.httpHttpServerTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>handlesParallelHttpRequests</td><td>19.492</td></tr></table></div><div class="section"><h3>Log4jStreamsTest<a name="Log4jStreamsTest"></a></h3><a name="com.rultor.conveyerLog4jStreamsTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>writesAndReads</td><td>1.505</td></tr></table></div><div class="section"><h3>SimpleConveyerTest<a name="SimpleConveyerTest"></a></h3><a name="com.rultor.conveyerSimpleConveyerTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>startsAndStops</td><td>3.301</td></tr></table></div><br /></div>
-            </article>
+</script><div class="section"><h2>Surefire Report<a name="Surefire_Report"></a></h2></div><div class="section"><h2>Summary<a name="Summary"></a></h2><a name="Summary"></a><p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br /><table border="1" class="bodyTable"><tr class="a"><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td>6</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>20.037</td></tr></table><br /><p>Note: failures are anticipated and checked for with assertions while errors are unanticipated.</p><br /></div><div class="section"><h2>Package List<a name="Package_List"></a></h2><a name="Package_List"></a><p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br /><table border="1" class="bodyTable"><tr class="a"><th>Package</th><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td><a href="#com.rultor.conveyer.http">com.rultor.conveyer.http</a></td><td>2</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>15.455</td></tr><tr class="a"><td><a href="#com.rultor.conveyer">com.rultor.conveyer</a></td><td>4</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>4.582</td></tr></table><br /><p>Note: package statistics are not computed recursively, they only sum up all of its testsuites numbers.</p><div class="section"><h3>com.rultor.conveyer.http<a name="com.rultor.conveyer.http"></a></h3><a name="com.rultor.conveyer.http"></a><table border="1" class="bodyTable"><tr class="a"><th></th><th>Class</th><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td><a href="#com.rultor.conveyer.httpStatisticsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.conveyer.httpStatisticsTest">StatisticsTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.091</td></tr><tr class="a"><td><a href="#com.rultor.conveyer.httpHttpServerTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.conveyer.httpHttpServerTest">HttpServerTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>15.364</td></tr></table></div><div class="section"><h3>com.rultor.conveyer<a name="com.rultor.conveyer"></a></h3><a name="com.rultor.conveyer"></a><table border="1" class="bodyTable"><tr class="a"><th></th><th>Class</th><th>Tests</th><th>Errors </th><th>Failures</th><th>Skipped</th><th>Success Rate</th><th>Time</th></tr><tr class="b"><td><a href="#com.rultor.conveyerCircularBufferTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.conveyerCircularBufferTest">CircularBufferTest</a></td><td>2</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>0.006</td></tr><tr class="a"><td><a href="#com.rultor.conveyerLog4jStreamsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.conveyerLog4jStreamsTest">Log4jStreamsTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>1.435</td></tr><tr class="b"><td><a href="#com.rultor.conveyerSimpleConveyerTest"><img src="images/icon_success_sml.gif" alt="" /></a></td><td><a href="#com.rultor.conveyerSimpleConveyerTest">SimpleConveyerTest</a></td><td>1</td><td>0</td><td>0</td><td>0</td><td>100%</td><td>3.141</td></tr></table></div><br /></div><div class="section"><h2>Test Cases<a name="Test_Cases"></a></h2><a name="Test_Cases"></a><p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><div class="section"><h3>StatisticsTest<a name="StatisticsTest"></a></h3><a name="com.rultor.conveyer.httpStatisticsTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>makesTextReport</td><td>0.091</td></tr></table></div><div class="section"><h3>CircularBufferTest<a name="CircularBufferTest"></a></h3><a name="com.rultor.conveyerCircularBufferTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>writesAndReads</td><td>0.002</td></tr><tr class="b"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>writesAndReadsWithOverflow</td><td>0.004</td></tr></table></div><div class="section"><h3>HttpServerTest<a name="HttpServerTest"></a></h3><a name="com.rultor.conveyer.httpHttpServerTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>handlesParallelHttpRequests</td><td>15.364</td></tr></table></div><div class="section"><h3>Log4jStreamsTest<a name="Log4jStreamsTest"></a></h3><a name="com.rultor.conveyerLog4jStreamsTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>writesAndReads</td><td>1.435</td></tr></table></div><div class="section"><h3>SimpleConveyerTest<a name="SimpleConveyerTest"></a></h3><a name="com.rultor.conveyerSimpleConveyerTest"></a><table border="1" class="bodyTable"><tr class="a"><td><img src="images/icon_success_sml.gif" alt="" /></td><td>startsAndStops</td><td>3.141</td></tr></table></div><br /></div>
+                </article>
+            </div>
+            <footer class="text-muted">
+                <ul class="list-inline text-center">
+                    <li>
+                        <small>0.2</small>
+                    </li>
+                    <li>
+                        <small>
+                            
+                            10-Sep-2013
+                        </small>
+                    </li>
+                </ul>
+            </footer>
         </div>
     </body>
 </html>
