@@ -103,7 +103,7 @@ public final class Standed implements Drain {
     /**
      * Max message batch size.
      */
-    private static final int MAX_BATCH_SIZE = 10;
+    private static final int MAX = 10;
 
     /**
      * SQS client connection container.
@@ -257,7 +257,7 @@ public final class Standed implements Drain {
                         }
                     }
                 )
-                .filter(Predicates.notNull()), Standed.MAX_BATCH_SIZE
+                .filter(Predicates.notNull()), Standed.MAX
         );
         for (List<String> batch : batches) {
             this.send(batch);
