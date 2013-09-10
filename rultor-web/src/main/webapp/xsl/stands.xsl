@@ -93,7 +93,7 @@
                     </a>
                 </li>
                 <li class="icon">
-                    <a title="edit specification of widgets">
+                    <a title="edit spec of widgets">
                         <xsl:attribute name="href">
                             <xsl:value-of select="links/link[@rel='widgets']/@href"/>
                         </xsl:attribute>

@@ -178,7 +178,7 @@ final class Testing implements Profile {
                 }
                 @Override
                 public void create(final String txt) {
-                    Testing.RULES.put(txt, new MemoryUnit(txt));
+                    Testing.RULES.put(txt, new MemoryRule(txt));
                 }
                 @Override
                 public void remove(final String txt) {
@@ -279,7 +279,7 @@ final class Testing implements Profile {
      * In-memory rule.
      */
     @Immutable
-    private static final class MemoryUnit implements Rule {
+    private static final class MemoryRule implements Rule {
         /**
          * Name of the rule.
          */
@@ -288,7 +288,7 @@ final class Testing implements Profile {
          * Public ctor.
          * @param rule Name of it
          */
-        protected MemoryUnit(final String rule) {
+        protected MemoryRule(final String rule) {
             Testing.SPECS.put(rule, new Spec.Simple());
             this.label = rule;
         }
@@ -307,6 +307,14 @@ final class Testing implements Profile {
         @Override
         public Wallet wallet(final Coordinates work, final URN urn,
             final String unt) {
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public void drain(final Spec spec) {
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public Spec drain() {
             throw new UnsupportedOperationException();
         }
     }

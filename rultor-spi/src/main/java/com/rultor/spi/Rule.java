@@ -53,17 +53,30 @@ public interface Rule {
     String name();
 
     /**
-     * Save specification.
+     * Save spec.
      * @param spec Specification to save
      */
     void spec(@NotNull(message = "spec can't be NULL") Spec spec);
 
     /**
-     * Get specification.
-     * @return Specification
+     * Get spec.
+     * @return Spec
      */
     @NotNull(message = "spec is never NULL")
     Spec spec();
+
+    /**
+     * Save drain spec.
+     * @param spec Spec to save
+     */
+    void drain(@NotNull(message = "spec can't be NULL") Spec spec);
+
+    /**
+     * Get drain spec.
+     * @return Spec
+     */
+    @NotNull(message = "spec of drain is never NULL")
+    Spec drain();
 
     /**
      * Wallet of the rule.
@@ -113,6 +126,20 @@ public interface Rule {
         @Override
         public Wallet wallet(final Coordinates work,
             final URN urn, final String rle) {
+            throw new UnsupportedOperationException();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void drain(final Spec spec) {
+            throw new UnsupportedOperationException();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Spec drain() {
             throw new UnsupportedOperationException();
         }
     }

@@ -128,7 +128,7 @@ public final class Main {
         parser.accepts("help", "Show detailed instructions").forHelp();
         parser.accepts("threads", "In how many threads to run")
             .withRequiredArg().defaultsTo("5").ofType(String.class);
-        parser.accepts("spec", "Text file with work specification")
+        parser.accepts("spec", "Text file with work spec")
             .withRequiredArg().ofType(String.class);
         parser.accepts("lifetime", "Maximum lifetime of the daemon, in millis")
             .withRequiredArg().ofType(String.class)

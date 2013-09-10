@@ -97,18 +97,18 @@ public interface Stand {
         @NotNull(message = "text can't be NULL") String xembly);
 
     /**
-     * Get specification of widgets.
+     * Get spec of widgets.
      * @return Specification of array of widgets
      */
-    @NotNull(message = "specification of widgets is never NULL")
+    @NotNull(message = "spec of widgets is never NULL")
     Spec widgets();
 
     /**
-     * Save specification of widgets.
+     * Save spec of widgets.
      * @param spec Spec to save
      */
     void widgets(
-        @NotNull(message = "specification of widgets is never NULL")
+        @NotNull(message = "spec of widgets is never NULL")
         Spec spec);
 
     /**

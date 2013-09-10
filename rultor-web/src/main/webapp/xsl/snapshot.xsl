@@ -37,7 +37,7 @@
         <ul class="list-inline spacious-inline-list">
             <xsl:if test="spec">
                 <li class="icon">
-                    <i class="icon-beaker" title="show specification"
+                    <i class="icon-beaker" title="show spec"
                         onclick="$(this).parent().parent().parent().parent().find('pre.spec').toggle();"><xsl:comment>spec</xsl:comment></i>
                 </li>
             </xsl:if>

@@ -145,4 +145,20 @@ final class RestRule implements Rule {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void drain(final Spec spec) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spec drain() {
+        throw new UnsupportedOperationException();
+    }
+
 }
