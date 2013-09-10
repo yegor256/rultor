@@ -36,6 +36,7 @@ import com.jcabi.log.VerboseRunnable;
 import com.rultor.conveyer.http.HttpServer;
 import com.rultor.conveyer.http.Streams;
 import com.rultor.spi.Coordinates;
+import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Users;
@@ -195,17 +196,33 @@ final class SimpleConveyer implements Closeable {
     private void process() throws Exception {
         final Coordinates work = this.queue.pull(1, TimeUnit.SECONDS);
         if (!work.equals(new Coordinates.None())) {
-            this.threads.label(work.toString());
-            final String key = this.streams.register();
-            try {
-                new Job(
-                    new StdoutWork(SimpleConveyer.PORT, key, work),
-                    this.repo, this.users
-                ).process();
-            } finally {
-                this.streams.unregister(key);
-                this.threads.label("free");
-            }
+            this.process(work);
+        }
+    }
+
+    /**
+     * Process this given work.
+     * @param work Work to process
+     * @throws Exception If fails
+     */
+    private void process(final Coordinates work) throws Exception {
+        this.threads.label(work.toString());
+        final String key = this.streams.register();
+        try {
+            new Job(work, this.repo, this.users).process(
+                new Job.Decor() {
+                    @Override
+                    public Instance decorate(final Instance instance) {
+                        return new WithCoords(
+                            work,
+                            new WithStdout(SimpleConveyer.PORT, key, instance)
+                        );
+                    }
+                }
+            );
+        } finally {
+            this.streams.unregister(key);
+            this.threads.label("free");
         }
     }
 

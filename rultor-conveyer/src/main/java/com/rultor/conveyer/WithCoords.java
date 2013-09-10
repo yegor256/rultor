@@ -36,20 +36,19 @@ import com.jcabi.manifests.Manifests;
 import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import lombok.EqualsAndHashCode;
 import org.xembly.Directives;
 
 /**
- * Descriptive instance that tells about itself in the xembly log.
+ * WithCoords instance that tells about itself in the xembly log.
  *
  * <p>It is important to use this instance wrapper for
  * <strong>all instances</strong>. It will enable their visibility in
  * the management panel and in the stand. Simply wrap whatever instance you
  * have in the unit into this wrapper:
  *
- * <pre> com.rultor.base.Descriptive(
+ * <pre> com.rultor.base.WithCoords(
  *   ${0:?}, my-instance-to-wrap
  * )</pre>
  *
@@ -60,7 +59,7 @@ import org.xembly.Directives;
 @Immutable
 @EqualsAndHashCode(of = { "work", "origin" })
 @Loggable(Loggable.DEBUG)
-final class Descriptive implements Instance {
+final class WithCoords implements Instance {
 
     /**
      * Coordinates we're in.
@@ -77,7 +76,7 @@ final class Descriptive implements Instance {
      * @param wrk Coordinates we're in
      * @param instance Original instance
      */
-    protected Descriptive(final Coordinates wrk, final Instance instance) {
+    protected WithCoords(final Coordinates wrk, final Instance instance) {
         this.work = wrk;
         this.origin = instance;
     }
@@ -111,15 +110,6 @@ final class Descriptive implements Instance {
                 .add("start")
                 .set(new Time().toString())
         ).log();
-        if (this.work instanceof Work) {
-            new XemblyLine(
-                new Directives()
-                    .xpath("/snapshot[not(stdout)]")
-                    .strict(1)
-                    .add("stdout")
-                    .set(Work.class.cast(this.work).stdout().toString())
-            ).log();
-        }
         new XemblyLine(
             new Directives()
                 .xpath("/snapshot[not(version)]")
@@ -137,9 +127,6 @@ final class Descriptive implements Instance {
         try {
             this.origin.pulse();
         } finally {
-            new XemblyLine(
-                new Directives().xpath("/snapshot/stdout").strict(1).remove()
-            ).log();
             new XemblyLine(
                 new Directives()
                     .xpath("/snapshot[not(finish)]")

@@ -61,6 +61,18 @@ import lombok.ToString;
 final class Job {
 
     /**
+     * Decorator of an instance.
+     */
+    public interface Decor {
+        /**
+         * Decorate this given instance.
+         * @param instance Instance to decorate
+         * @return Decorated one
+         */
+        Instance decorate(Instance instance);
+    }
+
+    /**
      * Work to do.
      */
     private final transient Coordinates work;
@@ -89,10 +101,10 @@ final class Job {
 
     /**
      * Process given work.
-     * @param work The work to process
+     * @param decor Decorator to use
      * @throws Exception If fails
      */
-    public void process() throws Exception {
+    public void process(final Job.Decor decor) throws Exception {
         final User owner = this.users.get(this.work.owner());
         final Rule rule = owner.rules().get(this.work.rule());
         final Variable<?> var = this.var(owner, rule.spec());
@@ -106,7 +118,7 @@ final class Job {
                     .instantiate(this.users, args);
                 new ThreadGroupSpy(
                     this.work,
-                    Instance.class.cast(instance),
+                    decor.decorate(Instance.class.cast(instance)),
                     Drain.class.cast(drain)
                 ).pulse();
             }
