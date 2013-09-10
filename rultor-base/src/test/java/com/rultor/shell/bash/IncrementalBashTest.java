@@ -118,7 +118,7 @@ public final class IncrementalBashTest {
                 ).dom()
             ),
             XhtmlMatchers.hasXPath(
-                "//step[summary='echo \"\\_\\*\" \\`date\\`;']/start"
+                "//step[summary='echo \"\\_\\*\" \\`date\\`']/start"
             )
         );
     }
