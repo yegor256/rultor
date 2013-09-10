@@ -93,6 +93,10 @@ public final class SimpleConveyerTest {
         Mockito.doReturn(instance).when(var).instantiate(
             Mockito.any(Users.class), Mockito.any(Arguments.class)
         );
+        final Variable<?> dvar = Mockito.mock(Variable.class);
+        Mockito.doReturn(Mockito.mock(Drain.class)).when(dvar).instantiate(
+            Mockito.any(Users.class), Mockito.any(Arguments.class)
+        );
         final CountDownLatch made = new CountDownLatch(1);
         Mockito.doAnswer(
             new Answer<Variable<?>>() {
@@ -103,18 +107,18 @@ public final class SimpleConveyerTest {
                     return var;
                 }
             }
-        ).when(repo).make(Mockito.any(User.class), Mockito.any(Spec.class));
-        final Variable<?> dvar = Mockito.mock(Variable.class);
-        Mockito.doReturn(Mockito.mock(Drain.class)).when(dvar).instantiate(
-            Mockito.any(Users.class), Mockito.any(Arguments.class)
-        );
+        )
+            .doReturn(dvar)
+            .when(repo)
+            .make(Mockito.any(User.class), Mockito.any(Spec.class));
         final User user = Mockito.mock(User.class);
         final Rule rule = Mockito.mock(Rule.class);
         final Rules rules = Mockito.mock(Rules.class);
         Mockito.doReturn(rules).when(user).rules();
         Mockito.doReturn(Arrays.asList(rule).iterator()).when(rules).iterator();
         Mockito.doReturn(rule).when(rules).get(name);
-        Mockito.doReturn(new Spec.Simple()).when(rule).spec();
+        Mockito.doReturn(new Spec.Simple("'spec'")).when(rule).spec();
+        Mockito.doReturn(new Spec.Simple("'drain'")).when(rule).drain();
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(owner);
         Mockito.doReturn(Arrays.asList(user).iterator())
