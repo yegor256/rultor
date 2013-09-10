@@ -38,6 +38,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
 import com.rexsl.test.RestTester;
 import com.rexsl.test.TestClient;
@@ -57,8 +58,10 @@ import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.json.Json;
@@ -84,7 +87,7 @@ import org.xembly.XemblySyntaxException;
 @Immutable
 @EqualsAndHashCode(of = { "origin", "work", "stand", "key" })
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings({ "PMD.ExcessiveImports", "PMD.DoNotUseThreads" })
+@SuppressWarnings({ "PMD.ExcessiveImports", "PMD.TooManyMethods" })
 public final class Standed implements Drain {
 
     /**
@@ -285,6 +288,47 @@ public final class Standed implements Drain {
      * @throws IOException If fails
      */
     private void send(final Iterable<String> xemblies) throws IOException {
+        this.exec.get().submit(
+            new VerboseRunnable(
+                new Callable<Void>() {
+                    @Override
+                    public Void call() throws Exception {
+                        Standed.this.send(Standed.this.body(xemblies));
+                        return null;
+                    }
+                },
+                true, false
+            )
+        );
+    }
+
+    /**
+     * Send the message.
+     * @param body POST request body
+     * @throws IOException If fails
+     */
+    @RetryOnFailure(verbose = false)
+    private void send(final String body) throws IOException {
+        final Collection<String> missed = Standed.this.enqueue(
+            this.entry.get(), body
+        );
+        if (!missed.isEmpty()) {
+            throw new IOException(
+                String.format(
+                    "Problem with sending of %d message(s): %s",
+                    missed.size(), StringUtils.join(missed, ", ")
+                )
+            );
+        }
+    }
+
+    /**
+     * Create POST request body.
+     * @param xemblies The xembly scripts
+     * @return POST request body
+     * @throws IOException If fails
+     */
+    private String body(final Iterable<String> xemblies) throws IOException {
         final List<String> msgs = new ArrayList<String>(0);
         for (String xembly : xemblies) {
             msgs.add(this.json(xembly));
@@ -292,53 +336,30 @@ public final class Standed implements Drain {
         final StringBuilder body = new StringBuilder()
             .append("Action=SendMessageBatch")
             .append("&Version=2011-10-01");
-        final List<String> posts = new ArrayList<String>(0);
         for (int idx = 0; idx < msgs.size(); ++idx) {
-            posts.add(
-                String.format(
-                    // @checkstyle LineLength (1 line)
-                    "SendMessageBatchRequestEntry.%d.Id=%<d&SendMessageBatchRequestEntry.%<d.MessageBody=%s",
-                    idx + 1,
-                    URLEncoder.encode(msgs.get(idx), CharEncoding.UTF_8)
-                )
-            );
+            final int ent = idx + 1;
+            body.append('&')
+                .append("SendMessageBatchRequestEntry.")
+                .append(ent)
+                .append(".Id=")
+                .append(ent)
+                .append("&SendMessageBatchRequestEntry.")
+                .append(ent)
+                .append(".MessageBody=")
+                .append(URLEncoder.encode(msgs.get(idx), CharEncoding.UTF_8));
         }
-        body.append('&').append(StringUtils.join(posts, '&'));
-        final TestClient client = this.entry.get();
-        this.exec.get().submit(
-            new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        final List<String> missed = Standed.this.enqueue(
-                            client, body.toString(), msgs.size()
-                        );
-                        if (!missed.isEmpty()) {
-                            throw new IOException(
-                                String.format(
-                                    "Problem sending %d messages", missed.size()
-                                )
-                            );
-                        }
-                    } catch (IOException ex) {
-                        throw new IllegalStateException(ex);
-                    }
-                }
-            }
-        );
+        return body.toString();
     }
 
     /**
      * Put messages on SQS.
      * @param client HTTP client to use.
      * @param body Body of the POST.
-     * @param size Number of messages sent.
      * @return List of message IDs that were not enqueued.
      * @throws UnsupportedEncodingException When unable to find UTF-8 encoding.
      */
-    @RetryOnFailure(verbose = false)
-    private List<String> enqueue(final TestClient client, final String body,
-        final int size) throws UnsupportedEncodingException {
+    private List<String> enqueue(final TestClient client, final String body)
+        throws UnsupportedEncodingException {
         return client.header(HttpHeaders.CONTENT_ENCODING, CharEncoding.UTF_8)
             .header(
                 HttpHeaders.CONTENT_LENGTH,
@@ -348,10 +369,7 @@ public final class Standed implements Drain {
                 HttpHeaders.CONTENT_TYPE,
                 MediaType.APPLICATION_FORM_URLENCODED
             )
-            .post(
-                String.format("sending %d line(s) to stand SQS queue", size),
-                body
-            )
+            .post("sending batch of lines to stand SQS queue", body)
             .assertStatus(HttpURLConnection.HTTP_OK)
             // @checkstyle LineLength (1 line)
             .xpath("/SendMessageBatchResponse/BatchResultError/BatchResultErrorEntry/Id/text()");

@@ -63,15 +63,15 @@ public final class StandedTest {
      */
     @Test
     public void appendingSingleMessage() throws IOException {
-        final TestClient client = this.testClient();
-        this.standed(client).append(this.xemblyList(1));
+        final TestClient client = this.client();
+        this.standed(client).append(this.xemblies(1));
         Mockito.verify(client).post(
             Mockito.anyString(),
             Mockito.argThat(
                 Matchers.allOf(
-                    this.matcherForMessage(1),
+                    this.matcher(1),
                     Matchers.not(
-                        this.matcherForMessage(2)
+                        this.matcher(2)
                     )
                 )
             )
@@ -84,9 +84,9 @@ public final class StandedTest {
      */
     @Test
     public void batchOfMessages() throws IOException {
-        final TestClient client = this.testClient();
+        final TestClient client = this.client();
         // @checkstyle MagicNumberCheck (1 lines)
-        this.standed(client).append(this.xemblyList(10));
+        this.standed(client).append(this.xemblies(10));
         Mockito.verify(client, Mockito.times(1))
             .post(Mockito.anyString(), Mockito.anyObject());
         Mockito.verify(client).post(
@@ -94,8 +94,8 @@ public final class StandedTest {
             Mockito.argThat(
                 Matchers.allOf(
                     // @checkstyle MagicNumberCheck (2 lines)
-                    this.matcherForMessage(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-                    Matchers.not(this.matcherForMessage(11))
+                    this.matcher(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+                    Matchers.not(this.matcher(11))
                 )
             )
         );
@@ -106,10 +106,10 @@ public final class StandedTest {
      * @throws IOException In case of error
      */
     @Test
-    public void twoBatcheOfMessages() throws IOException {
-        final TestClient client = this.testClient();
+    public void twoBatchesOfMessages() throws IOException {
+        final TestClient client = this.client();
         // @checkstyle MagicNumberCheck (1 lines)
-        this.standed(client).append(this.xemblyList(11));
+        this.standed(client).append(this.xemblies(11));
         Mockito.verify(client, Mockito.times(2))
             .post(Mockito.anyString(), Mockito.anyObject());
         Mockito.verify(client).post(
@@ -117,8 +117,8 @@ public final class StandedTest {
             Mockito.argThat(
                 Matchers.allOf(
                     // @checkstyle MagicNumberCheck (2 lines)
-                    this.matcherForMessage(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-                    Matchers.not(this.matcherForMessage(11))
+                    this.matcher(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+                    Matchers.not(this.matcher(11))
                 )
             )
         );
@@ -126,8 +126,8 @@ public final class StandedTest {
             Mockito.anyString(),
             Mockito.argThat(
                 Matchers.allOf(
-                    this.matcherForMessage(1),
-                    Matchers.not(this.matcherForMessage(2))
+                    this.matcher(1),
+                    Matchers.not(this.matcher(2))
                 )
             )
         );
@@ -144,7 +144,7 @@ public final class StandedTest {
         final TestClient client = Mockito.mock(TestClient.class);
         Mockito.doThrow(new IllegalStateException("failure!")).when(client)
             .header(Mockito.anyString(), Mockito.anyString());
-        this.standed(client).append(this.xemblyList(1));
+        this.standed(client).append(this.xemblies(1));
     }
 
     /**
@@ -168,8 +168,9 @@ public final class StandedTest {
      * @return Matcher for messages
      */
     @SuppressWarnings("unchecked")
-    private Matcher<String> matcherForMessage(final int... identifiers) {
-        final List<Matcher<String>> matchers = new ArrayList<Matcher<String>>();
+    private Matcher<String> matcher(final int... identifiers) {
+        final List<Matcher<String>> matchers =
+            new ArrayList<Matcher<String>>(identifiers.length);
         for (int identifier : identifiers) {
             matchers.add(
                 Matchers.allOf(
@@ -195,7 +196,7 @@ public final class StandedTest {
      * Create mock TestClient.
      * @return Mocked TestClient
      */
-    private TestClient testClient() {
+    private TestClient client() {
         final TestClient client = Mockito.mock(TestClient.class);
         final TestResponse response = Mockito.mock(TestResponse.class);
         Mockito.when(client.header(Mockito.anyString(), Mockito.anyObject()))
@@ -214,8 +215,8 @@ public final class StandedTest {
      * @param count Number of xemblies to create
      * @return Iterable with xemblies created
      */
-    private Iterable<String> xemblyList(final int count) {
-        final Collection<String> xemblies = new ArrayList<String>();
+    private Iterable<String> xemblies(final int count) {
+        final Collection<String> xemblies = new ArrayList<String>(0);
         for (int idx = 0; idx < count; ++idx) {
             xemblies.add(this.xembly());
         }
