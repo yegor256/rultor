@@ -35,7 +35,6 @@ import com.jcabi.urn.URN;
 import com.rexsl.page.JaxbBundle;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Drain;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Spec;
@@ -133,11 +132,6 @@ final class JaxbFace {
     private JaxbBundle append(final JaxbBundle bundle, final Object object) {
         JaxbBundle output = bundle
             .add("type", object.getClass().getName())
-            .up()
-            .add(
-                "drainable",
-                Boolean.toString(object instanceof Drain.Source)
-            )
             .up();
         if (!(object instanceof String)) {
             output = output.add(

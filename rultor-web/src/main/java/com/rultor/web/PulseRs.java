@@ -159,9 +159,9 @@ public final class PulseRs extends BaseRs {
      */
     private InputStream read(final Rule rule) throws IOException {
         try {
-            return Drain.Source.class.cast(
+            return Drain.class.cast(
                 new Repo.Cached(
-                    this.repo(), this.user(), rule.spec()
+                    this.repo(), this.user(), rule.drain()
                 ).get().instantiate(
                     this.users(),
                     new Arguments(
@@ -173,7 +173,7 @@ public final class PulseRs extends BaseRs {
                         new Wallet.Empty()
                     )
                 )
-            ).drain().read();
+            ).read();
         } catch (SpecException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),

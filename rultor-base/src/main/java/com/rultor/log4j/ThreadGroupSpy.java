@@ -66,7 +66,7 @@ import org.apache.log4j.PatternLayout;
 @EqualsAndHashCode(of = { "work", "level", "pattern", "origin", "drn" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
-public final class ThreadGroupSpy implements Instance, Drain.Source {
+public final class ThreadGroupSpy implements Instance {
 
     /**
      * The work we're in.
@@ -165,14 +165,6 @@ public final class ThreadGroupSpy implements Instance, Drain.Source {
             this.level,
             this.drn
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Drain drain() {
-        return this.drn;
     }
 
     /**
