@@ -91,9 +91,7 @@ public final class StepAspect {
         }
         new XemblyLine(
             new Directives()
-                .xpath("/snapshot")
-                .addIfAbsent("steps").strict(1)
-                .add("step").strict(1)
+                .xpath("/snapshot").addIfAbsent("steps").add("step")
                 .attr("id", label)
                 // @checkstyle MultipleStringLiterals (1 line)
                 .attr("class", method.getDeclaringClass().getCanonicalName())
