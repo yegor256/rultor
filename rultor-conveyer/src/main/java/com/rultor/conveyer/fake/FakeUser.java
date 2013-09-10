@@ -114,6 +114,14 @@ final class FakeUser implements User {
                     public Spec spec() {
                         return FakeUser.this.specification;
                     }
+                    @Override
+                    public void drain(final Spec spec) {
+                        throw new UnsupportedOperationException();
+                    }
+                    @Override
+                    public Spec drain() {
+                        throw new UnsupportedOperationException();
+                    }
                 };
             }
             @Override

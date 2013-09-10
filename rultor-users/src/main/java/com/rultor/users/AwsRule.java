@@ -29,7 +29,6 @@
  */
 package com.rultor.users;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -84,6 +83,11 @@ final class AwsRule implements Rule {
     public static final String FIELD_SPEC = "spec";
 
     /**
+     * Dynamo DB table column.
+     */
+    public static final String FIELD_DRAIN = "drain";
+
+    /**
      * Item.
      */
     private final transient Item item;
@@ -112,10 +116,8 @@ final class AwsRule implements Rule {
         final Spec spec) {
         this.item.put(
             new Attributes()
-                .with(
-                    AwsRule.FIELD_SPEC,
-                    new AttributeValue(spec.asText())
-            )
+                .with(AwsRule.FIELD_SPEC, spec.asText())
+                .with(AwsRule.FIELD_DRAIN, this.drain().asText())
         );
     }
 
@@ -154,6 +156,32 @@ final class AwsRule implements Rule {
             this.owner(), this.name(),
             taker, rule
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void drain(Spec spec) {
+        this.item.put(
+            new Attributes()
+                .with(AwsRule.FIELD_DRAIN, spec.asText())
+                .with(AwsRule.FIELD_SPEC, this.spec().asText())
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spec drain() {
+        Spec spec;
+        if (this.item.has(AwsRule.FIELD_DRAIN)) {
+            spec = new Spec.Simple(this.item.get(AwsRule.FIELD_DRAIN).getS());
+        } else {
+            spec = new Spec.Simple("com.rultor.drain.Trash()");
+        }
+        return spec;
     }
 
     /**

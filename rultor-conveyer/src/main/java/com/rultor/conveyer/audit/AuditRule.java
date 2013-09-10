@@ -111,4 +111,20 @@ final class AuditRule implements Rule {
         return this.origin.wallet(work, taker, rule);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void drain(final Spec spec) {
+        this.origin.drain(spec);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spec drain() {
+        return this.origin.drain();
+    }
+
 }

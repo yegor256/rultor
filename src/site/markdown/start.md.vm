@@ -9,7 +9,7 @@ and run automated build every time a new commit appears there
 (aka **continuous integration**).
 
 Let's create a rule for said continuous integration mechanism,
-with the following "_specification_":
+with the following "_spec_":
 
 ```
 urn:github:526301:git-on-commit(
@@ -38,7 +38,7 @@ urn:github:526301:git-on-commit(
 
 Save it and in a few minutes you will see its first result.
 
-The specification defines how to construct an object that should
+The spec defines how to construct an object that should
 receive control
 (see [full syntax description](./rultor-spi/apidocs-${project.version}/com/rultor/spi/Spec.html)).
 In this example, the object will be constructed from
@@ -177,7 +177,7 @@ your account at all.
 ${hash}${hash} #anchor("stand") Stand
 
 Now it's time to create a "stand", where project members will see the
-progress of your rules. Stand specification is much simplier, for
+progress of your rules. Stand spec is much simplier, for
 example this one can be used for a public project:
 
 ```
@@ -189,14 +189,14 @@ com.rultor.acl.Either(
 )
 ```
 
-An instantiated stand specification implements
+An instantiated stand spec implements
 [`ACL`](./rultor-spi/apidocs-${project.version}/com/rultor/spi/ACL.html) interface,
 which decides who is allowed to read your stand and who is allowed to
 post into it. Your rules of work post into the stand and your project
 members read the stand at `http://www.rultor.com/s/example`
 (if the name of the stand is `example`).
 
-In this specification we instantiate
+In this spec we instantiate
 [`Either`](./rultor-base/apidocs-${project.version}/com/rultor/acl/Either.html) class with
 one argument of its constructor, which is a list of instances of class `ACL`.
 As the name implies, the class allows access if any of the encapsulated
@@ -226,7 +226,7 @@ ${hash}${hash}${hash} #anchor("widgets") Widgets
 
 On top of the stand of rultor you see a few nice "widgets" that summarize
 the information collected by running instances. You can add similar
-widgets to your own stand. Their specification is a collection of
+widgets to your own stand. Their spec is a collection of
 classes that inherit [Widget](./rultor-spi/apidocs-${project.version}/com/rultor/spi/Widget.html)
 interface, for example:
 
@@ -254,7 +254,7 @@ a smart way. Let's break it down into components.
 
 As you already know, a rule receives control every minute.
 Technically it's even more interesting. Every minute a rule is
-instantiated as a Java object, according to its specification and then receives control.
+instantiated as a Java object, according to its spec and then receives control.
 We call this object an Instance. The module that instantiates a rule and
 controls instances is called a Conveyer.
 
@@ -278,7 +278,7 @@ of a rule. This is where Rultor differs from other continuous integration
 systems, like Jenkins. A new instance of every rule is created and executed
 every minute, 24 hours per day, 7 days per week.
 The only way to stop this process is to either delete the rule
-or enclose its specification into
+or enclose its spec into
 [`Empty`](./rultor-base/apidocs-${project.version}/com/rultor/base/Empty.html):
 
 ```
@@ -316,7 +316,7 @@ Constructor of class
 [`Crontab`](./rultor-base/apidocs-${project.version}/com/rultor/base/Crontab.html)
 accepts three parameters, where the first one is the Work being executed
 at the moment, the second one is
-[crontab specification](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html),
+[crontab spec](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html),
 and the third one is your original instance.
 
 This is how
@@ -342,12 +342,12 @@ public class Crontab implements Instance {
   private boolean allowed() {
     // return TRUE if the time of Work#scheduled()
     // satisfies the requirements of the encapsulated
-    // crontab specification, otherwise FALSE
+    // crontab spec, otherwise FALSE
   }
 }
 ```
 
-Most of the classes that you will use in your specifications are
+Most of the classes that you will use in your specs are
 using Decorator pattern, so get used to it.
 
 When a new commit is detected, build script is executed in a newly created
@@ -392,7 +392,7 @@ urn:github:526301:git-on-tag(
 )
 ```
 
-The specification looks almost identical to the one discussed above, with
+The spec looks almost identical to the one discussed above, with
 two important differences. First, we're using `git-on-tag` template
 provided by user `urn:github:526301`. Second, we're instructing Maven to
 deploy our artifacts, not just test them:
