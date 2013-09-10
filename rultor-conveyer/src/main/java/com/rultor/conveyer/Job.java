@@ -118,7 +118,10 @@ final class Job {
                     .instantiate(this.users, args);
                 new ThreadGroupSpy(
                     this.work,
-                    decor.decorate(Instance.class.cast(instance)),
+                    new WithSpec(
+                        rule.spec(),
+                        decor.decorate(Instance.class.cast(instance))
+                    ),
                     Drain.class.cast(drain)
                 ).pulse();
             }
