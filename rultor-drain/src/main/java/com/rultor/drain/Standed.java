@@ -307,7 +307,7 @@ public final class Standed implements Drain {
      * @param body POST request body
      * @throws IOException If fails
      */
-    @RetryOnFailure(verbose = false)
+    @RetryOnFailure(verbose = false, attempts = Tv.TEN)
     private void send(final String body) throws IOException {
         final Collection<String> missed = Standed.this.enqueue(
             this.entry.get(), body
