@@ -84,8 +84,8 @@ final class AuditRule implements Rule {
      * {@inheritDoc}
      */
     @Override
-    public void update(final Spec spec) {
-        this.origin.update(spec);
+    public void spec(final Spec spec) {
+        this.origin.spec(spec);
     }
 
     /**

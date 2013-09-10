@@ -108,7 +108,7 @@ final class AwsRule implements Rule {
      */
     @Override
     @Cacheable.FlushAfter
-    public void update(@NotNull(message = "spec is mandatory and can't be NULL")
+    public void spec(@NotNull(message = "spec is mandatory and can't be NULL")
         final Spec spec) {
         this.item.put(
             new Attributes()

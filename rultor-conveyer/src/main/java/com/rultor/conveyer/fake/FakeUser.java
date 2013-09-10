@@ -87,7 +87,7 @@ final class FakeUser implements User {
             public Rule get(final String name) {
                 return new Rule() {
                     @Override
-                    public void update(final Spec spc) {
+                    public void spec(final Spec spc) {
                         throw new UnsupportedOperationException();
                     }
                     @Override
