@@ -2,14 +2,14 @@
 #set($hash = "#")
 ${hash} Quick Start
 
-"Rule" is an active component that is receiving control
+"_Rule_" is an active component that is receiving control
 every minute and does something with your project on your behalf.
 A simple scenario would be to monitor your Git `master` branch
 and run automated build every time a new commit appears there
 (aka **continuous integration**).
 
-Let's create a rule for continuous integration mechanism,
-with the following Specification:
+Let's create a rule for said continuous integration mechanism,
+with the following "_specification_":
 
 ```
 urn:github:526301:git-on-commit(
@@ -51,7 +51,7 @@ of Git repository, as a Java string:
 ```
 
 The second one is a bash command that will be executed if a new commit
-is found in `master` branch of the repo:
+is found in `master` branch of the repository:
 
 ```
 "mvn test -e -Pci --settings /home/ubuntu/settings.xml"
@@ -59,20 +59,21 @@ is found in `master` branch of the repo:
 
 The third one is a list of email addresses that will receive notifications
 when build is complete (either with success or failure). In the example,
-the list contains just one element, but you can use it with many:
+the list contains just one element, but you can use it with many, by
+means of specifying a collection:
 
 ```
 ["me@example.com", "you@example.com"]
 ```
 
-The fourth one is an EC2 instance type, which will be used for build
-script execution. When a new commit is found in your `master` branch, the
+The fourth one is an EC2 instance type, which will be used for
+execution of the build. When a new commit is found in your `master` branch, the
 rule will create a new Amazon Web Services EC2 instance, execute your script, and
 terminate the instance. Your account will be charged for the price of the
-instance. Prices and instance types are listed in
+instance, approximately. Prices and instance types are listed in
 [AWS documention](http://aws.amazon.com/ec2/pricing/).
 
-The fifth and the sixth parameters are access credentials for a Stand, which
+The fifth and the sixth parameters are access credentials for a "_stand_", which
 is a public showcase of all rules in a project (will be discussed a bit later). In
 the example, credentials are not valid since you haven't create a stand yet.
 Stand name is `example` and authentication key is `super-secret`.
@@ -108,10 +109,8 @@ urn:github:526301:git-on-commit(
     "~/.ssh/id_rsa": """
     -----BEGIN RSA PRIVATE KEY-----
     MIIEowIBAAKCAQEAw93hQPucIa0D5nVhKHkHuyeBptzG6U7Lig4BbUAPjtSSsC2n
-    lVykSB24SnYTR+PcZhYepIdPF4BPYB13MSvLidNeS7vGWHOj9vt5daDCoOgCauRZ
     2RCJwO6ToaVnG8IHMiGRkXgFqKr1rd9unuPLZFi/HTYMkf0SYdoJc3GL9Ywt0pam
-    ...
-    2g2QQQKBgAQBp0FuT2o0KbxGnejYiU9T4SKMW3X3n2UWipx+TbntNNlGDP55NNYY
+    ... skipped ...
     a/pLWlmOF47jYTpc6j1Ws1JsxX+x6qrnN72P93dwjdNBgcgR3H3XtYVDSm3myMt6
     N9d/UY1o9c4kuhwbe9KlJGW8KBrZAS4j1RlvrBS8DVPjx18+xPyN
     -----END RSA PRIVATE KEY-----
@@ -120,7 +119,7 @@ urn:github:526301:git-on-commit(
 )
 ```
 
-Your private key will be uploaded to `~/.ssh/id_rsa` and picked up
+Your private key will be uploaded as `~/.ssh/id_rsa` file and picked up
 by Git while cloning of your repository.
 
 If you are planning to use your private key for other rules, we
@@ -130,11 +129,9 @@ recommend to move it to its own "passive" rule named, say, `github-ssh-key`:
 """
 -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAw93hQPucIa0D5nVhKHkHuyeBptzG6U7Lig4BbUAPjtSSsC2n
-lVykSB24SnYTR+PcZhYepIdPF4BPYB13MSvLidNeS7vGWHOj9vt5daDCoOgCauRZ
 2RCJwO6ToaVnG8IHMiGRkXgFqKr1rd9unuPLZFi/HTYMkf0SYdoJc3GL9Ywt0pam
-...
+... skipped ...
 2g2QQQKBgAQBp0FuT2o0KbxGnejYiU9T4SKMW3X3n2UWipx+TbntNNlGDP55NNYY
-a/pLWlmOF47jYTpc6j1Ws1JsxX+x6qrnN72P93dwjdNBgcgR3H3XtYVDSm3myMt6
 N9d/UY1o9c4kuhwbe9KlJGW8KBrZAS4j1RlvrBS8DVPjx18+xPyN
 -----END RSA PRIVATE KEY-----
 """
@@ -163,8 +160,8 @@ by [TPC2.com](http://www.tpc2.com). You don't pay anything for
 creating an account and defining your rules and stands.
 
 However, you can fund your account using PayPal and use the money to compensate
-other users for rule templates they provide you. Together with rule
-templates they provide you access to their computing and storage resources
+other users for rule templates they provide to you. Together with rule
+templates they provide you an access to their computing and storage resources
 (like Amazon EC2 instances or FTP logging). Rultor.com charges your
 account automatically and transfers money to their accounts. A detailed
 statistics of your expenses is available at
@@ -175,7 +172,7 @@ There is an allowance of $5.00 automatically added to your account every
 integration rule which runs, say three times per working day, using `m1.small`
 type of EC2 instance, your total cost will be $3.60 per month. This is less
 than the allowance you get automatically from us and you don't need to fund
-the account at all.
+your account at all.
 
 ${hash}${hash} #anchor("stand") Stand
 
@@ -192,7 +189,7 @@ com.rultor.acl.Either(
 )
 ```
 
-Instantiated stand specification implements
+An instantiated stand specification implements
 [`ACL`](./rultor-spi/apidocs-${project.version}/com/rultor/spi/ACL.html) interface,
 which decides who is allowed to read your stand and who is allowed to
 post into it. Your rules of work post into the stand and your project
@@ -224,6 +221,26 @@ com.rultor.acl.Prohibited()
 
 This is a link to a stand we use to publish the progress of
 development of Rultor itself: [www.rultor.com/s/rultor](http://www.rultor.com/s/rultor).
+
+${hash}${hash}${hash} #anchor("widgets") Widgets
+
+On top of the stand of rultor you see a few nice "widgets" that summarize
+the information collected by running instances. You can add similar
+widgets to your own stand. Their specification is a collection of
+classes that inherit [Widget](./rultor-spi/apidocs-${project.version}/com/rultor/spi/Widget.html)
+interface, for example:
+
+```
+[
+  com.rultor.widget.BuildHealth(),
+  com.rultor.widget.BuildHistory()
+]
+```
+
+These two will be enough to start with. For a full description of
+existing collection of widgets see
+[com.rultor.widget](./rultor-widget/apidocs-${project.version}/com/rultor/widget/index.html)
+package documentation.
 
 ${hash}${hash} #anchor("ci") Continuous Integration of Master Branch
 
