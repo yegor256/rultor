@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.base;
+package com.rultor.conveyer;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.LogExceptions;
@@ -60,7 +60,7 @@ import org.xembly.Directives;
 @Immutable
 @EqualsAndHashCode(of = { "work", "origin" })
 @Loggable(Loggable.DEBUG)
-public final class Descriptive implements Instance {
+final class Descriptive implements Instance {
 
     /**
      * Coordinates we're in.
@@ -77,7 +77,7 @@ public final class Descriptive implements Instance {
      * @param wrk Coordinates we're in
      * @param instance Original instance
      */
-    public Descriptive(final Coordinates wrk, final Instance instance) {
+    protected Descriptive(final Coordinates wrk, final Instance instance) {
         this.work = wrk;
         this.origin = instance;
     }
