@@ -35,12 +35,16 @@ import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.rultor.conveyer.http.HttpServer;
 import com.rultor.conveyer.http.Streams;
+import com.rultor.log4j.ThreadGroupSpy;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
+import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Rule;
+import com.rultor.spi.Spec;
+import com.rultor.spi.SpecException;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
@@ -219,17 +223,33 @@ final class SimpleConveyer implements Closeable {
     private void process(final Coordinates work) throws Exception {
         final User owner = this.users.get(work.owner());
         final Rule rule = owner.rules().get(work.rule());
-        final Variable<?> var =
-            new Repo.Cached(this.repo, owner, rule.spec()).get();
+        final Variable<?> var = this.var(owner, rule.spec());
         if (var.arguments().isEmpty()) {
-            final Object object = var.instantiate(
-                this.users,
-                new Arguments(work, new OwnWallet(work, rule))
+            final Arguments args = new Arguments(
+                work, new OwnWallet(work, rule)
             );
-            if (object instanceof Instance) {
-                Instance.class.cast(object).pulse();
+            final Object instance = var.instantiate(this.users, args);
+            if (instance instanceof Instance) {
+                final Object drain = this.var(owner, rule.drain())
+                    .instantiate(this.users, args);
+                new ThreadGroupSpy(
+                    work,
+                    Instance.class.cast(instance),
+                    Drain.class.cast(drain)
+                ).pulse();
             }
         }
+    }
+
+    /**
+     * Make a variable.
+     * @param owner Owner of the spec
+     * @param spec Spec itself
+     * @throws SpecException If fails
+     */
+    private Variable<?> var(final User owner, final Spec spec)
+        throws SpecException {
+        return new Repo.Cached(this.repo, owner, spec).get();
     }
 
 }
