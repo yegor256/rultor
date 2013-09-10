@@ -113,9 +113,9 @@ final class Job {
                 this.work, new OwnWallet(this.work, rule)
             );
             final Object instance = var.instantiate(this.users, args);
+            final Object drain = this.var(owner, rule.drain())
+                .instantiate(this.users, args);
             if (instance instanceof Instance) {
-                final Object drain = this.var(owner, rule.drain())
-                    .instantiate(this.users, args);
                 new ThreadGroupSpy(
                     this.work,
                     new WithSpec(
