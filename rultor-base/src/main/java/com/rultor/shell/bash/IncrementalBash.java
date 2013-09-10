@@ -287,11 +287,7 @@ public final class IncrementalBash implements Batch {
             new Directives()
                 .xpath(this.xpath(uid))
                 .add("summary")
-                .set(
-                    this.endWithSemicolon(
-                        summary.replaceAll("([_*`\\\\])", "\\\\$1")
-                    )
-                )
+                .set(summary.replaceAll("([_*`\\\\])", "\\\\$1"))
         ).toString();
         return String.format(
             "echo -e '%s'",
@@ -299,20 +295,6 @@ public final class IncrementalBash implements Batch {
                 XemblyLine.MARK, IncrementalBash.ESCAPED_MARK
             )
         );
-    }
-
-    /**
-     * Supplies end of text with semicolon.
-     * @param text Original text
-     * @return Text with semicolon at the end
-     */
-    private String endWithSemicolon(final String text) {
-        final StringBuilder out = new StringBuilder(text);
-        final String semicolon = ";";
-        if (!text.endsWith(semicolon)) {
-            out.append(semicolon);
-        }
-        return out.toString();
     }
 
     /**
