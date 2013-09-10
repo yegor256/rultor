@@ -293,7 +293,7 @@ final class Testing implements Profile {
             this.label = rule;
         }
         @Override
-        public void update(final Spec spec) {
+        public void spec(final Spec spec) {
             Testing.SPECS.put(this.label, spec);
         }
         @Override

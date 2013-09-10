@@ -128,7 +128,7 @@ public final class RuleRs extends BaseRs {
     public Response save(@NotNull(message = "spec form param is mandatory")
         @FormParam("spec") final String spec) {
         try {
-            this.rule().update(
+            this.rule().spec(
                 new Spec.Strict(
                     spec, this.repo(), this.user(), this.users(),
                     this.coordinates(this.name), Object.class

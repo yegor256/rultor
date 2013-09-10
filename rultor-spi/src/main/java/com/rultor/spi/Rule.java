@@ -56,7 +56,7 @@ public interface Rule {
      * Save specification.
      * @param spec Specification to save
      */
-    void update(@NotNull(message = "spec can't be NULL") Spec spec);
+    void spec(@NotNull(message = "spec can't be NULL") Spec spec);
 
     /**
      * Get specification.
@@ -95,7 +95,7 @@ public interface Rule {
          * {@inheritDoc}
          */
         @Override
-        public void update(@NotNull(message = "spec can't be NULL")
+        public void spec(@NotNull(message = "spec can't be NULL")
             final Spec spec) {
             assert spec != null;
         }

@@ -84,7 +84,7 @@ final class RestRule implements Rule {
      * {@inheritDoc}
      */
     @Override
-    public void update(final Spec spec) {
+    public void spec(final Spec spec) {
         try {
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
