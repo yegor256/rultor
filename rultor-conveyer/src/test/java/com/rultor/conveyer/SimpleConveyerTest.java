@@ -119,6 +119,7 @@ public final class SimpleConveyerTest {
         Mockito.doReturn(rule).when(rules).get(name);
         Mockito.doReturn(new Spec.Simple("'spec'")).when(rule).spec();
         Mockito.doReturn(new Spec.Simple("'drain'")).when(rule).drain();
+        Mockito.doReturn("").when(rule).failure();
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(owner);
         Mockito.doReturn(Arrays.asList(user).iterator())
