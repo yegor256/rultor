@@ -43,7 +43,6 @@ import com.rultor.spi.ACL;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulse;
-import com.rultor.spi.Repo;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Stand;
@@ -409,14 +408,12 @@ public final class StandRs extends BaseRs {
         ACL acl;
         try {
             acl = ACL.class.cast(
-                new Repo.Cached(this.repo(), new User.Nobody(), stand.acl())
-                    .get()
-                    .instantiate(
-                        this.users(),
-                        new Arguments(
-                            new Coordinates.None(), new Wallet.Empty()
-                        )
+                this.repo().make(new User.Nobody(), stand.acl()).instantiate(
+                    this.users(),
+                    new Arguments(
+                        new Coordinates.None(), new Wallet.Empty()
                     )
+                )
             );
         } catch (SpecException ex) {
             Exceptions.warn(this, ex);
@@ -444,14 +441,12 @@ public final class StandRs extends BaseRs {
         Collection<Widget> list;
         try {
             list = Collection.class.cast(
-                new Repo.Cached(this.repo(), new User.Nobody(), spec)
-                    .get()
-                    .instantiate(
-                        this.users(),
-                        new Arguments(
-                            new Coordinates.None(), new Wallet.Empty()
-                        )
+                this.repo().make(new User.Nobody(), spec).instantiate(
+                    this.users(),
+                    new Arguments(
+                        new Coordinates.None(), new Wallet.Empty()
                     )
+                )
             );
         } catch (SpecException ex) {
             list = Arrays.<Widget>asList(new Alert(Exceptions.stacktrace(ex)));

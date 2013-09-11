@@ -220,8 +220,7 @@ public final class SQSPulseSensor implements Runnable, Closeable {
     private ACL acl(final Stand stand) {
         try {
             return ACL.class.cast(
-                new Repo.Cached(this.repo, new User.Nobody(), stand.acl())
-                    .get()
+                this.repo.make(new User.Nobody(), stand.acl())
                     .instantiate(
                         this.users,
                         new Arguments(

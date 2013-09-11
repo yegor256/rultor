@@ -34,7 +34,6 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
-import com.rultor.spi.Repo;
 import com.rultor.spi.Rule;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Tags;
@@ -160,9 +159,7 @@ public final class PulseRs extends BaseRs {
     private InputStream read(final Rule rule) throws IOException {
         try {
             return Drain.class.cast(
-                new Repo.Cached(
-                    this.repo(), this.user(), rule.drain()
-                ).get().instantiate(
+                this.repo().make(this.user(), rule.drain()).instantiate(
                     this.users(),
                     new Arguments(
                         new Coordinates.Simple(

@@ -223,7 +223,7 @@ public interface Spec {
             @NotNull(message = "type can't be NULL") final Class<?> type)
             throws SpecException {
             final Spec temp = new Spec.Simple(text);
-            final Variable<?> var = new Repo.Cached(repo, user, temp).get();
+            final Variable<?> var = repo.make(user, temp);
             if (var.arguments().isEmpty()) {
                 final Object object = var.instantiate(
                     users, new Arguments(work, new Wallet.Empty())
