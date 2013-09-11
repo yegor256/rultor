@@ -104,14 +104,11 @@ public final class RulesRs extends BaseRs {
      * @return Collection of JAXB rules
      */
     private JaxbBundle mine() {
-        final JaxbFace face = new JaxbFace(
-            this.repo(), this.users(), this.user()
-        );
         return new JaxbBundle("rules").add(
             new JaxbBundle.Group<Rule>(this.user().rules()) {
                 @Override
                 public JaxbBundle bundle(final Rule rule) {
-                    return RulesRs.this.rule(face, rule);
+                    return RulesRs.this.rule(rule);
                 }
             }
         );
@@ -122,11 +119,10 @@ public final class RulesRs extends BaseRs {
      * @param rule The rule
      * @return Bundle
      */
-    private JaxbBundle rule(final JaxbFace face, final Rule rule) {
+    private JaxbBundle rule(final Rule rule) {
         return new JaxbBundle("rule")
             .add("name", rule.name())
             .up()
-            .add(face.bundle(rule))
             .link(
                 new Link(
                     // @checkstyle MultipleStringLiterals (1 line)

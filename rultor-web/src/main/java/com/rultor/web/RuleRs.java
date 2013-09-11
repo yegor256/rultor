@@ -95,10 +95,6 @@ public final class RuleRs extends BaseRs {
                     .add("drain", rule.drain().asText())
                     .up()
             )
-            .append(
-                new JaxbFace(this.repo(), this.users(), this.user())
-                    .bundle(rule)
-            )
             .render()
             .build();
     }

@@ -76,27 +76,10 @@
             <ul class="list-inline">
                 <li>
                     <a title="view drain of the rule">
-                        <xsl:if test="face/exception">
-                            <xsl:attribute name="class">
-                                <xsl:text>text-danger</xsl:text>
-                            </xsl:attribute>
-                        </xsl:if>
                         <xsl:attribute name="href">
                             <xsl:value-of select="links/link[@rel='drain']/@href"/>
                         </xsl:attribute>
                         <xsl:value-of select="name"/>
-                        <xsl:if test="face/arguments">
-                            <xsl:text>(</xsl:text>
-                            <xsl:for-each select="face/arguments/argument">
-                                <xsl:if test="position() &gt; 1">
-                                    <xsl:text>, </xsl:text>
-                                </xsl:if>
-                                <xsl:text>&quot;</xsl:text>
-                                <xsl:value-of select="."/>
-                                <xsl:text>&quot;</xsl:text>
-                            </xsl:for-each>
-                            <xsl:text>)</xsl:text>
-                        </xsl:if>
                     </a>
                 </li>
                 <li class="icon">
@@ -116,16 +99,7 @@
                         <i class="icon-remove"><xsl:comment>remove</xsl:comment></i>
                     </a>
                 </li>
-                <xsl:if test="face/exception">
-                    <li class="icon">
-                        <i class="icon-warning-sign text-danger" title="show exception"
-                            onclick="$(this).parent().parent().parent().find('.exception').toggle();"><xsl:comment>exception</xsl:comment></i>
-                    </li>
-                </xsl:if>
             </ul>
-            <xsl:if test="face/exception">
-                <pre style="display:none;" class="text-danger exception"><xsl:value-of select="face/exception"/></pre>
-            </xsl:if>
         </div>
     </xsl:template>
 </xsl:stylesheet>
