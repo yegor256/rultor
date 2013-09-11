@@ -93,6 +93,8 @@ public final class ReassignToTest {
         final Approval approval = new ReassignTo("");
         final PullRequest request = new PullRequest();
         final Github github = Mockito.mock(Github.class);
+        final GitHubClient client = Mockito.mock(GitHubClient.class);
+        Mockito.doReturn(client).when(github).client();
         MatcherAssert.assertThat(
             approval.has(
                 request,
