@@ -37,7 +37,6 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <xsl:apply-templates select="/page/face"/>
         <xsl:apply-templates select="/page/rule/exception"/>
         <form method="post" class="spacious">
             <xsl:attribute name="action">
@@ -81,21 +80,5 @@
                 </div>
             </fieldset>
         </form>
-    </xsl:template>
-    <xsl:template match="face">
-        <xsl:apply-templates select="exception"/>
-        <!--
-        Doesn't look nice so far, that's why disabling it...
-        <xsl:if test="type and html">
-            <p class="spacious">
-                <code><xsl:value-of select="type"/></code>
-                <xsl:text> </xsl:text>
-                <xsl:value-of disable-output-escaping="yes" select="html"/>
-            </p>
-        </xsl:if>
-        -->
-    </xsl:template>
-    <xsl:template match="exception">
-        <pre class="text-danger"><xsl:value-of select="."/></pre>
     </xsl:template>
 </xsl:stylesheet>
