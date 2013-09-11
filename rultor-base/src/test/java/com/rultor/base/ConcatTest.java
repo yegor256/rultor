@@ -46,7 +46,7 @@ public final class ConcatTest {
      */
     @Test
     public void concatWithSeparator() {
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<String>(0);
         list.add("test1");
         list.add("test2");
         list.add("test3");
@@ -57,10 +57,6 @@ public final class ConcatTest {
             concat.object(),
             Matchers.equalTo("test1,test2,test3")
         );
-        MatcherAssert.assertThat(
-            concat.toString(),
-            Matchers.equalTo("3 part(s)")
-        );
     }
 
     /**
@@ -68,7 +64,7 @@ public final class ConcatTest {
      */
     @Test
     public void concatWithoutSeparator() {
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<String>(0);
         list.add("test4");
         list.add("test5");
         list.add("test6");
@@ -79,10 +75,6 @@ public final class ConcatTest {
         MatcherAssert.assertThat(
             concat.object(),
             Matchers.equalTo("test4test5test6test7")
-        );
-        MatcherAssert.assertThat(
-            concat.toString(),
-            Matchers.equalTo("4 part(s)")
         );
     }
 }

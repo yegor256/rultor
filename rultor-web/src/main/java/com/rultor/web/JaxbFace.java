@@ -43,7 +43,6 @@ import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Wallet;
 import com.rultor.tools.Exceptions;
-import com.rultor.tools.Markdown;
 import com.rultor.tools.Time;
 import lombok.EqualsAndHashCode;
 
@@ -130,15 +129,9 @@ final class JaxbFace {
      * @return Bundle
      */
     private JaxbBundle append(final JaxbBundle bundle, final Object object) {
-        JaxbBundle output = bundle
+        return bundle
             .add("type", object.getClass().getName())
             .up();
-        if (!(object instanceof String)) {
-            output = output.add(
-                "html", new Markdown(object.toString()).html()
-            ).up();
-        }
-        return output;
     }
 
     /**
