@@ -162,7 +162,7 @@ final class AwsRule implements Rule {
      * {@inheritDoc}
      */
     @Override
-    public void drain(Spec spec) {
+    public void drain(final Spec spec) {
         this.item.put(
             new Attributes()
                 .with(AwsRule.FIELD_DRAIN, spec.asText())

@@ -140,10 +140,11 @@ public final class OnTag implements Instance {
             .write("name", tag)
             .writeEnd()
             .close();
-        final String desc = String.format("tag `%s`", tag);
+        final String desc = String.format("tag `%s` has been built", tag);
         new XemblyLine(
             new Directives()
                 .xpath("/snapshot").strict(1).addIfAbsent("tags")
+                // @checkstyle MultipleStringLiterals (1 line)
                 .add("tag").add("label").set("tag").up()
                 .add("level").set(Level.INFO.toString()).up()
                 .add("data").set(data.toString()).up()

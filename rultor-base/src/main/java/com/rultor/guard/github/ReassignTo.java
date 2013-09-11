@@ -49,7 +49,7 @@ import org.eclipse.egit.github.core.service.UserService;
 @EqualsAndHashCode(of = { "user" })
 @Loggable(Loggable.DEBUG)
 final class ReassignTo implements Approval {
-    
+
     /**
      * Reassigned to user.
      */
