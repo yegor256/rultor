@@ -109,12 +109,14 @@ final class Job {
     public void process(final Job.Decor decor) {
         final User owner = this.users.get(this.work.owner());
         final Rule rule = owner.rules().get(this.work.rule());
-        try {
-            this.make(owner, rule, decor).pulse();
-        } catch (SpecException ex) {
-            rule.failure(Exceptions.stacktrace(ex));
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(ex);
+        if (rule.failure().isEmpty()) {
+            try {
+                this.make(owner, rule, decor).pulse();
+            } catch (SpecException ex) {
+                rule.failure(Exceptions.stacktrace(ex));
+            } catch (Exception ex) {
+                throw new IllegalArgumentException(ex);
+            }
         }
     }
 
