@@ -32,8 +32,6 @@ package com.rultor.spi;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Rule.
@@ -56,8 +54,10 @@ public interface Rule {
     /**
      * Save spec.
      * @param spec Spec to save
+     * @param drain Spec of drain
      */
-    void spec(@NotNull(message = "spec can't be NULL") Spec spec);
+    void update(@NotNull(message = "spec can't be NULL") Spec spec,
+        @NotNull(message = "drain can't be NULL") Spec drain);
 
     /**
      * Get spec.
@@ -67,17 +67,23 @@ public interface Rule {
     Spec spec();
 
     /**
-     * Save drain spec.
-     * @param spec Spec to save
-     */
-    void drain(@NotNull(message = "spec can't be NULL") Spec spec);
-
-    /**
      * Get drain spec.
      * @return Spec
      */
     @NotNull(message = "spec of drain is never NULL")
     Spec drain();
+
+    /**
+     * Mark it as failed.
+     * @param desc Description of a failure
+     */
+    void failure(@NotNull(message = "desc can't be NULL") String desc);
+
+    /**
+     * Read description of failure or empty string if there is no failure.
+     * @return Description of it or empty string
+     */
+    String failure();
 
     /**
      * Wallet of the rule.
@@ -90,59 +96,5 @@ public interface Rule {
     @NotNull(message = "wallet is never NULL")
     Wallet wallet(Coordinates work, URN taker, String rule)
         throws Wallet.NotEnoughFundsException;
-
-    /**
-     * Always empty Rule.
-     */
-    @Immutable
-    @ToString
-    @EqualsAndHashCode
-    final class Empty implements Rule {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String name() {
-            return "empty";
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void spec(@NotNull(message = "spec can't be NULL")
-            final Spec spec) {
-            assert spec != null;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @NotNull(message = "spec of an empty rule is never NULL")
-        public Spec spec() {
-            return new Spec.Simple();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Wallet wallet(final Coordinates work,
-            final URN urn, final String rle) {
-            throw new UnsupportedOperationException();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void drain(final Spec spec) {
-            throw new UnsupportedOperationException();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Spec drain() {
-            throw new UnsupportedOperationException();
-        }
-    }
 
 }

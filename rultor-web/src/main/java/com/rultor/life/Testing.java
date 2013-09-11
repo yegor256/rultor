@@ -293,7 +293,7 @@ final class Testing implements Profile {
             this.label = rule;
         }
         @Override
-        public void spec(final Spec spec) {
+        public void update(final Spec spec, final Spec drain) {
             Testing.SPECS.put(this.label, spec);
         }
         @Override
@@ -310,12 +310,16 @@ final class Testing implements Profile {
             throw new UnsupportedOperationException();
         }
         @Override
-        public void drain(final Spec spec) {
-            assert spec != null;
-        }
-        @Override
         public Spec drain() {
             return new Spec.Simple("com.rultor.drain.Trash()");
+        }
+        @Override
+        public void failure(final String desc) {
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public String failure() {
+            throw new UnsupportedOperationException();
         }
     }
 

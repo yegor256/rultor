@@ -54,13 +54,13 @@ def rule = user.rules().get(name)
     'java.lang.Double ( -55.0 )': 'java.lang.Double(-55.0)',
     '"some text  \u20ac "  ': '"some text  \\u20AC "',
 ].each {
-    rule.spec(new Spec.Simple(it.key))
+    rule.update(new Spec.Simple(it.key), new Spec.Simple())
     MatcherAssert.assertThat(rule.spec().asText(), Matchers.equalTo(it.value))
 }
 [
     'com.rultor.base.Empty()',
     'com.rultor.base.Restrictive(${work}, ["*"], com.rultor.base.Empty())',
 ].each {
-    rule.spec(new Spec.Simple(it))
+    rule.update(new Spec.Simple(it), new Spec.Simple())
 }
 user.rules().remove(name)

@@ -88,6 +88,11 @@ final class AwsRule implements Rule {
     public static final String FIELD_DRAIN = "drain";
 
     /**
+     * Dynamo DB table column.
+     */
+    public static final String FIELD_FAILURE = "failure";
+
+    /**
      * Item.
      */
     private final transient Item item;
@@ -112,12 +117,13 @@ final class AwsRule implements Rule {
      */
     @Override
     @Cacheable.FlushAfter
-    public void spec(@NotNull(message = "spec is mandatory and can't be NULL")
-        final Spec spec) {
+    public void update(
+        @NotNull(message = "spec can't be NULL") final Spec spec,
+        @NotNull(message = "drain can't be NULL") final Spec drain) {
         this.item.put(
             new Attributes()
                 .with(AwsRule.FIELD_SPEC, spec.asText())
-                .with(AwsRule.FIELD_DRAIN, this.drain().asText())
+                .with(AwsRule.FIELD_DRAIN, drain.asText())
         );
     }
 
@@ -162,18 +168,6 @@ final class AwsRule implements Rule {
      * {@inheritDoc}
      */
     @Override
-    public void drain(final Spec spec) {
-        this.item.put(
-            new Attributes()
-                .with(AwsRule.FIELD_DRAIN, spec.asText())
-                .with(AwsRule.FIELD_SPEC, this.spec().asText())
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Spec drain() {
         Spec spec;
         if (this.item.has(AwsRule.FIELD_DRAIN)) {
@@ -182,6 +176,27 @@ final class AwsRule implements Rule {
             spec = new Spec.Simple("com.rultor.drain.Trash()");
         }
         return spec;
+    }
+
+    @Override
+    public void failure(final String desc) {
+        this.item.put(
+            new Attributes()
+                .with(AwsRule.FIELD_SPEC, this.spec().asText())
+                .with(AwsRule.FIELD_DRAIN, this.drain().asText())
+                .with(AwsRule.FIELD_FAILURE, desc)
+        );
+    }
+
+    @Override
+    public String failure() {
+        final String failure;
+        if (this.item.has(AwsRule.FIELD_FAILURE)) {
+            failure = this.item.get(AwsRule.FIELD_FAILURE).getS();
+        } else {
+            failure = "";
+        }
+        return failure;
     }
 
     /**
