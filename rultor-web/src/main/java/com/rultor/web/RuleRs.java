@@ -140,6 +140,12 @@ public final class RuleRs extends BaseRs {
                     this.coordinates(this.name), Object.class
                 )
             );
+            this.rule().drain(
+                new Spec.Strict(
+                    drain, this.repo(), this.user(), this.users(),
+                    this.coordinates(this.name), Object.class
+                )
+            );
         } catch (SpecException ex) {
             return this.head()
                 .append(FlashInset.bundle(Level.SEVERE, Exceptions.message(ex)))
