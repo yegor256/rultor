@@ -50,6 +50,7 @@ import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -62,6 +63,7 @@ import org.apache.commons.lang3.RandomStringUtils;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "client", "key" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
@@ -105,17 +107,6 @@ public final class ObjectLineup implements Lineup {
     public ObjectLineup(final String bkt, final String obj, final String akey,
         final String scrt) {
         this(obj, new S3Client.Simple(akey, scrt, bkt));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "S3 lineup at `%s` in `%s` bucket accessed with %s",
-            this.key, this.client.bucket(), this.client
-        );
     }
 
     /**

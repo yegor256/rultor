@@ -167,17 +167,6 @@ public final class SSHChannel implements Shell {
 
     /**
      * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "SSH as `%s` to `%s` with %s",
-            this.login, this.addr, this.key
-        );
-    }
-
-    /**
-     * {@inheritDoc}
      * @checkstyle ParameterNumber (10 lines)
      */
     @Override

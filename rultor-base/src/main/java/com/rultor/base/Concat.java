@@ -36,6 +36,7 @@ import com.rultor.spi.Proxy;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -46,6 +47,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "parts", "separator" })
 @Loggable(Loggable.DEBUG)
 public final class Concat implements Proxy<String> {
@@ -87,14 +89,6 @@ public final class Concat implements Proxy<String> {
     @Override
     public String object() {
         return StringUtils.join(this.parts, this.separator);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("%d part(s)", this.parts.size());
     }
 
 }

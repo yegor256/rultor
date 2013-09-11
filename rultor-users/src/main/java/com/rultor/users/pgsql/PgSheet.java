@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -65,6 +66,7 @@ import org.apache.commons.lang3.StringUtils;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "client", "owner", "orders", "groups" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
@@ -212,14 +214,6 @@ final class PgSheet implements Sheet {
             this.client, this.owner, this.orders, this.groups,
             this.start, this.end, head, this.clause
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return this.query();
     }
 
     /**

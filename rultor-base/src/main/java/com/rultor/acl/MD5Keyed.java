@@ -35,6 +35,7 @@ import com.jcabi.urn.URN;
 import com.rultor.spi.ACL;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
@@ -45,6 +46,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
 public final class MD5Keyed implements ACL {
@@ -60,13 +62,6 @@ public final class MD5Keyed implements ACL {
      */
     public MD5Keyed(@NotNull(message = "hash can't be NULL") final String txt) {
         this.hash = txt;
-    }
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("with MD5 hash `%s`", this.hash);
     }
 
     /**

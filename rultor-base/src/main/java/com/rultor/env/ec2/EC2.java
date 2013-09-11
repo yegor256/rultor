@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -64,6 +65,7 @@ import org.apache.commons.lang3.Validate;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "type", "ami", "group", "client" })
 @Loggable(Loggable.DEBUG)
 public final class EC2 implements Environments {
@@ -189,18 +191,6 @@ public final class EC2 implements Environments {
         this.zone = azone;
         this.client = new EC2Client.Regional(
             azone.substring(0, azone.length() - 1), clnt
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            // @checkstyle LineLength (1 line)
-            "EC2 `%s` instances with `%s` in `%s` security group with `%s` key pair accessed with %s",
-            this.type, this.ami, this.group, this.pair, this.client
         );
     }
 

@@ -68,6 +68,7 @@ import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -85,6 +86,7 @@ import org.xembly.XemblySyntaxException;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "origin", "work", "stand", "key" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings({ "PMD.ExcessiveImports", "PMD.TooManyMethods" })
@@ -208,17 +210,6 @@ public final class Standed implements Drain {
                 return executor;
             }
         };
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "%s standed at `%s`",
-            this.origin, this.stand
-        );
     }
 
     /**

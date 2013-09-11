@@ -49,6 +49,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.IOUtils;
 
@@ -61,6 +62,7 @@ import org.apache.commons.io.IOUtils;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "work", "pattern", "visible", "dirty", "clean" })
 @Loggable(Loggable.DEBUG)
 public final class NoiseReduction implements Drain {
@@ -120,20 +122,6 @@ public final class NoiseReduction implements Drain {
         this.visible = vsbl;
         this.dirty = drt;
         this.clean = cln;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "%s with noise reduction by `%s` (%d visible) buffering in %s",
-            this.clean,
-            this.pattern,
-            this.visible,
-            this.dirty
-        );
     }
 
     /**

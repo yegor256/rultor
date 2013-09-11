@@ -31,7 +31,6 @@ package com.rultor.ci;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
 import com.rultor.board.Billboard;
 import com.rultor.scm.Head;
 import com.rultor.scm.SCM;
@@ -45,6 +44,7 @@ import java.util.logging.Level;
 import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.xembly.Directives;
 
 /**
@@ -55,6 +55,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "scm", "batch", "board" })
 @Loggable(Loggable.DEBUG)
 public final class OnTag implements Instance {
@@ -98,17 +99,6 @@ public final class OnTag implements Instance {
         for (String tag : this.scm.branches()) {
             this.build(tag);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "on every tag in %s executes %s and announces through %s",
-            this.scm, this.batch, this.board
-        );
     }
 
     /**

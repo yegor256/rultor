@@ -37,6 +37,7 @@ import java.io.PrintStream;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTPClient;
@@ -52,6 +53,7 @@ import org.apache.commons.net.ftp.FTPReply;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "host", "login", "password", "port" })
 @Loggable(Loggable.DEBUG)
 final class FtpBatch {
@@ -103,17 +105,6 @@ final class FtpBatch {
         this.login = user;
         this.password = pwd;
         this.port = prt;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "ftp://%s@%s:%d",
-            this.login, this.host, this.port
-        );
     }
 
     /**

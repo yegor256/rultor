@@ -37,7 +37,7 @@ import com.rultor.spi.ACL;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.StringUtils;
+import lombok.ToString;
 
 /**
  * Allows if any of enclosed ACLs give a go.
@@ -47,6 +47,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = "acls")
 @Loggable(Loggable.DEBUG)
 public final class Either implements ACL {
@@ -63,14 +64,6 @@ public final class Either implements ACL {
     public Either(@NotNull(message = "list of ACLs can't be NULL")
         final Collection<ACL> list) {
         this.acls = new Array<ACL>(list);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return StringUtils.join(this.acls, " or ");
     }
 
     /**

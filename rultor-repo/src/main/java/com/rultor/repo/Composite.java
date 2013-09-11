@@ -40,19 +40,11 @@ import com.rultor.spi.Variable;
 import com.rultor.tools.Exceptions;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtField;
-import javassist.CtMethod;
-import javassist.Modifier;
-import javassist.NotFoundException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -70,16 +62,6 @@ import lombok.ToString;
 @EqualsAndHashCode(of = { "type", "vars" })
 @Loggable(Loggable.DEBUG)
 final class Composite implements Variable<Object> {
-
-    /**
-     * Supplementary method name.
-     */
-    public static final String METHOD = "__rultor_setToString";
-
-    /**
-     * Supplementary field name.
-     */
-    private static final String FIELD = "__rultor_toString";
 
     /**
      * Type name.
@@ -194,16 +176,10 @@ final class Composite implements Variable<Object> {
     private Constructor<?> ctor(final Class<?>[] types)
         throws SpecException {
         final Class<?> cls;
-        if (this.type.startsWith("java.")) {
-            try {
-                cls = Class.forName(this.type);
-            } catch (ClassNotFoundException ex) {
-                throw new SpecException(ex);
-            }
-        } else {
-            synchronized (Composite.class) {
-                cls = Composite.load(this.type);
-            }
+        try {
+            cls = Class.forName(this.type);
+        } catch (ClassNotFoundException ex) {
+            throw new SpecException(ex);
         }
         Constructor<?> ctor = null;
         for (Constructor<?> opt : cls.getConstructors()) {
@@ -269,144 +245,6 @@ final class Composite implements Variable<Object> {
             out = type;
         }
         return out;
-    }
-
-    /**
-     * Load and alter class.
-     * @param name Class name
-     * @return Modified type
-     * @throws SpecException If can't instantiate
-     * @checkstyle RedundantThrows (4 lines)
-     */
-    private static Class<?> load(final String name)
-        throws SpecException {
-        final ClassPool pool = ClassPool.getDefault();
-        Class<?> type;
-        try {
-            final CtClass cls = pool.get(name);
-            if (Composite.loaded(name) || cls.isModified()) {
-                type = Class.forName(name);
-            } else {
-                final CtField field = new CtField(
-                    pool.get("java.lang.String"), Composite.FIELD, cls
-                );
-                field.setModifiers(Modifier.PRIVATE | Modifier.FINAL);
-                cls.addField(field);
-                final String body = String.format(
-                    "if (%s != null) return %<s;",
-                    Composite.FIELD
-                );
-                if (Composite.hasToString(cls)) {
-                    final CtMethod method =
-                        // @checkstyle MultipleStringLiterals (1 line)
-                        cls.getDeclaredMethod("toString", new CtClass[0]);
-                    method.insertBefore(body);
-                } else {
-                    cls.addMethod(
-                        CtMethod.make(
-                            String.format(
-                                // @checkstyle StringLiteralsConcatenation (5 lines)
-                                "public String toString() { "
-                                + "%s return super.toString(); }",
-                                body
-                            ),
-                            cls
-                        )
-                    );
-                }
-                cls.addMethod(
-                    CtMethod.make(
-                        String.format(
-                            // @checkstyle StringLiteralsConcatenation (5 lines)
-                            "public void %s(String value) {"
-                            + "java.lang.reflect.Field field = "
-                            + "  this.getClass().getDeclaredField(\"%s\");"
-                            + "field.setAccessible(true);"
-                            + "field.set(this, value);}",
-                            Composite.METHOD,
-                            Composite.FIELD
-                        ),
-                        cls
-                    )
-                );
-                type = cls.toClass();
-                cls.defrost();
-            }
-        } catch (NotFoundException ex) {
-            throw new SpecException(
-                String.format(
-                    "class not found \"%s\"",
-                    name
-                ),
-                ex
-            );
-        } catch (CannotCompileException ex) {
-            throw new SpecException(
-                String.format(
-                    "can't compile \"%s\": %s",
-                    name,
-                    Exceptions.message(ex)
-                ),
-                ex
-            );
-        } catch (ClassNotFoundException ex) {
-            throw new SpecException(
-                String.format(
-                    "class \"%s\" not found: %s",
-                    name,
-                    Exceptions.message(ex)
-                ), ex
-            );
-        }
-        return type;
-    }
-
-    /**
-     * Does it have toString() method already?
-     * @param type The type
-     * @return TRUE if it has it
-     * @throws NotFoundException If not found
-     * @checkstyle RedundantThrows (5 lines)
-     */
-    private static boolean hasToString(final CtClass type)
-        throws NotFoundException {
-        boolean has = false;
-        for (CtMethod method : type.getDeclaredMethods()) {
-            if ("toString".equals(method.getName())
-                && method.getParameterTypes().length == 0) {
-                has = true;
-                break;
-            }
-        }
-        return has;
-    }
-
-    /**
-     * Is it loaded already?
-     * @param name Class name
-     * @return TRUE if it's already loaded
-     * @throws SpecException If can't instantiate
-     * @checkstyle RedundantThrows (4 lines)
-     */
-    private static boolean loaded(final String name)
-        throws SpecException {
-        try {
-            final Method method = ClassLoader.class.getDeclaredMethod(
-                "findLoadedClass", String.class
-            );
-            method.setAccessible(true);
-            return method.invoke(
-                ClassLoader.getSystemClassLoader(), name
-            ) != null;
-        } catch (NoSuchMethodException ex) {
-            throw new IllegalStateException(ex);
-        } catch (SecurityException ex) {
-            throw new IllegalStateException(ex);
-        } catch (IllegalAccessException ex) {
-            throw new IllegalStateException(ex);
-        } catch (InvocationTargetException ex) {
-            throw new IllegalStateException(ex);
-        }
     }
 
 }

@@ -43,6 +43,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
@@ -55,6 +56,7 @@ import org.apache.commons.lang3.CharEncoding;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "origin", "map" })
 @Loggable(Loggable.DEBUG)
 public final class Prerequisites implements Shells {
@@ -95,17 +97,6 @@ public final class Prerequisites implements Shells {
             );
         }
         return shell;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "%s with %d bash prerequisite(s)",
-            this.origin, this.map.size()
-        );
     }
 
     /**

@@ -46,6 +46,7 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
@@ -67,6 +68,7 @@ import org.apache.commons.lang3.Validate;
  * @see <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html">Crontab specification</a>
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "work", "origin", "gates" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings({ "PMD.TooManyMethods", "PMD.CyclomaticComplexity" })
@@ -126,14 +128,6 @@ public final class Crontab implements Instance {
         if (this.allowed()) {
             this.origin.pulse();
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format("%s in %[ms]s", this.origin, this.lag(new Time()));
     }
 
     /**

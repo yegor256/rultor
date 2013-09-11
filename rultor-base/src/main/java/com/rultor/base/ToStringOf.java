@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Proxy;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Retrieves a value of toString method.
@@ -43,6 +44,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "source" })
 @Loggable(Loggable.DEBUG)
 public final class ToStringOf implements Proxy<String> {
@@ -70,13 +72,4 @@ public final class ToStringOf implements Proxy<String> {
         return this.source.toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "toString value '%s'", this.source
-        );
-    }
 }

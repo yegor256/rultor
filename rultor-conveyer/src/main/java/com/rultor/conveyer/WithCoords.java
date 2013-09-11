@@ -38,6 +38,7 @@ import com.rultor.spi.Coordinates;
 import com.rultor.spi.Instance;
 import com.rultor.tools.Time;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.xembly.Directives;
 
 /**
@@ -57,6 +58,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "work", "origin" })
 @Loggable(Loggable.DEBUG)
 final class WithCoords implements Instance {
@@ -142,14 +144,6 @@ final class WithCoords implements Instance {
                     .set(Long.toString(System.currentTimeMillis() - start))
             ).log();
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("verbose %s", this.origin);
     }
 
 }

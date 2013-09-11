@@ -37,6 +37,7 @@ import com.rultor.stateful.Lineup;
 import java.util.concurrent.Callable;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Lineups in S3 bucket.
@@ -46,6 +47,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "work", "client", "prefix" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
@@ -88,17 +90,6 @@ public final class BucketLineup implements Lineup {
      */
     public BucketLineup(final Coordinates wrk, final S3Client clnt) {
         this(wrk, "", clnt);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "S3 lineups in `%s` with `%s` prefix accessed with %s",
-            this.client.bucket(), this.prefix, this.client
-        );
     }
 
     /**

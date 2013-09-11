@@ -55,6 +55,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
@@ -66,6 +67,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "client", "work", "wallet" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
@@ -120,17 +122,6 @@ public final class DomainNotepad implements Notepad {
         this.work = wrk;
         this.wallet = wlt;
         this.client = clnt;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "SimpleDB notepad in `%s` accessed with %s",
-            this.client.domain(), this.client
-        );
     }
 
     /**

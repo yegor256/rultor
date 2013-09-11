@@ -37,6 +37,8 @@ import java.io.StringReader;
 import javax.validation.constraints.NotNull;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * XSL transformation billboard.
@@ -46,6 +48,8 @@ import javax.xml.transform.stream.StreamSource;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(of = { "board", "xslt" })
 @Loggable(Loggable.DEBUG)
 public final class XsltTransform implements Billboard {
 
@@ -91,11 +95,4 @@ public final class XsltTransform implements Billboard {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("XSL transformation of '%s'", this.board);
-    }
 }

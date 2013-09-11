@@ -35,6 +35,7 @@ import com.jcabi.aspects.Tv;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Checked out branch.
@@ -44,6 +45,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "scm", "label" })
 @Loggable(Loggable.DEBUG)
 public final class Checkout implements Branch {
@@ -67,14 +69,6 @@ public final class Checkout implements Branch {
         @NotNull(message = "branch can't be NULL") final String branch) {
         this.scm = src;
         this.label = branch;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("branch `%s` at %s", this.label, this.scm);
     }
 
     /**

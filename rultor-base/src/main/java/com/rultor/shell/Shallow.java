@@ -36,6 +36,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Wrapper of shells.
@@ -45,6 +46,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = "shells")
 @Loggable(Loggable.DEBUG)
 public final class Shallow implements Shell {
@@ -61,14 +63,6 @@ public final class Shallow implements Shell {
     public Shallow(
         @NotNull(message = "shells can't be NULL") final Shells shls) {
         this.shells = shls;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("permanent shell at %s", this.shells);
     }
 
     /**

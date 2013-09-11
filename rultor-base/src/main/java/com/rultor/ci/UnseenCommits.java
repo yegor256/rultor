@@ -34,7 +34,6 @@ import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.jcabi.log.Logger;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
 import com.rultor.snapshot.Step;
@@ -43,6 +42,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Returns only one commit, if it wasn't seen before.
@@ -52,6 +52,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "origin", "notepad" })
 @Loggable(Loggable.DEBUG)
 public final class UnseenCommits implements Branch {
@@ -82,17 +83,6 @@ public final class UnseenCommits implements Branch {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return Logger.format(
-            "unseen commits of %s tracked in %s",
-            this.origin, this.notepad
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String name() {
         return this.origin.name();
     }
@@ -116,10 +106,6 @@ public final class UnseenCommits implements Branch {
                         }
                     }
                 );
-            }
-            @Override
-            public String toString() {
-                return "unseen commits";
             }
         };
     }

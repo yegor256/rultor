@@ -49,6 +49,7 @@ import java.io.SequenceInputStream;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
@@ -64,6 +65,7 @@ import org.apache.commons.lang3.Validate;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "client", "key" })
 @Loggable(Loggable.DEBUG)
 public final class ObjectDrain implements Drain {
@@ -91,18 +93,6 @@ public final class ObjectDrain implements Drain {
             name, "([^/]+/)*[^/]+", "invalid S3 object name '%s'", name
         );
         this.key = name;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "`%s` at %s",
-            this.key,
-            this.client
-        );
     }
 
     /**

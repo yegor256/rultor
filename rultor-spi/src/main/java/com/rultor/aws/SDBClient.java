@@ -36,6 +36,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * SimpleDB client.
@@ -63,6 +64,7 @@ public interface SDBClient {
      * Simple client.
      */
     @Immutable
+    @ToString
     @EqualsAndHashCode(of = { "key", "secret", "dmn" })
     @Loggable(Loggable.DEBUG)
     final class Simple implements SDBClient {
@@ -92,13 +94,6 @@ public interface SDBClient {
             this.key = akey;
             this.secret = scrt;
             this.dmn = domain;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString() {
-            return String.format("`%s`", this.key);
         }
         /**
          * {@inheritDoc}

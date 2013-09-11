@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * White List of allowed users.
@@ -47,6 +48,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = "friends")
 @Loggable(Loggable.DEBUG)
 public final class WhiteList implements ACL {
@@ -67,14 +69,6 @@ public final class WhiteList implements ACL {
             list.add(URN.create(urn));
         }
         this.friends = new Array<URN>(list);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("%d friend(s)", this.friends.size());
     }
 
     /**

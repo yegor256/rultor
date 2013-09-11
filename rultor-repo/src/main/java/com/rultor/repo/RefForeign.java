@@ -39,8 +39,6 @@ import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Wallet;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -115,12 +113,9 @@ final class RefForeign implements Variable<Object> {
         throws SpecException {
         final User user = users.get(this.owner);
         try {
-            return this.alter(
-                this.grammar.parse(
-                    user.urn(), user.rules().get(this.name).spec().asText()
-                ).instantiate(users, this.mapping(users, args)),
-                args
-            );
+            return this.grammar.parse(
+                user.urn(), user.rules().get(this.name).spec().asText()
+            ).instantiate(users, this.mapping(users, args));
         } catch (SpecException ex) {
             throw new SpecException(
                 String.format(
@@ -185,37 +180,6 @@ final class RefForeign implements Variable<Object> {
         } catch (Wallet.NotEnoughFundsException ex) {
             throw new SpecException(ex);
         }
-    }
-
-    /**
-     * Alter the object by injecting name into it.
-     * @param object The object
-     * @param args Arguments used to instantiate it
-     * @return Altered object
-     * @throws SpecException If some error inside
-     * @checkstyle RedundantThrows (5 lines)
-     */
-    private Object alter(final Object object, final Arguments args)
-        throws SpecException {
-        for (Method method : object.getClass().getMethods()) {
-            if (method.getName().equals(Composite.METHOD)) {
-                try {
-                    method.invoke(
-                        object,
-                        String.format(
-                            "`%s:%s` with %s", this.owner, this.name, args
-                        )
-                    );
-                } catch (IllegalAccessException ex) {
-                    throw new SpecException(ex);
-                } catch (SecurityException ex) {
-                    throw new SpecException(ex);
-                } catch (InvocationTargetException ex) {
-                    throw new SpecException(ex);
-                }
-            }
-        }
-        return object;
     }
 
 }

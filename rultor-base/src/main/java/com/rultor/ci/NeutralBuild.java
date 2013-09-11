@@ -32,12 +32,12 @@ package com.rultor.ci;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
 import com.rultor.board.Billboard;
 import com.rultor.shell.Batch;
 import com.rultor.spi.Instance;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Neutral Build.
@@ -47,6 +47,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "batch", "board" })
 @Loggable(Loggable.DEBUG)
 public final class NeutralBuild implements Instance {
@@ -83,18 +84,6 @@ public final class NeutralBuild implements Instance {
             new Build("neutral", this.batch).exec(
                 new ImmutableMap.Builder<String, Object>().build()
             ).xml().toString()
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "neutral %s announced through %s",
-            this.batch,
-            this.board
         );
     }
 
