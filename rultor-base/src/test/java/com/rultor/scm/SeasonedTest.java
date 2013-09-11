@@ -30,6 +30,7 @@
 package com.rultor.scm;
 
 import com.google.common.collect.Iterators;
+import com.jcabi.aspects.Tv;
 import com.rultor.tools.Time;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +48,7 @@ import org.mockito.Mockito;
 public final class SeasonedTest {
 
     /**
-     * Seasoned public ctor args can not be null.
+     * Seasoned can throw exception if public ctor args are null.
      * @throws Exception If some problem inside
      */
     @Test(expected = ConstraintViolationException.class)
@@ -56,12 +57,12 @@ public final class SeasonedTest {
     }
 
     /**
-     * Can show only commits on or after given time.
+     * Seasoned Can show only commits on or after given time.
      * @throws Exception If some problem inside
      */
     @Test
     public void showsBeforeCommitsOnly() throws Exception {
-        final Branch origin = Mockito.mock(Branch.class);
+        final Branch masterbranch = Mockito.mock(Branch.class);
         final Commit beforecommit = Mockito.mock(Commit.class);
         final Commit aftercommit = Mockito.mock(Commit.class);
         Mockito.doReturn(
@@ -69,17 +70,15 @@ public final class SeasonedTest {
                 beforecommit,
                 aftercommit
             )
-        ).when(origin).log();
-        final long beforetime = TimeUnit.MINUTES.toMillis(3);
-        final long aftertime = TimeUnit.MINUTES.toMillis(1);
+        ).when(masterbranch).log();
         final long currenttime = System.currentTimeMillis();
         Mockito.doReturn(
-            new Time(currenttime - beforetime)
+            new Time(currenttime - TimeUnit.MINUTES.toMillis(Tv.THREE))
         ).when(beforecommit).time();
         Mockito.doReturn(
-            new Time(currenttime - aftertime)
+            new Time(currenttime - TimeUnit.MINUTES.toMillis(1))
         ).when(aftercommit).time();
-        final Branch seasoned = new Seasoned(2, origin);
+        final Branch seasoned = new Seasoned(2, masterbranch);
         final Iterable<Commit> commitsitr = seasoned.log();
         MatcherAssert.assertThat(
             commitsitr,

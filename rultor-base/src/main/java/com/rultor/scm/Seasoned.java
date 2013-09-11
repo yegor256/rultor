@@ -39,6 +39,7 @@ import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Seasoned branch.
@@ -47,7 +48,8 @@ import lombok.EqualsAndHashCode;
  * @version $Id$
  */
 @Immutable
-@EqualsAndHashCode(of = "origin")
+@ToString
+@EqualsAndHashCode(of = { "origin", "commitsBefore" })
 @Loggable(Loggable.DEBUG)
 public final class Seasoned implements Branch {
 
@@ -59,7 +61,7 @@ public final class Seasoned implements Branch {
     /**
      * Holds mimimum age of commit in millis.
      */
-    private final transient long commitsAfter;
+    private final transient long commitsBefore;
 
     /**
      * Public ctor.
@@ -69,15 +71,7 @@ public final class Seasoned implements Branch {
     public Seasoned(final int min,
         @NotNull(message = "branch can't be NULL") final Branch brn) {
         this.origin = brn;
-        this.commitsAfter = TimeUnit.MINUTES.toMillis(min);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("HEAD of %s", this.origin);
+        this.commitsBefore = TimeUnit.MINUTES.toMillis(min);
     }
 
     /**
@@ -95,7 +89,7 @@ public final class Seasoned implements Branch {
                     new Predicate<Commit>() {
                         @Override
                         public boolean apply(final Commit commit) {
-                            return Seasoned.this.checkdelta(commit, current);
+                            return Seasoned.this.isBefore(commit, current);
                         }
                     }
                 );
@@ -122,13 +116,13 @@ public final class Seasoned implements Branch {
      * @param currenttime Present time in millis.
      * @return True if committed on or before commitsAfter.
      */
-    private boolean checkdelta(final Commit commit, final Time currenttime) {
-        boolean isolder;
+    private boolean isBefore(final Commit commit, final Time currenttime) {
+        boolean before;
         try {
-            isolder = commit.time().delta(currenttime) <= this.commitsAfter;
+            before = commit.time().delta(currenttime) <= this.commitsBefore;
         } catch (IOException ioe) {
-            isolder = false;
+            before = false;
         }
-        return isolder;
+        return before;
     }
 }
