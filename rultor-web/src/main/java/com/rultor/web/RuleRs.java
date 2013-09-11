@@ -130,13 +130,11 @@ public final class RuleRs extends BaseRs {
         @NotNull(message = "drain form param is mandatory")
         @FormParam("drain") final String drain) {
         try {
-            this.rule().spec(
+            this.rule().update(
                 new Spec.Strict(
                     spec, this.repo(), this.user(), this.users(),
                     this.coordinates(this.name), Object.class
-                )
-            );
-            this.rule().drain(
+                ),
                 new Spec.Strict(
                     drain, this.repo(), this.user(), this.users(),
                     this.coordinates(this.name), Object.class
