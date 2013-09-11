@@ -130,12 +130,18 @@ public final class S3CmdPut implements Sequel {
                 .append(" && cat > $CONFIG")
                 .append(" && HEAD=")
                 .append(
-                    Terminal.escape(
-                        String.format("s3://%s/%s", this.bucket, this.prefix)
+                    Terminal.quotate(
+                        Terminal.escape(
+                            String.format(
+                                "s3://%s/%s",
+                                this.bucket,
+                                this.prefix
+                            )
+                        )
                     )
                 )
                 .append(" && cd ")
-                .append(Terminal.escape(dir))
+                .append(Terminal.quotate(Terminal.escape(dir)))
                 .append(" && FILES=$(find ")
                 .append(mask)
                 // @checkstyle LineLength (1 line)
