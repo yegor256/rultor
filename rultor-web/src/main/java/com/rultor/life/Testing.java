@@ -311,7 +311,7 @@ final class Testing implements Profile {
         }
         @Override
         public void drain(final Spec spec) {
-            throw new UnsupportedOperationException();
+            assert spec != null;
         }
         @Override
         public Spec drain() {
