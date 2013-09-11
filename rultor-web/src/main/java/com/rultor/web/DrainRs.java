@@ -40,7 +40,6 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
-import com.rultor.spi.Repo;
 import com.rultor.spi.Rule;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Wallet;
@@ -185,15 +184,15 @@ public final class DrainRs extends BaseRs {
     private Drain drain(final Time time) {
         final Object src;
         try {
-            src = new Repo.Cached(
-                this.repo(), this.user(), this.rule().drain()
-            ).get().instantiate(
-                this.users(),
-                new Arguments(
-                    new Coordinates.Simple(this.user().urn(), this.name, time),
-                    new Wallet.Empty()
-                )
-            );
+            src = this.repo()
+                .make(this.user(), this.rule().drain())
+                .instantiate(
+                    this.users(),
+                    new Arguments(
+                        new Coordinates.Simple(this.user().urn(), this.name, time),
+                        new Wallet.Empty()
+                    )
+                );
         } catch (SpecException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),

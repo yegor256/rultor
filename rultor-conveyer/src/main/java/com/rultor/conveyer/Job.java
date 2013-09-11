@@ -139,7 +139,7 @@ final class Job {
      */
     private Variable<?> var(final User owner, final Spec spec)
         throws SpecException {
-        return new Repo.Cached(this.repo, owner, spec).get();
+        return this.repo.make(owner, spec);
     }
 
 }
