@@ -46,11 +46,13 @@ import org.eclipse.egit.github.core.PullRequest;
 @ToString
 @EqualsAndHashCode(of = { "user" })
 @Loggable(Loggable.DEBUG)
-final class AssignedTo implements Approval {
+public final class AssignedTo implements Approval {
+
     /**
      * First approval to ask.
      */
     private final transient String user;
+
     /**
      * Public ctor.
      * @param assignee Assignee

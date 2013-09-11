@@ -106,14 +106,16 @@
                 </li>
                 <xsl:if test="failure != ''">
                     <li class="icon">
-                        <a onclick="$(this).parent().parent().find('pre').toggle();"
+                        <a onclick="$(this).parent().parent().parent().find('pre').toggle();"
                             title="show the failure" class="text-danger">
                             <i class="icon-warning-sign"><xsl:comment>failure</xsl:comment></i>
                         </a>
                     </li>
-                    <pre class="text-danger" style="display:none"><xsl:value-of select="failure"/></pre>
                 </xsl:if>
             </ul>
+            <xsl:if test="failure != ''">
+                <pre class="text-danger" style="display:none"><xsl:value-of select="failure"/></pre>
+            </xsl:if>
         </div>
     </xsl:template>
 </xsl:stylesheet>
