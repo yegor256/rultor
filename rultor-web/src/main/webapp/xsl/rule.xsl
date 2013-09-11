@@ -37,8 +37,8 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <xsl:apply-templates select="/page/failure"/>
         <xsl:apply-templates select="/page/rule/exception"/>
+        <xsl:apply-templates select="/page/rule/failure"/>
         <form method="post" class="spacious">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
@@ -82,7 +82,10 @@
             </fieldset>
         </form>
     </xsl:template>
-    <xsl:template match="exception|failure">
+    <xsl:template match="exception">
+        <p class="alert alert-danger"><xsl:value-of select="."/></p>
+    </xsl:template>
+    <xsl:template match="failure">
         <pre class="text-danger"><xsl:value-of select="."/></pre>
     </xsl:template>
 </xsl:stylesheet>
