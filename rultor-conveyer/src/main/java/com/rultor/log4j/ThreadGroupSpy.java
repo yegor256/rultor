@@ -36,6 +36,7 @@ import com.rultor.spi.Instance;
 import com.rultor.tools.Exceptions;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -63,6 +64,7 @@ import org.apache.log4j.PatternLayout;
  * @version $Id$
  * @since 1.0
  */
+@ToString
 @EqualsAndHashCode(of = { "work", "level", "pattern", "origin", "drn" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
@@ -152,19 +154,6 @@ public final class ThreadGroupSpy implements Instance {
             this.close(appender);
             root.removeAppender(appender);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "%s drained `%s` to %s",
-            this.origin,
-            this.level,
-            this.drn
-        );
     }
 
     /**

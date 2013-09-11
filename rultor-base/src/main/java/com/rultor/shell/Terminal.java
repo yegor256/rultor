@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.TeeOutputStream;
@@ -49,6 +50,7 @@ import org.apache.commons.io.output.TeeOutputStream;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = "shell")
 @Loggable(Loggable.DEBUG)
 public final class Terminal {
@@ -64,14 +66,6 @@ public final class Terminal {
      */
     public Terminal(@NotNull(message = "shell can't be NULL") final Shell shl) {
         this.shell = shl;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("terminal to %s", this.shell);
     }
 
     /**

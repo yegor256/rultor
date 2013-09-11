@@ -31,7 +31,6 @@ package com.rultor.shell.bash;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
 import com.rultor.shell.Sequel;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Terminal;
@@ -42,6 +41,7 @@ import java.util.logging.Level;
 import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.FilenameUtils;
 import org.xembly.Directives;
 
@@ -54,6 +54,7 @@ import org.xembly.Directives;
  * @see <a href="http://s3tools.org/s3cmd">s3cmd</a>
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "name", "path", "bucket", "prefix", "key", "secret" })
 @Loggable(Loggable.DEBUG)
 public final class S3CmdPut implements Sequel {
@@ -111,17 +112,6 @@ public final class S3CmdPut implements Sequel {
         this.prefix = pfx;
         this.key = akey;
         this.secret = scrt;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "%s uploaded to `s3://%s/%s` by s3cmd from `%s`",
-            this.name, this.bucket, this.prefix, this.path
-        );
     }
 
     /**

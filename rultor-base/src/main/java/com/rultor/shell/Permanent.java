@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Permanent shell.
@@ -42,6 +43,7 @@ import lombok.EqualsAndHashCode;
  * @version $Id$
  * @since 1.0
  */
+@ToString
 @Immutable
 @EqualsAndHashCode(of = "shell")
 @Loggable(Loggable.DEBUG)
@@ -59,14 +61,6 @@ public final class Permanent implements Shells {
     public Permanent(
         @NotNull(message = "shell can't be NULL") final Shell shl) {
         this.shell = shl;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("permanent shell at %s", this.shell);
     }
 
     /**

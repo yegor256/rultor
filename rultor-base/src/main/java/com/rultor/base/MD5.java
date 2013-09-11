@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Proxy;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
@@ -44,6 +45,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = "text")
 @Loggable(Loggable.DEBUG)
 public final class MD5 implements Proxy<String> {
@@ -67,14 +69,6 @@ public final class MD5 implements Proxy<String> {
     @Override
     public String object() {
         return DigestUtils.md2Hex(this.text);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return this.object().toString();
     }
 
 }

@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 
@@ -51,6 +52,7 @@ import org.apache.commons.lang3.CharEncoding;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "main", "tail" })
 @Loggable(Loggable.DEBUG)
 public final class Tailed implements Drain {
@@ -75,17 +77,6 @@ public final class Tailed implements Drain {
         @NotNull(message = "tail can't be NULL") final Drain extra) {
         this.main = body;
         this.tail = extra;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "%s tailed by %s",
-            this.main, this.tail
-        );
     }
 
     /**

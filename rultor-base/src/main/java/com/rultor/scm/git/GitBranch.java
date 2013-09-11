@@ -42,6 +42,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Git.
@@ -51,6 +52,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "terminal", "dir", "label" })
 @Loggable(Loggable.DEBUG)
 public final class GitBranch implements Branch {
@@ -83,17 +85,6 @@ public final class GitBranch implements Branch {
         this.terminal = term;
         this.dir = folder;
         this.label = branch;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "Git branch `%s` at `%s` in %s",
-            this.label, this.dir, this.terminal
-        );
     }
 
     /**

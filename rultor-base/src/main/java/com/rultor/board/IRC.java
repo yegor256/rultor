@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * IRC.
@@ -42,6 +43,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "host", "port", "channel" })
 @Loggable(Loggable.DEBUG)
 public final class IRC implements Billboard {
@@ -71,17 +73,6 @@ public final class IRC implements Billboard {
         this.host = hst;
         this.port = prt;
         this.channel = chnl;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "IRC channel `%s` at `%s:%d`",
-            this.channel, this.host, this.port
-        );
     }
 
     /**

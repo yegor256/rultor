@@ -37,6 +37,7 @@ import com.rultor.spi.Proxy;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Restricts access for certain users.
@@ -46,6 +47,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "work", "origin", "friends" })
 @Loggable(Loggable.DEBUG)
 public final class Restrictive implements Proxy<Object> {
@@ -97,23 +99,6 @@ public final class Restrictive implements Proxy<Object> {
             );
         }
         return this.origin;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        if (!this.allowed()) {
-            throw new SecurityException(
-                String.format(
-                    "You (%s) are not allowed to use %s",
-                    this.work.owner(),
-                    this.origin
-                )
-            );
-        }
-        return this.origin.toString();
     }
 
     /**

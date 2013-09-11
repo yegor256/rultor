@@ -44,6 +44,7 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
@@ -60,6 +61,7 @@ import org.apache.commons.net.ftp.FTPClient;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "batch", "file" })
 @Loggable(Loggable.DEBUG)
 public final class FileDrain implements Drain {
@@ -104,17 +106,6 @@ public final class FileDrain implements Drain {
         @NotNull(message = "FTP file name can't be NULL") final String name) {
         this.batch = new FtpBatch(host, user, pwd, port);
         this.file = name;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "FTP file '%s' in %s",
-            this.file, this.batch
-        );
     }
 
     /**

@@ -36,6 +36,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Amazon SQS client.
@@ -63,6 +64,7 @@ public interface SQSClient {
      * Simple client.
      */
     @Immutable
+    @ToString
     @EqualsAndHashCode(of = { "key", "secret", "queue" })
     @Loggable(Loggable.DEBUG)
     final class Simple implements SQSClient {
@@ -96,13 +98,6 @@ public interface SQSClient {
          * {@inheritDoc}
          */
         @Override
-        public String toString() {
-            return String.format("`%s` to `%s`", this.key, this.queue);
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
         public AmazonSQS get() {
             return new AmazonSQSClient(
                 new BasicAWSCredentials(this.key, this.secret)
@@ -121,6 +116,7 @@ public interface SQSClient {
      * Client for assumed role.
      */
     @Immutable
+    @ToString
     @EqualsAndHashCode(of = "queue")
     @Loggable(Loggable.DEBUG)
     final class Assumed implements SQSClient {
@@ -135,13 +131,6 @@ public interface SQSClient {
         public Assumed(@NotNull(message = "URL can't be NULL")
             final String url) {
             this.queue = url;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString() {
-            return String.format("`%s`", this.queue);
         }
         /**
          * {@inheritDoc}

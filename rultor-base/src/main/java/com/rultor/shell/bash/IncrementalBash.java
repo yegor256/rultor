@@ -35,7 +35,6 @@ import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
-import com.jcabi.log.Logger;
 import com.rultor.shell.Batch;
 import com.rultor.shell.Shells;
 import com.rultor.shell.Terminal;
@@ -49,6 +48,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directives;
 
@@ -74,6 +74,7 @@ import org.xembly.Directives;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "shells", "commands" })
 @Loggable(Loggable.DEBUG)
 public final class IncrementalBash implements Batch {
@@ -122,17 +123,6 @@ public final class IncrementalBash implements Batch {
         @NotNull(message = "stream can't be NULL") final OutputStream output)
         throws IOException {
         return new Bash(this.shells, this.script(args)).exec(args, output);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "bash batch of %d command(s) through %s",
-            this.commands.size(), this.shells
-        );
     }
 
     /**

@@ -36,6 +36,7 @@ import com.jcabi.aspects.Tv;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Head of the branch.
@@ -45,6 +46,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = "origin")
 @Loggable(Loggable.DEBUG)
 public final class Head implements Branch {
@@ -60,14 +62,6 @@ public final class Head implements Branch {
      */
     public Head(@NotNull(message = "branch can't be NULL") final Branch brn) {
         this.origin = brn;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("HEAD of %s", this.origin);
     }
 
     /**

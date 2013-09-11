@@ -37,6 +37,7 @@ import com.rultor.aws.SNSClient;
 import com.rultor.snapshot.Step;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Amazon SNS.
@@ -46,6 +47,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "client", "topic" })
 @Loggable(Loggable.DEBUG)
 public final class SNS implements Billboard {
@@ -78,17 +80,6 @@ public final class SNS implements Billboard {
     public SNS(final String arn, final SNSClient clnt) {
         this.client = clnt;
         this.topic = arn;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "SNS topic `%s` accessed with %s",
-            this.topic, this.client
-        );
     }
 
     /**

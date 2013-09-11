@@ -48,6 +48,7 @@ import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -61,6 +62,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "client", "key" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
@@ -104,17 +106,6 @@ public final class ObjectNotepad implements Notepad {
     public ObjectNotepad(final String obj, final String bkt,
         final String akey, final String scrt) {
         this(obj, new S3Client.Simple(akey, scrt, bkt));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "S3 notepad at `%s` in `%s` bucket accessed with %s",
-            this.key, this.client.bucket(), this.client
-        );
     }
 
     /**

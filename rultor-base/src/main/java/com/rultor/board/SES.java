@@ -45,6 +45,7 @@ import com.rultor.snapshot.Step;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Amazon SES.
@@ -55,6 +56,7 @@ import lombok.EqualsAndHashCode;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "client", "sender", "recipients" })
 @Loggable(Loggable.DEBUG)
 public final class SES implements Billboard {
@@ -98,17 +100,6 @@ public final class SES implements Billboard {
         this.client = clnt;
         this.recipients = new Array<String>(rcpts);
         this.sender = src;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "SES from %s to %s with %s",
-            this.sender, this.recipients, this.client
-        );
     }
 
     /**

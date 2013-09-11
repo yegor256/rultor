@@ -44,6 +44,7 @@ import java.io.SequenceInputStream;
 import java.util.Arrays;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.Validate;
@@ -57,6 +58,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "delta", "spinbox", "origin" })
 @Loggable(Loggable.DEBUG)
 public final class LinesSensor implements Drain {
@@ -90,17 +92,6 @@ public final class LinesSensor implements Drain {
         this.delta = dlt;
         this.spinbox = box;
         this.origin = drain;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "%s with lines sensored with %s",
-            this.origin, this.spinbox
-        );
     }
 
     /**

@@ -34,7 +34,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.immutable.ArrayMap;
-import com.jcabi.log.Logger;
 import com.rexsl.test.SimpleXml;
 import com.rultor.guard.MergeRequest;
 import com.rultor.snapshot.Snapshot;
@@ -47,6 +46,7 @@ import java.util.Map;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.RequestException;
@@ -63,6 +63,7 @@ import org.xembly.ImpossibleModificationException;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "github", "repository", "parameters" })
 @Loggable(Loggable.DEBUG)
 final class GhRequest implements MergeRequest {
@@ -119,19 +120,6 @@ final class GhRequest implements MergeRequest {
     @Override
     public String name() {
         return Integer.toString(this.issue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "%s (#%d) in %s",
-            this.name(),
-            this.issue,
-            this.repository
-        );
     }
 
     /**

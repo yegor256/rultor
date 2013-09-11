@@ -32,7 +32,6 @@ package com.rultor.guard;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
 import com.rultor.ci.Build;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Snapshot;
@@ -50,6 +49,7 @@ import javax.json.Json;
 import javax.json.stream.JsonGenerator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 
@@ -61,6 +61,7 @@ import org.xembly.ImpossibleModificationException;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "requests", "busy", "batch" })
 @Loggable(Loggable.DEBUG)
 public final class OnPullRequest implements Instance {
@@ -113,19 +114,6 @@ public final class OnPullRequest implements Instance {
                 this.busy.remove(request.name());
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "on pull request from %s executes %s and track it in %s",
-            this.requests,
-            this.batch,
-            this.busy
-        );
     }
 
     /**

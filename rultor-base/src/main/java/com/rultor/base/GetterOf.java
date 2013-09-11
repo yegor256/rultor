@@ -41,6 +41,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Retrieves a string property from an object.
@@ -50,6 +51,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "source", "property" })
 @Loggable(Loggable.DEBUG)
 public final class GetterOf implements Proxy<Object> {
@@ -130,13 +132,4 @@ public final class GetterOf implements Proxy<Object> {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "Gets '%s' property from %s", this.property, this.source
-        );
-    }
 }

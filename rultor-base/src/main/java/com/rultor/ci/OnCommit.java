@@ -33,7 +33,6 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.jcabi.log.Logger;
 import com.rultor.board.Billboard;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
@@ -49,6 +48,7 @@ import java.util.logging.Level;
 import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
@@ -61,6 +61,7 @@ import org.xembly.ImpossibleModificationException;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "branch", "batch", "board" })
 @Loggable(Loggable.DEBUG)
 public final class OnCommit implements Instance {
@@ -104,17 +105,6 @@ public final class OnCommit implements Instance {
         for (Commit commit : this.branch.log()) {
             this.build(commit);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "on new commits at %s executes %s and announces through %s",
-            this.branch, this.batch, this.board
-        );
     }
 
     /**

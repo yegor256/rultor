@@ -63,6 +63,7 @@ import org.apache.commons.lang3.Validate;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "lifetime", "work", "origin" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.TooManyMethods" })
@@ -119,18 +120,6 @@ public final class BufferedWrite implements Drain, Closeable {
         this.work = wrk;
         this.lifetime = TimeUnit.SECONDS.toMillis(sec);
         this.origin = drain;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "%s with buffered write for %[ms]s",
-            this.origin,
-            this.lifetime
-        );
     }
 
     /**

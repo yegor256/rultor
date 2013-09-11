@@ -84,17 +84,6 @@ public final class SSHServer implements Shell {
 
     /**
      * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "SSH as `%s` at %s with %s",
-            this.login, this.env, this.key
-        );
-    }
-
-    /**
-     * {@inheritDoc}
      * @checkstyle ParameterNumber (10 lines)
      */
     @Override

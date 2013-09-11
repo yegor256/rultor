@@ -32,7 +32,6 @@ package com.rultor.guard.github;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
-import com.jcabi.log.Logger;
 import com.rultor.guard.MergeRequest;
 import com.rultor.guard.MergeRequests;
 import com.rultor.snapshot.Step;
@@ -43,6 +42,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.PullRequestService;
@@ -55,6 +55,7 @@ import org.eclipse.egit.github.core.service.PullRequestService;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "github", "repository" })
 @Loggable(Loggable.DEBUG)
 public final class GhRequests implements MergeRequests {
@@ -149,18 +150,6 @@ public final class GhRequests implements MergeRequests {
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "%s in %s",
-            this.repository,
-            this.github
-        );
     }
 
     /**

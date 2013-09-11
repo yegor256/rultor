@@ -48,6 +48,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Git.
@@ -59,6 +60,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "terminal", "url", "key" })
 @Loggable(Loggable.DEBUG)
 public final class Git implements SCM {
@@ -119,20 +121,6 @@ public final class Git implements SCM {
         this.url = addr.toString();
         this.dir = folder;
         this.key = priv;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "Git repository at `%s` cloned to `%s` at %s accessed through %s",
-            this.url,
-            this.dir,
-            this.terminal,
-            this.key
-        );
     }
 
     /**

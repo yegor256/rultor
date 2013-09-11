@@ -33,7 +33,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
 import com.rultor.scm.Branch;
 import com.rultor.scm.SCM;
 import com.rultor.snapshot.Step;
@@ -42,6 +41,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Returns only one tag, if it wasn't seen before.
@@ -51,6 +51,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "origin", "notepad" })
 @Loggable(Loggable.DEBUG)
 public final class UnseenBranches implements SCM {
@@ -81,17 +82,6 @@ public final class UnseenBranches implements SCM {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return Logger.format(
-            "unseen branches of %s tracked in %s",
-            this.origin, this.notepad
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Branch checkout(final String name) throws IOException {
         return this.origin.checkout(name);
     }
@@ -114,10 +104,6 @@ public final class UnseenBranches implements SCM {
                         }
                     }
                 );
-            }
-            @Override
-            public String toString() {
-                return "unseen branches";
             }
         };
     }

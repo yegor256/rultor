@@ -38,6 +38,7 @@ import com.rultor.stateful.Lineup;
 import java.util.concurrent.Callable;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Lineups in Amazon SimpleDB.
@@ -47,6 +48,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "work", "client" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
@@ -81,17 +83,6 @@ public final class DomainLineup implements Lineup {
         this.work = wrk;
         this.wallet = wlt;
         this.client = clnt;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "SimpleDB lineups in `%s` accessed with %s",
-            this.client.domain(), this.client
-        );
     }
 
     /**

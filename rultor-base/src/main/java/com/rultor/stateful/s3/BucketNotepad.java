@@ -38,6 +38,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Notepads in bucket.
@@ -47,6 +48,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "work", "client", "prefix" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
@@ -89,17 +91,6 @@ public final class BucketNotepad implements Notepad {
      */
     public BucketNotepad(final Coordinates wrk, final S3Client clnt) {
         this(wrk, "", clnt);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "S3 bucket notepad at `%s` with `%s` prefix accessed with %s",
-            this.client.bucket(), this.prefix, this.client
-        );
     }
 
     /**

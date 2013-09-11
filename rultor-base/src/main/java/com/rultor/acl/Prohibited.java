@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rultor.spi.ACL;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Never allows any access.
@@ -43,17 +44,10 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
 public final class Prohibited implements ACL {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return "prohibited";
-    }
 
     /**
      * {@inheritDoc}

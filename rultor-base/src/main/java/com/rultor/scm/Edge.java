@@ -39,6 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Edge of development (latest branch in the list).
@@ -48,6 +49,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = "scm")
 @Loggable(Loggable.DEBUG)
 public final class Edge implements SCM {
@@ -63,14 +65,6 @@ public final class Edge implements SCM {
      */
     public Edge(@NotNull(message = "SCM can't be NULL") final SCM src) {
         this.scm = src;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("edge in %s", this.scm);
     }
 
     /**

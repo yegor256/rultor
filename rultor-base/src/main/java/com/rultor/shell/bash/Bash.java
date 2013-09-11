@@ -46,6 +46,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.TeeOutputStream;
 import org.apache.commons.lang3.CharEncoding;
@@ -60,6 +61,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "shells", "script" })
 @Loggable(Loggable.DEBUG)
 public final class Bash implements Batch {
@@ -139,17 +141,6 @@ public final class Bash implements Batch {
             ).log();
         }
         return code;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "bash batch `%[text]s` through %s",
-            this.script, this.shells
-        );
     }
 
 }

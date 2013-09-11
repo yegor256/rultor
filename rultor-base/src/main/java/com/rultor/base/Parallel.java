@@ -39,6 +39,7 @@ import com.rultor.stateful.Lineup;
 import com.rultor.stateful.Notepad;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -49,6 +50,7 @@ import org.apache.commons.lang3.Validate;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "work", "active", "origin", "lineup", "maximum" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
@@ -113,20 +115,6 @@ public final class Parallel implements Instance {
         } else {
             Logger.info(this, "Zero threads allowed, no need to even try");
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "%s in %d thread(s) synchronized by %s and persisted by %s",
-            this.origin,
-            this.maximum,
-            this.lineup,
-            this.active
-        );
     }
 
     /**

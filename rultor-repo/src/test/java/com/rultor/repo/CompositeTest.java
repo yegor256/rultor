@@ -29,7 +29,6 @@
  */
 package com.rultor.repo;
 
-import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
@@ -37,8 +36,6 @@ import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Wallet;
 import java.util.Arrays;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -98,57 +95,6 @@ public final class CompositeTest {
                 + ")"
             )
         );
-    }
-
-    /**
-     * ClasspathRepo can make an instance with configurable {@code #toString()}.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public void makesConfigurableInstance() throws Exception {
-        final String[] types = new String[] {
-            "com.rultor.repo.CompositeTest$Foo",
-            "com.rultor.repo.CompositeTest$Bar",
-        };
-        for (String type : types) {
-            final Variable<?> composite = new Composite(
-                type,
-                Arrays.<Variable<?>>asList()
-            );
-            final Object object = composite.instantiate(
-                Mockito.mock(Users.class),
-                new Arguments(
-                    Mockito.mock(Coordinates.class), new Wallet.Empty()
-                )
-            );
-            MatcherAssert.assertThat(
-                object,
-                Matchers.hasToString(Matchers.notNullValue())
-            );
-            final String value = "hi there!";
-            object.getClass().getMethod(Composite.METHOD, String.class)
-                .invoke(object, value);
-            MatcherAssert.assertThat(object, Matchers.hasToString(value));
-            MatcherAssert.assertThat(
-                object, Matchers.instanceOf(Class.forName(type))
-            );
-        }
-    }
-
-    /**
-     * Test class.
-     */
-    public static final class Foo {
-    }
-
-    /**
-     * Test class.
-     */
-    @Immutable
-    @ToString
-    @EqualsAndHashCode
-    public static final class Bar {
     }
 
 }

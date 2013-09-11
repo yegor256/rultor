@@ -44,6 +44,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.Charsets;
 
 /**
@@ -56,6 +57,7 @@ import org.apache.commons.io.Charsets;
  * @see <a href="http://tools.ietf.org/html/rfc5424">RFC 5424</a>
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "host", "port", "priority" })
 @Loggable(Loggable.DEBUG)
 public final class Syslog implements Drain {
@@ -97,17 +99,6 @@ public final class Syslog implements Drain {
     public Syslog(final String hst, final int prt) {
         // @checkstyle MagicNumber (1 line)
         this(hst, prt, 14);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "`syslog://%s:%s`",
-            this.host, this.port
-        );
     }
 
     /**

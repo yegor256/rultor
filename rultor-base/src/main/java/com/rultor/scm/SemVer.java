@@ -45,6 +45,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Branches sorted according to SemVer recommendations.
@@ -55,6 +56,7 @@ import lombok.EqualsAndHashCode;
  * @see <a href="http://semver.org/">Semantic Versioning</a>
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "scm", "regex" })
 @Loggable(Loggable.DEBUG)
 public final class SemVer implements SCM {
@@ -79,14 +81,6 @@ public final class SemVer implements SCM {
         @NotNull(message = "SCM can't be NULL") final SCM src) {
         this.scm = src;
         this.regex = reg;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("semantic branches in %s", this.scm);
     }
 
     /**

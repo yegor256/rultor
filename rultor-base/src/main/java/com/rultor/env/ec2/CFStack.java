@@ -47,6 +47,7 @@ import java.net.InetAddress;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * CloudFormation stack.
@@ -56,6 +57,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "name", "client" })
 @Loggable(Loggable.DEBUG)
 final class CFStack implements Environment {
@@ -78,17 +80,6 @@ final class CFStack implements Environment {
     protected CFStack(final String stack, final CFClient clnt) {
         this.name = stack;
         this.client = clnt;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "CloudFormation stack `%s` accessed with %s",
-            this.name, this.client
-        );
     }
 
     /**
