@@ -132,7 +132,9 @@ final class Job {
      * Make a variable.
      * @param owner Owner of the spec
      * @param spec Spec itself
+     * @return Variable
      * @throws SpecException If fails
+     * @checkstyle RedundantThrows (5 lines)
      */
     private Variable<?> var(final User owner, final Spec spec)
         throws SpecException {

@@ -159,7 +159,7 @@ final class RestRule implements Rule {
                 .header(HttpHeaders.AUTHORIZATION, this.token)
                 .get(String.format("preparing for #drain(%s)", spec))
                 .assertStatus(HttpURLConnection.HTTP_OK)
-                .rel("/page/links/link[@rel='save']/@href")
+                .rel("/page/links/link[@rel = 'save']/@href")
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .post(
                     String.format("#drain(%s)", spec.asText()),
