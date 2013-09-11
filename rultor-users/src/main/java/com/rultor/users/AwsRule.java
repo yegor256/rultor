@@ -147,6 +147,7 @@ final class AwsRule implements Rule {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public String name() {
         return this.item.get(AwsRule.RANGE_NAME).getS();
     }
@@ -168,6 +169,7 @@ final class AwsRule implements Rule {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Spec drain() {
         Spec spec;
         if (this.item.has(AwsRule.FIELD_DRAIN)) {
@@ -179,6 +181,7 @@ final class AwsRule implements Rule {
     }
 
     @Override
+    @Cacheable.FlushAfter
     public void failure(final String desc) {
         this.item.put(
             new Attributes()
@@ -189,6 +192,7 @@ final class AwsRule implements Rule {
     }
 
     @Override
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public String failure() {
         final String failure;
         if (this.item.has(AwsRule.FIELD_FAILURE)) {
