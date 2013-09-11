@@ -104,7 +104,7 @@ final class Job {
      * Process given work.
      * @param decor Decorator to use
      */
-    @Loggable(value = Loggable.INFO, limit = Integer.MAX_VALUE)
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void process(final Job.Decor decor) {
         final User owner = this.users.get(this.work.owner());
