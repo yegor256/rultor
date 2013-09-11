@@ -126,7 +126,7 @@ final class FakeUser implements User {
                     }
                     @Override
                     public String failure() {
-                        throw new UnsupportedOperationException();
+                        return "";
                     }
                 };
             }
