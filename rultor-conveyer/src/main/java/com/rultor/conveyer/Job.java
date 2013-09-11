@@ -103,9 +103,9 @@ final class Job {
     /**
      * Process given work.
      * @param decor Decorator to use
-     * @throws Exception If fails
      */
     @Loggable(value = Loggable.INFO, limit = Integer.MAX_VALUE)
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void process(final Job.Decor decor) {
         final User owner = this.users.get(this.work.owner());
         final Rule rule = owner.rules().get(this.work.rule());
@@ -114,6 +114,7 @@ final class Job {
                 this.make(owner, rule, decor).pulse();
             } catch (SpecException ex) {
                 rule.failure(Exceptions.stacktrace(ex));
+            // @checkstyle IllegalCatch (1 line)
             } catch (Exception ex) {
                 throw new IllegalArgumentException(ex);
             }
@@ -126,6 +127,8 @@ final class Job {
      * @param rule The rule to use
      * @param decor Decorator to use
      * @return Instance
+     * @throws SpecException If incorrect spec
+     * @checkstyle RedundantThrows (4 lines)
      */
     private Instance make(final User owner, final Rule rule,
         final Job.Decor decor) throws SpecException {
@@ -133,7 +136,7 @@ final class Job {
         Instance instance = new Instance() {
             @Override
             public void pulse() throws Exception {
-                // nothing to do
+                assert var != null;
             }
         };
         if (var.arguments().isEmpty()) {
