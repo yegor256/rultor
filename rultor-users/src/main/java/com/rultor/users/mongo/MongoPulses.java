@@ -105,6 +105,7 @@ final class MongoPulses implements Pageable<Pulse, Coordinates> {
     @Override
     public Iterator<Pulse> iterator() {
         final DBCursor cursor = this.collection().find(this.query());
+        cursor.batchSize(1);
         cursor.sort(new BasicDBObject(MongoStand.ATTR_UPDATED, -1));
         this.close(cursor);
         // @checkstyle AnonInnerLength (50 lines)
