@@ -60,13 +60,10 @@
     </nav>
     <balance>$5.90</balance>
     <millis>1869</millis>
-    <face>
-        <type>com.rultor.Something</type>
-        <drainable>true</drainable>
-        <html>some very long text to show, some very &lt;code&gt;long text&lt;/code&gt; to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, </html>
-    </face>
     <rule>
         <name>nightly-build</name>
+        <failure>something went wrong</failure>
+        <exception>something went wrong</exception>
         <spec>com.rultor.ci.NightlyBuild(
     git,
     ec2,
