@@ -86,6 +86,8 @@
         <p class="alert alert-danger"><xsl:value-of select="."/></p>
     </xsl:template>
     <xsl:template match="failure">
-        <pre class="text-danger"><xsl:value-of select="."/></pre>
+        <xsl:if test=". != ''">
+            <pre class="text-danger"><xsl:value-of select="."/></pre>
+        </xsl:if>
     </xsl:template>
 </xsl:stylesheet>
