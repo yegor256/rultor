@@ -104,6 +104,7 @@ final class Job {
      * @param decor Decorator to use
      * @throws Exception If fails
      */
+    @Loggable(value = Loggable.INFO, limit = Integer.MAX_VALUE)
     public void process(final Job.Decor decor) throws Exception {
         final User owner = this.users.get(this.work.owner());
         final Rule rule = owner.rules().get(this.work.rule());

@@ -17,8 +17,6 @@ urn:github:526301:git-on-commit(
   "mvn test -e -Pci --settings /home/ubuntu/settings.xml",
   ["me@example.com"],
   "m1.small",
-  "example",
-  "super-secret",
   {
     "settings.xml": """
     <settings>
@@ -43,7 +41,7 @@ receive control
 (see [full syntax description](./rultor-spi/apidocs-${project.version}/com/rultor/spi/Spec.html)).
 In this example, the object will be constructed from
 a template defined by user `urn:github:526301` with `git-on-commit` name.
-The template requires eight parameters. The first one is the URL
+The template requires five parameters. The first one is the URL
 of Git repository, as a Java string:
 
 ```
@@ -72,11 +70,6 @@ rule will create a new Amazon Web Services EC2 instance, execute your script, an
 terminate the instance. Your account will be charged for the price of the
 instance, approximately. Prices and instance types are listed in
 [AWS documention](http://aws.amazon.com/ec2/pricing/).
-
-The fifth and the sixth parameters are access credentials for a "_stand_", which
-is a public showcase of all rules in a project (will be discussed a bit later). In
-the example, credentials are not valid since you haven't create a stand yet.
-Stand name is `example` and authentication key is `super-secret`.
 
 The last parameter is a map of files to be uploaded to the EC2 instance
 before running the build script. They will be uploaded into `/home/ubuntu` directory,
@@ -173,6 +166,21 @@ integration rule which runs, say three times per working day, using `m1.small`
 type of EC2 instance, your total cost will be $3.60 per month. This is less
 than the allowance you get automatically from us and you don't need to fund
 your account at all.
+
+${hash}${hash} #anchor("stand") Drain
+
+A "_drain_" is where your rules log their events. Every rule has its own drain
+configured with its own spec. For example, you can configure it like:
+
+```
+urn:github:526301:ftp-drain("example", "secret-code")
+```
+
+In this example we're using a template `ftp-drain` provided by
+`urn:github:526301`. This template logs all events to a private FTP server
+of that user and filters out non-important pulses. This template requires
+two parameters. The first one is the name of a "_stand_" and the second
+one is it authentication code.
 
 ${hash}${hash} #anchor("stand") Stand
 
@@ -373,8 +381,6 @@ urn:github:526301:git-on-tag(
   "mvn deploy -e -Pci --settings /home/ubuntu/settings.xml",
   ["me@example.com"],
   "m1.small",
-  "example",
-  "super-secret",
   {
     "settings.xml": """
     <settings>
@@ -434,7 +440,6 @@ urn:github:526301:github-on-pull-request(
   "m1.small",
   "mvn clean install -B -C",
   "rultor",
-  "... authentication code for the stand ...",
   ["yegor256"],
   ".*good.*",
   {".ssh/id_rsa": github-ssh-key()}
