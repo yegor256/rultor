@@ -64,6 +64,9 @@ public final class AssignedTo implements Approval {
         this.user = assignee;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean has(final PullRequest request, final Github client,
         final Github.Repo repo) throws IOException {
