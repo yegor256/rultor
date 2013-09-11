@@ -36,6 +36,7 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.eclipse.egit.github.core.PullRequest;
+import org.eclipse.egit.github.core.User;
 
 /**
  * Approves assigned user.
@@ -66,6 +67,11 @@ public final class AssignedTo implements Approval {
     @Override
     public boolean has(final PullRequest request, final Github client,
         final Github.Repo repo) throws IOException {
-        return this.user.equals(request.getAssignee().getLogin());
+        final User assignee = request.getAssignee();
+        boolean has = false;
+        if (assignee != null) {
+            has = this.user.equals(assignee.getLogin());
+        }
+        return has;
     }
 }
