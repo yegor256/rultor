@@ -319,7 +319,7 @@ final class Testing implements Profile {
         }
         @Override
         public String failure() {
-            throw new UnsupportedOperationException();
+            return "";
         }
     }
 

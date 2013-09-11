@@ -90,6 +90,8 @@ public final class RuleRs extends BaseRs {
                 new JaxbBundle("rule")
                     .add("name", this.name)
                     .up()
+                    .add("failure", rule.failure())
+                    .up()
                     .add("spec", rule.spec().asText())
                     .up()
                     .add("drain", rule.drain().asText())
@@ -146,6 +148,8 @@ public final class RuleRs extends BaseRs {
                 .append(
                     new JaxbBundle("rule")
                         .add("name", this.name)
+                        .up()
+                        .add("failure", this.rule().failure())
                         .up()
                         .add("spec", spec)
                         .up()

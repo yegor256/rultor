@@ -75,6 +75,11 @@
         <div class="spacious">
             <ul class="list-inline">
                 <li>
+                    <xsl:attribute name="class">
+                        <xsl:if test="failure != ''">
+                            <xsl:text>text-danger</xsl:text>
+                        </xsl:if>
+                    </xsl:attribute>
                     <a title="view drain of the rule">
                         <xsl:attribute name="href">
                             <xsl:value-of select="links/link[@rel='drain']/@href"/>
@@ -99,6 +104,15 @@
                         <i class="icon-remove"><xsl:comment>remove</xsl:comment></i>
                     </a>
                 </li>
+                <xsl:if test="failure != ''">
+                    <li class="icon text-danger">
+                        <a onclick="$(this).parent().find('.failure').toggle();"
+                            title="show the failure">
+                            <i class="icon-warning-sign"><xsl:comment>failure</xsl:comment></i>
+                        </a>
+                        <pre class="text-danger" style="display:none"><xsl:value-of select="failure"/></pre>
+                    </li>
+                </xsl:if>
             </ul>
         </div>
     </xsl:template>
