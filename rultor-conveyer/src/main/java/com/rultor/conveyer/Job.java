@@ -43,6 +43,7 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import com.rultor.tools.Exceptions;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -105,28 +106,53 @@ final class Job {
      * @throws Exception If fails
      */
     @Loggable(value = Loggable.INFO, limit = Integer.MAX_VALUE)
-    public void process(final Job.Decor decor) throws Exception {
+    public void process(final Job.Decor decor) {
         final User owner = this.users.get(this.work.owner());
         final Rule rule = owner.rules().get(this.work.rule());
+        try {
+            this.make(owner, rule, decor).pulse();
+        } catch (SpecException ex) {
+            rule.failure(Exceptions.stacktrace(ex));
+        } catch (Exception ex) {
+            throw new IllegalArgumentException(ex);
+        }
+    }
+
+    /**
+     * Make an instance to run.
+     * @param owner Owner of it
+     * @param rule The rule to use
+     * @param decor Decorator to use
+     * @return Instance
+     */
+    private Instance make(final User owner, final Rule rule,
+        final Job.Decor decor) throws SpecException {
         final Variable<?> var = this.var(owner, rule.spec());
+        Instance instance = new Instance() {
+            @Override
+            public void pulse() throws Exception {
+                // nothing to do
+            }
+        };
         if (var.arguments().isEmpty()) {
             final Arguments args = new Arguments(
                 this.work, new OwnWallet(this.work, rule)
             );
-            final Object instance = var.instantiate(this.users, args);
+            final Object inst = var.instantiate(this.users, args);
             final Object drain = this.var(owner, rule.drain())
                 .instantiate(this.users, args);
-            if (instance instanceof Instance) {
-                new ThreadGroupSpy(
+            if (inst instanceof Instance) {
+                instance = new ThreadGroupSpy(
                     this.work,
                     new WithSpec(
                         rule.spec(),
-                        decor.decorate(Instance.class.cast(instance))
+                        decor.decorate(Instance.class.cast(inst))
                     ),
                     Drain.class.cast(drain)
-                ).pulse();
+                );
             }
         }
+        return instance;
     }
 
     /**

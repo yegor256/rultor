@@ -141,7 +141,7 @@ final class SimpleConveyer implements Closeable {
         final Runnable runnable = new VerboseRunnable(
             new Callable<Void>() {
                 @Override
-                public Void call() throws Exception {
+                public Void call() throws InterruptedException {
                     SimpleConveyer.this.process();
                     return null;
                 }
@@ -191,9 +191,9 @@ final class SimpleConveyer implements Closeable {
 
     /**
      * Process the next work from the queue.
-     * @throws Exception If fails
+     * @throws InterruptedException If interrupted
      */
-    private void process() throws Exception {
+    private void process() throws InterruptedException {
         final Coordinates work = this.queue.pull(1, TimeUnit.SECONDS);
         if (!work.equals(new Coordinates.None())) {
             this.process(work);
@@ -205,7 +205,7 @@ final class SimpleConveyer implements Closeable {
      * @param work Work to process
      * @throws Exception If fails
      */
-    private void process(final Coordinates work) throws Exception {
+    private void process(final Coordinates work) {
         this.threads.label(work.toString());
         final String key = this.streams.register();
         try {
