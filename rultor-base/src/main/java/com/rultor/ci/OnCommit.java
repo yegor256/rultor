@@ -113,8 +113,8 @@ public final class OnCommit implements Instance {
      * @throws IOException If some IO problem
      */
     @Step(
-        before = "building `${args[0]}`",
-        value = "built successfully `${args[0]}`"
+        before = "building `${args[0].name}`",
+        value = "built successfully `${args[0].name}`"
     )
     private void build(final Commit head) throws IOException {
         this.tag(head);
