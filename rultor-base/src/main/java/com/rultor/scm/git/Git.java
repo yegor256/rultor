@@ -135,7 +135,7 @@ public final class Git implements SCM {
         this.terminal.exec(
             new StringBuilder(this.reset())
                 .append(" && BRANCH=")
-                .append(Terminal.escape(name))
+                .append(Terminal.quotate(Terminal.escape(name)))
                 // @checkstyle LineLength (2 lines)
                 .append(" && if [ $(git rev-parse --abbrev-ref HEAD) != $BRANCH ]; then git checkout $BRANCH; fi")
                 .append(" && if git for-each-ref refs/heads/$BRANCH | grep commit; then git pull; fi")
@@ -183,9 +183,9 @@ public final class Git implements SCM {
     private String reset() {
         return new StringBuilder()
             .append("DIR=$(pwd)/")
-            .append(Terminal.escape(this.dir))
+            .append(Terminal.quotate(Terminal.escape(this.dir)))
             .append(" && URL=")
-            .append(Terminal.escape(this.url))
+            .append(Terminal.quotate(Terminal.escape(this.url)))
             .append(" && mkdir -p \"$DIR\"")
             .append(" && ( cat > \"$DIR/id_rsa\" )")
             // @checkstyle LineLength (1 line)
