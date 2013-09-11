@@ -71,34 +71,40 @@ final class JaxbFace {
     private final transient Users users;
 
     /**
+     * User.
+     */
+    private final transient User user;
+
+    /**
      * Public ctor.
      * @param rpo Repo
      * @param usrs Users
+     * @param usr User we're working with
      */
-    protected JaxbFace(final Repo rpo, final Users usrs) {
+    protected JaxbFace(final Repo rpo, final Users usrs, final User usr) {
         this.repo = rpo;
         this.users = usrs;
+        this.user = usr;
     }
 
     /**
      * Build bundle.
-     * @param user URN of the user
      * @param rule Rule of the user
      * @return Bundle
      */
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    public JaxbBundle bundle(final User user, final Rule rule) {
+    public JaxbBundle bundle(final Rule rule) {
         final Spec spec = rule.spec();
         JaxbBundle bundle = new JaxbBundle("face");
         try {
             final Variable<?> var = new Repo.Cached(
-                this.repo, user, spec
+                this.repo, this.user, spec
             ).get();
             if (var.arguments().isEmpty()) {
                 final Object object = var.instantiate(
                     this.users,
                     new Arguments(
-                        this.coordinates(user.urn(), rule.name()),
+                        this.coordinates(this.user.urn(), rule.name()),
                         new Wallet.Empty()
                     )
                 );
