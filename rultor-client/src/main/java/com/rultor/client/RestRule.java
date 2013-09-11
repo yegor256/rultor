@@ -96,8 +96,11 @@ final class RestRule implements Rule {
                 .post(
                     String.format("#spec(%s)", spec.asText()),
                     String.format(
-                        "spec=%s",
-                        URLEncoder.encode(spec.asText(), CharEncoding.UTF_8)
+                        "spec=%s&drain=%s",
+                        URLEncoder.encode(spec.asText(), CharEncoding.UTF_8),
+                        URLEncoder.encode(
+                            this.drain().asText(), CharEncoding.UTF_8
+                        )
                     )
                 )
                 .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
@@ -150,7 +153,28 @@ final class RestRule implements Rule {
      */
     @Override
     public void drain(final Spec spec) {
-        throw new UnsupportedOperationException();
+        try {
+            RestTester.start(UriBuilder.fromUri(this.home))
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
+                .get(String.format("preparing for #drain(%s)", spec))
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .rel("/page/links/link[@rel='save']/@href")
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .post(
+                    String.format("#drain(%s)", spec.asText()),
+                    String.format(
+                        "drain=%s&spec=%s",
+                        URLEncoder.encode(spec.asText(), CharEncoding.UTF_8),
+                        URLEncoder.encode(
+                            this.spec().asText(), CharEncoding.UTF_8
+                        )
+                    )
+                )
+                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+        } catch (UnsupportedEncodingException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**
@@ -158,7 +182,15 @@ final class RestRule implements Rule {
      */
     @Override
     public Spec drain() {
-        throw new UnsupportedOperationException();
+        return new Spec.Simple(
+            RestTester.start(UriBuilder.fromUri(this.home))
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
+                .get("#drain()")
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .xpath("/page/rule/drain/text()")
+                .get(0)
+        );
     }
 
 }
