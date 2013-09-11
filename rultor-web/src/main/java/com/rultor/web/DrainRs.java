@@ -189,7 +189,9 @@ public final class DrainRs extends BaseRs {
                 .instantiate(
                     this.users(),
                     new Arguments(
-                        new Coordinates.Simple(this.user().urn(), this.name, time),
+                        new Coordinates.Simple(
+                            this.user().urn(), this.name, time
+                        ),
                         new Wallet.Empty()
                     )
                 );
