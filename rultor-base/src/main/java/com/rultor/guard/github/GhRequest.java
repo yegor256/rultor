@@ -41,6 +41,7 @@ import com.rultor.snapshot.Step;
 import com.rultor.snapshot.XSLT;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
+import com.rultor.tools.Vext;
 import java.io.IOException;
 import java.util.Map;
 import javax.xml.transform.TransformerException;
@@ -136,20 +137,21 @@ final class GhRequest implements MergeRequest {
     @Override
     @Step("notified GitHub pull request that merging started")
     public void started() throws IOException {
-        final StringBuilder text = new StringBuilder()
-            .append("Let me test your branch first (may take a few):\n\n")
-            .append("<table><tbody>\n");
-        for (Map.Entry<String, Object> entry : this.parameters.entrySet()) {
-            text.append("<tr><td>")
-                .append(entry.getKey())
-                .append("</td><td>")
-                .append(entry.getValue())
-                .append("</td></tr>\n");
-        }
-        text.append("</tbody></table>");
         final GitHubClient client = this.github.client();
         final IssueService issues = new IssueService(client);
-        issues.createComment(this.repository, this.issue, text.toString());
+        issues.createComment(
+            this.repository, this.issue,
+            new Vext(
+                new StringBuilder()
+                    .append("Hey, let me test your `${headUser}/${headRepo}`")
+                    .append(" branch first, ")
+                    .append(" this may take a few minutes. If there won't")
+                    .append(" be any errors I'll merge it into `${baseBranch}`")
+                    .append(" branch of `${baseUser}/${baseRepo}`. I'll let")
+                    .append(" you know in any case...")
+                    .toString()
+            ).print(this.parameters)
+        );
     }
 
     /**
