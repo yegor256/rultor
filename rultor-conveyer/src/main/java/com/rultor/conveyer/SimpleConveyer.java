@@ -203,7 +203,6 @@ final class SimpleConveyer implements Closeable {
     /**
      * Process this given work.
      * @param work Work to process
-     * @throws Exception If fails
      */
     private void process(final Coordinates work) {
         this.threads.label(work.toString());
