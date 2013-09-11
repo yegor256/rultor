@@ -32,6 +32,7 @@ package com.rultor.scm;
 import com.google.common.collect.Iterators;
 import com.rultor.tools.Time;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 import javax.validation.ConstraintViolationException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -69,10 +70,8 @@ public final class SeasonedTest {
                 aftercommit
             )
         ).when(origin).log();
-        final long secofmin = 60;
-        final long millisofsec = 1000;
-        final long beforetime = 3 * secofmin * millisofsec;
-        final long aftertime = 1 * secofmin * millisofsec;
+        final long beforetime = TimeUnit.MINUTES.toMillis(3);
+        final long aftertime = TimeUnit.MINUTES.toMillis(1);
         final long currenttime = System.currentTimeMillis();
         Mockito.doReturn(
             new Time(currenttime - beforetime)

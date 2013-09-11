@@ -36,6 +36,7 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
@@ -68,9 +69,7 @@ public final class Seasoned implements Branch {
     public Seasoned(final int min,
         @NotNull(message = "branch can't be NULL") final Branch brn) {
         this.origin = brn;
-        final long secofmin = 60;
-        final long millisofsec = 1000;
-        this.commitsAfter = min * secofmin * millisofsec;
+        this.commitsAfter = TimeUnit.MINUTES.toMillis(min);
     }
 
     /**
