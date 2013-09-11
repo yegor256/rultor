@@ -315,7 +315,7 @@ final class Testing implements Profile {
         }
         @Override
         public Spec drain() {
-            throw new UnsupportedOperationException();
+            return new Spec.Simple("com.rultor.drain.Trash()");
         }
     }
 

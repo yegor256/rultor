@@ -72,5 +72,6 @@
     ec2,
     "ant"
 )</spec>
+        <drain>com.rultor.drain.Trash()</drain>
     </rule>
 </page>

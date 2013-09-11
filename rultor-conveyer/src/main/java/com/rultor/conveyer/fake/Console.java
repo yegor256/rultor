@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.drain;
+package com.rultor.conveyer.fake;
 
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
