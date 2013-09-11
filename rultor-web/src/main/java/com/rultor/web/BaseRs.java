@@ -30,7 +30,6 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Timeable;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.rexsl.page.BasePage;
@@ -322,7 +321,6 @@ public class BaseRs extends BaseResource {
      * Get balance of the current user.
      * @return His balance
      */
-    @Timeable
     private Dollars balance() {
         return this.user().account().balance();
     }

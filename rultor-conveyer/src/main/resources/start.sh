@@ -39,6 +39,7 @@ export M2_HOME="/usr/local/share/apache-maven"
 export PATH="${M2_HOME}/bin:/usr/local/bin:${PATH}"
 export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=256m"
 
+VERSION=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.version'`
 SQS_URL=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.url'`
 SQS_WALLET_URL=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.wallet_url'`
 DYNAMO_PREFIX=`curl --silent http://169.254.169.254/latest/user-data | jq -r '.prefix'`
