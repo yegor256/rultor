@@ -120,7 +120,9 @@ final class FakeUser implements User {
                     }
                     @Override
                     public Spec drain() {
-                        throw new UnsupportedOperationException();
+                        return new Spec.Simple(
+                            "com.rultor.conveyer.fake.Console()"
+                        );
                     }
                 };
             }

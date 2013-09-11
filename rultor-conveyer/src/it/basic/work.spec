@@ -1,1 +1,1 @@
-com.rultor.base.Empty(${wallet}, ${work})
+com.rultor.base.Empty([${wallet}, ${work}])
