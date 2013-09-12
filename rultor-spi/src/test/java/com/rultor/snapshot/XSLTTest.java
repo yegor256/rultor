@@ -78,20 +78,14 @@ public final class XSLTTest {
     public void producesText() throws Exception {
         MatcherAssert.assertThat(
             new XSLT(
-                new Snapshot(
-                    new Directives()
-                        .xpath("/snapshot")
-                ),
-                // @checkstyle StringLiteralsConcatenation (9 lines)
+                new Snapshot(new Directives().xpath("/snapshot")),
+                // @checkstyle StringLiteralsConcatenation (6 lines)
                 "<xsl:stylesheet "
                 + "xmlns:xsl='http://www.w3.org/1999/XSL/Transform' "
                 + "version='2.0'> "
-                + "<xsl:output method='text'/>"
-                + "<xsl:template match='/snapshot'>"
-                + "<xsl:text>first&#x0A;</xsl:text>"
-                + "<xsl:text>second</xsl:text>"
-                + "</xsl:template> "
-                + "</xsl:stylesheet>"
+                + "<xsl:output method='text'/><xsl:template match='/snapshot'>"
+                + "<xsl:text>first&#x0A;</xsl:text><xsl:text>second</xsl:text>"
+                + "</xsl:template></xsl:stylesheet> "
             ).xml(),
             Matchers.equalTo("first\nsecond")
         );
