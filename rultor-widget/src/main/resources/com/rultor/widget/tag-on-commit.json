@@ -1,0 +1,14 @@
+{
+    "description": "'on-commit' tag in a pulse",
+    "type":"object",
+    "required": ["code", "duration"],
+    "additionalProperties": false,
+    "properties": {
+        "code": {
+            "type": "number"
+        },
+        "duration": {
+            "type": "number"
+        }
+    }
+}

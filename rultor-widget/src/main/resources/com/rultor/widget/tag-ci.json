@@ -1,0 +1,19 @@
+{
+    "description": "'ci' tag in a pulse",
+    "type":"object",
+    "required": ["name", "author", "time"],
+    "additionalProperties": false,
+    "properties": {
+        "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+        },
+        "author": {
+            "type": "string"
+        },
+        "time": {
+            "type": "string",
+            "format": "date-time"
+        }
+    }
+}

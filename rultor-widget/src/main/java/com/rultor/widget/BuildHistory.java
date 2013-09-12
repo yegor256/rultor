@@ -36,7 +36,10 @@ import com.jcabi.aspects.Tv;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
+import com.rultor.spi.Tags;
 import com.rultor.spi.Widget;
+import com.rultor.tools.Exceptions;
+import com.rultor.tools.NormJson;
 import com.rultor.tools.Time;
 import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
@@ -58,6 +61,20 @@ import org.xembly.Directives;
 public final class BuildHistory implements Widget {
 
     /**
+     * JSON schema for "ci" tag.
+     */
+    private static final NormJson TAG_CI = new NormJson(
+        BuildHealth.class.getResourceAsStream("tag-ci.json")
+    );
+
+    /**
+     * JSON schema for "on-commit" tag.
+     */
+    private static final NormJson TAG_ONCOMMIT = new NormJson(
+        BuildHealth.class.getResourceAsStream("tag-on-commit.json")
+    );
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -72,7 +89,11 @@ public final class BuildHistory implements Widget {
             if (!pulse.tags().contains("ci")) {
                 continue;
             }
-            dirs = dirs.append(this.render(pulse));
+            try {
+                dirs = dirs.append(this.render(pulse));
+            } catch (NormJson.JsonException ex) {
+                Exceptions.info(this, ex);
+            }
         }
         return dirs;
     }
@@ -81,10 +102,15 @@ public final class BuildHistory implements Widget {
      * Convert pulse to directives.
      * @param pulse Pulse to convert
      * @return Directives
+     * @throws NormJson.JsonException If can't parse
+     * @checkstyle RedundantThrows (5 lines)
      */
-    private Directives render(final Pulse pulse) {
-        final JsonObject commit = pulse.tags().get("on-commit").data();
-        final JsonObject scm = pulse.tags().get("ci").data();
+    private Directives render(final Pulse pulse)
+        throws NormJson.JsonException {
+        final Tags tags = pulse.tags();
+        final JsonObject commit = tags.get("on-commit")
+            .data(BuildHistory.TAG_ONCOMMIT);
+        final JsonObject scm = tags.get("ci").data(BuildHistory.TAG_CI);
         final Coordinates coords = pulse.coordinates();
         return new Directives().add("build")
             .add("coordinates")

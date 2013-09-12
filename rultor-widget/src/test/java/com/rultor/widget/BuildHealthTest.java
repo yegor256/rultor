@@ -171,13 +171,7 @@ public final class BuildHealthTest {
         new Xembler(widget.render(stand)).apply(dom);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(dom),
-            XhtmlMatchers.hasXPaths(
-                "/widget/builds/build/commit[name='???????']",
-                "/widget/builds/build/commit[author='unknown']",
-                "/widget/builds/build[duration='0']",
-                "/widget/builds/build[code='0']",
-                "/widget/builds/build[health='1.0']"
-            )
+            XhtmlMatchers.hasXPath("/widget/builds[count(build)=0]")
         );
     }
 
@@ -198,7 +192,24 @@ public final class BuildHealthTest {
         ).when(first).coordinates();
         Mockito.doReturn(
             new Tags.Simple(
-                Arrays.<Tag>asList(new Tag.Simple("on-commit", Level.SEVERE))
+                Arrays.<Tag>asList(
+                    new Tag.Simple(
+                        "ci", Level.INFO,
+                        Json.createReader(
+                            new StringReader(
+                                // @checkstyle LineLength (1 line)
+                                "{\"name\":\"x\",\"author\":\"x\",\"time\":\"2011-07-21T12:15:00Z\"}"
+                            )
+                        ).readObject(), ""
+                    ),
+                    new Tag.Simple(
+                        "on-commit", Level.SEVERE,
+                        Json.createReader(
+                            new StringReader("{\"code\":5,\"duration\":970}")
+                        ).readObject(),
+                        ""
+                    )
+                )
             )
         ).when(first).tags();
         final Pulse second = Mockito.mock(Pulse.class);
@@ -207,7 +218,24 @@ public final class BuildHealthTest {
         ).when(second).coordinates();
         Mockito.doReturn(
             new Tags.Simple(
-                Arrays.<Tag>asList(new Tag.Simple("on-commit", Level.INFO))
+                Arrays.<Tag>asList(
+                    new Tag.Simple(
+                        "ci", Level.INFO,
+                        Json.createReader(
+                            new StringReader(
+                                // @checkstyle LineLength (1 line)
+                                "{\"name\":\"y\",\"author\":\"y\",\"time\":\"2011-07-21T12:15:00Z\"}"
+                            )
+                        ).readObject(), ""
+                    ),
+                    new Tag.Simple(
+                        "on-commit", Level.SEVERE,
+                        Json.createReader(
+                            new StringReader("{\"code\":7,\"duration\":970}")
+                        ).readObject(),
+                        ""
+                    )
+                )
             )
         ).when(second).tags();
         final Pageable<Pulse, Coordinates> pulses =

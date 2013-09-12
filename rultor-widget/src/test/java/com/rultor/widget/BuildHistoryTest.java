@@ -183,12 +183,7 @@ public final class BuildHistoryTest {
         new Xembler(widget.render(stand)).apply(dom);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(dom),
-            XhtmlMatchers.hasXPaths(
-                "/widget/builds/build/commit[name='???????']",
-                "/widget/builds/build/commit[author='unknown']",
-                "/widget/builds/build[duration='0']",
-                "/widget/builds/build[code='0']"
-            )
+            XhtmlMatchers.hasXPath("/widget/builds[count(build)=0]")
         );
     }
 

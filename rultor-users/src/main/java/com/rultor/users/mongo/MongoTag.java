@@ -34,9 +34,8 @@ import com.jcabi.aspects.Loggable;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.rultor.spi.Tag;
-import java.io.StringReader;
+import com.rultor.tools.NormJson;
 import java.util.logging.Level;
-import javax.json.Json;
 import javax.json.JsonObject;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -156,11 +155,13 @@ final class MongoTag implements Tag {
 
     /**
      * {@inheritDoc}
+     * @checkstyle RedundantThrows (6 lines)
      */
     @Override
     @NotNull(message = "data is never NULL")
-    public JsonObject data() {
-        return Json.createReader(new StringReader(this.json)).readObject();
+    public JsonObject data(final NormJson schema)
+        throws NormJson.JsonException {
+        return schema.readObject(this.json);
     }
 
     /**
