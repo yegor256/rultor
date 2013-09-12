@@ -180,8 +180,8 @@ final class MongoStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public void acl(final Spec spec) {
-        this.origin.acl(spec);
+    public void update(final Spec spec, final Spec widgets) {
+        this.origin.update(spec, widgets);
     }
 
     /**
@@ -198,14 +198,6 @@ final class MongoStand implements Stand {
     @Override
     public Spec widgets() {
         return this.origin.widgets();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void widgets(final Spec spec) {
-        this.origin.widgets(spec);
     }
 
     /**

@@ -134,15 +134,6 @@ public final class StandsRs extends BaseRs {
             )
             .link(
                 new Link(
-                    "widgets",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(WidgetsRs.class)
-                        .build(stand.name())
-                )
-            )
-            .link(
-                new Link(
                     "see",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()

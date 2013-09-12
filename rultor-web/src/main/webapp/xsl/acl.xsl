@@ -43,7 +43,7 @@
             </xsl:attribute>
             <fieldset>
                 <div class="form-group">
-                    <label for="spec" class="hidden-phone">
+                    <label for="acl" class="hidden-phone">
                         <xsl:text>Access Control List of </xsl:text>
                         <code><xsl:value-of select="/page/stand/name"/></code>
                         <xsl:text> </xsl:text>
@@ -51,8 +51,21 @@
                             <xsl:text>what is it?</xsl:text>
                         </a>
                     </label>
-                    <textarea name="spec" id="spec" rows="18" class="form-control">
+                    <textarea name="acl" id="acl" rows="8" class="form-control">
                         <xsl:value-of select="/page/stand/acl"/>
+                    </textarea>
+                </div>
+                <div class="form-group">
+                    <label for="widgets" class="hidden-phone">
+                        <xsl:text>Widgets of </xsl:text>
+                        <code><xsl:value-of select="/page/stand/name"/></code>
+                        <xsl:text> </xsl:text>
+                        <a href="http://doc.rultor.com/start.html#widgets">
+                            <xsl:text>what is it?</xsl:text>
+                        </a>
+                    </label>
+                    <textarea name="widgets" id="widgets" rows="6" class="form-control">
+                        <xsl:value-of select="/page/stand/widgets"/>
                     </textarea>
                 </div>
                 <div class="form-group">

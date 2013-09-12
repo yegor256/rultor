@@ -85,20 +85,21 @@ final class RestStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public void acl(final Spec spec) {
+    public void update(final Spec spec, final Spec widgets) {
         try {
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get(String.format("preparing for #acl(%s)", spec))
+                .get(String.format("preparing for #update(%s)", spec))
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .rel("/page/links/link[@rel='save']/@href")
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .post(
-                    String.format("#spec(%s)", spec.asText()),
+                    "#update(..)",
                     String.format(
-                        "spec=%s",
-                        URLEncoder.encode(spec.asText(), CharEncoding.UTF_8)
+                        "spec=%s&widgets=%s",
+                        URLEncoder.encode(spec.asText(), CharEncoding.UTF_8),
+                        URLEncoder.encode(widgets.asText(), CharEncoding.UTF_8)
                     )
                 )
                 .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
@@ -119,6 +120,22 @@ final class RestStand implements Stand {
                 .get("#spec()")
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .xpath("/page/stand/acl/text()")
+                .get(0)
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spec widgets() {
+        return new Spec.Simple(
+            RestTester.start(UriBuilder.fromUri(this.home))
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
+                .get("#widgets()")
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .xpath("/page/stand/widgets/text()")
                 .get(0)
         );
     }
@@ -167,22 +184,6 @@ final class RestStand implements Stand {
     @Override
     public void post(final Coordinates pulse, final long nano,
         final String xembly) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Spec widgets() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void widgets(final Spec spec) {
         throw new UnsupportedOperationException();
     }
 

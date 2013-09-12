@@ -66,10 +66,13 @@ public interface Stand {
     URN owner();
 
     /**
-     * Update ACL.
-     * @param spec Spec to save
+     * Update it.
+     * @param acl ACL to save
+     * @param widgets Widgets spec to save
      */
-    void acl(@NotNull(message = "ACL can't be NULL") Spec spec);
+    void update(
+        @NotNull(message = "ACL can't be NULL") Spec acl,
+        @NotNull(message = "spec of widgets is never NULL") Spec widgets);
 
     /**
      * Get its ACL.
@@ -102,14 +105,6 @@ public interface Stand {
      */
     @NotNull(message = "spec of widgets is never NULL")
     Spec widgets();
-
-    /**
-     * Save spec of widgets.
-     * @param spec Spec to save
-     */
-    void widgets(
-        @NotNull(message = "spec of widgets is never NULL")
-        Spec spec);
 
     /**
      * When Xembly can't be accepted.
