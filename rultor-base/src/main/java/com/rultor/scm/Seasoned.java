@@ -48,7 +48,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "origin", "time" })
+@EqualsAndHashCode(of = { "origin", "minimum" })
 @Loggable(Loggable.DEBUG)
 public final class Seasoned implements Branch {
 
