@@ -31,6 +31,7 @@ package com.rultor.snapshot;
 
 import com.rexsl.test.XhtmlMatchers;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.xembly.Directives;
 
@@ -52,6 +53,7 @@ public final class XSLTTest {
                 new XSLT(
                     new Snapshot(
                         new Directives()
+                            // @checkstyle MultipleStringLiteralsCheck (1 lines)
                             .xpath("/snapshot")
                             .add("start")
                             .set("2012-08-23T13:00:00Z")
@@ -65,6 +67,27 @@ public final class XSLTTest {
                 ).dom()
             ),
             XhtmlMatchers.hasXPath("/test")
+        );
+    }
+
+    /**
+     * XSLT can produce plain text.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void producesText() throws Exception {
+        MatcherAssert.assertThat(
+            new XSLT(
+                new Snapshot(new Directives().xpath("/snapshot")),
+                // @checkstyle StringLiteralsConcatenation (6 lines)
+                "<xsl:stylesheet "
+                + "xmlns:xsl='http://www.w3.org/1999/XSL/Transform' "
+                + "version='2.0'> "
+                + "<xsl:output method='text'/><xsl:template match='/snapshot'>"
+                + "<xsl:text>first&#x0A;</xsl:text><xsl:text>second</xsl:text>"
+                + "</xsl:template></xsl:stylesheet> "
+            ).xml(),
+            Matchers.equalTo("first\nsecond")
         );
     }
 
