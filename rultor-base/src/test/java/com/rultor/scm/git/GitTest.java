@@ -27,14 +27,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.rultor.scm.git;
 
 import com.google.common.io.Files;
 import com.rultor.scm.Branch;
-import com.rultor.shell.Shell;
 import com.rultor.shell.ShellMocker;
-import java.io.File;
 import java.net.URL;
 import java.util.Collection;
 import javax.validation.ConstraintViolationException;
@@ -45,16 +42,22 @@ import org.junit.Test;
 /**
  * Test case for {@link Git}.
  * @author Bharath Bolisetty (bharathbolisetty@gmail.com)
+ * @author Evgeniy Nyavro (e.nyavro@gmail.com)
  * @version $Id$
  */
 public final class GitTest {
+
+    /**
+     * URL to public GitHub repository.
+     */
+    private static final String GIT_URL = "http://github.com/nyavro/test.git";
 
     /**
      * Git public ctor args can not be null.
      * @throws Exception If some problem inside
      */
     @Test(expected = ConstraintViolationException.class)
-    public void argsCanNotBeNull() throws Exception {
+    public void failsWhenInitializedWithNulls() throws Exception {
         new Git(null, null, null);
     }
 
@@ -63,18 +66,14 @@ public final class GitTest {
      * @throws Exception if some problem inside
      */
     @Test
-    public void canCheckOutBranch() throws Exception {
-        final File dir = Files.createTempDir();
-        // @checkstyle MultipleStringLiterals (1 line)
-        final String url = "http://github.com/nyavro/test.git";
-        final Shell shl = new ShellMocker.Bash(dir);
-        final Git git = new Git(
-            shl,
-            new URL(url),
-            "test"
-        );
+    public void checksOutBranch() throws Exception {
         MatcherAssert.assertThat(
-            git.checkout("master"), Matchers.notNullValue(Branch.class)
+            new Git(
+                new ShellMocker.Bash(Files.createTempDir()),
+                new URL(GitTest.GIT_URL),
+                "test"
+            ).checkout("master"),
+            Matchers.notNullValue(Branch.class)
         );
     }
 
@@ -83,17 +82,14 @@ public final class GitTest {
      * @throws Exception if some problem inside
      */
     @Test
-    public void canGetBranches() throws Exception {
-        final File dir = Files.createTempDir();
-        final String url = "http://github.com/nyavro/test.git";
-        final Shell shl = new ShellMocker.Bash(dir);
-        final Git git = new Git(
-            shl,
-            new URL(url),
-            "test2"
-        );
+    public void getsBranches() throws Exception {
         MatcherAssert.assertThat(
-            git.branches(), Matchers.notNullValue(Collection.class)
+            new Git(
+                new ShellMocker.Bash(Files.createTempDir()),
+                new URL(GitTest.GIT_URL),
+                "test2"
+            ).branches(),
+            Matchers.notNullValue(Collection.class)
         );
     }
 }
