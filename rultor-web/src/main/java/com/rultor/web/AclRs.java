@@ -41,6 +41,7 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.Stand;
 import com.rultor.tools.Exceptions;
 import java.net.HttpURLConnection;
+import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -121,7 +122,7 @@ public final class AclRs extends BaseRs {
                 ),
                 new Spec.Strict(
                     widgets, this.repo(), this.user(), this.users(),
-                    new Coordinates.None(), ACL.class
+                    new Coordinates.None(), Collection.class
                 )
             );
         } catch (SpecException ex) {

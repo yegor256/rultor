@@ -50,6 +50,7 @@
         </script>
     </xsl:template>
     <xsl:template name="content">
+        <xsl:apply-templates select="/page/pulses/pulse[snapshot or error]" mode="open"/>
         <xsl:apply-templates select="/page/widgets"/>
         <xsl:choose>
             <xsl:when test="/page/pulses/pulse">
@@ -71,7 +72,6 @@
                         </ul>
                     </div>
                 </xsl:if>
-                <xsl:apply-templates select="/page/pulses/pulse[snapshot or error]" mode="open"/>
                 <xsl:apply-templates select="/page/pulses/pulse[not(snapshot) and not(error)]" mode="closed"/>
                 <xsl:if test="/page/links/link[@rel='more']">
                     <div class="spacious">
