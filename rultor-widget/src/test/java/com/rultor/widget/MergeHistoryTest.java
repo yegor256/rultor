@@ -83,7 +83,7 @@ public final class MergeHistoryTest {
                         Json.createReader(
                             new StringReader(
                                 // @checkstyle LineLength (1 line)
-                                "{\"request\":\"554\",\"failure\":\"FALSE\",\"params\":{}}"
+                                "{\"request\":\"554\",\"failure\":\"false\",\"params\":{}}"
                             )
                         ).readObject(),
                         ""
@@ -117,7 +117,7 @@ public final class MergeHistoryTest {
                         Json.createReader(
                             new StringReader(
                                 // @checkstyle LineLength (1 line)
-                                "{\"request\":\"990\",\"failure\":\"TRUE\",\"params\":{}}"
+                                "{\"request\":\"990\",\"failure\":\"true\",\"params\":{}}"
                             )
                         ).readObject(),
                         ""
@@ -143,7 +143,7 @@ public final class MergeHistoryTest {
                 "/widget/merges/merge/coordinates[owner='urn:test:44']",
                 "/widget/merges/merge/coordinates[rule='rule-x']",
                 "/widget/merges/merge/request[name='554']",
-                "/widget/merges/merge/request[failure='FALSE']",
+                "/widget/merges/merge/request[failure='false']",
                 "/widget/merges/merge[code=127 and duration=9870]",
                 "/widget/merges/merge[code=0 and duration=98574]"
             )

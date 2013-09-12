@@ -71,7 +71,7 @@
                         <xsl:value-of select="coordinates/owner"/>
                     </xsl:attribute>
                     <xsl:choose>
-                        <xsl:when test="request/failure != 'FALSE'">
+                        <xsl:when test="request/failure == 'true'">
                             <i class="icon-thumbs-down text-danger"><xsl:comment>fail</xsl:comment></i>
                         </xsl:when>
                         <xsl:otherwise>
@@ -110,7 +110,7 @@
             </td>
             <td>
                 <xsl:attribute name="class">
-                    <xsl:if test="request/failure != 'FALSE'">
+                    <xsl:if test="request/failure == 'true'">
                         <xsl:text>text-danger</xsl:text>
                     </xsl:if>
                 </xsl:attribute>

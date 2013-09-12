@@ -9,7 +9,7 @@
         },
         "failure": {
             "type": "string",
-            "pattern": "^TRUE|FALSE$"
+            "pattern": "^true|false$"
         },
         "params": {}
     }

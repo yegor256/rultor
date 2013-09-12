@@ -51,7 +51,7 @@
                     </coordinates>
                     <request>
                         <name>323</name>
-                        <failure>FALSE</failure>
+                        <failure>false</failure>
                         <params>
                             <param>
                                 <name>baseUser</name>
