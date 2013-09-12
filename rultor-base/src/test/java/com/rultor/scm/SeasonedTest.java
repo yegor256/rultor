@@ -52,7 +52,7 @@ public final class SeasonedTest {
      * @throws Exception If some problem inside
      */
     @Test(expected = ConstraintViolationException.class)
-    public void canThrowExceptionIfArgsAreNull() throws Exception {
+    public void throwExceptionIfArgsAreNull() throws Exception {
         new Seasoned(1, null);
     }
 
@@ -61,7 +61,7 @@ public final class SeasonedTest {
      * @throws Exception If some problem inside
      */
     @Test
-    public void canShowCommitsBeforeGivenTime() throws Exception {
+    public void showCommitsBeforeGivenTime() throws Exception {
         final Branch branch = Mockito.mock(Branch.class);
         final Commit before = Mockito.mock(Commit.class);
         final Commit after = Mockito.mock(Commit.class);
@@ -79,16 +79,14 @@ public final class SeasonedTest {
             new Time(time - TimeUnit.MINUTES.toMillis(1))
         ).when(after).time();
         final Branch seasoned = new Seasoned(2, branch);
-        final Iterable<Commit> commitsitr = seasoned.log();
+        final Iterable<Commit> commits = seasoned.log();
         MatcherAssert.assertThat(
-            commitsitr,
+            commits,
             Matchers.hasItems(before)
         );
         MatcherAssert.assertThat(
-            Iterators.size(
-                commitsitr.iterator()
-            ),
-            Matchers.equalTo(1)
+            commits,
+            Matchers.<Commit>iterableWithSize(1)
         );
     }
 }

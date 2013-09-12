@@ -60,7 +60,7 @@ public final class Seasoned implements Branch {
     /**
      * Holds mimimum age of commit in millis.
      */
-    private final transient long time;
+    private final transient long minimum;
 
     /**
      * Public ctor.
@@ -70,7 +70,7 @@ public final class Seasoned implements Branch {
     public Seasoned(final int min,
         @NotNull(message = "branch can't be NULL") final Branch brn) {
         this.origin = brn;
-        this.time = TimeUnit.MINUTES.toMillis(min);
+        this.minimum = TimeUnit.MINUTES.toMillis(min);
     }
 
     /**
@@ -107,7 +107,7 @@ public final class Seasoned implements Branch {
      */
     private boolean isBefore(final Commit commit, final Time current) {
         try {
-            return current.delta(commit.time()) >= this.time;
+            return current.delta(commit.time()) >= this.minimum;
         } catch (IOException ioe) {
             throw new IllegalStateException(ioe);
         }
