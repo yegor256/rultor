@@ -34,12 +34,12 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseRunnable;
-import com.jcabi.log.VerboseThreads;
 import com.rexsl.test.RestTester;
 import com.rexsl.test.TestClient;
 import com.rultor.snapshot.XemblyLine;
@@ -63,7 +63,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
@@ -168,6 +167,9 @@ public final class Standed implements Drain {
      * @param secret Secret key of the stand
      * @param drain Main drain
      * @checkstyle ParameterNumber (8 lines)
+     * @todo #285 Due to a problem with concurrency we're using this
+     *  same thread executor. When the problem is fixed we should use
+     *  Executors.newFixedThreadPool(Standed.THREADS, new VerboseThreads())
      */
     public Standed(
         @NotNull(message = "work can't be NULL") final Coordinates wrk,
@@ -176,7 +178,7 @@ public final class Standed implements Drain {
         @NotNull(message = "drain can't be NULL") final Drain drain) {
         this(
             wrk, name, secret, drain, RestTester.start(Stand.QUEUE),
-            Executors.newFixedThreadPool(Standed.THREADS, new VerboseThreads())
+            MoreExecutors.sameThreadExecutor()
         );
     }
 
