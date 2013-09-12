@@ -143,12 +143,14 @@ final class GhRequest implements MergeRequest {
             this.repository, this.issue,
             new Vext(
                 new StringBuilder()
-                    .append("Hey, let me test your `${headUser}/${headRepo}`")
-                    .append(" branch first, ")
-                    .append(" this may take a few minutes. If there won't")
-                    .append(" be any errors I'll merge it into `${baseBranch}`")
-                    .append(" branch of `${baseUser}/${baseRepo}`. I'll let")
-                    .append(" you know in any case...")
+                    .append("Hey, let me try to merge your branch")
+                    .append(" `${headBranch}` from `${headUser}/${headRepo}`")
+                    .append(" into branch `${baseBranch}` of")
+                    .append(" `${baseUser}/${baseRepo}`. It there won't be")
+                    .append(" any merge conflicts, I'll try to build it.")
+                    .append(" If it builds without errors,")
+                    .append(" I will merge this pull request.")
+                    .append(" I will let you know in any case, in a few...")
                     .toString()
             ).print(this.parameters)
         );

@@ -40,14 +40,12 @@ import com.rultor.spi.Tags;
 import com.rultor.spi.Widget;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.NormJson;
-import com.rultor.tools.Time;
 import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directives;
 
 /**
- * Build history.
+ * Merge history.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -57,21 +55,21 @@ import org.xembly.Directives;
 @Immutable
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-@Widget.Stylesheet("build-history.xsl")
-public final class BuildHistory implements Widget {
+@Widget.Stylesheet("merge-history.xsl")
+public final class MergeHistory implements Widget {
 
     /**
-     * JSON schema for "ci" tag.
+     * JSON schema for "merge" tag.
      */
-    private static final NormJson TAG_CI = new NormJson(
-        BuildHealth.class.getResourceAsStream("tag-ci.json")
+    private static final NormJson TAG_MERGE = new NormJson(
+        BuildHealth.class.getResourceAsStream("tag-merge.json")
     );
 
     /**
-     * JSON schema for "on-commit" tag.
+     * JSON schema for "on-pull-request" tag.
      */
-    private static final NormJson TAG_ONCOMMIT = new NormJson(
-        BuildHealth.class.getResourceAsStream("tag-on-commit.json")
+    private static final NormJson TAG_ONREQUEST = new NormJson(
+        BuildHealth.class.getResourceAsStream("tag-on-pull-request.json")
     );
 
     /**
@@ -81,12 +79,12 @@ public final class BuildHistory implements Widget {
     public Directives render(final Stand stand) {
         Directives dirs = new Directives()
             .add("width").set("6").up()
-            .add("builds");
+            .add("merges");
         for (Pulse pulse : Iterables.limit(stand.pulses(), Tv.TWENTY)) {
-            if (!pulse.tags().contains("on-commit")) {
+            if (!pulse.tags().contains("on-pull-request")) {
                 continue;
             }
-            if (!pulse.tags().contains("ci")) {
+            if (!pulse.tags().contains("merge")) {
                 continue;
             }
             try {
@@ -108,26 +106,32 @@ public final class BuildHistory implements Widget {
     private Directives render(final Pulse pulse)
         throws NormJson.JsonException {
         final Tags tags = pulse.tags();
-        final JsonObject commit = tags.get("on-commit")
-            .data(BuildHistory.TAG_ONCOMMIT);
-        final JsonObject scm = tags.get("ci").data(BuildHistory.TAG_CI);
+        final JsonObject request = tags.get("on-pull-request")
+            .data(MergeHistory.TAG_ONREQUEST);
+        final JsonObject merge = tags.get("merge").data(MergeHistory.TAG_MERGE);
         final Coordinates coords = pulse.coordinates();
-        return new Directives().add("build")
+        Directives dirs = new Directives().add("merge")
             .add("coordinates")
             .add("rule").set(coords.rule()).up()
             .add("owner").set(coords.owner().toString()).up()
             .add("scheduled").set(coords.scheduled().toString()).up()
             .up()
-            .add("commit")
-            .add("name")
-            .set(StringUtils.substring(scm.getString("name"), 0, Tv.SEVEN))
+            .add("request")
+            .add("name").set(merge.getString("request")).up()
+            .add("failure").set(merge.getString("failure")).up()
+            .add("params");
+        final JsonObject params = merge.getJsonObject("params");
+        for (String key : params.keySet()) {
+            dirs = dirs.add("param")
+                .add("name").set(key).up()
+                .add("value").set(params.getString(key)).up().up();
+        }
+        return dirs.up().up().add("duration")
+            .set(Long.toString(request.getInt("duration")))
             .up()
-            .add("time")
-            .set(new Time(scm.getString("time")).toString()).up()
-            .add("author").set(scm.getString("author")).up()
+            .add("code")
+            .set(Integer.toString(request.getInt("code")))
             .up()
-            .add("duration").set(Long.toString(commit.getInt("duration"))).up()
-            .add("code").set(Integer.toString(commit.getInt("code"))).up()
             .up();
     }
 
