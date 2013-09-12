@@ -153,6 +153,7 @@ public final class XSLT {
     public String xml() throws TransformerException {
         final Transformer trans = XSLT.FACTORY.newTransformer(this.xsl);
         trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        trans.setOutputProperty(OutputKeys.ENCODING, CharEncoding.UTF_8);
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
             trans.transform(
