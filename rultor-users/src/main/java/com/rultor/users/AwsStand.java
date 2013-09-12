@@ -103,12 +103,13 @@ final class AwsStand implements Stand {
      */
     @Override
     @Cacheable.FlushAfter
-    public void acl(@NotNull(message = "ACL is mandatory and can't be NULL")
-        final Spec spec) {
+    public void update(
+        @NotNull(message = "ACL spec can't be NULL") final Spec spec,
+        @NotNull(message = "widgets spec can't be NULL") final Spec widgets) {
         this.item.put(
             new Attributes()
                 .with(AwsStand.FIELD_ACL, spec.asText())
-                .with(AwsStand.FIELD_WIDGETS, this.widgets().asText())
+                .with(AwsStand.FIELD_WIDGETS, widgets.asText())
         );
     }
 
@@ -126,20 +127,6 @@ final class AwsStand implements Stand {
             spec = new Spec.Simple("com.rultor.acl.Prohibited()");
         }
         return spec;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Cacheable.FlushAfter
-    public void widgets(@NotNull(message = "widgets and can't be NULL")
-        final Spec spec) {
-        this.item.put(
-            new Attributes()
-                .with(AwsStand.FIELD_WIDGETS, spec.asText())
-                .with(AwsStand.FIELD_ACL, this.acl().asText())
-        );
     }
 
     /**
@@ -164,6 +151,7 @@ final class AwsStand implements Stand {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public String name() {
         return this.item.get(AwsStand.RANGE_STAND).getS();
     }
@@ -172,6 +160,7 @@ final class AwsStand implements Stand {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public URN owner() {
         return URN.create(this.item.get(AwsStand.HASH_OWNER).getS());
     }
