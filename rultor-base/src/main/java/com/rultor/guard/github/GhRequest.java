@@ -34,7 +34,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.immutable.ArrayMap;
-import com.rexsl.test.SimpleXml;
 import com.rultor.guard.MergeRequest;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.Step;
@@ -45,7 +44,6 @@ import com.rultor.tools.Vext;
 import java.io.IOException;
 import java.util.Map;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.eclipse.egit.github.core.PullRequest;
@@ -229,14 +227,10 @@ final class GhRequest implements MergeRequest {
     private String summary(final Snapshot snapshot) {
         String summary;
         try {
-            summary = new SimpleXml(
-                new DOMSource(
-                    new XSLT(
-                        snapshot,
-                        this.getClass().getResourceAsStream("summary.xsl")
-                    ).dom()
-                )
-            ).xpath("/markdown/text()").get(0);
+            summary = new XSLT(
+                snapshot,
+                this.getClass().getResourceAsStream("summary.xsl")
+            ).xml();
         } catch (TransformerException ex) {
             summary = Exceptions.stacktrace(ex);
         } catch (ImpossibleModificationException ex) {
