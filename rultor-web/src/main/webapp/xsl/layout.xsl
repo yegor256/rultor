@@ -94,7 +94,7 @@
                 <script type="text/javascript">
                     <xsl:attribute name="src">
                         <xsl:value-of select="$proto"/>
-                        <xsl:text>://code.jquery.com/jquery-2.0.3.min.js</xsl:text>
+                        <xsl:text>://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js</xsl:text>
                     </xsl:attribute>
                     <!-- this is for W3C compliance -->
                     <xsl:text> </xsl:text>
