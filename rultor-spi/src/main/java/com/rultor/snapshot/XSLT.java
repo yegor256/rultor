@@ -151,14 +151,12 @@ public final class XSLT {
      * @throws TransformerException If fails
      */
     public String xml() throws TransformerException {
-        final Transformer trans = XSLT.FACTORY.newTransformer();
+        final Transformer trans = XSLT.FACTORY.newTransformer(this.xsl);
         trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        trans.setOutputProperty(OutputKeys.METHOD, "xml");
-        trans.setOutputProperty(OutputKeys.ENCODING, CharEncoding.UTF_8);
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
             trans.transform(
-                new DOMSource(this.dom()),
+                this.source,
                 new StreamResult(
                     new OutputStreamWriter(output, CharEncoding.UTF_8)
                 )
