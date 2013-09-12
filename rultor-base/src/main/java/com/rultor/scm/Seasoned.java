@@ -30,12 +30,11 @@
 package com.rultor.scm;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterators;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.tools.Time;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -49,7 +48,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "origin", "commitsBefore" })
+@EqualsAndHashCode(of = { "origin", "time" })
 @Loggable(Loggable.DEBUG)
 public final class Seasoned implements Branch {
 
@@ -61,7 +60,7 @@ public final class Seasoned implements Branch {
     /**
      * Holds mimimum age of commit in millis.
      */
-    private final transient long commitsBefore;
+    private final transient long time;
 
     /**
      * Public ctor.
@@ -71,7 +70,7 @@ public final class Seasoned implements Branch {
     public Seasoned(final int min,
         @NotNull(message = "branch can't be NULL") final Branch brn) {
         this.origin = brn;
-        this.commitsBefore = TimeUnit.MINUTES.toMillis(min);
+        this.time = TimeUnit.MINUTES.toMillis(min);
     }
 
     /**
@@ -79,26 +78,16 @@ public final class Seasoned implements Branch {
      */
     @Override
     public Iterable<Commit> log() throws IOException {
-        final Iterator<Commit> iterator = this.origin.log().iterator();
-        return new Iterable<Commit>() {
-            private final transient Time current = new Time();
-            @Override
-            public Iterator<Commit> iterator() {
-                return Iterators.filter(
-                    iterator,
-                    new Predicate<Commit>() {
-                        @Override
-                        public boolean apply(final Commit commit) {
-                            return Seasoned.this.isBefore(commit, current);
-                        }
-                    }
-                );
+        final Time current = new Time();
+        return Iterables.filter(
+            this.origin.log(),
+            new Predicate<Commit>() {
+                @Override
+                public boolean apply(final Commit commit) {
+                    return Seasoned.this.isBefore(commit, current);
+                }
             }
-            @Override
-            public String toString() {
-                return "Seasoned commits";
-            }
-        };
+        );
     }
 
     /**
@@ -113,16 +102,14 @@ public final class Seasoned implements Branch {
      * Checks delta of current time and commit time.
      *
      * @param commit Commit.
-     * @param currenttime Present time in millis.
-     * @return True if committed on or before commitsAfter.
+     * @param current Present time in millis.
+     * @return True if committed on or before given time.
      */
-    private boolean isBefore(final Commit commit, final Time currenttime) {
-        boolean before;
+    private boolean isBefore(final Commit commit, final Time current) {
         try {
-            before = commit.time().delta(currenttime) <= this.commitsBefore;
+            return current.delta(commit.time()) >= this.time;
         } catch (IOException ioe) {
-            before = false;
+            throw new IllegalStateException(ioe);
         }
-        return before;
     }
 }

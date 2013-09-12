@@ -52,7 +52,7 @@ public final class SeasonedTest {
      * @throws Exception If some problem inside
      */
     @Test(expected = ConstraintViolationException.class)
-    public void argsCanNotBeNull() throws Exception {
+    public void canThrowExceptionIfArgsAreNull() throws Exception {
         new Seasoned(1, null);
     }
 
@@ -61,28 +61,28 @@ public final class SeasonedTest {
      * @throws Exception If some problem inside
      */
     @Test
-    public void showsBeforeCommitsOnly() throws Exception {
-        final Branch masterbranch = Mockito.mock(Branch.class);
-        final Commit beforecommit = Mockito.mock(Commit.class);
-        final Commit aftercommit = Mockito.mock(Commit.class);
+    public void canShowCommitsBeforeGivenTime() throws Exception {
+        final Branch branch = Mockito.mock(Branch.class);
+        final Commit before = Mockito.mock(Commit.class);
+        final Commit after = Mockito.mock(Commit.class);
         Mockito.doReturn(
             Arrays.asList(
-                beforecommit,
-                aftercommit
+                before,
+                after
             )
-        ).when(masterbranch).log();
-        final long currenttime = System.currentTimeMillis();
+        ).when(branch).log();
+        final long time = System.currentTimeMillis();
         Mockito.doReturn(
-            new Time(currenttime - TimeUnit.MINUTES.toMillis(Tv.THREE))
-        ).when(beforecommit).time();
+            new Time(time - TimeUnit.MINUTES.toMillis(Tv.THREE))
+        ).when(before).time();
         Mockito.doReturn(
-            new Time(currenttime - TimeUnit.MINUTES.toMillis(1))
-        ).when(aftercommit).time();
-        final Branch seasoned = new Seasoned(2, masterbranch);
+            new Time(time - TimeUnit.MINUTES.toMillis(1))
+        ).when(after).time();
+        final Branch seasoned = new Seasoned(2, branch);
         final Iterable<Commit> commitsitr = seasoned.log();
         MatcherAssert.assertThat(
             commitsitr,
-            Matchers.hasItems(beforecommit)
+            Matchers.hasItems(before)
         );
         MatcherAssert.assertThat(
             Iterators.size(
