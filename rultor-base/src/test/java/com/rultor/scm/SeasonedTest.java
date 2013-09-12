@@ -29,7 +29,6 @@
  */
 package com.rultor.scm;
 
-import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Tv;
 import com.rultor.tools.Time;
 import java.util.Arrays;
