@@ -34,8 +34,10 @@ import com.rultor.spi.Pageable;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang.CharEncoding;
 
 /**
  * Drain to console.
@@ -64,8 +66,11 @@ public final class Console implements Drain {
     @Override
     @SuppressWarnings("PMD.SystemPrintln")
     public void append(final Iterable<String> lines) throws IOException {
+        final PrintStream stream = new PrintStream(
+            System.out, true, CharEncoding.UTF_8
+        );
         for (String line : lines) {
-            System.out.println(String.format("CONSOLE: %s", line));
+            stream.println(String.format("CONSOLE: %s", line));
         }
     }
 
