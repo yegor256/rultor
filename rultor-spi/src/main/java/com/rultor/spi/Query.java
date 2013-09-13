@@ -33,20 +33,28 @@ import com.jcabi.aspects.Immutable;
 import javax.validation.constraints.NotNull;
 
 /**
- * Pulses.
+ * Query.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Pulses extends Pageable<Pulse, Coordinates> {
+public interface Query {
 
     /**
-     * Get query to filter by.
-     * @return Query to use
+     * Fetch pulses.
+     * @return Pulses filtered
+     */
+    @NotNull(message = "pulses is never NULL")
+    Pulses fetch();
+
+    /**
+     * Parse this plain text query.
+     * @param text Text of it
+     * @return New query
      */
     @NotNull(message = "query is never NULL")
-    Query query();
+    Query parse(@NotNull(message = "text can't be NULL") String text);
 
 }

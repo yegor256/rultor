@@ -27,26 +27,63 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.users.mongo;
 
 import com.jcabi.aspects.Immutable;
-import javax.validation.constraints.NotNull;
+import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Pulses;
+import com.rultor.spi.Query;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Pulses.
+ * Query in Mongo stand.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-public interface Pulses extends Pageable<Pulse, Coordinates> {
+@ToString
+@EqualsAndHashCode(of = { "mongo", "origin" })
+@Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.TooManyMethods")
+final class MongoQuery implements Query {
 
     /**
-     * Get query to filter by.
-     * @return Query to use
+     * Mongo pulses original, without filtering yet.
      */
-    @NotNull(message = "query is never NULL")
-    Query query();
+    private final transient MongoPulses pulses;
+
+    /**
+     * Filtering predicate.
+     */
+    private final transient Predicate predicate;
+
+    /**
+     * Public ctor.
+     * @param previous Previous query
+     */
+    protected MongoQuery(final MongoPulses origin, final MongoQuery previous) {
+        this.pulses = origin;
+        this.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Query parse(final String txt) {
+        return new MongoQuery(this.pulses, new PredicateBuilder(txt).build());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Pulses fetch() {
+        return new MongoPulses(this.pulses);
+    }
 
 }

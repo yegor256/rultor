@@ -39,6 +39,7 @@ import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Pulses;
+import com.rultor.spi.Query;
 import com.rultor.spi.Stand;
 import java.io.IOException;
 import java.util.Iterator;
@@ -58,7 +59,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "mongo", "origin" })
+@EqualsAndHashCode(of = { "mongo", "filter" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
 final class MongoPulses implements Pulses {
@@ -69,14 +70,9 @@ final class MongoPulses implements Pulses {
     private final transient Mongo mongo;
 
     /**
-     * Original stand.
+     * Filter to apply.
      */
-    private final transient Stand origin;
-
-    /**
-     * Head of the list.
-     */
-    private final transient Coordinates head;
+    private final transient MongoQuery filter;
 
     /**
      * Public ctor.
@@ -89,15 +85,25 @@ final class MongoPulses implements Pulses {
 
     /**
      * Private ctor.
-     * @param mng Mongo container
-     * @param stnd Original
-     * @param top Head of the list
+     * @param pulses Other pulses
+     * @param query New filter
      */
-    private MongoPulses(final Mongo mng, final Stand stnd,
-        final Coordinates top) {
+    private MongoPulses(final MongoPulses pulses, final MongoQuery query) {
         this.mongo = mng;
         this.origin = stnd;
-        this.head = top;
+    }
+
+    /**
+     * Private ctor.
+     * @param mng Mongo container
+     * @param stnd Original
+     * @param query New filter
+     */
+    private MongoPulses(final Mongo mng, final Stand stnd,
+        final MongoQuery query) {
+        this.mongo = mng;
+        this.origin = stnd;
+        this.filter = query;
     }
 
     /**
@@ -105,7 +111,7 @@ final class MongoPulses implements Pulses {
      */
     @Override
     public Iterator<Pulse> iterator() {
-        final DBCursor cursor = this.collection().find(this.query());
+        final DBCursor cursor = this.collection().find(this.select());
         cursor.sort(new BasicDBObject(MongoStand.ATTR_UPDATED, -1));
         this.close(cursor);
         // @checkstyle AnonInnerLength (50 lines)
@@ -137,15 +143,15 @@ final class MongoPulses implements Pulses {
      * {@inheritDoc}
      */
     @Override
-    public Pulses filter(final String query) {
-        return this;
+    public Query query() {
+        return new MongoQuery(this.filter);
     }
 
     /**
      * Build query.
      * @return Query
      */
-    private DBObject query() {
+    private DBObject select() {
         final BasicDBObject query = new BasicDBObject()
             .append(MongoStand.ATTR_STAND, this.origin.name());
         if (!this.head.equals(new Coordinates.None())) {
@@ -154,7 +160,7 @@ final class MongoPulses implements Pulses {
                 new MongoCoords(this.head).asObject()
             );
         }
-        return query;
+        return this.filter.extend(query);
     }
 
     /**
