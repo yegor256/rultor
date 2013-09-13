@@ -33,6 +33,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rultor.scm.Branch;
 import com.rultor.scm.SCM;
 import com.rultor.snapshot.Step;
@@ -90,6 +91,7 @@ public final class UnseenBranches implements SCM {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<String> branches() throws IOException {
         final Iterator<String> iterator = this.origin.branches().iterator();
         return new Iterable<String>() {

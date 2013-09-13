@@ -33,6 +33,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -77,6 +78,7 @@ public final class Seasoned implements Branch {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<Commit> log() throws IOException {
         final Time current = new Time();
         return Iterables.filter(

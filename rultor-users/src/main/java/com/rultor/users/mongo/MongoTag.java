@@ -159,6 +159,7 @@ final class MongoTag implements Tag {
      */
     @Override
     @NotNull(message = "data is never NULL")
+    @Loggable(value = Loggable.DEBUG, ignore = NormJson.JsonException.class)
     public JsonObject data(final NormJson schema)
         throws NormJson.JsonException {
         return schema.readObject(this.json);
