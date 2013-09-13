@@ -30,9 +30,10 @@
 
 def log = new File(basedir, 'build.log')
 assert log.exists()
-assert log.text.contains('INFO: main #start():')
-assert log.text.contains('CONSOLE: ')
-assert log.text.contains('INFO χemβly ')
-assert log.text.contains('INFO nothing to do')
-assert log.text.contains('INFO: main #close():')
+def text = log.getText('UTF-8')
+assert text.contains('INFO: main #start():')
+assert text.contains('CONSOLE: ')
+assert text.contains('INFO χemβly ')
+assert text.contains('INFO nothing to do')
+assert text.contains('INFO: main #close():')
 
