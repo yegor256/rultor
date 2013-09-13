@@ -38,6 +38,7 @@ import com.mongodb.DBObject;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import java.io.IOException;
 import java.util.Iterator;
@@ -60,7 +61,7 @@ import lombok.ToString;
 @EqualsAndHashCode(of = { "mongo", "origin" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
-final class MongoPulses implements Pageable<Pulse, Coordinates> {
+final class MongoPulses implements Pulses {
 
     /**
      * Mongo container.
@@ -130,6 +131,14 @@ final class MongoPulses implements Pageable<Pulse, Coordinates> {
     @Override
     public Pageable<Pulse, Coordinates> tail(final Coordinates top) {
         return new MongoPulses(this.mongo, this.origin, top);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Pulses filter(final String query) {
+        return this;
     }
 
     /**
