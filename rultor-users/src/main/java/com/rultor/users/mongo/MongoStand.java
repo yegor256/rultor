@@ -40,8 +40,7 @@ import com.rexsl.test.SimpleXml;
 import com.rexsl.test.XmlDocument;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pageable;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
 import com.rultor.tools.Time;
@@ -156,7 +155,7 @@ final class MongoStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, Coordinates> pulses() {
+    public Pulses pulses() {
         return new MongoPulses(this.mongo, this.origin);
     }
 

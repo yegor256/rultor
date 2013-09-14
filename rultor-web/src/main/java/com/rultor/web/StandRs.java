@@ -43,6 +43,7 @@ import com.rultor.spi.ACL;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Stand;
@@ -103,6 +104,11 @@ public final class StandRs extends BaseRs {
     private static final String QUERY_OPEN = "open";
 
     /**
+     * List of tags to filter for.
+     */
+    private static final String QUERY_TAGS = "tags";
+
+    /**
      * ID of pulse.
      */
     private static final String QUERY_ID = "id";
@@ -116,6 +122,11 @@ public final class StandRs extends BaseRs {
      * Names of pulses to show open.
      */
     private final transient Set<String> open = new TreeSet<String>();
+
+    /**
+     * Names of tags to filter by.
+     */
+    private final transient Set<String> tags = new TreeSet<String>();
 
     /**
      * Inject it from query.
@@ -135,6 +146,17 @@ public final class StandRs extends BaseRs {
     public void setPulses(final List<String> pulses) {
         if (pulses != null) {
             this.open.addAll(pulses);
+        }
+    }
+
+    /**
+     * Inject it from query.
+     * @param names Names of tags
+     */
+    @QueryParam(StandRs.QUERY_TAGS)
+    public void setTags(final List<String> names) {
+        if (names != null) {
+            this.tags.addAll(names);
         }
     }
 
@@ -193,10 +215,14 @@ public final class StandRs extends BaseRs {
                     .bundle()
             );
         }
+        Pulses pulses = this.stand().pulses();
+        for (String tag : this.tags) {
+            pulses = pulses.query().withTag(tag).fetch();
+        }
         return page
             .append(new JaxbBundle("stand", this.name))
             .append(this.widgets(this.widgets(this.stand().widgets())))
-            .append(this.pulses(this.stand().pulses().iterator(), Tv.TWENTY))
+            .append(this.pulses(pulses.iterator(), Tv.TWENTY))
             .render()
             .build();
     }
@@ -312,10 +338,7 @@ public final class StandRs extends BaseRs {
                     new JaxbBundle.Group<Tag>(pulse.tags()) {
                         @Override
                         public JaxbBundle bundle(final Tag tag) {
-                            return new JaxbBundle("tag")
-                                .add("label", tag.label()).up()
-                                .add("level", tag.level().toString()).up()
-                                .add("markdown", tag.markdown()).up();
+                            return StandRs.this.bundle(tag);
                         }
                     }
                 )
@@ -491,6 +514,40 @@ public final class StandRs extends BaseRs {
             dom.getDocumentElement().appendChild(error);
         }
         return dom.getDocumentElement();
+    }
+
+    /**
+     * Bundle a tag.
+     * @param tag A tag
+     * @return Bundle
+     */
+    private JaxbBundle bundle(final Tag tag) {
+        final UriBuilder uri = this.uriInfo().getBaseUriBuilder()
+            .clone().path(StandRs.class);
+        final Set<String> labels = new TreeSet<String>();
+        labels.addAll(this.tags);
+        labels.add(tag.label());
+        final Object[] args = new String[labels.size()];
+        final Object[] vals = new String[labels.size()];
+        int idx = 0;
+        for (String label : labels) {
+            args[idx] = String.format("{arg%d}", idx);
+            vals[idx] = label;
+            ++idx;
+        }
+        return new JaxbBundle("tag")
+            .add("label", tag.label())
+            .up()
+            .add("level", tag.level().toString())
+            .up()
+            .add("markdown", tag.markdown())
+            .up()
+            .link(
+                new Link(
+                    "filter",
+                    uri.queryParam(StandRs.QUERY_TAGS, args).build(vals)
+                )
+            );
     }
 
 }

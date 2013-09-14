@@ -32,8 +32,8 @@ package com.rultor.widget;
 import com.jcabi.urn.URN;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Tag;
 import com.rultor.spi.Tags;
@@ -114,8 +114,7 @@ public final class BuildHealthTest {
                 )
             )
         ).when(second).tags();
-        final Pageable<Pulse, Coordinates> pulses =
-            Mockito.mock(Pageable.class);
+        final Pulses pulses = Mockito.mock(Pulses.class);
         Mockito.doReturn(
             Arrays.asList(first, second).iterator()
         ).when(pulses).iterator();
@@ -162,8 +161,7 @@ public final class BuildHealthTest {
                 )
             )
         ).when(first).tags();
-        final Pageable<Pulse, Coordinates> pulses =
-            Mockito.mock(Pageable.class);
+        final Pulses pulses = Mockito.mock(Pulses.class);
         Mockito.doReturn(Arrays.asList(first).iterator())
             .when(pulses).iterator();
         final Stand stand = Mockito.mock(Stand.class);
@@ -238,8 +236,7 @@ public final class BuildHealthTest {
                 )
             )
         ).when(second).tags();
-        final Pageable<Pulse, Coordinates> pulses =
-            Mockito.mock(Pageable.class);
+        final Pulses pulses = Mockito.mock(Pulses.class);
         Mockito.doReturn(
             Arrays.asList(first, second).iterator()
         ).when(pulses).iterator();
@@ -267,8 +264,7 @@ public final class BuildHealthTest {
         final Document dom = DocumentBuilderFactory.newInstance()
             .newDocumentBuilder().newDocument();
         dom.appendChild(dom.createElement("widget"));
-        final Pageable<Pulse, Coordinates> pulses =
-            Mockito.mock(Pageable.class);
+        final Pulses pulses = Mockito.mock(Pulses.class);
         Mockito.doReturn(new ArrayList<Pulse>(0).iterator())
             .when(pulses).iterator();
         final Stand stand = Mockito.mock(Stand.class);

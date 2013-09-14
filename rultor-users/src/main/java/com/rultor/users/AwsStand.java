@@ -37,8 +37,7 @@ import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pageable;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
 import java.util.concurrent.TimeUnit;
@@ -169,7 +168,7 @@ final class AwsStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, Coordinates> pulses() {
+    public Pulses pulses() {
         throw new UnsupportedOperationException();
     }
 
