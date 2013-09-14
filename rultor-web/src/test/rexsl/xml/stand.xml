@@ -203,6 +203,11 @@
                     <markdown>commit `4e56ba43` built successfully in 23min</markdown>
                 </tag>
                 <tag>
+                    <level>FINE</level>
+                    <label>stdout</label>
+                    <markdown>see [log.txt](http://www.rultor.com) for details</markdown>
+                </tag>
+                <tag>
                     <level>INFO</level>
                     <label>#324</label>
                 </tag>

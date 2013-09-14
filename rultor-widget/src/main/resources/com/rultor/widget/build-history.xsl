@@ -33,9 +33,9 @@
     <xsl:template match="widget[@class='com.rultor.widget.BuildHistory']">
         <xsl:choose>
             <xsl:when test="not(builds) or builds[count(build) = 0]">
-                <p>
+                <div class="panel-body">
                     <xsl:text>No builds found in this stand yet...</xsl:text>
-                </p>
+                </div>
             </xsl:when>
             <xsl:otherwise>
                 <table class="table table-condensed">

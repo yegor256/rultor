@@ -31,7 +31,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:include href="./layout.xsl"/>
-    <xsl:include href="./snapshot.xsl"/>
+    <xsl:include href="./pulse.xsl"/>
     <xsl:template name="head">
         <title>
             <xsl:value-of select="/page/stand"/>
@@ -50,7 +50,7 @@
         </script>
     </xsl:template>
     <xsl:template name="content">
-        <xsl:apply-templates select="/page/pulses/pulse[snapshot or error]" mode="open"/>
+        <xsl:apply-templates select="/page/pulses/pulse[snapshot or error]"/>
         <xsl:apply-templates select="/page/widgets"/>
         <xsl:choose>
             <xsl:when test="/page/pulses/pulse">
@@ -72,7 +72,7 @@
                         </ul>
                     </div>
                 </xsl:if>
-                <xsl:apply-templates select="/page/pulses/pulse[not(snapshot) and not(error)]" mode="closed"/>
+                <xsl:apply-templates select="/page/pulses/pulse[not(snapshot) and not(error)]"/>
                 <xsl:if test="/page/links/link[@rel='more']">
                     <div class="spacious">
                         <xsl:text>See </xsl:text>
@@ -128,9 +128,7 @@
                                 <xsl:value-of select="title"/>
                             </div>
                         </xsl:if>
-                        <div class="panel-body">
-                            <xsl:apply-templates select="." />
-                        </div>
+                        <xsl:apply-templates select="." />
                     </div>
                 </div>
             </xsl:for-each>
@@ -146,63 +144,5 @@
                 <xsl:value-of select="round($w)"/>
             </xsl:otherwise>
         </xsl:choose>
-    </xsl:template>
-    <xsl:template match="pulse" mode="open">
-        <div class="panel panel-default">
-            <xsl:attribute name="data-fetch-url">
-                <xsl:value-of select="links/link[@rel='fetch']/@href"/>
-            </xsl:attribute>
-            <div class="panel-heading">
-                <ul class="list-inline">
-                    <xsl:apply-templates select="coordinates"/>
-                    <li class="heart text-muted icon" title="click to stop fetching">
-                        <i class="icon-cloud-download"><xsl:comment>heart</xsl:comment></i>
-                    </li>
-                    <li class="pull-right icon">
-                        <a title="close and stop fetching" class="close">
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="links/link[@rel='close']/@href"/>
-                            </xsl:attribute>
-                            <xsl:text>&#215;</xsl:text>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="panel-body snapshot">
-                <xsl:if test="error">
-                    <pre class="text-danger"><xsl:value-of select="error"/></pre>
-                </xsl:if>
-                <xsl:apply-templates select="snapshot"/>
-            </div>
-        </div>
-    </xsl:template>
-    <xsl:template match="pulse" mode="closed">
-        <div class="panel panel-default spacious">
-            <div class="panel-body">
-                <a class="pull-right icon" title="open for full view">
-                    <xsl:attribute name="href">
-                        <xsl:value-of select="links/link[@rel='open']/@href"/>
-                    </xsl:attribute>
-                    <i class="icon-zoom-in"><xsl:comment>open</xsl:comment></i>
-                </a>
-                <ul class="list-inline spacious-inline-list">
-                    <xsl:apply-templates select="coordinates"/>
-                    <xsl:apply-templates select="tags/tag"/>
-                </ul>
-                <xsl:if test="tags/tag[markdown != '']">
-                    <ul class="list-unstyled tag-detailed-list">
-                        <xsl:apply-templates select="tags/tag[markdown != '']" mode="detailed"/>
-                    </ul>
-                </xsl:if>
-            </div>
-        </div>
-    </xsl:template>
-    <xsl:template match="coordinates">
-        <li>
-            <xsl:value-of select="rule"/>
-        </li>
-        <li>
-            <xsl:value-of select="scheduled"/>
-        </li>
     </xsl:template>
 </xsl:stylesheet>
