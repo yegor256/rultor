@@ -79,7 +79,7 @@ public interface Pageable<T, K> extends Iterable<T> {
         /**
          * Encapsulated array.
          */
-        private final transient ArraySortedSet<T> array;
+        private final transient com.jcabi.immutable.Array<T> array;
         /**
          * Public ctor.
          */
@@ -92,9 +92,7 @@ public interface Pageable<T, K> extends Iterable<T> {
          */
         public Row(@NotNull(message = "array can't be NULL")
             final Collection<T> data) {
-            this.array = new ArraySortedSet<T>(
-                data, new ArraySortedSet.Comparator.Reverse<T>()
-            );
+            this.array = new com.jcabi.immutable.Array<T>(data);
         }
         /**
          * {@inheritDoc}

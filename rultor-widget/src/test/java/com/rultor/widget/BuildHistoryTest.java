@@ -39,7 +39,6 @@ import com.rultor.spi.Tag;
 import com.rultor.spi.Tags;
 import com.rultor.spi.Widget;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 import javax.json.Json;
