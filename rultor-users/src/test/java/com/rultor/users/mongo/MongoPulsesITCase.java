@@ -89,11 +89,12 @@ public final class MongoPulsesITCase {
         final DBCollection col = mongo.get().getCollection(MongoStand.TABLE);
         col.remove(new BasicDBObject());
         final String first = "first-tag";
+        final String data = "{\"item\": 555}";
         col.insert(
             new BasicDBObject().append(
                 MongoStand.ATTR_TAGS,
                 Arrays.asList(
-                    new MongoTag(first, Level.INFO, "{}", "").asObject()
+                    new MongoTag(first, Level.INFO, data, "").asObject()
                 )
             )
         );
@@ -102,7 +103,7 @@ public final class MongoPulsesITCase {
             new BasicDBObject().append(
                 MongoStand.ATTR_TAGS,
                 Arrays.asList(
-                    new MongoTag(second, Level.INFO, "{  }", "").asObject()
+                    new MongoTag(second, Level.INFO, data, "").asObject()
                 )
             )
         );
@@ -110,15 +111,15 @@ public final class MongoPulsesITCase {
             new BasicDBObject().append(
                 MongoStand.ATTR_TAGS,
                 Arrays.asList(
-                    new MongoTag(first, Level.INFO, "{}", "").asObject(),
-                    new MongoTag(second, Level.INFO, "{  }", "").asObject()
+                    new MongoTag(first, Level.INFO, data, "").asObject(),
+                    new MongoTag(second, Level.INFO, data, "").asObject()
                 )
             )
         );
         col.insert(
             new BasicDBObject().append(
                 MongoStand.ATTR_TAGS,
-                new MongoTag("other-tag", Level.INFO, "{ }", "").asObject()
+                new MongoTag("other-tag", Level.INFO, data, "").asObject()
             )
         );
         MatcherAssert.assertThat(

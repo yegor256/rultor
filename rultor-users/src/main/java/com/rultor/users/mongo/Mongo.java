@@ -32,6 +32,7 @@ package com.rultor.users.mongo;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import java.io.IOException;
@@ -106,6 +107,7 @@ public interface Mongo {
          */
         @Override
         @Cacheable(forever = true)
+        @RetryOnFailure(verbose = false)
         public DB get() throws IOException {
             final MongoClient client = new MongoClient(this.host, this.port);
             final DB database = client.getDB(this.name);

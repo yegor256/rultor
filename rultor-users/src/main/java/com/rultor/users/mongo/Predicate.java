@@ -35,6 +35,7 @@ import com.jcabi.immutable.Array;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.rultor.spi.Coordinates;
+import java.util.Arrays;
 import java.util.Collection;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -96,10 +97,9 @@ interface Predicate {
         }
         @Override
         public DBObject query() {
-            final DBObject query = new BasicDBObject();
-            query.putAll(this.left.query());
-            query.putAll(this.right.query());
-            return query;
+            return new BasicDBObject().append(
+                "$and", Arrays.asList(this.left.query(), this.right.query())
+            );
         }
     }
 
