@@ -46,36 +46,47 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "mongo", "origin" })
+@EqualsAndHashCode(of = { "mongo", "mandatory", "optional" })
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.TooManyMethods")
 final class MongoQuery implements Query {
 
     /**
-     * Mongo pulses original, without filtering yet.
+     * Mongo.
      */
-    private final transient MongoPulses pulses;
+    private final transient Mongo mongo;
 
     /**
-     * Filtering predicate.
+     * Mandatory predicate.
      */
-    private final transient Predicate predicate;
+    private final transient Predicate mandatory;
+
+    /**
+     * Optional.
+     */
+    private final transient Predicate optional;
 
     /**
      * Public ctor.
-     * @param previous Previous query
+     * @param mng Mongo
+     * @param mnd Mandatory
+     * @param opt Optional
      */
-    protected MongoQuery(final MongoPulses origin, final MongoQuery previous) {
-        this.pulses = origin;
-        this.
+    protected MongoQuery(final Mongo mng, final Predicate mnd,
+        final Predicate opt) {
+        this.mongo = mng;
+        this.mandatory = mnd;
+        this.optional = opt;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Query parse(final String txt) {
-        return new MongoQuery(this.pulses, new PredicateBuilder(txt).build());
+    public Query withTag(final String name) {
+        return new MongoQuery(
+            this.mongo, this.mandatory,
+            new Predicate.And(this.optional, new Predicate.WithTag(name))
+        );
     }
 
     /**
@@ -83,7 +94,7 @@ final class MongoQuery implements Query {
      */
     @Override
     public Pulses fetch() {
-        return new MongoPulses(this.pulses);
+        return new MongoPulses(this.mongo, this.mandatory, this.optional);
     }
 
 }

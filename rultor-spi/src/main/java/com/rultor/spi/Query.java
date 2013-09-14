@@ -50,11 +50,11 @@ public interface Query {
     Pulses fetch();
 
     /**
-     * Parse this plain text query.
-     * @param text Text of it
+     * Narrow down query to pulses where this tag is present.
+     * @param label Name of the tag
      * @return New query
      */
     @NotNull(message = "query is never NULL")
-    Query parse(@NotNull(message = "text can't be NULL") String text);
+    Query withTag(@NotNull(message = "label can't be NULL") String label);
 
 }
