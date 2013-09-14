@@ -39,7 +39,7 @@
     <xsl:template name="content">
         <xsl:if test="/page/receipts/receipt">
             <div class="row">
-                <div class="col-6 col-sm-4 col-lg-3">
+                <div class="col-xs-12 col-sm-5 col-lg-3">
                     <form action="https://www.paypal.com/cgi-bin/webscr" method="post" class="form-inline spacious">
                         <fieldset>
                             <input type="hidden" name="cmd" value="_s-xclick"/>
@@ -53,20 +53,22 @@
                                     <xsl:value-of select="/page/@date"/>
                                 </xsl:attribute>
                             </input>
-                            <select name="os0" id="os0" class="form-control" style="width: 14em;">
-                                <option value="Small">Small $5.00 USD</option>
-                                <option value="Medium">Medium $10.00 USD</option>
-                                <option value="Large">Large $25.00 USD</option>
-                            </select>
-                            <xsl:text> </xsl:text>
-                            <button type="submit" id="fund" class="btn btn-primary">
-                                <xsl:text>Fund</xsl:text>
-                            </button>
+                            <div class="input-group">
+                                <select name="os0" id="os0" class="form-control" style="width: 70%;">
+                                    <option value="Small">Small $5.00 USD</option>
+                                    <option value="Medium">Medium $10.00 USD</option>
+                                    <option value="Large">Large $25.00 USD</option>
+                                </select>
+                                <xsl:text> </xsl:text>
+                                <button type="submit" id="fund" class="btn btn-primary">
+                                    <xsl:text>Fund</xsl:text>
+                                </button>
+                            </div>
                             <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1"/>
                         </fieldset>
                     </form>
                 </div>
-                <div class="col-6 col-sm-4 col-lg-2">
+                <div class="col-xs-12 col-sm-5 col-lg-3">
                     <form method="post" class="form-inline spacious">
                         <xsl:attribute name="action">
                             <xsl:value-of select="/page/links/link[@rel='coupon']/@href"/>
