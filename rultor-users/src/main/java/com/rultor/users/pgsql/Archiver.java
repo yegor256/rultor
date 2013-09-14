@@ -78,6 +78,9 @@ public final class Archiver implements Runnable, Closeable {
             new JdbcSession(this.client.get())
                 .sql("SELECT archive()")
                 .select(new VoidHandler());
+            new JdbcSession(this.client.get())
+                .sql("ANALYZE receipt")
+                .select(new VoidHandler());
         } catch (SQLException ex) {
             throw new IllegalStateException(ex);
         }
