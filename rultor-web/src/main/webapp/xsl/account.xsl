@@ -77,7 +77,7 @@
                             <div class="input-group">
                                 <input type="text" name="code" id="code" class="form-control" placeholder="Coupon code"/>
                                 <span class="input-group-btn">
-                                    <button type="button" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary">
                                         <xsl:text>Redeem</xsl:text>
                                     </button>
                                 </span>
