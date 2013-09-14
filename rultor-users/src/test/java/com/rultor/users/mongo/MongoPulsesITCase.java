@@ -29,6 +29,7 @@
  */
 package com.rultor.users.mongo;
 
+import com.jcabi.aspects.Tv;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.rultor.spi.Pulse;
@@ -87,12 +88,30 @@ public final class MongoPulsesITCase {
         final Mongo mongo = this.mongo();
         final DBCollection col = mongo.get().getCollection(MongoStand.TABLE);
         col.remove(new BasicDBObject());
-        final String label = "some-test-tag";
+        final String first = "first-tag";
         col.insert(
             new BasicDBObject().append(
                 MongoStand.ATTR_TAGS,
                 Arrays.asList(
-                    new MongoTag(label, Level.INFO, "{}", "").asObject()
+                    new MongoTag(first, Level.INFO, "{}", "").asObject()
+                )
+            )
+        );
+        final String second = "second-tag";
+        col.insert(
+            new BasicDBObject().append(
+                MongoStand.ATTR_TAGS,
+                Arrays.asList(
+                    new MongoTag(second, Level.INFO, "{  }", "").asObject()
+                )
+            )
+        );
+        col.insert(
+            new BasicDBObject().append(
+                MongoStand.ATTR_TAGS,
+                Arrays.asList(
+                    new MongoTag(first, Level.INFO, "{}", "").asObject(),
+                    new MongoTag(second, Level.INFO, "{  }", "").asObject()
                 )
             )
         );
@@ -104,7 +123,24 @@ public final class MongoPulsesITCase {
         );
         MatcherAssert.assertThat(
             new MongoPulses(
-                mongo, new Predicate.Any(), new Predicate.WithTag(label)
+                mongo, new Predicate.Any(), new Predicate.Any()
+            ),
+            Matchers.<Pulse>iterableWithSize(Tv.FOUR)
+        );
+        MatcherAssert.assertThat(
+            new MongoPulses(
+                mongo, new Predicate.Any(),
+                new Predicate.WithTag(second)
+            ),
+            Matchers.<Pulse>iterableWithSize(2)
+        );
+        MatcherAssert.assertThat(
+            new MongoPulses(
+                mongo, new Predicate.Any(),
+                new Predicate.And(
+                    new Predicate.WithTag(first),
+                    new Predicate.WithTag(second)
+                )
             ),
             Matchers.<Pulse>iterableWithSize(1)
         );
