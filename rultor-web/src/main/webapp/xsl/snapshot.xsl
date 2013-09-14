@@ -38,7 +38,7 @@
             <xsl:if test="spec">
                 <li class="icon">
                     <i class="icon-beaker" title="show spec"
-                        onclick="$(this).closest('pre.spec').toggle();"><xsl:comment>spec</xsl:comment></i>
+                        onclick="$(this).closest('div').find('pre.spec').toggle();"><xsl:comment>spec</xsl:comment></i>
                 </li>
             </xsl:if>
             <xsl:apply-templates select="version" mode="compact"/>
@@ -272,7 +272,7 @@
             <xsl:if test="tag/markdown">
                 <li class="icon">
                     <i class="icon-plus-sign"
-                        onclick="$(this).closest('.detailed').toggle();"><xsl:comment>show</xsl:comment></i>
+                        onclick="$(this).closest('.panel').find('.detailed').toggle();"><xsl:comment>show</xsl:comment></i>
                 </li>
             </xsl:if>
             <xsl:apply-templates select="tag"/>
