@@ -101,7 +101,7 @@ public final class StandRs extends BaseRs {
     /**
      * List of open pulses.
      */
-    private static final String QUERY_OPEN = "open";
+    public static final String QUERY_OPEN = "open";
 
     /**
      * List of tags to filter for.
@@ -221,6 +221,16 @@ public final class StandRs extends BaseRs {
         }
         return page
             .append(new JaxbBundle("stand", this.name))
+            .append(
+                new JaxbBundle("filters").add(
+                    new JaxbBundle.Group<String>(this.tags) {
+                        @Override
+                        public JaxbBundle bundle(final String tag) {
+                            return new JaxbBundle("filter", tag);
+                        }
+                    }
+                )
+            )
             .append(this.widgets(this.widgets(this.stand().widgets())))
             .append(this.pulses(pulses.iterator(), Tv.TWENTY))
             .render()

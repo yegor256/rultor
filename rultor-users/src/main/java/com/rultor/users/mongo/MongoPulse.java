@@ -32,6 +32,8 @@ package com.rultor.users.mongo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArrayMap;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulse;
@@ -59,16 +61,23 @@ import lombok.ToString;
 final class MongoPulse implements Pulse {
 
     /**
+     * Mongo container.
+     */
+    private final transient Mongo mongo;
+
+    /**
      * Mongo data map.
      */
     private final transient ArrayMap<String, Object> map;
 
     /**
      * Public ctor.
+     * @param mng Mongo
      * @param object The object
      */
     @SuppressWarnings("unchecked")
-    protected MongoPulse(final DBObject object) {
+    protected MongoPulse(final Mongo mng, final DBObject object) {
+        this.mongo = mng;
         this.map = new ArrayMap<String, Object>(object.toMap());
     }
 
@@ -77,12 +86,19 @@ final class MongoPulse implements Pulse {
      */
     @Override
     public String xembly() throws IOException {
-        final String xembly = this.map.get(MongoStand.ATTR_XEMBLY).toString();
+        final DBObject object = this.collection().findOne(
+            // @checkstyle MultipleStringLiterals (1 line)
+            new BasicDBObject().append("_id", this.map.get("_id")),
+            new BasicDBObject()
+                .append(MongoStand.ATTR_XEMBLY, true)
+                .append(MongoStand.ATTR_UPDATED, true)
+        );
+        final String xembly = object.get(MongoStand.ATTR_XEMBLY).toString();
         return new StringBuilder()
             .append(MongoStand.decode(xembly))
             .append("XPATH '/snapshot'; ADDIF 'updated';")
             .append("SET '")
-            .append(this.map.get(MongoStand.ATTR_UPDATED))
+            .append(object.get(MongoStand.ATTR_UPDATED))
             .append("';")
             .toString();
     }
@@ -118,6 +134,18 @@ final class MongoPulse implements Pulse {
             tags.add(new MongoTag(DBObject.class.cast(object)));
         }
         return new Tags.Simple(tags);
+    }
+
+    /**
+     * Collection.
+     * @return Mongo collection
+     */
+    private DBCollection collection() {
+        try {
+            return this.mongo.get().getCollection(MongoStand.TABLE);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
 }

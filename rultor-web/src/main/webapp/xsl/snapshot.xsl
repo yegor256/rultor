@@ -289,44 +289,72 @@
     </xsl:template>
     <xsl:template match="tag">
         <li>
-            <span>
-                <xsl:attribute name="class">
-                    <xsl:text>label </xsl:text>
-                    <xsl:choose>
-                        <xsl:when test="level = 'FINE'">
-                            <xsl:text>label-success</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="level = 'INFO'">
-                            <xsl:text>label-info</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="level = 'WARNING'">
-                            <xsl:text>label-warning</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="level = 'SEVERE'">
-                            <xsl:text>label-danger</xsl:text>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:text>label-default</xsl:text>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:attribute>
-                <xsl:value-of select="label"/>
-            </span>
+            <xsl:call-template name="tag-label">
+                <xsl:with-param name="tag" select="." />
+                <xsl:with-param name="level" select="level" />
+            </xsl:call-template>
         </li>
     </xsl:template>
     <xsl:template match="tag" mode="detailed">
         <li>
             <ul class="list-inline">
                 <li>
-                    <span class="label label-default">
-                        <xsl:value-of select="label"/>
-                    </span>
+                    <xsl:call-template name="tag-label">
+                        <xsl:with-param name="tag" select="." />
+                        <xsl:with-param name="level" select="'default'" />
+                    </xsl:call-template>
                 </li>
                 <li>
                     <span class="markdown"><xsl:value-of select="markdown"/></span>
                 </li>
             </ul>
         </li>
+    </xsl:template>
+    <xsl:template name="tag-label">
+        <xsl:param name="tag"/>
+        <xsl:param name="level" as="xs:string"/>
+        <xsl:variable name="class">
+            <xsl:text>label </xsl:text>
+            <xsl:text> </xsl:text>
+            <xsl:choose>
+                <xsl:when test="$level = 'FINE'">
+                    <xsl:text>label-success</xsl:text>
+                </xsl:when>
+                <xsl:when test="$level = 'INFO'">
+                    <xsl:text>label-info</xsl:text>
+                </xsl:when>
+                <xsl:when test="$level = 'WARNING'">
+                    <xsl:text>label-warning</xsl:text>
+                </xsl:when>
+                <xsl:when test="$level = 'SEVERE'">
+                    <xsl:text>label-danger</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:text>label-default</xsl:text>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$tag/links/link[@rel='filter']">
+                <a>
+                    <xsl:attribute name="class">
+                        <xsl:value-of select="$class"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="$tag/links/link[@rel='filter']/@href"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$tag/label"/>
+                </a>
+            </xsl:when>
+            <xsl:otherwise>
+                <span>
+                    <xsl:attribute name="class">
+                        <xsl:value-of select="$class"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$tag/label"/>
+                </span>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template name="bar">
         <xsl:param name="snapshot"/>

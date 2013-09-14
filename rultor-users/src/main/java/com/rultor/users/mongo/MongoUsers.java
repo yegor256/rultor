@@ -32,6 +32,7 @@ package com.rultor.users.mongo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
@@ -108,6 +109,18 @@ public final class MongoUsers implements Users {
     @Override
     public Stand stand(final String name) {
         return new MongoStand(this.mongo, this.origin.stand(name));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Pulses flow() {
+        return new MongoPulses(
+            this.mongo,
+            new Predicate.Any(),
+            new Predicate.Any()
+        );
     }
 
 }

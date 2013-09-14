@@ -39,7 +39,6 @@ import com.rultor.spi.Tag;
 import com.rultor.spi.Tags;
 import com.rultor.spi.Widget;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 import javax.json.Json;
@@ -114,10 +113,8 @@ public final class BuildHealthTest {
                 )
             )
         ).when(second).tags();
-        final Pulses pulses = Mockito.mock(Pulses.class);
-        Mockito.doReturn(
-            Arrays.asList(first, second).iterator()
-        ).when(pulses).iterator();
+        final Pulses pulses =
+            new Pulses.Row(Arrays.asList(first, second));
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(pulses).when(stand).pulses();
         new Xembler(widget.render(stand)).apply(dom);
@@ -161,9 +158,7 @@ public final class BuildHealthTest {
                 )
             )
         ).when(first).tags();
-        final Pulses pulses = Mockito.mock(Pulses.class);
-        Mockito.doReturn(Arrays.asList(first).iterator())
-            .when(pulses).iterator();
+        final Pulses pulses = new Pulses.Row(Arrays.asList(first));
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(pulses).when(stand).pulses();
         new Xembler(widget.render(stand)).apply(dom);
@@ -236,10 +231,7 @@ public final class BuildHealthTest {
                 )
             )
         ).when(second).tags();
-        final Pulses pulses = Mockito.mock(Pulses.class);
-        Mockito.doReturn(
-            Arrays.asList(first, second).iterator()
-        ).when(pulses).iterator();
+        final Pulses pulses = new Pulses.Row(Arrays.asList(first, second));
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(pulses).when(stand).pulses();
         new Xembler(widget.render(stand)).apply(dom);
@@ -264,9 +256,7 @@ public final class BuildHealthTest {
         final Document dom = DocumentBuilderFactory.newInstance()
             .newDocumentBuilder().newDocument();
         dom.appendChild(dom.createElement("widget"));
-        final Pulses pulses = Mockito.mock(Pulses.class);
-        Mockito.doReturn(new ArrayList<Pulse>(0).iterator())
-            .when(pulses).iterator();
+        final Pulses pulses = new Pulses.Row();
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(pulses).when(stand).pulses();
         new Xembler(widget.render(stand)).apply(dom);

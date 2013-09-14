@@ -73,27 +73,22 @@ public final class StandRsTest {
      * @throws Exception If some problem inside
      */
     @Test
-    @SuppressWarnings("unchecked")
     public void fetchesSnapshotInHtml() throws Exception {
         final StandRs rest = new StandRs();
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(BaseRs.TEST_URN).when(stand).owner();
-        final Pulses pulses = Mockito.mock(Pulses.class);
+        final Pulse pulse = Mockito.mock(Pulse.class);
+        final Pulses pulses = new Pulses.Row(Arrays.asList(pulse));
         Mockito.doReturn(pulses).when(stand).pulses();
         final Coordinates coords = new Coordinates.Simple(
             new URN("urn:test:888"), "some-rule-identifier"
         );
-        final Pulse pulse = Mockito.mock(Pulse.class);
         Mockito.doReturn(
             new Directives()
                 .add("spec").set("some text").up()
                 .add("tags").add("tag").add("label").set("tag label")
                 .toString()
         ).when(pulse).xembly();
-        Mockito.doReturn(Arrays.asList(pulse).iterator())
-            .when(pulses).iterator();
-        Mockito.doReturn(pulses).when(pulses)
-            .tail(Mockito.any(Coordinates.class));
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(stand).when(users).stand(Mockito.anyString());
         rest.setServletContext(

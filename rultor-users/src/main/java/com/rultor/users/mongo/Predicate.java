@@ -31,9 +31,11 @@ package com.rultor.users.mongo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.Array;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.rultor.spi.Coordinates;
+import java.util.Collection;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -151,6 +153,34 @@ interface Predicate {
         public DBObject query() {
             return new BasicDBObject().append(
                 MongoStand.ATTR_STAND, this.name
+            );
+        }
+    }
+
+    /**
+     * In stands predicate.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "names")
+    @Loggable(Loggable.DEBUG)
+    final class InStands implements Predicate {
+        /**
+         * Names of the stands.
+         */
+        private final transient Array<String> names;
+        /**
+         * Public ctor.
+         * @param stands Name of the stand
+         */
+        public InStands(final Collection<String> stands) {
+            this.names = new Array<String>(stands);
+        }
+        @Override
+        public DBObject query() {
+            return new BasicDBObject().append(
+                MongoStand.ATTR_STAND,
+                new BasicDBObject().append("$in", this.names)
             );
         }
     }

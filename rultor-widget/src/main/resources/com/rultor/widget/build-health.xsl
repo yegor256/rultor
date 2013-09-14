@@ -33,20 +33,23 @@
     <xsl:template match="widget[@class='com.rultor.widget.BuildHealth']">
         <xsl:choose>
             <xsl:when test="not(builds) or builds[count(build) = 0]">
-                <p>
+                <div class="panel-body">
                     <span class="pull-left" style="font-size: 3em; margin-right: .2em;">
                         <i class="icon-microphone-off text-muted"><xsl:comment>nothing</xsl:comment></i>
                     </span>
                     <xsl:text>No builds found in this stand yet...</xsl:text>
-                </p>
+                </div>
             </xsl:when>
             <xsl:when test="builds[count(build) = 1]">
-                <xsl:apply-templates select="builds/build" mode="build-health-single"/>
+                <div class="panel-body">
+                    <xsl:apply-templates select="builds/build" mode="build-health-single"/>
+                </div>
             </xsl:when>
             <xsl:otherwise>
                 <table class="table table-condensed">
                     <thead>
                         <tr>
+                            <th><xsl:text>H.</xsl:text></th>
                             <th><xsl:text>St.</xsl:text></th>
                             <th><xsl:text>Rule</xsl:text></th>
                             <th><xsl:text>By</xsl:text></th>
@@ -117,19 +120,19 @@
     </xsl:template>
     <xsl:template match="build" mode="build-health-row">
         <tr>
-            <xsl:attribute name="class">
+            <td>
                 <xsl:choose>
                     <xsl:when test="health &gt; 0.8">
-                        <xsl:text>success</xsl:text>
+                        <i class="icon-beer text-success"><xsl:comment>ok</xsl:comment></i>
                     </xsl:when>
                     <xsl:when test="health &gt; 0.5">
-                        <xsl:text>warning</xsl:text>
+                        <i class="icon-umbrella text-warning"><xsl:comment>fail</xsl:comment></i>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:text>danger</xsl:text>
+                        <i class="icon-bolt text-danger"><xsl:comment>fail</xsl:comment></i>
                     </xsl:otherwise>
                 </xsl:choose>
-            </xsl:attribute>
+            </td>
             <td>
                 <a class="icon">
                     <xsl:attribute name="href">

@@ -31,32 +31,13 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:include href="./layout.xsl"/>
+    <xsl:include href="./pulse.xsl"/>
     <xsl:template name="head">
         <title>
             <xsl:text>index</xsl:text>
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <p class="text-warning col-lg-6 col-sm-8 col-xs-12">
-            <xsl:text>
-                This page is under construction. We're going to
-                have a fluid stream of events here, aggregated from
-                all your stands. In the meantime, go to the list of your
-            </xsl:text>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='rules']/@href"/>
-                </xsl:attribute>
-                <xsl:text>rules</xsl:text>
-            </a>
-            <xsl:text> or </xsl:text>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='stands']/@href"/>
-                </xsl:attribute>
-                <xsl:text>stands</xsl:text>
-            </a>
-            <xsl:text>. Click the logo to see full navigation menu.</xsl:text>
-        </p>
+        <xsl:apply-templates select="/page/pulses/pulse"/>
     </xsl:template>
 </xsl:stylesheet>

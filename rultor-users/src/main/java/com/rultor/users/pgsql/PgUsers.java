@@ -35,6 +35,7 @@ import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
@@ -151,6 +152,14 @@ public final class PgUsers implements Users, Runnable, Closeable {
     @Override
     public void close() throws IOException {
         this.archiver.close();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Pulses flow() {
+        return this.origin.flow();
     }
 
 }
