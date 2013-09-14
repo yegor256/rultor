@@ -33,9 +33,9 @@
     <xsl:template match="widget[@class='com.rultor.widget.MergeHistory']">
         <xsl:choose>
             <xsl:when test="not(merges) or merges[count(merge) = 0]">
-                <p>
+                <div class="panel-body">
                     <xsl:text>No merges found in this stand yet...</xsl:text>
-                </p>
+                </div>
             </xsl:when>
             <xsl:otherwise>
                 <table class="table table-condensed">

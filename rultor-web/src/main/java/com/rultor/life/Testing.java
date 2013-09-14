@@ -38,6 +38,7 @@ import com.rultor.spi.Column;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.InvalidCouponException;
 import com.rultor.spi.Pageable;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Rule;
@@ -126,6 +127,10 @@ final class Testing implements Profile {
             public Stand stand(final String name) {
                 throw new UnsupportedOperationException();
             }
+            @Override
+            public Pulses flow() {
+                return new Pulses.Row();
+            }
         };
     }
 
@@ -208,6 +213,10 @@ final class Testing implements Profile {
                 @Override
                 public Iterator<Stand> iterator() {
                     return Testing.STANDS.values().iterator();
+                }
+                @Override
+                public Pulses flow() {
+                    return new Pulses.Row();
                 }
             };
         }

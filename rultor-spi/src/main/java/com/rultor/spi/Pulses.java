@@ -30,7 +30,13 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Pulses.
@@ -48,5 +54,63 @@ public interface Pulses extends Pageable<Pulse, Coordinates> {
      */
     @NotNull(message = "query is never NULL")
     Query query();
+
+    /**
+     * One row that doesn't support paginating.
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode
+    @Loggable(Loggable.DEBUG)
+    final class Row implements Pulses {
+        /**
+         * Encapsulated array.
+         */
+        private final transient com.jcabi.immutable.Array<Pulse> array;
+        /**
+         * Public ctor.
+         */
+        public Row() {
+            this(new ArrayList<Pulse>(0));
+        }
+        /**
+         * Public ctor.
+         * @param data Array of data
+         */
+        public Row(@NotNull(message = "array can't be NULL")
+            final Collection<Pulse> data) {
+            this.array = new com.jcabi.immutable.Array<Pulse>(data);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Iterator<Pulse> iterator() {
+            return this.array.iterator();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Pageable<Pulse, Coordinates> tail(final Coordinates head) {
+            return this;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Query query() {
+            return new Query() {
+                @Override
+                public Pulses fetch() {
+                    return Pulses.Row.this;
+                }
+                @Override
+                public Query withTag(final String label) {
+                    return this;
+                }
+            };
+        }
+    }
 
 }

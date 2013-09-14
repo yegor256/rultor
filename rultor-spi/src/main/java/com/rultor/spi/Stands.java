@@ -64,4 +64,11 @@ public interface Stands extends Iterable<Stand> {
     @NotNull(message = "stand is never NULL")
     Stand get(@NotNull(message = "stand name can't be NULL") String name);
 
+    /**
+     * Get flow of recent events.
+     * @return Pulses
+     */
+    @NotNull(message = "flow is never NULL")
+    Pulses flow();
+
 }

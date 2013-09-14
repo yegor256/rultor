@@ -60,4 +60,61 @@
     </nav>
     <millis>16</millis>
     <balance>$0.45</balance>
+    <pulses>
+        <pulse>
+            <coordinates>
+                <owner>urn:test:111</owner>
+                <rule>on-commit</rule>
+                <scheduled>2012-08-23T13:23Z</scheduled>
+            </coordinates>
+            <links>
+                <link href="/xml/stand.xml?open=abc" rel="open" type="text/xml"/>
+            </links>
+        </pulse>
+        <pulse>
+            <coordinates>
+                <owner>urn:test:111</owner>
+                <rule>on-commit</rule>
+                <scheduled>2012-08-23T13:23Z</scheduled>
+            </coordinates>
+            <tags>
+                <tag>
+                    <level>FINE</level>
+                    <label>success</label>
+                    <markdown>commit `4e56ba43` built successfully in 23min</markdown>
+                </tag>
+                <tag>
+                    <level>INFO</level>
+                    <label>#324</label>
+                </tag>
+                <tag>
+                    <level>INFO</level>
+                    <label>pull-request</label>
+                </tag>
+            </tags>
+            <links>
+                <link href="/xml/stand.xml" rel="open" type="text/xml"/>
+            </links>
+        </pulse>
+        <pulse>
+            <coordinates>
+                <owner>urn:test:111</owner>
+                <rule>on-commit</rule>
+                <scheduled>2012-08-23T13:23Z</scheduled>
+            </coordinates>
+            <links>
+                <link href="/xml/stand.xml" rel="open" type="text/xml"/>
+            </links>
+            <tags>
+                <tag>
+                    <level>INFO</level>
+                    <label>#324</label>
+                </tag>
+                <tag>
+                    <level>INFO</level>
+                    <label>pull-request</label>
+                </tag>
+            </tags>
+        </pulse>
+    </pulses>
 </page>

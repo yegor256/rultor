@@ -30,8 +30,15 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
+import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.auth.Identity;
+import com.rultor.spi.Coordinates;
+import com.rultor.spi.Pulse;
+import com.rultor.spi.Tag;
+import java.util.Iterator;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -63,6 +70,7 @@ public final class IndexRs extends BaseRs {
                 .build(EmptyPage.class)
                 .init(this)
                 .append(new Breadcrumbs().with("self", "home").bundle())
+                .append(this.pulses(this.users().flow().iterator(), Tv.TWENTY))
                 .render()
                 .build();
         } else {
@@ -71,10 +79,72 @@ public final class IndexRs extends BaseRs {
                 .build(EmptyPage.class)
                 .init(this)
                 .append(new Breadcrumbs().with("self", "home").bundle())
+                .append(
+                    this.pulses(
+                        this.user().stands().flow().iterator(), Tv.TWENTY
+                    )
+                )
                 .render()
                 .build();
         }
         return response;
+    }
+
+    /**
+     * All pulses of the stand.
+     * @param pulses All pulses to show
+     * @param maximum Maximum to show
+     * @return Collection of JAXB stands
+     */
+    private JaxbBundle pulses(final Iterator<Pulse> pulses, final int maximum) {
+        JaxbBundle bundle = new JaxbBundle("pulses");
+        int pos;
+        for (pos = 0; pos < maximum; ++pos) {
+            if (!pulses.hasNext()) {
+                break;
+            }
+            bundle = bundle.add(this.pulse(pulses.next()));
+        }
+        return bundle;
+    }
+
+    /**
+     * Convert pulse to JaxbBundle.
+     * @param pulse The pulse
+     * @return Bundle
+     */
+    private JaxbBundle pulse(final Pulse pulse) {
+        final Coordinates coords = pulse.coordinates();
+        final String label = new Coordinates.Simple(coords).toString();
+        return new JaxbBundle("pulse")
+            .add("coordinates")
+            .add("rule", coords.rule()).up()
+            .add("owner", coords.owner().toString()).up()
+            .add("scheduled", coords.scheduled().toString()).up()
+            .up()
+            .link(
+                new Link(
+                    "open",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(StandRs.class)
+                        .queryParam(StandRs.QUERY_OPEN, "{label}")
+                        .build(label)
+                )
+            )
+            .add("tags")
+            .add(
+                new JaxbBundle.Group<Tag>(pulse.tags()) {
+                    @Override
+                    public JaxbBundle bundle(final Tag tag) {
+                        return new JaxbBundle("tag")
+                            .add("label", tag.label()).up()
+                            .add("level", tag.level().toString()).up()
+                            .add("markdown", tag.markdown()).up();
+                    }
+                }
+            )
+            .up();
     }
 
 }

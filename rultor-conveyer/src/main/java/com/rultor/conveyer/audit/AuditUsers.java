@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.urn.URN;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
@@ -116,6 +117,14 @@ public final class AuditUsers implements Users, Runnable {
         for (User user : this) {
             tier.fund(user.account());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Pulses flow() {
+        return this.origin.flow();
     }
 
 }

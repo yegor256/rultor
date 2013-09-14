@@ -63,6 +63,10 @@
     <stand>nightly-build</stand>
     <since>2012-08-23T13:25:33Z</since>
     <balance>$0.45</balance>
+    <filters>
+        <filter>on-commit</filter>
+        <filter>stdout</filter>
+    </filters>
     <pulses>
         <pulse>
             <coordinates>
@@ -201,14 +205,31 @@
                     <level>FINE</level>
                     <label>success</label>
                     <markdown>commit `4e56ba43` built successfully in 23min</markdown>
+                    <links>
+                        <link href="/xml/stand.xml" rel="filter" type="text/xml"/>
+                    </links>
+                </tag>
+                <tag>
+                    <level>FINE</level>
+                    <label>stdout</label>
+                    <markdown>see [log.txt](http://www.rultor.com) for details</markdown>
+                    <links>
+                        <link href="/xml/stand.xml" rel="filter" type="text/xml"/>
+                    </links>
                 </tag>
                 <tag>
                     <level>INFO</level>
                     <label>#324</label>
+                    <links>
+                        <link href="/xml/stand.xml" rel="filter" type="text/xml"/>
+                    </links>
                 </tag>
                 <tag>
                     <level>INFO</level>
                     <label>pull-request</label>
+                    <links>
+                        <link href="/xml/stand.xml" rel="filter" type="text/xml"/>
+                    </links>
                 </tag>
             </tags>
             <links>
@@ -228,10 +249,16 @@
                 <tag>
                     <level>INFO</level>
                     <label>#324</label>
+                    <links>
+                        <link href="/xml/stand.xml" rel="filter" type="text/xml"/>
+                    </links>
                 </tag>
                 <tag>
                     <level>INFO</level>
                     <label>pull-request</label>
+                    <links>
+                        <link href="/xml/stand.xml" rel="filter" type="text/xml"/>
+                    </links>
                 </tag>
             </tags>
         </pulse>
