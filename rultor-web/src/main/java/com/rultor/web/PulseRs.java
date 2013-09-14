@@ -147,6 +147,10 @@ public final class PulseRs extends BaseRs {
             public Tags tags() {
                 throw new UnsupportedOperationException();
             }
+            @Override
+            public String stand() {
+                throw new UnsupportedOperationException();
+            }
         };
     }
 

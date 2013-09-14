@@ -555,7 +555,8 @@ public final class StandRs extends BaseRs {
             .link(
                 new Link(
                     "filter",
-                    uri.queryParam(StandRs.QUERY_TAGS, args).build(vals)
+                    uri.queryParam(StandRs.QUERY_TAGS, args)
+                        .build(this.name, vals)
                 )
             );
     }

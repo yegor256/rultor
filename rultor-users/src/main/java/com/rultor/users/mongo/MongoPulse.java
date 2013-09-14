@@ -137,6 +137,14 @@ final class MongoPulse implements Pulse {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String stand() {
+        return this.map.get(MongoStand.ATTR_STAND).toString();
+    }
+
+    /**
      * Collection.
      * @return Mongo collection
      */

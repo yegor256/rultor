@@ -129,7 +129,7 @@ public final class IndexRs extends BaseRs {
                         .clone()
                         .path(StandRs.class)
                         .queryParam(StandRs.QUERY_OPEN, "{label}")
-                        .build(label)
+                        .build(pulse.stand(), label)
                 )
             )
             .add("tags")

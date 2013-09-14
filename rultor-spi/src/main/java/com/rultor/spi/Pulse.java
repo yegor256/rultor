@@ -45,6 +45,13 @@ import javax.validation.constraints.NotNull;
 public interface Pulse {
 
     /**
+     * What stand it belongs to, if known (empty string otherwise).
+     * @return Name of stand
+     */
+    @NotNull(message = "name of stand is never NULL")
+    String stand();
+
+    /**
      * Coordinates of it.
      * @return Identifier
      */
