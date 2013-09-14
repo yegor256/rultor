@@ -33,9 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pageable;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
@@ -125,7 +123,7 @@ public final class AuditUsers implements Users, Runnable {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, Coordinates> flow() {
+    public Pulses flow() {
         return this.origin.flow();
     }
 

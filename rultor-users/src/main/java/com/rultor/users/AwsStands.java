@@ -38,9 +38,7 @@ import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pageable;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
 import java.util.Collection;
@@ -163,7 +161,7 @@ final class AwsStands implements Stands {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, Coordinates> flow() {
+    public Pulses flow() {
         throw new UnsupportedOperationException();
     }
 

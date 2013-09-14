@@ -69,6 +69,6 @@ public interface Stands extends Iterable<Stand> {
      * @return Pulses
      */
     @NotNull(message = "flow is never NULL")
-    Pageable<Pulse, Coordinates> flow();
+    Pulses flow();
 
 }

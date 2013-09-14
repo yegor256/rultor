@@ -32,9 +32,7 @@ package com.rultor.client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
-import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pageable;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
 import java.io.UnsupportedEncodingException;
@@ -160,7 +158,7 @@ public final class RestStands implements Stands {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, Coordinates> flow() {
+    public Pulses flow() {
         throw new UnsupportedOperationException();
     }
 

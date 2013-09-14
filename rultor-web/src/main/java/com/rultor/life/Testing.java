@@ -38,7 +38,7 @@ import com.rultor.spi.Column;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.InvalidCouponException;
 import com.rultor.spi.Pageable;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Rule;
@@ -128,8 +128,8 @@ final class Testing implements Profile {
                 throw new UnsupportedOperationException();
             }
             @Override
-            public Pageable<Pulse, Coordinates> flow() {
-                return new Pageable.Row<Pulse, Coordinates>();
+            public Pulses flow() {
+                return new Pulses.Row();
             }
         };
     }
@@ -215,8 +215,8 @@ final class Testing implements Profile {
                     return Testing.STANDS.values().iterator();
                 }
                 @Override
-                public Pageable<Pulse, Coordinates> flow() {
-                    return new Pageable.Row<Pulse, Coordinates>();
+                public Pulses flow() {
+                    return new Pulses.Row();
                 }
             };
         }

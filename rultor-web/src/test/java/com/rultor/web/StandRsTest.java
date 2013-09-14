@@ -77,6 +77,7 @@ public final class StandRsTest {
         final StandRs rest = new StandRs();
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(BaseRs.TEST_URN).when(stand).owner();
+        final Pulse pulse = Mockito.mock(Pulse.class);
         final Pulses pulses = new Pulses.Row(Arrays.asList(pulse));
         Mockito.doReturn(pulses).when(stand).pulses();
         final Coordinates coords = new Coordinates.Simple(

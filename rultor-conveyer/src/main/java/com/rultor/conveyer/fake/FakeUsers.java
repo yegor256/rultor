@@ -32,8 +32,7 @@ package com.rultor.conveyer.fake;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pageable;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
@@ -104,7 +103,7 @@ public final class FakeUsers implements Users {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, Coordinates> flow() {
+    public Pulses flow() {
         throw new UnsupportedOperationException();
     }
 

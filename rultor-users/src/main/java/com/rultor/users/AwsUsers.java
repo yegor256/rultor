@@ -41,9 +41,7 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
-import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pageable;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
@@ -149,7 +147,7 @@ public final class AwsUsers implements Users {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, Coordinates> flow() {
+    public Pulses flow() {
         throw new UnsupportedOperationException();
     }
 

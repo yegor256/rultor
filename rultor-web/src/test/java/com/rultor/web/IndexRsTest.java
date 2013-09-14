@@ -37,9 +37,7 @@ import com.rexsl.page.UriInfoMocker;
 import com.rexsl.test.JaxbConverter;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.spi.Account;
-import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pageable;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Rules;
 import com.rultor.spi.Stands;
@@ -85,8 +83,7 @@ public final class IndexRsTest {
         final User user = Mockito.mock(User.class);
         final Stands stands = Mockito.mock(Stands.class);
         Mockito.doReturn(stands).when(user).stands();
-        final Pageable<Pulse, Coordinates> flow =
-            new Pageable.Row<Pulse, Coordinates>();
+        final Pulses flow = new Pulses.Row();
         Mockito.doReturn(flow).when(stands).flow();
         final Rules rules = Mockito.mock(Rules.class);
         Mockito.doReturn(rules).when(user).rules();

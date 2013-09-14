@@ -256,7 +256,7 @@ public final class BuildHealthTest {
         final Document dom = DocumentBuilderFactory.newInstance()
             .newDocumentBuilder().newDocument();
         dom.appendChild(dom.createElement("widget"));
-        final Pulses pulses = new Pulses.Row<Pulse, Coordinates>();
+        final Pulses pulses = new Pulses.Row();
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(pulses).when(stand).pulses();
         new Xembler(widget.render(stand)).apply(dom);

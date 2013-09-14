@@ -64,6 +64,6 @@ public interface Users extends Iterable<User> {
      * @return Pulses
      */
     @NotNull(message = "flow is never NULL")
-    Pageable<Pulse, Coordinates> flow();
+    Pulses flow();
 
 }
