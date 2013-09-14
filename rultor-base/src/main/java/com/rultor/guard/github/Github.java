@@ -100,7 +100,7 @@ public interface Github {
      * Simple implementation.
      */
     @Loggable(Loggable.DEBUG)
-    @ToString
+    @ToString(exclude = "password")
     @EqualsAndHashCode(of = { "username", "password" })
     @Immutable
     final class Simple implements Github {

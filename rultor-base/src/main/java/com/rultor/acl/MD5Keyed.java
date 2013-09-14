@@ -46,7 +46,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  * @since 1.0
  */
 @Immutable
-@ToString
+@ToString(exclude = "hash")
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
 public final class MD5Keyed implements ACL {

@@ -36,6 +36,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * SNS client.
@@ -57,6 +58,7 @@ public interface SNSClient {
      * Simple client.
      */
     @Immutable
+    @ToString(exclude = "secret")
     @EqualsAndHashCode(of = { "key", "secret" })
     @Loggable(Loggable.DEBUG)
     final class Simple implements SNSClient {
@@ -78,13 +80,6 @@ public interface SNSClient {
             @NotNull(message = "AWS secret can't be NULL") final String scrt) {
             this.key = akey;
             this.secret = scrt;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString() {
-            return this.key;
         }
         /**
          * {@inheritDoc}

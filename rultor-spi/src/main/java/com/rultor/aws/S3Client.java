@@ -36,6 +36,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * S3 client.
@@ -63,6 +64,7 @@ public interface S3Client {
      * Simple client.
      */
     @Immutable
+    @ToString(exclude = "secret")
     @EqualsAndHashCode(of = { "key", "secret", "bkt" })
     @Loggable(Loggable.DEBUG)
     final class Simple implements S3Client {
@@ -91,13 +93,6 @@ public interface S3Client {
             this.key = akey;
             this.secret = scrt;
             this.bkt = bucket;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString() {
-            return this.key;
         }
         /**
          * {@inheritDoc}

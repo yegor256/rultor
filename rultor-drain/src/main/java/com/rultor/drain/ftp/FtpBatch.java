@@ -53,7 +53,7 @@ import org.apache.commons.net.ftp.FTPReply;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@ToString
+@ToString(exclude = "password")
 @EqualsAndHashCode(of = { "host", "login", "password", "port" })
 @Loggable(Loggable.DEBUG)
 final class FtpBatch {

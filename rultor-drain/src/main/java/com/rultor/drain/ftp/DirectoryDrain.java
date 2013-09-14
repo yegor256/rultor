@@ -59,7 +59,7 @@ import org.apache.commons.net.ftp.FTPReply;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@ToString
+@ToString(exclude = "password")
 @EqualsAndHashCode(of = { "work", "host", "login", "password", "port", "dir" })
 @Loggable(Loggable.DEBUG)
 public final class DirectoryDrain implements Drain {
