@@ -109,7 +109,11 @@ final class MongoPulses implements Pulses {
     @Override
     public Iterator<Pulse> iterator() {
         final DBCursor cursor = this.collection().find(
-            new Predicate.And(this.mandatory, this.optional).query()
+            new Predicate.And(this.mandatory, this.optional).query(),
+            new BasicDBObject()
+                .append(MongoStand.ATTR_COORDS, true)
+                .append(MongoStand.ATTR_STAND, true)
+                .append(MongoStand.ATTR_TAGS, true)
         );
         cursor.sort(new BasicDBObject(MongoStand.ATTR_UPDATED, -1));
         new Timer().schedule(
@@ -129,7 +133,7 @@ final class MongoPulses implements Pulses {
             }
             @Override
             public Pulse next() {
-                return new MongoPulse(cursor.next());
+                return new MongoPulse(MongoPulses.this.mongo, cursor.next());
             }
             @Override
             public void remove() {
