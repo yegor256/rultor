@@ -29,6 +29,9 @@
  */
 package com.rultor.users.mongo;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Pulses;
@@ -122,7 +125,23 @@ final class MongoStands implements Stands {
      */
     @Override
     public Pulses flow() {
-        throw new UnsupportedOperationException();
+        return new MongoPulses(
+            this.mongo,
+            new Predicate.InStands(
+                Lists.newArrayList(
+                    Iterables.transform(
+                        this.origin,
+                        new Function<Stand, String>() {
+                            @Override
+                            public String apply(final Stand stand) {
+                                return stand.name();
+                            }
+                        }
+                    )
+                )
+            ),
+            new Predicate.Any()
+        );
     }
 
 }

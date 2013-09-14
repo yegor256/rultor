@@ -116,7 +116,11 @@ public final class MongoUsers implements Users {
      */
     @Override
     public Pulses flow() {
-        throw new UnsupportedOperationException();
+        return new MongoPulses(
+            this.mongo,
+            new Predicate.Any(),
+            new Predicate.Any()
+        );
     }
 
 }

@@ -66,7 +66,7 @@ public interface Pulses extends Pageable<Pulse, Coordinates> {
         /**
          * Encapsulated array.
          */
-        private final transient Array<Pulse> array;
+        private final transient com.jcabi.immutable.Array<Pulse> array;
         /**
          * Public ctor.
          */
@@ -79,7 +79,7 @@ public interface Pulses extends Pageable<Pulse, Coordinates> {
          */
         public Row(@NotNull(message = "array can't be NULL")
             final Collection<Pulse> data) {
-            this.array = new Array<Pulse>(data);
+            this.array = new com.jcabi.immutable.Array<Pulse>(data);
         }
         /**
          * {@inheritDoc}
@@ -105,7 +105,6 @@ public interface Pulses extends Pageable<Pulse, Coordinates> {
                 public Pulses fetch() {
                     return Pulses.Row.this;
                 }
-
                 @Override
                 public Query withTag(final String label) {
                     return this;
