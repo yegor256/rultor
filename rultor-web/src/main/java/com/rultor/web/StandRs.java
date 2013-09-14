@@ -338,10 +338,7 @@ public final class StandRs extends BaseRs {
                     new JaxbBundle.Group<Tag>(pulse.tags()) {
                         @Override
                         public JaxbBundle bundle(final Tag tag) {
-                            return new JaxbBundle("tag")
-                                .add("label", tag.label()).up()
-                                .add("level", tag.level().toString()).up()
-                                .add("markdown", tag.markdown()).up();
+                            return StandRs.this.bundle(tag);
                         }
                     }
                 )
@@ -517,6 +514,40 @@ public final class StandRs extends BaseRs {
             dom.getDocumentElement().appendChild(error);
         }
         return dom.getDocumentElement();
+    }
+
+    /**
+     * Bundle a tag.
+     * @param tag A tag
+     * @return Bundle
+     */
+    private JaxbBundle bundle(final Tag tag) {
+        final UriBuilder uri = this.uriInfo().getBaseUriBuilder()
+            .clone().path(StandRs.class);
+        final Set<String> labels = new TreeSet<String>();
+        labels.addAll(this.tags);
+        labels.add(tag.label());
+        final Object[] args = new String[labels.size()];
+        final Object[] vals = new String[labels.size()];
+        int idx = 0;
+        for (String label : labels) {
+            args[idx] = String.format("{arg%d}", idx);
+            vals[idx] = label;
+            ++idx;
+        }
+        return new JaxbBundle("tag")
+            .add("label", tag.label())
+            .up()
+            .add("level", tag.level().toString())
+            .up()
+            .add("markdown", tag.markdown())
+            .up()
+            .link(
+                new Link(
+                    "filter",
+                    uri.queryParam(StandRs.QUERY_TAGS, args).build(vals)
+                )
+            );
     }
 
 }
