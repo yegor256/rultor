@@ -80,13 +80,13 @@ public final class MergeHistory implements Widget {
         Directives dirs = new Directives()
             .add("width").set("6").up()
             .add("merges");
-        for (Pulse pulse : Iterables.limit(stand.pulses(), Tv.TWENTY)) {
-            if (!pulse.tags().contains("on-pull-request")) {
-                continue;
-            }
-            if (!pulse.tags().contains("merge")) {
-                continue;
-            }
+        final Iterable<Pulse> pulses = Iterables.limit(
+            stand.pulses().query()
+                .withTag("on-pull-request")
+                .withTag("merge").fetch(),
+            Tv.HUNDRED
+        );
+        for (Pulse pulse : pulses) {
             try {
                 dirs = dirs.append(this.render(pulse));
             } catch (NormJson.JsonException ex) {

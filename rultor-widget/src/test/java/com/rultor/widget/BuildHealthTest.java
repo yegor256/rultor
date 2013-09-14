@@ -109,6 +109,16 @@ public final class BuildHealthTest {
                             new StringReader("{\"code\":0,\"duration\":98574}")
                         ).readObject(),
                         ""
+                    ),
+                    new Tag.Simple(
+                        "ci", Level.INFO,
+                        Json.createReader(
+                            new StringReader(
+                                // @checkstyle LineLength (1 line)
+                                "{\"name\":\"9ffeb7d\",\"author\":\"Walter\",\"time\":\"2011-07-21T12:15:00Z\"}"
+                            )
+                        ).readObject(),
+                        ""
                     )
                 )
             )
@@ -131,40 +141,6 @@ public final class BuildHealthTest {
                 "/widget/builds/build[code='127']",
                 "/widget/builds/build[health='0.5']"
             )
-        );
-    }
-
-    /**
-     * BuildHealth can gracefully handle broken tags.
-     * @throws Exception If fails
-     */
-    @Test
-    @SuppressWarnings("unchecked")
-    public void gracefullyHandlesEmptyTags() throws Exception {
-        final Widget widget = new BuildHealth();
-        final Document dom = DocumentBuilderFactory.newInstance()
-            .newDocumentBuilder().newDocument();
-        dom.appendChild(dom.createElement("widget"));
-        final Pulse first = Mockito.mock(Pulse.class);
-        final Coordinates coords = new Coordinates.Simple(
-            new URN("urn:test:3"), "rule-a"
-        );
-        Mockito.doReturn(coords).when(first).coordinates();
-        Mockito.doReturn(
-            new Tags.Simple(
-                Arrays.<Tag>asList(
-                    new Tag.Simple("ci", Level.INFO),
-                    new Tag.Simple("on-commit", Level.SEVERE)
-                )
-            )
-        ).when(first).tags();
-        final Pulses pulses = new Pulses.Row(Arrays.asList(first));
-        final Stand stand = Mockito.mock(Stand.class);
-        Mockito.doReturn(pulses).when(stand).pulses();
-        new Xembler(widget.render(stand)).apply(dom);
-        MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(dom),
-            XhtmlMatchers.hasXPath("/widget/builds[count(build)=0]")
         );
     }
 

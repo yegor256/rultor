@@ -29,7 +29,7 @@
  */
 package com.rultor.widget;
 
-import com.google.common.collect.Iterators;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
@@ -96,7 +96,12 @@ public final class BuildHealth implements Widget {
             .add("width").set("4").up()
             .add("builds");
         final Collection<BuildHealth.Build> builds = this.builds(
-            Iterators.limit(stand.pulses().iterator(), Tv.TWENTY)
+            Iterables.limit(
+                stand.pulses().query()
+                    .withTag("on-commit")
+                    .withTag("ci").fetch(),
+                Tv.HUNDRED
+            ).iterator()
         );
         for (BuildHealth.Build build : builds) {
             dirs = dirs.append(build.directives()).up();
@@ -115,9 +120,6 @@ public final class BuildHealth implements Widget {
             new ConcurrentSkipListMap<String, BuildHealth.Build>();
         while (pulses.hasNext()) {
             final Pulse pulse = pulses.next();
-            if (!pulse.tags().contains("on-commit")) {
-                continue;
-            }
             final String coord = String.format(
                 "%s %s", pulse.coordinates().owner(), pulse.coordinates().rule()
             );
@@ -177,15 +179,13 @@ public final class BuildHealth implements Widget {
                 .data(BuildHealth.TAG_ONCOMMIT);
             if (this.coords == null) {
                 this.coords = pulse.coordinates();
-                if (pulse.tags().contains("ci")) {
-                    final JsonObject scm = tags.get("ci")
-                        .data(BuildHealth.TAG_CI);
-                    this.head = StringUtils.substring(
-                        scm.getString("name"), 0, Tv.SEVEN
-                    );
-                    this.author = scm.getString("author");
-                    this.time = new Time(scm.getString("time"));
-                }
+                final JsonObject scm = tags.get("ci")
+                    .data(BuildHealth.TAG_CI);
+                this.head = StringUtils.substring(
+                    scm.getString("name"), 0, Tv.SEVEN
+                );
+                this.author = scm.getString("author");
+                this.time = new Time(scm.getString("time"));
                 this.duration = commit.getInt("duration");
                 this.code = commit.getInt("code");
             }

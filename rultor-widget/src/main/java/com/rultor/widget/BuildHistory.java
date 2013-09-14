@@ -82,13 +82,13 @@ public final class BuildHistory implements Widget {
         Directives dirs = new Directives()
             .add("width").set("6").up()
             .add("builds");
-        for (Pulse pulse : Iterables.limit(stand.pulses(), Tv.TWENTY)) {
-            if (!pulse.tags().contains("on-commit")) {
-                continue;
-            }
-            if (!pulse.tags().contains("ci")) {
-                continue;
-            }
+        final Iterable<Pulse> pulses = Iterables.limit(
+            stand.pulses().query()
+                .withTag("on-commit")
+                .withTag("ci").fetch(),
+            Tv.HUNDRED
+        );
+        for (Pulse pulse : pulses) {
             try {
                 dirs = dirs.append(this.render(pulse));
             } catch (NormJson.JsonException ex) {
