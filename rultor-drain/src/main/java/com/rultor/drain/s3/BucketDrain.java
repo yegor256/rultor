@@ -105,8 +105,7 @@ public final class BucketDrain implements Drain {
             IOUtils.toInputStream(
                 String.format(
                     "BucketDrain: work='%s', client='%s'\n",
-                    this.work,
-                    this.client
+                    this.work, this.client
                 )
             ),
             this.obj().read()

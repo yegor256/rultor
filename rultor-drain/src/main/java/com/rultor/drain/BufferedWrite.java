@@ -159,10 +159,8 @@ public final class BufferedWrite implements Drain, Closeable {
         return new SequenceInputStream(
             IOUtils.toInputStream(
                 Logger.format(
-                    "BufferedWrite: lifetime=%[ms]s, work='%s', origin='%s'\n",
-                    this.lifetime,
-                    this.work,
-                    this.origin
+                    "BufferedWrite: lifetime=%[ms]s, work='%s'\n",
+                    this.lifetime, this.work
                 ),
                 CharEncoding.UTF_8
             ),

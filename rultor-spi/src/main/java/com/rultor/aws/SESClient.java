@@ -36,7 +36,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * SES client.
@@ -58,7 +57,6 @@ public interface SESClient {
      * Simple client.
      */
     @Immutable
-    @ToString
     @EqualsAndHashCode(of = { "key", "secret" })
     @Loggable(Loggable.DEBUG)
     final class Simple implements SESClient {
@@ -80,6 +78,13 @@ public interface SESClient {
             @NotNull(message = "AWS secret can't be NULL") final String scrt) {
             this.key = akey;
             this.secret = scrt;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return this.key;
         }
         /**
          * {@inheritDoc}

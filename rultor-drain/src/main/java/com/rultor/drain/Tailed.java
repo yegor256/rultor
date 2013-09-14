@@ -106,8 +106,8 @@ public final class Tailed implements Drain {
             IOUtils.toInputStream(
                 String.format(
                     "Tailed: main='%s', tail='%s'\n",
-                    this.main,
-                    this.tail
+                    this.main.getClass().getCanonicalName(),
+                    this.tail.getClass().getCanonicalName()
                 ),
                 CharEncoding.UTF_8
             ),

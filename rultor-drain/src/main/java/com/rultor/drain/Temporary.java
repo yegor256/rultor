@@ -167,9 +167,7 @@ public final class Temporary implements Drain {
             IOUtils.toInputStream(
                 Logger.format(
                     "Temporary: marker='%s', work='%s', buffer='%s'\n",
-                    this.marker,
-                    this.work,
-                    buffer
+                    this.marker, this.work, buffer
                 ),
                 CharEncoding.UTF_8
             ),

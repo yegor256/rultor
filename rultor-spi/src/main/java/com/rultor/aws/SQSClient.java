@@ -64,7 +64,6 @@ public interface SQSClient {
      * Simple client.
      */
     @Immutable
-    @ToString
     @EqualsAndHashCode(of = { "key", "secret", "queue" })
     @Loggable(Loggable.DEBUG)
     final class Simple implements SQSClient {
@@ -93,6 +92,13 @@ public interface SQSClient {
             this.key = akey;
             this.secret = scrt;
             this.queue = url;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return this.key;
         }
         /**
          * {@inheritDoc}

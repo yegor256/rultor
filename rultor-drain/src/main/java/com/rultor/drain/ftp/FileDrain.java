@@ -142,8 +142,7 @@ public final class FileDrain implements Drain {
             IOUtils.toInputStream(
                 String.format(
                     "FileDrain: %s, file='%s'\n\n",
-                    this.batch,
-                    this.file
+                    this.batch, this.file
                 ),
                 CharEncoding.UTF_8
             ),

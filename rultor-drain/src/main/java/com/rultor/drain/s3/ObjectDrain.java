@@ -218,8 +218,7 @@ public final class ObjectDrain implements Drain {
             IOUtils.toInputStream(
                 String.format(
                     "ObjectDrain: key='%s', client='%s'\n",
-                    this.key,
-                    this.client
+                    this.key, this.client
                 ),
                 CharEncoding.UTF_8
             ),

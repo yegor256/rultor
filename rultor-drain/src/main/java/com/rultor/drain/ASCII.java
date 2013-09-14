@@ -107,10 +107,7 @@ public final class ASCII implements Drain {
     public InputStream read() throws IOException {
         return new SequenceInputStream(
             IOUtils.toInputStream(
-                String.format(
-                    "ASCII: origin='%s'\n",
-                    this.origin
-                ),
+                "ASCII\n",
                 CharEncoding.UTF_8
             ),
             this.origin.read()
