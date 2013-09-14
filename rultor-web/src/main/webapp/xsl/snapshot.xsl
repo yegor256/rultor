@@ -147,7 +147,7 @@
                 <xsl:comment>signal</xsl:comment>
             </i>
         </li>
-        <li>
+        <li class="hidden-phone">
             <xsl:value-of select="rule"/>
         </li>
     </xsl:template>
