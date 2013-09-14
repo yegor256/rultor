@@ -173,6 +173,7 @@ public final class BuildHealth implements Widget {
          * @throws NormJson.JsonException If can't process
          * @checkstyle RedundantThrows (5 lines)
          */
+        @Loggable(value = Loggable.DEBUG, ignore = NormJson.JsonException.class)
         public void append(final Pulse pulse) throws NormJson.JsonException {
             final Tags tags = pulse.tags();
             final JsonObject commit = tags.get("on-commit")
