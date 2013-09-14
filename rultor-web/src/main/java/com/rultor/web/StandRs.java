@@ -537,11 +537,12 @@ public final class StandRs extends BaseRs {
         labels.addAll(this.tags);
         labels.add(tag.label());
         final Object[] args = new String[labels.size()];
-        final Object[] vals = new String[labels.size()];
+        final Object[] values = new String[labels.size() + 1];
         int idx = 0;
+        values[0] = this.name;
         for (String label : labels) {
             args[idx] = String.format("{arg%d}", idx);
-            vals[idx] = label;
+            values[idx + 1] = label;
             ++idx;
         }
         return new JaxbBundle("tag")
@@ -558,7 +559,7 @@ public final class StandRs extends BaseRs {
                         .clone()
                         .path(StandRs.class)
                         .queryParam(StandRs.QUERY_TAGS, args)
-                        .build(this.name, vals)
+                        .build(values)
                 )
             );
     }
