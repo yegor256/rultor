@@ -115,10 +115,7 @@ public final class BuildHealthTest {
             )
         ).when(second).tags();
         final Pageable<Pulse, Coordinates> pulses =
-            Mockito.mock(Pageable.class);
-        Mockito.doReturn(
-            Arrays.asList(first, second).iterator()
-        ).when(pulses).iterator();
+            new Pageable.Row<Pulse, Coordinates>(Arrays.asList(first, second));
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(pulses).when(stand).pulses();
         new Xembler(widget.render(stand)).apply(dom);
@@ -163,9 +160,7 @@ public final class BuildHealthTest {
             )
         ).when(first).tags();
         final Pageable<Pulse, Coordinates> pulses =
-            Mockito.mock(Pageable.class);
-        Mockito.doReturn(Arrays.asList(first).iterator())
-            .when(pulses).iterator();
+            new Pageable.Row<Pulse, Coordinates>(Arrays.asList(first));
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(pulses).when(stand).pulses();
         new Xembler(widget.render(stand)).apply(dom);
@@ -239,10 +234,7 @@ public final class BuildHealthTest {
             )
         ).when(second).tags();
         final Pageable<Pulse, Coordinates> pulses =
-            Mockito.mock(Pageable.class);
-        Mockito.doReturn(
-            Arrays.asList(first, second).iterator()
-        ).when(pulses).iterator();
+            new Pageable.Row<Pulse, Coordinates>(Arrays.asList(first, second));
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(pulses).when(stand).pulses();
         new Xembler(widget.render(stand)).apply(dom);
@@ -268,9 +260,7 @@ public final class BuildHealthTest {
             .newDocumentBuilder().newDocument();
         dom.appendChild(dom.createElement("widget"));
         final Pageable<Pulse, Coordinates> pulses =
-            Mockito.mock(Pageable.class);
-        Mockito.doReturn(new ArrayList<Pulse>(0).iterator())
-            .when(pulses).iterator();
+            new Pageable.Row<Pulse, Coordinates>();
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(pulses).when(stand).pulses();
         new Xembler(widget.render(stand)).apply(dom);

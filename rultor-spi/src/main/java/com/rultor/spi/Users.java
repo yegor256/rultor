@@ -59,4 +59,11 @@ public interface Users extends Iterable<User> {
     @NotNull(message = "stand is never NULL")
     Stand stand(@NotNull(message = "stand name can't be NULL") String name);
 
+    /**
+     * Get flow of recent events visible to all users.
+     * @return Pulses
+     */
+    @NotNull(message = "flow is never NULL")
+    Pageable<Pulse, Coordinates> flow();
+
 }

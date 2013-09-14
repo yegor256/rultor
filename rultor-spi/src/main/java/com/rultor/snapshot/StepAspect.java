@@ -160,6 +160,7 @@ public final class StepAspect {
      * @param array Array of objects to wrap
      * @return Array of wrappers
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private static Object[] wrap(final Object[] array) {
         final Object[] output = new Object[array.length];
         for (int idx = 0; idx < array.length; ++idx) {

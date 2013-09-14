@@ -67,6 +67,52 @@ public interface Pageable<T, K> extends Iterable<T> {
         throws IOException;
 
     /**
+     * One row that doesn't support paginating.
+     * @param <T> Type of elements
+     * @param <K> Type of locator
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode
+    @Loggable(Loggable.DEBUG)
+    final class Row<T, K> implements Pageable<T, K> {
+        /**
+         * Encapsulated array.
+         */
+        private final transient ArraySortedSet<T> array;
+        /**
+         * Public ctor.
+         */
+        public Row() {
+            this(new ArrayList<T>(0));
+        }
+        /**
+         * Public ctor.
+         * @param data Array of data
+         */
+        public Row(@NotNull(message = "array can't be NULL")
+            final Collection<T> data) {
+            this.array = new ArraySortedSet<T>(
+                data, new ArraySortedSet.Comparator.Reverse<T>()
+            );
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Iterator<T> iterator() {
+            return this.array.iterator();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Pageable<T, K> tail(final K head) throws IOException {
+            return this;
+        }
+    }
+
+    /**
      * Immutable collection, based on array.
      * @param <T> Type of elements
      */

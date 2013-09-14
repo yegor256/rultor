@@ -31,6 +31,9 @@ package com.rultor.users.mongo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Coordinates;
+import com.rultor.spi.Pageable;
+import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
 import java.util.Iterator;
@@ -114,6 +117,14 @@ final class MongoStands implements Stands {
     @Override
     public Stand get(final String name) {
         return this.origin.get(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Pageable<Pulse, Coordinates> flow() {
+        throw new UnsupportedOperationException();
     }
 
 }

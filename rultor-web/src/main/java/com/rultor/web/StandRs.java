@@ -100,7 +100,7 @@ public final class StandRs extends BaseRs {
     /**
      * List of open pulses.
      */
-    private static final String QUERY_OPEN = "open";
+    public static final String QUERY_OPEN = "open";
 
     /**
      * ID of pulse.
