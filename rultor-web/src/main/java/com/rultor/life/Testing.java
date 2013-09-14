@@ -129,7 +129,7 @@ final class Testing implements Profile {
             }
             @Override
             public Pageable<Pulse, Coordinates> flow() {
-                throw new UnsupportedOperationException();
+                return new Pageable.Row<Pulse, Coordinates>();
             }
         };
     }
@@ -216,7 +216,7 @@ final class Testing implements Profile {
                 }
                 @Override
                 public Pageable<Pulse, Coordinates> flow() {
-                    throw new UnsupportedOperationException();
+                    return new Pageable.Row<Pulse, Coordinates>();
                 }
             };
         }
