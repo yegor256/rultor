@@ -72,7 +72,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -364,8 +363,6 @@ public final class StandRs extends BaseRs {
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private URI self(final Collection<String> coords) {
-        final UriBuilder builder = this.uriInfo().getBaseUriBuilder()
-            .clone().path(StandRs.class);
         final Object[] args = new Object[coords.size() + 1];
         final Object[] labels = new String[coords.size()];
         args[0] = this.name;
@@ -375,7 +372,11 @@ public final class StandRs extends BaseRs {
             args[idx + 1] = coord;
             ++idx;
         }
-        return builder.queryParam(StandRs.QUERY_OPEN, labels).build(args);
+        return this.uriInfo().getBaseUriBuilder()
+            .clone()
+            .path(StandRs.class)
+            .queryParam(StandRs.QUERY_OPEN, labels)
+            .build(args);
     }
 
     /**
@@ -532,8 +533,6 @@ public final class StandRs extends BaseRs {
      * @return Bundle
      */
     private JaxbBundle bundle(final Tag tag) {
-        final UriBuilder uri = this.uriInfo().getBaseUriBuilder()
-            .clone().path(StandRs.class);
         final Set<String> labels = new TreeSet<String>();
         labels.addAll(this.tags);
         labels.add(tag.label());
@@ -555,7 +554,10 @@ public final class StandRs extends BaseRs {
             .link(
                 new Link(
                     "filter",
-                    uri.queryParam(StandRs.QUERY_TAGS, args)
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(StandRs.class)
+                        .queryParam(StandRs.QUERY_TAGS, args)
                         .build(this.name, vals)
                 )
             );

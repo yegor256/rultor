@@ -80,5 +80,6 @@
                 </li>
             </xsl:if>
         </ul>
+        <xsl:apply-templates select="/page/pulses/pulse"/>
     </xsl:template>
 </xsl:stylesheet>
