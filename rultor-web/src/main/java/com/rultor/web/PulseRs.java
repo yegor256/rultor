@@ -130,6 +130,7 @@ public final class PulseRs extends BaseRs {
         } catch (NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
+        // @checkstyle AnonInnerLength (50 lines)
         return new Pulse() {
             @Override
             public String xembly() throws IOException {
