@@ -50,6 +50,7 @@
         </script>
     </xsl:template>
     <xsl:template name="content">
+        <xsl:apply-templates select="/page/filters"/>
         <xsl:apply-templates select="/page/pulses/pulse[snapshot or error]"/>
         <xsl:apply-templates select="/page/widgets"/>
         <xsl:choose>
@@ -92,6 +93,29 @@
                 </p>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
+    <xsl:template match="filters">
+        <div class="spacious">
+            <ul class="list-inline spacious-inline-list">
+                <li>
+                    <xsl:text>Show only: </xsl:text>
+                </li>
+                <xsl:apply-templates select="filter"/>
+                <li>
+                    <a title="clear filtering">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="/page/links/link[@rel='collapse']/@href"/>
+                        </xsl:attribute>
+                        <xsl:text>clear</xsl:text>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </xsl:template>
+    <xsl:template match="filter">
+        <li>
+            <span class="label label-default"><xsl:value-of select="."/></span>
+        </li>
     </xsl:template>
     <xsl:template match="widgets">
         <div class="row">
