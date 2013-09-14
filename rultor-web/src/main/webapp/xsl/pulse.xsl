@@ -39,10 +39,10 @@
             <div class="panel-heading">
                 <ul class="list-inline">
                     <li>
-                        <xsl:value-of select="coordindates/rule"/>
+                        <xsl:value-of select="coordinates/rule"/>
                     </li>
                     <li>
-                        <xsl:value-of select="coordindates/scheduled"/>
+                        <xsl:value-of select="coordinates/scheduled"/>
                     </li>
                     <li class="heart text-muted icon" title="click to stop fetching">
                         <i class="icon-cloud-download"><xsl:comment>heart</xsl:comment></i>
