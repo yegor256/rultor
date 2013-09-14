@@ -289,10 +289,20 @@
     </xsl:template>
     <xsl:template match="tag">
         <li>
-            <xsl:call-template name="tag-label">
-                <xsl:with-param name="tag" select="." />
-                <xsl:with-param name="level" select="level" />
-            </xsl:call-template>
+            <xsl:choose>
+                <xsl:when test="level">
+                    <xsl:call-template name="tag-label">
+                        <xsl:with-param name="tag" select="." />
+                        <xsl:with-param name="level" select="level" />
+                    </xsl:call-template>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:call-template name="tag-label">
+                        <xsl:with-param name="tag" select="." />
+                        <xsl:with-param name="level" select="'default'" />
+                    </xsl:call-template>
+                </xsl:otherwise>
+            </xsl:choose>
         </li>
     </xsl:template>
     <xsl:template match="tag" mode="detailed">
