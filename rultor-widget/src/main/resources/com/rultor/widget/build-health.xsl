@@ -114,7 +114,7 @@
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:text> (</xsl:text>
-            <xsl:value-of select="health"/>
+            <xsl:value-of select="format-number(health, '0.00')"/>
             <xsl:text>).</xsl:text>
         </p>
     </xsl:template>

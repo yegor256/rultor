@@ -175,6 +175,17 @@
                         <summary>running bash build script</summary>
                     </step>
                     <step>
+                        <id>build</id>
+                        <level>SEVERE</level>
+                        <start at="0.7">2013-08-23T17:59Z</start>
+                        <summary>exception occured</summary>
+                        <exception>
+                            <class>java.io.IOException</class>
+                            <cause>something went terribly wrong</cause>
+                            <stacktrace>test</stacktrace>
+                        </exception>
+                    </step>
+                    <step>
                         <id>announce</id>
                         <summary>announce results</summary>
                     </step>

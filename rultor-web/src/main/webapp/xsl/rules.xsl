@@ -37,25 +37,25 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <form method="post" class="form-inline spacious">
-            <xsl:attribute name="action">
-                <xsl:value-of select="/page/links/link[@rel='create']/@href"/>
-            </xsl:attribute>
-            <fieldset>
-                <div class="row">
-                    <div class="col-12 col-sm-6 col-lg-4">
+        <div class="row">
+            <div class="col-12 col-sm-6 col-lg-4">
+                <form method="post" class="form-inline spacious">
+                    <xsl:attribute name="action">
+                        <xsl:value-of select="/page/links/link[@rel='create']/@href"/>
+                    </xsl:attribute>
+                    <fieldset>
                         <div class="input-group">
-                            <input name="name" type="text" class="form-control" />
+                            <input name="name" type="text" class="form-control" placeholder="Unique name of a new rule"/>
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-primary">
                                     <xsl:text>Create</xsl:text>
                                 </button>
                             </span>
                         </div>
-                    </div>
-                </div>
-            </fieldset>
-        </form>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
         <xsl:choose>
             <xsl:when test="/page/rules/rule">
                 <xsl:apply-templates select="/page/rules/rule"/>
@@ -106,7 +106,7 @@
                 </li>
                 <xsl:if test="failure != ''">
                     <li class="icon">
-                        <a onclick="$(this).parent().parent().parent().find('pre').toggle();"
+                        <a onclick="$(this).closest('pre').toggle();"
                             title="show the failure" class="text-danger">
                             <i class="icon-warning-sign"><xsl:comment>failure</xsl:comment></i>
                         </a>

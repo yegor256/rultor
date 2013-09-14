@@ -95,13 +95,13 @@
                     <xsl:if test="xembly">
                         <li class="icon">
                             <i class="icon-wrench" title="show xembly"
-                                onclick="$(this).parent().parent().parent().parent().find('.xembly').toggle();"><xsl:comment>xembly</xsl:comment></i>
+                                onclick="$(this).closest('.xembly').toggle();"><xsl:comment>xembly</xsl:comment></i>
                         </li>
                     </xsl:if>
                     <xsl:if test="exceptions/exception">
                         <li class="icon">
                             <i class="icon-warning-sign text-danger" title="show exceptions"
-                                onclick="$(this).parent().parent().parent().parent().find('.exceptions').toggle();"><xsl:comment>exceptions</xsl:comment></i>
+                                onclick="$(this).closest('.exceptions').toggle();"><xsl:comment>exceptions</xsl:comment></i>
                         </li>
                     </xsl:if>
                 </ul>

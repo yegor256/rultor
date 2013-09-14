@@ -38,7 +38,7 @@
             <xsl:if test="spec">
                 <li class="icon">
                     <i class="icon-beaker" title="show spec"
-                        onclick="$(this).parent().parent().parent().parent().find('pre.spec').toggle();"><xsl:comment>spec</xsl:comment></i>
+                        onclick="$(this).closest('pre.spec').toggle();"><xsl:comment>spec</xsl:comment></i>
                 </li>
             </xsl:if>
             <xsl:apply-templates select="version" mode="compact"/>
@@ -206,7 +206,7 @@
             <span class="step">
                 <xsl:if test="exception">
                     <i class="text-danger icon-warning-sign icon"
-                        onclick="$(this).parent().parent().find('pre.exception').toggle();">
+                        onclick="$(this).parent().parent().next().toggle();">
                         <xsl:attribute name="title">
                             <xsl:value-of select="exception/class"/>
                         </xsl:attribute>
@@ -260,17 +260,19 @@
             <xsl:if test="not($left)">
                 <i class="icon-chevron-left"><xsl:comment>start</xsl:comment></i>
             </xsl:if>
-            <xsl:if test="exception/stacktrace">
-                <pre style="display:none" class="text-danger text-left exception"><xsl:value-of select="exception/stacktrace"/></pre>
-            </xsl:if>
         </li>
+        <xsl:if test="exception/stacktrace">
+            <li style="display:none">
+                <pre class="text-danger text-left exception"><xsl:value-of select="exception/stacktrace"/></pre>
+            </li>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="tags">
         <ul class="list-inline spacious-inline-list">
             <xsl:if test="tag/markdown">
                 <li class="icon">
                     <i class="icon-plus-sign"
-                        onclick="$(this).parent().parent().parent().find('.detailed').toggle();"><xsl:comment>show</xsl:comment></i>
+                        onclick="$(this).closest('.detailed').toggle();"><xsl:comment>show</xsl:comment></i>
                 </li>
             </xsl:if>
             <xsl:apply-templates select="tag"/>
