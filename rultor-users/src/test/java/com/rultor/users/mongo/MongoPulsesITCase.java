@@ -30,6 +30,7 @@
 package com.rultor.users.mongo;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
 import com.rultor.spi.Pulse;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -84,8 +85,10 @@ public final class MongoPulsesITCase {
     @Test
     public void searchesByTagInMongoDb() throws Exception {
         final Mongo mongo = this.mongo();
+        final DBCollection col = mongo.get().getCollection(MongoStand.TABLE);
+        col.remove(new BasicDBObject());
         final String label = "some-test-tag";
-        mongo.get().getCollection(MongoStand.TABLE).insert(
+        col.insert(
             new BasicDBObject().append(
                 MongoStand.ATTR_TAGS,
                 Arrays.asList(
@@ -93,7 +96,7 @@ public final class MongoPulsesITCase {
                 )
             )
         );
-        mongo.get().getCollection(MongoStand.TABLE).insert(
+        col.insert(
             new BasicDBObject().append(
                 MongoStand.ATTR_TAGS,
                 new MongoTag("other-tag", Level.INFO, "{ }", "").asObject()
