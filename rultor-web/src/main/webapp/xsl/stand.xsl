@@ -95,22 +95,24 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="filters">
-        <div class="spacious">
-            <ul class="list-inline spacious-inline-list">
-                <li>
-                    <xsl:text>Show only: </xsl:text>
-                </li>
-                <xsl:apply-templates select="filter"/>
-                <li>
-                    <a title="clear filtering">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="/page/links/link[@rel='collapse']/@href"/>
-                        </xsl:attribute>
-                        <xsl:text>clear</xsl:text>
-                    </a>
-                </li>
-            </ul>
-        </div>
+        <xsl:if test="filter">
+            <div class="spacious">
+                <ul class="list-inline spacious-inline-list">
+                    <li>
+                        <xsl:text>Show only: </xsl:text>
+                    </li>
+                    <xsl:apply-templates select="filter"/>
+                    <li>
+                        <a title="clear filtering">
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="/page/links/link[@rel='collapse']/@href"/>
+                            </xsl:attribute>
+                            <xsl:text>clear</xsl:text>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="filter">
         <li>
