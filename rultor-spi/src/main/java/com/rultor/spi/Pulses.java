@@ -27,13 +27,26 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.spi;
 
-def log = new File(basedir, 'build.log')
-assert log.exists()
-def text = log.getText('UTF-8')
-assert text.contains('INFO: main #start():')
-assert text.contains('CONSOLE: ')
-assert text.contains('INFO χemβly ')
-assert text.contains('INFO nothing to do')
-assert text.contains('INFO: main #close():')
+import com.jcabi.aspects.Immutable;
+import javax.validation.constraints.NotNull;
 
+/**
+ * Pulses.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+@Immutable
+public interface Pulses extends Pageable<Pulse, Coordinates> {
+
+    /**
+     * Get query to filter by.
+     * @return Query to use
+     */
+    @NotNull(message = "query is never NULL")
+    Query query();
+
+}

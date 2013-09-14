@@ -38,8 +38,8 @@ import com.rexsl.test.XhtmlMatchers;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Users;
 import java.io.IOException;
@@ -77,9 +77,7 @@ public final class StandRsTest {
         final StandRs rest = new StandRs();
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(BaseRs.TEST_URN).when(stand).owner();
-        final Pulse pulse = Mockito.mock(Pulse.class);
-        final Pageable<Pulse, Coordinates> pulses =
-            new Pageable.Row<Pulse, Coordinates>(Arrays.asList(pulse));
+        final Pulses pulses = new Pulses.Row(Arrays.asList(pulse));
         Mockito.doReturn(pulses).when(stand).pulses();
         final Coordinates coords = new Coordinates.Simple(
             new URN("urn:test:888"), "some-rule-identifier"

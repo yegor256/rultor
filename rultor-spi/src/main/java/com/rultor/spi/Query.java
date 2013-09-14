@@ -27,13 +27,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.spi;
 
-def log = new File(basedir, 'build.log')
-assert log.exists()
-def text = log.getText('UTF-8')
-assert text.contains('INFO: main #start():')
-assert text.contains('CONSOLE: ')
-assert text.contains('INFO χemβly ')
-assert text.contains('INFO nothing to do')
-assert text.contains('INFO: main #close():')
+import com.jcabi.aspects.Immutable;
+import javax.validation.constraints.NotNull;
 
+/**
+ * Query.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+@Immutable
+public interface Query {
+
+    /**
+     * Fetch pulses.
+     * @return Pulses filtered
+     */
+    @NotNull(message = "pulses is never NULL")
+    Pulses fetch();
+
+    /**
+     * Narrow down query to pulses where this tag is present.
+     * @param label Name of the tag
+     * @return New query
+     */
+    @NotNull(message = "query is never NULL")
+    Query withTag(@NotNull(message = "label can't be NULL") String label);
+
+}

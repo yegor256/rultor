@@ -27,13 +27,74 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.users.mongo;
 
-def log = new File(basedir, 'build.log')
-assert log.exists()
-def text = log.getText('UTF-8')
-assert text.contains('INFO: main #start():')
-assert text.contains('CONSOLE: ')
-assert text.contains('INFO χemβly ')
-assert text.contains('INFO nothing to do')
-assert text.contains('INFO: main #close():')
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.rultor.spi.Pulses;
+import com.rultor.spi.Query;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+/**
+ * Query in Mongo stand.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ */
+@Immutable
+@ToString
+@EqualsAndHashCode(of = { "mongo", "mandatory", "optional" })
+@Loggable(Loggable.DEBUG)
+final class MongoQuery implements Query {
+
+    /**
+     * Mongo.
+     */
+    private final transient Mongo mongo;
+
+    /**
+     * Mandatory predicate.
+     */
+    private final transient Predicate mandatory;
+
+    /**
+     * Optional.
+     */
+    private final transient Predicate optional;
+
+    /**
+     * Public ctor.
+     * @param mng Mongo
+     * @param mnd Mandatory
+     * @param opt Optional
+     */
+    protected MongoQuery(final Mongo mng, final Predicate mnd,
+        final Predicate opt) {
+        this.mongo = mng;
+        this.mandatory = mnd;
+        this.optional = opt;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Query withTag(final String name) {
+        return new MongoQuery(
+            this.mongo, this.mandatory,
+            new Predicate.And(this.optional, new Predicate.WithTag(name))
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Pulses fetch() {
+        return new MongoPulses(this.mongo, this.mandatory, this.optional);
+    }
+
+}

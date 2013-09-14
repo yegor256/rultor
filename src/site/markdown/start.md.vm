@@ -167,7 +167,7 @@ type of EC2 instance, your total cost will be $3.60 per month. This is less
 than the allowance you get automatically from us and you don't need to fund
 your account at all.
 
-${hash}${hash} #anchor("stand") Drain
+${hash}${hash} #anchor("drain") Drain
 
 A "_drain_" is where your rules log their events. Every rule has its own drain
 configured with its own spec. For example, you can configure it like:

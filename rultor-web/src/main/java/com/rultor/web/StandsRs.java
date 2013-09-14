@@ -92,7 +92,7 @@ public final class StandsRs extends BaseRs {
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()
                 .clone()
-                .path(StandRs.class)
+                .path(AclRs.class)
                 .build(name),
             String.format("Stand `%s` successfully created", name),
             Level.INFO

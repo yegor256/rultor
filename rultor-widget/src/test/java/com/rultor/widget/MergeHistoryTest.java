@@ -32,8 +32,8 @@ package com.rultor.widget;
 import com.jcabi.urn.URN;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Tag;
 import com.rultor.spi.Tags;
@@ -124,8 +124,7 @@ public final class MergeHistoryTest {
                 )
             )
         ).when(second).tags();
-        final Pageable<Pulse, Coordinates> pulses =
-            new Pageable.Row<Pulse, Coordinates>(Arrays.asList(first, second));
+        final Pulses pulses = new Pulses.Row(Arrays.asList(first, second));
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(pulses).when(stand).pulses();
         new Xembler(widget.render(stand)).apply(dom);
@@ -170,8 +169,7 @@ public final class MergeHistoryTest {
                 )
             )
         ).when(first).tags();
-        final Pageable<Pulse, Coordinates> pulses =
-            new Pageable.Row<Pulse, Coordinates>(Arrays.asList(first));
+        final Pulses pulses = new Pulses.Row(Arrays.asList(first));
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(pulses).when(stand).pulses();
         new Xembler(widget.render(stand)).apply(dom);
@@ -192,8 +190,7 @@ public final class MergeHistoryTest {
         final Document dom = DocumentBuilderFactory.newInstance()
             .newDocumentBuilder().newDocument();
         dom.appendChild(dom.createElement("widget"));
-        final Pageable<Pulse, Coordinates> pulses =
-            new Pageable.Row<Pulse, Coordinates>();
+        final Pulses pulses = new Pulses.Row();
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(pulses).when(stand).pulses();
         new Xembler(widget.render(stand)).apply(dom);
