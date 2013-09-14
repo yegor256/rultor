@@ -31,25 +31,13 @@ package com.rultor.users.mongo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pageable;
-import com.rultor.spi.Pulse;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Query;
-import com.rultor.spi.Stand;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Pulses in Mongo stand.
+ * Query in Mongo stand.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -60,10 +48,10 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "mongo", "mandatory", "optional" })
 @Loggable(Loggable.DEBUG)
-final class MongoPulses implements Pulses {
+final class MongoQuery implements Query {
 
     /**
-     * Mongo container.
+     * Mongo.
      */
     private final transient Mongo mongo;
 
@@ -79,24 +67,11 @@ final class MongoPulses implements Pulses {
 
     /**
      * Public ctor.
-     * @param mng Mongo container
-     * @param stand Original
-     */
-    protected MongoPulses(final Mongo mng, final Stand stand) {
-        this(
-            mng,
-            new Predicate.InStand(stand.name()),
-            new Predicate.Any()
-        );
-    }
-
-    /**
-     * Private ctor.
      * @param mng Mongo
-     * @param mnd Mandatory predicate
-     * @param opt Optional predicate
+     * @param mnd Mandatory
+     * @param opt Optional
      */
-    protected MongoPulses(final Mongo mng, final Predicate mnd,
+    protected MongoQuery(final Mongo mng, final Predicate mnd,
         final Predicate opt) {
         this.mongo = mng;
         this.mandatory = mnd;
@@ -107,46 +82,10 @@ final class MongoPulses implements Pulses {
      * {@inheritDoc}
      */
     @Override
-    public Iterator<Pulse> iterator() {
-        final DBCursor cursor = this.collection().find(
-            new Predicate.And(this.mandatory, this.optional).query()
-        );
-        cursor.sort(new BasicDBObject(MongoStand.ATTR_UPDATED, -1));
-        new Timer().schedule(
-            new TimerTask() {
-                @Override
-                public void run() {
-                    cursor.close();
-                }
-            },
-            TimeUnit.MINUTES.toMillis(1)
-        );
-        // @checkstyle AnonInnerLength (50 lines)
-        return new Iterator<Pulse>() {
-            @Override
-            public boolean hasNext() {
-                return cursor.hasNext();
-            }
-            @Override
-            public Pulse next() {
-                return new MongoPulse(cursor.next());
-            }
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Pageable<Pulse, Coordinates> tail(final Coordinates top) {
-        return new MongoPulses(
-            this.mongo,
-            new Predicate.And(this.mandatory, new Predicate.Tail(top)),
-            this.optional
+    public Query withTag(final String name) {
+        return new MongoQuery(
+            this.mongo, this.mandatory,
+            new Predicate.And(this.optional, new Predicate.WithTag(name))
         );
     }
 
@@ -154,20 +93,8 @@ final class MongoPulses implements Pulses {
      * {@inheritDoc}
      */
     @Override
-    public Query query() {
-        return new MongoQuery(this.mongo, this.mandatory, this.optional);
-    }
-
-    /**
-     * Collection.
-     * @return Mongo collection
-     */
-    private DBCollection collection() {
-        try {
-            return this.mongo.get().getCollection(MongoStand.TABLE);
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+    public Pulses fetch() {
+        return new MongoPulses(this.mongo, this.mandatory, this.optional);
     }
 
 }
