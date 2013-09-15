@@ -32,22 +32,24 @@ package com.rultor.scm.git;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.util.regex.Pattern;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Validator of GIT URLs.
+ * Wrapper for string representation of GIT URI.
  *
  * @author Evgeniy Nyavro (e.nyavro@gmail.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(of = "uri")
 @Loggable(Loggable.DEBUG)
-public final class GitURLValidator {
+public final class GitURI {
 
     /**
      * Pattern to validate GIT URLS.
-     * ssh://[user@]host.xz[:port]/path/to/repo.git/
-     * "user@host.xz:path/to/repo.git/",
      */
     private static final Pattern PATTERN =
         Pattern.compile(
@@ -55,17 +57,34 @@ public final class GitURLValidator {
             "ssh://(\\w+@)?\\w+[\\w.-]*(:\\d+)?/\\w[\\w./-]+\\w.git/?|"
             + "(git|((http|ftp)s?))://\\w+[\\w.-]*(:\\d+)?/\\w[\\w./-]+\\w"
             + ".git/?|rsync://\\w+[\\w.-/]*.git/?|"
-            + "(?!(ssh|git|http(s)?|ftp(s)?|rsync))"
-            + "(\\w+@)?[\\w.-]+:(?!(//))[\\w.-/]+|"
+            + "(\\w+@)?[\\w.-]+:(?!(/))[\\w.-/]+|"
             + "/\\w+[\\w/]+\\w+.git/?|file:///[\\w/]+\\w+.git/?"
         );
 
     /**
-     * Check if url is valid GIT URL.
-     * @param addr Address to check
-     * @return True if address is valid GIT URL
+     * Underlying uri value.
      */
-    public boolean isValid(final String addr) {
-        return GitURLValidator.PATTERN.matcher(addr).matches();
+    private final transient String uri;
+
+    /**
+     * Public ctor.
+     * Throws IllegalArgumentException if passed address is invalid
+     * @param addr GIT URL
+     */
+    public GitURI(final String addr) {
+        if (!GitURI.PATTERN.matcher(addr).matches()) {
+            throw new IllegalArgumentException(
+                String.format("Invalid GIT URL: %s", addr)
+            );
+        }
+        this.uri = addr;
+    }
+
+    /**
+     * Getting underlying value.
+     * @return Underlying uri value
+     */
+    public String getValue() {
+        return this.uri;
     }
 }

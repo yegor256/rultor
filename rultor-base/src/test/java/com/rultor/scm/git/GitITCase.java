@@ -75,7 +75,7 @@ public final class GitITCase {
         final File dir = Files.createTempDir();
         final SCM git = new Git(
             new ShellMocker.Bash(dir),
-            GitITCase.URL,
+            new GitURI(GitITCase.URL),
             "test"
         );
         final Branch branch = git.checkout("master");
@@ -96,7 +96,7 @@ public final class GitITCase {
         final File dir = Files.createTempDir();
         final SCM git = new Git(
             new ShellMocker.Bash(dir),
-            GitITCase.URL,
+            new GitURI(GitITCase.URL),
             "boom"
         );
         MatcherAssert.assertThat(
@@ -115,7 +115,7 @@ public final class GitITCase {
         final File dir = Files.createTempDir();
         final SCM git = new Git(
             new ShellMocker.Bash(dir),
-            GitITCase.URL,
+            new GitURI(GitITCase.URL),
             "foo-4"
         );
         git.checkout(GitITCase.TAG);
@@ -131,7 +131,7 @@ public final class GitITCase {
         final File dir = Files.createTempDir();
         final SCM git = new Git(
             new ShellMocker.Bash(dir),
-            GitITCase.URL,
+            new GitURI(GitITCase.URL),
             "foo-ff"
         );
         git.checkout(GitITCase.BRANCH);

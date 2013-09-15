@@ -72,7 +72,7 @@ public final class Git implements SCM {
     /**
      * Git URL.
      */
-    private final transient String url;
+    private final transient GitURI url;
 
     /**
      * Directory to use in terminal.
@@ -93,7 +93,7 @@ public final class Git implements SCM {
      */
     public Git(
         @NotNull(message = "shell can't be NULL") final Shell shl,
-        @NotNull(message = "URL can't be NULL") final String addr,
+        @NotNull(message = "URL can't be NULL") final GitURI addr,
         @NotNull(message = "folder can't be NULL") final String folder) {
         this(
             shl, addr, folder,
@@ -114,11 +114,8 @@ public final class Git implements SCM {
      * @param priv Private key to use locally
      * @checkstyle ParameterNumber (5 lines)
      */
-    public Git(final Shell shl, final String addr, final String folder,
+    public Git(final Shell shl, final GitURI addr, final String folder,
         final PrivateKey priv) {
-        if (!new GitURLValidator().isValid(addr)) {
-            throw new IllegalArgumentException("Invalid GIT URL: " + addr);
-        }
         this.terminal = new Terminal(shl);
         this.url = addr;
         this.dir = folder;
@@ -187,7 +184,7 @@ public final class Git implements SCM {
             .append("DIR=$(pwd)/")
             .append(Terminal.quotate(Terminal.escape(this.dir)))
             .append(" && URL=")
-            .append(Terminal.quotate(Terminal.escape(this.url)))
+            .append(Terminal.quotate(Terminal.escape(this.url.getValue())))
             .append(" && mkdir -p \"$DIR\"")
             .append(" && ( cat > \"$DIR/id_rsa\" )")
             // @checkstyle LineLength (1 line)

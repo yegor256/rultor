@@ -31,19 +31,17 @@ package com.rultor.scm.git;
 
 import java.util.Arrays;
 import java.util.List;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 /**
- * Test case for {@link com.rultor.scm.git.GitURLValidator}.
+ * Test case for {@link GitURI}.
  * @author Evgeniy Nyavro (e.nyavro@gmail.com)
  * @version $Id$
  */
 @RunWith(Parameterized.class)
-public final class GitURLValidatorTest {
+public final class GitURITest {
 
     /**
      * Git url to run test with.
@@ -53,34 +51,42 @@ public final class GitURLValidatorTest {
     /**
      * Expected validity of url.
      */
-    private final transient boolean expected;
+    private final transient boolean isValid;
 
     /**
      * Public ctor.
      * @param giturl Address to check
      * @param expect Expected validity
      */
-    public GitURLValidatorTest(final String giturl, final boolean expect) {
+    public GitURITest(final String giturl, final boolean expect) {
         this.url = giturl;
-        this.expected = expect;
+        this.isValid = expect;
     }
 
     /**
      * Checks ssh GIT URLs.
-     * Valid ssh urls:
-     * ssh://[user@]host.xz[:port]/path/to/repo.git/
      */
     @Test
-    public void checksSshUrls() {
-        MatcherAssert.assertThat(
-            new GitURLValidator().isValid(this.url),
-            Matchers.is(this.expected)
-        );
+    public void checksGitUrlValidity() {
+        if (this.isValid) {
+            new GitURI(this.url);
+        }
+    }
+
+    /**
+     * Fails when passed invalid GIT URL.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void failsWhenPassedInvalidGitURL() {
+        if (this.isValid) {
+            throw new IllegalArgumentException();
+        }
+        new GitURI(this.url);
     }
 
     /**
      * Test cases.
-     * @return List of pairs of git url and expected validity.
+     * @return List of pairs of git url and isValid validity.
      */
     @Parameterized.Parameters
     public static List<Object[]> isEmptyData() {
@@ -103,6 +109,7 @@ public final class GitURLValidatorTest {
                 {"rsync://host.xz/path/to/repo.git/", true},
                 {"host.xz:path/to/repo.git/", true},
                 {"user@host.xz:path/to/repo.git/", true},
+                {"git@github.com:rultor/rultor.git", true},
                 {"/path/to/repo.git/", true},
                 {"file:///path/to/repo.git/", true},
                 {"ssh1://host.xz/path/to/repo.git/", false},
@@ -124,11 +131,9 @@ public final class GitURLValidatorTest {
                 {"gits://host.xz:8383/path/to/repo.git/", false},
                 {"http://host.xz/path/to/repo./", false},
                 {"https://host.xz:/path/to/repo.git/", false},
-                {"https:host.xz/path/to/repo.git/", false},
                 {"http://host.xz:81b81/path/to/repo.git/", false},
                 {"ftp://host.xz/path/to/repo./", false},
                 {"ftps://host.xz:/path/to/repo.git/", false},
-                {"ftps:host.xz/path/to/repo.git/", false},
                 {"ftp://host.xz:81b81/path/to/repo.git/", false},
                 {"rsync:/host.xz/path/to/repo.git/", false},
                 {"rsync//host.xz/path/to/repo.git/", false},

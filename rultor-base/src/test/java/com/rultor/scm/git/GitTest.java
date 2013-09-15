@@ -69,7 +69,7 @@ public final class GitTest {
         MatcherAssert.assertThat(
             new Git(
                 new ShellMocker.Bash(Files.createTempDir()),
-                GitTest.GIT_URL,
+                new GitURI(GitTest.GIT_URL),
                 "test"
             ).checkout("master"),
             Matchers.notNullValue(Branch.class)
@@ -85,7 +85,7 @@ public final class GitTest {
         MatcherAssert.assertThat(
             new Git(
                 new ShellMocker.Bash(Files.createTempDir()),
-                GitTest.GIT_URL,
+                new GitURI(GitTest.GIT_URL),
                 "test2"
             ).branches(),
             Matchers.notNullValue(Collection.class)
