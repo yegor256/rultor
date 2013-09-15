@@ -123,7 +123,7 @@ final class PgAccount implements Account {
                 .set("")
                 .set(details)
                 .set(amount.points())
-                .update();
+                .execute();
         } catch (SQLException ex) {
             throw new IllegalStateException(ex);
         }
@@ -145,7 +145,7 @@ final class PgAccount implements Account {
             new JdbcSession(this.client.get())
                 .sql("DELETE FROM coupon WHERE code=?")
                 .set(code)
-                .update();
+                .execute();
             this.fund(
                 amount, String.format("account funded with coupon %s", code)
             );

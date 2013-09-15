@@ -93,14 +93,10 @@ public final class PgAccountTest {
             conn.prepareStatement(Mockito.startsWith("SELECT"))
         ).thenReturn(selectStmt);
         Mockito.when(
-            conn.prepareStatement(
-                Mockito.startsWith("DELETE"), Mockito.anyInt()
-            )
+            conn.prepareStatement(Mockito.startsWith("DELETE"))
         ).thenReturn(deleteStmt);
         Mockito.when(
-            conn.prepareStatement(
-                Mockito.startsWith("INSERT"), Mockito.anyInt()
-            )
+            conn.prepareStatement(Mockito.startsWith("INSERT"))
         ).thenReturn(updateStmt);
         final ResultSet result = Mockito.mock(ResultSet.class);
         Mockito.when(result.next()).thenReturn(true, false);
