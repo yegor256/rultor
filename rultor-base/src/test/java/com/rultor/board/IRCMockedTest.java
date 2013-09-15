@@ -32,7 +32,12 @@ package com.rultor.board;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.ArgumentCaptor;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.schwering.irc.lib.IRCConnection;
+import org.schwering.irc.lib.IRCEventListener;
+import org.schwering.irc.lib.IRCUser;
 
 /**
  * A mocked test of IRC board.
@@ -43,6 +48,20 @@ import org.schwering.irc.lib.IRCConnection;
  */
 public class IRCMockedTest {
     /**
+     * IRC default port.
+     * @checkstyle DeclarationOrder (3 lines)
+     * @checkstyle MagicNumber (2 lines)
+     */
+    private static final int IRC_PORT_DEFAULT = 6667;
+
+    /**
+     * IRC Server host.
+     * @checkstyle DeclarationOrder (3 lines)
+     * IRC server host.
+     */
+    private static final String IRC_SERVER_HOST = "calvino.freenode.net";
+
+    /**
      * Sends a correct message.
      *
      * @throws Exception If some problem inside
@@ -51,11 +70,14 @@ public class IRCMockedTest {
     public final void sendMessage() throws Exception {
         final IRCConnection conn = Mockito.mock(IRCConnection.class);
         final String channel = "channelTest";
-        final String body = "test irc";
+        final String body = "test irc message";
         final Billboard board = new IRC(
+            this.IRC_SERVER_HOST,
+            this.IRC_PORT_DEFAULT,
             channel,
             conn
         );
+        Mockito.when(conn.isConnected()).thenReturn(new Boolean(true));
         board.announce(body);
         Mockito.verify(conn).doPrivmsg(
             Mockito.argThat(

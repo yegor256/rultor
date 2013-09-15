@@ -61,7 +61,7 @@ public class IRCTest {
     @Test
     public final void sendMessage() throws Exception {
         final String channel = "channelTest";
-        final String body = "test irc";
+        final String body = "test irc message";
         final Billboard board = new IRC(
             this.IRC_SERVER_HOST,
             this.IRC_PORT_DEFAULT,

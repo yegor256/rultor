@@ -44,10 +44,9 @@ import org.schwering.irc.lib.ssl.SSLIRCConnection;
 import org.schwering.irc.lib.ssl.SSLTrustManager;
 
 /**
- * IRC.
- * The IRC client API implementation is from here:
- * http://moepii.sourceforge.net/
+ * The IRC client API implementation.
  *
+ * @see <a href="http://moepii.sourceforge.net/">IRClib</a>
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
@@ -60,12 +59,12 @@ public final class IRC implements Billboard {
     /**
      * Host name.
      */
-    private transient String host;
+    private final transient String host;
 
     /**
      * Port number.
      */
-    private transient int port;
+    private final transient int port;
 
     /**
      * Channel name.
@@ -77,17 +76,7 @@ public final class IRC implements Billboard {
     /**
      * The IRC connection.
      */
-    private transient IRCConnection conn;
-
-    /**
-     * Waiter for event: Connected to IRC server.
-     */
-    private final transient Waiter waiterConnected = new Waiter();
-
-    /**
-     * Waiter for event: Joined IRC channel.
-     */
-    private final transient Waiter waiterJoined = new Waiter();
+    private final transient IRCConnection conn;
 
     /**
      * Public ctor.
@@ -100,12 +89,10 @@ public final class IRC implements Billboard {
         this.host = hst;
         this.port = prt;
         this.channel = chnl;
-        this.connInstantiate(
+        this.conn = this.connInstantiate(
             this.host, this.port, "", "nickTest", "userTest", "nameTest",
             false
         );
-        this.connSetOptions();
-        this.connectAndJoin();
     }
 
     /**
@@ -114,20 +101,25 @@ public final class IRC implements Billboard {
      * @param chnl Channel
      * @param connz Connection with predefined host and port. Supposed to be already connected to the server.
      */
-    public IRC(final String chnl, final IRCConnection connz) {
+    public IRC(final String hst, final int prt, final String chnl, final IRCConnection connz) {
+        this.host = hst;
+        this.port = prt;
         this.channel = chnl;
         this.conn = connz;
-        this.connSetOptions();
     }
 
     /**
      * Connect the server and join the channel.
      */
-    public void connectAndJoin() {
+    public void connectAndJoinChannel() {
+        Waiter waiterConnected = new Waiter();
+        Waiter waiterJoined = new Waiter();
+
+        this.connSetOptions(waiterConnected, waiterJoined);
         this.connConnect();
-        this.waiterConnected.sleepUntilHappenned();
+        waiterConnected.sleepUntilHappenned();
         this.joinChannel(this.channel);
-        this.waiterJoined.sleepUntilHappenned();
+        waiterJoined.sleepUntilHappenned();
     }
 
     /**
@@ -147,7 +139,9 @@ public final class IRC implements Billboard {
     @Override
     public void announce(
         @NotNull(message = "body can't be NULL") final String body) {
-        assert this.channel != null;
+        if (!this.conn.isConnected()) {
+            this.connectAndJoinChannel();
+        }
         final String channelFormatted =
             this.formatChannelName(this.channel);
         this.conn.doPrivmsg(channelFormatted, body);
@@ -165,37 +159,39 @@ public final class IRC implements Billboard {
      * @param user Username
      * @param name User real name
      * @param ssl Is SSL
+     * @return IRCConnection
      * @checkstyle ParameterNumber (4 lines)
      */
     @SuppressWarnings("PMD.ConfusingTernary")
-    private void connInstantiate(final String hostz, final int portz,
+    private IRCConnection connInstantiate(final String hostz, final int portz,
         final String pass, final String nick,
         final String user, final String name, final boolean ssl) {
         if (!ssl) {
-            this.conn = new IRCConnection(hostz, new int[]{portz}, pass,
+            return new IRCConnection(hostz, new int[]{portz}, pass,
                 nick, user, name);
         } else {
-            this.conn = new SSLIRCConnection(hostz, new int[]{portz}, pass,
+            IRCConnection conn = new SSLIRCConnection(hostz, new int[]{portz}, pass,
                 nick, user, name);
-            ((SSLIRCConnection) this.conn).addTrustManager(new TrustManager());
+            ((SSLIRCConnection) conn).addTrustManager(new TrustManager());
+            return conn;
         }
     }
 
     /**
      * Setups common IRC protocol options.
      */
-    private void connSetOptions() {
+    private void connSetOptions(final Waiter waiterConnected, final Waiter waiterJoined) {
         this.conn.addIRCEventListener(
             new Listener() {
                 @Override
                 public void onRegistered() {
                     super.onRegistered();
-                    IRC.this.waiterConnected.triggerHappenned();
+                    waiterConnected.triggerHappenned();
                 }
                 @Override
                 public void onJoin(final String chan, final IRCUser user) {
                     super.onJoin(chan, user);
-                    IRC.this.waiterJoined.triggerHappenned();
+                    waiterJoined.triggerHappenned();
                 }
             }
         );
@@ -272,7 +268,6 @@ public final class IRC implements Billboard {
     public class Listener implements IRCEventListener {
         public void onRegistered() {
             IRC.this.print("Connected");
-            IRC.this.joinChannel(IRC.this.channel);
         }
 
         public void onDisconnected() {
@@ -433,6 +428,7 @@ public final class IRC implements Billboard {
      */
     private void print(final Object obj) {
         Logger.info(this, (String) obj);
+        System.out.println(obj);
     }
 
     /**
@@ -443,6 +439,7 @@ public final class IRC implements Billboard {
     private void printFromProgram(final Object obj) {
         // @checkstyle StringLiteralsConcatenation (1 line)
         Logger.info(this, "[i am] " + obj);
+        System.out.println("[i am] " + obj);
     }
 
     /**
