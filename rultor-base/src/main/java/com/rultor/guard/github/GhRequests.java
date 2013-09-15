@@ -171,7 +171,7 @@ public final class GhRequests implements MergeRequests {
      * @return Collection of them
      * @throws IOException If fails
      */
-    @Step("${result.size()} out of ${args[0].size()} request(s) approved")
+    @Step("${result.size()} out of ${args[0].size} request(s) approved")
     private Collection<PullRequest> filter(final Collection<PullRequest> list)
         throws IOException {
         final Collection<PullRequest> requests = new LinkedList<PullRequest>();

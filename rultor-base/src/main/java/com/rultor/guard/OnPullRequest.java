@@ -123,9 +123,9 @@ public final class OnPullRequest implements Instance {
      * @throws IOException If IO problem
      */
     @Step(
-        before = "building merge request ${args[0].name()}",
+        before = "building merge request ${args[0].name}",
         // @checkstyle LineLength (1 line)
-        value = "merge request ${args[0].name()} #if($result)built successfully#{else}failed to build#end"
+        value = "merge request ${args[0].name} #if($result)built successfully#{else}failed to build#end"
     )
     private boolean merge(final MergeRequest request) throws IOException {
         final String tag = "on-pull-request";
