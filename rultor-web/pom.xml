@@ -48,6 +48,17 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>rultor-users</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.jcabi</groupId>
+                    <artifactId>jcabi-jdbc</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-jdbc</artifactId>
+            <version>0.9</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
