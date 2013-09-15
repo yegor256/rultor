@@ -64,10 +64,10 @@ public final class GitURITest {
     }
 
     /**
-     * Checks ssh GIT URLs.
+     * Creates instance of GitURI when given GIT URL is valid.
      */
     @Test
-    public void checksGitUrlValidity() {
+    public void succeedsWhenGitUrlIsValid() {
         if (this.isValid) {
             new GitURI(this.url);
         }
@@ -89,7 +89,7 @@ public final class GitURITest {
      * @return List of pairs of git url and isValid validity.
      */
     @Parameterized.Parameters
-    public static List<Object[]> isEmptyData() {
+    public static List<Object[]> data() {
         return Arrays.asList(
             new Object[][]{
                 {"ssh://host.xz/path/to/rep-o.git/", true},

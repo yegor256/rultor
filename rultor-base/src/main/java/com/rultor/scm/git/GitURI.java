@@ -84,7 +84,7 @@ public final class GitURI {
      * Getting underlying value.
      * @return Underlying uri value
      */
-    public String getValue() {
+    public String value() {
         return this.uri;
     }
 }

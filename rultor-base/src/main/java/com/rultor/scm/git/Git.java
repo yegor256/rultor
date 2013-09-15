@@ -184,7 +184,7 @@ public final class Git implements SCM {
             .append("DIR=$(pwd)/")
             .append(Terminal.quotate(Terminal.escape(this.dir)))
             .append(" && URL=")
-            .append(Terminal.quotate(Terminal.escape(this.url.getValue())))
+            .append(Terminal.quotate(Terminal.escape(this.url.value())))
             .append(" && mkdir -p \"$DIR\"")
             .append(" && ( cat > \"$DIR/id_rsa\" )")
             // @checkstyle LineLength (1 line)
