@@ -80,7 +80,7 @@ public final class Archiver implements Runnable, Closeable {
                 .select(new VoidHandler());
             new JdbcSession(this.client.get())
                 .sql("ANALYZE receipt")
-                .select(new VoidHandler());
+                .execute();
         } catch (SQLException ex) {
             throw new IllegalStateException(ex);
         }
