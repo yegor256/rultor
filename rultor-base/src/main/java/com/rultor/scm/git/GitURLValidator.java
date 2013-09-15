@@ -29,66 +29,43 @@
  */
 package com.rultor.scm.git;
 
-import com.google.common.io.Files;
-import com.rultor.scm.Branch;
-import com.rultor.shell.ShellMocker;
-import java.util.Collection;
-import javax.validation.ConstraintViolationException;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import java.util.regex.Pattern;
 
 /**
- * Test case for {@link Git}.
- * @author Bharath Bolisetty (bharathbolisetty@gmail.com)
+ * Validator of GIT URLs.
+ *
  * @author Evgeniy Nyavro (e.nyavro@gmail.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class GitTest {
+@Immutable
+@Loggable(Loggable.DEBUG)
+public final class GitURLValidator {
 
     /**
-     * URL to public GitHub repository.
+     * Pattern to validate GIT URLS.
+     * ssh://[user@]host.xz[:port]/path/to/repo.git/
+     * "user@host.xz:path/to/repo.git/",
      */
-    private static final String GIT_URL = "http://github.com/nyavro/test.git";
-
-    /**
-     * Git public ctor args can not be null.
-     * @throws Exception If some problem inside
-     */
-    @Test(expected = ConstraintViolationException.class)
-    public void failsWhenInitializedWithNulls() throws Exception {
-        new Git(null, null, null);
-    }
-
-    /**
-     * Can checkout branch.
-     * @throws Exception if some problem inside
-     */
-    @Test
-    public void checksOutBranch() throws Exception {
-        MatcherAssert.assertThat(
-            new Git(
-                new ShellMocker.Bash(Files.createTempDir()),
-                GitTest.GIT_URL,
-                "test"
-            ).checkout("master"),
-            Matchers.notNullValue(Branch.class)
+    private static final Pattern PATTERN =
+        Pattern.compile(
+            // @checkstyle StringLiteralsConcatenation (6 lines)
+            "ssh://(\\w+@)?\\w+[\\w.-]*(:\\d+)?/\\w[\\w./-]+\\w.git/?|"
+            + "(git|((http|ftp)s?))://\\w+[\\w.-]*(:\\d+)?/\\w[\\w./-]+\\w"
+            + ".git/?|rsync://\\w+[\\w.-/]*.git/?|"
+            + "(?!(ssh|git|http(s)?|ftp(s)?|rsync))"
+            + "(\\w+@)?[\\w.-]+:(?!(//))[\\w.-/]+|"
+            + "/\\w+[\\w/]+\\w+.git/?|file:///[\\w/]+\\w+.git/?"
         );
-    }
 
     /**
-     * Can get branches.
-     * @throws Exception if some problem inside
+     * Check if url is valid GIT URL.
+     * @param addr Address to check
+     * @return True if address is valid GIT URL
      */
-    @Test
-    public void getsBranches() throws Exception {
-        MatcherAssert.assertThat(
-            new Git(
-                new ShellMocker.Bash(Files.createTempDir()),
-                GitTest.GIT_URL,
-                "test2"
-            ).branches(),
-            Matchers.notNullValue(Collection.class)
-        );
+    public boolean isValid(final String addr) {
+        return GitURLValidator.PATTERN.matcher(addr).matches();
     }
 }
