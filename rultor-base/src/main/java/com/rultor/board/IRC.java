@@ -280,7 +280,7 @@ public final class IRC implements Billboard {
     /**
      * Treats IRC events. The most of them are just printed.
      */
-    public abstract class AbstractListener implements IRCEventListener {
+    abstract class AbstractListener implements IRCEventListener {
 
         /**
          * Event - On Registered.
@@ -525,7 +525,7 @@ public final class IRC implements Billboard {
      * Helps making the asynchronous IRC API synchronous,
      * which makes it easier to operate.
      */
-    public class Waiter {
+    class Waiter {
         /**
          * Flag says if the event has happened.
          */

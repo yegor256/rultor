@@ -29,14 +29,17 @@
  */
 package com.rultor.board;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.schwering.irc.lib.IRCConnection;
 
 /**
- * A simple high-level test of IRC board.
+ * A mocked test of IRC board.
  *
  * @author Konstantin Voytenko (cppruler@gmail.com)
  * @version $Id$
- * @since 06.09.13
+ * @since 1.0
  */
 public class IRCTest {
     /**
@@ -54,19 +57,35 @@ public class IRCTest {
     private static final String IRC_SERVER_HOST = "calvino.freenode.net";
 
     /**
-     * High level operability test.
+     * Sends a correct message.
      *
      * @throws Exception If some problem inside
      */
     @Test
     public final void sendMessage() throws Exception {
+        final IRCConnection conn = Mockito.mock(IRCConnection.class);
         final String channel = "channelTest";
         final String body = "test irc message";
         final Billboard board = new IRC(
             this.IRC_SERVER_HOST,
             this.IRC_PORT_DEFAULT,
-            channel
+            channel,
+            conn
         );
+        Mockito.when(conn.isConnected()).thenReturn(Boolean.TRUE);
         board.announce(body);
+        Mockito.verify(conn).doPrivmsg(
+            Mockito.argThat(
+                Matchers.equalTo(
+                    // @checkstyle StringLiteralsConcatenation (1 line)
+                    "#" + channel
+                )
+            ),
+            Mockito.argThat(
+                Matchers.equalTo(
+                    body
+                )
+            )
+        );
     }
 }
