@@ -32,6 +32,7 @@ package com.rultor.users.mongo;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.rultor.spi.Tag;
+import com.rultor.tools.NormJson;
 import java.util.logging.Level;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -59,7 +60,10 @@ public final class MongoTagTest {
                 .append(MongoTag.ATTR_MARKDOWN, "")
         );
         MatcherAssert.assertThat(tag.label(), Matchers.equalTo(label));
-        MatcherAssert.assertThat(tag.data(), Matchers.notNullValue());
+        MatcherAssert.assertThat(
+            tag.data(new NormJson("{ }")),
+            Matchers.notNullValue()
+        );
     }
 
     /**
@@ -69,7 +73,7 @@ public final class MongoTagTest {
     @Test
     public void buildsMongoDbObject() throws Exception {
         final String label = "test";
-        final String data = "{ }";
+        final String data = "{  }";
         final DBObject object = new MongoTag(
             label, Level.FINE, data, ""
         ).asObject();

@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * One single Server.
@@ -44,6 +45,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = "host")
 @Loggable(Loggable.DEBUG)
 public final class Server implements Environments {
@@ -59,14 +61,6 @@ public final class Server implements Environments {
      */
     public Server(@NotNull(message = "IP can't be NULL") final String address) {
         this.host = address;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("`%s`", this.host);
     }
 
     /**

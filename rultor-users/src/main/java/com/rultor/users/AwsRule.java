@@ -29,7 +29,6 @@
  */
 package com.rultor.users;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -84,6 +83,16 @@ final class AwsRule implements Rule {
     public static final String FIELD_SPEC = "spec";
 
     /**
+     * Dynamo DB table column.
+     */
+    public static final String FIELD_DRAIN = "drain";
+
+    /**
+     * Dynamo DB table column.
+     */
+    public static final String FIELD_FAILURE = "failure";
+
+    /**
      * Item.
      */
     private final transient Item item;
@@ -108,14 +117,13 @@ final class AwsRule implements Rule {
      */
     @Override
     @Cacheable.FlushAfter
-    public void update(@NotNull(message = "spec is mandatory and can't be NULL")
-        final Spec spec) {
+    public void update(
+        @NotNull(message = "spec can't be NULL") final Spec spec,
+        @NotNull(message = "drain can't be NULL") final Spec drain) {
         this.item.put(
             new Attributes()
-                .with(
-                    AwsRule.FIELD_SPEC,
-                    new AttributeValue(spec.asText())
-            )
+                .with(AwsRule.FIELD_SPEC, spec.asText())
+                .with(AwsRule.FIELD_DRAIN, drain.asText())
         );
     }
 
@@ -139,6 +147,7 @@ final class AwsRule implements Rule {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public String name() {
         return this.item.get(AwsRule.RANGE_NAME).getS();
     }
@@ -154,6 +163,44 @@ final class AwsRule implements Rule {
             this.owner(), this.name(),
             taker, rule
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    public Spec drain() {
+        Spec spec;
+        if (this.item.has(AwsRule.FIELD_DRAIN)) {
+            spec = new Spec.Simple(this.item.get(AwsRule.FIELD_DRAIN).getS());
+        } else {
+            spec = new Spec.Simple("com.rultor.drain.Trash()");
+        }
+        return spec;
+    }
+
+    @Override
+    @Cacheable.FlushAfter
+    public void failure(final String desc) {
+        this.item.put(
+            new Attributes()
+                .with(AwsRule.FIELD_SPEC, this.spec().asText())
+                .with(AwsRule.FIELD_DRAIN, this.drain().asText())
+                .with(AwsRule.FIELD_FAILURE, desc)
+        );
+    }
+
+    @Override
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    public String failure() {
+        final String failure;
+        if (this.item.has(AwsRule.FIELD_FAILURE)) {
+            failure = this.item.get(AwsRule.FIELD_FAILURE).getS();
+        } else {
+            failure = "";
+        }
+        return failure;
     }
 
     /**

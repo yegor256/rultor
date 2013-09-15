@@ -63,11 +63,7 @@
     <rules>
         <rule>
             <name>git-rultor</name>
-            <face>
-                <type>com.rultor.Something</type>
-                <drainable>true</drainable>
-                <html>some very long text to show, some very &lt;code&gt;long text&lt;/code&gt; to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, some very long text to show, </html>
-            </face>
+            <failure>some problem happened</failure>
             <links>
                 <link href="/xml/rule.xml" rel="edit" type="text/xml"/>
                 <link href="/xml/drain.xml" rel="drain" type="text/xml"/>
@@ -76,9 +72,6 @@
         </rule>
         <rule>
             <name>nightly-build-rultor</name>
-            <face>
-                <exception>invalid text somewhere</exception>
-            </face>
             <links>
                 <link href="/xml/rule.xml" rel="edit" type="text/xml"/>
                 <link href="/xml/drain.xml" rel="drain" type="text/xml"/>
@@ -87,12 +80,6 @@
         </rule>
         <rule>
             <name>git-template</name>
-            <face>
-                <arguments>
-                    <argument>first</argument>
-                    <argument>second</argument>
-                </arguments>
-            </face>
             <links>
                 <link href="/xml/rule.xml" rel="edit" type="text/xml"/>
                 <link href="/xml/drain.xml" rel="drain" type="text/xml"/>

@@ -32,7 +32,6 @@ package com.rultor.shell.bash;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArrayMap;
-import com.jcabi.log.Logger;
 import com.rultor.shell.Sequel;
 import com.rultor.shell.Shell;
 import com.rultor.spi.Coordinates;
@@ -40,6 +39,7 @@ import java.io.IOException;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -50,6 +50,7 @@ import org.apache.commons.lang3.Validate;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(
     callSuper = false,
     of = { "work", "names", "bucket", "prefix", "key", "secret" }
@@ -115,17 +116,6 @@ public final class S3CmdRelics implements Sequel {
         this.prefix = pfx;
         this.key = akey;
         this.secret = scrt;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "%d relic(s) uploaded by s3cmd to `s3://%s/%s`",
-            this.names.size(), this.bucket, this.prefix
-        );
     }
 
     /**

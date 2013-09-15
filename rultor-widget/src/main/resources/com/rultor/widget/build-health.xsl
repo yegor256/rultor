@@ -33,43 +33,56 @@
     <xsl:template match="widget[@class='com.rultor.widget.BuildHealth']">
         <xsl:choose>
             <xsl:when test="not(builds) or builds[count(build) = 0]">
-                <p>
+                <div class="panel-body">
                     <span class="pull-left" style="font-size: 3em; margin-right: .2em;">
                         <i class="icon-microphone-off text-muted"><xsl:comment>nothing</xsl:comment></i>
                     </span>
                     <xsl:text>No builds found in this stand yet...</xsl:text>
-                </p>
+                </div>
             </xsl:when>
             <xsl:when test="builds[count(build) = 1]">
-                <xsl:apply-templates select="builds/build" mode="single"/>
+                <div class="panel-body">
+                    <xsl:apply-templates select="builds/build" mode="build-health-single"/>
+                </div>
             </xsl:when>
             <xsl:otherwise>
                 <table class="table table-condensed">
                     <thead>
                         <tr>
+                            <th><xsl:text>H.</xsl:text></th>
                             <th><xsl:text>St.</xsl:text></th>
                             <th><xsl:text>Rule</xsl:text></th>
                             <th><xsl:text>By</xsl:text></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <xsl:apply-templates select="builds/build" mode="table-row"/>
+                        <xsl:apply-templates select="builds/build" mode="build-health-row"/>
                     </tbody>
                 </table>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <xsl:template match="build" mode="single">
+    <xsl:template match="build" mode="build-health-single">
         <p>
             <span class="pull-left" style="font-size: 3em; margin-right: .2em;">
-                <xsl:choose>
-                    <xsl:when test="code = 0">
-                        <i class="icon-thumbs-up text-success"><xsl:comment>ok</xsl:comment></i>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <i class="icon-thumbs-down text-danger"><xsl:comment>fail</xsl:comment></i>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <a class="icon">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="/page/links/link[@rel='pulse-open']/@href"/>
+                        <xsl:value-of select="coordinates/scheduled"/>
+                        <xsl:text>+</xsl:text>
+                        <xsl:value-of select="coordinates/rule"/>
+                        <xsl:text>+</xsl:text>
+                        <xsl:value-of select="coordinates/owner"/>
+                    </xsl:attribute>
+                    <xsl:choose>
+                        <xsl:when test="code = 0">
+                            <i class="icon-thumbs-up text-success"><xsl:comment>ok</xsl:comment></i>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <i class="icon-thumbs-down text-danger"><xsl:comment>fail</xsl:comment></i>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </a>
             </span>
             <xsl:text>Latest commit </xsl:text>
             <code><xsl:value-of select="commit/name"/></code>
@@ -78,7 +91,7 @@
             <xsl:text> </xsl:text>
             <xsl:choose>
                 <xsl:when test="code = 0">
-                    <xsl:text>was built </xsl:text>
+                    <xsl:text>has been built </xsl:text>
                     <strong><xsl:text>successfully</xsl:text></strong>
                 </xsl:when>
                 <xsl:otherwise>
@@ -101,34 +114,44 @@
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:text> (</xsl:text>
-            <xsl:value-of select="health"/>
+            <xsl:value-of select="format-number(health, '0.00')"/>
             <xsl:text>).</xsl:text>
         </p>
     </xsl:template>
-    <xsl:template match="build" mode="table-row">
+    <xsl:template match="build" mode="build-health-row">
         <tr>
-            <xsl:attribute name="class">
-                <xsl:choose>
-                    <xsl:when test="health &gt; 0.8">
-                        <xsl:text>success</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="health &gt; 0.5">
-                        <xsl:text>warning</xsl:text>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:text>danger</xsl:text>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:attribute>
             <td>
                 <xsl:choose>
-                    <xsl:when test="code = 0">
-                        <i class="icon-thumbs-up text-success"><xsl:comment>ok</xsl:comment></i>
+                    <xsl:when test="health &gt; 0.8">
+                        <i class="icon-beer text-success"><xsl:comment>ok</xsl:comment></i>
+                    </xsl:when>
+                    <xsl:when test="health &gt; 0.5">
+                        <i class="icon-umbrella text-warning"><xsl:comment>fail</xsl:comment></i>
                     </xsl:when>
                     <xsl:otherwise>
-                        <i class="icon-thumbs-down text-danger"><xsl:comment>fail</xsl:comment></i>
+                        <i class="icon-bolt text-danger"><xsl:comment>fail</xsl:comment></i>
                     </xsl:otherwise>
                 </xsl:choose>
+            </td>
+            <td>
+                <a class="icon">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="/page/links/link[@rel='pulse-open']/@href"/>
+                        <xsl:value-of select="coordinates/scheduled"/>
+                        <xsl:text>+</xsl:text>
+                        <xsl:value-of select="coordinates/rule"/>
+                        <xsl:text>+</xsl:text>
+                        <xsl:value-of select="coordinates/owner"/>
+                    </xsl:attribute>
+                    <xsl:choose>
+                        <xsl:when test="code = 0">
+                            <i class="icon-thumbs-up text-success"><xsl:comment>ok</xsl:comment></i>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <i class="icon-thumbs-down text-danger"><xsl:comment>fail</xsl:comment></i>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </a>
             </td>
             <td>
                 <xsl:value-of select="coordinates/rule"/>

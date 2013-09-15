@@ -51,7 +51,7 @@ sudo pip install -U dynamic-dynamodb
 
 # https://github.com/sebdah/dynamic-dynamodb
 dynamic-dynamodb --version
-for table in rules stands
+for table in units stands
 do
     while true
     do
@@ -75,6 +75,12 @@ do
     done &
 done
 
+# @todo #275 This design is wrong, for one important reason - it doesn't
+#  take into account a version of software being deployed. Version is
+#  hardcoded in ec2-pom.xml as 1.0-SNAPSHOT. This should be changed. An
+#  alternative approach is to specify version as user data parameter,
+#  and use Maven only to download one required executable JAR file. Then,
+#  just run it with provided user data arguments.
 curl --silent https://raw.github.com/rultor/rultor/master/rultor-conveyer/src/main/resources/ec2-pom.xml > pom.xml
 mvn test --batch-mode --strict-checksums --quiet --update-snapshots \
     "-Dsqs-url=${SQS_URL}" \

@@ -34,7 +34,6 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pulse;
-import com.rultor.spi.Repo;
 import com.rultor.spi.Rule;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Tags;
@@ -131,6 +130,7 @@ public final class PulseRs extends BaseRs {
         } catch (NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
+        // @checkstyle AnonInnerLength (50 lines)
         return new Pulse() {
             @Override
             public String xembly() throws IOException {
@@ -148,6 +148,10 @@ public final class PulseRs extends BaseRs {
             public Tags tags() {
                 throw new UnsupportedOperationException();
             }
+            @Override
+            public String stand() {
+                throw new UnsupportedOperationException();
+            }
         };
     }
 
@@ -159,10 +163,8 @@ public final class PulseRs extends BaseRs {
      */
     private InputStream read(final Rule rule) throws IOException {
         try {
-            return Drain.Source.class.cast(
-                new Repo.Cached(
-                    this.repo(), this.user(), rule.spec()
-                ).get().instantiate(
+            return Drain.class.cast(
+                this.repo().make(this.user(), rule.drain()).instantiate(
                     this.users(),
                     new Arguments(
                         new Coordinates.Simple(
@@ -173,7 +175,7 @@ public final class PulseRs extends BaseRs {
                         new Wallet.Empty()
                     )
                 )
-            ).drain().read();
+            ).read();
         } catch (SpecException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),

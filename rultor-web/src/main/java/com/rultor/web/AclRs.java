@@ -41,6 +41,7 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.Stand;
 import com.rultor.tools.Exceptions;
 import java.net.HttpURLConnection;
+import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -93,6 +94,8 @@ public final class AclRs extends BaseRs {
                     .up()
                     .add("acl", this.stand().acl().asText())
                     .up()
+                    .add("widgets", this.stand().widgets().asText())
+                    .up()
             )
             .render()
             .build();
@@ -100,18 +103,26 @@ public final class AclRs extends BaseRs {
 
     /**
      * Save new or existing stand stand.
-     * @param spec Spec to save
+     * @param acl ACL spec to save
+     * @param widgets Widgets spec to save
      * @return The JAX-RS response
      */
     @POST
     @Path("/")
-    public Response save(@NotNull(message = "spec form param is mandatory")
-        @FormParam("spec") final String spec) {
+    public Response save(
+        @NotNull(message = "acl form param is mandatory")
+        @FormParam("acl") final String acl,
+        @NotNull(message = "widgets form param is mandatory")
+        @FormParam("widgets") final String widgets) {
         try {
-            this.stand().acl(
+            this.stand().update(
                 new Spec.Strict(
-                    spec, this.repo(), this.user(), this.users(),
+                    acl, this.repo(), this.user(), this.users(),
                     new Coordinates.None(), ACL.class
+                ),
+                new Spec.Strict(
+                    widgets, this.repo(), this.user(), this.users(),
+                    new Coordinates.None(), Collection.class
                 )
             );
         } catch (SpecException ex) {
@@ -121,7 +132,9 @@ public final class AclRs extends BaseRs {
                     new JaxbBundle("stand")
                         .add("name", this.name)
                         .up()
-                        .add("acl", spec)
+                        .add("acl", acl)
+                        .up()
+                        .add("widgets", widgets)
                         .up()
                         .add("exception", Exceptions.message(ex))
                         .up()

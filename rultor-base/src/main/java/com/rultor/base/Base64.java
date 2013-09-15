@@ -33,6 +33,7 @@ import com.jcabi.aspects.Loggable;
 import java.io.ByteArrayInputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Base64 text.
@@ -41,6 +42,7 @@ import lombok.EqualsAndHashCode;
  * @version $Id$
  * @since 1.0
  */
+@ToString
 @EqualsAndHashCode(callSuper = false)
 @Loggable(Loggable.DEBUG)
 public final class Base64 extends ByteArrayInputStream {
@@ -52,14 +54,6 @@ public final class Base64 extends ByteArrayInputStream {
     public Base64(@NotNull(message = "base64-encoded text can't be NULL")
         final String text) {
         super(org.apache.commons.codec.binary.Base64.decodeBase64(text));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return "Base64 bytes";
     }
 
 }

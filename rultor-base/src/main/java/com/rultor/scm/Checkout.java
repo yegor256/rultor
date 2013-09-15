@@ -31,9 +31,11 @@ package com.rultor.scm;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Checked out branch.
@@ -43,6 +45,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "scm", "label" })
 @Loggable(Loggable.DEBUG)
 public final class Checkout implements Branch {
@@ -72,14 +75,7 @@ public final class Checkout implements Branch {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return String.format("branch `%s` at %s", this.label, this.scm);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<Commit> log() throws IOException {
         return this.scm.checkout(this.label).log();
     }

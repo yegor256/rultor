@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -26,55 +27,32 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.rultor.drain;
-
-import com.rultor.spi.Drain;
-import com.rultor.spi.Pageable;
-import com.rultor.tools.Time;
-import java.io.IOException;
-import java.io.InputStream;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
-/**
- * Drain to console.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
- * @checkstyle MultipleStringLiterals (500 lines)
- */
-@ToString
-@EqualsAndHashCode
-public final class Console implements Drain {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Pageable<Time, Time> pulses() throws IOException {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @SuppressWarnings("PMD.SystemPrintln")
-    public void append(final Iterable<String> lines) throws IOException {
-        for (String line : lines) {
-            System.out.println(String.format("CONSOLE: %s", line));
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public InputStream read() throws IOException {
-        throw new UnsupportedOperationException();
-    }
-
-}
+ -->
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="yegor@tpc2.com" id="153">
+        <comment>Extra indexes on RECEIPT table for performance boost</comment>
+        <createIndex schemaName="public" tableName="receipt"
+            indexName="idx_time" unique="false">
+            <column name="time" />
+        </createIndex>
+        <createIndex schemaName="public" tableName="receipt"
+            indexName="idx_amount" unique="false">
+            <column name="amount" />
+        </createIndex>
+        <createIndex schemaName="public" tableName="receipt"
+            indexName="idx_dtct" unique="false">
+            <column name="dt" />
+            <column name="ct" />
+        </createIndex>
+        <rollback>
+            <dropIndex schemaName="public" tableName="receipt" indexName="idx_time"/>
+            <dropIndex schemaName="public" tableName="receipt" indexName="idx_amount"/>
+            <dropIndex schemaName="public" tableName="receipt" indexName="idx_dtct"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

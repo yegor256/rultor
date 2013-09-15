@@ -37,25 +37,25 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <form method="post" class="form-inline spacious">
-            <xsl:attribute name="action">
-                <xsl:value-of select="/page/links/link[@rel='create']/@href"/>
-            </xsl:attribute>
-            <fieldset>
-                <div class="row">
-                    <div class="col-12 col-sm-6 col-lg-4">
+        <div class="row">
+            <div class="col-12 col-sm-6 col-lg-4">
+                <form method="post" class="form-inline spacious">
+                    <xsl:attribute name="action">
+                        <xsl:value-of select="/page/links/link[@rel='create']/@href"/>
+                    </xsl:attribute>
+                    <fieldset>
                         <div class="input-group">
-                            <input name="name" type="text" class="form-control" />
+                            <input name="name" type="text" class="form-control" placeholder="Unique name of a new rule"/>
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-primary">
                                     <xsl:text>Create</xsl:text>
                                 </button>
                             </span>
                         </div>
-                    </div>
-                </div>
-            </fieldset>
-        </form>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
         <xsl:choose>
             <xsl:when test="/page/rules/rule">
                 <xsl:apply-templates select="/page/rules/rule"/>
@@ -76,31 +76,19 @@
             <ul class="list-inline">
                 <li>
                     <a title="view drain of the rule">
-                        <xsl:if test="face/exception">
-                            <xsl:attribute name="class">
-                                <xsl:text>text-danger</xsl:text>
-                            </xsl:attribute>
-                        </xsl:if>
                         <xsl:attribute name="href">
                             <xsl:value-of select="links/link[@rel='drain']/@href"/>
                         </xsl:attribute>
+                        <xsl:attribute name="class">
+                            <xsl:if test="failure != ''">
+                                <xsl:text>text-danger</xsl:text>
+                            </xsl:if>
+                        </xsl:attribute>
                         <xsl:value-of select="name"/>
-                        <xsl:if test="face/arguments">
-                            <xsl:text>(</xsl:text>
-                            <xsl:for-each select="face/arguments/argument">
-                                <xsl:if test="position() &gt; 1">
-                                    <xsl:text>, </xsl:text>
-                                </xsl:if>
-                                <xsl:text>&quot;</xsl:text>
-                                <xsl:value-of select="."/>
-                                <xsl:text>&quot;</xsl:text>
-                            </xsl:for-each>
-                            <xsl:text>)</xsl:text>
-                        </xsl:if>
                     </a>
                 </li>
                 <li class="icon">
-                    <a title="edit specification">
+                    <a title="edit spec">
                         <xsl:attribute name="href">
                             <xsl:value-of select="links/link[@rel='edit']/@href"/>
                         </xsl:attribute>
@@ -116,15 +104,17 @@
                         <i class="icon-remove"><xsl:comment>remove</xsl:comment></i>
                     </a>
                 </li>
-                <xsl:if test="face/exception">
+                <xsl:if test="failure != ''">
                     <li class="icon">
-                        <i class="icon-warning-sign text-danger" title="show exception"
-                            onclick="$(this).parent().parent().parent().find('.exception').toggle();"><xsl:comment>exception</xsl:comment></i>
+                        <a onclick="$(this).closest('.panel').find('pre').toggle();"
+                            title="show the failure" class="text-danger">
+                            <i class="icon-warning-sign"><xsl:comment>failure</xsl:comment></i>
+                        </a>
                     </li>
                 </xsl:if>
             </ul>
-            <xsl:if test="face/exception">
-                <pre style="display:none;" class="text-danger exception"><xsl:value-of select="face/exception"/></pre>
+            <xsl:if test="failure != ''">
+                <pre class="text-danger" style="display:none"><xsl:value-of select="failure"/></pre>
             </xsl:if>
         </div>
     </xsl:template>

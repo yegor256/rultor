@@ -103,7 +103,6 @@ public final class IncrementalBashTest {
      * @throws Exception If some problem inside
      */
     @Test
-    @org.junit.Ignore
     public void escapesMarkdownInCommandSummary() throws Exception {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final File dir = Files.createTempDir();
@@ -119,7 +118,7 @@ public final class IncrementalBashTest {
                 ).dom()
             ),
             XhtmlMatchers.hasXPath(
-                "//step[summary='echo \"\\_\\*\" \\`date\\`;']/start"
+                "//step[summary='echo \"\\_\\*\" \\`date\\`']/start"
             )
         );
     }

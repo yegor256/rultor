@@ -44,6 +44,7 @@ import java.io.SequenceInputStream;
 import java.util.Arrays;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.Validate;
@@ -57,6 +58,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "delta", "spinbox", "origin" })
 @Loggable(Loggable.DEBUG)
 public final class LinesSensor implements Drain {
@@ -96,17 +98,6 @@ public final class LinesSensor implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return String.format(
-            "%s with lines sensored with %s",
-            this.origin, this.spinbox
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Pageable<Time, Time> pulses() throws IOException {
         return this.origin.pulses();
     }
@@ -124,9 +115,7 @@ public final class LinesSensor implements Drain {
                     new XemblyLine(
                         new Directives()
                             .xpath("/snapshot")
-                            .strict(1)
                             .addIfAbsent("lines")
-                            .strict(1)
                             .set(Long.toString(after))
                     ).toString()
                 )

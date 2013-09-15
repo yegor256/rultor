@@ -38,6 +38,7 @@ import com.rultor.spi.Column;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.InvalidCouponException;
 import com.rultor.spi.Pageable;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Rule;
@@ -126,6 +127,10 @@ final class Testing implements Profile {
             public Stand stand(final String name) {
                 throw new UnsupportedOperationException();
             }
+            @Override
+            public Pulses flow() {
+                return new Pulses.Row();
+            }
         };
     }
 
@@ -178,7 +183,7 @@ final class Testing implements Profile {
                 }
                 @Override
                 public void create(final String txt) {
-                    Testing.RULES.put(txt, new MemoryUnit(txt));
+                    Testing.RULES.put(txt, new MemoryRule(txt));
                 }
                 @Override
                 public void remove(final String txt) {
@@ -208,6 +213,10 @@ final class Testing implements Profile {
                 @Override
                 public Iterator<Stand> iterator() {
                     return Testing.STANDS.values().iterator();
+                }
+                @Override
+                public Pulses flow() {
+                    return new Pulses.Row();
                 }
             };
         }
@@ -279,7 +288,7 @@ final class Testing implements Profile {
      * In-memory rule.
      */
     @Immutable
-    private static final class MemoryUnit implements Rule {
+    private static final class MemoryRule implements Rule {
         /**
          * Name of the rule.
          */
@@ -288,12 +297,12 @@ final class Testing implements Profile {
          * Public ctor.
          * @param rule Name of it
          */
-        protected MemoryUnit(final String rule) {
+        protected MemoryRule(final String rule) {
             Testing.SPECS.put(rule, new Spec.Simple());
             this.label = rule;
         }
         @Override
-        public void update(final Spec spec) {
+        public void update(final Spec spec, final Spec drain) {
             Testing.SPECS.put(this.label, spec);
         }
         @Override
@@ -308,6 +317,18 @@ final class Testing implements Profile {
         public Wallet wallet(final Coordinates work, final URN urn,
             final String unt) {
             throw new UnsupportedOperationException();
+        }
+        @Override
+        public Spec drain() {
+            return new Spec.Simple("com.rultor.drain.Trash()");
+        }
+        @Override
+        public void failure(final String desc) {
+            throw new UnsupportedOperationException();
+        }
+        @Override
+        public String failure() {
+            return "";
         }
     }
 

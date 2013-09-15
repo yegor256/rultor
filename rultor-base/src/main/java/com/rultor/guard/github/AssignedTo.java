@@ -27,25 +27,54 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.guard.github;
 
 import com.jcabi.aspects.Immutable;
-import java.net.URI;
+import com.jcabi.aspects.Loggable;
+import java.io.IOException;
+import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.eclipse.egit.github.core.PullRequest;
+import org.eclipse.egit.github.core.User;
 
 /**
- * Work to do.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * Approves assigned user.
+ * @author Bharath Bolisetty (bharathbolisetty@gmail.com)
  * @version $Id$
- * @since 1.0
  */
 @Immutable
-public interface Work extends Coordinates {
+@ToString
+@EqualsAndHashCode(of = { "user" })
+@Loggable(Loggable.DEBUG)
+public final class AssignedTo implements Approval {
 
     /**
-     * Instant access to running logs/stdout.
-     * @return URI of it
+     * First approval to ask.
      */
-    URI stdout();
+    private final transient String user;
 
+    /**
+     * Public ctor.
+     * @param assignee Assignee
+     */
+    public AssignedTo(
+        @NotNull(message = "Assignee can't be NULL")
+        final String assignee) {
+        this.user = assignee;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean has(final PullRequest request, final Github client,
+        final Github.Repo repo) throws IOException {
+        final User assignee = request.getAssignee();
+        boolean has = false;
+        if (assignee != null) {
+            has = this.user.equals(assignee.getLogin());
+        }
+        return has;
+    }
 }

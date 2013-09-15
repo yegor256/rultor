@@ -32,6 +32,7 @@ package com.rultor.scm.git;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
@@ -41,6 +42,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Git.
@@ -50,6 +52,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "terminal", "dir", "label" })
 @Loggable(Loggable.DEBUG)
 public final class GitBranch implements Branch {
@@ -88,23 +91,13 @@ public final class GitBranch implements Branch {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return String.format(
-            "Git branch `%s` at `%s` in %s",
-            this.label, this.dir, this.terminal
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
+    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<Commit> log() throws IOException {
         final String stdout = this.terminal.exec(
             new StringBuilder()
                 .append("DIR=`pwd`/")
-                .append(Terminal.escape(this.dir))
+                .append(Terminal.quotate(Terminal.escape(this.dir)))
                 .append(" && cd \"$DIR/repo\"")
                 .append(" && GIT_SSH=\"$DIR/git-ssh.sh\"")
                 // @checkstyle LineLength (1 line)

@@ -33,6 +33,7 @@ import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
@@ -119,21 +120,7 @@ final class SQSWallet implements Wallet {
     @Override
     public void charge(final String details, final Dollars amount) {
         if (!this.creditor.equals(this.debitor)) {
-            final AmazonSQS aws = this.client.get();
-            try {
-                aws.sendMessage(
-                    new SendMessageRequest()
-                        .withQueueUrl(this.client.url())
-                        .withMessageBody(this.json(details, amount))
-                );
-                Logger.info(
-                    this,
-                    "charged %s from %s to %s for \"%s\"",
-                    amount, this.creditor, this.debitor, details
-                );
-            } finally {
-                aws.shutdown();
-            }
+            this.send(details, amount);
         }
     }
 
@@ -158,6 +145,30 @@ final class SQSWallet implements Wallet {
                 return delegate.delegate(urn, rule);
             }
         };
+    }
+
+    /**
+     * Send a message to SQS.
+     * @param details Details
+     * @param amount Amount
+     */
+    @RetryOnFailure(verbose = false)
+    private void send(final String details, final Dollars amount) {
+        final AmazonSQS aws = this.client.get();
+        try {
+            aws.sendMessage(
+                new SendMessageRequest()
+                    .withQueueUrl(this.client.url())
+                    .withMessageBody(this.json(details, amount))
+            );
+            Logger.info(
+                this,
+                "charged %s from %s to %s for \"%s\"",
+                amount, this.creditor, this.debitor, details
+            );
+        } finally {
+            aws.shutdown();
+        }
     }
 
     /**

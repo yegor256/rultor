@@ -33,7 +33,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
+import com.jcabi.aspects.Tv;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
 import com.rultor.snapshot.Step;
@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Returns only one commit, if it wasn't seen before.
@@ -51,6 +52,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "origin", "notepad" })
 @Loggable(Loggable.DEBUG)
 public final class UnseenCommits implements Branch {
@@ -81,17 +83,6 @@ public final class UnseenCommits implements Branch {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return Logger.format(
-            "unseen commits of %s tracked in %s",
-            this.origin, this.notepad
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String name() {
         return this.origin.name();
     }
@@ -100,6 +91,7 @@ public final class UnseenCommits implements Branch {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<Commit> log() throws IOException {
         final Iterator<Commit> iterator = this.origin.log().iterator();
         return new Iterable<Commit>() {
@@ -115,10 +107,6 @@ public final class UnseenCommits implements Branch {
                     }
                 );
             }
-            @Override
-            public String toString() {
-                return "unseen commits";
-            }
         };
     }
 
@@ -127,7 +115,7 @@ public final class UnseenCommits implements Branch {
      * @param head HEAD commit
      * @return TRUE if seen
      */
-    @Step("commit `${args[0]}` #if(!$result)NOT#end seen before")
+    @Step("commit `${args[0].name}` #if(!$result)NOT#end seen before")
     private boolean seen(final Commit head) {
         final String name;
         try {

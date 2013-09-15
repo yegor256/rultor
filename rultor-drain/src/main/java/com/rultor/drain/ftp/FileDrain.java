@@ -44,6 +44,7 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
@@ -60,6 +61,7 @@ import org.apache.commons.net.ftp.FTPClient;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "batch", "file" })
 @Loggable(Loggable.DEBUG)
 public final class FileDrain implements Drain {
@@ -110,17 +112,6 @@ public final class FileDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return String.format(
-            "FTP file '%s' in %s",
-            this.file, this.batch
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Pageable<Time, Time> pulses() {
         return new Pageable.Array<Time>();
     }
@@ -151,8 +142,7 @@ public final class FileDrain implements Drain {
             IOUtils.toInputStream(
                 String.format(
                     "FileDrain: %s, file='%s'\n\n",
-                    this.batch,
-                    this.file
+                    this.batch, this.file
                 ),
                 CharEncoding.UTF_8
             ),
@@ -175,7 +165,7 @@ public final class FileDrain implements Drain {
      * @param lines Lines to append
      * @throws IOException If some I/O problem inside
      */
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     private void append(final FTPClient ftp, final Iterable<String> lines)
         throws IOException {
         final String name = FilenameUtils.getBaseName(this.file);

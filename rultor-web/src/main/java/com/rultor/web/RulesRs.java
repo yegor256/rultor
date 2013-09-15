@@ -123,10 +123,8 @@ public final class RulesRs extends BaseRs {
         return new JaxbBundle("rule")
             .add("name", rule.name())
             .up()
-            .add(
-                new JaxbFace(this.repo(), this.users())
-                    .bundle(this.user(), rule)
-            )
+            .add("failure", rule.failure())
+            .up()
             .link(
                 new Link(
                     // @checkstyle MultipleStringLiterals (1 line)

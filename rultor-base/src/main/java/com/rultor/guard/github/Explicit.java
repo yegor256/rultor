@@ -31,6 +31,7 @@ package com.rultor.guard.github;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import com.rultor.tools.Time;
@@ -147,6 +148,7 @@ public final class Explicit implements Approval {
      * @return Time of latest commit in this pull request
      * @throws IOException If fails
      */
+    @RetryOnFailure(verbose = false)
     private Collection<Comment> comments(final PullRequest request,
         final Github github, final Github.Repo repo) throws IOException {
         final GitHubClient client = github.client();
@@ -164,6 +166,7 @@ public final class Explicit implements Approval {
      * @return Time of latest commit in this pull request
      * @throws IOException If fails
      */
+    @RetryOnFailure(verbose = false)
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Time latest(final PullRequest request, final Github github,
         final Github.Repo repo) throws IOException {

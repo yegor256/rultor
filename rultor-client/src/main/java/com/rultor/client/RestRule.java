@@ -84,7 +84,7 @@ final class RestRule implements Rule {
      * {@inheritDoc}
      */
     @Override
-    public void update(final Spec spec) {
+    public void update(final Spec spec, final Spec drain) {
         try {
             RestTester.start(UriBuilder.fromUri(this.home))
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
@@ -94,10 +94,11 @@ final class RestRule implements Rule {
                 .rel("/page/links/link[@rel='save']/@href")
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .post(
-                    String.format("#spec(%s)", spec.asText()),
+                    String.format("#update(..)"),
                     String.format(
-                        "spec=%s",
-                        URLEncoder.encode(spec.asText(), CharEncoding.UTF_8)
+                        "spec=%s&drain=%s",
+                        URLEncoder.encode(spec.asText(), CharEncoding.UTF_8),
+                        URLEncoder.encode(drain.asText(), CharEncoding.UTF_8)
                     )
                 )
                 .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
@@ -142,6 +143,38 @@ final class RestRule implements Rule {
     @Override
     public Wallet wallet(final Coordinates work, final URN urn,
         final String rule) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spec drain() {
+        return new Spec.Simple(
+            RestTester.start(UriBuilder.fromUri(this.home))
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
+                .get("#drain()")
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .xpath("/page/rule/drain/text()")
+                .get(0)
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void failure(final String desc) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String failure() {
         throw new UnsupportedOperationException();
     }
 

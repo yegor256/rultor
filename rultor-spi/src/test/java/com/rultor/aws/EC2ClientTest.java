@@ -29,8 +29,12 @@
  */
 package com.rultor.aws;
 
+import java.io.IOException;
+import java.net.URL;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -39,6 +43,18 @@ import org.junit.Test;
  * @version $Id$
  */
 public final class EC2ClientTest {
+
+    /**
+     * Assume we're online.
+     */
+    @Before
+    public void weAreOnline() {
+        try {
+            new URL("http://www.google.com").getContent();
+        } catch (IOException ex) {
+            Assume.assumeTrue(false);
+        }
+    }
 
     /**
      * EC2Client.Simple can make an AWS client.

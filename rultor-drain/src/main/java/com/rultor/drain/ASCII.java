@@ -42,6 +42,7 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 
@@ -54,6 +55,7 @@ import org.apache.commons.lang3.CharEncoding;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = "origin")
 @Loggable(Loggable.DEBUG)
 public final class ASCII implements Drain {
@@ -69,17 +71,6 @@ public final class ASCII implements Drain {
      */
     public ASCII(@NotNull(message = "drain can't be NULL") final Drain drain) {
         this.origin = drain;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "%s sensitive to ASCII command codes",
-            this.origin
-        );
     }
 
     /**
@@ -116,10 +107,7 @@ public final class ASCII implements Drain {
     public InputStream read() throws IOException {
         return new SequenceInputStream(
             IOUtils.toInputStream(
-                String.format(
-                    "ASCII: origin='%s'\n",
-                    this.origin
-                ),
+                "ASCII\n",
                 CharEncoding.UTF_8
             ),
             this.origin.read()

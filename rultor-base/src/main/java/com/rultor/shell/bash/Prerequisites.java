@@ -43,6 +43,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
@@ -55,6 +56,7 @@ import org.apache.commons.lang3.CharEncoding;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "origin", "map" })
 @Loggable(Loggable.DEBUG)
 public final class Prerequisites implements Shells {
@@ -98,17 +100,6 @@ public final class Prerequisites implements Shells {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "%s with %d bash prerequisite(s)",
-            this.origin, this.map.size()
-        );
-    }
-
-    /**
      * Upload one file.
      * @param shell Shell to use
      * @param file File name to upload
@@ -135,11 +126,14 @@ public final class Prerequisites implements Shells {
         final StringBuilder script = new StringBuilder();
         final String dir = FilenameUtils.getFullPathNoEndSeparator(path);
         if (!dir.isEmpty()) {
-            script.append("mkdir -p ").append(Terminal.escape(dir)).append(";");
+            script
+                .append("mkdir -p ")
+                .append(Terminal.quotate(Terminal.escape(dir)))
+                .append(";");
         }
         return script
             .append("cat > ")
-            .append(Terminal.escape(path))
+            .append(Terminal.quotate(Terminal.escape(path)))
             .toString();
     }
 

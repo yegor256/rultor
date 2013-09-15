@@ -1,0 +1,111 @@
+/**
+ * Copyright (c) 2009-2013, rultor.com
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met: 1) Redistributions of source code must retain the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer. 2) Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3) Neither the name of the rultor.com nor
+ * the names of its contributors may be used to endorse or promote
+ * products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+ * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package com.rultor.guard.github;
+
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.rultor.snapshot.Step;
+import java.io.IOException;
+import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.eclipse.egit.github.core.PullRequest;
+import org.eclipse.egit.github.core.User;
+import org.eclipse.egit.github.core.service.PullRequestService;
+import org.eclipse.egit.github.core.service.UserService;
+
+/**
+ * Reassigns to user.
+ * @author Bharath Bolisetty (bharathbolisetty@gmail.com)
+ * @version $Id$
+ */
+@Immutable
+@ToString
+@EqualsAndHashCode(of = { "user" })
+@Loggable(Loggable.DEBUG)
+public final class ReassignTo implements Approval {
+
+    /**
+     * Reassigned to user.
+     */
+    private final transient String user;
+
+    /**
+     * Public ctor.
+     * @param assignee Assignee
+     */
+    public ReassignTo(
+        @NotNull(message = "asignee can not be null") final String assignee) {
+        this.user = assignee;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean has(final PullRequest request, final Github client,
+        final Github.Repo repo) throws IOException {
+        request.setAssignee(this.assignee(client));
+        this.update(request, client, repo);
+        return true;
+    }
+
+    /**
+     * Assign pull request to this user.
+     * @param request Request to assign
+     * @param client Github client
+     * @param repo Github repo
+     * @throws IOException if fails.
+     */
+    @Step("assigned pull request ${args[0].id} to `${args[0].user.login}`")
+    private void update(final PullRequest request, final Github client,
+        final Github.Repo repo) throws IOException {
+        final PullRequestService svc = new PullRequestService(client.client());
+        svc.editPullRequest(repo, request);
+    }
+
+    /**
+     * Github User object of user.
+     * @param github Github
+     * @return User object of user.
+     * @throws IOException if fails.
+     */
+    private User assignee(final Github github) throws IOException {
+        final User assignee;
+        if (this.user.isEmpty()) {
+            assignee = new User();
+            assignee.setLogin("");
+        } else {
+            final UserService usvc = new UserService(github.client());
+            assignee = usvc.getUser(this.user);
+        }
+        return assignee;
+    }
+}

@@ -41,6 +41,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -51,6 +52,7 @@ import org.apache.commons.lang3.Validate;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "hash", "when", "who" })
 @Loggable(Loggable.DEBUG)
 final class GitCommit implements Commit {
@@ -89,14 +91,6 @@ final class GitCommit implements Commit {
         this.hash = name;
         this.when = date;
         this.who = author;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return this.hash.substring(0, Tv.SEVEN);
     }
 
     /**

@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Instance;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Empty instance that does absolutely nothing on every pulse and
@@ -48,6 +49,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
 public final class Empty implements Instance {
@@ -73,14 +75,6 @@ public final class Empty implements Instance {
     @Override
     public void pulse() throws Exception {
         Logger.info(this, "nothing to do");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return "Empty instance";
     }
 
 }

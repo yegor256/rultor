@@ -32,9 +32,11 @@ package com.rultor.scm;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Head of the branch.
@@ -44,6 +46,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = "origin")
 @Loggable(Loggable.DEBUG)
 public final class Head implements Branch {
@@ -65,14 +68,7 @@ public final class Head implements Branch {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return String.format("HEAD of %s", this.origin);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<Commit> log() throws IOException {
         return Iterables.limit(this.origin.log(), 1);
     }

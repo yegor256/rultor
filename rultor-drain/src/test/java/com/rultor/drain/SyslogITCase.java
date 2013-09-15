@@ -31,6 +31,7 @@ package com.rultor.drain;
 
 import com.rultor.spi.Drain;
 import java.util.Arrays;
+import org.junit.Assume;
 import org.junit.Test;
 
 /**
@@ -41,13 +42,28 @@ import org.junit.Test;
 public final class SyslogITCase {
 
     /**
+     * Syslog host.
+     */
+    private static final String HOST =
+        System.getProperty("failsafe.syslog.host");
+
+    /**
+     * Syslog port.
+     */
+    private static final String PORT =
+        System.getProperty("failsafe.syslog.port");
+
+    /**
      * Syslog can log.
      * @throws Exception If some problem inside
      */
     @Test
     public void logsMessages() throws Exception {
+        Assume.assumeNotNull(SyslogITCase.HOST);
         final String msg = "some test log message \u20ac";
-        final Drain drain = new Syslog("logs.papertrailapp.com", 33152);
+        final Drain drain = new Syslog(
+            SyslogITCase.HOST, Integer.parseInt(SyslogITCase.PORT)
+        );
         drain.append(Arrays.asList(msg));
     }
 

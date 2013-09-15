@@ -29,7 +29,6 @@
  */
 package com.rultor.users;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -38,8 +37,7 @@ import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pageable;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
 import java.util.concurrent.TimeUnit;
@@ -104,14 +102,13 @@ final class AwsStand implements Stand {
      */
     @Override
     @Cacheable.FlushAfter
-    public void acl(@NotNull(message = "ACL is mandatory and can't be NULL")
-        final Spec spec) {
+    public void update(
+        @NotNull(message = "ACL spec can't be NULL") final Spec spec,
+        @NotNull(message = "widgets spec can't be NULL") final Spec widgets) {
         this.item.put(
             new Attributes()
-                .with(
-                    AwsStand.FIELD_ACL,
-                    new AttributeValue(spec.asText())
-            )
+                .with(AwsStand.FIELD_ACL, spec.asText())
+                .with(AwsStand.FIELD_WIDGETS, widgets.asText())
         );
     }
 
@@ -126,25 +123,9 @@ final class AwsStand implements Stand {
         if (this.item.has(AwsStand.FIELD_ACL)) {
             spec = new Spec.Simple(this.item.get(AwsStand.FIELD_ACL).getS());
         } else {
-            spec = new Spec.Simple();
+            spec = new Spec.Simple("com.rultor.acl.Prohibited()");
         }
         return spec;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Cacheable.FlushAfter
-    public void widgets(@NotNull(message = "widgets and can't be NULL")
-        final Spec spec) {
-        this.item.put(
-            new Attributes()
-                .with(
-                    AwsStand.FIELD_WIDGETS,
-                    new AttributeValue(spec.asText())
-            )
-        );
     }
 
     /**
@@ -169,6 +150,7 @@ final class AwsStand implements Stand {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public String name() {
         return this.item.get(AwsStand.RANGE_STAND).getS();
     }
@@ -177,6 +159,7 @@ final class AwsStand implements Stand {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public URN owner() {
         return URN.create(this.item.get(AwsStand.HASH_OWNER).getS());
     }
@@ -185,7 +168,7 @@ final class AwsStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, Coordinates> pulses() {
+    public Pulses pulses() {
         throw new UnsupportedOperationException();
     }
 

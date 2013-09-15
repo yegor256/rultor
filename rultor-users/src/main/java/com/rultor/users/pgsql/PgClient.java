@@ -81,6 +81,14 @@ public interface PgClient {
         }
         /**
          * {@inheritDoc}
+         *
+         * <p>Don't increase numbers here, since Heroku limits
+         * the number of connections to PostgreSQL. Maximum we can have is
+         * twenty, but keep in mind that this class is used by multiple
+         * instances of the module, including web and conveyer. And each
+         * of them may have multiple instances of themselves. Thus, it's
+         * better to keep this number as little as possible. We don't have
+         * long-running transactions - no need to have many connections.
          */
         @Override
         @Cacheable(forever = true)
@@ -90,7 +98,7 @@ public interface PgClient {
             src.setJdbcUrl(this.jdbc);
             src.setPassword(this.password);
             src.setPartitionCount(Tv.THREE);
-            src.setMaxConnectionsPerPartition(2);
+            src.setMaxConnectionsPerPartition(1);
             src.setMinConnectionsPerPartition(1);
             src.setAcquireIncrement(1);
             src.setDisableConnectionTracking(true);

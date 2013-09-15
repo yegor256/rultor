@@ -32,8 +32,8 @@ package com.rultor.widget;
 import com.jcabi.urn.URN;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Tag;
 import com.rultor.spi.Tags;
@@ -54,7 +54,9 @@ import org.xembly.Xembler;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle MultipleStringLiterals (500 lines)
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class BuildHealthTest {
 
     /**
@@ -77,11 +79,11 @@ public final class BuildHealthTest {
             new Tags.Simple(
                 Arrays.<Tag>asList(
                     new Tag.Simple(
-                        "git", Level.INFO,
+                        "ci", Level.INFO,
                         Json.createReader(
                             new StringReader(
                                 // @checkstyle LineLength (1 line)
-                                "{\"hash\":\"98aeb7d\",\"author\":\"Jeff\",\"time\":\"2011-07-21T12:15:00Z\"}"
+                                "{\"name\":\"98aeb7d\",\"author\":\"Jeff\",\"time\":\"2011-07-21T12:15:00Z\"}"
                             )
                         ).readObject(),
                         ""
@@ -107,22 +109,29 @@ public final class BuildHealthTest {
                             new StringReader("{\"code\":0,\"duration\":98574}")
                         ).readObject(),
                         ""
+                    ),
+                    new Tag.Simple(
+                        "ci", Level.INFO,
+                        Json.createReader(
+                            new StringReader(
+                                // @checkstyle LineLength (1 line)
+                                "{\"name\":\"9ffeb7d\",\"author\":\"Walter\",\"time\":\"2011-07-21T12:15:00Z\"}"
+                            )
+                        ).readObject(),
+                        ""
                     )
                 )
             )
         ).when(second).tags();
-        final Pageable<Pulse, Coordinates> pulses =
-            Mockito.mock(Pageable.class);
-        Mockito.doReturn(
-            Arrays.asList(first, second).iterator()
-        ).when(pulses).iterator();
+        final Pulses pulses =
+            new Pulses.Row(Arrays.asList(first, second));
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(pulses).when(stand).pulses();
         new Xembler(widget.render(stand)).apply(dom);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(dom),
             XhtmlMatchers.hasXPaths(
-                "/widget[title='Builds Health']",
+                "/widget[not(title)]",
                 "/widget[width='4']",
                 "/widget/builds/build/coordinates[owner='urn:test:3']",
                 "/widget/builds/build/coordinates[rule='rule-a']",
@@ -132,6 +141,104 @@ public final class BuildHealthTest {
                 "/widget/builds/build[code='127']",
                 "/widget/builds/build[health='0.5']"
             )
+        );
+    }
+
+    /**
+     * BuildHealth can find multiple builds.
+     * @throws Exception If fails
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void findsMultipleBuilds() throws Exception {
+        final Widget widget = new BuildHealth();
+        final Document dom = DocumentBuilderFactory.newInstance()
+            .newDocumentBuilder().newDocument();
+        dom.appendChild(dom.createElement("widget"));
+        final Pulse first = Mockito.mock(Pulse.class);
+        Mockito.doReturn(
+            new Coordinates.Simple(new URN("urn:test:44"), "rule-x")
+        ).when(first).coordinates();
+        Mockito.doReturn(
+            new Tags.Simple(
+                Arrays.<Tag>asList(
+                    new Tag.Simple(
+                        "ci", Level.INFO,
+                        Json.createReader(
+                            new StringReader(
+                                // @checkstyle LineLength (1 line)
+                                "{\"name\":\"x\",\"author\":\"x\",\"time\":\"2011-07-21T12:15:00Z\"}"
+                            )
+                        ).readObject(), ""
+                    ),
+                    new Tag.Simple(
+                        "on-commit", Level.SEVERE,
+                        Json.createReader(
+                            new StringReader("{\"code\":5,\"duration\":970}")
+                        ).readObject(),
+                        ""
+                    )
+                )
+            )
+        ).when(first).tags();
+        final Pulse second = Mockito.mock(Pulse.class);
+        Mockito.doReturn(
+            new Coordinates.Simple(new URN("urn:test:55"), "rule-y")
+        ).when(second).coordinates();
+        Mockito.doReturn(
+            new Tags.Simple(
+                Arrays.<Tag>asList(
+                    new Tag.Simple(
+                        "ci", Level.INFO,
+                        Json.createReader(
+                            new StringReader(
+                                // @checkstyle LineLength (1 line)
+                                "{\"name\":\"y\",\"author\":\"y\",\"time\":\"2011-07-21T12:15:00Z\"}"
+                            )
+                        ).readObject(), ""
+                    ),
+                    new Tag.Simple(
+                        "on-commit", Level.SEVERE,
+                        Json.createReader(
+                            new StringReader("{\"code\":7,\"duration\":970}")
+                        ).readObject(),
+                        ""
+                    )
+                )
+            )
+        ).when(second).tags();
+        final Pulses pulses = new Pulses.Row(Arrays.asList(first, second));
+        final Stand stand = Mockito.mock(Stand.class);
+        Mockito.doReturn(pulses).when(stand).pulses();
+        new Xembler(widget.render(stand)).apply(dom);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(dom),
+            XhtmlMatchers.hasXPaths(
+                "/widget/builds[count(build) = 2]",
+                "/widget/builds/build/coordinates[rule='rule-x']",
+                "/widget/builds/build/coordinates[rule='rule-y']"
+            )
+        );
+    }
+
+    /**
+     * BuildHealth can report empty widget.
+     * @throws Exception If fails
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void reportsEmptyWidgetWhenNoTagsFound() throws Exception {
+        final Widget widget = new BuildHealth();
+        final Document dom = DocumentBuilderFactory.newInstance()
+            .newDocumentBuilder().newDocument();
+        dom.appendChild(dom.createElement("widget"));
+        final Pulses pulses = new Pulses.Row();
+        final Stand stand = Mockito.mock(Stand.class);
+        Mockito.doReturn(pulses).when(stand).pulses();
+        new Xembler(widget.render(stand)).apply(dom);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(dom),
+            XhtmlMatchers.hasXPath("/widget/builds[count(build) = 0]")
         );
     }
 

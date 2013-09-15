@@ -36,7 +36,111 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Unit specification.
+ * Specification of an object (aka "Spec").
+ *
+ * <p>A spec is a plain-text description of a Java object
+ * to be instantiated. This is a simple example of a spec:
+ *
+ * <pre> com.rultor.base.Base64("AFEFEFSJKL789jojHKLW==")</pre>
+ *
+ * <p>Formally, a spec is defined as (simplified BNF):
+ *
+ * <pre> spec := variable;
+ * variable := composite
+ *   | name arguments | urn ':' name arguments
+ *   | array | dictionary | meta | arg
+ *   | text | bigtext
+ *   | integer | double | long | boolean;
+ * arguments := '(' ( variable ( ',' variable )? )? ')';
+ * name := [a-z0-9-]+;
+ * urn := 'urn:[a-z]+:[0-9]+';
+ * composite := type arguments;
+ * type := [a-z0-9$-]+;
+ * array := '[' ( variable ( ',' variable )? )? ']';
+ * dictionary := '{' ( text ':' variable ( ',' text ':' variable )? )? '}';
+ * meta := '$' '{' [a-z] '}';
+ * arg := '$' '{' [0-9] ':' .* '}';
+ * text := '"' ('\\"' | ~'"')* '"';
+ * bigtext := '"""' .+ '"""';
+ * integer := (+|-)? [0-9]+;
+ * double := (+|-)? [0-9]+ '.' [0-9]+;
+ * long := (+|-)? [0-9]+ 'L';
+ * boolean := 'TRUE' | 'FALSE';</pre>
+ *
+ * <p>This description actually means that a spec is a variable, and there are
+ * a few possible kinds of variables. The most commonly used is a "composite",
+ * which represents a Java class to be instantiated. For example:
+ *
+ * <pre> com.rultor.base.Empty()</pre>
+ *
+ * Another one is a local reference to a rule, for example:
+ *
+ * <pre> my-other-rule()</pre>
+ *
+ * <p>This spec actually tells its parser that the object should be
+ * instantiated using the spec from another rule, named
+ * {@code my-other-rule}. It's also possible to refer to the rule
+ * of another user:
+ *
+ * <pre> urn:github:526301:his-rule()</pre>
+ *
+ * <p>This spec tells its parser to go to the rule {@code his-rule}
+ * that belongs to the user {@code urn:github:526301}.
+ *
+ * <p>Arrays and dictionaries are collections and maps in Java, for example:
+ *
+ * <pre> [ "first line", "second line" ]
+ * {
+ *   "name": "Jeff Lebowski",
+ *   "photo": java.net.URI("http://.."),
+ *   "age": 32
+ * }
+ * [ com.rultor.base.Empty(), 4, 67L, 14.989008 ]</pre>
+ *
+ * <p>As you see, both arrays and dictionaries are not strongly typed and
+ * may contains objects of different types.
+ *
+ * <p>Texts have two forms, a short/compact/usual one, and a long one,
+ * called a "big text". Both of them create instances of Java
+ * {@link java.lang.String} class, but big text is more convenient for
+ * multi-line blocks of text, for example:
+ *
+ * <pre> "Hello, \"World!\""
+ * """
+ * &lt;envelope&gt;
+ *   &lt;message&gt;Hello, "World!"&lt;/message&gt;
+ * &lt;/envelope&gt;
+ * """
+ * </pre>
+ *
+ * <p>So called "metas" may give you access to a few system properties
+ * of a running rule, including, for example, {@code ${work}} and
+ * {@code ${wallet}}. Some classes need these types of arguments in order
+ * to understand where they are running (what are the coordinates) or who
+ * to charge for resource usage, for example:
+ *
+ * <pre> com.rultor.base.Crontab(
+ *   ${work}, "*5 * * * *",
+ *   com.rultor.base.Empty()
+ * )</pre>
+ *
+ * <p>When you're writing a template, which will be used by other
+ * rules or even by other users, you will need to make it parametrized. For
+ * example, you want to define a spec template that will send emails, but
+ * an actual delivery address should be configurable by those who is
+ * using the template:
+ *
+ * <pre> com.example.Send("Hello, it works!", ${0:email address})</pre>
+ *
+ * <p>In this example, the spec will instantiate class {@code com.example.Send}
+ * with two parameters. The first one is a Java {@code java.lang.String},
+ * while the second one is not defined yet, but has to be provided by
+ * those who is using this rule. If the name of the rule is, say, {@code send},
+ * than it can be used as:
+ *
+ * <pre> send("me&#64;example.com")</pre>
+ *
+ * <p>Most of this magic is implemented in {@code rultor-repo} module.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -119,7 +223,7 @@ public interface Spec {
             @NotNull(message = "type can't be NULL") final Class<?> type)
             throws SpecException {
             final Spec temp = new Spec.Simple(text);
-            final Variable<?> var = new Repo.Cached(repo, user, temp).get();
+            final Variable<?> var = repo.make(user, temp);
             if (var.arguments().isEmpty()) {
                 final Object object = var.instantiate(
                     users, new Arguments(work, new Wallet.Empty())

@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.CharEncoding;
 
 /**
@@ -45,6 +46,7 @@ import org.apache.commons.lang3.CharEncoding;
  * @since 1.0
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
+@ToString
 @EqualsAndHashCode(callSuper = false, of = "origin")
 @Loggable(Loggable.DEBUG)
 public final class ASCIIOutputStream extends OutputStream {
@@ -68,17 +70,6 @@ public final class ASCIIOutputStream extends OutputStream {
         @NotNull(message = "stream can't be NULL") final OutputStream stream) {
         super();
         this.origin = stream;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "%s sensitive to ASCII command codes",
-            this.origin
-        );
     }
 
     /**

@@ -43,7 +43,7 @@ import com.rultor.spi.ACL;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulse;
-import com.rultor.spi.Repo;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Spec;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Stand;
@@ -72,7 +72,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -101,7 +100,12 @@ public final class StandRs extends BaseRs {
     /**
      * List of open pulses.
      */
-    private static final String QUERY_OPEN = "open";
+    public static final String QUERY_OPEN = "open";
+
+    /**
+     * List of tags to filter for.
+     */
+    private static final String QUERY_TAGS = "tags";
 
     /**
      * ID of pulse.
@@ -116,7 +120,12 @@ public final class StandRs extends BaseRs {
     /**
      * Names of pulses to show open.
      */
-    private final transient Set<Coordinates> open = new TreeSet<Coordinates>();
+    private final transient Set<String> open = new TreeSet<String>();
+
+    /**
+     * Names of tags to filter by.
+     */
+    private final transient Set<String> tags = new TreeSet<String>();
 
     /**
      * Inject it from query.
@@ -135,9 +144,18 @@ public final class StandRs extends BaseRs {
     @QueryParam(StandRs.QUERY_OPEN)
     public void setPulses(final List<String> pulses) {
         if (pulses != null) {
-            for (String pulse : pulses) {
-                this.open.add(Coordinates.Simple.valueOf(pulse));
-            }
+            this.open.addAll(pulses);
+        }
+    }
+
+    /**
+     * Inject it from query.
+     * @param names Names of tags
+     */
+    @QueryParam(StandRs.QUERY_TAGS)
+    public void setTags(final List<String> names) {
+        if (names != null) {
+            this.tags.addAll(names);
         }
     }
 
@@ -149,7 +167,10 @@ public final class StandRs extends BaseRs {
     @Path("/")
     public Response index() {
         EmptyPage page = new PageBuilder()
-            .stylesheet("/xsl/stand.xsl")
+            .stylesheet(
+                this.uriInfo().getBaseUriBuilder()
+                    .clone().path(StylesheetsRs.class).build().toString()
+        )
             .build(EmptyPage.class)
             .init(this)
             .link(
@@ -163,12 +184,27 @@ public final class StandRs extends BaseRs {
             )
             .link(
                 new Link(
+                    "pulse-open",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(StandRs.class)
+                        .queryParam(StandRs.QUERY_OPEN, "")
+                        .build(this.name)
+                )
+            )
+            .link(
+                new Link(
                     "collapse",
-                    this.self(new ArrayList<Coordinates>(0))
+                    this.self(new ArrayList<String>(0))
                 )
             );
         if (this.auth().identity().equals(Identity.ANONYMOUS)) {
-            page = page.append(new Breadcrumbs().with("home").bundle());
+            page = page.append(
+                new Breadcrumbs()
+                    .with("home")
+                    .with("self", this.name)
+                    .bundle()
+            );
         } else {
             page = page.append(
                 new Breadcrumbs()
@@ -178,10 +214,24 @@ public final class StandRs extends BaseRs {
                     .bundle()
             );
         }
+        Pulses pulses = this.stand().pulses();
+        for (String tag : this.tags) {
+            pulses = pulses.query().withTag(tag).fetch();
+        }
         return page
             .append(new JaxbBundle("stand", this.name))
+            .append(
+                new JaxbBundle("filters").add(
+                    new JaxbBundle.Group<String>(this.tags) {
+                        @Override
+                        public JaxbBundle bundle(final String tag) {
+                            return new JaxbBundle("filter", tag);
+                        }
+                    }
+                )
+            )
             .append(this.widgets(this.widgets(this.stand().widgets())))
-            .append(this.pulses(this.stand().pulses().iterator(), Tv.TWENTY))
+            .append(this.pulses(pulses.iterator(), Tv.TWENTY))
             .render()
             .build();
     }
@@ -272,11 +322,12 @@ public final class StandRs extends BaseRs {
             .add("owner", coords.owner().toString()).up()
             .add("scheduled", coords.scheduled().toString()).up()
             .up();
-        final ArraySet<Coordinates> now = new ArraySet<Coordinates>(this.open);
-        if (this.open.contains(coords)) {
+        final String label = new Coordinates.Simple(coords).toString();
+        final ArraySet<String> now = new ArraySet<String>(this.open);
+        if (this.open.contains(label)) {
             bundle = this
                 .render(bundle, pulse)
-                .link(new Link("close", this.self(now.without(coords))))
+                .link(new Link("close", this.self(now.without(label))))
                 .link(
                     new Link(
                         "fetch",
@@ -285,20 +336,18 @@ public final class StandRs extends BaseRs {
                             .path(StandRs.class)
                             .path(StandRs.class, "fetch")
                             .queryParam(StandRs.QUERY_ID, "{id}")
-                            .build(this.name, coords)
+                            .build(this.name, label)
                     )
                 );
         } else {
             bundle = bundle
-                .link(new Link("open", this.self(now.with(coords))))
+                .link(new Link("open", this.self(now.with(label))))
                 .add("tags")
                 .add(
                     new JaxbBundle.Group<Tag>(pulse.tags()) {
                         @Override
                         public JaxbBundle bundle(final Tag tag) {
-                            return new JaxbBundle("tag")
-                                .add("label", tag.label()).up()
-                                .add("level", tag.level().toString()).up();
+                            return StandRs.this.bundle(tag);
                         }
                     }
                 )
@@ -313,19 +362,21 @@ public final class StandRs extends BaseRs {
      * @return URI
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    private URI self(final Collection<Coordinates> coords) {
-        final UriBuilder builder = this.uriInfo().getBaseUriBuilder()
-            .clone().path(StandRs.class);
+    private URI self(final Collection<String> coords) {
         final Object[] args = new Object[coords.size() + 1];
         final Object[] labels = new String[coords.size()];
         args[0] = this.name;
         int idx = 0;
-        for (Coordinates coord : coords) {
+        for (String coord : coords) {
             labels[idx] = String.format("{arg%d}", idx);
-            args[idx + 1] = new Coordinates.Simple(coord).toString();
+            args[idx + 1] = coord;
             ++idx;
         }
-        return builder.queryParam(StandRs.QUERY_OPEN, labels).build(args);
+        return this.uriInfo().getBaseUriBuilder()
+            .clone()
+            .path(StandRs.class)
+            .queryParam(StandRs.QUERY_OPEN, labels)
+            .build(args);
     }
 
     /**
@@ -379,7 +430,7 @@ public final class StandRs extends BaseRs {
      * @return Bundle
      */
     private JaxbBundle bug(final JaxbBundle bundle, final Exception exc) {
-        return bundle.add("error", Exceptions.message(exc)).up();
+        return bundle.add("error", Exceptions.stacktrace(exc)).up();
     }
 
     /**
@@ -391,14 +442,12 @@ public final class StandRs extends BaseRs {
         ACL acl;
         try {
             acl = ACL.class.cast(
-                new Repo.Cached(this.repo(), new User.Nobody(), stand.acl())
-                    .get()
-                    .instantiate(
-                        this.users(),
-                        new Arguments(
-                            new Coordinates.None(), new Wallet.Empty()
-                        )
+                this.repo().make(new User.Nobody(), stand.acl()).instantiate(
+                    this.users(),
+                    new Arguments(
+                        new Coordinates.None(), new Wallet.Empty()
                     )
+                )
             );
         } catch (SpecException ex) {
             Exceptions.warn(this, ex);
@@ -426,14 +475,12 @@ public final class StandRs extends BaseRs {
         Collection<Widget> list;
         try {
             list = Collection.class.cast(
-                new Repo.Cached(this.repo(), new User.Nobody(), spec)
-                    .get()
-                    .instantiate(
-                        this.users(),
-                        new Arguments(
-                            new Coordinates.None(), new Wallet.Empty()
-                        )
+                this.repo().make(new User.Nobody(), spec).instantiate(
+                    this.users(),
+                    new Arguments(
+                        new Coordinates.None(), new Wallet.Empty()
                     )
+                )
             );
         } catch (SpecException ex) {
             list = Arrays.<Widget>asList(new Alert(Exceptions.stacktrace(ex)));
@@ -467,7 +514,9 @@ public final class StandRs extends BaseRs {
         } catch (ParserConfigurationException ex) {
             throw new IllegalStateException(ex);
         }
-        dom.appendChild(dom.createElement("widget"));
+        final Element root = dom.createElement("widget");
+        root.setAttribute("class", widget.getClass().getCanonicalName());
+        dom.appendChild(root);
         try {
             new Xembler(widget.render(this.stand())).apply(dom);
         } catch (ImpossibleModificationException ex) {
@@ -476,6 +525,43 @@ public final class StandRs extends BaseRs {
             dom.getDocumentElement().appendChild(error);
         }
         return dom.getDocumentElement();
+    }
+
+    /**
+     * Bundle a tag.
+     * @param tag A tag
+     * @return Bundle
+     */
+    private JaxbBundle bundle(final Tag tag) {
+        final Set<String> labels = new TreeSet<String>();
+        labels.addAll(this.tags);
+        labels.add(tag.label());
+        final Object[] args = new String[labels.size()];
+        final Object[] values = new String[labels.size() + 1];
+        int idx = 0;
+        values[0] = this.name;
+        for (String label : labels) {
+            args[idx] = String.format("{arg%d}", idx);
+            values[idx + 1] = label;
+            ++idx;
+        }
+        return new JaxbBundle("tag")
+            .add("label", tag.label())
+            .up()
+            .add("level", tag.level().toString())
+            .up()
+            .add("markdown", tag.markdown())
+            .up()
+            .link(
+                new Link(
+                    "filter",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(StandRs.class)
+                        .queryParam(StandRs.QUERY_TAGS, args)
+                        .build(values)
+                )
+            );
     }
 
 }

@@ -29,6 +29,7 @@
  */
 package com.rultor.spi;
 
+import com.rultor.tools.NormJson;
 import java.io.StringReader;
 import java.util.logging.Level;
 import javax.json.Json;
@@ -59,11 +60,12 @@ public final class TagTest {
             json.getString("author"), Matchers.equalTo("Jeff")
         );
         final Tag tag = new Tag.Simple("hello", Level.INFO, json, "some text");
+        final NormJson schema = new NormJson("{}");
         MatcherAssert.assertThat(
-            tag.data().getString("hash"), Matchers.equalTo("98aeb7d")
+            tag.data(schema).getString("hash"), Matchers.equalTo("98aeb7d")
         );
         MatcherAssert.assertThat(
-            tag.data().getInt("code"), Matchers.equalTo(1)
+            tag.data(schema).getInt("code"), Matchers.equalTo(1)
         );
     }
 

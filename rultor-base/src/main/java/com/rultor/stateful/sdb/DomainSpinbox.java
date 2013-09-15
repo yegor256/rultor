@@ -37,6 +37,7 @@ import com.rultor.spi.Wallet;
 import com.rultor.stateful.Spinbox;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Spinboxes in Amazon SimpleDB.
@@ -46,6 +47,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @Loggable(Loggable.DEBUG)
 @EqualsAndHashCode(of = { "work", "client" })
 public final class DomainSpinbox implements Spinbox {
@@ -79,17 +81,6 @@ public final class DomainSpinbox implements Spinbox {
         this.work = wrk;
         this.wallet = wlt;
         this.client = clnt;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "SimpleDB spinboxes in `%s` accessed with %s",
-            this.client.domain(), this.client
-        );
     }
 
     /**

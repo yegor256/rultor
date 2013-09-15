@@ -32,12 +32,14 @@ package com.rultor.scm;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rultor.snapshot.Step;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Edge of development (latest branch in the list).
@@ -47,6 +49,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = "scm")
 @Loggable(Loggable.DEBUG)
 public final class Edge implements SCM {
@@ -68,14 +71,7 @@ public final class Edge implements SCM {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return String.format("edge in %s", this.scm);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Branch checkout(final String name) throws IOException {
         return this.scm.checkout(name);
     }
@@ -85,6 +81,7 @@ public final class Edge implements SCM {
      */
     @Override
     @Step("${result.size()} branch(es) at the edge")
+    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public List<String> branches() throws IOException {
         final List<String> branches = new LinkedList<String>();
         final List<String> all = Lists.newLinkedList(this.scm.branches());

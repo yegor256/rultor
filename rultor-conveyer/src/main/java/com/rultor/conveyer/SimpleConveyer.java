@@ -35,15 +35,11 @@ import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.rultor.conveyer.http.HttpServer;
 import com.rultor.conveyer.http.Streams;
-import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
-import com.rultor.spi.Rule;
-import com.rultor.spi.User;
 import com.rultor.spi.Users;
-import com.rultor.spi.Variable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Random;
@@ -145,7 +141,7 @@ final class SimpleConveyer implements Closeable {
         final Runnable runnable = new VerboseRunnable(
             new Callable<Void>() {
                 @Override
-                public Void call() throws Exception {
+                public Void call() throws InterruptedException {
                     SimpleConveyer.this.process();
                     return null;
                 }
@@ -195,40 +191,37 @@ final class SimpleConveyer implements Closeable {
 
     /**
      * Process the next work from the queue.
-     * @throws Exception If fails
+     * @throws InterruptedException If interrupted
      */
-    private void process() throws Exception {
+    private void process() throws InterruptedException {
         final Coordinates work = this.queue.pull(1, TimeUnit.SECONDS);
         if (!work.equals(new Coordinates.None())) {
-            this.threads.label(work.toString());
-            final String key = this.streams.register();
-            try {
-                this.process(new StdoutWork(SimpleConveyer.PORT, key, work));
-            } finally {
-                this.streams.unregister(key);
-                this.threads.label("free");
-            }
+            this.process(work);
         }
     }
 
     /**
-     * Process given work.
-     * @param work The work to process
-     * @throws Exception If fails
+     * Process this given work.
+     * @param work Work to process
      */
-    private void process(final Coordinates work) throws Exception {
-        final User owner = this.users.get(work.owner());
-        final Rule rule = owner.rules().get(work.rule());
-        final Variable<?> var =
-            new Repo.Cached(this.repo, owner, rule.spec()).get();
-        if (var.arguments().isEmpty()) {
-            final Object object = var.instantiate(
-                this.users,
-                new Arguments(work, new OwnWallet(work, rule))
+    private void process(final Coordinates work) {
+        this.threads.label(work.toString());
+        final String key = this.streams.register();
+        try {
+            new Job(work, this.repo, this.users).process(
+                new Job.Decor() {
+                    @Override
+                    public Instance decorate(final Instance instance) {
+                        return new WithCoords(
+                            work,
+                            new WithStdout(SimpleConveyer.PORT, key, instance)
+                        );
+                    }
+                }
             );
-            if (object instanceof Instance) {
-                Instance.class.cast(object).pulse();
-            }
+        } finally {
+            this.streams.unregister(key);
+            this.threads.label("free");
         }
     }
 

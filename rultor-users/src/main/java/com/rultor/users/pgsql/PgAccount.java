@@ -89,8 +89,7 @@ final class PgAccount implements Account {
             return new Dollars(
                 new JdbcSession(this.client.get())
                     // @checkstyle LineLength (1 line)
-                    .sql("SELECT SUM(CASE WHEN dt=? THEN amount ELSE -amount END) FROM receipt WHERE dt=? OR ct=?")
-                    .set(this.owner)
+                    .sql("SELECT SUM(sum) FROM (SELECT SUM(amount) AS sum FROM receipt WHERE dt=? UNION SELECT -SUM(amount) FROM receipt WHERE ct=?) AS sub")
                     .set(this.owner)
                     .set(this.owner)
                     .select(new SingleHandler<Long>(Long.class))
@@ -124,7 +123,7 @@ final class PgAccount implements Account {
                 .set("")
                 .set(details)
                 .set(amount.points())
-                .update();
+                .execute();
         } catch (SQLException ex) {
             throw new IllegalStateException(ex);
         }
@@ -146,7 +145,7 @@ final class PgAccount implements Account {
             new JdbcSession(this.client.get())
                 .sql("DELETE FROM coupon WHERE code=?")
                 .set(code)
-                .update();
+                .execute();
             this.fund(
                 amount, String.format("account funded with coupon %s", code)
             );

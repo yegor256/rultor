@@ -37,6 +37,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -59,6 +60,7 @@ public interface EC2Client {
      * Simple client.
      */
     @Immutable
+    @ToString(exclude = "secret")
     @EqualsAndHashCode(of = { "key", "secret" })
     @Loggable(Loggable.DEBUG)
     final class Simple implements EC2Client {
@@ -85,13 +87,6 @@ public interface EC2Client {
          * {@inheritDoc}
          */
         @Override
-        public String toString() {
-            return String.format("`%s`", this.key);
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
         public AmazonEC2 get() {
             return new AmazonEC2Client(
                 new BasicAWSCredentials(this.key, this.secret)
@@ -103,6 +98,7 @@ public interface EC2Client {
      * With custom region.
      */
     @Immutable
+    @ToString
     @EqualsAndHashCode(of = { "region", "origin" })
     @Loggable(Loggable.DEBUG)
     final class Regional implements EC2Client {
@@ -128,13 +124,6 @@ public interface EC2Client {
             );
             this.region = reg;
             this.origin = client;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString() {
-            return String.format("%s in %s", this.origin, this.region);
         }
         /**
          * {@inheritDoc}

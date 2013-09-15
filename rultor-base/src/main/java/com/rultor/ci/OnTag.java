@@ -31,16 +31,21 @@ package com.rultor.ci;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
 import com.rultor.board.Billboard;
 import com.rultor.scm.Head;
 import com.rultor.scm.SCM;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Step;
-import com.rultor.snapshot.Tag;
+import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Instance;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.logging.Level;
+import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.xembly.Directives;
 
 /**
  * Build on every tag.
@@ -50,6 +55,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "scm", "batch", "board" })
 @Loggable(Loggable.DEBUG)
 public final class OnTag implements Instance {
@@ -96,17 +102,6 @@ public final class OnTag implements Instance {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "on every tag in %s executes %s and announces through %s",
-            this.scm, this.batch, this.board
-        );
-    }
-
-    /**
      * Build this particular branch.
      * @param tag Branch name to build
      * @throws Exception If fails
@@ -115,12 +110,36 @@ public final class OnTag implements Instance {
         before = "building `${args[0]}`",
         value = "built successfully `${args[0]}`"
     )
-    @Tag("ci")
     private void build(final String tag) throws Exception {
+        this.log(tag);
         new OnCommit(
             new Head(this.scm.checkout(tag)),
             this.batch, this.board
         ).pulse();
+    }
+
+    /**
+     * Log a tag.
+     * @param tag Tag we're building
+     * @throws IOException If fails
+     */
+    private void log(final String tag) throws IOException {
+        final StringWriter data = new StringWriter();
+        Json.createGenerator(data)
+            .writeStartObject()
+            .write("name", tag)
+            .writeEnd()
+            .close();
+        final String desc = String.format("tag `%s` has been built", tag);
+        new XemblyLine(
+            new Directives()
+                .xpath("/snapshot").strict(1).addIfAbsent("tags")
+                // @checkstyle MultipleStringLiterals (1 line)
+                .add("tag").add("label").set("tag").up()
+                .add("level").set(Level.INFO.toString()).up()
+                .add("data").set(data.toString()).up()
+                .add("markdown").set(desc)
+        ).log();
     }
 
 }

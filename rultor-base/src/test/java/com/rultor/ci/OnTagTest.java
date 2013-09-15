@@ -35,6 +35,7 @@ import com.rultor.scm.Commit;
 import com.rultor.scm.SCM;
 import com.rultor.shell.Batch;
 import com.rultor.spi.Instance;
+import com.rultor.tools.Time;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Map;
@@ -60,7 +61,7 @@ public final class OnTagTest {
         final Branch branch = Mockito.mock(Branch.class);
         Mockito.doReturn("master").when(branch).name();
         Mockito.doReturn(branch).when(scm).checkout(Mockito.anyString());
-        final Commit commit = Mockito.mock(Commit.class);
+        final Commit commit = new Commit.Simple("abce7f6", new Time(), "me");
         Mockito.doReturn(Arrays.asList(commit)).when(branch).log();
         final Batch batch = Mockito.mock(Batch.class);
         final Billboard board = Mockito.mock(Billboard.class);

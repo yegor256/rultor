@@ -41,6 +41,7 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
@@ -140,6 +141,14 @@ public final class AwsUsers implements Users {
             );
         }
         return new AwsStand(items.iterator().next());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Pulses flow() {
+        throw new UnsupportedOperationException();
     }
 
 }

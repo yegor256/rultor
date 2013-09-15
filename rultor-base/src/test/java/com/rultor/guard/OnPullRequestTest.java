@@ -55,6 +55,7 @@ public final class OnPullRequestTest {
     public void failsOnNewPullRequest() throws Exception {
         final MergeRequests requests = Mockito.mock(MergeRequests.class);
         final MergeRequest request = Mockito.mock(MergeRequest.class);
+        Mockito.doReturn("#626").when(request).name();
         Mockito.doReturn(Arrays.asList(request).iterator())
             .when(requests).iterator();
         final Batch batch = Mockito.mock(Batch.class);
@@ -79,6 +80,7 @@ public final class OnPullRequestTest {
     public void succeedsOnNewPullRequest() throws Exception {
         final MergeRequests requests = Mockito.mock(MergeRequests.class);
         final MergeRequest request = Mockito.mock(MergeRequest.class);
+        Mockito.doReturn("#39").when(request).name();
         Mockito.doReturn(Arrays.asList(request).iterator())
             .when(requests).iterator();
         final Batch batch = Mockito.mock(Batch.class);

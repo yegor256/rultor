@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.net.ftp.FTP;
@@ -58,6 +59,7 @@ import org.apache.commons.net.ftp.FTPReply;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString(exclude = "password")
 @EqualsAndHashCode(of = { "work", "host", "login", "password", "port", "dir" })
 @Loggable(Loggable.DEBUG)
 public final class DirectoryDrain implements Drain {
@@ -129,17 +131,6 @@ public final class DirectoryDrain implements Drain {
         this.password = pwd;
         this.port = prt;
         this.dir = name;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "files in ftp://%s@%s:%d/%s/%s",
-            this.login, this.host, this.port, this.dir, this.prefix()
-        );
     }
 
     /**

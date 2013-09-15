@@ -45,6 +45,7 @@ import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Spinbox in SimpleDB item.
@@ -55,6 +56,7 @@ import lombok.EqualsAndHashCode;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @Loggable(Loggable.DEBUG)
 @EqualsAndHashCode(of = { "client", "name" })
 public final class ItemSpinbox implements Spinbox {
@@ -104,18 +106,7 @@ public final class ItemSpinbox implements Spinbox {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return String.format(
-            "SimpleDB spinbox at `%s` in `%s` domain accessed with %s",
-            this.name, this.client.domain(), this.client
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     public long add(final long value) {
         final AmazonSimpleDB aws = this.client.get();
         final GetAttributesResult result = aws.getAttributes(

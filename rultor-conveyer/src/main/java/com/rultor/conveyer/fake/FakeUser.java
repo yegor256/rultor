@@ -87,7 +87,7 @@ final class FakeUser implements User {
             public Rule get(final String name) {
                 return new Rule() {
                     @Override
-                    public void update(final Spec spc) {
+                    public void update(final Spec spc, final Spec drn) {
                         throw new UnsupportedOperationException();
                     }
                     @Override
@@ -113,6 +113,20 @@ final class FakeUser implements User {
                     @Override
                     public Spec spec() {
                         return FakeUser.this.specification;
+                    }
+                    @Override
+                    public Spec drain() {
+                        return new Spec.Simple(
+                            "com.rultor.conveyer.fake.Console()"
+                        );
+                    }
+                    @Override
+                    public void failure(final String desc) {
+                        throw new UnsupportedOperationException();
+                    }
+                    @Override
+                    public String failure() {
+                        return "";
                     }
                 };
             }

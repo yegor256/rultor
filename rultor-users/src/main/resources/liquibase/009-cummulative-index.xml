@@ -28,36 +28,28 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
-    <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="./layout.xsl"/>
-    <xsl:template name="head">
-        <title>
-            <xsl:value-of select="/page/stand/name"/>
-        </title>
-    </xsl:template>
-    <xsl:template name="content">
-        <form method="post" class="spacious">
-            <xsl:attribute name="action">
-                <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
-            </xsl:attribute>
-            <fieldset>
-                <div class="form-group">
-                    <label for="spec" class="hidden-phone">
-                        <xsl:text>Widgets of </xsl:text>
-                        <code><xsl:value-of select="/page/stand/name"/></code>
-                    </label>
-                    <textarea name="spec" id="spec" rows="18" class="form-control">
-                        <xsl:value-of select="/page/stand/widgets"/>
-                    </textarea>
-                </div>
-                <div class="form-group">
-                    <label><xsl:comment>for the submit button below</xsl:comment></label>
-                    <button type="submit" class="btn btn-primary">
-                        <xsl:text>Save</xsl:text>
-                    </button>
-                </div>
-            </fieldset>
-        </form>
-    </xsl:template>
-</xsl:stylesheet>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="yegor@tpc2.com" id="">
+        <!-- http://stackoverflow.com/questions/18741608 -->
+        <comment>Extra index to make summary calculation faster</comment>
+        <createIndex schemaName="public" tableName="receipt"
+            indexName="idx_ctamount" unique="false">
+            <column name="ct" />
+            <column name="amount" />
+        </createIndex>
+        <createIndex schemaName="public" tableName="receipt"
+            indexName="idx_dtamount" unique="false">
+            <column name="dt" />
+            <column name="amount" />
+        </createIndex>
+        <rollback>
+            <dropIndex schemaName="public" tableName="receipt" indexName="idx_ctamount"/>
+            <dropIndex schemaName="public" tableName="receipt" indexName="idx_dtamount"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

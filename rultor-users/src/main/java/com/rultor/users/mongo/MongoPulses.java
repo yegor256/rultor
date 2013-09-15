@@ -34,10 +34,11 @@ import com.jcabi.aspects.Loggable;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
+import com.rultor.spi.Query;
 import com.rultor.spi.Stand;
 import java.io.IOException;
 import java.util.Iterator;
@@ -57,10 +58,9 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "mongo", "origin" })
+@EqualsAndHashCode(of = { "mongo", "mandatory", "optional" })
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.TooManyMethods")
-final class MongoPulses implements Pageable<Pulse, Coordinates> {
+final class MongoPulses implements Pulses {
 
     /**
      * Mongo container.
@@ -68,35 +68,39 @@ final class MongoPulses implements Pageable<Pulse, Coordinates> {
     private final transient Mongo mongo;
 
     /**
-     * Original stand.
+     * Mandatory predicate.
      */
-    private final transient Stand origin;
+    private final transient Predicate mandatory;
 
     /**
-     * Head of the list.
+     * Optional.
      */
-    private final transient Coordinates head;
+    private final transient Predicate optional;
 
     /**
      * Public ctor.
      * @param mng Mongo container
-     * @param stnd Original
+     * @param stand Original
      */
-    protected MongoPulses(final Mongo mng, final Stand stnd) {
-        this(mng, stnd, new Coordinates.None());
+    protected MongoPulses(final Mongo mng, final Stand stand) {
+        this(
+            mng,
+            new Predicate.InStand(stand.name()),
+            new Predicate.Any()
+        );
     }
 
     /**
      * Private ctor.
-     * @param mng Mongo container
-     * @param stnd Original
-     * @param top Head of the list
+     * @param mng Mongo
+     * @param mnd Mandatory predicate
+     * @param opt Optional predicate
      */
-    private MongoPulses(final Mongo mng, final Stand stnd,
-        final Coordinates top) {
+    protected MongoPulses(final Mongo mng, final Predicate mnd,
+        final Predicate opt) {
         this.mongo = mng;
-        this.origin = stnd;
-        this.head = top;
+        this.mandatory = mnd;
+        this.optional = opt;
     }
 
     /**
@@ -104,9 +108,23 @@ final class MongoPulses implements Pageable<Pulse, Coordinates> {
      */
     @Override
     public Iterator<Pulse> iterator() {
-        final DBCursor cursor = this.collection().find(this.query());
+        final DBCursor cursor = this.collection().find(
+            new Predicate.And(this.mandatory, this.optional).query(),
+            new BasicDBObject()
+                .append(MongoStand.ATTR_COORDS, true)
+                .append(MongoStand.ATTR_STAND, true)
+                .append(MongoStand.ATTR_TAGS, true)
+        );
         cursor.sort(new BasicDBObject(MongoStand.ATTR_UPDATED, -1));
-        this.close(cursor);
+        new Timer().schedule(
+            new TimerTask() {
+                @Override
+                public void run() {
+                    cursor.close();
+                }
+            },
+            TimeUnit.MINUTES.toMillis(1)
+        );
         // @checkstyle AnonInnerLength (50 lines)
         return new Iterator<Pulse>() {
             @Override
@@ -115,7 +133,7 @@ final class MongoPulses implements Pageable<Pulse, Coordinates> {
             }
             @Override
             public Pulse next() {
-                return new MongoPulse(cursor.next());
+                return new MongoPulse(MongoPulses.this.mongo, cursor.next());
             }
             @Override
             public void remove() {
@@ -129,39 +147,19 @@ final class MongoPulses implements Pageable<Pulse, Coordinates> {
      */
     @Override
     public Pageable<Pulse, Coordinates> tail(final Coordinates top) {
-        return new MongoPulses(this.mongo, this.origin, top);
-    }
-
-    /**
-     * Build query.
-     * @return Query
-     */
-    private DBObject query() {
-        final BasicDBObject query = new BasicDBObject()
-            .append(MongoStand.ATTR_STAND, this.origin.name());
-        if (!this.head.equals(new Coordinates.None())) {
-            query.append(
-                MongoStand.ATTR_COORDS,
-                new MongoCoords(this.head).asObject()
-            );
-        }
-        return query;
-    }
-
-    /**
-     * Close it later.
-     * @param cursor The cursor
-     */
-    private void close(final DBCursor cursor) {
-        new Timer().schedule(
-            new TimerTask() {
-                @Override
-                public void run() {
-                    cursor.close();
-                }
-            },
-            TimeUnit.MINUTES.toMillis(1)
+        return new MongoPulses(
+            this.mongo,
+            new Predicate.And(this.mandatory, new Predicate.Tail(top)),
+            this.optional
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Query query() {
+        return new MongoQuery(this.mongo, this.mandatory, this.optional);
     }
 
     /**

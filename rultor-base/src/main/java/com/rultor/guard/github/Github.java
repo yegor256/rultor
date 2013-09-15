@@ -31,7 +31,6 @@ package com.rultor.guard.github;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -101,6 +100,7 @@ public interface Github {
      * Simple implementation.
      */
     @Loggable(Loggable.DEBUG)
+    @ToString(exclude = "password")
     @EqualsAndHashCode(of = { "username", "password" })
     @Immutable
     final class Simple implements Github {
@@ -120,13 +120,6 @@ public interface Github {
         public Simple(@NotNull final String user, @NotNull final String pwd) {
             this.username = user;
             this.password = pwd;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString() {
-            return Logger.format("Github as `%s`", this.username);
         }
         /**
          * {@inheritDoc}

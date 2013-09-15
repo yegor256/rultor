@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.security.cert.X509Certificate;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.schwering.irc.lib.IRCConnection;
 import org.schwering.irc.lib.IRCEventListener;
 import org.schwering.irc.lib.IRCModeParser;
@@ -52,10 +53,12 @@ import org.schwering.irc.lib.ssl.SSLTrustManager;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "host", "port", "channel" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
 public final class IRC implements Billboard {
+
     /**
      * Host name.
      */

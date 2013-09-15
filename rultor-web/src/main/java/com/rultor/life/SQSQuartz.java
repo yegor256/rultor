@@ -135,36 +135,40 @@ public final class SQSQuartz implements Runnable, Closeable {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Time next() {
         final AmazonSQS aws = this.client.get();
-        final ReceiveMessageResult result = aws.receiveMessage(
-            new ReceiveMessageRequest()
-                .withQueueUrl(this.client.url())
-                .withWaitTimeSeconds(Tv.TWENTY)
-                .withVisibilityTimeout(Tv.FIVE)
-                .withMaxNumberOfMessages(Tv.TEN)
-        );
-        final Time previous;
-        if (result.getMessages().isEmpty()) {
-            previous = new Time(new Time().toString());
-        } else {
-            previous = new Time(result.getMessages().get(0).getBody());
-        }
-        final Time next = new Time(
-            previous.millis() + TimeUnit.MINUTES.toMillis(1)
-        ).round();
-        aws.sendMessage(
-            new SendMessageRequest()
-                .withQueueUrl(this.client.url())
-                .withDelaySeconds(0)
-                .withMessageBody(next.toString())
-        );
-        for (Message msg : result.getMessages()) {
-            aws.deleteMessage(
-                new DeleteMessageRequest()
+        try {
+            final ReceiveMessageResult result = aws.receiveMessage(
+                new ReceiveMessageRequest()
                     .withQueueUrl(this.client.url())
-                    .withReceiptHandle(msg.getReceiptHandle())
+                    .withWaitTimeSeconds(Tv.TWENTY)
+                    .withVisibilityTimeout(Tv.FIVE)
+                    .withMaxNumberOfMessages(Tv.TEN)
             );
+            final Time previous;
+            if (result.getMessages().isEmpty()) {
+                previous = new Time(new Time().toString());
+            } else {
+                previous = new Time(result.getMessages().get(0).getBody());
+            }
+            final Time next = new Time(
+                previous.millis() + TimeUnit.MINUTES.toMillis(1)
+            ).round();
+            aws.sendMessage(
+                new SendMessageRequest()
+                    .withQueueUrl(this.client.url())
+                    .withDelaySeconds(0)
+                    .withMessageBody(next.toString())
+            );
+            for (Message msg : result.getMessages()) {
+                aws.deleteMessage(
+                    new DeleteMessageRequest()
+                        .withQueueUrl(this.client.url())
+                        .withReceiptHandle(msg.getReceiptHandle())
+                );
+            }
+            return previous;
+        } finally {
+            aws.shutdown();
         }
-        return previous;
     }
 
     /**

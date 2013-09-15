@@ -35,7 +35,6 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Widget;
 import com.rultor.tools.Vext;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
@@ -45,6 +44,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.reflections.Reflections;
 
 /**
@@ -69,7 +69,6 @@ public final class StylesheetsRs extends BaseRs {
      * @throws IOException If fails
      */
     @GET
-    @Path("/all.xsl")
     @Produces("text/xsl")
     public String aggregation() throws IOException {
         final Vext vext = new Vext(
@@ -81,6 +80,14 @@ public final class StylesheetsRs extends BaseRs {
         return vext.print(
             new ImmutableMap.Builder<String, Object>()
                 .put("hrefs", this.hrefs())
+                .put(
+                    "stand",
+                    StringEscapeUtils.escapeXml(
+                        this.uriInfo().getBaseUriBuilder()
+                            .clone().path("/xsl/stand.xsl")
+                            .build().toString()
+                    )
+                )
                 .build()
         );
     }
@@ -105,16 +112,19 @@ public final class StylesheetsRs extends BaseRs {
      * @return List of HREFs of stylesheets
      * @throws IOException If fails
      */
-    private Collection<URI> hrefs() throws IOException {
-        final Collection<URI> hrefs = new LinkedList<URI>();
+    private Collection<String> hrefs() throws IOException {
+        final Collection<String> hrefs = new LinkedList<String>();
         for (String type : StylesheetsRs.stylesheets().keySet()) {
             hrefs.add(
-                this.uriInfo().getBaseUriBuilder()
-                    .clone()
-                    .path(StylesheetsRs.class)
-                    .path(StylesheetsRs.class, "single")
-                    .queryParam(StylesheetsRs.QUERY_TYPE, "{t}")
-                    .build(type)
+                StringEscapeUtils.escapeXml(
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(StylesheetsRs.class)
+                        .path(StylesheetsRs.class, "single")
+                        .queryParam(StylesheetsRs.QUERY_TYPE, "{t}")
+                        .build(type)
+                        .toString()
+                )
             );
         }
         return hrefs;

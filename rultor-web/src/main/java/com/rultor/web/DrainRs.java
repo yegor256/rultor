@@ -31,7 +31,6 @@ package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.jcabi.log.Logger;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
@@ -41,7 +40,6 @@ import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Pageable;
-import com.rultor.spi.Repo;
 import com.rultor.spi.Rule;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Wallet;
@@ -186,15 +184,17 @@ public final class DrainRs extends BaseRs {
     private Drain drain(final Time time) {
         final Object src;
         try {
-            src = new Repo.Cached(
-                this.repo(), this.user(), this.rule().spec()
-            ).get().instantiate(
-                this.users(),
-                new Arguments(
-                    new Coordinates.Simple(this.user().urn(), this.name, time),
-                    new Wallet.Empty()
-                )
-            );
+            src = this.repo()
+                .make(this.user(), this.rule().drain())
+                .instantiate(
+                    this.users(),
+                    new Arguments(
+                        new Coordinates.Simple(
+                            this.user().urn(), this.name, time
+                        ),
+                        new Wallet.Empty()
+                    )
+                );
         } catch (SpecException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
@@ -205,16 +205,7 @@ public final class DrainRs extends BaseRs {
                 Level.SEVERE
             );
         }
-        if (!(src instanceof Drain.Source)) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                Logger.format(
-                    "Rule `%[type]s` is not an instance of `Drain.Source`", src
-                ),
-                Level.SEVERE
-            );
-        }
-        return Drain.Source.class.cast(src).drain();
+        return Drain.class.cast(src);
     }
 
     /**

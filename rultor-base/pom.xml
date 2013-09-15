@@ -58,11 +58,6 @@
             <artifactId>xml-apis</artifactId>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
@@ -117,10 +112,6 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-urn</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-manifests</artifactId>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>

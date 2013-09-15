@@ -46,6 +46,7 @@ import lombok.ToString;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = "origin")
 @Loggable(Loggable.DEBUG)
 public final class Followed implements Shells {
@@ -70,14 +71,6 @@ public final class Followed implements Shells {
         @NotNull(message = "shells can't be NULL") final Shells shells) {
         this.sequel = seql;
         this.origin = shells;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("%s followed by %s", this.origin, this.sequel);
     }
 
     /**
@@ -118,6 +111,7 @@ public final class Followed implements Shells {
          * @checkstyle ParameterNumber (5 lines)
          */
         @Override
+        @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
         public int exec(final String command, final InputStream stdin,
             final OutputStream stdout, final OutputStream stderr)
             throws IOException {

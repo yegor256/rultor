@@ -32,20 +32,20 @@ package com.rultor.guard.github;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.immutable.ArrayMap;
-import com.jcabi.log.Logger;
-import com.rexsl.test.SimpleXml;
 import com.rultor.guard.MergeRequest;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.Step;
 import com.rultor.snapshot.XSLT;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
+import com.rultor.tools.Vext;
 import java.io.IOException;
 import java.util.Map;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.RequestException;
@@ -62,6 +62,7 @@ import org.xembly.ImpossibleModificationException;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "github", "repository", "parameters" })
 @Loggable(Loggable.DEBUG)
 final class GhRequest implements MergeRequest {
@@ -124,19 +125,6 @@ final class GhRequest implements MergeRequest {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return Logger.format(
-            "%s (#%d) in %s",
-            this.name(),
-            this.issue,
-            this.repository
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Map<String, Object> params() {
         return this.parameters;
     }
@@ -147,20 +135,23 @@ final class GhRequest implements MergeRequest {
     @Override
     @Step("notified GitHub pull request that merging started")
     public void started() throws IOException {
-        final StringBuilder text = new StringBuilder()
-            .append("Let me test your branch first (may take a few):\n\n")
-            .append("<table><tbody>\n");
-        for (Map.Entry<String, Object> entry : this.parameters.entrySet()) {
-            text.append("<tr><td>")
-                .append(entry.getKey())
-                .append("</td><td>")
-                .append(entry.getValue())
-                .append("</td></tr>\n");
-        }
-        text.append("</tbody></table>");
         final GitHubClient client = this.github.client();
         final IssueService issues = new IssueService(client);
-        issues.createComment(this.repository, this.issue, text.toString());
+        issues.createComment(
+            this.repository, this.issue,
+            new Vext(
+                new StringBuilder()
+                    .append("Hey, let me try to merge your branch")
+                    .append(" `${headBranch}` from `${headUser}/${headRepo}`")
+                    .append(" into branch `${baseBranch}` of")
+                    .append(" `${baseUser}/${baseRepo}`. It there won't be")
+                    .append(" any merge conflicts, I'll try to build it.")
+                    .append(" If it builds without errors,")
+                    .append(" I will merge this pull request.")
+                    .append(" I will let you know in any case, in a few...")
+                    .toString()
+            ).print(this.parameters)
+        );
     }
 
     /**
@@ -179,15 +170,7 @@ final class GhRequest implements MergeRequest {
             )
         );
         try {
-            final PullRequestService svc = new PullRequestService(client);
-            svc.merge(
-                this.repository, this.issue,
-                String.format(
-                    "#%d: pull request %s",
-                    this.issue,
-                    issues.getIssue(this.repository, this.issue).getTitle()
-                )
-            );
+            this.merge();
         } catch (RequestException ex) {
             issues.createComment(
                 this.repository, this.issue,
@@ -218,6 +201,25 @@ final class GhRequest implements MergeRequest {
     }
 
     /**
+     * Do the actual merging.
+     * @throws IOException If fails
+     */
+    @RetryOnFailure(verbose = false)
+    private void merge() throws IOException {
+        final GitHubClient client = this.github.client();
+        final PullRequestService svc = new PullRequestService(client);
+        final IssueService issues = new IssueService(client);
+        svc.merge(
+            this.repository, this.issue,
+            String.format(
+                "#%d: pull request %s",
+                this.issue,
+                issues.getIssue(this.repository, this.issue).getTitle()
+            )
+        );
+    }
+
+    /**
      * Make summary out of snapshot.
      * @param snapshot Snapshot XML
      * @return Summary
@@ -225,14 +227,10 @@ final class GhRequest implements MergeRequest {
     private String summary(final Snapshot snapshot) {
         String summary;
         try {
-            summary = new SimpleXml(
-                new DOMSource(
-                    new XSLT(
-                        snapshot,
-                        this.getClass().getResourceAsStream("summary.xsl")
-                    ).dom()
-                )
-            ).xpath("/markdown/text()").get(0);
+            summary = new XSLT(
+                snapshot,
+                this.getClass().getResourceAsStream("summary.xsl")
+            ).xml();
         } catch (TransformerException ex) {
             summary = Exceptions.stacktrace(ex);
         } catch (ImpossibleModificationException ex) {

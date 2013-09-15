@@ -32,7 +32,6 @@ package com.rultor.base;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Instance;
-import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -95,19 +94,6 @@ public final class RestrictiveTest {
             new URN("urn:test:6"), "test-44"
         );
         new Restrictive(work, Arrays.asList("urn:facebook:2"), origin).object();
-    }
-
-    /**
-     * Restrictive can reject when entirely disabled.
-     * @throws Exception If some problem inside
-     */
-    @Test(expected = SecurityException.class)
-    public void blocksEverybodyWhenRequested() throws Exception {
-        final Instance origin = Mockito.mock(Instance.class);
-        final Coordinates work = new Coordinates.Simple(
-            new URN("urn:test:998"), "test-8"
-        );
-        new Restrictive(work, new ArrayList<String>(0), origin).toString();
     }
 
 }

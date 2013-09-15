@@ -67,5 +67,6 @@
     ec2,
     "ant"
 )</acl>
+        <widgets>[]</widgets>
     </stand>
 </page>

@@ -1,0 +1,16 @@
+{
+    "description": "'merge' tag in a pulse",
+    "type":"object",
+    "required": ["request", "failure", "params"],
+    "additionalProperties": false,
+    "properties": {
+        "request": {
+            "type": "string"
+        },
+        "failure": {
+            "type": "string",
+            "pattern": "^true|false$"
+        },
+        "params": {}
+    }
+}

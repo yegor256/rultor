@@ -37,8 +37,10 @@ import com.rexsl.page.UriInfoMocker;
 import com.rexsl.test.JaxbConverter;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.spi.Account;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Rules;
+import com.rultor.spi.Stands;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.tools.Dollars;
@@ -79,6 +81,10 @@ public final class IndexRsTest {
         res.setHttpHeaders(new HttpHeadersMocker().mock());
         res.setSecurityContext(Mockito.mock(SecurityContext.class));
         final User user = Mockito.mock(User.class);
+        final Stands stands = Mockito.mock(Stands.class);
+        Mockito.doReturn(stands).when(user).stands();
+        final Pulses flow = new Pulses.Row();
+        Mockito.doReturn(flow).when(stands).flow();
         final Rules rules = Mockito.mock(Rules.class);
         Mockito.doReturn(rules).when(user).rules();
         Mockito.doReturn(new ArrayList<Rule>(0).iterator())

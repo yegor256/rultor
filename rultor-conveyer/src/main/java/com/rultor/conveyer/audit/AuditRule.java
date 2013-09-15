@@ -84,8 +84,8 @@ final class AuditRule implements Rule {
      * {@inheritDoc}
      */
     @Override
-    public void update(final Spec spec) {
-        this.origin.update(spec);
+    public void update(final Spec spec, final Spec drain) {
+        this.origin.update(spec, drain);
     }
 
     /**
@@ -109,6 +109,30 @@ final class AuditRule implements Rule {
             );
         }
         return this.origin.wallet(work, taker, rule);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spec drain() {
+        return this.origin.drain();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void failure(final String desc) {
+        this.origin.failure(desc);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String failure() {
+        return this.origin.failure();
     }
 
 }

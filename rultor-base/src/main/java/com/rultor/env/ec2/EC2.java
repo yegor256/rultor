@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -64,6 +65,7 @@ import org.apache.commons.lang3.Validate;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "type", "ami", "group", "client" })
 @Loggable(Loggable.DEBUG)
 public final class EC2 implements Environments {
@@ -196,18 +198,6 @@ public final class EC2 implements Environments {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return String.format(
-            // @checkstyle LineLength (1 line)
-            "EC2 `%s` instances with `%s` in `%s` security group with `%s` key pair accessed with %s",
-            this.type, this.ami, this.group, this.pair, this.client
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Environment acquire() throws IOException {
         return new EC2Environment(
             this.work, this.wallet,
@@ -265,7 +255,12 @@ public final class EC2 implements Environments {
      * @param instance Instance running (maybe already)
      * @return The same instance
      */
-    @RetryOnFailure(attempts = Tv.TEN, delay = 2, unit = TimeUnit.MINUTES)
+    @RetryOnFailure(
+        attempts = Tv.TEN,
+        delay = 2,
+        unit = TimeUnit.MINUTES,
+        verbose = false
+    )
     private Instance wrap(final AmazonEC2 aws, final Instance instance) {
         aws.createTags(
             new CreateTagsRequest()

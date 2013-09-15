@@ -40,8 +40,7 @@ import com.rexsl.test.SimpleXml;
 import com.rexsl.test.XmlDocument;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pageable;
-import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
 import com.rultor.tools.Time;
@@ -156,7 +155,7 @@ final class MongoStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public Pageable<Pulse, Coordinates> pulses() {
+    public Pulses pulses() {
         return new MongoPulses(this.mongo, this.origin);
     }
 
@@ -180,8 +179,8 @@ final class MongoStand implements Stand {
      * {@inheritDoc}
      */
     @Override
-    public void acl(final Spec spec) {
-        this.origin.acl(spec);
+    public void update(final Spec spec, final Spec widgets) {
+        this.origin.update(spec, widgets);
     }
 
     /**
@@ -198,14 +197,6 @@ final class MongoStand implements Stand {
     @Override
     public Spec widgets() {
         return this.origin.widgets();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void widgets(final Spec spec) {
-        this.origin.widgets(spec);
     }
 
     /**
@@ -301,7 +292,7 @@ final class MongoStand implements Stand {
         try {
             nodes.addAll(
                 new SimpleXml(new DOMSource(this.dom(after))).nodes(
-                    "/snapshot/tags/tag"
+                    "/snapshot/tags/tag[label and level]"
                 )
             );
         } catch (BrokenXemblyException ex) {

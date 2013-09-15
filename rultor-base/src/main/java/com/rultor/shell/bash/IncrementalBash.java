@@ -35,7 +35,6 @@ import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
-import com.jcabi.log.Logger;
 import com.rultor.shell.Batch;
 import com.rultor.shell.Shells;
 import com.rultor.shell.Terminal;
@@ -49,6 +48,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directives;
 
@@ -74,6 +74,7 @@ import org.xembly.Directives;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "shells", "commands" })
 @Loggable(Loggable.DEBUG)
 public final class IncrementalBash implements Batch {
@@ -125,17 +126,6 @@ public final class IncrementalBash implements Batch {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "bash batch of %d command(s) through %s",
-            this.commands.size(), this.shells
-        );
-    }
-
-    /**
      * Make a script using custom arguments provided.
      *
      * <p>The method returns a Vext script that is a composition of
@@ -153,7 +143,7 @@ public final class IncrementalBash implements Batch {
             .append("set -o pipefail;\n")
             .append("set +o histexpand;\n")
             .append("ESCAPE=")
-            .append(Terminal.escape(IncrementalBash.escape()))
+            .append(Terminal.quotate(Terminal.escape(IncrementalBash.escape())))
             .append(';').append('\n');
         for (Vext cmd : this.commands) {
             script.append(this.script(args, cmd));
@@ -178,7 +168,7 @@ public final class IncrementalBash implements Batch {
         final String command = cmd.print(args);
         return new StringBuilder()
             .append("echo; echo ${dollar} ")
-            .append(Terminal.escape(command))
+            .append(Terminal.quotate(Terminal.escape(command)))
             .append(';').append('\n')
             .append(
                 this.echo(
@@ -287,7 +277,7 @@ public final class IncrementalBash implements Batch {
             new Directives()
                 .xpath(this.xpath(uid))
                 .add("summary")
-                .set(summary.replace("\\", "\\\\"))
+                .set(summary.replaceAll("([_*`\\\\])", "\\\\$1"))
         ).toString();
         return String.format(
             "echo -e '%s'",

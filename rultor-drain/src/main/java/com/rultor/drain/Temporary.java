@@ -120,14 +120,6 @@ public final class Temporary implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return String.format("temporary marked as `%s`", this.marker);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Pageable<Time, Time> pulses() throws IOException {
         final Collection<Time> times = new LinkedList<Time>();
         for (Temporary client : Temporary.BUFFERS.keySet()) {
@@ -175,9 +167,7 @@ public final class Temporary implements Drain {
             IOUtils.toInputStream(
                 Logger.format(
                     "Temporary: marker='%s', work='%s', buffer='%s'\n",
-                    this.marker,
-                    this.work,
-                    buffer
+                    this.marker, this.work, buffer
                 ),
                 CharEncoding.UTF_8
             ),

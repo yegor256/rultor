@@ -66,14 +66,17 @@ public interface Stand {
     URN owner();
 
     /**
-     * Update ACL.
-     * @param spec Specification to save
+     * Update it.
+     * @param acl ACL to save
+     * @param widgets Widgets spec to save
      */
-    void acl(@NotNull(message = "ACL can't be NULL") Spec spec);
+    void update(
+        @NotNull(message = "ACL can't be NULL") Spec acl,
+        @NotNull(message = "spec of widgets is never NULL") Spec widgets);
 
     /**
      * Get its ACL.
-     * @return Specification of ACL
+     * @return Spec of ACL
      */
     @NotNull(message = "ACL is never NULL")
     Spec acl();
@@ -83,7 +86,7 @@ public interface Stand {
      * @return Pageable
      */
     @NotNull(message = "collection of pulses is never NULL")
-    Pageable<Pulse, Coordinates> pulses();
+    Pulses pulses();
 
     /**
      * Post new xembly script to the pulse of the stand.
@@ -97,19 +100,11 @@ public interface Stand {
         @NotNull(message = "text can't be NULL") String xembly);
 
     /**
-     * Get specification of widgets.
-     * @return Specification of array of widgets
+     * Get spec of widgets.
+     * @return Spec of array of widgets
      */
-    @NotNull(message = "specification of widgets is never NULL")
+    @NotNull(message = "spec of widgets is never NULL")
     Spec widgets();
-
-    /**
-     * Save specification of widgets.
-     * @param spec Spec to save
-     */
-    void widgets(
-        @NotNull(message = "specification of widgets is never NULL")
-        Spec spec);
 
     /**
      * When Xembly can't be accepted.

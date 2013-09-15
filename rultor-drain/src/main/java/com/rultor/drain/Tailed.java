@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 
@@ -51,6 +52,7 @@ import org.apache.commons.lang3.CharEncoding;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "main", "tail" })
 @Loggable(Loggable.DEBUG)
 public final class Tailed implements Drain {
@@ -81,17 +83,6 @@ public final class Tailed implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return String.format(
-            "%s tailed by %s",
-            this.main, this.tail
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Pageable<Time, Time> pulses() throws IOException {
         return this.main.pulses();
     }
@@ -115,8 +106,8 @@ public final class Tailed implements Drain {
             IOUtils.toInputStream(
                 String.format(
                     "Tailed: main='%s', tail='%s'\n",
-                    this.main,
-                    this.tail
+                    this.main.getClass().getCanonicalName(),
+                    this.tail.getClass().getCanonicalName()
                 ),
                 CharEncoding.UTF_8
             ),

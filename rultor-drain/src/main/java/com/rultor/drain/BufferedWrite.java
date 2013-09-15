@@ -63,6 +63,7 @@ import org.apache.commons.lang3.Validate;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "lifetime", "work", "origin" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.TooManyMethods" })
@@ -125,18 +126,6 @@ public final class BufferedWrite implements Drain, Closeable {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return Logger.format(
-            "%s with buffered write for %[ms]s",
-            this.origin,
-            this.lifetime
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void close() {
         BufferedWrite.FLUSH.flush(true);
     }
@@ -170,10 +159,8 @@ public final class BufferedWrite implements Drain, Closeable {
         return new SequenceInputStream(
             IOUtils.toInputStream(
                 Logger.format(
-                    "BufferedWrite: lifetime=%[ms]s, work='%s', origin='%s'\n",
-                    this.lifetime,
-                    this.work,
-                    this.origin
+                    "BufferedWrite: lifetime=%[ms]s, work='%s'\n",
+                    this.lifetime, this.work
                 ),
                 CharEncoding.UTF_8
             ),

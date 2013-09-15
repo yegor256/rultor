@@ -27,28 +27,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.base;
+package com.rultor.conveyer;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.LogExceptions;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import com.rultor.snapshot.XemblyLine;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Instance;
-import com.rultor.spi.Work;
 import com.rultor.tools.Time;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.xembly.Directives;
 
 /**
- * Descriptive instance that tells about itself in the xembly log.
+ * WithCoords instance that tells about itself in the xembly log.
  *
  * <p>It is important to use this instance wrapper for
  * <strong>all instances</strong>. It will enable their visibility in
  * the management panel and in the stand. Simply wrap whatever instance you
  * have in the unit into this wrapper:
  *
- * <pre> com.rultor.base.Descriptive(
+ * <pre> com.rultor.base.WithCoords(
  *   ${0:?}, my-instance-to-wrap
  * )</pre>
  *
@@ -57,14 +58,15 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "work", "origin" })
 @Loggable(Loggable.DEBUG)
-public final class Descriptive implements Instance {
+final class WithCoords implements Instance {
 
     /**
      * Coordinates we're in.
      */
-    private final transient Work work;
+    private final transient Coordinates work;
 
     /**
      * Origin.
@@ -76,7 +78,7 @@ public final class Descriptive implements Instance {
      * @param wrk Coordinates we're in
      * @param instance Original instance
      */
-    public Descriptive(final Work wrk, final Instance instance) {
+    protected WithCoords(final Coordinates wrk, final Instance instance) {
         this.work = wrk;
         this.origin = instance;
     }
@@ -112,13 +114,6 @@ public final class Descriptive implements Instance {
         ).log();
         new XemblyLine(
             new Directives()
-                .xpath("/snapshot[not(stdout)]")
-                .strict(1)
-                .add("stdout")
-                .set(this.work.stdout().toString())
-        ).log();
-        new XemblyLine(
-            new Directives()
                 .xpath("/snapshot[not(version)]")
                 .strict(1)
                 .add("version")
@@ -135,9 +130,6 @@ public final class Descriptive implements Instance {
             this.origin.pulse();
         } finally {
             new XemblyLine(
-                new Directives().xpath("/snapshot/stdout").strict(1).remove()
-            ).log();
-            new XemblyLine(
                 new Directives()
                     .xpath("/snapshot[not(finish)]")
                     .strict(1)
@@ -152,14 +144,6 @@ public final class Descriptive implements Instance {
                     .set(Long.toString(System.currentTimeMillis() - start))
             ).log();
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("verbose %s", this.origin);
     }
 
 }

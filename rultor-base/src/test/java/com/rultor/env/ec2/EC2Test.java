@@ -41,10 +41,13 @@ import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
 import com.rultor.tools.Time;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -55,6 +58,18 @@ import org.mockito.Mockito;
  * @version $Id$
  */
 public final class EC2Test {
+
+    /**
+     * Assume we're online.
+     */
+    @Before
+    public void weAreOnline() {
+        try {
+            new URL("http://www.google.com").getContent();
+        } catch (IOException ex) {
+            Assume.assumeTrue(false);
+        }
+    }
 
     /**
      * Acquire Environment from EC2.
@@ -89,10 +104,10 @@ public final class EC2Test {
         Mockito.when(instance.getInstanceId()).thenReturn("InstanceId");
         Mockito.when(work.owner()).thenReturn(new URN());
         Mockito.when(work.scheduled()).thenReturn(new Time());
-        final EC2 envs =
-            new EC2(
-                work, wallet, "type", "ami-ef9f2f1e", "group", "par",
-                "eu-west-123t", client);
+        final EC2 envs = new EC2(
+            work, wallet, "type", "ami-ef9f2f1e", "group", "par",
+            "eu-west-123t", client
+        );
         return envs;
     }
 }

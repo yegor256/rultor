@@ -84,17 +84,6 @@ public final class SSHServers implements Shells {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return String.format(
-            "SSH servers as `%s` in %s with %s",
-            this.login, this.envs, this.key
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Shell acquire() throws IOException {
         return new SSHServer(this.envs.acquire(), this.login, this.key);
     }

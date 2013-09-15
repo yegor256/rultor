@@ -34,6 +34,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rultor.snapshot.Step;
 import java.io.IOException;
 import java.util.Collections;
@@ -44,6 +45,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Branches sorted according to SemVer recommendations.
@@ -54,6 +56,7 @@ import lombok.EqualsAndHashCode;
  * @see <a href="http://semver.org/">Semantic Versioning</a>
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "scm", "regex" })
 @Loggable(Loggable.DEBUG)
 public final class SemVer implements SCM {
@@ -84,14 +87,7 @@ public final class SemVer implements SCM {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return String.format("semantic branches in %s", this.scm);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Branch checkout(final String name) throws IOException {
         return this.scm.checkout(name);
     }
@@ -101,6 +97,7 @@ public final class SemVer implements SCM {
      */
     @Override
     @Step("${result.size()} branch(es) match `${this.regex}`")
+    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public List<String> branches() throws IOException {
         final List<String> ordered = new LinkedList<String>();
         final Pattern pattern = Pattern.compile(this.regex);

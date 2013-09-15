@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Map that never discloses its content.
@@ -46,6 +47,7 @@ import lombok.EqualsAndHashCode;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = "origin")
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
@@ -63,20 +65,6 @@ public final class SecretMap implements Map<String, Object> {
     public SecretMap(
         @NotNull(message = "map can't be NULL") final Map<String, Object> map) {
         this.origin = new ArrayMap<String, Object>(map);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        final String text;
-        if (this.isEmpty()) {
-            text = "{}";
-        } else {
-            text = String.format("{%d pair(s)}", this.size());
-        }
-        return text;
     }
 
     /**

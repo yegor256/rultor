@@ -37,8 +37,8 @@
         <ul class="list-inline spacious-inline-list">
             <xsl:if test="spec">
                 <li class="icon">
-                    <i class="icon-beaker" title="show specification"
-                        onclick="$(this).parent().parent().parent().parent().find('pre.spec').toggle();"><xsl:comment>spec</xsl:comment></i>
+                    <i class="icon-beaker" title="show spec"
+                        onclick="$(this).closest('div').find('pre.spec').toggle();"><xsl:comment>spec</xsl:comment></i>
                 </li>
             </xsl:if>
             <xsl:apply-templates select="version" mode="compact"/>
@@ -147,7 +147,7 @@
                 <xsl:comment>signal</xsl:comment>
             </i>
         </li>
-        <li>
+        <li class="hidden-phone">
             <xsl:value-of select="rule"/>
         </li>
     </xsl:template>
@@ -206,7 +206,7 @@
             <span class="step">
                 <xsl:if test="exception">
                     <i class="text-danger icon-warning-sign icon"
-                        onclick="$(this).parent().parent().find('pre.exception').toggle();">
+                        onclick="$(this).parent().parent().next().toggle();">
                         <xsl:attribute name="title">
                             <xsl:value-of select="exception/class"/>
                         </xsl:attribute>
@@ -260,17 +260,19 @@
             <xsl:if test="not($left)">
                 <i class="icon-chevron-left"><xsl:comment>start</xsl:comment></i>
             </xsl:if>
-            <xsl:if test="exception/stacktrace">
-                <pre style="display:none" class="text-danger text-left exception"><xsl:value-of select="exception/stacktrace"/></pre>
-            </xsl:if>
         </li>
+        <xsl:if test="exception/stacktrace">
+            <li style="display:none">
+                <pre class="text-danger text-left exception"><xsl:value-of select="exception/stacktrace"/></pre>
+            </li>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="tags">
         <ul class="list-inline spacious-inline-list">
             <xsl:if test="tag/markdown">
                 <li class="icon">
                     <i class="icon-plus-sign"
-                        onclick="$(this).parent().parent().parent().find('.detailed').toggle();"><xsl:comment>show</xsl:comment></i>
+                        onclick="$(this).closest('.panel').find('.detailed').toggle();"><xsl:comment>show</xsl:comment></i>
                 </li>
             </xsl:if>
             <xsl:apply-templates select="tag"/>
@@ -289,44 +291,82 @@
     </xsl:template>
     <xsl:template match="tag">
         <li>
-            <span>
-                <xsl:attribute name="class">
-                    <xsl:text>label </xsl:text>
-                    <xsl:choose>
-                        <xsl:when test="level = 'FINE'">
-                            <xsl:text>label-success</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="level = 'INFO'">
-                            <xsl:text>label-info</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="level = 'WARNING'">
-                            <xsl:text>label-warning</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="level = 'SEVERE'">
-                            <xsl:text>label-danger</xsl:text>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:text>label-default</xsl:text>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:attribute>
-                <xsl:value-of select="label"/>
-            </span>
+            <xsl:choose>
+                <xsl:when test="level">
+                    <xsl:call-template name="tag-label">
+                        <xsl:with-param name="tag" select="." />
+                        <xsl:with-param name="level" select="level" />
+                    </xsl:call-template>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:call-template name="tag-label">
+                        <xsl:with-param name="tag" select="." />
+                        <xsl:with-param name="level" select="'default'" />
+                    </xsl:call-template>
+                </xsl:otherwise>
+            </xsl:choose>
         </li>
     </xsl:template>
     <xsl:template match="tag" mode="detailed">
         <li>
             <ul class="list-inline">
                 <li>
-                    <span class="label label-default">
-                        <xsl:value-of select="label"/>
-                    </span>
+                    <xsl:call-template name="tag-label">
+                        <xsl:with-param name="tag" select="." />
+                        <xsl:with-param name="level" select="'default'" />
+                    </xsl:call-template>
                 </li>
                 <li>
                     <span class="markdown"><xsl:value-of select="markdown"/></span>
                 </li>
             </ul>
         </li>
+    </xsl:template>
+    <xsl:template name="tag-label">
+        <xsl:param name="tag"/>
+        <xsl:param name="level" as="xs:string"/>
+        <xsl:variable name="class">
+            <xsl:text>label </xsl:text>
+            <xsl:text> </xsl:text>
+            <xsl:choose>
+                <xsl:when test="$level = 'FINE'">
+                    <xsl:text>label-success</xsl:text>
+                </xsl:when>
+                <xsl:when test="$level = 'INFO'">
+                    <xsl:text>label-info</xsl:text>
+                </xsl:when>
+                <xsl:when test="$level = 'WARNING'">
+                    <xsl:text>label-warning</xsl:text>
+                </xsl:when>
+                <xsl:when test="$level = 'SEVERE'">
+                    <xsl:text>label-danger</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:text>label-default</xsl:text>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$tag/links/link[@rel='filter']">
+                <a>
+                    <xsl:attribute name="class">
+                        <xsl:value-of select="$class"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="$tag/links/link[@rel='filter']/@href"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$tag/label"/>
+                </a>
+            </xsl:when>
+            <xsl:otherwise>
+                <span>
+                    <xsl:attribute name="class">
+                        <xsl:value-of select="$class"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$tag/label"/>
+                </span>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template name="bar">
         <xsl:param name="snapshot"/>

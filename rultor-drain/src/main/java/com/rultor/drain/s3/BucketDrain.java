@@ -41,6 +41,7 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -52,6 +53,7 @@ import org.apache.commons.io.IOUtils;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "work", "client" })
 @Loggable(Loggable.DEBUG)
 public final class BucketDrain implements Drain {
@@ -82,17 +84,6 @@ public final class BucketDrain implements Drain {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return String.format(
-            "S3 objects in %s",
-            this.client
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Pageable<Time, Time> pulses() {
         return new BucketPulses(this.client, this.prefix(), new Time());
     }
@@ -114,8 +105,7 @@ public final class BucketDrain implements Drain {
             IOUtils.toInputStream(
                 String.format(
                     "BucketDrain: work='%s', client='%s'\n",
-                    this.work,
-                    this.client
+                    this.work, this.client
                 )
             ),
             this.obj().read()

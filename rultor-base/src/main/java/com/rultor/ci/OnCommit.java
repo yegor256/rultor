@@ -32,19 +32,25 @@ package com.rultor.ci;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
+import com.jcabi.aspects.Tv;
 import com.rultor.board.Billboard;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.Step;
-import com.rultor.snapshot.Tag;
+import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Instance;
 import com.rultor.tools.Exceptions;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.util.logging.Level;
+import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
+import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 
 /**
@@ -55,6 +61,7 @@ import org.xembly.ImpossibleModificationException;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "branch", "batch", "board" })
 @Loggable(Loggable.DEBUG)
 public final class OnCommit implements Instance {
@@ -101,27 +108,16 @@ public final class OnCommit implements Instance {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "on new commits at %s executes %s and announces through %s",
-            this.branch, this.batch, this.board
-        );
-    }
-
-    /**
      * Build.
      * @param head Head of the branch
      * @throws IOException If some IO problem
      */
     @Step(
-        before = "building `${args[0]}`",
-        value = "built successfully `${args[0]}`"
+        before = "building `${args[0].name}`",
+        value = "built successfully `${args[0].name}`"
     )
-    @Tag("ci")
     private void build(final Commit head) throws IOException {
+        this.tag(head);
         final Snapshot snapshot = new Build("on-commit", this.batch).exec(
             new ImmutableMap.Builder<String, Object>()
                 .put("branch", this.branch.name())
@@ -148,6 +144,35 @@ public final class OnCommit implements Instance {
     @Step("announced result")
     private void announce(final String snapshot) throws IOException {
         this.board.announce(snapshot);
+    }
+
+    /**
+     * Log a tag.
+     * @param commit Commit we're integrating
+     * @throws IOException If fails
+     */
+    private void tag(final Commit commit) throws IOException {
+        final StringWriter data = new StringWriter();
+        Json.createGenerator(data)
+            .writeStartObject()
+            .write("name", commit.name())
+            .write("author", commit.author())
+            .write("time", commit.time().toString())
+            .writeEnd()
+            .close();
+        final String desc = String.format(
+            "commit `%s` by %s on %s",
+            StringUtils.substring(commit.name(), 0, Tv.SEVEN),
+            commit.author(), commit.time()
+        );
+        new XemblyLine(
+            new Directives()
+                .xpath("/snapshot").strict(1).addIfAbsent("tags")
+                .add("tag").add("label").set("ci").up()
+                .add("level").set(Level.INFO.toString()).up()
+                .add("data").set(data.toString()).up()
+                .add("markdown").set(desc)
+        ).log();
     }
 
 }

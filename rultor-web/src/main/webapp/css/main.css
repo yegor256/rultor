@@ -74,6 +74,7 @@ textarea {
 
 .icon {
     cursor: pointer;
+    text-decoration: none;
 }
     .icon a {
         text-decoration: none;
@@ -87,10 +88,6 @@ textarea {
     cursor: pointer;
     -webkit-font-smoothing: antialiased;
 }
-    .logo:hover {
-        color: gray;
-        text-decoration: none;
-    }
 
 h2 {
     padding-top: 1em;

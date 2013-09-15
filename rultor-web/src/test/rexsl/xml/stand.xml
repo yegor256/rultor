@@ -63,54 +63,10 @@
     <stand>nightly-build</stand>
     <since>2012-08-23T13:25:33Z</since>
     <balance>$0.45</balance>
-    <widgets>
-        <widget class="com.rultor.widget.BuildHealth">
-            <title>Build Health</title>
-            <width>4</width>
-            <builds>
-                <build>
-                    <coordinates>
-                        <rule>rultor-on-commit</rule>
-                        <owner>urn:github:1</owner>
-                        <scheduled>2012-07-20T07:13:33Z</scheduled>
-                    </coordinates>
-                    <health>0.78</health>
-                    <commit>
-                        <name>09ae8f5</name>
-                        <time>2012-08-23T13:25:33Z</time>
-                        <author>Jeff Lebowski</author>
-                    </commit>
-                    <duration>473783</duration>
-                    <code>0</code>
-                </build>
-                <build>
-                    <coordinates>
-                        <rule>rultor-skin-on-commit</rule>
-                        <owner>urn:github:1</owner>
-                        <scheduled>2012-07-20T07:13:33Z</scheduled>
-                    </coordinates>
-                    <health>0.97</health>
-                    <commit>
-                        <name>89775e5</name>
-                        <time>2012-07-20T13:25:33Z</time>
-                        <author>Walter</author>
-                    </commit>
-                    <duration>93838</duration>
-                    <code>0</code>
-                </build>
-            </builds>
-        </widget>
-        <widget class="com.rultor.widget.RecentBuilds">
-            <title>Recent Builds</title>
-            <width>6</width>
-            <links>
-                <link href="/xml/stand.xml" rel="more" type="text/xml"/>
-            </links>
-            <body>
-                test
-            </body>
-        </widget>
-    </widgets>
+    <filters>
+        <filter>on-commit</filter>
+        <filter>stdout</filter>
+    </filters>
     <pulses>
         <pulse>
             <coordinates>
@@ -219,6 +175,17 @@
                         <summary>running bash build script</summary>
                     </step>
                     <step>
+                        <id>build</id>
+                        <level>SEVERE</level>
+                        <start at="0.7">2013-08-23T17:59Z</start>
+                        <summary>exception occured</summary>
+                        <exception>
+                            <class>java.io.IOException</class>
+                            <cause>something went terribly wrong</cause>
+                            <stacktrace>test</stacktrace>
+                        </exception>
+                    </step>
+                    <step>
                         <id>announce</id>
                         <summary>announce results</summary>
                     </step>
@@ -249,14 +216,31 @@
                     <level>FINE</level>
                     <label>success</label>
                     <markdown>commit `4e56ba43` built successfully in 23min</markdown>
+                    <links>
+                        <link href="/xml/stand.xml" rel="filter" type="text/xml"/>
+                    </links>
+                </tag>
+                <tag>
+                    <level>FINE</level>
+                    <label>stdout</label>
+                    <markdown>see [log.txt](http://www.rultor.com) for details</markdown>
+                    <links>
+                        <link href="/xml/stand.xml" rel="filter" type="text/xml"/>
+                    </links>
                 </tag>
                 <tag>
                     <level>INFO</level>
                     <label>#324</label>
+                    <links>
+                        <link href="/xml/stand.xml" rel="filter" type="text/xml"/>
+                    </links>
                 </tag>
                 <tag>
                     <level>INFO</level>
                     <label>pull-request</label>
+                    <links>
+                        <link href="/xml/stand.xml" rel="filter" type="text/xml"/>
+                    </links>
                 </tag>
             </tags>
             <links>
@@ -276,10 +260,16 @@
                 <tag>
                     <level>INFO</level>
                     <label>#324</label>
+                    <links>
+                        <link href="/xml/stand.xml" rel="filter" type="text/xml"/>
+                    </links>
                 </tag>
                 <tag>
                     <level>INFO</level>
                     <label>pull-request</label>
+                    <links>
+                        <link href="/xml/stand.xml" rel="filter" type="text/xml"/>
+                    </links>
                 </tag>
             </tags>
         </pulse>

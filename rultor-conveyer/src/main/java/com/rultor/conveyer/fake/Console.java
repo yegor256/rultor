@@ -27,14 +27,59 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web.rexsl.xhtml
+package com.rultor.conveyer.fake;
 
-import com.rexsl.test.XhtmlMatchers
-import org.hamcrest.MatcherAssert
+import com.rultor.spi.Drain;
+import com.rultor.spi.Pageable;
+import com.rultor.tools.Time;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.apache.commons.lang.CharEncoding;
 
-MatcherAssert.assertThat(
-    rexsl.document,
-    XhtmlMatchers.hasXPaths(
-        '//xhtml:html/xhtml:head/xhtml:title'
-    )
-)
+/**
+ * Drain to console.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @checkstyle MultipleStringLiterals (500 lines)
+ */
+@ToString
+@EqualsAndHashCode
+public final class Console implements Drain {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Pageable<Time, Time> pulses() throws IOException {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @SuppressWarnings("PMD.SystemPrintln")
+    public void append(final Iterable<String> lines) throws IOException {
+        final PrintStream stream = new PrintStream(
+            System.out, true, CharEncoding.UTF_8
+        );
+        for (String line : lines) {
+            stream.println(String.format("CONSOLE: %s", line));
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InputStream read() throws IOException {
+        throw new UnsupportedOperationException();
+    }
+
+}

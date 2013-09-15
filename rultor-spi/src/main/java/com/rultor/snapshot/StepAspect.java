@@ -79,7 +79,7 @@ public final class StepAspect {
         final ImmutableMap.Builder<String, Object> args =
             new ImmutableMap.Builder<String, Object>()
                 .put("this", new StepAspect.Open(point.getThis()))
-                .put("args", point.getArgs());
+                .put("args", StepAspect.wrap(point.getArgs()));
         final String before;
         if (step.before().isEmpty()) {
             before = String.format(
@@ -91,9 +91,7 @@ public final class StepAspect {
         }
         new XemblyLine(
             new Directives()
-                .xpath("/snapshot")
-                .addIfAbsent("steps").strict(1)
-                .add("step").strict(1)
+                .xpath("/snapshot").addIfAbsent("steps").add("step")
                 .attr("id", label)
                 // @checkstyle MultipleStringLiterals (1 line)
                 .attr("class", method.getDeclaringClass().getCanonicalName())
@@ -158,6 +156,20 @@ public final class StepAspect {
     }
 
     /**
+     * Wrap them all into Open.
+     * @param array Array of objects to wrap
+     * @return Array of wrappers
+     */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    private static Object[] wrap(final Object[] array) {
+        final Object[] output = new Object[array.length];
+        for (int idx = 0; idx < array.length; ++idx) {
+            output[idx] = new StepAspect.Open(array[idx]);
+        }
+        return output;
+    }
+
+    /**
      * Open object for velocity rendering of all private properties.
      */
     @EqualsAndHashCode(of = "subject")
@@ -187,9 +199,19 @@ public final class StepAspect {
          * @throws Exception If fails
          */
         public Object get(final String name) throws Exception {
-            final Field field = this.subject.getClass().getDeclaredField(name);
-            field.setAccessible(true);
-            return field.get(this.subject);
+            Object value;
+            try {
+                final Method method = this.subject.getClass()
+                    .getDeclaredMethod(name);
+                method.setAccessible(true);
+                value = method.invoke(this.subject);
+            } catch (NoSuchMethodException ex) {
+                final Field field = this.subject.getClass()
+                    .getDeclaredField(name);
+                field.setAccessible(true);
+                value = field.get(this.subject);
+            }
+            return value;
         }
     }
 

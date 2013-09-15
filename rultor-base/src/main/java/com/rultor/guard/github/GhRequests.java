@@ -32,7 +32,6 @@ package com.rultor.guard.github;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
-import com.jcabi.log.Logger;
 import com.rultor.guard.MergeRequest;
 import com.rultor.guard.MergeRequests;
 import com.rultor.snapshot.Step;
@@ -43,6 +42,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.PullRequestService;
@@ -55,6 +55,7 @@ import org.eclipse.egit.github.core.service.PullRequestService;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "github", "repository" })
 @Loggable(Loggable.DEBUG)
 public final class GhRequests implements MergeRequests {
@@ -152,24 +153,12 @@ public final class GhRequests implements MergeRequests {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return Logger.format(
-            "%s in %s",
-            this.repository,
-            this.github
-        );
-    }
-
-    /**
      * Fetch all pull requests.
      * @return Collection of them
      * @throws IOException If fails
      */
+    @RetryOnFailure(verbose = false)
     @Step("found ${result.size()} pull request(s) in Github")
-    @RetryOnFailure
     private Collection<PullRequest> fetch() throws IOException {
         final GitHubClient client = this.github.client();
         final PullRequestService svc = new PullRequestService(client);
@@ -182,7 +171,7 @@ public final class GhRequests implements MergeRequests {
      * @return Collection of them
      * @throws IOException If fails
      */
-    @Step("${result.size()} out of ${args[0].size()} request(s) approved")
+    @Step("${result.size()} out of ${args[0].size} request(s) approved")
     private Collection<PullRequest> filter(final Collection<PullRequest> list)
         throws IOException {
         final Collection<PullRequest> requests = new LinkedList<PullRequest>();

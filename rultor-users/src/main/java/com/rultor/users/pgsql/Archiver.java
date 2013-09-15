@@ -27,46 +27,71 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.base;
+package com.rultor.users.pgsql;
 
-import com.jcabi.urn.URN;
-import com.rultor.spi.Instance;
-import com.rultor.spi.Work;
-import com.rultor.tools.Time;
-import java.net.URI;
-import org.junit.Test;
-import org.mockito.Mockito;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.ScheduleWithFixedDelay;
+import com.jcabi.jdbc.JdbcSession;
+import com.jcabi.jdbc.VoidHandler;
+import java.io.Closeable;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Test case for {@link Descriptive}.
- * @author Gangababu Tirumalanadhuni (gangababu.t@gmail.com)
+ * Archives old data in PostgreSQL.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class DescriptiveTest {
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "client")
+@Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.DoNotUseThreads")
+@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.HOURS)
+public final class Archiver implements Runnable, Closeable {
 
     /**
-     * Test descriptives in Xembly Log.
-     * @throws Exception If some problem inside
+     * PostgreSQL client.
      */
-    @Test
-    public void testDescriptiveInXemblyLog() throws Exception {
-        final Time scheduled = new Time();
-        final Instance origin = Mockito.mock(Instance.class);
-        final Work work = Mockito.mock(Work.class);
-        Mockito.doReturn(URI.create("urn:facebook:1")).when(work).stdout();
-        Mockito.doReturn(scheduled).when(work).scheduled();
-        Mockito.doReturn(URN.create("urn:facebook:2")).when(work).owner();
-        Mockito.doReturn("test-rule").when(work).rule();
-        final Descriptive descriptive = new Descriptive(
-            work,
-            origin
-        );
-        descriptive.pulse();
-        Mockito.verify(origin).pulse();
-        Mockito.verify(work).rule();
-        Mockito.verify(work).scheduled();
-        Mockito.verify(work).stdout();
-        Mockito.verify(work).owner();
+    private final transient PgClient client;
+
+    /**
+     * Public ctor.
+     * @param clnt Client
+     */
+    public Archiver(final PgClient clnt) {
+        this.client = clnt;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void run() {
+        try {
+            new JdbcSession(this.client.get())
+                .sql("SELECT archive()")
+                .select(new VoidHandler());
+            new JdbcSession(this.client.get())
+                .sql("ANALYZE receipt")
+                .execute();
+        } catch (SQLException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() throws IOException {
+        // nothing to do now
     }
 
 }

@@ -176,6 +176,14 @@ final class PgSheet implements Sheet {
      * {@inheritDoc}
      */
     @Override
+    public String toString() {
+        return this.query();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public List<Column> columns() {
         return Collections.unmodifiableList(PgSheet.COLS);
     }
@@ -212,14 +220,6 @@ final class PgSheet implements Sheet {
             this.client, this.owner, this.orders, this.groups,
             this.start, this.end, head, this.clause
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return this.query();
     }
 
     /**

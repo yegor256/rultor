@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.TeeOutputStream;
@@ -49,6 +50,7 @@ import org.apache.commons.io.output.TeeOutputStream;
  * @since 1.0
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = "shell")
 @Loggable(Loggable.DEBUG)
 public final class Terminal {
@@ -67,30 +69,31 @@ public final class Terminal {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format("terminal to %s", this.shell);
-    }
-
-    /**
      * Escape argument.
      * @param arg Argument
-     * @return Escaped and bash-safe
+     * @return Escaped
      * @todo #34 This implementation is extremely bad
      */
     public static String escape(@NotNull(message = "argument can't be NULL")
         final String arg) {
+        return arg
+            .replace("\\", "\\\\")
+            .replace("\"", "\\\"")
+            .replace("$", "\\$")
+            .replace("!", "\"'!'\"")
+            .replace("`", "\\`");
+    }
+
+    /**
+     * Quotate argument.
+     * @param arg Argument
+     * @return Quotated
+     */
+    public static String quotate(@NotNull(message = "argument can't be NULL")
+        final String arg) {
         return new StringBuilder()
             .append('"')
-            .append(
-                arg.replace("\\", "\\\\")
-                    .replace("\"", "\\\"")
-                    .replace("$", "\\$")
-                    .replace("!", "\"'!'\"")
-                    .replace("`", "\\`")
-            )
+            .append(arg)
             .append('"')
             .toString();
     }
@@ -101,6 +104,7 @@ public final class Terminal {
      * @return Output stream
      * @throws IOException If some IO problem inside
      */
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public String exec(@NotNull(message = "command can't be NULL")
         final String command) throws IOException {
         return this.exec(command, "");
@@ -113,6 +117,7 @@ public final class Terminal {
      * @return Output stream
      * @throws IOException If some IO problem inside
      */
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public String exec(
         @NotNull(message = "command can't be NULL") final String command,
         @NotNull(message = "stdin can't be NULL") final String stdin)

@@ -66,24 +66,4 @@ public final class SecretMapTest {
         );
     }
 
-    /**
-     * SecretMap toString prints how many pairs it has.
-     */
-    @Test
-    public void canPrintBasedOnsize() {
-        final ConcurrentHashMap<String, Object> map =
-            new ConcurrentHashMap<String, Object>(2);
-        final SecretMap secretmap = new SecretMap(map);
-        MatcherAssert.assertThat(secretmap.toString(), Matchers.is("{}"));
-        map.put("d", "2");
-        final SecretMap smap = new SecretMap(map);
-        MatcherAssert.assertThat(
-            smap.toString(), Matchers.is("{1 pair(s)}")
-        );
-        map.put("e", "3");
-        final SecretMap scmap = new SecretMap(map);
-        MatcherAssert.assertThat(
-            scmap.toString(), Matchers.is("{2 pair(s)}")
-        );
-    }
 }

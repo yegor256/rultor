@@ -35,9 +35,12 @@ import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
+import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import java.io.Closeable;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
@@ -57,10 +60,10 @@ import lombok.ToString;
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
 @ScheduleWithFixedDelay(threads = Tv.FIVE, delay = 1, unit = TimeUnit.SECONDS)
-public final class PgUsers implements Users, Runnable {
+public final class PgUsers implements Users, Runnable, Closeable {
 
     /**
-     * Mongo container.
+     * PostgreSQL client.
      */
     private final transient PgClient client;
 
@@ -75,6 +78,11 @@ public final class PgUsers implements Users, Runnable {
     private final transient Users origin;
 
     /**
+     * Compressor.
+     */
+    private final transient Archiver archiver;
+
+    /**
      * Public ctor.
      * @param clnt Client
      * @param sqs SQS queue
@@ -84,6 +92,7 @@ public final class PgUsers implements Users, Runnable {
         final Users users) {
         this.client = clnt;
         this.receipts = new SQSReceipts(clnt, sqs);
+        this.archiver = new Archiver(this.client);
         this.origin = users;
     }
 
@@ -135,6 +144,22 @@ public final class PgUsers implements Users, Runnable {
         } catch (SQLException ex) {
             throw new IllegalStateException(ex);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() throws IOException {
+        this.archiver.close();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Pulses flow() {
+        return this.origin.flow();
     }
 
 }

@@ -50,6 +50,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Lineup with synchronization through Amazon SimpleDB item.
@@ -60,6 +61,7 @@ import lombok.EqualsAndHashCode;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode(of = { "client", "name" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
@@ -105,17 +107,6 @@ public final class ItemLineup implements Lineup {
         this.wallet = wlt;
         this.name = obj;
         this.client = clnt;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "SimpleDB lineup at `%s` in `%s` domain accessed with %s",
-            this.name, this.client.domain(), this.client
-        );
     }
 
     /**
@@ -199,7 +190,7 @@ public final class ItemLineup implements Lineup {
      * Item exists in SimpleDB.
      * @return TRUE if it exists
      */
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     private boolean exists() {
         final long start = System.currentTimeMillis();
         final GetAttributesResult result = this.client.get().getAttributes(
@@ -224,7 +215,7 @@ public final class ItemLineup implements Lineup {
      * Save text to SimpleDB object.
      * @param content Content to save
      */
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     private void save(final String content) {
         final long start = System.currentTimeMillis();
         this.client.get().putAttributes(
@@ -256,7 +247,7 @@ public final class ItemLineup implements Lineup {
      * Load text from SimpleDB item (or empty if it doesn't exist).
      * @return The content loaded
      */
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     private String load() {
         final long start = System.currentTimeMillis();
         final GetAttributesResult result = this.client.get().getAttributes(
@@ -286,7 +277,7 @@ public final class ItemLineup implements Lineup {
     /**
      * Remove object from SimpleDB.
      */
-    @RetryOnFailure
+    @RetryOnFailure(verbose = false)
     private void remove() {
         final long start = System.currentTimeMillis();
         this.client.get().deleteAttributes(

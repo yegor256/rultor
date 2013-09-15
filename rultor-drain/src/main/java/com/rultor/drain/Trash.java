@@ -37,6 +37,7 @@ import com.rultor.tools.Time;
 import java.io.IOException;
 import java.io.InputStream;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -48,17 +49,10 @@ import org.apache.commons.io.IOUtils;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
+@ToString
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
 public final class Trash implements Drain {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return "trash";
-    }
 
     /**
      * {@inheritDoc}

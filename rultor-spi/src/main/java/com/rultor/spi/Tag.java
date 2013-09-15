@@ -31,7 +31,8 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import java.io.StringReader;
+import com.rultor.tools.NormJson;
+import com.rultor.tools.NormJson.JsonException;
 import java.io.StringWriter;
 import java.util.logging.Level;
 import javax.json.Json;
@@ -66,10 +67,12 @@ public interface Tag {
 
     /**
      * Data (may be empty).
+     * @param schema JSON schema to validate it against
      * @return Data
+     * @throws NormJson.JsonException If can't process
      */
     @NotNull(message = "data is never NULL")
-    JsonObject data();
+    JsonObject data(NormJson schema) throws JsonException;
 
     /**
      * Description in Markdown (may be empty), preferably one line.
@@ -159,8 +162,8 @@ public interface Tag {
          */
         @Override
         @NotNull(message = "data is never NULL")
-        public JsonObject data() {
-            return Json.createReader(new StringReader(this.json)).readObject();
+        public JsonObject data(final NormJson schema) throws JsonException {
+            return schema.readObject(this.json);
         }
         /**
          * {@inheritDoc}
