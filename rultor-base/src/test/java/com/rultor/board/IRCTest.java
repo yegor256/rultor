@@ -51,7 +51,7 @@ public class IRCTest {
      * @checkstyle DeclarationOrder (3 lines)
      * IRC server host.
      */
-    private static final String IRC_SERVER_HOST = "localhost";
+    private static final String IRC_SERVER_HOST = "calvino.freenode.net";
 
     /**
      * High level operability test.

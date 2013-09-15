@@ -32,12 +32,7 @@ package com.rultor.board;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.ArgumentCaptor;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.schwering.irc.lib.IRCConnection;
-import org.schwering.irc.lib.IRCEventListener;
-import org.schwering.irc.lib.IRCUser;
 
 /**
  * A mocked test of IRC board.
@@ -77,7 +72,7 @@ public class IRCMockedTest {
             channel,
             conn
         );
-        Mockito.when(conn.isConnected()).thenReturn(new Boolean(true));
+        Mockito.when(conn.isConnected()).thenReturn(Boolean.TRUE);
         board.announce(body);
         Mockito.verify(conn).doPrivmsg(
             Mockito.argThat(

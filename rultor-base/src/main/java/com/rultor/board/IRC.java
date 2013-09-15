@@ -101,10 +101,15 @@ public final class IRC implements Billboard {
     /**
      * Public ctor.
      *
+     * @param hst Host
+     * @param prt Port
      * @param chnl Channel
-     * @param connz Connection with predefined host and port. Supposed to be already connected to the server.
+     * @param connz Connection with predefined host and port.
+     *  Supposed to be already connected to the server.
+     * @checkstyle ParameterNumber (3 lines)
      */
-    public IRC(final String hst, final int prt, final String chnl, final IRCConnection connz) {
+    public IRC(final String hst, final int prt, final String chnl,
+        final IRCConnection connz) {
         this.host = hst;
         this.port = prt;
         this.channel = chnl;
@@ -115,25 +120,13 @@ public final class IRC implements Billboard {
      * Connect the server and join the channel.
      */
     public void connectAndJoinChannel() {
-        Waiter waiterConnected = new Waiter();
-        Waiter waiterJoined = new Waiter();
-
+        final Waiter waiterConnected = new Waiter();
+        final Waiter waiterJoined = new Waiter();
         this.connSetOptions(waiterConnected, waiterJoined);
         this.connConnect();
         waiterConnected.sleepUntilHappenned();
         this.joinChannel(this.channel);
         waiterJoined.sleepUntilHappenned();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return String.format(
-            "IRC channel `%s` at `%s:%d`",
-            this.channel, this.host, this.port
-        );
     }
 
     /**
@@ -148,8 +141,11 @@ public final class IRC implements Billboard {
         final String channelFormatted =
             this.formatChannelName(this.channel);
         this.conn.doPrivmsg(channelFormatted, body);
-        this.printFromProgram(this.formatToChannel(channelFormatted)
-            + body
+        this.printFromProgram(
+            String.format(
+                "%s%s",
+                this.formatToChannel(channelFormatted), body
+            )
         );
     }
 
@@ -165,36 +161,45 @@ public final class IRC implements Billboard {
      * @return IRCConnection
      * @checkstyle ParameterNumber (4 lines)
      */
-    @SuppressWarnings("PMD.ConfusingTernary")
     private IRCConnection connInstantiate(final String hostz, final int portz,
         final String pass, final String nick,
         final String user, final String name, final boolean ssl) {
-        if (!ssl) {
-            return new IRCConnection(hostz, new int[]{portz}, pass,
-                nick, user, name);
+        IRCConnection connz = null;
+        if (ssl) {
+            connz =
+                new SSLIRCConnection(hostz, new int[]{portz}, pass,
+                    nick, user, name);
+            ((SSLIRCConnection) connz).addTrustManager(new TrustManager());
         } else {
-            IRCConnection conn = new SSLIRCConnection(hostz, new int[]{portz}, pass,
+            connz = new IRCConnection(hostz, new int[]{portz}, pass,
                 nick, user, name);
-            ((SSLIRCConnection) conn).addTrustManager(new TrustManager());
-            return conn;
         }
+        return connz;
     }
 
     /**
      * Setups common IRC protocol options.
+     *
+     * @param connected Waiter until connected to server
+     * @param joined Waiter until joined the server
      */
-    private void connSetOptions(final Waiter waiterConnected, final Waiter waiterJoined) {
+    private void connSetOptions(final Waiter connected,
+        final Waiter joined) {
         this.conn.addIRCEventListener(
-            new Listener() {
+            new AbstractListener() {
                 @Override
                 public void onRegistered() {
-                    super.onRegistered();
-                    waiterConnected.triggerHappenned();
+                    connected.triggerHappenned();
                 }
                 @Override
                 public void onJoin(final String chan, final IRCUser user) {
-                    super.onJoin(chan, user);
-                    waiterJoined.triggerHappenned();
+                    IRC.this.print(
+                        String.format(
+                            "%s%s joins",
+                            IRC.this.formatToChannel(chan), user.getNick()
+                        )
+                    );
+                    joined.triggerHappenned();
                 }
             }
         );
@@ -221,8 +226,9 @@ public final class IRC implements Billboard {
      * @param channelz Channel name
      */
     private void joinChannel(final String channelz) {
-        // @checkstyle StringLiteralsConcatenation (1 line)
-        final String command = "join " + this.formatChannelName(channelz);
+        final String command = String.format(
+            "join %s", this.formatChannelName(channelz)
+        );
         this.print(command);
         this.conn.send(command);
     }
@@ -234,136 +240,284 @@ public final class IRC implements Billboard {
      * @return Formatted channel name
      */
     private String formatChannelName(final String channelname) {
-        // @checkstyle StringLiteralsConcatenation (1 line)
-        return "#" + channelname;
+        return String.format("#%s", channelname);
     }
 
     /**
-     * Needed if use SSL.
-     * @checkstyle JavadocMethod (20 lines)
+     * Needed if using SSL.
      */
-    @SuppressWarnings({ "PMD.ConfusingTernary", "PMD.ArrayIsStoredDirectly" })
     public class TrustManager implements SSLTrustManager {
-        // @checkstyle JavadocVariable (1 line)
+        /**
+         * X509 Certificate chain.
+         */
         private transient X509Certificate[] chain;
 
+        /**
+         * Get issuers.
+         * @return Chain
+         */
         public final X509Certificate[] getAcceptedIssuers() {
-            // @checkstyle AvoidInlineConditionals (1 line)
-            return this.chain != null ? this.chain : new X509Certificate[0];
+            X509Certificate[] res;
+            if (this.chain == null) {
+                res = new X509Certificate[0];
+            } else {
+                res = this.chain.clone();
+            }
+            return res;
         }
 
+        /**
+         * Is trusted.
+         * @param chainz Chain
+         * @return Is trusted
+         */
         public final boolean isTrusted(final X509Certificate[] chainz) {
-            this.chain = chainz;
+            this.chain = chainz.clone();
             return true;
         }
     }
 
     /**
      * Treats IRC events. The most of them are just printed.
-     * @checkstyle JavadocMethod (110 lines)
-     * @checkstyle DesignForExtension (110 lines)
-     * @checkstyle FinalParameters (110 lines)
-     * @checkstyle ParameterName (110 lines)
-     * @checkstyle StringLiteralsConcatenation (110 lines)
-     * @checkstyle MultipleStringLiterals (110 lines)
      */
-    @SuppressWarnings("PMD.MethodArgumentCouldBeFinal")
-    public class Listener implements IRCEventListener {
-        public void onRegistered() {
-            IRC.this.print("Connected");
-        }
+    public abstract class AbstractListener implements IRCEventListener {
 
-        public void onDisconnected() {
+        /**
+         * Event - On Registered.
+         */
+        public abstract void onRegistered();
+
+        /**
+         * Event - On disconnected.
+         */
+        public final void onDisconnected() {
             IRC.this.print("Disconnected");
         }
 
-        public void onError(String msg) {
-            // @checkstyle StringLiteralsConcatenation (1 line)
-            IRC.this.print("Error: " + msg);
+        /**
+         * Event - On error.
+         * @param msg Error message
+         */
+        public final void onError(final String msg) {
+            IRC.this.print(String.format("Error: %s", msg));
         }
 
-        public void onError(int num, String msg) {
-            IRC.this.print("Error #" + num + ": " + msg);
-        }
-
-        public void onInvite(String chan, IRCUser u, String nickPass) {
-            IRC.this.print(IRC.this.formatToChannel(chan) + u.getNick()
-                + " invites " + nickPass
-            );
-        }
-
-        public void onJoin(String chan, IRCUser u) {
-            IRC.this.print(IRC.this.formatToChannel(chan) + u.getNick()
-                + " joins"
-            );
-        }
-
-        // @checkstyle ParameterNumber (1 line)
-        public void onKick(String chan, IRCUser u, String nickPass,
-            String msg) {
-            IRC.this.print(IRC.this.formatToChannel(chan) + u.getNick()
-                + " kicks " + nickPass
-            );
-        }
-
-        public void onMode(IRCUser u, String nickPass, String mode) {
+        /**
+         * Event - On error.
+         * @param num Error num
+         * @param msg Error message
+         */
+        public final void onError(final int num, final String msg) {
             IRC.this.print(
-                "Mode: " + u.getNick() + " sets modes " + mode + " "
-                    + nickPass
+                String.format("Error #%d: %s", num, msg)
             );
         }
 
-        public void onMode(String chan, IRCUser u, IRCModeParser mp) {
-            IRC.this.print(IRC.this.formatToChannel(chan) + u.getNick()
-                + " sets mode: " + mp.getLine()
+        /**
+         * Event - On invitation.
+         * @param chan Channel name
+         * @param user User
+         * @param nickpass Password
+         */
+        public final void onInvite(final String chan, final IRCUser user,
+            final String nickpass) {
+            IRC.this.print(
+                String.format(
+                    "%s%s invites %s",
+                    IRC.this.formatToChannel(chan),
+                    user.getNick(), nickpass
+                )
             );
         }
 
-        public void onNick(IRCUser u, String nickNew) {
-            IRC.this.print("Nick: " + u.getNick() + " is now known as "
-                + nickNew
+        /**
+         * Event - On Join.
+         * @param chan Channel name
+         * @param user User
+         */
+        public abstract void onJoin(final String chan, final IRCUser user);
+
+        /**
+         * Event - On Kick.
+         * @param chan Channel name
+         * @param user User
+         * @param nickpass Password
+         * @param msg Message
+         * @checkstyle ParameterNumber (2 lines)
+         */
+        public final void onKick(final String chan, final IRCUser user,
+            final String nickpass,
+            final String msg) {
+            IRC.this.print(
+                String.format(
+                    "%s%s kicks %s",
+                    IRC.this.formatToChannel(chan),
+                    user.getNick(), nickpass
+                )
             );
         }
 
-        public void onNotice(String target, IRCUser u, String msg) {
-            IRC.this.print(IRC.this.formatToChannel(target) + u.getNick()
-                + " (notice): " + msg
+        /**
+         * Event - On Mode changed.
+         * @param user User
+         * @param nickpass Password
+         * @param mode Mode
+         */
+        public final void onMode(final IRCUser user, final String nickpass,
+            final String mode) {
+            IRC.this.print(
+                String.format(
+                    "Mode: %s sets modes %s %s",
+                    user.getNick(), mode, nickpass
+                )
             );
         }
 
-        public void onPart(String chan, IRCUser u, String msg) {
-            IRC.this.print(IRC.this.formatToChannel(chan) + u.getNick()
-                + " parts"
+        /**
+         * Event - On Mode changed.
+         * @param chan Channel name
+         * @param user User
+         * @param modeparser Mode Parser
+         */
+        public final void onMode(final String chan, final IRCUser user,
+            final IRCModeParser modeparser) {
+            IRC.this.print(
+                String.format(
+                    "%s%s sets mode: %s",
+                    IRC.this.formatToChannel(chan),
+                    user.getNick(), modeparser.getLine()
+                )
             );
         }
 
-        public void onPrivmsg(String chan, IRCUser u, String msg) {
-            IRC.this.print(IRC.this.formatToChannel(chan) + u.getNick()
-                + ": " + msg
+        /**
+         * Event - On nickname change.
+         * @param user User
+         * @param nicknew New nickname
+         */
+        public final void onNick(final IRCUser user, final String nicknew) {
+            IRC.this.print(
+                String.format(
+                    "Nick: %s is now known as %s",
+                    user.getNick(), nicknew
+                )
             );
         }
 
-        public void onQuit(IRCUser u, String msg) {
-            IRC.this.print("Quit: " + u.getNick());
-        }
-
-        public void onReply(int num, String value, String msg) {
-            IRC.this.print("Reply #" + num + ": " + value + " " + msg);
-        }
-
-        public void onTopic(String chan, IRCUser u, String topic) {
-            IRC.this.print(IRC.this.formatToChannel(chan) + u.getNick()
-                + " changes topic into: " + topic
+        /**
+         * Event - on notice.
+         * @param target Target (channel name or user name)
+         * @param user User
+         * @param msg Message
+         */
+        public final void onNotice(final String target, final IRCUser user,
+            final String msg) {
+            IRC.this.print(
+                String.format(
+                    "%s%s (notice): %s",
+                    IRC.this.formatToChannel(target),
+                    user.getNick(), msg
+                )
             );
         }
 
-        @SuppressWarnings("PMD.UncommentedEmptyMethod")
-        public void onPing(String p) {
+        /**
+         * Event - On part.
+         * @param chan Channel
+         * @param user User
+         * @param msg Message
+         */
+        public final void onPart(final String chan, final IRCUser user,
+            final String msg) {
+            IRC.this.print(
+                String.format(
+                    "%s%s parts",
+                    IRC.this.formatToChannel(chan), user.getNick()
+                )
+            );
         }
 
-        // @checkstyle ParameterNumber (1 line)
-        public void unknown(String a, String b, String c, String d) {
-            IRC.this.print("UNKNOWN: " + a + " b " + c + " " + d);
+        /**
+         * Event - On private message.
+         * @param chan Channel
+         * @param user User
+         * @param msg Message
+         */
+        public final void onPrivmsg(final String chan, final IRCUser user,
+            final String msg) {
+            IRC.this.print(
+                String.format(
+                    "%s%s: %s",
+                    IRC.this.formatToChannel(chan),
+                    user.getNick(), msg
+                )
+            );
+        }
+
+        /**
+         * Event - on quit.
+         * @param user User
+         * @param msg Message
+         */
+        public final void onQuit(final IRCUser user, final String msg) {
+            IRC.this.print(String.format("Quit: %s", user.getNick()));
+        }
+
+        /**
+         * Event - on reply.
+         * @param num ID
+         * @param value Value
+         * @param msg Message
+         */
+        public final void onReply(final int num, final String value,
+            final String msg) {
+            IRC.this.print(
+                String.format("Reply #%d: %s %s", num, value, msg)
+            );
+        }
+
+        /**
+         * On topic setup.
+         * @param chan Channel name
+         * @param user User
+         * @param topic Topic
+         */
+        public final void onTopic(final String chan, final IRCUser user,
+            final String topic) {
+            IRC.this.print(
+                String.format(
+                    "%s%s changes topic into: %s",
+                    IRC.this.formatToChannel(chan),
+                    user.getNick(), topic
+                )
+            );
+        }
+
+        /**
+         * On ping.
+         * @param ping Ping message
+         */
+        @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
+        public void onPing(final String ping) {
+            // not required
+        }
+
+        /**
+         * On unknown message.
+         * @param parta Part a
+         * @param partb Part b
+         * @param partc Part c
+         * @param partd Part D
+         * @checkstyle ParameterNumber (3 lines)
+         */
+        public final void unknown(final String parta, final String partb,
+            final String partc, final String partd) {
+            IRC.this.print(
+                String.format(
+                    "UNKNOWN: %s %s %s %s",
+                    parta, partb, partc, partd
+                )
+            );
         }
     }
 
@@ -411,10 +565,10 @@ public final class IRC implements Billboard {
             while (!this.happened) {
                 try {
                     Thread.sleep(this.SLEEP_TIME);
-                    // @checkstyle StringLiteralsConcatenation (3 lines)
                     if (this.sleptCounter > this.SLEEP_TIMEOUT) {
-                        throw new IllegalStateException("Timeout: "
-                            + this.sleptCounter);
+                        throw new IllegalStateException(
+                            String.format("Timeout: %d", this.sleptCounter)
+                        );
                     }
                     this.sleptCounter += 1;
                 } catch (InterruptedException ex) {
@@ -430,8 +584,8 @@ public final class IRC implements Billboard {
      * @param obj Object to be printed
      */
     private void print(final Object obj) {
-        Logger.info(this, (String) obj);
         System.out.println(obj);
+        Logger.info(this, (String) obj);
     }
 
     /**
@@ -440,9 +594,8 @@ public final class IRC implements Billboard {
      * @param obj Object to be printed
      */
     private void printFromProgram(final Object obj) {
-        // @checkstyle StringLiteralsConcatenation (1 line)
-        Logger.info(this, "[i am] " + obj);
-        System.out.println("[i am] " + obj);
+        System.out.println(String.format("[i am]  %s", obj));
+        Logger.info(this, String.format("[i am]  %s", obj));
     }
 
     /**
@@ -452,7 +605,6 @@ public final class IRC implements Billboard {
      * @return Formatted
      */
     private String formatToChannel(final String channelz) {
-        // @checkstyle StringLiteralsConcatenation (1 line)
-        return channelz + "> ";
+        return String.format("%s> ", channelz);
     }
 }
