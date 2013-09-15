@@ -584,7 +584,6 @@ public final class IRC implements Billboard {
      * @param obj Object to be printed
      */
     private void print(final Object obj) {
-        System.out.println(obj);
         Logger.info(this, (String) obj);
     }
 
@@ -594,7 +593,6 @@ public final class IRC implements Billboard {
      * @param obj Object to be printed
      */
     private void printFromProgram(final Object obj) {
-        System.out.println(String.format("[i am]  %s", obj));
         Logger.info(this, String.format("[i am]  %s", obj));
     }
 
