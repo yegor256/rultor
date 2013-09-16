@@ -89,7 +89,6 @@ public final class Git implements SCM {
      * @param shl Shell to use for checkout
      * @param addr URL of git repository
      * @param folder Directory to use for clone
-     * @checkstyle ParameterNumber (5 lines)
      */
     public Git(
         @NotNull(message = "shell can't be NULL") final Shell shl,
@@ -104,6 +103,16 @@ public final class Git implements SCM {
                 + "-----END RSA PRIVATE KEY-----"
             )
         );
+    }
+
+    /**
+     * Public ctor.
+     * @param shl Shell to use for checkout
+     * @param addr URL of git repository
+     * @param folder Directory to use for clone
+     */
+    public Git(final Shell shl, final String addr, final String folder) {
+        this(shl, new GitURI(addr), folder);
     }
 
     /**
