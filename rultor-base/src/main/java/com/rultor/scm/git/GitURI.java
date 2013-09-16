@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Wrapper for string representation of GIT URI.
@@ -51,15 +52,17 @@ public final class GitURI {
     /**
      * Pattern to validate GIT URLS.
      */
-    private static final Pattern PATTERN =
-        Pattern.compile(
-            // @checkstyle StringLiteralsConcatenation (6 lines)
-            "ssh://(\\w+@)?\\w+[\\w.-]*(:\\d+)?/\\w[\\w./-]+\\w.git/?|"
-            + "(git|((http|ftp)s?))://\\w+[\\w.-]*(:\\d+)?/\\w[\\w./-]+\\w"
-            + ".git/?|rsync://\\w+[\\w.-/]*.git/?|"
-            + "(\\w+@)?[\\w.-]+:(?!(/))[\\w.-/]+|"
-            + "/\\w+[\\w/]+\\w+.git/?|file:///[\\w/]+\\w+.git/?"
-        );
+    private static final Pattern PATTERN = Pattern.compile(
+        StringUtils.join(
+            "ssh://(\\w+@)?\\w+[\\w.-]*(:\\d+)?/\\w[\\w./-]+\\w.git/?",
+            // @checkstyle LineLength (1 line)
+            "|(git|((http|ftp)s?))://([\\w_%-]+:[\\w_%-]*@)?\\w+[\\w.-]*(:\\d+)?/\\w[\\w./-]+\\w.git/?",
+            "|rsync://\\w+[\\w.-/]*.git/?",
+            "|(\\w+@)?[\\w.-]+:(?!(/))[\\w.-/]+",
+            "|/\\w+[\\w/]+\\w+.git/?",
+            "|file:///[\\w/]+\\w+.git/?"
+        )
+    );
 
     /**
      * Underlying uri value.

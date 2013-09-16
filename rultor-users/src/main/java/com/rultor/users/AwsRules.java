@@ -182,7 +182,7 @@ final class AwsRules implements Rules {
                 String.format("Rule `%s` doesn't exist", rule)
             );
         }
-        return new AwsRule(this.client, items.iterator().next());
+        return this.toRule(items.iterator().next());
     }
 
     /**

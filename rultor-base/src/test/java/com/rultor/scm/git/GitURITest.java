@@ -92,6 +92,7 @@ public final class GitURITest {
     public static List<Object[]> data() {
         return Arrays.asList(
             new Object[][]{
+                {"https://peter:secret11@github.com/rultor/rultor.git", true},
                 {"ssh://host.xz/path/to/rep-o.git/", true},
                 {"ssh://host.xz/path/to/rep-o.git", true},
                 {"ssh://host.xz/path/to.some/rep-o.git", true},
