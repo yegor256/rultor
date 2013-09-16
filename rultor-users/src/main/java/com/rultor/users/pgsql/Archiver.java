@@ -32,6 +32,7 @@ package com.rultor.users.pgsql;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
+import com.jcabi.aspects.Tv;
 import com.jcabi.jdbc.JdbcSession;
 import com.jcabi.jdbc.VoidHandler;
 import java.io.Closeable;
@@ -73,6 +74,7 @@ public final class Archiver implements Runnable, Closeable {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, limit = Tv.TEN, unit = TimeUnit.MINUTES)
     public void run() {
         try {
             new JdbcSession(this.client.get())
