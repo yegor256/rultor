@@ -30,9 +30,9 @@
 package com.rultor.users;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.jcabi.dynamo.Frame;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.Table;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Rule;
@@ -143,11 +143,13 @@ public final class AwsRulesTest {
             Mockito.mock(SQSClient.class),
             new URN()
         );
-        final Frame frame = region.table("").frame();
+        final Table table = region.table("");
         final Rule rule = rules.iterator().next();
         MatcherAssert.assertThat(rule.name(), Matchers.equalTo(name));
         rule.update(new Spec.Simple(), new Spec.Simple());
-        Mockito.verify(frame, Mockito.times(2)).iterator();
+        rules.iterator();
+        rules.iterator();
+        Mockito.verify(table, Mockito.times(2)).frame();
     }
 
 }

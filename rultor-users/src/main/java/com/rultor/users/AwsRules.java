@@ -39,9 +39,11 @@ import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Rules;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Wallet;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -205,10 +207,19 @@ final class AwsRules implements Rules {
      */
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     private Collection<Item> fetch() {
+        System.out.println("fetch");
         return this.region.table(AwsRule.TABLE)
             .frame()
             .where(AwsRule.HASH_OWNER, this.owner.toString())
             .through(new QueryValve());
+    }
+
+    /**
+     * Marker to flush cash.
+     */
+    @Cacheable.FlushAfter
+    private void flush() {
+        // nothing todo
     }
 
     /**
@@ -217,7 +228,48 @@ final class AwsRules implements Rules {
      * @return Rule
      */
     private Rule toRule(final Item item) {
-        return new AwsRule(this.client, item);
+        final Rule origin = new AwsRule(this.client, item);
+        // @checkstyle AnonInnerLength (50 lines)
+        return new Rule() {
+            @Override
+            @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+            public String name() {
+                return origin.name();
+            }
+            @Override
+            @Cacheable.FlushAfter
+            public void update(final Spec spec, final Spec drain) {
+                origin.update(spec, drain);
+                AwsRules.this.flush();
+            }
+            @Override
+            @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+            public Spec spec() {
+                return origin.spec();
+            }
+            @Override
+            @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+            public Spec drain() {
+                return origin.drain();
+            }
+            @Override
+            @Cacheable.FlushAfter
+            public void failure(final String desc) {
+                origin.failure(desc);
+                AwsRules.this.flush();
+            }
+            @Override
+            @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+            public String failure() {
+                return origin.failure();
+            }
+            // @checkstyle RedundantThrows (5 lines)
+            @Override
+            public Wallet wallet(final Coordinates work, final URN taker,
+                final String rule) throws Wallet.NotEnoughFundsException {
+                return origin.wallet(work, taker, rule);
+            }
+        };
     }
 
 }
