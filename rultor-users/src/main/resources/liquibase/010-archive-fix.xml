@@ -52,4 +52,32 @@
             $$ LANGUAGE plpgsql
         ]]></sql>
     </changeSet>
+    <changeSet author="yegor@tpc2.com" id="311.test" context="test">
+        <sql splitStatements="false"><![CDATA[
+            DO language plpgsql $$
+            DECLARE
+                found INTEGER;
+            BEGIN
+                TRUNCATE receipt CASCADE;
+                INSERT INTO receipt (time, ct, ctrule, dt, dtrule, amount, details)
+                    VALUES (TIMESTAMP '2010-05-16T15:36:38Z', 'urn:test:1', 'alpha', 'urn:test:2', 'foo', 10, 'test line 1');
+                INSERT INTO receipt (time, ct, ctrule, dt, dtrule, amount, details)
+                    VALUES (TIMESTAMP '2010-05-16T15:36:38Z', 'urn:test:1', 'alpha', 'urn:test:2', 'foo', 10, 'test line 2');
+                INSERT INTO receipt (time, ct, ctrule, dt, dtrule, amount, details)
+                    VALUES (NOW() + '1 DAY'::INTERVAL, 'urn:test:1', 'beta', 'urn:test:2', 'foo', 55000, 'big amount, should stay');
+                INSERT INTO receipt (time, ct, ctrule, dt, dtrule, amount, details)
+                    VALUES (TIMESTAMP '2010-05-16T15:36:38Z', 'urn:test:1', 'alpha', 'urn:test:2', 'foo', -33000, 'transaction in future');
+                PERFORM archive();
+                SELECT COUNT(*) INTO found FROM receipt;
+                IF found != 3 THEN
+                    RAISE EXCEPTION 'Exactly three records expected, % found', found;
+                END IF;
+                SELECT SUM(amount) INTO found FROM receipt;
+                IF found != 22020 THEN
+                    RAISE EXCEPTION 'Total balance expected is 55020, % found', found;
+                END IF;
+            END
+            $$;
+        ]]></sql>
+    </changeSet>
 </databaseChangeLog>
