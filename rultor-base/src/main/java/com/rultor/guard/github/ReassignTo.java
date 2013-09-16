@@ -31,81 +31,72 @@ package com.rultor.guard.github;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import com.rultor.snapshot.Step;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.User;
-import org.eclipse.egit.github.core.service.PullRequestService;
-import org.eclipse.egit.github.core.service.UserService;
+import org.eclipse.egit.github.core.client.RequestException;
+import org.eclipse.egit.github.core.service.IssueService;
 
 /**
  * Reassigns to user.
  * @author Bharath Bolisetty (bharathbolisetty@gmail.com)
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "user" })
+@EqualsAndHashCode(of = "user")
 @Loggable(Loggable.DEBUG)
 public final class ReassignTo implements Approval {
 
     /**
-     * Reassigned to user.
+     * Login to reassign to.
      */
     private final transient String user;
 
     /**
      * Public ctor.
-     * @param assignee Assignee
+     * @param login Login to assign to
      */
     public ReassignTo(
-        @NotNull(message = "asignee can not be null") final String assignee) {
-        this.user = assignee;
+        @NotNull(message = "login can not be null") final String login) {
+        this.user = login;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
+    @Step("assigned pull request #${args[0].number} to `${args[0].user.login}`")
     public boolean has(final PullRequest request, final Github client,
         final Github.Repo repo) throws IOException {
-        request.setAssignee(this.assignee(client));
-        this.update(request, client, repo);
+        final IssueService svc = new IssueService(client.client());
+        final Issue issue = svc.getIssue(repo, request.getNumber());
+        User assignee = issue.getAssignee();
+        if (assignee == null) {
+            assignee = new User();
+            assignee.setLogin("");
+        }
+        if (!assignee.getLogin().equals(this.user)) {
+            assignee.setLogin(this.user);
+            issue.setAssignee(assignee);
+            try {
+                svc.editIssue(repo, issue);
+            } catch (RequestException ex) {
+                if ("Server Error (500)".equals(ex.getMessage())) {
+                    Logger.warn(this, "strange error on Github side: %s", ex);
+                } else {
+                    throw ex;
+                }
+            }
+        }
         return true;
     }
 
-    /**
-     * Assign pull request to this user.
-     * @param request Request to assign
-     * @param client Github client
-     * @param repo Github repo
-     * @throws IOException if fails.
-     */
-    @Step("assigned pull request ${args[0].id} to `${args[0].user.login}`")
-    private void update(final PullRequest request, final Github client,
-        final Github.Repo repo) throws IOException {
-        final PullRequestService svc = new PullRequestService(client.client());
-        svc.editPullRequest(repo, request);
-    }
-
-    /**
-     * Github User object of user.
-     * @param github Github
-     * @return User object of user.
-     * @throws IOException if fails.
-     */
-    private User assignee(final Github github) throws IOException {
-        final User assignee;
-        if (this.user.isEmpty()) {
-            assignee = new User();
-            assignee.setLogin("");
-        } else {
-            final UserService usvc = new UserService(github.client());
-            assignee = usvc.getUser(this.user);
-        }
-        return assignee;
-    }
 }

@@ -67,11 +67,11 @@ public final class ReassignToITCase {
     @Test
     public void reassignsIssueToSomeoneElse() throws Exception {
         Assume.assumeNotNull(ReassignToITCase.USER);
-        final PullRequest request = new PullRequest();
-        request.setId(1);
+        final PullRequest first = new PullRequest();
+        first.setNumber(1);
         MatcherAssert.assertThat(
             new ReassignTo(ReassignToITCase.USER).has(
-                request,
+                first,
                 new Github.Simple(
                     ReassignToITCase.USER,
                     ReassignToITCase.PASSWORD
@@ -80,9 +80,11 @@ public final class ReassignToITCase {
             ),
             Matchers.is(true)
         );
+        final PullRequest second = new PullRequest();
+        second.setNumber(1);
         MatcherAssert.assertThat(
             new ReassignTo("").has(
-                request,
+                second,
                 new Github.Simple(
                     ReassignToITCase.USER,
                     ReassignToITCase.PASSWORD

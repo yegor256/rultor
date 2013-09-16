@@ -32,8 +32,8 @@ package com.rultor.guard.github;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.GitHubResponse;
@@ -45,6 +45,7 @@ import org.mockito.Mockito;
 /**
  * Test case for {@link ReassignTo}.
  * @author Bharath Bolisetty (bharathbolisetty@gmail.com)
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
 public final class ReassignToTest {
@@ -54,33 +55,27 @@ public final class ReassignToTest {
      * @throws IOException If some problem inside
      */
     @Test
-    public void canApproveAndReassign() throws IOException {
+    public void approvesAndReassigns() throws IOException {
         final String login = "test";
-        final Approval approval = new ReassignTo(login);
         final PullRequest request = new PullRequest();
+        request.setNumber(1);
         final Github github = Mockito.mock(Github.class);
-        final User assignee = new User();
-        assignee.setLogin(login);
         final GitHubClient client = Mockito.mock(GitHubClient.class);
         Mockito.doReturn(client).when(github).client();
-        Mockito.when(client.get(Mockito.any(GitHubRequest.class)))
-            .thenReturn(
-                new GitHubResponse(
-                    Mockito.mock(HttpURLConnection.class),
-                    assignee
-                )
-            );
+        final Issue issue = new Issue();
+        Mockito.when(client.get(Mockito.any(GitHubRequest.class))).thenReturn(
+            new GitHubResponse(
+                Mockito.mock(HttpURLConnection.class),
+                issue
+            )
+        );
         MatcherAssert.assertThat(
-            approval.has(
+            new ReassignTo(login).has(
                 request,
                 github,
                 new Github.Repo("xembly/xembly")
             ),
             Matchers.is(true)
-        );
-        MatcherAssert.assertThat(
-            request.getAssignee().getLogin(),
-            Matchers.is(login)
         );
     }
 
@@ -89,23 +84,25 @@ public final class ReassignToTest {
      * @throws IOException If some problem inside
      */
     @Test
-    public void canApproveAndUnAssign() throws IOException {
-        final Approval approval = new ReassignTo("");
+    public void approveAndUnAssigns() throws IOException {
         final PullRequest request = new PullRequest();
+        request.setNumber(1);
         final Github github = Mockito.mock(Github.class);
         final GitHubClient client = Mockito.mock(GitHubClient.class);
         Mockito.doReturn(client).when(github).client();
+        Mockito.when(client.get(Mockito.any(GitHubRequest.class))).thenReturn(
+            new GitHubResponse(
+                Mockito.mock(HttpURLConnection.class),
+                new Issue()
+            )
+        );
         MatcherAssert.assertThat(
-            approval.has(
+            new ReassignTo("").has(
                 request,
                 github,
                 new Github.Repo("xembly1/xembly")
             ),
             Matchers.is(true)
-        );
-        MatcherAssert.assertThat(
-            request.getAssignee().getLogin(),
-            Matchers.isEmptyString()
         );
     }
 }
