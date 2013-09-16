@@ -81,7 +81,8 @@ public class IRCServer {
      * @param name Real name
      * @param ssl Is SSL used
      * @return Connection
-     * @checkstyle DesignForExtension (3 lines)
+     * @checkstyle DesignForExtension (4 lines) This method be overridden
+     *  by the Mock implementation. So cannot make it final
      * @checkstyle ParameterNumber (4 lines)
      */
     public IRCConnection connect(final String channel,
