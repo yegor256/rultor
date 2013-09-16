@@ -35,10 +35,13 @@ import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.Table;
 import com.jcabi.dynamo.Valve;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.hamcrest.Matchers;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
  * Mocker for {@link Region}.
@@ -70,7 +73,14 @@ public final class RegionMocker {
         Mockito.when(region.table(Mockito.anyString())).thenReturn(table);
         Mockito.when(table.frame()).thenReturn(frame);
         Mockito.when(frame.isEmpty()).thenReturn(false);
-        Mockito.when(frame.iterator()).thenReturn(this.items.iterator());
+        Mockito.when(frame.iterator()).thenAnswer(
+            new Answer<Iterator<Item>>() {
+                @Override
+                public Iterator<Item> answer(final InvocationOnMock inv) {
+                    return RegionMocker.this.items.iterator();
+                }
+            }
+        );
         Mockito.when(frame.through(Mockito.any(Valve.class))).thenReturn(frame);
         Mockito.when(
             frame.where(

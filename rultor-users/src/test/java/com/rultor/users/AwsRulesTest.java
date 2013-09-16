@@ -152,4 +152,31 @@ public final class AwsRulesTest {
         Mockito.verify(table, Mockito.times(2)).frame();
     }
 
+    /**
+     * AwsRules can cache results of get() and iterator() as same rules.
+     */
+    @Test
+    public void returnsGetAndIteratorAsSameRules() {
+        final Item item = Mockito.mock(Item.class);
+        final String name = "rule-name-foo";
+        Mockito.doReturn(new AttributeValue(name))
+            .when(item).get(Mockito.anyString());
+        final Region region = new RegionMocker().with(item).mock();
+        final Rules rules = new AwsRules(
+            region,
+            Mockito.mock(SQSClient.class),
+            new URN()
+        );
+        final Table table = region.table("");
+        MatcherAssert.assertThat(
+            rules.get(name).name(),
+            Matchers.equalTo(name)
+        );
+        MatcherAssert.assertThat(
+            rules.iterator().next().name(),
+            Matchers.equalTo(name)
+        );
+        Mockito.verify(table, Mockito.times(1)).frame();
+    }
+
 }
