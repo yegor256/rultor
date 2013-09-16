@@ -43,42 +43,29 @@ import org.schwering.irc.lib.IRCConnection;
  */
 public class IRCTest {
     /**
-     * IRC default port.
-     * @checkstyle DeclarationOrder (3 lines)
-     * @checkstyle MagicNumber (2 lines)
-     */
-    private static final int IRC_PORT_DEFAULT = 6667;
-
-    /**
-     * IRC Server host.
-     * @checkstyle DeclarationOrder (3 lines)
-     * IRC server host.
-     */
-    private static final String IRC_SERVER_HOST = "calvino.freenode.net";
-
-    /**
      * Sends a correct message.
      *
      * @throws Exception If some problem inside
      */
     @Test
     public final void sendMessage() throws Exception {
+        final IRCServer server = Mockito.mock(IRCServer.class);
         final IRCConnection conn = Mockito.mock(IRCConnection.class);
         final String channel = "channelTest";
         final String body = "test irc message";
-        final Billboard board = new IRC(
-            this.IRC_SERVER_HOST,
-            this.IRC_PORT_DEFAULT,
-            channel,
-            conn
-        );
-        Mockito.when(conn.isConnected()).thenReturn(Boolean.TRUE);
+        Mockito.when(
+            server.connect(
+                Mockito.anyString(), Mockito.anyString(),
+                Mockito.anyString(), Mockito.anyString(),
+                Mockito.anyString(), Mockito.anyBoolean()
+            )
+        ).thenReturn(conn);
+        final Billboard board = new IRC(channel, server);
         board.announce(body);
         Mockito.verify(conn).doPrivmsg(
             Mockito.argThat(
                 Matchers.equalTo(
-                    // @checkstyle StringLiteralsConcatenation (1 line)
-                    "#" + channel
+                    String.format("#%s", channel)
                 )
             ),
             Mockito.argThat(
