@@ -90,6 +90,11 @@ final class AwsRule implements Rule {
     public static final String FIELD_FAILURE = "failure";
 
     /**
+     * Dynamo DB table column.
+     */
+    private static final String NO_FAILURE = "-";
+
+    /**
      * Item.
      */
     private final transient Item item;
@@ -120,7 +125,7 @@ final class AwsRule implements Rule {
             new Attributes()
                 .with(AwsRule.FIELD_SPEC, spec.asText())
                 .with(AwsRule.FIELD_DRAIN, drain.asText())
-                .with(AwsRule.FIELD_FAILURE, "")
+                .with(AwsRule.FIELD_FAILURE, AwsRule.NO_FAILURE)
         );
     }
 
@@ -186,9 +191,12 @@ final class AwsRule implements Rule {
 
     @Override
     public String failure() {
-        final String failure;
+        String failure;
         if (this.item.has(AwsRule.FIELD_FAILURE)) {
             failure = this.item.get(AwsRule.FIELD_FAILURE).getS();
+            if (failure.equals(AwsRule.NO_FAILURE)) {
+                failure = "";
+            }
         } else {
             failure = "";
         }
