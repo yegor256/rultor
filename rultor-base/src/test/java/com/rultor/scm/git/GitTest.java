@@ -57,7 +57,7 @@ public final class GitTest {
      */
     @Test(expected = ConstraintViolationException.class)
     public void failsWhenInitializedWithNulls() throws Exception {
-        new Git(null, null, null);
+        new Git(null, "", null);
     }
 
     /**

@@ -105,7 +105,7 @@ final class AwsRules implements Rules {
             }
             @Override
             public Rule next() {
-                return new AwsRule(AwsRules.this.client, items.next());
+                return AwsRules.this.toRule(items.next());
             }
             @Override
             public void remove() {
@@ -209,6 +209,15 @@ final class AwsRules implements Rules {
             .frame()
             .where(AwsRule.HASH_OWNER, this.owner.toString())
             .through(new QueryValve());
+    }
+
+    /**
+     * Convert item to rule.
+     * @param item Item from AWS
+     * @return Rule
+     */
+    private Rule toRule(final Item item) {
+        return new AwsRule(this.client, item);
     }
 
 }
