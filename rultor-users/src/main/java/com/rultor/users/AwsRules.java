@@ -64,6 +64,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "region", "owner" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.TooManyMethods")
 final class AwsRules implements Rules {
 
     /**
@@ -207,7 +208,6 @@ final class AwsRules implements Rules {
      */
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     private Collection<Item> fetch() {
-        System.out.println("fetch");
         return this.region.table(AwsRule.TABLE)
             .frame()
             .where(AwsRule.HASH_OWNER, this.owner.toString())
