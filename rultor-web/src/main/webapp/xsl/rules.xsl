@@ -106,7 +106,7 @@
                 </li>
                 <xsl:if test="failure != ''">
                     <li class="icon">
-                        <a onclick="$(this).closest('.panel').find('pre').toggle();"
+                        <a onclick="$(this).closest('div').find('pre').toggle();"
                             title="show the failure" class="text-danger">
                             <i class="icon-warning-sign"><xsl:comment>failure</xsl:comment></i>
                         </a>
