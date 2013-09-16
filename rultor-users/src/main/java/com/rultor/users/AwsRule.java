@@ -120,6 +120,7 @@ final class AwsRule implements Rule {
             new Attributes()
                 .with(AwsRule.FIELD_SPEC, spec.asText())
                 .with(AwsRule.FIELD_DRAIN, drain.asText())
+                .with(AwsRule.FIELD_FAILURE, "")
         );
     }
 
