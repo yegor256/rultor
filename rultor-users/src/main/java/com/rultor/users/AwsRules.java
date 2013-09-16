@@ -228,48 +228,65 @@ final class AwsRules implements Rules {
      * @return Rule
      */
     private Rule toRule(final Item item) {
-        final Rule origin = new AwsRule(this.client, item);
-        // @checkstyle AnonInnerLength (50 lines)
-        return new Rule() {
-            @Override
-            @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-            public String name() {
-                return origin.name();
-            }
-            @Override
-            @Cacheable.FlushAfter
-            public void update(final Spec spec, final Spec drain) {
-                origin.update(spec, drain);
-                AwsRules.this.flush();
-            }
-            @Override
-            @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-            public Spec spec() {
-                return origin.spec();
-            }
-            @Override
-            @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-            public Spec drain() {
-                return origin.drain();
-            }
-            @Override
-            @Cacheable.FlushAfter
-            public void failure(final String desc) {
-                origin.failure(desc);
-                AwsRules.this.flush();
-            }
-            @Override
-            @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-            public String failure() {
-                return origin.failure();
-            }
-            // @checkstyle RedundantThrows (5 lines)
-            @Override
-            public Wallet wallet(final Coordinates work, final URN taker,
-                final String rule) throws Wallet.NotEnoughFundsException {
-                return origin.wallet(work, taker, rule);
-            }
-        };
+        return new CacheableRule(new AwsRule(this.client, item));
+    }
+
+    /**
+     * Rule that caches its calls.
+     */
+//    @ToString
+//    @EqualsAndHashCode(of = "origin")
+//    @Loggable(Loggable.DEBUG)
+    private final class CacheableRule implements Rule {
+        /**
+         * Original rule.
+         */
+        private final transient Rule origin;
+        /**
+         * Ctor.
+         * @param rule Rule to wrap
+         */
+        protected CacheableRule(final Rule rule) {
+            this.origin = rule;
+        }
+        @Override
+        @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+        public String name() {
+            return this.origin.name();
+        }
+        @Override
+        @Cacheable.FlushAfter
+        public void update(final Spec spec, final Spec drain) {
+            this.origin.update(spec, drain);
+            AwsRules.this.flush();
+        }
+        @Override
+        @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+        public Spec spec() {
+            return this.origin.spec();
+        }
+        @Override
+        @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+        public Spec drain() {
+            return this.origin.drain();
+        }
+        @Override
+        @Cacheable.FlushAfter
+        public void failure(final String desc) {
+            this.origin.failure(desc);
+            AwsRules.this.flush();
+        }
+        @Override
+        @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+        public String failure() {
+            return this.origin.failure();
+        }
+        // @checkstyle RedundantThrows (5 lines)
+        @Override
+        public Wallet wallet(final Coordinates work, final URN taker,
+            final String rule) throws Wallet.NotEnoughFundsException {
+            return this.origin.wallet(work, taker, rule);
+        }
     }
 
 }

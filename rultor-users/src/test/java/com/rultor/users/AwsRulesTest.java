@@ -167,7 +167,6 @@ public final class AwsRulesTest {
             Mockito.mock(SQSClient.class),
             new URN()
         );
-        final Table table = region.table("");
         MatcherAssert.assertThat(
             rules.get(name).name(),
             Matchers.equalTo(name)
@@ -176,7 +175,7 @@ public final class AwsRulesTest {
             rules.iterator().next().name(),
             Matchers.equalTo(name)
         );
-        Mockito.verify(table, Mockito.times(1)).frame();
+        Mockito.verify(item, Mockito.times(1)).get(Mockito.anyString());
     }
 
 }
