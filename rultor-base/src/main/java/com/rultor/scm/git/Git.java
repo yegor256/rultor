@@ -43,7 +43,6 @@ import com.rultor.shell.ssh.PrivateKey;
 import com.rultor.snapshot.Step;
 import com.rultor.snapshot.Tag;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
@@ -73,7 +72,7 @@ public final class Git implements SCM {
     /**
      * Git URL.
      */
-    private final transient String url;
+    private final transient GitURI url;
 
     /**
      * Directory to use in terminal.
@@ -94,7 +93,7 @@ public final class Git implements SCM {
      */
     public Git(
         @NotNull(message = "shell can't be NULL") final Shell shl,
-        @NotNull(message = "URL can't be NULL") final URL addr,
+        @NotNull(message = "URL can't be NULL") final GitURI addr,
         @NotNull(message = "folder can't be NULL") final String folder) {
         this(
             shl, addr, folder,
@@ -115,10 +114,10 @@ public final class Git implements SCM {
      * @param priv Private key to use locally
      * @checkstyle ParameterNumber (5 lines)
      */
-    public Git(final Shell shl, final URL addr, final String folder,
+    public Git(final Shell shl, final GitURI addr, final String folder,
         final PrivateKey priv) {
         this.terminal = new Terminal(shl);
-        this.url = addr.toString();
+        this.url = addr;
         this.dir = folder;
         this.key = priv;
     }
@@ -185,7 +184,7 @@ public final class Git implements SCM {
             .append("DIR=$(pwd)/")
             .append(Terminal.quotate(Terminal.escape(this.dir)))
             .append(" && URL=")
-            .append(Terminal.quotate(Terminal.escape(this.url)))
+            .append(Terminal.quotate(Terminal.escape(this.url.value())))
             .append(" && mkdir -p \"$DIR\"")
             .append(" && ( cat > \"$DIR/id_rsa\" )")
             // @checkstyle LineLength (1 line)
@@ -201,5 +200,4 @@ public final class Git implements SCM {
             .append(" && git clean -f -d")
             .toString();
     }
-
 }
