@@ -234,9 +234,9 @@ final class AwsRules implements Rules {
     /**
      * Rule that caches its calls.
      */
-//    @ToString
-//    @EqualsAndHashCode(of = "origin")
-//    @Loggable(Loggable.DEBUG)
+    @ToString
+    @EqualsAndHashCode(of = "origin")
+    @Loggable(Loggable.DEBUG)
     private final class CacheableRule implements Rule {
         /**
          * Original rule.
