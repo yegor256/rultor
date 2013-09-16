@@ -34,7 +34,8 @@
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-    <changeSet author="yegor@tpc2.com" id="311">
+    <changeSet author="yegor@tpc2.com" id="311" context="live">
+        <comment>Fix for archive() function</comment>
         <sql splitStatements="false"><![CDATA[
             CREATE OR REPLACE FUNCTION archive() RETURNS VOID AS $$
             DECLARE
@@ -53,6 +54,7 @@
         ]]></sql>
     </changeSet>
     <changeSet author="yegor@tpc2.com" id="311.test" context="test">
+        <comment>Test for archive() function</comment>
         <sql splitStatements="false"><![CDATA[
             DO language plpgsql $$
             DECLARE
