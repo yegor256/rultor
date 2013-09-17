@@ -61,8 +61,8 @@ do
             --decrease-reads-with 25 \
             --increase-writes-with 50 \
             --decrease-writes-with 25 \
-            --increase-reads-unit percents \
-            --decrease-reads-unit percents \
+            --increase-reads-unit percent \
+            --decrease-reads-unit percent \
             --reads-upper-threshold 90 \
             --reads-lower-threshold 30 \
             --writes-upper-threshold 90 \
