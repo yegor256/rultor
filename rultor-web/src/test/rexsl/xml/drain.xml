@@ -44,7 +44,6 @@
         <link href="/" rel="root" type="text/xml"/>
         <link href="/xml/drain.xml" rel="self" type="text/xml"/>
         <link href="/xml/index.xml" rel="home" type="text/xml"/>
-        <link href="/xml/drain.xml" rel="more" type="text/xml"/>
         <link href="/xml/account.xml" rel="account" type="text/xml"/>
         <link href="/xml/rules.xml" rel="rules" type="text/xml"/>
         <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
@@ -65,6 +64,9 @@
     <since>2012-08-23T13:25:33Z</since>
     <balance>$0.45</balance>
     <pulses>
+        <links>
+            <link href="/xml/drain.xml" rel="more" type="text/xml"/>
+        </links>
         <pulse>
             <time>2012-08-23T13:23Z</time>
             <xembly>ADD "test";

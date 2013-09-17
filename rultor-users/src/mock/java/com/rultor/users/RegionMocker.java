@@ -36,8 +36,12 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.Table;
 import com.jcabi.dynamo.Valve;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import org.hamcrest.Matchers;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
  * Mocker for {@link Region}.
@@ -46,10 +50,22 @@ import org.mockito.Mockito;
  */
 public final class RegionMocker {
     /**
+     * List of items to return.
+     */
+    private final transient List<Item> items = new LinkedList<Item>();
+    /**
+     * With this extra item.
+     * @param item The item
+     * @return This object
+     */
+    public RegionMocker with(final Item item) {
+        this.items.add(item);
+        return this;
+    }
+    /**
      * Create a mocked region that throws exception in case of wrong arguments.
      * @return Mocked region.
      */
-    @SuppressWarnings("unchecked")
     public Region mock() {
         final Region region = Mockito.mock(Region.class);
         final Table table = Mockito.mock(Table.class);
@@ -57,9 +73,14 @@ public final class RegionMocker {
         Mockito.when(region.table(Mockito.anyString())).thenReturn(table);
         Mockito.when(table.frame()).thenReturn(frame);
         Mockito.when(frame.isEmpty()).thenReturn(false);
-        final Iterator<Item> iterator = Mockito.mock(Iterator.class);
-        Mockito.when(frame.iterator()).thenReturn(iterator);
-        Mockito.when(iterator.next()).thenReturn(null);
+        Mockito.when(frame.iterator()).thenAnswer(
+            new Answer<Iterator<Item>>() {
+                @Override
+                public Iterator<Item> answer(final InvocationOnMock inv) {
+                    return RegionMocker.this.items.iterator();
+                }
+            }
+        );
         Mockito.when(frame.through(Mockito.any(Valve.class))).thenReturn(frame);
         Mockito.when(
             frame.where(

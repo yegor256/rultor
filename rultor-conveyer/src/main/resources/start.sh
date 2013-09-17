@@ -57,12 +57,12 @@ do
     do
         dynamic-dynamodb --log-level WARNING \
             --table-name "${DYNAMO_PREFIX}${table}" \
-            --increase-reads-with 1 \
-            --decrease-reads-with 1 \
-            --increase-writes-with 1 \
-            --decrease-writes-with 1 \
-            --increase-reads-unit units \
-            --decrease-reads-unit units \
+            --increase-reads-with 50 \
+            --decrease-reads-with 25 \
+            --increase-writes-with 50 \
+            --decrease-writes-with 25 \
+            --increase-reads-unit percents \
+            --decrease-reads-unit percents \
             --reads-upper-threshold 90 \
             --reads-lower-threshold 30 \
             --writes-upper-threshold 90 \

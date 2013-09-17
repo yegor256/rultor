@@ -29,8 +29,15 @@
  */
 package com.rultor.users;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.jcabi.dynamo.Item;
+import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.Table;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
+import com.rultor.spi.Rule;
+import com.rultor.spi.Rules;
+import com.rultor.spi.Spec;
 import javax.validation.ConstraintViolationException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -40,6 +47,7 @@ import org.mockito.Mockito;
 /**
  * Tests for {@link AwsRules}.
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
 public final class AwsRulesTest {
@@ -85,10 +93,10 @@ public final class AwsRulesTest {
      * Check that null constrain is enforced for normal get call.
      */
     @Test
-    public void getNormal() {
+    public void retrievesElementByGetCall() {
         MatcherAssert.assertThat(
             new AwsRules(
-                new RegionMocker().mock(),
+                new RegionMocker().with(Mockito.mock(Item.class)).mock(),
                 Mockito.mock(SQSClient.class),
                 new URN()
             ).get("other"),
@@ -119,4 +127,55 @@ public final class AwsRulesTest {
             new URN()
         ).get("");
     }
+
+    /**
+     * AwsRules can cache and flush.
+     */
+    @Test
+    public void cachesAndFlushesListOfRules() {
+        final Item item = Mockito.mock(Item.class);
+        final String name = "rule-name-test";
+        Mockito.doReturn(new AttributeValue(name))
+            .when(item).get(Mockito.anyString());
+        final Region region = new RegionMocker().with(item).mock();
+        final Rules rules = new AwsRules(
+            region,
+            Mockito.mock(SQSClient.class),
+            new URN()
+        );
+        final Table table = region.table("");
+        final Rule rule = rules.iterator().next();
+        MatcherAssert.assertThat(rule.name(), Matchers.equalTo(name));
+        rule.update(new Spec.Simple(), new Spec.Simple());
+        rules.iterator();
+        rules.iterator();
+        Mockito.verify(table, Mockito.times(2)).frame();
+    }
+
+    /**
+     * AwsRules can cache results of get() and iterator() as same rules.
+     */
+    @Test
+    public void returnsGetAndIteratorAsSameRules() {
+        final Item item = Mockito.mock(Item.class);
+        final String name = "rule-name-foo";
+        Mockito.doReturn(new AttributeValue(name))
+            .when(item).get(Mockito.anyString());
+        final Region region = new RegionMocker().with(item).mock();
+        final Rules rules = new AwsRules(
+            region,
+            Mockito.mock(SQSClient.class),
+            new URN()
+        );
+        MatcherAssert.assertThat(
+            rules.get(name).name(),
+            Matchers.equalTo(name)
+        );
+        MatcherAssert.assertThat(
+            rules.iterator().next().name(),
+            Matchers.equalTo(name)
+        );
+        Mockito.verify(item, Mockito.times(1)).get(Mockito.anyString());
+    }
+
 }

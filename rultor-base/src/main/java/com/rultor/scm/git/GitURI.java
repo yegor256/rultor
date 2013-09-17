@@ -27,73 +27,67 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.users.pgsql;
+package com.rultor.scm.git;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.ScheduleWithFixedDelay;
-import com.jcabi.aspects.Tv;
-import com.jcabi.jdbc.JdbcSession;
-import com.jcabi.jdbc.VoidHandler;
-import java.io.Closeable;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
- * Archives old data in PostgreSQL.
+ * Wrapper for string representation of GIT URI.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Evgeniy Nyavro (e.nyavro@gmail.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "client")
+@EqualsAndHashCode(of = "uri")
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.DoNotUseThreads")
-@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.HOURS)
-public final class Archiver implements Runnable, Closeable {
+public final class GitURI {
 
     /**
-     * PostgreSQL client.
+     * Pattern to validate GIT URLS.
      */
-    private final transient PgClient client;
+    private static final Pattern PATTERN = Pattern.compile(
+        StringUtils.join(
+            "ssh://(\\w+@)?\\w+[\\w.-]*(:\\d+)?/\\w[\\w./-]+\\w.git/?",
+            // @checkstyle LineLength (1 line)
+            "|(git|((http|ftp)s?))://([\\w_%-]+:[\\w_%-]*@)?\\w+[\\w.-]*(:\\d+)?/\\w[\\w./-]+\\w.git/?",
+            "|rsync://\\w+[\\w.-/]*.git/?",
+            "|(\\w+@)?[\\w.-]+:(?!(/))[\\w.-/]+",
+            "|/\\w+[\\w/]+\\w+.git/?",
+            "|file:///[\\w/]+\\w+.git/?"
+        )
+    );
+
+    /**
+     * Underlying uri value.
+     */
+    private final transient String uri;
 
     /**
      * Public ctor.
-     * @param clnt Client
+     * Throws IllegalArgumentException if passed address is invalid
+     * @param addr GIT URL
      */
-    public Archiver(final PgClient clnt) {
-        this.client = clnt;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Loggable(value = Loggable.DEBUG, limit = Tv.TEN, unit = TimeUnit.MINUTES)
-    public void run() {
-        try {
-            new JdbcSession(this.client.get())
-                .sql("SELECT archive()")
-                .select(new VoidHandler());
-            new JdbcSession(this.client.get())
-                .sql("ANALYZE receipt")
-                .execute();
-        } catch (SQLException ex) {
-            throw new IllegalStateException(ex);
+    public GitURI(final String addr) {
+        if (!GitURI.PATTERN.matcher(addr).matches()) {
+            throw new IllegalArgumentException(
+                String.format("Invalid GIT URL: %s", addr)
+            );
         }
+        this.uri = addr;
     }
 
     /**
-     * {@inheritDoc}
+     * Getting underlying value.
+     * @return Underlying uri value
      */
-    @Override
-    public void close() throws IOException {
-        // nothing to do now
+    public String value() {
+        return this.uri;
     }
-
 }

@@ -91,7 +91,7 @@ final class PgCondition implements Sheet.Condition {
     public Sheet.Condition equalTo(final String column, final String value) {
         String tag;
         do {
-            tag = RandomStringUtils.randomAlphanumeric(Tv.TEN);
+            tag = RandomStringUtils.randomAlphabetic(Tv.TEN);
         } while (value.contains(tag));
         return new PgCondition(
             this.parent,

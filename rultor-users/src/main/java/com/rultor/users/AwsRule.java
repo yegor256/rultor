@@ -29,10 +29,8 @@
  */
 package com.rultor.users;
 
-import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
 import com.jcabi.urn.URN;
@@ -41,7 +39,6 @@ import com.rultor.spi.Coordinates;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Wallet;
-import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -93,6 +90,11 @@ final class AwsRule implements Rule {
     public static final String FIELD_FAILURE = "failure";
 
     /**
+     * Dynamo DB table column.
+     */
+    private static final String NO_FAILURE = "-";
+
+    /**
      * Item.
      */
     private final transient Item item;
@@ -116,7 +118,6 @@ final class AwsRule implements Rule {
      * {@inheritDoc}
      */
     @Override
-    @Cacheable.FlushAfter
     public void update(
         @NotNull(message = "spec can't be NULL") final Spec spec,
         @NotNull(message = "drain can't be NULL") final Spec drain) {
@@ -124,6 +125,7 @@ final class AwsRule implements Rule {
             new Attributes()
                 .with(AwsRule.FIELD_SPEC, spec.asText())
                 .with(AwsRule.FIELD_DRAIN, drain.asText())
+                .with(AwsRule.FIELD_FAILURE, AwsRule.NO_FAILURE)
         );
     }
 
@@ -132,7 +134,6 @@ final class AwsRule implements Rule {
      */
     @Override
     @NotNull(message = "spec of a rule is never NULL")
-    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Spec spec() {
         Spec spec;
         if (this.item.has(AwsRule.FIELD_SPEC)) {
@@ -147,7 +148,6 @@ final class AwsRule implements Rule {
      * {@inheritDoc}
      */
     @Override
-    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public String name() {
         return this.item.get(AwsRule.RANGE_NAME).getS();
     }
@@ -169,7 +169,6 @@ final class AwsRule implements Rule {
      * {@inheritDoc}
      */
     @Override
-    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public Spec drain() {
         Spec spec;
         if (this.item.has(AwsRule.FIELD_DRAIN)) {
@@ -181,7 +180,6 @@ final class AwsRule implements Rule {
     }
 
     @Override
-    @Cacheable.FlushAfter
     public void failure(final String desc) {
         this.item.put(
             new Attributes()
@@ -192,11 +190,13 @@ final class AwsRule implements Rule {
     }
 
     @Override
-    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public String failure() {
-        final String failure;
+        String failure;
         if (this.item.has(AwsRule.FIELD_FAILURE)) {
             failure = this.item.get(AwsRule.FIELD_FAILURE).getS();
+            if (failure.equals(AwsRule.NO_FAILURE)) {
+                failure = "";
+            }
         } else {
             failure = "";
         }

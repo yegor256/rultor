@@ -46,7 +46,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "origin", "funded" })
+@EqualsAndHashCode(of = { "origin", "error" })
 @Loggable(Loggable.DEBUG)
 final class AuditRules implements Rules {
 
@@ -56,18 +56,18 @@ final class AuditRules implements Rules {
     private final transient Rules origin;
 
     /**
-     * Wallet is available, account is properly funded.
+     * Error, if any (empty string otherwise).
      */
-    private final transient boolean funded;
+    private final transient String error;
 
     /**
      * Public ctor.
      * @param rules Rules
-     * @param fnd Funded
+     * @param problem Problem
      */
-    protected AuditRules(final Rules rules, final boolean fnd) {
+    protected AuditRules(final Rules rules, final String problem) {
         this.origin = rules;
-        this.funded = fnd;
+        this.error = problem;
     }
 
     /**
@@ -83,7 +83,7 @@ final class AuditRules implements Rules {
      */
     @Override
     public Rule get(final String name) {
-        return new AuditRule(this.origin.get(name), this.funded);
+        return new AuditRule(this.origin.get(name), this.error);
     }
 
     /**
@@ -115,7 +115,7 @@ final class AuditRules implements Rules {
             }
             @Override
             public Rule next() {
-                return new AuditRule(iterator.next(), AuditRules.this.funded);
+                return new AuditRule(iterator.next(), AuditRules.this.error);
             }
             @Override
             public void remove() {

@@ -48,7 +48,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "origin", "funded" })
+@EqualsAndHashCode(of = { "origin", "error" })
 @Loggable(Loggable.DEBUG)
 final class AuditRule implements Rule {
 
@@ -58,18 +58,18 @@ final class AuditRule implements Rule {
     private final transient Rule origin;
 
     /**
-     * Wallet is available, account is properly funded.
+     * Error message if there is a problem, or empty string otherwise.
      */
-    private final transient boolean funded;
+    private final transient String error;
 
     /**
      * Public ctor.
      * @param rule Rule
-     * @param fnd Funded
+     * @param problem Problem if it exists (empty string otherwise)
      */
-    protected AuditRule(final Rule rule, final boolean fnd) {
+    protected AuditRule(final Rule rule, final String problem) {
         this.origin = rule;
-        this.funded = fnd;
+        this.error = problem;
     }
 
     /**
@@ -103,10 +103,8 @@ final class AuditRule implements Rule {
     @Override
     public Wallet wallet(final Coordinates work, final URN taker,
         final String rule) throws Wallet.NotEnoughFundsException {
-        if (!this.funded) {
-            throw new Wallet.NotEnoughFundsException(
-                "not enough funds in the account"
-            );
+        if (!this.error.isEmpty()) {
+            throw new Wallet.NotEnoughFundsException(this.error);
         }
         return this.origin.wallet(work, taker, rule);
     }

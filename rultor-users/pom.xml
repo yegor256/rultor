@@ -205,7 +205,7 @@
                             <username></username>
                             <password>${pgsql.password}</password>
                             <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-                            <contexts>${liquibase.contexts}</contexts>
+                            <contexts>any,${liquibase.contexts}</contexts>
                         </configuration>
                         <executions>
                             <execution>

@@ -37,6 +37,7 @@ import com.rultor.spi.Account;
 import com.rultor.spi.Rules;
 import com.rultor.spi.Stands;
 import com.rultor.spi.User;
+import com.rultor.tools.Dollars;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -84,10 +85,17 @@ final class AuditUser implements User {
      */
     @Override
     public Rules rules() {
-        return new AuditRules(
-            this.origin.rules(),
-            this.account().balance().points() > AuditUser.THRESHOLD
-        );
+        final Dollars balance = this.account().balance();
+        final String error;
+        if (balance.points() > AuditUser.THRESHOLD) {
+            error = "";
+        } else {
+            error = String.format(
+                "not enough funds in %s account: %s",
+                this.origin.urn(), balance
+            );
+        }
+        return new AuditRules(this.origin.rules(), error);
     }
 
     /**

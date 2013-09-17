@@ -58,19 +58,7 @@
                         </ul>
                     </div>
                 </xsl:if>
-                <xsl:apply-templates select="/page/pulses/pulse"/>
-                <xsl:if test="/page/links/link[@rel='more']">
-                    <p>
-                        <xsl:text>See </xsl:text>
-                        <a title="more">
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="/page/links/link[@rel='more']/@href"/>
-                            </xsl:attribute>
-                            <xsl:text>more</xsl:text>
-                        </a>
-                        <xsl:text> pulses.</xsl:text>
-                    </p>
-                </xsl:if>
+                <xsl:apply-templates select="/page/pulses"/>
             </xsl:when>
             <xsl:otherwise>
                 <p>
@@ -78,6 +66,21 @@
                 </p>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
+    <xsl:template match="pulses">
+        <xsl:apply-templates select="pulse"/>
+        <xsl:if test="links/link[@rel='more']">
+            <p>
+                <xsl:text>See </xsl:text>
+                <a title="more">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="links/link[@rel='more']/@href"/>
+                    </xsl:attribute>
+                    <xsl:text>more</xsl:text>
+                </a>
+                <xsl:text> pulses.</xsl:text>
+            </p>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="pulse">
         <div class="panel panel-default">

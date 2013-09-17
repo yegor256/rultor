@@ -27,68 +27,72 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.scm.git;
+package com.rultor.guard.github;
 
-import com.google.common.io.Files;
-import com.rultor.scm.Branch;
-import com.rultor.shell.ShellMocker;
-import java.util.Collection;
-import javax.validation.ConstraintViolationException;
+import org.eclipse.egit.github.core.PullRequest;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assume;
 import org.junit.Test;
 
 /**
- * Test case for {@link Git}.
- * @author Bharath Bolisetty (bharathbolisetty@gmail.com)
- * @author Evgeniy Nyavro (e.nyavro@gmail.com)
+ * Integration case for {@link ReassignTo}.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class GitTest {
+public final class ReassignToITCase {
 
     /**
-     * URL to public GitHub repository.
+     * Github user.
      */
-    private static final String GIT_URL = "http://github.com/nyavro/test.git";
+    private static final String USER =
+        System.getProperty("failsafe.github.user");
 
     /**
-     * Git public ctor args can not be null.
+     * Github password.
+     */
+    private static final String PASSWORD =
+        System.getProperty("failsafe.github.password");
+
+    /**
+     * Github repository name.
+     */
+    private static final String REPO =
+        System.getProperty("failsafe.github.repo");
+
+    /**
+     * ReassignTo can assign an issue to someone else.
      * @throws Exception If some problem inside
      */
-    @Test(expected = ConstraintViolationException.class)
-    public void failsWhenInitializedWithNulls() throws Exception {
-        new Git(null, "git@github.com:rultor/rultor.git", null);
-    }
-
-    /**
-     * Can checkout branch.
-     * @throws Exception if some problem inside
-     */
     @Test
-    public void checksOutBranch() throws Exception {
+    public void reassignsIssueToSomeoneElse() throws Exception {
+        Assume.assumeNotNull(ReassignToITCase.USER);
+        final PullRequest first = new PullRequest();
+        first.setNumber(1);
         MatcherAssert.assertThat(
-            new Git(
-                new ShellMocker.Bash(Files.createTempDir()),
-                new GitURI(GitTest.GIT_URL),
-                "test"
-            ).checkout("master"),
-            Matchers.notNullValue(Branch.class)
+            new ReassignTo(ReassignToITCase.USER).has(
+                first,
+                new Github.Simple(
+                    ReassignToITCase.USER,
+                    ReassignToITCase.PASSWORD
+                ),
+                new Github.Repo(ReassignToITCase.REPO)
+            ),
+            Matchers.is(true)
+        );
+        final PullRequest second = new PullRequest();
+        second.setNumber(1);
+        MatcherAssert.assertThat(
+            new ReassignTo("").has(
+                second,
+                new Github.Simple(
+                    ReassignToITCase.USER,
+                    ReassignToITCase.PASSWORD
+                ),
+                new Github.Repo(ReassignToITCase.REPO)
+            ),
+            Matchers.is(true)
         );
     }
 
-    /**
-     * Can get branches.
-     * @throws Exception if some problem inside
-     */
-    @Test
-    public void getsBranches() throws Exception {
-        MatcherAssert.assertThat(
-            new Git(
-                new ShellMocker.Bash(Files.createTempDir()),
-                new GitURI(GitTest.GIT_URL),
-                "test2"
-            ).branches(),
-            Matchers.notNullValue(Collection.class)
-        );
-    }
 }

@@ -39,9 +39,11 @@ import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
+import com.rultor.spi.Coordinates;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Rules;
 import com.rultor.spi.Spec;
+import com.rultor.spi.Wallet;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -62,6 +64,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "region", "owner" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.TooManyMethods")
 final class AwsRules implements Rules {
 
     /**
@@ -105,7 +108,7 @@ final class AwsRules implements Rules {
             }
             @Override
             public Rule next() {
-                return new AwsRule(AwsRules.this.client, items.next());
+                return AwsRules.this.toRule(items.next());
             }
             @Override
             public void remove() {
@@ -179,7 +182,7 @@ final class AwsRules implements Rules {
                 String.format("Rule `%s` doesn't exist", rule)
             );
         }
-        return new AwsRule(this.client, items.iterator().next());
+        return this.toRule(items.iterator().next());
     }
 
     /**
@@ -209,6 +212,81 @@ final class AwsRules implements Rules {
             .frame()
             .where(AwsRule.HASH_OWNER, this.owner.toString())
             .through(new QueryValve());
+    }
+
+    /**
+     * Marker to flush cash.
+     */
+    @Cacheable.FlushAfter
+    private void flush() {
+        // nothing todo
+    }
+
+    /**
+     * Convert item to rule.
+     * @param item Item from AWS
+     * @return Rule
+     */
+    private Rule toRule(final Item item) {
+        return new CacheableRule(new AwsRule(this.client, item));
+    }
+
+    /**
+     * Rule that caches its calls.
+     */
+    @ToString
+    @EqualsAndHashCode(of = "origin")
+    @Loggable(Loggable.DEBUG)
+    private final class CacheableRule implements Rule {
+        /**
+         * Original rule.
+         */
+        private final transient Rule origin;
+        /**
+         * Ctor.
+         * @param rule Rule to wrap
+         */
+        protected CacheableRule(final Rule rule) {
+            this.origin = rule;
+        }
+        @Override
+        @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+        public String name() {
+            return this.origin.name();
+        }
+        @Override
+        @Cacheable.FlushAfter
+        public void update(final Spec spec, final Spec drain) {
+            this.origin.update(spec, drain);
+            AwsRules.this.flush();
+        }
+        @Override
+        @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+        public Spec spec() {
+            return this.origin.spec();
+        }
+        @Override
+        @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+        public Spec drain() {
+            return this.origin.drain();
+        }
+        @Override
+        @Cacheable.FlushAfter
+        public void failure(final String desc) {
+            this.origin.failure(desc);
+            AwsRules.this.flush();
+        }
+        @Override
+        @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+        public String failure() {
+            return this.origin.failure();
+        }
+        // @checkstyle RedundantThrows (5 lines)
+        @Override
+        public Wallet wallet(final Coordinates work, final URN taker,
+            final String rule) throws Wallet.NotEnoughFundsException {
+            return this.origin.wallet(work, taker, rule);
+        }
     }
 
 }

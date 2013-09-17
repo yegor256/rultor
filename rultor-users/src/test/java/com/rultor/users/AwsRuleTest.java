@@ -27,73 +27,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.users.pgsql;
+package com.rultor.users;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.ScheduleWithFixedDelay;
-import com.jcabi.aspects.Tv;
-import com.jcabi.jdbc.JdbcSession;
-import com.jcabi.jdbc.VoidHandler;
-import java.io.Closeable;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.concurrent.TimeUnit;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.jcabi.dynamo.Item;
+import com.rultor.aws.SQSClient;
+import com.rultor.spi.Rule;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Archives old data in PostgreSQL.
- *
+ * Tests for {@link AwsRule}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-@ToString
-@EqualsAndHashCode(of = "client")
-@Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.DoNotUseThreads")
-@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.HOURS)
-public final class Archiver implements Runnable, Closeable {
+public final class AwsRuleTest {
 
     /**
-     * PostgreSQL client.
+     * AwsRule can retrieve a failure from a clean item.
+     * @throws Exception If fails
      */
-    private final transient PgClient client;
-
-    /**
-     * Public ctor.
-     * @param clnt Client
-     */
-    public Archiver(final PgClient clnt) {
-        this.client = clnt;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Loggable(value = Loggable.DEBUG, limit = Tv.TEN, unit = TimeUnit.MINUTES)
-    public void run() {
-        try {
-            new JdbcSession(this.client.get())
-                .sql("SELECT archive()")
-                .select(new VoidHandler());
-            new JdbcSession(this.client.get())
-                .sql("ANALYZE receipt")
-                .execute();
-        } catch (SQLException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void close() throws IOException {
-        // nothing to do now
+    @Test
+    public void retrievesFailureFromEmptyItem() throws Exception {
+        final Item item = Mockito.mock(Item.class);
+        Mockito.doThrow(new IllegalArgumentException())
+            .when(item).get(AwsRule.FIELD_FAILURE);
+        final Rule rule = new AwsRule(Mockito.mock(SQSClient.class), item);
+        MatcherAssert.assertThat(rule.failure(), Matchers.equalTo(""));
     }
 
 }

@@ -29,11 +29,13 @@
  */
 package com.rultor.users;
 
+import com.jcabi.dynamo.Item;
 import com.jcabi.urn.URN;
 import javax.validation.ConstraintViolationException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Tests for {@link AwsStand}.
@@ -78,7 +80,10 @@ public final class AwsStandsTest {
     @Test
     public void getNormal() {
         MatcherAssert.assertThat(
-            new AwsStands(new RegionMocker().mock(), new URN()).get("other"),
+            new AwsStands(
+                new RegionMocker().with(Mockito.mock(Item.class)).mock(),
+                new URN()
+            ).get("other"),
             Matchers.notNullValue()
         );
     }
