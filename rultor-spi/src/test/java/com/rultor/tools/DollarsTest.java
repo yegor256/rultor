@@ -31,6 +31,7 @@ package com.rultor.tools;
 
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Tv;
+import java.util.Locale;
 import java.util.Map;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -49,6 +50,7 @@ public final class DollarsTest {
      */
     @Test
     public void printsItselfToString() throws Exception {
+        Locale.setDefault(Locale.ENGLISH);
         final ImmutableMap<Dollars, String> map =
             new ImmutableMap.Builder<Dollars, String>()
                 .put(new Dollars(0L), "$0.00")
