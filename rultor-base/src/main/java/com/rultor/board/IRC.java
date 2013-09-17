@@ -31,8 +31,8 @@ package com.rultor.board;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.board.IRCServer.UtilFormatter;
-import com.rultor.board.IRCServer.UtilLogger;
+import com.jcabi.log.Logger;
+import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -48,7 +48,7 @@ import org.schwering.irc.lib.IRCConnection;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "host", "port", "channel" })
+@EqualsAndHashCode(of = { "host", "port", "channel", "nickname", "username" })
 @Loggable(Loggable.DEBUG)
 public final class IRC implements Billboard {
     /**
@@ -59,10 +59,35 @@ public final class IRC implements Billboard {
     private final transient String channel;
 
     /**
+     * Password.
+     */
+    private final transient String password;
+
+    /**
+     * Nickname.
+     */
+    private final transient String nickname;
+
+    /**
+     * Username.
+     */
+    private final transient String username;
+
+    /**
+     * Real name.
+     */
+    private final transient String realname;
+
+    /**
+     * Is SSL used.
+     */
+    private final transient boolean isSSL;
+
+    /**
      * Creates connection and stores basic connection information.
      * Like host, port, channel.
      */
-    private final transient IRCServer server;
+    private final transient IRCServerInterface server;
 
     /**
      * Public ctor.
@@ -70,20 +95,42 @@ public final class IRC implements Billboard {
      * @param hst Host
      * @param prt Port
      * @param chnl Channel
+     * @param pass Password
+     * @param nick Nickname
+     * @param user Username
+     * @param name Real name
+     * @param ssl Is SSL used
+     * @checkstyle ParameterNumber (3 lines)
      */
-    public IRC(final String hst, final int prt, final String chnl) {
-        this(chnl, new IRCServer(hst, prt));
+    public IRC(final String hst, final int prt, final String chnl,
+        final String pass, final String nick, final String user,
+        final String name, final boolean ssl) {
+        this(new IRCServer(hst, prt), chnl, pass, nick, user, name, ssl);
     }
 
     /**
      * Public ctor.
      *
+     * @param srv Server
      * @param chnl Channel
-     * @param serverz Server
+     * @param pass Password
+     * @param nick Nickname
+     * @param user Username
+     * @param name Real name
+     * @param ssl Is SSL used
+     * @checkstyle ParameterNumber (3 lines)
      */
-    public IRC(final String chnl, final IRCServer serverz) {
+    public IRC(final IRCServerInterface srv, final String chnl,
+        final String pass, final String nick, final String user,
+        final String name, final boolean ssl
+    ) {
+        this.server = srv;
         this.channel = chnl;
-        this.server = serverz;
+        this.password = pass;
+        this.nickname = nick;
+        this.username = user;
+        this.realname = name;
+        this.isSSL = ssl;
     }
 
     /**
@@ -92,16 +139,23 @@ public final class IRC implements Billboard {
     @Override
     public void announce(
         @NotNull(message = "body can't be NULL") final String body) {
-        final IRCConnection conn = this.server.connect(
-            this.channel, "", "nickTest", "userTest", "nameTest", false
-        );
-        final String channelFormatted =
-            UtilFormatter.formatChannelName(this.channel);
-        conn.doPrivmsg(channelFormatted, body);
-        UtilLogger.printFromProgram(
+        final IRCConnection conn;
+        try {
+            conn = this.server.connect(
+                this.channel, this.password, this.nickname, this.username,
+                this.realname, this.isSSL
+            );
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+        final String formatted =
+            IRCServer.formatChannelName(this.channel);
+        conn.doPrivmsg(formatted, body);
+        Logger.info(
+            this,
             String.format(
                 "%s%s",
-                UtilFormatter.formatChannelPrompt(channelFormatted), body
+                IRCServer.formatChannelPrompt(formatted), body
             )
         );
     }

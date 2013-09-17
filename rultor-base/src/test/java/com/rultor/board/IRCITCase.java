@@ -62,10 +62,14 @@ public class IRCITCase {
     public final void sendMessage() throws Exception {
         final String channel = "channelTest";
         final String body = "test irc message";
+        final String password = "";
+        final String nickname = "nickTest";
+        final String username = "userTest";
+        final String realname = "nameTest";
+        final boolean ssl = false;
         final Billboard board = new IRC(
-            this.IRC_SERVER_HOST,
-            this.IRC_PORT_DEFAULT,
-            channel
+            this.IRC_SERVER_HOST, this.IRC_PORT_DEFAULT, channel, password,
+            nickname, username, realname, ssl
         );
         board.announce(body);
     }

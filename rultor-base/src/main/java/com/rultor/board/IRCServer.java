@@ -29,10 +29,13 @@
  */
 package com.rultor.board;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.security.cert.X509Certificate;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.schwering.irc.lib.IRCConnection;
 import org.schwering.irc.lib.IRCEventListener;
 import org.schwering.irc.lib.IRCModeParser;
@@ -41,15 +44,18 @@ import org.schwering.irc.lib.ssl.SSLIRCConnection;
 import org.schwering.irc.lib.ssl.SSLTrustManager;
 
 /**
- * Actually a factory of a connection object.
+ * Actually a factory of an IRCConnection connection.
  *
  * @author Konstantin Voytenko (cppruler@gmail.com)
  * @version $Id$
  * @since 1.0
  */
+@Immutable
+@ToString
+@EqualsAndHashCode(of = { "host", "port" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
-public class IRCServer {
+public final class IRCServer implements IRCServerInterface {
     /**
      * Host name.
      */
@@ -72,23 +78,15 @@ public class IRCServer {
     }
 
     /**
-     * Creates a connection.
-     *
-     * @param channel Channel
-     * @param pass Password
-     * @param nick Nickname
-     * @param user User
-     * @param name Real name
-     * @param ssl Is SSL used
-     * @return Connection
-     * @checkstyle DesignForExtension (4 lines) This method be overridden
-     *  by the Mock implementation. So cannot make it final
+     * {@inheritDoc}
      * @checkstyle ParameterNumber (4 lines)
      */
+    @Override
     public IRCConnection connect(final String channel,
         final String pass, final String nick,
-        final String user, final String name, final boolean ssl) {
-        final IRCConnection conn = this.connectionInstantiate(
+        final String user, final String name, final boolean ssl)
+        throws IOException {
+        final IRCConnection conn = this.connection(
             this.host, this.port, pass, nick, user, name, ssl
         );
         this.connectToServerAndJoinChannel(conn, channel);
@@ -100,13 +98,14 @@ public class IRCServer {
      *
      * @param conn Connection
      * @param channel Channel
+     * @throws IOException Exception during connecting to server
      */
     private void connectToServerAndJoinChannel(final IRCConnection conn,
-        final String channel) {
+        final String channel) throws IOException {
         final Waiter waiterConnected = new Waiter();
         final Waiter waiterJoined = new Waiter();
         this.connSetOptions(conn, waiterConnected, waiterJoined);
-        this.connConnect(conn);
+        conn.connect();
         waiterConnected.sleepUntilHappenned();
         this.joinChannel(conn, channel);
         waiterJoined.sleepUntilHappenned();
@@ -115,8 +114,8 @@ public class IRCServer {
     /**
      * Instantiates a connection object to talk to IRC server.
      *
-     * @param hostz Host
-     * @param portz Port
+     * @param hst Host
+     * @param prt Port
      * @param pass Password
      * @param nick Nickname
      * @param user Username
@@ -125,19 +124,21 @@ public class IRCServer {
      * @return IRCConnection
      * @checkstyle ParameterNumber (4 lines)
      */
-    private IRCConnection connectionInstantiate(final String hostz,
-        final int portz, final String pass, final String nick,
+    private IRCConnection connection(final String hst,
+        final int prt, final String pass, final String nick,
         final String user, final String name, final boolean ssl) {
-        IRCConnection connz;
+        IRCConnection connct;
         if (ssl) {
-            connz = new SSLIRCConnection(hostz, new int[]{portz}, pass,
-                nick, user, name);
-            ((SSLIRCConnection) connz).addTrustManager(new TrustManager());
+            connct = new SSLIRCConnection(
+                hst, new int[]{prt}, pass, nick, user, name
+            );
+            ((SSLIRCConnection) connct).addTrustManager(new TrustManager());
         } else {
-            connz = new IRCConnection(hostz, new int[]{portz}, pass,
-                nick, user, name);
+            connct = new IRCConnection(
+                hst, new int[]{prt}, pass, nick, user, name
+            );
         }
-        return connz;
+        return connct;
     }
 
     /**
@@ -157,10 +158,11 @@ public class IRCServer {
                 }
                 @Override
                 public void onJoin(final String chan, final IRCUser user) {
-                    UtilLogger.print(
+                    Logger.info(
+                        this,
                         String.format(
                             "%s%s joins",
-                            UtilFormatter.formatChannelPrompt(chan),
+                            IRCServer.formatChannelPrompt(chan),
                             user.getNick()
                         )
                     );
@@ -175,18 +177,6 @@ public class IRCServer {
     }
 
     /**
-     * Start the connection to the server.
-     * @param conn Connection
-     */
-    private void connConnect(final IRCConnection conn) {
-        try {
-            conn.connect();
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex.getMessage(), ex);
-        }
-    }
-
-    /**
      * Join the channel.
      * @param conn Connection
      * @param channelz Channel name
@@ -194,15 +184,16 @@ public class IRCServer {
     private void joinChannel(final IRCConnection conn,
         final String channelz) {
         final String command = String.format(
-            "join %s", UtilFormatter.formatChannelName(channelz)
+            "join %s", IRCServer.formatChannelName(channelz)
         );
-        UtilLogger.print(command);
+        Logger.info(this, command);
         conn.send(command);
     }
 
     /**
      * Treats IRC events. The most of them are just printed.
      */
+    @ToString
     abstract class AbstractListener implements IRCEventListener {
 
         /**
@@ -214,7 +205,7 @@ public class IRCServer {
          * Event - On disconnected.
          */
         public final void onDisconnected() {
-            UtilLogger.print("Disconnected");
+            Logger.info(this, "Disconnected");
         }
 
         /**
@@ -222,7 +213,7 @@ public class IRCServer {
          * @param msg Error message
          */
         public final void onError(final String msg) {
-            UtilLogger.print(String.format("Error: %s", msg));
+            Logger.info(this, String.format("Error: %s", msg));
         }
 
         /**
@@ -231,8 +222,8 @@ public class IRCServer {
          * @param msg Error message
          */
         public final void onError(final int num, final String msg) {
-            UtilLogger.print(
-                String.format("Error #%d: %s", num, msg)
+            Logger.info(
+                this, String.format("Error #%d: %s", num, msg)
             );
         }
 
@@ -244,10 +235,10 @@ public class IRCServer {
          */
         public final void onInvite(final String chan, final IRCUser user,
             final String nickpass) {
-            UtilLogger.print(
-                String.format(
+            Logger.info(
+                this, String.format(
                     "%s%s invites %s",
-                    UtilFormatter.formatChannelPrompt(chan),
+                    IRCServer.formatChannelPrompt(chan),
                     user.getNick(), nickpass
                 )
             );
@@ -271,10 +262,10 @@ public class IRCServer {
         public final void onKick(final String chan, final IRCUser user,
             final String nickpass,
             final String msg) {
-            UtilLogger.print(
-                String.format(
+            Logger.info(
+                this, String.format(
                     "%s%s kicks %s",
-                    UtilFormatter.formatChannelPrompt(chan),
+                    IRCServer.formatChannelPrompt(chan),
                     user.getNick(), nickpass
                 )
             );
@@ -288,8 +279,8 @@ public class IRCServer {
          */
         public final void onMode(final IRCUser user, final String nickpass,
             final String mode) {
-            UtilLogger.print(
-                String.format(
+            Logger.info(
+                this, String.format(
                     "Mode: %s sets modes %s %s",
                     user.getNick(), mode, nickpass
                 )
@@ -304,10 +295,10 @@ public class IRCServer {
          */
         public final void onMode(final String chan, final IRCUser user,
             final IRCModeParser modeparser) {
-            UtilLogger.print(
-                String.format(
+            Logger.info(
+                this, String.format(
                     "%s%s sets mode: %s",
-                    UtilFormatter.formatChannelPrompt(chan),
+                    IRCServer.formatChannelPrompt(chan),
                     user.getNick(), modeparser.getLine()
                 )
             );
@@ -319,8 +310,8 @@ public class IRCServer {
          * @param nicknew New nickname
          */
         public final void onNick(final IRCUser user, final String nicknew) {
-            UtilLogger.print(
-                String.format(
+            Logger.info(
+                this, String.format(
                     "Nick: %s is now known as %s",
                     user.getNick(), nicknew
                 )
@@ -335,10 +326,10 @@ public class IRCServer {
          */
         public final void onNotice(final String target, final IRCUser user,
             final String msg) {
-            UtilLogger.print(
-                String.format(
+            Logger.info(
+                this, String.format(
                     "%s%s (notice): %s",
-                    UtilFormatter.formatChannelPrompt(target),
+                    IRCServer.formatChannelPrompt(target),
                     user.getNick(), msg
                 )
             );
@@ -352,10 +343,10 @@ public class IRCServer {
          */
         public final void onPart(final String chan, final IRCUser user,
             final String msg) {
-            UtilLogger.print(
-                String.format(
+            Logger.info(
+                this, String.format(
                     "%s%s parts",
-                    UtilFormatter.formatChannelPrompt(chan), user.getNick()
+                    IRCServer.formatChannelPrompt(chan), user.getNick()
                 )
             );
         }
@@ -368,10 +359,10 @@ public class IRCServer {
          */
         public final void onPrivmsg(final String chan, final IRCUser user,
             final String msg) {
-            UtilLogger.print(
-                String.format(
+            Logger.info(
+                this, String.format(
                     "%s%s: %s",
-                    UtilFormatter.formatChannelPrompt(chan),
+                    IRCServer.formatChannelPrompt(chan),
                     user.getNick(), msg
                 )
             );
@@ -383,7 +374,7 @@ public class IRCServer {
          * @param msg Message
          */
         public final void onQuit(final IRCUser user, final String msg) {
-            UtilLogger.print(String.format("Quit: %s", user.getNick()));
+            Logger.info(this, String.format("Quit: %s", user.getNick()));
         }
 
         /**
@@ -394,8 +385,8 @@ public class IRCServer {
          */
         public final void onReply(final int num, final String value,
             final String msg) {
-            UtilLogger.print(
-                String.format("Reply #%d: %s %s", num, value, msg)
+            Logger.info(
+                this, String.format("Reply #%d: %s %s", num, value, msg)
             );
         }
 
@@ -407,10 +398,10 @@ public class IRCServer {
          */
         public final void onTopic(final String chan, final IRCUser user,
             final String topic) {
-            UtilLogger.print(
-                String.format(
+            Logger.info(
+                this, String.format(
                     "%s%s changes topic into: %s",
-                    UtilFormatter.formatChannelPrompt(chan),
+                    IRCServer.formatChannelPrompt(chan),
                     user.getNick(), topic
                 )
             );
@@ -435,8 +426,8 @@ public class IRCServer {
          */
         public final void unknown(final String parta, final String partb,
             final String partc, final String partd) {
-            UtilLogger.print(
-                String.format(
+            Logger.info(
+                this, String.format(
                     "UNKNOWN: %s %s %s %s",
                     parta, partb, partc, partd
                 )
@@ -447,7 +438,9 @@ public class IRCServer {
     /**
      * Needed if using SSL.
      */
-    public class TrustManager implements SSLTrustManager {
+    @Immutable
+    @ToString
+    final class TrustManager implements SSLTrustManager {
         /**
          * X509 Certificate chain.
          */
@@ -457,7 +450,7 @@ public class IRCServer {
          * Get issuers.
          * @return Chain
          */
-        public final X509Certificate[] getAcceptedIssuers() {
+        public X509Certificate[] getAcceptedIssuers() {
             X509Certificate[] res;
             if (this.chain == null) {
                 res = new X509Certificate[0];
@@ -472,7 +465,7 @@ public class IRCServer {
          * @param chainz Chain
          * @return Is trusted
          */
-        public final boolean isTrusted(final X509Certificate[] chainz) {
+        public boolean isTrusted(final X509Certificate[] chainz) {
             this.chain = chainz.clone();
             return true;
         }
@@ -482,7 +475,9 @@ public class IRCServer {
      * Helps making the asynchronous IRC API synchronous,
      * which makes it easier to operate.
      */
-    class Waiter {
+    @ToString
+    @EqualsAndHashCode(of = { "happened", "sleptCounter" })
+    final class Waiter {
         /**
          * Flag says if the event has happened.
          */
@@ -510,14 +505,14 @@ public class IRCServer {
         /**
          * Event has happened trigger.
          */
-        public final void triggerHappenned() {
+        public void triggerHappenned() {
             this.happened = true;
         }
 
         /**
          * Make thread sleep until event has happened or timeouted.
          */
-        public final void sleepUntilHappenned() {
+        public void sleepUntilHappenned() {
             this.sleptCounter = 0;
             while (!this.happened) {
                 try {
@@ -536,64 +531,22 @@ public class IRCServer {
     }
 
     /**
-     * String formatter utility.
+     * Format a channel name. Prefix it with "#" sign.
+     *
+     * @param channelname Channel name
+     * @return Formatted channel name
      */
-    static final class UtilFormatter {
-        /**
-         * Private ctor.
-         * Class is supposed to only be used statically
-         */
-        private UtilFormatter() {
-        }
-
-        /**
-         * Format a channel name. Prefix it with "#" sign.
-         *
-         * @param channelname Channel name
-         * @return Formatted channel name
-         */
-        public static String formatChannelName(final String channelname) {
-            return String.format("#%s", channelname);
-        }
-
-        /**
-         * Formats the receiver of message.
-         *
-         * @param channelz Receiver
-         * @return Formatted
-         */
-        public static String formatChannelPrompt(final String channelz) {
-            return String.format("%s> ", channelz);
-        }
+    public static String formatChannelName(final String channelname) {
+        return String.format("#%s", channelname);
     }
 
     /**
-     * Logger utility.
+     * Formats the receiver of message.
+     *
+     * @param channelz Receiver
+     * @return Formatted
      */
-    static final class UtilLogger {
-        /**
-         * Private ctor.
-         * Class is supposed to only be used statically
-         */
-        private UtilLogger() {
-        }
-
-        /**
-         * A shorthand for the Logger.info method.
-         *
-         * @param obj Object to be printed
-         */
-        public static void print(final Object obj) {
-            Logger.info(Object.class, (String) obj);
-        }
-
-        /**
-         * A shorthand for the Logger.info method.
-         *
-         * @param obj Object to be printed
-         */
-        public static void printFromProgram(final Object obj) {
-            Logger.info(Object.class, String.format("[i am]  %s", obj));
-        }
+    public static String formatChannelPrompt(final String channelz) {
+        return String.format("%s> ", channelz);
     }
 }

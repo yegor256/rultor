@@ -29,58 +29,34 @@
  */
 package com.rultor.board;
 
-import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.mockito.Mockito;
+import com.jcabi.aspects.Immutable;
+import java.io.IOException;
 import org.schwering.irc.lib.IRCConnection;
 
 /**
- * A mocked test of IRC board.
+ * An interface for IRCServer.
  *
  * @author Konstantin Voytenko (cppruler@gmail.com)
  * @version $Id$
  * @since 1.0
  */
-public class IRCTest {
+@Immutable
+public interface IRCServerInterface {
     /**
-     * Sends a correct message.
+     * Creates a connection.
      *
-     * @throws Exception If some problem inside
+     * @param channel Channel
+     * @param pass Password
+     * @param nick Nickname
+     * @param user Username
+     * @param name Real name
+     * @param ssl Is SSL used
+     * @return Connection
+     * @throws IOException Exception during connecting to server
+     * @checkstyle ParameterNumber (4 lines)
      */
-    @Test
-    public final void sendMessage() throws Exception {
-        final IRCServerInterface server = Mockito.mock(
-            IRCServerInterface.class
-        );
-        final IRCConnection conn = Mockito.mock(IRCConnection.class);
-        final String channel = "channelTest";
-        final String body = "test irc message";
-        final String password = "";
-        final String nickname = "nickTest";
-        final String username = "userTest";
-        final String realname = "nameTest";
-        final boolean ssl = false;
-        Mockito.when(
-            server.connect(
-                Mockito.anyString(), Mockito.anyString(),
-                Mockito.anyString(), Mockito.anyString(),
-                Mockito.anyString(), Mockito.anyBoolean()
-            )
-        ).thenReturn(conn);
-        final Billboard board = new IRC(server, channel, password, nickname,
-            username, realname, ssl);
-        board.announce(body);
-        Mockito.verify(conn).doPrivmsg(
-            Mockito.argThat(
-                Matchers.equalTo(
-                    String.format("#%s", channel)
-                )
-            ),
-            Mockito.argThat(
-                Matchers.equalTo(
-                    body
-                )
-            )
-        );
-    }
+    IRCConnection connect(final String channel,
+        final String pass, final String nick,
+        final String user, final String name, final boolean ssl)
+        throws IOException;
 }
