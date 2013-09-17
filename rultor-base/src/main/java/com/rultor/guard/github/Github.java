@@ -127,6 +127,7 @@ public interface Github {
         @Override
         public GitHubClient client() {
             final GitHubClient client = new GitHubClient();
+            client.setUserAgent("www.rultor.com");
             client.setCredentials(this.username, this.password);
             return client;
         }

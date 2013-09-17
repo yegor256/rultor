@@ -32,6 +32,7 @@ package com.rultor.guard.github;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
+import com.jcabi.log.Logger;
 import com.rultor.guard.MergeRequest;
 import com.rultor.guard.MergeRequests;
 import com.rultor.snapshot.Step;
@@ -162,7 +163,16 @@ public final class GhRequests implements MergeRequests {
     private Collection<PullRequest> fetch() throws IOException {
         final GitHubClient client = this.github.client();
         final PullRequestService svc = new PullRequestService(client);
-        return svc.getPullRequests(this.repository, "open");
+        final Collection<PullRequest> requests =
+            svc.getPullRequests(this.repository, "open");
+        Logger.info(
+            this,
+            // @checkstyle LineLength (1 line)
+            "%d request(s) found in Github, requestLimit=%d, remainingRequests=%d",
+            requests.size(), client.getRequestLimit(),
+            client.getRemainingRequests()
+        );
+        return requests;
     }
 
     /**
