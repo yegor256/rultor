@@ -215,7 +215,11 @@ public final class BufferedRead implements Drain, Closeable {
     @ToString
     @Immutable
     @EqualsAndHashCode
-    @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.SECONDS)
+    @ScheduleWithFixedDelay(
+        delay = 1, unit = TimeUnit.SECONDS,
+        await = 1, awaitUnit = TimeUnit.MINUTES,
+        shutdownAttempts = 5
+    )
     private static final class Cleaner implements Runnable {
         @Override
         public void run() {

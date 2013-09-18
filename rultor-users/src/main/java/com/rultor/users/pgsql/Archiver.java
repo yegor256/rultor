@@ -54,7 +54,11 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "client")
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
-@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.HOURS)
+@ScheduleWithFixedDelay(
+    delay = 1, unit = TimeUnit.HOURS,
+    await = 1, awaitUnit = TimeUnit.MINUTES,
+    shutdownAttempts = 5
+)
 public final class Archiver implements Runnable, Closeable {
 
     /**

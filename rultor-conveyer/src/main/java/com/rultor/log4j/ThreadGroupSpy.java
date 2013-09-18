@@ -30,10 +30,10 @@
 package com.rultor.log4j;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Quietly;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
-import com.rultor.tools.Exceptions;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -160,16 +160,9 @@ public final class ThreadGroupSpy implements Instance {
      * Close the appender.
      * @param appender The appender to close
      */
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
+    @Quietly
     private void close(final Appender appender) {
-        try {
-            appender.close();
-        // @checkstyle IllegalCatch (1 line)
-        } catch (Throwable ex) {
-            com.jcabi.log.Logger.error(
-                this, "#close(): %s", Exceptions.message(ex)
-            );
-        }
+        appender.close();
     }
 
 }
