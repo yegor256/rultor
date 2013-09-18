@@ -296,7 +296,7 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:attribute>
-            <xsl:value-of select="message"/>
+            <span class="markdown"><xsl:value-of select="message"/></span>
             <xsl:if test="msec &gt; 0">
                 <xsl:text> (in </xsl:text>
                 <xsl:call-template name="millis">
