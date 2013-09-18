@@ -57,7 +57,7 @@ import lombok.ToString;
 @ScheduleWithFixedDelay(
     delay = 1, unit = TimeUnit.HOURS,
     await = 1, awaitUnit = TimeUnit.MINUTES,
-    shutdownAttempts = 5
+    shutdownAttempts = Tv.FIVE
 )
 public final class Archiver implements Runnable, Closeable {
 

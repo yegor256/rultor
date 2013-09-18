@@ -32,6 +32,7 @@ package com.rultor.drain;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
@@ -218,7 +219,7 @@ public final class BufferedRead implements Drain, Closeable {
     @ScheduleWithFixedDelay(
         delay = 1, unit = TimeUnit.SECONDS,
         await = 1, awaitUnit = TimeUnit.MINUTES,
-        shutdownAttempts = 5
+        shutdownAttempts = Tv.FIVE
     )
     private static final class Cleaner implements Runnable {
         @Override

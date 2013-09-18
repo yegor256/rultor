@@ -165,12 +165,12 @@ final class GroupAppender extends AppenderSkeleton
 
     /**
      * Flush them all to the drain.
-     * @param lines Lines to flush
+     * @param lns Lines to flush
      */
     @Quietly
-    public void flush(final Collection<String> lines) {
+    public void flush(final Collection<String> lns) {
         try {
-            this.drain.append(lines);
+            this.drain.append(lns);
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }

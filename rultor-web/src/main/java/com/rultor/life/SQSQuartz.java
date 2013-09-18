@@ -63,7 +63,7 @@ import lombok.EqualsAndHashCode;
 @ScheduleWithFixedDelay(
     delay = 1, unit = TimeUnit.SECONDS,
     await = 1, awaitUnit = TimeUnit.MINUTES,
-    shutdownAttempts = 5
+    shutdownAttempts = Tv.FIVE
 )
 @EqualsAndHashCode(of = { "users", "queue", "client" })
 @SuppressWarnings("PMD.DoNotUseThreads")
