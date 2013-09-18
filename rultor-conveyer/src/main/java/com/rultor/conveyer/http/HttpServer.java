@@ -110,7 +110,6 @@ public final class HttpServer implements Closeable {
                         thread.dispatch();
                     } catch (InterruptedException ex) {
                         Thread.currentThread().interrupt();
-                        throw new IllegalStateException(ex);
                     }
                 }
             },
@@ -137,7 +136,11 @@ public final class HttpServer implements Closeable {
                 new Runnable() {
                     @Override
                     public void run() {
-                        HttpServer.this.process();
+                        try {
+                            HttpServer.this.process();
+                        } catch (InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                        }
                     }
                 },
                 true, false
@@ -158,8 +161,9 @@ public final class HttpServer implements Closeable {
 
     /**
      * Process one socket.
+     * @throws InterruptedException When thread is interrupted.
      */
-    private void process() {
+    private void process() throws InterruptedException {
         Socket socket;
         try {
             socket = this.server.accept();
@@ -174,9 +178,6 @@ public final class HttpServer implements Closeable {
                 throw new IOException("too many sockets");
             }
         } catch (IOException ex) {
-            throw new IllegalStateException(ex);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
             throw new IllegalStateException(ex);
         }
     }
