@@ -193,8 +193,9 @@ public final class IRCServer implements IRCServerInterface {
     /**
      * Treats IRC events. The most of them are just printed.
      */
+    @Immutable
     @ToString
-    abstract class AbstractListener implements IRCEventListener {
+    abstract static class AbstractListener implements IRCEventListener {
 
         /**
          * Event - On Registered.
