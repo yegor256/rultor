@@ -42,6 +42,16 @@ import com.jcabi.aspects.Immutable;
 public interface Instance {
 
     /**
+     * Instance that does nothing.
+     */
+    Instance EMPTY = new Instance() {
+        @Override
+        public void pulse() throws Exception {
+            // nothing to do
+        }
+    };
+
+    /**
      * Pulse.
      * @throws Exception If something fails
      */

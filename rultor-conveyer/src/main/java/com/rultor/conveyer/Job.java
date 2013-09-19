@@ -133,12 +133,7 @@ final class Job {
     private Instance make(final User owner, final Rule rule,
         final Job.Decor decor) throws SpecException {
         final Variable<?> var = this.var(owner, rule.spec());
-        Instance instance = new Instance() {
-            @Override
-            public void pulse() throws Exception {
-                assert var != null;
-            }
-        };
+        Instance instance = Instance.EMPTY;
         if (var.arguments().isEmpty()) {
             final Arguments args = new Arguments(
                 this.work, new OwnWallet(this.work, rule)
@@ -146,7 +141,7 @@ final class Job {
             final Object inst = var.instantiate(this.users, args);
             final Object drain = this.var(owner, rule.drain())
                 .instantiate(this.users, args);
-            if (inst instanceof Instance) {
+            if (inst instanceof Instance && drain instanceof Drain) {
                 instance = new ThreadGroupSpy(
                     this.work,
                     new WithSpec(
