@@ -38,6 +38,15 @@
     <artifactId>rultor-users</artifactId>
     <packaging>jar</packaging>
     <name>rultor-users</name>
+    <repositories>
+        <repository>
+            <id>jcabi-dynamodb-maven-plugin</id>
+            <url>http://repo.jcabi.com/releases</url>
+        </repository>
+    </repositories>
+    <properties>
+        <dynamodblocal.tgz>${com.jcabi:DynamoDBLocal:tgz}</dynamodblocal.tgz>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -70,6 +79,13 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>DynamoDBLocal</artifactId>
+            <version>2013-09-12</version>
+            <type>tgz</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.1-901.jdbc4</version>
@@ -98,12 +114,12 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-dynamo</artifactId>
-            <version>0.8</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-dynamo</artifactId>
-            <version>0.8</version>
+            <version>1.0-SNAPSHOT</version>
             <scope>test</scope>
             <classifier>mock</classifier>
         </dependency>
@@ -152,9 +168,7 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
                         <systemPropertyVariables>
-                            <failsafe.dynamo.key>${failsafe.dynamo.key}</failsafe.dynamo.key>
-                            <failsafe.dynamo.secret>${failsafe.dynamo.secret}</failsafe.dynamo.secret>
-                            <failsafe.dynamo.prefix>${failsafe.dynamo.prefix}</failsafe.dynamo.prefix>
+                            <dynamodb.port>${dynamodblocal.port}</dynamodb.port>
                             <failsafe.mongo.host>${failsafe.mongo.host}</failsafe.mongo.host>
                             <failsafe.mongo.port>${failsafe.mongo.port}</failsafe.mongo.port>
                             <failsafe.mongo.name>${failsafe.mongo.name}</failsafe.mongo.name>
@@ -168,6 +182,50 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>reserve-network-port</goal>
+                        </goals>
+                        <configuration>
+                            <portNames>
+                                <portName>dynamodblocal.port</portName>
+                            </portNames>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.jcabi</groupId>
+                <artifactId>jcabi-dynamodb-maven-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <configuration>
+                    <port>${dynamodblocal.port}</port>
+                    <tgz>${dynamodblocal.tgz}</tgz>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>start</goal>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <!-- @see https://github.com/github/maven-plugins/issues/22 -->
                 <groupId>com.github.github</groupId>

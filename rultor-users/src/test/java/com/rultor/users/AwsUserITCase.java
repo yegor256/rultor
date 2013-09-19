@@ -58,9 +58,11 @@ import org.mockito.Mockito;
 public final class AwsUserITCase {
 
     /**
-     * AWS key.
+     * TCP port of DynamoDB Local.
      */
-    private static final String KEY = System.getProperty("failsafe.dynamo.key");
+    private static final int PORT = Integer.parseInt(
+        System.getProperty("dynamodb.port")
+    );
 
     /**
      * Region to work with.
@@ -78,23 +80,13 @@ public final class AwsUserITCase {
      */
     @Before
     public void prepare() throws Exception {
-        if (AwsUserITCase.KEY == null) {
-            return;
-        }
-        final String prefix = System.getProperty("failsafe.dynamo.prefix");
-        this.region = new Region.Prefixed(
-            new Region.Simple(
-                new Credentials.Simple(
-                    AwsUserITCase.KEY,
-                    System.getProperty("failsafe.dynamo.secret")
-                )
-            ),
-            prefix
+        this.region = new Region.Simple(
+            new Credentials.Direct(Credentials.TEST, AwsUserITCase.PORT)
         );
         this.table = new TableMocker(
             this.region,
             new CreateTableRequest()
-                .withTableName(String.format("%s%s", prefix, AwsRule.TABLE))
+                .withTableName(AwsRule.TABLE)
                 .withProvisionedThroughput(
                     new ProvisionedThroughput()
                         .withReadCapacityUnits(1L)
@@ -126,9 +118,7 @@ public final class AwsUserITCase {
      */
     @After
     public void drop() throws Exception {
-        if (AwsUserITCase.KEY != null) {
-            this.table.drop();
-        }
+        this.table.drop();
     }
 
     /**
@@ -137,9 +127,6 @@ public final class AwsUserITCase {
      */
     @Test
     public void worksWithRealDynamoDb() throws Exception {
-        if (AwsUserITCase.KEY == null) {
-            return;
-        }
         final URN urn = new URN("urn:github:66");
         final User user = new AwsUser(
             this.region, Mockito.mock(SQSClient.class), urn
