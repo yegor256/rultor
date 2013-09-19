@@ -53,7 +53,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "item")
+@EqualsAndHashCode(of = { "item", "client" })
 @Loggable(Loggable.DEBUG)
 final class AwsRule implements Rule {
 
@@ -179,6 +179,9 @@ final class AwsRule implements Rule {
         return spec;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void failure(final String desc) {
         this.item.put(
@@ -189,6 +192,9 @@ final class AwsRule implements Rule {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String failure() {
         String failure;

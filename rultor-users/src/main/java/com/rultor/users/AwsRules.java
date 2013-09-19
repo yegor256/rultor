@@ -62,7 +62,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "region", "owner" })
+@EqualsAndHashCode(of = { "region", "client", "owner" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
 final class AwsRules implements Rules {

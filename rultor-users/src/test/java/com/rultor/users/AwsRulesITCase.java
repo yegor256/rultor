@@ -148,7 +148,8 @@ public final class AwsRulesITCase {
                 new Predicate<Rule>() {
                     @Override
                     public boolean apply(final Rule rule) {
-                        return rule.name().equals(name);
+                        return rule.name().equals(name)
+                            && rule.failure().isEmpty();
                     }
                 }
             ),
