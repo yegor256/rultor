@@ -49,6 +49,26 @@ import org.mockito.Mockito;
 public final class SESTest {
 
     /**
+     * Constant message.
+     */
+    public static final String MESSAGE = "message";
+    /**
+     * Constant subject.
+     */
+    public static final String SUBJECT = "subject";
+    /**
+     * Constant data.
+     */
+    public static final String DATA = "data";
+    /**
+     * Constant body.
+     */
+    public static final String BODY = "body";
+    /**
+     * Constant text.
+     */
+    public static final String TEXT = "text";
+    /**
      * SES can send emails.
      * @throws Exception If some problem inside
      */
@@ -69,23 +89,70 @@ public final class SESTest {
         Mockito.verify(aws).sendEmail(
             Mockito.argThat(
                 Matchers.<SendEmailRequest>hasProperty(
-                    "message",
+                    SESTest.MESSAGE,
                     Matchers.allOf(
                         Matchers.<Message>hasProperty(
-                            "subject",
+                            SESTest.SUBJECT,
                             Matchers.<Content>hasProperty(
                                 // @checkstyle MultipleStringLiterals (1 line)
-                                "data",
+                                SESTest.DATA,
                                 Matchers.equalTo("hello, друг!")
                             )
                         ),
                         Matchers.<Message>hasProperty(
-                            "body",
+                            SESTest.BODY,
                             Matchers.<Body>hasProperty(
-                                "text",
+                                SESTest.TEXT,
                                 Matchers.<Content>hasProperty(
-                                    "data",
+                                    SESTest.DATA,
                                     Matchers.equalTo("first\nsecond")
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        );
+    }
+    /**
+     * SES can send emails.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void sendsEmailFromHTML() throws Exception {
+        final SESClient client = Mockito.mock(SESClient.class);
+        final String msg = "<html><head><title>t</title></head></html>";
+        final AmazonSimpleEmailService aws =
+            Mockito.mock(AmazonSimpleEmailService.class);
+        Mockito.doReturn(aws).when(client).get();
+        Mockito.doReturn(new SendEmailResult()).when(aws)
+            .sendEmail(Mockito.any(SendEmailRequest.class));
+        final Billboard board = new SES(
+            "senderhtml@rultor.com",
+            Arrays.asList("recepienthtml@rultor.com"),
+            client
+        );
+        board.announce(msg);
+        Mockito.verify(aws).sendEmail(
+            Mockito.argThat(
+                Matchers.<SendEmailRequest>hasProperty(
+                    SESTest.MESSAGE,
+                    Matchers.allOf(
+                        Matchers.<Message>hasProperty(
+                            SESTest.SUBJECT,
+                            Matchers.<Content>hasProperty(
+                                // @checkstyle MultipleStringLiterals (1 line)
+                                SESTest.DATA,
+                                Matchers.equalTo("t")
+                            )
+                        ),
+                        Matchers.<Message>hasProperty(
+                            SESTest.BODY,
+                            Matchers.<Body>hasProperty(
+                                "html",
+                                Matchers.<Content>hasProperty(
+                                    SESTest.DATA,
+                                    Matchers.equalTo(msg)
                                 )
                             )
                         )

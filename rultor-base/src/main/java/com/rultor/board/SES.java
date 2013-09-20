@@ -127,6 +127,7 @@ public final class SES implements Billboard {
         @NotNull(message = "body can't  be NULL") final String body) {
         final AmazonSimpleEmailService aws = this.client.get();
         String[] parts = new String[2];
+        Message message = null;
         if (body.startsWith("<html>") && body.endsWith("</html>")) {
             try {
                 final InputSource source =
@@ -137,21 +138,25 @@ public final class SES implements Billboard {
                 final Document document = dbuilder.parse(source);
                 final XPathFactory xpathFactory = XPathFactory.newInstance();
                 final XPath xpath = xpathFactory.newXPath();
-                final String msg = xpath.evaluate("/html/head/title", document);
-                parts[0] = msg;
-                parts[1] = body;
+                final String title = xpath
+                    .evaluate("/html/head/title", document);
+                message = new Message()
+                    .withSubject(new Content().withData(title))
+                        .withBody(
+                            new Body().withHtml(new Content().withData(body))
+                    );
             } catch (Exception ex) {
                 throw new RuntimeException(ex.getMessage());
             }
         } else {
             parts = body.split("\n", 2);
-        }
-        try {
-            final Message message = new Message()
+            message = new Message()
                 .withSubject(new Content().withData(parts[0]))
                 .withBody(
-                    new Body().withText(new Content().withData(parts[1]))
+                new Body().withText(new Content().withData(parts[1]))
                 );
+        }
+        try {
             final SendEmailResult result = aws.sendEmail(
                 new SendEmailRequest()
                     .withSource(this.sender)
