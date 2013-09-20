@@ -38,7 +38,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.jdbc.JdbcSession;
-import com.jcabi.jdbc.VoidHandler;
 import com.rultor.aws.SQSClient;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.NormJson;
@@ -138,7 +137,7 @@ final class SQSReceipts {
             .set(json.getString("dtrule"))
             .set(json.getJsonNumber("amount").longValue())
             .set(json.getString("details"))
-            .insert(new VoidHandler());
+            .execute();
     }
 
 }
