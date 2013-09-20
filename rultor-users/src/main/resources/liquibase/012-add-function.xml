@@ -97,7 +97,7 @@
             DO language plpgsql $$
             BEGIN
                 TRUNCATE receipt CASCADE;
-                PERFORM add('urn:test:1', 'urn:test:2', 123, '#336 test')
+                PERFORM add('urn:test:1', 'urn:test:2', 123, '#336 test');
                 PERFORM * FROM receipt WHERE dtbalance = 123 AND dt = 'urn:test:2';
                 IF NOT FOUND THEN
                     RAISE EXCEPTION 'Row was not inserted';
