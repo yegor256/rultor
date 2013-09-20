@@ -47,7 +47,7 @@ import com.rexsl.page.auth.Identity;
  * Test case for {@link AuthKeys}.
  * 
  * @author Shailendra Soni
- * @version $Id$
+ * @version $Id$ 
  */
 
 public class AuthKeysTest {
