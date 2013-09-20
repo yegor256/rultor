@@ -78,6 +78,11 @@ public final class ItemLineup implements Lineup {
     private static final Random RAND = new SecureRandom();
 
     /**
+     * Max waiting time in milliseconds.
+     */
+    private static final long MAX = TimeUnit.MINUTES.toMillis(Tv.FIVE);
+
+    /**
      * Wallet to charge.
      */
     private final transient Wallet wallet;
@@ -119,20 +124,22 @@ public final class ItemLineup implements Lineup {
         final long start = System.currentTimeMillis();
         try {
             while (true) {
-                final String marker = String.format(
-                    "%s %d %s", new Time(), System.nanoTime(),
-                    callable.toString()
-                );
+                final Marker marker = new Marker(callable);
                 if (!this.exists()) {
                     this.save(marker);
                 }
-                if (this.load().equals(marker)) {
+                final Marker saved = this.load();
+                if (saved.equals(marker)) {
                     break;
+                }
+                if (saved.age() > ItemLineup.MAX) {
+                    this.remove();
+                    continue;
                 }
                 Logger.info(
                     this,
-                    "SimpleDB item `%s/%s` is locked for %[ms]s already...",
-                    this.client.domain(), this.name,
+                    "SDB item `%s/%s` is locked by %s for %[ms]s already...",
+                    this.client.domain(), this.name, saved,
                     System.currentTimeMillis() - start
                 );
                 TimeUnit.MILLISECONDS.sleep(
@@ -173,6 +180,53 @@ public final class ItemLineup implements Lineup {
     }
 
     /**
+     * Marker used in items.
+     */
+    @Immutable
+    @EqualsAndHashCode(of = "text")
+    private static final class Marker {
+        /**
+         * Text of it.
+         */
+        private final transient String text;
+        /**
+         * Ctor.
+         * @param txt Text of the marker
+         */
+        protected Marker(final String txt) {
+            this.text = txt;
+        }
+        /**
+         * Ctor.
+         * @param callable Callable we're based on
+         */
+        protected Marker(final Callable<?> callable) {
+            this(
+                String.format(
+                    "%s %d %s", new Time(), System.nanoTime(), callable
+                )
+            );
+        }
+        @Override
+        public String toString() {
+            return this.text;
+        }
+        /**
+         * Get its age in milliseconds.
+         * @return Milliseconds
+         */
+        public long age() {
+            final Time time;
+            if (this.text.isEmpty()) {
+                time = new Time();
+            } else {
+                time = new Time(this.text.substring(0, this.text.indexOf(' ')));
+            }
+            return time.delta(new Time());
+        }
+    }
+
+    /**
      * Item exists in SimpleDB.
      * @return TRUE if it exists
      */
@@ -199,10 +253,10 @@ public final class ItemLineup implements Lineup {
 
     /**
      * Save text to SimpleDB object.
-     * @param content Content to save
+     * @param marker Content to save
      */
     @RetryOnFailure(verbose = false)
-    private void save(final String content) {
+    private void save(final Marker marker) {
         final long start = System.currentTimeMillis();
         this.client.get().putAttributes(
             new PutAttributesRequest()
@@ -211,7 +265,7 @@ public final class ItemLineup implements Lineup {
                 .withAttributes(
                     new ReplaceableAttribute()
                         .withName(ItemLineup.IDENTIFIER)
-                        .withValue(content)
+                        .withValue(marker.toString())
                         .withReplace(true),
                     new ReplaceableAttribute()
                         .withName("time")
@@ -234,7 +288,7 @@ public final class ItemLineup implements Lineup {
      * @return The content loaded
      */
     @RetryOnFailure(verbose = false)
-    private String load() {
+    private Marker load() {
         final long start = System.currentTimeMillis();
         final GetAttributesResult result = this.client.get().getAttributes(
             new GetAttributesRequest()
@@ -257,7 +311,7 @@ public final class ItemLineup implements Lineup {
         } else {
             text = result.getAttributes().get(0).getValue();
         }
-        return text;
+        return new Marker(text);
     }
 
     /**
