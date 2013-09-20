@@ -147,7 +147,10 @@ public final class PgAccountITCase {
             new PgClient.Simple(PgAccountITCase.URL, PgAccountITCase.PASSWORD),
             URN.create("urn:test:1")
         );
-        account.fund(new Dollars(-account.balance().points()), "zeroing it");
+        final long now = account.balance().points();
+        if (now != 0) {
+            account.fund(new Dollars(-now), "zeroing it");
+        }
         MatcherAssert.assertThat(
             account.balance().points(),
             Matchers.equalTo(0L)

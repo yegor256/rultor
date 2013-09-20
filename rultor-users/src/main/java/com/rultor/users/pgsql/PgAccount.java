@@ -113,14 +113,11 @@ final class PgAccount implements Account {
     public void fund(final Dollars amount, final String details) {
         try {
             new JdbcSession(this.client.get())
-                // @checkstyle LineLength (1 line)
-                .sql("INSERT INTO receipt (ct, ctrule, dt, dtrule, details, amount) VALUES (?, ?, ?, ?, ?, ?)")
+                .sql("SELECT add(?, ?, ?, ?)")
                 .set(Account.BANK)
-                .set("")
                 .set(this.owner)
-                .set("")
-                .set(details)
                 .set(amount.points())
+                .set(details)
                 .execute();
         } catch (SQLException ex) {
             throw new IllegalStateException(ex);
