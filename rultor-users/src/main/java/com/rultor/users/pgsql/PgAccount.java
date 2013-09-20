@@ -88,9 +88,7 @@ final class PgAccount implements Account {
         try {
             return new Dollars(
                 new JdbcSession(this.client.get())
-                    // @checkstyle LineLength (1 line)
-                    .sql("SELECT SUM(sum) FROM (SELECT SUM(amount) AS sum FROM receipt WHERE dt=? UNION SELECT -SUM(amount) FROM receipt WHERE ct=?) AS sub")
-                    .set(this.owner)
+                    .sql("SELECT balance(?)")
                     .set(this.owner)
                     .select(new SingleHandler<Long>(Long.class))
             );
