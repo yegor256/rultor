@@ -29,7 +29,6 @@
  */
 package com.rultor.base;
 
-import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseThreads;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Instance;
@@ -133,7 +132,7 @@ public final class ParallelTest {
         start.countDown();
         svc.shutdown();
         MatcherAssert.assertThat(
-            svc.awaitTermination(Tv.FIVE, TimeUnit.SECONDS),
+            svc.awaitTermination(1, TimeUnit.MINUTES),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(done.getCount(), Matchers.equalTo(0L));
