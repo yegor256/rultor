@@ -123,15 +123,20 @@ public final class ItemLineup implements Lineup {
                     "%s %d %s", new Time(), System.nanoTime(),
                     callable.toString()
                 );
-                final String saved = this.saveAndLoad(marker);
-                if (saved.equals(marker)) {
+                if (!this.exists()) {
+                    this.save(marker);
+                }
+                if (this.load().equals(marker)) {
                     break;
                 }
                 Logger.info(
                     this,
-                    "SimpleDB `%s/%s` is locked by `%s` for %[ms]s already...",
+                    "SimpleDB item `%s/%s` is locked for %[ms]s already...",
                     this.client.domain(), this.name,
-                    saved, System.currentTimeMillis() - start
+                    System.currentTimeMillis() - start
+                );
+                TimeUnit.MILLISECONDS.sleep(
+                    ItemLineup.RAND.nextInt(Tv.THOUSAND)
                 );
             }
             return callable.call();
@@ -165,26 +170,6 @@ public final class ItemLineup implements Lineup {
         } catch (Exception ex) {
             throw new IllegalArgumentException(ex);
         }
-    }
-
-    /**
-     * Save this marker when possible and load it back.
-     * @param marker Marker to save
-     * @return What we have in the notepad after saving
-     */
-    private String saveAndLoad(final String marker) {
-        while (this.exists()) {
-            final long msec = ItemLineup.RAND.nextInt(Tv.THOUSAND);
-            Logger.info(this, "sleeping for %[ms]s...", msec);
-            try {
-                TimeUnit.MILLISECONDS.sleep(msec);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                throw new IllegalStateException(ex);
-            }
-        }
-        this.save(marker);
-        return this.load();
     }
 
     /**
