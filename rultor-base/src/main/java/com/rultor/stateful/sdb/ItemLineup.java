@@ -117,22 +117,23 @@ public final class ItemLineup implements Lineup {
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public <T> T exec(final Callable<T> callable) throws Exception {
         final long start = System.currentTimeMillis();
-        while (true) {
-            final String marker = String.format(
-                "%s %d %s", new Time(), System.nanoTime(), callable.toString()
-            );
-            final String saved = this.saveAndLoad(marker);
-            if (saved.equals(marker)) {
-                break;
-            }
-            Logger.info(
-                this,
-                "SimpleDB item `%s/%s` is locked by `%s` for %[ms]s already...",
-                this.client.domain(), this.name,
-                saved, System.currentTimeMillis() - start
-            );
-        }
         try {
+            while (true) {
+                final String marker = String.format(
+                    "%s %d %s", new Time(), System.nanoTime(),
+                    callable.toString()
+                );
+                final String saved = this.saveAndLoad(marker);
+                if (saved.equals(marker)) {
+                    break;
+                }
+                Logger.info(
+                    this,
+                    "SimpleDB `%s/%s` is locked by `%s` for %[ms]s already...",
+                    this.client.domain(), this.name,
+                    saved, System.currentTimeMillis() - start
+                );
+            }
             return callable.call();
         } finally {
             this.remove();
