@@ -124,7 +124,7 @@ public final class SES implements Billboard {
     @Override
     @Step("email sent to ${this.recipients}")
     public void announce(
-        @NotNull(message = "body can't be NULL") final String body) {
+        @NotNull(message = "body can't  be NULL") final String body) {
         final AmazonSimpleEmailService aws = this.client.get();
         String[] parts = new String[2];
         if (body.startsWith("<html>") && body.endsWith("</html>")) {
