@@ -50,6 +50,9 @@
                 IF amount = 0 THEN
                     RAISE EXCEPTION 'amount cannot be zero';
                 END IF;
+                IF details = '' THEN
+                    RAISE EXCEPTION 'details cannot be empty';
+                END IF;
                 IF ct NOT SIMILAR TO urn_regex THEN
                     RAISE EXCEPTION 'CT is not a valid URN: %', ct;
                 END IF;
@@ -59,6 +62,7 @@
                 IF wowner != '' AND wowner NOT SIMILAR TO urn_regex THEN
                     RAISE EXCEPTION 'WOWNER is not a valid URN: %', wowner;
                 END IF;
+                LOCK TABLE receipt IN SHARE ROW EXCLUSIVE MODE;
                 INSERT INTO receipt (time, wowner, wrule, wscheduled, ct, ctrule, dt, dtrule, details, amount)
                     VALUES (NOW(), wowner, wrule, wscheduled, ct, ctrule, dt, dtrule, details, amount);
                 RETURN;
