@@ -55,7 +55,7 @@ import lombok.ToString;
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
 @ScheduleWithFixedDelay(
-    delay = 1, unit = TimeUnit.HOURS,
+    delay = Tv.THREE, unit = TimeUnit.HOURS,
     await = 1, awaitUnit = TimeUnit.MINUTES,
     shutdownAttempts = Tv.FIVE
 )
@@ -85,7 +85,7 @@ public final class Archiver implements Runnable, Closeable {
                 .sql("SELECT archive()")
                 .select(new VoidHandler());
             new JdbcSession(this.client.get())
-                .sql("ANALYZE receipt")
+                .sql("VACUUM")
                 .execute();
         } catch (SQLException ex) {
             throw new IllegalStateException(ex);
