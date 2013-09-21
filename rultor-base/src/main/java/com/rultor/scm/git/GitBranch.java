@@ -40,6 +40,7 @@ import com.rultor.shell.Terminal;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -94,30 +95,44 @@ public final class GitBranch implements Branch {
     @RetryOnFailure(verbose = false)
     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<Commit> log() throws IOException {
-        final String stdout = this.terminal.exec(
-            new StringBuilder()
-                .append("DIR=`pwd`/")
-                .append(Terminal.quotate(Terminal.escape(this.dir)))
-                .append(" && cd \"$DIR/repo\"")
-                .append(" && GIT_SSH=\"$DIR/git-ssh.sh\"")
-                // @checkstyle LineLength (1 line)
-                .append(" && git log --pretty=format:'%H %ae %cd %s' --date=iso8601")
-                .toString()
-        );
-        Logger.info(this, "Git log in branch `%s` retrieved", this.label);
-        final Iterable<String> lines = Arrays.asList(stdout.split("\n"));
+        final String backslash = "\n";
+        // @checkstyle AnonInnerLengthCheck (44 lines)
         return new Iterable<Commit>() {
             @Override
             public Iterator<Commit> iterator() {
-                final Iterator<String> iterator = lines.iterator();
+                // @checkstyle AnonInnerLengthCheck (40 lines)
                 return new Iterator<Commit>() {
+                    private String hash;
+                    // @checkstyle LineLength (1 line)
+                    private List<String> lines = Arrays.asList(GitBranch.this.invokeGit("").split(backslash));
+                    private Iterator<String> itr = lines.iterator();
                     @Override
                     public boolean hasNext() {
-                        return iterator.hasNext();
+                        boolean has = false;
+                        if (itr.hasNext()) {
+                            has = true;
+                        } else {
+                            try {
+                                // @checkstyle LineLength (1 line)
+                                hash = GitCommit.parse(lines.get(lines.size() - 1)).name();
+                                // @checkstyle LineLength (1 line)
+                                lines = Arrays.asList(GitBranch.this.invokeGit("").split(backslash));
+                                if (lines.size() == 0 || lines.size() == 1) {
+                                    has = false;
+                                } else {
+                                    itr = lines.iterator();
+                                    itr.next();
+                                    has = itr.hasNext();
+                                }
+                            } catch (IOException ioe) {
+                                throw new IllegalStateException(ioe);
+                            }
+                        }
+                        return has;
                     }
                     @Override
                     public Commit next() {
-                        return GitCommit.parse(iterator.next());
+                        return GitCommit.parse(itr.next());
                     }
                     @Override
                     public void remove() {
@@ -136,4 +151,29 @@ public final class GitBranch implements Branch {
         return this.label;
     }
 
+    /**
+     * Git command fetch next 10 commit log.
+     * @param hash Commit hash.
+     * @return String
+     */
+    private String invokeGit(final String hash) {
+        String stdout;
+        try {
+            stdout = this.terminal.exec(
+                new StringBuilder()
+                    .append("DIR=`pwd`/")
+                    .append(Terminal.quotate(Terminal.escape(this.dir)))
+                    .append(" && cd \"$DIR/repo\"")
+                    .append(" && GIT_SSH=\"$DIR/git-ssh.sh\"")
+                    // @checkstyle LineLength (1 line)
+                    .append(" && git log --pretty=format:'%H %ae %cd %s' --date=iso8601 -11 ")
+                    .append(hash)
+                    .toString()
+            );
+        } catch (IOException ioe) {
+            throw new IllegalStateException(ioe);
+        }
+        Logger.info(this, "Git log in branch `%s` retrieved", this.label);
+        return stdout;
+    }
 }

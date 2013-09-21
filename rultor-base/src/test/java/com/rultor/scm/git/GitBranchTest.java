@@ -71,25 +71,6 @@ public final class GitBranchTest {
     public void limitsCommitHistory() throws Exception {
         final Shell shl = Mockito.mock(Shell.class);
         final Terminal terminal = new Terminal(shl);
-        Mockito.doAnswer(this.answer()).doAnswer(this.answer()).doReturn(1)
-        // @checkstyle LineLength (1 line)
-        .when(shl).exec(Mockito.anyString(), Mockito.any(InputStream.class), Mockito.any(OutputStream.class), Mockito.any(OutputStream.class));
-        final Iterable<Commit> itr =  new GitBranch(
-            terminal,
-            Files.createTempDir().getAbsolutePath(),
-            "test"
-        ).log();
-        MatcherAssert.assertThat(
-            itr,
-            Matchers.<Commit>iterableWithSize(Tv.TWENTY)
-        );
-    }
-
-    /**
-     * Creates new answer object.
-     * @return Answer
-     */
-    private Answer<Void> answer() {
         final StringBuilder log = new StringBuilder();
         // @checkstyle LineLength (1 line)
         log.append("97d27074cc60ce0e470aa7dfbf78ffc8c53047b4 tarahbb@maunh.com 2013-09-12 23:12:11 +0200 typo in XSL\n")
@@ -111,8 +92,29 @@ public final class GitBranchTest {
             .append("dc5725c7c3cd5323704db3745a04305fdeeca9d6 tarahbb@maunh.com 2013-09-12 13:01:22 -0700 Merge pull request\n")
             // @checkstyle LineLength (1 line)
             .append("34aecdb81397189c3869031aac4f3ca501d4b800 tarahbb@maunh.com 2013-09-13 03:00:59 +0700 Indentation improved");
+        // @checkstyle LineLength (1 line)
+        Mockito.doAnswer(this.answer(log.toString())).doAnswer(this.answer(""))
+        // @checkstyle LineLength (1 line)
+        .when(shl).exec(Mockito.anyString(), Mockito.any(InputStream.class), Mockito.any(OutputStream.class), Mockito.any(OutputStream.class));
+        final Iterable<Commit> itr =  new GitBranch(
+            terminal,
+            Files.createTempDir().getAbsolutePath(),
+            "test"
+        ).log();
+        MatcherAssert.assertThat(
+            itr,
+            Matchers.<Commit>iterableWithSize(Tv.TEN)
+        );
+    }
+
+    /**
+     * Creates new answer object.
+     * @param log Log.
+     * @return Answer
+     */
+    private Answer<Void> answer(final String log) {
         final InputStream reader = new ByteArrayInputStream(
-            log.toString().getBytes()
+            log.getBytes()
         );
         return new Answer<Void>() {
             // @checkstyle LineLength (1 line)
