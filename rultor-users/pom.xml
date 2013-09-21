@@ -163,6 +163,9 @@
                     <configuration>
                         <pgsqlHome>${project.build.directory}/pgsql</pgsqlHome>
                         <dataDir>${project.build.directory}/data</dataDir>
+                        <databaseName>${failsafe.pgsql.db}</databaseName>
+                        <username>${failsafe.pgsql.username}</username>
+                        <passwordFile>${project.build.directory}/test-classes/password.txt</passwordFile>
                     </configuration>
                     <executions>
                         <execution>
@@ -170,29 +173,9 @@
                             <phase>pre-integration-test</phase>
                             <goals>
                                 <goal>initdb</goal>
-                            </goals>
-                            <configuration>
-                                <username>${failsafe.pgsql.username}</username>
-                                <passwordFile>${project.build.directory}/test-classes/password.txt</passwordFile>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>start-postgresql</id>
-                            <phase>pre-integration-test</phase>
-                            <goals>
                                 <goal>start</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>create-db</id>
-                            <phase>pre-integration-test</phase>
-                            <goals>
                                 <goal>createdb</goal>
                             </goals>
-                            <configuration>
-                                <username>${failsafe.pgsql.username}</username>
-                                <databaseName>${failsafe.pgsql.db}</databaseName>
-                            </configuration>
                         </execution>
                         <execution>
                             <id>stop-postgresql</id>
@@ -231,6 +214,28 @@
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-maven-plugin</artifactId>
+                    <version>2.0.1</version>
+                    <configuration>
+                        <changeLogFile>src/main/resources/liquibase-master.xml</changeLogFile>
+                        <driver>org.postgresql.Driver</driver>
+                        <url>${failsafe.pgsql.jdbc}</url>
+                        <username>${failsafe.pgsql.username}</username>
+                        <password>${failsafe.pgsql.password}</password>
+                        <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+                        <contexts>any</contexts>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>update</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -261,6 +266,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--
             <plugin>
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-dynamodb-maven-plugin</artifactId>
@@ -278,6 +284,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
             <plugin>
                 <!-- @see https://github.com/github/maven-plugins/issues/22 -->
                 <groupId>com.github.github</groupId>
@@ -461,24 +468,6 @@
                     <plugin>
                         <groupId>org.liquibase</groupId>
                         <artifactId>liquibase-maven-plugin</artifactId>
-                        <version>2.0.1</version>
-                        <configuration>
-                            <changeLogFile>src/main/resources/liquibase-master.xml</changeLogFile>
-                            <driver>org.postgresql.Driver</driver>
-                            <url>${failsafe.pgsql.jdbc}</url>
-                            <username>${failsafe.pgsql.username}</username>
-                            <password>${failsafe.pgsql.password}</password>
-                            <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-                            <contexts>any</contexts>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>update</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -525,24 +514,6 @@
                     <plugin>
                         <groupId>org.liquibase</groupId>
                         <artifactId>liquibase-maven-plugin</artifactId>
-                        <version>2.0.1</version>
-                        <configuration>
-                            <changeLogFile>src/main/resources/liquibase-master.xml</changeLogFile>
-                            <driver>org.postgresql.Driver</driver>
-                            <url>${failsafe.pgsql.jdbc}</url>
-                            <username>${failsafe.pgsql.username}</username>
-                            <password>${failsafe.pgsql.password}</password>
-                            <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-                            <contexts>any</contexts>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>update</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
                 </plugins>
             </build>
