@@ -29,6 +29,7 @@
  */
 package com.rultor.cd.jira;
 
+import java.util.Date;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -48,6 +49,12 @@ public final class RxJiraITCase {
         System.getProperty("failsafe.jira.url");
 
     /**
+     * JIRA test issue.
+     */
+    private static final String ISSUE =
+        System.getProperty("failsafe.jira.issue");
+
+    /**
      * RxJira can retrieve issues.
      * @throws Exception If some problem inside
      */
@@ -55,12 +62,47 @@ public final class RxJiraITCase {
     public void fetchesIssuesFromJira() throws Exception {
         Assume.assumeNotNull(RxJiraITCase.URL);
         final Jira jira = new RxJira(RxJiraITCase.URL);
-        MatcherAssert.assertThat(
-            jira.search("assignee=currentUser()"),
-            Matchers.<JiraIssue>iterableWithSize(
-                Matchers.not(Matchers.equalTo(0))
-            )
+        final Iterable<JiraIssue> issues = jira.search(
+            String.format("key = %s", RxJiraITCase.ISSUE)
         );
+        MatcherAssert.assertThat(
+            issues,
+            Matchers.<JiraIssue>iterableWithSize(1)
+        );
+        for (JiraIssue issue : issues) {
+            MatcherAssert.assertThat(
+                issue.key(),
+                Matchers.equalTo(RxJiraITCase.ISSUE)
+            );
+            MatcherAssert.assertThat(
+                issue.comments(),
+                Matchers.not(Matchers.emptyIterable())
+            );
+            for (JiraComment comment : issue.comments()) {
+                MatcherAssert.assertThat(
+                    comment.body(),
+                    Matchers.notNullValue()
+                );
+                MatcherAssert.assertThat(
+                    comment.author(),
+                    Matchers.notNullValue()
+                );
+            }
+        }
+    }
+
+    /**
+     * RxJira can post a comment.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void postsCommentToJiraIssue() throws Exception {
+        Assume.assumeNotNull(RxJiraITCase.URL);
+        final Jira jira = new RxJira(RxJiraITCase.URL);
+        final JiraIssue issue = jira.search(
+            String.format("key = %s", RxJiraITCase.ISSUE)
+        ).iterator().next();
+        issue.post(String.format("test message, ignore it, %s", new Date()));
     }
 
 }

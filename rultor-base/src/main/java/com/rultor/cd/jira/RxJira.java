@@ -83,7 +83,7 @@ final class RxJira implements Jira {
             .queryParam("expand", "")
             .build(jql);
         final JsonArray json = RestTester.start(uri)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
             .get("fetch list of issues from JIRA")
             .assertStatus(HttpURLConnection.HTTP_OK)
             .getJson()
@@ -93,7 +93,9 @@ final class RxJira implements Jira {
         for (JsonValue obj : json) {
             lst.add(
                 new RxJiraIssue(
-                    JsonObject.class.cast(obj).getString("self")
+                    UriBuilder.fromUri(
+                        JsonObject.class.cast(obj).getString("self")
+                    ).userInfo(uri.getUserInfo()).build()
                 )
             );
         }

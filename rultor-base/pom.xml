@@ -140,6 +140,7 @@
                     <configuration>
                         <systemPropertyVariables>
                             <failsafe.jira.url>${failsafe.jira.url}</failsafe.jira.url>
+                            <failsafe.jira.issue>${failsafe.jira.issue}</failsafe.jira.issue>
                             <failsafe.s3.key>${failsafe.s3.key}</failsafe.s3.key>
                             <failsafe.s3.secret>${failsafe.s3.secret}</failsafe.s3.secret>
                             <failsafe.s3.bucket>${failsafe.s3.bucket}</failsafe.s3.bucket>

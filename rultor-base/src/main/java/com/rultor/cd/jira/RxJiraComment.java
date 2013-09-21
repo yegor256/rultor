@@ -32,23 +32,15 @@ package com.rultor.cd.jira;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
-import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonValue;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.http.HttpHeaders;
 
 /**
- * Jira issue with ReXSL.
+ * Jira comment with ReXSL.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -58,7 +50,7 @@ import org.apache.http.HttpHeaders;
 @ToString
 @EqualsAndHashCode(of = "url")
 @Loggable(Loggable.DEBUG)
-final class RxJiraIssue implements JiraIssue {
+final class RxJiraComment implements JiraComment {
 
     /**
      * URL of the server.
@@ -69,7 +61,7 @@ final class RxJiraIssue implements JiraIssue {
      * Public ctor.
      * @param srv Server URL
      */
-    protected RxJiraIssue(final URI srv) {
+    protected RxJiraComment(final URI srv) {
         this.url = srv.toString();
     }
 
@@ -77,75 +69,29 @@ final class RxJiraIssue implements JiraIssue {
      * {@inheritDoc}
      */
     @Override
-    public String key() {
-        final URI uri = UriBuilder.fromUri(this.url)
-            .queryParam("fields", "")
-            .queryParam("expand", "")
-            .build();
-        return RestTester.start(uri)
+    public String body() {
+        return RestTester.start(URI.create(this.url))
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .get("fetching issue key")
+            .get("fetching body of the comment")
             .assertStatus(HttpURLConnection.HTTP_OK)
             .getJson()
             .readObject()
-            .getString("key");
+            .getString("body");
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void assign(final String name) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterable<JiraComment> comments() {
-        final URI uri = UriBuilder.fromUri(this.url)
-            .path("/comment")
-            .build();
-        final JsonArray json = RestTester.start(uri)
+    public String author() {
+        return RestTester.start(URI.create(this.url))
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .get("fetch list of comments of an issue")
+            .get("fetching author name of the comment")
             .assertStatus(HttpURLConnection.HTTP_OK)
             .getJson()
             .readObject()
-            .getJsonArray("comments");
-        final Collection<JiraComment> lst =
-            new ArrayList<JiraComment>(json.size());
-        for (JsonValue obj : json) {
-            lst.add(
-                new RxJiraComment(
-                    UriBuilder.fromUri(
-                        JsonObject.class.cast(obj).getString("self")
-                    ).userInfo(uri.getUserInfo()).build()
-                )
-            );
-        }
-        return lst;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void post(final String body) {
-        final URI uri = UriBuilder.fromUri(this.url)
-            .path("/comment")
-            .build();
-        final StringWriter json = new StringWriter();
-        Json.createGenerator(json)
-            .writeStartObject()
-            .write("body", body)
-            .writeEnd()
-            .close();
-        RestTester.start(uri)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-            .post("posting comment", json.toString())
-            .assertStatus(HttpURLConnection.HTTP_CREATED);
+            .getJsonObject("author")
+            .getString("name");
     }
 
 }
