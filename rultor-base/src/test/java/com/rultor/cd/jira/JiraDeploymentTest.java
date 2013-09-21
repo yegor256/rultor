@@ -29,70 +29,31 @@
  */
 package com.rultor.cd.jira;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.rexsl.test.RestTester;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import javax.ws.rs.core.MediaType;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.apache.http.HttpHeaders;
+import com.rultor.cd.Deployment;
+import com.rultor.snapshot.Snapshot;
+import java.util.Arrays;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Jira comment with ReXSL.
- *
+ * Test case for {@link JiraDeployment}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
- * @see <a href="https://docs.atlassian.com/jira/REST/latest/">JIRA REST API</a>
  */
-@Immutable
-@ToString
-@EqualsAndHashCode(of = "url")
-@Loggable(Loggable.DEBUG)
-final class RxJiraComment implements JiraComment {
+public final class JiraDeploymentTest {
 
     /**
-     * URL of the server.
+     * JiraDeployment can report success.
+     * @throws Exception If some problem inside
      */
-    private final transient String url;
-
-    /**
-     * Public ctor.
-     * @param srv Server URL
-     */
-    protected RxJiraComment(final URI srv) {
-        this.url = srv.toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String body() {
-        return RestTester.start(URI.create(this.url))
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .get("fetching body of the comment")
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .getJson()
-            .readObject()
-            .getString("body");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String author() {
-        return RestTester.start(URI.create(this.url))
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .get("fetching author name of the comment")
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .getJson()
-            .readObject()
-            .getJsonObject("author")
-            .getString("name");
+    @Test
+    public void reportsSuccessToJira() throws Exception {
+        final JiraComment comment = Mockito.mock(JiraComment.class);
+        Mockito.doReturn("jeff.lebowski").when(comment).author();
+        final JiraIssue issue = Mockito.mock(JiraIssue.class);
+        Mockito.doReturn(Arrays.asList(comment)).when(issue).comments();
+        final Deployment dep = new JiraDeployment(issue);
+        dep.succeeded(new Snapshot("ADD 'test';"));
     }
 
 }

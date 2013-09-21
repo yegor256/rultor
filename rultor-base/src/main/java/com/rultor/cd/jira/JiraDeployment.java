@@ -34,9 +34,13 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.cd.Deployment;
 import com.rultor.snapshot.Snapshot;
+import com.rultor.snapshot.XSLT;
+import com.rultor.tools.Exceptions;
 import java.util.Map;
+import javax.xml.transform.TransformerException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.xembly.ImpossibleModificationException;
 
 /**
  * Deployment request from JIRA.
@@ -87,7 +91,8 @@ final class JiraDeployment implements Deployment {
      */
     @Override
     public void succeeded(final Snapshot snapshot) {
-        this.issue.post("succeeded");
+        this.issue.assign(this.issue.comments().iterator().next().author());
+        this.issue.post(this.summary(snapshot));
     }
 
     /**
@@ -95,7 +100,28 @@ final class JiraDeployment implements Deployment {
      */
     @Override
     public void failed(final Snapshot snapshot) {
-        this.issue.post("failed");
+        this.issue.assign(this.issue.comments().iterator().next().author());
+        this.issue.post(this.summary(snapshot));
+    }
+
+    /**
+     * Make summary out of snapshot.
+     * @param snapshot Snapshot XML
+     * @return Summary
+     */
+    private String summary(final Snapshot snapshot) {
+        String summary;
+        try {
+            summary = new XSLT(
+                snapshot,
+                this.getClass().getResourceAsStream("deploy-summary.xsl")
+            ).xml();
+        } catch (TransformerException ex) {
+            summary = Exceptions.stacktrace(ex);
+        } catch (ImpossibleModificationException ex) {
+            summary = Exceptions.stacktrace(ex);
+        }
+        return summary;
     }
 
 }

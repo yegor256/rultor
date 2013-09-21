@@ -51,6 +51,7 @@ import org.apache.http.HttpHeaders;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @see <a href="https://docs.atlassian.com/jira/REST/latest/">JIRA REST API</a>
  */
 @Immutable
 @ToString

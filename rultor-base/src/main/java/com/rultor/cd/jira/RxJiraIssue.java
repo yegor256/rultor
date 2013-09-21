@@ -36,7 +36,8 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -53,6 +54,7 @@ import org.apache.http.HttpHeaders;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @see <a href="https://docs.atlassian.com/jira/REST/latest/">JIRA REST API</a>
  */
 @Immutable
 @ToString
@@ -113,6 +115,8 @@ final class RxJiraIssue implements JiraIssue {
 
     /**
      * {@inheritDoc}
+     *
+     * @todo #307 Paging is not implemented
      */
     @Override
     public Iterable<JiraComment> comments() {
@@ -126,7 +130,7 @@ final class RxJiraIssue implements JiraIssue {
             .getJson()
             .readObject()
             .getJsonArray("comments");
-        final Collection<JiraComment> lst =
+        final List<JiraComment> lst =
             new ArrayList<JiraComment>(json.size());
         for (JsonValue obj : json) {
             lst.add(
@@ -137,6 +141,7 @@ final class RxJiraIssue implements JiraIssue {
                 )
             );
         }
+        Collections.reverse(lst);
         return lst;
     }
 
