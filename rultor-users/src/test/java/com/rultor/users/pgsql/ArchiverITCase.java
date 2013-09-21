@@ -52,6 +52,12 @@ public final class ArchiverITCase {
         System.getProperty("failsafe.pgsql.password");
 
     /**
+     * JDBC username.
+     */
+    private static final String USERNAME =
+        System.getProperty("failsafe.pgsql.username");
+
+    /**
      * Archiver can archive DB.
      * @throws Exception If some problem inside
      */
@@ -59,7 +65,10 @@ public final class ArchiverITCase {
     public void archivesDatabase() throws Exception {
         Assume.assumeNotNull(ArchiverITCase.URL);
         final Archiver arch = new Archiver(
-            new PgClient.Simple(ArchiverITCase.URL, ArchiverITCase.PASSWORD)
+            new PgClient.Simple(
+                ArchiverITCase.URL,
+                ArchiverITCase.PASSWORD, ArchiverITCase.USERNAME
+            )
         );
         arch.run();
     }

@@ -71,13 +71,32 @@ public interface PgClient {
          */
         private final transient String password;
         /**
+         * JDBC user.
+         */
+        private final transient String user;
+
+        /**
          * Public ctor.
          * @param url JDBC URL
          * @param pwd Password
          */
+        @SuppressWarnings("PMD.NullAssignment")
         public Simple(final String url, final String pwd) {
             this.jdbc = url;
             this.password = pwd;
+            this.user = null;
+        }
+
+        /**
+         * Constructor.
+         * @param url JDBC URL
+         * @param pwd Password
+         * @param usr Username
+         */
+        public Simple(final String url, final String pwd, final String usr) {
+            this.jdbc = url;
+            this.password = pwd;
+            this.user = usr;
         }
         /**
          * {@inheritDoc}
@@ -96,6 +115,9 @@ public interface PgClient {
             final BoneCPDataSource src = new BoneCPDataSource();
             src.setDriverClass("org.postgresql.Driver");
             src.setJdbcUrl(this.jdbc);
+            if (this.user != null) {
+                src.setUser("postgres");
+            }
             src.setPassword(this.password);
             src.setPartitionCount(Tv.THREE);
             src.setMaxConnectionsPerPartition(1);
