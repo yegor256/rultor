@@ -27,81 +27,60 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.cd.jira;
+package com.rultor.env;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.test.RestTester;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonValue;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
+import com.jcabi.log.Logger;
+import java.io.IOException;
+import java.net.InetAddress;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.http.HttpHeaders;
 
 /**
- * Jira with ReXSL.
+ * Immortal environments (can't be closed).
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
- * @see <a href="https://docs.atlassian.com/jira/REST/latest/">JIRA REST API</a>
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "url")
+@EqualsAndHashCode(of = "origin")
 @Loggable(Loggable.DEBUG)
-final class RxJira implements Jira {
+public final class Immortal implements Environments {
 
     /**
-     * URL of the server.
+     * Origin environments.
      */
-    private final transient String url;
+    private final transient Environments origin;
 
     /**
      * Public ctor.
-     * @param srv Server URL
+     * @param envs Original envs
      */
-    protected RxJira(final String srv) {
-        this.url = srv;
+    public Immortal(@NotNull(message = "envs can't be NULL")
+        final Environments envs) {
+        this.origin = envs;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public Iterable<JiraIssue> search(final String jql) {
-        final URI uri = UriBuilder.fromUri(this.url)
-            .path("/search")
-            .queryParam("jql", "{jql}")
-            .queryParam("fields", "")
-            .queryParam("expand", "")
-            .build(jql);
-        final JsonArray json = RestTester.start(uri)
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .get("fetch list of issues from JIRA")
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .getJson()
-            .readObject()
-            .getJsonArray("issues");
-        final Collection<JiraIssue> lst = new ArrayList<JiraIssue>(json.size());
-        for (JsonValue obj : json) {
-            lst.add(
-                new RxJiraIssue(
-                    UriBuilder.fromUri(
-                        JsonObject.class.cast(obj).getString("self")
-                    ).userInfo(uri.getUserInfo()).build()
-                )
-            );
-        }
-        return lst;
+    public Environment acquire() throws IOException {
+        final Environment env = this.origin.acquire();
+        return new Environment() {
+            @Override
+            public InetAddress address() throws IOException {
+                return env.address();
+            }
+            @Override
+            public void close() throws IOException {
+                Logger.info(this, "#close(): immortal environment");
+            }
+        };
     }
 
 }

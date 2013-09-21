@@ -51,7 +51,7 @@ public final class RxJiraITCase {
     /**
      * JIRA test issue.
      */
-    private static final String ISSUE =
+    private static final String KEY =
         System.getProperty("failsafe.jira.issue");
 
     /**
@@ -63,7 +63,7 @@ public final class RxJiraITCase {
         Assume.assumeNotNull(RxJiraITCase.URL);
         final Jira jira = new RxJira(RxJiraITCase.URL);
         final Iterable<JiraIssue> issues = jira.search(
-            String.format("key = %s", RxJiraITCase.ISSUE)
+            String.format("key = %s", RxJiraITCase.KEY)
         );
         MatcherAssert.assertThat(
             issues,
@@ -72,7 +72,7 @@ public final class RxJiraITCase {
         for (JiraIssue issue : issues) {
             MatcherAssert.assertThat(
                 issue.key(),
-                Matchers.equalTo(RxJiraITCase.ISSUE)
+                Matchers.equalTo(RxJiraITCase.KEY)
             );
             MatcherAssert.assertThat(
                 issue.comments(),
@@ -113,13 +113,14 @@ public final class RxJiraITCase {
 
     /**
      * Get issue.
+     * @return Issue to test against
      * @throws Exception If some problem inside
      */
     private JiraIssue issue() throws Exception {
         Assume.assumeNotNull(RxJiraITCase.URL);
         final Jira jira = new RxJira(RxJiraITCase.URL);
         return jira.search(
-            String.format("key= %s", RxJiraITCase.ISSUE)
+            String.format("key= %s", RxJiraITCase.KEY)
         ).iterator().next();
     }
 

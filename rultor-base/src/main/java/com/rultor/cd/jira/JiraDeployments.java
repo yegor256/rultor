@@ -72,6 +72,7 @@ public final class JiraDeployments implements Iterable<Deployment> {
      */
     @Override
     @Tag("jira")
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Iterator<Deployment> iterator() {
         final Iterable<JiraIssue> issues = this.jira.search(
             "assignee = currentUser()"

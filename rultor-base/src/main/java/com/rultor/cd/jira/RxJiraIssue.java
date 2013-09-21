@@ -119,8 +119,10 @@ final class RxJiraIssue implements JiraIssue {
      * @todo #307 Paging is not implemented
      */
     @Override
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Iterable<JiraComment> comments() {
         final URI uri = UriBuilder.fromUri(this.url)
+            // @checkstyle MultipleStringLiterals (1 line)
             .path("/comment")
             .build();
         final JsonArray json = RestTester.start(uri)
