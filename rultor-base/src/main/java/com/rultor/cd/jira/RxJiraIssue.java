@@ -96,7 +96,19 @@ final class RxJiraIssue implements JiraIssue {
      */
     @Override
     public void assign(final String name) {
-        throw new UnsupportedOperationException();
+        final URI uri = UriBuilder.fromUri(this.url)
+            .path("/assignee")
+            .build();
+        final StringWriter json = new StringWriter();
+        Json.createGenerator(json)
+            .writeStartObject()
+            .write("name", name)
+            .writeEnd()
+            .close();
+        RestTester.start(uri)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+            .put("assigning issue", json.toString())
+            .assertStatus(HttpURLConnection.HTTP_NO_CONTENT);
     }
 
     /**

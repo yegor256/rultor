@@ -97,12 +97,30 @@ public final class RxJiraITCase {
      */
     @Test
     public void postsCommentToJiraIssue() throws Exception {
+        final JiraIssue issue = this.issue();
+        issue.post(String.format("test message, ignore it, %s", new Date()));
+    }
+
+    /**
+     * RxJira can assign issue to someone else.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void assignsIssueToAnotherPerson() throws Exception {
+        final JiraIssue issue = this.issue();
+        issue.assign(issue.comments().iterator().next().author());
+    }
+
+    /**
+     * Get issue.
+     * @throws Exception If some problem inside
+     */
+    private JiraIssue issue() throws Exception {
         Assume.assumeNotNull(RxJiraITCase.URL);
         final Jira jira = new RxJira(RxJiraITCase.URL);
-        final JiraIssue issue = jira.search(
-            String.format("key = %s", RxJiraITCase.ISSUE)
+        return jira.search(
+            String.format("key= %s", RxJiraITCase.ISSUE)
         ).iterator().next();
-        issue.post(String.format("test message, ignore it, %s", new Date()));
     }
 
 }
