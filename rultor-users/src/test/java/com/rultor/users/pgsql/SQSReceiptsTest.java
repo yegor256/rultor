@@ -132,6 +132,7 @@ public final class SQSReceiptsTest {
         Mockito.doReturn(stmt).when(conn).prepareStatement(
             Mockito.anyString(), Mockito.eq(Statement.RETURN_GENERATED_KEYS)
         );
+        Mockito.doReturn(stmt).when(conn).prepareStatement(Mockito.anyString());
         final DataSource source = Mockito.mock(DataSource.class);
         Mockito.doReturn(conn).when(source).getConnection();
         final PgClient pgsql = Mockito.mock(PgClient.class);
