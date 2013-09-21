@@ -266,7 +266,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--
             <plugin>
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-dynamodb-maven-plugin</artifactId>
@@ -284,7 +283,6 @@
                     </execution>
                 </executions>
             </plugin>
-            -->
             <plugin>
                 <!-- @see https://github.com/github/maven-plugins/issues/22 -->
                 <groupId>com.github.github</groupId>
@@ -414,7 +412,6 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-dependency-plugin</artifactId>
-                        <version>2.6</version>
                         <executions>
                             <execution>
                                 <id>copy-postgresql-linux</id>
@@ -441,7 +438,6 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                        <version>1.2.1</version>
                         <executions>
                             <execution>
                                 <id>unzip-postgresql-linux</id>
@@ -483,7 +479,6 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-dependency-plugin</artifactId>
-                        <version>2.6</version>
                         <executions>
                             <execution>
                                 <id>unpack-postgresql-windows</id>
