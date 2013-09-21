@@ -82,9 +82,7 @@ public interface PgClient {
          */
         @SuppressWarnings("PMD.NullAssignment")
         public Simple(final String url, final String pwd) {
-            this.jdbc = url;
-            this.password = pwd;
-            this.user = null;
+            this(url, pwd, null);
         }
 
         /**
@@ -116,7 +114,7 @@ public interface PgClient {
             src.setDriverClass("org.postgresql.Driver");
             src.setJdbcUrl(this.jdbc);
             if (this.user != null) {
-                src.setUser("postgres");
+                src.setUser(this.user);
             }
             src.setPassword(this.password);
             src.setPartitionCount(Tv.THREE);
