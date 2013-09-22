@@ -80,7 +80,6 @@ public interface PgClient {
          * @param url JDBC URL
          * @param pwd Password
          */
-        @SuppressWarnings("PMD.NullAssignment")
         public Simple(final String url, final String pwd) {
             this(url, pwd, null);
         }

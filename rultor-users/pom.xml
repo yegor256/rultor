@@ -44,12 +44,25 @@
             <url>http://repo.jcabi.com/releases</url>
         </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>  
     <properties>
         <dynamodblocal.tgz>${com.jcabi:DynamoDBLocal:tgz}</dynamodblocal.tgz>
         <failsafe.pgsql.username>postgres</failsafe.pgsql.username>
         <failsafe.pgsql.password>secure</failsafe.pgsql.password>
         <failsafe.pgsql.db>test</failsafe.pgsql.db>
-        <failsafe.pgsql.jdbc>jdbc:postgresql://localhost/${failsafe.pgsql.db}</failsafe.pgsql.jdbc>
+        <failsafe.pgsql.jdbc.start>jdbc:postgresql://localhost</failsafe.pgsql.jdbc.start>
     </properties>
     <dependencies>
         <dependency>
@@ -159,13 +172,14 @@
                 <plugin>
                     <groupId>com.github.adrianboimvaser</groupId>
                     <artifactId>postgresql-maven-plugin</artifactId>
-                    <version>0.1</version>
+                    <version>0.2-SNAPSHOT</version>
                     <configuration>
                         <pgsqlHome>${project.build.directory}/pgsql</pgsqlHome>
                         <dataDir>${project.build.directory}/data</dataDir>
                         <databaseName>${failsafe.pgsql.db}</databaseName>
                         <username>${failsafe.pgsql.username}</username>
                         <passwordFile>${project.build.directory}/test-classes/password.txt</passwordFile>
+                        <port>${failsafe.pgsql.port}</port>
                     </configuration>
                     <executions>
                         <execution>
@@ -208,7 +222,7 @@
                             <failsafe.mongo.name>${failsafe.mongo.name}</failsafe.mongo.name>
                             <failsafe.mongo.user>${failsafe.mongo.user}</failsafe.mongo.user>
                             <failsafe.mongo.password>${failsafe.mongo.password}</failsafe.mongo.password>
-                            <failsafe.pgsql.jdbc>${failsafe.pgsql.jdbc}</failsafe.pgsql.jdbc>
+                            <failsafe.pgsql.jdbc>${failsafe.pgsql.jdbc.start}:${failsafe.pgsql.port}/${failsafe.pgsql.db}</failsafe.pgsql.jdbc>
                             <failsafe.pgsql.username>${failsafe.pgsql.username}</failsafe.pgsql.username>
                             <failsafe.pgsql.password>${failsafe.pgsql.password}</failsafe.pgsql.password>
                         </systemPropertyVariables>
@@ -221,7 +235,7 @@
                     <configuration>
                         <changeLogFile>src/main/resources/liquibase-master.xml</changeLogFile>
                         <driver>org.postgresql.Driver</driver>
-                        <url>${failsafe.pgsql.jdbc}</url>
+                        <url>${failsafe.pgsql.jdbc.start}:${failsafe.pgsql.port}/${failsafe.pgsql.db}</url>
                         <username>${failsafe.pgsql.username}</username>
                         <password>${failsafe.pgsql.password}</password>
                         <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
@@ -251,6 +265,7 @@
                         <configuration>
                             <portNames>
                                 <portName>dynamodblocal.port</portName>
+                                <portName>failsafe.pgsql.port</portName>
                             </portNames>
                         </configuration>
                     </execution>
