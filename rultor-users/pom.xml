@@ -44,19 +44,6 @@
             <url>http://repo.jcabi.com/releases</url>
         </repository>
     </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>  
     <properties>
         <dynamodblocal.tgz>${com.jcabi:DynamoDBLocal:tgz}</dynamodblocal.tgz>
         <failsafe.pgsql.username>postgres</failsafe.pgsql.username>
