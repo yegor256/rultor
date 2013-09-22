@@ -105,6 +105,14 @@ final class JiraDeployment implements Deployment {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void terminated() {
+        this.issue.post("Deployment terminated");
+    }
+
+    /**
      * Make summary out of snapshot.
      * @param snapshot Snapshot XML
      * @return Summary

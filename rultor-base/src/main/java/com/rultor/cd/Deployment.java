@@ -67,4 +67,9 @@ public interface Deployment {
      */
     void failed(Snapshot snapshot);
 
+    /**
+     * When terminated.
+     */
+    void terminated();
+
 }
