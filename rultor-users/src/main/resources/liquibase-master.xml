@@ -32,11 +32,5 @@
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
-    <!--
-    @todo 215 Liquibase should load all the xml files in directory, right now
-     it loads only files  001...009 ignoring all other. When this is
-     fixed remove @Ignored annotation from ArhiverITCase, PgAccountITCase and
-     SQSReceiptsITCase.
-    -->
     <includeAll path="src/main/resources/liquibase" />
 </databaseChangeLog>

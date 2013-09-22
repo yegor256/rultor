@@ -30,7 +30,6 @@
 package com.rultor.users.pgsql;
 
 import org.junit.Assume;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -38,7 +37,6 @@ import org.junit.Test;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-@Ignore
 public final class ArchiverITCase {
 
     /**
