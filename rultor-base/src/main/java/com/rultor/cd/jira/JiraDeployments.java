@@ -60,10 +60,18 @@ public final class JiraDeployments implements Iterable<Deployment> {
 
     /**
      * Public ctor.
-     * @param jra JIRA
+     * @param url JIRA URL
      */
     public JiraDeployments(
-        @NotNull(message = "JIRA can't be NULL") final Jira jra) {
+        @NotNull(message = "JIRA URL can't be NULL") final String url) {
+        this(new RxJira(url));
+    }
+
+    /**
+     * Protected ctor, for tests mostly.
+     * @param jra JIRA
+     */
+    protected JiraDeployments(final Jira jra) {
         this.jira = jra;
     }
 
