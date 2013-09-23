@@ -32,6 +32,7 @@ package com.rultor.cd;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.Array;
 import com.rultor.ci.Build;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Snapshot;
@@ -41,6 +42,7 @@ import com.rultor.spi.Instance;
 import com.rultor.tools.Exceptions;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.json.Json;
@@ -67,7 +69,7 @@ public final class OnDeploy implements Instance {
     /**
      * All available deployment requests.
      */
-    private final transient Iterable<Deployment> deployments;
+    private final transient Array<Deployment> deployments;
 
     /**
      * Batch to execute.
@@ -80,9 +82,10 @@ public final class OnDeploy implements Instance {
      * @param btch Batch to use
      */
     public OnDeploy(
-        @NotNull(message = "dps can't be NULL") final Iterable<Deployment> deps,
+        @NotNull(message = "deployments can't be NULL")
+        final Collection<Deployment> deps,
         @NotNull(message = "batch can't be NULL") final Batch btch) {
-        this.deployments = deps;
+        this.deployments = new Array<Deployment>(deps);
         this.batch = btch;
     }
 
