@@ -51,7 +51,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "jira")
+@EqualsAndHashCode(callSuper = false, of = "jira")
 @Loggable(Loggable.DEBUG)
 public final class JiraDeployments extends AbstractCollection<Deployment> {
 
