@@ -38,12 +38,6 @@
     <artifactId>rultor-web</artifactId>
     <packaging>war</packaging>
     <name>rultor-web</name>
-    <repositories>
-        <repository>
-            <id>labs-consol-release</id>
-            <url>http://labs.consol.de/maven/repository</url>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -103,7 +97,7 @@
         <dependency>
             <groupId>org.jolokia</groupId>
             <artifactId>jolokia-core</artifactId>
-            <version>0.90</version>
+            <version>1.1.3</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
