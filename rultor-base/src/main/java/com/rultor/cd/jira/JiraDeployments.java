@@ -29,10 +29,12 @@
  */
 package com.rultor.cd.jira;
 
+import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.cd.Deployment;
 import com.rultor.snapshot.Tag;
+import java.util.AbstractCollection;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -51,7 +53,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "jira")
 @Loggable(Loggable.DEBUG)
-public final class JiraDeployments implements Iterable<Deployment> {
+public final class JiraDeployments extends AbstractCollection<Deployment> {
 
     /**
      * JIRA.
@@ -90,6 +92,14 @@ public final class JiraDeployments implements Iterable<Deployment> {
             deps.add(new JiraDeployment(issue));
         }
         return deps.iterator();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int size() {
+        return Iterators.size(this.iterator());
     }
 
 }
