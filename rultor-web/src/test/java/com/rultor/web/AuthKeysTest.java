@@ -30,37 +30,30 @@
 package com.rultor.web;
 
 import java.io.IOException;
-
 import javax.validation.ConstraintViolationException;
-
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
 import com.jcabi.manifests.Manifests;
 import com.rexsl.page.auth.Identity;
 
 /**
  * Test case for {@link AuthKeys}.
- * 
  * @author Shailendra Soni
- * @version $Id$ 
+ * @version $Id$
  */
 
 public class AuthKeysTest {
 
 	/**
 	 * Pre-load test MANIFEST.MF.
-	 * 
-	 * @throws IOException
-	 *             If fails
+	 * @throws IOExceptionIf fails
 	 */
-
 	@Rule
-	public ExpectedException thrown = ExpectedException.none();
+	public final ExpectedException thrown = ExpectedException.none();
 
 	@Before
 	public void manifests() throws IOException {
@@ -70,7 +63,6 @@ public class AuthKeysTest {
 	@Test
 	public void validateNullUser() {
 		thrown.expect(ConstraintViolationException.class);
-
 		final AuthKeys authKeys = new AuthKeys();
 		final String user = null;
 		final String password = "test";
@@ -82,7 +74,6 @@ public class AuthKeysTest {
 	 */
 	@Test
 	public void validateNullPassword() {
-		thrown.expect(ConstraintViolationException.class);
 		final AuthKeys authKeys = new AuthKeys();
 		final String user = "urn:git:test";
 		final String password = null;
@@ -94,7 +85,8 @@ public class AuthKeysTest {
 		final AuthKeys authKeys = new AuthKeys();
 		final String user = "urn:git:test";
 		final String password = "test";
-		MatcherAssert.assertThat(authKeys.authenticate(user, password).name(), Matchers.equalTo(Identity.ANONYMOUS.name()));
+		MatcherAssert.assertThat(authKeys.authenticate(user, password).name(),
+		        Matchers.equalTo(Identity.ANONYMOUS.name()));
 	}
 
 	/**
@@ -106,7 +98,8 @@ public class AuthKeysTest {
 		final AuthKeys authKeys = new AuthKeys();
 		final String user = "";
 		final String password = "";
-		MatcherAssert.assertThat(authKeys.authenticate(user, password).name(), Matchers.equalTo(Identity.ANONYMOUS.name()));
+		MatcherAssert.assertThat(authKeys.authenticate(user, password).name(),
+		        Matchers.equalTo(Identity.ANONYMOUS.name()));
 	}
 
 }
