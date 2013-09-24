@@ -77,6 +77,7 @@ public class AuthKeysTest {
 	 */
 	@Test
 	public void validateNullPassword() {
+		thrown.expect(ConstraintViolationException.class);
 		final AuthKeys authKeys = new AuthKeys();
 		final String user = "urn:git:test";
 		final String password = null;
