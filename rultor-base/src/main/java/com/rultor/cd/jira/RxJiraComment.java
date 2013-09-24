@@ -27,65 +27,72 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.life;
+package com.rultor.cd.jira;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.manifests.Manifests;
-import com.rultor.spi.Queue;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Users;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import org.apache.commons.io.IOUtils;
+import com.rexsl.test.RestTester;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import javax.ws.rs.core.MediaType;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.apache.http.HttpHeaders;
 
 /**
- * Lifespan.
+ * Jira comment with ReXSL.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @since 1.0
+ * @see <a href="https://docs.atlassian.com/jira/REST/latest/">JIRA REST API</a>
  */
-@Loggable(Loggable.INFO)
-public final class Lifespan implements ServletContextListener {
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "url")
+@Loggable(Loggable.DEBUG)
+final class RxJiraComment implements JiraComment {
 
     /**
-     * Current profile.
+     * URL of the server.
      */
-    private transient Profile profile;
+    private final transient String url;
 
     /**
-     * {@inheritDoc}
+     * Public ctor.
+     * @param srv Server URL
      */
-    @Override
-    public void contextInitialized(final ServletContextEvent event) {
-        try {
-            Manifests.append(event.getServletContext());
-        } catch (java.io.IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-        final ServletContext context = event.getServletContext();
-        final String key = "Rultor-DynamoKey";
-        if (Manifests.exists(key)
-            && Manifests.read(key).matches("[A-Z0-9]{20}")) {
-            this.profile = new Production();
-        } else {
-            this.profile = new Testing();
-        }
-        final Users users = this.profile.users();
-        final Queue queue = this.profile.queue();
-        final Repo repo = this.profile.repo();
-        context.setAttribute(Users.class.getName(), users);
-        context.setAttribute(Repo.class.getName(), repo);
-        context.setAttribute(Queue.class.getName(), queue);
+    protected RxJiraComment(final URI srv) {
+        this.url = srv.toString();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void contextDestroyed(final ServletContextEvent event) {
-        IOUtils.closeQuietly(this.profile);
+    public String body() {
+        return RestTester.start(URI.create(this.url))
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+            .get("fetching body of the comment")
+            .assertStatus(HttpURLConnection.HTTP_OK)
+            .getJson()
+            .readObject()
+            .getString("body");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String author() {
+        return RestTester.start(URI.create(this.url))
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+            .get("fetching author name of the comment")
+            .assertStatus(HttpURLConnection.HTTP_OK)
+            .getJson()
+            .readObject()
+            .getJsonObject("author")
+            .getString("name");
     }
 
 }

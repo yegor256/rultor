@@ -27,65 +27,42 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.life;
+package com.rultor.cd.jira;
 
-import com.jcabi.aspects.Loggable;
-import com.jcabi.manifests.Manifests;
-import com.rultor.spi.Queue;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Users;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import org.apache.commons.io.IOUtils;
+import com.jcabi.aspects.Immutable;
 
 /**
- * Lifespan.
+ * Jira issue.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @since 1.0
  */
-@Loggable(Loggable.INFO)
-public final class Lifespan implements ServletContextListener {
+@Immutable
+public interface JiraIssue {
 
     /**
-     * Current profile.
+     * Its key.
+     * @return Key of the issue, e.g. TEST-1242
      */
-    private transient Profile profile;
+    String key();
 
     /**
-     * {@inheritDoc}
+     * Assign it to another user.
+     * @param name Name of the user to assign to
      */
-    @Override
-    public void contextInitialized(final ServletContextEvent event) {
-        try {
-            Manifests.append(event.getServletContext());
-        } catch (java.io.IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-        final ServletContext context = event.getServletContext();
-        final String key = "Rultor-DynamoKey";
-        if (Manifests.exists(key)
-            && Manifests.read(key).matches("[A-Z0-9]{20}")) {
-            this.profile = new Production();
-        } else {
-            this.profile = new Testing();
-        }
-        final Users users = this.profile.users();
-        final Queue queue = this.profile.queue();
-        final Repo repo = this.profile.repo();
-        context.setAttribute(Users.class.getName(), users);
-        context.setAttribute(Repo.class.getName(), repo);
-        context.setAttribute(Queue.class.getName(), queue);
-    }
+    void assign(String name);
 
     /**
-     * {@inheritDoc}
+     * Get its comments (in reverse order, latest first).
+     * @return Comments
      */
-    @Override
-    public void contextDestroyed(final ServletContextEvent event) {
-        IOUtils.closeQuietly(this.profile);
-    }
+    Iterable<JiraComment> comments();
+
+    /**
+     * Post a comment.
+     * @param body Body of it
+     */
+    void post(String body);
 
 }
