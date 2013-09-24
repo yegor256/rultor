@@ -60,6 +60,9 @@ public class AuthKeysTest {
 		Manifests.inject("Rultor-Revision", "12345");
 	}
 
+	/**
+	 * Validate weather user is null or not.
+	 */
 	@Test
 	public void validateNullUser() {
 		thrown.expect(ConstraintViolationException.class);
@@ -80,6 +83,9 @@ public class AuthKeysTest {
 		authKeys.authenticate(user, password);
 	}
 
+	/**
+	 * Giving proper data to authenticate.
+	 */
 	@Test
 	public void authenticateURN() {
 		final AuthKeys authKeys = new AuthKeys();
