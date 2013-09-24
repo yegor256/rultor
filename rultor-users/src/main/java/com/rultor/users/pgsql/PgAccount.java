@@ -141,9 +141,7 @@ final class PgAccount implements Account {
                 .sql("DELETE FROM coupon WHERE code=?")
                 .set(code)
                 .execute();
-            this.fund(
-                amount, String.format("account funded with coupon %s", code)
-            );
+            this.fund(amount, String.format("coupon %s redeemed", code));
         } catch (SQLException ex) {
             throw new InvalidCouponException(ex);
         }

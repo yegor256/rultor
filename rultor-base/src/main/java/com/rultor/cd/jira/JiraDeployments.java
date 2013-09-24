@@ -74,6 +74,7 @@ public final class JiraDeployments extends AbstractCollection<Deployment> {
      * @param jra JIRA
      */
     protected JiraDeployments(final Jira jra) {
+        super();
         this.jira = jra;
     }
 

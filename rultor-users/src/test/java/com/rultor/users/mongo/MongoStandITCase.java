@@ -29,9 +29,8 @@
  */
 package com.rultor.users.mongo;
 
+import com.jcabi.aspects.Parallel;
 import com.jcabi.aspects.Tv;
-import com.jcabi.log.VerboseRunnable;
-import com.jcabi.log.VerboseThreads;
 import com.jcabi.urn.URN;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.snapshot.Snapshot;
@@ -39,11 +38,6 @@ import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
 import java.util.Iterator;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -124,39 +118,7 @@ public final class MongoStandITCase {
     public void updatesSameStandConcurrently() throws Exception {
         final Stand stand = this.stand();
         final Coordinates pulse = this.pulse();
-        final CountDownLatch start = new CountDownLatch(1);
-        final AtomicLong nano = new AtomicLong(1);
-        final Runnable runnable = new VerboseRunnable(
-            new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                    start.await();
-                    final long inc = nano.getAndIncrement();
-                    stand.post(
-                        pulse, inc,
-                        new Directives()
-                            .xpath(String.format("//a%d", inc - 1))
-                            .strict(1)
-                            .add(String.format("a%d", inc))
-                            .toString()
-                    );
-                    return null;
-                }
-            }
-        );
-        final int threads = 5;
-        final ExecutorService svc = Executors.newFixedThreadPool(
-            threads, new VerboseThreads()
-        );
-        for (int thread = 0; thread < threads; ++thread) {
-            svc.submit(runnable);
-        }
-        start.countDown();
-        svc.shutdown();
-        MatcherAssert.assertThat(
-            svc.awaitTermination(Tv.TEN, TimeUnit.SECONDS),
-            Matchers.is(true)
-        );
+        this.post(stand, pulse, new AtomicLong(1));
         final Document dom = DocumentBuilderFactory.newInstance()
             .newDocumentBuilder().newDocument();
         dom.appendChild(dom.createElement("a0"));
@@ -167,6 +129,26 @@ public final class MongoStandITCase {
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(dom),
             XhtmlMatchers.hasXPath("/a0/a1/a2/a3/a4")
+        );
+    }
+
+    /**
+     * Post the next message to a stand.
+     * @param stand Stand to post to
+     * @param coords Coordinates
+     * @param nano Nano to increment
+     */
+    @Parallel(threads = Tv.TEN)
+    private void post(final Stand stand, final Coordinates coords,
+        final AtomicLong nano) {
+        final long inc = nano.getAndIncrement();
+        stand.post(
+            coords, inc,
+            new Directives()
+                .xpath(String.format("//a%d", inc - 1))
+                .strict(1)
+                .add(String.format("a%d", inc))
+                .toString()
         );
     }
 
