@@ -70,7 +70,6 @@ public class AuthKeysTest {
 	@Test
 	public void validateNullUser() {
 		thrown.expect(ConstraintViolationException.class);
-
 		final AuthKeys authKeys = new AuthKeys();
 		final String user = null;
 		final String password = "test";
