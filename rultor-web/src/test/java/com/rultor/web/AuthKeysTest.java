@@ -89,6 +89,7 @@ public class AuthKeysTest {
 		        Matchers.equalTo(Identity.ANONYMOUS.name()));
 	}
 
+	
 	/**
 	 * @TODO #123? , Ideally target class AuthKeys should also have validation of empty string.
 	 */
