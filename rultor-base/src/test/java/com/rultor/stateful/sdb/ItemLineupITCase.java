@@ -29,17 +29,14 @@
  */
 package com.rultor.stateful.sdb;
 
+import com.jcabi.aspects.Parallel;
 import com.jcabi.aspects.Tv;
-import com.jcabi.log.VerboseThreads;
 import com.rultor.aws.SDBClient;
 import com.rultor.spi.Wallet;
 import com.rultor.stateful.Lineup;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.hamcrest.MatcherAssert;
@@ -54,6 +51,11 @@ import org.junit.Test;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class ItemLineupITCase {
+
+    /**
+     * Randomizer.
+     */
+    private static final Random RND = new SecureRandom();
 
     /**
      * SimpleDB key.
@@ -80,39 +82,33 @@ public final class ItemLineupITCase {
     @Test
     public void runsInParallel() throws Exception {
         final Lineup lineup = this.lineup("ItemLineupITCase.txt");
-        final int threads = 10;
-        final CountDownLatch start = new CountDownLatch(1);
         final AtomicInteger count = new AtomicInteger();
-        final ExecutorService svc =
-            Executors.newFixedThreadPool(threads, new VerboseThreads());
-        final Random rnd = new SecureRandom();
-        final Callable<?> callable = new Callable<Integer>() {
-            @Override
-            public Integer call() throws Exception {
-                start.await();
-                return lineup.exec(
-                    new Callable<Integer>() {
-                        @Override
-                        public Integer call() throws Exception {
-                            final int num = count.get();
-                            TimeUnit.MILLISECONDS.sleep(rnd.nextInt(Tv.TEN));
-                            count.set(num + 1);
-                            return count.get();
-                        }
-                    }
-                );
+        this.increment(lineup, count);
+        MatcherAssert.assertThat(count.get(), Matchers.equalTo(Tv.TEN));
+    }
+
+    /**
+     * Increment counter.
+     * @param lineup Lineup to use
+     * @param count Counter
+     * @throws Exception If fails
+     */
+    @Parallel(threads = Tv.TEN)
+    private void increment(final Lineup lineup, final AtomicInteger count)
+        throws Exception {
+        lineup.exec(
+            new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    final int num = count.get();
+                    TimeUnit.MILLISECONDS.sleep(
+                        ItemLineupITCase.RND.nextInt(Tv.TEN)
+                    );
+                    count.set(num + 1);
+                    return null;
+                }
             }
-        };
-        for (int thread = 0; thread < threads; ++thread) {
-            svc.submit(callable);
-        }
-        start.countDown();
-        svc.shutdown();
-        MatcherAssert.assertThat(
-            svc.awaitTermination(2, TimeUnit.MINUTES),
-            Matchers.is(true)
         );
-        MatcherAssert.assertThat(count.get(), Matchers.equalTo(threads));
     }
 
     /**

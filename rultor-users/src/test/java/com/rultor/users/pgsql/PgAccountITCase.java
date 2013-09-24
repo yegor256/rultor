@@ -29,19 +29,13 @@
  */
 package com.rultor.users.pgsql;
 
+import com.jcabi.aspects.Parallel;
 import com.jcabi.aspects.Tv;
-import com.jcabi.log.VerboseRunnable;
-import com.jcabi.log.VerboseThreads;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Account;
 import com.rultor.tools.Dollars;
 import java.security.SecureRandom;
 import java.util.Random;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -105,35 +99,24 @@ public final class PgAccountITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    @SuppressWarnings("PMD.DoNotUseThreads")
     public void fundsItselfInParallelThreads() throws Exception {
         final Account account = this.account();
-        final int threads = 10;
-        final ExecutorService svc = Executors.newFixedThreadPool(
-            threads, new VerboseThreads()
-        );
         final long amount = PgAccountITCase.RND.nextInt();
-        final CountDownLatch start = new CountDownLatch(1);
-        final Runnable runnable = new VerboseRunnable(
-            new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                    start.await();
-                    account.fund(new Dollars(amount), "something");
-                    return null;
-                }
-            }
-        );
-        for (int thread = 0; thread < threads; ++thread) {
-            svc.submit(runnable);
-        }
-        start.countDown();
-        svc.shutdown();
-        svc.awaitTermination(Tv.TEN, TimeUnit.SECONDS);
+        this.fund(account, new Dollars(amount));
         MatcherAssert.assertThat(
             account.balance().points(),
-            Matchers.equalTo(amount * threads)
+            Matchers.equalTo(amount * Tv.TEN)
         );
+    }
+
+    /**
+     * Fund the account.
+     * @param acc Account to fund
+     * @param amount Amount to add
+     */
+    @Parallel(threads = Tv.TEN)
+    private void fund(final Account acc, final Dollars amount) {
+        acc.fund(amount, "something");
     }
 
     /**
