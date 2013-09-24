@@ -27,30 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.conveyer.http;
-
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
 
 /**
- * Test case for {@link Statistics}.
+ * Continuous Deployment (CD) basic tools.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @since 1.0
  */
-public final class StatisticsTest {
-
-    /**
-     * Statistics can build a text.
-     * @throws Exception If there is some problem inside
-     */
-    @Test
-    public void makesTextReport() throws Exception {
-        MatcherAssert.assertThat(
-            new Statistics(),
-            Matchers.hasToString(Matchers.notNullValue())
-        );
-    }
-
-}
+package com.rultor.cd;

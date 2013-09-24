@@ -27,65 +27,79 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.life;
+package com.rultor.cd.jira;
 
+import com.google.common.collect.Iterators;
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.manifests.Manifests;
-import com.rultor.spi.Queue;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Users;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import org.apache.commons.io.IOUtils;
+import com.rultor.cd.Deployment;
+import com.rultor.snapshot.Tag;
+import java.util.AbstractCollection;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Lifespan.
+ * Deployment requests from JIRA.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @since 1.0
  */
-@Loggable(Loggable.INFO)
-public final class Lifespan implements ServletContextListener {
+@Immutable
+@ToString
+@EqualsAndHashCode(callSuper = false, of = "jira")
+@Loggable(Loggable.DEBUG)
+public final class JiraDeployments extends AbstractCollection<Deployment> {
 
     /**
-     * Current profile.
+     * JIRA.
      */
-    private transient Profile profile;
+    private final transient Jira jira;
 
     /**
-     * {@inheritDoc}
+     * Public ctor.
+     * @param url JIRA URL
      */
-    @Override
-    public void contextInitialized(final ServletContextEvent event) {
-        try {
-            Manifests.append(event.getServletContext());
-        } catch (java.io.IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-        final ServletContext context = event.getServletContext();
-        final String key = "Rultor-DynamoKey";
-        if (Manifests.exists(key)
-            && Manifests.read(key).matches("[A-Z0-9]{20}")) {
-            this.profile = new Production();
-        } else {
-            this.profile = new Testing();
-        }
-        final Users users = this.profile.users();
-        final Queue queue = this.profile.queue();
-        final Repo repo = this.profile.repo();
-        context.setAttribute(Users.class.getName(), users);
-        context.setAttribute(Repo.class.getName(), repo);
-        context.setAttribute(Queue.class.getName(), queue);
+    public JiraDeployments(
+        @NotNull(message = "JIRA URL can't be NULL") final String url) {
+        this(new RxJira(url));
+    }
+
+    /**
+     * Protected ctor, for tests mostly.
+     * @param jra JIRA
+     */
+    protected JiraDeployments(final Jira jra) {
+        this.jira = jra;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void contextDestroyed(final ServletContextEvent event) {
-        IOUtils.closeQuietly(this.profile);
+    @Tag("jira")
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    public Iterator<Deployment> iterator() {
+        final Iterable<JiraIssue> issues = this.jira.search(
+            "assignee = currentUser()"
+        );
+        final Collection<Deployment> deps = new LinkedList<Deployment>();
+        for (JiraIssue issue : issues) {
+            deps.add(new JiraDeployment(issue));
+        }
+        return deps.iterator();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int size() {
+        return Iterators.size(this.iterator());
     }
 
 }

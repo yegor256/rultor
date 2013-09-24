@@ -27,65 +27,49 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.life;
+package com.rultor.cd;
 
-import com.jcabi.aspects.Loggable;
-import com.jcabi.manifests.Manifests;
-import com.rultor.spi.Queue;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Users;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import org.apache.commons.io.IOUtils;
+import com.jcabi.aspects.Immutable;
+import com.rultor.snapshot.Snapshot;
+import java.util.Map;
 
 /**
- * Lifespan.
+ * Deployment request.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @since 1.0
  */
-@Loggable(Loggable.INFO)
-public final class Lifespan implements ServletContextListener {
+@Immutable
+public interface Deployment {
 
     /**
-     * Current profile.
+     * Name of it.
+     * @return Name
      */
-    private transient Profile profile;
+    String name();
 
     /**
-     * {@inheritDoc}
+     * Optional parameters.
+     * @return Map of parameters
      */
-    @Override
-    public void contextInitialized(final ServletContextEvent event) {
-        try {
-            Manifests.append(event.getServletContext());
-        } catch (java.io.IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-        final ServletContext context = event.getServletContext();
-        final String key = "Rultor-DynamoKey";
-        if (Manifests.exists(key)
-            && Manifests.read(key).matches("[A-Z0-9]{20}")) {
-            this.profile = new Production();
-        } else {
-            this.profile = new Testing();
-        }
-        final Users users = this.profile.users();
-        final Queue queue = this.profile.queue();
-        final Repo repo = this.profile.repo();
-        context.setAttribute(Users.class.getName(), users);
-        context.setAttribute(Repo.class.getName(), repo);
-        context.setAttribute(Queue.class.getName(), queue);
-    }
+    Map<String, Object> params();
 
     /**
-     * {@inheritDoc}
+     * When it's done.
+     * @param snapshot Snapshot
      */
-    @Override
-    public void contextDestroyed(final ServletContextEvent event) {
-        IOUtils.closeQuietly(this.profile);
-    }
+    void succeeded(Snapshot snapshot);
+
+    /**
+     * When it's failed.
+     * @param snapshot Snapshot
+     */
+    void failed(Snapshot snapshot);
+
+    /**
+     * When terminated.
+     */
+    void terminated();
 
 }

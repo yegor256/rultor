@@ -27,65 +27,60 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.life;
+package com.rultor.env;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.manifests.Manifests;
-import com.rultor.spi.Queue;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Users;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import org.apache.commons.io.IOUtils;
+import com.jcabi.log.Logger;
+import java.io.IOException;
+import java.net.InetAddress;
+import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Lifespan.
+ * Immortal environments (can't be closed).
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @since 1.0
  */
-@Loggable(Loggable.INFO)
-public final class Lifespan implements ServletContextListener {
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "origin")
+@Loggable(Loggable.DEBUG)
+public final class Immortal implements Environments {
 
     /**
-     * Current profile.
+     * Origin environments.
      */
-    private transient Profile profile;
+    private final transient Environments origin;
 
     /**
-     * {@inheritDoc}
+     * Public ctor.
+     * @param envs Original envs
      */
-    @Override
-    public void contextInitialized(final ServletContextEvent event) {
-        try {
-            Manifests.append(event.getServletContext());
-        } catch (java.io.IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-        final ServletContext context = event.getServletContext();
-        final String key = "Rultor-DynamoKey";
-        if (Manifests.exists(key)
-            && Manifests.read(key).matches("[A-Z0-9]{20}")) {
-            this.profile = new Production();
-        } else {
-            this.profile = new Testing();
-        }
-        final Users users = this.profile.users();
-        final Queue queue = this.profile.queue();
-        final Repo repo = this.profile.repo();
-        context.setAttribute(Users.class.getName(), users);
-        context.setAttribute(Repo.class.getName(), repo);
-        context.setAttribute(Queue.class.getName(), queue);
+    public Immortal(@NotNull(message = "envs can't be NULL")
+        final Environments envs) {
+        this.origin = envs;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void contextDestroyed(final ServletContextEvent event) {
-        IOUtils.closeQuietly(this.profile);
+    public Environment acquire() throws IOException {
+        final Environment env = this.origin.acquire();
+        return new Environment() {
+            @Override
+            public InetAddress address() throws IOException {
+                return env.address();
+            }
+            @Override
+            public void close() throws IOException {
+                Logger.info(this, "#close(): immortal environment");
+            }
+        };
     }
 
 }
