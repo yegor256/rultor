@@ -83,6 +83,10 @@ public final class Immortal implements Shells {
             public void close() throws IOException {
                 assert shell != null;
             }
+            @Override
+            public void badge(final String name, final String value) {
+                shell.badge(name, value);
+            }
         };
     }
 

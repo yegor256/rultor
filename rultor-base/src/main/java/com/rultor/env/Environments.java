@@ -41,7 +41,7 @@ import javax.validation.constraints.NotNull;
  * @since 1.0
  */
 @Immutable
-public interface Environments {
+public interface Environments extends Iterable<Environment> {
 
     /**
      * Get new environment.

@@ -34,6 +34,8 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Iterator;
+import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -70,17 +72,74 @@ public final class Immortal implements Environments {
      */
     @Override
     public Environment acquire() throws IOException {
-        final Environment env = this.origin.acquire();
-        return new Environment() {
+        return new Immortal.Env(this.origin.acquire());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterator<Environment> iterator() {
+        final Iterator<Environment> envs = this.origin.iterator();
+        return new Iterator<Environment>() {
             @Override
-            public InetAddress address() throws IOException {
-                return env.address();
+            public boolean hasNext() {
+                return envs.hasNext();
             }
             @Override
-            public void close() throws IOException {
-                Logger.info(this, "#close(): immortal environment");
+            public Environment next() {
+                return new Immortal.Env(envs.next());
+            }
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
             }
         };
+    }
+
+    /**
+     * Environment without closing feature.
+     */
+    private static final class Env implements Environment {
+        /**
+         * Origin environment.
+         */
+        private final transient Environment origin;
+        /**
+         * Ctor.
+         * @param env Origin
+         */
+        protected Env(final Environment env) {
+            this.origin = env;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public InetAddress address() throws IOException {
+            return this.origin.address();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void close() throws IOException {
+            Logger.info(this, "#close(): immortal environment");
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Map<String, String> badges() {
+            return this.origin.badges();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void badge(final String name, final String value) {
+            this.origin.badge(name, value);
+        }
     }
 
 }

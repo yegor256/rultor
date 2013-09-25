@@ -32,8 +32,10 @@ package com.rultor.env.ec2;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
+import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.Placement;
+import com.amazonaws.services.ec2.model.Reservation;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.Tag;
@@ -49,6 +51,10 @@ import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
 import com.rultor.tools.Time;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
@@ -68,6 +74,7 @@ import org.apache.commons.lang3.Validate;
 @ToString
 @EqualsAndHashCode(of = { "type", "ami", "group", "client" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class EC2 implements Environments {
 
     /**
@@ -199,11 +206,36 @@ public final class EC2 implements Environments {
      */
     @Override
     public Environment acquire() throws IOException {
-        return new EC2Environment(
-            this.work, this.wallet,
-            this.create().getInstanceId(),
-            this.client
-        );
+        return this.env(this.create().getInstanceId());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterator<Environment> iterator() {
+        final AmazonEC2 aws = this.client.get();
+        try {
+            final Collection<Environment> envs = new LinkedList<Environment>();
+            final DescribeInstancesResult result = aws.describeInstances();
+            for (Reservation res : result.getReservations()) {
+                for (Instance inst : res.getInstances()) {
+                    envs.add(this.env(inst.getInstanceId()));
+                }
+            }
+            return Collections.unmodifiableCollection(envs).iterator();
+        } finally {
+            aws.shutdown();
+        }
+    }
+
+    /**
+     * Make an environment with this ID.
+     * @param inst Instance ID
+     * @return Environment
+     */
+    private Environment env(final String inst) {
+        return new EC2Environment(this.work, this.wallet, inst, this.client);
     }
 
     /**
