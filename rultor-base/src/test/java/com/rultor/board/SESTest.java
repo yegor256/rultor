@@ -36,6 +36,7 @@ import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.amazonaws.services.simpleemail.model.SendEmailResult;
 import com.rultor.aws.SESClient;
+import java.io.IOException;
 import java.util.Arrays;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -49,43 +50,97 @@ import org.mockito.Mockito;
 public final class SESTest {
 
     /**
+     * Constant message.
+     */
+    public static final String MESSAGE = "message";
+    /**
+     * Constant subject.
+     */
+    public static final String SUBJECT = "subject";
+    /**
+     * Constant data.
+     */
+    public static final String DATA = "data";
+    /**
+     * Constant body.
+     */
+    public static final String BODY = "body";
+    /**
+     * Constant text.
+     */
+    public static final String TEXT = "text";
+    /**
+     * Client mock.
+     */
+    private final transient SESClient client = Mockito.mock(SESClient.class);
+    /**
+     * Message message.
+     */
+    private transient String msg;
+    /**
      * SES can send emails.
      * @throws Exception If some problem inside
      */
     @Test
-    public void sendsEmail() throws Exception {
-        final SESClient client = Mockito.mock(SESClient.class);
-        final AmazonSimpleEmailService aws =
-            Mockito.mock(AmazonSimpleEmailService.class);
-        Mockito.doReturn(aws).when(client).get();
-        Mockito.doReturn(new SendEmailResult()).when(aws)
-            .sendEmail(Mockito.any(SendEmailRequest.class));
+    public void sendsEmailTXT() throws Exception {
+        this.msg = "hello, друг!\nfirst\nsecond";
+        this.verifyMessage(
+            "hello, друг!"
+            , "first\nsecond", SESTest.TEXT
+        );
+    }
+
+    /**
+     * SES can send emails.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void sendsEmailFromHTML() throws Exception {
+        this.msg = "<html><head><title>t</title></head></html>";
+        this.verifyMessage("t", this.msg, "html");
+    }
+
+    /**
+     * This method verifies the message and the subject.
+     * @param expectedsubject Expected Subject
+     * @param expectedbody Expected Body
+     * @param bodytype Body Type
+     * @throws IOException if some problem inside
+     */
+    private  void verifyMessage(final String expectedsubject
+        , final String expectedbody
+        , final String bodytype) throws IOException {
         final Billboard board = new SES(
             "sender@rultor.com",
             Arrays.asList("recepient@rultor.com"),
-            client
+            this.client
         );
-        board.announce("hello, друг!\nfirst\nsecond");
+        final AmazonSimpleEmailService aws =
+            Mockito.mock(AmazonSimpleEmailService.class);
+        Mockito.doReturn(aws).when(this.client).get();
+        Mockito.doReturn(new SendEmailResult()).when(aws)
+            .sendEmail(Mockito.any(SendEmailRequest.class));
+        board.announce(this.msg);
         Mockito.verify(aws).sendEmail(
             Mockito.argThat(
                 Matchers.<SendEmailRequest>hasProperty(
-                    "message",
+                    SESTest.MESSAGE,
                     Matchers.allOf(
                         Matchers.<Message>hasProperty(
-                            "subject",
+                            SESTest.SUBJECT,
                             Matchers.<Content>hasProperty(
                                 // @checkstyle MultipleStringLiterals (1 line)
-                                "data",
-                                Matchers.equalTo("hello, друг!")
+                                SESTest.DATA,
+                                Matchers.equalTo(expectedsubject)
                             )
                         ),
                         Matchers.<Message>hasProperty(
-                            "body",
+                            SESTest.BODY,
                             Matchers.<Body>hasProperty(
-                                "text",
+                                bodytype,
                                 Matchers.<Content>hasProperty(
-                                    "data",
-                                    Matchers.equalTo("first\nsecond")
+                                    SESTest.DATA,
+                                    Matchers.equalTo(expectedbody)
                                 )
                             )
                         )
