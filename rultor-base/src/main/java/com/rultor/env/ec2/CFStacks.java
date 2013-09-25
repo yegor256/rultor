@@ -40,6 +40,7 @@ import com.rultor.env.Environments;
 import com.rultor.snapshot.Step;
 import com.rultor.snapshot.Tag;
 import java.io.IOException;
+import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -92,6 +93,14 @@ public final class CFStacks implements Environments {
     @Override
     public Environment acquire() throws IOException {
         return new CFStack(this.create(), this.client);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterator<Environment> iterator() {
+        throw new UnsupportedOperationException();
     }
 
     /**

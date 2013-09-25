@@ -30,11 +30,13 @@
 package com.rultor.env.ec2;
 
 import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.InstanceState;
 import com.amazonaws.services.ec2.model.InstanceStateChange;
+import com.amazonaws.services.ec2.model.Tag;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 import com.google.common.collect.ImmutableMap;
@@ -51,6 +53,7 @@ import com.rultor.spi.Wallet;
 import com.rultor.tools.Dollars;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
@@ -183,6 +186,46 @@ final class EC2Environment implements Environment {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<String, String> badges() {
+        final AmazonEC2 aws = this.client.get();
+        try {
+            final DescribeInstancesResult result = aws.describeInstances(
+                new DescribeInstancesRequest().withInstanceIds(this.name)
+            );
+            final List<Tag> tags = result.getReservations()
+                .get(0).getInstances().get(0).getTags();
+            final ImmutableMap.Builder<String, String> map =
+                new ImmutableMap.Builder<String, String>();
+            for (Tag tag : tags) {
+                map.put(tag.getKey(), tag.getValue());
+            }
+            return map.build();
+        } finally {
+            aws.shutdown();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void badge(final String badge, final String value) {
+        final AmazonEC2 aws = this.client.get();
+        try {
+            aws.createTags(
+                new CreateTagsRequest()
+                    .withResources(this.name)
+                    .withTags(new Tag().withKey(badge).withValue(value))
+            );
+        } finally {
+            aws.shutdown();
+        }
+    }
+
+    /**
      * Return instance when it's ready.
      * @return Instance
      * @throws IOException If fails
@@ -190,9 +233,9 @@ final class EC2Environment implements Environment {
     @RetryOnFailure(verbose = false)
     private Instance instance() throws IOException {
         final AmazonEC2 aws = this.client.get();
-        final DescribeInstancesRequest request = new DescribeInstancesRequest()
-            .withInstanceIds(this.name);
         try {
+            final DescribeInstancesRequest request =
+                new DescribeInstancesRequest().withInstanceIds(this.name);
             while (true) {
                 final DescribeInstancesResult result =
                     aws.describeInstances(request);

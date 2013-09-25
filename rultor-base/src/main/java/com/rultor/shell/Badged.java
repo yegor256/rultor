@@ -27,91 +27,62 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.shell.ssh;
+package com.rultor.shell;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.env.Environment;
-import com.rultor.shell.Shell;
+import com.jcabi.immutable.ArrayMap;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Single SSH Server.
+ * Shells with badges.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@EqualsAndHashCode(of = { "env", "key" })
+@ToString
+@EqualsAndHashCode(of = { "origin", "badges" })
 @Loggable(Loggable.DEBUG)
-public final class SSHServer implements Shell {
+public final class Badged implements Shells {
 
     /**
-     * Environment.
+     * Shells.
      */
-    private final transient Environment env;
+    private final transient Shells origin;
 
     /**
-     * User name.
+     * Badges.
      */
-    private final transient String login;
-
-    /**
-     * Private SSH key.
-     */
-    private final transient PrivateKey key;
+    private final transient ArrayMap<String, String> badges;
 
     /**
      * Public ctor.
-     * @param environ Environment
-     * @param user Login
-     * @param priv Private SSH key
+     * @param map Map of badges
+     * @param shls Shells
      */
-    public SSHServer(
-        @NotNull(message = "env can't be NULL") final Environment environ,
-        @NotNull(message = "user name can't be NULL") final String user,
-        @NotNull(message = "private key can't be NULL") final PrivateKey priv) {
-        this.env = environ;
-        this.login = user;
-        this.key = priv;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @checkstyle ParameterNumber (10 lines)
-     */
-    @Override
-    @Loggable(value = Loggable.DEBUG, limit = 1, unit = TimeUnit.HOURS)
-    public int exec(
-        @NotNull(message = "command can't be NULL") final String command,
-        @NotNull(message = "stdin can't be NULL") final InputStream stdin,
-        @NotNull(message = "stdout can't be NULL") final OutputStream stdout,
-        @NotNull(message = "stderr can't be NULL") final OutputStream stderr)
-        throws IOException {
-        return new SSHChannel(this.env.address(), this.login, this.key)
-            .exec(command, stdin, stdout, stderr);
+    public Badged(
+        @NotNull(message = "map can't be NULL") final Map<String, String> map,
+        @NotNull(message = "shells can't be NULL") final Shells shls) {
+        this.badges = new ArrayMap<String, String>(map);
+        this.origin = shls;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void close() throws IOException {
-        this.env.close();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void badge(final String name, final String value) {
-        throw new UnsupportedOperationException();
+    public Shell acquire() throws IOException {
+        final Shell shell = this.origin.acquire();
+        for (Map.Entry<String, String> entry : this.badges.entrySet()) {
+            shell.badge(entry.getKey(), entry.getValue());
+        }
+        return shell;
     }
 
 }

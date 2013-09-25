@@ -45,6 +45,7 @@ import com.rultor.snapshot.Step;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -103,6 +104,22 @@ final class CFStack implements Environment {
         } finally {
             aws.shutdown();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<String, String> badges() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void badge(final String badge, final String value) {
+        throw new UnsupportedOperationException();
     }
 
     /**

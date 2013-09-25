@@ -207,6 +207,14 @@ public final class SSHChannel implements Shell {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void badge(final String name, final String value) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * Exec this channel and return its exit code.
      * @param channel The channel to exec
      * @param session The session
