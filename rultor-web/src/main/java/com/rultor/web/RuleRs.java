@@ -155,8 +155,6 @@ public final class RuleRs extends BaseRs {
                         .up()
                         .add("drain", drain)
                         .up()
-                        .add("exception", Exceptions.message(ex))
-                        .up()
                 )
                 .render()
                 .status(HttpURLConnection.HTTP_BAD_REQUEST)
