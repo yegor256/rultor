@@ -31,6 +31,53 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
     <xsl:output method="text"/>
     <xsl:template match="/snapshot">
-        <xsl:text>Some text...</xsl:text>
+        <xsl:if test="tags/tag">
+            <xsl:text>Tags:&#x0A;</xsl:text>
+            <xsl:apply-templates select="tags/tag"/>
+            <xsl:text>&#x0A;</xsl:text>
+        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="steps/step">
+                <xsl:text>{code}</xsl:text>
+                <xsl:apply-templates select="steps/step"/>
+                <xsl:text>&#x0A;{code}</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:text>Due to some internal error there are not details to post here.</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <xsl:template match="tag">
+        <xsl:text> * </xsl:text>
+        <xsl:value-of select="label"/>
+        <xsl:text>/</xsl:text>
+        <xsl:value-of select="level"/>
+        <xsl:text>: </xsl:text>
+        <xsl:value-of select="markdown"/>
+        <xsl:text>&#x0A;</xsl:text>
+    </xsl:template>
+    <xsl:template match="step">
+        <xsl:text>&#x0A;</xsl:text>
+        <xsl:text>$ </xsl:text>
+        <xsl:value-of select="summary"/>
+        <xsl:text>&#x0A;  </xsl:text>
+        <xsl:choose>
+            <xsl:when test="level = 'INFO'">
+                <xsl:text>SUCCESS</xsl:text>
+            </xsl:when>
+            <xsl:when test="level = 'SEVERE'">
+                <xsl:text>FAILURE</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="level"/>
+            </xsl:otherwise>
+        </xsl:choose>
+        <xsl:apply-templates select="exception"/>
+    </xsl:template>
+    <xsl:template match="exception">
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="cause"/>
+        <xsl:text>&#x0A;&#x0A;</xsl:text>
+        <xsl:value-of select="stacktrace"/>
     </xsl:template>
 </xsl:stylesheet>

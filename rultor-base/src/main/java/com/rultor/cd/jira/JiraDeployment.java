@@ -90,6 +90,21 @@ final class JiraDeployment implements Deployment {
      * {@inheritDoc}
      */
     @Override
+    public void started() {
+        this.issue.post(
+            new StringBuilder()
+                .append("I'll try to create a new environment")
+                .append(" and deploy your branch into it.")
+                .append(" This may take a few minutes. I will let you know")
+                .append(" in any case...")
+                .toString()
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void succeeded(final Snapshot snapshot) {
         this.issue.assign(this.issue.comments().iterator().next().author());
         this.issue.post(this.summary(snapshot));
@@ -122,7 +137,7 @@ final class JiraDeployment implements Deployment {
         try {
             summary = new XSLT(
                 snapshot,
-                this.getClass().getResourceAsStream("deploy-summary.xsl")
+                this.getClass().getResourceAsStream("jira-summary.xsl")
             ).xml();
         } catch (TransformerException ex) {
             summary = Exceptions.stacktrace(ex);
