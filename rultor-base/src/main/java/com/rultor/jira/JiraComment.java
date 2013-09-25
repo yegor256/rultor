@@ -27,35 +27,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.cd.jira;
+package com.rultor.jira;
 
-import com.rultor.cd.Deployment;
-import com.rultor.jira.JiraComment;
-import com.rultor.jira.JiraIssue;
-import com.rultor.snapshot.Snapshot;
-import java.util.Arrays;
-import org.junit.Test;
-import org.mockito.Mockito;
+import com.jcabi.aspects.Immutable;
 
 /**
- * Test case for {@link JiraDeployment}.
+ * Jira comment.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class JiraDeploymentTest {
+@Immutable
+public interface JiraComment {
 
     /**
-     * JiraDeployment can report success.
-     * @throws Exception If some problem inside
+     * Get its text.
+     * @return Body of the comment
      */
-    @Test
-    public void reportsSuccessToJira() throws Exception {
-        final JiraComment comment = Mockito.mock(JiraComment.class);
-        Mockito.doReturn("jeff.lebowski").when(comment).author();
-        final JiraIssue issue = Mockito.mock(JiraIssue.class);
-        Mockito.doReturn(Arrays.asList(comment)).when(issue).comments();
-        final Deployment dep = new JiraDeployment(issue);
-        dep.succeeded(new Snapshot("ADD 'test';"));
-    }
+    String body();
+
+    /**
+     * Author.
+     * @return Name of the author
+     */
+    String author();
 
 }

@@ -27,26 +27,20 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.cd.jira;
+package com.rultor.jira;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonValue;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.http.HttpHeaders;
 
 /**
- * Jira with ReXSL.
+ * Jira comment with ReXSL.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -57,7 +51,7 @@ import org.apache.http.HttpHeaders;
 @ToString
 @EqualsAndHashCode(of = "url")
 @Loggable(Loggable.DEBUG)
-final class RxJira implements Jira {
+final class RxJiraComment implements JiraComment {
 
     /**
      * URL of the server.
@@ -68,40 +62,37 @@ final class RxJira implements Jira {
      * Public ctor.
      * @param srv Server URL
      */
-    protected RxJira(final String srv) {
-        this.url = srv;
+    protected RxJiraComment(final URI srv) {
+        this.url = srv.toString();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public Iterable<JiraIssue> search(final String jql) {
-        final URI uri = UriBuilder.fromUri(this.url)
-            .path("/search")
-            .queryParam("jql", "{jql}")
-            .queryParam("fields", "")
-            .queryParam("expand", "")
-            .build(jql);
-        final JsonArray json = RestTester.start(uri)
+    public String body() {
+        return RestTester.start(URI.create(this.url))
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .get("fetch list of issues from JIRA")
+            .get("fetching body of the comment")
             .assertStatus(HttpURLConnection.HTTP_OK)
             .getJson()
             .readObject()
-            .getJsonArray("issues");
-        final Collection<JiraIssue> lst = new ArrayList<JiraIssue>(json.size());
-        for (JsonValue obj : json) {
-            lst.add(
-                new RxJiraIssue(
-                    UriBuilder.fromUri(
-                        JsonObject.class.cast(obj).getString("self")
-                    ).userInfo(uri.getUserInfo()).build()
-                )
-            );
-        }
-        return lst;
+            .getString("body");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String author() {
+        return RestTester.start(URI.create(this.url))
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+            .get("fetching author name of the comment")
+            .assertStatus(HttpURLConnection.HTTP_OK)
+            .getJson()
+            .readObject()
+            .getJsonObject("author")
+            .getString("name");
     }
 
 }
