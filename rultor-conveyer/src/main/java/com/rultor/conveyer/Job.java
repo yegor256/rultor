@@ -62,18 +62,6 @@ import lombok.ToString;
 final class Job {
 
     /**
-     * Decorator of an instance.
-     */
-    public interface Decor {
-        /**
-         * Decorate this given instance.
-         * @param instance Instance to decorate
-         * @return Decorated one
-         */
-        Instance decorate(Instance instance);
-    }
-
-    /**
      * Work to do.
      */
     private final transient Coordinates work;
@@ -166,6 +154,18 @@ final class Job {
     private Variable<?> var(final User owner, final Spec spec)
         throws SpecException {
         return this.repo.make(owner, spec);
+    }
+
+    /**
+     * Decorator of an instance.
+     */
+    public interface Decor {
+        /**
+         * Decorate this given instance.
+         * @param instance Instance to decorate
+         * @return Decorated one
+         */
+        Instance decorate(Instance instance);
     }
 
 }

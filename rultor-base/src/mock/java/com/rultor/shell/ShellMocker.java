@@ -47,6 +47,14 @@ import org.junit.Assume;
 public final class ShellMocker {
 
     /**
+     * Mock it.
+     * @return Shell
+     */
+    public Shell mock() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * Shell to local bash.
      */
     @Immutable
@@ -90,14 +98,6 @@ public final class ShellMocker {
         public void close() throws IOException {
             assert this.dir != null;
         }
-    }
-
-    /**
-     * Mock it.
-     * @return Shell
-     */
-    public Shell mock() {
-        throw new UnsupportedOperationException();
     }
 
 }

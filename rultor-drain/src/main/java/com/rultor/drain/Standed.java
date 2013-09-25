@@ -107,30 +107,6 @@ public final class Standed implements Drain {
     private static final int MAX = 10;
 
     /**
-     * SQS client connection container.
-     */
-    @Immutable
-    private interface SQSEntry {
-        /**
-         * Provide SQS connection.
-         * @return SQS connection.
-         */
-        TestClient get();
-    }
-
-    /**
-     * Executor container.
-     */
-    @Immutable
-    private interface Exec {
-        /**
-         * Provide executor.
-         * @return ExecutorService
-         */
-        ExecutorService get();
-    }
-
-    /**
      * Coordinates we're in.
      */
     private final transient Coordinates work;
@@ -392,4 +368,29 @@ public final class Standed implements Drain {
             .close();
         return writer.toString();
     }
+
+    /**
+     * SQS client connection container.
+     */
+    @Immutable
+    private interface SQSEntry {
+        /**
+         * Provide SQS connection.
+         * @return SQS connection.
+         */
+        TestClient get();
+    }
+
+    /**
+     * Executor container.
+     */
+    @Immutable
+    private interface Exec {
+        /**
+         * Provide executor.
+         * @return ExecutorService
+         */
+        ExecutorService get();
+    }
+
 }

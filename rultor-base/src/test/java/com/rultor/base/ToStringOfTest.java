@@ -41,18 +41,6 @@ import org.junit.Test;
  * @since 1.0
  */
 public final class ToStringOfTest {
-    /**
-     * Class with overridden toString.
-     */
-    private static final class Overrider {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString() {
-            return "to string";
-        }
-    }
 
     /**
      * Behaviour for overridden toString.
@@ -78,4 +66,18 @@ public final class ToStringOfTest {
             Matchers.equalTo(def.toString())
         );
     }
+
+    /**
+     * Class with overridden toString.
+     */
+    private static final class Overrider {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return "to string";
+        }
+    }
+
 }

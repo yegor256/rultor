@@ -180,53 +180,6 @@ public final class ItemLineup implements Lineup {
     }
 
     /**
-     * Marker used in items.
-     */
-    @Immutable
-    @EqualsAndHashCode(of = "text")
-    private static final class Marker {
-        /**
-         * Text of it.
-         */
-        private final transient String text;
-        /**
-         * Ctor.
-         * @param txt Text of the marker
-         */
-        protected Marker(final String txt) {
-            this.text = txt;
-        }
-        /**
-         * Ctor.
-         * @param callable Callable we're based on
-         */
-        protected Marker(final Callable<?> callable) {
-            this(
-                String.format(
-                    "%s %d %s", new Time(), System.nanoTime(), callable
-                )
-            );
-        }
-        @Override
-        public String toString() {
-            return this.text;
-        }
-        /**
-         * Get its age in milliseconds.
-         * @return Milliseconds
-         */
-        public long age() {
-            final Time time;
-            if (this.text.isEmpty()) {
-                time = new Time();
-            } else {
-                time = new Time(this.text.substring(0, this.text.indexOf(' ')));
-            }
-            return time.delta(new Time());
-        }
-    }
-
-    /**
      * Item exists in SimpleDB.
      * @return TRUE if it exists
      */
@@ -333,6 +286,53 @@ public final class ItemLineup implements Lineup {
             ),
             new Dollars(Tv.FIVE)
         );
+    }
+
+    /**
+     * Marker used in items.
+     */
+    @Immutable
+    @EqualsAndHashCode(of = "text")
+    private static final class Marker {
+        /**
+         * Text of it.
+         */
+        private final transient String text;
+        /**
+         * Ctor.
+         * @param txt Text of the marker
+         */
+        protected Marker(final String txt) {
+            this.text = txt;
+        }
+        /**
+         * Ctor.
+         * @param callable Callable we're based on
+         */
+        protected Marker(final Callable<?> callable) {
+            this(
+                String.format(
+                    "%s %d %s", new Time(), System.nanoTime(), callable
+                )
+            );
+        }
+        @Override
+        public String toString() {
+            return this.text;
+        }
+        /**
+         * Get its age in milliseconds.
+         * @return Milliseconds
+         */
+        public long age() {
+            final Time time;
+            if (this.text.isEmpty()) {
+                time = new Time();
+            } else {
+                time = new Time(this.text.substring(0, this.text.indexOf(' ')));
+            }
+            return time.delta(new Time());
+        }
     }
 
 }
