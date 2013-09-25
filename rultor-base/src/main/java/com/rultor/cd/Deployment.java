@@ -56,6 +56,11 @@ public interface Deployment {
     Map<String, Object> params();
 
     /**
+     * When deployment is just started.
+     */
+    void started();
+
+    /**
      * When it's done.
      * @param snapshot Snapshot
      */
