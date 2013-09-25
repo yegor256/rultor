@@ -27,72 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.cd.jira;
-
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.rexsl.test.RestTester;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import javax.ws.rs.core.MediaType;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.apache.http.HttpHeaders;
 
 /**
- * Jira comment with ReXSL.
+ * JIRA.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
- * @see <a href="https://docs.atlassian.com/jira/REST/latest/">JIRA REST API</a>
  */
-@Immutable
-@ToString
-@EqualsAndHashCode(of = "url")
-@Loggable(Loggable.DEBUG)
-final class RxJiraComment implements JiraComment {
-
-    /**
-     * URL of the server.
-     */
-    private final transient String url;
-
-    /**
-     * Public ctor.
-     * @param srv Server URL
-     */
-    protected RxJiraComment(final URI srv) {
-        this.url = srv.toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String body() {
-        return RestTester.start(URI.create(this.url))
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .get("fetching body of the comment")
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .getJson()
-            .readObject()
-            .getString("body");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String author() {
-        return RestTester.start(URI.create(this.url))
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .get("fetching author name of the comment")
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .getJson()
-            .readObject()
-            .getJsonObject("author")
-            .getString("name");
-    }
-
-}
+package com.rultor.jira;

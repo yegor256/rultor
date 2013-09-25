@@ -27,18 +27,15 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.cd.jira;
+package com.rultor.jira;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
-import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import javax.json.Json;
+import java.util.Collection;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
@@ -49,7 +46,7 @@ import lombok.ToString;
 import org.apache.http.HttpHeaders;
 
 /**
- * Jira issue with ReXSL.
+ * Jira with ReXSL.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -60,7 +57,7 @@ import org.apache.http.HttpHeaders;
 @ToString
 @EqualsAndHashCode(of = "url")
 @Loggable(Loggable.DEBUG)
-final class RxJiraIssue implements JiraIssue {
+public final class RxJira implements Jira {
 
     /**
      * URL of the server.
@@ -71,100 +68,40 @@ final class RxJiraIssue implements JiraIssue {
      * Public ctor.
      * @param srv Server URL
      */
-    protected RxJiraIssue(final URI srv) {
-        this.url = srv.toString();
+    public RxJira(final String srv) {
+        this.url = srv;
     }
 
     /**
      * {@inheritDoc}
-     */
-    @Override
-    public String key() {
-        final URI uri = UriBuilder.fromUri(this.url)
-            .queryParam("fields", "")
-            .queryParam("expand", "")
-            .build();
-        return RestTester.start(uri)
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .get("fetching issue key")
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .getJson()
-            .readObject()
-            .getString("key");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void assign(final String name) {
-        final URI uri = UriBuilder.fromUri(this.url)
-            .path("/assignee")
-            .build();
-        final StringWriter json = new StringWriter();
-        Json.createGenerator(json)
-            .writeStartObject()
-            .write("name", name)
-            .writeEnd()
-            .close();
-        RestTester.start(uri)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-            .put("assigning issue", json.toString())
-            .assertStatus(HttpURLConnection.HTTP_NO_CONTENT);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @todo #307 Paging is not implemented
      */
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public Iterable<JiraComment> comments() {
+    public Iterable<JiraIssue> search(final String jql) {
         final URI uri = UriBuilder.fromUri(this.url)
-            // @checkstyle MultipleStringLiterals (1 line)
-            .path("/comment")
-            .build();
+            .path("/search")
+            .queryParam("jql", "{jql}")
+            .queryParam("fields", "")
+            .queryParam("expand", "")
+            .build(jql);
         final JsonArray json = RestTester.start(uri)
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .get("fetch list of comments of an issue")
+            .get("fetch list of issues from JIRA")
             .assertStatus(HttpURLConnection.HTTP_OK)
             .getJson()
             .readObject()
-            .getJsonArray("comments");
-        final List<JiraComment> lst =
-            new ArrayList<JiraComment>(json.size());
+            .getJsonArray("issues");
+        final Collection<JiraIssue> lst = new ArrayList<JiraIssue>(json.size());
         for (JsonValue obj : json) {
             lst.add(
-                new RxJiraComment(
+                new RxJiraIssue(
                     UriBuilder.fromUri(
                         JsonObject.class.cast(obj).getString("self")
                     ).userInfo(uri.getUserInfo()).build()
                 )
             );
         }
-        Collections.reverse(lst);
         return lst;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void post(final String body) {
-        final URI uri = UriBuilder.fromUri(this.url)
-            .path("/comment")
-            .build();
-        final StringWriter json = new StringWriter();
-        Json.createGenerator(json)
-            .writeStartObject()
-            .write("body", body)
-            .writeEnd()
-            .close();
-        RestTester.start(uri)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-            .post("posting comment", json.toString())
-            .assertStatus(HttpURLConnection.HTTP_CREATED);
     }
 
 }
