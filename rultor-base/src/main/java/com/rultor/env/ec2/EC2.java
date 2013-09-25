@@ -302,16 +302,16 @@ public final class EC2 implements Environments {
                         .withKey("Name")
                         .withValue(this.work.rule()),
                     new Tag()
-                        .withKey("rultor:work:rule")
+                        .withKey("urn:rultor:rule")
                         .withValue(this.work.rule()),
                     new Tag()
-                        .withKey("rultor:work:owner")
+                        .withKey("urn:rultor:owner")
                         .withValue(this.work.owner().toString()),
                     new Tag()
-                        .withKey("rultor:work:scheduled")
+                        .withKey("urn:rultor:scheduled")
                         .withValue(this.work.scheduled().toString()),
                     new Tag()
-                        .withKey("rultor:instance-created")
+                        .withKey("urn:rultor:created")
                         .withValue(new Time().toString())
                 )
         );
