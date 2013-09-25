@@ -40,18 +40,12 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
+import com.rexsl.test.SimpleXml;
 import com.rultor.aws.SESClient;
 import com.rultor.snapshot.Step;
-import java.io.StringReader;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathFactory;
 import lombok.EqualsAndHashCode;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 
 /**
  * Amazon SES.
@@ -126,30 +120,19 @@ public final class SES implements Billboard {
     public void announce(
         @NotNull(message = "body can't  be NULL") final String body) {
         final AmazonSimpleEmailService aws = this.client.get();
-        String[] parts = new String[2];
-        Message message = null;
+        final Message message;
         if (body.startsWith("<html>") && body.endsWith("</html>")) {
-            try {
-                final InputSource source =
-                    new InputSource(new StringReader(body));
-                final DocumentBuilderFactory dbf =
-                    DocumentBuilderFactory.newInstance();
-                final DocumentBuilder dbuilder = dbf.newDocumentBuilder();
-                final Document document = dbuilder.parse(source);
-                final XPathFactory xpathFactory = XPathFactory.newInstance();
-                final XPath xpath = xpathFactory.newXPath();
-                final String title = xpath
-                    .evaluate("/html/head/title", document);
-                message = new Message()
-                    .withSubject(new Content().withData(title))
-                        .withBody(
-                            new Body().withHtml(new Content().withData(body))
-                    );
-            } catch (Exception ex) {
-                throw new RuntimeException(ex.getMessage());
-            }
+            message = new Message()
+                .withSubject(new Content()
+                    .withData(new SimpleXml(body)
+                        .xpath("/html/head/title/text()").get(0)
+                )
+            )
+                .withBody(new Body()
+                    .withHtml(new Content().withData(body))
+                );
         } else {
-            parts = body.split("\n", 2);
+            final String[] parts = body.split("\n", 2);
             message = new Message()
                 .withSubject(new Content().withData(parts[0]))
                 .withBody(

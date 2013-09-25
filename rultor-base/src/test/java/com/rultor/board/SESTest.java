@@ -36,6 +36,7 @@ import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.amazonaws.services.simpleemail.model.SendEmailResult;
 import com.rultor.aws.SESClient;
+import java.io.IOException;
 import java.util.Arrays;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -69,70 +70,57 @@ public final class SESTest {
      */
     public static final String TEXT = "text";
     /**
+     * Client mock.
+     */
+    private final transient SESClient client = Mockito.mock(SESClient.class);
+    /**
+     * Message message.
+     */
+    private transient String msg;
+    /**
      * SES can send emails.
      * @throws Exception If some problem inside
      */
     @Test
-    public void sendsEmail() throws Exception {
-        final SESClient client = Mockito.mock(SESClient.class);
-        final AmazonSimpleEmailService aws =
-            Mockito.mock(AmazonSimpleEmailService.class);
-        Mockito.doReturn(aws).when(client).get();
-        Mockito.doReturn(new SendEmailResult()).when(aws)
-            .sendEmail(Mockito.any(SendEmailRequest.class));
-        final Billboard board = new SES(
-            "sender@rultor.com",
-            Arrays.asList("recepient@rultor.com"),
-            client
-        );
-        board.announce("hello, друг!\nfirst\nsecond");
-        Mockito.verify(aws).sendEmail(
-            Mockito.argThat(
-                Matchers.<SendEmailRequest>hasProperty(
-                    SESTest.MESSAGE,
-                    Matchers.allOf(
-                        Matchers.<Message>hasProperty(
-                            SESTest.SUBJECT,
-                            Matchers.<Content>hasProperty(
-                                // @checkstyle MultipleStringLiterals (1 line)
-                                SESTest.DATA,
-                                Matchers.equalTo("hello, друг!")
-                            )
-                        ),
-                        Matchers.<Message>hasProperty(
-                            SESTest.BODY,
-                            Matchers.<Body>hasProperty(
-                                SESTest.TEXT,
-                                Matchers.<Content>hasProperty(
-                                    SESTest.DATA,
-                                    Matchers.equalTo("first\nsecond")
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+    public void sendsEmailTXT() throws Exception {
+        this.msg = "hello, друг!\nfirst\nsecond";
+        this.verifyMessage(
+            "hello, друг!"
+            , "first\nsecond", SESTest.TEXT
         );
     }
+
     /**
      * SES can send emails.
      * @throws Exception If some problem inside
      */
     @Test
     public void sendsEmailFromHTML() throws Exception {
-        final SESClient client = Mockito.mock(SESClient.class);
-        final String msg = "<html><head><title>t</title></head></html>";
+        this.msg = "<html><head><title>t</title></head></html>";
+        this.verifyMessage("t", this.msg, "html");
+    }
+
+    /**
+     * This method verifies the message and the subject.
+     * @param expectedsubject Expected Subject
+     * @param expectedbody Expected Body
+     * @param bodytype Body Type
+     * @throws IOException if some problem inside
+     */
+    private  void verifyMessage(final String expectedsubject
+        , final String expectedbody
+        , final String bodytype) throws IOException {
+        final Billboard board = new SES(
+            "sender@rultor.com",
+            Arrays.asList("recepient@rultor.com"),
+            this.client
+        );
         final AmazonSimpleEmailService aws =
             Mockito.mock(AmazonSimpleEmailService.class);
-        Mockito.doReturn(aws).when(client).get();
+        Mockito.doReturn(aws).when(this.client).get();
         Mockito.doReturn(new SendEmailResult()).when(aws)
             .sendEmail(Mockito.any(SendEmailRequest.class));
-        final Billboard board = new SES(
-            "senderhtml@rultor.com",
-            Arrays.asList("recepienthtml@rultor.com"),
-            client
-        );
-        board.announce(msg);
+        board.announce(this.msg);
         Mockito.verify(aws).sendEmail(
             Mockito.argThat(
                 Matchers.<SendEmailRequest>hasProperty(
@@ -143,16 +131,16 @@ public final class SESTest {
                             Matchers.<Content>hasProperty(
                                 // @checkstyle MultipleStringLiterals (1 line)
                                 SESTest.DATA,
-                                Matchers.equalTo("t")
+                                Matchers.equalTo(expectedsubject)
                             )
                         ),
                         Matchers.<Message>hasProperty(
                             SESTest.BODY,
                             Matchers.<Body>hasProperty(
-                                "html",
+                                bodytype,
                                 Matchers.<Content>hasProperty(
                                     SESTest.DATA,
-                                    Matchers.equalTo(msg)
+                                    Matchers.equalTo(expectedbody)
                                 )
                             )
                         )
