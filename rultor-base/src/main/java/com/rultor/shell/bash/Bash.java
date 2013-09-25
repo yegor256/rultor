@@ -32,6 +32,7 @@ package com.rultor.shell.bash;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
+import com.jcabi.urn.URN;
 import com.rultor.shell.Batch;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
@@ -106,7 +107,7 @@ public final class Bash implements Batch {
         @NotNull(message = "args can't be NULL") final Map<String, Object> args,
         @NotNull(message = "stream can't be NULL") final OutputStream output)
         throws IOException {
-        final Shell shell = this.shells.acquire();
+        final Shell shell = this.badged(this.shells.acquire(), args);
         try {
             final String command = this.script.print(args);
             final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
@@ -140,6 +141,22 @@ public final class Bash implements Batch {
         } finally {
             shell.close();
         }
+    }
+
+    /**
+     * Badge a shell.
+     * @param shell The shell
+     * @param args Args to convert into badges
+     * @return The same shell, but with badges
+     */
+    private Shell badged(final Shell shell, final Map<String, Object> args) {
+        for (Map.Entry<String, Object> entry : args.entrySet()) {
+            if (!URN.isValid(entry.getKey())) {
+                continue;
+            }
+            shell.badge(entry.getKey(), entry.getValue().toString());
+        }
+        return shell;
     }
 
 }
