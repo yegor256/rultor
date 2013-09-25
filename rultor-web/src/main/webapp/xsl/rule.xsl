@@ -37,7 +37,6 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <xsl:apply-templates select="/page/rule/exception"/>
         <xsl:apply-templates select="/page/rule/failure"/>
         <form method="post" class="spacious">
             <xsl:attribute name="action">
@@ -81,9 +80,6 @@
                 </div>
             </fieldset>
         </form>
-    </xsl:template>
-    <xsl:template match="exception">
-        <p class="alert alert-danger"><xsl:value-of select="."/></p>
     </xsl:template>
     <xsl:template match="failure">
         <xsl:if test=". != ''">
