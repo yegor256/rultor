@@ -43,56 +43,6 @@ import org.junit.Test;
  */
 public final class GetterOfTest {
     /**
-     * Correct bean class with property getter.
-     */
-    private static final class Correct {
-        /**
-         * Arbitrary number.
-         */
-        private final transient Integer number;
-
-        /**
-         * Arbitrary names.
-         */
-        private final transient String names;
-
-        /**
-         * Constructor.
-         * @param num Number to store.
-         * @param nam Name to store
-         */
-        private Correct(final Integer num, final String nam) {
-            this.number = num;
-            this.names = nam;
-        }
-
-        /**
-         * Getter for number.
-         * @return Stored number.
-         */
-        public Integer getNumber() {
-            return this.number;
-        }
-
-        /**
-         * Getter for name.
-         * @return Stored name.
-         */
-        public String txt() {
-            return this.names;
-        }
-
-        /**
-         * Simple method.
-         * @param num Number.
-         * @return Stored name.
-         */
-        public String nameParams(final int num) {
-            return this.names;
-        }
-    }
-
-    /**
      * Correct call.
      */
     @Test
@@ -145,4 +95,50 @@ public final class GetterOfTest {
     public void methodWithParams() {
         new GetterOf(new GetterOfTest.Correct(1, ""), "nameParams").object();
     }
+
+    /**
+     * Correct bean class with property getter.
+     */
+    private static final class Correct {
+        /**
+         * Arbitrary number.
+         */
+        private final transient Integer number;
+        /**
+         * Arbitrary names.
+         */
+        private final transient String names;
+        /**
+         * Constructor.
+         * @param num Number to store.
+         * @param nam Name to store
+         */
+        private Correct(final Integer num, final String nam) {
+            this.number = num;
+            this.names = nam;
+        }
+        /**
+         * Getter for number.
+         * @return Stored number.
+         */
+        public Integer getNumber() {
+            return this.number;
+        }
+        /**
+         * Getter for name.
+         * @return Stored name.
+         */
+        public String txt() {
+            return this.names;
+        }
+        /**
+         * Simple method.
+         * @param num Number.
+         * @return Stored name.
+         */
+        public String nameParams(final int num) {
+            return this.names;
+        }
+    }
+
 }

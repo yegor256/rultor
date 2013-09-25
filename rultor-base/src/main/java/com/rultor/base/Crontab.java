@@ -192,22 +192,158 @@ public final class Crontab implements Instance {
     }
 
     /**
-     * Gate condition.
+     * Parse text into alternative.
+     * @param part The text to parse
+     * @return Small gate condition
      */
-    @Immutable
-    private interface Gate<T> {
-        /**
-         * Pass or not.
-         * @param calendar Calendar to check
-         * @return TRUE if it's a good time to go through
-         */
-        boolean pass(T calendar);
-        /**
-         * How many milliseconds to wait before the next opportunity.
-         * @param calendar Calendar to check
-         * @return Lag in milliseconds
-         */
-        long lag(T calendar);
+    private static Crontab.Gate<Integer> parse(final String part) {
+        final Crontab.Gate<Integer> alternative;
+        if (part.matches("\\d+")) {
+            alternative = new Crontab.ExactGate(Integer.parseInt(part));
+        } else if (part.matches("\\d+-\\d+")) {
+            final String[] numbers = part.split("-");
+            alternative = new Crontab.IntervalGate(
+                Integer.parseInt(numbers[0]), Integer.parseInt(numbers[1])
+            );
+        } else if (part.matches("\\*/\\d+")) {
+            alternative = new Crontab.ModuloGate(
+                Integer.valueOf(part.substring(part.indexOf('/') + 1))
+            );
+        // @checkstyle MultipleStringLiterals (1 line)
+        } else if ("*".equals(part)) {
+            alternative = new Crontab.Gate<Integer>() {
+                @Override
+                public String toString() {
+                    return "*";
+                }
+                @Override
+                public boolean pass(final Integer num) {
+                    return true;
+                }
+                @Override
+                public long lag(final Integer num) {
+                    return 0L;
+                }
+            };
+        } else {
+            throw new IllegalArgumentException(
+                String.format("invalid crontab sector `%s`", part)
+            );
+        }
+        return alternative;
+    }
+
+    /**
+     * Split into parts.
+     * @param text Text to split
+     * @return Five parts, numbers
+     */
+    @SuppressWarnings("unchecked")
+    private static Crontab.Gate<Calendar>[] split(final String text) {
+        String src = text;
+        if (Crontab.DEFS.containsKey(src)) {
+            src = Crontab.DEFS.get(src);
+        }
+        final String[] parts = src.split("\\s+");
+        if (parts.length != Tv.FIVE) {
+            throw new IllegalArgumentException(
+                String.format("invalid crontab definition `%s`", text)
+            );
+        }
+        return (Crontab.Gate<Calendar>[]) new Crontab.Gate<?>[] {
+            new Crontab.AbstractBigGate(parts[0]) {
+                @Override
+                public boolean pass(final Calendar calendar) {
+                    return this.matches(calendar.get(Calendar.MINUTE));
+                }
+                @Override
+                public long lag(final Calendar calendar) {
+                    return this.lag(
+                        calendar.get(Calendar.MINUTE)
+                    ) * TimeUnit.MINUTES.toMillis(1);
+                }
+            },
+            new Crontab.AbstractBigGate(parts[1]) {
+                @Override
+                public boolean pass(final Calendar calendar) {
+                    return this.matches(calendar.get(Calendar.HOUR_OF_DAY));
+                }
+                @Override
+                public long lag(final Calendar calendar) {
+                    return this.lag(
+                        calendar.get(Calendar.HOUR_OF_DAY)
+                    ) * TimeUnit.HOURS.toMillis(1);
+                }
+            },
+            new Crontab.AbstractBigGate(parts[2]) {
+                @Override
+                public boolean pass(final Calendar calendar) {
+                    return this.matches(
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                    );
+                }
+                @Override
+                public long lag(final Calendar calendar) {
+                    return this.lag(
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                    ) * TimeUnit.DAYS.toMillis(1);
+                }
+            },
+            new Crontab.AbstractBigGate(parts[Tv.THREE]) {
+                @Override
+                public boolean pass(final Calendar calendar) {
+                    return this.matches(calendar.get(Calendar.MONTH) + 1);
+                }
+                @Override
+                public long lag(final Calendar calendar) {
+                    return this.lag(
+                        calendar.get(Calendar.MONTH) + 1
+                    ) * Tv.THIRTY * TimeUnit.DAYS.toMillis(1);
+                }
+            },
+            new Crontab.AbstractBigGate(parts[Tv.FOUR]) {
+                @Override
+                public boolean pass(final Calendar calendar) {
+                    return this.matches(calendar.get(Calendar.DAY_OF_WEEK));
+                }
+                @Override
+                public long lag(final Calendar calendar) {
+                    return this.lag(
+                        calendar.get(Calendar.DAY_OF_WEEK) - 1
+                    ) * TimeUnit.DAYS.toMillis(1);
+                }
+            },
+        };
+    }
+
+    /**
+     * Convert date to calendar.
+     * @param date Current date
+     * @return Calendar or today
+     */
+    private static Calendar calendar(final Time date) {
+        final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        cal.setTime(date.date());
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.SECOND, 0);
+        return cal;
+    }
+
+    /**
+     * Convert time into text.
+     * @param date The date
+     * @return Text in crontab format
+     */
+    private static String moment(final Time date) {
+        final Calendar cal = Crontab.calendar(date);
+        return String.format(
+            "%d %d %d %d %d",
+            cal.get(Calendar.MINUTE),
+            cal.get(Calendar.HOUR_OF_DAY),
+            cal.get(Calendar.DAY_OF_MONTH),
+            cal.get(Calendar.MONTH) + 1,
+            cal.get(Calendar.DAY_OF_WEEK) - 1
+        );
     }
 
     /**
@@ -419,158 +555,22 @@ public final class Crontab implements Instance {
     }
 
     /**
-     * Parse text into alternative.
-     * @param part The text to parse
-     * @return Small gate condition
+     * Gate condition.
      */
-    private static Crontab.Gate<Integer> parse(final String part) {
-        final Crontab.Gate<Integer> alternative;
-        if (part.matches("\\d+")) {
-            alternative = new Crontab.ExactGate(Integer.parseInt(part));
-        } else if (part.matches("\\d+-\\d+")) {
-            final String[] numbers = part.split("-");
-            alternative = new Crontab.IntervalGate(
-                Integer.parseInt(numbers[0]), Integer.parseInt(numbers[1])
-            );
-        } else if (part.matches("\\*/\\d+")) {
-            alternative = new Crontab.ModuloGate(
-                Integer.valueOf(part.substring(part.indexOf('/') + 1))
-            );
-        // @checkstyle MultipleStringLiterals (1 line)
-        } else if ("*".equals(part)) {
-            alternative = new Crontab.Gate<Integer>() {
-                @Override
-                public String toString() {
-                    return "*";
-                }
-                @Override
-                public boolean pass(final Integer num) {
-                    return true;
-                }
-                @Override
-                public long lag(final Integer num) {
-                    return 0L;
-                }
-            };
-        } else {
-            throw new IllegalArgumentException(
-                String.format("invalid crontab sector `%s`", part)
-            );
-        }
-        return alternative;
-    }
-
-    /**
-     * Split into parts.
-     * @param text Text to split
-     * @return Five parts, numbers
-     */
-    @SuppressWarnings("unchecked")
-    private static Crontab.Gate<Calendar>[] split(final String text) {
-        String src = text;
-        if (Crontab.DEFS.containsKey(src)) {
-            src = Crontab.DEFS.get(src);
-        }
-        final String[] parts = src.split("\\s+");
-        if (parts.length != Tv.FIVE) {
-            throw new IllegalArgumentException(
-                String.format("invalid crontab definition `%s`", text)
-            );
-        }
-        return (Crontab.Gate<Calendar>[]) new Crontab.Gate<?>[] {
-            new Crontab.AbstractBigGate(parts[0]) {
-                @Override
-                public boolean pass(final Calendar calendar) {
-                    return this.matches(calendar.get(Calendar.MINUTE));
-                }
-                @Override
-                public long lag(final Calendar calendar) {
-                    return this.lag(
-                        calendar.get(Calendar.MINUTE)
-                    ) * TimeUnit.MINUTES.toMillis(1);
-                }
-            },
-            new Crontab.AbstractBigGate(parts[1]) {
-                @Override
-                public boolean pass(final Calendar calendar) {
-                    return this.matches(calendar.get(Calendar.HOUR_OF_DAY));
-                }
-                @Override
-                public long lag(final Calendar calendar) {
-                    return this.lag(
-                        calendar.get(Calendar.HOUR_OF_DAY)
-                    ) * TimeUnit.HOURS.toMillis(1);
-                }
-            },
-            new Crontab.AbstractBigGate(parts[2]) {
-                @Override
-                public boolean pass(final Calendar calendar) {
-                    return this.matches(
-                        calendar.get(Calendar.DAY_OF_MONTH)
-                    );
-                }
-                @Override
-                public long lag(final Calendar calendar) {
-                    return this.lag(
-                        calendar.get(Calendar.DAY_OF_MONTH)
-                    ) * TimeUnit.DAYS.toMillis(1);
-                }
-            },
-            new Crontab.AbstractBigGate(parts[Tv.THREE]) {
-                @Override
-                public boolean pass(final Calendar calendar) {
-                    return this.matches(calendar.get(Calendar.MONTH) + 1);
-                }
-                @Override
-                public long lag(final Calendar calendar) {
-                    return this.lag(
-                        calendar.get(Calendar.MONTH) + 1
-                    ) * Tv.THIRTY * TimeUnit.DAYS.toMillis(1);
-                }
-            },
-            new Crontab.AbstractBigGate(parts[Tv.FOUR]) {
-                @Override
-                public boolean pass(final Calendar calendar) {
-                    return this.matches(calendar.get(Calendar.DAY_OF_WEEK));
-                }
-                @Override
-                public long lag(final Calendar calendar) {
-                    return this.lag(
-                        calendar.get(Calendar.DAY_OF_WEEK) - 1
-                    ) * TimeUnit.DAYS.toMillis(1);
-                }
-            },
-        };
-    }
-
-    /**
-     * Convert date to calendar.
-     * @param date Current date
-     * @return Calendar or today
-     */
-    private static Calendar calendar(final Time date) {
-        final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        cal.setTime(date.date());
-        cal.set(Calendar.MILLISECOND, 0);
-        cal.set(Calendar.SECOND, 0);
-        return cal;
-    }
-
-    /**
-     * Convert time into text.
-     * @param date The date
-     * @return Text in crontab format
-     */
-    private static String moment(final Time date) {
-        final Calendar cal = Crontab.calendar(date);
-        return String.format(
-            "%d %d %d %d %d",
-            cal.get(Calendar.MINUTE),
-            cal.get(Calendar.HOUR_OF_DAY),
-            cal.get(Calendar.DAY_OF_MONTH),
-            cal.get(Calendar.MONTH) + 1,
-            cal.get(Calendar.DAY_OF_WEEK) - 1
-        );
+    @Immutable
+    private interface Gate<T> {
+        /**
+         * Pass or not.
+         * @param calendar Calendar to check
+         * @return TRUE if it's a good time to go through
+         */
+        boolean pass(T calendar);
+        /**
+         * How many milliseconds to wait before the next opportunity.
+         * @param calendar Calendar to check
+         * @return Lag in milliseconds
+         */
+        long lag(T calendar);
     }
 
 }

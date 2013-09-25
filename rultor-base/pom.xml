@@ -40,10 +40,6 @@
     <name>rultor-base</name>
     <dependencies>
         <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-aspects</artifactId>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>rultor-spi</artifactId>
             <version>${project.version}</version>
@@ -55,6 +51,10 @@
         <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-aspects</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

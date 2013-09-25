@@ -74,19 +74,6 @@ final class Brackets<T> {
     private final transient Brackets.Format<T> format;
 
     /**
-     * Formatter.
-     */
-    @Immutable
-    public interface Format<T> {
-        /**
-         * Format the line.
-         * @param var Variable to render
-         * @return Text rendered
-         */
-        String print(T var);
-    }
-
-    /**
      * Public ctor.
      * @param args Arguments
      */
@@ -141,6 +128,19 @@ final class Brackets<T> {
             }
         }
         return text.toString();
+    }
+
+    /**
+     * Formatter.
+     */
+    @Immutable
+    public interface Format<T> {
+        /**
+         * Format the line.
+         * @param var Variable to render
+         * @return Text rendered
+         */
+        String print(T var);
     }
 
 }

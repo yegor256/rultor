@@ -176,6 +176,32 @@ public final class Temporary implements Drain {
     }
 
     /**
+     * This drain is similar to the one provided?
+     * @param drain Drain to compare with
+     * @return TRUE if they are similar
+     */
+    private boolean similar(final Temporary drain) {
+        return this.work.owner().equals(drain.work.owner())
+            && this.work.rule().equals(drain.work.rule())
+            && this.marker.equals(drain.marker);
+    }
+
+    /**
+     * Flush.
+     */
+    @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.SECONDS)
+    private static final class Cleaner implements Runnable {
+        @Override
+        public void run() {
+            for (Temporary client : Temporary.BUFFERS.keySet()) {
+                if (Temporary.BUFFERS.get(client).expired()) {
+                    Temporary.BUFFERS.remove(client);
+                }
+            }
+        }
+    }
+
+    /**
      * Thread-safe buffer to the real drain.
      */
     private final class Buffer {
@@ -230,32 +256,6 @@ public final class Temporary implements Drain {
         public boolean expired() {
             return System.currentTimeMillis() - this.start
                 > Temporary.LIFETIME;
-        }
-    }
-
-    /**
-     * This drain is similar to the one provided?
-     * @param drain Drain to compare with
-     * @return TRUE if they are similar
-     */
-    private boolean similar(final Temporary drain) {
-        return this.work.owner().equals(drain.work.owner())
-            && this.work.rule().equals(drain.work.rule())
-            && this.marker.equals(drain.marker);
-    }
-
-    /**
-     * Flush.
-     */
-    @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.SECONDS)
-    private static final class Cleaner implements Runnable {
-        @Override
-        public void run() {
-            for (Temporary client : Temporary.BUFFERS.keySet()) {
-                if (Temporary.BUFFERS.get(client).expired()) {
-                    Temporary.BUFFERS.remove(client);
-                }
-            }
         }
     }
 

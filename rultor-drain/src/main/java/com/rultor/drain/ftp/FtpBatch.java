@@ -79,19 +79,6 @@ final class FtpBatch {
     private final transient int port;
 
     /**
-     * Script to execute.
-     */
-    protected interface Script<T> {
-        /**
-         * Run it.
-         * @param ftp FTP client
-         * @return Result
-         * @throws IOException If fails in IO operation
-         */
-        T exec(final FTPClient ftp) throws IOException;
-    }
-
-    /**
      * Public ctor.
      * @param hst FTP host name (or IP address)
      * @param user FTP user name for login
@@ -237,6 +224,19 @@ final class FtpBatch {
         }
         Logger.debug(this, "#exists('%s'): %B", dir, exists);
         return exists;
+    }
+
+    /**
+     * Script to execute.
+     */
+    protected interface Script<T> {
+        /**
+         * Run it.
+         * @param ftp FTP client
+         * @return Result
+         * @throws IOException If fails in IO operation
+         */
+        T exec(final FTPClient ftp) throws IOException;
     }
 
 }
