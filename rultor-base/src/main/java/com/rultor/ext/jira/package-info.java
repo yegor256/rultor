@@ -27,42 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.jira;
-
-import com.jcabi.aspects.Immutable;
 
 /**
- * Jira issue.
+ * JIRA.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface JiraIssue {
-
-    /**
-     * Its key.
-     * @return Key of the issue, e.g. TEST-1242
-     */
-    String key();
-
-    /**
-     * Assign it to another user.
-     * @param name Name of the user to assign to
-     */
-    void assign(String name);
-
-    /**
-     * Get its comments (in reverse order, latest first).
-     * @return Comments
-     */
-    Iterable<JiraComment> comments();
-
-    /**
-     * Post a comment.
-     * @param body Body of it
-     */
-    void post(String body);
-
-}
+package com.rultor.ext.jira;

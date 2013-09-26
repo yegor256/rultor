@@ -33,7 +33,7 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.cd.Deployment;
-import com.rultor.jira.JiraIssue;
+import com.rultor.ext.jira.JiraIssue;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
 import com.rultor.tools.Exceptions;
