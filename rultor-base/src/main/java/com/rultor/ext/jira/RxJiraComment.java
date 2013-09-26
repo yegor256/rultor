@@ -27,83 +27,72 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.cd.jira;
+package com.rultor.ext.jira;
 
-import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.cd.Deployment;
-import com.rultor.ext.jira.Jira;
-import com.rultor.ext.jira.JiraIssue;
-import com.rultor.ext.jira.RxJira;
-import com.rultor.snapshot.Tag;
-import java.util.AbstractCollection;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import javax.validation.constraints.NotNull;
+import com.rexsl.test.RestTester;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.http.HttpHeaders;
 
 /**
- * Deployment requests from JIRA.
+ * Jira comment with ReXSL.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @see <a href="https://docs.atlassian.com/jira/REST/latest/">JIRA REST API</a>
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(callSuper = false, of = "jira")
+@EqualsAndHashCode(of = "url")
 @Loggable(Loggable.DEBUG)
-public final class JiraDeployments extends AbstractCollection<Deployment> {
+final class RxJiraComment implements JiraComment {
 
     /**
-     * JIRA.
+     * URL of the server.
      */
-    private final transient Jira jira;
+    private final transient String url;
 
     /**
      * Public ctor.
-     * @param url JIRA URL
+     * @param srv Server URL
      */
-    public JiraDeployments(
-        @NotNull(message = "JIRA URL can't be NULL") final String url) {
-        this(new RxJira(url));
-    }
-
-    /**
-     * Protected ctor, for tests mostly.
-     * @param jra JIRA
-     */
-    protected JiraDeployments(final Jira jra) {
-        super();
-        this.jira = jra;
+    protected RxJiraComment(final URI srv) {
+        this.url = srv.toString();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Tag("jira")
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public Iterator<Deployment> iterator() {
-        final Iterable<JiraIssue> issues = this.jira.search(
-            "assignee = currentUser()"
-        );
-        final Collection<Deployment> deps = new LinkedList<Deployment>();
-        for (JiraIssue issue : issues) {
-            deps.add(new JiraDeployment(issue));
-        }
-        return deps.iterator();
+    public String body() {
+        return RestTester.start(URI.create(this.url))
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+            .get("fetching body of the comment")
+            .assertStatus(HttpURLConnection.HTTP_OK)
+            .getJson()
+            .readObject()
+            .getString("body");
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public int size() {
-        return Iterators.size(this.iterator());
+    public String author() {
+        return RestTester.start(URI.create(this.url))
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+            .get("fetching author name of the comment")
+            .assertStatus(HttpURLConnection.HTTP_OK)
+            .getJson()
+            .readObject()
+            .getJsonObject("author")
+            .getString("name");
     }
 
 }

@@ -27,30 +27,25 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.jira;
+package com.rultor.ext.jira;
 
 import com.jcabi.aspects.Immutable;
 
 /**
- * Jira comment.
+ * Jira.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface JiraComment {
+public interface Jira {
 
     /**
-     * Get its text.
-     * @return Body of the comment
+     * Issues by search request.
+     * @param jql Query string
+     * @return Issues
      */
-    String body();
-
-    /**
-     * Author.
-     * @return Name of the author
-     */
-    String author();
+    Iterable<JiraIssue> search(String jql);
 
 }

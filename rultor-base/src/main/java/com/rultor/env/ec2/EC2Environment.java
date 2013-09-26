@@ -143,6 +143,7 @@ final class EC2Environment implements Environment {
      */
     @Override
     @Step("EC2 instance `${this.name}` terminated")
+    @RetryOnFailure(verbose = false)
     public void close() throws IOException {
         final AmazonEC2 aws = this.client.get();
         try {
@@ -189,6 +190,7 @@ final class EC2Environment implements Environment {
      * {@inheritDoc}
      */
     @Override
+    @RetryOnFailure(verbose = false)
     public Map<String, String> badges() {
         final AmazonEC2 aws = this.client.get();
         try {
@@ -212,6 +214,7 @@ final class EC2Environment implements Environment {
      * {@inheritDoc}
      */
     @Override
+    @RetryOnFailure(verbose = false)
     public void badge(final String badge, final String value) {
         final AmazonEC2 aws = this.client.get();
         try {

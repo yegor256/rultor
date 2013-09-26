@@ -27,25 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.jira;
-
-import com.jcabi.aspects.Immutable;
 
 /**
- * Jira.
+ * JIRA, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Jira {
-
-    /**
-     * Issues by search request.
-     * @param jql Query string
-     * @return Issues
-     */
-    Iterable<JiraIssue> search(String jql);
-
-}
+package com.rultor.ext.jira;
