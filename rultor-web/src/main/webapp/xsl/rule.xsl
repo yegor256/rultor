@@ -44,7 +44,7 @@
             </xsl:attribute>
             <fieldset>
                 <div class="form-group">
-                    <label for="spec" class="hidden-phone">
+                    <label for="spec" class="hidden-xs hidden-sm">
                         <xsl:text>Spec of </xsl:text>
                         <code><xsl:value-of select="/page/rule/name"/></code>
                         <xsl:text> </xsl:text>
@@ -57,7 +57,7 @@
                     </textarea>
                 </div>
                 <div class="form-group">
-                    <label for="drain" class="hidden-phone">
+                    <label for="drain" class="hidden-xs hidden-sm">
                         <xsl:text>Drain spec of </xsl:text>
                         <code><xsl:value-of select="/page/rule/name"/></code>
                         <xsl:text> </xsl:text>
@@ -74,7 +74,7 @@
                     <button type="submit" class="btn btn-primary">
                         <xsl:text>Save</xsl:text>
                     </button>
-                    <span class="help-block hidden-phone">
+                    <span class="help-block hidden-xs hidden-sm">
                         <xsl:text>Takes up to five minutes to update all servers</xsl:text>
                     </span>
                 </div>

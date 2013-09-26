@@ -27,6 +27,12 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @todo #1 Would be nice to hide certain elements in the upper
+ *  inline menu with Bootstrap responsive utility classes, however
+ *  this only will be possible in version 3.1:
+ *  https://github.com/twbs/bootstrap/issues/8869
+ *
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:include href="./common.xsl"/>
@@ -149,7 +155,7 @@
                     </div>
                 </xsl:if>
                 <aside>
-                    <a href="https://github.com/rultor/rultor" class="hidden-phone">
+                    <a href="https://github.com/rultor/rultor" class="hidden-xs hidden-sm">
                         <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
                             src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
                             alt="Fork me on GitHub" />
@@ -171,7 +177,7 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </li>
-                    <li class="hidden-phone">
+                    <li>
                         <a href="//doc.rultor.com/">
                             <xsl:text>how it works?</xsl:text>
                         </a>
@@ -237,7 +243,7 @@
         </xsl:if>
     </xsl:template>
     <xsl:template match="version">
-        <aside class="version hidden-phone" style="padding: 0.2em 0.5em;">
+        <aside class="version hidden-xs hidden-sm" style="padding: 0.2em 0.5em;">
             <ul class="list-inline">
                 <li>
                     <xsl:attribute name="class">
@@ -307,7 +313,7 @@
         </p>
     </xsl:template>
     <xsl:template match="identity">
-        <li class="hidden-phone hidden-tablet">
+        <li>
             <img style="width: 25px; height: 25px;" class="img-rounded">
                 <xsl:attribute name="src">
                     <xsl:value-of select="photo"/>
@@ -331,7 +337,7 @@
                 <xsl:value-of select="/page/balance"/>
             </a>
         </li>
-        <li class="hidden-phone">
+        <li>
             <i>
                 <xsl:attribute name="title">
                     <xsl:value-of select="urn"/>

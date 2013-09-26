@@ -84,6 +84,7 @@ final class JiraDeployment implements Deployment {
     public Map<String, Object> params() {
         return new ImmutableMap.Builder<String, Object>()
             .put("name", this.name())
+            .put("urn:rultor:jira:key", this.issue.key())
             .build();
     }
 

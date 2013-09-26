@@ -43,7 +43,7 @@
             </xsl:attribute>
             <fieldset>
                 <div class="form-group">
-                    <label for="acl" class="hidden-phone">
+                    <label for="acl" class="hidden-xs hidden-sm">
                         <xsl:text>Access Control List of </xsl:text>
                         <code><xsl:value-of select="/page/stand/name"/></code>
                         <xsl:text> </xsl:text>
@@ -56,7 +56,7 @@
                     </textarea>
                 </div>
                 <div class="form-group">
-                    <label for="widgets" class="hidden-phone">
+                    <label for="widgets" class="hidden-xs hidden-sm">
                         <xsl:text>Widgets of </xsl:text>
                         <code><xsl:value-of select="/page/stand/name"/></code>
                         <xsl:text> </xsl:text>
@@ -73,7 +73,7 @@
                     <button type="submit" class="btn btn-primary">
                         <xsl:text>Save</xsl:text>
                     </button>
-                    <span class="help-block hidden-phone">
+                    <span class="help-block hidden-xs hidden-sm">
                         <xsl:text>Takes up to five minutes to update all servers</xsl:text>
                     </span>
                 </div>
