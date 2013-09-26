@@ -99,6 +99,9 @@ final class GhRequest implements MergeRequest {
         this.repository = rep;
         this.parameters = new ArrayMap<String, Object>(
             new ImmutableMap.Builder<String, Object>()
+                .put("urn:rultor:github:user", rep.user())
+                .put("urn:rultor:github:repo", rep.repo())
+                .put("urn:rultor:github:issue", req.getNumber())
                 .put("issue", req.getNumber())
                 .put("baseRepo", req.getBase().getRepo().getName())
                 .put("baseBranch", req.getBase().getRef())
