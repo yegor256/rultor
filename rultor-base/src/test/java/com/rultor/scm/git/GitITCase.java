@@ -35,6 +35,7 @@ import com.rultor.scm.Commit;
 import com.rultor.scm.SCM;
 import com.rultor.shell.ShellMocker;
 import java.io.File;
+import java.net.URL;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -75,7 +76,7 @@ public final class GitITCase {
         final File dir = Files.createTempDir();
         final SCM git = new Git(
             new ShellMocker.Bash(dir),
-            new GitURI(GitITCase.URL),
+            new URL(GitITCase.URL),
             "test"
         );
         final Branch branch = git.checkout("master");
@@ -96,7 +97,7 @@ public final class GitITCase {
         final File dir = Files.createTempDir();
         final SCM git = new Git(
             new ShellMocker.Bash(dir),
-            new GitURI(GitITCase.URL),
+            new URL(GitITCase.URL),
             "boom"
         );
         MatcherAssert.assertThat(
@@ -115,7 +116,7 @@ public final class GitITCase {
         final File dir = Files.createTempDir();
         final SCM git = new Git(
             new ShellMocker.Bash(dir),
-            new GitURI(GitITCase.URL),
+            new URL(GitITCase.URL),
             "foo-4"
         );
         git.checkout(GitITCase.TAG);
@@ -131,7 +132,7 @@ public final class GitITCase {
         final File dir = Files.createTempDir();
         final SCM git = new Git(
             new ShellMocker.Bash(dir),
-            new GitURI(GitITCase.URL),
+            new URL(GitITCase.URL),
             "foo-ff"
         );
         git.checkout(GitITCase.BRANCH);

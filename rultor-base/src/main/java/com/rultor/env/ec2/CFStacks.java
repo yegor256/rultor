@@ -38,7 +38,6 @@ import com.rultor.aws.CFClient;
 import com.rultor.env.Environment;
 import com.rultor.env.Environments;
 import com.rultor.snapshot.Step;
-import com.rultor.snapshot.Tag;
 import java.io.IOException;
 import java.util.Iterator;
 import lombok.EqualsAndHashCode;
@@ -108,7 +107,6 @@ public final class CFStacks implements Environments {
      * @return Name of stack just created
      */
     @Step("CloudFormation stack `{$result}` created")
-    @Tag("CloudFormation")
     private String create() {
         final AmazonCloudFormation aws = this.client.get();
         try {

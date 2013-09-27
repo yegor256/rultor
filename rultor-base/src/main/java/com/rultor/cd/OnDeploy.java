@@ -29,29 +29,21 @@
  */
 package com.rultor.cd;
 
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
-import com.rultor.ci.Build;
+import com.jcabi.immutable.ArrayMap;
+import com.jcabi.log.Logger;
 import com.rultor.shell.Batch;
-import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.Step;
-import com.rultor.snapshot.XemblyLine;
+import com.rultor.snapshot.TagLine;
 import com.rultor.spi.Instance;
-import com.rultor.tools.Exceptions;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Collection;
-import java.util.Map;
-import java.util.logging.Level;
-import javax.json.Json;
-import javax.json.stream.JsonGenerator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.xembly.Directives;
-import org.xembly.ImpossibleModificationException;
+import org.apache.commons.io.output.NullOutputStream;
 
 /**
  * On deployment request.
@@ -107,80 +99,37 @@ public final class OnDeploy implements Instance {
      * @throws IOException If IO problem
      */
     @Step(
-        before = "deploying request ${args[0].name}",
+        before = "deploying ${args[0].name}",
         // @checkstyle LineLength (1 line)
-        value = "deployment ${args[0].name} #if($result)successfull#{else}failed#end"
+        value = "deployment ${args[0].name} #if($result)succeeded#{else}failed#end"
     )
     private boolean deploy(final Deployment dep) throws IOException {
-        final String tag = "on-deploy";
-        final Snapshot snapshot = new Build(tag, this.batch).exec(
-            new ImmutableMap.Builder<String, Object>()
-                .putAll(dep.params())
-                .build()
+        final long start = System.currentTimeMillis();
+        final int code = this.batch.exec(
+            new ArrayMap<String, String>().with("name", dep.name()),
+            new NullOutputStream()
         );
-        final boolean failure = this.failure(snapshot, tag);
-        if (failure) {
-            dep.failed(snapshot);
+        final long millis = System.currentTimeMillis() - start;
+        new TagLine("on-deploy")
+            .fine(code == 0)
+            .attr("code", Integer.toString(code))
+            .attr("duration", Long.toString(millis))
+            .attr("name", dep.name())
+            .markdown(
+                Logger.format(
+                    "deployment `%s` %s in %[ms]s",
+                    dep.name(),
+                    code == 0 ? "succeeded" : "failed",
+                    millis
+                )
+            )
+            .log();
+        if (code == 0) {
+            dep.succeeded();
         } else {
-            dep.succeeded(snapshot);
+            dep.failed();
         }
-        this.tag(dep, failure);
-        return !failure;
-    }
-
-    /**
-     * Was it a failed merge?
-     * @param snapshot Snapshot received
-     * @param tag Tag to look for
-     * @return TRUE if it was a failure
-     */
-    private boolean failure(final Snapshot snapshot, final String tag) {
-        boolean failure = true;
-        try {
-            failure = snapshot.xml()
-                .nodes(String.format("//tag[label='%s' and level='FINE']", tag))
-                .isEmpty();
-        } catch (ImpossibleModificationException ex) {
-            Exceptions.warn(this, ex);
-        }
-        return failure;
-    }
-
-    /**
-     * Log a tag.
-     * @param dep Deployment request
-     * @param failure TRUE if failed
-     * @throws IOException If fails
-     */
-    private void tag(final Deployment dep, final boolean failure)
-        throws IOException {
-        final StringWriter data = new StringWriter();
-        final JsonGenerator json = Json.createGenerator(data)
-            .writeStartObject()
-            .write("request", dep.name())
-            .writeStartObject("params");
-        for (Map.Entry<String, Object> entry : dep.params().entrySet()) {
-            json.write(entry.getKey(), entry.getValue().toString());
-        }
-        json.writeEnd()
-            .write("failure", Boolean.toString(failure))
-            .writeEnd()
-            .close();
-        final StringBuilder desc = new StringBuilder();
-        desc.append("deployment request ").append(dep.name());
-        if (failure) {
-            desc.append(" failed");
-        } else {
-            desc.append(" succeeded");
-        }
-        new XemblyLine(
-            new Directives()
-                .xpath("/snapshot").strict(1).addIfAbsent("tags")
-                .add("tag").add("label").set("deploy").up()
-                .add("level").set(Level.INFO.toString()).up()
-                .add("data").set(data.toString()).up()
-                .add("markdown").set(desc.toString())
-        ).log();
+        return code == 0;
     }
 
 }

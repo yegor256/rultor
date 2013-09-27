@@ -104,7 +104,7 @@ public final class Bash implements Batch {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public int exec(
-        @NotNull(message = "args can't be NULL") final Map<String, Object> args,
+        @NotNull(message = "args can't be NULL") final Map<String, String> args,
         @NotNull(message = "stream can't be NULL") final OutputStream output)
         throws IOException {
         final Shell shell = this.badged(this.shells.acquire(), args);
@@ -149,8 +149,8 @@ public final class Bash implements Batch {
      * @param args Args to convert into badges
      * @return The same shell, but with badges
      */
-    private Shell badged(final Shell shell, final Map<String, Object> args) {
-        for (Map.Entry<String, Object> entry : args.entrySet()) {
+    private Shell badged(final Shell shell, final Map<String, String> args) {
+        for (Map.Entry<String, String> entry : args.entrySet()) {
             if (!URN.isValid(entry.getKey())) {
                 continue;
             }

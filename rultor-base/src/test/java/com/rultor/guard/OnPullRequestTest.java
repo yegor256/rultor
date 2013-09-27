@@ -30,7 +30,6 @@
 package com.rultor.guard;
 
 import com.rultor.shell.Batch;
-import com.rultor.snapshot.Snapshot;
 import com.rultor.spi.Instance;
 import com.rultor.stateful.ConcurrentNotepad;
 import java.io.OutputStream;
@@ -68,7 +67,7 @@ public final class OnPullRequestTest {
         Mockito.verify(batch).exec(
             Mockito.any(Map.class), Mockito.any(OutputStream.class)
         );
-        Mockito.verify(request).reject(Mockito.any(Snapshot.class));
+        Mockito.verify(request).reject();
     }
 
     /**
@@ -91,7 +90,7 @@ public final class OnPullRequestTest {
         Mockito.verify(batch).exec(
             Mockito.any(Map.class), Mockito.any(OutputStream.class)
         );
-        Mockito.verify(request).accept(Mockito.any(Snapshot.class));
+        Mockito.verify(request).accept();
     }
 
 }

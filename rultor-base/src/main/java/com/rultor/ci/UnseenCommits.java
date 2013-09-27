@@ -36,6 +36,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
+import com.rultor.scm.SCM;
 import com.rultor.snapshot.Step;
 import com.rultor.stateful.Notepad;
 import java.io.IOException;
@@ -108,6 +109,14 @@ public final class UnseenCommits implements Branch {
                 );
             }
         };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SCM scm() {
+        return this.origin.scm();
     }
 
     /**

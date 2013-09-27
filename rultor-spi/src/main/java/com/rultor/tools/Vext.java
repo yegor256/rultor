@@ -88,11 +88,11 @@ public final class Vext {
      * @param args Arguments
      * @return Text printed
      */
-    public String print(@NotNull(message = "args can't be NULL")
-        final Map<String, Object> args) {
+    public <T> String print(@NotNull(message = "args can't be NULL")
+        final Map<String, T> args) {
         final StringWriter writer = new StringWriter();
         final Context context = new VelocityContext();
-        for (Map.Entry<String, Object> entry : args.entrySet()) {
+        for (Map.Entry<String, T> entry : args.entrySet()) {
             context.put(entry.getKey(), entry.getValue());
         }
         final VelocityEngine engine = new VelocityEngine();

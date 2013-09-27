@@ -30,8 +30,6 @@
 package com.rultor.cd;
 
 import com.jcabi.aspects.Immutable;
-import com.rultor.snapshot.Snapshot;
-import java.util.Map;
 
 /**
  * Deployment request.
@@ -50,31 +48,18 @@ public interface Deployment {
     String name();
 
     /**
-     * Optional parameters.
-     * @return Map of parameters
-     */
-    Map<String, Object> params();
-
-    /**
      * When deployment is just started.
      */
     void started();
 
     /**
      * When it's done.
-     * @param snapshot Snapshot
      */
-    void succeeded(Snapshot snapshot);
+    void succeeded();
 
     /**
      * When it's failed.
-     * @param snapshot Snapshot
      */
-    void failed(Snapshot snapshot);
-
-    /**
-     * When terminated.
-     */
-    void terminated();
+    void failed();
 
 }

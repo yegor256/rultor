@@ -30,7 +30,6 @@
 package com.rultor.guard.github;
 
 import com.rultor.guard.MergeRequest;
-import com.rultor.snapshot.Snapshot;
 import java.net.HttpURLConnection;
 import java.util.Date;
 import org.eclipse.egit.github.core.Issue;
@@ -83,7 +82,7 @@ public final class GhRequestTest {
         final MergeRequest request = new GhRequest(
             github, new Github.Repo("test/test"), req
         );
-        request.accept(new Snapshot("ADD 'test';"));
+        request.accept();
     }
 
 }

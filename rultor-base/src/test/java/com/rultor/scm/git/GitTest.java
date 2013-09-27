@@ -32,6 +32,7 @@ package com.rultor.scm.git;
 import com.google.common.io.Files;
 import com.rultor.scm.Branch;
 import com.rultor.shell.ShellMocker;
+import java.net.URL;
 import java.util.Collection;
 import javax.validation.ConstraintViolationException;
 import org.hamcrest.MatcherAssert;
@@ -49,7 +50,7 @@ public final class GitTest {
     /**
      * URL to public GitHub repository.
      */
-    private static final String GIT_URL = "http://github.com/nyavro/test.git";
+    private static final String GIT_URL = "ssh://github.com/xembly/xembly.git";
 
     /**
      * Git public ctor args can not be null.
@@ -57,7 +58,7 @@ public final class GitTest {
      */
     @Test(expected = ConstraintViolationException.class)
     public void failsWhenInitializedWithNulls() throws Exception {
-        new Git(null, "git@github.com:rultor/rultor.git", null);
+        new Git(null, new URL("git@github.com:rultor/rultor.git"), null);
     }
 
     /**
@@ -69,7 +70,7 @@ public final class GitTest {
         MatcherAssert.assertThat(
             new Git(
                 new ShellMocker.Bash(Files.createTempDir()),
-                new GitURI(GitTest.GIT_URL),
+                new URL(GitTest.GIT_URL),
                 "test"
             ).checkout("master"),
             Matchers.notNullValue(Branch.class)
@@ -85,7 +86,7 @@ public final class GitTest {
         MatcherAssert.assertThat(
             new Git(
                 new ShellMocker.Bash(Files.createTempDir()),
-                new GitURI(GitTest.GIT_URL),
+                new URL(GitTest.GIT_URL),
                 "test2"
             ).branches(),
             Matchers.notNullValue(Collection.class)

@@ -32,7 +32,6 @@ package com.rultor.cd.jira;
 import com.rultor.cd.Deployment;
 import com.rultor.ext.jira.JiraComment;
 import com.rultor.ext.jira.JiraIssue;
-import com.rultor.snapshot.Snapshot;
 import java.util.Arrays;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -55,7 +54,7 @@ public final class JiraDeploymentTest {
         final JiraIssue issue = Mockito.mock(JiraIssue.class);
         Mockito.doReturn(Arrays.asList(comment)).when(issue).comments();
         final Deployment dep = new JiraDeployment(issue);
-        dep.succeeded(new Snapshot("ADD 'test';"));
+        dep.succeeded();
     }
 
 }

@@ -29,19 +29,14 @@
  */
 package com.rultor.cd.jira;
 
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.cd.Deployment;
 import com.rultor.ext.jira.JiraIssue;
-import com.rultor.snapshot.Snapshot;
-import com.rultor.snapshot.XSLT;
-import com.rultor.tools.Exceptions;
-import java.util.Map;
-import javax.xml.transform.TransformerException;
+import com.rultor.snapshot.Radar;
+import com.rultor.snapshot.TagLine;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.xembly.ImpossibleModificationException;
 
 /**
  * Deployment request from JIRA.
@@ -67,6 +62,7 @@ final class JiraDeployment implements Deployment {
      */
     protected JiraDeployment(final JiraIssue iss) {
         this.issue = iss;
+        new TagLine("jira").attr("key", iss.key()).log();
     }
 
     /**
@@ -81,25 +77,11 @@ final class JiraDeployment implements Deployment {
      * {@inheritDoc}
      */
     @Override
-    public Map<String, Object> params() {
-        return new ImmutableMap.Builder<String, Object>()
-            .put("name", this.name())
-            .put("urn:rultor:jira:key", this.issue.key())
-            .build();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void started() {
         this.issue.post(
-            new StringBuilder()
-                .append("I'll try to create a new environment")
-                .append(" and deploy your branch into it.")
-                .append(" This may take a few minutes. I will let you know")
-                .append(" in any case...")
-                .toString()
+            Radar.render(
+                this.getClass().getResourceAsStream("jira-started.xsl")
+            )
         );
     }
 
@@ -107,46 +89,26 @@ final class JiraDeployment implements Deployment {
      * {@inheritDoc}
      */
     @Override
-    public void succeeded(final Snapshot snapshot) {
+    public void succeeded() {
         this.issue.assign(this.issue.comments().iterator().next().author());
-        this.issue.post(this.summary(snapshot));
+        this.issue.post(
+            Radar.render(
+                this.getClass().getResourceAsStream("jira-succeeded.xsl")
+            )
+        );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void failed(final Snapshot snapshot) {
+    public void failed() {
         this.issue.assign(this.issue.comments().iterator().next().author());
-        this.issue.post(this.summary(snapshot));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void terminated() {
-        this.issue.post("Deployment terminated");
-    }
-
-    /**
-     * Make summary out of snapshot.
-     * @param snapshot Snapshot XML
-     * @return Summary
-     */
-    private String summary(final Snapshot snapshot) {
-        String summary;
-        try {
-            summary = new XSLT(
-                snapshot,
-                this.getClass().getResourceAsStream("jira-summary.xsl")
-            ).xml();
-        } catch (TransformerException ex) {
-            summary = Exceptions.stacktrace(ex);
-        } catch (ImpossibleModificationException ex) {
-            summary = Exceptions.stacktrace(ex);
-        }
-        return summary;
+        this.issue.post(
+            Radar.render(
+                this.getClass().getResourceAsStream("jira-failed.xsl")
+            )
+        );
     }
 
 }

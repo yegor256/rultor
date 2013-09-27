@@ -36,7 +36,6 @@ import com.jcabi.log.Logger;
 import com.rultor.guard.MergeRequest;
 import com.rultor.guard.MergeRequests;
 import com.rultor.snapshot.Step;
-import com.rultor.snapshot.Tag;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -125,7 +124,6 @@ public final class GhRequests implements MergeRequests {
      * {@inheritDoc}
      */
     @Override
-    @Tag("github")
     public Iterator<MergeRequest> iterator() {
         try {
             final Iterator<PullRequest> requests =

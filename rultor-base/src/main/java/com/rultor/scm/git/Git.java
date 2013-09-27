@@ -35,16 +35,20 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.Logger;
 import com.rultor.scm.Branch;
+import com.rultor.scm.Commit;
 import com.rultor.scm.SCM;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Terminal;
 import com.rultor.shell.ssh.PrivateKey;
 import com.rultor.snapshot.Step;
-import com.rultor.snapshot.Tag;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -72,7 +76,7 @@ public final class Git implements SCM {
     /**
      * Git URL.
      */
-    private final transient GitURI url;
+    private final transient String url;
 
     /**
      * Directory to use in terminal.
@@ -92,7 +96,7 @@ public final class Git implements SCM {
      */
     public Git(
         @NotNull(message = "shell can't be NULL") final Shell shl,
-        @NotNull(message = "URL can't be NULL") final GitURI addr,
+        @NotNull(message = "URL can't be NULL") final URL addr,
         @NotNull(message = "folder can't be NULL") final String folder) {
         this(
             shl, addr, folder,
@@ -110,23 +114,13 @@ public final class Git implements SCM {
      * @param shl Shell to use for checkout
      * @param addr URL of git repository
      * @param folder Directory to use for clone
-     */
-    public Git(final Shell shl, final String addr, final String folder) {
-        this(shl, new GitURI(addr), folder);
-    }
-
-    /**
-     * Public ctor.
-     * @param shl Shell to use for checkout
-     * @param addr URL of git repository
-     * @param folder Directory to use for clone
      * @param priv Private key to use locally
      * @checkstyle ParameterNumber (5 lines)
      */
-    public Git(final Shell shl, final GitURI addr, final String folder,
+    public Git(final Shell shl, final URL addr, final String folder,
         final PrivateKey priv) {
         this.terminal = new Terminal(shl);
-        this.url = addr;
+        this.url = addr.toString();
         this.dir = folder;
         this.key = priv;
     }
@@ -135,29 +129,17 @@ public final class Git implements SCM {
      * {@inheritDoc}
      */
     @Override
-    @Tag("git")
     @Step("Git branch `${args[0]}` checked out")
     @RetryOnFailure(verbose = false)
     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Branch checkout(final String name) throws IOException {
-        this.terminal.exec(
-            new StringBuilder(this.reset())
-                .append(" && BRANCH=")
-                .append(Terminal.quotate(Terminal.escape(name)))
-                // @checkstyle LineLength (2 lines)
-                .append(" && if [ $(git rev-parse --abbrev-ref HEAD) != $BRANCH ]; then git checkout $BRANCH; fi")
-                .append(" && if git for-each-ref refs/heads/$BRANCH | grep commit; then git pull; fi")
-                .toString(),
-            this.key.asText()
-        );
-        return new GitBranch(this.terminal, this.dir, name);
+        return new GitBranch(this, name);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Tag("git")
     @Step("found ${result.size()} refs in Git")
     @RetryOnFailure(verbose = false)
     public Collection<String> branches() throws IOException {
@@ -185,6 +167,66 @@ public final class Git implements SCM {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public URL url() {
+        try {
+            return new URL(this.url.toString());
+        } catch (MalformedURLException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    /**
+     * Get log of the branch.
+     * @param branch Branch name
+     * @return Iterable commits
+     * @throws IOException If fails
+     */
+    @RetryOnFailure(verbose = false)
+    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
+    public Iterable<Commit> log(final String branch) throws IOException {
+        final String stdout = this.terminal.exec(
+            new StringBuilder()
+                .append("DIR=`pwd`/")
+                .append(Terminal.quotate(Terminal.escape(this.dir)))
+                .append(" && BRANCH=")
+                .append(Terminal.quotate(Terminal.escape(branch)))
+                // @checkstyle LineLength (2 lines)
+                .append(" && if [ $(git rev-parse --abbrev-ref HEAD) != $BRANCH ]; then git checkout $BRANCH; fi")
+                .append(" && if git for-each-ref refs/heads/$BRANCH | grep commit; then git pull; fi")
+                .append(" && cd \"$DIR/repo\"")
+                .append(" && GIT_SSH=\"$DIR/git-ssh.sh\"")
+                // @checkstyle LineLength (1 line)
+                .append(" && git log --pretty=format:'%H %ae %cd %s' --date=iso8601")
+                .toString()
+        );
+        Logger.info(this, "Git log in branch `%s` retrieved", branch);
+        final Iterable<String> lines = Arrays.asList(stdout.split("\n"));
+        return new Iterable<Commit>() {
+            @Override
+            public Iterator<Commit> iterator() {
+                final Iterator<String> iterator = lines.iterator();
+                return new Iterator<Commit>() {
+                    @Override
+                    public boolean hasNext() {
+                        return iterator.hasNext();
+                    }
+                    @Override
+                    public Commit next() {
+                        return GitCommit.parse(iterator.next());
+                    }
+                    @Override
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+        };
+    }
+
+    /**
      * Start script, to clone the repo.
      * @return Script to start
      */
@@ -193,7 +235,7 @@ public final class Git implements SCM {
             .append("DIR=$(pwd)/")
             .append(Terminal.quotate(Terminal.escape(this.dir)))
             .append(" && URL=")
-            .append(Terminal.quotate(Terminal.escape(this.url.value())))
+            .append(Terminal.quotate(Terminal.escape(this.url.toString())))
             .append(" && mkdir -p \"$DIR\"")
             .append(" && ( cat > \"$DIR/id_rsa\" )")
             // @checkstyle LineLength (1 line)
