@@ -37,6 +37,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rultor.snapshot.Step;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -131,12 +132,20 @@ public final class SemVer implements SCM {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public URL url() {
+        return this.scm.url();
+    }
+
+    /**
      * Compare two versions.
      * @param left Left version
      * @param right Right version
      * @return Positive if right is newer than left
      */
-    public static int compare(final String left, final String right) {
+    private static int compare(final String left, final String right) {
         return SemVer.normalized(left).compareTo(SemVer.normalized(right));
     }
 
@@ -145,7 +154,7 @@ public final class SemVer implements SCM {
      * @param ver Version
      * @return Normalized version
      */
-    public static String normalized(final String ver) {
+    private static String normalized(final String ver) {
         final StringBuilder output = new StringBuilder();
         for (String part : ver.split("\\.")) {
             output.append(String.format("%3s", part));

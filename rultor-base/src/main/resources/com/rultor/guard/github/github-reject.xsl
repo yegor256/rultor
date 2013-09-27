@@ -32,16 +32,23 @@
     <xsl:output method="text"/>
     <xsl:include href="http://www.rultor.com/xsl/common.xsl"/>
     <xsl:template match="/snapshot">
-        <xsl:choose>
-            <xsl:when test="steps/step">
-                <xsl:text>```</xsl:text>
-                <xsl:apply-templates select="steps/step"/>
-                <xsl:text>&#x0A;```</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:text>No steps to describe</xsl:text>
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:variable name="attrs" select="tags/tag[label='github']/attributes"/>
+        <xsl:text>I've merged your branch `</xsl:text>
+        <xsl:value-of select="$attrs/attribute[name='headRef']/value"/>
+        <xsl:text>` into `</xsl:text>
+        <xsl:value-of select="$attrs/attribute[name='baseRef']/value"/>
+        <xsl:text>` of `</xsl:text>
+        <xsl:value-of select="$attrs/attribute[name='baseUser']/value"/>
+        <xsl:text>/</xsl:text>
+        <xsl:value-of select="$attrs/attribute[name='baseRepo']/value"/>
+        <xsl:text>` and tried to build it.</xsl:text>
+        <xsl:text> Some problems were found, which make it impossible to merge your pull request:</xsl:text>
+        <xsl:text>&#x0A;&#x0A;</xsl:text>
+        <xsl:if test="steps/step">
+            <xsl:text>```</xsl:text>
+            <xsl:apply-templates select="steps/step"/>
+            <xsl:text>&#x0A;```</xsl:text>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="step">
         <xsl:text>&#x0A;</xsl:text>

@@ -33,14 +33,10 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
-import com.jcabi.log.Logger;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
-import com.rultor.shell.Terminal;
+import com.rultor.scm.SCM;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Iterator;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -53,19 +49,14 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "terminal", "dir", "label" })
+@EqualsAndHashCode(of = { "git", "label" })
 @Loggable(Loggable.DEBUG)
-public final class GitBranch implements Branch {
+final class GitBranch implements Branch {
 
     /**
-     * Terminal to use.
+     * Git.
      */
-    private final transient Terminal terminal;
-
-    /**
-     * Directory.
-     */
-    private final transient String dir;
+    private final transient Git git;
 
     /**
      * Branch name.
@@ -74,16 +65,11 @@ public final class GitBranch implements Branch {
 
     /**
      * Public ctor.
-     * @param term Terminal to use for checkout
-     * @param folder Directory with data
+     * @param scm Git SCM
      * @param branch Name of the branch
      */
-    public GitBranch(@NotNull(message = "terminal can't be NULL")
-        final Terminal term, @NotNull(message = "folder can't be NULL")
-        final String folder, @NotNull(message = "branch can't be NULL")
-        final String branch) {
-        this.terminal = term;
-        this.dir = folder;
+    protected GitBranch(final Git scm, final String branch) {
+        this.git = scm;
         this.label = branch;
     }
 
@@ -94,38 +80,7 @@ public final class GitBranch implements Branch {
     @RetryOnFailure(verbose = false)
     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<Commit> log() throws IOException {
-        final String stdout = this.terminal.exec(
-            new StringBuilder()
-                .append("DIR=`pwd`/")
-                .append(Terminal.quotate(Terminal.escape(this.dir)))
-                .append(" && cd \"$DIR/repo\"")
-                .append(" && GIT_SSH=\"$DIR/git-ssh.sh\"")
-                // @checkstyle LineLength (1 line)
-                .append(" && git log --pretty=format:'%H %ae %cd %s' --date=iso8601")
-                .toString()
-        );
-        Logger.info(this, "Git log in branch `%s` retrieved", this.label);
-        final Iterable<String> lines = Arrays.asList(stdout.split("\n"));
-        return new Iterable<Commit>() {
-            @Override
-            public Iterator<Commit> iterator() {
-                final Iterator<String> iterator = lines.iterator();
-                return new Iterator<Commit>() {
-                    @Override
-                    public boolean hasNext() {
-                        return iterator.hasNext();
-                    }
-                    @Override
-                    public Commit next() {
-                        return GitCommit.parse(iterator.next());
-                    }
-                    @Override
-                    public void remove() {
-                        throw new UnsupportedOperationException();
-                    }
-                };
-            }
-        };
+        return this.git.log(this.label);
     }
 
     /**
@@ -134,6 +89,14 @@ public final class GitBranch implements Branch {
     @Override
     public String name() {
         return this.label;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SCM scm() {
+        return this.git;
     }
 
 }

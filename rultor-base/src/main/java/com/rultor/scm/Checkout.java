@@ -88,4 +88,12 @@ public final class Checkout implements Branch {
         return this.label;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SCM scm() {
+        return this.scm;
+    }
+
 }

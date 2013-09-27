@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -26,60 +27,25 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.rultor.snapshot;
-
-import com.jcabi.aspects.Tv;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
-
-/**
- * Test case for {@link TagAspect}.
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- */
-public final class TagAspectTest {
-
-    /**
-     * TagAspect can report progress of a method.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void reportsMethodProgressInLog() throws Exception {
-        MatcherAssert.assertThat(
-            new TagAspectTest.Foo("0x").toHex(Tv.HUNDRED),
-            Matchers.equalTo("0x64")
-        );
-    }
-
-    /**
-     * Dummy class for testing.
-     */
-    private static final class Foo {
-        /**
-         * Some property encapsulated.
-         */
-        private final transient String prefix;
-        /**
-         * Ctor.
-         * @param pfx Prefix
-         */
-        protected Foo(final String pfx) {
-            this.prefix = pfx;
-        }
-        /**
-         * Simple method.
-         * @param number Number to convert to hex
-         * @return Hexadecimal number
-         */
-        @Tag("some-test-tag")
-        public String toHex(final int number) {
-            return String.format(
-                "%s%s",
-                this.prefix, Integer.toHexString(number)
-            );
-        }
-    }
-
-}
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+    <xsl:output method="text"/>
+    <xsl:template match="/snapshot">
+        <xsl:variable name="attrs" select="tags/tag[label='github']/attributes"/>
+        <xsl:text>Hey, let me try to merge your branch `</xsl:text>
+        <xsl:value-of select="$attrs/attribute[name='headRef']/value"/>
+        <xsl:text>` from `</xsl:text>
+        <xsl:value-of select="$attrs/attribute[name='headUser']/value"/>
+        <xsl:text>/</xsl:text>
+        <xsl:value-of select="$attrs/attribute[name='headRepo']/value"/>
+        <xsl:text>` into branch `</xsl:text>
+        <xsl:value-of select="$attrs/attribute[name='baseRef']/value"/>
+        <xsl:text>` of `</xsl:text>
+        <xsl:value-of select="$attrs/attribute[name='baseUser']/value"/>
+        <xsl:text>/</xsl:text>
+        <xsl:value-of select="$attrs/attribute[name='baseRepo']/value"/>
+        <xsl:text>`. If there won't be any merge conflicts, I'll try to build it.</xsl:text>
+        <xsl:text> If it builds without errors, I will merge this pull request.</xsl:text>
+        <xsl:text> I will let you know in any case, in a few...</xsl:text>
+    </xsl:template>
+</xsl:stylesheet>

@@ -29,29 +29,29 @@
  */
 package com.rultor.ci;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.immutable.ArrayMap;
+import com.jcabi.log.Logger;
 import com.rultor.board.Billboard;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
 import com.rultor.shell.Batch;
-import com.rultor.snapshot.Snapshot;
+import com.rultor.snapshot.Radar;
 import com.rultor.snapshot.Step;
-import com.rultor.snapshot.XemblyLine;
+import com.rultor.snapshot.TagLine;
 import com.rultor.spi.Instance;
 import com.rultor.tools.Exceptions;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.logging.Level;
-import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang3.StringUtils;
-import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
+import org.xembly.XemblySyntaxException;
 
 /**
  * Build on every new commit.
@@ -102,7 +102,7 @@ public final class OnCommit implements Instance {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
-        for (Commit commit : this.branch.log()) {
+        for (Commit commit : Iterables.limit(this.branch.log(), 1)) {
             this.build(commit);
         }
     }
@@ -117,23 +117,49 @@ public final class OnCommit implements Instance {
         value = "built successfully `${args[0].name}`"
     )
     private void build(final Commit head) throws IOException {
-        this.tag(head);
-        final Snapshot snapshot = new Build("on-commit", this.batch).exec(
-            new ImmutableMap.Builder<String, Object>()
-                .put("branch", this.branch.name())
-                .put("head", head)
-                .build()
+        final long start = System.currentTimeMillis();
+        final int code = this.batch.exec(
+            new ArrayMap<String, String>().with("commit", head.name()),
+            new NullOutputStream()
         );
-        String xml;
+        final long millis = System.currentTimeMillis() - start;
+        new TagLine("on-commit")
+            .fine(code == 0)
+            .attr("code", Integer.toString(code))
+            .attr("duration", Long.toString(millis))
+            .attr("branch", this.branch.name())
+            .attr("head", head.name())
+            .attr("author", head.author())
+            .attr("time", head.time().toString())
+            .markdown(
+                Logger.format(
+                    "commit `%s` by %s %s in %[ms]s",
+                    StringUtils.substring(head.name(), 0, Tv.SEVEN),
+                    head.author(),
+                    code == 0 ? "succeeded" : "failed",
+                    millis
+                )
+            )
+            .log();
         try {
-            xml = snapshot.xml().toString();
+            this.announce(Radar.snapshot().xml().toString());
         } catch (ImpossibleModificationException ex) {
-            xml = String.format(
-                "<snapshot><error>%s</error></snapshot>",
-                Exceptions.stacktrace(ex)
-            );
+            this.announce(this.failure(ex));
+        } catch (XemblySyntaxException ex) {
+            this.announce(this.failure(ex));
         }
-        this.announce(xml);
+    }
+
+    /**
+     * Convert failure to a snapshot.
+     * @param error Exception
+     * @return XML
+     */
+    private String failure(final Exception error) {
+        return String.format(
+            "<snapshot><error>%s</error></snapshot>",
+            Exceptions.stacktrace(error)
+        );
     }
 
     /**
@@ -144,35 +170,6 @@ public final class OnCommit implements Instance {
     @Step("announced result")
     private void announce(final String snapshot) throws IOException {
         this.board.announce(snapshot);
-    }
-
-    /**
-     * Log a tag.
-     * @param commit Commit we're integrating
-     * @throws IOException If fails
-     */
-    private void tag(final Commit commit) throws IOException {
-        final StringWriter data = new StringWriter();
-        Json.createGenerator(data)
-            .writeStartObject()
-            .write("name", commit.name())
-            .write("author", commit.author())
-            .write("time", commit.time().toString())
-            .writeEnd()
-            .close();
-        final String desc = String.format(
-            "commit `%s` by %s on %s",
-            StringUtils.substring(commit.name(), 0, Tv.SEVEN),
-            commit.author(), commit.time()
-        );
-        new XemblyLine(
-            new Directives()
-                .xpath("/snapshot").strict(1).addIfAbsent("tags")
-                .add("tag").add("label").set("ci").up()
-                .add("level").set(Level.INFO.toString()).up()
-                .add("data").set(data.toString()).up()
-                .add("markdown").set(desc)
-        ).log();
     }
 
 }
