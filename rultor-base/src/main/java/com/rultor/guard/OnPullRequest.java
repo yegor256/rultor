@@ -97,7 +97,7 @@ public final class OnPullRequest implements Instance {
         final Iterator<MergeRequest> iterator = this.requests.iterator();
         while (iterator.hasNext()) {
             final MergeRequest request = iterator.next();
-            if (!this.busy.addIfAbsent(request.name())) {
+            if (!this.busy.addIf(request.name())) {
                 continue;
             }
             try {
@@ -123,7 +123,7 @@ public final class OnPullRequest implements Instance {
         request.started();
         final long start = System.currentTimeMillis();
         final int code = this.batch.exec(
-            new ArrayMap<String, String>().with("name", request.name()),
+            new ArrayMap<String, String>().with("request", request.name()),
             new NullOutputStream()
         );
         final boolean success = code == 0;
@@ -138,15 +138,16 @@ public final class OnPullRequest implements Instance {
             .attr("code", Integer.toString(code))
             .attr("duration", Long.toString(millis))
             .attr("name", request.name())
-            .attr("srcSCM", request.source().scm().url().toString())
+            .attr("srcSCM", request.source().scm().uri().toString())
             .attr("srcBranch", request.source().name())
-            .attr("destSCM", request.destination().scm().url().toString())
+            .attr("destSCM", request.destination().scm().uri().toString())
             .attr("destBranch", request.destination().name())
             .markdown(
                 Logger.format(
                     "merge request %s from `%s` to `%s` %s in %[ms]s",
                     request.name(), request.source().name(),
                     request.destination().name(),
+                    // @checkstyle AvoidInlineConditionals (1 line)
                     success ? "succeeded" : "failed",
                     millis
                 )

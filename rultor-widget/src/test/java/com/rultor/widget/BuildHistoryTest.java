@@ -81,7 +81,7 @@ public final class BuildHistoryTest {
                         new ArrayMap<String, String>()
                             .with("code", "127")
                             .with("duration", "9870")
-                            .with("name", "9ffeb7d")
+                            .with("head", "9ffeb7d")
                             .with("author", "Jeff")
                             .with("time", "2011-07-21T12:15:00Z"),
                         ""
@@ -101,7 +101,7 @@ public final class BuildHistoryTest {
                         new ArrayMap<String, String>()
                             .with("code", "0")
                             .with("duration", "99892")
-                            .with("name", "9ffeb7d")
+                            .with("head", "9ffeb7d")
                             .with("author", "Walter")
                             .with("time", "2011-07-21T12:15:00Z"),
                         ""
@@ -122,10 +122,10 @@ public final class BuildHistoryTest {
                 "/widget/builds/build/coordinates[owner='urn:test:54']",
                 "/widget/builds/build/coordinates[owner='urn:test:44']",
                 "/widget/builds/build/coordinates[rule='rule-x']",
-                "/widget/builds/build/commit[name='98aeb7d']",
-                "/widget/builds/build/commit[author='Jeff']",
+                "/widget/builds/build[head='9ffeb7d']",
+                "/widget/builds/build[author='Jeff']",
                 "/widget/builds/build[code=127 and duration=9870]",
-                "/widget/builds/build[code=0 and duration=98574]"
+                "/widget/builds/build[code=0 and duration=99892]"
             )
         );
     }
@@ -149,7 +149,6 @@ public final class BuildHistoryTest {
         Mockito.doReturn(
             new Tags.Simple(
                 Arrays.<Tag>asList(
-                    new Tag.Simple("ci", Level.INFO),
                     new Tag.Simple("on-commit", Level.SEVERE)
                 )
             )
@@ -160,7 +159,7 @@ public final class BuildHistoryTest {
         new Xembler(widget.render(stand)).apply(dom);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(dom),
-            XhtmlMatchers.hasXPath("/widget/builds[count(build)=0]")
+            XhtmlMatchers.hasXPath("/widget/builds[count(build)=1]")
         );
     }
 

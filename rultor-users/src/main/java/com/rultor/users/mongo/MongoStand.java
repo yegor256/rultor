@@ -262,6 +262,7 @@ final class MongoStand implements Stand {
      * @param after Xembly after changes
      * @return Array of tags
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Collection<DBObject> tags(final String after) {
         final Collection<Tag> found = new LinkedList<Tag>();
         try {

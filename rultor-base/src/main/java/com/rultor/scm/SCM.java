@@ -31,7 +31,7 @@ package com.rultor.scm;
 
 import com.jcabi.aspects.Immutable;
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -45,11 +45,11 @@ import javax.validation.constraints.NotNull;
 public interface SCM {
 
     /**
-     * URL of it.
-     * @return URL of the SCM
+     * URI of it.
+     * @return URI of the SCM
      */
-    @NotNull(message = "URL is never NULL")
-    URL url();
+    @NotNull(message = "URI is never NULL")
+    URI uri();
 
     /**
      * Checkout branch.

@@ -82,7 +82,7 @@ public final class BuildHealthTest {
                         new ArrayMap<String, String>()
                             .with("code", "127")
                             .with("duration", "9870")
-                            .with("name", "98aeb7d")
+                            .with("head", "98aeb7d")
                             .with("author", "Jeff")
                             .with("time", "2011-07-21T12:15:00Z"),
                         ""
@@ -100,7 +100,7 @@ public final class BuildHealthTest {
                         new ArrayMap<String, String>()
                             .with("code", "0")
                             .with("duration", "99892")
-                            .with("name", "9ffeb7d")
+                            .with("head", "9ffeb7d")
                             .with("author", "Walter")
                             .with("time", "2011-07-21T12:15:00Z"),
                         ""
@@ -120,8 +120,8 @@ public final class BuildHealthTest {
                 "/widget[width='4']",
                 "/widget/builds/build/coordinates[owner='urn:test:3']",
                 "/widget/builds/build/coordinates[rule='rule-a']",
-                "/widget/builds/build/commit[name='98aeb7d']",
-                "/widget/builds/build/commit[author='Jeff']",
+                "/widget/builds/build[head='98aeb7d']",
+                "/widget/builds/build[author='Jeff']",
                 "/widget/builds/build[duration='9870']",
                 "/widget/builds/build[code='127']",
                 "/widget/builds/build[health='0.5']"

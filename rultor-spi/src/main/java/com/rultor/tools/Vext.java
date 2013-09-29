@@ -85,6 +85,7 @@ public final class Vext {
 
     /**
      * Print using these arguments.
+     * @param <T> Type of values in the arguments
      * @param args Arguments
      * @return Text printed
      */

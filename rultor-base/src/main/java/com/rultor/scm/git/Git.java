@@ -44,8 +44,7 @@ import com.rultor.shell.Terminal;
 import com.rultor.shell.ssh.PrivateKey;
 import com.rultor.snapshot.Step;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -64,7 +63,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "terminal", "url", "key" })
+@EqualsAndHashCode(of = { "terminal", "address", "key" })
 @Loggable(Loggable.DEBUG)
 public final class Git implements SCM {
 
@@ -74,9 +73,9 @@ public final class Git implements SCM {
     private final transient Terminal terminal;
 
     /**
-     * Git URL.
+     * Git URI.
      */
-    private final transient String url;
+    private final transient String address;
 
     /**
      * Directory to use in terminal.
@@ -96,7 +95,7 @@ public final class Git implements SCM {
      */
     public Git(
         @NotNull(message = "shell can't be NULL") final Shell shl,
-        @NotNull(message = "URL can't be NULL") final URL addr,
+        @NotNull(message = "URI can't be NULL") final URI addr,
         @NotNull(message = "folder can't be NULL") final String folder) {
         this(
             shl, addr, folder,
@@ -112,15 +111,15 @@ public final class Git implements SCM {
     /**
      * Public ctor.
      * @param shl Shell to use for checkout
-     * @param addr URL of git repository
+     * @param addr URI of git repository
      * @param folder Directory to use for clone
      * @param priv Private key to use locally
      * @checkstyle ParameterNumber (5 lines)
      */
-    public Git(final Shell shl, final URL addr, final String folder,
+    public Git(final Shell shl, final URI addr, final String folder,
         final PrivateKey priv) {
         this.terminal = new Terminal(shl);
-        this.url = addr.toString();
+        this.address = addr.toString();
         this.dir = folder;
         this.key = priv;
     }
@@ -151,6 +150,7 @@ public final class Git implements SCM {
                         .append(" && git for-each-ref --format='%(refname:short)' refs/remotes/origin refs/tags")
                         .toString(),
                     this.key.asText()
+                    // @checkstyle MultipleStringLiterals (1 line)
                 ).split("\n")
             ),
             new Function<String, String>() {
@@ -170,12 +170,8 @@ public final class Git implements SCM {
      * {@inheritDoc}
      */
     @Override
-    public URL url() {
-        try {
-            return new URL(this.url.toString());
-        } catch (MalformedURLException ex) {
-            throw new IllegalStateException(ex);
-        }
+    public URI uri() {
+        return URI.create(this.address);
     }
 
     /**
@@ -235,7 +231,7 @@ public final class Git implements SCM {
             .append("DIR=$(pwd)/")
             .append(Terminal.quotate(Terminal.escape(this.dir)))
             .append(" && URL=")
-            .append(Terminal.quotate(Terminal.escape(this.url.toString())))
+            .append(Terminal.quotate(Terminal.escape(this.address)))
             .append(" && mkdir -p \"$DIR\"")
             .append(" && ( cat > \"$DIR/id_rsa\" )")
             // @checkstyle LineLength (1 line)

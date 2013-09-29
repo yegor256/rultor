@@ -131,11 +131,12 @@ public final class BuildHealth implements Widget {
          * @param pulse Pulse seen
          */
         public void append(final Pulse pulse) {
+            final Tag etag = pulse.tags().get("on-commit");
             if (this.coords == null) {
                 this.coords = pulse.coordinates();
-                this.tag = pulse.tags().get("on-commit");
+                this.tag = etag;
             }
-            if ("0".equals(this.tag.attributes().get("code"))) {
+            if ("0".equals(etag.attributes().get("code"))) {
                 this.codes.add(1d);
             } else {
                 this.codes.add(0d);

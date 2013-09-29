@@ -40,7 +40,7 @@ import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Tag in Mongo.
@@ -111,7 +111,8 @@ final class MongoTag implements Tag {
 
     /**
      * Public ctor.
-     * @param object The object
+     * @param label Label of it
+     * @param level Level
      */
     protected MongoTag(final String label, final Level level) {
         this(label, level, new ArrayMap<String, String>(), "");

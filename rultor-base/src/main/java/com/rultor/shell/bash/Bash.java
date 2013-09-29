@@ -126,7 +126,7 @@ public final class Bash implements Batch {
                 new XemblyLine(
                     new Directives()
                         .xpath("/snapshot")
-                        .addIfAbsent("steps")
+                        .addIf("steps")
                         .add("step").add("summary")
                         .set(String.format("bash error code #%d", code)).up()
                         .add("finish").set(new Time().toString()).up()

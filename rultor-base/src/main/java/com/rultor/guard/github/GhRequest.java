@@ -39,8 +39,7 @@ import com.rultor.snapshot.Step;
 import com.rultor.snapshot.TagLine;
 import com.rultor.tools.Exceptions;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.eclipse.egit.github.core.PullRequest;
@@ -100,11 +99,11 @@ final class GhRequest implements MergeRequest {
         this.github = ghub;
         this.repository = rep;
         this.src = new Branch.Passive(
-            GhRequest.url(req.getHead()),
+            GhRequest.uri(req.getHead()),
             req.getHead().getRef()
         );
         this.dest = new Branch.Passive(
-            GhRequest.url(req.getBase()),
+            GhRequest.uri(req.getBase()),
             req.getBase().getRef()
         );
         this.issue = req.getNumber();
@@ -204,22 +203,18 @@ final class GhRequest implements MergeRequest {
     }
 
     /**
-     * Make an URL of Git repo.
+     * Make an URI of Git repo.
      * @param head Marker
-     * @return URL of the repo
+     * @return URI of the repo
      */
-    private static URL url(final PullRequestMarker head) {
-        try {
-            return new URL(
-                String.format(
-                    "ssh://github.com/%s/%s.git",
-                    head.getUser().getLogin(),
-                    head.getRepo().getName()
-                )
-            );
-        } catch (MalformedURLException ex) {
-            throw new IllegalArgumentException(ex);
-        }
+    private static URI uri(final PullRequestMarker head) {
+        return URI.create(
+            String.format(
+                "ssh://github.com/%s/%s.git",
+                head.getUser().getLogin(),
+                head.getRepo().getName()
+            )
+        );
     }
 
     /**

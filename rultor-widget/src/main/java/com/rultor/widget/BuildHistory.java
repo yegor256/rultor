@@ -59,7 +59,7 @@ public final class BuildHistory implements Widget {
      */
     @Override
     public Directives render(final Stand stand) {
-        Directives dirs = new Directives()
+        final Directives dirs = new Directives()
             .add("width").set("6").up()
             .add("builds");
         final Iterable<Pulse> pulses = Iterables.limit(

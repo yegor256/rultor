@@ -52,7 +52,7 @@ public final class MongoTagTest {
     @Test
     public void parsesMongoDbObject() throws Exception {
         final String label = "test-label";
-        final String attr = "attr-1";
+        final String attr = "alpha";
         final Tag tag = new MongoTag(
             new BasicDBObject()
                 .append(MongoTag.ATTR_LABEL, label)

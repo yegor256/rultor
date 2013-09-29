@@ -46,13 +46,14 @@ public final class TagLineTest {
      */
     @Test
     public void printsXemblyDirectives() throws Exception {
-        new TagLine("test")
-            .fine(true)
-            .attr("alpha", "one")
-            .markdown("hello, world!")
-            .log();
         MatcherAssert.assertThat(
-            Radar.snapshot().xml(),
+            new Snapshot(
+                new TagLine("test")
+                    .fine(true)
+                    .attr("alpha", "one")
+                    .markdown("hello, world!")
+                    .toString()
+            ).xml(),
             XhtmlMatchers.hasXPaths(
                 "/snapshot/tags/tag[label='test']",
                 "//tag[label='test' and markdown='hello, world!']",

@@ -136,6 +136,7 @@ public final class OnCommit implements Instance {
                     "commit `%s` by %s %s in %[ms]s",
                     StringUtils.substring(head.name(), 0, Tv.SEVEN),
                     head.author(),
+                    // @checkstyle AvoidInlineConditionals (1 line)
                     code == 0 ? "succeeded" : "failed",
                     millis
                 )

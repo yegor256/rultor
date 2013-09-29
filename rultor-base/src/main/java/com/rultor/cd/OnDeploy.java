@@ -106,7 +106,7 @@ public final class OnDeploy implements Instance {
     private boolean deploy(final Deployment dep) throws IOException {
         final long start = System.currentTimeMillis();
         final int code = this.batch.exec(
-            new ArrayMap<String, String>().with("name", dep.name()),
+            new ArrayMap<String, String>().with("deployment", dep.name()),
             new NullOutputStream()
         );
         final long millis = System.currentTimeMillis() - start;
@@ -119,6 +119,7 @@ public final class OnDeploy implements Instance {
                 Logger.format(
                     "deployment `%s` %s in %[ms]s",
                     dep.name(),
+                    // @checkstyle AvoidInlineConditionals (1 line)
                     code == 0 ? "succeeded" : "failed",
                     millis
                 )

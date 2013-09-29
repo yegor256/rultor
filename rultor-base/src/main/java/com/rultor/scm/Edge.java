@@ -35,7 +35,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rultor.snapshot.Step;
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 import javax.validation.constraints.NotNull;
@@ -96,8 +96,8 @@ public final class Edge implements SCM {
      * {@inheritDoc}
      */
     @Override
-    public URL url() {
-        return this.scm.url();
+    public URI uri() {
+        return this.scm.uri();
     }
 
 }
