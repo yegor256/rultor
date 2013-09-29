@@ -36,14 +36,8 @@ import com.jcabi.aspects.Tv;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
-import com.rultor.spi.Tags;
 import com.rultor.spi.Widget;
-import com.rultor.tools.Exceptions;
-import com.rultor.tools.NormJson;
-import com.rultor.tools.Time;
-import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directives;
 
 /**
@@ -61,20 +55,6 @@ import org.xembly.Directives;
 public final class BuildHistory implements Widget {
 
     /**
-     * JSON schema for "ci" tag.
-     */
-    private static final NormJson TAG_CI = new NormJson(
-        BuildHealth.class.getResourceAsStream("tag-ci.json")
-    );
-
-    /**
-     * JSON schema for "on-commit" tag.
-     */
-    private static final NormJson TAG_ONCOMMIT = new NormJson(
-        BuildHealth.class.getResourceAsStream("tag-on-commit.json")
-    );
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -83,52 +63,19 @@ public final class BuildHistory implements Widget {
             .add("width").set("6").up()
             .add("builds");
         final Iterable<Pulse> pulses = Iterables.limit(
-            stand.pulses().query()
-                .withTag("on-commit")
-                .withTag("ci").fetch(),
-            Tv.HUNDRED
+            stand.pulses().query().withTag("on-commit").fetch(),
+            Tv.TEN
         );
         for (Pulse pulse : pulses) {
-            try {
-                dirs = dirs.append(this.render(pulse));
-            } catch (NormJson.JsonException ex) {
-                Exceptions.info(this, ex);
-            }
+            final Coordinates coords = pulse.coordinates();
+            dirs.add("build")
+                .add("coordinates")
+                .add("rule").set(coords.rule()).up()
+                .add("owner").set(coords.owner().toString()).up()
+                .add("scheduled").set(coords.scheduled().toString()).up().up()
+                .add(pulse.tags().get("on-commit").attributes()).up();
         }
         return dirs;
-    }
-
-    /**
-     * Convert pulse to directives.
-     * @param pulse Pulse to convert
-     * @return Directives
-     * @throws NormJson.JsonException If can't parse
-     * @checkstyle RedundantThrows (5 lines)
-     */
-    private Directives render(final Pulse pulse)
-        throws NormJson.JsonException {
-        final Tags tags = pulse.tags();
-        final JsonObject commit = tags.get("on-commit")
-            .data(BuildHistory.TAG_ONCOMMIT);
-        final JsonObject scm = tags.get("ci").data(BuildHistory.TAG_CI);
-        final Coordinates coords = pulse.coordinates();
-        return new Directives().add("build")
-            .add("coordinates")
-            .add("rule").set(coords.rule()).up()
-            .add("owner").set(coords.owner().toString()).up()
-            .add("scheduled").set(coords.scheduled().toString()).up()
-            .up()
-            .add("commit")
-            .add("name")
-            .set(StringUtils.substring(scm.getString("name"), 0, Tv.SEVEN))
-            .up()
-            .add("time")
-            .set(new Time(scm.getString("time")).toString()).up()
-            .add("author").set(scm.getString("author")).up()
-            .up()
-            .add("duration").set(Long.toString(commit.getInt("duration"))).up()
-            .add("code").set(Integer.toString(commit.getInt("code"))).up()
-            .up();
     }
 
 }

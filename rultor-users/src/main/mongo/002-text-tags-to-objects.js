@@ -27,55 +27,37 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.widget;
-
-import com.google.common.collect.Iterables;
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
-import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pulse;
-import com.rultor.spi.Stand;
-import com.rultor.spi.Widget;
-import lombok.EqualsAndHashCode;
-import org.xembly.Directives;
 
 /**
- * Merge history.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- * @checkstyle MultipleStringLiterals (500 lines)
+ * Convert plain-text tags to objects.
  */
-@Immutable
-@EqualsAndHashCode
-@Loggable(Loggable.DEBUG)
-@Widget.Stylesheet("merge-history.xsl")
-public final class MergeHistory implements Widget {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Directives render(final Stand stand) {
-        final Directives dirs = new Directives()
-            .add("width").set("6").up()
-            .add("merges");
-        final Iterable<Pulse> pulses = Iterables.limit(
-            stand.pulses().query().withTag("on-pull-request").fetch(),
-            Tv.TEN
+db.stands.find({tags: {"$exists": true}}).forEach(
+    function(item) {
+        var tags = new Array();
+        item.tags.forEach(
+            function(tag) {
+                if (typeof tag === 'string') {
+                    tags.push(
+                        {
+                            "label": tag,
+                            "level": "INFO",
+                            "data": "{}",
+                            "markdown": ""
+                        }
+                    );
+                } else {
+                    tags.push(tag);
+                }
+            }
         );
-        for (Pulse pulse : pulses) {
-            final Coordinates coords = pulse.coordinates();
-            dirs.add("merge")
-                .add("coordinates")
-                .add("rule").set(coords.rule()).up()
-                .add("owner").set(coords.owner().toString()).up()
-                .add("scheduled").set(coords.scheduled().toString()).up().up()
-                .add(pulse.tags().get("on-pull-request").attributes()).up();
-        }
-        return dirs;
+        db.stands.update(
+            { "_id": item._id },
+            {
+                "$set": {
+                    "tags": tags
+                }
+            }
+        );
+        print("converted " + tags.length + " tag(s) in " + item.coordinates.rule);
     }
-
-}
+);

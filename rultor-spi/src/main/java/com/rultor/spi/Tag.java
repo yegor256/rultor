@@ -31,13 +31,9 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.tools.NormJson;
-import com.rultor.tools.NormJson.JsonException;
-import java.io.StringWriter;
+import com.jcabi.immutable.ArrayMap;
+import java.util.Map;
 import java.util.logging.Level;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonWriter;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
@@ -66,13 +62,11 @@ public interface Tag {
     Level level();
 
     /**
-     * Data (may be empty).
-     * @param schema JSON schema to validate it against
-     * @return Data
-     * @throws NormJson.JsonException If can't process
+     * Map of attributes.
+     * @return Map of attributes
      */
-    @NotNull(message = "data is never NULL")
-    JsonObject data(NormJson schema) throws JsonException;
+    @NotNull(message = "map of attributes is never NULL")
+    Map<String, String> attributes();
 
     /**
      * Description in Markdown (may be empty), preferably one line.
@@ -86,7 +80,7 @@ public interface Tag {
      */
     @Immutable
     @Loggable(Loggable.DEBUG)
-    @EqualsAndHashCode(of = { "name", "lvl", "json", "text" })
+    @EqualsAndHashCode(of = { "name", "lvl", "attrs", "text" })
     final class Simple implements Tag {
         /**
          * Label.
@@ -97,9 +91,9 @@ public interface Tag {
          */
         private final transient String lvl;
         /**
-         * Data in JSON.
+         * Map of attributes.
          */
-        private final transient String json;
+        private final transient ArrayMap<String, String> attrs;
         /**
          * Markdown.
          */
@@ -110,28 +104,25 @@ public interface Tag {
          * @param level Level
          */
         public Simple(final String label, final Level level) {
-            this(label, level, Json.createObjectBuilder().build(), "");
+            this(label, level, new ArrayMap<String, String>(), "");
         }
         /**
          * Public ctor.
          * @param label Label of it
          * @param level Level of tag
-         * @param data Data in JSON object
+         * @param map Map of attributes
          * @param txt Markdown details
          * @checkstyle ParameterNumber (6 lines)
          */
         public Simple(
             @NotNull(message = "label can't be NULL") final String label,
             @NotNull(message = "level can't be NULL") final Level level,
-            @NotNull(message = "data can't be NULL") final JsonObject data,
+            @NotNull(message = "map of attributes can't be NULL")
+            final Map<String, String> map,
             @NotNull(message = "markdown can't be NULL") final String txt) {
             this.name = label;
             this.lvl = level.toString();
-            final StringWriter writer = new StringWriter();
-            final JsonWriter wrt = Json.createWriter(writer);
-            wrt.writeObject(data);
-            wrt.close();
-            this.json = writer.toString();
+            this.attrs = new ArrayMap<String, String>(map);
             this.text = txt;
         }
         /**
@@ -161,9 +152,9 @@ public interface Tag {
          * {@inheritDoc}
          */
         @Override
-        @NotNull(message = "data is never NULL")
-        public JsonObject data(final NormJson schema) throws JsonException {
-            return schema.readObject(this.json);
+        @NotNull(message = "map of attributes is never NULL")
+        public Map<String, String> attributes() {
+            return this.attrs;
         }
         /**
          * {@inheritDoc}

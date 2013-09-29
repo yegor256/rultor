@@ -29,11 +29,8 @@
  */
 package com.rultor.spi;
 
-import com.rultor.tools.NormJson;
-import java.io.StringReader;
+import com.jcabi.immutable.ArrayMap;
 import java.util.logging.Level;
-import javax.json.Json;
-import javax.json.JsonObject;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -46,26 +43,20 @@ import org.junit.Test;
 public final class TagTest {
 
     /**
-     * Tag.Simple can encapsulate JSON.
+     * Tag.Simple can encapsulate attributes.
      * @throws Exception If some problem inside
      */
     @Test
     public void encapsulatesJson() throws Exception {
-        final JsonObject json = Json.createReader(
-            new StringReader(
-                "{\"hash\":\"98aeb7d\",\"author\":\"Jeff\",\"code\":1}"
-            )
-        ).readObject();
-        MatcherAssert.assertThat(
-            json.getString("author"), Matchers.equalTo("Jeff")
-        );
-        final Tag tag = new Tag.Simple("hello", Level.INFO, json, "some text");
-        final NormJson schema = new NormJson("{}");
-        MatcherAssert.assertThat(
-            tag.data(schema).getString("hash"), Matchers.equalTo("98aeb7d")
+        final String attr = "attribute-name";
+        final Tag tag = new Tag.Simple(
+            "hello", Level.INFO,
+            new ArrayMap<String, String>().with(attr, "foo"),
+            "some text"
         );
         MatcherAssert.assertThat(
-            tag.data(schema).getInt("code"), Matchers.equalTo(1)
+            tag.attributes(),
+            Matchers.hasKey(attr)
         );
     }
 
