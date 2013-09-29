@@ -29,10 +29,10 @@
  */
 package com.rultor.users.mongo;
 
+import com.jcabi.immutable.ArrayMap;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.rultor.spi.Tag;
-import com.rultor.tools.NormJson;
 import java.util.logging.Level;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -52,17 +52,21 @@ public final class MongoTagTest {
     @Test
     public void parsesMongoDbObject() throws Exception {
         final String label = "test-label";
+        final String attr = "attr-1";
         final Tag tag = new MongoTag(
             new BasicDBObject()
                 .append(MongoTag.ATTR_LABEL, label)
                 .append(MongoTag.ATTR_LEVEL, Level.INFO.toString())
-                .append(MongoTag.ATTR_DATA, "{}")
+                .append(
+                    MongoTag.ATTR_ATTRIBUTES,
+                    new ArrayMap<String, String>().with(attr, "foo---")
+                )
                 .append(MongoTag.ATTR_MARKDOWN, "")
         );
         MatcherAssert.assertThat(tag.label(), Matchers.equalTo(label));
         MatcherAssert.assertThat(
-            tag.data(new NormJson("{ }")),
-            Matchers.notNullValue()
+            tag.attributes(),
+            Matchers.hasKey(attr)
         );
     }
 
@@ -73,10 +77,7 @@ public final class MongoTagTest {
     @Test
     public void buildsMongoDbObject() throws Exception {
         final String label = "test";
-        final String data = "{  }";
-        final DBObject object = new MongoTag(
-            label, Level.FINE, data, ""
-        ).asObject();
+        final DBObject object = new MongoTag(label, Level.FINE).asObject();
         MatcherAssert.assertThat(
             object.get(MongoTag.ATTR_LABEL).toString(),
             Matchers.equalTo(label)
@@ -84,10 +85,6 @@ public final class MongoTagTest {
         MatcherAssert.assertThat(
             object.get(MongoTag.ATTR_LEVEL).toString(),
             Matchers.equalTo(Level.FINE.toString())
-        );
-        MatcherAssert.assertThat(
-            object.get(MongoTag.ATTR_DATA).toString(),
-            Matchers.equalTo(data)
         );
     }
 

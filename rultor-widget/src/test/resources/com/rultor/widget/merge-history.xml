@@ -49,38 +49,13 @@
                         <owner>urn:github:1</owner>
                         <scheduled>2012-07-20T07:13:33Z</scheduled>
                     </coordinates>
-                    <request>
-                        <name>323</name>
-                        <failure>false</failure>
-                        <params>
-                            <param>
-                                <name>baseUser</name>
-                                <value>rultor</value>
-                            </param>
-                            <param>
-                                <name>baseRepo</name>
-                                <value>rultor</value>
-                            </param>
-                            <param>
-                                <name>baseBranch</name>
-                                <value>master</value>
-                            </param>
-                            <param>
-                                <name>headUser</name>
-                                <value>johnny</value>
-                            </param>
-                            <param>
-                                <name>headRepo</name>
-                                <value>rultor</value>
-                            </param>
-                            <param>
-                                <name>headBranch</name>
-                                <value>323</value>
-                            </param>
-                        </params>
-                    </request>
-                    <duration>4737</duration>
+                    <name>323</name>
                     <code>0</code>
+                    <duration>8988</duration>
+                    <srcSCM>ssh://github.com/yegor256/xembly.git</srcSCM>
+                    <srcBranch>13</srcBranch>
+                    <destSCM>ssh://github.com/xembly/xembly.git</destSCM>
+                    <destBranch>master</destBranch>
                 </merge>
                 <merge>
                     <coordinates>
@@ -88,38 +63,13 @@
                         <owner>urn:github:1</owner>
                         <scheduled>2012-07-20T07:13:33Z</scheduled>
                     </coordinates>
-                    <request>
-                        <name>323</name>
-                        <failure>true</failure>
-                        <params>
-                            <param>
-                                <name>baseUser</name>
-                                <value>rultor</value>
-                            </param>
-                            <param>
-                                <name>baseRepo</name>
-                                <value>rultor</value>
-                            </param>
-                            <param>
-                                <name>baseBranch</name>
-                                <value>master</value>
-                            </param>
-                            <param>
-                                <name>headUser</name>
-                                <value>johnny</value>
-                            </param>
-                            <param>
-                                <name>headRepo</name>
-                                <value>rultor</value>
-                            </param>
-                            <param>
-                                <name>headBranch</name>
-                                <value>323</value>
-                            </param>
-                        </params>
-                    </request>
-                    <duration>4737</duration>
-                    <code>0</code>
+                    <name>323</name>
+                    <code>127</code>
+                    <duration>8988</duration>
+                    <srcSCM>ssh://github.com/yegor256/xembly.git</srcSCM>
+                    <srcBranch>13</srcBranch>
+                    <destSCM>ssh://github.com/xembly/xembly.git</destSCM>
+                    <destBranch>master</destBranch>
                 </merge>
             </merges>
         </widget>

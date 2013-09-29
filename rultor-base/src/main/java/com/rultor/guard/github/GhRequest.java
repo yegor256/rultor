@@ -109,6 +109,7 @@ final class GhRequest implements MergeRequest {
         );
         this.issue = req.getNumber();
         new TagLine("github")
+            .attr("issue", Integer.toString(req.getNumber()))
             .attr("baseRef", req.getBase().getRef())
             .attr("baseRepo", req.getBase().getRepo().getName())
             .attr("baseUser", req.getBase().getUser().getLogin())

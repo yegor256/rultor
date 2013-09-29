@@ -138,10 +138,15 @@ public final class OnPullRequest implements Instance {
             .attr("code", Integer.toString(code))
             .attr("duration", Long.toString(millis))
             .attr("name", request.name())
+            .attr("srcSCM", request.source().scm().url().toString())
+            .attr("srcBranch", request.source().name())
+            .attr("destSCM", request.destination().scm().url().toString())
+            .attr("destBranch", request.destination().name())
             .markdown(
                 Logger.format(
-                    "merge request %s %s in %[ms]s",
-                    request.name(),
+                    "merge request %s from `%s` to `%s` %s in %[ms]s",
+                    request.name(), request.source().name(),
+                    request.destination().name(),
                     success ? "succeeded" : "failed",
                     millis
                 )

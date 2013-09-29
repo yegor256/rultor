@@ -29,6 +29,7 @@
  */
 package com.rultor.widget;
 
+import com.jcabi.immutable.ArrayMap;
 import com.jcabi.urn.URN;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.spi.Coordinates;
@@ -38,10 +39,8 @@ import com.rultor.spi.Stand;
 import com.rultor.spi.Tag;
 import com.rultor.spi.Tags;
 import com.rultor.spi.Widget;
-import java.io.StringReader;
 import java.util.Arrays;
 import java.util.logging.Level;
-import javax.json.Json;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -78,20 +77,11 @@ public final class MergeHistoryTest {
             new Tags.Simple(
                 Arrays.<Tag>asList(
                     new Tag.Simple(
-                        "merge", Level.INFO,
-                        Json.createReader(
-                            new StringReader(
-                                // @checkstyle LineLength (1 line)
-                                "{\"request\":\"554\",\"failure\":\"false\",\"params\":{}}"
-                            )
-                        ).readObject(),
-                        ""
-                    ),
-                    new Tag.Simple(
                         "on-pull-request", Level.SEVERE,
-                        Json.createReader(
-                            new StringReader("{\"code\":127,\"duration\":9870}")
-                        ).readObject(),
+                        new ArrayMap<String, String>()
+                            .with("code", "127")
+                            .with("duration", "99892")
+                            .with("name", "554"),
                         ""
                     )
                 )
@@ -106,19 +96,10 @@ public final class MergeHistoryTest {
                 Arrays.<Tag>asList(
                     new Tag.Simple(
                         "on-pull-request", Level.INFO,
-                        Json.createReader(
-                            new StringReader("{\"code\":0,\"duration\":98574}")
-                        ).readObject(),
-                        ""
-                    ),
-                    new Tag.Simple(
-                        "merge", Level.INFO,
-                        Json.createReader(
-                            new StringReader(
-                                // @checkstyle LineLength (1 line)
-                                "{\"request\":\"990\",\"failure\":\"true\",\"params\":{}}"
-                            )
-                        ).readObject(),
+                        new ArrayMap<String, String>()
+                            .with("code", "127")
+                            .with("duration", "99892")
+                            .with("name", "554"),
                         ""
                     )
                 )

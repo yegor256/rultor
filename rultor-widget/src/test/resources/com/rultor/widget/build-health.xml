@@ -51,11 +51,9 @@
                         <scheduled>2012-07-20T07:13:33Z</scheduled>
                     </coordinates>
                     <health>0.78</health>
-                    <commit>
-                        <name>09ae8f5</name>
-                        <time>2012-08-23T13:25:33Z</time>
-                        <author>Jeff Lebowski</author>
-                    </commit>
+                    <head>09ae8f5</head>
+                    <time>2012-08-23T13:25:33Z</time>
+                    <author>Jeff Lebowski</author>
                     <duration>473783</duration>
                     <code>0</code>
                 </build>
@@ -66,11 +64,9 @@
                         <scheduled>2012-07-20T07:13:33Z</scheduled>
                     </coordinates>
                     <health>0.97</health>
-                    <commit>
-                        <name>89775e5</name>
-                        <time>2012-07-20T13:25:33Z</time>
-                        <author>Walter</author>
-                    </commit>
+                    <head>89775e5</head>
+                    <time>2012-07-20T13:25:33Z</time>
+                    <author>Walter</author>
                     <duration>93838</duration>
                     <code>0</code>
                 </build>
@@ -81,11 +77,9 @@
                         <scheduled>2012-07-20T07:13:33Z</scheduled>
                     </coordinates>
                     <health>0.14</health>
-                    <commit>
-                        <name>89ff5c3</name>
-                        <time>2012-07-20T07:13:33Z</time>
-                        <author>Dunny</author>
-                    </commit>
+                    <head>89ff5c3</head>
+                    <time>2012-07-20T07:13:33Z</time>
+                    <author>Dunny</author>
                     <duration>88782</duration>
                     <code>127</code>
                 </build>
@@ -101,11 +95,9 @@
                         <scheduled>2012-07-20T07:13:33Z</scheduled>
                     </coordinates>
                     <health>0.78</health>
-                    <commit>
-                        <name>09ae8f5</name>
-                        <time>2012-08-23T13:25:33Z</time>
-                        <author>Jeff Lebowski</author>
-                    </commit>
+                    <head>09ae8f5</head>
+                    <time>2012-08-23T13:25:33Z</time>
+                    <author>Jeff Lebowski</author>
                     <duration>473783</duration>
                     <code>0</code>
                 </build>

@@ -29,6 +29,7 @@
  */
 package com.rultor.widget;
 
+import com.jcabi.immutable.ArrayMap;
 import com.jcabi.urn.URN;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.spi.Coordinates;
@@ -38,10 +39,8 @@ import com.rultor.spi.Stand;
 import com.rultor.spi.Tag;
 import com.rultor.spi.Tags;
 import com.rultor.spi.Widget;
-import java.io.StringReader;
 import java.util.Arrays;
 import java.util.logging.Level;
-import javax.json.Json;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -79,20 +78,13 @@ public final class BuildHealthTest {
             new Tags.Simple(
                 Arrays.<Tag>asList(
                     new Tag.Simple(
-                        "ci", Level.INFO,
-                        Json.createReader(
-                            new StringReader(
-                                // @checkstyle LineLength (1 line)
-                                "{\"name\":\"98aeb7d\",\"author\":\"Jeff\",\"time\":\"2011-07-21T12:15:00Z\"}"
-                            )
-                        ).readObject(),
-                        ""
-                    ),
-                    new Tag.Simple(
-                        "on-commit", Level.SEVERE,
-                        Json.createReader(
-                            new StringReader("{\"code\":127,\"duration\":9870}")
-                        ).readObject(),
+                        "on-commit", Level.INFO,
+                        new ArrayMap<String, String>()
+                            .with("code", "127")
+                            .with("duration", "9870")
+                            .with("name", "98aeb7d")
+                            .with("author", "Jeff")
+                            .with("time", "2011-07-21T12:15:00Z"),
                         ""
                     )
                 )
@@ -105,19 +97,12 @@ public final class BuildHealthTest {
                 Arrays.<Tag>asList(
                     new Tag.Simple(
                         "on-commit", Level.INFO,
-                        Json.createReader(
-                            new StringReader("{\"code\":0,\"duration\":98574}")
-                        ).readObject(),
-                        ""
-                    ),
-                    new Tag.Simple(
-                        "ci", Level.INFO,
-                        Json.createReader(
-                            new StringReader(
-                                // @checkstyle LineLength (1 line)
-                                "{\"name\":\"9ffeb7d\",\"author\":\"Walter\",\"time\":\"2011-07-21T12:15:00Z\"}"
-                            )
-                        ).readObject(),
+                        new ArrayMap<String, String>()
+                            .with("code", "0")
+                            .with("duration", "99892")
+                            .with("name", "9ffeb7d")
+                            .with("author", "Walter")
+                            .with("time", "2011-07-21T12:15:00Z"),
                         ""
                     )
                 )
@@ -163,19 +148,13 @@ public final class BuildHealthTest {
             new Tags.Simple(
                 Arrays.<Tag>asList(
                     new Tag.Simple(
-                        "ci", Level.INFO,
-                        Json.createReader(
-                            new StringReader(
-                                // @checkstyle LineLength (1 line)
-                                "{\"name\":\"x\",\"author\":\"x\",\"time\":\"2011-07-21T12:15:00Z\"}"
-                            )
-                        ).readObject(), ""
-                    ),
-                    new Tag.Simple(
-                        "on-commit", Level.SEVERE,
-                        Json.createReader(
-                            new StringReader("{\"code\":5,\"duration\":970}")
-                        ).readObject(),
+                        "on-commit", Level.INFO,
+                        new ArrayMap<String, String>()
+                            .with("code", "5")
+                            .with("duration", "970")
+                            .with("name", "x")
+                            .with("author", "x")
+                            .with("time", "2011-07-21T12:15:00Z"),
                         ""
                     )
                 )
@@ -189,19 +168,13 @@ public final class BuildHealthTest {
             new Tags.Simple(
                 Arrays.<Tag>asList(
                     new Tag.Simple(
-                        "ci", Level.INFO,
-                        Json.createReader(
-                            new StringReader(
-                                // @checkstyle LineLength (1 line)
-                                "{\"name\":\"y\",\"author\":\"y\",\"time\":\"2011-07-21T12:15:00Z\"}"
-                            )
-                        ).readObject(), ""
-                    ),
-                    new Tag.Simple(
-                        "on-commit", Level.SEVERE,
-                        Json.createReader(
-                            new StringReader("{\"code\":7,\"duration\":970}")
-                        ).readObject(),
+                        "on-commit", Level.INFO,
+                        new ArrayMap<String, String>()
+                            .with("code", "7")
+                            .with("duration", "970")
+                            .with("name", "y")
+                            .with("author", "xy")
+                            .with("time", "2011-07-21T12:15:00Z"),
                         ""
                     )
                 )

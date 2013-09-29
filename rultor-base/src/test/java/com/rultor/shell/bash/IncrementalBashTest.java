@@ -62,8 +62,8 @@ public final class IncrementalBashTest {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final File dir = Files.createTempDir();
         FileUtils.write(new File(dir, "a.txt"), "first\nsecond");
-        final ImmutableMap<String, Object> args =
-            new ImmutableMap.Builder<String, Object>()
+        final ImmutableMap<String, String> args =
+            new ImmutableMap.Builder<String, String>()
                 .put("file", "file-name.txt")
                 .build();
         final int code = new IncrementalBash(
@@ -109,7 +109,7 @@ public final class IncrementalBashTest {
         final int code = new IncrementalBash(
             new Permanent(new ShellMocker.Bash(dir)),
             Arrays.asList("echo \"_*\" `date`")
-        ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
+        ).exec(new ImmutableMap.Builder<String, String>().build(), stdout);
         MatcherAssert.assertThat(code, Matchers.equalTo(0));
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
@@ -136,7 +136,7 @@ public final class IncrementalBashTest {
             Arrays.asList(
                 "( for i in {100..300}; do echo $i; done; exit 1 ) >&2"
             )
-        ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
+        ).exec(new ImmutableMap.Builder<String, String>().build(), stdout);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
                 new Snapshot(
@@ -164,7 +164,7 @@ public final class IncrementalBashTest {
             Arrays.asList(
                 "echo -e 'one\\ntwo' >&2; echo -e 'foo-1\\nfoo-2'"
             )
-        ).exec(new ImmutableMap.Builder<String, Object>().build(), stdout);
+        ).exec(new ImmutableMap.Builder<String, String>().build(), stdout);
         MatcherAssert.assertThat(
             new String(stdout.toByteArray(), CharEncoding.UTF_8),
             Matchers.allOf(
