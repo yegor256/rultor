@@ -33,8 +33,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.xembly.Directives;
 
 /**
@@ -44,7 +44,6 @@ import org.xembly.Directives;
  * @version $Id$
  * @since 1.0
  */
-@ToString
 @EqualsAndHashCode
 public final class TagLine {
 
@@ -62,12 +61,12 @@ public final class TagLine {
     /**
      * Log level.
      */
-    private transient Level level = Level.INFO;
+    private transient Level lvl = Level.INFO;
 
     /**
      * Markdown.
      */
-    private transient String markdown = "";
+    private transient String mdwn = "";
 
     /**
      * Public ctor.
@@ -83,18 +82,27 @@ public final class TagLine {
      * @param value Attribute value
      * @return This object
      */
-    public TagLine attr(final String attr, final String value) {
+    public TagLine attr(@NotNull final String attr,
+        @NotNull final String value) {
         this.attrs.put(attr, value);
         return this;
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return this.directives().toString();
+    }
+
+    /**
      * Set its level.
-     * @param lvl Level to set
+     * @param level Level to set
      * @return This object
      */
-    public TagLine level(final Level lvl) {
-        this.level = lvl;
+    public TagLine level(@NotNull final Level level) {
+        this.lvl = level;
         return this;
     }
 
@@ -117,8 +125,8 @@ public final class TagLine {
      * @param txt The text to set
      * @return This object
      */
-    public TagLine markdown(final String txt) {
-        this.markdown = txt;
+    public TagLine markdown(@NotNull final String txt) {
+        this.mdwn = txt;
         return this;
     }
 
@@ -126,18 +134,26 @@ public final class TagLine {
      * Log it.
      */
     public void log() {
+        new XemblyLine(this.directives()).log();
+    }
+
+    /**
+     * Build Xembly directives.
+     * @return Directives
+     */
+    private Directives directives() {
         final Directives dirs = new Directives()
-            .xpath("/snapshot").addIfAbsent("tags").add("tag")
+            .xpath("/snapshot").addIf("tags").add("tag")
             .add("label").set(this.name).up()
-            .add("markdown").set(this.markdown).up()
-            .add("level").set(this.level.toString()).up()
+            .add("markdown").set(this.mdwn).up()
+            .add("level").set(this.lvl.toString()).up()
             .add("attributes");
         for (Map.Entry<String, String> entry : this.attrs.entrySet()) {
             dirs.add("attribute")
                 .add("name").set(entry.getKey()).up()
                 .add("value").set(entry.getValue()).up().up();
         }
-        new XemblyLine(dirs).log();
+        return dirs;
     }
 
 }

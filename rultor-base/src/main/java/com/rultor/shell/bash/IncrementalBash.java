@@ -174,7 +174,7 @@ public final class IncrementalBash implements Batch {
                 this.echo(
                     new Directives()
                         .xpath("/snapshot")
-                        .addIfAbsent("steps")
+                        .addIf("steps")
                         .add("step")
                         .attr("id", uid)
                         .add("start")

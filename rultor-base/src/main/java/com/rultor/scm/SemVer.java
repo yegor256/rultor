@@ -37,7 +37,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rultor.snapshot.Step;
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -135,8 +135,8 @@ public final class SemVer implements SCM {
      * {@inheritDoc}
      */
     @Override
-    public URL url() {
-        return this.scm.url();
+    public URI uri() {
+        return this.scm.uri();
     }
 
     /**

@@ -59,7 +59,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.xml.transform.TransformerException;
 import org.xembly.ImpossibleModificationException;
-import org.xembly.XemblySyntaxException;
 
 /**
  * Drain of a rule.
@@ -306,12 +305,10 @@ public final class DrainRs extends BaseRs {
                 );
             } catch (ImpossibleModificationException ex) {
                 bugs.add(ex);
+            } catch (TransformerException ex) {
+                bugs.add(ex);
             }
         } catch (IOException ex) {
-            bugs.add(ex);
-        } catch (XemblySyntaxException ex) {
-            bugs.add(ex);
-        } catch (TransformerException ex) {
             bugs.add(ex);
         }
         return bundle.add(

@@ -31,8 +31,7 @@ package com.rultor.scm;
 
 import com.jcabi.aspects.Immutable;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -72,7 +71,7 @@ public interface Branch {
      */
     final class Passive implements Branch {
         /**
-         * URL of SCM.
+         * URI of SCM.
          */
         private final transient String addr;
         /**
@@ -81,23 +80,19 @@ public interface Branch {
         private final transient String label;
         /**
          * Public ctor.
-         * @param url URL of SCM
+         * @param uri URI of SCM
          * @param name Name of the branch
          */
-        public Passive(final URL url, final String name) {
-            this.addr = url.toString();
+        public Passive(final URI uri, final String name) {
+            this.addr = uri.toString();
             this.label = name;
         }
         @Override
         public SCM scm() {
             return new SCM() {
                 @Override
-                public URL url() {
-                    try {
-                        return new URL(Passive.this.addr);
-                    } catch (MalformedURLException ex) {
-                        throw new IllegalStateException(ex);
-                    }
+                public URI uri() {
+                    return URI.create(Passive.this.addr);
                 }
                 @Override
                 public Branch checkout(final String name) {

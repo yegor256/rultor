@@ -52,6 +52,7 @@ public final class JiraDeploymentTest {
         final JiraComment comment = Mockito.mock(JiraComment.class);
         Mockito.doReturn("jeff.lebowski").when(comment).author();
         final JiraIssue issue = Mockito.mock(JiraIssue.class);
+        Mockito.doReturn("PRJ-111").when(issue).key();
         Mockito.doReturn(Arrays.asList(comment)).when(issue).comments();
         final Deployment dep = new JiraDeployment(issue);
         dep.succeeded();

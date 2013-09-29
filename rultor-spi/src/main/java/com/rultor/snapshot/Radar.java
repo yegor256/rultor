@@ -85,13 +85,18 @@ public final class Radar {
      * Get snapshot of the current thread.
      * @return The snapshot
      * @throws XemblySyntaxException If fails
+     * @checkstyle RedundantThrows (5 lines)
      */
     public static Snapshot snapshot() throws XemblySyntaxException {
-        return new Snapshot(
-            Radar.LINES.get(
-                Thread.currentThread().getThreadGroup()
-            ).toString()
-        );
+        final ThreadGroup group = Thread.currentThread().getThreadGroup();
+        final StringBuffer buffer = Radar.LINES.get(group);
+        final String input;
+        if (buffer == null) {
+            input = "XPATH '/snapshot';";
+        } else {
+            input = buffer.toString();
+        }
+        return new Snapshot(input);
     }
 
     /**
