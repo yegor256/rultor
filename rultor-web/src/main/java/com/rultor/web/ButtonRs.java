@@ -157,8 +157,11 @@ public final class ButtonRs extends BaseRs {
      */
     private byte[] draw(final List<String> infos)
         throws IOException {
-        final BufferedImage img = ImageIO
-            .read(this.getClass().getResourceAsStream("/build_health.png"));
+        final BufferedImage img = ImageIO.read(
+            this.getClass().getResourceAsStream(
+                "/com/rultor/web/build_health.png"
+            )
+        );
         final BufferedImage image = new BufferedImage(
             img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB
         );
@@ -178,21 +181,17 @@ public final class ButtonRs extends BaseRs {
      * @return Retrieved information.
      */
     private List<String> info(final XmlDocument response) {
-        final String head = String.format(
-            // @checkstyle LineLength (1 line)
-            "/page/widgets/widget[@class='com.rultor.widget.BuildHealth']/builds/build[coordinates/rule='%s'][1]",
-            this.rule
-        );
+        final XmlDocument node = response.nodes(
+            String.format(
+                // @checkstyle LineLength (1 line)
+                "/page/widgets/widget[@class='com.rultor.widget.BuildHealth']/builds/build[coordinates/rule='%s'][1]",
+                this.rule
+            )
+        ).get(0);
         final List<String> health = new LinkedList<String>();
-        health.add(
-            response.xpath(String.format("%s/code/text()", head)).get(0)
-        );
-        health.add(
-            response.xpath(String.format("%s/duration/text()", head)).get(0)
-        );
-        health.add(
-            response.xpath(String.format("%s/health/text()", head)).get(0)
-        );
+        health.add(node.xpath("code/text()").get(0));
+        health.add(node.xpath("duration/text()").get(0));
+        health.add(node.xpath("health/text()").get(0));
         return health;
     }
 

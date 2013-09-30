@@ -51,7 +51,7 @@ import org.junit.Test;
 public final class ButtonRsTest {
 
     /**
-     * Check if ButtonRs build correctly PNG image.
+     * ButtonRs can build PNG image.
      * @throws Exception In case of error.
      */
     @Test
