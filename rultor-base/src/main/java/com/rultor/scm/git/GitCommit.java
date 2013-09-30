@@ -61,7 +61,7 @@ final class GitCommit implements Commit {
     /**
      * Pattern for every log line.
      */
-    private static final Pattern LINE = Pattern.compile(
+    public static final Pattern LINE = Pattern.compile(
         // @checkstyle LineLength (1 line)
         "([a-f0-9]{40}) ([\\w\\-@\\.]+) (\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2} (\\+|\\-)\\d{4}) (.*)"
     );
