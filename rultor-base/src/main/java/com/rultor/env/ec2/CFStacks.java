@@ -34,10 +34,12 @@ import com.amazonaws.services.cloudformation.model.CreateStackRequest;
 import com.amazonaws.services.cloudformation.model.CreateStackResult;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import com.rultor.aws.CFClient;
 import com.rultor.env.Environment;
 import com.rultor.env.Environments;
 import com.rultor.snapshot.Step;
+import com.rultor.snapshot.TagLine;
 import java.io.IOException;
 import java.util.Iterator;
 import lombok.EqualsAndHashCode;
@@ -114,6 +116,15 @@ public final class CFStacks implements Environments {
                 new CreateStackRequest()
                     .withTemplateBody(this.template)
             );
+            new TagLine("cf")
+                .attr("id", result.getStackId())
+                .markdown(
+                    Logger.format(
+                        "CF stack `%s` created",
+                        result.getStackId()
+                    )
+                )
+                .log();
             return result.getStackId();
         } finally {
             aws.shutdown();

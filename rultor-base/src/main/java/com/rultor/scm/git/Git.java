@@ -43,6 +43,7 @@ import com.rultor.shell.Shell;
 import com.rultor.shell.Terminal;
 import com.rultor.shell.ssh.PrivateKey;
 import com.rultor.snapshot.Step;
+import com.rultor.snapshot.TagLine;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
@@ -60,6 +61,7 @@ import lombok.ToString;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @ToString
@@ -122,6 +124,7 @@ public final class Git implements SCM {
         this.address = addr.toString();
         this.dir = folder;
         this.key = priv;
+        new TagLine("git").attr("url", this.address).log();
     }
 
     /**

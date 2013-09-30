@@ -29,48 +29,48 @@
  */
 package com.rultor.board;
 
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
-import org.mockito.Mockito;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.Array;
+import java.io.IOException;
+import java.util.Collection;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Test case for {@link XsltTransform}.
- * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
+ * All billboards, one by one.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class XsltTransformTest {
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "boards")
+@Loggable(Loggable.DEBUG)
+public final class AllOf implements Billboard {
 
     /**
-     * Simple transformation test.
-     * @throws Exception In case of error.
+     * Array of encapsulated billboards.
      */
-    @Test
-    public void simple() throws Exception {
-        final Billboard board = Mockito.mock(Billboard.class);
-        new XsltTransform(
-            StringUtils.join(
-                "<?xml version=\"1.0\"?>",
-                // @checkstyle LineLength (1 line)
-                "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">",
-                "<xsl:template match=\"/body\">",
-                "<test><xsl:value-of select=\"value\"/></test>",
-                "</xsl:template>",
-                "</xsl:stylesheet>"
-            ),
-            board
-        ).announce("<body><value>Text</value></body>");
-        Mockito.verify(board).announce(Mockito.eq("<test>Text</test>"));
+    private final transient Array<Billboard> boards;
+
+    /**
+     * Public ctor.
+     * @param brds Boards
+     */
+    public AllOf(final Collection<Billboard> brds) {
+        this.boards = new Array<Billboard>(brds);
     }
 
     /**
-     * Wrong XSL transformation.
-     * @throws Exception In case of error.
+     * {@inheritDoc}
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void wrongArgument() throws Exception {
-        new XsltTransform(
-            "",
-            Mockito.mock(Billboard.class)
-        ).announce("<value>Text</value>");
+    @Override
+    public void announce(final boolean success) throws IOException {
+        for (Billboard board : this.boards) {
+            board.announce(success);
+        }
     }
+
 }

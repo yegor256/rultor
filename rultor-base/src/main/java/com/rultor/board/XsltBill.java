@@ -31,43 +31,89 @@ package com.rultor.board;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
-import com.rultor.snapshot.Radar;
-import java.io.IOException;
+import com.rultor.snapshot.XSLT;
+import java.io.StringReader;
+import java.util.Collection;
+import javax.validation.constraints.NotNull;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.stream.StreamSource;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.xembly.ImpossibleModificationException;
-import org.xembly.XemblySyntaxException;
 
 /**
- * Transmits all announcements to log.
+ * XSL transformation bill.
  *
+ * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "xslt")
 @Loggable(Loggable.DEBUG)
-public final class Echo implements Billboard {
+public final class XsltBill implements Bill {
+
+    /**
+     * Original bill.
+     */
+    private final transient Bill origin;
+
+    /**
+     * XSL transformation.
+     */
+    private final transient String xslt;
+
+    /**
+     * Public constructor.
+     * @param xsltran XSL transformation.
+     * @param bill Original bill
+     */
+    public XsltBill(
+        @NotNull(message = "transformation can't be NULL") final String xsltran,
+        @NotNull(message = "bill can't be NULL") final Bill bill
+    ) {
+        this.origin = bill;
+        this.xslt = xsltran;
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void announce(final boolean success) throws IOException {
+    public String body() {
         try {
-            Logger.info(
-                this,
-                StringEscapeUtils.escapeJava(Radar.snapshot().xml().toString())
-            );
-        } catch (XemblySyntaxException ex) {
-            throw new IOException(ex);
-        } catch (ImpossibleModificationException ex) {
-            throw new IOException(ex);
+            return new XSLT(
+                new StreamSource(new StringReader(this.origin.body())),
+                new StreamSource(new StringReader(this.xslt))
+            ).xml();
+        } catch (TransformerException ex) {
+            throw new IllegalArgumentException(ex);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String subject() {
+        return this.origin.subject();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String sender() {
+        return this.origin.sender();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Collection<String> recipients() {
+        return this.origin.recipients();
     }
 
 }

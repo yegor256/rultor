@@ -31,17 +31,23 @@ package com.rultor.board;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
+import com.rultor.guard.github.Github;
 import com.rultor.snapshot.Radar;
+import com.rultor.spi.Tag;
+import com.rultor.spi.Tags;
 import java.io.IOException;
+import java.net.URI;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.eclipse.egit.github.core.CommitComment;
+import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.service.CommitService;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
 
 /**
- * Transmits all announcements to log.
+ * Posting a comment to Github.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -51,23 +57,69 @@ import org.xembly.XemblySyntaxException;
 @ToString
 @EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
-public final class Echo implements Billboard {
+public final class GithubComment implements Billboard {
+
+    /**
+     * Github client.
+     */
+    private final transient Github github;
+
+    /**
+     * Public ctor.
+     * @param login Github login
+     * @param pwd Github password
+     */
+    public GithubComment(
+        @NotNull(message = "login can't be NULL") final String login,
+        @NotNull(message = "password can't be NULL") final String pwd) {
+        this.github = new Github.Simple(login, pwd);
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void announce(final boolean success) throws IOException {
+        final Tags tags;
         try {
-            Logger.info(
-                this,
-                StringEscapeUtils.escapeJava(Radar.snapshot().xml().toString())
-            );
+            tags = new Tags.Simple(Radar.snapshot().tags());
         } catch (XemblySyntaxException ex) {
             throw new IOException(ex);
         } catch (ImpossibleModificationException ex) {
             throw new IOException(ex);
         }
+        // @checkstyle MultipleStringLiterals (10 lines)
+        if (tags.contains("git") && tags.contains("commit")) {
+            final Tag git = tags.get("git");
+            final URI uri = URI.create(git.attributes().get("url"));
+            if ("github.com".equals(uri.getHost())) {
+                this.post(
+                    new Github.Repo(uri),
+                    tags.get("commit").attributes().get("name"),
+                    success
+                );
+            }
+        }
+    }
+
+    /**
+     * Post a comment for commit.
+     * @param repo Github repository name
+     * @param commit Commit name
+     * @param success TRUE if success
+     * @throws IOException If fails
+     */
+    private void post(final Github.Repo repo, final String commit,
+        final boolean success) throws IOException {
+        final GitHubClient client = this.github.client();
+        final CommitService svc = new CommitService(client);
+        final CommitComment comment = new CommitComment();
+        if (success) {
+            comment.setBody("This commit was built successfully");
+        } else {
+            comment.setBody("We failed to build this commit");
+        }
+        svc.addComment(repo, commit, comment);
     }
 
 }
