@@ -31,15 +31,16 @@ package com.rultor.web;
 
 import com.google.common.net.MediaType;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rexsl.test.RestTester;
-import com.rexsl.test.SimpleXml;
+import com.rexsl.test.TestResponse;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.validation.constraints.NotNull;
@@ -62,6 +63,11 @@ import javax.ws.rs.core.UriBuilder;
 public final class ButtonRs extends BaseRs {
 
     /**
+     * Provider of build information.
+     */
+    private final transient ButtonRs.BuildInfoRetriever retriever;
+
+    /**
      * Stand name.
      */
     private transient String stand;
@@ -70,6 +76,36 @@ public final class ButtonRs extends BaseRs {
      * Rule name.
      */
     private transient String rule;
+
+    /**
+     * Public constructor.
+     */
+    public ButtonRs() {
+        this(
+            new ButtonRs.BuildInfoRetriever() {
+                @Override
+                public TestResponse info(final UriBuilder builder,
+                    final String stnd) {
+                    return RestTester.start(
+                        builder.path(stnd).build()
+                    )
+                        .header(
+                            "Accept", MediaType.APPLICATION_XML_UTF_8.toString()
+                        )
+                        .get("retrieve stand");
+                }
+            }
+        );
+    }
+
+    /**
+     * Constructor.
+     * @param retr Build info retriever.
+     */
+    public ButtonRs(final ButtonRs.BuildInfoRetriever retr) {
+        super();
+        this.retriever = retr;
+    }
 
     /**
      * Inject it from query.
@@ -94,54 +130,66 @@ public final class ButtonRs extends BaseRs {
     /**
      * Draw image with build stats.
      * @return Image generated.
+     * @throws Exception In case of problems generating image.
      */
     @GET
     @Path("/")
     @Produces("image/*")
-    public Response button() {
-        final String build = RestTester.start(
-            UriBuilder.fromUri("http://www.rultor.com/s/").path(this.stand)
-                .build()
-        )
-            .header("Accept", MediaType.APPLICATION_XML_UTF_8.toString())
-            .get("retrieve stand")
-            .getBody();
-        final SimpleXml xml = new SimpleXml(build);
-        final String head = String.format(
-            // @checkstyle LineLength (1 line)
-            "/page/widgets/widget[@class='com.rultor.widget.BuildHealth']/builds/build[coordinates/rule='%s'][1]",
-            this.rule
+    public Response button() throws Exception {
+        final List<String> health = this.info(
+            this.retriever.info(
+                this.uriInfo().getBaseUriBuilder().clone(), this.stand
+            )
         );
-        final String code = xml
-            .xpath(String.format("%s/code/text()", head)).get(0);
-        final String duration = xml
-            .xpath(String.format("%s/duration/text()", head)).get(0);
-        final String health = xml
-            .xpath(String.format("%s/health/text()", head)).get(0);
-        final BufferedImage img;
-        try {
-            img = ImageIO
-                .read(this.getClass().getResourceAsStream("/build_health.png"));
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+        return Response.ok(draw(health), MediaType.PNG.toString()).build();
+    }
+
+    /**
+     * Draw build info on image.
+     * @param infos Information to draw on the image.
+     * @return Image with with info drawn on it.
+     * @throws IOException In case of image read/write error.
+     */
+    private byte[] draw(final List<String> infos)
+        throws IOException {
+        final BufferedImage img = ImageIO
+            .read(this.getClass().getResourceAsStream("/build_health.png"));
         final BufferedImage image = new BufferedImage(
             img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB
         );
         final Graphics2D gfx = image.createGraphics();
         gfx.drawImage(img, 0, 0, null);
         // @checkstyle MagicNumber (1 line)
-        gfx.setFont(new Font("Serif", Font.PLAIN, 10));
-        drawString(gfx, Arrays.asList(code, duration, health));
+        gfx.setFont(new Font("Serif", Font.PLAIN, Tv.TEN));
+        this.drawString(gfx, infos);
         gfx.dispose();
         final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(image, "png", stream);
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-        return Response.ok(stream.toByteArray(), MediaType.PNG.toString())
-            .build();
+        ImageIO.write(image, "png", stream);
+        return stream.toByteArray();
+    }
+
+    /**
+     * Retrieve build related information.
+     * @param response Response to parse for the info.
+     * @return Retrieved information.
+     */
+    private List<String> info(final TestResponse response) {
+        final String head = String.format(
+            // @checkstyle LineLength (1 line)
+            "/page/widgets/widget[@class='com.rultor.widget.BuildHealth']/builds/build[coordinates/rule='%s'][1]",
+            this.rule
+        );
+        final List<String> health = new LinkedList<String>();
+        health.add(
+            response.xpath(String.format("%s/code/text()", head)).get(0)
+        );
+        health.add(
+            response.xpath(String.format("%s/duration/text()", head)).get(0)
+        );
+        health.add(
+            response.xpath(String.format("%s/health/text()", head)).get(0)
+        );
+        return health;
     }
 
     /**
@@ -157,5 +205,18 @@ public final class ButtonRs extends BaseRs {
                 0, gfx.getFontMetrics().getHeight() * (offset + 1)
             );
         }
+    }
+
+    /**
+     * Retrieves build information.
+     */
+    public interface BuildInfoRetriever {
+        /**
+         * Retrieve build info.
+         * @param builder UriBuilder to use.
+         * @param stand Stand name to use.
+         * @return Response.
+         */
+        TestResponse info(final UriBuilder builder, final String stand);
     }
 }
