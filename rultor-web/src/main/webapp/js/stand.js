@@ -64,7 +64,7 @@ $(document).ready(
             function () {
                 $(this).click(
                     function() {
-                        var $div = $(this).closest('div');
+                        var $div = $(this).closest('div.panel');
                         var $icon = $(this).find('i');
                         var $msg = $(this).closest('ul').find('li.msg')
                         if ($div.attr('data-fetch-stop')) {
