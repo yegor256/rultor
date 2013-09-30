@@ -158,9 +158,7 @@ public final class ButtonRs extends BaseRs {
     private byte[] draw(final List<String> infos)
         throws IOException {
         final BufferedImage img = ImageIO.read(
-            this.getClass().getResourceAsStream(
-                "/com/rultor/web/build_health.png"
-            )
+            this.getClass().getResourceAsStream("build_health.png")
         );
         final BufferedImage image = new BufferedImage(
             img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB
