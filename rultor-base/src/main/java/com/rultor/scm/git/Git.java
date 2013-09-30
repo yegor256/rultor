@@ -30,7 +30,9 @@
 package com.rultor.scm.git;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
@@ -67,6 +69,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "terminal", "address", "key" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.TooManyMethods")
 public final class Git implements SCM {
 
     /**
@@ -187,22 +190,25 @@ public final class Git implements SCM {
     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<Commit> log(final String branch) throws IOException {
         final String stdout = this.terminal.exec(
-            new StringBuilder()
-                .append("DIR=`pwd`/")
-                .append(Terminal.quotate(Terminal.escape(this.dir)))
+            new StringBuilder(this.reset())
                 .append(" && BRANCH=")
                 .append(Terminal.quotate(Terminal.escape(branch)))
-                // @checkstyle LineLength (2 lines)
+                // @checkstyle LineLength (3 lines)
                 .append(" && if [ $(git rev-parse --abbrev-ref HEAD) != $BRANCH ]; then git checkout $BRANCH; fi")
                 .append(" && if git for-each-ref refs/heads/$BRANCH | grep commit; then git pull; fi")
-                .append(" && cd \"$DIR/repo\"")
-                .append(" && GIT_SSH=\"$DIR/git-ssh.sh\"")
-                // @checkstyle LineLength (1 line)
                 .append(" && git log --pretty=format:'%H %ae %cd %s' --date=iso8601")
                 .toString()
         );
         Logger.info(this, "Git log in branch `%s` retrieved", branch);
-        final Iterable<String> lines = Arrays.asList(stdout.split("\n"));
+        final Iterable<String> lines = Iterables.filter(
+            Arrays.asList(stdout.split("\n")),
+            new Predicate<String>() {
+                @Override
+                public boolean apply(final String line) {
+                    return GitCommit.LINE.matcher(line).matches();
+                }
+            }
+        );
         return new Iterable<Commit>() {
             @Override
             public Iterator<Commit> iterator() {
