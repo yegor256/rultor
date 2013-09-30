@@ -82,9 +82,12 @@ public final class TagLine {
      * @param value Attribute value
      * @return This object
      */
-    public TagLine attr(@NotNull final String attr,
-        @NotNull final String value) {
-        this.attrs.put(attr, value);
+    public TagLine attr(@NotNull final String attr, final String value) {
+        if (value == null) {
+            this.attrs.put(attr, "NULL");
+        } else {
+            this.attrs.put(attr, value);
+        }
         return this;
     }
 
