@@ -74,7 +74,7 @@ public interface Github {
          * @param repo Repository name
          */
         public Repo(@NotNull final String repo) {
-            final String[] parts = repo.split("/");
+            final String[] parts = repo.split("/", 2);
             this.login = parts[0];
             this.name = parts[1];
         }
