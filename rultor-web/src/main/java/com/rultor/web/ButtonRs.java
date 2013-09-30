@@ -159,7 +159,6 @@ public final class ButtonRs extends BaseRs {
         );
         final Graphics2D gfx = image.createGraphics();
         gfx.drawImage(img, 0, 0, null);
-        // @checkstyle MagicNumber (1 line)
         gfx.setFont(new Font("Serif", Font.PLAIN, Tv.TEN));
         this.drawString(gfx, infos);
         gfx.dispose();
