@@ -179,4 +179,18 @@ public final class MergeHistoryTest {
         );
     }
 
+    /**
+     * MergeHistory can render XML+XSL with Phandom.
+     * @throws Exception If fails
+     */
+    @Test
+    public void rendersXmlInPhandom() throws Exception {
+        MatcherAssert.assertThat(
+            WidgetMocker.xhtml(
+                this.getClass().getResource("merge-history.xml")
+            ),
+            XhtmlMatchers.hasXPath("//xhtml:table")
+        );
+    }
+
 }

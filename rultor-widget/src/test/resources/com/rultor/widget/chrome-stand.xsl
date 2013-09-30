@@ -33,9 +33,9 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/1999/xhtml" version="2.0">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="../rultor-web/src/main/webapp/xsl/stand.xsl" />
-    <xsl:include href="src/main/resources/com/rultor/widget/alert.xsl" />
-    <xsl:include href="src/main/resources/com/rultor/widget/build-health.xsl" />
-    <xsl:include href="src/main/resources/com/rultor/widget/build-history.xsl" />
-    <xsl:include href="src/main/resources/com/rultor/widget/merge-history.xsl" />
+    <xsl:include href="../../../../../../../rultor-web/src/main/webapp/xsl/stand.xsl" />
+    <xsl:include href="../../../../../../src/main/resources/com/rultor/widget/alert.xsl" />
+    <xsl:include href="../../../../../../src/main/resources/com/rultor/widget/build-health.xsl" />
+    <xsl:include href="../../../../../../src/main/resources/com/rultor/widget/build-history.xsl" />
+    <xsl:include href="../../../../../../src/main/resources/com/rultor/widget/merge-history.xsl" />
 </xsl:stylesheet>

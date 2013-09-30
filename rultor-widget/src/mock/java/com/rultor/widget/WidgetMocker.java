@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -27,15 +26,45 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * Works only in Safari.
- *
- -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/1999/xhtml" version="2.0">
-    <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="../rultor-web/src/main/webapp/xsl/stand.xsl" />
-    <xsl:include href="src/main/resources/com/rultor/widget/alert.xsl" />
-    <xsl:include href="src/main/resources/com/rultor/widget/build-health.xsl" />
-    <xsl:include href="src/main/resources/com/rultor/widget/build-history.xsl" />
-    <xsl:include href="src/main/resources/com/rultor/widget/merge-history.xsl" />
-</xsl:stylesheet>
+ */
+package com.rultor.widget;
+
+import com.rexsl.test.XhtmlMatchers;
+import com.rultor.snapshot.XSLT;
+import java.net.URL;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+
+/**
+ * Mocker of {@link Widget}.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ */
+public final class WidgetMocker {
+
+    /**
+     * Utility class.
+     */
+    private WidgetMocker() {
+        // intentionally empty
+    }
+
+    /**
+     * Renders XML with widget XSL.
+     * @param xml URL with XML
+     * @return XHTML produced
+     * @throws Exception If fails
+     */
+    public static Source xhtml(final URL xml)
+        throws Exception {
+        return XhtmlMatchers.xhtml(
+            new XSLT(
+                new StreamSource(xml.openStream()),
+                new StreamSource(
+                    WidgetMocker.class.getResourceAsStream("test-stand.xsl")
+                )
+            ).xml()
+        );
+    }
+
+}

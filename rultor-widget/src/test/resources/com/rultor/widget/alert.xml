@@ -41,49 +41,10 @@
         <link rel="pulse-open" href="./?open=" />
     </links>
     <widgets>
-        <widget class="com.rultor.widget.BuildHistory">
-            <width>6</width>
-            <builds>
-                <build>
-                    <coordinates>
-                        <rule>rultor-on-commit</rule>
-                        <owner>urn:github:1</owner>
-                        <scheduled>2012-07-20T07:13:33Z</scheduled>
-                    </coordinates>
-                    <duration>473783</duration>
-                    <code>0</code>
-                    <head>09ae8f5</head>
-                    <time>2012-08-23T13:25:33Z</time>
-                    <author>Jeff Lebowski</author>
-                </build>
-                <build>
-                    <coordinates>
-                        <rule>rultor-skin-on-commit</rule>
-                        <owner>urn:github:1</owner>
-                        <scheduled>2012-07-20T07:13:33Z</scheduled>
-                    </coordinates>
-                    <duration>93838</duration>
-                    <code>0</code>
-                    <head>89775e5</head>
-                    <time>2012-07-20T13:25:33Z</time>
-                    <author>Walter</author>
-                </build>
-                <build>
-                    <coordinates>
-                        <rule>rultor-other-on-commit</rule>
-                        <owner>urn:github:1</owner>
-                        <scheduled>2012-07-20T07:13:33Z</scheduled>
-                    </coordinates>
-                    <duration>88782</duration>
-                    <code>127</code>
-                    <head>89ff5c3</head>
-                    <time>2012-07-20T07:13:33Z</time>
-                    <author>Dunny</author>
-                </build>
-            </builds>
-        </widget>
-        <widget class="com.rultor.widget.BuildHistory">
-            <width>6</width>
+        <widget class="com.rultor.widget.Alert">
+            <title>Alert</title>
+            <width>4</width>
+            <error>hey, something went wrong!</error>
         </widget>
     </widgets>
 </page>

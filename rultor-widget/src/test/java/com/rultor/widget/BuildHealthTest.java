@@ -215,4 +215,18 @@ public final class BuildHealthTest {
         );
     }
 
+    /**
+     * BuildHealth can render XML+XSL with Phandom.
+     * @throws Exception If fails
+     */
+    @Test
+    public void rendersXmlInPhandom() throws Exception {
+        MatcherAssert.assertThat(
+            WidgetMocker.xhtml(
+                this.getClass().getResource("build-health.xml")
+            ),
+            XhtmlMatchers.hasXPath("//xhtml:table")
+        );
+    }
+
 }
