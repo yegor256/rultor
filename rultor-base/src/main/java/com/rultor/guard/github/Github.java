@@ -83,14 +83,14 @@ public interface Github {
          * @param uri URI of the github repo
          */
         public Repo(@NotNull final URI uri) {
-            this(uri.getPath().replace("\\.git$", ""));
+            this(uri.getPath().replaceAll("^/|\\.git$", ""));
         }
         /**
          * {@inheritDoc}
          */
         @Override
         public String generateId() {
-            return this.name;
+            return String.format("%s/%s", this.login, this.name);
         }
         /**
          * Owner of the repo (user name).
