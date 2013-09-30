@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2013, rultor.com
  * All rights reserved.
  *
@@ -27,15 +26,13 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/**
+ * Widgets, mocks.
  *
- * Works only in Safari.
- *
- -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/1999/xhtml" version="2.0">
-    <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="../rultor-web/src/main/webapp/xsl/stand.xsl" />
-    <xsl:include href="src/main/resources/com/rultor/widget/alert.xsl" />
-    <xsl:include href="src/main/resources/com/rultor/widget/build-health.xsl" />
-    <xsl:include href="src/main/resources/com/rultor/widget/build-history.xsl" />
-    <xsl:include href="src/main/resources/com/rultor/widget/merge-history.xsl" />
-</xsl:stylesheet>
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+package com.rultor.widget;

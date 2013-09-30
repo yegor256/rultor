@@ -184,4 +184,18 @@ public final class BuildHistoryTest {
         );
     }
 
+    /**
+     * BuildHistory can render XML+XSL with Phandom.
+     * @throws Exception If fails
+     */
+    @Test
+    public void rendersXmlInPhandom() throws Exception {
+        MatcherAssert.assertThat(
+            WidgetMocker.xhtml(
+                this.getClass().getResource("build-history.xml")
+            ),
+            XhtmlMatchers.hasXPath("//xhtml:table")
+        );
+    }
+
 }
