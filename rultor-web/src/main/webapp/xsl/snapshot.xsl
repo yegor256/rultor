@@ -147,7 +147,7 @@
                 <xsl:comment>signal</xsl:comment>
             </i>
         </li>
-        <li class="hidden-xs hidden-sm">
+        <li>
             <xsl:value-of select="rule"/>
         </li>
     </xsl:template>
