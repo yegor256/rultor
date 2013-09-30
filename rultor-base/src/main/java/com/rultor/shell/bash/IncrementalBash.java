@@ -86,6 +86,16 @@ public final class IncrementalBash implements Batch {
         IncrementalBash.escape(XemblyLine.MARK);
 
     /**
+     * Count of lines to take from head.
+     */
+    private static final int HEAD_SIZE = 25;
+
+    /**
+     * Count of lines to take from tail.
+     */
+    private static final int TAIL_SIZE = 100;
+
+    /**
      * Shells to be used for actual execution of bash script.
      */
     private final transient Shells shells;
@@ -204,6 +214,16 @@ public final class IncrementalBash implements Batch {
                 )
             )
             .append(";\nelse\n  ")
+            .append("HEADSZ=").append(HEAD_SIZE)
+            .append(";TAILSZ=").append(TAIL_SIZE).append(";")
+            .append("ERRLEN=`cat ${dollar}STDERR | wc -l`;")
+            // @checkstyle LineLength (4 lines)
+            .append("if [ ${dollar}ERRLEN -gt ${dollar}((HEADSZ + TAILSZ)) ]; then ")
+            .append("HEAD=`head -${dollar}HEADSZ ${dollar}STDERR | eval ${dollar}ESCAPE`;")
+            .append("MSG='... '${dollar}((ERRLEN - HEADSZ - TAILSZ))' lines skipped ...';")
+            .append("TAIL=`tail -${dollar}TAILSZ ${dollar}STDERR | eval ${dollar}ESCAPE`;")
+            .append("else HEAD=`cat ${dollar}STDERR | eval ${dollar}ESCAPE`;")
+            .append("fi;")
             .append(
                 this.echo(
                     new Directives()
@@ -216,8 +236,7 @@ public final class IncrementalBash implements Batch {
                         .set("exit code ${dollar}CODE")
                         .up()
                         .add("stacktrace")
-                        // @checkstyle LineLength (1 line)
-                        .set("${dollar}(tail -100 ${dollar}STDERR | eval ${dollar}ESCAPE)")
+                        .set("${dollar}HEAD${dollar}MSG\n${dollar}TAIL")
                 )
             )
             .append(";\nfi;\n")
