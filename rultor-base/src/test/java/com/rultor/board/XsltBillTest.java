@@ -29,70 +29,52 @@
  */
 package com.rultor.board;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.rultor.snapshot.XSLT;
-import java.io.IOException;
-import java.io.StringReader;
-import javax.validation.constraints.NotNull;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.stream.StreamSource;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * XSL transformation billboard.
- *
+ * Test case for {@link XsltBill}.
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-@ToString
-@EqualsAndHashCode(of = { "board", "xslt" })
-@Loggable(Loggable.DEBUG)
-public final class XsltTransform implements Billboard {
+public final class XsltBillTest {
 
     /**
-     * Target board.
+     * Simple transformation test.
+     * @throws Exception In case of error.
      */
-    private final transient Billboard board;
-
-    /**
-     * XSL transformation.
-     */
-    private final transient String xslt;
-
-    /**
-     * Public constructor.
-     * @param xsltran XSL transformation.
-     * @param brd Original board.
-     */
-    public XsltTransform(
-        @NotNull(message = "transformation can't be NULL") final String xsltran,
-        @NotNull(message = "target board can't be NULL") final Billboard brd
-    ) {
-        this.board = brd;
-        this.xslt = xsltran;
+    @Test
+    public void simple() throws Exception {
+        final Bill bill = Mockito.mock(Bill.class);
+        Mockito.doReturn("<body><value>Text</value></body>").when(bill).body();
+        MatcherAssert.assertThat(
+            new XsltBill(
+                StringUtils.join(
+                    "<?xml version=\"1.0\"?>",
+                    // @checkstyle LineLength (1 line)
+                    "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">",
+                    "<xsl:template match=\"/body\">",
+                    "<test><xsl:value-of select=\"value\"/></test>",
+                    "</xsl:template>",
+                    "</xsl:stylesheet>"
+                ),
+                bill
+            ).body(),
+            Matchers.equalTo("<test>Text</test>")
+        );
     }
 
     /**
-     * {@inheritDoc}
+     * Wrong XSL transformation.
+     * @throws Exception In case of error.
      */
-    @Override
-    public void announce(
-        @NotNull(message = "body can't be NULL") final String body)
-        throws IOException {
-        try {
-            this.board.announce(
-                new XSLT(
-                    new StreamSource(new StringReader(body)),
-                    new StreamSource(new StringReader(this.xslt))
-                ).xml()
-            );
-        } catch (TransformerException ex) {
-            throw new IllegalArgumentException(ex);
-        }
+    @Test(expected = IllegalArgumentException.class)
+    public void wrongArgument() throws Exception {
+        final Bill bill = Mockito.mock(Bill.class);
+        Mockito.doReturn("<body/>").when(bill).body();
+        new XsltBill("", bill).body();
     }
-
 }

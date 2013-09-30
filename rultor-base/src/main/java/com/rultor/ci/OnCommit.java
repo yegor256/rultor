@@ -39,19 +39,15 @@ import com.rultor.board.Billboard;
 import com.rultor.scm.Branch;
 import com.rultor.scm.Commit;
 import com.rultor.shell.Batch;
-import com.rultor.snapshot.Radar;
 import com.rultor.snapshot.Step;
 import com.rultor.snapshot.TagLine;
 import com.rultor.spi.Instance;
-import com.rultor.tools.Exceptions;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang3.StringUtils;
-import org.xembly.ImpossibleModificationException;
-import org.xembly.XemblySyntaxException;
 
 /**
  * Build on every new commit.
@@ -110,21 +106,24 @@ public final class OnCommit implements Instance {
     /**
      * Build.
      * @param head Head of the branch
+     * @return TRUE if success
      * @throws IOException If some IO problem
      */
     @Step(
         before = "building `${args[0].name}`",
-        value = "built successfully `${args[0].name}`"
+        // @checkstyle LineLength (1 line)
+        value = "#if($result)succeeded#{else}failed#end to build `${args[0].name}`"
     )
-    private void build(final Commit head) throws IOException {
+    private boolean build(final Commit head) throws IOException {
         final long start = System.currentTimeMillis();
         final int code = this.batch.exec(
             new ArrayMap<String, String>().with("commit", head.name()),
             new NullOutputStream()
         );
         final long millis = System.currentTimeMillis() - start;
+        final boolean success = code == 0;
         new TagLine("on-commit")
-            .fine(code == 0)
+            .fine(success)
             .attr("code", Integer.toString(code))
             .attr("duration", Long.toString(millis))
             .attr("branch", this.branch.name())
@@ -142,35 +141,19 @@ public final class OnCommit implements Instance {
                 )
             )
             .log();
-        try {
-            this.announce(Radar.snapshot().xml().toString());
-        } catch (ImpossibleModificationException ex) {
-            this.announce(this.failure(ex));
-        } catch (XemblySyntaxException ex) {
-            this.announce(this.failure(ex));
-        }
-    }
-
-    /**
-     * Convert failure to a snapshot.
-     * @param error Exception
-     * @return XML
-     */
-    private String failure(final Exception error) {
-        return String.format(
-            "<snapshot><error>%s</error></snapshot>",
-            Exceptions.stacktrace(error)
-        );
+        return this.announce(success);
     }
 
     /**
      * Announce result and return success status.
-     * @param snapshot Snapshot to announce
+     * @param success TRUE if success
+     * @return The same flag
      * @throws IOException If fails
      */
-    @Step("announced result")
-    private void announce(final String snapshot) throws IOException {
-        this.board.announce(snapshot);
+    @Step("announced #if($args[0])succeess#{else}failure#end")
+    private boolean announce(final boolean success) throws IOException {
+        this.board.announce(success);
+        return success;
     }
 
 }

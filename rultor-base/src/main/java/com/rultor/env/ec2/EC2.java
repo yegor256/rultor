@@ -43,10 +43,12 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.Logger;
 import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
 import com.rultor.env.Environments;
 import com.rultor.snapshot.Step;
+import com.rultor.snapshot.TagLine;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
 import com.rultor.tools.Time;
@@ -274,6 +276,22 @@ public final class EC2 implements Environments {
                 );
             }
             final Instance instance = instances.get(0);
+            new TagLine("ec2")
+                .attr("id", instance.getInstanceId())
+                .attr("type", instance.getInstanceType())
+                .attr("image", instance.getImageId())
+                .attr("key", instance.getKeyName())
+                .attr("ip", instance.getPublicIpAddress())
+                .attr("kernel", instance.getKernelId())
+                .attr("az", instance.getPlacement().getAvailabilityZone())
+                .markdown(
+                    Logger.format(
+                        "instance `%s` of type `%s` in %s",
+                        instance.getInstanceId(), instance.getInstanceType(),
+                        instance.getPlacement().getAvailabilityZone()
+                    )
+                )
+                .log();
             return this.wrap(aws, instance);
         } finally {
             aws.shutdown();
