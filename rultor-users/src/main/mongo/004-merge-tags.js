@@ -28,32 +28,58 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+function merge(input, left, right) {
+    var tags = new Array();
+    input.forEach(
+        function (tag) {
+            if (tag.label != right) {
+                return;
+            }
+            var merged = false;
+            tags.forEach(
+                function (etag) {
+                    if (tag.label != left) {
+                        return;
+                    }
+                    if (etag.label == tag.label) {
+                        tag.attributes.forEach(
+                            function(value, key) {
+                                etag.attributes[key] = value;
+                            }
+                        );
+                        merged = true;
+                        print("merged " + right + " into " + left);
+                    }
+                }
+            );
+            if (!merged) {
+                tags.push(tag);
+            }
+        }
+    );
+    return tags;
+}
+
 /**
- * Convert DATA into ATTRIBUTES.
+ * Merge tags.
  */
 db.stands.find({tags: {"$exists": true}}).forEach(
     function(item) {
-        var tags = item.tags;
-        tags.forEach(
-            function (tag) {
-                if (tag.data) {
-                    try {
-                        tag.attributes = JSON.parse(tag.data);
-                    } catch (e) {
-                        tag.attributes = {};
-                    }
-                    delete tag.data;
-                    print("converted DATA into ATTRIBUTE(S) in " + item.pulse);
-                }
-                if (Object.prototype.toString.call(tag.attributes) == '[object Array]') {
-                    tag.attributes = {};
-                    print("converted empty ATTRIBUTE(S) to MAP in " + item.pulse);
-                }
-            }
-        );
         db.stands.update(
             { "_id": item._id },
-            { "$set": { "tags": tags } }
+            { "$set": { "tags": merge(item.tags, 'on-pull-request', 'merge') } }
+        );
+    }
+);
+
+/**
+ * Merge tags.
+ */
+db.stands.find({tags: {"$exists": true}}).forEach(
+    function(item) {
+        db.stands.update(
+            { "_id": item._id },
+            { "$set": { "tags": merge(item.tags, 'ci', 'on-commit') } }
         );
     }
 );
