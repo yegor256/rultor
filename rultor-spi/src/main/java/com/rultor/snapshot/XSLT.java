@@ -45,6 +45,8 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
@@ -59,6 +61,8 @@ import org.xembly.ImpossibleModificationException;
  * @version $Id$
  * @since 1.0
  */
+@ToString
+@EqualsAndHashCode(of = { "source", "xsl" })
 @Loggable(Loggable.DEBUG)
 public final class XSLT {
 

@@ -39,6 +39,7 @@ import com.rultor.scm.SCM;
 import com.rultor.snapshot.Step;
 import com.rultor.stateful.Notepad;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -108,6 +109,14 @@ public final class UnseenBranches implements SCM {
                 );
             }
         };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public URI uri() {
+        return this.origin.uri();
     }
 
     /**

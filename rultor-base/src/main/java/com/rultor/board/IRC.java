@@ -31,7 +31,6 @@ package com.rultor.board;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -79,8 +78,7 @@ public final class IRC implements Billboard {
      * {@inheritDoc}
      */
     @Override
-    public void announce(
-        @NotNull(message = "body can't be NULL") final String body) {
+    public void announce(final boolean success) {
         assert this.host != null;
         assert this.port != 0;
         assert this.channel != null;

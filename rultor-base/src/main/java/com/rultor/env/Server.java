@@ -29,10 +29,14 @@
  */
 package com.rultor.env;
 
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -77,7 +81,27 @@ public final class Server implements Environments {
             public void close() throws IOException {
                 assert Server.this.host != null;
             }
+            @Override
+            public Map<String, String> badges() {
+                return new ImmutableMap.Builder<String, String>().build();
+            }
+            @Override
+            public void badge(final String name, final String value) {
+                assert Server.this.host != null;
+            }
         };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterator<Environment> iterator() {
+        try {
+            return Arrays.asList(this.acquire()).iterator();
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
 }

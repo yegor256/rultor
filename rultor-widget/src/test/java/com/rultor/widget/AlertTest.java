@@ -64,4 +64,20 @@ public final class AlertTest {
         );
     }
 
+    /**
+     * Alert can render XML+XSL with Phandom.
+     * @throws Exception If fails
+     */
+    @Test
+    public void rendersXmlInPhandom() throws Exception {
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(
+                WidgetMocker.xhtml(
+                    this.getClass().getResource("alert.xml")
+                )
+            ),
+            XhtmlMatchers.hasXPath("//xhtml:div[@class='text-danger']")
+        );
+    }
+
 }

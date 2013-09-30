@@ -81,4 +81,12 @@ public final class Head implements Branch {
         return this.origin.name();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SCM scm() {
+        return this.origin.scm();
+    }
+
 }

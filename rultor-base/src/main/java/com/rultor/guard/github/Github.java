@@ -31,10 +31,10 @@ package com.rultor.guard.github;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import java.net.URI;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.client.GitHubClient;
 
@@ -58,11 +58,15 @@ public interface Github {
      */
     @Loggable(Loggable.DEBUG)
     @ToString
-    @EqualsAndHashCode(of = "name")
+    @EqualsAndHashCode(of = { "name", "login" })
     @Immutable
     final class Repo implements IRepositoryIdProvider {
         /**
-         * Name of it.
+         * User name.
+         */
+        private final transient String login;
+        /**
+         * Repo name.
          */
         private final transient String name;
         /**
@@ -70,7 +74,16 @@ public interface Github {
          * @param repo Repository name
          */
         public Repo(@NotNull final String repo) {
-            this.name = repo;
+            final String[] parts = repo.split("/");
+            this.login = parts[0];
+            this.name = parts[1];
+        }
+        /**
+         * Public ctor.
+         * @param uri URI of the github repo
+         */
+        public Repo(@NotNull final URI uri) {
+            this(uri.getPath().replace("\\.git$", ""));
         }
         /**
          * {@inheritDoc}
@@ -84,15 +97,14 @@ public interface Github {
          * @return User name
          */
         public String user() {
-            // @checkstyle MultipleStringLiterals (1 line)
-            return StringUtils.substringBefore(this.name, "/");
+            return this.login;
         }
         /**
          * Repository name.
          * @return Repo name
          */
         public String repo() {
-            return StringUtils.substringAfter(this.name, "/");
+            return this.name;
         }
     }
 

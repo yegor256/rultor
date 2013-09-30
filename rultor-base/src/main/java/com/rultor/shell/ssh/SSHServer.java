@@ -106,4 +106,12 @@ public final class SSHServer implements Shell {
         this.env.close();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void badge(final String name, final String value) {
+        throw new UnsupportedOperationException();
+    }
+
 }

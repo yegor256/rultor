@@ -128,7 +128,13 @@ public final class Followed implements Shells {
                 this.origin.close();
             }
         }
-
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void badge(final String name, final String value) {
+            this.origin.badge(name, value);
+        }
     }
 
 }

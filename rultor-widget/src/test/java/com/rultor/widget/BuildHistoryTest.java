@@ -29,6 +29,7 @@
  */
 package com.rultor.widget;
 
+import com.jcabi.immutable.ArrayMap;
 import com.jcabi.urn.URN;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.spi.Coordinates;
@@ -38,10 +39,8 @@ import com.rultor.spi.Stand;
 import com.rultor.spi.Tag;
 import com.rultor.spi.Tags;
 import com.rultor.spi.Widget;
-import java.io.StringReader;
 import java.util.Arrays;
 import java.util.logging.Level;
-import javax.json.Json;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -78,20 +77,13 @@ public final class BuildHistoryTest {
             new Tags.Simple(
                 Arrays.<Tag>asList(
                     new Tag.Simple(
-                        "ci", Level.INFO,
-                        Json.createReader(
-                            new StringReader(
-                                // @checkstyle LineLength (1 line)
-                                "{\"name\":\"98aeb7d\",\"author\":\"Jeff\",\"time\":\"2011-07-21T12:15:00Z\"}"
-                            )
-                        ).readObject(),
-                        ""
-                    ),
-                    new Tag.Simple(
-                        "on-commit", Level.SEVERE,
-                        Json.createReader(
-                            new StringReader("{\"code\":127,\"duration\":9870}")
-                        ).readObject(),
+                        "on-commit", Level.INFO,
+                        new ArrayMap<String, String>()
+                            .with("code", "127")
+                            .with("duration", "9870")
+                            .with("head", "9ffeb7d")
+                            .with("author", "Jeff")
+                            .with("time", "2011-07-21T12:15:00Z"),
                         ""
                     )
                 )
@@ -106,19 +98,12 @@ public final class BuildHistoryTest {
                 Arrays.<Tag>asList(
                     new Tag.Simple(
                         "on-commit", Level.INFO,
-                        Json.createReader(
-                            new StringReader("{\"code\":0,\"duration\":98574}")
-                        ).readObject(),
-                        ""
-                    ),
-                    new Tag.Simple(
-                        "ci", Level.INFO,
-                        Json.createReader(
-                            new StringReader(
-                                // @checkstyle LineLength (1 line)
-                                "{\"name\":\"ff098ae\",\"author\":\"Jeff\",\"time\":\"2011-07-21T12:15:00Z\"}"
-                            )
-                        ).readObject(),
+                        new ArrayMap<String, String>()
+                            .with("code", "0")
+                            .with("duration", "99892")
+                            .with("head", "9ffeb7d")
+                            .with("author", "Walter")
+                            .with("time", "2011-07-21T12:15:00Z"),
                         ""
                     )
                 )
@@ -137,10 +122,10 @@ public final class BuildHistoryTest {
                 "/widget/builds/build/coordinates[owner='urn:test:54']",
                 "/widget/builds/build/coordinates[owner='urn:test:44']",
                 "/widget/builds/build/coordinates[rule='rule-x']",
-                "/widget/builds/build/commit[name='98aeb7d']",
-                "/widget/builds/build/commit[author='Jeff']",
+                "/widget/builds/build[head='9ffeb7d']",
+                "/widget/builds/build[author='Jeff']",
                 "/widget/builds/build[code=127 and duration=9870]",
-                "/widget/builds/build[code=0 and duration=98574]"
+                "/widget/builds/build[code=0 and duration=99892]"
             )
         );
     }
@@ -164,7 +149,6 @@ public final class BuildHistoryTest {
         Mockito.doReturn(
             new Tags.Simple(
                 Arrays.<Tag>asList(
-                    new Tag.Simple("ci", Level.INFO),
                     new Tag.Simple("on-commit", Level.SEVERE)
                 )
             )
@@ -175,7 +159,7 @@ public final class BuildHistoryTest {
         new Xembler(widget.render(stand)).apply(dom);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(dom),
-            XhtmlMatchers.hasXPath("/widget/builds[count(build)=0]")
+            XhtmlMatchers.hasXPath("/widget/builds[count(build)=1]")
         );
     }
 
@@ -197,6 +181,20 @@ public final class BuildHistoryTest {
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(dom),
             XhtmlMatchers.hasXPath("/widget/builds[count(build) = 0]")
+        );
+    }
+
+    /**
+     * BuildHistory can render XML+XSL with Phandom.
+     * @throws Exception If fails
+     */
+    @Test
+    public void rendersXmlInPhandom() throws Exception {
+        MatcherAssert.assertThat(
+            WidgetMocker.xhtml(
+                this.getClass().getResource("build-history.xml")
+            ),
+            XhtmlMatchers.hasXPath("//xhtml:table")
         );
     }
 

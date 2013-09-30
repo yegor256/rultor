@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rultor.scm.Commit;
+import com.rultor.snapshot.TagLine;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.text.ParseException;
@@ -91,6 +92,11 @@ final class GitCommit implements Commit {
         this.hash = name;
         this.when = date;
         this.who = author;
+        new TagLine("commit")
+            .attr("name", name)
+            .attr("date", date.toString())
+            .attr("author", author)
+            .log();
     }
 
     /**

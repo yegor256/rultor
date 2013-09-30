@@ -31,6 +31,7 @@ package com.rultor.scm;
 
 import com.jcabi.aspects.Immutable;
 import java.io.IOException;
+import java.net.URI;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -42,6 +43,13 @@ import javax.validation.constraints.NotNull;
  */
 @Immutable
 public interface Branch {
+
+    /**
+     * SCM it's in.
+     * @return The SCM
+     */
+    @NotNull
+    SCM scm();
 
     /**
      * Name of it.
@@ -57,5 +65,53 @@ public interface Branch {
      */
     @NotNull
     Iterable<Commit> log() throws IOException;
+
+    /**
+     * Passive branch, without any active components.
+     */
+    final class Passive implements Branch {
+        /**
+         * URI of SCM.
+         */
+        private final transient String addr;
+        /**
+         * Branch name.
+         */
+        private final transient String label;
+        /**
+         * Public ctor.
+         * @param uri URI of SCM
+         * @param name Name of the branch
+         */
+        public Passive(final URI uri, final String name) {
+            this.addr = uri.toString();
+            this.label = name;
+        }
+        @Override
+        public SCM scm() {
+            return new SCM() {
+                @Override
+                public URI uri() {
+                    return URI.create(Passive.this.addr);
+                }
+                @Override
+                public Branch checkout(final String name) {
+                    throw new UnsupportedOperationException();
+                }
+                @Override
+                public Iterable<String> branches() {
+                    throw new UnsupportedOperationException();
+                }
+            };
+        }
+        @Override
+        public String name() {
+            return Passive.this.label;
+        }
+        @Override
+        public Iterable<Commit> log() {
+            throw new UnsupportedOperationException();
+        }
+    }
 
 }

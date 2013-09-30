@@ -38,12 +38,10 @@ import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.amazonaws.services.simpleemail.model.SendEmailResult;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import com.rultor.aws.SESClient;
 import com.rultor.snapshot.Step;
-import java.util.Collection;
-import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -57,7 +55,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "client", "sender", "recipients" })
+@EqualsAndHashCode(of = { "client", "bill" })
 @Loggable(Loggable.DEBUG)
 public final class SES implements Billboard {
 
@@ -67,62 +65,53 @@ public final class SES implements Billboard {
     private final transient SESClient client;
 
     /**
-     * Sender.
+     * Bill to publish.
      */
-    private final transient String sender;
-
-    /**
-     * Recipients.
-     */
-    private final transient Array<String> recipients;
+    private final transient Bill bill;
 
     /**
      * Public ctor.
-     * @param src Sender of emails
-     * @param rcpts Recipients
+     * @param bll Bill
      * @param key AWS key
      * @param secret AWS secret
-     * @checkstyle ParameterNumber (4 lines)
      */
-    public SES(final String src, final Collection<String> rcpts,
-        final String key, final String secret) {
-        this(src, rcpts, new SESClient.Simple(key, secret));
+    public SES(final Bill bll, final String key, final String secret) {
+        this(bll, new SESClient.Simple(key, secret));
     }
 
     /**
      * Public ctor.
-     * @param src Sender of emails
-     * @param rcpts Recipients
+     * @param bll Bill
      * @param clnt SES Client
      */
-    public SES(final String src, final Collection<String> rcpts,
-        final SESClient clnt) {
+    public SES(final Bill bll, final SESClient clnt) {
         this.client = clnt;
-        this.recipients = new Array<String>(rcpts);
-        this.sender = src;
+        this.bill = bll;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Step("email sent to ${this.recipients}")
-    public void announce(
-        @NotNull(message = "body can't be NULL") final String body) {
+    @Step("email sent to ${this.bill.recipients()}")
+    public void announce(final boolean success) throws IOException {
         final AmazonSimpleEmailService aws = this.client.get();
-        final String[] parts = body.split("\n", 2);
         try {
             final Message message = new Message()
-                .withSubject(new Content().withData(parts[0]))
+                .withSubject(new Content().withData(this.bill.subject()))
                 .withBody(
-                    new Body().withText(new Content().withData(parts[1]))
+                    new Body().withText(
+                        new Content().withData(this.bill.body())
+                    )
                 );
             final SendEmailResult result = aws.sendEmail(
                 new SendEmailRequest()
-                    .withSource(this.sender)
-                    .withReturnPath(this.sender)
+                    .withSource(this.bill.sender())
+                    .withReturnPath(this.bill.sender())
                     .withDestination(
-                        new Destination().withToAddresses(this.recipients)
+                        new Destination().withToAddresses(
+                            this.bill.recipients()
+                        )
                     )
                     .withMessage(message)
             );
@@ -130,8 +119,8 @@ public final class SES implements Billboard {
                 this,
                 "#announce(..): sent SES email %s from %s to %s",
                 result.getMessageId(),
-                this.sender,
-                this.recipients
+                this.bill.sender(),
+                this.bill.recipients()
             );
         } finally {
             aws.shutdown();

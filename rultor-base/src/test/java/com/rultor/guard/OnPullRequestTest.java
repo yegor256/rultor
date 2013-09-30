@@ -29,11 +29,13 @@
  */
 package com.rultor.guard;
 
+import com.rultor.scm.Branch;
+import com.rultor.scm.SCM;
 import com.rultor.shell.Batch;
-import com.rultor.snapshot.Snapshot;
 import com.rultor.spi.Instance;
 import com.rultor.stateful.ConcurrentNotepad;
 import java.io.OutputStream;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Map;
 import org.junit.Test;
@@ -54,21 +56,20 @@ public final class OnPullRequestTest {
     @SuppressWarnings("unchecked")
     public void failsOnNewPullRequest() throws Exception {
         final MergeRequests requests = Mockito.mock(MergeRequests.class);
-        final MergeRequest request = Mockito.mock(MergeRequest.class);
-        Mockito.doReturn("#626").when(request).name();
+        final MergeRequest request = this.request();
         Mockito.doReturn(Arrays.asList(request).iterator())
             .when(requests).iterator();
         final Batch batch = Mockito.mock(Batch.class);
         Mockito.doReturn(1).when(batch)
             .exec(Mockito.any(Map.class), Mockito.any(OutputStream.class));
         final ConcurrentNotepad notepad = Mockito.mock(ConcurrentNotepad.class);
-        Mockito.doReturn(true).when(notepad).addIfAbsent(Mockito.anyString());
+        Mockito.doReturn(true).when(notepad).addIf(Mockito.anyString());
         final Instance instance = new OnPullRequest(requests, notepad, batch);
         instance.pulse();
         Mockito.verify(batch).exec(
             Mockito.any(Map.class), Mockito.any(OutputStream.class)
         );
-        Mockito.verify(request).reject(Mockito.any(Snapshot.class));
+        Mockito.verify(request).reject();
     }
 
     /**
@@ -79,19 +80,37 @@ public final class OnPullRequestTest {
     @SuppressWarnings("unchecked")
     public void succeedsOnNewPullRequest() throws Exception {
         final MergeRequests requests = Mockito.mock(MergeRequests.class);
-        final MergeRequest request = Mockito.mock(MergeRequest.class);
-        Mockito.doReturn("#39").when(request).name();
+        final MergeRequest request = this.request();
         Mockito.doReturn(Arrays.asList(request).iterator())
             .when(requests).iterator();
         final Batch batch = Mockito.mock(Batch.class);
         final ConcurrentNotepad notepad = Mockito.mock(ConcurrentNotepad.class);
-        Mockito.doReturn(true).when(notepad).addIfAbsent(Mockito.anyString());
+        Mockito.doReturn(true).when(notepad).addIf(Mockito.anyString());
         final Instance instance = new OnPullRequest(requests, notepad, batch);
         instance.pulse();
         Mockito.verify(batch).exec(
             Mockito.any(Map.class), Mockito.any(OutputStream.class)
         );
-        Mockito.verify(request).accept(Mockito.any(Snapshot.class));
+        Mockito.verify(request).accept();
+    }
+
+    /**
+     * Make a fake request.
+     * @return Merge request
+     * @throws Exception If some problem inside
+     */
+    private MergeRequest request() throws Exception {
+        final MergeRequest request = Mockito.mock(MergeRequest.class);
+        Mockito.doReturn("#626").when(request).name();
+        final SCM scm = Mockito.mock(SCM.class);
+        Mockito.doReturn(new URI("ssh://git@github.com/rultor/rultor.git"))
+            .when(scm).uri();
+        final Branch branch = Mockito.mock(Branch.class);
+        Mockito.doReturn("master").when(branch).name();
+        Mockito.doReturn(scm).when(branch).scm();
+        Mockito.doReturn(branch).when(request).source();
+        Mockito.doReturn(branch).when(request).destination();
+        return request;
     }
 
 }

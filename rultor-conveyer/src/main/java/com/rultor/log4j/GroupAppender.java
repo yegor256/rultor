@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Quietly;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Tv;
+import com.rultor.snapshot.Radar;
 import com.rultor.spi.Drain;
 import com.rultor.tools.Time;
 import java.io.IOException;
@@ -115,6 +116,7 @@ final class GroupAppender extends AppenderSkeleton
         super();
         this.start = date;
         this.drain = drn;
+        Radar.clean();
     }
 
     /**
@@ -129,21 +131,19 @@ final class GroupAppender extends AppenderSkeleton
 
     /**
      * {@inheritDoc}
-     *
-     * <p>We swallow exception here in order to enable normal processing
-     * of a logging event through LOG4j even when this particular drain
-     * fails (this may happen and often).
      */
     @Override
     protected void append(final LoggingEvent event) {
         if (Thread.currentThread().getThreadGroup().equals(this.group)) {
+            final String msg = this.layout.format(event);
             this.lines.add(
                 new Drain.Line.Simple(
                     new Time().delta(this.start),
                     GroupAppender.LEVELS.get(event.getLevel()),
-                    this.layout.format(event)
+                    msg
                 ).toString()
             );
+            Radar.append(msg);
         }
     }
 

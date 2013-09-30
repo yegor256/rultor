@@ -101,6 +101,14 @@ public final class Seasoned implements Branch {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SCM scm() {
+        return this.origin.scm();
+    }
+
+    /**
      * Checks delta of current time and commit time.
      *
      * @param commit Commit.

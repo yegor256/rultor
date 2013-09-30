@@ -62,4 +62,11 @@ public interface Shell extends Closeable {
         @NotNull(message = "stderr can't be NULL") OutputStream stderr)
         throws IOException;
 
+    /**
+     * Add a new badge.
+     * @param name Badge name
+     * @param value Value of the badge
+     */
+    void badge(String name, String value);
+
 }

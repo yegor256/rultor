@@ -30,9 +30,8 @@
 package com.rultor.guard;
 
 import com.jcabi.aspects.Immutable;
-import com.rultor.snapshot.Snapshot;
+import com.rultor.scm.Branch;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Pull request.
@@ -51,10 +50,16 @@ public interface MergeRequest {
     String name();
 
     /**
-     * Optional parameters.
-     * @return Map of parameters
+     * Source branch.
+     * @return SCM
      */
-    Map<String, Object> params();
+    Branch source();
+
+    /**
+     * Destination branch.
+     * @return SCM
+     */
+    Branch destination();
 
     /**
      * Notify when started to merge.
@@ -64,16 +69,14 @@ public interface MergeRequest {
 
     /**
      * Accept and merge.
-     * @param snapshot Snapshot
      * @throws IOException If fails
      */
-    void accept(Snapshot snapshot) throws IOException;
+    void accept() throws IOException;
 
     /**
      * Reject.
-     * @param snapshot Snapshot
      * @throws IOException If fails
      */
-    void reject(Snapshot snapshot) throws IOException;
+    void reject() throws IOException;
 
 }

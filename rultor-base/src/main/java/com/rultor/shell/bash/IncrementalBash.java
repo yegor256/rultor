@@ -119,7 +119,7 @@ public final class IncrementalBash implements Batch {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public int exec(
-        @NotNull(message = "args can't be NULL") final Map<String, Object> args,
+        @NotNull(message = "args can't be NULL") final Map<String, String> args,
         @NotNull(message = "stream can't be NULL") final OutputStream output)
         throws IOException {
         return new Bash(this.shells, this.script(args)).exec(args, output);
@@ -137,7 +137,7 @@ public final class IncrementalBash implements Batch {
      * @param args All arguments to inject into Velocity script
      * @return Bash script ready for execution
      */
-    private String script(final Map<String, Object> args) {
+    private String script(final Map<String, String> args) {
         final StringBuilder script = new StringBuilder()
             .append("#set($dollar='$')")
             .append("set -o pipefail;\n")
@@ -162,7 +162,7 @@ public final class IncrementalBash implements Batch {
      * @return Bash script ready for execution
      * @see http://stackoverflow.com/questions/18665603
      */
-    private String script(final Map<String, Object> args, final Vext cmd) {
+    private String script(final Map<String, String> args, final Vext cmd) {
         final String uid = String.format("bash-%d", System.nanoTime());
         final String velocity = StringUtils.strip(cmd.velocity(), " ;");
         final String command = cmd.print(args);
@@ -174,7 +174,7 @@ public final class IncrementalBash implements Batch {
                 this.echo(
                     new Directives()
                         .xpath("/snapshot")
-                        .addIfAbsent("steps")
+                        .addIf("steps")
                         .add("step")
                         .attr("id", uid)
                         .add("start")

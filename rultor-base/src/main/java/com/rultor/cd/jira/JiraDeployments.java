@@ -33,7 +33,9 @@ import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.cd.Deployment;
-import com.rultor.snapshot.Tag;
+import com.rultor.ext.jira.Jira;
+import com.rultor.ext.jira.JiraIssue;
+import com.rultor.ext.jira.RxJira;
 import java.util.AbstractCollection;
 import java.util.Collection;
 import java.util.Iterator;
@@ -82,7 +84,6 @@ public final class JiraDeployments extends AbstractCollection<Deployment> {
      * {@inheritDoc}
      */
     @Override
-    @Tag("jira")
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Iterator<Deployment> iterator() {
         final Iterable<JiraIssue> issues = this.jira.search(
