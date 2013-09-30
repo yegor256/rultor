@@ -32,10 +32,13 @@ package com.rultor.board;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
-import javax.validation.constraints.NotNull;
+import com.rultor.snapshot.Radar;
+import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.xembly.ImpossibleModificationException;
+import org.xembly.XemblySyntaxException;
 
 /**
  * Transmits all announcements to log.
@@ -54,9 +57,17 @@ public final class Echo implements Billboard {
      * {@inheritDoc}
      */
     @Override
-    public void announce(
-        @NotNull(message = "body can't be NULL") final String body) {
-        Logger.info(this, StringEscapeUtils.escapeJava(body));
+    public void announce(final boolean success) throws IOException {
+        try {
+            Logger.info(
+                this,
+                StringEscapeUtils.escapeJava(Radar.snapshot().xml().toString())
+            );
+        } catch (XemblySyntaxException ex) {
+            throw new IOException(ex);
+        } catch (ImpossibleModificationException ex) {
+            throw new IOException(ex);
+        }
     }
 
 }

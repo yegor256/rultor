@@ -98,6 +98,10 @@ public final class ShellMocker {
         public void close() throws IOException {
             assert this.dir != null;
         }
+        @Override
+        public void badge(final String name, final String value) {
+            throw new UnsupportedOperationException();
+        }
     }
 
 }

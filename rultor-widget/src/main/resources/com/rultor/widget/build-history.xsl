@@ -90,11 +90,11 @@
                             <xsl:text>text-danger</xsl:text>
                         </xsl:if>
                     </xsl:attribute>
-                    <xsl:value-of select="commit/name"/>
+                    <xsl:value-of select="head"/>
                 </code>
             </td>
             <td>
-                <xsl:value-of select="commit/author"/>
+                <xsl:value-of select="author"/>
             </td>
             <td>
                 <span class="timeago"><xsl:value-of select="coordinates/scheduled"/></span>

@@ -30,7 +30,8 @@
 package com.rultor.cd.jira;
 
 import com.rultor.cd.Deployment;
-import com.rultor.snapshot.Snapshot;
+import com.rultor.ext.jira.JiraComment;
+import com.rultor.ext.jira.JiraIssue;
 import java.util.Arrays;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -51,9 +52,10 @@ public final class JiraDeploymentTest {
         final JiraComment comment = Mockito.mock(JiraComment.class);
         Mockito.doReturn("jeff.lebowski").when(comment).author();
         final JiraIssue issue = Mockito.mock(JiraIssue.class);
+        Mockito.doReturn("PRJ-111").when(issue).key();
         Mockito.doReturn(Arrays.asList(comment)).when(issue).comments();
         final Deployment dep = new JiraDeployment(issue);
-        dep.succeeded(new Snapshot("ADD 'test';"));
+        dep.succeeded();
     }
 
 }

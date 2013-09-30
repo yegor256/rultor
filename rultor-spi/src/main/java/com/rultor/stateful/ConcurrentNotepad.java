@@ -52,7 +52,7 @@ public interface ConcurrentNotepad extends Notepad {
      * @param item The item to add
      * @return TRUE if it was added
      */
-    boolean addIfAbsent(String item);
+    boolean addIf(String item);
 
     /**
      * Composite.
@@ -83,7 +83,7 @@ public interface ConcurrentNotepad extends Notepad {
          */
         @Override
         @SuppressWarnings("PMD.AvoidCatchingGenericException")
-        public boolean addIfAbsent(final String item) {
+        public boolean addIf(final String item) {
             try {
                 return this.lineup.exec(
                     new Callable<Boolean>() {

@@ -147,7 +147,7 @@
                 <xsl:comment>signal</xsl:comment>
             </i>
         </li>
-        <li class="hidden-phone">
+        <li class="hidden-xs hidden-sm">
             <xsl:value-of select="rule"/>
         </li>
     </xsl:template>
@@ -206,7 +206,7 @@
             <span class="step">
                 <xsl:if test="exception">
                     <i class="text-danger icon-warning-sign icon"
-                        onclick="$(this).parent().parent().next().toggle();">
+                        onclick="$(this).parent().parent().next().toggle();$(this).closest('.panel').find('.heart').click();">
                         <xsl:attribute name="title">
                             <xsl:value-of select="exception/class"/>
                         </xsl:attribute>

@@ -54,7 +54,7 @@
                             <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
                         </xsl:attribute>
                         <i class="icon-facebook-sign"><xsl:comment>facebook sign</xsl:comment></i>
-                        <span class="hidden-phone"><xsl:text> Facebook</xsl:text></span>
+                        <span class="hidden-xs hidden-sm"><xsl:text> Facebook</xsl:text></span>
                     </a>
                 </li>
             </xsl:if>
@@ -65,7 +65,7 @@
                             <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
                         </xsl:attribute>
                         <i class="icon-google-plus-sign"><xsl:comment>google plus sign</xsl:comment></i>
-                        <span class="hidden-phone"><xsl:text> Google</xsl:text></span>
+                        <span class="hidden-xs hidden-sm"><xsl:text> Google</xsl:text></span>
                     </a>
                 </li>
             </xsl:if>
@@ -76,7 +76,7 @@
                             <xsl:value-of select="/page/links/link[@rel='auth-github']/@href"/>
                         </xsl:attribute>
                         <i class="icon-github-sign"><xsl:comment>github sign</xsl:comment></i>
-                        <span class="hidden-phone"><xsl:text> Github</xsl:text></span>
+                        <span class="hidden-xs hidden-sm"><xsl:text> Github</xsl:text></span>
                     </a>
                 </li>
             </xsl:if>

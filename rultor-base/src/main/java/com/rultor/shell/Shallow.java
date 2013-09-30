@@ -85,4 +85,12 @@ public final class Shallow implements Shell {
         // nothing to do;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void badge(final String name, final String value) {
+        throw new UnsupportedOperationException();
+    }
+
 }

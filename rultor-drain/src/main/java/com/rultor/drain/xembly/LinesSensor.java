@@ -115,7 +115,7 @@ public final class LinesSensor implements Drain {
                     new XemblyLine(
                         new Directives()
                             .xpath("/snapshot")
-                            .addIfAbsent("lines")
+                            .addIf("lines")
                             .set(Long.toString(after))
                     ).toString()
                 )

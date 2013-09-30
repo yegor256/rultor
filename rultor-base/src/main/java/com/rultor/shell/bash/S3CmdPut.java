@@ -177,7 +177,7 @@ public final class S3CmdPut implements Sequel {
             .close();
         new XemblyLine(
             new Directives()
-                .xpath("/snapshot").addIfAbsent("tags").strict(1)
+                .xpath("/snapshot").addIf("tags").strict(1)
                 .add("tag")
                 .add("label").set(this.name).up()
                 .add("level").set(Level.FINE.toString()).up()

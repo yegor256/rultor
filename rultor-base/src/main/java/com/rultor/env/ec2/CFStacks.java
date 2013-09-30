@@ -34,12 +34,14 @@ import com.amazonaws.services.cloudformation.model.CreateStackRequest;
 import com.amazonaws.services.cloudformation.model.CreateStackResult;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import com.rultor.aws.CFClient;
 import com.rultor.env.Environment;
 import com.rultor.env.Environments;
 import com.rultor.snapshot.Step;
-import com.rultor.snapshot.Tag;
+import com.rultor.snapshot.TagLine;
 import java.io.IOException;
+import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -95,11 +97,18 @@ public final class CFStacks implements Environments {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterator<Environment> iterator() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * Create stack.
      * @return Name of stack just created
      */
     @Step("CloudFormation stack `{$result}` created")
-    @Tag("CloudFormation")
     private String create() {
         final AmazonCloudFormation aws = this.client.get();
         try {
@@ -107,6 +116,15 @@ public final class CFStacks implements Environments {
                 new CreateStackRequest()
                     .withTemplateBody(this.template)
             );
+            new TagLine("cf")
+                .attr("id", result.getStackId())
+                .markdown(
+                    Logger.format(
+                        "CF stack `%s` created",
+                        result.getStackId()
+                    )
+                )
+                .log();
             return result.getStackId();
         } finally {
             aws.shutdown();

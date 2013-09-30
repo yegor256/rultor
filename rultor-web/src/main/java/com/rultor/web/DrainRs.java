@@ -306,12 +306,12 @@ public final class DrainRs extends BaseRs {
                 );
             } catch (ImpossibleModificationException ex) {
                 bugs.add(ex);
+            } catch (TransformerException ex) {
+                bugs.add(ex);
             }
         } catch (IOException ex) {
             bugs.add(ex);
         } catch (XemblySyntaxException ex) {
-            bugs.add(ex);
-        } catch (TransformerException ex) {
             bugs.add(ex);
         }
         return bundle.add(

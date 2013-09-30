@@ -44,8 +44,11 @@
                     <li>
                         <xsl:value-of select="coordinates/scheduled"/>
                     </li>
-                    <li class="heart text-muted icon" title="click to stop fetching">
-                        <i class="icon-cloud-download"><xsl:comment>heart</xsl:comment></i>
+                    <li class="heart icon" title="click to stop fetching">
+                        <i class="icon-cloud-download text-muted"><xsl:comment>heart</xsl:comment></i>
+                    </li>
+                    <li style="display:none" class="text-danger msg">
+                        click to re-start
                     </li>
                     <li class="pull-right icon">
                         <a title="close and stop fetching" class="close">

@@ -46,14 +46,14 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "scm", "label" })
+@EqualsAndHashCode(of = { "source", "label" })
 @Loggable(Loggable.DEBUG)
 public final class Checkout implements Branch {
 
     /**
      * SCM.
      */
-    private final transient SCM scm;
+    private final transient SCM source;
 
     /**
      * Name of the branch.
@@ -67,7 +67,7 @@ public final class Checkout implements Branch {
      */
     public Checkout(@NotNull(message = "SCM can't be NULL") final SCM src,
         @NotNull(message = "branch can't be NULL") final String branch) {
-        this.scm = src;
+        this.source = src;
         this.label = branch;
     }
 
@@ -77,7 +77,7 @@ public final class Checkout implements Branch {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<Commit> log() throws IOException {
-        return this.scm.checkout(this.label).log();
+        return this.source.checkout(this.label).log();
     }
 
     /**
@@ -86,6 +86,14 @@ public final class Checkout implements Branch {
     @Override
     public String name() {
         return this.label;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SCM scm() {
+        return this.source;
     }
 
 }
