@@ -77,7 +77,11 @@ public final class Radar {
                 buffer = new StringBuffer();
                 Radar.LINES.put(group, buffer);
             }
-            buffer.append(line);
+            try {
+                buffer.append(XemblyLine.parse(line).xembly());
+            } catch (XemblySyntaxException ex) {
+                assert ex != null;
+            }
         }
     }
 
