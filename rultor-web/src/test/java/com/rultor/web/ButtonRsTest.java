@@ -32,15 +32,14 @@ package com.rultor.web;
 import com.google.common.net.MediaType;
 import com.rexsl.page.HttpHeadersMocker;
 import com.rexsl.page.UriInfoMocker;
-import com.rexsl.test.TestResponse;
+import com.rexsl.test.SimpleXml;
+import com.rexsl.test.XmlDocument;
 import java.io.ByteArrayInputStream;
+import java.net.URI;
 import java.net.URLConnection;
-import java.util.Arrays;
-import javax.ws.rs.core.UriBuilder;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
  * Tests for {@link ButtonRs}.
@@ -57,22 +56,31 @@ public final class ButtonRsTest {
      */
     @Test
     public void buildBasicImage() throws Exception {
-        final TestResponse response = Mockito.mock(TestResponse.class);
-        Mockito.when(response.xpath(Mockito.anyString()))
-            .thenReturn(Arrays.asList("test"));
+        final String rule = "rultor-on-commit";
         final ButtonRs res = new ButtonRs(
             new ButtonRs.BuildInfoRetriever() {
                 @Override
-                public TestResponse info(final UriBuilder builder,
-                    final String stand) {
-                    return response;
+                public XmlDocument info(final URI uri, final String stand) {
+                    return new SimpleXml(
+                        String.format(
+                            // @checkstyle StringLiteralsConcatenation (8 lines)
+                            // @checkstyle LineLength (1 line)
+                            "<page><widgets><widget class=\"com.rultor.widget.BuildHealth\"><builds><build>"
+                                + "  <coordinates><rule>%s</rule></coordinates>"
+                                + "  <duration>1212602</duration>"
+                                + "  <code>0</code>"
+                                + "  <health>0.6153846153846154</health>"
+                                + "</build></builds></widget></widgets></page>",
+                            rule
+                        )
+                    );
                 }
             }
         );
         res.setUriInfo(new UriInfoMocker().mock());
         res.setHttpHeaders(new HttpHeadersMocker().mock());
         res.setStand("stand");
-        res.setRule("rule");
+        res.setRule(rule);
         MatcherAssert.assertThat(
             URLConnection.guessContentTypeFromStream(
                 new ByteArrayInputStream((byte[]) res.button().getEntity())

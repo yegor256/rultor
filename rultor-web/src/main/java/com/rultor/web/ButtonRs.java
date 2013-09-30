@@ -34,12 +34,14 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rexsl.test.RestTester;
 import com.rexsl.test.TestResponse;
+import com.rexsl.test.XmlDocument;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 import javax.imageio.ImageIO;
@@ -48,6 +50,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
@@ -65,7 +68,7 @@ public final class ButtonRs extends BaseRs {
     /**
      * Provider of build information.
      */
-    private final transient ButtonRs.BuildInfoRetriever retriever;
+    private final transient ButtonRs.BuildInfoRetriever build;
 
     /**
      * Stand name.
@@ -84,13 +87,13 @@ public final class ButtonRs extends BaseRs {
         this(
             new ButtonRs.BuildInfoRetriever() {
                 @Override
-                public TestResponse info(final UriBuilder builder,
-                    final String stnd) {
+                public TestResponse info(final URI uri, final String stnd) {
                     return RestTester.start(
-                        builder.path(stnd).build()
+                        UriBuilder.fromUri(uri).path(stnd).build()
                     )
                         .header(
-                            "Accept", MediaType.APPLICATION_XML_UTF_8.toString()
+                            HttpHeaders.ACCEPT,
+                            MediaType.APPLICATION_XML_UTF_8.toString()
                         )
                         .get("retrieve stand");
                 }
@@ -104,7 +107,7 @@ public final class ButtonRs extends BaseRs {
      */
     public ButtonRs(final ButtonRs.BuildInfoRetriever retr) {
         super();
-        this.retriever = retr;
+        this.build = retr;
     }
 
     /**
@@ -137,8 +140,8 @@ public final class ButtonRs extends BaseRs {
     @Produces("image/*")
     public Response button() throws Exception {
         final List<String> health = this.info(
-            this.retriever.info(
-                this.uriInfo().getBaseUriBuilder().clone(), this.stand
+            this.build.info(
+                this.uriInfo().getBaseUriBuilder().build(), this.stand
             )
         );
         return Response.ok(draw(health), MediaType.PNG.toString()).build();
@@ -172,7 +175,7 @@ public final class ButtonRs extends BaseRs {
      * @param response Response to parse for the info.
      * @return Retrieved information.
      */
-    private List<String> info(final TestResponse response) {
+    private List<String> info(final XmlDocument response) {
         final String head = String.format(
             // @checkstyle LineLength (1 line)
             "/page/widgets/widget[@class='com.rultor.widget.BuildHealth']/builds/build[coordinates/rule='%s'][1]",
@@ -212,10 +215,10 @@ public final class ButtonRs extends BaseRs {
     public interface BuildInfoRetriever {
         /**
          * Retrieve build info.
-         * @param builder UriBuilder to use.
+         * @param uri Location to use.
          * @param stand Stand name to use.
          * @return Response.
          */
-        TestResponse info(final UriBuilder builder, final String stand);
+        XmlDocument info(final URI uri, final String stand);
     }
 }
