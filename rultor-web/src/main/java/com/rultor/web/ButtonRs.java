@@ -33,7 +33,6 @@ import com.google.common.net.MediaType;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rexsl.test.RestTester;
-import com.rexsl.test.TestResponse;
 import com.rexsl.test.XmlDocument;
 import java.awt.Color;
 import java.awt.Font;
@@ -66,9 +65,26 @@ import javax.ws.rs.core.UriBuilder;
 public final class ButtonRs extends BaseRs {
 
     /**
+     * Instance that retrieves XML from application.
+     */
+    private static final ButtonRs.Build DEFAULT_BUILD = new ButtonRs.Build() {
+        @Override
+        public XmlDocument info(final URI uri, final String stnd) {
+            return RestTester.start(
+                UriBuilder.fromUri(uri).path(stnd).build()
+            )
+                .header(
+                    HttpHeaders.ACCEPT,
+                    MediaType.APPLICATION_XML_UTF_8.toString()
+                )
+                .get("retrieve stand");
+        }
+    };
+
+    /**
      * Provider of build information.
      */
-    private final transient ButtonRs.BuildInfoRetriever build;
+    private final transient ButtonRs.Build build;
 
     /**
      * Stand name.
@@ -84,30 +100,16 @@ public final class ButtonRs extends BaseRs {
      * Public constructor.
      */
     public ButtonRs() {
-        this(
-            new ButtonRs.BuildInfoRetriever() {
-                @Override
-                public TestResponse info(final URI uri, final String stnd) {
-                    return RestTester.start(
-                        UriBuilder.fromUri(uri).path(stnd).build()
-                    )
-                        .header(
-                            HttpHeaders.ACCEPT,
-                            MediaType.APPLICATION_XML_UTF_8.toString()
-                        )
-                        .get("retrieve stand");
-                }
-            }
-        );
+        this(ButtonRs.DEFAULT_BUILD);
     }
 
     /**
      * Constructor.
-     * @param retr Build info retriever.
+     * @param bld Build info retriever.
      */
-    public ButtonRs(final ButtonRs.BuildInfoRetriever retr) {
+    public ButtonRs(final ButtonRs.Build bld) {
         super();
-        this.build = retr;
+        this.build = bld;
     }
 
     /**
@@ -141,7 +143,7 @@ public final class ButtonRs extends BaseRs {
     public Response button() throws Exception {
         final List<String> health = this.info(
             this.build.info(
-                this.uriInfo().getBaseUriBuilder().build(), this.stand
+                this.uriInfo().getBaseUri(), this.stand
             )
         );
         return Response.ok(draw(health), MediaType.PNG.toString()).build();
@@ -212,7 +214,7 @@ public final class ButtonRs extends BaseRs {
     /**
      * Retrieves build information.
      */
-    public interface BuildInfoRetriever {
+    public interface Build {
         /**
          * Retrieve build info.
          * @param uri Location to use.

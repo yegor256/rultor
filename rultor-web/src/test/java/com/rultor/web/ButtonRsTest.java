@@ -58,7 +58,7 @@ public final class ButtonRsTest {
     public void buildBasicImage() throws Exception {
         final String rule = "rultor-on-commit";
         final ButtonRs res = new ButtonRs(
-            new ButtonRs.BuildInfoRetriever() {
+            new ButtonRs.Build() {
                 @Override
                 public XmlDocument info(final URI uri, final String stand) {
                     return new SimpleXml(
