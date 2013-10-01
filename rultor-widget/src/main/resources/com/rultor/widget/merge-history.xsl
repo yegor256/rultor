@@ -92,7 +92,14 @@
                         <xsl:text>text-danger</xsl:text>
                     </xsl:if>
                 </xsl:attribute>
-                <xsl:value-of select="head"/>
+                <xsl:choose>
+                    <xsl:when test="string-length(head) &gt; 7">
+                        <xsl:value-of select="substring(head,1,7)"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="head"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </td>
             <td>
                 <span class="timeago"><xsl:value-of select="coordinates/scheduled"/></span>
