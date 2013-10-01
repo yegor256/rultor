@@ -269,23 +269,17 @@
     </xsl:template>
     <xsl:template match="tags">
         <ul class="list-inline spacious-inline-list">
-            <xsl:if test="tag/markdown != ''">
-                <li class="icon">
-                    <i class="icon-plus-sign"
-                        onclick="$(this).closest('.panel').find('.detailed').toggle();"><xsl:comment>show</xsl:comment></i>
-                </li>
-            </xsl:if>
             <xsl:apply-templates select="tag"/>
-            <xsl:if test="updated">
+            <xsl:if test="../updated">
                 <li class="text-muted">
                     <xsl:text>updated </xsl:text>
-                    <span class="timeago"><xsl:value-of select="updated"/></span>
+                    <span class="timeago"><xsl:value-of select="../updated"/></span>
                 </li>
             </xsl:if>
         </ul>
         <xsl:if test="tag/markdown != ''">
             <ul class="detailed list-unstyled tag-detailed-list" style="display: none;">
-                <xsl:apply-templates select="tag[markdown]" mode="detailed"/>
+                <xsl:apply-templates select="tag[markdown != '']" mode="detailed"/>
             </ul>
         </xsl:if>
     </xsl:template>
