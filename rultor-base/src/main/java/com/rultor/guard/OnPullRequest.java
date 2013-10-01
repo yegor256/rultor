@@ -123,7 +123,13 @@ public final class OnPullRequest implements Instance {
         request.started();
         final long start = System.currentTimeMillis();
         final int code = this.batch.exec(
-            new ArrayMap<String, String>().with("request", request.name()),
+            new ArrayMap<String, String>()
+                .with("request", request.name())
+                // @checkstyle MultipleStringLiterals (4 lines)
+                .with("srcSCM", request.source().scm().uri().toString())
+                .with("srcBranch", request.source().name())
+                .with("destSCM", request.destination().scm().uri().toString())
+                .with("destBranch", request.destination().name()),
             new NullOutputStream()
         );
         final boolean success = code == 0;
