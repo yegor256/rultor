@@ -170,7 +170,13 @@
                         </xsl:if>
                         <xsl:choose>
                             <xsl:when test="contains(/page/version/name, 'SNAPSHOT')">
-                                <xsl:text>b</xsl:text>
+                                <xsl:text>R</xsl:text>
+                                <!--
+                                Would be nice to show a different logo for a SNAPSHOT version,
+                                but now we deploy so often that all versions are snapshots. Let's
+                                enable this feature in the future
+                                -->
+                                <!-- <xsl:text>b</xsl:text> -->
                             </xsl:when>
                             <xsl:otherwise>
                                 <xsl:text>R</xsl:text>
