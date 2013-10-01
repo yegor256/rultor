@@ -144,7 +144,7 @@ public final class TagLine {
      * Build Xembly directives.
      * @return Directives
      */
-    private Directives directives() {
+    public Directives directives() {
         final Directives dirs = new Directives()
             .xpath("/snapshot").addIf("tags").add("tag")
             .add("label").set(this.name).up()
