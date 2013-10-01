@@ -41,14 +41,14 @@ import org.junit.Test;
 import org.xembly.Directives;
 
 /**
- * Test case for {@link SnapshotInStream}.
+ * Test case for {@link Snapshot}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
 public final class SnapshotTest {
 
     /**
-     * SnapshotInStream can fetch snapshot from stream.
+     * Snapshot can fetch snapshot from stream.
      * @throws Exception If some problem inside
      */
     @Test
@@ -80,7 +80,7 @@ public final class SnapshotTest {
     }
 
     /**
-     * SnapshotInStream can fetch tags.
+     * Snapshot can fetch tags.
      * @throws Exception If some problem inside
      */
     @Test
@@ -91,9 +91,9 @@ public final class SnapshotTest {
                 IOUtils.toInputStream(
                     new XemblyLine(
                         new TagLine(label)
-                            .markdown("")
+                            .markdown("\u0433 **dude**")
                             .attr("alpha", null)
-                            .attr("beta-attr", "hey, друг!")
+                            .attr("beta-attr", "hey, \u20ac!")
                             .fine(true)
                             .directives()
                     ).toString(),
@@ -103,13 +103,42 @@ public final class SnapshotTest {
         ).get(label);
         MatcherAssert.assertThat(tag.label(), Matchers.equalTo(label));
         MatcherAssert.assertThat(tag.level(), Matchers.equalTo(Level.FINE));
-        MatcherAssert.assertThat(tag.markdown(), Matchers.equalTo(""));
+        MatcherAssert.assertThat(
+            tag.markdown(),
+            Matchers.containsString(" **dude**")
+        );
         MatcherAssert.assertThat(
             tag.attributes(),
             Matchers.hasEntry(
                 Matchers.startsWith("beta-"),
                 Matchers.startsWith("hey, ")
             )
+        );
+    }
+
+    /**
+     * Snapshot can gracefully handle empty tag.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void gracefullyHandlesEmptyOrBrokenTag() throws Exception {
+        final String label = "test-tag";
+        final Tag tag = new Tags.Simple(
+            new Snapshot(
+                IOUtils.toInputStream(
+                    new XemblyLine(
+                        new TagLine(label).directives()
+                    ).toString(),
+                    CharEncoding.UTF_8
+                )
+            ).tags()
+        ).get(label);
+        MatcherAssert.assertThat(tag.label(), Matchers.equalTo(label));
+        MatcherAssert.assertThat(tag.level(), Matchers.equalTo(Level.INFO));
+        MatcherAssert.assertThat(tag.markdown(), Matchers.equalTo(""));
+        MatcherAssert.assertThat(
+            tag.attributes().keySet(),
+            Matchers.empty()
         );
     }
 

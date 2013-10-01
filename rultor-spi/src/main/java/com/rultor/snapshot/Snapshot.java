@@ -189,8 +189,6 @@ public final class Snapshot {
      * @return Tag made
      */
     public Tag tag(final XmlDocument node) {
-        final ImmutableMap.Builder<String, String> attrs =
-            new ImmutableMap.Builder<String, String>();
         final Level level;
         if (node.nodes("level").isEmpty()) {
             level = Level.INFO;
@@ -202,6 +200,14 @@ public final class Snapshot {
             markdown = "";
         } else {
             markdown = node.xpath("markdown/text()").get(0);
+        }
+        final ImmutableMap.Builder<String, String> attrs =
+            new ImmutableMap.Builder<String, String>();
+        for (XmlDocument attr : node.nodes("attributes/attribute")) {
+            attrs.put(
+                attr.xpath("name/text()").get(0),
+                attr.xpath("value/text()").get(0)
+            );
         }
         return new Tag.Simple(
             node.xpath("label/text()").get(0),
