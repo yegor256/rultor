@@ -31,8 +31,10 @@ package com.rultor.env.ec2;
 
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.model.BlockDeviceMapping;
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
+import com.amazonaws.services.ec2.model.EbsBlockDevice;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.Placement;
 import com.amazonaws.services.ec2.model.Reservation;
@@ -62,6 +64,7 @@ import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -135,7 +138,8 @@ public final class EC2 implements Environments {
         final String image, final String grp, final String par,
         final String akey, final String scrt) {
         this(
-            wrk, wlt, tpe, image, grp, par, Regions.US_EAST_1.getName(),
+            wrk, wlt, tpe, image, grp, par,
+            String.format("%sa", Regions.US_EAST_1.getName()),
             new EC2Client.Simple(akey, scrt)
         );
     }
@@ -181,14 +185,14 @@ public final class EC2 implements Environments {
         @NotNull(message = "AMI can't be NULL") final String image,
         @NotNull(message = "security group can't be NULL") final String grp,
         @NotNull(message = "key pair can't be NULL") final String par,
-        @NotNull(message = "av.zone can't be NULL") final String azone,
+        @NotNull(message = "avlt zone can't be NULL") final String azone,
         @NotNull(message = "AWS client can't be NULL") final EC2Client clnt) {
         Validate.isTrue(
             image.matches("ami-[a-f0-9]{8}"),
             "AMI name `%s` is in wrong format", image
         );
         Validate.isTrue(
-            azone.matches("[a-z]{2}\\-[a-z]+\\-\\d+[a-z]"),
+            azone.matches("[a-z]{2}\\-[a-z]+\\-\\d[a-z]"),
             "availability zone `%s` is in wrong format", azone
         );
         this.work = wrk;
@@ -199,7 +203,7 @@ public final class EC2 implements Environments {
         this.pair = par;
         this.zone = azone;
         this.client = new EC2Client.Regional(
-            azone.substring(0, azone.length() - 1), clnt
+            StringUtils.stripEnd(azone, "abcdef"), clnt
         );
     }
 
@@ -263,6 +267,15 @@ public final class EC2 implements Environments {
                     )
                     .withMinCount(1)
                     .withMaxCount(1)
+                    .withBlockDeviceMappings(
+                        new BlockDeviceMapping()
+                            .withDeviceName("/dev/sda1")
+                            .withEbs(
+                                new EbsBlockDevice()
+                                    .withDeleteOnTermination(true)
+                            )
+                    )
+                    .withInstanceInitiatedShutdownBehavior("terminate")
             );
             final List<Instance> instances =
                 result.getReservation().getInstances();
@@ -270,8 +283,7 @@ public final class EC2 implements Environments {
                 throw new IllegalStateException(
                     String.format(
                         "failed to run an EC2 instance `%s` with AMI `%s`",
-                        this.type,
-                        this.ami
+                        this.type, this.ami
                     )
                 );
             }

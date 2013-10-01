@@ -52,6 +52,24 @@ import org.junit.Test;
 public final class EC2ITCase {
 
     /**
+     * AWS EC2 key.
+     */
+    private static final String KEY =
+        System.getProperty("failsafe.ec2.key");
+
+    /**
+     * AWS EC2 secret.
+     */
+    private static final String SECRET =
+        System.getProperty("failsafe.ec2.secret");
+
+    /**
+     * AWS EC2 private SSH key.
+     */
+    private static final String SSH_KEY =
+        System.getProperty("failsafe.ec2.priv");
+
+    /**
      * EC2 security group.
      * @checkstyle MultipleStringLiterals (2 lines)
      */
@@ -67,35 +85,24 @@ public final class EC2ITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    @org.junit.Ignore
     public void makesInstanceAndConnectsToIt() throws Exception {
-        final String key = System.getProperty("failsafe.ec2.key");
-        Assume.assumeNotNull(key);
+        Assume.assumeNotNull(EC2ITCase.KEY);
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
         final Environments envs = new EC2(
-            new Coordinates.None(),
-            new Wallet.Empty(),
-            "t1.micro",
-            "ami-82fa58eb",
-            EC2ITCase.GROUP,
-            EC2ITCase.PAIR,
-            key,
-            System.getProperty("failsafe.ec2.secret")
+            new Coordinates.None(), new Wallet.Empty(),
+            "t1.micro", "ami-e187cb88",
+            EC2ITCase.GROUP, EC2ITCase.PAIR, EC2ITCase.KEY, EC2ITCase.SECRET
         );
         final Shells shells = new SSHServers(
-            envs,
-            "ubuntu",
-            new PrivateKey(System.getProperty("failsafe.ec2.priv"))
+            envs, "ubuntu", new PrivateKey(EC2ITCase.SSH_KEY)
         );
         final Shell shell = shells.acquire();
         int code;
         try {
             code = shell.exec(
                 "#!/bin/bash\nfor i in '1 2 3 4'\ndo\necho $i\ndone",
-                IOUtils.toInputStream(""),
-                stdout,
-                stderr
+                IOUtils.toInputStream(""), stdout, stderr
             );
         } finally {
             shell.close();

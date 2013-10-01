@@ -112,7 +112,7 @@ public final class EC2Test {
         Mockito.when(work.scheduled()).thenReturn(new Time());
         final EC2 envs = new EC2(
             work, wallet, "type", "ami-ef9f2f1e", "group", "par",
-            "eu-west-123t", client
+            "eu-west-1a", client
         );
         return envs;
     }
