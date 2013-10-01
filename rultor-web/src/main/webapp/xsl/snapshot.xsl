@@ -278,7 +278,7 @@
             </xsl:if>
         </ul>
         <xsl:if test="tag/markdown != ''">
-            <ul class="detailed list-unstyled tag-detailed-list" style="display: none;">
+            <ul class="detailed list-unstyled tag-detailed-list">
                 <xsl:apply-templates select="tag[markdown != '']" mode="detailed"/>
             </ul>
         </xsl:if>
