@@ -85,7 +85,16 @@
                 </a>
             </span>
             <xsl:text>Latest commit </xsl:text>
-            <code><xsl:value-of select="head"/></code>
+            <code>
+                <xsl:choose>
+                    <xsl:when test="string-length(head) &gt; 7">
+                        <xsl:value-of select="substring(head,1,7)"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="head"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </code>
             <xsl:text> by </xsl:text>
             <xsl:value-of select="author"/>
             <xsl:text> </xsl:text>
