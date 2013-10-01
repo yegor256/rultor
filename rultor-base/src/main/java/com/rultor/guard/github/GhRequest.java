@@ -130,7 +130,7 @@ final class GhRequest implements MergeRequest {
      * {@inheritDoc}
      */
     @Override
-    @Step("notified GitHub pull request that merging started")
+    @Step("notified GitHub pull request ${this.issue} that merging started")
     public void started() throws IOException {
         final GitHubClient client = this.github.client();
         final IssueService issues = new IssueService(client);
@@ -146,7 +146,7 @@ final class GhRequest implements MergeRequest {
      * {@inheritDoc}
      */
     @Override
-    @Step("accepted GitHub pull request #${this.issue}")
+    @Step("accepted GitHub pull request ${this.issue}")
     public void accept() throws IOException {
         final GitHubClient client = this.github.client();
         final IssueService issues = new IssueService(client);
@@ -174,7 +174,7 @@ final class GhRequest implements MergeRequest {
      * {@inheritDoc}
      */
     @Override
-    @Step("rejected GitHub pull request #${this.issue}")
+    @Step("rejected GitHub pull request ${this.issue}")
     public void reject() throws IOException {
         final GitHubClient client = this.github.client();
         final IssueService svc = new IssueService(client);
