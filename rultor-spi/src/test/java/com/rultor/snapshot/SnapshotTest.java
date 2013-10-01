@@ -93,7 +93,7 @@ public final class SnapshotTest {
                         new TagLine(label)
                             .markdown("")
                             .attr("alpha", null)
-                            .attr("beta", "hey, друг!")
+                            .attr("beta-attr", "hey, друг!")
                             .fine(true)
                             .directives()
                     ).toString(),
@@ -104,6 +104,13 @@ public final class SnapshotTest {
         MatcherAssert.assertThat(tag.label(), Matchers.equalTo(label));
         MatcherAssert.assertThat(tag.level(), Matchers.equalTo(Level.FINE));
         MatcherAssert.assertThat(tag.markdown(), Matchers.equalTo(""));
+        MatcherAssert.assertThat(
+            tag.attributes(),
+            Matchers.hasEntry(
+                Matchers.startsWith("beta-"),
+                Matchers.startsWith("hey, ")
+            )
+        );
     }
 
 }
