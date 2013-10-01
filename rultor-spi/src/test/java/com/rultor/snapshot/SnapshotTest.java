@@ -30,9 +30,13 @@
 package com.rultor.snapshot;
 
 import com.rexsl.test.XhtmlMatchers;
+import com.rultor.spi.Tag;
+import com.rultor.spi.Tags;
+import java.util.logging.Level;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.xembly.Directives;
 
@@ -73,6 +77,33 @@ public final class SnapshotTest {
                 "/snapshot/test[.='how are you, dude?!']"
             )
         );
+    }
+
+    /**
+     * SnapshotInStream can fetch tags.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void fetchesTagsFromXml() throws Exception {
+        final String label = "my-tag";
+        final Tag tag = new Tags.Simple(
+            new Snapshot(
+                IOUtils.toInputStream(
+                    new XemblyLine(
+                        new TagLine(label)
+                            .markdown("")
+                            .attr("alpha", null)
+                            .attr("beta", "hey, друг!")
+                            .fine(true)
+                            .directives()
+                    ).toString(),
+                    CharEncoding.UTF_8
+                )
+            ).tags()
+        ).get(label);
+        MatcherAssert.assertThat(tag.label(), Matchers.equalTo(label));
+        MatcherAssert.assertThat(tag.level(), Matchers.equalTo(Level.FINE));
+        MatcherAssert.assertThat(tag.markdown(), Matchers.equalTo(""));
     }
 
 }
