@@ -198,7 +198,7 @@ public final class Snapshot {
             level = Level.parse(node.xpath("level/text()").get(0));
         }
         final String markdown;
-        if (node.nodes("markdown").isEmpty()) {
+        if (node.nodes("markdown[.!='']").isEmpty()) {
             markdown = "";
         } else {
             markdown = node.xpath("markdown/text()").get(0);
