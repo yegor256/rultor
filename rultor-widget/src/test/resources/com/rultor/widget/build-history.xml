@@ -30,7 +30,6 @@
  -->
 <?xml-stylesheet type='text/xsl' href='./chrome-stand.xsl'?>
 <page>
-    <millis>6373</millis>
     <version>
         <name>1.0-SNAPSHOT</name>
         <revision>123</revision>
@@ -50,11 +49,6 @@
                         <owner>urn:github:1</owner>
                         <scheduled>2012-07-20T07:13:33Z</scheduled>
                     </coordinates>
-                    <duration>473783</duration>
-                    <code>0</code>
-                    <head>09ae8f5</head>
-                    <time>2012-08-23T13:25:33Z</time>
-                    <author>Jeff Lebowski</author>
                 </build>
                 <build>
                     <coordinates>
