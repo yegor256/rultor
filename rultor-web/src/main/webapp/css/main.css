@@ -72,6 +72,10 @@ textarea {
     z-index: 1002;
 }
 
+.login-icon {
+    font-size: 1.6em;
+}
+
 .icon {
     cursor: pointer;
     text-decoration: none;
