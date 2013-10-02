@@ -34,16 +34,12 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.shell.Sequel;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Terminal;
-import com.rultor.snapshot.XemblyLine;
+import com.rultor.snapshot.TagLine;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.logging.Level;
-import javax.json.Json;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.FilenameUtils;
-import org.xembly.Directives;
 
 /**
  * Put file(s) using s3cmd command line tool.
@@ -169,21 +165,11 @@ public final class S3CmdPut implements Sequel {
      * @throws IOException If fails
      */
     private void tag(final String desc, final String href) throws IOException {
-        final StringWriter data = new StringWriter();
-        Json.createGenerator(data)
-            .writeStartObject()
-            .write("href", href)
-            .writeEnd()
-            .close();
-        new XemblyLine(
-            new Directives()
-                .xpath("/snapshot").addIf("tags").strict(1)
-                .add("tag")
-                .add("label").set(this.name).up()
-                .add("level").set(Level.FINE.toString()).up()
-                .add("data").set(data.toString()).up()
-                .add("markdown").set(desc)
-        ).log();
+        new TagLine(this.name)
+            .markdown(desc)
+            .fine(true)
+            .attr("href", href)
+            .log();
     }
 
 }
