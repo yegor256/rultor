@@ -210,7 +210,7 @@ final class GhRequest implements MergeRequest {
     private static URI uri(final PullRequestMarker head) {
         return URI.create(
             String.format(
-                "ssh://github.com/%s/%s.git",
+                "ssh://git@github.com/%s/%s.git",
                 head.getUser().getLogin(),
                 head.getRepo().getName()
             )
