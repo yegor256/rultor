@@ -40,6 +40,7 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.amazonaws.services.sqs.model.SendMessageResult;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
@@ -173,6 +174,7 @@ public final class SQSQueue implements Queue {
      * @param sec Seconds to wait
      * @return Coordinates or Coordinates.None
      */
+    @RetryOnFailure(verbose = false)
     private Coordinates fetch(final int sec) {
         final AmazonSQS aws = this.client.get();
         Coordinates work = new Coordinates.None();
