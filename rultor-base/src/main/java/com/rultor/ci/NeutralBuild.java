@@ -94,7 +94,7 @@ public final class NeutralBuild implements Instance {
                 @Override
                 public Iterable<Commit> log() throws IOException {
                     return Arrays.<Commit>asList(
-                        new Commit.Simple("", new Time(), "")
+                        new Commit.Simple("abcdef", new Time(), "nobody")
                     );
                 }
                 @Override
