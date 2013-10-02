@@ -59,7 +59,6 @@
         <item rel="stands">Stands</item>
         <item rel="account">Account</item>
     </nav>
-    <millis>16</millis>
     <stand>nightly-build</stand>
     <since>2012-08-23T13:25:33Z</since>
     <balance>$0.45</balance>
