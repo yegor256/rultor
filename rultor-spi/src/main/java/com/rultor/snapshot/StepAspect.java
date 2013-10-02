@@ -108,10 +108,9 @@ public final class StepAspect {
             }
             this.mark(label, Level.INFO);
             new XemblyLine(
-                new Directives()
-                    .xpath(String.format("//step[@id=%s]/summary", label))
-                    .strict(1)
-                    .set(new Vext(step.value()).print(args.build()))
+                new Directives().xpath(
+                    String.format("/snapshot/steps/step[@id=%s]/summary", label)
+                ).strict(1).set(new Vext(step.value()).print(args.build()))
             ).log();
             return result;
         // @checkstyle IllegalCatch (1 line)
