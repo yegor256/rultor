@@ -133,11 +133,6 @@ public final class OnPullRequest implements Instance {
             new NullOutputStream()
         );
         final boolean success = code == 0;
-        if (success) {
-            request.accept();
-        } else {
-            request.reject();
-        }
         final long millis = System.currentTimeMillis() - start;
         new TagLine("on-pull-request")
             .fine(success)
@@ -159,6 +154,11 @@ public final class OnPullRequest implements Instance {
                 )
             )
             .log();
+        if (success) {
+            request.accept();
+        } else {
+            request.reject();
+        }
         return success;
     }
 
