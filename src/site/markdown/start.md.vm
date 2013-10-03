@@ -13,8 +13,8 @@ with the following "_spec_":
 
 ```
 urn:github:526301:git-on-commit(
-  "https://github.com/jcabi/jcabi.git",
-  "mvn test -e -Pci --settings /home/ubuntu/settings.xml",
+  "ssh://git@github.com/jcabi/jcabi-aspects.git",
+  "mvn test -e -Pci --settings ../settings.xml",
   ["me@example.com"],
   "m1.small",
   {
@@ -34,7 +34,9 @@ urn:github:526301:git-on-commit(
 )
 ```
 
-Save it and in a few minutes you will see its first result.
+Save it and in a few minutes you will see its first result. To see
+the result, just click its name. You will see every-minute
+"_pulses_".
 
 The spec defines how to construct an object that should
 receive control
@@ -45,14 +47,14 @@ The template requires five parameters. The first one is the URL
 of Git repository, as a Java string:
 
 ```
-"https://github.com/jcabi/jcabi.git"
+"ssh://git@github.com/jcabi/jcabi-aspects.git"
 ```
 
 The second one is a bash command that will be executed if a new commit
 is found in `master` branch of the repository:
 
 ```
-"mvn test -e -Pci --settings /home/ubuntu/settings.xml"
+"mvn test -e -Pci --settings ../settings.xml"
 ```
 
 The third one is a list of email addresses that will receive notifications
@@ -66,7 +68,9 @@ means of specifying a collection:
 
 The fourth one is an EC2 instance type, which will be used for
 execution of the build. When a new commit is found in your `master` branch, the
-rule will create a new Amazon Web Services EC2 instance, execute your script, and
+rule will create a new
+[AWS EC2 instance](http://aws.amazon.com/ec2/),
+execute your script, and
 terminate the instance. Your account will be charged for the price of the
 instance, approximately. Prices and instance types are listed in
 [AWS documention](http://aws.amazon.com/ec2/pricing/).
@@ -154,8 +158,8 @@ creating an account and defining your rules and stands.
 
 However, you can fund your account using PayPal and use the money to compensate
 other users for rule templates they provide to you. Together with rule
-templates they provide you an access to their computing and storage resources
-(like Amazon EC2 instances or FTP logging). Rultor.com charges your
+templates, they provide you an access to their computing and storage resources
+(like AWS EC2 instances or FTP logging). Rultor.com charges your
 account automatically and transfers money to their accounts. A detailed
 statistics of your expenses is available at
 [account page](http://www.rultor.com/account).
@@ -232,7 +236,7 @@ development of Rultor itself: [www.rultor.com/s/rultor](http://www.rultor.com/s/
 
 ${hash}${hash}${hash} #anchor("widgets") Widgets
 
-On top of the stand of rultor you see a few nice "widgets" that summarize
+On top of the stand of rultor you see a few nice "_widgets_" that summarize
 the information collected by running instances. You can add similar
 widgets to your own stand. Their spec is a collection of
 classes that inherit [Widget](./rultor-spi/apidocs-${project.version}/com/rultor/spi/Widget.html)
@@ -263,8 +267,8 @@ a smart way. Let's break it down into components.
 As you already know, a rule receives control every minute.
 Technically it's even more interesting. Every minute a rule is
 instantiated as a Java object, according to its spec and then receives control.
-We call this object an Instance. The module that instantiates a rule and
-controls instances is called a Conveyer.
+We call this object an "_instance_". The module that instantiates a rule and
+controls instances is called a "_conveyer_".
 
 When the instance's lifespan comes to end, it looses control and gets destroyed
 by Java Virtual Machine. More to this, all instances are stateless immutable
@@ -277,17 +281,19 @@ of concurrent execution of multiple instances. When a new commit appears
 in Git branch, Conveyer creates an instance and lets it do its job, which
 is building the product. This process may take more than a minute. We don't
 want to start a new build until the first one is finished. This problem is
-solved by `git-on-commit` using semaphores in Amazon SimpleDB. When
-using the template you pay for its usage of SimpleDB, but the price is
+solved by `git-on-commit` by using semaphores in
+[AWS SimpleDB](http://aws.amazon.com/simpledb/).
+When using the template you pay for its usage of SimpleDB, but the price is
 very small (less than $0.00001 per request).
 
 As you have probably already understood, there is no way to manually "trigger" execution
 of a rule. This is where Rultor differs from other continuous integration
-systems, like Jenkins. A new instance of every rule is created and executed
+systems, like [Jenkins](http://jenkins-ci.org/).
+A new instance of every rule is created and executed
 every minute, 24 hours per day, 7 days per week.
 The only way to stop this process is to either delete the rule
 or enclose its spec into
-[`Empty`](./rultor-base/apidocs-${project.version}/com/rultor/base/Empty.html):
+[`Empty`](./rultor-base/apidocs-${project.version}/com/rultor/base/Empty.html), for example:
 
 ```
 com.rultor.base.Empty(
@@ -359,9 +365,9 @@ Most of the classes that you will use in your specs are
 using Decorator pattern, so get used to it.
 
 When a new commit is detected, build script is executed in a newly created
-Amazon EC2 instance. When execution is finished and build succeeded or
+EC2 instance. When execution is finished and build succeeded or
 failed we don't want to execute the same operation on the same commit. We
-want our rule to remember that given commit has already been seen and should
+want our rule to remember that a given commit has already been seen and should
 be ignored in the future. This check is also implemented by `git-on-commit`.
 
 When execution is finished, `git-on-commit` uploads full output of the
@@ -377,8 +383,8 @@ find such tags and run build script on them:
 
 ```
 urn:github:526301:git-on-tag(
-  "https://github.com/jcabi/jcabi.git",
-  "mvn deploy -e -Pci --settings /home/ubuntu/settings.xml",
+  "ssh://git@github.com/jcabi/jcabi-aspects.git",
+  "mvn deploy -e -Pci --settings ../settings.xml",
   ["me@example.com"],
   "m1.small",
   {
@@ -404,7 +410,7 @@ provided by user `urn:github:526301`. Second, we're instructing Maven to
 deploy our artifacts, not just test them:
 
 ```
-"mvn deploy -e -Pci --settings /home/ubuntu/settings.xml"
+"mvn deploy -e -Pci --settings ../settings.xml"
 ```
 
 Template `git-on-tag` expects you to name your tags according to
@@ -424,6 +430,7 @@ before merging. When you receive a pull request from one of your
 project contributor, you should review the code for its logical validity and
 then run build automation script with all quality checks turned on.
 If build fails, you should reject this pull request and explain why.
+This technology is also known as **pre-flight build**.
 
 Read this article published by Yegor Bugayenko in php|Architect managazine
 on August 2010:
@@ -441,15 +448,26 @@ urn:github:526301:github-on-pull-request(
   "mvn clean install -B -C",
   "rultor",
   ["yegor256"],
-  ".*good.*",
+  ".*good to merge.*",
   {".ssh/id_rsa": github-ssh-key()}
 )
 ```
 
 Once a new pull request is ready user `yegor256` has to review the code
-and post a message that matches `.*good.*` regular expression to its
+and post a message that matches `.*good to merge.*` regular expression to its
 issue. The rule will pick this pull request up, will merge it with
 master its destination branch and merge, if succeeded. Otherwise it will
 post a negative message to the Github issue and won't try again, until a new
 comment "good" comment is posted by `yegor256`.
+
+${hash}${hash} #anchor("contribute") How to Contribute?
+
+Rultor is an open source project hosted at [Gihub](https://github.com/rultor/rultor).
+You're very welcome to suggest new features, report bugs, and ask
+questions in [Github Issue Tracker](https://github.com/rultor/rultor/issues).
+The project is still in "pre-beta" state.
+
+Moreover, you're welcome
+[to fork our repository](https://github.com/rultor/rultor)
+and submit your changes and/or improvements.
 
