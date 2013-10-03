@@ -81,10 +81,10 @@
                 </a>
             </td>
             <td>
-                <xsl:value-of select="srcBranch"/>
+                <xsl:value-of select="srcbranch"/>
             </td>
             <td>
-                <xsl:value-of select="srcDest"/>
+                <xsl:value-of select="destbranch"/>
             </td>
             <td>
                 <xsl:attribute name="class">
@@ -92,14 +92,7 @@
                         <xsl:text>text-danger</xsl:text>
                     </xsl:if>
                 </xsl:attribute>
-                <xsl:choose>
-                    <xsl:when test="string-length(head) &gt; 7">
-                        <xsl:value-of select="substring(head,1,7)"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:value-of select="head"/>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:value-of select="name"/>
             </td>
             <td>
                 <span class="timeago"><xsl:value-of select="coordinates/scheduled"/></span>
