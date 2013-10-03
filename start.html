@@ -60,8 +60,8 @@
 
 <div class="source">
 <pre>urn:github:526301:git-on-commit(
-  &quot;https://github.com/jcabi/jcabi.git&quot;,
-  &quot;mvn test -e -Pci --settings /home/ubuntu/settings.xml&quot;,
+  &quot;ssh://git@github.com/jcabi/jcabi-aspects.git&quot;,
+  &quot;mvn test -e -Pci --settings ../settings.xml&quot;,
   [&quot;me@example.com&quot;],
   &quot;m1.small&quot;,
   {
@@ -80,23 +80,23 @@
   }
 )
 </pre></div>
-<p>Save it and in a few minutes you will see its first result.</p>
+<p>Save it and in a few minutes you will see its first result. To see the result, just click its name. You will see every-minute &#x201c;<i>pulses</i>&#x201d;.</p>
 <p>The spec defines how to construct an object that should receive control (see <a href="./rultor-spi/apidocs-1.0-SNAPSHOT/com/rultor/spi/Spec.html">full syntax description</a>). In this example, the object will be constructed from a template defined by user <tt>urn:github:526301</tt> with <tt>git-on-commit</tt> name. The template requires five parameters. The first one is the URL of Git repository, as a Java string:</p>
 
 <div class="source">
-<pre>&quot;https://github.com/jcabi/jcabi.git&quot;
+<pre>&quot;ssh://git@github.com/jcabi/jcabi-aspects.git&quot;
 </pre></div>
 <p>The second one is a bash command that will be executed if a new commit is found in <tt>master</tt> branch of the repository:</p>
 
 <div class="source">
-<pre>&quot;mvn test -e -Pci --settings /home/ubuntu/settings.xml&quot;
+<pre>&quot;mvn test -e -Pci --settings ../settings.xml&quot;
 </pre></div>
 <p>The third one is a list of email addresses that will receive notifications when build is complete (either with success or failure). In the example, the list contains just one element, but you can use it with many, by means of specifying a collection:</p>
 
 <div class="source">
 <pre>[&quot;me@example.com&quot;, &quot;you@example.com&quot;]
 </pre></div>
-<p>The fourth one is an EC2 instance type, which will be used for execution of the build. When a new commit is found in your <tt>master</tt> branch, the rule will create a new Amazon Web Services EC2 instance, execute your script, and terminate the instance. Your account will be charged for the price of the instance, approximately. Prices and instance types are listed in <a class="externalLink" href="http://aws.amazon.com/ec2/pricing/">AWS documention</a>.</p>
+<p>The fourth one is an EC2 instance type, which will be used for execution of the build. When a new commit is found in your <tt>master</tt> branch, the rule will create a new <a class="externalLink" href="http://aws.amazon.com/ec2/">AWS EC2 instance</a>, execute your script, and terminate the instance. Your account will be charged for the price of the instance, approximately. Prices and instance types are listed in <a class="externalLink" href="http://aws.amazon.com/ec2/pricing/">AWS documention</a>.</p>
 <p>The last parameter is a map of files to be uploaded to the EC2 instance before running the build script. They will be uploaded into <tt>/home/ubuntu</tt> directory, which is a home directory of the EC2 user for Ubuntu images. The map may contain more elements, for example:</p>
 
 <div class="source">
@@ -158,10 +158,10 @@ N9d/UY1o9c4kuhwbe9KlJGW8KBrZAS4j1RlvrBS8DVPjx18+xPyN
 <div class="section">
 <h3><a name="cost"></a> How much does it cost?<a name="How_much_does_it_cost"></a></h3>
 <p>Rultor.com is an open source and completely free service. It is sponsored by <a class="externalLink" href="http://www.tpc2.com">TPC2.com</a>. You don&#x2019;t pay anything for creating an account and defining your rules and stands.</p>
-<p>However, you can fund your account using PayPal and use the money to compensate other users for rule templates they provide to you. Together with rule templates they provide you an access to their computing and storage resources (like Amazon EC2 instances or FTP logging). Rultor.com charges your account automatically and transfers money to their accounts. A detailed statistics of your expenses is available at <a class="externalLink" href="http://www.rultor.com/account">account page</a>.</p>
+<p>However, you can fund your account using PayPal and use the money to compensate other users for rule templates they provide to you. Together with rule templates, they provide you an access to their computing and storage resources (like AWS EC2 instances or FTP logging). Rultor.com charges your account automatically and transfers money to their accounts. A detailed statistics of your expenses is available at <a class="externalLink" href="http://www.rultor.com/account">account page</a>.</p>
 <p>There is an allowance of $5.00 automatically added to your account every 30 days, if you don&#x2019;t fund it otherwise. Thus, if you have just one continuous integration rule which runs, say three times per working day, using <tt>m1.small</tt> type of EC2 instance, your total cost will be $3.60 per month. This is less than the allowance you get automatically from us and you don&#x2019;t need to fund your account at all.</p></div></div>
 <div class="section">
-<h2><a name="stand"></a> Drain<a name="Drain"></a></h2>
+<h2><a name="drain"></a> Drain<a name="Drain"></a></h2>
 <p>A &#x201c;<i>drain</i>&#x201d; is where your rules log their events. Every rule has its own drain configured with its own spec. For example, you can configure it like:</p>
 
 <div class="source">
@@ -192,7 +192,7 @@ N9d/UY1o9c4kuhwbe9KlJGW8KBrZAS4j1RlvrBS8DVPjx18+xPyN
 <p>This is a link to a stand we use to publish the progress of development of Rultor itself: <a class="externalLink" href="http://www.rultor.com/s/rultor">www.rultor.com/s/rultor</a>.</p>
 <div class="section">
 <h3><a name="widgets"></a> Widgets<a name="Widgets"></a></h3>
-<p>On top of the stand of rultor you see a few nice &#x201c;widgets&#x201d; that summarize the information collected by running instances. You can add similar widgets to your own stand. Their spec is a collection of classes that inherit <a href="./rultor-spi/apidocs-1.0-SNAPSHOT/com/rultor/spi/Widget.html">Widget</a> interface, for example:</p>
+<p>On top of the stand of rultor you see a few nice &#x201c;<i>widgets</i>&#x201d; that summarize the information collected by running instances. You can add similar widgets to your own stand. Their spec is a collection of classes that inherit <a href="./rultor-spi/apidocs-1.0-SNAPSHOT/com/rultor/spi/Widget.html">Widget</a> interface, for example:</p>
 
 <div class="source">
 <pre>[
@@ -205,10 +205,10 @@ N9d/UY1o9c4kuhwbe9KlJGW8KBrZAS4j1RlvrBS8DVPjx18+xPyN
 <h2><a name="ci"></a> Continuous Integration of Master Branch<a name="Continuous_Integration_of_Master_Branch"></a></h2>
 <p>In the example above, every new commit made to your Git <tt>master</tt> branch triggers a script, which builds the product and validates its consistency (you should use unit tests, integration tests, and static analysis as validating instruments).</p>
 <p>Template <tt>git-on-commit</tt> provided by user <tt>urn:github:526301</tt> does it all in a smart way. Let&#x2019;s break it down into components.</p>
-<p>As you already know, a rule receives control every minute. Technically it&#x2019;s even more interesting. Every minute a rule is instantiated as a Java object, according to its spec and then receives control. We call this object an Instance. The module that instantiates a rule and controls instances is called a Conveyer.</p>
+<p>As you already know, a rule receives control every minute. Technically it&#x2019;s even more interesting. Every minute a rule is instantiated as a Java object, according to its spec and then receives control. We call this object an &#x201c;<i>instance</i>&#x201d;. The module that instantiates a rule and controls instances is called a &#x201c;<i>conveyer</i>&#x201d;.</p>
 <p>When the instance&#x2019;s lifespan comes to end, it looses control and gets destroyed by Java Virtual Machine. More to this, all instances are stateless immutable objects, which are not aware about each others existence. This models gives a lot of benefits in concurrency and traceability. However, it requires more accurate and precise configuration.</p>
-<p>The first problem that <tt>git-on-commit</tt> template solves is a possibility of concurrent execution of multiple instances. When a new commit appears in Git branch, Conveyer creates an instance and lets it do its job, which is building the product. This process may take more than a minute. We don&#x2019;t want to start a new build until the first one is finished. This problem is solved by <tt>git-on-commit</tt> using semaphores in Amazon SimpleDB. When using the template you pay for its usage of SimpleDB, but the price is very small (less than $0.00001 per request).</p>
-<p>As you have probably already understood, there is no way to manually &#x201c;trigger&#x201d; execution of a rule. This is where Rultor differs from other continuous integration systems, like Jenkins. A new instance of every rule is created and executed every minute, 24 hours per day, 7 days per week. The only way to stop this process is to either delete the rule or enclose its spec into <a href="./rultor-base/apidocs-1.0-SNAPSHOT/com/rultor/base/Empty.html"><tt>Empty</tt></a>:</p>
+<p>The first problem that <tt>git-on-commit</tt> template solves is a possibility of concurrent execution of multiple instances. When a new commit appears in Git branch, Conveyer creates an instance and lets it do its job, which is building the product. This process may take more than a minute. We don&#x2019;t want to start a new build until the first one is finished. This problem is solved by <tt>git-on-commit</tt> by using semaphores in <a class="externalLink" href="http://aws.amazon.com/simpledb/">AWS SimpleDB</a>. When using the template you pay for its usage of SimpleDB, but the price is very small (less than $0.00001 per request).</p>
+<p>As you have probably already understood, there is no way to manually &#x201c;trigger&#x201d; execution of a rule. This is where Rultor differs from other continuous integration systems, like <a class="externalLink" href="http://jenkins-ci.org/">Jenkins</a>. A new instance of every rule is created and executed every minute, 24 hours per day, 7 days per week. The only way to stop this process is to either delete the rule or enclose its spec into <a href="./rultor-base/apidocs-1.0-SNAPSHOT/com/rultor/base/Empty.html"><tt>Empty</tt></a>, for example:</p>
 
 <div class="source">
 <pre>com.rultor.base.Empty(
@@ -259,7 +259,7 @@ N9d/UY1o9c4kuhwbe9KlJGW8KBrZAS4j1RlvrBS8DVPjx18+xPyN
 }
 </pre></div>
 <p>Most of the classes that you will use in your specs are using Decorator pattern, so get used to it.</p>
-<p>When a new commit is detected, build script is executed in a newly created Amazon EC2 instance. When execution is finished and build succeeded or failed we don&#x2019;t want to execute the same operation on the same commit. We want our rule to remember that given commit has already been seen and should be ignored in the future. This check is also implemented by <tt>git-on-commit</tt>.</p>
+<p>When a new commit is detected, build script is executed in a newly created EC2 instance. When execution is finished and build succeeded or failed we don&#x2019;t want to execute the same operation on the same commit. We want our rule to remember that a given commit has already been seen and should be ignored in the future. This check is also implemented by <tt>git-on-commit</tt>.</p>
 <p>When execution is finished, <tt>git-on-commit</tt> uploads full output of the script to Amazon S3 and publishes a link to the file in the stand.</p></div>
 <div class="section">
 <h2><a name="on-tag"></a> Release Every New Tag<a name="Release_Every_New_Tag"></a></h2>
@@ -267,8 +267,8 @@ N9d/UY1o9c4kuhwbe9KlJGW8KBrZAS4j1RlvrBS8DVPjx18+xPyN
 
 <div class="source">
 <pre>urn:github:526301:git-on-tag(
-  &quot;https://github.com/jcabi/jcabi.git&quot;,
-  &quot;mvn deploy -e -Pci --settings /home/ubuntu/settings.xml&quot;,
+  &quot;ssh://git@github.com/jcabi/jcabi-aspects.git&quot;,
+  &quot;mvn deploy -e -Pci --settings ../settings.xml&quot;,
   [&quot;me@example.com&quot;],
   &quot;m1.small&quot;,
   {
@@ -290,7 +290,7 @@ N9d/UY1o9c4kuhwbe9KlJGW8KBrZAS4j1RlvrBS8DVPjx18+xPyN
 <p>The spec looks almost identical to the one discussed above, with two important differences. First, we&#x2019;re using <tt>git-on-tag</tt> template provided by user <tt>urn:github:526301</tt>. Second, we&#x2019;re instructing Maven to deploy our artifacts, not just test them:</p>
 
 <div class="source">
-<pre>&quot;mvn deploy -e -Pci --settings /home/ubuntu/settings.xml&quot;
+<pre>&quot;mvn deploy -e -Pci --settings ../settings.xml&quot;
 </pre></div>
 <p>Template <tt>git-on-tag</tt> expects you to name your tags according to <a class="externalLink" href="http://semver.org/">Semantic Versioning</a> convention and prefix them with a single word, for example:</p>
 
@@ -301,7 +301,7 @@ example-2.0.3.GA
 </pre></div></div>
 <div class="section">
 <h2><a name="on-pull-request"></a> Guard Your Master Branch<a name="Guard_Your_Master_Branch"></a></h2>
-<p>It is a very good practice to test changes submitted to your code base before merging. When you receive a pull request from one of your project contributor, you should review the code for its logical validity and then run build automation script with all quality checks turned on. If build fails, you should reject this pull request and explain why.</p>
+<p>It is a very good practice to test changes submitted to your code base before merging. When you receive a pull request from one of your project contributor, you should review the code for its logical validity and then run build automation script with all quality checks turned on. If build fails, you should reject this pull request and explain why. This technology is also known as <b>pre-flight build</b>.</p>
 <p>Read this article published by Yegor Bugayenko in php|Architect managazine on August 2010: <a class="externalLink" href="http://img.rultor.com/guard-article.pdf">&#x201c;Prevent Conflicts in Distributed Agile PHP Projects&#x201d;</a></p>
 <p>The process can be automated using <tt>github-on-pull-request</tt> provided by user <tt>urn:github:526301</tt>:</p>
 
@@ -314,11 +314,15 @@ example-2.0.3.GA
   &quot;mvn clean install -B -C&quot;,
   &quot;rultor&quot;,
   [&quot;yegor256&quot;],
-  &quot;.*good.*&quot;,
+  &quot;.*good to merge.*&quot;,
   {&quot;.ssh/id_rsa&quot;: github-ssh-key()}
 )
 </pre></div>
-<p>Once a new pull request is ready user <tt>yegor256</tt> has to review the code and post a message that matches <tt>.*good.*</tt> regular expression to its issue. The rule will pick this pull request up, will merge it with master its destination branch and merge, if succeeded. Otherwise it will post a negative message to the Github issue and won&#x2019;t try again, until a new comment &#x201c;good&#x201d; comment is posted by <tt>yegor256</tt>.</p></div>
+<p>Once a new pull request is ready user <tt>yegor256</tt> has to review the code and post a message that matches <tt>.*good to merge.*</tt> regular expression to its issue. The rule will pick this pull request up, will merge it with master its destination branch and merge, if succeeded. Otherwise it will post a negative message to the Github issue and won&#x2019;t try again, until a new comment &#x201c;good&#x201d; comment is posted by <tt>yegor256</tt>.</p></div>
+<div class="section">
+<h2><a name="contribute"></a> How to Contribute?<a name="How_to_Contribute"></a></h2>
+<p>Rultor is an open source project hosted at <a class="externalLink" href="https://github.com/rultor/rultor">Gihub</a>. You&#x2019;re very welcome to suggest new features, report bugs, and ask questions in <a class="externalLink" href="https://github.com/rultor/rultor/issues">Github Issue Tracker</a>. The project is still in &#x201c;pre-beta&#x201d; state.</p>
+<p>Moreover, you&#x2019;re welcome <a class="externalLink" href="https://github.com/rultor/rultor">to fork our repository</a> and submit your changes and/or improvements.</p></div>
                 </article>
             </div>
             <footer class="text-muted">
@@ -329,7 +333,7 @@ example-2.0.3.GA
                     <li>
                         <small>
                             
-                            11-Sep-2013
+                            03-Oct-2013
                         </small>
                     </li>
                 </ul>
