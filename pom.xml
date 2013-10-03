@@ -33,7 +33,7 @@
     <parent>
         <groupId>com.jcabi</groupId>
         <artifactId>parent</artifactId>
-        <version>0.10.1</version>
+        <version>0.10.2</version>
     </parent>
     <groupId>com.rultor</groupId>
     <artifactId>rultor</artifactId>
@@ -106,12 +106,6 @@
     </properties>
     <build>
         <plugins>
-            <plugin>
-                <!-- https://github.com/jcabi/jcabi-maven-plugin/issues/4 -->
-                <groupId>com.jcabi</groupId>
-                <artifactId>jcabi-maven-plugin</artifactId>
-                <version>0.8</version>
-            </plugin>
             <plugin>
                 <artifactId>maven-site-plugin</artifactId>
                 <configuration>
