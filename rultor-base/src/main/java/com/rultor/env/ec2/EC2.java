@@ -298,8 +298,9 @@ public final class EC2 implements Environments {
                 .attr("az", instance.getPlacement().getAvailabilityZone())
                 .markdown(
                     Logger.format(
-                        "instance `%s` of type `%s` in %s",
+                        "instance `%s` of type `%s` from `%s` in %s",
                         instance.getInstanceId(), instance.getInstanceType(),
+                        instance.getImageId(),
                         instance.getPlacement().getAvailabilityZone()
                     )
                 )
