@@ -226,7 +226,7 @@
                         <username>${failsafe.pgsql.username}</username>
                         <password>${failsafe.pgsql.password}</password>
                         <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-                        <contexts>any</contexts>
+                        <contexts>any,live</contexts>
                     </configuration>
                     <executions>
                         <execution>
