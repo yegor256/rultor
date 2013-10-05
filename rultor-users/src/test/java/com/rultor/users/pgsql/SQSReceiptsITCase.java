@@ -61,6 +61,12 @@ public final class SQSReceiptsITCase {
         System.getProperty("failsafe.pgsql.password");
 
     /**
+     * JDBC username.
+     */
+    private static final String USERNAME =
+        System.getProperty("failsafe.pgsql.username");
+
+    /**
      * SQSReceipts can process JSON and post to PostrgreSQL.
      * @throws Exception If some problem inside
      */
@@ -93,7 +99,8 @@ public final class SQSReceiptsITCase {
     private PgClient pgsql() throws Exception {
         Assume.assumeNotNull(SQSReceiptsITCase.URL);
         return new PgClient.Simple(
-            SQSReceiptsITCase.URL, SQSReceiptsITCase.PASSWORD
+            SQSReceiptsITCase.URL,
+            SQSReceiptsITCase.PASSWORD, SQSReceiptsITCase.USERNAME
         );
     }
 

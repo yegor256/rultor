@@ -67,6 +67,12 @@ public final class PgAccountITCase {
         System.getProperty("failsafe.pgsql.password");
 
     /**
+     * JDBC username.
+     */
+    private static final String USERNAME =
+        System.getProperty("failsafe.pgsql.username");
+
+    /**
      * PgAccount can fetch balance.
      * @throws Exception If some problem inside
      */
@@ -127,7 +133,10 @@ public final class PgAccountITCase {
     private Account account() throws Exception {
         Assume.assumeNotNull(PgAccountITCase.URL);
         final Account account = new PgAccount(
-            new PgClient.Simple(PgAccountITCase.URL, PgAccountITCase.PASSWORD),
+            new PgClient.Simple(
+                PgAccountITCase.URL,
+                PgAccountITCase.PASSWORD, PgAccountITCase.USERNAME
+            ),
             URN.create("urn:test:1")
         );
         final long now = account.balance().points();
