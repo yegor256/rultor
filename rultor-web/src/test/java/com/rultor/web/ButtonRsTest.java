@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.google.common.net.MediaType;
 import com.rexsl.page.HttpHeadersMocker;
 import com.rexsl.page.UriInfoMocker;
 import com.rexsl.test.SimpleXml;
@@ -83,9 +82,11 @@ public final class ButtonRsTest {
         res.setRule(rule);
         MatcherAssert.assertThat(
             URLConnection.guessContentTypeFromStream(
-                new ByteArrayInputStream((byte[]) res.button().getEntity())
+                new ByteArrayInputStream(
+                    ((String) res.button().getEntity()).getBytes()
+                )
             ),
-            Matchers.equalTo(MediaType.PNG.toString())
+            Matchers.equalTo("application/xml")
         );
     }
 }
