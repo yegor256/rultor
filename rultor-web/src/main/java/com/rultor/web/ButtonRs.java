@@ -35,15 +35,14 @@ import com.jcabi.aspects.Tv;
 import com.rexsl.test.RestTester;
 import com.rexsl.test.XmlDocument;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
-import javax.imageio.ImageIO;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -52,6 +51,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import org.apache.batik.dom.svg.SVGDOMImplementation;
+import org.apache.batik.svggen.SVGGraphics2D;
+import org.apache.batik.svggen.SVGSyntax;
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.svg.SVGSVGElement;
 
 /**
  * Health button.
@@ -75,7 +81,7 @@ public final class ButtonRs extends BaseRs {
             )
                 .header(
                     HttpHeaders.ACCEPT,
-                    MediaType.APPLICATION_XML_UTF_8.toString()
+                    MediaType.SVG_UTF_8
                 )
                 .get("retrieve stand");
         }
@@ -139,14 +145,15 @@ public final class ButtonRs extends BaseRs {
      */
     @GET
     @Path("/")
-    @Produces("image/*")
+    @Produces("image/svg+xml")
     public Response button() throws Exception {
         final List<String> health = this.info(
             this.build.info(
-                this.uriInfo().getBaseUri(), this.stand
+                URI.create("http://www.rultor.com/s/"), this.stand
             )
         );
-        return Response.ok(draw(health), MediaType.PNG.toString()).build();
+        return Response.ok(draw(health), MediaType.SVG_UTF_8.toString())
+            .build();
     }
 
     /**
@@ -155,22 +162,55 @@ public final class ButtonRs extends BaseRs {
      * @return Image with with info drawn on it.
      * @throws IOException In case of image read/write error.
      */
-    private byte[] draw(final List<String> infos)
-        throws IOException {
-        final BufferedImage img = ImageIO.read(
-            this.getClass().getResourceAsStream("build_health.png")
+    private String draw(final List<String> infos) throws IOException {
+        final Document document = SVGDOMImplementation.getDOMImplementation()
+            .createDocument("http://www.w3.org/2000/svg", "svg", null);
+        final SVGGraphics2D svg = new SVGGraphics2D(document);
+        final int width = Tv.HUNDRED;
+        final int height = Tv.FIFTY;
+        svg.setSVGCanvasSize(new Dimension(width, height));
+        final int size = Tv.FORTY;
+        svg.drawString("R", width - size, height - Tv.SEVEN);
+        this.drawString(svg, infos);
+        final StringWriter writer = new StringWriter();
+        svg.stream(this.root(document, svg, size), writer);
+        return writer.toString();
+    }
+
+    /**
+     * Prepare root element of SVG.
+     * @param document SVG document.
+     * @param svg SVG graphics.
+     * @param size Font size.
+     * @return SVG element.
+     */
+    private SVGSVGElement root(final Document document,
+        final SVGGraphics2D svg, final int size) {
+        final SVGSVGElement root = (SVGSVGElement) svg.getRoot();
+        final Element defs = root.getElementById(
+            SVGSyntax.ID_PREFIX_GENERIC_DEFS
         );
-        final BufferedImage image = new BufferedImage(
-            img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB
+        final Element style = document.createElementNS(
+            SVGSyntax.SVG_NAMESPACE_URI, SVGSyntax.SVG_STYLE_TAG
         );
-        final Graphics2D gfx = image.createGraphics();
-        gfx.drawImage(img, 0, 0, null);
-        gfx.setFont(new Font("Serif", Font.PLAIN, Tv.TEN));
-        this.drawString(gfx, infos);
-        gfx.dispose();
-        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        ImageIO.write(image, "png", stream);
-        return stream.toByteArray();
+        style.setAttributeNS(null, SVGSyntax.SVG_TYPE_ATTRIBUTE, "text/css");
+        root.setAttribute("font-family", "rultor");
+        root.setAttribute("font-size", String.format("%dpx", size));
+        final CDATASection styleSheet = document.createCDATASection(
+            // @checkstyle StringLiteralsConcatenation (9 lines)
+            "@font-face {"
+            + "font-family: 'rultor';"
+            + "src: url('//img.rultor.com/rultor.eot');"
+                //@checkstyle LineLength (1 line)
+            + "src: url('//img.rultor.com/rultor.eot?#iefix') format('embedded-opentype'),"
+            + "url('//img.rultor.com/rultor.woff') format('woff'),"
+            + "url('//img.rultor.com/rultor.ttf') format('truetype'),"
+            + "url('//img.rultor.com/rultor.svg?#rultor') format('svg');"
+            + "}"
+        );
+        style.appendChild(styleSheet);
+        defs.appendChild(style);
+        return root;
     }
 
     /**
@@ -199,6 +239,7 @@ public final class ButtonRs extends BaseRs {
      * @param lines Lines of text.
      */
     private void drawString(final Graphics2D gfx, final List<String> lines) {
+        gfx.setFont(new Font("serif", Font.PLAIN, Tv.TEN));
         for (int offset = 0; offset < lines.size(); ++offset) {
             gfx.setPaint(Color.BLACK);
             gfx.drawString(
