@@ -124,17 +124,17 @@ public final class IncrementalBashTest {
     }
 
     /**
-     * IncrementalBash can show only TAIL of stderr.
+     * IncrementalBash can show only HEAD and TAIL of stacktrace.
      * @throws Exception If some problem inside
      */
     @Test
-    public void showsTailOfStderr() throws Exception {
+    public void showsHeadAndTailOfStderr() throws Exception {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final File dir = Files.createTempDir();
         new IncrementalBash(
             new Permanent(new ShellMocker.Bash(dir)),
             Arrays.asList(
-                "( for i in {100..300}; do echo $i; done; exit 1 ) >&2"
+                "( for i in {1..300}; do echo -$i-; done; exit 1 ) >&2"
             )
         ).exec(new ImmutableMap.Builder<String, String>().build(), stdout);
         MatcherAssert.assertThat(
@@ -145,8 +145,41 @@ public final class IncrementalBashTest {
             ),
             XhtmlMatchers.hasXPaths(
                 "//level[.='SEVERE']",
+                "//exception[contains(stacktrace, '-25-')]",
+                "//exception[not(contains(stacktrace, '-26-'))]",
+                // @checkstyle LineLength (1 lines)
+                "//exception[contains(stacktrace, '... 175 lines skipped ...')]",
                 "//exception[not(contains(stacktrace, '199'))]",
                 "//exception[contains(stacktrace, '300')]"
+            )
+        );
+    }
+
+    /**
+     * IncrementalBash can show full stacktrace.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void showsStderrWithoutCuts() throws Exception {
+        final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        final File dir = Files.createTempDir();
+        new IncrementalBash(
+            new Permanent(new ShellMocker.Bash(dir)),
+            Arrays.asList(
+                "( for i in {1..75}; do echo -$i-; done; exit 1 ) >&2"
+            )
+        ).exec(new ImmutableMap.Builder<String, String>().build(), stdout);
+        MatcherAssert.assertThat(
+            XhtmlMatchers.xhtml(
+                new Snapshot(
+                    new ByteArrayInputStream(stdout.toByteArray())
+                ).dom()
+            ),
+            XhtmlMatchers.hasXPaths(
+                "//exception[contains(stacktrace, '-24-')]",
+                // @checkstyle LineLength (1 lines)
+                "//exception[not(contains(stacktrace, 'lines skipped'))]",
+                "//exception[contains(stacktrace, '75')]"
             )
         );
     }
