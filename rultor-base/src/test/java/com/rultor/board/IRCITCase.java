@@ -40,17 +40,17 @@ import java.util.Arrays;
  * @version $Id$
  * @since 1.0
  */
-public class IRCITCase {
+public final class IRCITCase {
     /**
      * IRC default port.
-     * @checkstyle DeclarationOrder (3 lines)
+     * checkstyle DeclarationOrder (3 lines)
      * @checkstyle MagicNumber (2 lines)
      */
     private static final int IRC_PORT_DEFAULT = 6667;
 
     /**
      * IRC Server host.
-     * @checkstyle DeclarationOrder (3 lines)
+     * checkstyle DeclarationOrder (3 lines)
      * IRC server host.
      */
     private static final String IRC_SERVER_HOST = "cameron.freenode.net";
@@ -61,7 +61,7 @@ public class IRCITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    public final void sendMessage() throws Exception {
+    public void sendsMessage() throws Exception {
         final String channel = "channelTest";
         final String body = "test irc message";
         final String password = "";

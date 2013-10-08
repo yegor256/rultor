@@ -43,14 +43,14 @@ import java.util.Arrays;
  * @version $Id$
  * @since 1.0
  */
-public class IRCTest {
+public final class IRCTest {
     /**
      * Sends a correct message.
      *
      * @throws Exception If some problem inside
      */
     @Test
-    public final void sendMessage() throws Exception {
+    public void sendsMessage() throws Exception {
         final IRCServer server = Mockito.mock(
             IRCServer.class
         );

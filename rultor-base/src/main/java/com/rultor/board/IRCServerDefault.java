@@ -31,6 +31,7 @@ package com.rultor.board;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.security.cert.X509Certificate;
@@ -55,7 +56,7 @@ import org.schwering.irc.lib.ssl.SSLTrustManager;
 @EqualsAndHashCode(of = { "host", "port" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
-public final class IRCServerDefault implements IRCServer {
+final class IRCServerDefault implements IRCServer {
     /**
      * Host name.
      */
@@ -104,7 +105,7 @@ public final class IRCServerDefault implements IRCServer {
         final String channel) throws IOException {
         final Waiter connected = new Waiter();
         final Waiter joined = new Waiter();
-        this.connSetOptions(conn, connected, joined);
+        this.setOptions(conn, connected, joined);
         conn.connect();
         connected.sleepUntilHappenned();
         this.joinChannel(conn, channel);
@@ -148,8 +149,8 @@ public final class IRCServerDefault implements IRCServer {
      * @param connected Waiter until connected to server
      * @param joined Waiter until joined the server
      */
-    private void connSetOptions(final IRCConnection conn,
-        final Waiter connected, final Waiter joined) {
+    private void setOptions(final IRCConnection conn,
+                            final Waiter connected, final Waiter joined) {
         conn.addIRCEventListener(
             new AbstractListener() {
                 @Override
@@ -406,7 +407,7 @@ public final class IRCServerDefault implements IRCServer {
      */
     @Immutable
     @ToString
-    final class TrustManager implements SSLTrustManager {
+    private static final class TrustManager implements SSLTrustManager {
         /**
          * X509 Certificate chain.
          */
@@ -417,7 +418,7 @@ public final class IRCServerDefault implements IRCServer {
          * @return Chain
          */
         public X509Certificate[] getAcceptedIssuers() {
-            X509Certificate[] res;
+            final X509Certificate[] res;
             if (this.chain == null) {
                 res = new X509Certificate[0];
             } else {
@@ -442,8 +443,8 @@ public final class IRCServerDefault implements IRCServer {
      * which makes it easier to operate.
      */
     @ToString
-    @EqualsAndHashCode(of = { "happened", "sleptCounter" })
-    final class Waiter {
+    @EqualsAndHashCode(of = { "happened", "slept" })
+    private static final class Waiter {
         /**
          * Flag says if the event has happened.
          */
@@ -452,21 +453,21 @@ public final class IRCServerDefault implements IRCServer {
         /**
          * To track the timeouts.
          */
-        private transient int sleptCounter;
+        private transient int slept;
 
         /**
          * Sleep time, ms.
          * @checkstyle DeclarationOrder (3 lines)
          * @checkstyle MagicNumber (3 lines)
          */
-        private static final int SLEEP_TIME = 100;
+        private static final int SLEEP_TIME = Tv.HUNDRED;
 
         /**
          * Max allowed number of sleeps.
          * @checkstyle DeclarationOrder (3 lines)
          * @checkstyle MagicNumber (3 lines)
          */
-        private static final int SLEEP_TIMEOUT = 100;
+        private static final int SLEEP_TIMEOUT = Tv.HUNDRED;
 
         /**
          * Event has happened trigger.
@@ -479,17 +480,18 @@ public final class IRCServerDefault implements IRCServer {
          * Make thread sleep until event has happened or timeouted.
          */
         public void sleepUntilHappenned() {
-            this.sleptCounter = 0;
+            this.slept = 0;
             while (!this.happened) {
                 try {
                     Thread.sleep(this.SLEEP_TIME);
-                    if (this.sleptCounter > this.SLEEP_TIMEOUT) {
+                    if (this.slept > this.SLEEP_TIMEOUT) {
                         throw new IllegalStateException(
-                            String.format("Timeout: %d", this.sleptCounter)
+                            String.format("Timeout: %d", this.slept)
                         );
                     }
-                    this.sleptCounter += 1;
+                    this.slept += 1;
                 } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
                     throw new IllegalStateException(ex);
                 }
             }
