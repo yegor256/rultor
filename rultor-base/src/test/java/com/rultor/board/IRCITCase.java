@@ -31,6 +31,8 @@ package com.rultor.board;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 /**
  * A simple high-level test of IRC board.
  *
@@ -51,7 +53,7 @@ public class IRCITCase {
      * @checkstyle DeclarationOrder (3 lines)
      * IRC server host.
      */
-    private static final String IRC_SERVER_HOST = "calvino.freenode.net";
+    private static final String IRC_SERVER_HOST = "cameron.freenode.net";
 
     /**
      * High level operability test.
@@ -67,10 +69,15 @@ public class IRCITCase {
         final String username = "userTest";
         final String realname = "nameTest";
         final boolean ssl = false;
-        final Billboard board = new IRC(
-            this.IRC_SERVER_HOST, this.IRC_PORT_DEFAULT, channel, password,
-            nickname, username, realname, ssl
+        final Bill bill = new Bill.Simple(
+            body,
+            nickname,
+            Arrays.asList("")
         );
-        board.announce(body);
+        final Billboard board = new IRC(
+            bill, this.IRC_SERVER_HOST, this.IRC_PORT_DEFAULT, channel,
+            password, nickname, username, realname, ssl
+        );
+        board.announce(true);
     }
 }

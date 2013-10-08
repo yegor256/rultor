@@ -34,6 +34,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.schwering.irc.lib.IRCConnection;
 
+import java.util.Arrays;
+
 /**
  * A mocked test of IRC board.
  *
@@ -49,8 +51,8 @@ public class IRCTest {
      */
     @Test
     public final void sendMessage() throws Exception {
-        final IRCServerInterface server = Mockito.mock(
-            IRCServerInterface.class
+        final IRCServer server = Mockito.mock(
+            IRCServer.class
         );
         final IRCConnection conn = Mockito.mock(IRCConnection.class);
         final String channel = "channelTest";
@@ -60,6 +62,11 @@ public class IRCTest {
         final String username = "userTest";
         final String realname = "nameTest";
         final boolean ssl = false;
+        final Bill bill = new Bill.Simple(
+            body,
+            nickname,
+            Arrays.asList("")
+        );
         Mockito.when(
             server.connect(
                 Mockito.anyString(), Mockito.anyString(),
@@ -67,9 +74,9 @@ public class IRCTest {
                 Mockito.anyString(), Mockito.anyBoolean()
             )
         ).thenReturn(conn);
-        final Billboard board = new IRC(server, channel, password, nickname,
+        final Billboard board = new IRC(bill, server, channel, password, nickname,
             username, realname, ssl);
-        board.announce(body);
+        board.announce(true);
         Mockito.verify(conn).doPrivmsg(
             Mockito.argThat(
                 Matchers.equalTo(
@@ -78,7 +85,7 @@ public class IRCTest {
             ),
             Mockito.argThat(
                 Matchers.equalTo(
-                    body
+                    bill.subject()
                 )
             )
         );

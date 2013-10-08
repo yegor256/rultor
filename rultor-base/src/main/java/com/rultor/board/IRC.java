@@ -83,14 +83,20 @@ public final class IRC implements Billboard {
     private final transient boolean isSSL;
 
     /**
+     * Bill to publish.
+     */
+    private final transient Bill bill;
+
+    /**
      .* Creates connection and stores basic connection information.
      * Like host, port, channel.
      */
-    private final transient IRCServerInterface server;
+    private final transient IRCServer server;
 
     /**
      * Public ctor.
      *
+     * @param bll Bill
      * @param hst Host
      * @param prt Port
      * @param chnl Channel
@@ -101,15 +107,16 @@ public final class IRC implements Billboard {
      * @param ssl Is SSL used
      * @checkstyle ParameterNumber (3 lines)
      */
-    public IRC(final String hst, final int prt, final String chnl,
+    public IRC(final Bill bll, final String hst, final int prt, final String chnl,
         final String pass, final String nick, final String user,
         final String name, final boolean ssl) {
-        this(new IRCServer(hst, prt), chnl, pass, nick, user, name, ssl);
+        this(bll, new IRCServerDefault(hst, prt), chnl, pass, nick, user, name, ssl);
     }
 
     /**
      * Public ctor.
      *
+     * @param bll Bill
      * @param srv Server
      * @param chnl Channel
      * @param pass Password
@@ -119,10 +126,11 @@ public final class IRC implements Billboard {
      * @param ssl Is SSL used
      * @checkstyle ParameterNumber (3 lines)
      */
-    public IRC(final IRCServerInterface srv, final String chnl,
+    public IRC(final Bill bll, final IRCServer srv, final String chnl,
         final String pass, final String nick, final String user,
         final String name, final boolean ssl
     ) {
+        this.bill = bll;
         this.server = srv;
         this.channel = chnl;
         this.password = pass;
@@ -147,11 +155,11 @@ public final class IRC implements Billboard {
             throw new IllegalStateException(ex);
         }
         final String formatted =
-            IRCServer.formatChannelName(this.channel);
-        conn.doPrivmsg(formatted, String.valueOf(success));
+            IRCServerDefault.formatChannelName(this.channel);
+        conn.doPrivmsg(formatted, this.bill.subject());
         Logger.info(
             this, "%s%s",
-            IRCServer.formatChannelPrompt(formatted), String.valueOf(success)
+            IRCServerDefault.formatChannelPrompt(formatted), this.bill.subject()
         );
     }
 }
