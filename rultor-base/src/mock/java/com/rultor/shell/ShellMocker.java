@@ -104,4 +104,48 @@ public final class ShellMocker {
         }
     }
 
+    /**
+     * Shell wrapper for additional commands injection.
+     */
+    @Immutable
+    public static final class ProvisionedBash implements Shell {
+        /**
+         * Underlying shell.
+         */
+        private final transient Shell shell;
+
+        /**
+         * Command pattern to wrap around.
+         */
+        private final transient String pattern;
+
+        /**
+         * Public ctor.
+         * @param shl Underlying shell
+         * @param ptrn Command pattern to wrap around client's command
+         */
+        public ProvisionedBash(final Shell shl, final String ptrn) {
+            this.shell = shl;
+            this.pattern = ptrn;
+        }
+        // @checkstyle ParameterNumber (5 lines)
+        @Override
+        public int exec(final String cmd, final InputStream stdin,
+            final OutputStream stdout, final OutputStream stderr)
+            throws IOException {
+            return this.shell.exec(
+                String.format(this.pattern, cmd),
+                stdin, stdout, stderr
+            );
+        }
+        @Override
+        public void close() throws IOException {
+            this.shell.close();
+        }
+        @Override
+        public void badge(final String name, final String value) {
+            this.shell.badge(name, value);
+        }
+    }
+
 }
