@@ -29,12 +29,11 @@
  */
 package com.rultor.board;
 
+import java.util.Arrays;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.schwering.irc.lib.IRCConnection;
-
-import java.util.Arrays;
 
 /**
  * A mocked test of IRC board.
@@ -74,8 +73,8 @@ public final class IRCTest {
                 Mockito.anyString(), Mockito.anyBoolean()
             )
         ).thenReturn(conn);
-        final Billboard board = new IRC(bill, server, channel, password, nickname,
-            username, realname, ssl);
+        final Billboard board = new IRC(bill, server, channel, password,
+            nickname, username, realname, ssl);
         board.announce(true);
         Mockito.verify(conn).doPrivmsg(
             Mockito.argThat(

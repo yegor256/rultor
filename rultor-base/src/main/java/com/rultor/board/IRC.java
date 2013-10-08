@@ -47,7 +47,7 @@ import org.schwering.irc.lib.IRCConnection;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "host", "port", "channel", "nickname", "username" })
+@EqualsAndHashCode(of = { "channel", "nickname", "username" })
 @Loggable(Loggable.DEBUG)
 public final class IRC implements Billboard {
     /**
@@ -88,7 +88,7 @@ public final class IRC implements Billboard {
     private final transient Bill bill;
 
     /**
-     .* Creates connection and stores basic connection information.
+     * Creates connection and stores basic connection information.
      * Like host, port, channel.
      */
     private final transient IRCServer server;
@@ -107,10 +107,12 @@ public final class IRC implements Billboard {
      * @param ssl Is SSL used
      * @checkstyle ParameterNumber (3 lines)
      */
-    public IRC(final Bill bll, final String hst, final int prt, final String chnl,
-        final String pass, final String nick, final String user,
-        final String name, final boolean ssl) {
-        this(bll, new IRCServerDefault(hst, prt), chnl, pass, nick, user, name, ssl);
+    public IRC(final Bill bll, final String hst, final int prt,
+        final String chnl, final String pass, final String nick,
+        final String user, final String name, final boolean ssl) {
+        this(bll, new IRCServerDefault(hst, prt), chnl, pass, nick, user, name,
+            ssl
+        );
     }
 
     /**

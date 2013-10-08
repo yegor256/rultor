@@ -29,9 +29,8 @@
  */
 package com.rultor.board;
 
-import org.junit.Test;
-
 import java.util.Arrays;
+import org.junit.Test;
 
 /**
  * A simple high-level test of IRC board.

@@ -150,7 +150,7 @@ final class IRCServerDefault implements IRCServer {
      * @param joined Waiter until joined the server
      */
     private void setOptions(final IRCConnection conn,
-                            final Waiter connected, final Waiter joined) {
+        final Waiter connected, final Waiter joined) {
         conn.addIRCEventListener(
             new AbstractListener() {
                 @Override
@@ -161,7 +161,8 @@ final class IRCServerDefault implements IRCServer {
                 public void onJoin(final String chan, final IRCUser user) {
                     Logger.info(
                         this, "%s%s joins",
-                        IRCServerDefault.formatChannelPrompt(chan), user.getNick()
+                        IRCServerDefault.formatChannelPrompt(chan),
+                        user.getNick()
                     );
                     joined.triggerHappenned();
                 }
@@ -185,6 +186,26 @@ final class IRCServerDefault implements IRCServer {
         );
         Logger.info(this, command);
         conn.send(command);
+    }
+
+    /**
+     * Format a channel name. Prefix it with "#" sign.
+     *
+     * @param channelname Channel name
+     * @return Formatted channel name
+     */
+    public static String formatChannelName(final String channelname) {
+        return String.format("#%s", channelname);
+    }
+
+    /**
+     * Formats the receiver of message.
+     *
+     * @param channelz Receiver
+     * @return Formatted
+     */
+    public static String formatChannelPrompt(final String channelz) {
+        return String.format("%s> ", channelz);
     }
 
     /**
@@ -232,7 +253,8 @@ final class IRCServerDefault implements IRCServer {
         public final void onInvite(final String chan, final IRCUser user,
             final String nickpass) {
             Logger.info(
-                this, "%s%s invites %s", IRCServerDefault.formatChannelPrompt(chan),
+                this, "%s%s invites %s",
+                IRCServerDefault.formatChannelPrompt(chan),
                 user.getNick(), nickpass
             );
         }
@@ -256,7 +278,8 @@ final class IRCServerDefault implements IRCServer {
             final String nickpass,
             final String msg) {
             Logger.info(
-                this, "%s%s kicks %s", IRCServerDefault.formatChannelPrompt(chan),
+                this, "%s%s kicks %s",
+                IRCServerDefault.formatChannelPrompt(chan),
                 user.getNick(), nickpass
             );
         }
@@ -311,7 +334,8 @@ final class IRCServerDefault implements IRCServer {
             final String msg) {
             Logger.info(
                 this,  "%s%s (notice): %s",
-                IRCServerDefault.formatChannelPrompt(target), user.getNick(), msg
+                IRCServerDefault.formatChannelPrompt(target), user.getNick(),
+                msg
             );
         }
 
@@ -373,7 +397,8 @@ final class IRCServerDefault implements IRCServer {
             final String topic) {
             Logger.info(
                 this, "%s%s changes topic into: %s",
-                IRCServerDefault.formatChannelPrompt(chan), user.getNick(), topic
+                IRCServerDefault.formatChannelPrompt(chan), user.getNick(),
+                topic
             );
         }
 
@@ -467,7 +492,7 @@ final class IRCServerDefault implements IRCServer {
          * @checkstyle DeclarationOrder (3 lines)
          * @checkstyle MagicNumber (3 lines)
          */
-        private static final int SLEEP_TIMEOUT = Tv.HUNDRED;
+        private static final int SLEEP_TIMEOUT = Tv.THOUSAND;
 
         /**
          * Event has happened trigger.
@@ -483,8 +508,8 @@ final class IRCServerDefault implements IRCServer {
             this.slept = 0;
             while (!this.happened) {
                 try {
-                    Thread.sleep(this.SLEEP_TIME);
-                    if (this.slept > this.SLEEP_TIMEOUT) {
+                    Thread.sleep(Waiter.SLEEP_TIME);
+                    if (this.slept > Waiter.SLEEP_TIMEOUT) {
                         throw new IllegalStateException(
                             String.format("Timeout: %d", this.slept)
                         );
@@ -496,25 +521,5 @@ final class IRCServerDefault implements IRCServer {
                 }
             }
         }
-    }
-
-    /**
-     * Format a channel name. Prefix it with "#" sign.
-     *
-     * @param channelname Channel name
-     * @return Formatted channel name
-     */
-    public static String formatChannelName(final String channelname) {
-        return String.format("#%s", channelname);
-    }
-
-    /**
-     * Formats the receiver of message.
-     *
-     * @param channelz Receiver
-     * @return Formatted
-     */
-    public static String formatChannelPrompt(final String channelz) {
-        return String.format("%s> ", channelz);
     }
 }
