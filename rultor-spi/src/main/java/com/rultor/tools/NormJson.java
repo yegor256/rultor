@@ -70,30 +70,6 @@ public final class NormJson {
     private final transient String schema;
 
     /**
-     * When fails to parse.
-     */
-    public static final class JsonException extends Exception {
-        /**
-         * Serialization marker.
-         */
-        private static final long serialVersionUID = 0x987ef4afeb3ef907L;
-        /**
-         * Ctor.
-         * @param cause Cause of it
-         */
-        private JsonException(final Throwable cause) {
-            super(cause);
-        }
-        /**
-         * Ctor.
-         * @param cause Cause of it
-         */
-        private JsonException(final String cause) {
-            super(cause);
-        }
-    }
-
-    /**
      * Public ctor.
      * @param json Schema in JSON format
      */
@@ -141,6 +117,30 @@ public final class NormJson {
             return Json.createReader(new StringReader(json)).readObject();
         } catch (javax.json.JsonException ex) {
             throw new NormJson.JsonException(ex);
+        }
+    }
+
+    /**
+     * When fails to parse.
+     */
+    public static final class JsonException extends Exception {
+        /**
+         * Serialization marker.
+         */
+        private static final long serialVersionUID = 0x987ef4afeb3ef907L;
+        /**
+         * Ctor.
+         * @param cause Cause of it
+         */
+        private JsonException(final Throwable cause) {
+            super(cause);
+        }
+        /**
+         * Ctor.
+         * @param cause Cause of it
+         */
+        private JsonException(final String cause) {
+            super(cause);
         }
     }
 

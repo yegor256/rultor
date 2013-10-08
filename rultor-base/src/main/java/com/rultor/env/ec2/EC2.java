@@ -31,9 +31,13 @@ package com.rultor.env.ec2;
 
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.model.BlockDeviceMapping;
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
+import com.amazonaws.services.ec2.model.DescribeInstancesResult;
+import com.amazonaws.services.ec2.model.EbsBlockDevice;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.Placement;
+import com.amazonaws.services.ec2.model.Reservation;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.Tag;
@@ -41,19 +45,26 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.Logger;
 import com.rultor.aws.EC2Client;
 import com.rultor.env.Environment;
 import com.rultor.env.Environments;
 import com.rultor.snapshot.Step;
+import com.rultor.snapshot.TagLine;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
 import com.rultor.tools.Time;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -68,6 +79,7 @@ import org.apache.commons.lang3.Validate;
 @ToString
 @EqualsAndHashCode(of = { "type", "ami", "group", "client" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class EC2 implements Environments {
 
     /**
@@ -126,7 +138,8 @@ public final class EC2 implements Environments {
         final String image, final String grp, final String par,
         final String akey, final String scrt) {
         this(
-            wrk, wlt, tpe, image, grp, par, Regions.US_EAST_1.getName(),
+            wrk, wlt, tpe, image, grp, par,
+            String.format("%sa", Regions.US_EAST_1.getName()),
             new EC2Client.Simple(akey, scrt)
         );
     }
@@ -172,14 +185,14 @@ public final class EC2 implements Environments {
         @NotNull(message = "AMI can't be NULL") final String image,
         @NotNull(message = "security group can't be NULL") final String grp,
         @NotNull(message = "key pair can't be NULL") final String par,
-        @NotNull(message = "av.zone can't be NULL") final String azone,
+        @NotNull(message = "avlt zone can't be NULL") final String azone,
         @NotNull(message = "AWS client can't be NULL") final EC2Client clnt) {
         Validate.isTrue(
             image.matches("ami-[a-f0-9]{8}"),
             "AMI name `%s` is in wrong format", image
         );
         Validate.isTrue(
-            azone.matches("[a-z]{2}\\-[a-z]+\\-\\d+[a-z]"),
+            azone.matches("[a-z]{2}\\-[a-z]+\\-\\d[a-z]"),
             "availability zone `%s` is in wrong format", azone
         );
         this.work = wrk;
@@ -190,7 +203,7 @@ public final class EC2 implements Environments {
         this.pair = par;
         this.zone = azone;
         this.client = new EC2Client.Regional(
-            azone.substring(0, azone.length() - 1), clnt
+            StringUtils.stripEnd(azone, "abcdef"), clnt
         );
     }
 
@@ -199,11 +212,36 @@ public final class EC2 implements Environments {
      */
     @Override
     public Environment acquire() throws IOException {
-        return new EC2Environment(
-            this.work, this.wallet,
-            this.create().getInstanceId(),
-            this.client
-        );
+        return this.env(this.create().getInstanceId());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterator<Environment> iterator() {
+        final AmazonEC2 aws = this.client.get();
+        try {
+            final Collection<Environment> envs = new LinkedList<Environment>();
+            final DescribeInstancesResult result = aws.describeInstances();
+            for (Reservation res : result.getReservations()) {
+                for (Instance inst : res.getInstances()) {
+                    envs.add(this.env(inst.getInstanceId()));
+                }
+            }
+            return Collections.unmodifiableCollection(envs).iterator();
+        } finally {
+            aws.shutdown();
+        }
+    }
+
+    /**
+     * Make an environment with this ID.
+     * @param inst Instance ID
+     * @return Environment
+     */
+    private Environment env(final String inst) {
+        return new EC2Environment(this.work, this.wallet, inst, this.client);
     }
 
     /**
@@ -215,7 +253,6 @@ public final class EC2 implements Environments {
         // @checkstyle LineLength (1 line)
         value = "EC2 `${result.instanceType}` instance `${result.instanceId}` created in `${this.zone}`"
     )
-    @com.rultor.snapshot.Tag("ec2")
     private Instance create() {
         final AmazonEC2 aws = this.client.get();
         try {
@@ -230,6 +267,15 @@ public final class EC2 implements Environments {
                     )
                     .withMinCount(1)
                     .withMaxCount(1)
+                    .withBlockDeviceMappings(
+                        new BlockDeviceMapping()
+                            .withDeviceName("/dev/sda1")
+                            .withEbs(
+                                new EbsBlockDevice()
+                                    .withDeleteOnTermination(true)
+                            )
+                    )
+                    .withInstanceInitiatedShutdownBehavior("terminate")
             );
             final List<Instance> instances =
                 result.getReservation().getInstances();
@@ -237,12 +283,28 @@ public final class EC2 implements Environments {
                 throw new IllegalStateException(
                     String.format(
                         "failed to run an EC2 instance `%s` with AMI `%s`",
-                        this.type,
-                        this.ami
+                        this.type, this.ami
                     )
                 );
             }
             final Instance instance = instances.get(0);
+            new TagLine("ec2")
+                .attr("id", instance.getInstanceId())
+                .attr("type", instance.getInstanceType())
+                .attr("image", instance.getImageId())
+                .attr("key", instance.getKeyName())
+                .attr("ip", instance.getPublicIpAddress())
+                .attr("kernel", instance.getKernelId())
+                .attr("az", instance.getPlacement().getAvailabilityZone())
+                .markdown(
+                    Logger.format(
+                        "instance `%s` of type `%s` from `%s` in %s",
+                        instance.getInstanceId(), instance.getInstanceType(),
+                        instance.getImageId(),
+                        instance.getPlacement().getAvailabilityZone()
+                    )
+                )
+                .log();
             return this.wrap(aws, instance);
         } finally {
             aws.shutdown();
@@ -270,16 +332,16 @@ public final class EC2 implements Environments {
                         .withKey("Name")
                         .withValue(this.work.rule()),
                     new Tag()
-                        .withKey("rultor:work:rule")
+                        .withKey("urn:rultor:rule")
                         .withValue(this.work.rule()),
                     new Tag()
-                        .withKey("rultor:work:owner")
+                        .withKey("urn:rultor:owner")
                         .withValue(this.work.owner().toString()),
                     new Tag()
-                        .withKey("rultor:work:scheduled")
+                        .withKey("urn:rultor:scheduled")
                         .withValue(this.work.scheduled().toString()),
                     new Tag()
-                        .withKey("rultor:instance-created")
+                        .withKey("urn:rultor:created")
                         .withValue(new Time().toString())
                 )
         );

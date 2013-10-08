@@ -65,7 +65,9 @@ public final class Lifespan implements ServletContextListener {
             throw new IllegalStateException(ex);
         }
         final ServletContext context = event.getServletContext();
-        if (Manifests.read("Rultor-DynamoKey").matches("[A-Z0-9]{20}")) {
+        final String key = "Rultor-DynamoKey";
+        if (Manifests.exists(key)
+            && Manifests.read(key).matches("[A-Z0-9]{20}")) {
             this.profile = new Production();
         } else {
             this.profile = new Testing();

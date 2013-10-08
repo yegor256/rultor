@@ -62,7 +62,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "region", "owner" })
+@EqualsAndHashCode(of = { "region", "client", "owner" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
 final class AwsRules implements Rules {
@@ -211,7 +211,13 @@ final class AwsRules implements Rules {
         return this.region.table(AwsRule.TABLE)
             .frame()
             .where(AwsRule.HASH_OWNER, this.owner.toString())
-            .through(new QueryValve());
+            .through(
+                new QueryValve().withAttributesToGet(
+                    AwsRule.FIELD_SPEC,
+                    AwsRule.FIELD_DRAIN,
+                    AwsRule.FIELD_FAILURE
+                )
+            );
     }
 
     /**

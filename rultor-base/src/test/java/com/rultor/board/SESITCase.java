@@ -49,12 +49,15 @@ public final class SESITCase {
         final String key = System.getProperty("failsafe.ses.key");
         Assume.assumeNotNull(key);
         final Billboard board = new SES(
-            "yegor@tpc2.com",
-            Arrays.asList("yegor.bugayenko@tpc2.com"),
+            new Bill.Simple(
+                "test message from rultor",
+                "yegor@tpc2.com",
+                Arrays.asList("yegor.bugayenko@tpc2.com")
+            ),
             key,
             System.getProperty("failsafe.ec2.secret")
         );
-        board.announce("integration testing\nHello, dear tester!\n");
+        board.announce(true);
     }
 
 }

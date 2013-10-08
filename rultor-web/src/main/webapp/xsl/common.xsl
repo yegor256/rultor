@@ -30,8 +30,11 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:template name="millis">
-        <xsl:param name="millis" as="xs:integer"/>
+        <xsl:param name="millis"/>
         <xsl:choose>
+            <xsl:when test="not($millis)">
+                <xsl:text>?</xsl:text>
+            </xsl:when>
             <xsl:when test="$millis &gt; 60000">
                 <xsl:value-of select="format-number($millis div 60000, '0')"/>
                 <xsl:text>min</xsl:text>

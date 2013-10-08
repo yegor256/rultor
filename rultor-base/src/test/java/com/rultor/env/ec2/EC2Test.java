@@ -31,6 +31,7 @@ package com.rultor.env.ec2;
 
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.Placement;
 import com.amazonaws.services.ec2.model.Reservation;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
@@ -42,8 +43,6 @@ import com.rultor.spi.Wallet;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -56,6 +55,7 @@ import org.mockito.Mockito;
  *
  * @author Vaibhav Paliwal (vaibhavpaliwal99@gmail.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class EC2Test {
 
@@ -91,22 +91,28 @@ public final class EC2Test {
         final Wallet wallet = Mockito.mock(Wallet.class);
         final EC2Client client = Mockito.mock(EC2Client.class);
         final AmazonEC2 aws = Mockito.mock(AmazonEC2.class);
-        final RunInstancesResult result =
-            Mockito.mock(RunInstancesResult.class);
-        final Reservation reservation = Mockito.mock(Reservation.class);
-        final Instance instance = Mockito.mock(Instance.class);
-        final List<Instance> instances = Arrays.asList(instance);
         Mockito.when(client.get()).thenReturn(aws);
-        Mockito.when(aws.runInstances(Mockito.any(RunInstancesRequest.class)))
-            .thenReturn(result);
-        Mockito.when(result.getReservation()).thenReturn(reservation);
-        Mockito.when(reservation.getInstances()).thenReturn(instances);
-        Mockito.when(instance.getInstanceId()).thenReturn("InstanceId");
+        Mockito.doReturn(
+            new RunInstancesResult().withReservation(
+                new Reservation().withInstances(
+                    new Instance()
+                        .withImageId("ami-7676767")
+                        .withInstanceId("i-909090")
+                        .withInstanceType("m1.small")
+                        .withKernelId("aki-89797978")
+                        .withKeyName("my-key")
+                        .withPublicIpAddress("192-168-0-1")
+                        .withPlacement(
+                            new Placement().withAvailabilityZone("eu-west-1")
+                        )
+                )
+            )
+        ).when(aws).runInstances(Mockito.any(RunInstancesRequest.class));
         Mockito.when(work.owner()).thenReturn(new URN());
         Mockito.when(work.scheduled()).thenReturn(new Time());
         final EC2 envs = new EC2(
             work, wallet, "type", "ami-ef9f2f1e", "group", "par",
-            "eu-west-123t", client
+            "eu-west-1a", client
         );
         return envs;
     }

@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rultor.scm.Commit;
+import com.rultor.snapshot.TagLine;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.text.ParseException;
@@ -60,7 +61,7 @@ final class GitCommit implements Commit {
     /**
      * Pattern for every log line.
      */
-    private static final Pattern LINE = Pattern.compile(
+    public static final Pattern LINE = Pattern.compile(
         // @checkstyle LineLength (1 line)
         "([a-f0-9]{40}) ([\\w\\-@\\.]+) (\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2} (\\+|\\-)\\d{4}) (.*)"
     );
@@ -91,6 +92,11 @@ final class GitCommit implements Commit {
         this.hash = name;
         this.when = date;
         this.who = author;
+        new TagLine("commit")
+            .attr("name", name)
+            .attr("date", date.toString())
+            .attr("author", author)
+            .log();
     }
 
     /**

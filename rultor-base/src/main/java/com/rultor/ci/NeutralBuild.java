@@ -29,12 +29,17 @@
  */
 package com.rultor.ci;
 
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.board.Billboard;
+import com.rultor.scm.Branch;
+import com.rultor.scm.Commit;
+import com.rultor.scm.SCM;
 import com.rultor.shell.Batch;
 import com.rultor.spi.Instance;
+import com.rultor.tools.Time;
+import java.io.IOException;
+import java.util.Arrays;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -80,11 +85,25 @@ public final class NeutralBuild implements Instance {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
-        this.board.announce(
-            new Build("neutral", this.batch).exec(
-                new ImmutableMap.Builder<String, Object>().build()
-            ).xml().toString()
-        );
+        new OnCommit(
+            new Branch() {
+                @Override
+                public String name() {
+                    return "neutral";
+                }
+                @Override
+                public Iterable<Commit> log() throws IOException {
+                    return Arrays.<Commit>asList(
+                        new Commit.Simple("abcdef", new Time(), "nobody")
+                    );
+                }
+                @Override
+                public SCM scm() {
+                    throw new UnsupportedOperationException();
+                }
+            },
+            this.batch, this.board
+        ).pulse();
     }
 
 }

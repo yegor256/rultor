@@ -62,18 +62,6 @@ import lombok.ToString;
 final class Job {
 
     /**
-     * Decorator of an instance.
-     */
-    public interface Decor {
-        /**
-         * Decorate this given instance.
-         * @param instance Instance to decorate
-         * @return Decorated one
-         */
-        Instance decorate(Instance instance);
-    }
-
-    /**
      * Work to do.
      */
     private final transient Coordinates work;
@@ -133,12 +121,7 @@ final class Job {
     private Instance make(final User owner, final Rule rule,
         final Job.Decor decor) throws SpecException {
         final Variable<?> var = this.var(owner, rule.spec());
-        Instance instance = new Instance() {
-            @Override
-            public void pulse() throws Exception {
-                assert var != null;
-            }
-        };
+        Instance instance = Instance.EMPTY;
         if (var.arguments().isEmpty()) {
             final Arguments args = new Arguments(
                 this.work, new OwnWallet(this.work, rule)
@@ -146,7 +129,7 @@ final class Job {
             final Object inst = var.instantiate(this.users, args);
             final Object drain = this.var(owner, rule.drain())
                 .instantiate(this.users, args);
-            if (inst instanceof Instance) {
+            if (inst instanceof Instance && drain instanceof Drain) {
                 instance = new ThreadGroupSpy(
                     this.work,
                     new WithSpec(
@@ -171,6 +154,18 @@ final class Job {
     private Variable<?> var(final User owner, final Spec spec)
         throws SpecException {
         return this.repo.make(owner, spec);
+    }
+
+    /**
+     * Decorator of an instance.
+     */
+    public interface Decor {
+        /**
+         * Decorate this given instance.
+         * @param instance Instance to decorate
+         * @return Decorated one
+         */
+        Instance decorate(Instance instance);
     }
 
 }

@@ -29,6 +29,7 @@
  */
 package com.rultor.widget;
 
+import com.jcabi.immutable.ArrayMap;
 import com.jcabi.urn.URN;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.spi.Coordinates;
@@ -38,10 +39,8 @@ import com.rultor.spi.Stand;
 import com.rultor.spi.Tag;
 import com.rultor.spi.Tags;
 import com.rultor.spi.Widget;
-import java.io.StringReader;
 import java.util.Arrays;
 import java.util.logging.Level;
-import javax.json.Json;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -78,20 +77,11 @@ public final class MergeHistoryTest {
             new Tags.Simple(
                 Arrays.<Tag>asList(
                     new Tag.Simple(
-                        "merge", Level.INFO,
-                        Json.createReader(
-                            new StringReader(
-                                // @checkstyle LineLength (1 line)
-                                "{\"request\":\"554\",\"failure\":\"false\",\"params\":{}}"
-                            )
-                        ).readObject(),
-                        ""
-                    ),
-                    new Tag.Simple(
                         "on-pull-request", Level.SEVERE,
-                        Json.createReader(
-                            new StringReader("{\"code\":127,\"duration\":9870}")
-                        ).readObject(),
+                        new ArrayMap<String, String>()
+                            .with("code", "127")
+                            .with("duration", "9870")
+                            .with("name", "554"),
                         ""
                     )
                 )
@@ -106,19 +96,10 @@ public final class MergeHistoryTest {
                 Arrays.<Tag>asList(
                     new Tag.Simple(
                         "on-pull-request", Level.INFO,
-                        Json.createReader(
-                            new StringReader("{\"code\":0,\"duration\":98574}")
-                        ).readObject(),
-                        ""
-                    ),
-                    new Tag.Simple(
-                        "merge", Level.INFO,
-                        Json.createReader(
-                            new StringReader(
-                                // @checkstyle LineLength (1 line)
-                                "{\"request\":\"990\",\"failure\":\"true\",\"params\":{}}"
-                            )
-                        ).readObject(),
+                        new ArrayMap<String, String>()
+                            .with("code", "0")
+                            .with("duration", "99892")
+                            .with("name", "554"),
                         ""
                     )
                 )
@@ -137,10 +118,9 @@ public final class MergeHistoryTest {
                 "/widget/merges/merge/coordinates[owner='urn:test:54']",
                 "/widget/merges/merge/coordinates[owner='urn:test:44']",
                 "/widget/merges/merge/coordinates[rule='rule-x']",
-                "/widget/merges/merge/request[name='554']",
-                "/widget/merges/merge/request[failure='false']",
+                "/widget/merges/merge[name='554']",
                 "/widget/merges/merge[code=127 and duration=9870]",
-                "/widget/merges/merge[code=0 and duration=98574]"
+                "/widget/merges/merge[code=0 and duration=99892]"
             )
         );
     }
@@ -164,7 +144,6 @@ public final class MergeHistoryTest {
         Mockito.doReturn(
             new Tags.Simple(
                 Arrays.<Tag>asList(
-                    new Tag.Simple("merge", Level.INFO),
                     new Tag.Simple("on-pull-request", Level.SEVERE)
                 )
             )
@@ -175,7 +154,7 @@ public final class MergeHistoryTest {
         new Xembler(widget.render(stand)).apply(dom);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(dom),
-            XhtmlMatchers.hasXPath("/widget/merges[count(merge)=0]")
+            XhtmlMatchers.hasXPath("/widget/merges[count(merge)=1]")
         );
     }
 
@@ -197,6 +176,20 @@ public final class MergeHistoryTest {
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(dom),
             XhtmlMatchers.hasXPath("/widget/merges[count(merge) = 0]")
+        );
+    }
+
+    /**
+     * MergeHistory can render XML+XSL with Phandom.
+     * @throws Exception If fails
+     */
+    @Test
+    public void rendersXmlInPhandom() throws Exception {
+        MatcherAssert.assertThat(
+            WidgetMocker.xhtml(
+                this.getClass().getResource("merge-history.xml")
+            ),
+            XhtmlMatchers.hasXPath("//xhtml:table")
         );
     }
 

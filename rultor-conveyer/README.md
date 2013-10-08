@@ -50,7 +50,31 @@ $ as-create-auto-scaling-group rultor-conveyer \
   --desired-capacity 1
 ```
 
-AWS should launch the first EC2 instance automatically. That's it.
+AWS should launch the first EC2 instance automatically.
+
+Now it's time to make this conveyer scalable on demand
+(see [Auto Scaling with SQS](http://docs.aws.amazon.com/AutoScaling/latest/DeveloperGuide/as-using-sqs-queue.html)).
+Create scaling-out and scaling-in policies:
+
+```
+$ as-put-scaling-policy rultor-sqs-scaleout-policy --auto-scaling-group rultor-conveyer --adjustment=1 --type ChangeInCapacity
+$ as-put-scaling-policy rultor-sqs-scalein-policy --auto-scaling-group rultor-conveyer --adjustment=-1 --type ChangeInCapacity
+```
+
+Create CloudWatch alarms:
+
+```
+$ mon-put-metric-alarm --alarm-name AddCapacityToConveyer \
+  --metric-name ApproximateNumberOfMessagesVisible \
+  --namespace "AWS/SQS" --statistic Average --period 300 --threshold 500 \
+  --comparison-operator GreaterThanOrEqualToThreshold --dimensions "QueueName=rultor" \
+  --evaluation-periods 2 --alarm-actions [...ARN of the scale-out policy created above...]
+$ mon-put-metric-alarm --alarm-name RemoveCapacityFromConveyer \
+  --metric-name ApproximateNumberOfMessagesVisible \
+  --namespace "AWS/SQS" --statistic Average --period 300 --threshold 50 \
+  --comparison-operator LessThanOrEqualToThreshold  --dimensions "QueueName=rultor" \
+  --evaluation-periods 2 --alarm-actions [...ARN of the scale-in policy created above...]
+```
 
 ## How to re-configure existing AS group
 

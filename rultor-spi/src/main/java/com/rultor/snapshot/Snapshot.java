@@ -29,15 +29,21 @@
  */
 package com.rultor.snapshot;
 
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
 import com.rexsl.test.SimpleXml;
 import com.rexsl.test.XmlDocument;
+import com.rultor.spi.Tag;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.logging.Level;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.dom.DOMSource;
@@ -159,6 +165,56 @@ public final class Snapshot {
     public void apply(final Document dom)
         throws ImpossibleModificationException {
         new Xembler(this.directives).apply(dom);
+    }
+
+    /**
+     * Get all tags.
+     * @return Collection of tags found
+     * @throws ImpossibleModificationException If can't parse it
+     * @checkstyle RedundantThrows (3 lines)
+     */
+    public Collection<Tag> tags() throws ImpossibleModificationException {
+        final Collection<XmlDocument> nodes = this.xml()
+            .nodes("/snapshot/tags/tag");
+        final Collection<Tag> tags = new ArrayList<Tag>(nodes.size());
+        for (XmlDocument node : nodes) {
+            tags.add(this.tag(node));
+        }
+        return Collections.unmodifiableCollection(tags);
+    }
+
+    /**
+     * Make tag from XML node.
+     * @param node The node
+     * @return Tag made
+     */
+    public Tag tag(final XmlDocument node) {
+        final Level level;
+        if (node.nodes("level").isEmpty()) {
+            level = Level.INFO;
+        } else {
+            level = Level.parse(node.xpath("level/text()").get(0));
+        }
+        final String markdown;
+        if (node.nodes("markdown[.!='']").isEmpty()) {
+            markdown = "";
+        } else {
+            markdown = node.xpath("markdown/text()").get(0);
+        }
+        final ImmutableMap.Builder<String, String> attrs =
+            new ImmutableMap.Builder<String, String>();
+        for (XmlDocument attr : node.nodes("attributes/attribute")) {
+            attrs.put(
+                attr.xpath("name/text()").get(0),
+                attr.xpath("value/text()").get(0)
+            );
+        }
+        return new Tag.Simple(
+            node.xpath("label/text()").get(0),
+            level,
+            attrs.build(),
+            markdown
+        );
     }
 
     /**

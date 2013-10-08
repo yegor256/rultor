@@ -29,9 +29,12 @@
  */
 package com.rultor.users.pgsql;
 
+import com.jcabi.aspects.Parallel;
+import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Account;
 import com.rultor.tools.Dollars;
+import java.security.SecureRandom;
 import java.util.Random;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -47,6 +50,11 @@ import org.junit.Test;
 public final class PgAccountITCase {
 
     /**
+     * Randomizer.
+     */
+    private static final Random RND = new SecureRandom();
+
+    /**
      * JDBC URL.
      */
     private static final String URL =
@@ -59,6 +67,12 @@ public final class PgAccountITCase {
         System.getProperty("failsafe.pgsql.password");
 
     /**
+     * JDBC username.
+     */
+    private static final String USERNAME =
+        System.getProperty("failsafe.pgsql.username");
+
+    /**
      * PgAccount can fetch balance.
      * @throws Exception If some problem inside
      */
@@ -67,7 +81,7 @@ public final class PgAccountITCase {
         final Account account = this.account();
         MatcherAssert.assertThat(
             account.balance().points(),
-            Matchers.not(Matchers.equalTo(0L))
+            Matchers.equalTo(0L)
         );
     }
 
@@ -78,11 +92,37 @@ public final class PgAccountITCase {
     @Test
     public void fundsItself() throws Exception {
         final Account account = this.account();
-        account.fund(new Dollars(new Random().nextInt()), "for a service");
+        final long amount = PgAccountITCase.RND.nextInt();
+        account.fund(new Dollars(amount), "service");
         MatcherAssert.assertThat(
             account.balance().points(),
-            Matchers.not(Matchers.equalTo(0L))
+            Matchers.equalTo(amount)
         );
+    }
+
+    /**
+     * PgAccount can fund itself in multiple parallel threads.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void fundsItselfInParallelThreads() throws Exception {
+        final Account account = this.account();
+        final long amount = PgAccountITCase.RND.nextInt();
+        this.fund(account, new Dollars(amount));
+        MatcherAssert.assertThat(
+            account.balance().points(),
+            Matchers.equalTo(amount * Tv.TEN)
+        );
+    }
+
+    /**
+     * Fund the account.
+     * @param acc Account to fund
+     * @param amount Amount to add
+     */
+    @Parallel(threads = Tv.TEN)
+    private void fund(final Account acc, final Dollars amount) {
+        acc.fund(amount, "something");
     }
 
     /**
@@ -92,10 +132,22 @@ public final class PgAccountITCase {
      */
     private Account account() throws Exception {
         Assume.assumeNotNull(PgAccountITCase.URL);
-        return new PgAccount(
-            new PgClient.Simple(PgAccountITCase.URL, PgAccountITCase.PASSWORD),
+        final Account account = new PgAccount(
+            new PgClient.Simple(
+                PgAccountITCase.URL,
+                PgAccountITCase.PASSWORD, PgAccountITCase.USERNAME
+            ),
             URN.create("urn:test:1")
         );
+        final long now = account.balance().points();
+        if (now != 0) {
+            account.fund(new Dollars(-now), "zeroing it");
+        }
+        MatcherAssert.assertThat(
+            account.balance().points(),
+            Matchers.equalTo(0L)
+        );
+        return account;
     }
 
 }

@@ -30,10 +30,13 @@
 package com.rultor.log4j;
 
 import com.google.common.collect.ImmutableMap;
+import com.jcabi.aspects.Quietly;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
+import com.jcabi.aspects.Tv;
+import com.rultor.snapshot.Radar;
 import com.rultor.spi.Drain;
-import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.BlockingQueue;
@@ -57,7 +60,11 @@ import org.apache.log4j.spi.LoggingEvent;
 @ToString
 @EqualsAndHashCode(callSuper = false, of = { "group", "start", "drain" })
 @SuppressWarnings("PMD.DoNotUseThreads")
-@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.SECONDS)
+@ScheduleWithFixedDelay(
+    delay = 1, unit = TimeUnit.SECONDS,
+    await = 1, awaitUnit = TimeUnit.MINUTES,
+    shutdownAttempts = Tv.FIVE
+)
 final class GroupAppender extends AppenderSkeleton
     implements Runnable, Appender {
 
@@ -109,41 +116,34 @@ final class GroupAppender extends AppenderSkeleton
         super();
         this.start = date;
         this.drain = drn;
+        Radar.clean();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public void run() {
         final Collection<String> all = new LinkedList<String>();
         this.lines.drainTo(all);
-        try {
-            this.drain.append(all);
-        // @checkstyle IllegalCatch (1 line)
-        } catch (Throwable ex) {
-            Exceptions.error(this, ex);
-        }
+        this.flush(all);
     }
 
     /**
      * {@inheritDoc}
-     *
-     * <p>We swallow exception here in order to enable normal processing
-     * of a logging event through LOG4j even when this particular drain
-     * fails (this may happen and often).
      */
     @Override
     protected void append(final LoggingEvent event) {
         if (Thread.currentThread().getThreadGroup().equals(this.group)) {
+            final String msg = this.layout.format(event);
             this.lines.add(
                 new Drain.Line.Simple(
                     new Time().delta(this.start),
                     GroupAppender.LEVELS.get(event.getLevel()),
-                    this.layout.format(event)
+                    msg
                 ).toString()
             );
+            Radar.append(msg);
         }
     }
 
@@ -161,6 +161,19 @@ final class GroupAppender extends AppenderSkeleton
     @Override
     public boolean requiresLayout() {
         return true;
+    }
+
+    /**
+     * Flush them all to the drain.
+     * @param lns Lines to flush
+     */
+    @Quietly
+    public void flush(final Collection<String> lns) {
+        try {
+            this.drain.append(lns);
+        } catch (IOException ex) {
+            throw new IllegalArgumentException(ex);
+        }
     }
 
 }

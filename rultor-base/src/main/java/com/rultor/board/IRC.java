@@ -33,7 +33,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import java.io.IOException;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.schwering.irc.lib.IRCConnection;
@@ -137,8 +136,7 @@ public final class IRC implements Billboard {
      * {@inheritDoc}
      */
     @Override
-    public void announce(
-        @NotNull(message = "body can't be NULL") final String body) {
+    public void announce(final boolean success) {
         final IRCConnection conn;
         try {
             conn = this.server.connect(

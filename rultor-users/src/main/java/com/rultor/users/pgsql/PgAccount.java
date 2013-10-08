@@ -88,9 +88,7 @@ final class PgAccount implements Account {
         try {
             return new Dollars(
                 new JdbcSession(this.client.get())
-                    // @checkstyle LineLength (1 line)
-                    .sql("SELECT SUM(sum) FROM (SELECT SUM(amount) AS sum FROM receipt WHERE dt=? UNION SELECT -SUM(amount) FROM receipt WHERE ct=?) AS sub")
-                    .set(this.owner)
+                    .sql("SELECT balance(?)")
                     .set(this.owner)
                     .select(new SingleHandler<Long>(Long.class))
             );
@@ -115,14 +113,11 @@ final class PgAccount implements Account {
     public void fund(final Dollars amount, final String details) {
         try {
             new JdbcSession(this.client.get())
-                // @checkstyle LineLength (1 line)
-                .sql("INSERT INTO receipt (ct, ctrule, dt, dtrule, details, amount) VALUES (?, ?, ?, ?, ?, ?)")
+                .sql("SELECT add(?, ?, ?, ?)")
                 .set(Account.BANK)
-                .set("")
                 .set(this.owner)
-                .set("")
-                .set(details)
                 .set(amount.points())
+                .set(details)
                 .execute();
         } catch (SQLException ex) {
             throw new IllegalStateException(ex);
@@ -146,9 +141,7 @@ final class PgAccount implements Account {
                 .sql("DELETE FROM coupon WHERE code=?")
                 .set(code)
                 .execute();
-            this.fund(
-                amount, String.format("account funded with coupon %s", code)
-            );
+            this.fund(amount, String.format("coupon %s redeemed", code));
         } catch (SQLException ex) {
             throw new InvalidCouponException(ex);
         }

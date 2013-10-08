@@ -35,6 +35,7 @@ import com.rultor.scm.Commit;
 import com.rultor.scm.SCM;
 import com.rultor.shell.ShellMocker;
 import java.io.File;
+import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -48,9 +49,9 @@ import org.junit.Test;
 public final class GitITCase {
 
     /**
-     * URL of test Git repository.
+     * URI of test Git repository.
      */
-    private static final String URL =
+    private static final String REPO =
         System.getProperty("failsafe.git.url");
 
     /**
@@ -71,11 +72,11 @@ public final class GitITCase {
      */
     @Test
     public void checksOutBranch() throws Exception {
-        Assume.assumeNotNull(GitITCase.URL);
+        Assume.assumeNotNull(GitITCase.REPO);
         final File dir = Files.createTempDir();
         final SCM git = new Git(
             new ShellMocker.Bash(dir),
-            new GitURI(GitITCase.URL),
+            new URI(GitITCase.REPO),
             "test"
         );
         final Branch branch = git.checkout("master");
@@ -92,11 +93,11 @@ public final class GitITCase {
      */
     @Test
     public void listsBranches() throws Exception {
-        Assume.assumeNotNull(GitITCase.URL);
+        Assume.assumeNotNull(GitITCase.REPO);
         final File dir = Files.createTempDir();
         final SCM git = new Git(
             new ShellMocker.Bash(dir),
-            new GitURI(GitITCase.URL),
+            new URI(GitITCase.REPO),
             "boom"
         );
         MatcherAssert.assertThat(
@@ -111,11 +112,11 @@ public final class GitITCase {
      */
     @Test
     public void fetchesTag() throws Exception {
-        Assume.assumeNotNull(GitITCase.URL);
+        Assume.assumeNotNull(GitITCase.REPO);
         final File dir = Files.createTempDir();
         final SCM git = new Git(
             new ShellMocker.Bash(dir),
-            new GitURI(GitITCase.URL),
+            new URI(GitITCase.REPO),
             "foo-4"
         );
         git.checkout(GitITCase.TAG);
@@ -127,11 +128,11 @@ public final class GitITCase {
      */
     @Test
     public void fetchesBranch() throws Exception {
-        Assume.assumeNotNull(GitITCase.URL);
+        Assume.assumeNotNull(GitITCase.REPO);
         final File dir = Files.createTempDir();
         final SCM git = new Git(
             new ShellMocker.Bash(dir),
-            new GitURI(GitITCase.URL),
+            new URI(GitITCase.REPO),
             "foo-ff"
         );
         git.checkout(GitITCase.BRANCH);

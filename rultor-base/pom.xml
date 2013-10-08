@@ -58,6 +58,10 @@
             <artifactId>xml-apis</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-aspects</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
@@ -65,12 +69,6 @@
             <groupId>com.rexsl</groupId>
             <artifactId>rexsl-test</artifactId>
             <version>${rexsl.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sun.jersey</groupId>
-                    <artifactId>jersey-core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -98,8 +96,15 @@
             <version>0.1.45</version>
         </dependency>
         <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-core</artifactId>
+            <version>1.17.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.json</groupId>
@@ -118,8 +123,9 @@
             <artifactId>jcabi-log</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-aspects</artifactId>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.madgag</groupId>
@@ -145,6 +151,8 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
                         <systemPropertyVariables>
+                            <failsafe.jira.url>${failsafe.jira.url}</failsafe.jira.url>
+                            <failsafe.jira.issue>${failsafe.jira.issue}</failsafe.jira.issue>
                             <failsafe.s3.key>${failsafe.s3.key}</failsafe.s3.key>
                             <failsafe.s3.secret>${failsafe.s3.secret}</failsafe.s3.secret>
                             <failsafe.s3.bucket>${failsafe.s3.bucket}</failsafe.s3.bucket>

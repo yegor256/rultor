@@ -38,7 +38,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.jdbc.JdbcSession;
-import com.jcabi.jdbc.VoidHandler;
 import com.rultor.aws.SQSClient;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.NormJson;
@@ -128,8 +127,7 @@ final class SQSReceipts {
     private void process(final JsonObject json) throws SQLException {
         final JsonObject work = json.getJsonObject("work");
         new JdbcSession(this.client.get())
-            // @checkstyle LineLength (1 line)
-            .sql("INSERT INTO receipt (time, wowner, wrule, wscheduled, ct, ctrule, dt, dtrule, details, amount) VALUES (now(), ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+            .sql("SELECT add(?, ?, ?, ?, ?, ?, ?, ?, ?)")
             .set(work.getString("owner"))
             .set(work.getString("rule"))
             .set(new Time(work.getString("scheduled")).toString())
@@ -137,9 +135,9 @@ final class SQSReceipts {
             .set(json.getString("ctrule"))
             .set(json.getString("dt"))
             .set(json.getString("dtrule"))
-            .set(json.getString("details"))
             .set(json.getJsonNumber("amount").longValue())
-            .insert(new VoidHandler());
+            .set(json.getString("details"))
+            .execute();
     }
 
 }

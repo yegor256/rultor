@@ -91,7 +91,7 @@ public final class StepAspect {
         }
         new XemblyLine(
             new Directives()
-                .xpath("/snapshot").addIfAbsent("steps").add("step")
+                .xpath("/snapshot").addIf("steps").add("step")
                 .attr("id", label)
                 // @checkstyle MultipleStringLiterals (1 line)
                 .attr("class", method.getDeclaringClass().getCanonicalName())
@@ -108,10 +108,9 @@ public final class StepAspect {
             }
             this.mark(label, Level.INFO);
             new XemblyLine(
-                new Directives()
-                    .xpath(String.format("//step[@id=%s]/summary", label))
-                    .strict(1)
-                    .set(new Vext(step.value()).print(args.build()))
+                new Directives().xpath(
+                    String.format("/snapshot/steps/step[@id=%s]/summary", label)
+                ).strict(1).set(new Vext(step.value()).print(args.build()))
             ).log();
             return result;
         // @checkstyle IllegalCatch (1 line)

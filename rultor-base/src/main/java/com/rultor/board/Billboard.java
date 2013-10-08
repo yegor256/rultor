@@ -31,7 +31,6 @@ package com.rultor.board;
 
 import com.jcabi.aspects.Immutable;
 import java.io.IOException;
-import javax.validation.constraints.NotNull;
 
 /**
  * Billboard for announcements.
@@ -44,11 +43,10 @@ import javax.validation.constraints.NotNull;
 public interface Billboard {
 
     /**
-     * Announce (the first line of the body is treated as subject).
-     * @param body Text/XML/XHTML/etc body
+     * Announce success or failure.
+     * @param success TRUE if we successfully did something
      * @throws IOException If fails
      */
-    void announce(@NotNull(message = "body can't be NULL") String body)
-        throws IOException;
+    void announce(boolean success) throws IOException;
 
 }

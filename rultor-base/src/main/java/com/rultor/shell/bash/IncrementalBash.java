@@ -86,6 +86,16 @@ public final class IncrementalBash implements Batch {
         IncrementalBash.escape(XemblyLine.MARK);
 
     /**
+     * Count of lines to take from head.
+     */
+    private static final int HEAD_SIZE = 25;
+
+    /**
+     * Count of lines to take from tail.
+     */
+    private static final int TAIL_SIZE = 100;
+
+    /**
      * Shells to be used for actual execution of bash script.
      */
     private final transient Shells shells;
@@ -119,7 +129,7 @@ public final class IncrementalBash implements Batch {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public int exec(
-        @NotNull(message = "args can't be NULL") final Map<String, Object> args,
+        @NotNull(message = "args can't be NULL") final Map<String, String> args,
         @NotNull(message = "stream can't be NULL") final OutputStream output)
         throws IOException {
         return new Bash(this.shells, this.script(args)).exec(args, output);
@@ -137,7 +147,7 @@ public final class IncrementalBash implements Batch {
      * @param args All arguments to inject into Velocity script
      * @return Bash script ready for execution
      */
-    private String script(final Map<String, Object> args) {
+    private String script(final Map<String, String> args) {
         final StringBuilder script = new StringBuilder()
             .append("#set($dollar='$')")
             .append("set -o pipefail;\n")
@@ -162,7 +172,7 @@ public final class IncrementalBash implements Batch {
      * @return Bash script ready for execution
      * @see http://stackoverflow.com/questions/18665603
      */
-    private String script(final Map<String, Object> args, final Vext cmd) {
+    private String script(final Map<String, String> args, final Vext cmd) {
         final String uid = String.format("bash-%d", System.nanoTime());
         final String velocity = StringUtils.strip(cmd.velocity(), " ;");
         final String command = cmd.print(args);
@@ -174,7 +184,7 @@ public final class IncrementalBash implements Batch {
                 this.echo(
                     new Directives()
                         .xpath("/snapshot")
-                        .addIfAbsent("steps")
+                        .addIf("steps")
                         .add("step")
                         .attr("id", uid)
                         .add("start")
@@ -204,6 +214,17 @@ public final class IncrementalBash implements Batch {
                 )
             )
             .append(";\nelse\n  ")
+            .append("HEADSZ=").append(HEAD_SIZE)
+            .append(";TAILSZ=").append(TAIL_SIZE).append(";")
+            .append("ERRLEN=${dollar}(cat ${dollar}STDERR | wc -l);\n")
+            // @checkstyle LineLength (6 lines)
+            .append("if [ ${dollar}ERRLEN -gt ${dollar}((HEADSZ + TAILSZ)) ]; then \n")
+            .append("HEAD=${dollar}(head -${dollar}HEADSZ ${dollar}STDERR | eval ${dollar}ESCAPE);\n")
+            .append("BREAK='... '${dollar}((ERRLEN - HEADSZ - TAILSZ))' lines skipped ...&#10;';\n")
+            .append("TAIL=${dollar}(tail -${dollar}TAILSZ ${dollar}STDERR | eval ${dollar}ESCAPE);\n")
+            .append("MSG=${dollar}HEAD${dollar}BREAK${dollar}TAIL;\n")
+            .append("else MSG=${dollar}(cat ${dollar}STDERR | eval ${dollar}ESCAPE);\n")
+            .append("fi;\n")
             .append(
                 this.echo(
                     new Directives()
@@ -216,8 +237,7 @@ public final class IncrementalBash implements Batch {
                         .set("exit code ${dollar}CODE")
                         .up()
                         .add("stacktrace")
-                        // @checkstyle LineLength (1 line)
-                        .set("${dollar}(tail -100 ${dollar}STDERR | eval ${dollar}ESCAPE)")
+                        .set("${dollar}MSG")
                 )
             )
             .append(";\nfi;\n")

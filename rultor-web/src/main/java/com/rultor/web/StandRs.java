@@ -285,7 +285,7 @@ public final class StandRs extends BaseRs {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 String.format("access denied to stand `%s`", this.name),
-                Level.SEVERE
+                Level.WARNING
             );
         }
         return stand;

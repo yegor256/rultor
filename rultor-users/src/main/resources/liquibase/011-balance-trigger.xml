@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<!--
+ * Copyright (c) 2009-2013, rultor.com
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met: 1) Redistributions of source code must retain the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer. 2) Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3) Neither the name of the rultor.com nor
+ * the names of its contributors may be used to endorse or promote
+ * products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+ * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ -->
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="yegor@tpc2.com" id="335.1" context="live">
+        <comment>Extra two columns for receipt table</comment>
+        <addColumn schemaName="public" tableName="receipt">
+            <column name="ctbalance" type="BIGINT" remarks="balance of the creditor"/>
+            <column name="dtbalance" type="BIGINT" remarks="balance of the debitor"/>
+        </addColumn>
+        <rollback>
+            <dropColumn schemaName="public" tableName="receipt" columnName="ctbalance"/>
+            <dropColumn schemaName="public" tableName="receipt" columnName="dtbalance"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="yegor@tpc2.com" id="335.2" context="live">
+        <comment>Change monetary type from INTEGER to BIGINT</comment>
+        <modifyDataType schemaName="public" tableName="receipt" columnName="amount" newDataType="BIGINT"/>
+    </changeSet>
+    <changeSet author="yegor@tpc2.com" id="335.3" context="live">
+        <comment>New function balance()</comment>
+        <sql splitStatements="false"><![CDATA[
+            CREATE FUNCTION balance(urn VARCHAR(120)) RETURNS BIGINT AS $$
+                SELECT COALESCE(SUM(a), 0)::BIGINT FROM
+                    (SELECT CASE WHEN dt = $1 THEN dtbalance ELSE ctbalance END AS a
+                        FROM receipt
+                        WHERE dt = $1 OR ct = $1
+                        ORDER BY id DESC
+                        LIMIT 1) AS x
+            $$ LANGUAGE SQL
+        ]]></sql>
+        <rollback>
+            <sql splitStatements="false"><![CDATA[
+                DROP FUNCTION balance;
+            ]]></sql>
+        </rollback>
+    </changeSet>
+    <changeSet author="yegor@tpc2.com" id="335.4" context="live">
+        <comment>Trigger to update balance on every INSERT into receipt</comment>
+        <sql splitStatements="false"><![CDATA[
+            CREATE OR REPLACE FUNCTION preset_balance() RETURNS TRIGGER AS $$
+            DECLARE
+                ctbal BIGINT;
+                dtbal BIGINT;
+            BEGIN
+                SELECT balance(NEW.ct) INTO ctbal;
+                IF ctbal IS NULL THEN
+                    RAISE EXCEPTION 'function balance() returned NULL, it is an error';
+                END IF;
+                SELECT balance(NEW.dt) INTO dtbal;
+                IF dtbal IS NULL THEN
+                    RAISE EXCEPTION 'function balance() returned NULL, it is an error';
+                END IF;
+                NEW.ctbalance := ctbal - NEW.amount;
+                NEW.dtbalance := dtbal + NEW.amount;
+                RETURN NEW;
+            END;
+            $$ LANGUAGE plpgsql
+        ]]></sql>
+        <sql splitStatements="false"><![CDATA[
+            CREATE TRIGGER preset_balance_trigger
+                BEFORE INSERT ON receipt
+                FOR EACH ROW
+                EXECUTE PROCEDURE preset_balance();
+        ]]></sql>
+        <rollback>
+            <sql splitStatements="false"><![CDATA[
+                DROP TRIGGER preset_balance_trigger ON receipt;
+            ]]></sql>
+            <sql splitStatements="false"><![CDATA[
+                DROP FUNCTION preset_balance;
+            ]]></sql>
+        </rollback>
+    </changeSet>
+    <changeSet author="yegor@tpc2.com" id="335.5" context="live">
+        <comment>Prohibit updates or deletes on RECEIPT table</comment>
+        <sql splitStatements="false"><![CDATA[
+            CREATE OR REPLACE FUNCTION prohibited() RETURNS TRIGGER AS $$
+            BEGIN
+                RAISE EXCEPTION 'rows in table RECEIPT cant be updated or deleted';
+            END;
+            $$ LANGUAGE plpgsql
+        ]]></sql>
+        <sql splitStatements="false"><![CDATA[
+            CREATE TRIGGER prohibit_changes
+                BEFORE UPDATE OR DELETE ON receipt
+                FOR EACH ROW
+                EXECUTE PROCEDURE prohibited();
+        ]]></sql>
+        <rollback>
+            <sql splitStatements="false"><![CDATA[
+                DROP TRIGGER prohibit_changes ON receipt;
+            ]]></sql>
+            <sql splitStatements="false"><![CDATA[
+                DROP FUNCTION prohibited;
+            ]]></sql>
+        </rollback>
+    </changeSet>
+    <changeSet author="yegor@tpc2.com" id="335.test" context="test">
+        <comment>Test for balance trigger</comment>
+        <sql splitStatements="false"><![CDATA[
+            DO language plpgsql $$
+            DECLARE
+                balance INTEGER;
+            BEGIN
+                TRUNCATE receipt CASCADE;
+                INSERT INTO receipt (time, ct, ctrule, dt, dtrule, amount, details)
+                    VALUES (NOW(), 'urn:test:1', '', 'urn:test:2', '', 123, '335.test #1');
+                INSERT INTO receipt (time, ct, ctrule, dt, dtrule, amount, details)
+                    VALUES (NOW(), 'urn:test:1', '', 'urn:test:2', '', 345, '335.test #2');
+                INSERT INTO receipt (time, ct, ctrule, dt, dtrule, amount, details)
+                    VALUES (NOW(), 'urn:test:2', '', 'urn:test:1', '', 567, '335.test #3');
+                SELECT balance('urn:test:1') INTO balance;
+                IF balance IS NULL THEN
+                    RAISE EXCEPTION 'Balance is NULL';
+                END IF;
+                IF balance != 99 THEN
+                    RAISE EXCEPTION 'Balance of 99 expected, % found', balance;
+                END IF;
+                SELECT balance('urn:test:2') INTO balance;
+                IF balance IS NULL THEN
+                    RAISE EXCEPTION 'Balance is NULL';
+                END IF;
+                IF balance != -99 THEN
+                    RAISE EXCEPTION 'Balance of -99 expected, % found', balance;
+                END IF;
+                PERFORM * FROM receipt WHERE ctbalance IS NULL or dtbalance IS NULL;
+                IF FOUND THEN
+                    RAISE EXCEPTION 'Some rows have ctbalance/dtbalance set to NULL';
+                END IF;
+            END
+            $$;
+        ]]></sql>
+    </changeSet>
+</databaseChangeLog>

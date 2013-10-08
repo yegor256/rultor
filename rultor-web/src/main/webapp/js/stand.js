@@ -64,14 +64,18 @@ $(document).ready(
             function () {
                 $(this).click(
                     function() {
-                        var $div = $(this).parent().parent().parent();
+                        var $div = $(this).closest('div.panel');
+                        var $icon = $(this).find('i');
+                        var $msg = $(this).closest('ul').find('li.msg')
                         if ($div.attr('data-fetch-stop')) {
                             $div.removeAttr('data-fetch-stop');
-                            $(this).removeClass('text-danger');
+                            $icon.removeClass('text-danger');
+                            $msg.hide();
                             fetch($div);
                         } else {
                             $div.attr('data-fetch-stop', 'yes');
-                            $(this).addClass('text-danger');
+                            $msg.show();
+                            $icon.addClass('text-danger');
                         }
                     }
                 );

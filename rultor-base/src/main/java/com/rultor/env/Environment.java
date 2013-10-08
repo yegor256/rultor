@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -52,5 +53,18 @@ public interface Environment extends Closeable {
      */
     @NotNull(message = "IP address is never NULL")
     InetAddress address() throws IOException;
+
+    /**
+     * Get all badges.
+     * @return Map of badges
+     */
+    Map<String, String> badges();
+
+    /**
+     * Add badge.
+     * @param name Badge name
+     * @param value Badge value
+     */
+    void badge(String name, String value);
 
 }

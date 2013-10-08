@@ -34,12 +34,17 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Rule;
+import com.rultor.spi.Spec;
+import com.rultor.spi.SpecException;
+import com.rultor.tools.Exceptions;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -97,6 +102,39 @@ public final class RulesRs extends BaseRs {
             String.format("Rule `%s` successfully created", name),
             Level.INFO
         );
+    }
+
+    /**
+     * Re-save all rules in one go (internal feature, not for public users).
+     * @return Plain text output
+     */
+    @GET
+    @Path("/resave")
+    @Produces(MediaType.TEXT_PLAIN)
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    public String resave() {
+        final StringBuilder text = new StringBuilder();
+        for (Rule rule : this.user().rules()) {
+            final String name = rule.name();
+            text.append(name).append(": ");
+            try {
+                rule.update(
+                    new Spec.Strict(
+                        rule.spec().asText(), this.repo(), this.user(),
+                        this.users(), this.coordinates(name), Object.class
+                    ),
+                    new Spec.Strict(
+                        rule.drain().asText(), this.repo(), this.user(),
+                        this.users(), this.coordinates(name), Object.class
+                    )
+                );
+                text.append("OK");
+            } catch (SpecException ex) {
+                text.append('\n').append(Exceptions.stacktrace(ex));
+            }
+            text.append("\n\n");
+        }
+        return text.toString();
     }
 
     /**

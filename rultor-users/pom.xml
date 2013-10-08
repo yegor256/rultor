@@ -38,7 +38,24 @@
     <artifactId>rultor-users</artifactId>
     <packaging>jar</packaging>
     <name>rultor-users</name>
+    <repositories>
+        <repository>
+            <id>jcabi-dynamodb-maven-plugin</id>
+            <url>http://repo.jcabi.com/releases</url>
+        </repository>
+    </repositories>
+    <properties>
+        <dynamodblocal.tgz>${com.jcabi:DynamoDBLocal:tgz}</dynamodblocal.tgz>
+        <failsafe.pgsql.username>postgres</failsafe.pgsql.username>
+        <failsafe.pgsql.password>secure</failsafe.pgsql.password>
+        <failsafe.pgsql.db>test</failsafe.pgsql.db>
+        <failsafe.pgsql.jdbc.start>jdbc:postgresql://localhost</failsafe.pgsql.jdbc.start>
+    </properties>
     <dependencies>
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-aspects</artifactId>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>rultor-spi</artifactId>
@@ -70,6 +87,13 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>DynamoDBLocal</artifactId>
+            <version>2013-09-12</version>
+            <type>tgz</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.1-901.jdbc4</version>
@@ -98,12 +122,12 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-dynamo</artifactId>
-            <version>0.8</version>
+            <version>0.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-dynamo</artifactId>
-            <version>0.8</version>
+            <version>0.8.2</version>
             <scope>test</scope>
             <classifier>mock</classifier>
         </dependency>
@@ -124,10 +148,6 @@
             <artifactId>jcabi-urn</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-aspects</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
             <version>2.11.2</version>
@@ -136,6 +156,37 @@
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>com.github.adrianboimvaser</groupId>
+                    <artifactId>postgresql-maven-plugin</artifactId>
+                    <version>0.2-SNAPSHOT</version>
+                    <configuration>
+                        <pgsqlHome>${project.build.directory}/pgsql</pgsqlHome>
+                        <dataDir>${project.build.directory}/data</dataDir>
+                        <databaseName>${failsafe.pgsql.db}</databaseName>
+                        <username>${failsafe.pgsql.username}</username>
+                        <passwordFile>${project.build.directory}/test-classes/password.txt</passwordFile>
+                        <port>${failsafe.pgsql.port}</port>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>init-db</id>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>initdb</goal>
+                                <goal>start</goal>
+                                <goal>createdb</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>stop-postgresql</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>stop</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
                     <configuration>
@@ -152,22 +203,88 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
                         <systemPropertyVariables>
-                            <failsafe.dynamo.key>${failsafe.dynamo.key}</failsafe.dynamo.key>
-                            <failsafe.dynamo.secret>${failsafe.dynamo.secret}</failsafe.dynamo.secret>
-                            <failsafe.dynamo.prefix>${failsafe.dynamo.prefix}</failsafe.dynamo.prefix>
+                            <dynamodb.port>${dynamodblocal.port}</dynamodb.port>
                             <failsafe.mongo.host>${failsafe.mongo.host}</failsafe.mongo.host>
                             <failsafe.mongo.port>${failsafe.mongo.port}</failsafe.mongo.port>
                             <failsafe.mongo.name>${failsafe.mongo.name}</failsafe.mongo.name>
                             <failsafe.mongo.user>${failsafe.mongo.user}</failsafe.mongo.user>
                             <failsafe.mongo.password>${failsafe.mongo.password}</failsafe.mongo.password>
-                            <failsafe.pgsql.jdbc>${failsafe.pgsql.jdbc}</failsafe.pgsql.jdbc>
+                            <failsafe.pgsql.jdbc>${failsafe.pgsql.jdbc.start}:${failsafe.pgsql.port}/${failsafe.pgsql.db}</failsafe.pgsql.jdbc>
+                            <failsafe.pgsql.username>${failsafe.pgsql.username}</failsafe.pgsql.username>
                             <failsafe.pgsql.password>${failsafe.pgsql.password}</failsafe.pgsql.password>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-maven-plugin</artifactId>
+                    <version>2.0.1</version>
+                    <configuration>
+                        <changeLogFile>src/main/resources/liquibase-master.xml</changeLogFile>
+                        <driver>org.postgresql.Driver</driver>
+                        <url>${failsafe.pgsql.jdbc.start}:${failsafe.pgsql.port}/${failsafe.pgsql.db}</url>
+                        <username>${failsafe.pgsql.username}</username>
+                        <password>${failsafe.pgsql.password}</password>
+                        <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+                        <contexts>any,live</contexts>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>update</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>reserve-network-port</goal>
+                        </goals>
+                        <configuration>
+                            <portNames>
+                                <portName>dynamodblocal.port</portName>
+                                <portName>failsafe.pgsql.port</portName>
+                            </portNames>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.jcabi</groupId>
+                <artifactId>jcabi-dynamodb-maven-plugin</artifactId>
+                <version>0.1.1</version>
+                <configuration>
+                    <port>${dynamodblocal.port}</port>
+                    <tgz>${dynamodblocal.tgz}</tgz>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>start</goal>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <!-- @see https://github.com/github/maven-plugins/issues/22 -->
                 <groupId>com.github.github</groupId>
@@ -215,6 +332,185 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>linux-x86</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <name>Linux</name>
+                    <arch>x86</arch>
+                </os>
+            </activation>
+            <properties>
+                <postgresql-dist.classifier>linux</postgresql-dist.classifier>
+                <postgresql-dist.type>tar.gz</postgresql-dist.type>
+            </properties>
+        </profile>
+        <profile>
+            <id>linux-x64</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <name>Linux</name>
+                    <arch>amd64</arch>
+                </os>
+            </activation>
+            <properties>
+                <postgresql-dist.classifier>linux-x64</postgresql-dist.classifier>
+                <postgresql-dist.type>tar.gz</postgresql-dist.type>
+            </properties>
+        </profile>
+        <profile>
+            <id>windows-x86</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                    <arch>x86</arch>
+                </os>
+            </activation>
+            <properties>
+                <postgresql-dist.classifier>windows</postgresql-dist.classifier>
+                <postgresql-dist.type>zip</postgresql-dist.type>
+            </properties>
+        </profile>
+        <profile>
+            <id>windows-x64</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                    <arch>amd64</arch>
+                </os>
+            </activation>
+            <properties>
+                <postgresql-dist.classifier>windows-x64</postgresql-dist.classifier>
+                <postgresql-dist.type>zip</postgresql-dist.type>
+            </properties>
+        </profile>
+        <profile>
+            <id>osx</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <postgresql-dist.classifier>osx</postgresql-dist.classifier>
+                <postgresql-dist.type>zip</postgresql-dist.type>
+            </properties>
+        </profile>
+        <profile>
+            <id>linux</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <name>Linux</name>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-postgresql-linux</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>com.github.adrianboimvaser</groupId>
+                                            <artifactId>postgresql-dist</artifactId>
+                                            <classifier>${postgresql-dist.classifier}</classifier>
+                                            <version>9.2.4</version>
+                                            <type>${postgresql-dist.type}</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${project.build.directory}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unzip-postgresql-linux</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>tar</executable>
+                                    <arguments>
+                                        <argument>-zxvf</argument>
+                                        <argument>${project.build.directory}/postgresql-dist-9.2.4-${postgresql-dist.classifier}.${postgresql-dist.type}</argument>
+                                        <argument>-C</argument>
+                                        <argument>${project.build.directory}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.adrianboimvaser</groupId>
+                        <artifactId>postgresql-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.liquibase</groupId>
+                        <artifactId>liquibase-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-postgresql-windows</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>com.github.adrianboimvaser</groupId>
+                                            <artifactId>postgresql-dist</artifactId>
+                                            <classifier>${postgresql-dist.classifier}</classifier>
+                                            <version>9.2.4</version>
+                                            <type>${postgresql-dist.type}</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${project.build.directory}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.adrianboimvaser</groupId>
+                        <artifactId>postgresql-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.liquibase</groupId>
+                        <artifactId>liquibase-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>

@@ -36,28 +36,22 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
-import com.rexsl.test.SimpleXml;
-import com.rexsl.test.XmlDocument;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
+import com.rultor.spi.Tag;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.logging.Level;
-import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.w3c.dom.Document;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.XemblySyntaxException;
 
@@ -258,48 +252,29 @@ final class MongoStand implements Stand {
     }
 
     /**
-     * Xembly to DOM.
+     * Fetch all visible tags.
      *
      * <p>All exceptions are swallowed here since we can't be sure
      * that at this moment Xembly script is fully complete. It may contain
      * broken parts, which will be completed later. That's why we're
      * returning our best guess here.
      *
-     * @param xembly Xembly script
-     * @return DOM document
-     * @throws Stand.BrokenXemblyException If fails
-     * @checkstyle RedundantThrows (5 lines)
-     */
-    private Document dom(final String xembly)
-        throws Stand.BrokenXemblyException {
-        try {
-            return new Snapshot(xembly).dom();
-        } catch (XemblySyntaxException ex) {
-            throw new BrokenXemblyException(ex);
-        } catch (ImpossibleModificationException ex) {
-            throw new BrokenXemblyException(ex);
-        }
-    }
-
-    /**
-     * Fetch all visible tags.
      * @param after Xembly after changes
      * @return Array of tags
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Collection<DBObject> tags(final String after) {
-        final Collection<DBObject> tags = new HashSet<DBObject>(0);
-        final List<XmlDocument> nodes = new LinkedList<XmlDocument>();
+        final Collection<Tag> found = new LinkedList<Tag>();
         try {
-            nodes.addAll(
-                new SimpleXml(new DOMSource(this.dom(after))).nodes(
-                    "/snapshot/tags/tag[label and level]"
-                )
-            );
-        } catch (BrokenXemblyException ex) {
+            found.addAll(new Snapshot(after).tags());
+        } catch (ImpossibleModificationException ex) {
+            assert ex != null;
+        } catch (XemblySyntaxException ex) {
             assert ex != null;
         }
-        for (XmlDocument node : nodes) {
-            tags.add(this.tag(node).asObject());
+        final Collection<DBObject> tags = new LinkedList<DBObject>();
+        for (Tag tag : found) {
+            tags.add(new MongoTag(tag).asObject());
         }
         return tags;
     }
@@ -317,31 +292,6 @@ final class MongoStand implements Stand {
             lines.put(Long.parseLong(parts[0]), parts[1]);
         }
         return StringUtils.join(lines.values(), "\n");
-    }
-
-    /**
-     * Make Mongo Tag from XML node.
-     * @param node XML node
-     * @return Mongo tag
-     */
-    private MongoTag tag(final XmlDocument node) {
-        final String data;
-        if (node.nodes("data").isEmpty()) {
-            data = "{}";
-        } else {
-            data = node.xpath("data/text()").get(0);
-        }
-        final String markdown;
-        if (node.nodes("markdown").isEmpty()) {
-            markdown = "";
-        } else {
-            markdown = node.xpath("markdown/text()").get(0);
-        }
-        return new MongoTag(
-            node.xpath("label/text()").get(0),
-            Level.parse(node.xpath("level/text()").get(0)),
-            data, markdown
-        );
     }
 
     /**

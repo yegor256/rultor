@@ -35,7 +35,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.aws.SNSClient;
 import com.rultor.snapshot.Step;
-import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -63,23 +63,33 @@ public final class SNS implements Billboard {
     private final transient String topic;
 
     /**
+     * Bill to announce.
+     */
+    private final transient Bill bill;
+
+    /**
      * Public ctor.
      * @param arn ARN of SNS topic
      * @param key AWS key
      * @param secret AWS secret
+     * @param bll Bill to announce
+     * @checkstyle ParameterNumber (5 lines)
      */
-    public SNS(final String arn, final String key, final String secret) {
-        this(arn, new SNSClient.Simple(key, secret));
+    public SNS(final String arn, final String key, final String secret,
+        final Bill bll) {
+        this(arn, new SNSClient.Simple(key, secret), bll);
     }
 
     /**
      * Public ctor.
      * @param arn ARN of SNS topic
      * @param clnt SNS Client
+     * @param bll Bill to announce
      */
-    public SNS(final String arn, final SNSClient clnt) {
+    public SNS(final String arn, final SNSClient clnt, final Bill bll) {
         this.client = clnt;
         this.topic = arn;
+        this.bill = bll;
     }
 
     /**
@@ -87,16 +97,14 @@ public final class SNS implements Billboard {
      */
     @Override
     @Step("notification sent to ${this.topic}")
-    public void announce(
-        @NotNull(message = "body can't be NULL") final String body) {
-        final String[] parts = body.split("\n", 2);
+    public void announce(final boolean success) throws IOException {
         final AmazonSNS aws = this.client.get();
         try {
             aws.publish(
                 new PublishRequest()
                     .withTopicArn(this.topic)
-                    .withMessage(parts[1])
-                    .withSubject(parts[0])
+                    .withMessage(this.bill.body())
+                    .withSubject(this.bill.subject())
             );
         } finally {
             aws.shutdown();

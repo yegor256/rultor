@@ -44,8 +44,8 @@
                             <th>
                                 <i class="icon-flag-alt"><xsl:comment>flag</xsl:comment></i>
                             </th>
-                            <th><xsl:text>From</xsl:text></th>
-                            <th><xsl:text>To</xsl:text></th>
+                            <th><xsl:text>Src</xsl:text></th>
+                            <th><xsl:text>Dest</xsl:text></th>
                             <th><xsl:text>Req</xsl:text></th>
                             <th><xsl:text>When</xsl:text></th>
                             <th><xsl:text>Time</xsl:text></th>
@@ -71,50 +71,28 @@
                         <xsl:value-of select="coordinates/owner"/>
                     </xsl:attribute>
                     <xsl:choose>
-                        <xsl:when test="request/failure = 'true'">
-                            <i class="icon-thumbs-down text-danger"><xsl:comment>fail</xsl:comment></i>
+                        <xsl:when test="code = 0">
+                            <i class="icon-thumbs-up text-success"><xsl:comment>ok</xsl:comment></i>
                         </xsl:when>
                         <xsl:otherwise>
-                            <i class="icon-thumbs-up text-success"><xsl:comment>ok</xsl:comment></i>
+                            <i class="icon-thumbs-down text-danger"><xsl:comment>fail</xsl:comment></i>
                         </xsl:otherwise>
                     </xsl:choose>
                 </a>
             </td>
             <td>
-                <xsl:choose>
-                    <xsl:when test="request/params/param[name='headUser']">
-                        <xsl:value-of select="request/params/param[name='headUser']/value"/>
-                        <xsl:text>/</xsl:text>
-                        <xsl:value-of select="request/params/param[name='headRepo']/value"/>
-                        <xsl:text>/</xsl:text>
-                        <xsl:value-of select="request/params/param[name='headBranch']/value"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:text>?</xsl:text>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:value-of select="srcbranch"/>
             </td>
             <td>
-                <xsl:choose>
-                    <xsl:when test="request/params/param[name='baseUser']">
-                        <xsl:value-of select="request/params/param[name='baseUser']/value"/>
-                        <xsl:text>/</xsl:text>
-                        <xsl:value-of select="request/params/param[name='baseRepo']/value"/>
-                        <xsl:text>/</xsl:text>
-                        <xsl:value-of select="request/params/param[name='baseBranch']/value"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:text>?</xsl:text>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:value-of select="destbranch"/>
             </td>
             <td>
                 <xsl:attribute name="class">
-                    <xsl:if test="request/failure = 'true'">
+                    <xsl:if test="code != 0">
                         <xsl:text>text-danger</xsl:text>
                     </xsl:if>
                 </xsl:attribute>
-                <xsl:value-of select="request/name"/>
+                <xsl:value-of select="name"/>
             </td>
             <td>
                 <span class="timeago"><xsl:value-of select="coordinates/scheduled"/></span>

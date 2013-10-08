@@ -147,7 +147,7 @@
                 <xsl:comment>signal</xsl:comment>
             </i>
         </li>
-        <li class="hidden-phone">
+        <li>
             <xsl:value-of select="rule"/>
         </li>
     </xsl:template>
@@ -206,7 +206,7 @@
             <span class="step">
                 <xsl:if test="exception">
                     <i class="text-danger icon-warning-sign icon"
-                        onclick="$(this).parent().parent().next().toggle();">
+                        onclick="$(this).parent().parent().next().toggle();$(this).closest('.panel').find('.heart').click();">
                         <xsl:attribute name="title">
                             <xsl:value-of select="exception/class"/>
                         </xsl:attribute>
@@ -269,23 +269,17 @@
     </xsl:template>
     <xsl:template match="tags">
         <ul class="list-inline spacious-inline-list">
-            <xsl:if test="tag/markdown">
-                <li class="icon">
-                    <i class="icon-plus-sign"
-                        onclick="$(this).closest('.panel').find('.detailed').toggle();"><xsl:comment>show</xsl:comment></i>
-                </li>
-            </xsl:if>
             <xsl:apply-templates select="tag"/>
-            <xsl:if test="updated">
+            <xsl:if test="../updated">
                 <li class="text-muted">
                     <xsl:text>updated </xsl:text>
-                    <span class="timeago"><xsl:value-of select="updated"/></span>
+                    <span class="timeago"><xsl:value-of select="../updated"/></span>
                 </li>
             </xsl:if>
         </ul>
-        <xsl:if test="tag/markdown">
-            <ul class="detailed list-unstyled tag-detailed-list" style="display: none;">
-                <xsl:apply-templates select="tag[markdown]" mode="detailed"/>
+        <xsl:if test="tag/markdown != ''">
+            <ul class="detailed list-unstyled tag-detailed-list">
+                <xsl:apply-templates select="tag[markdown != '']" mode="detailed"/>
             </ul>
         </xsl:if>
     </xsl:template>

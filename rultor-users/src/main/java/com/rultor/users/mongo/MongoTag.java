@@ -31,15 +31,16 @@ package com.rultor.users.mongo;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.ArrayMap;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.rultor.spi.Tag;
-import com.rultor.tools.NormJson;
+import java.util.Map;
 import java.util.logging.Level;
-import javax.json.JsonObject;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Tag in Mongo.
@@ -50,7 +51,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "name", "lvl", "json", "text" })
+@EqualsAndHashCode(of = { "name", "lvl", "attrs", "text" })
 @Loggable(Loggable.DEBUG)
 final class MongoTag implements Tag {
 
@@ -67,7 +68,7 @@ final class MongoTag implements Tag {
     /**
      * MongoDB table column.
      */
-    public static final String ATTR_DATA = "data";
+    public static final String ATTR_ATTRIBUTES = "attributes";
 
     /**
      * MongoDB table column.
@@ -85,9 +86,9 @@ final class MongoTag implements Tag {
     private final transient String lvl;
 
     /**
-     * Data in JSON.
+     * Attributes in JSON.
      */
-    private final transient String json;
+    private final transient ArrayMap<String, String> attrs;
 
     /**
      * Markdown.
@@ -98,28 +99,56 @@ final class MongoTag implements Tag {
      * Public ctor.
      * @param object The object
      */
+    @SuppressWarnings("unchecked")
     protected MongoTag(final DBObject object) {
         this(
             object.get(MongoTag.ATTR_LABEL).toString(),
             Level.parse(object.get(MongoTag.ATTR_LEVEL).toString()),
-            object.get(MongoTag.ATTR_DATA).toString(),
+            Map.class.cast(object.get(MongoTag.ATTR_ATTRIBUTES)),
             object.get(MongoTag.ATTR_MARKDOWN).toString()
         );
     }
 
     /**
      * Public ctor.
+     * @param label Label of it
+     * @param level Level
+     */
+    protected MongoTag(final String label, final Level level) {
+        this(label, level, new ArrayMap<String, String>(), "");
+    }
+
+    /**
+     * Public ctor.
+     * @param tag Another tag
+     */
+    protected MongoTag(final Tag tag) {
+        this(tag.label(), tag.level(), tag.attributes(), tag.markdown());
+    }
+
+    /**
+     * Public ctor.
      * @param label Label
      * @param level Level
-     * @param data Data
+     * @param map Map of attributes
      * @param markdown Markdown
      * @checkstyle ParameterNumber (5 lines)
      */
     protected MongoTag(final String label, final Level level,
-        final String data, final String markdown) {
+        final Map<String, String> map, final String markdown) {
+        Validate.isTrue(
+            label.matches("[a-z][a-z0-9-]+"),
+            "invalid tag '%s'", label
+        );
         this.name = label;
         this.lvl = level.toString();
-        this.json = data;
+        for (String attr : map.keySet()) {
+            Validate.isTrue(
+                attr.matches("[a-zA-Z]+"),
+                "invalid attribute name '%s'", attr
+            );
+        }
+        this.attrs = new ArrayMap<String, String>(map);
         this.text = markdown;
     }
 
@@ -131,7 +160,7 @@ final class MongoTag implements Tag {
         return new BasicDBObject()
             .append(MongoTag.ATTR_LABEL, this.label())
             .append(MongoTag.ATTR_LEVEL, this.level().toString())
-            .append(MongoTag.ATTR_DATA, this.json)
+            .append(MongoTag.ATTR_ATTRIBUTES, this.attrs)
             .append(MongoTag.ATTR_MARKDOWN, this.markdown());
     }
 
@@ -155,14 +184,11 @@ final class MongoTag implements Tag {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (6 lines)
      */
     @Override
-    @NotNull(message = "data is never NULL")
-    @Loggable(value = Loggable.DEBUG, ignore = NormJson.JsonException.class)
-    public JsonObject data(final NormJson schema)
-        throws NormJson.JsonException {
-        return schema.readObject(this.json);
+    @NotNull(message = "map of attributes is never NULL")
+    public Map<String, String> attributes() {
+        return this.attrs;
     }
 
     /**

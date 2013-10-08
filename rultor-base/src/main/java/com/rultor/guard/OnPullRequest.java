@@ -29,29 +29,21 @@
  */
 package com.rultor.guard;
 
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.ci.Build;
+import com.jcabi.immutable.ArrayMap;
+import com.jcabi.log.Logger;
 import com.rultor.shell.Batch;
-import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.Step;
-import com.rultor.snapshot.XemblyLine;
+import com.rultor.snapshot.TagLine;
 import com.rultor.spi.Instance;
 import com.rultor.stateful.ConcurrentNotepad;
-import com.rultor.tools.Exceptions;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.logging.Level;
-import javax.json.Json;
-import javax.json.stream.JsonGenerator;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.xembly.Directives;
-import org.xembly.ImpossibleModificationException;
+import org.apache.commons.io.output.NullOutputStream;
 
 /**
  * On pull request.
@@ -105,7 +97,7 @@ public final class OnPullRequest implements Instance {
         final Iterator<MergeRequest> iterator = this.requests.iterator();
         while (iterator.hasNext()) {
             final MergeRequest request = iterator.next();
-            if (!this.busy.addIfAbsent(request.name())) {
+            if (!this.busy.addIf(request.name())) {
                 continue;
             }
             try {
@@ -123,81 +115,51 @@ public final class OnPullRequest implements Instance {
      * @throws IOException If IO problem
      */
     @Step(
-        before = "building merge request ${args[0].name}",
+        before = "merging request ${args[0].name}",
         // @checkstyle LineLength (1 line)
-        value = "merge request ${args[0].name} #if($result)built successfully#{else}failed to build#end"
+        value = "merge request ${args[0].name} #if($result)succeeded#{else}failed#end"
     )
     private boolean merge(final MergeRequest request) throws IOException {
-        final String tag = "on-pull-request";
         request.started();
-        final Snapshot snapshot = new Build(tag, this.batch).exec(
-            new ImmutableMap.Builder<String, Object>()
-                .putAll(request.params())
-                .build()
+        final long start = System.currentTimeMillis();
+        final int code = this.batch.exec(
+            new ArrayMap<String, String>()
+                .with("request", request.name())
+                // @checkstyle MultipleStringLiterals (4 lines)
+                .with("srcSCM", request.source().scm().uri().toString())
+                .with("srcBranch", request.source().name())
+                .with("destSCM", request.destination().scm().uri().toString())
+                .with("destBranch", request.destination().name()),
+            new NullOutputStream()
         );
-        final boolean failure = this.failure(snapshot, tag);
-        if (failure) {
-            request.reject(snapshot);
+        final boolean success = code == 0;
+        final long millis = System.currentTimeMillis() - start;
+        new TagLine("on-pull-request")
+            .fine(success)
+            .attr("code", Integer.toString(code))
+            .attr("duration", Long.toString(millis))
+            .attr("name", request.name())
+            .attr("srcSCM", request.source().scm().uri().toString())
+            .attr("srcBranch", request.source().name())
+            .attr("destSCM", request.destination().scm().uri().toString())
+            .attr("destBranch", request.destination().name())
+            .markdown(
+                Logger.format(
+                    "merge request %s from `%s` to `%s` %s in %[ms]s",
+                    request.name(), request.source().name(),
+                    request.destination().name(),
+                    // @checkstyle AvoidInlineConditionals (1 line)
+                    success ? "succeeded" : "failed",
+                    millis
+                )
+            )
+            .log();
+        if (success) {
+            request.accept();
         } else {
-            request.accept(snapshot);
+            request.reject();
         }
-        this.tag(request, failure);
-        return !failure;
-    }
-
-    /**
-     * Was it a failed merge?
-     * @param snapshot Snapshot received
-     * @param tag Tag to look for
-     * @return TRUE if it was a failure
-     */
-    private boolean failure(final Snapshot snapshot, final String tag) {
-        boolean failure = true;
-        try {
-            failure = snapshot.xml()
-                .nodes(String.format("//tag[label='%s' and level='FINE']", tag))
-                .isEmpty();
-        } catch (ImpossibleModificationException ex) {
-            Exceptions.warn(this, ex);
-        }
-        return failure;
-    }
-
-    /**
-     * Log a tag.
-     * @param request Request
-     * @param failure TRUE if failed
-     * @throws IOException If fails
-     */
-    private void tag(final MergeRequest request, final boolean failure)
-        throws IOException {
-        final StringWriter data = new StringWriter();
-        final JsonGenerator json = Json.createGenerator(data)
-            .writeStartObject()
-            .write("request", request.name())
-            .writeStartObject("params");
-        for (Map.Entry<String, Object> entry : request.params().entrySet()) {
-            json.write(entry.getKey(), entry.getValue().toString());
-        }
-        json.writeEnd()
-            .write("failure", Boolean.toString(failure))
-            .writeEnd()
-            .close();
-        final StringBuilder desc = new StringBuilder();
-        desc.append("merge request ").append(request.name());
-        if (failure) {
-            desc.append(" failed");
-        } else {
-            desc.append(" succeeded");
-        }
-        new XemblyLine(
-            new Directives()
-                .xpath("/snapshot").strict(1).addIfAbsent("tags")
-                .add("tag").add("label").set("merge").up()
-                .add("level").set(Level.INFO.toString()).up()
-                .add("data").set(data.toString()).up()
-                .add("markdown").set(desc.toString())
-        ).log();
+        return success;
     }
 
 }

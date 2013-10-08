@@ -60,7 +60,11 @@ import lombok.EqualsAndHashCode;
  */
 @Immutable
 @Loggable(Loggable.DEBUG)
-@ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.SECONDS)
+@ScheduleWithFixedDelay(
+    delay = 1, unit = TimeUnit.SECONDS,
+    await = 1, awaitUnit = TimeUnit.MINUTES,
+    shutdownAttempts = Tv.FIVE
+)
 @EqualsAndHashCode(of = { "users", "queue", "client" })
 @SuppressWarnings("PMD.DoNotUseThreads")
 public final class SQSQuartz implements Runnable, Closeable {

@@ -29,29 +29,25 @@
  */
 package com.rultor.guard.github;
 
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
-import com.jcabi.immutable.ArrayMap;
 import com.rultor.guard.MergeRequest;
-import com.rultor.snapshot.Snapshot;
+import com.rultor.scm.Branch;
+import com.rultor.snapshot.Radar;
 import com.rultor.snapshot.Step;
-import com.rultor.snapshot.XSLT;
+import com.rultor.snapshot.TagLine;
 import com.rultor.tools.Exceptions;
-import com.rultor.tools.Time;
-import com.rultor.tools.Vext;
 import java.io.IOException;
-import java.util.Map;
-import javax.xml.transform.TransformerException;
+import java.net.URI;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.eclipse.egit.github.core.PullRequest;
+import org.eclipse.egit.github.core.PullRequestMarker;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.PullRequestService;
-import org.xembly.ImpossibleModificationException;
 
 /**
  * Github pull request.
@@ -63,7 +59,7 @@ import org.xembly.ImpossibleModificationException;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "github", "repository", "parameters" })
+@EqualsAndHashCode(of = { "github", "repository", "issue", "src", "dest" })
 @Loggable(Loggable.DEBUG)
 final class GhRequest implements MergeRequest {
 
@@ -78,14 +74,19 @@ final class GhRequest implements MergeRequest {
     private final transient Github.Repo repository;
 
     /**
-     * Map of parameters.
-     */
-    private final transient ArrayMap<String, Object> parameters;
-
-    /**
      * Pull request issue ID.
      */
     private final transient int issue;
+
+    /**
+     * Source branch.
+     */
+    private final transient Branch src;
+
+    /**
+     * Destination branch.
+     */
+    private final transient Branch dest;
 
     /**
      * Public ctor.
@@ -97,20 +98,24 @@ final class GhRequest implements MergeRequest {
         final PullRequest req) {
         this.github = ghub;
         this.repository = rep;
-        this.parameters = new ArrayMap<String, Object>(
-            new ImmutableMap.Builder<String, Object>()
-                .put("issue", req.getNumber())
-                .put("baseRepo", req.getBase().getRepo().getName())
-                .put("baseBranch", req.getBase().getRef())
-                .put("baseUser", req.getBase().getUser().getLogin())
-                .put("headRepo", req.getHead().getRepo().getName())
-                .put("headBranch", req.getHead().getRef())
-                .put("headUser", req.getHead().getUser().getLogin())
-                .put("date", new Time(req.getCreatedAt()))
-                .put("title", req.getTitle())
-                .build()
+        this.src = new Branch.Passive(
+            GhRequest.uri(req.getHead()),
+            req.getHead().getRef()
+        );
+        this.dest = new Branch.Passive(
+            GhRequest.uri(req.getBase()),
+            req.getBase().getRef()
         );
         this.issue = req.getNumber();
+        new TagLine("github")
+            .attr("issue", Integer.toString(req.getNumber()))
+            .attr("baseRef", req.getBase().getRef())
+            .attr("baseRepo", req.getBase().getRepo().getName())
+            .attr("baseUser", req.getBase().getUser().getLogin())
+            .attr("headRef", req.getHead().getRef())
+            .attr("headRepo", req.getHead().getRepo().getName())
+            .attr("headUser", req.getHead().getUser().getLogin())
+            .log();
     }
 
     /**
@@ -125,32 +130,15 @@ final class GhRequest implements MergeRequest {
      * {@inheritDoc}
      */
     @Override
-    public Map<String, Object> params() {
-        return this.parameters;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Step("notified GitHub pull request that merging started")
+    @Step("notified GitHub pull request ${this.issue} that merging started")
     public void started() throws IOException {
         final GitHubClient client = this.github.client();
         final IssueService issues = new IssueService(client);
         issues.createComment(
             this.repository, this.issue,
-            new Vext(
-                new StringBuilder()
-                    .append("Hey, let me try to merge your branch")
-                    .append(" `${headBranch}` from `${headUser}/${headRepo}`")
-                    .append(" into branch `${baseBranch}` of")
-                    .append(" `${baseUser}/${baseRepo}`. It there won't be")
-                    .append(" any merge conflicts, I'll try to build it.")
-                    .append(" If it builds without errors,")
-                    .append(" I will merge this pull request.")
-                    .append(" I will let you know in any case, in a few...")
-                    .toString()
-            ).print(this.parameters)
+            Radar.render(
+                this.getClass().getResourceAsStream("github-started.xsl")
+            )
         );
     }
 
@@ -158,15 +146,14 @@ final class GhRequest implements MergeRequest {
      * {@inheritDoc}
      */
     @Override
-    @Step("accepted GitHub pull request #${this.issue}")
-    public void accept(final Snapshot snapshot) throws IOException {
+    @Step("accepted GitHub pull request ${this.issue}")
+    public void accept() throws IOException {
         final GitHubClient client = this.github.client();
         final IssueService issues = new IssueService(client);
         issues.createComment(
             this.repository, this.issue,
-            String.format(
-                "Accepted, ready to merge.\n\n%s",
-                this.summary(snapshot)
+            Radar.render(
+                this.getClass().getResourceAsStream("github-accept.xsl")
             )
         );
         try {
@@ -187,15 +174,45 @@ final class GhRequest implements MergeRequest {
      * {@inheritDoc}
      */
     @Override
-    @Step("rejected GitHub pull request #${this.issue}")
-    public void reject(final Snapshot snapshot) throws IOException {
+    @Step("rejected GitHub pull request ${this.issue}")
+    public void reject() throws IOException {
         final GitHubClient client = this.github.client();
         final IssueService svc = new IssueService(client);
         svc.createComment(
             this.repository, this.issue,
+            Radar.render(
+                this.getClass().getResourceAsStream("github-reject.xsl")
+            )
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Branch source() {
+        return this.src;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Branch destination() {
+        return this.dest;
+    }
+
+    /**
+     * Make an URI of Git repo.
+     * @param head Marker
+     * @return URI of the repo
+     */
+    private static URI uri(final PullRequestMarker head) {
+        return URI.create(
             String.format(
-                "**Rejected**, not ready to merge.\n\n%s",
-                this.summary(snapshot)
+                "ssh://git@github.com/%s/%s.git",
+                head.getUser().getLogin(),
+                head.getRepo().getName()
             )
         );
     }
@@ -217,26 +234,6 @@ final class GhRequest implements MergeRequest {
                 issues.getIssue(this.repository, this.issue).getTitle()
             )
         );
-    }
-
-    /**
-     * Make summary out of snapshot.
-     * @param snapshot Snapshot XML
-     * @return Summary
-     */
-    private String summary(final Snapshot snapshot) {
-        String summary;
-        try {
-            summary = new XSLT(
-                snapshot,
-                this.getClass().getResourceAsStream("summary.xsl")
-            ).xml();
-        } catch (TransformerException ex) {
-            summary = Exceptions.stacktrace(ex);
-        } catch (ImpossibleModificationException ex) {
-            summary = Exceptions.stacktrace(ex);
-        }
-        return summary;
     }
 
 }

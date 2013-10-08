@@ -35,6 +35,7 @@ import com.amazonaws.services.simpleemail.model.Content;
 import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.amazonaws.services.simpleemail.model.SendEmailResult;
+import com.rexsl.test.XhtmlMatchers;
 import com.rultor.aws.SESClient;
 import java.util.Arrays;
 import org.hamcrest.Matchers;
@@ -60,12 +61,16 @@ public final class SESTest {
         Mockito.doReturn(aws).when(client).get();
         Mockito.doReturn(new SendEmailResult()).when(aws)
             .sendEmail(Mockito.any(SendEmailRequest.class));
+        final String subject = "hello, друг!";
         final Billboard board = new SES(
-            "sender@rultor.com",
-            Arrays.asList("recepient@rultor.com"),
+            new Bill.Simple(
+                subject,
+                "sender@rultor.com",
+                Arrays.asList("recepient@rultor.com")
+            ),
             client
         );
-        board.announce("hello, друг!\nfirst\nsecond");
+        board.announce(true);
         Mockito.verify(aws).sendEmail(
             Mockito.argThat(
                 Matchers.<SendEmailRequest>hasProperty(
@@ -76,7 +81,7 @@ public final class SESTest {
                             Matchers.<Content>hasProperty(
                                 // @checkstyle MultipleStringLiterals (1 line)
                                 "data",
-                                Matchers.equalTo("hello, друг!")
+                                Matchers.equalTo(subject)
                             )
                         ),
                         Matchers.<Message>hasProperty(
@@ -85,7 +90,7 @@ public final class SESTest {
                                 "text",
                                 Matchers.<Content>hasProperty(
                                     "data",
-                                    Matchers.equalTo("first\nsecond")
+                                    XhtmlMatchers.hasXPath("/snapshot")
                                 )
                             )
                         )

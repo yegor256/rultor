@@ -32,6 +32,7 @@ package com.rultor.shell.bash;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
+import com.jcabi.urn.URN;
 import com.rultor.shell.Batch;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
@@ -103,17 +104,15 @@ public final class Bash implements Batch {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public int exec(
-        @NotNull(message = "args can't be NULL") final Map<String, Object> args,
+        @NotNull(message = "args can't be NULL") final Map<String, String> args,
         @NotNull(message = "stream can't be NULL") final OutputStream output)
         throws IOException {
-        final Shell shell = this.shells.acquire();
-        final String command = this.script.print(args);
-        final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
-        final int code;
+        final Shell shell = this.badged(this.shells.acquire(), args);
         try {
-            code = shell.exec(
-                command,
-                IOUtils.toInputStream(""),
+            final String command = this.script.print(args);
+            final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
+            final int code = shell.exec(
+                command, IOUtils.toInputStream(""),
                 new TeeOutputStream(output, Logger.stream(Level.INFO, this)),
                 new TeeOutputStream(
                     output,
@@ -123,24 +122,41 @@ public final class Bash implements Batch {
                     )
                 )
             );
+            if (code != 0) {
+                new XemblyLine(
+                    new Directives()
+                        .xpath("/snapshot")
+                        .addIf("steps")
+                        .add("step").add("summary")
+                        .set(String.format("bash error code #%d", code)).up()
+                        .add("finish").set(new Time().toString()).up()
+                        .add("level").set(Level.SEVERE.toString()).up()
+                        .add("exception")
+                        .add("cause").set(Integer.toString(code)).up()
+                        .add("stacktrace")
+                        .set(stderr.toString(CharEncoding.UTF_8))
+                ).log();
+            }
+            return code;
         } finally {
             shell.close();
         }
-        if (code != 0) {
-            new XemblyLine(
-                new Directives()
-                    .xpath("/snapshot")
-                    .addIfAbsent("steps")
-                    .add("step").add("summary")
-                    .set(String.format("bash error code #%d", code)).up()
-                    .add("finish").set(new Time().toString()).up()
-                    .add("level").set(Level.SEVERE.toString()).up()
-                    .add("exception")
-                    .add("cause").set(Integer.toString(code)).up()
-                    .add("stacktrace").set(stderr.toString(CharEncoding.UTF_8))
-            ).log();
+    }
+
+    /**
+     * Badge a shell.
+     * @param shell The shell
+     * @param args Args to convert into badges
+     * @return The same shell, but with badges
+     */
+    private Shell badged(final Shell shell, final Map<String, String> args) {
+        for (Map.Entry<String, String> entry : args.entrySet()) {
+            if (!URN.isValid(entry.getKey())) {
+                continue;
+            }
+            shell.badge(entry.getKey(), entry.getValue().toString());
         }
-        return code;
+        return shell;
     }
 
 }
