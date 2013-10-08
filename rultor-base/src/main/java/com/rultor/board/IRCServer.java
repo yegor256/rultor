@@ -159,12 +159,8 @@ public final class IRCServer implements IRCServerInterface {
                 @Override
                 public void onJoin(final String chan, final IRCUser user) {
                     Logger.info(
-                        this,
-                        String.format(
-                            "%s%s joins",
-                            IRCServer.formatChannelPrompt(chan),
-                            user.getNick()
-                        )
+                        this, "%s%s joins",
+                        IRCServer.formatChannelPrompt(chan), user.getNick()
                     );
                     joined.triggerHappenned();
                 }
@@ -214,7 +210,7 @@ public final class IRCServer implements IRCServerInterface {
          * @param msg Error message
          */
         public final void onError(final String msg) {
-            Logger.info(this, String.format("Error: %s", msg));
+            Logger.info(this, "Error: %s", msg);
         }
 
         /**
@@ -223,9 +219,7 @@ public final class IRCServer implements IRCServerInterface {
          * @param msg Error message
          */
         public final void onError(final int num, final String msg) {
-            Logger.info(
-                this, String.format("Error #%d: %s", num, msg)
-            );
+            Logger.info(this, "Error #%d: %s", num, msg);
         }
 
         /**
@@ -237,11 +231,8 @@ public final class IRCServer implements IRCServerInterface {
         public final void onInvite(final String chan, final IRCUser user,
             final String nickpass) {
             Logger.info(
-                this, String.format(
-                    "%s%s invites %s",
-                    IRCServer.formatChannelPrompt(chan),
-                    user.getNick(), nickpass
-                )
+                this, "%s%s invites %s", IRCServer.formatChannelPrompt(chan),
+                user.getNick(), nickpass
             );
         }
 
@@ -264,11 +255,8 @@ public final class IRCServer implements IRCServerInterface {
             final String nickpass,
             final String msg) {
             Logger.info(
-                this, String.format(
-                    "%s%s kicks %s",
-                    IRCServer.formatChannelPrompt(chan),
-                    user.getNick(), nickpass
-                )
+                this, "%s%s kicks %s", IRCServer.formatChannelPrompt(chan),
+                user.getNick(), nickpass
             );
         }
 
@@ -281,10 +269,8 @@ public final class IRCServer implements IRCServerInterface {
         public final void onMode(final IRCUser user, final String nickpass,
             final String mode) {
             Logger.info(
-                this, String.format(
-                    "Mode: %s sets modes %s %s",
-                    user.getNick(), mode, nickpass
-                )
+                this, "Mode: %s sets modes %s %s", user.getNick(), mode,
+                nickpass
             );
         }
 
@@ -297,11 +283,9 @@ public final class IRCServer implements IRCServerInterface {
         public final void onMode(final String chan, final IRCUser user,
             final IRCModeParser modeparser) {
             Logger.info(
-                this, String.format(
-                    "%s%s sets mode: %s",
-                    IRCServer.formatChannelPrompt(chan),
-                    user.getNick(), modeparser.getLine()
-                )
+                this, "%s%s sets mode: %s",
+                IRCServer.formatChannelPrompt(chan), user.getNick(),
+                modeparser.getLine()
             );
         }
 
@@ -312,10 +296,7 @@ public final class IRCServer implements IRCServerInterface {
          */
         public final void onNick(final IRCUser user, final String nicknew) {
             Logger.info(
-                this, String.format(
-                    "Nick: %s is now known as %s",
-                    user.getNick(), nicknew
-                )
+                this, "Nick: %s is now known as %s", user.getNick(), nicknew
             );
         }
 
@@ -328,11 +309,8 @@ public final class IRCServer implements IRCServerInterface {
         public final void onNotice(final String target, final IRCUser user,
             final String msg) {
             Logger.info(
-                this, String.format(
-                    "%s%s (notice): %s",
-                    IRCServer.formatChannelPrompt(target),
-                    user.getNick(), msg
-                )
+                this,  "%s%s (notice): %s",
+                IRCServer.formatChannelPrompt(target), user.getNick(), msg
             );
         }
 
@@ -345,10 +323,8 @@ public final class IRCServer implements IRCServerInterface {
         public final void onPart(final String chan, final IRCUser user,
             final String msg) {
             Logger.info(
-                this, String.format(
-                    "%s%s parts",
-                    IRCServer.formatChannelPrompt(chan), user.getNick()
-                )
+                this, "%s%s parts", IRCServer.formatChannelPrompt(chan),
+                user.getNick()
             );
         }
 
@@ -361,11 +337,8 @@ public final class IRCServer implements IRCServerInterface {
         public final void onPrivmsg(final String chan, final IRCUser user,
             final String msg) {
             Logger.info(
-                this, String.format(
-                    "%s%s: %s",
-                    IRCServer.formatChannelPrompt(chan),
-                    user.getNick(), msg
-                )
+                this, "%s%s: %s", IRCServer.formatChannelPrompt(chan),
+                user.getNick(), msg
             );
         }
 
@@ -375,7 +348,7 @@ public final class IRCServer implements IRCServerInterface {
          * @param msg Message
          */
         public final void onQuit(final IRCUser user, final String msg) {
-            Logger.info(this, String.format("Quit: %s", user.getNick()));
+            Logger.info(this, "Quit: %s", user.getNick());
         }
 
         /**
@@ -386,9 +359,7 @@ public final class IRCServer implements IRCServerInterface {
          */
         public final void onReply(final int num, final String value,
             final String msg) {
-            Logger.info(
-                this, String.format("Reply #%d: %s %s", num, value, msg)
-            );
+            Logger.info(this, "Reply #%d: %s %s", num, value, msg);
         }
 
         /**
@@ -400,11 +371,8 @@ public final class IRCServer implements IRCServerInterface {
         public final void onTopic(final String chan, final IRCUser user,
             final String topic) {
             Logger.info(
-                this, String.format(
-                    "%s%s changes topic into: %s",
-                    IRCServer.formatChannelPrompt(chan),
-                    user.getNick(), topic
-                )
+                this, "%s%s changes topic into: %s",
+                IRCServer.formatChannelPrompt(chan), user.getNick(), topic
             );
         }
 
@@ -428,10 +396,7 @@ public final class IRCServer implements IRCServerInterface {
         public final void unknown(final String parta, final String partb,
             final String partc, final String partd) {
             Logger.info(
-                this, String.format(
-                    "UNKNOWN: %s %s %s %s",
-                    parta, partb, partc, partd
-                )
+                this, "UNKNOWN: %s %s %s %s", parta, partb, partc, partd
             );
         }
     }

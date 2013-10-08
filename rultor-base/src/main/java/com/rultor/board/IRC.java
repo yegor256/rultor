@@ -83,7 +83,7 @@ public final class IRC implements Billboard {
     private final transient boolean isSSL;
 
     /**
-     * Creates connection and stores basic connection information.
+     .* Creates connection and stores basic connection information.
      * Like host, port, channel.
      */
     private final transient IRCServerInterface server;
@@ -148,13 +148,10 @@ public final class IRC implements Billboard {
         }
         final String formatted =
             IRCServer.formatChannelName(this.channel);
-        conn.doPrivmsg(formatted, body);
+        conn.doPrivmsg(formatted, String.valueOf(success));
         Logger.info(
-            this,
-            String.format(
-                "%s%s",
-                IRCServer.formatChannelPrompt(formatted), body
-            )
+            this, "%s%s",
+            IRCServer.formatChannelPrompt(formatted), String.valueOf(success)
         );
     }
 }
