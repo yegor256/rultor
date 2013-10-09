@@ -54,7 +54,7 @@ public final class S3CmdPutTest {
         final S3CmdPut cmd = new S3CmdPut("", "", "", "", "", "");
         cmd.exec(
             new ShellMocker.ProvisionedBash(
-                new ShellMocker.Bash(dir), "PATH=$PATH:.\nchmod +x s3cmd\n %s"
+                new ShellMocker.Bash(dir), "PATH=$PATH:.; chmod +x s3cmd; %s"
             )
         );
     }
