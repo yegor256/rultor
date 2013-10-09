@@ -47,7 +47,8 @@ public final class XemblyReportingWalletTest {
     @Test
     public void chargeGetsLoggedInXembly() {
         final Wallet mock = Mockito.mock(Wallet.class);
-        XemblyReportingWallet wallet = new XemblyReportingWallet(mock);
+        final XemblyReportingWallet wallet = new XemblyReportingWallet(mock);
+        // @checkstyle MagicNumber (2 lines)
         wallet.charge("some", new Dollars(123000));
         wallet.charge("more", new Dollars(14300));
     }

@@ -52,8 +52,8 @@
             </xsl:if>
             <xsl:if test="cost">
                 <li>
-                    <i><xsl:comment>cost</xsl:comment></i>
-                    <xsl:value-of select="cost"/>
+                    <xsl:text>$</xsl:text>
+                    <xsl:value-of select="format-number(cost div 100000, '0.00')"/>
                 </li>
             </xsl:if>
             <xsl:if test="start and not(finish)">

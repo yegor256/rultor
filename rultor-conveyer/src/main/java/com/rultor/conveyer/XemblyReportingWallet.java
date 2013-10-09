@@ -29,11 +29,13 @@
  */
 package com.rultor.conveyer;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Wallet;
 import com.rultor.tools.Dollars;
+import lombok.EqualsAndHashCode;
 import org.xembly.Directives;
 
 /**
@@ -43,7 +45,9 @@ import org.xembly.Directives;
  * @version $Id$
  * @since 1.0
  */
+@Immutable
 @Loggable(Loggable.DEBUG)
+@EqualsAndHashCode(of = { "wallet" })
 final class XemblyReportingWallet implements Wallet {
 
     /**
@@ -52,19 +56,11 @@ final class XemblyReportingWallet implements Wallet {
     private final transient Wallet wallet;
 
     /**
-     * Directives to accumulate total charge.
-     */
-    private final transient Directives directives;
-
-    /**
      * Public ctor.
      * @param underlying Underlying wallet to wrap
      */
-    protected XemblyReportingWallet(Wallet underlying) {
+    protected XemblyReportingWallet(final Wallet underlying) {
         this.wallet = underlying;
-        this.directives = new Directives()
-            .xpath("/snapshot")
-            .add("cost").set("0");
     }
 
     /**
@@ -72,10 +68,13 @@ final class XemblyReportingWallet implements Wallet {
      */
     @Override
     public void charge(final String details, final Dollars amount) {
-        new XemblyLine(
-            this.directives.xset(String.format(". + %d", amount.points()))
-        ).log();
         this.wallet.charge(details, amount);
+        new XemblyLine(
+            new Directives()
+                .xpath("/snapshot")
+                .add("cost")
+                .xset(String.format(". + %d", amount.points()))
+        ).log();
     }
 
     /**
