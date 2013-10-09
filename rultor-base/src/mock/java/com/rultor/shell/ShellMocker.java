@@ -106,6 +106,7 @@ public final class ShellMocker {
 
     /**
      * Shell wrapper for additional commands injection.
+     * @todo #210! Move ProvisionedBash to com.rultor.shell.Prefixed
      */
     @Immutable
     public static final class ProvisionedBash implements Shell {
