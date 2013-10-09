@@ -124,7 +124,8 @@ final class Job {
         Instance instance = Instance.EMPTY;
         if (var.arguments().isEmpty()) {
             final Arguments args = new Arguments(
-                this.work, new OwnWallet(this.work, rule)
+                this.work,
+                new XemblyReportingWallet(new OwnWallet(this.work, rule))
             );
             final Object inst = var.instantiate(this.users, args);
             final Object drain = this.var(owner, rule.drain())
