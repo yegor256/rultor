@@ -72,7 +72,7 @@ final class XemblyReportingWallet implements Wallet {
         new XemblyLine(
             new Directives()
                 .xpath("/snapshot")
-                .add("cost")
+                .addIf("cost")
                 .xset(String.format(". + %d", amount.points()))
         ).log();
     }
