@@ -32,6 +32,7 @@ package com.rultor.users;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
@@ -122,6 +123,7 @@ final class AwsRules implements Rules {
      */
     @Override
     @Cacheable.FlushAfter
+    @RetryOnFailure(verbose = false)
     public void create(
         @NotNull(message = "rule name is mandatory when creating new rule")
         @Pattern(
@@ -147,6 +149,7 @@ final class AwsRules implements Rules {
      */
     @Override
     @Cacheable.FlushAfter
+    @RetryOnFailure(verbose = false)
     public void remove(@NotNull(message = "rule name is mandatory")
         final String rule) {
         final Iterator<Item> items = this.region.table(AwsRule.TABLE).frame()
@@ -168,6 +171,7 @@ final class AwsRules implements Rules {
      */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    @RetryOnFailure(verbose = false)
     public Rule get(
         @NotNull(message = "rule name can't be NULL")
         @Pattern(regexp = ".+", message = "rule shouldn't be blank")
@@ -190,6 +194,7 @@ final class AwsRules implements Rules {
      */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    @RetryOnFailure(verbose = false)
     public boolean contains(
         @NotNull(message = "rule name can't be NULL")
         @Pattern(regexp = ".+", message = "rule shouldn't be blank")
@@ -207,6 +212,7 @@ final class AwsRules implements Rules {
      * @return All Rules
      */
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    @RetryOnFailure(verbose = false)
     private Collection<Item> fetch() {
         return this.region.table(AwsRule.TABLE)
             .frame()

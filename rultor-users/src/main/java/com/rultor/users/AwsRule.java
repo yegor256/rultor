@@ -31,6 +31,7 @@ package com.rultor.users;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
 import com.jcabi.urn.URN;
@@ -118,6 +119,7 @@ final class AwsRule implements Rule {
      * {@inheritDoc}
      */
     @Override
+    @RetryOnFailure(verbose = false)
     public void update(
         @NotNull(message = "spec can't be NULL") final Spec spec,
         @NotNull(message = "drain can't be NULL") final Spec drain) {
@@ -134,6 +136,7 @@ final class AwsRule implements Rule {
      */
     @Override
     @NotNull(message = "spec of a rule is never NULL")
+    @RetryOnFailure(verbose = false)
     public Spec spec() {
         Spec spec;
         if (this.item.has(AwsRule.FIELD_SPEC)) {
@@ -148,6 +151,7 @@ final class AwsRule implements Rule {
      * {@inheritDoc}
      */
     @Override
+    @RetryOnFailure(verbose = false)
     public String name() {
         return this.item.get(AwsRule.RANGE_NAME).getS();
     }
@@ -169,6 +173,7 @@ final class AwsRule implements Rule {
      * {@inheritDoc}
      */
     @Override
+    @RetryOnFailure(verbose = false)
     public Spec drain() {
         Spec spec;
         if (this.item.has(AwsRule.FIELD_DRAIN)) {
@@ -183,6 +188,7 @@ final class AwsRule implements Rule {
      * {@inheritDoc}
      */
     @Override
+    @RetryOnFailure(verbose = false)
     public void failure(final String desc) {
         this.item.put(
             new Attributes()
@@ -196,6 +202,7 @@ final class AwsRule implements Rule {
      * {@inheritDoc}
      */
     @Override
+    @RetryOnFailure(verbose = false)
     public String failure() {
         String failure;
         if (this.item.has(AwsRule.FIELD_FAILURE)) {
@@ -213,6 +220,7 @@ final class AwsRule implements Rule {
      * Owner of it.
      * @return URN of the owner
      */
+    @RetryOnFailure(verbose = false)
     private URN owner() {
         return URN.create(this.item.get(AwsRule.HASH_OWNER).getS());
     }

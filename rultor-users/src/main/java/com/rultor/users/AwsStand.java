@@ -32,6 +32,7 @@ package com.rultor.users;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
@@ -102,6 +103,7 @@ final class AwsStand implements Stand {
      */
     @Override
     @Cacheable.FlushAfter
+    @RetryOnFailure(verbose = false)
     public void update(
         @NotNull(message = "ACL spec can't be NULL") final Spec spec,
         @NotNull(message = "widgets spec can't be NULL") final Spec widgets) {
@@ -118,6 +120,7 @@ final class AwsStand implements Stand {
     @Override
     @NotNull(message = "ACL of a stand is never NULL")
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    @RetryOnFailure(verbose = false)
     public Spec acl() {
         Spec spec;
         if (this.item.has(AwsStand.FIELD_ACL)) {
@@ -134,6 +137,7 @@ final class AwsStand implements Stand {
     @Override
     @NotNull(message = "widgets of a stand is never NULL")
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    @RetryOnFailure(verbose = false)
     public Spec widgets() {
         Spec spec;
         if (this.item.has(AwsStand.FIELD_WIDGETS)) {
@@ -151,6 +155,7 @@ final class AwsStand implements Stand {
      */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    @RetryOnFailure(verbose = false)
     public String name() {
         return this.item.get(AwsStand.RANGE_STAND).getS();
     }
@@ -160,6 +165,7 @@ final class AwsStand implements Stand {
      */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    @RetryOnFailure(verbose = false)
     public URN owner() {
         return URN.create(this.item.get(AwsStand.HASH_OWNER).getS());
     }

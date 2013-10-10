@@ -35,6 +35,7 @@ import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
@@ -103,6 +104,7 @@ public final class AwsUsers implements Users {
     @Override
     @NotNull(message = "list of users is never NULL")
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    @RetryOnFailure(verbose = false)
     public Iterator<User> iterator() {
         final Collection<User> users = new HashSet<User>(0);
         for (Item item : this.region.table(AwsRule.TABLE).frame()) {
@@ -131,6 +133,7 @@ public final class AwsUsers implements Users {
      */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    @RetryOnFailure(verbose = false)
     public Stand stand(final String stand) {
         final Collection<Item> items = this.region.table(AwsStand.TABLE)
             .frame()

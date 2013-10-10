@@ -32,6 +32,7 @@ package com.rultor.users;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
@@ -111,6 +112,7 @@ final class AwsStands implements Stands {
      */
     @Override
     @Cacheable.FlushAfter
+    @RetryOnFailure(verbose = false)
     public void create(
         @NotNull(message = "stand name is mandatory when creating")
         @Pattern(
@@ -131,6 +133,7 @@ final class AwsStands implements Stands {
      */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    @RetryOnFailure(verbose = false)
     public boolean contains(
         @NotNull @Pattern(regexp = ".+") final String name) {
         return !this.region.table(AwsStand.TABLE).frame()
@@ -143,6 +146,7 @@ final class AwsStands implements Stands {
      * {@inheritDoc}
      */
     @Override
+    @RetryOnFailure(verbose = false)
     public Stand get(@NotNull @Pattern(regexp = ".+")final String name) {
         final Collection<Item> items = this.region.table(AwsStand.TABLE)
             .frame()
@@ -170,6 +174,7 @@ final class AwsStands implements Stands {
      * @return All stands
      */
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    @RetryOnFailure(verbose = false)
     private Collection<Item> fetch() {
         return this.region.table(AwsStand.TABLE)
             .frame()
