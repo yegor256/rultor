@@ -50,6 +50,12 @@
                     <xsl:value-of select="lines"/>
                 </li>
             </xsl:if>
+            <xsl:if test="cost">
+                <li>
+                    <xsl:text>$</xsl:text>
+                    <xsl:value-of select="format-number(cost div 100000, '0.00')"/>
+                </li>
+            </xsl:if>
             <xsl:if test="start and not(finish)">
                 <li>
                     <i class="icon-flag-alt"><xsl:comment>start</xsl:comment></i>
