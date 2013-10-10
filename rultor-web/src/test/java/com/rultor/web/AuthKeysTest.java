@@ -33,6 +33,7 @@ import com.rexsl.page.auth.Identity;
 import javax.validation.ConstraintViolationException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -44,38 +45,35 @@ public class AuthKeysTest {
 
     /**
      * Validate weather user is null or not.
+     * @throws Exception If test fails
      */
     @Test(expected = ConstraintViolationException.class)
-    public final void validateNullUser() {
+    public final void validateNullUser() throws Exception {
         final AuthKeys authKeys = new AuthKeys();
-        final String user = null;
-        final String password = "password";
-        authKeys.authenticate(user, password);
+        authKeys.authenticate(null, "password");
     }
 
     /**
      * It should be throw exception if password is given null.
+     * @throws Exception If test fails
      */
     @Test(expected = ConstraintViolationException.class)
-    public final void validateNullPassword() {
+    public final void validateNullPassword() throws Exception {
         final AuthKeys authKeys = new AuthKeys();
-        final String user = "urn:git:soni";
-        final String password = null;
-        authKeys.authenticate(user, password);
+        authKeys.authenticate("urn:git:soni", null);
     }
 
     /**
-     * Giving proper data to authenticate.
+     * AuthKeys should authenticate URN.
+     * @throws Exception If test fails
      */
     @Test
-    public final void authenticateURN() {
+    public final void authenticateURN() throws Exception {
         final AuthKeys authKeys = new AuthKeys();
-        final String user = "urn:git:rultor";
-        final String password = "test";
         MatcherAssert.assertThat(
-            authKeys.authenticate(user, password)
+            authKeys.authenticate("urn:git:rultor", "test")
                 .name(),
-                Matchers.equalTo(Identity.ANONYMOUS.name())
+            Matchers.equalTo(Identity.ANONYMOUS.name())
         );
     }
 
@@ -83,16 +81,16 @@ public class AuthKeysTest {
      * Execute method with Empty String.
      * @TODO #123?,Ideally target class AuthKeys should also have
      *  validation of empty string.
+     * @throws Exception If test fails
      */
+    @Ignore
     @Test(expected = IllegalArgumentException.class)
-    public final void authenticateURNWithEmptyUser() {
+    public final void authenticateURNWithEmptyUser() throws Exception {
         final AuthKeys authKeys = new AuthKeys();
-        final String user = "";
-        final String password = "";
         MatcherAssert.assertThat(
-            authKeys.authenticate(user, password)
+            authKeys.authenticate("", "")
                 .name(),
-                Matchers.equalTo(Identity.ANONYMOUS.name())
+            Matchers.equalTo(Identity.ANONYMOUS.name())
         );
     }
 
