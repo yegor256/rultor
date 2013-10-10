@@ -71,25 +71,22 @@ public class AuthKeysTest {
     public final void authenticateURN() throws Exception {
         final AuthKeys authKeys = new AuthKeys();
         MatcherAssert.assertThat(
-            authKeys.authenticate("urn:git:rultor", "test")
-                .name(),
+            authKeys.authenticate("urn:git:rultor", "test").name(),
             Matchers.equalTo(Identity.ANONYMOUS.name())
         );
     }
 
     /**
      * Execute method with Empty String.
-     * @TODO #123?,Ideally target class AuthKeys should also have
-     *  validation of empty string.
      * @throws Exception If test fails
+     * @todo #238 AuthKeys should validate empty string.
      */
     @Ignore
     @Test(expected = IllegalArgumentException.class)
     public final void authenticateURNWithEmptyUser() throws Exception {
         final AuthKeys authKeys = new AuthKeys();
         MatcherAssert.assertThat(
-            authKeys.authenticate("", "")
-                .name(),
+            authKeys.authenticate("", "").name(),
             Matchers.equalTo(Identity.ANONYMOUS.name())
         );
     }
