@@ -168,24 +168,6 @@
                         <passwordFile>${project.build.directory}/test-classes/password.txt</passwordFile>
                         <port>${failsafe.pgsql.port}</port>
                     </configuration>
-                    <executions>
-                        <execution>
-                            <id>init-db</id>
-                            <phase>pre-integration-test</phase>
-                            <goals>
-                                <goal>initdb</goal>
-                                <goal>start</goal>
-                                <goal>createdb</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>stop-postgresql</id>
-                            <phase>post-integration-test</phase>
-                            <goals>
-                                <goal>stop</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
@@ -226,20 +208,59 @@
                         <username>${failsafe.pgsql.username}</username>
                         <password>${failsafe.pgsql.password}</password>
                         <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-                        <contexts>any,live</contexts>
                     </configuration>
-                    <executions>
-                        <execution>
-                            <phase>pre-integration-test</phase>
-                            <goals>
-                                <goal>update</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>com.github.adrianboimvaser</groupId>
+                <artifactId>postgresql-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>init-db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>initdb</goal>
+                            <goal>start</goal>
+                            <goal>createdb</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop-postgresql</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>apply-sql-schema</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>update</goal>
+                        </goals>
+                        <configuration>
+                            <contexts>any,live</contexts>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-sql-schema</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>update</goal>
+                        </goals>
+                        <configuration>
+                            <contexts>test</contexts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -314,14 +335,11 @@
                     <plugin>
                         <groupId>org.liquibase</groupId>
                         <artifactId>liquibase-maven-plugin</artifactId>
-                        <version>2.0.1</version>
                         <configuration>
                             <changeLogFile>src/main/resources/liquibase-master.xml</changeLogFile>
-                            <driver>org.postgresql.Driver</driver>
                             <url>${pgsql.jdbc}</url>
                             <username></username>
                             <password>${pgsql.password}</password>
-                            <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
                             <contexts>any,${liquibase.contexts}</contexts>
                         </configuration>
                         <executions>
@@ -401,6 +419,35 @@
                 <postgresql-dist.classifier>osx</postgresql-dist.classifier>
                 <postgresql-dist.type>zip</postgresql-dist.type>
             </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-postgresql-osx</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>com.github.adrianboimvaser</groupId>
+                                            <artifactId>postgresql-dist</artifactId>
+                                            <classifier>${postgresql-dist.classifier}</classifier>
+                                            <version>9.2.4</version>
+                                            <type>${postgresql-dist.type}</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${project.build.directory}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>linux</id>
@@ -417,7 +464,7 @@
                         <executions>
                             <execution>
                                 <id>copy-postgresql-linux</id>
-                                <phase>pre-integration-test</phase>
+                                <phase>prepare-package</phase>
                                 <goals>
                                     <goal>copy</goal>
                                 </goals>
@@ -459,14 +506,6 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <plugin>
-                        <groupId>com.github.adrianboimvaser</groupId>
-                        <artifactId>postgresql-maven-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.liquibase</groupId>
-                        <artifactId>liquibase-maven-plugin</artifactId>
-                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -484,7 +523,7 @@
                         <executions>
                             <execution>
                                 <id>unpack-postgresql-windows</id>
-                                <phase>pre-integration-test</phase>
+                                <phase>prepare-package</phase>
                                 <goals>
                                     <goal>unpack</goal>
                                 </goals>
@@ -503,14 +542,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.github.adrianboimvaser</groupId>
-                        <artifactId>postgresql-maven-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.liquibase</groupId>
-                        <artifactId>liquibase-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>
