@@ -42,7 +42,6 @@ import org.junit.Test;
  * Test case for {@link S3CmdRelics}.
  * @author Evgeniy Nyavro (e.nyavro@gmail.com)
  * @version $Id$
- * @checkstyle MultipleStringLiterals (500 lines)
  */
 public final class S3CmdRelicsTest {
 
