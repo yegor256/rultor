@@ -123,22 +123,18 @@ public final class S3CmdRelics implements Sequel {
      */
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public void exec(final Shell shell) {
+    public void exec(final Shell shell) throws IOException {
         for (Map.Entry<String, String> entry : this.names.entrySet()) {
-            try {
-                new S3CmdPut(
-                    entry.getKey(), entry.getValue(),
-                    this.bucket,
-                    String.format(
-                        "%s%s/%s/%s/%s/", this.prefix,
-                        this.work.owner(), this.work.rule(),
-                        entry.getKey(), this.work.scheduled()
-                    ),
-                    this.key, this.secret
-                ).exec(shell);
-            } catch (IOException ex) {
-                continue;
-            }
+            new S3CmdPut(
+                entry.getKey(), entry.getValue(),
+                this.bucket,
+                String.format(
+                    "%s%s/%s/%s/%s/", this.prefix,
+                    this.work.owner(), this.work.rule(),
+                    entry.getKey(), this.work.scheduled()
+                ),
+                this.key, this.secret
+            ).exec(shell);
         }
     }
 
