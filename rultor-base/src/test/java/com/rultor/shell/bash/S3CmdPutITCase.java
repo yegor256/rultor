@@ -75,7 +75,7 @@ public final class S3CmdPutITCase {
             S3CmdPutITCase.BUCKET,
             "S3CmdPutITCase/",
             S3CmdPutITCase.KEY,
-            S3CmdPutITCase.SECRET
+            S3CmdPutITCase.SECRET, "", ""
         );
         final File dir = Files.createTempDir();
         FileUtils.write(new File(dir, "test/index.html"), "<html/>");

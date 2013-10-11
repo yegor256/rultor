@@ -86,6 +86,16 @@ public final class S3CmdPut implements Sequel {
     private final transient String secret;
 
     /**
+     * Content type.
+     */
+    private final transient String contentType;
+
+    /**
+     * Encoding.
+     */
+    private final transient String encoding;
+
+    /**
      * Public ctor.
      * @param label Name of the product to discover
      * @param pth Path to use
@@ -93,6 +103,8 @@ public final class S3CmdPut implements Sequel {
      * @param pfx Prefix in S3 bucket
      * @param akey S3 authorization key
      * @param scrt S3 authorization secret
+     * @param type Content type
+     * @param enc Encoding
      * @checkstyle ParameterNumber (8 lines)
      */
     public S3CmdPut(
@@ -101,13 +113,17 @@ public final class S3CmdPut implements Sequel {
         @NotNull(message = "bucket can't be NULL") final String bkt,
         @NotNull(message = "prefix can't be NULL") final String pfx,
         @NotNull(message = "key can't be NULL") final String akey,
-        @NotNull(message = "secret can't be NULL") final String scrt) {
+        @NotNull(message = "secret can't be NULL") final String scrt,
+        @NotNull(message = "content type can't be NULL") final String type,
+        @NotNull(message = "encoding can't be NULL") final String enc) {
         this.name = label;
         this.bucket = bkt;
         this.path = pth;
         this.prefix = pfx;
         this.key = akey;
         this.secret = scrt;
+        this.contentType = type;
+        this.encoding = enc;
     }
 
     /**
@@ -147,6 +163,8 @@ public final class S3CmdPut implements Sequel {
                 .append("[default]\n")
                 .append("access_key=").append(this.key).append('\n')
                 .append("secret_key=").append(this.secret).append('\n')
+                .append("encoding=").append(this.encoding).append('\n')
+                .append("mime-type=").append(this.contentType).append('\n')
                 .toString()
         ).split("\n").length;
         if (mask.contains("*")) {

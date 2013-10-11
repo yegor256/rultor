@@ -133,7 +133,7 @@ public final class S3CmdRelics implements Sequel {
                     this.work.owner(), this.work.rule(),
                     entry.getKey(), this.work.scheduled()
                 ),
-                this.key, this.secret
+                this.key, this.secret, "", ""
             ).exec(shell);
         }
     }
