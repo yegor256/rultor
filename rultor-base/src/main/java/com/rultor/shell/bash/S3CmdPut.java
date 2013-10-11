@@ -112,7 +112,7 @@ public final class S3CmdPut implements Sequel {
         @NotNull(message = "prefix can't be NULL") final String pfx,
         @NotNull(message = "key can't be NULL") final String akey,
         @NotNull(message = "secret can't be NULL") final String scrt) {
-        this(label, pth, bkt, pfx, akey, scrt, "binary/octet-stream", "UTF-8");
+        this(label, pth, bkt, pfx, akey, scrt, "text/plain", "UTF-8");
     }
 
     /**
