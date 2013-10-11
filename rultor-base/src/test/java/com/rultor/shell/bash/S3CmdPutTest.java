@@ -53,7 +53,7 @@ public final class S3CmdPutTest {
     public void executesUploadCmd() throws Exception {
         final File dir = Files.createTempDir();
         FileUtils.write(new File(dir, "s3cmd"), "echo $@");
-        final S3CmdPut cmd = new S3CmdPut("", "", "", "", "", "", "", "");
+        final S3CmdPut cmd = new S3CmdPut("", "", "", "", "", "");
         cmd.exec(
             new ShellMocker.ProvisionedBash(
                 new ShellMocker.Bash(dir), "PATH=.:$PATH; chmod +x s3cmd; %s"

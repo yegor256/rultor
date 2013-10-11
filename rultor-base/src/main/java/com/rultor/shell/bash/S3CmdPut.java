@@ -103,6 +103,26 @@ public final class S3CmdPut implements Sequel {
      * @param pfx Prefix in S3 bucket
      * @param akey S3 authorization key
      * @param scrt S3 authorization secret
+     * @checkstyle ParameterNumber (8 lines)
+     */
+    public S3CmdPut(
+        @NotNull(message = "name can't be NULL") final String label,
+        @NotNull(message = "path can't be NULL") final String pth,
+        @NotNull(message = "bucket can't be NULL") final String bkt,
+        @NotNull(message = "prefix can't be NULL") final String pfx,
+        @NotNull(message = "key can't be NULL") final String akey,
+        @NotNull(message = "secret can't be NULL") final String scrt) {
+        this(label, pth, bkt, pfx, akey, scrt, "binary/octet-stream", "UTF-8");
+    }
+
+    /**
+     * Public ctor.
+     * @param label Name of the product to discover
+     * @param pth Path to use
+     * @param bkt Bucket name
+     * @param pfx Prefix in S3 bucket
+     * @param akey S3 authorization key
+     * @param scrt S3 authorization secret
      * @param type Content type
      * @param enc Encoding
      * @checkstyle ParameterNumber (8 lines)
