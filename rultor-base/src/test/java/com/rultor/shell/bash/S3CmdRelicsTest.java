@@ -34,7 +34,6 @@ import com.google.common.io.Files;
 import com.rultor.shell.ShellMocker;
 import com.rultor.spi.Coordinates;
 import java.io.File;
-import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
@@ -46,11 +45,11 @@ import org.junit.Test;
 public final class S3CmdRelicsTest {
 
     /**
-     * Fails when file not found.
+     * Skips upload when file not found.
      * @throws Exception If some problem inside
      */
-    @Test (expected = IOException.class)
-    public void failsWhenFileNotFound() throws Exception {
+    @Test
+    public void skipsWhenFileNotFound() throws Exception {
         final File dir = Files.createTempDir();
         FileUtils.write(new File(dir, "s3cmd"), "echo $@");
         new S3CmdRelics(
