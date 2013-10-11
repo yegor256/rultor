@@ -33,6 +33,8 @@ import com.google.common.io.Files;
 import com.rultor.shell.ShellMocker;
 import java.io.File;
 import org.apache.commons.io.FileUtils;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
@@ -59,4 +61,43 @@ public final class S3CmdPutTest {
         );
     }
 
+    /**
+     * Parametrizes s3cmd with type.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void parametrizesCmdWithType() throws Exception {
+        final File dir = Files.createTempDir();
+        FileUtils.write(new File(dir, "s3cmd"), "cat ${1#*=} > s3cmd.config");
+        final S3CmdPut cmd = new S3CmdPut("", "", "", "", "", "", "type", "");
+        cmd.exec(
+            new ShellMocker.ProvisionedBash(
+                new ShellMocker.Bash(dir), "PATH=.:$PATH; chmod +x s3cmd; %s"
+            )
+        );
+        MatcherAssert.assertThat(
+            FileUtils.readFileToString(new File(dir, "s3cmd.config")),
+            Matchers.containsString("mime-type=type")
+        );
+    }
+
+    /**
+     * Parametrizes s3cmd with encoding.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void parametrizesCmdWithEncoding() throws Exception {
+        final File dir = Files.createTempDir();
+        FileUtils.write(new File(dir, "s3cmd"), "cat ${1#*=} > s3cmd.cfg");
+        final S3CmdPut cmd = new S3CmdPut("", "", "", "", "", "", "", "enc");
+        cmd.exec(
+            new ShellMocker.ProvisionedBash(
+                new ShellMocker.Bash(dir), "PATH=.:$PATH; chmod +x s3cmd; %s"
+            )
+        );
+        MatcherAssert.assertThat(
+            FileUtils.readFileToString(new File(dir, "s3cmd.cfg")),
+            Matchers.containsString("encoding=enc")
+        );
+    }
 }
