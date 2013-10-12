@@ -141,7 +141,9 @@ public final class S3CmdPut implements Sequel {
                 .append(" && if [ -e ").append(mask).append(" ];then")
                 .append(" FILES=$(find ").append(mask).append(" -type f)")
                 // @checkstyle LineLength (1 line)
-                .append(" && for f in $FILES; do s3cmd --config=$CONFIG put $f \"$HEAD$f\" > /dev/null && echo $f; done; fi")
+                .append(" && for f in $FILES; do s3cmd --config=$CONFIG put $f \"$HEAD$f\" > /dev/null && echo $f; done;")
+                .append(" else echo No files found by mask ").append(mask)
+                .append("; fi;")
                 .toString(),
             new StringBuilder()
                 .append("[default]\n")
