@@ -370,9 +370,10 @@
                         <goals>
                             <!--
                             @todo #360 After rexsl#723 is fixed add exclude for
-                             batik library (which contains xml api classes).
+                             batik library (which contains xml api classes
+                             reported bug for that https://issues.apache.org/jira/browse/BATIK-1059).
                             -->
-                            <!-- <goal>check</goal> -->
+                            <!-- <goal>check</goal>-->
                             <goal>package</goal>
                         </goals>
                     </execution>

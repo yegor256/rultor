@@ -148,7 +148,7 @@ public final class ButtonRs extends BaseRs {
         );
         final ByteArrayOutputStream png = new ByteArrayOutputStream();
         transcoder.transcode(
-            new TranscoderInput(IOUtils.toInputStream(svg())),
+            new TranscoderInput(IOUtils.toInputStream(this.svg())),
             new TranscoderOutput(png)
         );
         return Response
@@ -174,10 +174,10 @@ public final class ButtonRs extends BaseRs {
                 IOUtils.toInputStream(
                     String.format(
                         IOUtils.toString(
-                            servletContext()
-                                .getResourceAsStream("/xsl/button.xsl")
-                        )
-                        ,
+                            this.getClass().getResourceAsStream(
+                                "/com/rultor/web/button.xsl"
+                            )
+                        ),
                         this.rule
                     )
                 )
