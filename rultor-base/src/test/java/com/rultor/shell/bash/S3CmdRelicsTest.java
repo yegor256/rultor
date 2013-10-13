@@ -29,8 +29,10 @@
  */
 package com.rultor.shell.bash;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
 import com.rultor.shell.ShellMocker;
+import com.rultor.spi.Coordinates;
 import java.io.File;
 import org.apache.commons.io.FileUtils;
 import org.hamcrest.MatcherAssert;
@@ -38,66 +40,36 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link com.rultor.shell.bash.S3CmdPut}.
+ * Test case for {@link S3CmdRelics}.
  * @author Evgeniy Nyavro (e.nyavro@gmail.com)
  * @version $Id$
- * @checkstyle MultipleStringLiterals (500 lines)
  */
-public final class S3CmdPutTest {
+public final class S3CmdRelicsTest {
 
     /**
-     * Puts files to s3.
+     * Skips upload when file not found.
      * @throws Exception If some problem inside
      */
     @Test
-    public void executesUploadCmd() throws Exception {
+    public void skipsWhenFileNotFound() throws Exception {
         final File dir = Files.createTempDir();
         FileUtils.write(new File(dir, "s3cmd"), "echo $@");
-        final S3CmdPut cmd = new S3CmdPut("", "", "", "", "", "");
-        cmd.exec(
+        new S3CmdRelics(
+            new Coordinates.Simple(),
+            new ImmutableMap.Builder<String, String>()
+                .put("log", "./log.txt").build(), "", "", "", ""
+        ).exec(
             new ShellMocker.ProvisionedBash(
-                new ShellMocker.Bash(dir), "PATH=.:$PATH; chmod +x s3cmd; %s"
+                new ShellMocker.Bash(dir),
+                "PATH=.:$PATH; chmod +x s3cmd; (%s) > res.txt"
+            )
+        );
+        MatcherAssert.assertThat(
+            FileUtils.readFileToString(new File(dir, "res.txt")),
+            Matchers.containsString(
+                String.format("No files found by mask %s", "log.txt")
             )
         );
     }
 
-    /**
-     * Parametrizes s3cmd with type.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void parametrizesCmdWithType() throws Exception {
-        final File dir = Files.createTempDir();
-        FileUtils.write(new File(dir, "s3cmd"), "cat ${1#*=} > s3cmd.config");
-        final S3CmdPut cmd = new S3CmdPut("", "", "", "", "", "", "type", "");
-        cmd.exec(
-            new ShellMocker.ProvisionedBash(
-                new ShellMocker.Bash(dir), "PATH=.:$PATH; chmod +x s3cmd; %s"
-            )
-        );
-        MatcherAssert.assertThat(
-            FileUtils.readFileToString(new File(dir, "s3cmd.config")),
-            Matchers.containsString("mime-type=type")
-        );
-    }
-
-    /**
-     * Parametrizes s3cmd with encoding.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void parametrizesCmdWithEncoding() throws Exception {
-        final File dir = Files.createTempDir();
-        FileUtils.write(new File(dir, "s3cmd"), "cat ${1#*=} > s3cmd.cfg");
-        final S3CmdPut cmd = new S3CmdPut("", "", "", "", "", "", "", "enc");
-        cmd.exec(
-            new ShellMocker.ProvisionedBash(
-                new ShellMocker.Bash(dir), "PATH=.:$PATH; chmod +x s3cmd; %s"
-            )
-        );
-        MatcherAssert.assertThat(
-            FileUtils.readFileToString(new File(dir, "s3cmd.cfg")),
-            Matchers.containsString("encoding=enc")
-        );
-    }
 }
