@@ -175,7 +175,7 @@ public final class ButtonRs extends BaseRs {
                     String.format(
                         IOUtils.toString(
                             this.getClass().getResourceAsStream(
-                                "/com/rultor/web/button.xsl"
+                                "button.xsl"
                             )
                         ),
                         this.rule

@@ -85,7 +85,7 @@ public final class ButtonRsTest {
         Mockito.when(context.getResourceAsStream(Mockito.anyString()))
             .thenReturn(
                 this.getClass().getResourceAsStream(
-                    "/com/rultor/web/button.xsl"
+                    "button.xsl"
                 )
             );
         res.setServletContext(context);
