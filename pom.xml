@@ -140,7 +140,7 @@
             <plugin>
                 <groupId>com.rempl.plugins</groupId>
                 <artifactId>rempl-maven-plugin</artifactId>
-                <version>2.0-SNAPSHOT</version>
+                <version>1.2</version>
                 <configuration>
                     <profiles>
                         <profile>
@@ -148,7 +148,7 @@
                             <arguments>
                                 <argument>${basedir}</argument>
                                 <argument>**</argument>
-                                <argument>target/**,**/target/**,.git/**</argument>
+                                <argument>target/**,**/target,.git/**</argument>
                             </arguments>
                         </profile>
                     </profiles>
@@ -164,7 +164,7 @@
                     <dependency>
                         <groupId>com.rempl.profiles</groupId>
                         <artifactId>rempl-pdd-profile</artifactId>
-                        <version>2.0-SNAPSHOT</version>
+                        <version>1.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
