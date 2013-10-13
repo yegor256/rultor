@@ -137,6 +137,37 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>com.rempl.plugins</groupId>
+                <artifactId>rempl-maven-plugin</artifactId>
+                <version>2.0-SNAPSHOT</version>
+                <configuration>
+                    <profiles>
+                        <profile>
+                            <type>com.rempl.pdd.PDDProfile</type>
+                            <arguments>
+                                <argument>${basedir}</argument>
+                                <argument>**</argument>
+                                <argument>target/**,**/target/**,.git/**</argument>
+                            </arguments>
+                        </profile>
+                    </profiles>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>read</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.rempl.profiles</groupId>
+                        <artifactId>rempl-pdd-profile</artifactId>
+                        <version>2.0-SNAPSHOT</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
     <dependencyManagement>
@@ -182,6 +213,17 @@
                             <inherited>false</inherited>
                             <configuration>
                                 <reportPlugins combine.children="append">
+                                    <plugin>
+                                        <groupId>com.rempl.plugins</groupId>
+                                        <artifactId>rempl-maven-plugin</artifactId>
+                                        <configuration>
+                                            <reports>
+                                                <report>
+                                                    <type>com.rempl.pdd.SummaryReport</type>
+                                                </report>
+                                            </reports>
+                                        </configuration>
+                                    </plugin>
                                     <plugin>
                                         <artifactId>maven-changes-plugin</artifactId>
                                         <reportSets>

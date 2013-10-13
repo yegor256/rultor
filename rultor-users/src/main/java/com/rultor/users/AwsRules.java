@@ -104,6 +104,7 @@ final class AwsRules implements Rules {
         final Iterator<Item> items = this.fetch().iterator();
         return new Iterator<Rule>() {
             @Override
+            @RetryOnFailure(verbose = false)
             public boolean hasNext() {
                 return items.hasNext();
             }

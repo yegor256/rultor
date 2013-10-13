@@ -37,6 +37,7 @@ import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Tv;
 import com.rultor.aws.SQSClient;
@@ -137,6 +138,7 @@ public final class SQSQuartz implements Runnable, Closeable {
      * @return Time
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    @RetryOnFailure(verbose = false)
     private Time next() {
         final AmazonSQS aws = this.client.get();
         try {

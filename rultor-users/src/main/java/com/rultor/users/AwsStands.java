@@ -93,6 +93,7 @@ final class AwsStands implements Stands {
         final Iterator<Item> items = this.fetch().iterator();
         return new Iterator<Stand>() {
             @Override
+            @RetryOnFailure(verbose = false)
             public boolean hasNext() {
                 return items.hasNext();
             }
