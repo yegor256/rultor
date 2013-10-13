@@ -38,12 +38,6 @@
     <artifactId>rultor-users</artifactId>
     <packaging>jar</packaging>
     <name>rultor-users</name>
-    <repositories>
-        <repository>
-            <id>jcabi-dynamodb-maven-plugin</id>
-            <url>http://repo.jcabi.com/releases</url>
-        </repository>
-    </repositories>
     <properties>
         <dynamodblocal.tgz>${com.jcabi:DynamoDBLocal:tgz}</dynamodblocal.tgz>
         <failsafe.pgsql.username>postgres</failsafe.pgsql.username>
@@ -292,7 +286,7 @@
             <plugin>
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-dynamodb-maven-plugin</artifactId>
-                <version>0.1.1</version>
+                <version>0.2</version>
                 <configuration>
                     <port>${dynamodblocal.port}</port>
                     <tgz>${dynamodblocal.tgz}</tgz>
