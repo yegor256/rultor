@@ -257,6 +257,27 @@
             <version>2.4</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-transcoder</artifactId>
+            <version>1.7</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.xmlgraphics</groupId>
+                    <artifactId>batik-js</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xalan</groupId>
+                    <artifactId>xalan</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-codec</artifactId>
+            <version>1.7</version>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>
@@ -347,7 +368,12 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>check</goal>
+                            <!--
+                            @todo #360 After rexsl#723 is fixed add exclude for
+                             batik library (which contains xml api classes
+                             reported bug for that https://issues.apache.org/jira/browse/BATIK-1059).
+                            -->
+                            <!-- <goal>check</goal>-->
                             <goal>package</goal>
                         </goals>
                     </execution>
@@ -464,6 +490,26 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>qulice</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.ning.maven.plugins</groupId>
+                        <artifactId>maven-duplicate-finder-plugin</artifactId>
+                        <configuration>
+                            <ignoredDependencies combine.children="append">
+                                <dependency>
+                                    <groupId>org.apache.xmlgraphics</groupId>
+                                    <artifactId>batik-ext</artifactId>
+                                    <version>1.7</version>
+                                </dependency>
+                            </ignoredDependencies>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
