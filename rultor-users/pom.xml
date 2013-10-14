@@ -485,14 +485,14 @@
                         <executions>
                             <execution>
                                 <id>unzip-postgresql-linux</id>
-                                <phase>pre-integration-test</phase>
+                                <phase>prepare-package</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
                                     <executable>tar</executable>
                                     <arguments>
-                                        <argument>-zxvf</argument>
+                                        <argument>-xzf</argument>
                                         <argument>${project.build.directory}/postgresql-dist-9.2.4-${postgresql-dist.classifier}.${postgresql-dist.type}</argument>
                                         <argument>-C</argument>
                                         <argument>${project.build.directory}</argument>
