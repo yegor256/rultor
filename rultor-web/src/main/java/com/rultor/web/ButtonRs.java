@@ -33,17 +33,9 @@ import com.google.common.net.MediaType;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rexsl.test.RestTester;
-import com.rexsl.test.XmlDocument;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
+import com.rultor.snapshot.XSLT;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.URI;
-import java.util.LinkedList;
-import java.util.List;
-import javax.imageio.ImageIO;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -52,6 +44,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import javax.xml.transform.stream.StreamSource;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.PNGTranscoder;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Health button.
@@ -67,9 +64,9 @@ public final class ButtonRs extends BaseRs {
     /**
      * Instance that retrieves XML from application.
      */
-    private static final ButtonRs.Build DEFAULT_BUILD = new ButtonRs.Build() {
+    private static final Build DEFAULT_BUILD = new Build() {
         @Override
-        public XmlDocument info(final URI uri, final String stnd) {
+        public String info(final URI uri, final String stnd) {
             return RestTester.start(
                 UriBuilder.fromUri(uri).path(stnd).build()
             )
@@ -77,14 +74,15 @@ public final class ButtonRs extends BaseRs {
                     HttpHeaders.ACCEPT,
                     MediaType.APPLICATION_XML_UTF_8.toString()
                 )
-                .get("retrieve stand");
+                .get("retrieve stand")
+                .getBody();
         }
     };
 
     /**
      * Provider of build information.
      */
-    private final transient ButtonRs.Build build;
+    private final transient Build build;
 
     /**
      * Stand name.
@@ -107,7 +105,7 @@ public final class ButtonRs extends BaseRs {
      * Constructor.
      * @param bld Build info retriever.
      */
-    public ButtonRs(final ButtonRs.Build bld) {
+    public ButtonRs(final Build bld) {
         super();
         this.build = bld;
     }
@@ -139,73 +137,52 @@ public final class ButtonRs extends BaseRs {
      */
     @GET
     @Path("/")
-    @Produces("image/*")
+    @Produces("image/png")
     public Response button() throws Exception {
-        final List<String> health = this.info(
-            this.build.info(
-                this.uriInfo().getBaseUri(), this.stand
+        final PNGTranscoder transcoder = new PNGTranscoder();
+        transcoder.addTranscodingHint(
+            PNGTranscoder.KEY_WIDTH, (float) Tv.HUNDRED
+        );
+        transcoder.addTranscodingHint(
+            PNGTranscoder.KEY_HEIGHT, (float) Tv.FIFTY
+        );
+        final ByteArrayOutputStream png = new ByteArrayOutputStream();
+        transcoder.transcode(
+            new TranscoderInput(IOUtils.toInputStream(this.svg())),
+            new TranscoderOutput(png)
+        );
+        return Response
+            .ok(png.toByteArray(), MediaType.SVG_UTF_8.toString())
+            .build();
+    }
+
+    /**
+     * Create SVG from build.
+     * @return String with SVG.
+     * @throws Exception In case of transformation error.
+     */
+    private String svg() throws Exception {
+        return new XSLT(
+            new StreamSource(
+                IOUtils.toInputStream(
+                    this.build.info(
+                        this.uriInfo().getBaseUri(), this.stand
+                    )
+                )
+            ),
+            new StreamSource(
+                IOUtils.toInputStream(
+                    String.format(
+                        IOUtils.toString(
+                            this.getClass().getResourceAsStream(
+                                "button.xsl"
+                            )
+                        ),
+                        this.rule
+                    )
+                )
             )
-        );
-        return Response.ok(draw(health), MediaType.PNG.toString()).build();
-    }
-
-    /**
-     * Draw build info on image.
-     * @param infos Information to draw on the image.
-     * @return Image with with info drawn on it.
-     * @throws IOException In case of image read/write error.
-     */
-    private byte[] draw(final List<String> infos)
-        throws IOException {
-        final BufferedImage img = ImageIO.read(
-            this.getClass().getResourceAsStream("build_health.png")
-        );
-        final BufferedImage image = new BufferedImage(
-            img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB
-        );
-        final Graphics2D gfx = image.createGraphics();
-        gfx.drawImage(img, 0, 0, null);
-        gfx.setFont(new Font("Serif", Font.PLAIN, Tv.TEN));
-        this.drawString(gfx, infos);
-        gfx.dispose();
-        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        ImageIO.write(image, "png", stream);
-        return stream.toByteArray();
-    }
-
-    /**
-     * Retrieve build related information.
-     * @param response Response to parse for the info.
-     * @return Retrieved information.
-     */
-    private List<String> info(final XmlDocument response) {
-        final XmlDocument node = response.nodes(
-            String.format(
-                // @checkstyle LineLength (1 line)
-                "/page/widgets/widget[@class='com.rultor.widget.BuildHealth']/builds/build[coordinates/rule='%s'][1]",
-                this.rule
-            )
-        ).get(0);
-        final List<String> health = new LinkedList<String>();
-        health.add(node.xpath("code/text()").get(0));
-        health.add(node.xpath("duration/text()").get(0));
-        health.add(node.xpath("health/text()").get(0));
-        return health;
-    }
-
-    /**
-     * Draw lines of text on graphics.
-     * @param gfx Graphics to use.
-     * @param lines Lines of text.
-     */
-    private void drawString(final Graphics2D gfx, final List<String> lines) {
-        for (int offset = 0; offset < lines.size(); ++offset) {
-            gfx.setPaint(Color.BLACK);
-            gfx.drawString(
-                lines.get(offset),
-                0, gfx.getFontMetrics().getHeight() * (offset + 1)
-            );
-        }
+        ).xml();
     }
 
     /**
@@ -218,6 +195,6 @@ public final class ButtonRs extends BaseRs {
          * @param stand Stand name to use.
          * @return Response.
          */
-        XmlDocument info(final URI uri, final String stand);
+        String info(final URI uri, final String stand);
     }
 }

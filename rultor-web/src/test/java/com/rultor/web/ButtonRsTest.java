@@ -32,14 +32,15 @@ package com.rultor.web;
 import com.google.common.net.MediaType;
 import com.rexsl.page.HttpHeadersMocker;
 import com.rexsl.page.UriInfoMocker;
-import com.rexsl.test.SimpleXml;
-import com.rexsl.test.XmlDocument;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.net.URLConnection;
+import javax.servlet.ServletContext;
+import javax.ws.rs.core.SecurityContext;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Tests for {@link ButtonRs}.
@@ -60,27 +61,34 @@ public final class ButtonRsTest {
         final ButtonRs res = new ButtonRs(
             new ButtonRs.Build() {
                 @Override
-                public XmlDocument info(final URI uri, final String stand) {
-                    return new SimpleXml(
-                        String.format(
-                            // @checkstyle StringLiteralsConcatenation (8 lines)
-                            // @checkstyle LineLength (1 line)
-                            "<page><widgets><widget class=\"com.rultor.widget.BuildHealth\"><builds><build>"
-                                + "  <coordinates><rule>%s</rule></coordinates>"
-                                + "  <duration>1212602</duration>"
-                                + "  <code>0</code>"
-                                + "  <health>0.6153846153846154</health>"
-                                + "</build></builds></widget></widgets></page>",
-                            rule
-                        )
+                public String info(final URI uri, final String stand) {
+                    return String.format(
+                        // @checkstyle StringLiteralsConcatenation (8 lines)
+                        // @checkstyle LineLength (1 line)
+                        "<page><widgets><widget class=\"com.rultor.widget.BuildHealth\"><builds><build>"
+                            + "  <coordinates><rule>%s</rule></coordinates>"
+                            + "  <duration>1212602</duration>"
+                            + "  <code>0</code>"
+                            + "  <health>0.6153846153846154</health>"
+                            + "</build></builds></widget></widgets></page>",
+                        rule
                     );
                 }
             }
         );
         res.setUriInfo(new UriInfoMocker().mock());
         res.setHttpHeaders(new HttpHeadersMocker().mock());
+        res.setSecurityContext(Mockito.mock(SecurityContext.class));
         res.setStand("stand");
         res.setRule(rule);
+        final ServletContext context = Mockito.mock(ServletContext.class);
+        Mockito.when(context.getResourceAsStream(Mockito.anyString()))
+            .thenReturn(
+                this.getClass().getResourceAsStream(
+                    "button.xsl"
+                )
+            );
+        res.setServletContext(context);
         MatcherAssert.assertThat(
             URLConnection.guessContentTypeFromStream(
                 new ByteArrayInputStream((byte[]) res.button().getEntity())
