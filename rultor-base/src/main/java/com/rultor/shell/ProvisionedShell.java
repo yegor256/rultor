@@ -32,49 +32,77 @@ package com.rultor.shell;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Provisioned executes bash script in every acquired shell.
+ * Shell executing script prepended by another script.
  *
  * @author Evgeniy Nyavro (e.nyavro@gmail.com)
  * @version $Id$
  * @since 1.0
  */
-@ToString
 @Immutable
+@ToString
+@EqualsAndHashCode(of = {"shell", "script" })
 @Loggable(Loggable.DEBUG)
-public final class Provisioned implements Shells {
+public final class ProvisionedShell implements Shell {
 
     /**
-     * Shell.
+     * Underlying shell.
      */
-    private final transient Shells shells;
+    private final transient Shell shell;
 
     /**
-     * Script to execute on acquire.
+     * Script to prepend with.
      */
     private final transient String script;
 
     /**
      * Public ctor.
-     * @param scrt Script to execute
-     * @param shls Shells
+     * @param scrt Script to prepend with
+     * @param shl Underlying Shell
      */
-    public Provisioned(
+    public ProvisionedShell(
         @NotNull(message = "script can't be NULL") final String scrt,
-        @NotNull(message = "shells can't be NULL") final Shells shls) {
+        @NotNull(message = "shell can't be NULL") final Shell shl) {
         this.script = scrt;
-        this.shells = shls;
+        this.shell = shl;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @checkstyle ParameterNumber (8 lines)
+     */
+    @Override
+    public int exec(
+        @NotNull(message = "command can't be NULL") final String command,
+        @NotNull(message = "stdin can't be NULL") final InputStream stdin,
+        @NotNull(message = "stdout can't be NULL") final OutputStream stdout,
+        @NotNull(message = "stderr can't be NULL") final OutputStream stderr
+    ) throws IOException {
+        return this.shell.exec(
+            String.format("%s;%s", this.script, command),
+            stdin, stdout, stderr
+        );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Shell acquire() throws IOException {
-        return new ProvisionedShell(this.script, this.shells.acquire());
+    public void badge(final String name, final String value) {
+        this.shell.badge(name, value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() throws IOException {
+        this.shell.close();
+    }
 }
