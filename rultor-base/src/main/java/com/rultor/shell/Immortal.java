@@ -31,6 +31,7 @@ package com.rultor.shell;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -81,7 +82,7 @@ public final class Immortal implements Shells {
             }
             @Override
             public void close() throws IOException {
-                assert shell != null;
+                Logger.info(this, "close() request ignored");
             }
             @Override
             public void badge(final String name, final String value) {
