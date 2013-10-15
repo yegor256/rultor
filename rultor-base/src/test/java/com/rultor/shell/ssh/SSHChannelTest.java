@@ -29,6 +29,7 @@
  */
 package com.rultor.shell.ssh;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -48,10 +49,10 @@ import org.apache.sshd.server.UserAuth;
 import org.apache.sshd.server.auth.UserAuthPublicKey;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.session.ServerSession;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 /**
  * Tests for ${@link SSHChannel}.
@@ -70,11 +71,11 @@ public final class SSHChannelTest {
     public void executeCommandOnServer() throws Exception {
         final int port = this.port();
         final SshServer sshd = this.sshServer(port);
-        final CommandFactory cmdFactory = this.cmdFactory();
-        sshd.setCommandFactory(cmdFactory);
+        sshd.setCommandFactory(new SSHChannelTest.EchoCommandCreator());
         sshd.start();
         final String cmd = "ls";
-        new SSHChannel(
+        final ByteArrayOutputStream output = new ByteArrayOutputStream();
+        final int exit = new SSHChannel(
             InetAddress.getLocalHost(),
             port,
             "test",
@@ -86,43 +87,12 @@ public final class SSHChannelTest {
         ).exec(
             cmd,
             Mockito.mock(InputStream.class),
-            Mockito.mock(OutputStream.class),
+            output,
             Mockito.mock(OutputStream.class)
         );
         sshd.stop();
-        Mockito.verify(cmdFactory).createCommand(Mockito.eq(cmd));
-    }
-
-    /**
-     * Create command factory.
-     * @return Command factory.
-     * @throws IOException In case of error.
-     */
-    private CommandFactory cmdFactory() throws IOException {
-        final CommandFactory commands = Mockito.mock(CommandFactory.class);
-        final Command cmd = Mockito.mock(Command.class);
-        final ExitCallback[] callback = new ExitCallback[1];
-        Mockito.doAnswer(
-            new Answer<Void>() {
-                @Override
-                public Void answer(final InvocationOnMock invocation) {
-                    callback[0] = (ExitCallback) invocation.getArguments()[0];
-                    return null;
-                }
-            }
-        ).when(cmd).setExitCallback(Mockito.any(ExitCallback.class));
-        Mockito.doAnswer(
-            new Answer<Void>() {
-                @Override
-                public Void answer(final InvocationOnMock invocation) {
-                    callback[0].onExit(1);
-                    return null;
-                }
-            }
-        ).when(cmd).start(Mockito.any(Environment.class));
-        Mockito.when(commands.createCommand(Mockito.anyString()))
-            .thenReturn(cmd);
-        return commands;
+        MatcherAssert.assertThat(exit, Matchers.equalTo(0));
+        MatcherAssert.assertThat(output.toString(), Matchers.equalTo(cmd));
     }
 
     /**
@@ -164,5 +134,93 @@ public final class SSHChannelTest {
         final int port = socket.getLocalPort();
         socket.close();
         return port;
+    }
+
+    /**
+     * Factory for echo command.
+     */
+    private static final class EchoCommandCreator implements CommandFactory {
+        @Override
+        public Command createCommand(final String command) {
+            return new SSHChannelTest.EchoCommand(command);
+        }
+    }
+
+    /**
+     * Command that displays its name.
+     */
+    private static final class EchoCommand implements Command {
+        /**
+         * Command being executed.
+         */
+        private final transient String command;
+
+        /**
+         * Exit callback.
+         */
+        private transient ExitCallback callback;
+
+        /**
+         * Output stream for use by command.
+         */
+        private transient OutputStream output;
+
+        /**
+         * Constructor.
+         * @param cmd Command to echo.
+         */
+        public EchoCommand(final String cmd) {
+            this.command = cmd;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setInputStream(final InputStream input) {
+            // do nothing
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setOutputStream(final OutputStream out) {
+            this.output = out;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setErrorStream(final OutputStream err) {
+            // do nothing
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setExitCallback(final ExitCallback cllbck) {
+            this.callback = cllbck;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void start(final Environment env) throws IOException {
+            IOUtils.write(this.command, this.output);
+            this.output.flush();
+            this.callback.onExit(0);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void destroy() {
+            // do nothing
+        }
     }
 }
