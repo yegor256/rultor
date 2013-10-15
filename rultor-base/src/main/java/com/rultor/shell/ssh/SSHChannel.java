@@ -65,11 +65,6 @@ import org.apache.commons.lang3.Validate;
 public final class SSHChannel implements Shell {
 
     /**
-     * SSH port to use.
-     */
-    private static final int PORT = 22;
-
-    /**
      * Logger to use for all channels.
      */
     private static final com.jcraft.jsch.Logger LOGGER =
@@ -134,6 +129,11 @@ public final class SSHChannel implements Shell {
     private final transient String addr;
 
     /**
+     * Port to use.
+     */
+    private final transient int port;
+
+    /**
      * User name.
      */
     private final transient String login;
@@ -144,13 +144,16 @@ public final class SSHChannel implements Shell {
     private final transient PrivateKey key;
 
     /**
-     * Public ctor.
+     * Constructor.
      * @param adr IP address
+     * @param prt Port of server
      * @param user Login
      * @param priv Private SSH key
+     * @checkstyle ParameterNumberCheck (6 lines)
      */
     public SSHChannel(
         @NotNull(message = "IP address can't be NULL") final InetAddress adr,
+        final int prt,
         @NotNull(message = "user name can't be NULL") final String user,
         @NotNull(message = "private key can't be NULL") final PrivateKey priv) {
         this.addr = adr.getHostAddress();
@@ -163,6 +166,21 @@ public final class SSHChannel implements Shell {
         this.login = user;
         Validate.notEmpty(this.login, "user name can't be empty");
         this.key = priv;
+        this.port = prt;
+    }
+
+    /**
+     * Public ctor.
+     * @param adr IP address
+     * @param user Login
+     * @param priv Private SSH key
+     */
+    public SSHChannel(
+        @NotNull(message = "IP address can't be NULL") final InetAddress adr,
+        @NotNull(message = "user name can't be NULL") final String user,
+        @NotNull(message = "private key can't be NULL") final PrivateKey priv) {
+        // @checkstyle MagicNumber (1 line)
+        this(adr, 22, user, priv);
     }
 
     /**
@@ -279,11 +297,11 @@ public final class SSHChannel implements Shell {
             Logger.info(
                 this,
                 "Opening SSH session to %s@%s:%s (%d bytes in RSA key)...",
-                this.login, this.addr, SSHChannel.PORT,
+                this.login, this.addr, this.port,
                 file.length()
             );
             final Session session = jsch.getSession(
-                this.login, this.addr, SSHChannel.PORT
+                this.login, this.addr, this.port
             );
             session.setServerAliveInterval((int) TimeUnit.SECONDS.toMillis(1));
             session.setServerAliveCountMax(Tv.MILLION);
