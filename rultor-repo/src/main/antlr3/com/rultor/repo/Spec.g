@@ -84,6 +84,9 @@ variable returns [Variable<?> ret]
     dictionary
     { $ret = $dictionary.ret; }
     |
+    alter
+    { $ret = $alter.ret; }
+    |
     META
     { $ret = new Meta($META.text); }
     |
@@ -113,6 +116,15 @@ variable returns [Variable<?> ret]
     |
     DOUBLE
     { $ret = new Constant<Double>(Double.valueOf($DOUBLE.text)); }
+    ;
+
+alter returns [Variable<String> ret]
+    :
+    '@'
+    '('
+    TEXT
+    ')'
+    { $ret = new Alter($TEXT.text); }
     ;
 
 composite returns [Composite ret]
@@ -157,24 +169,33 @@ array returns [Chain ret]
     ;
 
 dictionary returns [Dictionary ret]
-    @init { final Map<String, Variable<?>> map = new TreeMap<String, Variable<?>>(); }
+    @init { final Map<Variable<String>, Variable<?>> map = new TreeMap<Variable<String>, Variable<?>>(); }
     :
     '{'
     (
-        first_key=TEXT
+        first_key=key
         ':'
         first_value=variable
-        { map.put($first_key.text, $first_value.ret); }
+        { map.put($first_key.ret, $first_value.ret); }
         (
             ','
-            second_key=TEXT
+            second_key=key
             ':'
             second_value=variable
-            { map.put($second_key.text, $second_value.ret); }
+            { map.put($second_key.ret, $second_value.ret); }
         )*
     )*
     '}'
     { $ret = new Dictionary(map); }
+    ;
+
+key returns [Variable<String> ret]
+    :
+    TEXT
+    { $ret = new Text($TEXT.text); }
+    |
+    alter
+    { $ret = $alter.ret; }
     ;
 
 BOOLEAN
