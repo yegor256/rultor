@@ -53,7 +53,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 @ToString
 @EqualsAndHashCode(of = "value")
 @Loggable(Loggable.DEBUG)
-final class Text implements Variable<String> {
+final class Text implements Variable<String>, Comparable<Variable<String>> {
 
     /**
      * The value.
@@ -99,6 +99,14 @@ final class Text implements Variable<String> {
     @Override
     public Map<Integer, String> arguments() {
         return new ConcurrentHashMap<Integer, String>(0);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int compareTo(final Variable<String> var) {
+        return this.value.compareTo(var.asText());
     }
 
 }

@@ -29,23 +29,23 @@
  */
 package com.rultor.repo;
 
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.immutable.ArrayMap;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
+import com.rultor.tools.Vext;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- * Array.
+ * Alter.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -53,91 +53,67 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "map")
+@EqualsAndHashCode(of = "value")
 @Loggable(Loggable.DEBUG)
-final class Dictionary implements Variable<Map<String, Object>> {
+final class Alter implements Variable<String>, Comparable<Variable<String>> {
 
     /**
-     * Map of values.
+     * The value.
      */
-    private final transient ArrayMap<Variable<String>, Variable<?>> map;
+    private final transient String value;
 
     /**
      * Public ctor.
-     * @param vals Values
+     * @param val Value
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    protected Dictionary(final Map<Variable<String>, Variable<?>> vals) {
-        this.map = new ArrayMap<Variable<String>, Variable<?>>(vals);
+    protected Alter(final String val) {
+        this.value = val;
     }
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (8 lines)
+     * @checkstyle RedundantThrows (10 lines)
      */
     @Override
     @NotNull
-    public Map<String, Object> instantiate(
+    public String instantiate(
         @NotNull(message = "users can't be NULL") final Users users,
         @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
-        final ConcurrentMap<String, Object> objects =
-            new ConcurrentHashMap<String, Object>(this.map.size());
-        for (Map.Entry<Variable<String>, Variable<?>> pair
-            : this.map.entrySet()) {
-            objects.put(
-                pair.getKey().instantiate(users, args),
-                pair.getValue().instantiate(users, args)
-            );
-        }
-        return objects;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String asText() {
-        return new StringBuilder()
-            .append('{')
-            .append(this.brackets())
-            .append('}')
-            .toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
-     */
-    @Override
-    public Map<Integer, String> arguments() throws SpecException {
-        final ConcurrentMap<Integer, String> args =
-            new ConcurrentSkipListMap<Integer, String>();
-        for (Variable<?> var : this.map.values()) {
-            args.putAll(var.arguments());
-        }
-        return args;
-    }
-
-    /**
-     * Return brackets.
-     * @return Brackets
-     */
-    private Brackets<?> brackets() {
-        return new Brackets<Map.Entry<Variable<String>, Variable<?>>>(
-            this.map.entrySet(),
-            new Brackets.Format<Map.Entry<Variable<String>, Variable<?>>>() {
-                @Override
-                public String print(
-                    final Map.Entry<Variable<String>, Variable<?>> entry) {
-                    return String.format(
-                        "%s: %s",
-                        entry.getKey().asText(),
-                        entry.getValue().asText()
-                    );
-                }
-            }
+        return new Vext(this.value).print(
+            new ImmutableMap.Builder<String, Object>()
+                .put("work", args.work())
+                .put("wallet", args.wallet())
+                .build()
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NotNull(message = "text is never NULL")
+    public String asText() {
+        return String.format(
+            "@(\"%s\")",
+            StringEscapeUtils.escapeJava(this.value)
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<Integer, String> arguments() {
+        return new ConcurrentHashMap<Integer, String>(0);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int compareTo(final Variable<String> var) {
+        return this.value.compareTo(var.asText());
     }
 
 }
