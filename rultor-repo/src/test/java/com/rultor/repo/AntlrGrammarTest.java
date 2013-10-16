@@ -55,6 +55,7 @@ public final class AntlrGrammarTest {
             "foo.SomeClass(1, FALSE, TRUE, 8L, \"test\")",
             "java.lang.Double(-44.66)",
             "com.some.type$name(${0:?})",
+            "${\"this is a rule: ${work.rule}\"}",
             "com.first(com.second(com.third(), com.forth()))",
             "\"\"\"\nsome\nunformatted  text  \u20ac\u0433\n\"\"\"",
             "java.lang.String(\n  \"\"\"\n  \"hello\"\n  \"\"\"\n)",
