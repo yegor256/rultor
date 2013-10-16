@@ -61,6 +61,7 @@ public final class SnapshotTest {
                         .append(
                             new XemblyLine(
                                 new Directives()
+                                    // @checkstyle MultipleStringLiterals (1 line)
                                     .xpath("/snapshot")
                                     .strict(1)
                                     .add("test")
@@ -139,6 +140,41 @@ public final class SnapshotTest {
         MatcherAssert.assertThat(
             tag.attributes().keySet(),
             Matchers.empty()
+        );
+    }
+
+    /**
+     * Ignores all tags but last.
+     * @throws Exception If problem inside
+     */
+    @Test
+    public void xmlIgnoresAllTagsButLast() throws Exception {
+        MatcherAssert.assertThat(
+            new Snapshot(
+                new Directives()
+                    .xpath("/snapshot")
+                    .addIf("tags")
+                        // @checkstyle MultipleStringLiterals (5 line)
+                    .add("tag").add("label").set("unique").up()
+                    .add("markdown").set("this is unique tag").up().up()
+                    .add("tag").add("label").set("duplicate").up()
+                    .add("markdown").set("this is the first tag").up().up()
+                    .add("tag").add("label").set("duplicate").up()
+                    .add("markdown").set("this is the second tag")
+            ).xml(),
+            Matchers.allOf(
+                XhtmlMatchers.hasXPath(
+                    "/snapshot/tags/tag/markdown[contains(.,'unique')]"
+                ),
+                Matchers.not(
+                    XhtmlMatchers.hasXPath(
+                        "/snapshot/tags/tag/markdown[contains(.,'first')]"
+                    )
+                ),
+                XhtmlMatchers.hasXPath(
+                    "/snapshot/tags/tag/markdown[contains(.,'second')]"
+                )
+            )
         );
     }
 
