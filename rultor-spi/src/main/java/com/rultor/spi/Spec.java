@@ -57,9 +57,11 @@ import lombok.ToString;
  * composite := type arguments;
  * type := [a-z0-9$-]+;
  * array := '[' ( variable ( ',' variable )? )? ']';
- * dictionary := '{' ( text ':' variable ( ',' text ':' variable )? )? '}';
+ * dictionary := '{' ( key ':' variable ( ',' key ':' variable )? )? '}';
+ * key := text | alter;
  * meta := '$' '{' [a-z] '}';
  * arg := '$' '{' [0-9] ':' .* '}';
+ * alter := '&#64;' '(' text ')';
  * text := '"' ('\\"' | ~'"')* '"';
  * bigtext := '"""' .+ '"""';
  * integer := (+|-)? [0-9]+;
@@ -73,7 +75,7 @@ import lombok.ToString;
  *
  * <pre> com.rultor.base.Empty()</pre>
  *
- * Another one is a local reference to a rule, for example:
+ * <p>Another one is a local reference to a rule, for example:
  *
  * <pre> my-other-rule()</pre>
  *
@@ -123,6 +125,11 @@ import lombok.ToString;
  *   ${work}, "*5 * * * *",
  *   com.rultor.base.Empty()
  * )</pre>
+ *
+ * <p>It's also possible to use so called "altered text", which contains
+ * Velocity commands, for example:
+ *
+ * <pre> &#64;("this is currently rule: ${work.rule()}")</pre>
  *
  * <p>When you're writing a template, which will be used by other
  * rules or even by other users, you will need to make it parametrized. For

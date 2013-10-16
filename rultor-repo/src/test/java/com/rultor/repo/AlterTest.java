@@ -29,80 +29,41 @@
  */
 package com.rultor.repo;
 
-import com.google.common.collect.ImmutableMap;
-import com.jcabi.aspects.Tv;
+import com.jcabi.urn.URN;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.spi.Wallet;
-import java.util.Arrays;
-import java.util.Map;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test case for {@link Dictionary}.
+ * Test case for {@link Sharp}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public final class DictionaryTest {
+public final class AlterTest {
 
     /**
-     * Dictionary can make an instance.
+     * Alter can make an instance.
      * @throws Exception If some problem inside
      */
     @Test
     public void makesInstance() throws Exception {
-        final String key = "some key";
-        final Variable<Map<String, Object>> var = new Dictionary(
-            new ImmutableMap.Builder<Variable<String>, Variable<?>>()
-                .put(new Text(key), new Constant<Integer>(Tv.TEN))
-                .build()
-        );
+        final String text = "\u20ac \"' ${work.rule()}";
+        final Variable<String> var = new Alter(text);
         MatcherAssert.assertThat(
             var.instantiate(
                 Mockito.mock(Users.class),
                 new Arguments(
-                    Mockito.mock(Coordinates.class), new Wallet.Empty()
+                    new Coordinates.Simple(new URN("urn:test:1"), "hey"),
+                    new Wallet.Empty()
                 )
             ),
-            Matchers.<String, Object>hasEntry(key, Tv.TEN)
-        );
-    }
-
-    /**
-     * Dictionary can make a text.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void makesText() throws Exception {
-        final Variable<Map<String, Object>> var = new Dictionary(
-            new ImmutableMap.Builder<Variable<String>, Variable<?>>()
-                .put(new Text("one"), new Constant<Long>((long) Tv.TEN))
-                .put(new Text("two"), new Text("some text\nline two"))
-                .put(
-                    new Alter("three"),
-                    new Composite(
-                        "com.rultor.SomeOtherClass",
-                        Arrays.<Variable<?>>asList()
-                    )
-                )
-                .build()
-        );
-        MatcherAssert.assertThat(
-            var.asText(),
-            Matchers.equalTo(
-                // @checkstyle StringLiteralsConcatenation (5 lines)
-                "{\n"
-                + "  \"one\": 10L,\n"
-                + "  \"two\": \"some text\\nline two\",\n"
-                + "  @(\"three\"): com.rultor.SomeOtherClass()\n"
-                + "}"
-            )
+            Matchers.equalTo("\u20ac \"' hey")
         );
     }
 
