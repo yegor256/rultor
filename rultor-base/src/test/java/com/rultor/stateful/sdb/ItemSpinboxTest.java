@@ -30,16 +30,10 @@
 
 package com.rultor.stateful.sdb;
 
-import com.amazonaws.services.simpledb.AmazonSimpleDB;
-import com.amazonaws.services.simpledb.model.Attribute;
-import com.amazonaws.services.simpledb.model.GetAttributesRequest;
-import com.amazonaws.services.simpledb.model.GetAttributesResult;
-import com.amazonaws.services.simpledb.model.PutAttributesRequest;
 import com.jcabi.aspects.Tv;
-import com.rultor.aws.SDBClient;
+import com.jcabi.simpledb.Item;
 import com.rultor.spi.Wallet;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Map;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -48,6 +42,7 @@ import org.mockito.Mockito;
 /**
  * Test case for {@link ItemSpinbox}.
  * @author Bharath Bolisetty (bharathbolisetty@gmail.com)
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
 public final class ItemSpinboxTest {
@@ -56,72 +51,19 @@ public final class ItemSpinboxTest {
      * ItemSpinbox can add to empty wallet.
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void canAddToEmptyWallet() {
-        final SDBClient client = Mockito.mock(SDBClient.class);
-        final AmazonSimpleDB aws = Mockito.mock(AmazonSimpleDB.class);
-        Mockito.doReturn(aws).when(client).get();
-        final GetAttributesResult gar = Mockito.mock(GetAttributesResult.class);
-        Mockito.doReturn(gar).when(aws).getAttributes(
-            Mockito.any(GetAttributesRequest.class)
-        );
-        Mockito.doReturn(new ArrayList<Attribute>(0)).when(gar).getAttributes();
-        Mockito.doNothing().when(aws).putAttributes(
-            Mockito.any(
-                PutAttributesRequest.class
-            )
-        );
-        final Wallet wlt = new Wallet.Empty();
-        final ItemSpinbox box = new ItemSpinbox(wlt, "test", client);
+        final Item item = Mockito.mock(Item.class);
+        final ItemSpinbox box = new ItemSpinbox(new Wallet.Empty(), item);
         final long deposit = Tv.EIGHT;
-        final long balance = box.add(deposit);
-        Mockito.verify(aws).getAttributes(
-            Mockito.any(
-                GetAttributesRequest.class
+        MatcherAssert.assertThat(box.add(deposit), Matchers.equalTo(deposit));
+        Mockito.verify(item).putAll(
+            Map.class.cast(
+                Mockito.argThat(
+                    Matchers.hasValue(Long.toString(deposit))
+                )
             )
         );
-        Mockito.verify(aws).putAttributes(
-            Mockito.any(
-                PutAttributesRequest.class
-            )
-        );
-        MatcherAssert.assertThat(balance, Matchers.equalTo(deposit));
     }
 
-    /**
-     * ItemSpinbox can add to wallet.
-     */
-    @Test
-    public void canAddToWallet() {
-        final SDBClient client = Mockito.mock(SDBClient.class);
-        final AmazonSimpleDB aws = Mockito.mock(AmazonSimpleDB.class);
-        Mockito.doReturn(aws).when(client).get();
-        final GetAttributesResult gar = Mockito.mock(GetAttributesResult.class);
-        Mockito.doReturn(gar).when(aws).getAttributes(
-            Mockito.any(GetAttributesRequest.class)
-        );
-        final Attribute atr = Mockito.mock(Attribute.class);
-        Mockito.doReturn(Arrays.asList(atr)).when(gar).getAttributes();
-        Mockito.doNothing().when(aws).putAttributes(
-            Mockito.any(
-                PutAttributesRequest.class
-            )
-        );
-        final Wallet wlt = new Wallet.Empty();
-        final ItemSpinbox box = new ItemSpinbox(wlt, "testac", client);
-        Mockito.doReturn("10").when(atr).getValue();
-        final long deposit = Tv.FIVE;
-        final long balance = box.add(deposit);
-        Mockito.verify(aws).getAttributes(
-            Mockito.any(
-                GetAttributesRequest.class
-            )
-        );
-        Mockito.verify(aws).putAttributes(
-            Mockito.any(
-                PutAttributesRequest.class
-            )
-        );
-        final long total = Tv.FIFTEEN;
-        MatcherAssert.assertThat(balance, Matchers.equalTo(total));
-    }
 }

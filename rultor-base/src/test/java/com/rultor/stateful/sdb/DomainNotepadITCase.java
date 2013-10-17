@@ -29,10 +29,14 @@
  */
 package com.rultor.stateful.sdb;
 
-import com.rultor.aws.SDBClient;
+import com.jcabi.aspects.Tv;
+import com.jcabi.simpledb.Credentials;
+import com.jcabi.simpledb.Domain;
+import com.jcabi.simpledb.Region;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
 import com.rultor.stateful.Notepad;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -58,31 +62,36 @@ public final class DomainNotepadITCase {
         System.getProperty("failsafe.sdb.secret");
 
     /**
-     * AWD SimpleDB domain.
-     */
-    private static final String DOMAIN =
-        System.getProperty("failsafe.sdb.domain");
-
-    /**
      * DomainNotepad can store and retrieve lines.
      * @throws Exception If some problem inside
      */
     @Test
     public void storesAndRetrievesLines() throws Exception {
-        final Notepad notepad = new DomainNotepad(
-            new Coordinates.Simple(), new Wallet.Empty(), this.client()
-        );
-        final String first = "some \u20ac\t\n\r\n\n\n test";
-        final String second = "AAA - some \u20ac\t\n\r\n\n\n test";
-        notepad.clear();
-        notepad.add(first);
-        notepad.add(second);
-        MatcherAssert.assertThat(notepad, Matchers.hasSize(2));
-        MatcherAssert.assertThat(notepad, Matchers.hasItem(first));
-        MatcherAssert.assertThat(notepad.contains(first), Matchers.is(true));
-        MatcherAssert.assertThat(notepad.contains(second), Matchers.is(true));
-        notepad.clear();
-        MatcherAssert.assertThat(notepad.contains(second), Matchers.is(false));
+        final Domain domain = this.domain();
+        try {
+            final Notepad notepad = new DomainNotepad(
+                new Coordinates.Simple(), new Wallet.Empty(), domain
+            );
+            final String first = "some \u20ac\t\n\r\n\n\n test";
+            final String second = "AAA - some \u20ac\t\n\r\n\n\n test";
+            notepad.clear();
+            notepad.add(first);
+            notepad.add(second);
+            MatcherAssert.assertThat(notepad, Matchers.hasSize(2));
+            MatcherAssert.assertThat(notepad, Matchers.hasItem(first));
+            MatcherAssert.assertThat(
+                notepad.contains(first), Matchers.is(true)
+            );
+            MatcherAssert.assertThat(
+                notepad.contains(second), Matchers.is(true)
+            );
+            notepad.clear();
+            MatcherAssert.assertThat(
+                notepad.contains(second), Matchers.is(false)
+            );
+        } finally {
+            domain.drop();
+        }
     }
 
     /**
@@ -91,13 +100,18 @@ public final class DomainNotepadITCase {
      */
     @Test
     public void cleansItself() throws Exception {
-        final Notepad notepad = new DomainNotepad(
-            new Coordinates.Simple(), new Wallet.Empty(), this.client()
-        );
-        notepad.add("some test line\t\nпривет");
-        MatcherAssert.assertThat(notepad, Matchers.not(Matchers.empty()));
-        notepad.clear();
-        MatcherAssert.assertThat(notepad, Matchers.empty());
+        final Domain domain = this.domain();
+        try {
+            final Notepad notepad = new DomainNotepad(
+                new Coordinates.Simple(), new Wallet.Empty(), domain
+            );
+            notepad.add("some test line\t\nпривет");
+            MatcherAssert.assertThat(notepad, Matchers.not(Matchers.empty()));
+            notepad.clear();
+            MatcherAssert.assertThat(notepad, Matchers.empty());
+        } finally {
+            domain.drop();
+        }
     }
 
     /**
@@ -106,30 +120,43 @@ public final class DomainNotepadITCase {
      */
     @Test
     public void checksLineExistence() throws Exception {
-        final Notepad notepad = new DomainNotepad(
-            new Coordinates.Simple(), new Wallet.Empty(), this.client()
-        );
-        final String text = "да test line\t\nпривет";
-        notepad.add(text);
-        MatcherAssert.assertThat(notepad.contains(text), Matchers.is(true));
-        notepad.clear();
-        MatcherAssert.assertThat(notepad.contains(text), Matchers.is(false));
-        notepad.add(text);
-        MatcherAssert.assertThat(notepad.contains(text), Matchers.is(true));
+        final Domain domain = this.domain();
+        try {
+            final Notepad notepad = new DomainNotepad(
+                new Coordinates.Simple(), new Wallet.Empty(), domain
+            );
+            final String text = "да test line\t\nпривет";
+            notepad.add(text);
+            MatcherAssert.assertThat(notepad.contains(text), Matchers.is(true));
+            notepad.clear();
+            MatcherAssert.assertThat(
+                notepad.contains(text), Matchers.is(false)
+            );
+            notepad.add(text);
+            MatcherAssert.assertThat(notepad.contains(text), Matchers.is(true));
+        } finally {
+            domain.drop();
+        }
     }
 
     /**
-     * Make a client.
-     * @return The client
+     * Make a domain.
+     * @return The domain
      * @throws Exception If some problem inside
      */
-    private SDBClient client() throws Exception {
+    private Domain domain() throws Exception {
         Assume.assumeNotNull(DomainNotepadITCase.KEY);
-        return new SDBClient.Simple(
-            DomainNotepadITCase.KEY,
-            DomainNotepadITCase.SECRET,
-            DomainNotepadITCase.DOMAIN
+        final String name = String.format(
+            "test-%s", RandomStringUtils.randomAlphabetic(Tv.FIVE)
         );
+        final Domain domain = new Region.Simple(
+            new Credentials.Simple(
+                DomainNotepadITCase.KEY,
+                DomainNotepadITCase.SECRET
+            )
+        ).domain(name);
+        domain.create();
+        return domain;
     }
 
 }

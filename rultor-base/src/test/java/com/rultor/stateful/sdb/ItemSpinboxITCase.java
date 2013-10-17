@@ -29,9 +29,13 @@
  */
 package com.rultor.stateful.sdb;
 
-import com.rultor.aws.SDBClient;
+import com.jcabi.aspects.Tv;
+import com.jcabi.simpledb.Credentials;
+import com.jcabi.simpledb.Domain;
+import com.jcabi.simpledb.Region;
 import com.rultor.spi.Wallet;
 import com.rultor.stateful.Spinbox;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -58,42 +62,44 @@ public final class ItemSpinboxITCase {
         System.getProperty("failsafe.sdb.secret");
 
     /**
-     * SimpleDB domain.
-     */
-    private static final String DOMAIN =
-        System.getProperty("failsafe.sdb.domain");
-
-    /**
      * ItemSpinbox can run code in parallel.
      * @throws Exception If some problem inside
      */
     @Test
     public void runsInParallel() throws Exception {
-        final Spinbox spinbox = this.spinbox("ItemSpinboxITCase");
-        final long before = spinbox.add(0);
-        MatcherAssert.assertThat(
-            spinbox.add(1),
-            Matchers.equalTo(before + 1)
-        );
+        final Domain domain = this.domain();
+        try {
+            final Spinbox spinbox = new ItemSpinbox(
+                new Wallet.Empty(), domain.item("ItemSpinboxITCase")
+            );
+            final long before = spinbox.add(0);
+            MatcherAssert.assertThat(
+                spinbox.add(1),
+                Matchers.equalTo(before + 1)
+            );
+        } finally {
+            domain.drop();
+        }
     }
 
     /**
-     * Get spinbox to work with.
-     * @param name Name of item
-     * @return Spinbox
+     * Make a domain.
+     * @return The domain
      * @throws Exception If some problem inside
      */
-    private Spinbox spinbox(final String name) throws Exception {
+    private Domain domain() throws Exception {
         Assume.assumeNotNull(ItemSpinboxITCase.KEY);
-        return new ItemSpinbox(
-            new Wallet.Empty(),
-            name,
-            new SDBClient.Simple(
-                ItemSpinboxITCase.KEY,
-                ItemSpinboxITCase.SECRET,
-                ItemSpinboxITCase.DOMAIN
-            )
+        final String name = String.format(
+            "test-%s", RandomStringUtils.randomAlphabetic(Tv.FIVE)
         );
+        final Domain domain = new Region.Simple(
+            new Credentials.Simple(
+                ItemSpinboxITCase.KEY,
+                ItemSpinboxITCase.SECRET
+            )
+        ).domain(name);
+        domain.create();
+        return domain;
     }
 
 }

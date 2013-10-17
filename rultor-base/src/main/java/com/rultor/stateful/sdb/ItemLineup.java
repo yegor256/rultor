@@ -29,17 +29,13 @@
  */
 package com.rultor.stateful.sdb;
 
-import com.amazonaws.services.simpledb.model.DeleteAttributesRequest;
-import com.amazonaws.services.simpledb.model.GetAttributesRequest;
-import com.amazonaws.services.simpledb.model.GetAttributesResult;
-import com.amazonaws.services.simpledb.model.PutAttributesRequest;
-import com.amazonaws.services.simpledb.model.ReplaceableAttribute;
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
-import com.rultor.aws.SDBClient;
+import com.jcabi.simpledb.Item;
 import com.rultor.spi.Wallet;
 import com.rultor.stateful.Lineup;
 import com.rultor.tools.Dollars;
@@ -62,7 +58,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "client", "name" })
+@EqualsAndHashCode(of = { "item", "wallet" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
 public final class ItemLineup implements Lineup {
@@ -71,6 +67,11 @@ public final class ItemLineup implements Lineup {
      * Attribute name.
      */
     private static final String IDENTIFIER = "identifier";
+
+    /**
+     * Attribute name.
+     */
+    private static final String TIME = "time";
 
     /**
      * Randomizer.
@@ -88,30 +89,20 @@ public final class ItemLineup implements Lineup {
     private final transient Wallet wallet;
 
     /**
-     * SimpleDB client.
+     * SimpleDB item.
      */
-    private final transient SDBClient client;
-
-    /**
-     * Object name.
-     */
-    private final transient String name;
+    private final transient Item item;
 
     /**
      * Public ctor.
      * @param wlt Wallet to charge
-     * @param obj Item name
-     * @param clnt Client
-     * @checkstyle ParameterNumber (7 lines)
+     * @param itm Item
      */
     public ItemLineup(
         @NotNull(message = "wallet can't be NULL") final Wallet wlt,
-        @NotNull(message = "object name can't be NULL") final String obj,
-        @NotNull(message = "SimpleDB client can't be NULL")
-        final SDBClient clnt) {
+        @NotNull(message = "item can't be NULL") final Item itm) {
         this.wallet = wlt;
-        this.name = obj;
-        this.client = clnt;
+        this.item = itm;
     }
 
     /**
@@ -138,8 +129,8 @@ public final class ItemLineup implements Lineup {
                 }
                 Logger.info(
                     this,
-                    "SDB item `%s/%s` is locked by %s for %[ms]s already...",
-                    this.client.domain(), this.name, saved,
+                    "SDB item %s is locked by %s for %[ms]s already...",
+                    this.item, saved,
                     System.currentTimeMillis() - start
                 );
                 TimeUnit.MILLISECONDS.sleep(
@@ -186,22 +177,16 @@ public final class ItemLineup implements Lineup {
     @RetryOnFailure(verbose = false)
     private boolean exists() {
         final long start = System.currentTimeMillis();
-        final GetAttributesResult result = this.client.get().getAttributes(
-            new GetAttributesRequest()
-                .withConsistentRead(true)
-                .withDomainName(this.client.domain())
-                .withItemName(this.name)
-        );
+        final boolean exists = !this.item.isEmpty();
         this.wallet.charge(
             Logger.format(
                 // @checkstyle LineLength (1 line)
-                "checked existence of AWS SimpleDB item `%s` in `%s` domain in %[ms]s",
-                this.name, this.client.domain(),
-                System.currentTimeMillis() - start
+                "checked existence of AWS SimpleDB item %s domain in %[ms]s: %B",
+                this.item, System.currentTimeMillis() - start, exists
             ),
             new Dollars(Tv.FIVE)
         );
-        return !result.getAttributes().isEmpty();
+        return exists;
     }
 
     /**
@@ -211,26 +196,16 @@ public final class ItemLineup implements Lineup {
     @RetryOnFailure(verbose = false)
     private void save(final Marker marker) {
         final long start = System.currentTimeMillis();
-        this.client.get().putAttributes(
-            new PutAttributesRequest()
-                .withDomainName(this.client.domain())
-                .withItemName(this.name)
-                .withAttributes(
-                    new ReplaceableAttribute()
-                        .withName(ItemLineup.IDENTIFIER)
-                        .withValue(marker.toString())
-                        .withReplace(true),
-                    new ReplaceableAttribute()
-                        .withName("time")
-                        .withValue(new Time().toString())
-                        .withReplace(true)
-                )
+        this.item.putAll(
+            new ImmutableMap.Builder<String, String>()
+                .put(ItemLineup.IDENTIFIER, marker.toString())
+                .put(ItemLineup.TIME, new Time().toString())
+                .build()
         );
         this.wallet.charge(
             Logger.format(
-                "put AWS SimpleDB item `%s` into `%s` domain in %[ms]s",
-                this.name, this.client.domain(),
-                System.currentTimeMillis() - start
+                "put AWS SimpleDB item %s in %[ms]s",
+                this.item, System.currentTimeMillis() - start
             ),
             new Dollars(Tv.FIVE)
         );
@@ -243,26 +218,16 @@ public final class ItemLineup implements Lineup {
     @RetryOnFailure(verbose = false)
     private Marker load() {
         final long start = System.currentTimeMillis();
-        final GetAttributesResult result = this.client.get().getAttributes(
-            new GetAttributesRequest()
-                .withConsistentRead(true)
-                .withDomainName(this.client.domain())
-                .withItemName(this.name)
-                .withAttributeNames(ItemLineup.IDENTIFIER)
-        );
+        String text = this.item.get(ItemLineup.IDENTIFIER);
         this.wallet.charge(
             Logger.format(
-                "loaded AWS SimpleDB item `%s` from `%s` domain in %[ms]s",
-                this.name, this.client.domain(),
-                System.currentTimeMillis() - start
+                "loaded AWS SimpleDB item %s in %[ms]s",
+                this.item, System.currentTimeMillis() - start
             ),
             new Dollars(Tv.FIVE)
         );
-        final String text;
-        if (result.getAttributes().isEmpty()) {
+        if (text == null) {
             text = "";
-        } else {
-            text = result.getAttributes().get(0).getValue();
         }
         return new Marker(text);
     }
@@ -273,16 +238,11 @@ public final class ItemLineup implements Lineup {
     @RetryOnFailure(verbose = false)
     private void remove() {
         final long start = System.currentTimeMillis();
-        this.client.get().deleteAttributes(
-            new DeleteAttributesRequest()
-                .withDomainName(this.client.domain())
-                .withItemName(this.name)
-        );
+        this.item.clear();
         this.wallet.charge(
             Logger.format(
-                "removed AWS SimpleDB item `%s` from `%s` domain in %[ms]s",
-                this.name, this.client.domain(),
-                System.currentTimeMillis() - start
+                "removed AWS SimpleDB item %s in %[ms]s",
+                this.item, System.currentTimeMillis() - start
             ),
             new Dollars(Tv.FIVE)
         );
