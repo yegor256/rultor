@@ -259,9 +259,11 @@ final class EC2Environment implements Environment {
                 if (!"pending".equals(state.getName())) {
                     throw new IllegalStateException(
                         String.format(
-                            "instance `%s` is in invalid state `%s`",
-                            instance.getInstanceId(),
-                            state.getName()
+                            // @checkstyle LineLength (1 line)
+                            "instance `%s` is in invalid state `%s`: \"%s\", \"%s\"",
+                            instance.getInstanceId(), state.getName(),
+                            instance.getStateReason().getMessage(),
+                            instance.getStateTransitionReason()
                         )
                     );
                 }
