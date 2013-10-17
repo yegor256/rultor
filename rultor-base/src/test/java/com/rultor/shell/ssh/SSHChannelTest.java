@@ -62,6 +62,7 @@ import org.mockito.Mockito;
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class SSHChannelTest {
 
