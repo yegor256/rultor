@@ -31,7 +31,9 @@ package com.rultor.stateful.sdb;
 
 import com.jcabi.aspects.Parallel;
 import com.jcabi.aspects.Tv;
-import com.rultor.aws.SDBClient;
+import com.jcabi.simpledb.Credentials;
+import com.jcabi.simpledb.Domain;
+import com.jcabi.simpledb.Region;
 import com.rultor.spi.Wallet;
 import com.rultor.stateful.Lineup;
 import java.security.SecureRandom;
@@ -39,6 +41,7 @@ import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -70,21 +73,23 @@ public final class ItemLineupITCase {
         System.getProperty("failsafe.sdb.secret");
 
     /**
-     * SimpleDB domain.
-     */
-    private static final String DOMAIN =
-        System.getProperty("failsafe.sdb.domain");
-
-    /**
      * ItemLineup can run code in parallel.
      * @throws Exception If some problem inside
      */
     @Test
     public void runsInParallel() throws Exception {
-        final Lineup lineup = this.lineup("ItemLineupITCase.txt");
-        final AtomicInteger count = new AtomicInteger();
-        this.increment(lineup, count);
-        MatcherAssert.assertThat(count.get(), Matchers.equalTo(Tv.TEN));
+        final Domain domain = this.domain();
+        try {
+            final Lineup lineup = new ItemLineup(
+                new Wallet.Empty(),
+                domain.item("ItemLineupITCase.txt")
+            );
+            final AtomicInteger count = new AtomicInteger();
+            this.increment(lineup, count);
+            MatcherAssert.assertThat(count.get(), Matchers.equalTo(Tv.TEN));
+        } finally {
+            domain.drop();
+        }
     }
 
     /**
@@ -112,22 +117,23 @@ public final class ItemLineupITCase {
     }
 
     /**
-     * Get lineup to work with.
-     * @param name Name of item
-     * @return Lineup
+     * Make a domain.
+     * @return The domain
      * @throws Exception If some problem inside
      */
-    private Lineup lineup(final String name) throws Exception {
+    private Domain domain() throws Exception {
         Assume.assumeNotNull(ItemLineupITCase.KEY);
-        return new ItemLineup(
-            new Wallet.Empty(),
-            name,
-            new SDBClient.Simple(
-                ItemLineupITCase.KEY,
-                ItemLineupITCase.SECRET,
-                ItemLineupITCase.DOMAIN
-            )
+        final String name = String.format(
+            "test-%s", RandomStringUtils.randomAlphabetic(Tv.FIVE)
         );
+        final Domain domain = new Region.Simple(
+            new Credentials.Simple(
+                ItemLineupITCase.KEY,
+                ItemLineupITCase.SECRET
+            )
+        ).domain(name);
+        domain.create();
+        return domain;
     }
 
 }

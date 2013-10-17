@@ -29,22 +29,16 @@
  */
 package com.rultor.stateful.sdb;
 
-import com.amazonaws.services.simpledb.model.Attribute;
-import com.amazonaws.services.simpledb.model.DeleteAttributesRequest;
-import com.amazonaws.services.simpledb.model.GetAttributesRequest;
-import com.amazonaws.services.simpledb.model.GetAttributesResult;
-import com.amazonaws.services.simpledb.model.Item;
-import com.amazonaws.services.simpledb.model.PutAttributesRequest;
-import com.amazonaws.services.simpledb.model.ReplaceableAttribute;
 import com.amazonaws.services.simpledb.model.SelectRequest;
-import com.amazonaws.services.simpledb.model.SelectResult;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
-import com.rultor.aws.SDBClient;
+import com.jcabi.simpledb.Domain;
+import com.jcabi.simpledb.Item;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
 import com.rultor.stateful.Notepad;
@@ -68,7 +62,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "client", "work", "wallet" })
+@EqualsAndHashCode(of = { "domain", "work", "wallet" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
 public final class DomainNotepad implements Notepad {
@@ -94,9 +88,9 @@ public final class DomainNotepad implements Notepad {
     private static final String ATTR_TIME = "time";
 
     /**
-     * SimpleDB client.
+     * SimpleDB domain.
      */
-    private final transient SDBClient client;
+    private final transient Domain domain;
 
     /**
      * Coordinates we're in.
@@ -112,16 +106,15 @@ public final class DomainNotepad implements Notepad {
      * Public ctor.
      * @param wrk Coordinates
      * @param wlt Wallet to charge
-     * @param clnt Client
+     * @param dmn Domain
      */
     public DomainNotepad(
         @NotNull(message = "work can't be NULL") final Coordinates wrk,
         @NotNull(message = "wallet can't be NULL") final Wallet wlt,
-        @NotNull(message = "SimpleDB client can't be NULL")
-        final SDBClient clnt) {
+        @NotNull(message = "domain can't be NULL") final Domain dmn) {
         this.work = wrk;
         this.wallet = wlt;
-        this.client = clnt;
+        this.domain = dmn;
     }
 
     /**
@@ -146,22 +139,17 @@ public final class DomainNotepad implements Notepad {
     @Override
     public boolean contains(final Object object) {
         final long start = System.currentTimeMillis();
-        final GetAttributesResult result = this.client.get().getAttributes(
-            new GetAttributesRequest()
-                .withDomainName(this.client.domain())
-                .withItemName(this.name(object.toString()))
-                .withConsistentRead(true)
-        );
+        final boolean contains = !this.domain.item(
+            this.name(object.toString())
+        ).isEmpty();
         this.wallet.charge(
             Logger.format(
-                // @checkstyle LineLength (1 line)
-                "checked existence of AWS SimpleDB item from `%s` domain in %[ms]s",
-                this.client.domain(),
-                System.currentTimeMillis() - start
+                "checked existence of AWS SimpleDB item in %s in %[ms]s: %B",
+                this.domain, System.currentTimeMillis() - start, contains
             ),
             new Dollars(Tv.FIVE)
         );
-        return !result.getAttributes().isEmpty();
+        return contains;
     }
 
     /**
@@ -170,38 +158,36 @@ public final class DomainNotepad implements Notepad {
     @Override
     @RetryOnFailure(verbose = false)
     public Iterator<String> iterator() {
-        final String query = String.format(
-            "SELECT `%s` FROM `%s` WHERE `%s`='%s' AND `%s`='%s'",
-            DomainNotepad.ATTR_TEXT,
-            this.client.domain(),
-            DomainNotepad.ATTR_OWNER,
-            this.work.owner(),
-            DomainNotepad.ATTR_RULE,
-            this.work.rule()
+        final Iterable<Item> items = this.domain.select(
+            new SelectRequest().withSelectExpression(
+                String.format(
+                    "SELECT `%s` FROM `%s` WHERE `%s`='%s' AND `%s`='%s'",
+                    DomainNotepad.ATTR_TEXT,
+                    this.domain.name(),
+                    DomainNotepad.ATTR_OWNER,
+                    this.work.owner(),
+                    DomainNotepad.ATTR_RULE,
+                    this.work.rule()
+                )
+            ).withConsistentRead(true)
         );
         final long start = System.currentTimeMillis();
-        final SelectResult result = this.client.get().select(
-            new SelectRequest()
-                .withConsistentRead(true)
-                .withSelectExpression(query)
-        );
-        final Collection<String> items = new LinkedList<String>();
-        for (Item item : result.getItems()) {
-            final String text = item.getAttributes().get(0).getValue();
-            if (item.getName().equals(this.name(text))) {
-                items.add(text);
+        final Collection<String> texts = new LinkedList<String>();
+        for (Item item : items) {
+            final String text = this.name(item.get(DomainNotepad.ATTR_TEXT));
+            if (item.name().equals(text)) {
+                texts.add(item.get(DomainNotepad.ATTR_TEXT));
             }
         }
         this.wallet.charge(
             Logger.format(
-                // @checkstyle LineLength (1 line)
-                "retrieved AWS SimpleDB %d item(s) from `%s` domain in %[ms]s (%d total)",
-                items.size(), this.client.domain(),
-                System.currentTimeMillis() - start, result.getItems().size()
+                "retrieved AWS SimpleDB %d item(s) from %s in %[ms]s",
+                texts.size(), this.domain,
+                System.currentTimeMillis() - start
             ),
             new Dollars(Tv.FIVE)
         );
-        return items.iterator();
+        return texts.iterator();
     }
 
     /**
@@ -228,34 +214,18 @@ public final class DomainNotepad implements Notepad {
     @RetryOnFailure(verbose = false)
     public boolean add(final String line) {
         final long start = System.currentTimeMillis();
-        this.client.get().putAttributes(
-            new PutAttributesRequest()
-                .withDomainName(this.client.domain())
-                .withItemName(this.name(line))
-                .withAttributes(
-                    new ReplaceableAttribute()
-                        .withName(DomainNotepad.ATTR_TEXT)
-                        .withValue(line)
-                        .withReplace(true),
-                    new ReplaceableAttribute()
-                        .withName(DomainNotepad.ATTR_OWNER)
-                        .withValue(this.work.owner().toString())
-                        .withReplace(true),
-                    new ReplaceableAttribute()
-                        .withName(DomainNotepad.ATTR_RULE)
-                        .withValue(this.work.rule())
-                        .withReplace(true),
-                    new ReplaceableAttribute()
-                        .withName(DomainNotepad.ATTR_TIME)
-                        .withValue(new Time().toString())
-                        .withReplace(true)
-                )
+        this.domain.item(this.name(line)).putAll(
+            new ImmutableMap.Builder<String, String>()
+                .put(DomainNotepad.ATTR_TEXT, line)
+                .put(DomainNotepad.ATTR_OWNER, this.work.owner().toString())
+                .put(DomainNotepad.ATTR_RULE, this.work.rule())
+                .put(DomainNotepad.ATTR_TIME, new Time().toString())
+                .build()
         );
         this.wallet.charge(
             Logger.format(
-                "added AWS SimpleDB item `%s` to `%s` domain in %[ms]s",
-                this.name(line),
-                this.client.domain(),
+                "added AWS SimpleDB item `%s` to %s in %[ms]s",
+                this.name(line), this.domain,
                 System.currentTimeMillis() - start
             ),
             new Dollars(Tv.FIVE)
@@ -270,22 +240,11 @@ public final class DomainNotepad implements Notepad {
     @RetryOnFailure(verbose = false)
     public boolean remove(final Object line) {
         final long start = System.currentTimeMillis();
-        this.client.get().deleteAttributes(
-            new DeleteAttributesRequest()
-                .withDomainName(this.client.domain())
-                .withItemName(this.name(line.toString()))
-                .withAttributes(
-                    new Attribute().withName(DomainNotepad.ATTR_OWNER),
-                    new Attribute().withName(DomainNotepad.ATTR_TEXT),
-                    new Attribute().withName(DomainNotepad.ATTR_TIME),
-                    new Attribute().withName(DomainNotepad.ATTR_RULE)
-                )
-        );
+        this.domain.item(this.name(line.toString())).clear();
         this.wallet.charge(
             Logger.format(
-                "removed AWS SimpleDB item `%s` from `%s` domain in %[ms]s",
-                this.name(line.toString()),
-                this.client.domain(),
+                "removed AWS SimpleDB item `%s` from %s in %[ms]s",
+                this.name(line.toString()), this.domain,
                 System.currentTimeMillis() - start
             ),
             new Dollars(Tv.FIVE)

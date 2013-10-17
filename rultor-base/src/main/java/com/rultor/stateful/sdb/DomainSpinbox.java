@@ -31,7 +31,7 @@ package com.rultor.stateful.sdb;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.aws.SDBClient;
+import com.jcabi.simpledb.Domain;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
 import com.rultor.stateful.Spinbox;
@@ -49,7 +49,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @Loggable(Loggable.DEBUG)
-@EqualsAndHashCode(of = { "work", "client" })
+@EqualsAndHashCode(of = { "work", "wallet", "domain" })
 public final class DomainSpinbox implements Spinbox {
 
     /**
@@ -65,22 +65,21 @@ public final class DomainSpinbox implements Spinbox {
     /**
      * SimpleDB client.
      */
-    private final transient SDBClient client;
+    private final transient Domain domain;
 
     /**
      * Public ctor.
      * @param wrk Coordinates we're in
      * @param wlt Wallet
-     * @param clnt Client
+     * @param dmn Domain
      */
     public DomainSpinbox(
         @NotNull(message = "work can't be NULL") final Coordinates wrk,
         @NotNull(message = "wallet can't be NULL") final Wallet wlt,
-        @NotNull(message = "SimpleDB client can't be NULL")
-        final SDBClient clnt) {
+        @NotNull(message = "domain can't be NULL") final Domain dmn) {
         this.work = wrk;
         this.wallet = wlt;
-        this.client = clnt;
+        this.domain = dmn;
     }
 
     /**
@@ -90,13 +89,14 @@ public final class DomainSpinbox implements Spinbox {
     public long add(final long value) {
         return new ItemSpinbox(
             this.wallet,
-            String.format(
-                "%s %s %s",
-                this.work.owner(),
-                this.work.rule(),
-                this.work.scheduled()
-            ),
-            this.client
+            this.domain.item(
+                String.format(
+                    "%s %s %s",
+                    this.work.owner(),
+                    this.work.rule(),
+                    this.work.scheduled()
+                )
+            )
         ).add(value);
     }
 

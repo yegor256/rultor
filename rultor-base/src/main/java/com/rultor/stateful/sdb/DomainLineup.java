@@ -31,7 +31,7 @@ package com.rultor.stateful.sdb;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.aws.SDBClient;
+import com.jcabi.simpledb.Domain;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
 import com.rultor.stateful.Lineup;
@@ -49,7 +49,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "work", "client" })
+@EqualsAndHashCode(of = { "work", "wallet", "domain" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
 public final class DomainLineup implements Lineup {
@@ -65,24 +65,24 @@ public final class DomainLineup implements Lineup {
     private final transient Wallet wallet;
 
     /**
-     * SimpleDB client.
+     * SimpleDB domain.
      */
-    private final transient SDBClient client;
+    private final transient Domain domain;
 
     /**
      * Public ctor.
      * @param wrk Coordinates we're in
      * @param wlt Wallet to charge
-     * @param clnt Client
+     * @param dmn SimpleDB domain
      */
     public DomainLineup(
         @NotNull(message = "work can't be NULL") final Coordinates wrk,
         @NotNull(message = "wallet can't be NULL") final Wallet wlt,
         @NotNull(message = "SimpleDB client can't be NULL")
-        final SDBClient clnt) {
+        final Domain dmn) {
         this.work = wrk;
         this.wallet = wlt;
-        this.client = clnt;
+        this.domain = dmn;
     }
 
     /**
@@ -110,12 +110,13 @@ public final class DomainLineup implements Lineup {
     private Lineup lineup() {
         return new ItemLineup(
             this.wallet,
-            String.format(
-                "%s %s",
-                this.work.owner(),
-                this.work.rule()
-            ),
-            this.client
+            this.domain.item(
+                String.format(
+                    "%s %s",
+                    this.work.owner(),
+                    this.work.rule()
+                )
+            )
         );
     }
 
