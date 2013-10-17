@@ -36,9 +36,7 @@ import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.simpledb.Item;
-import com.rultor.spi.Wallet;
 import com.rultor.stateful.Lineup;
-import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
 import java.security.SecureRandom;
 import java.util.Random;
@@ -58,7 +56,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "item", "wallet" })
+@EqualsAndHashCode(of = "item")
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
 public final class ItemLineup implements Lineup {
@@ -84,24 +82,16 @@ public final class ItemLineup implements Lineup {
     private static final long MAX = TimeUnit.MINUTES.toMillis(Tv.FIVE);
 
     /**
-     * Wallet to charge.
-     */
-    private final transient Wallet wallet;
-
-    /**
      * SimpleDB item.
      */
     private final transient Item item;
 
     /**
      * Public ctor.
-     * @param wlt Wallet to charge
      * @param itm Item
      */
     public ItemLineup(
-        @NotNull(message = "wallet can't be NULL") final Wallet wlt,
         @NotNull(message = "item can't be NULL") final Item itm) {
-        this.wallet = wlt;
         this.item = itm;
     }
 
@@ -176,17 +166,7 @@ public final class ItemLineup implements Lineup {
      */
     @RetryOnFailure(verbose = false)
     private boolean exists() {
-        final long start = System.currentTimeMillis();
-        final boolean exists = !this.item.isEmpty();
-        this.wallet.charge(
-            Logger.format(
-                // @checkstyle LineLength (1 line)
-                "checked existence of AWS SimpleDB item %s domain in %[ms]s: %B",
-                this.item, System.currentTimeMillis() - start, exists
-            ),
-            new Dollars(Tv.FIVE)
-        );
-        return exists;
+        return !this.item.isEmpty();
     }
 
     /**
@@ -195,19 +175,11 @@ public final class ItemLineup implements Lineup {
      */
     @RetryOnFailure(verbose = false)
     private void save(final Marker marker) {
-        final long start = System.currentTimeMillis();
         this.item.putAll(
             new ImmutableMap.Builder<String, String>()
                 .put(ItemLineup.IDENTIFIER, marker.toString())
                 .put(ItemLineup.TIME, new Time().toString())
                 .build()
-        );
-        this.wallet.charge(
-            Logger.format(
-                "put AWS SimpleDB item %s in %[ms]s",
-                this.item, System.currentTimeMillis() - start
-            ),
-            new Dollars(Tv.FIVE)
         );
     }
 
@@ -217,15 +189,7 @@ public final class ItemLineup implements Lineup {
      */
     @RetryOnFailure(verbose = false)
     private Marker load() {
-        final long start = System.currentTimeMillis();
         String text = this.item.get(ItemLineup.IDENTIFIER);
-        this.wallet.charge(
-            Logger.format(
-                "loaded AWS SimpleDB item %s in %[ms]s",
-                this.item, System.currentTimeMillis() - start
-            ),
-            new Dollars(Tv.FIVE)
-        );
         if (text == null) {
             text = "";
         }
@@ -237,15 +201,7 @@ public final class ItemLineup implements Lineup {
      */
     @RetryOnFailure(verbose = false)
     private void remove() {
-        final long start = System.currentTimeMillis();
         this.item.clear();
-        this.wallet.charge(
-            Logger.format(
-                "removed AWS SimpleDB item %s in %[ms]s",
-                this.item, System.currentTimeMillis() - start
-            ),
-            new Dollars(Tv.FIVE)
-        );
     }
 
     /**

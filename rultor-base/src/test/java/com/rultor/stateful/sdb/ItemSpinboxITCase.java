@@ -33,7 +33,6 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.simpledb.Credentials;
 import com.jcabi.simpledb.Domain;
 import com.jcabi.simpledb.Region;
-import com.rultor.spi.Wallet;
 import com.rultor.stateful.Spinbox;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.MatcherAssert;
@@ -70,7 +69,7 @@ public final class ItemSpinboxITCase {
         final Domain domain = this.domain();
         try {
             final Spinbox spinbox = new ItemSpinbox(
-                new Wallet.Empty(), domain.item("ItemSpinboxITCase")
+                domain.item("ItemSpinboxITCase")
             );
             final long before = spinbox.add(0);
             MatcherAssert.assertThat(

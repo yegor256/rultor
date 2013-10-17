@@ -35,15 +35,11 @@ import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
-import com.jcabi.aspects.Tv;
-import com.jcabi.log.Logger;
 import com.jcabi.simpledb.Domain;
 import com.jcabi.simpledb.Item;
 import com.jcabi.simpledb.Region;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Wallet;
 import com.rultor.stateful.Notepad;
-import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
 import java.util.Collection;
 import java.util.Iterator;
@@ -63,7 +59,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "domain", "work", "wallet" })
+@EqualsAndHashCode(of = { "domain", "work" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
 public final class DomainNotepad implements Notepad {
@@ -99,36 +95,27 @@ public final class DomainNotepad implements Notepad {
     private final transient Coordinates work;
 
     /**
-     * Wallet to charge.
-     */
-    private final transient Wallet wallet;
-
-    /**
      * Public ctor.
      * @param wrk Coordinates
-     * @param wlt Wallet to charge
      * @param dmn Domain
      */
     public DomainNotepad(
         @NotNull(message = "work can't be NULL") final Coordinates wrk,
-        @NotNull(message = "wallet can't be NULL") final Wallet wlt,
         @NotNull(message = "domain can't be NULL") final Domain dmn) {
         this.work = wrk;
-        this.wallet = wlt;
         this.domain = dmn;
     }
 
     /**
      * Public ctor.
      * @param wrk Coordinates
-     * @param wlt Wallet to charge
      * @param region Region
      * @param name Name of domain
      */
-    public DomainNotepad(final Coordinates wrk, final Wallet wlt,
+    public DomainNotepad(final Coordinates wrk,
         @NotNull(message = "region can't be NULL") final Region region,
         @NotNull(message = "domain can't be NULL") final String name) {
-        this(wrk, wlt, region.domain(name));
+        this(wrk, region.domain(name));
     }
 
     /**
@@ -152,18 +139,7 @@ public final class DomainNotepad implements Notepad {
      */
     @Override
     public boolean contains(final Object object) {
-        final long start = System.currentTimeMillis();
-        final boolean contains = !this.domain.item(
-            this.name(object.toString())
-        ).isEmpty();
-        this.wallet.charge(
-            Logger.format(
-                "checked existence of AWS SimpleDB item in %s in %[ms]s: %B",
-                this.domain, System.currentTimeMillis() - start, contains
-            ),
-            new Dollars(Tv.FIVE)
-        );
-        return contains;
+        return !this.domain.item(this.name(object.toString())).isEmpty();
     }
 
     /**
@@ -185,7 +161,6 @@ public final class DomainNotepad implements Notepad {
                 )
             ).withConsistentRead(true)
         );
-        final long start = System.currentTimeMillis();
         final Collection<String> texts = new LinkedList<String>();
         for (Item item : items) {
             final String text = this.name(item.get(DomainNotepad.ATTR_TEXT));
@@ -193,14 +168,6 @@ public final class DomainNotepad implements Notepad {
                 texts.add(item.get(DomainNotepad.ATTR_TEXT));
             }
         }
-        this.wallet.charge(
-            Logger.format(
-                "retrieved AWS SimpleDB %d item(s) from %s in %[ms]s",
-                texts.size(), this.domain,
-                System.currentTimeMillis() - start
-            ),
-            new Dollars(Tv.FIVE)
-        );
         return texts.iterator();
     }
 
@@ -227,7 +194,6 @@ public final class DomainNotepad implements Notepad {
     @Override
     @RetryOnFailure(verbose = false)
     public boolean add(final String line) {
-        final long start = System.currentTimeMillis();
         this.domain.item(this.name(line)).putAll(
             new ImmutableMap.Builder<String, String>()
                 .put(DomainNotepad.ATTR_TEXT, line)
@@ -235,14 +201,6 @@ public final class DomainNotepad implements Notepad {
                 .put(DomainNotepad.ATTR_RULE, this.work.rule())
                 .put(DomainNotepad.ATTR_TIME, new Time().toString())
                 .build()
-        );
-        this.wallet.charge(
-            Logger.format(
-                "added AWS SimpleDB item `%s` to %s in %[ms]s",
-                this.name(line), this.domain,
-                System.currentTimeMillis() - start
-            ),
-            new Dollars(Tv.FIVE)
         );
         return true;
     }
@@ -253,16 +211,7 @@ public final class DomainNotepad implements Notepad {
     @Override
     @RetryOnFailure(verbose = false)
     public boolean remove(final Object line) {
-        final long start = System.currentTimeMillis();
         this.domain.item(this.name(line.toString())).clear();
-        this.wallet.charge(
-            Logger.format(
-                "removed AWS SimpleDB item `%s` from %s in %[ms]s",
-                this.name(line.toString()), this.domain,
-                System.currentTimeMillis() - start
-            ),
-            new Dollars(Tv.FIVE)
-        );
         return true;
     }
 

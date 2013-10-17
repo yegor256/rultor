@@ -34,7 +34,6 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.simpledb.Domain;
 import com.jcabi.simpledb.Region;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Wallet;
 import com.rultor.stateful.Lineup;
 import java.util.concurrent.Callable;
 import javax.validation.constraints.NotNull;
@@ -50,7 +49,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "work", "wallet", "domain" })
+@EqualsAndHashCode(of = { "work", "domain" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.DoNotUseThreads")
 public final class DomainLineup implements Lineup {
@@ -61,11 +60,6 @@ public final class DomainLineup implements Lineup {
     private final transient Coordinates work;
 
     /**
-     * Wallet to charge.
-     */
-    private final transient Wallet wallet;
-
-    /**
      * SimpleDB domain.
      */
     private final transient Domain domain;
@@ -73,29 +67,25 @@ public final class DomainLineup implements Lineup {
     /**
      * Public ctor.
      * @param wrk Coordinates we're in
-     * @param wlt Wallet to charge
      * @param dmn SimpleDB domain
      */
     public DomainLineup(
         @NotNull(message = "work can't be NULL") final Coordinates wrk,
-        @NotNull(message = "wallet can't be NULL") final Wallet wlt,
         @NotNull(message = "domain can't be NULL") final Domain dmn) {
         this.work = wrk;
-        this.wallet = wlt;
         this.domain = dmn;
     }
 
     /**
      * Public ctor.
      * @param wrk Coordinates we're in
-     * @param wlt Wallet to charge
      * @param region Region
      * @param name Domain name
      */
-    public DomainLineup(final Coordinates wrk, final Wallet wlt,
+    public DomainLineup(final Coordinates wrk,
         @NotNull(message = "region can't be NULL") final Region region,
         @NotNull(message = "domain can't be NULL") final String name) {
-        this(wrk, wlt, region.domain(name));
+        this(wrk, region.domain(name));
     }
 
     /**
@@ -122,7 +112,6 @@ public final class DomainLineup implements Lineup {
      */
     private Lineup lineup() {
         return new ItemLineup(
-            this.wallet,
             this.domain.item(
                 String.format(
                     "%s %s",
