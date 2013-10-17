@@ -154,25 +154,57 @@ public final class SnapshotTest {
                 new Directives()
                     .xpath("/snapshot")
                     .addIf("tags")
-                        // @checkstyle MultipleStringLiterals (5 line)
-                    .add("tag").add("label").set("unique").up()
-                    .add("markdown").set("this is unique tag").up().up()
-                    .add("tag").add("label").set("duplicate").up()
-                    .add("markdown").set("this is the first tag").up().up()
-                    .add("tag").add("label").set("duplicate").up()
-                    .add("markdown").set("this is the second tag")
+                    // @checkstyle MultipleStringLiterals (34 line)
+                    .add("tag")
+                        .add("label").set("unique").up()
+                        .add("markdown").set("this is unique tag").up()
+                        .add("level").set("INFO").up()
+                        .add("attributes")
+                            .add("attribute")
+                                .add("name").set("headUser").up()
+                                .add("value").set("one").up()
+                            .up()
+                        .up()
+                    .up()
+                    .add("tag")
+                        .add("label").set("duplicate").up()
+                        .add("markdown").set("this is the first tag").up()
+                        .add("level").set("WARNING").up()
+                        .add("attributes")
+                            .add("attribute")
+                                .add("name").set("headUser").up()
+                                .add("value").set("two").up()
+                            .up()
+                        .up()
+                    .up()
+                    .add("tag")
+                        .add("label").set("duplicate").up()
+                        .add("markdown").set("this is the second tag").up()
+                        .add("level").set("WARNING").up()
+                        .add("attributes")
+                            .add("attribute")
+                                .add("name").set("headUser").up()
+                                .add("value").set("three").up()
+                            .up()
+                        .up()
+                    .up()
             ).xml(),
             Matchers.allOf(
-                XhtmlMatchers.hasXPath(
-                    "/snapshot/tags/tag/markdown[contains(.,'unique')]"
+                XhtmlMatchers.hasXPaths(
+                    "/snapshot/tags/tag/markdown[contains(.,'unique')]",
+                    "/snapshot/tags/tag/markdown[contains(.,'second')]",
+                    "/snapshot/tags/tag[label='unique'][level='INFO']",
+                    "/snapshot/tags/tag[label='duplicate'][level='WARNING']",
+                    // @checkstyle LineLength (4 line)
+                    "/snapshot/tags/tag[label='unique']/attributes/attribute/name",
+                    "/snapshot/tags/tag[label='unique']/attributes/attribute[value='one']",
+                    "/snapshot/tags/tag[label='duplicate']/attributes/attribute/name",
+                    "/snapshot/tags/tag[label='duplicate']/attributes/attribute[value='three']"
                 ),
                 Matchers.not(
                     XhtmlMatchers.hasXPath(
                         "/snapshot/tags/tag/markdown[contains(.,'first')]"
                     )
-                ),
-                XhtmlMatchers.hasXPath(
-                    "/snapshot/tags/tag/markdown[contains(.,'second')]"
                 )
             )
         );
