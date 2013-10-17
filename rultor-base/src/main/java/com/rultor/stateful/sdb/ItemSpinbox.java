@@ -29,16 +29,12 @@
  */
 package com.rultor.stateful.sdb;
 
-import com.amazonaws.services.simpledb.AmazonSimpleDB;
-import com.amazonaws.services.simpledb.model.GetAttributesRequest;
-import com.amazonaws.services.simpledb.model.GetAttributesResult;
-import com.amazonaws.services.simpledb.model.PutAttributesRequest;
-import com.amazonaws.services.simpledb.model.ReplaceableAttribute;
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
-import com.rultor.aws.SDBClient;
+import com.jcabi.simpledb.Item;
 import com.rultor.spi.Wallet;
 import com.rultor.stateful.Spinbox;
 import com.rultor.tools.Dollars;
@@ -58,7 +54,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @Loggable(Loggable.DEBUG)
-@EqualsAndHashCode(of = { "client", "name" })
+@EqualsAndHashCode(of = { "item", "wallet" })
 public final class ItemSpinbox implements Spinbox {
 
     /**
@@ -77,29 +73,20 @@ public final class ItemSpinbox implements Spinbox {
     private final transient Wallet wallet;
 
     /**
-     * SimpleDB client.
+     * SimpleDB item.
      */
-    private final transient SDBClient client;
-
-    /**
-     * Object name.
-     */
-    private final transient String name;
+    private final transient Item item;
 
     /**
      * Public ctor.
      * @param wlt Wallet to charge
-     * @param obj Item name
-     * @param clnt Client
+     * @param itm Item
      */
     public ItemSpinbox(
         @NotNull(message = "wallet can't be NULL") final Wallet wlt,
-        @NotNull(message = "object name can't be NULL") final String obj,
-        @NotNull(message = "SimpleDB client can't be NULL")
-        final SDBClient clnt) {
+        @NotNull(message = "item can't be NULL") final Item itm) {
         this.wallet = wlt;
-        this.name = obj;
-        this.client = clnt;
+        this.item = itm;
     }
 
     /**
@@ -108,40 +95,21 @@ public final class ItemSpinbox implements Spinbox {
     @Override
     @RetryOnFailure(verbose = false)
     public long add(final long value) {
-        final AmazonSimpleDB aws = this.client.get();
-        final GetAttributesResult result = aws.getAttributes(
-            new GetAttributesRequest()
-                .withConsistentRead(true)
-                .withDomainName(this.client.domain())
-                .withItemName(this.name)
-                .withAttributeNames(ItemSpinbox.COUNTER)
-        );
-        final long before;
-        if (result.getAttributes().isEmpty()) {
-            before = 0;
-        } else {
-            before = Long.parseLong(result.getAttributes().get(0).getValue());
+        String before = this.item.get(ItemSpinbox.COUNTER);
+        if (before == null) {
+            before = "0";
         }
-        final long after = before + value;
-        aws.putAttributes(
-            new PutAttributesRequest()
-                .withDomainName(this.client.domain())
-                .withItemName(this.name)
-                .withAttributes(
-                    new ReplaceableAttribute()
-                        .withName(ItemSpinbox.COUNTER)
-                        .withValue(Long.toString(after))
-                        .withReplace(true),
-                    new ReplaceableAttribute()
-                        .withName(ItemSpinbox.TIME)
-                        .withValue(new Time().toString())
-                        .withReplace(true)
-                )
+        final long after = Long.parseLong(before) + value;
+        this.item.putAll(
+            new ImmutableMap.Builder<String, String>()
+                .put(ItemSpinbox.COUNTER, Long.toString(after))
+                .put(ItemSpinbox.TIME, new Time().toString())
+                .build()
         );
         this.wallet.charge(
             String.format(
-                "added %d to spinbox in AWS SimpleDB item `%s` in `%s` domain",
-                value, this.name, this.client.domain()
+                "added %d to spinbox in AWS SimpleDB item %s",
+                value, this.item
             ),
             new Dollars(Tv.FIVE)
         );

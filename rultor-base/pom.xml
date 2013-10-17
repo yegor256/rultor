@@ -54,6 +54,11 @@
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-simpledb</artifactId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi</groupId>
             <artifactId>jcabi-aspects</artifactId>
         </dependency>
         <dependency>
@@ -159,7 +164,6 @@
                             <failsafe.s3.bucket>${failsafe.s3.bucket}</failsafe.s3.bucket>
                             <failsafe.sdb.key>${failsafe.sdb.key}</failsafe.sdb.key>
                             <failsafe.sdb.secret>${failsafe.sdb.secret}</failsafe.sdb.secret>
-                            <failsafe.sdb.domain>${failsafe.sdb.domain}</failsafe.sdb.domain>
                             <failsafe.ec2.key>${failsafe.ec2.key}</failsafe.ec2.key>
                             <failsafe.ec2.secret>${failsafe.ec2.secret}</failsafe.ec2.secret>
                             <failsafe.ec2.priv>${failsafe.ec2.priv}</failsafe.ec2.priv>
