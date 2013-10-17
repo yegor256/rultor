@@ -32,6 +32,7 @@ package com.rultor.stateful.sdb;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.simpledb.Domain;
+import com.jcabi.simpledb.Region;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
 import com.rultor.stateful.Spinbox;
@@ -80,6 +81,19 @@ public final class DomainSpinbox implements Spinbox {
         this.work = wrk;
         this.wallet = wlt;
         this.domain = dmn;
+    }
+
+    /**
+     * Public ctor.
+     * @param wrk Coordinates we're in
+     * @param wlt Wallet
+     * @param region Region
+     * @param name Domain name
+     */
+    public DomainSpinbox(final Coordinates wrk, final Wallet wlt,
+        @NotNull(message = "region can't be NULL") final Region region,
+        @NotNull(message = "domain name can't be NULL") final String name) {
+        this(wrk, wlt, region.domain(name));
     }
 
     /**

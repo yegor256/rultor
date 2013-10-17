@@ -39,6 +39,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.simpledb.Domain;
 import com.jcabi.simpledb.Item;
+import com.jcabi.simpledb.Region;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
 import com.rultor.stateful.Notepad;
@@ -115,6 +116,19 @@ public final class DomainNotepad implements Notepad {
         this.work = wrk;
         this.wallet = wlt;
         this.domain = dmn;
+    }
+
+    /**
+     * Public ctor.
+     * @param wrk Coordinates
+     * @param wlt Wallet to charge
+     * @param region Region
+     * @param name Name of domain
+     */
+    public DomainNotepad(final Coordinates wrk, final Wallet wlt,
+        @NotNull(message = "region can't be NULL") final Region region,
+        @NotNull(message = "domain can't be NULL") final String name) {
+        this(wrk, wlt, region.domain(name));
     }
 
     /**

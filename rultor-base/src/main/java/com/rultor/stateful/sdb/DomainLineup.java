@@ -32,6 +32,7 @@ package com.rultor.stateful.sdb;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.simpledb.Domain;
+import com.jcabi.simpledb.Region;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Wallet;
 import com.rultor.stateful.Lineup;
@@ -78,11 +79,23 @@ public final class DomainLineup implements Lineup {
     public DomainLineup(
         @NotNull(message = "work can't be NULL") final Coordinates wrk,
         @NotNull(message = "wallet can't be NULL") final Wallet wlt,
-        @NotNull(message = "SimpleDB client can't be NULL")
-        final Domain dmn) {
+        @NotNull(message = "domain can't be NULL") final Domain dmn) {
         this.work = wrk;
         this.wallet = wlt;
         this.domain = dmn;
+    }
+
+    /**
+     * Public ctor.
+     * @param wrk Coordinates we're in
+     * @param wlt Wallet to charge
+     * @param region Region
+     * @param name Domain name
+     */
+    public DomainLineup(final Coordinates wrk, final Wallet wlt,
+        @NotNull(message = "region can't be NULL") final Region region,
+        @NotNull(message = "domain can't be NULL") final String name) {
+        this(wrk, wlt, region.domain(name));
     }
 
     /**
