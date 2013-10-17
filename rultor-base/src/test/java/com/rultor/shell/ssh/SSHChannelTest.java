@@ -29,7 +29,9 @@
  */
 package com.rultor.shell.ssh;
 
+import com.google.common.io.Files;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -119,7 +121,9 @@ public final class SSHChannelTest {
             )
         );
         sshd.setKeyPairProvider(
-            new SimpleGeneratorHostKeyProvider("hostkey.ser")
+            new SimpleGeneratorHostKeyProvider(
+                new File(Files.createTempDir(), "hostkey.ser").getAbsolutePath()
+            )
         );
         return sshd;
     }
