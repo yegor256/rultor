@@ -32,7 +32,6 @@ package com.rultor.stateful.sdb;
 
 import com.jcabi.aspects.Tv;
 import com.jcabi.simpledb.Item;
-import com.rultor.spi.Wallet;
 import java.util.Map;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -54,7 +53,7 @@ public final class ItemSpinboxTest {
     @SuppressWarnings("unchecked")
     public void canAddToEmptyWallet() {
         final Item item = Mockito.mock(Item.class);
-        final ItemSpinbox box = new ItemSpinbox(new Wallet.Empty(), item);
+        final ItemSpinbox box = new ItemSpinbox(item);
         final long deposit = Tv.EIGHT;
         MatcherAssert.assertThat(box.add(deposit), Matchers.equalTo(deposit));
         Mockito.verify(item).putAll(

@@ -34,7 +34,6 @@ import com.jcabi.simpledb.Credentials;
 import com.jcabi.simpledb.Domain;
 import com.jcabi.simpledb.Region;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Wallet;
 import com.rultor.stateful.Notepad;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.MatcherAssert;
@@ -70,7 +69,7 @@ public final class DomainNotepadITCase {
         final Domain domain = this.domain();
         try {
             final Notepad notepad = new DomainNotepad(
-                new Coordinates.Simple(), new Wallet.Empty(), domain
+                new Coordinates.Simple(), domain
             );
             final String first = "some \u20ac\t\n\r\n\n\n test";
             final String second = "AAA - some \u20ac\t\n\r\n\n\n test";
@@ -103,7 +102,7 @@ public final class DomainNotepadITCase {
         final Domain domain = this.domain();
         try {
             final Notepad notepad = new DomainNotepad(
-                new Coordinates.Simple(), new Wallet.Empty(), domain
+                new Coordinates.Simple(), domain
             );
             notepad.add("some test line\t\nпривет");
             MatcherAssert.assertThat(notepad, Matchers.not(Matchers.empty()));
@@ -123,7 +122,7 @@ public final class DomainNotepadITCase {
         final Domain domain = this.domain();
         try {
             final Notepad notepad = new DomainNotepad(
-                new Coordinates.Simple(), new Wallet.Empty(), domain
+                new Coordinates.Simple(), domain
             );
             final String text = "да test line\t\nпривет";
             notepad.add(text);

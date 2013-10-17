@@ -33,11 +33,8 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
-import com.jcabi.aspects.Tv;
 import com.jcabi.simpledb.Item;
-import com.rultor.spi.Wallet;
 import com.rultor.stateful.Spinbox;
-import com.rultor.tools.Dollars;
 import com.rultor.tools.Time;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -54,7 +51,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @Loggable(Loggable.DEBUG)
-@EqualsAndHashCode(of = { "item", "wallet" })
+@EqualsAndHashCode(of = "item")
 public final class ItemSpinbox implements Spinbox {
 
     /**
@@ -68,24 +65,16 @@ public final class ItemSpinbox implements Spinbox {
     private static final String TIME = "time";
 
     /**
-     * Wallet to charge.
-     */
-    private final transient Wallet wallet;
-
-    /**
      * SimpleDB item.
      */
     private final transient Item item;
 
     /**
      * Public ctor.
-     * @param wlt Wallet to charge
      * @param itm Item
      */
     public ItemSpinbox(
-        @NotNull(message = "wallet can't be NULL") final Wallet wlt,
         @NotNull(message = "item can't be NULL") final Item itm) {
-        this.wallet = wlt;
         this.item = itm;
     }
 
@@ -105,13 +94,6 @@ public final class ItemSpinbox implements Spinbox {
                 .put(ItemSpinbox.COUNTER, Long.toString(after))
                 .put(ItemSpinbox.TIME, new Time().toString())
                 .build()
-        );
-        this.wallet.charge(
-            String.format(
-                "added %d to spinbox in AWS SimpleDB item %s",
-                value, this.item
-            ),
-            new Dollars(Tv.FIVE)
         );
         return after;
     }
