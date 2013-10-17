@@ -55,7 +55,7 @@ public final class SESITCase {
                 Arrays.asList("yegor.bugayenko@tpc2.com")
             ),
             key,
-            System.getProperty("failsafe.ec2.secret")
+            System.getProperty("failsafe.ses.secret")
         );
         board.announce(true);
     }

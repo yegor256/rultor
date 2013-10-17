@@ -34,7 +34,6 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.simpledb.Credentials;
 import com.jcabi.simpledb.Domain;
 import com.jcabi.simpledb.Region;
-import com.rultor.spi.Wallet;
 import com.rultor.stateful.Lineup;
 import java.security.SecureRandom;
 import java.util.Random;
@@ -81,7 +80,6 @@ public final class ItemLineupITCase {
         final Domain domain = this.domain();
         try {
             final Lineup lineup = new ItemLineup(
-                new Wallet.Empty(),
                 domain.item("ItemLineupITCase.txt")
             );
             final AtomicInteger count = new AtomicInteger();

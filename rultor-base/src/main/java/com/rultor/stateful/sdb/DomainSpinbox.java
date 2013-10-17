@@ -32,8 +32,8 @@ package com.rultor.stateful.sdb;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.simpledb.Domain;
+import com.jcabi.simpledb.Region;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Wallet;
 import com.rultor.stateful.Spinbox;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -49,18 +49,13 @@ import lombok.ToString;
 @Immutable
 @ToString
 @Loggable(Loggable.DEBUG)
-@EqualsAndHashCode(of = { "work", "wallet", "domain" })
+@EqualsAndHashCode(of = { "work", "domain" })
 public final class DomainSpinbox implements Spinbox {
 
     /**
      * Coordinates we're in.
      */
     private final transient Coordinates work;
-
-    /**
-     * Wallet to charge.
-     */
-    private final transient Wallet wallet;
 
     /**
      * SimpleDB client.
@@ -70,16 +65,25 @@ public final class DomainSpinbox implements Spinbox {
     /**
      * Public ctor.
      * @param wrk Coordinates we're in
-     * @param wlt Wallet
      * @param dmn Domain
      */
     public DomainSpinbox(
         @NotNull(message = "work can't be NULL") final Coordinates wrk,
-        @NotNull(message = "wallet can't be NULL") final Wallet wlt,
         @NotNull(message = "domain can't be NULL") final Domain dmn) {
         this.work = wrk;
-        this.wallet = wlt;
         this.domain = dmn;
+    }
+
+    /**
+     * Public ctor.
+     * @param wrk Coordinates we're in
+     * @param region Region
+     * @param name Domain name
+     */
+    public DomainSpinbox(final Coordinates wrk,
+        @NotNull(message = "region can't be NULL") final Region region,
+        @NotNull(message = "domain name can't be NULL") final String name) {
+        this(wrk, region.domain(name));
     }
 
     /**
@@ -88,7 +92,6 @@ public final class DomainSpinbox implements Spinbox {
     @Override
     public long add(final long value) {
         return new ItemSpinbox(
-            this.wallet,
             this.domain.item(
                 String.format(
                     "%s %s %s",
