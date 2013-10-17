@@ -43,7 +43,6 @@
         <failsafe.pgsql.username>postgres</failsafe.pgsql.username>
         <failsafe.pgsql.password>secure</failsafe.pgsql.password>
         <failsafe.pgsql.db>test</failsafe.pgsql.db>
-        <failsafe.pgsql.jdbc.start>jdbc:postgresql://localhost</failsafe.pgsql.jdbc.start>
     </properties>
     <dependencies>
         <dependency>
@@ -185,7 +184,7 @@
                             <failsafe.mongo.name>${failsafe.mongo.name}</failsafe.mongo.name>
                             <failsafe.mongo.user>${failsafe.mongo.user}</failsafe.mongo.user>
                             <failsafe.mongo.password>${failsafe.mongo.password}</failsafe.mongo.password>
-                            <failsafe.pgsql.jdbc>${failsafe.pgsql.jdbc.start}:${failsafe.pgsql.port}/${failsafe.pgsql.db}</failsafe.pgsql.jdbc>
+                            <failsafe.pgsql.jdbc>jdbc:postgresql://localhost:${failsafe.pgsql.port}/${failsafe.pgsql.db}</failsafe.pgsql.jdbc>
                             <failsafe.pgsql.username>${failsafe.pgsql.username}</failsafe.pgsql.username>
                             <failsafe.pgsql.password>${failsafe.pgsql.password}</failsafe.pgsql.password>
                         </systemPropertyVariables>
@@ -198,7 +197,7 @@
                     <configuration>
                         <changeLogFile>src/main/resources/liquibase-master.xml</changeLogFile>
                         <driver>org.postgresql.Driver</driver>
-                        <url>${failsafe.pgsql.jdbc.start}:${failsafe.pgsql.port}/${failsafe.pgsql.db}</url>
+                        <url>jdbc:postgresql://localhost:${failsafe.pgsql.port}/${failsafe.pgsql.db}</url>
                         <username>${failsafe.pgsql.username}</username>
                         <password>${failsafe.pgsql.password}</password>
                         <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
@@ -244,7 +243,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>test-sql-schema</id>
+                        <id>apply-test-sql-schema</id>
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>update</goal>
@@ -329,19 +328,19 @@
                     <plugin>
                         <groupId>org.liquibase</groupId>
                         <artifactId>liquibase-maven-plugin</artifactId>
-                        <configuration>
-                            <changeLogFile>src/main/resources/liquibase-master.xml</changeLogFile>
-                            <url>${pgsql.jdbc}</url>
-                            <username></username>
-                            <password>${pgsql.password}</password>
-                            <contexts>any,${liquibase.contexts}</contexts>
-                        </configuration>
                         <executions>
                             <execution>
+                                <id>live-sql-schema</id>
                                 <phase>deploy</phase>
                                 <goals>
                                     <goal>update</goal>
                                 </goals>
+                                <configuration>
+                                    <url>${pgsql.jdbc}</url>
+                                    <username></username>
+                                    <password>${pgsql.password}</password>
+                                    <contexts>any,live</contexts>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
