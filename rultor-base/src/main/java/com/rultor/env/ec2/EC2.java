@@ -33,8 +33,9 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.BlockDeviceMapping;
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
+import com.amazonaws.services.ec2.model.DescribeImagesRequest;
+import com.amazonaws.services.ec2.model.DescribeImagesResult;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
-import com.amazonaws.services.ec2.model.EbsBlockDevice;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.Placement;
 import com.amazonaws.services.ec2.model.Reservation;
@@ -267,14 +268,7 @@ public final class EC2 implements Environments {
                     )
                     .withMinCount(1)
                     .withMaxCount(1)
-                    .withBlockDeviceMappings(
-                        new BlockDeviceMapping()
-                            .withDeviceName("/dev/sda1")
-                            .withEbs(
-                                new EbsBlockDevice()
-                                    .withDeleteOnTermination(true)
-                            )
-                    )
+                    .withBlockDeviceMappings(this.devices(aws))
                     .withInstanceInitiatedShutdownBehavior("terminate")
             );
             final List<Instance> instances =
@@ -309,6 +303,30 @@ public final class EC2 implements Environments {
         } finally {
             aws.shutdown();
         }
+    }
+
+    /**
+     * Get device mappings.
+     * @param aws EC2 client
+     * @return Block device mappings
+     */
+    private Collection<BlockDeviceMapping> devices(final AmazonEC2 aws) {
+        final DescribeImagesResult result = aws.describeImages(
+            new DescribeImagesRequest().withImageIds(this.ami)
+        );
+        if (result.getImages().isEmpty()) {
+            throw new IllegalArgumentException(
+                String.format("AMI %s not found", this.ami)
+            );
+        }
+        final Collection<BlockDeviceMapping> devices =
+            result.getImages().get(0).getBlockDeviceMappings();
+        for (BlockDeviceMapping device : devices) {
+            if (device.getEbs() != null) {
+                device.getEbs().setDeleteOnTermination(true);
+            }
+        }
+        return devices;
     }
 
     /**
