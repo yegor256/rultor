@@ -30,6 +30,11 @@
 package com.rultor.env.ec2;
 
 import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.model.BlockDeviceMapping;
+import com.amazonaws.services.ec2.model.DescribeImagesRequest;
+import com.amazonaws.services.ec2.model.DescribeImagesResult;
+import com.amazonaws.services.ec2.model.EbsBlockDevice;
+import com.amazonaws.services.ec2.model.Image;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.Placement;
 import com.amazonaws.services.ec2.model.Reservation;
@@ -92,6 +97,15 @@ public final class EC2Test {
         final EC2Client client = Mockito.mock(EC2Client.class);
         final AmazonEC2 aws = Mockito.mock(AmazonEC2.class);
         Mockito.when(client.get()).thenReturn(aws);
+        Mockito.doReturn(
+            new DescribeImagesResult().withImages(
+                new Image().withBlockDeviceMappings(
+                    new BlockDeviceMapping()
+                        .withDeviceName("/dev/sda1")
+                        .withEbs(new EbsBlockDevice())
+                )
+            )
+        ).when(aws).describeImages(Mockito.any(DescribeImagesRequest.class));
         Mockito.doReturn(
             new RunInstancesResult().withReservation(
                 new Reservation().withInstances(

@@ -70,6 +70,12 @@ public final class EC2ITCase {
         System.getProperty("failsafe.ec2.priv");
 
     /**
+     * AWS EC2 AMI.
+     */
+    private static final String AMI =
+        System.getProperty("failsafe.ec2.ami");
+
+    /**
      * EC2 security group.
      * @checkstyle MultipleStringLiterals (2 lines)
      */
@@ -90,12 +96,12 @@ public final class EC2ITCase {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final ByteArrayOutputStream stderr = new ByteArrayOutputStream();
         final Environments envs = new EC2(
-            new Coordinates.None(), new Wallet.Empty(),
-            "t1.micro", "ami-e187cb88",
+            new Coordinates.Simple(), new Wallet.Empty(),
+            "t1.micro", EC2ITCase.AMI,
             EC2ITCase.GROUP, EC2ITCase.PAIR, EC2ITCase.KEY, EC2ITCase.SECRET
         );
         final Shells shells = new SSHServers(
-            envs, "ubuntu", new PrivateKey(EC2ITCase.SSH_KEY)
+            envs, "ec2-user", new PrivateKey(EC2ITCase.SSH_KEY)
         );
         final Shell shell = shells.acquire();
         int code;

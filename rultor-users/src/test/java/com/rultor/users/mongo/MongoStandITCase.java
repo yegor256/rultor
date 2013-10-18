@@ -39,14 +39,12 @@ import com.rultor.spi.Pulse;
 import com.rultor.spi.Stand;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
-import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.w3c.dom.Document;
 import org.xembly.Directives;
 
 /**
@@ -114,20 +112,19 @@ public final class MongoStandITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    @SuppressWarnings("PMD.DoNotUseThreads")
     public void updatesSameStandConcurrently() throws Exception {
         final Stand stand = this.stand();
         final Coordinates pulse = this.pulse();
+        stand.post(
+            pulse, 0,
+            new Directives().add("a0").toString()
+        );
         this.post(stand, pulse, new AtomicLong(1));
-        final Document dom = DocumentBuilderFactory.newInstance()
-            .newDocumentBuilder().newDocument();
-        dom.appendChild(dom.createElement("a0"));
         final String xembly = stand.pulses().tail(pulse)
             .iterator().next().xembly();
-        MatcherAssert.assertThat(xembly, Matchers.startsWith("XPATH \"//a0"));
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(new Snapshot(xembly).xml()),
-            XhtmlMatchers.hasXPath("/a0/a1/a2/a3/a4")
+            XhtmlMatchers.hasXPath("/snapshot/a0/a1/a2/a3/a4/a5/a6/a7/a8/a9")
         );
     }
 
@@ -137,7 +134,7 @@ public final class MongoStandITCase {
      * @param coords Coordinates
      * @param nano Nano to increment
      */
-    @Parallel(threads = Tv.TEN)
+    @Parallel(threads = Tv.NINE)
     private void post(final Stand stand, final Coordinates coords,
         final AtomicLong nano) {
         final long inc = nano.getAndIncrement();
