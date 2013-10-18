@@ -67,4 +67,47 @@ public final class AlterTest {
         );
     }
 
+    /**
+     * Alter can make an instance with arguments.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void makesInstanceWithArguments() throws Exception {
+        final String text = "${work.rule()}: #arg(0,'this is test')";
+        final Variable<String> var = new Alter(text);
+        MatcherAssert.assertThat(
+            var.instantiate(
+                Mockito.mock(Users.class),
+                new Arguments(
+                    new Coordinates.Simple(new URN("urn:test:5"), "r"),
+                    new Wallet.Empty()
+                ).with(0, "hello-\u20ac")
+            ),
+            Matchers.equalTo("r: hello-\u20ac")
+        );
+    }
+
+    /**
+     * Alter can detect arguments.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void findsArguments() throws Exception {
+        final String text = "hello: #arg(0, 'hey you \u20ac')boom #arg(2,'')";
+        final Variable<String> var = new Alter(text);
+        MatcherAssert.assertThat(
+            var.arguments(),
+            Matchers.allOf(
+                Matchers.hasEntry(
+                    Matchers.equalTo(0),
+                    Matchers.equalTo("hey you \u20ac")
+                ),
+                Matchers.hasEntry(
+                    Matchers.equalTo(2),
+                    Matchers.equalTo("")
+                )
+            )
+        );
+    }
+
 }
