@@ -15,11 +15,17 @@
         <xsl:if test="count($source) &gt; 0">
             <xsl:variable name="first" select="$source[1]/label"/>
             <xsl:variable name="count" select="count($source[label=$first])"/>
-            <xsl:apply-templates select="$source[label=$first][$count]"/>
-            <xsl:call-template name="collectUniqueTags">
-                <xsl:with-param name="source"
-                                select="$source[not(label=$first)]"/>
-            </xsl:call-template>
+            <xsl:choose>
+                <xsl:when test="$count &gt; 0">
+                    <xsl:apply-templates select="$source[label=$first][$count]"/>
+                    <xsl:call-template name="collectUniqueTags">
+                        <xsl:with-param name="source" select="$source[not(label=$first)]"/>
+                    </xsl:call-template>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates select="$source"/>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:if>
     </xsl:template>
 </xsl:stylesheet>

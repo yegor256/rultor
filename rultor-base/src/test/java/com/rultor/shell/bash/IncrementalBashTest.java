@@ -81,7 +81,7 @@ public final class IncrementalBashTest {
             XhtmlMatchers.xhtml(
                 new Snapshot(
                     new ByteArrayInputStream(stdout.toByteArray())
-                ).dom()
+                ).xml()
             ),
             XhtmlMatchers.hasXPaths(
                 "/snapshot/steps/step",
@@ -115,7 +115,7 @@ public final class IncrementalBashTest {
             XhtmlMatchers.xhtml(
                 new Snapshot(
                     new ByteArrayInputStream(stdout.toByteArray())
-                ).dom()
+                ).xml()
             ),
             XhtmlMatchers.hasXPath(
                 "//step[summary='echo \"\\_\\*\" \\`date\\`']/start"
@@ -141,7 +141,7 @@ public final class IncrementalBashTest {
             XhtmlMatchers.xhtml(
                 new Snapshot(
                     new ByteArrayInputStream(stdout.toByteArray())
-                ).dom()
+                ).xml()
             ),
             XhtmlMatchers.hasXPaths(
                 "//level[.='SEVERE']",
@@ -173,7 +173,7 @@ public final class IncrementalBashTest {
             XhtmlMatchers.xhtml(
                 new Snapshot(
                     new ByteArrayInputStream(stdout.toByteArray())
-                ).dom()
+                ).xml()
             ),
             XhtmlMatchers.hasXPaths(
                 "//exception[contains(stacktrace, '-24-')]",
