@@ -126,11 +126,6 @@ import lombok.ToString;
  *   com.rultor.base.Empty()
  * )</pre>
  *
- * <p>It's also possible to use so called "altered text", which contains
- * Velocity commands, for example:
- *
- * <pre> &#64;("this is currently rule: ${work.rule()}")</pre>
- *
  * <p>When you're writing a template, which will be used by other
  * rules or even by other users, you will need to make it parametrized. For
  * example, you want to define a spec template that will send emails, but
@@ -146,6 +141,15 @@ import lombok.ToString;
  * than it can be used as:
  *
  * <pre> send("me&#64;example.com")</pre>
+ *
+ * <p>It's also possible to use so called "altered text", which contains
+ * Velocity commands, for example:
+ *
+ * <pre> &#64;("this is currently rule: ${work.rule()}")</pre>
+ *
+ * <p>Inside this velocity text you can use template arguments, for example:
+ *
+ * <pre> &#64;("URL is: #arg(0,'URL of the Github repository')")</pre>
  *
  * <p>Most of this magic is implemented in {@code rultor-repo} module.
  *
