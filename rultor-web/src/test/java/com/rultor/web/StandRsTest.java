@@ -114,6 +114,7 @@ public final class StandRsTest {
                 new XSLT(
                     new Snapshot(
                         new Directives()
+                            .xpath("/snapshot")
                             .add("start").set("2012-08-23T15:00:00Z").up()
                             .add("tags").add("tag")
                             .add("markdown").set("hello!")

@@ -31,7 +31,6 @@ package com.rultor.snapshot;
 
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
 import com.rexsl.test.SimpleXml;
 import com.rexsl.test.XmlDocument;
@@ -44,8 +43,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.logging.Level;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -115,56 +113,30 @@ public final class Snapshot {
     }
 
     /**
-     * Get empty DOM.
-     * @return The DOM
-     */
-    public static Document empty() {
-        final Document dom;
-        try {
-            dom = DocumentBuilderFactory.newInstance()
-                .newDocumentBuilder().newDocument();
-        } catch (ParserConfigurationException ex) {
-            throw new IllegalStateException(ex);
-        }
-        dom.appendChild(dom.createElement("snapshot"));
-        return dom;
-    }
-
-    /**
-     * Make DOM out of it.
-     * @return The DOM
-     * @throws ImpossibleModificationException If can't apply
-     * @checkstyle RedundantThrows (3 lines)
-     */
-    public Document dom() throws ImpossibleModificationException {
-        final Document dom = Snapshot.empty();
-        this.apply(dom);
-        return dom;
-    }
-
-    /**
      * Make XML out of it.
      * @return The XML
      * @throws ImpossibleModificationException If can't apply
      * @checkstyle RedundantThrows (3 lines)
      */
     public XmlDocument xml() throws ImpossibleModificationException {
-        return new SimpleXml(new DOMSource(this.dom()));
-    }
-
-    /**
-     * Apply it to the DOM.
-     * @param dom DOM document
-     * @throws ImpossibleModificationException If fails at some point
-     * @checkstyle RedundantThrows (10 lines)
-     */
-    @Loggable(
-        value = Loggable.DEBUG,
-        ignore = ImpossibleModificationException.class
-    )
-    public void apply(final Document dom)
-        throws ImpossibleModificationException {
-        new Xembler(this.directives).apply(dom);
+        final Document dom = new Xembler(this.directives).dom("snapshot");
+        try {
+            return new SimpleXml(
+                new DOMSource(
+                    new XSLT(
+                        dom,
+                        this.getClass().getResourceAsStream(
+                            "remove-duplicate-tags.xsl"
+                        )
+                    ).dom()
+                )
+            );
+        } catch (TransformerException ex) {
+            throw new ImpossibleModificationException(
+                "Failed to transform",
+                ex
+            );
+        }
     }
 
     /**

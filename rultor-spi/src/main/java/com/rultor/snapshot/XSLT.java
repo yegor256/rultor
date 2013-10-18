@@ -109,7 +109,7 @@ public final class XSLT {
      */
     public XSLT(final Snapshot snapshot, final InputStream stream)
         throws ImpossibleModificationException {
-        this(new DOMSource(snapshot.dom()), new StreamSource(stream));
+        this(new DOMSource(snapshot.xml().node()), new StreamSource(stream));
     }
 
     /**

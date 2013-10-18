@@ -124,10 +124,9 @@ public final class MongoStandITCase {
         dom.appendChild(dom.createElement("a0"));
         final String xembly = stand.pulses().tail(pulse)
             .iterator().next().xembly();
-        new Snapshot(xembly).apply(dom);
         MatcherAssert.assertThat(xembly, Matchers.startsWith("XPATH \"//a0"));
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(dom),
+            XhtmlMatchers.xhtml(new Snapshot(xembly).xml()),
             XhtmlMatchers.hasXPath("/a0/a1/a2/a3/a4")
         );
     }
