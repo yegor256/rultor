@@ -38,7 +38,8 @@ import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.tools.Vext;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -58,6 +59,13 @@ import org.apache.commons.lang3.StringEscapeUtils;
 final class Alter implements Variable<String>, Comparable<Variable<String>> {
 
     /**
+     * Pattern to match macros.
+     */
+    private static final Pattern MACROS = Pattern.compile(
+        "#arg\\(\\s*(\\d+)\\s*,\\s*'([^']*)'\\s*\\)"
+    );
+
+    /**
      * The value.
      */
     private final transient String value;
@@ -75,15 +83,21 @@ final class Alter implements Variable<String>, Comparable<Variable<String>> {
      * @checkstyle RedundantThrows (10 lines)
      */
     @Override
-    @NotNull
+    @NotNull(message = "text produced is never NULL")
     public String instantiate(
         @NotNull(message = "users can't be NULL") final Users users,
         @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
-        return new Vext(this.value).print(
+        return new Vext(
+            new StringBuilder()
+                .append("#macro(arg $pos $desc)$arguments.get($pos)#end#**#")
+                .append(this.value)
+                .toString()
+        ).print(
             new ImmutableMap.Builder<String, Object>()
                 .put("work", args.work())
                 .put("wallet", args.wallet())
+                .put("arguments", args)
                 .build()
         );
     }
@@ -105,7 +119,13 @@ final class Alter implements Variable<String>, Comparable<Variable<String>> {
      */
     @Override
     public Map<Integer, String> arguments() {
-        return new ConcurrentHashMap<Integer, String>(0);
+        final ImmutableMap.Builder<Integer, String> args =
+            new ImmutableMap.Builder<Integer, String>();
+        final Matcher matcher = Alter.MACROS.matcher(this.value);
+        while (matcher.find()) {
+            args.put(Integer.valueOf(matcher.group(1)), matcher.group(2));
+        }
+        return args.build();
     }
 
     /**
