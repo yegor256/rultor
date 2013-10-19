@@ -165,7 +165,7 @@ public final class ButtonRs extends BaseRs {
                 IOUtils.toInputStream(
                     this.build.info(
                         UriBuilder.fromUri(this.uriInfo().getBaseUri())
-                            .path(this.stand).build()
+                            .segment("s", this.stand).build()
                     )
                 )
             ),
