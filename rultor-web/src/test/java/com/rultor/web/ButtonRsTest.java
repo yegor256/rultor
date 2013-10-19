@@ -61,7 +61,7 @@ public final class ButtonRsTest {
         final ButtonRs res = new ButtonRs(
             new ButtonRs.Build() {
                 @Override
-                public String info(final URI uri, final String stand) {
+                public String info(final URI uri) {
                     return String.format(
                         // @checkstyle StringLiteralsConcatenation (8 lines)
                         // @checkstyle LineLength (1 line)
