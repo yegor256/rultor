@@ -35,13 +35,10 @@ import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
-import com.rultor.shell.Batch;
-import com.rultor.shell.Shells;
 import com.rultor.shell.Terminal;
 import com.rultor.snapshot.XemblyLine;
+import com.rultor.spi.Proxy;
 import com.rultor.tools.Vext;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -53,20 +50,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directives;
 
 /**
- * Incremental bash batch.
- *
- * <p>This class executes bash script, constructing it from the provided
- * collection of Velocity templates. Internally it uses {@link Bash} in
- * order to execute the script, built as an aggregation of provided lines.
- * The main purpose of this class is to build a bash script that reports
- * its execution steps in Xembly format, in order to make log more
- * informative. Every line in the collection turns into a {@code step} in
- * the {@link Snapshot} built from Xembly lines.
- *
- * <p>It is recommended to use this class instead of bare {@link Bash},
- * because it provides much more logging information, in Xembly format. This
- * means that the execution of the bash script will be visible in work
- * {@link Snapshot} and rendered in stand and drain.
+ * Smart concatenator of bash commands.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -75,30 +59,25 @@ import org.xembly.Directives;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "shells", "commands" })
+@EqualsAndHashCode(of = "commands")
 @Loggable(Loggable.DEBUG)
-public final class IncrementalBash implements Batch {
+public final class Concat implements Proxy<String> {
 
     /**
      * Escaped Xembly mark.
      */
     private static final String ESCAPED_MARK =
-        IncrementalBash.escape(XemblyLine.MARK);
+        Concat.escape(XemblyLine.MARK);
 
     /**
-     * Count of lines to take from head.
+     * Number of lines to take from head of stderr.
      */
     private static final int HEAD = 25;
 
     /**
-     * Count of lines to take from tail.
+     * Number of lines to take from tail of stderr.
      */
     private static final int TAIL = 100;
-
-    /**
-     * Shells to be used for actual execution of bash script.
-     */
-    private final transient Shells shells;
 
     /**
      * Bash commands to execute, one by one in provided order.
@@ -107,15 +86,12 @@ public final class IncrementalBash implements Batch {
 
     /**
      * Public ctor.
-     * @param shls Shells to encapsulate
      * @param cmds Bash commands to encapsulate
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public IncrementalBash(
-        @NotNull(message = "shells can't be NULL") final Shells shls,
+    public Concat(
         @NotNull(message = "list of commands can't be NULL")
         final Collection<String> cmds) {
-        this.shells = shls;
         final Collection<Vext> vexts = new ArrayList<Vext>(cmds.size());
         for (String cmd : cmds) {
             vexts.add(new Vext(cmd));
@@ -127,12 +103,8 @@ public final class IncrementalBash implements Batch {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
-    public int exec(
-        @NotNull(message = "args can't be NULL") final Map<String, String> args,
-        @NotNull(message = "stream can't be NULL") final OutputStream output)
-        throws IOException {
-        return new Bash(this.shells, this.script(args)).exec(args, output);
+    public String object() {
+        return this.script().velocity();
     }
 
     /**
@@ -144,21 +116,20 @@ public final class IncrementalBash implements Batch {
      * with steps. Every step will have a summary, a log level, and
      * an exception if its exit code is not zero.
      *
-     * @param args All arguments to inject into Velocity script
      * @return Bash script ready for execution
      */
-    private String script(final Map<String, String> args) {
+    private Vext script() {
         final StringBuilder script = new StringBuilder()
             .append("#set($dollar='$')")
             .append("set -o pipefail;\n")
             .append("set +o histexpand;\n")
             .append("ESCAPE=")
-            .append(Terminal.quotate(Terminal.escape(IncrementalBash.escape())))
+            .append(Terminal.quotate(Terminal.escape(Concat.escape())))
             .append(';').append('\n');
         for (Vext cmd : this.commands) {
-            script.append(this.script(args, cmd));
+            script.append(this.script(cmd));
         }
-        return script.toString();
+        return new Vext(script.toString());
     }
 
     /**
@@ -167,15 +138,14 @@ public final class IncrementalBash implements Batch {
      * <p>The method converts one command in Vext format
      * to a script ready for execution in bash.
      *
-     * @param args All arguments to inject into Velocity script
      * @param cmd Command in Vext format
      * @return Bash script ready for execution
      * @see http://stackoverflow.com/questions/18665603
      */
-    private String script(final Map<String, String> args, final Vext cmd) {
+    private String script(final Vext cmd) {
         final String uid = String.format("bash-%d", System.nanoTime());
         final String velocity = StringUtils.strip(cmd.velocity(), " ;");
-        final String command = cmd.print(args);
+        final String command = cmd.velocity();
         return new StringBuilder()
             .append("echo; echo ${dollar} ")
             .append(Terminal.quotate(Terminal.escape(command)))
@@ -216,16 +186,16 @@ public final class IncrementalBash implements Batch {
             .append(";\nelse\n")
             .append("  ERRLEN=${dollar}(cat ${dollar}STDERR | wc -l);\n")
             .append("  if [ ${dollar}ERRLEN -gt ")
-            .append(IncrementalBash.HEAD + IncrementalBash.TAIL)
+            .append(Concat.HEAD + Concat.TAIL)
             .append(" ]; then\n")
             .append("    HEAD=${dollar}(head -")
-            .append(IncrementalBash.HEAD)
+            .append(Concat.HEAD)
             .append(" ${dollar}STDERR | eval ${dollar}ESCAPE);\n")
             .append("    BREAK='... '${dollar}((ERRLEN - ")
-            .append(IncrementalBash.HEAD + IncrementalBash.TAIL)
+            .append(Concat.HEAD + Concat.TAIL)
             .append("))' lines skipped ...&#10;';\n")
             .append("    TAIL=${dollar}(tail -")
-            .append(IncrementalBash.TAIL)
+            .append(Concat.TAIL)
             .append(" ${dollar}STDERR | eval ${dollar}ESCAPE);\n")
             .append("    MSG=${dollar}HEAD${dollar}BREAK${dollar}TAIL;\n")
             .append("  else\n")
@@ -283,7 +253,7 @@ public final class IncrementalBash implements Batch {
                 // @checkstyle MultipleStringLiterals (2 lines)
                 .replace("\\", "\\\\\\")
                 .replace("\"", "\\\"")
-                .replace(XemblyLine.MARK, IncrementalBash.ESCAPED_MARK)
+                .replace(XemblyLine.MARK, Concat.ESCAPED_MARK)
         );
     }
 
@@ -309,7 +279,7 @@ public final class IncrementalBash implements Batch {
         return String.format(
             "echo -e '%s'",
             xembly.replace("'", "\\x27").replace(
-                XemblyLine.MARK, IncrementalBash.ESCAPED_MARK
+                XemblyLine.MARK, Concat.ESCAPED_MARK
             )
         );
     }

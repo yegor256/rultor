@@ -46,15 +46,15 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link IncrementalBash}.
+ * Test case for {@link Concat}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public final class IncrementalBashTest {
+public final class ConcatTest {
 
     /**
-     * IncrementalBash can run complex script with bash.
+     * Concat can run complex script with bash.
      * @throws Exception If some problem inside
      */
     @Test
@@ -66,15 +66,17 @@ public final class IncrementalBashTest {
             new ImmutableMap.Builder<String, String>()
                 .put("file", "file-name.txt")
                 .build();
-        final int code = new IncrementalBash(
+        final int code = new Bash(
             new Permanent(new ShellMocker.Bash(dir)),
-            Arrays.asList(
-                "MSG='$A'; echo $(date) $A; sleep 1; pwd;",
-                "find . -name \"a.txt\" | grep txt | wc -l;",
-                "mkdir -p foo; cd foo; touch ${file}; pwd",
-                "pwd; if [ ! -f ${file.toString()} ]; then exit 1; fi",
-                "echo -e \"A\\x1b\\x09\\x9B\" >&2; /usr/--broken; /usr/--again"
-            )
+            new Concat(
+                Arrays.asList(
+                    "MSG='$A'; echo $(date) $A; sleep 1; pwd;",
+                    "find . -name \"a.txt\" | grep txt | wc -l;",
+                    "mkdir -p foo; cd foo; touch ${file}; pwd",
+                    "pwd; if [ ! -f ${file.toString()} ]; then exit 1; fi",
+                    "echo -e \"\\x1b\\x09\\x9B\" >&2; /usr/--bad; /usr/--again"
+                )
+            ).object()
         ).exec(args, stdout);
         MatcherAssert.assertThat(code, Matchers.not(Matchers.equalTo(0)));
         MatcherAssert.assertThat(
@@ -87,8 +89,8 @@ public final class IncrementalBashTest {
                 "/snapshot/steps/step",
                 // @checkstyle LineLength (5 lines)
                 "//step[summary=\"MSG='$A'; echo $(date) $A; sleep 1; pwd;\"]/start",
-                "//step[contains(summary, '/usr/--broken; /usr/--again')]/exception",
-                "//step/exception[contains(stacktrace,'/usr/--broken: No such file or directory')]",
+                "//step[contains(summary, '/usr/--bad; /usr/--again')]/exception",
+                "//step/exception[contains(stacktrace,'/usr/--bad: No such file or directory')]",
                 "//steps[count(step[level='INFO']) = 4]",
                 "//steps[count(step[level='SEVERE']) = 1]",
                 "//steps[count(step[start]) = 5]",
@@ -99,16 +101,16 @@ public final class IncrementalBashTest {
     }
 
     /**
-     * IncrementalBash can escape command summary as Markdown.
+     * Concat can escape command summary as Markdown.
      * @throws Exception If some problem inside
      */
     @Test
     public void escapesMarkdownInCommandSummary() throws Exception {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final File dir = Files.createTempDir();
-        final int code = new IncrementalBash(
+        final int code = new Bash(
             new Permanent(new ShellMocker.Bash(dir)),
-            Arrays.asList("echo \"_*\" `date`")
+            new Concat(Arrays.asList("echo \"_*\" `date`")).object()
         ).exec(new ImmutableMap.Builder<String, String>().build(), stdout);
         MatcherAssert.assertThat(code, Matchers.equalTo(0));
         MatcherAssert.assertThat(
@@ -124,18 +126,20 @@ public final class IncrementalBashTest {
     }
 
     /**
-     * IncrementalBash can show only HEAD and TAIL of stacktrace.
+     * Concat can show only HEAD and TAIL of stacktrace.
      * @throws Exception If some problem inside
      */
     @Test
     public void showsHeadAndTailOfStderr() throws Exception {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final File dir = Files.createTempDir();
-        new IncrementalBash(
+        new Bash(
             new Permanent(new ShellMocker.Bash(dir)),
-            Arrays.asList(
-                "( for i in {1..300}; do echo -$i-; done; exit 1 ) >&2"
-            )
+            new Concat(
+                Arrays.asList(
+                    "( for i in {1..300}; do echo -$i-; done; exit 1 ) >&2"
+                )
+            ).object()
         ).exec(new ImmutableMap.Builder<String, String>().build(), stdout);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
@@ -156,18 +160,20 @@ public final class IncrementalBashTest {
     }
 
     /**
-     * IncrementalBash can show full stacktrace.
+     * Concat can show full stacktrace.
      * @throws Exception If some problem inside
      */
     @Test
     public void showsStderrWithoutCuts() throws Exception {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final File dir = Files.createTempDir();
-        new IncrementalBash(
+        new Bash(
             new Permanent(new ShellMocker.Bash(dir)),
-            Arrays.asList(
-                "( for i in {1..75}; do echo -$i-; done; exit 1 ) >&2"
-            )
+            new Concat(
+                Arrays.asList(
+                    "( for i in {1..75}; do echo -$i-; done; exit 1 ) >&2"
+                )
+            ).object()
         ).exec(new ImmutableMap.Builder<String, String>().build(), stdout);
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
@@ -185,18 +191,20 @@ public final class IncrementalBashTest {
     }
 
     /**
-     * IncrementalBash can output stderr and stdout correctly.
+     * Concat can output stderr and stdout correctly.
      * @throws Exception If some problem inside
      */
     @Test
     public void correctlyPrintsStderrAndStdout() throws Exception {
         final ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         final File dir = Files.createTempDir();
-        new IncrementalBash(
+        new Bash(
             new Permanent(new ShellMocker.Bash(dir)),
-            Arrays.asList(
-                "echo -e 'one\\ntwo' >&2; echo -e 'foo-1\\nfoo-2'"
-            )
+            new Concat(
+                Arrays.asList(
+                    "echo -e 'one\\ntwo' >&2; echo -e 'foo-1\\nfoo-2'"
+                )
+            ).object()
         ).exec(new ImmutableMap.Builder<String, String>().build(), stdout);
         MatcherAssert.assertThat(
             new String(stdout.toByteArray(), CharEncoding.UTF_8),
