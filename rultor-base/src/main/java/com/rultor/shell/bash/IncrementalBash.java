@@ -88,12 +88,12 @@ public final class IncrementalBash implements Batch {
     /**
      * Count of lines to take from head.
      */
-    private static final int HEAD_SIZE = 25;
+    private static final int HEAD = 25;
 
     /**
      * Count of lines to take from tail.
      */
-    private static final int TAIL_SIZE = 100;
+    private static final int TAIL = 100;
 
     /**
      * Shells to be used for actual execution of bash script.
@@ -213,18 +213,25 @@ public final class IncrementalBash implements Batch {
                         .set(Level.INFO.toString())
                 )
             )
-            .append(";\nelse\n  ")
-            .append("HEADSZ=").append(HEAD_SIZE)
-            .append(";TAILSZ=").append(TAIL_SIZE).append(";")
-            .append("ERRLEN=${dollar}(cat ${dollar}STDERR | wc -l);\n")
-            // @checkstyle LineLength (6 lines)
-            .append("if [ ${dollar}ERRLEN -gt ${dollar}((HEADSZ + TAILSZ)) ]; then \n")
-            .append("HEAD=${dollar}(head -${dollar}HEADSZ ${dollar}STDERR | eval ${dollar}ESCAPE);\n")
-            .append("BREAK='... '${dollar}((ERRLEN - HEADSZ - TAILSZ))' lines skipped ...&#10;';\n")
-            .append("TAIL=${dollar}(tail -${dollar}TAILSZ ${dollar}STDERR | eval ${dollar}ESCAPE);\n")
-            .append("MSG=${dollar}HEAD${dollar}BREAK${dollar}TAIL;\n")
-            .append("else MSG=${dollar}(cat ${dollar}STDERR | eval ${dollar}ESCAPE);\n")
-            .append("fi;\n")
+            .append(";\nelse\n")
+            .append("  ERRLEN=${dollar}(cat ${dollar}STDERR | wc -l);\n")
+            .append("  if [ ${dollar}ERRLEN -gt ")
+            .append(IncrementalBash.HEAD + IncrementalBash.TAIL)
+            .append(" ]; then\n")
+            .append("    HEAD=${dollar}(head -")
+            .append(IncrementalBash.HEAD)
+            .append(" ${dollar}STDERR | eval ${dollar}ESCAPE);\n")
+            .append("    BREAK='... '${dollar}((ERRLEN - ")
+            .append(IncrementalBash.HEAD + IncrementalBash.TAIL)
+            .append("))' lines skipped ...&#10;';\n")
+            .append("    TAIL=${dollar}(tail -")
+            .append(IncrementalBash.TAIL)
+            .append(" ${dollar}STDERR | eval ${dollar}ESCAPE);\n")
+            .append("    MSG=${dollar}HEAD${dollar}BREAK${dollar}TAIL;\n")
+            .append("  else\n")
+            // @checkstyle LineLength (1 line)
+            .append("    MSG=${dollar}(cat ${dollar}STDERR | eval ${dollar}ESCAPE);\n")
+            .append("  fi;\n")
             .append(
                 this.echo(
                     new Directives()
