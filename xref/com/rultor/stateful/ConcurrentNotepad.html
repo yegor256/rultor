@@ -62,7 +62,7 @@
 <a class="jxr_linenumber" name="52" href="#52">52</a>  <em class="jxr_javadoccomment">     * @param item The item to add</em>
 <a class="jxr_linenumber" name="53" href="#53">53</a>  <em class="jxr_javadoccomment">     * @return TRUE if it was added</em>
 <a class="jxr_linenumber" name="54" href="#54">54</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="55" href="#55">55</a>      <strong class="jxr_keyword">boolean</strong> addIfAbsent(String item);
+<a class="jxr_linenumber" name="55" href="#55">55</a>      <strong class="jxr_keyword">boolean</strong> addIf(String item);
 <a class="jxr_linenumber" name="56" href="#56">56</a>  
 <a class="jxr_linenumber" name="57" href="#57">57</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="58" href="#58">58</a>  <em class="jxr_javadoccomment">     * Composite.</em>
@@ -93,7 +93,7 @@
 <a class="jxr_linenumber" name="83" href="#83">83</a>  <em class="jxr_javadoccomment">         */</em>
 <a class="jxr_linenumber" name="84" href="#84">84</a>          @Override
 <a class="jxr_linenumber" name="85" href="#85">85</a>          @SuppressWarnings(<span class="jxr_string">"PMD.AvoidCatchingGenericException"</span>)
-<a class="jxr_linenumber" name="86" href="#86">86</a>          <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> addIfAbsent(<strong class="jxr_keyword">final</strong> String item) {
+<a class="jxr_linenumber" name="86" href="#86">86</a>          <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> addIf(<strong class="jxr_keyword">final</strong> String item) {
 <a class="jxr_linenumber" name="87" href="#87">87</a>              <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="88" href="#88">88</a>                  <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.lineup.exec(
 <a class="jxr_linenumber" name="89" href="#89">89</a>                      <strong class="jxr_keyword">new</strong> Callable&lt;Boolean&gt;() {

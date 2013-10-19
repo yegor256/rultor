@@ -101,7 +101,7 @@
 <a class="jxr_linenumber" name="91" href="#91">91</a>      <strong class="jxr_keyword">public</strong> Sheet.Condition equalTo(<strong class="jxr_keyword">final</strong> String column, <strong class="jxr_keyword">final</strong> String value) {
 <a class="jxr_linenumber" name="92" href="#92">92</a>          String tag;
 <a class="jxr_linenumber" name="93" href="#93">93</a>          <strong class="jxr_keyword">do</strong> {
-<a class="jxr_linenumber" name="94" href="#94">94</a>              tag = RandomStringUtils.randomAlphanumeric(Tv.TEN);
+<a class="jxr_linenumber" name="94" href="#94">94</a>              tag = RandomStringUtils.randomAlphabetic(Tv.TEN);
 <a class="jxr_linenumber" name="95" href="#95">95</a>          } <strong class="jxr_keyword">while</strong> (value.contains(tag));
 <a class="jxr_linenumber" name="96" href="#96">96</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/users/pgsql/PgCondition.html">PgCondition</a>(
 <a class="jxr_linenumber" name="97" href="#97">97</a>              <strong class="jxr_keyword">this</strong>.parent,

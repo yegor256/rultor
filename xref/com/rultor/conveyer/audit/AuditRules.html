@@ -56,7 +56,7 @@
 <a class="jxr_linenumber" name="46" href="#46">46</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="47" href="#47">47</a>  @Immutable
 <a class="jxr_linenumber" name="48" href="#48">48</a>  @ToString
-<a class="jxr_linenumber" name="49" href="#49">49</a>  @EqualsAndHashCode(of = { <span class="jxr_string">"origin"</span>, <span class="jxr_string">"funded"</span> })
+<a class="jxr_linenumber" name="49" href="#49">49</a>  @EqualsAndHashCode(of = { <span class="jxr_string">"origin"</span>, <span class="jxr_string">"error"</span> })
 <a class="jxr_linenumber" name="50" href="#50">50</a>  @Loggable(Loggable.DEBUG)
 <a class="jxr_linenumber" name="51" href="#51">51</a>  <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../com/rultor/conveyer/audit/AuditRules.html">AuditRules</a> <strong class="jxr_keyword">implements</strong> <a href="../../../../com/rultor/spi/Rules.html">Rules</a> {
 <a class="jxr_linenumber" name="52" href="#52">52</a>  
@@ -66,18 +66,18 @@
 <a class="jxr_linenumber" name="56" href="#56">56</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> <a href="../../../../com/rultor/spi/Rules.html">Rules</a> origin;
 <a class="jxr_linenumber" name="57" href="#57">57</a>  
 <a class="jxr_linenumber" name="58" href="#58">58</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="59" href="#59">59</a>  <em class="jxr_javadoccomment">     * Wallet is available, account is properly funded.</em>
+<a class="jxr_linenumber" name="59" href="#59">59</a>  <em class="jxr_javadoccomment">     * Error, if any (empty string otherwise).</em>
 <a class="jxr_linenumber" name="60" href="#60">60</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="61" href="#61">61</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> <strong class="jxr_keyword">boolean</strong> funded;
+<a class="jxr_linenumber" name="61" href="#61">61</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> String error;
 <a class="jxr_linenumber" name="62" href="#62">62</a>  
 <a class="jxr_linenumber" name="63" href="#63">63</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="64" href="#64">64</a>  <em class="jxr_javadoccomment">     * Public ctor.</em>
 <a class="jxr_linenumber" name="65" href="#65">65</a>  <em class="jxr_javadoccomment">     * @param rules Rules</em>
-<a class="jxr_linenumber" name="66" href="#66">66</a>  <em class="jxr_javadoccomment">     * @param fnd Funded</em>
+<a class="jxr_linenumber" name="66" href="#66">66</a>  <em class="jxr_javadoccomment">     * @param problem Problem</em>
 <a class="jxr_linenumber" name="67" href="#67">67</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="68" href="#68">68</a>      <strong class="jxr_keyword">protected</strong> <a href="../../../../com/rultor/conveyer/audit/AuditRules.html">AuditRules</a>(<strong class="jxr_keyword">final</strong> <a href="../../../../com/rultor/spi/Rules.html">Rules</a> rules, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> fnd) {
+<a class="jxr_linenumber" name="68" href="#68">68</a>      <strong class="jxr_keyword">protected</strong> <a href="../../../../com/rultor/conveyer/audit/AuditRules.html">AuditRules</a>(<strong class="jxr_keyword">final</strong> <a href="../../../../com/rultor/spi/Rules.html">Rules</a> rules, <strong class="jxr_keyword">final</strong> String problem) {
 <a class="jxr_linenumber" name="69" href="#69">69</a>          <strong class="jxr_keyword">this</strong>.origin = rules;
-<a class="jxr_linenumber" name="70" href="#70">70</a>          <strong class="jxr_keyword">this</strong>.funded = fnd;
+<a class="jxr_linenumber" name="70" href="#70">70</a>          <strong class="jxr_keyword">this</strong>.error = problem;
 <a class="jxr_linenumber" name="71" href="#71">71</a>      }
 <a class="jxr_linenumber" name="72" href="#72">72</a>  
 <a class="jxr_linenumber" name="73" href="#73">73</a>      <em class="jxr_javadoccomment">/**</em>
@@ -93,7 +93,7 @@
 <a class="jxr_linenumber" name="83" href="#83">83</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="84" href="#84">84</a>      @Override
 <a class="jxr_linenumber" name="85" href="#85">85</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../com/rultor/spi/Rule.html">Rule</a> get(<strong class="jxr_keyword">final</strong> String name) {
-<a class="jxr_linenumber" name="86" href="#86">86</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/conveyer/audit/AuditRule.html">AuditRule</a>(<strong class="jxr_keyword">this</strong>.origin.get(name), <strong class="jxr_keyword">this</strong>.funded);
+<a class="jxr_linenumber" name="86" href="#86">86</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/conveyer/audit/AuditRule.html">AuditRule</a>(<strong class="jxr_keyword">this</strong>.origin.get(name), <strong class="jxr_keyword">this</strong>.error);
 <a class="jxr_linenumber" name="87" href="#87">87</a>      }
 <a class="jxr_linenumber" name="88" href="#88">88</a>  
 <a class="jxr_linenumber" name="89" href="#89">89</a>      <em class="jxr_javadoccomment">/**</em>
@@ -125,7 +125,7 @@
 <a class="jxr_linenumber" name="115" href="#115">115</a>             }
 <a class="jxr_linenumber" name="116" href="#116">116</a>             @Override
 <a class="jxr_linenumber" name="117" href="#117">117</a>             <strong class="jxr_keyword">public</strong> <a href="../../../../com/rultor/spi/Rule.html">Rule</a> next() {
-<a class="jxr_linenumber" name="118" href="#118">118</a>                 <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/conveyer/audit/AuditRule.html">AuditRule</a>(iterator.next(), AuditRules.<strong class="jxr_keyword">this</strong>.funded);
+<a class="jxr_linenumber" name="118" href="#118">118</a>                 <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/conveyer/audit/AuditRule.html">AuditRule</a>(iterator.next(), AuditRules.<strong class="jxr_keyword">this</strong>.error);
 <a class="jxr_linenumber" name="119" href="#119">119</a>             }
 <a class="jxr_linenumber" name="120" href="#120">120</a>             @Override
 <a class="jxr_linenumber" name="121" href="#121">121</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> remove() {

@@ -149,35 +149,33 @@
 <a class="jxr_linenumber" name="139" href="#139">139</a>             writer.println(
 <a class="jxr_linenumber" name="140" href="#140">140</a>                 <strong class="jxr_keyword">this</strong>.streams.interrupt(query.substring(0, query.indexOf('?')))
 <a class="jxr_linenumber" name="141" href="#141">141</a>             );
-<a class="jxr_linenumber" name="142" href="#142">142</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (query.endsWith(<span class="jxr_string">"/stats"</span>)) {
-<a class="jxr_linenumber" name="143" href="#143">143</a>             writer.print(<strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/conveyer/http/Statistics.html">Statistics</a>().toString());
-<a class="jxr_linenumber" name="144" href="#144">144</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (query.isEmpty()) {
-<a class="jxr_linenumber" name="145" href="#145">145</a>             writer.print(<strong class="jxr_keyword">this</strong>.streams.toString());
-<a class="jxr_linenumber" name="146" href="#146">146</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="147" href="#147">147</a>             HttpThread.copy(<strong class="jxr_keyword">this</strong>.streams.stream(query), output);
-<a class="jxr_linenumber" name="148" href="#148">148</a>         }
-<a class="jxr_linenumber" name="149" href="#149">149</a>         writer.flush();
-<a class="jxr_linenumber" name="150" href="#150">150</a>         writer.close();
-<a class="jxr_linenumber" name="151" href="#151">151</a>     }
-<a class="jxr_linenumber" name="152" href="#152">152</a> 
-<a class="jxr_linenumber" name="153" href="#153">153</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="154" href="#154">154</a> <em class="jxr_javadoccomment">     * Copy input stream to output stream without any buffering.</em>
-<a class="jxr_linenumber" name="155" href="#155">155</a> <em class="jxr_javadoccomment">     * @param input Input stream</em>
-<a class="jxr_linenumber" name="156" href="#156">156</a> <em class="jxr_javadoccomment">     * @param output Output stream</em>
-<a class="jxr_linenumber" name="157" href="#157">157</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
-<a class="jxr_linenumber" name="158" href="#158">158</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="159" href="#159">159</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> copy(<strong class="jxr_keyword">final</strong> InputStream input,
-<a class="jxr_linenumber" name="160" href="#160">160</a>         <strong class="jxr_keyword">final</strong> OutputStream output) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="161" href="#161">161</a>         <strong class="jxr_keyword">while</strong> (<strong class="jxr_keyword">true</strong>) {
-<a class="jxr_linenumber" name="162" href="#162">162</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> data = input.read();
-<a class="jxr_linenumber" name="163" href="#163">163</a>             <strong class="jxr_keyword">if</strong> (data == -1) {
-<a class="jxr_linenumber" name="164" href="#164">164</a>                 <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="165" href="#165">165</a>             }
-<a class="jxr_linenumber" name="166" href="#166">166</a>             output.write(data);
-<a class="jxr_linenumber" name="167" href="#167">167</a>         }
-<a class="jxr_linenumber" name="168" href="#168">168</a>     }
-<a class="jxr_linenumber" name="169" href="#169">169</a> 
-<a class="jxr_linenumber" name="170" href="#170">170</a> }
+<a class="jxr_linenumber" name="142" href="#142">142</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (query.isEmpty()) {
+<a class="jxr_linenumber" name="143" href="#143">143</a>             writer.print(<strong class="jxr_keyword">this</strong>.streams.toString());
+<a class="jxr_linenumber" name="144" href="#144">144</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="145" href="#145">145</a>             HttpThread.copy(<strong class="jxr_keyword">this</strong>.streams.stream(query), output);
+<a class="jxr_linenumber" name="146" href="#146">146</a>         }
+<a class="jxr_linenumber" name="147" href="#147">147</a>         writer.flush();
+<a class="jxr_linenumber" name="148" href="#148">148</a>         writer.close();
+<a class="jxr_linenumber" name="149" href="#149">149</a>     }
+<a class="jxr_linenumber" name="150" href="#150">150</a> 
+<a class="jxr_linenumber" name="151" href="#151">151</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="152" href="#152">152</a> <em class="jxr_javadoccomment">     * Copy input stream to output stream without any buffering.</em>
+<a class="jxr_linenumber" name="153" href="#153">153</a> <em class="jxr_javadoccomment">     * @param input Input stream</em>
+<a class="jxr_linenumber" name="154" href="#154">154</a> <em class="jxr_javadoccomment">     * @param output Output stream</em>
+<a class="jxr_linenumber" name="155" href="#155">155</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
+<a class="jxr_linenumber" name="156" href="#156">156</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="157" href="#157">157</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> copy(<strong class="jxr_keyword">final</strong> InputStream input,
+<a class="jxr_linenumber" name="158" href="#158">158</a>         <strong class="jxr_keyword">final</strong> OutputStream output) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="159" href="#159">159</a>         <strong class="jxr_keyword">while</strong> (<strong class="jxr_keyword">true</strong>) {
+<a class="jxr_linenumber" name="160" href="#160">160</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> data = input.read();
+<a class="jxr_linenumber" name="161" href="#161">161</a>             <strong class="jxr_keyword">if</strong> (data == -1) {
+<a class="jxr_linenumber" name="162" href="#162">162</a>                 <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="163" href="#163">163</a>             }
+<a class="jxr_linenumber" name="164" href="#164">164</a>             output.write(data);
+<a class="jxr_linenumber" name="165" href="#165">165</a>         }
+<a class="jxr_linenumber" name="166" href="#166">166</a>     }
+<a class="jxr_linenumber" name="167" href="#167">167</a> 
+<a class="jxr_linenumber" name="168" href="#168">168</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

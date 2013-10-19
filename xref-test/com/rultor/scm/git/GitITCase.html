@@ -45,7 +45,7 @@
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.scm.SCM;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.shell.ShellMocker;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> java.io.File;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> java.net.URL;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> java.net.URI;
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.MatcherAssert;
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.Matchers;
 <a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> org.junit.Assume;
@@ -59,9 +59,9 @@
 <a class="jxr_linenumber" name="49" href="#49">49</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../com/rultor/scm/git/GitITCase.html">GitITCase</a> {
 <a class="jxr_linenumber" name="50" href="#50">50</a>  
 <a class="jxr_linenumber" name="51" href="#51">51</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="52" href="#52">52</a>  <em class="jxr_javadoccomment">     * URL of test Git repository.</em>
+<a class="jxr_linenumber" name="52" href="#52">52</a>  <em class="jxr_javadoccomment">     * URI of test Git repository.</em>
 <a class="jxr_linenumber" name="53" href="#53">53</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="54" href="#54">54</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String URL =
+<a class="jxr_linenumber" name="54" href="#54">54</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String REPO =
 <a class="jxr_linenumber" name="55" href="#55">55</a>          System.getProperty(<span class="jxr_string">"failsafe.git.url"</span>);
 <a class="jxr_linenumber" name="56" href="#56">56</a>  
 <a class="jxr_linenumber" name="57" href="#57">57</a>      <em class="jxr_javadoccomment">/**</em>
@@ -82,11 +82,11 @@
 <a class="jxr_linenumber" name="72" href="#72">72</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="73" href="#73">73</a>      @Test
 <a class="jxr_linenumber" name="74" href="#74">74</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> checksOutBranch() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="75" href="#75">75</a>          Assume.assumeNotNull(GitITCase.URL);
+<a class="jxr_linenumber" name="75" href="#75">75</a>          Assume.assumeNotNull(GitITCase.REPO);
 <a class="jxr_linenumber" name="76" href="#76">76</a>          <strong class="jxr_keyword">final</strong> File dir = Files.createTempDir();
 <a class="jxr_linenumber" name="77" href="#77">77</a>          <strong class="jxr_keyword">final</strong> SCM git = <strong class="jxr_keyword">new</strong> Git(
 <a class="jxr_linenumber" name="78" href="#78">78</a>              <strong class="jxr_keyword">new</strong> ShellMocker.Bash(dir),
-<a class="jxr_linenumber" name="79" href="#79">79</a>              <strong class="jxr_keyword">new</strong> URL(GitITCase.URL),
+<a class="jxr_linenumber" name="79" href="#79">79</a>              <strong class="jxr_keyword">new</strong> URI(GitITCase.REPO),
 <a class="jxr_linenumber" name="80" href="#80">80</a>              <span class="jxr_string">"test"</span>
 <a class="jxr_linenumber" name="81" href="#81">81</a>          );
 <a class="jxr_linenumber" name="82" href="#82">82</a>          <strong class="jxr_keyword">final</strong> Branch branch = git.checkout(<span class="jxr_string">"master"</span>);
@@ -103,11 +103,11 @@
 <a class="jxr_linenumber" name="93" href="#93">93</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="94" href="#94">94</a>      @Test
 <a class="jxr_linenumber" name="95" href="#95">95</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> listsBranches() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="96" href="#96">96</a>          Assume.assumeNotNull(GitITCase.URL);
+<a class="jxr_linenumber" name="96" href="#96">96</a>          Assume.assumeNotNull(GitITCase.REPO);
 <a class="jxr_linenumber" name="97" href="#97">97</a>          <strong class="jxr_keyword">final</strong> File dir = Files.createTempDir();
 <a class="jxr_linenumber" name="98" href="#98">98</a>          <strong class="jxr_keyword">final</strong> SCM git = <strong class="jxr_keyword">new</strong> Git(
 <a class="jxr_linenumber" name="99" href="#99">99</a>              <strong class="jxr_keyword">new</strong> ShellMocker.Bash(dir),
-<a class="jxr_linenumber" name="100" href="#100">100</a>             <strong class="jxr_keyword">new</strong> URL(GitITCase.URL),
+<a class="jxr_linenumber" name="100" href="#100">100</a>             <strong class="jxr_keyword">new</strong> URI(GitITCase.REPO),
 <a class="jxr_linenumber" name="101" href="#101">101</a>             <span class="jxr_string">"boom"</span>
 <a class="jxr_linenumber" name="102" href="#102">102</a>         );
 <a class="jxr_linenumber" name="103" href="#103">103</a>         MatcherAssert.assertThat(
@@ -122,11 +122,11 @@
 <a class="jxr_linenumber" name="112" href="#112">112</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="113" href="#113">113</a>     @Test
 <a class="jxr_linenumber" name="114" href="#114">114</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> fetchesTag() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="115" href="#115">115</a>         Assume.assumeNotNull(GitITCase.URL);
+<a class="jxr_linenumber" name="115" href="#115">115</a>         Assume.assumeNotNull(GitITCase.REPO);
 <a class="jxr_linenumber" name="116" href="#116">116</a>         <strong class="jxr_keyword">final</strong> File dir = Files.createTempDir();
 <a class="jxr_linenumber" name="117" href="#117">117</a>         <strong class="jxr_keyword">final</strong> SCM git = <strong class="jxr_keyword">new</strong> Git(
 <a class="jxr_linenumber" name="118" href="#118">118</a>             <strong class="jxr_keyword">new</strong> ShellMocker.Bash(dir),
-<a class="jxr_linenumber" name="119" href="#119">119</a>             <strong class="jxr_keyword">new</strong> URL(GitITCase.URL),
+<a class="jxr_linenumber" name="119" href="#119">119</a>             <strong class="jxr_keyword">new</strong> URI(GitITCase.REPO),
 <a class="jxr_linenumber" name="120" href="#120">120</a>             <span class="jxr_string">"foo-4"</span>
 <a class="jxr_linenumber" name="121" href="#121">121</a>         );
 <a class="jxr_linenumber" name="122" href="#122">122</a>         git.checkout(GitITCase.TAG);
@@ -138,11 +138,11 @@
 <a class="jxr_linenumber" name="128" href="#128">128</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="129" href="#129">129</a>     @Test
 <a class="jxr_linenumber" name="130" href="#130">130</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> fetchesBranch() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="131" href="#131">131</a>         Assume.assumeNotNull(GitITCase.URL);
+<a class="jxr_linenumber" name="131" href="#131">131</a>         Assume.assumeNotNull(GitITCase.REPO);
 <a class="jxr_linenumber" name="132" href="#132">132</a>         <strong class="jxr_keyword">final</strong> File dir = Files.createTempDir();
 <a class="jxr_linenumber" name="133" href="#133">133</a>         <strong class="jxr_keyword">final</strong> SCM git = <strong class="jxr_keyword">new</strong> Git(
 <a class="jxr_linenumber" name="134" href="#134">134</a>             <strong class="jxr_keyword">new</strong> ShellMocker.Bash(dir),
-<a class="jxr_linenumber" name="135" href="#135">135</a>             <strong class="jxr_keyword">new</strong> URL(GitITCase.URL),
+<a class="jxr_linenumber" name="135" href="#135">135</a>             <strong class="jxr_keyword">new</strong> URI(GitITCase.REPO),
 <a class="jxr_linenumber" name="136" href="#136">136</a>             <span class="jxr_string">"foo-ff"</span>
 <a class="jxr_linenumber" name="137" href="#137">137</a>         );
 <a class="jxr_linenumber" name="138" href="#138">138</a>         git.checkout(GitITCase.BRANCH);

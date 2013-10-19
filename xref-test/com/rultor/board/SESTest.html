@@ -45,67 +45,72 @@
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.amazonaws.services.simpleemail.model.Message;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.amazonaws.services.simpleemail.model.SendEmailRequest;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.amazonaws.services.simpleemail.model.SendEmailResult;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.aws.SESClient;
-<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
-<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.Matchers;
-<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
-<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> org.mockito.Mockito;
-<a class="jxr_linenumber" name="43" href="#43">43</a>  
-<a class="jxr_linenumber" name="44" href="#44">44</a>  <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="45" href="#45">45</a>  <em class="jxr_javadoccomment"> * Test case for {@link SES}.</em>
-<a class="jxr_linenumber" name="46" href="#46">46</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@tpc2.com)</em>
-<a class="jxr_linenumber" name="47" href="#47">47</a>  <em class="jxr_javadoccomment"> * @version $Id$</em>
-<a class="jxr_linenumber" name="48" href="#48">48</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="49" href="#49">49</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/board/SESTest.html">SESTest</a> {
-<a class="jxr_linenumber" name="50" href="#50">50</a>  
-<a class="jxr_linenumber" name="51" href="#51">51</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="52" href="#52">52</a>  <em class="jxr_javadoccomment">     * SES can send emails.</em>
-<a class="jxr_linenumber" name="53" href="#53">53</a>  <em class="jxr_javadoccomment">     * @throws Exception If some problem inside</em>
-<a class="jxr_linenumber" name="54" href="#54">54</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="55" href="#55">55</a>      @Test
-<a class="jxr_linenumber" name="56" href="#56">56</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> sendsEmail() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="57" href="#57">57</a>          <strong class="jxr_keyword">final</strong> SESClient client = Mockito.mock(SESClient.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="58" href="#58">58</a>          <strong class="jxr_keyword">final</strong> AmazonSimpleEmailService aws =
-<a class="jxr_linenumber" name="59" href="#59">59</a>              Mockito.mock(AmazonSimpleEmailService.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="60" href="#60">60</a>          Mockito.doReturn(aws).when(client).get();
-<a class="jxr_linenumber" name="61" href="#61">61</a>          Mockito.doReturn(<strong class="jxr_keyword">new</strong> SendEmailResult()).when(aws)
-<a class="jxr_linenumber" name="62" href="#62">62</a>              .sendEmail(Mockito.any(SendEmailRequest.<strong class="jxr_keyword">class</strong>));
-<a class="jxr_linenumber" name="63" href="#63">63</a>          <strong class="jxr_keyword">final</strong> Billboard board = <strong class="jxr_keyword">new</strong> SES(
-<a class="jxr_linenumber" name="64" href="#64">64</a>              <span class="jxr_string">"sender@rultor.com"</span>,
-<a class="jxr_linenumber" name="65" href="#65">65</a>              Arrays.asList(<span class="jxr_string">"recepient@rultor.com"</span>),
-<a class="jxr_linenumber" name="66" href="#66">66</a>              client
-<a class="jxr_linenumber" name="67" href="#67">67</a>          );
-<a class="jxr_linenumber" name="68" href="#68">68</a>          board.announce(<span class="jxr_string">"hello, друг!\nfirst\nsecond"</span>);
-<a class="jxr_linenumber" name="69" href="#69">69</a>          Mockito.verify(aws).sendEmail(
-<a class="jxr_linenumber" name="70" href="#70">70</a>              Mockito.argThat(
-<a class="jxr_linenumber" name="71" href="#71">71</a>                  Matchers.&lt;SendEmailRequest&gt;hasProperty(
-<a class="jxr_linenumber" name="72" href="#72">72</a>                      <span class="jxr_string">"message"</span>,
-<a class="jxr_linenumber" name="73" href="#73">73</a>                      Matchers.allOf(
-<a class="jxr_linenumber" name="74" href="#74">74</a>                          Matchers.&lt;Message&gt;hasProperty(
-<a class="jxr_linenumber" name="75" href="#75">75</a>                              <span class="jxr_string">"subject"</span>,
-<a class="jxr_linenumber" name="76" href="#76">76</a>                              Matchers.&lt;Content&gt;hasProperty(
-<a class="jxr_linenumber" name="77" href="#77">77</a>                                  <em class="jxr_comment">// @checkstyle MultipleStringLiterals (1 line)</em>
-<a class="jxr_linenumber" name="78" href="#78">78</a>                                  <span class="jxr_string">"data"</span>,
-<a class="jxr_linenumber" name="79" href="#79">79</a>                                  Matchers.equalTo(<span class="jxr_string">"hello, друг!"</span>)
-<a class="jxr_linenumber" name="80" href="#80">80</a>                              )
-<a class="jxr_linenumber" name="81" href="#81">81</a>                          ),
-<a class="jxr_linenumber" name="82" href="#82">82</a>                          Matchers.&lt;Message&gt;hasProperty(
-<a class="jxr_linenumber" name="83" href="#83">83</a>                              <span class="jxr_string">"body"</span>,
-<a class="jxr_linenumber" name="84" href="#84">84</a>                              Matchers.&lt;Body&gt;hasProperty(
-<a class="jxr_linenumber" name="85" href="#85">85</a>                                  <span class="jxr_string">"text"</span>,
-<a class="jxr_linenumber" name="86" href="#86">86</a>                                  Matchers.&lt;Content&gt;hasProperty(
-<a class="jxr_linenumber" name="87" href="#87">87</a>                                      <span class="jxr_string">"data"</span>,
-<a class="jxr_linenumber" name="88" href="#88">88</a>                                      Matchers.equalTo(<span class="jxr_string">"first\nsecond"</span>)
-<a class="jxr_linenumber" name="89" href="#89">89</a>                                  )
-<a class="jxr_linenumber" name="90" href="#90">90</a>                              )
-<a class="jxr_linenumber" name="91" href="#91">91</a>                          )
-<a class="jxr_linenumber" name="92" href="#92">92</a>                      )
-<a class="jxr_linenumber" name="93" href="#93">93</a>                  )
-<a class="jxr_linenumber" name="94" href="#94">94</a>              )
-<a class="jxr_linenumber" name="95" href="#95">95</a>          );
-<a class="jxr_linenumber" name="96" href="#96">96</a>      }
-<a class="jxr_linenumber" name="97" href="#97">97</a>  
-<a class="jxr_linenumber" name="98" href="#98">98</a>  }
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rexsl.test.XhtmlMatchers;
+<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.aws.SESClient;
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
+<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> org.hamcrest.Matchers;
+<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
+<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> org.mockito.Mockito;
+<a class="jxr_linenumber" name="44" href="#44">44</a>  
+<a class="jxr_linenumber" name="45" href="#45">45</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="46" href="#46">46</a>  <em class="jxr_javadoccomment"> * Test case for {@link SES}.</em>
+<a class="jxr_linenumber" name="47" href="#47">47</a>  <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor@tpc2.com)</em>
+<a class="jxr_linenumber" name="48" href="#48">48</a>  <em class="jxr_javadoccomment"> * @version $Id$</em>
+<a class="jxr_linenumber" name="49" href="#49">49</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="50" href="#50">50</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/board/SESTest.html">SESTest</a> {
+<a class="jxr_linenumber" name="51" href="#51">51</a>  
+<a class="jxr_linenumber" name="52" href="#52">52</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="53" href="#53">53</a>  <em class="jxr_javadoccomment">     * SES can send emails.</em>
+<a class="jxr_linenumber" name="54" href="#54">54</a>  <em class="jxr_javadoccomment">     * @throws Exception If some problem inside</em>
+<a class="jxr_linenumber" name="55" href="#55">55</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="56" href="#56">56</a>      @Test
+<a class="jxr_linenumber" name="57" href="#57">57</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> sendsEmail() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="58" href="#58">58</a>          <strong class="jxr_keyword">final</strong> SESClient client = Mockito.mock(SESClient.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="59" href="#59">59</a>          <strong class="jxr_keyword">final</strong> AmazonSimpleEmailService aws =
+<a class="jxr_linenumber" name="60" href="#60">60</a>              Mockito.mock(AmazonSimpleEmailService.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="61" href="#61">61</a>          Mockito.doReturn(aws).when(client).get();
+<a class="jxr_linenumber" name="62" href="#62">62</a>          Mockito.doReturn(<strong class="jxr_keyword">new</strong> SendEmailResult()).when(aws)
+<a class="jxr_linenumber" name="63" href="#63">63</a>              .sendEmail(Mockito.any(SendEmailRequest.<strong class="jxr_keyword">class</strong>));
+<a class="jxr_linenumber" name="64" href="#64">64</a>          <strong class="jxr_keyword">final</strong> String subject = <span class="jxr_string">"hello, друг!"</span>;
+<a class="jxr_linenumber" name="65" href="#65">65</a>          <strong class="jxr_keyword">final</strong> Billboard board = <strong class="jxr_keyword">new</strong> SES(
+<a class="jxr_linenumber" name="66" href="#66">66</a>              <strong class="jxr_keyword">new</strong> Bill.Simple(
+<a class="jxr_linenumber" name="67" href="#67">67</a>                  subject,
+<a class="jxr_linenumber" name="68" href="#68">68</a>                  <span class="jxr_string">"sender@rultor.com"</span>,
+<a class="jxr_linenumber" name="69" href="#69">69</a>                  Arrays.asList(<span class="jxr_string">"recepient@rultor.com"</span>)
+<a class="jxr_linenumber" name="70" href="#70">70</a>              ),
+<a class="jxr_linenumber" name="71" href="#71">71</a>              client
+<a class="jxr_linenumber" name="72" href="#72">72</a>          );
+<a class="jxr_linenumber" name="73" href="#73">73</a>          board.announce(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="74" href="#74">74</a>          Mockito.verify(aws).sendEmail(
+<a class="jxr_linenumber" name="75" href="#75">75</a>              Mockito.argThat(
+<a class="jxr_linenumber" name="76" href="#76">76</a>                  Matchers.&lt;SendEmailRequest&gt;hasProperty(
+<a class="jxr_linenumber" name="77" href="#77">77</a>                      <span class="jxr_string">"message"</span>,
+<a class="jxr_linenumber" name="78" href="#78">78</a>                      Matchers.allOf(
+<a class="jxr_linenumber" name="79" href="#79">79</a>                          Matchers.&lt;Message&gt;hasProperty(
+<a class="jxr_linenumber" name="80" href="#80">80</a>                              <span class="jxr_string">"subject"</span>,
+<a class="jxr_linenumber" name="81" href="#81">81</a>                              Matchers.&lt;Content&gt;hasProperty(
+<a class="jxr_linenumber" name="82" href="#82">82</a>                                  <em class="jxr_comment">// @checkstyle MultipleStringLiterals (1 line)</em>
+<a class="jxr_linenumber" name="83" href="#83">83</a>                                  <span class="jxr_string">"data"</span>,
+<a class="jxr_linenumber" name="84" href="#84">84</a>                                  Matchers.equalTo(subject)
+<a class="jxr_linenumber" name="85" href="#85">85</a>                              )
+<a class="jxr_linenumber" name="86" href="#86">86</a>                          ),
+<a class="jxr_linenumber" name="87" href="#87">87</a>                          Matchers.&lt;Message&gt;hasProperty(
+<a class="jxr_linenumber" name="88" href="#88">88</a>                              <span class="jxr_string">"body"</span>,
+<a class="jxr_linenumber" name="89" href="#89">89</a>                              Matchers.&lt;Body&gt;hasProperty(
+<a class="jxr_linenumber" name="90" href="#90">90</a>                                  <span class="jxr_string">"text"</span>,
+<a class="jxr_linenumber" name="91" href="#91">91</a>                                  Matchers.&lt;Content&gt;hasProperty(
+<a class="jxr_linenumber" name="92" href="#92">92</a>                                      <span class="jxr_string">"data"</span>,
+<a class="jxr_linenumber" name="93" href="#93">93</a>                                      XhtmlMatchers.hasXPath(<span class="jxr_string">"/snapshot"</span>)
+<a class="jxr_linenumber" name="94" href="#94">94</a>                                  )
+<a class="jxr_linenumber" name="95" href="#95">95</a>                              )
+<a class="jxr_linenumber" name="96" href="#96">96</a>                          )
+<a class="jxr_linenumber" name="97" href="#97">97</a>                      )
+<a class="jxr_linenumber" name="98" href="#98">98</a>                  )
+<a class="jxr_linenumber" name="99" href="#99">99</a>              )
+<a class="jxr_linenumber" name="100" href="#100">100</a>         );
+<a class="jxr_linenumber" name="101" href="#101">101</a>     }
+<a class="jxr_linenumber" name="102" href="#102">102</a> 
+<a class="jxr_linenumber" name="103" href="#103">103</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
