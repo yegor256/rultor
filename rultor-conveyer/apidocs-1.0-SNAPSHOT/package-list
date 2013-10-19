@@ -2,3 +2,4 @@ com.rultor.conveyer
 com.rultor.conveyer.audit
 com.rultor.conveyer.fake
 com.rultor.conveyer.http
+com.rultor.log4j
