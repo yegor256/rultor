@@ -196,7 +196,7 @@ public final class Concat implements Proxy<String> {
             .append("))' lines skipped ...&#10;';\n")
             .append("    TAIL=${dollar}(tail -")
             .append(Concat.TAIL)
-            .append(" ${dollar}STDERR | eval ${dollar}ESCAPE);\n")
+            .append(" ${dollar}STDERR | eval ${dollar}ESCAPE); \n")
             .append("    MSG=${dollar}HEAD${dollar}BREAK${dollar}TAIL;\n")
             .append("  else\n")
             // @checkstyle LineLength (1 line)

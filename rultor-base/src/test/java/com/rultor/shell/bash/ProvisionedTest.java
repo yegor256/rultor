@@ -31,7 +31,6 @@ package com.rultor.shell.bash;
 
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
-import com.rultor.shell.bash.Provisioned;
 import java.io.InputStream;
 import java.io.OutputStream;
 import org.apache.commons.io.IOUtils;
@@ -62,7 +61,7 @@ public final class ProvisionedTest {
             new NullOutputStream(), new NullOutputStream()
         );
         Mockito.verify(shell).exec(
-            Mockito.argThat(Matchers.is("echo OK;echo Hi")),
+            Mockito.argThat(Matchers.is("echo OK && echo Hi")),
             Mockito.any(InputStream.class),
             Mockito.any(OutputStream.class),
             Mockito.any(OutputStream.class)

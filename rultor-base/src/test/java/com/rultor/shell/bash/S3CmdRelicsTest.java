@@ -35,8 +35,6 @@ import com.rultor.shell.ShellMocker;
 import com.rultor.spi.Coordinates;
 import java.io.File;
 import org.apache.commons.io.FileUtils;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
@@ -53,21 +51,18 @@ public final class S3CmdRelicsTest {
     @Test
     public void skipsWhenFileNotFound() throws Exception {
         final File dir = Files.createTempDir();
-        FileUtils.write(new File(dir, "s3cmd"), "echo $@");
+        FileUtils.write(new File(dir, "s3cmd"), "echo $@ > cmd");
         new S3CmdRelics(
             new Coordinates.Simple(),
             new ImmutableMap.Builder<String, String>()
-                .put("log", "./log.txt").build(), "", "", "", ""
+                .put("log", "./log.txt").build(),
+            "bucket-1", "",
+            "AAAAAAAAAAAAAAAAAAEE",
+            "30KFuodpOPX07QIaO4+QoLdTR5/MW/FN5qUDqxsL"
         ).exec(
-            new ShellMocker.ProvisionedBash(
-                new ShellMocker.Bash(dir),
-                "PATH=.:$PATH; chmod +x s3cmd; (%s) > res.txt"
-            )
-        );
-        MatcherAssert.assertThat(
-            FileUtils.readFileToString(new File(dir, "res.txt")),
-            Matchers.containsString(
-                String.format("No files found by mask %s", "log.txt")
+            new ProvisionedShell(
+                "PATH=.:$PATH && chmod +x s3cmd",
+                new ShellMocker.Bash(dir)
             )
         );
     }

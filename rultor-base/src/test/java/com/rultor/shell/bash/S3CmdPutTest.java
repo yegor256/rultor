@@ -40,6 +40,7 @@ import org.junit.Test;
 /**
  * Test case for {@link com.rultor.shell.bash.S3CmdPut}.
  * @author Evgeniy Nyavro (e.nyavro@gmail.com)
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle MultipleStringLiterals (500 lines)
  */
@@ -53,10 +54,15 @@ public final class S3CmdPutTest {
     public void executesUploadCmd() throws Exception {
         final File dir = Files.createTempDir();
         FileUtils.write(new File(dir, "s3cmd"), "echo $@");
-        final S3CmdPut cmd = new S3CmdPut("", "", "", "", "", "");
+        final S3CmdPut cmd = new S3CmdPut(
+            "a1", "./*", "bkt1", "",
+            "AAAAAAAAAAAAAAAAAAAA",
+            "30KFuodpOPX07QIaO4+QoLdTR5/MW/FN5qUDqxs="
+        );
         cmd.exec(
-            new ShellMocker.ProvisionedBash(
-                new ShellMocker.Bash(dir), "PATH=.:$PATH; chmod +x s3cmd; %s"
+            new ProvisionedShell(
+                "PATH=.:$PATH && chmod +x s3cmd",
+                new ShellMocker.Bash(dir)
             )
         );
     }
@@ -68,16 +74,22 @@ public final class S3CmdPutTest {
     @Test
     public void parametrizesCmdWithType() throws Exception {
         final File dir = Files.createTempDir();
-        FileUtils.write(new File(dir, "s3cmd"), "cat ${1#*=} > s3cmd.config");
-        final S3CmdPut cmd = new S3CmdPut("", "", "", "", "", "", "type", "");
+        FileUtils.write(new File(dir, "s3cmd"), "cat ${1#*=} > stdout");
+        final S3CmdPut cmd = new S3CmdPut(
+            "a2", new File(dir, "*").getAbsolutePath(), "bkt2", "",
+            "AAAAAAAAAAAAAAAAAAEE",
+            "30KFuodpOPX07QIaO4+QoLdTR5/MW/FN5qUDqxsL",
+            "text/html", "utf-8"
+        );
         cmd.exec(
-            new ShellMocker.ProvisionedBash(
-                new ShellMocker.Bash(dir), "PATH=.:$PATH; chmod +x s3cmd; %s"
+            new ProvisionedShell(
+                "PATH=.:$PATH && chmod +x s3cmd",
+                new ShellMocker.Bash(dir)
             )
         );
         MatcherAssert.assertThat(
-            FileUtils.readFileToString(new File(dir, "s3cmd.config")),
-            Matchers.containsString("mime-type=type")
+            FileUtils.readFileToString(new File(dir, "stdout")),
+            Matchers.containsString("mime-type=text/html")
         );
     }
 
@@ -88,16 +100,24 @@ public final class S3CmdPutTest {
     @Test
     public void parametrizesCmdWithEncoding() throws Exception {
         final File dir = Files.createTempDir();
-        FileUtils.write(new File(dir, "s3cmd"), "cat ${1#*=} > s3cmd.cfg");
-        final S3CmdPut cmd = new S3CmdPut("", "", "", "", "", "", "", "enc");
+        FileUtils.write(new File(dir, "s3cmd"), "cat ${1#*=} > stdout");
+        FileUtils.write(new File(dir, "something.txt"), "");
+        final S3CmdPut cmd = new S3CmdPut(
+            "a3", new File(dir, "something.txt").getAbsolutePath(), "bkt3", "",
+            "AAAAAAAAAAAAAAAAAAFF",
+            "cQTLve84UnNzYyo848o1oVkIX7RhOFimeQoM7vJl",
+            "text/plain", "win-1252"
+        );
         cmd.exec(
-            new ShellMocker.ProvisionedBash(
-                new ShellMocker.Bash(dir), "PATH=.:$PATH; chmod +x s3cmd; %s"
+            new ProvisionedShell(
+                "PATH=.:$PATH && chmod +x s3cmd",
+                new ShellMocker.Bash(dir)
             )
         );
         MatcherAssert.assertThat(
-            FileUtils.readFileToString(new File(dir, "s3cmd.cfg")),
-            Matchers.containsString("encoding=enc")
+            FileUtils.readFileToString(new File(dir, "stdout")),
+            Matchers.containsString("encoding=win-1252")
         );
     }
+
 }

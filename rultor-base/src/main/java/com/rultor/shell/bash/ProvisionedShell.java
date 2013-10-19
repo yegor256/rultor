@@ -86,7 +86,10 @@ public final class ProvisionedShell implements Shell {
         @NotNull(message = "stderr can't be NULL") final OutputStream stderr
     ) throws IOException {
         return this.shell.exec(
-            String.format("%s && %s", this.script, command),
+            new StringBuilder(this.script)
+                .append(" && ")
+                .append(command)
+                .toString(),
             stdin, stdout, stderr
         );
     }
