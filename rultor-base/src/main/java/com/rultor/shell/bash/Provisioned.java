@@ -27,42 +27,56 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.shell;
+package com.rultor.shell.bash;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.NullOutputStream;
-import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.mockito.Mockito;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.rultor.shell.Shell;
+import com.rultor.shell.Shells;
+import java.io.IOException;
+import javax.validation.constraints.NotNull;
+import lombok.ToString;
 
 /**
- * Test case for {@link ProvisionedShell}.
+ * Provisioned executes bash script in every acquired shell.
+ *
  * @author Evgeniy Nyavro (e.nyavro@gmail.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class ProvisionedShellTest {
+@ToString
+@Immutable
+@Loggable(Loggable.DEBUG)
+public final class Provisioned implements Shells {
 
     /**
-     * Provisioned executes bash script in every acquired shell.
-     * @throws Exception If some problem inside
+     * Shell.
      */
-    @Test
-    public void prependsExecWithCommand() throws Exception {
-        final Shell shell = Mockito.mock(Shell.class);
-        new ProvisionedShell("echo OK", shell)
-            .exec(
-                "echo Hi",
-                IOUtils.toInputStream(""),
-                new NullOutputStream(),
-                new NullOutputStream()
-        );
-        Mockito.verify(shell).exec(
-            Mockito.argThat(Matchers.is("echo OK;echo Hi")),
-            Mockito.any(InputStream.class),
-            Mockito.any(OutputStream.class),
-            Mockito.any(OutputStream.class)
-        );
+    private final transient Shells shells;
+
+    /**
+     * Script to execute on acquire.
+     */
+    private final transient String script;
+
+    /**
+     * Public ctor.
+     * @param scrt Script to execute
+     * @param shls Shells
+     */
+    public Provisioned(
+        @NotNull(message = "script can't be NULL") final String scrt,
+        @NotNull(message = "shells can't be NULL") final Shells shls) {
+        this.script = scrt;
+        this.shells = shls;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Shell acquire() throws IOException {
+        return new ProvisionedShell(this.script, this.shells.acquire());
+    }
+
 }

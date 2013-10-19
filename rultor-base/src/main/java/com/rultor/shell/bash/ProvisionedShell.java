@@ -27,10 +27,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.shell;
+package com.rultor.shell.bash;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.rultor.shell.Shell;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -85,7 +86,7 @@ public final class ProvisionedShell implements Shell {
         @NotNull(message = "stderr can't be NULL") final OutputStream stderr
     ) throws IOException {
         return this.shell.exec(
-            String.format("%s;%s", this.script, command),
+            String.format("%s && %s", this.script, command),
             stdin, stdout, stderr
         );
     }

@@ -27,8 +27,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.shell;
+package com.rultor.shell.bash;
 
+import com.rultor.shell.Shell;
+import com.rultor.shell.bash.ProvisionedShell;
 import java.io.InputStream;
 import java.io.OutputStream;
 import org.apache.commons.io.IOUtils;
@@ -38,11 +40,11 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test case for {@link com.rultor.shell.Provisioned}.
+ * Test case for {@link ProvisionedShell}.
  * @author Evgeniy Nyavro (e.nyavro@gmail.com)
  * @version $Id$
  */
-public final class ProvisionedTest {
+public final class ProvisionedShellTest {
 
     /**
      * Provisioned executes bash script in every acquired shell.
@@ -50,13 +52,13 @@ public final class ProvisionedTest {
      */
     @Test
     public void prependsExecWithCommand() throws Exception {
-        final Shells shells = Mockito.mock(Shells.class);
         final Shell shell = Mockito.mock(Shell.class);
-        Mockito.doReturn(shell).when(shells).acquire();
-        final Shell prepended = new Provisioned("echo OK", shells).acquire();
-        prepended.exec(
-            "echo Hi",  IOUtils.toInputStream(""),
-            new NullOutputStream(), new NullOutputStream()
+        new ProvisionedShell("echo OK", shell)
+            .exec(
+                "echo Hi",
+                IOUtils.toInputStream(""),
+                new NullOutputStream(),
+                new NullOutputStream()
         );
         Mockito.verify(shell).exec(
             Mockito.argThat(Matchers.is("echo OK;echo Hi")),
