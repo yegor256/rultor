@@ -66,10 +66,8 @@ public final class ButtonRs extends BaseRs {
      */
     private static final Build DEFAULT_BUILD = new Build() {
         @Override
-        public String info(final URI uri, final String stnd) {
-            return RestTester.start(
-                UriBuilder.fromUri(uri).path(stnd).build()
-            )
+        public String info(final URI uri) {
+            return RestTester.start(uri)
                 .header(
                     HttpHeaders.ACCEPT,
                     MediaType.APPLICATION_XML_UTF_8.toString()
@@ -152,7 +150,7 @@ public final class ButtonRs extends BaseRs {
             new TranscoderOutput(png)
         );
         return Response
-            .ok(png.toByteArray(), MediaType.SVG_UTF_8.toString())
+            .ok(png.toByteArray(), MediaType.PNG.toString())
             .build();
     }
 
@@ -166,7 +164,8 @@ public final class ButtonRs extends BaseRs {
             new StreamSource(
                 IOUtils.toInputStream(
                     this.build.info(
-                        this.uriInfo().getBaseUri(), this.stand
+                        UriBuilder.fromUri(this.uriInfo().getBaseUri())
+                            .segment("s", this.stand).build()
                     )
                 )
             ),
@@ -192,9 +191,8 @@ public final class ButtonRs extends BaseRs {
         /**
          * Retrieve build info.
          * @param uri Location to use.
-         * @param stand Stand name to use.
          * @return Response.
          */
-        String info(final URI uri, final String stand);
+        String info(final URI uri);
     }
 }
