@@ -57,7 +57,7 @@ import org.apache.commons.io.IOUtils;
  * @version $Id$
  * @since 1.0
  */
-@Path("/b/stand/{stand:[\\w\\-]+}/{rule:[\\w\\-]+}")
+@Path("/b/stand/{stand:[\\w\\-]+}/{rule:[\\w\\-]+}.png")
 @Loggable(Loggable.DEBUG)
 public final class ButtonRs extends BaseRs {
 
