@@ -175,6 +175,7 @@
                     <configuration>
                         <systemPropertyVariables>
                             <dynamodb.port>${dynamodblocal.port}</dynamodb.port>
+                            <embedmongo.port>${embedmongo.port}</embedmongo.port>
                             <failsafe.mongo.host>${failsafe.mongo.host}</failsafe.mongo.host>
                             <failsafe.mongo.port>${failsafe.mongo.port}</failsafe.mongo.port>
                             <failsafe.mongo.name>${failsafe.mongo.name}</failsafe.mongo.name>
@@ -202,6 +203,28 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>com.github.joelittlejohn.embedmongo</groupId>
+                <artifactId>embedmongo-maven-plugin</artifactId>
+                <version>0.1.9</version>
+                <executions>
+                    <execution>
+                        <id>start</id>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                        <configuration>
+                            <port>${embedmongo.port}</port>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop</id>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>com.github.adrianboimvaser</groupId>
                 <artifactId>postgresql-maven-plugin</artifactId>
@@ -263,6 +286,7 @@
                             <portNames>
                                 <portName>dynamodblocal.port</portName>
                                 <portName>failsafe.pgsql.port</portName>
+                                <portName>embedmongo.port</portName>
                             </portNames>
                         </configuration>
                     </execution>
