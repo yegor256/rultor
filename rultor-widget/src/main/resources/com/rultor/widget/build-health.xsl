@@ -52,7 +52,6 @@
                             <th><xsl:text>H.</xsl:text></th>
                             <th><xsl:text>St.</xsl:text></th>
                             <th><xsl:text>Rule</xsl:text></th>
-                            <th><xsl:text>By</xsl:text></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -129,7 +128,7 @@
     </xsl:template>
     <xsl:template match="build" mode="build-health-row">
         <tr>
-            <td>
+            <td style="font-size: 1.4em;">
                 <xsl:choose>
                     <xsl:when test="health &gt; 0.8">
                         <i class="icon-beer text-success"><xsl:comment>ok</xsl:comment></i>
@@ -143,7 +142,7 @@
                 </xsl:choose>
             </td>
             <td>
-                <a class="icon">
+                <a class="icon" style="font-size: 1.4em;">
                     <xsl:attribute name="href">
                         <xsl:value-of select="/page/links/link[@rel='pulse-open']/@href"/>
                         <xsl:value-of select="coordinates/scheduled"/>
@@ -163,10 +162,17 @@
                 </a>
             </td>
             <td>
-                <xsl:value-of select="coordinates/rule"/>
-            </td>
-            <td>
-                <xsl:value-of select="author"/>
+                <div>
+                    <xsl:value-of select="coordinates/rule"/>
+                </div>
+                <div style="font-size:0.75em;" class="text-muted">
+                    <xsl:text>by </xsl:text>
+                    <xsl:value-of select="author"/>
+                    <xsl:text> </xsl:text>
+                    <span class="timeago">
+                        <xsl:value-of select="time"/>
+                    </span>
+                </div>
             </td>
         </tr>
     </xsl:template>
