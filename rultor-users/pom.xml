@@ -43,6 +43,9 @@
         <failsafe.pgsql.username>postgres</failsafe.pgsql.username>
         <failsafe.pgsql.password>secure</failsafe.pgsql.password>
         <failsafe.pgsql.db>test</failsafe.pgsql.db>
+        <failsafe.mongo.name>test</failsafe.mongo.name>
+        <failsafe.mongo.user>user</failsafe.mongo.user>
+        <failsafe.mongo.password>password</failsafe.mongo.password>
     </properties>
     <dependencies>
         <dependency>
@@ -175,9 +178,8 @@
                     <configuration>
                         <systemPropertyVariables>
                             <dynamodb.port>${dynamodblocal.port}</dynamodb.port>
-                            <embedmongo.port>${embedmongo.port}</embedmongo.port>
-                            <failsafe.mongo.host>${failsafe.mongo.host}</failsafe.mongo.host>
-                            <failsafe.mongo.port>${failsafe.mongo.port}</failsafe.mongo.port>
+                            <failsafe.mongo.host>localhost</failsafe.mongo.host>
+                            <failsafe.mongo.port>${embedmongo.port}</failsafe.mongo.port>
                             <failsafe.mongo.name>${failsafe.mongo.name}</failsafe.mongo.name>
                             <failsafe.mongo.user>${failsafe.mongo.user}</failsafe.mongo.user>
                             <failsafe.mongo.password>${failsafe.mongo.password}</failsafe.mongo.password>
@@ -222,6 +224,30 @@
                         <goals>
                             <goal>stop</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <id>create-embedmongo-user</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>mongo</executable>
+                            <arguments>
+                                <argument>${failsafe.mongo.name}</argument>
+                                <argument>--port</argument>
+                                <argument>${embedmongo.port}</argument>
+                                <argument>--eval</argument>
+                                <argument>db.addUser('${failsafe.mongo.user}','${failsafe.mongo.password}')</argument>
+                            </arguments>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
