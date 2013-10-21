@@ -217,6 +217,7 @@
                         </goals>
                         <configuration>
                             <port>${embedmongo.port}</port>
+                            <version>2.4.6</version>
                         </configuration>
                     </execution>
                     <execution>
