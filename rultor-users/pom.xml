@@ -43,6 +43,7 @@
         <failsafe.pgsql.username>postgres</failsafe.pgsql.username>
         <failsafe.pgsql.password>secure</failsafe.pgsql.password>
         <failsafe.pgsql.db>test</failsafe.pgsql.db>
+        <failsafe.mongo.name>test</failsafe.mongo.name>
     </properties>
     <dependencies>
         <dependency>
@@ -175,8 +176,8 @@
                     <configuration>
                         <systemPropertyVariables>
                             <dynamodb.port>${dynamodblocal.port}</dynamodb.port>
-                            <failsafe.mongo.host>${failsafe.mongo.host}</failsafe.mongo.host>
-                            <failsafe.mongo.port>${failsafe.mongo.port}</failsafe.mongo.port>
+                            <failsafe.mongo.host>localhost</failsafe.mongo.host>
+                            <failsafe.mongo.port>${embedmongo.port}</failsafe.mongo.port>
                             <failsafe.mongo.name>${failsafe.mongo.name}</failsafe.mongo.name>
                             <failsafe.mongo.user>${failsafe.mongo.user}</failsafe.mongo.user>
                             <failsafe.mongo.password>${failsafe.mongo.password}</failsafe.mongo.password>
@@ -202,6 +203,29 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>com.github.joelittlejohn.embedmongo</groupId>
+                <artifactId>embedmongo-maven-plugin</artifactId>
+                <version>0.1.9</version>
+                <executions>
+                    <execution>
+                        <id>start</id>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                        <configuration>
+                            <port>${embedmongo.port}</port>
+                            <version>2.4.6</version>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop</id>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>com.github.adrianboimvaser</groupId>
                 <artifactId>postgresql-maven-plugin</artifactId>
@@ -263,6 +287,7 @@
                             <portNames>
                                 <portName>dynamodblocal.port</portName>
                                 <portName>failsafe.pgsql.port</portName>
+                                <portName>embedmongo.port</portName>
                             </portNames>
                         </configuration>
                     </execution>
