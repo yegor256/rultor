@@ -164,36 +164,24 @@ final class MongoTag implements Tag {
             .append(MongoTag.ATTR_MARKDOWN, this.markdown());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull(message = "label is never NULL")
     public String label() {
         return this.name;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull(message = "level is never NULL")
     public Level level() {
         return Level.parse(this.lvl);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull(message = "map of attributes is never NULL")
     public Map<String, String> attributes() {
         return this.attrs;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull(message = "markdown is never NULL")
     public String markdown() {

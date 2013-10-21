@@ -65,17 +65,11 @@ final class JiraDeployment implements Deployment {
         new TagLine("jira").attr("key", iss.key()).log();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String name() {
         return this.issue.key();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void started() {
         this.issue.post(
@@ -85,26 +79,18 @@ final class JiraDeployment implements Deployment {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void succeeded() {
-        this.issue.assign(this.issue.comments().iterator().next().author());
-        this.issue.post(
+        this.issue.revert(
             Radar.render(
                 this.getClass().getResourceAsStream("jira-succeeded.xsl")
             )
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void failed() {
-        this.issue.assign(this.issue.comments().iterator().next().author());
-        this.issue.post(
+        this.issue.revert(
             Radar.render(
                 this.getClass().getResourceAsStream("jira-failed.xsl")
             )

@@ -93,9 +93,6 @@ public final class Explicit implements Approval {
         this.regex = reg;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean has(final PullRequest request, final Github github,
         final Github.Repo repo) throws IOException {

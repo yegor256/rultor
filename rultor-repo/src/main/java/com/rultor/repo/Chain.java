@@ -90,9 +90,6 @@ final class Chain implements Variable<List<Object>> {
         return objects;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String asText() {
         return new StringBuilder()

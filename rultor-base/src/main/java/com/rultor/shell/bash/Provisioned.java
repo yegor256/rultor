@@ -71,9 +71,6 @@ public final class Provisioned implements Shells {
         this.shells = shls;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Shell acquire() throws IOException {
         return new ProvisionedShell(this.script, this.shells.acquire());

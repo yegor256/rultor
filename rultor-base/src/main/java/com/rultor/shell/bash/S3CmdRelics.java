@@ -118,9 +118,6 @@ public final class S3CmdRelics implements Sequel {
         this.secret = scrt;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void exec(final Shell shell) throws IOException {

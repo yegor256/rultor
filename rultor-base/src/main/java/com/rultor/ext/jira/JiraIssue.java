@@ -54,6 +54,12 @@ public interface JiraIssue {
     void assign(String name);
 
     /**
+     * Revert it back to the original owner before the latest change.
+     * @param message Error message to show
+     */
+    void revert(String message);
+
+    /**
      * Get its comments (in reverse order, latest first).
      * @return Comments
      */

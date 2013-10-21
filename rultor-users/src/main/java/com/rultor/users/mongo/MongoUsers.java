@@ -73,9 +73,6 @@ public final class MongoUsers implements Users {
         this.origin = users;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<User> iterator() {
         final Iterator<User> iter = this.origin.iterator();
@@ -95,25 +92,16 @@ public final class MongoUsers implements Users {
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public User get(final URN name) {
         return new MongoUser(this.mongo, this.origin.get(name));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Stand stand(final String name) {
         return new MongoStand(this.mongo, this.origin.stand(name));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pulses flow() {
         return new MongoPulses(

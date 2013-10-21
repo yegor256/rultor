@@ -29,6 +29,7 @@
  */
 package com.rultor.ext.jira;
 
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
@@ -75,9 +76,6 @@ final class RxJiraIssue implements JiraIssue {
         this.url = srv.toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String key() {
         final URI uri = UriBuilder.fromUri(this.url)
@@ -93,9 +91,6 @@ final class RxJiraIssue implements JiraIssue {
             .getString("key");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void assign(final String name) {
         final URI uri = UriBuilder.fromUri(this.url)
@@ -111,6 +106,19 @@ final class RxJiraIssue implements JiraIssue {
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
             .put("assigning issue", json.toString())
             .assertStatus(HttpURLConnection.HTTP_NO_CONTENT);
+    }
+
+    @Override
+    public void revert(final String message) {
+        final Iterable<JiraComment> comments = this.comments();
+        if (Iterables.isEmpty(comments)) {
+            this.assign("");
+        } else {
+            this.assign(comments.iterator().next().author());
+        }
+        if (!message.isEmpty()) {
+            this.post(message);
+        }
     }
 
     /**
@@ -147,9 +155,6 @@ final class RxJiraIssue implements JiraIssue {
         return lst;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void post(final String body) {
         final URI uri = UriBuilder.fromUri(this.url)

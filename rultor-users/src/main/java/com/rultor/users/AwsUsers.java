@@ -98,9 +98,6 @@ public final class AwsUsers implements Users {
         this.client = sqs;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull(message = "list of users is never NULL")
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
@@ -119,18 +116,12 @@ public final class AwsUsers implements Users {
         return users.iterator();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull(message = "User is never NULL")
     public User get(@NotNull(message = "URN can't be empty") final URN urn) {
         return new AwsUser(this.region, this.client, urn);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     @RetryOnFailure(verbose = false)
@@ -146,9 +137,6 @@ public final class AwsUsers implements Users {
         return new AwsStand(items.iterator().next());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pulses flow() {
         throw new UnsupportedOperationException();

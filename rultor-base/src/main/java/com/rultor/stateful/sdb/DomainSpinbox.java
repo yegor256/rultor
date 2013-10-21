@@ -86,9 +86,6 @@ public final class DomainSpinbox implements Spinbox {
         this(wrk, region.domain(name));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public long add(final long value) {
         return new ItemSpinbox(

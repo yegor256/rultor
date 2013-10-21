@@ -77,17 +77,11 @@ public interface Queue {
          */
         private final transient BlockingQueue<Coordinates> list =
             new LinkedBlockingQueue<Coordinates>();
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void push(@NotNull(message = "work can't be NULL")
             final Coordinates work) {
             this.list.add(work);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         @NotNull
         @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)

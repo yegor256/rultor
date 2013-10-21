@@ -80,25 +80,16 @@ public final class BucketDrain implements Drain {
         this.work = wrk;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<Time, Time> pulses() {
         return new BucketPulses(this.client, this.prefix(), new Time());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void append(final Iterable<String> lines) throws IOException {
         this.obj().append(lines);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InputStream read() throws IOException {
         return new SequenceInputStream(

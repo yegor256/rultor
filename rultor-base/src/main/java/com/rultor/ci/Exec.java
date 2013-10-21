@@ -76,9 +76,6 @@ public final class Exec implements Instance {
         this.map = new ArrayMap<String, String>(args);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {

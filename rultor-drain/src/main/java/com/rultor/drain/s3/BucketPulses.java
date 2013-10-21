@@ -90,9 +90,6 @@ final class BucketPulses implements Pageable<Time, Time> {
         this.top = time;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<Time, Time> tail(final Time head) {
         return new BucketPulses(
@@ -100,9 +97,6 @@ final class BucketPulses implements Pageable<Time, Time> {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<Time> iterator() {
         final String mrkr = new StringBuilder(this.prefix)

@@ -139,9 +139,6 @@ final class Composite implements Variable<Object> {
         return object;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String asText() {
         return new StringBuilder()

@@ -193,9 +193,6 @@ public interface Spec {
             final String spec) {
             this.text = spec;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String asText() {
             return this.text;
@@ -256,9 +253,6 @@ public interface Spec {
             }
             this.spec = new Spec.Simple(var.asText());
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String asText() {
             return this.spec.asText();

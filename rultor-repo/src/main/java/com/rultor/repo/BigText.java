@@ -116,9 +116,6 @@ final class BigText implements Variable<String> {
         return StringUtils.join(this.lines, BigText.EOL);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String asText() {
         return new StringBuilder("\"\"\"\n")
@@ -127,9 +124,6 @@ final class BigText implements Variable<String> {
             .toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Map<Integer, String> arguments() {
         return new ConcurrentHashMap<Integer, String>(0);

@@ -80,9 +80,6 @@ public final class JiraDeployments extends AbstractCollection<Deployment> {
         this.jira = jra;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Iterator<Deployment> iterator() {
@@ -96,9 +93,6 @@ public final class JiraDeployments extends AbstractCollection<Deployment> {
         return deps.iterator();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int size() {
         return Iterators.size(this.iterator());

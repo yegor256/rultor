@@ -76,17 +76,11 @@ final class PgCondition implements Sheet.Condition {
         this.clause = sql;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Sheet sheet() {
         return this.parent.with(this.clause);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Sheet.Condition equalTo(final String column, final String value) {
         String tag;

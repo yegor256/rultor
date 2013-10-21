@@ -83,9 +83,6 @@ public final class Concat implements Proxy<String> {
         this.separator = sep;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String object() {
         return StringUtils.join(this.parts, this.separator);

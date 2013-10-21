@@ -106,9 +106,6 @@ public interface Bill {
             this.rcpts = new Array<String>(recipients);
             this.from = sender;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String body() {
             try {
@@ -119,23 +116,14 @@ public interface Bill {
                 throw new IllegalStateException(ex);
             }
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String subject() {
             return this.subj;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String sender() {
             return this.from;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Collection<String> recipients() {
             return Collections.unmodifiableCollection(this.rcpts);

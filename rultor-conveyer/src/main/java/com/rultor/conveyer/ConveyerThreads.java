@@ -62,9 +62,6 @@ final class ConveyerThreads implements ThreadFactory {
      */
     private final transient AtomicLong group = new AtomicLong();
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Thread newThread(final Runnable runnable) {
         return new Thread(

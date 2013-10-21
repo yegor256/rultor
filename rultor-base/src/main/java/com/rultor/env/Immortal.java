@@ -31,7 +31,7 @@ package com.rultor.env;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
+import com.rultor.snapshot.Step;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Iterator;
@@ -67,17 +67,11 @@ public final class Immortal implements Environments {
         this.origin = envs;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Environment acquire() throws IOException {
         return new Immortal.Env(this.origin.acquire());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<Environment> iterator() {
         final Iterator<Environment> envs = this.origin.iterator();
@@ -100,6 +94,10 @@ public final class Immortal implements Environments {
     /**
      * Environment without closing feature.
      */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "origin")
+    @Loggable(Loggable.DEBUG)
     private static final class Env implements Environment {
         /**
          * Origin environment.
@@ -112,30 +110,19 @@ public final class Immortal implements Environments {
         protected Env(final Environment env) {
             this.origin = env;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public InetAddress address() throws IOException {
             return this.origin.address();
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
+        @Step("immortal environment is not closed")
         public void close() throws IOException {
-            Logger.info(this, "#close(): immortal environment");
+            assert this.origin != null;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Map<String, String> badges() {
             return this.origin.badges();
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void badge(final String name, final String value) {
             this.origin.badge(name, value);

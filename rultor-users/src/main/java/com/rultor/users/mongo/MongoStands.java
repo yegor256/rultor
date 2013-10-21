@@ -74,17 +74,11 @@ final class MongoStands implements Stands {
         this.origin = stands;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void create(final String name) {
         this.origin.create(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<Stand> iterator() {
         final Iterator<Stand> iter = this.origin.iterator();
@@ -104,25 +98,16 @@ final class MongoStands implements Stands {
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean contains(final String name) {
         return this.origin.contains(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Stand get(final String name) {
         return this.origin.get(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pulses flow() {
         return new MongoPulses(

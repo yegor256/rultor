@@ -103,9 +103,6 @@ final class MongoPulses implements Pulses {
         this.optional = opt;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<Pulse> iterator() {
         final DBCursor cursor = this.collection().find(
@@ -142,9 +139,6 @@ final class MongoPulses implements Pulses {
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<Pulse, Coordinates> tail(final Coordinates top) {
         return new MongoPulses(
@@ -154,9 +148,6 @@ final class MongoPulses implements Pulses {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Query query() {
         return new MongoQuery(this.mongo, this.mandatory, this.optional);

@@ -77,9 +77,6 @@ final class Key implements Comparable<Key> {
         this.when = date;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -111,9 +108,6 @@ final class Key implements Comparable<Key> {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int compareTo(final Key key) {
         return key.when.compareTo(this.when);

@@ -80,9 +80,6 @@ public final class SSHServers implements Shells {
         this.key = priv;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Shell acquire() throws IOException {
         return new SSHServer(this.envs.acquire(), this.login, this.key);

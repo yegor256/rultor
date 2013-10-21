@@ -81,9 +81,6 @@ public interface CFClient {
             this.key = akey;
             this.secret = scrt;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public AmazonCloudFormation get() {
             return new AmazonCloudFormationClient(

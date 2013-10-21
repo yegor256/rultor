@@ -108,57 +108,36 @@ public final class ObjectNotepad implements Notepad {
         this(obj, new S3Client.Simple(akey, scrt, bkt));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int size() {
         return this.load().size();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isEmpty() {
         return this.load().isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean contains(final Object object) {
         return this.load().contains(object);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<String> iterator() {
         return this.load().iterator();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object[] toArray() {
         return this.load().toArray();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public <T> T[] toArray(final T[] array) {
         return this.load().toArray(array);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean add(final String line) {
         final Collection<String> remote = this.load();
@@ -175,17 +154,11 @@ public final class ObjectNotepad implements Notepad {
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean containsAll(final Collection<?> list) {
         return this.load().containsAll(list);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean addAll(final Collection<? extends String> list) {
         final Collection<String> remote = this.load();
@@ -194,9 +167,6 @@ public final class ObjectNotepad implements Notepad {
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean removeAll(final Collection<?> list) {
         final Collection<String> remote = this.load();
@@ -205,9 +175,6 @@ public final class ObjectNotepad implements Notepad {
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean retainAll(final Collection<?> list) {
         final Collection<String> remote = this.load();
@@ -216,9 +183,6 @@ public final class ObjectNotepad implements Notepad {
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void clear() {
         this.save(new ArrayList<String>(0));

@@ -105,23 +105,14 @@ public interface Commit {
             this.when = date;
             this.who = author;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String name() throws IOException {
             return this.label;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Time time() throws IOException {
             return this.when;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String author() throws IOException {
             return this.who;

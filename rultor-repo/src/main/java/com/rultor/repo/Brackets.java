@@ -99,9 +99,6 @@ final class Brackets<T> {
         this.format = fmt;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         final StringBuilder text = new StringBuilder();

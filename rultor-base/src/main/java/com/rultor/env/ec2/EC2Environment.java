@@ -124,9 +124,6 @@ final class EC2Environment implements Environment {
         this.client = clnt;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InetAddress address() throws IOException {
         final Instance instance = this.instance();
@@ -138,9 +135,6 @@ final class EC2Environment implements Environment {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Step("EC2 instance `${this.name}` terminated")
     @RetryOnFailure(verbose = false)
@@ -186,9 +180,6 @@ final class EC2Environment implements Environment {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @RetryOnFailure(verbose = false)
     public Map<String, String> badges() {
@@ -210,9 +201,6 @@ final class EC2Environment implements Environment {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @RetryOnFailure(verbose = false)
     public void badge(final String badge, final String value) {

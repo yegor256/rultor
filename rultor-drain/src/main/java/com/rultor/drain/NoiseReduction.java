@@ -124,9 +124,6 @@ public final class NoiseReduction implements Drain {
         this.clean = cln;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<Time, Time> pulses() throws IOException {
         // @checkstyle AnonInnerLength (50 lines)
@@ -155,9 +152,6 @@ public final class NoiseReduction implements Drain {
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void append(final Iterable<String> lines)
         throws IOException {
@@ -192,9 +186,6 @@ public final class NoiseReduction implements Drain {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InputStream read() throws IOException {
         final boolean exists = Iterables.contains(
@@ -244,9 +235,6 @@ public final class NoiseReduction implements Drain {
         protected Distinct(final Iterator<T> iterator) {
             this.origin = iterator;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean hasNext() {
             while (this.recent.get() == null && this.origin.hasNext()) {
@@ -258,9 +246,6 @@ public final class NoiseReduction implements Drain {
             }
             return this.recent.get() != null;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public T next() {
             if (!this.hasNext()) {
@@ -268,9 +253,6 @@ public final class NoiseReduction implements Drain {
             }
             return this.recent.getAndSet(null);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void remove() {
             throw new UnsupportedOperationException();

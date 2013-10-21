@@ -73,17 +73,11 @@ public final class ASCII implements Drain {
         this.origin = drain;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<Time, Time> pulses() throws IOException {
         return this.origin.pulses();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void append(final Iterable<String> lines)
         throws IOException {
@@ -100,9 +94,6 @@ public final class ASCII implements Drain {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InputStream read() throws IOException {
         return new SequenceInputStream(

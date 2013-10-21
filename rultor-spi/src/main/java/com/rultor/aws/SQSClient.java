@@ -94,18 +94,12 @@ public interface SQSClient {
             this.secret = scrt;
             this.queue = url;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public AmazonSQS get() {
             return new AmazonSQSClient(
                 new BasicAWSCredentials(this.key, this.secret)
             );
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String url() {
             return this.queue;
@@ -132,16 +126,10 @@ public interface SQSClient {
             final String url) {
             this.queue = url;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public AmazonSQS get() {
             return new AmazonSQSClient();
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String url() {
             return this.queue;

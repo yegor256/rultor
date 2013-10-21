@@ -83,9 +83,6 @@ public interface EC2Client {
             this.key = akey;
             this.secret = scrt;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public AmazonEC2 get() {
             return new AmazonEC2Client(
@@ -125,9 +122,6 @@ public interface EC2Client {
             this.region = reg;
             this.origin = client;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public AmazonEC2 get() {
             final AmazonEC2 aws = this.origin.get();

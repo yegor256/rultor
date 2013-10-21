@@ -95,18 +95,12 @@ public interface Pageable<T, K> extends Iterable<T> {
                 array, new ArraySortedSet.Comparator.Reverse<T>()
             );
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         @NotNull
         public Pageable<T, T> tail(
             @NotNull(message = "head is NULL") final T head) {
             return new Pageable.Array<T>(this.times.tailSet(head));
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Iterator<T> iterator() {
             return this.times.iterator();
@@ -142,9 +136,6 @@ public interface Pageable<T, K> extends Iterable<T> {
             this.first = frst;
             this.second = scnd;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         @NotNull
         public Pageable<T, T> tail(
@@ -154,9 +145,6 @@ public interface Pageable<T, K> extends Iterable<T> {
                 this.first.tail(head), this.second.tail(head)
             );
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         @SuppressWarnings("unchecked")
         public Iterator<T> iterator() {

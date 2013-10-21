@@ -82,17 +82,11 @@ final class RestRules implements Rules {
         this.token = tkn;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<Rule> iterator() {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Rule get(final String name) {
         return new RestRule(
@@ -113,9 +107,6 @@ final class RestRules implements Rules {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void create(final String name) {
         try {
@@ -139,9 +130,6 @@ final class RestRules implements Rules {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void remove(final String name) {
         RestTester.start(UriBuilder.fromUri(this.home))
@@ -160,9 +148,6 @@ final class RestRules implements Rules {
             .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean contains(final String name) {
         return !RestTester.start(UriBuilder.fromUri(this.home))

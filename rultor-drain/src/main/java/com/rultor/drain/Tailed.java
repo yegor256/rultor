@@ -79,17 +79,11 @@ public final class Tailed implements Drain {
         this.tail = extra;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<Time, Time> pulses() throws IOException {
         return this.main.pulses();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void append(final Iterable<String> lines)
         throws IOException {
@@ -97,9 +91,6 @@ public final class Tailed implements Drain {
         this.tail.append(lines);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InputStream read() throws IOException {
         return new SequenceInputStream(

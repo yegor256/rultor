@@ -116,9 +116,6 @@ public final class Temporary implements Drain {
         this(wrk, "def");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<Time, Time> pulses() throws IOException {
         final Collection<Time> times = new LinkedList<Time>();
@@ -130,9 +127,6 @@ public final class Temporary implements Drain {
         return new Pageable.Array<Time>(times);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void append(final Iterable<String> lines) throws IOException {
         final Temporary.Buffer buffer;
@@ -148,9 +142,6 @@ public final class Temporary implements Drain {
         buffer.append(lines);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InputStream read() throws IOException {
         final Temporary.Buffer buffer = Temporary.BUFFERS.get(this);
@@ -214,9 +205,6 @@ public final class Temporary implements Drain {
          */
         private final transient ByteArrayOutputStream data =
             new ByteArrayOutputStream();
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String toString() {
             return Logger.format(

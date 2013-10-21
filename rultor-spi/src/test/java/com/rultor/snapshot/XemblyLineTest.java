@@ -56,7 +56,7 @@ public final class XemblyLineTest {
             .add("test")
             .set("hello,\n\"'друг'\"!")
             .add("foo")
-            .set(RandomStringUtils.random(Tv.TEN));
+            .set(RandomStringUtils.randomAscii(Tv.TEN));
         MatcherAssert.assertThat(
             XemblyLine.existsIn(new XemblyLine(dirs).toString()),
             Matchers.is(true)

@@ -84,9 +84,6 @@ public final class Restrictive implements Proxy<Object> {
         this.friends = new Array<String>(frnds);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object object() {
         if (!this.allowed()) {

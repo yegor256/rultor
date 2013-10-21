@@ -108,17 +108,11 @@ public final class FileDrain implements Drain {
         this.file = name;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<Time, Time> pulses() {
         return new Pageable.Array<Time>();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void append(final Iterable<String> lines) throws IOException {
         this.batch.exec(
@@ -133,9 +127,6 @@ public final class FileDrain implements Drain {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InputStream read() throws IOException {
         return new SequenceInputStream(

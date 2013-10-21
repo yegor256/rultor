@@ -73,9 +73,6 @@ final class GitBranch implements Branch {
         this.label = branch;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @RetryOnFailure(verbose = false)
     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
@@ -83,17 +80,11 @@ final class GitBranch implements Branch {
         return this.git.log(this.label);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String name() {
         return this.label;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public SCM scm() {
         return this.git;

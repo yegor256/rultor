@@ -81,9 +81,6 @@ final class Text implements Variable<String>, Comparable<Variable<String>> {
         return this.value;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull(message = "text is never NULL")
     public String asText() {
@@ -93,17 +90,11 @@ final class Text implements Variable<String>, Comparable<Variable<String>> {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Map<Integer, String> arguments() {
         return new ConcurrentHashMap<Integer, String>(0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int compareTo(final Variable<String> var) {
         return this.value.compareTo(var.asText());

@@ -99,25 +99,16 @@ final class GitCommit implements Commit {
             .log();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String name() throws IOException {
         return this.hash;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Time time() throws IOException {
         return this.when;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String author() throws IOException {
         return this.who;

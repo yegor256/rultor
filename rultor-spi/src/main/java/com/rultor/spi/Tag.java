@@ -125,40 +125,25 @@ public interface Tag {
             this.attrs = new ArrayMap<String, String>(map);
             this.text = txt;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String toString() {
             return String.format("%s:%s", this.name, this.lvl);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         @NotNull(message = "label is never NULL")
         public String label() {
             return this.name;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         @NotNull(message = "level is never NULL")
         public Level level() {
             return Level.parse(this.lvl);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         @NotNull(message = "map of attributes is never NULL")
         public Map<String, String> attributes() {
             return this.attrs;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         @NotNull(message = "markdown is never NULL")
         public String markdown() {

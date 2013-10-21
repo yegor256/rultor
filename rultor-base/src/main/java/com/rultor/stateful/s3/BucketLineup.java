@@ -92,17 +92,11 @@ public final class BucketLineup implements Lineup {
         this(wrk, "", clnt);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public <T> T exec(final Callable<T> callable) throws Exception {
         return this.lineup().exec(callable);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void exec(final Runnable runnable) {

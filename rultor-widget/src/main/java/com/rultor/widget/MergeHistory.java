@@ -54,9 +54,6 @@ import org.xembly.Directives;
 @Widget.Stylesheet("merge-history.xsl")
 public final class MergeHistory implements Widget {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Directives render(final Stand stand) {
         final Directives dirs = new Directives()

@@ -63,9 +63,6 @@ public final class Permanent implements Shells {
         this.shell = shl;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Shell acquire() throws IOException {
         return this.shell;

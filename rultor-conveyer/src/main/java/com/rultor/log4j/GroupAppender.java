@@ -119,9 +119,6 @@ final class GroupAppender extends AppenderSkeleton
         Radar.clean();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void run() {
         final Collection<String> all = new LinkedList<String>();
@@ -129,9 +126,6 @@ final class GroupAppender extends AppenderSkeleton
         this.flush(all);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void append(final LoggingEvent event) {
         if (Thread.currentThread().getThreadGroup().equals(this.group)) {
@@ -147,17 +141,11 @@ final class GroupAppender extends AppenderSkeleton
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() {
         this.run();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean requiresLayout() {
         return true;

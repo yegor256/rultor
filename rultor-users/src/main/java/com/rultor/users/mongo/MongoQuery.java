@@ -78,9 +78,6 @@ final class MongoQuery implements Query {
         this.optional = opt;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Query withTag(final String name) {
         return new MongoQuery(
@@ -89,9 +86,6 @@ final class MongoQuery implements Query {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pulses fetch() {
         return new MongoPulses(this.mongo, this.mandatory, this.optional);

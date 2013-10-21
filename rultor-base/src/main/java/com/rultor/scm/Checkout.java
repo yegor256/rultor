@@ -71,26 +71,17 @@ public final class Checkout implements Branch {
         this.label = branch;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<Commit> log() throws IOException {
         return this.source.checkout(this.label).log();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String name() {
         return this.label;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public SCM scm() {
         return this.source;

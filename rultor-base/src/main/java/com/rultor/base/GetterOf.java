@@ -113,9 +113,6 @@ public final class GetterOf implements Proxy<Object> {
         return found;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object object() {
         try {

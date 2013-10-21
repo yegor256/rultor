@@ -101,17 +101,11 @@ final class Testing implements Profile {
     private static final ConcurrentMap<String, Spec> SPECS =
         new ConcurrentHashMap<String, Spec>(0);
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Repo repo() {
         return new ClasspathRepo();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Users users() {
         return new Users() {
@@ -134,17 +128,11 @@ final class Testing implements Profile {
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Queue queue() {
         return new Queue.Memory();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         // nothing to do

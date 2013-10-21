@@ -118,17 +118,11 @@ final class GhRequest implements MergeRequest {
             .log();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String name() {
         return Integer.toString(this.issue);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Step("notified GitHub pull request ${this.issue} that merging started")
     public void started() throws IOException {
@@ -142,9 +136,6 @@ final class GhRequest implements MergeRequest {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Step("accepted GitHub pull request ${this.issue}")
     public void accept() throws IOException {
@@ -170,9 +161,6 @@ final class GhRequest implements MergeRequest {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Step("rejected GitHub pull request ${this.issue}")
     public void reject() throws IOException {
@@ -186,17 +174,11 @@ final class GhRequest implements MergeRequest {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Branch source() {
         return this.src;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Branch destination() {
         return this.dest;

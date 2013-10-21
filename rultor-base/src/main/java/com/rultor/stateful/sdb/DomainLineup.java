@@ -88,18 +88,12 @@ public final class DomainLineup implements Lineup {
         this(wrk, region.domain(name));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public <T> T exec(final Callable<T> callable) throws Exception {
         return this.lineup().exec(callable);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void exec(final Runnable runnable) {

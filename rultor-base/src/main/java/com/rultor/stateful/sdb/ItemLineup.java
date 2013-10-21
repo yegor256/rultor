@@ -95,9 +95,6 @@ public final class ItemLineup implements Lineup {
         this.item = itm;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
@@ -133,9 +130,6 @@ public final class ItemLineup implements Lineup {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)

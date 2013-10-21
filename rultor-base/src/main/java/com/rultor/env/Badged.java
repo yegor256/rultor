@@ -99,9 +99,6 @@ public final class Badged implements Environments {
         this.mapping = new ArrayMap<String, String>(map);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Environment acquire() throws IOException {
         final Environment env = this.origin.acquire();
@@ -121,9 +118,6 @@ public final class Badged implements Environments {
         return env;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<Environment> iterator() {
         return this.origin.iterator();

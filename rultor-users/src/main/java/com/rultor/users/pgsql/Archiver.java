@@ -74,9 +74,6 @@ public final class Archiver implements Runnable, Closeable {
         this.client = clnt;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Tv.TEN, unit = TimeUnit.MINUTES)
     public void run() {
@@ -92,9 +89,6 @@ public final class Archiver implements Runnable, Closeable {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         // nothing to do now

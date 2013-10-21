@@ -98,9 +98,6 @@ public final class Bash implements Batch {
         this(shls, StringUtils.join(lines, " && "));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public int exec(

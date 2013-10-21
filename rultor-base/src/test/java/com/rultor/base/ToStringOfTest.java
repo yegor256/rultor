@@ -71,9 +71,6 @@ public final class ToStringOfTest {
      * Class with overridden toString.
      */
     private static final class Overrider {
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String toString() {
             return "to string";

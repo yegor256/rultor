@@ -52,17 +52,11 @@ import org.apache.commons.lang.CharEncoding;
 @EqualsAndHashCode
 public final class Console implements Drain {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<Time, Time> pulses() throws IOException {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SuppressWarnings("PMD.SystemPrintln")
     public void append(final Iterable<String> lines) throws IOException {
@@ -74,9 +68,6 @@ public final class Console implements Drain {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InputStream read() throws IOException {
         throw new UnsupportedOperationException();

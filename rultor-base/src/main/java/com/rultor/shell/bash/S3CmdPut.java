@@ -155,9 +155,6 @@ public final class S3CmdPut implements Sequel {
         this.encoding = enc;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void exec(final Shell shell) throws IOException {
         final String dir = FilenameUtils.getFullPathNoEndSeparator(this.path);

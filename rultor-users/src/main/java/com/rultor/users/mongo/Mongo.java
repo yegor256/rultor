@@ -103,9 +103,6 @@ public interface Mongo {
             this.user = login;
             this.password = pwd;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         @Cacheable(forever = true)
         @RetryOnFailure(verbose = false)

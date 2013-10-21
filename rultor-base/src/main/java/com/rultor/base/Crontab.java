@@ -119,9 +119,6 @@ public final class Crontab implements Instance {
         this.gates = new Array<Crontab.Gate<Calendar>>(Crontab.split(text));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
@@ -372,9 +369,6 @@ public final class Crontab implements Instance {
             }
             this.alternatives = new Array<Crontab.Gate<Integer>>(alts);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String toString() {
             return StringUtils.join(this.alternatives, "|");
@@ -426,23 +420,14 @@ public final class Crontab implements Instance {
         protected ExactGate(final int val) {
             this.exact = val;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String toString() {
             return Integer.toString(this.exact);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean pass(final Integer num) {
             return num == this.exact;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public long lag(final Integer num) {
             return Math.abs(num - this.exact);
@@ -477,23 +462,14 @@ public final class Crontab implements Instance {
             this.left = lft;
             this.right = rgt;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String toString() {
             return String.format("%d-%d", this.left, this.right);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean pass(final Integer num) {
             return num >= this.left && num <= this.right;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public long lag(final Integer num) {
             long lag = 0;
@@ -526,23 +502,14 @@ public final class Crontab implements Instance {
             );
             this.divisor = div;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String toString() {
             return String.format("*/%d", this.divisor);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean pass(final Integer num) {
             return num % this.divisor == 0;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public long lag(final Integer num) {
             long lag = 0;

@@ -78,9 +78,6 @@ public interface ConcurrentNotepad extends Notepad {
             this.notepad = ntp;
             this.lineup = lnp;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         @SuppressWarnings("PMD.AvoidCatchingGenericException")
         public boolean addIf(final String item) {
@@ -106,93 +103,54 @@ public interface ConcurrentNotepad extends Notepad {
                 throw new IllegalStateException(ex);
             }
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public int size() {
             return this.notepad.size();
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean isEmpty() {
             return this.notepad.isEmpty();
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean contains(final Object obj) {
             return this.notepad.contains(obj);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Iterator<String> iterator() {
             return this.notepad.iterator();
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Object[] toArray() {
             return this.notepad.toArray();
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public <T> T[] toArray(final T[] array) {
             return this.notepad.toArray(array);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean add(final String item) {
             return this.notepad.add(item);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean remove(final Object item) {
             return this.notepad.remove(item);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean containsAll(final Collection<?> items) {
             return this.notepad.containsAll(items);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean addAll(final Collection<? extends String> items) {
             return this.notepad.addAll(items);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean removeAll(final Collection<?> items) {
             return this.notepad.removeAll(items);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean retainAll(final Collection<?> items) {
             return this.notepad.retainAll(items);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void clear() {
             this.notepad.clear();

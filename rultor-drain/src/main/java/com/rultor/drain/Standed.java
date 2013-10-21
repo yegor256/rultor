@@ -190,17 +190,11 @@ public final class Standed implements Drain {
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<Time, Time> pulses() throws IOException {
         return this.origin.pulses();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void append(final Iterable<String> lines) throws IOException {
         final Iterable<List<String>> batches = Iterables.partition(
@@ -234,9 +228,6 @@ public final class Standed implements Drain {
         this.origin.append(lines);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InputStream read() throws IOException {
         return new SequenceInputStream(

@@ -93,9 +93,6 @@ final class Dictionary implements Variable<Map<String, Object>> {
         return objects;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String asText() {
         return new StringBuilder()

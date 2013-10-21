@@ -77,9 +77,6 @@ public final class XsltBill implements Bill {
         this.xslt = xsltran;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String body() {
         try {
@@ -92,25 +89,16 @@ public final class XsltBill implements Bill {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String subject() {
         return this.origin.subject();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String sender() {
         return this.origin.sender();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Collection<String> recipients() {
         return this.origin.recipients();

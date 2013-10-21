@@ -178,41 +178,26 @@ public final class SSHChannelTest {
             this.command = cmd;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void setInputStream(final InputStream input) {
             // do nothing
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void setOutputStream(final OutputStream out) {
             this.output = out;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void setErrorStream(final OutputStream err) {
             // do nothing
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void setExitCallback(final ExitCallback cllbck) {
             this.callback = cllbck;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void start(final Environment env) throws IOException {
             IOUtils.write(this.command, this.output);
@@ -220,9 +205,6 @@ public final class SSHChannelTest {
             this.callback.onExit(0);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void destroy() {
             // do nothing

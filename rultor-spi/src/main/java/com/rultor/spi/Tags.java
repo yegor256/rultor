@@ -82,23 +82,14 @@ public interface Tags extends Collection<Tag> {
             super();
             this.list = new Array<Tag>(tags);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Iterator<Tag> iterator() {
             return this.list.iterator();
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public int size() {
             return this.list.size();
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean contains(final String label) {
             boolean contains = false;
@@ -110,9 +101,6 @@ public interface Tags extends Collection<Tag> {
             }
             return contains;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Tag get(final String label) {
             Tag found = null;

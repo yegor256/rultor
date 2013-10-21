@@ -82,36 +82,24 @@ final class AwsUser implements User {
         this.name = urn;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull(message = "URN of a user is never NULL")
     public URN urn() {
         return this.name;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull(message = "rules of a user is never NULL")
     public Rules rules() {
         return new AwsRules(this.region, this.client, this.name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull(message = "stands of a user is never NULL")
     public Stands stands() {
         return new AwsStands(this.region, this.name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Account account() {
         throw new UnsupportedOperationException();

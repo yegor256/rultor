@@ -72,97 +72,61 @@ public final class MergedMaps<K, V> implements Map<K, V> {
         this.map = new ArrayMap<K, V>(collector);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int size() {
         return this.map.size();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isEmpty() {
         return this.map.isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean containsKey(final Object key) {
         return this.map.containsKey(key);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean containsValue(final Object value) {
         return this.map.containsValue(value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public V get(final Object key) {
         return this.map.get(key);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public V put(final K key, final V value) {
         return this.map.put(key, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public V remove(final Object key) {
         return this.map.remove(key);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void putAll(final Map<? extends K, ? extends V> origin) {
         this.map.putAll(origin);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void clear() {
         this.map.clear();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Set<K> keySet() {
         return this.map.keySet();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Collection<V> values() {
         return this.map.values();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Set<Entry<K, V>> entrySet() {
         return this.map.entrySet();

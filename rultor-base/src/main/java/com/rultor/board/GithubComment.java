@@ -75,9 +75,6 @@ public final class GithubComment implements Billboard {
         this.github = new Github.Simple(login, pwd);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void announce(final boolean success) throws IOException {
         final Tags tags;

@@ -89,9 +89,6 @@ public final class SES implements Billboard {
         this.bill = bll;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Step("email sent to ${this.bill.recipients()}")
     public void announce(final boolean success) throws IOException {

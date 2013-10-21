@@ -94,7 +94,7 @@ public final class StepAspect {
                 .xpath("/snapshot").addIf("steps").add("step")
                 .attr("id", label)
                 // @checkstyle MultipleStringLiterals (1 line)
-                .attr("class", method.getDeclaringClass().getCanonicalName())
+                .attr("class", method.getDeclaringClass().getName())
                 .attr("method", method.getName())
                 .add("start").set(new Time().toString()).up()
                 .add("summary")
@@ -106,7 +106,7 @@ public final class StepAspect {
             if (result != null) {
                 args.put("result", result);
             }
-            this.mark(label, Level.INFO);
+            StepAspect.mark(label, Level.INFO);
             new XemblyLine(
                 new Directives().xpath(
                     String.format("/snapshot/steps/step[@id=%s]/summary", label)
@@ -115,7 +115,7 @@ public final class StepAspect {
             return result;
         // @checkstyle IllegalCatch (1 line)
         } catch (Throwable ex) {
-            this.mark(label, Level.SEVERE);
+            StepAspect.mark(label, Level.SEVERE);
             new XemblyLine(
                 new Directives()
                     // @checkstyle MultipleStringLiterals (1 line)
@@ -145,7 +145,7 @@ public final class StepAspect {
      * @param label Label of the step
      * @param level Level to set
      */
-    private void mark(final String label, final Level level) {
+    private static void mark(final String label, final Level level) {
         new XemblyLine(
             new Directives()
                 .xpath(String.format("/snapshot/steps/step[@id=%s]", label))
@@ -160,7 +160,7 @@ public final class StepAspect {
      * @return Array of wrappers
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    private static Object[] wrap(final Object[] array) {
+    private static Object[] wrap(final Object... array) {
         final Object[] output = new Object[array.length];
         for (int idx = 0; idx < array.length; ++idx) {
             output[idx] = new StepAspect.Open(array[idx]);
@@ -184,9 +184,6 @@ public final class StepAspect {
         protected Open(final Object subj) {
             this.subject = subj;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String toString() {
             return this.subject.toString();

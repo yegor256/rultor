@@ -67,9 +67,6 @@ public final class Vext {
         this.template = text;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return Logger.format("`%[text]s`", this.template);

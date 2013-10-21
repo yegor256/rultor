@@ -78,9 +78,6 @@ public final class XemblyLine {
         this.directives = new Array<Directive>(dirs);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return String.format("%s '%s'", XemblyLine.MARK, this.xembly());

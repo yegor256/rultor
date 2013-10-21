@@ -80,9 +80,6 @@ final class RestAccount implements Account {
         this.token = tkn;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Dollars balance() {
         return Dollars.valueOf(
@@ -96,9 +93,6 @@ final class RestAccount implements Account {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Sheet sheet() {
         return new RestSheet(
@@ -115,9 +109,6 @@ final class RestAccount implements Account {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void fund(final Dollars amount, final String details) {
         throw new UnsupportedOperationException();

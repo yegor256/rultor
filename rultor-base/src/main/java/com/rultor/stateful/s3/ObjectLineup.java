@@ -109,9 +109,6 @@ public final class ObjectLineup implements Lineup {
         this(obj, new S3Client.Simple(akey, scrt, bkt));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public <T> T exec(final Callable<T> callable) throws Exception {
         while (true) {
@@ -157,9 +154,6 @@ public final class ObjectLineup implements Lineup {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public void exec(final Runnable runnable) {

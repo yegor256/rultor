@@ -83,18 +83,12 @@ final class CFStack implements Environment {
         this.client = clnt;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InetAddress address() throws IOException {
         final Stack stack = this.whenReady();
         return CFStack.address(stack);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Step("requested deletion of stack `${this.name}`")
     public void close() throws IOException {
@@ -106,17 +100,11 @@ final class CFStack implements Environment {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Map<String, String> badges() {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void badge(final String badge, final String value) {
         throw new UnsupportedOperationException();

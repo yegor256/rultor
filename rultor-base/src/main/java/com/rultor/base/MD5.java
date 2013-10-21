@@ -63,9 +63,6 @@ public final class MD5 implements Proxy<String> {
         this.text = txt;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String object() {
         return DigestUtils.md2Hex(this.text);

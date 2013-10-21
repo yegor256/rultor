@@ -121,34 +121,22 @@ public final class BufferedRead implements Drain, Closeable {
         this.origin = drain;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() {
         BufferedRead.CLEANER.run();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<Time, Time> pulses() throws IOException {
         return this.origin.pulses();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void append(final Iterable<String> lines) throws IOException {
         this.origin.append(lines);
         BufferedRead.BUFFERS.remove(this);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InputStream read() throws IOException {
         final BufferedRead.Buffer buffer;

@@ -68,18 +68,12 @@ public final class Edge implements SCM {
         this.scm = src;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Branch checkout(final String name) throws IOException {
         return this.scm.checkout(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Step("${result.size()} branch(es) at the edge")
     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
@@ -92,9 +86,6 @@ public final class Edge implements SCM {
         return branches;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public URI uri() {
         return this.scm.uri();

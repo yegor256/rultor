@@ -72,17 +72,11 @@ final class AuditUser implements User {
         this.origin = user;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public URN urn() {
         return this.origin.urn();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Rules rules() {
         final Dollars balance = this.account().balance();
@@ -98,17 +92,11 @@ final class AuditUser implements User {
         return new AuditRules(this.origin.rules(), error);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Stands stands() {
         return this.origin.stands();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Account account() {
         return this.origin.account();

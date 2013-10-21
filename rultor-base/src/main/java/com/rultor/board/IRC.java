@@ -74,9 +74,6 @@ public final class IRC implements Billboard {
         this.channel = chnl;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void announce(final boolean success) {
         assert this.host != null;

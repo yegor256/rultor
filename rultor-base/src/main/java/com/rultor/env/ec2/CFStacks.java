@@ -88,17 +88,11 @@ public final class CFStacks implements Environments {
         this.client = clnt;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Environment acquire() throws IOException {
         return new CFStack(this.create(), this.client);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<Environment> iterator() {
         throw new UnsupportedOperationException();

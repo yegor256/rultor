@@ -67,9 +67,6 @@ public final class Server implements Environments {
         this.host = address;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Environment acquire() throws IOException {
         return new Environment() {
@@ -92,9 +89,6 @@ public final class Server implements Environments {
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<Environment> iterator() {
         try {

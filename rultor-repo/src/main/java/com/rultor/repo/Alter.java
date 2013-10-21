@@ -102,9 +102,6 @@ final class Alter implements Variable<String>, Comparable<Variable<String>> {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull(message = "text is never NULL")
     public String asText() {
@@ -114,9 +111,6 @@ final class Alter implements Variable<String>, Comparable<Variable<String>> {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Map<Integer, String> arguments() {
         final ImmutableMap.Builder<Integer, String> args =
@@ -128,9 +122,6 @@ final class Alter implements Variable<String>, Comparable<Variable<String>> {
         return args.build();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int compareTo(final Variable<String> var) {
         return this.value.compareTo(var.asText());

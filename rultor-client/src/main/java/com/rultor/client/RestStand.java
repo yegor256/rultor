@@ -80,9 +80,6 @@ final class RestStand implements Stand {
         this.token = auth;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void update(final Spec spec, final Spec widgets) {
         try {
@@ -107,9 +104,6 @@ final class RestStand implements Stand {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Spec acl() {
         return new Spec.Simple(
@@ -123,9 +117,6 @@ final class RestStand implements Stand {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Spec widgets() {
         return new Spec.Simple(
@@ -139,9 +130,6 @@ final class RestStand implements Stand {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String name() {
         return RestTester.start(UriBuilder.fromUri(this.home))
@@ -153,9 +141,6 @@ final class RestStand implements Stand {
             .get(0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public URN owner() {
         return URN.create(
@@ -169,17 +154,11 @@ final class RestStand implements Stand {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pulses pulses() {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void post(final Coordinates pulse, final long nano,
         final String xembly) {

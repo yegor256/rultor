@@ -64,9 +64,6 @@ public final class ToStringOf implements Proxy<String> {
         this.source = src;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String object() {
         return this.source.toString();

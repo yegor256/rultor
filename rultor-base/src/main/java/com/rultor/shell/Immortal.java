@@ -31,7 +31,7 @@ package com.rultor.shell;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
+import com.rultor.snapshot.Step;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -66,9 +66,6 @@ public final class Immortal implements Shells {
         this.origin = shls;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Shell acquire() throws IOException {
         final Shell shell = this.origin.acquire();
@@ -81,8 +78,9 @@ public final class Immortal implements Shells {
                 return shell.exec(command, stdin, stdout, stderr);
             }
             @Override
+            @Step("immortal shell is not closed")
             public void close() throws IOException {
-                Logger.info(this, "close() request ignored");
+                assert shell != null;
             }
             @Override
             public void badge(final String name, final String value) {

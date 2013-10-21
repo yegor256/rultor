@@ -71,9 +71,6 @@ public final class PrivateKey {
         this.toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         final PemObject pem;

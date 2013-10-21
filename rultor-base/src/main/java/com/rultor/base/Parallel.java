@@ -104,9 +104,6 @@ public final class Parallel implements Instance {
         this.active = atv;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {

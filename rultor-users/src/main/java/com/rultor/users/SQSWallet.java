@@ -114,9 +114,6 @@ final class SQSWallet implements Wallet {
         this.dtrule = drule;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void charge(final String details, final Dollars amount) {
         if (!this.creditor.equals(this.debitor)) {
@@ -124,9 +121,6 @@ final class SQSWallet implements Wallet {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Wallet delegate(final URN urn, final String rule) {
         final Wallet delegate = new SQSWallet(

@@ -69,9 +69,6 @@ public final class ReassignTo implements Approval {
         this.user = login;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Step("assigned pull request #${args[0].number} to `${args[0].user.login}`")
     public boolean has(final PullRequest request, final Github client,

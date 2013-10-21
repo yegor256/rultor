@@ -72,9 +72,6 @@ public final class RxJira implements Jira {
         this.url = srv;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Iterable<JiraIssue> search(final String jql) {

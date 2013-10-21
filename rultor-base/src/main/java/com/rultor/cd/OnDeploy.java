@@ -81,9 +81,6 @@ public final class OnDeploy implements Instance {
         this.batch = btch;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {

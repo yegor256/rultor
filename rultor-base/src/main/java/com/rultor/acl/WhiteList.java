@@ -71,9 +71,6 @@ public final class WhiteList implements ACL {
         this.friends = new Array<URN>(list);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean canView(final URN urn) {
         boolean allowed = false;
@@ -86,9 +83,6 @@ public final class WhiteList implements ACL {
         return allowed;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean canPost(final String key) {
         return false;

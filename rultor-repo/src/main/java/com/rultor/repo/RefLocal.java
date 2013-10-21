@@ -109,9 +109,6 @@ final class RefLocal implements Variable<Object> {
         ).instantiate(users, args);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull(message = "text is never NULL")
     public String asText() {

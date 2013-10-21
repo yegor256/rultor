@@ -119,9 +119,6 @@ public final class SQSQueue implements Queue {
         this.client = clnt;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void push(
         @NotNull(message = "work can't be NULL") final Coordinates work) {
@@ -142,9 +139,6 @@ public final class SQSQueue implements Queue {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
