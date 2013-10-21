@@ -87,6 +87,7 @@ public final class XslPosts implements Refinement {
     @Override
     public MergeRequest refine(final MergeRequest request,
         final JiraIssue issue) {
+        // @checkstyle AnonInnerLength (50 lines)
         return new MergeRequest() {
             private final transient String key = issue.key();
             @Override
