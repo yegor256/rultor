@@ -30,13 +30,14 @@
 package com.rultor.guard.jira;
 
 import com.rultor.ext.jira.Jira;
+import com.rultor.guard.MergeRequest;
 import com.rultor.guard.MergeRequests;
-import com.rultor.guard.github.Github;
-import com.rultor.guard.github.ReassignTo;
 import java.io.IOException;
+import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link JiraRequests}.
@@ -52,14 +53,29 @@ public final class JiraRequestsTest {
     @Test
     public void sendsIssuesThrough() throws IOException {
         final Jira jira = Mockito.mock(Jira.class);
-        final MergeRequests requests = new JiraRequests(jira, "");
+        final Refinement refinement = Mockito.mock(Refinement.class);
+        final MergeRequests requests = new JiraRequests(jira, "", refinement);
         MatcherAssert.assertThat(
-            new ReassignTo(login).has(
-                request,
-                github,
-                new Github.Repo("xembly/xembly")
-            ),
-            Matchers.is(true)
+            requests,
+            Matchers.<MergeRequest>hasItem(Matchers.notNullValue())
+        );
+    }
+
+    /**
+     * JiraRequests can refine multiple times.
+     * @throws IOException If some problem inside
+     */
+    @Test
+    public void refinesMultipleTimes() throws IOException {
+        final Jira jira = Mockito.mock(Jira.class);
+        final Refinement first = Mockito.mock(Refinement.class);
+        final Refinement second = Mockito.mock(Refinement.class);
+        final MergeRequests requests = new JiraRequests(
+            jira, "", Arrays.asList(first, second)
+        );
+        MatcherAssert.assertThat(
+            requests,
+            Matchers.<MergeRequest>hasItem(Matchers.notNullValue())
         );
     }
 

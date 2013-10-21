@@ -37,6 +37,7 @@ import com.rultor.ext.jira.Jira;
 import com.rultor.ext.jira.JiraIssue;
 import com.rultor.guard.MergeRequest;
 import com.rultor.guard.MergeRequests;
+import java.util.Collection;
 import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -80,6 +81,30 @@ public final class JiraRequests implements MergeRequests {
         this.jira = jra;
         this.jql = query;
         this.refinement = ref;
+    }
+
+    /**
+     * Public ctor.
+     * @param jra JIRA client
+     * @param query JQL query
+     * @param refs Refinements
+     */
+    public JiraRequests(final Jira jra, final String query,
+        final Collection<Refinement> refs) {
+        this(
+            jra, query,
+            new Refinement() {
+                @Override
+                public MergeRequest refine(final MergeRequest request,
+                    final JiraIssue issue) {
+                    MergeRequest refined = request;
+                    for (Refinement ref : refs) {
+                        refined = ref.refine(refined, issue);
+                    }
+                    return refined;
+                }
+            }
+        );
     }
 
     /**
