@@ -44,8 +44,6 @@
         <failsafe.pgsql.password>secure</failsafe.pgsql.password>
         <failsafe.pgsql.db>test</failsafe.pgsql.db>
         <failsafe.mongo.name>test</failsafe.mongo.name>
-        <failsafe.mongo.user>user</failsafe.mongo.user>
-        <failsafe.mongo.password>password</failsafe.mongo.password>
     </properties>
     <dependencies>
         <dependency>
@@ -225,30 +223,6 @@
                         <goals>
                             <goal>stop</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <executions>
-                    <execution>
-                        <id>create-embedmongo-user</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>mongo</executable>
-                            <arguments>
-                                <argument>${failsafe.mongo.name}</argument>
-                                <argument>--port</argument>
-                                <argument>${embedmongo.port}</argument>
-                                <argument>--eval</argument>
-                                <argument>db.addUser('${failsafe.mongo.user}','${failsafe.mongo.password}')</argument>
-                            </arguments>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

@@ -38,6 +38,7 @@ import com.mongodb.MongoClient;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -111,11 +112,17 @@ public interface Mongo {
         public DB get() throws IOException {
             final MongoClient client = new MongoClient(this.host, this.port);
             final DB database = client.getDB(this.name);
-            Validate.isTrue(
-                database.authenticate(this.user, this.password.toCharArray()),
-                "failed to authenticate with MongoDB at '%s:%d/%s' as '%s'",
-                this.host, this.port, this.name, this.user
-            );
+            if (!StringUtils.isEmpty(this.user)
+                && !StringUtils.isEmpty(this.password)) {
+                Validate.isTrue(
+                    database.authenticate(
+                        this.user,
+                        this.password.toCharArray()
+                    ),
+                    "failed to authenticate with MongoDB at '%s:%d/%s' as '%s'",
+                    this.host, this.port, this.name, this.user
+                );
+            }
             return database;
         }
     }
