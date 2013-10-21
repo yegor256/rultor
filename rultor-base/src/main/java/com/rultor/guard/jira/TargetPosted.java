@@ -79,6 +79,7 @@ public final class TargetPosted implements Refinement {
     @Override
     public MergeRequest refine(final MergeRequest request,
         final JiraIssue issue) {
+        // @checkstyle AnonInnerLength (50 lines)
         return new MergeRequest() {
             @Override
             public String name() {

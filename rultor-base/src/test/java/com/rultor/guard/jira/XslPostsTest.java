@@ -49,8 +49,11 @@ public final class XslPostsTest {
     @Test
     public void postsXmlToJira() throws IOException {
         final JiraIssue issue = Mockito.mock(JiraIssue.class);
+        Mockito.doReturn("KEY-11").when(issue).key();
         final MergeRequest request = Mockito.mock(MergeRequest.class);
-        final Refinement ref = new XslPosts("", "", "");
+        // @checkstyle LineLength (1 line)
+        final String xsl = "<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='2.0'/>";
+        final Refinement ref = new XslPosts(xsl, xsl, xsl);
         ref.refine(request, issue).started();
         Mockito.verify(issue).post("");
     }

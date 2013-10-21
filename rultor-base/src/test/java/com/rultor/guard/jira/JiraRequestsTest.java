@@ -30,10 +30,11 @@
 package com.rultor.guard.jira;
 
 import com.rultor.ext.jira.Jira;
+import com.rultor.ext.jira.JiraIssue;
 import com.rultor.guard.MergeRequest;
 import com.rultor.guard.MergeRequests;
-import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -48,12 +49,15 @@ public final class JiraRequestsTest {
 
     /**
      * JiraRequests can send issues through.
-     * @throws IOException If some problem inside
+     * @throws Exception If some problem inside
      */
     @Test
-    public void sendsIssuesThrough() throws IOException {
+    public void sendsIssuesThrough() throws Exception {
+        final JiraIssue issue = Mockito.mock(JiraIssue.class);
         final Jira jira = Mockito.mock(Jira.class);
-        final Refinement refinement = Mockito.mock(Refinement.class);
+        Mockito.doReturn(Collections.singletonList(issue)).when(jira)
+            .search(Mockito.anyString());
+        final Refinement refinement = Refinement.NONE;
         final MergeRequests requests = new JiraRequests(jira, "", refinement);
         MatcherAssert.assertThat(
             requests,
@@ -63,13 +67,16 @@ public final class JiraRequestsTest {
 
     /**
      * JiraRequests can refine multiple times.
-     * @throws IOException If some problem inside
+     * @throws Exception If some problem inside
      */
     @Test
-    public void refinesMultipleTimes() throws IOException {
+    public void refinesMultipleTimes() throws Exception {
+        final JiraIssue issue = Mockito.mock(JiraIssue.class);
         final Jira jira = Mockito.mock(Jira.class);
-        final Refinement first = Mockito.mock(Refinement.class);
-        final Refinement second = Mockito.mock(Refinement.class);
+        Mockito.doReturn(Collections.singletonList(issue)).when(jira)
+            .search(Mockito.anyString());
+        final Refinement first = Refinement.NONE;
+        final Refinement second = Refinement.NONE;
         final MergeRequests requests = new JiraRequests(
             jira, "", Arrays.asList(first, second)
         );

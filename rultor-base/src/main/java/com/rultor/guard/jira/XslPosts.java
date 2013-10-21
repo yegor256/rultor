@@ -37,7 +37,6 @@ import com.rultor.scm.Branch;
 import com.rultor.snapshot.Radar;
 import com.rultor.snapshot.Step;
 import com.rultor.snapshot.XSLT;
-import java.io.IOException;
 import javax.xml.transform.TransformerException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -53,7 +52,7 @@ import org.xembly.XemblySyntaxException;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "issue")
+@EqualsAndHashCode(of = { "start", "success", "failure" })
 @Loggable(Loggable.DEBUG)
 public final class XslPosts implements Refinement {
 
@@ -63,14 +62,14 @@ public final class XslPosts implements Refinement {
     private final transient String start;
 
     /**
-     * XSL for good.
+     * XSL for success.
      */
-    private final transient String good;
+    private final transient String success;
 
     /**
-     * XSL for bad.
+     * XSL for failure.
      */
-    private final transient String bad;
+    private final transient String failure;
 
     /**
      * Public ctor.
@@ -81,14 +80,15 @@ public final class XslPosts implements Refinement {
     public XslPosts(final String started, final String accept,
         final String reject) {
         this.start = started;
-        this.good = accept;
-        this.bad = reject;
+        this.success = accept;
+        this.failure = reject;
     }
 
     @Override
     public MergeRequest refine(final MergeRequest request,
         final JiraIssue issue) {
         return new MergeRequest() {
+            private final transient String key = issue.key();
             @Override
             public String name() {
                 return request.name();
@@ -102,19 +102,19 @@ public final class XslPosts implements Refinement {
                 return request.destination();
             }
             @Override
-            @Step("notified JIRA issue ${this.issue} that merging started")
-            public void started() throws IOException {
+            @Step("notified JIRA issue ${this.key} that merging started")
+            public void started() {
                 issue.post(XslPosts.render(XslPosts.this.start));
             }
             @Override
-            @Step("accepted JIRA request in ${this.issue}")
-            public void accept() throws IOException {
-                issue.revert(XslPosts.render(XslPosts.this.good));
+            @Step("accepted JIRA request in ${this.key}")
+            public void accept() {
+                issue.revert(XslPosts.render(XslPosts.this.success));
             }
             @Override
-            @Step("rejected JIRA request in ${this.issue}")
-            public void reject() throws IOException {
-                issue.revert(XslPosts.render(XslPosts.this.bad));
+            @Step("rejected JIRA request in ${this.key}")
+            public void reject() {
+                issue.revert(XslPosts.render(XslPosts.this.failure));
             }
         };
     }
@@ -126,12 +126,12 @@ public final class XslPosts implements Refinement {
     private static String render(final String xsl) {
         try {
             return new XSLT(Radar.snapshot(), xsl).xml();
-        } catch (TransformerException e) {
-            throw new IllegalStateException(e);
-        } catch (ImpossibleModificationException e) {
-            throw new IllegalStateException(e);
-        } catch (XemblySyntaxException e) {
-            throw new IllegalStateException(e);
+        } catch (TransformerException ex) {
+            throw new IllegalStateException(ex);
+        } catch (ImpossibleModificationException ex) {
+            throw new IllegalStateException(ex);
+        } catch (XemblySyntaxException ex) {
+            throw new IllegalStateException(ex);
         }
     }
 }

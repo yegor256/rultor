@@ -38,7 +38,6 @@ import com.rultor.ext.jira.JiraIssue;
 import com.rultor.guard.MergeRequest;
 import com.rultor.guard.MergeRequests;
 import com.rultor.scm.Branch;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import lombok.EqualsAndHashCode;
@@ -53,7 +52,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = {"jira", "jql", "refinement"})
+@EqualsAndHashCode(of = {"jira", "jql", "refinement" })
 @Loggable(Loggable.DEBUG)
 public final class JiraRequests implements MergeRequests {
 
@@ -117,7 +116,7 @@ public final class JiraRequests implements MergeRequests {
                 @Override
                 public MergeRequest apply(final JiraIssue issue) {
                     return JiraRequests.this.refinement.refine(
-                        JiraRequests.request(issue), issue
+                        new JiraRequests.Empty(issue), issue
                     );
                 }
             }
@@ -125,37 +124,48 @@ public final class JiraRequests implements MergeRequests {
     }
 
     /**
-     * Make a default request with the given issue.
-     * @param issue Jira issue
-     * @return Merge request
+     * Empty merge request.
      */
-    private static MergeRequest request(final JiraIssue issue) {
-        return new MergeRequest() {
-            @Override
-            public String name() {
-                return issue.key();
-            }
-            @Override
-            public Branch source() {
-                throw new UnsupportedOperationException("source()");
-            }
-            @Override
-            public Branch destination() {
-                throw new UnsupportedOperationException("destination()");
-            }
-            @Override
-            public void started() throws IOException {
-                assert issue != null;
-            }
-            @Override
-            public void accept() throws IOException {
-                assert issue != null;
-            }
-            @Override
-            public void reject() throws IOException {
-                assert issue != null;
-            }
-        };
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "issue")
+    @Loggable(Loggable.DEBUG)
+    private static final class Empty implements MergeRequest {
+        /**
+         * Jira issue.
+         */
+        private final transient JiraIssue issue;
+        /**
+         * Public ctor.
+         * @param iss Issue
+         */
+        protected Empty(final JiraIssue iss) {
+            this.issue = iss;
+        }
+        @Override
+        public String name() {
+            return this.issue.key();
+        }
+        @Override
+        public Branch source() {
+            throw new UnsupportedOperationException("source()");
+        }
+        @Override
+        public Branch destination() {
+            throw new UnsupportedOperationException("destination()");
+        }
+        @Override
+        public void started() {
+            assert this.issue != null;
+        }
+        @Override
+        public void accept() {
+            assert this.issue != null;
+        }
+        @Override
+        public void reject() {
+            assert this.issue != null;
+        }
     }
 
 }

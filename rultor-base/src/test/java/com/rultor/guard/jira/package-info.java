@@ -27,39 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.guard.jira;
-
-import com.jcabi.aspects.Immutable;
-import com.rultor.ext.jira.JiraIssue;
-import com.rultor.guard.MergeRequest;
 
 /**
- * Refinement of a JIRA merge request.
+ * JIRA-related guard classes, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Refinement {
-
-    /**
-     * Doing nothing.
-     */
-    Refinement NONE = new Refinement() {
-        @Override
-        public MergeRequest refine(final MergeRequest request,
-            final JiraIssue issue) {
-            return request;
-        }
-    };
-
-    /**
-     * Refine this merge request.
-     * @param request Merge request
-     * @param issue JIRA issue
-     * @return Refined merge request
-     */
-    MergeRequest refine(MergeRequest request, JiraIssue issue);
-
-}
+package com.rultor.guard.jira;
