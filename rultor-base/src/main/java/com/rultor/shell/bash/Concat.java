@@ -112,7 +112,8 @@ public final class Concat implements Proxy<String> {
      *
      * <p>The method returns a Vext script that is a composition of
      * all commands encapsulated. This script when executed through BASH
-     * outputs Xembly log lines that, when parsed, produce a {@link Snapshot}
+     * outputs Xembly log lines that, when parsed, produce
+     * a {@link com.rultor.snapshot.Snapshot}
      * with steps. Every step will have a summary, a log level, and
      * an exception if its exit code is not zero.
      *
@@ -140,7 +141,7 @@ public final class Concat implements Proxy<String> {
      *
      * @param cmd Command in Vext format
      * @return Bash script ready for execution
-     * @see http://stackoverflow.com/questions/18665603
+     * @see <a href="http://stackoverflow.com/questions/18665603">discussion</a>
      */
     private String script(final Vext cmd) {
         final String uid = String.format("bash-%d", System.nanoTime());
