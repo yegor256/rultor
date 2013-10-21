@@ -34,14 +34,13 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.ext.jira.JiraIssue;
 import com.rultor.guard.MergeRequest;
 import com.rultor.scm.Branch;
-import com.rultor.snapshot.Step;
-import com.rultor.snapshot.TagLine;
 import java.io.IOException;
+import java.net.URI;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Jira merge request.
+ * Source branch detected from issue key.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -49,73 +48,54 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "issue")
+@EqualsAndHashCode(of = "uri")
 @Loggable(Loggable.DEBUG)
-final class JiraRequest implements MergeRequest {
+public final class SourceKeyed implements Refinement {
 
     /**
-     * Jira issue.
+     * URI of source.
      */
-    private final transient JiraIssue issue;
+    private final transient String uri;
 
     /**
      * Public ctor.
-     * @param iss JIRA issue
+     * @param scm URI of SCM
      */
-    protected JiraRequest(final JiraIssue iss) {
-        this.issue = iss;
-        new TagLine("jira").attr("key", this.issue.key()).log();
+    public SourceKeyed(final String scm) {
+        this.uri = scm;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public String name() {
-        return this.issue.key();
+    public MergeRequest refine(final MergeRequest request,
+        final JiraIssue issue) {
+        return new MergeRequest() {
+            @Override
+            public String name() {
+                return request.name();
+            }
+            @Override
+            public Branch source() {
+                return new Branch.Passive(
+                    URI.create(SourceKeyed.this.uri),
+                    issue.key()
+                );
+            }
+            @Override
+            public Branch destination() {
+                return request.destination();
+            }
+            @Override
+            public void started() throws IOException {
+                request.started();
+            }
+            @Override
+            public void accept() throws IOException {
+                request.accept();
+            }
+            @Override
+            public void reject() throws IOException {
+                request.reject();
+            }
+        };
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Step("notified JIRA issue ${this.issue} that merging started")
-    public void started() throws IOException {
-        this.issue.post("merging started...");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Step("accepted JIRA request in ${this.issue}")
-    public void accept() throws IOException {
-        this.issue.post("merged successfully.");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Step("rejected JIRA request in ${this.issue}")
-    public void reject() throws IOException {
-        this.issue.post("failed to merge.");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Branch source() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Branch destination() {
-        throw new UnsupportedOperationException();
-    }
-
 }

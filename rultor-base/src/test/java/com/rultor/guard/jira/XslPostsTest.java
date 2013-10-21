@@ -27,48 +27,32 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.ext.jira;
+package com.rultor.guard.jira;
 
-import com.jcabi.aspects.Immutable;
+import com.rultor.ext.jira.JiraIssue;
+import com.rultor.guard.MergeRequest;
+import java.io.IOException;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Jira issue.
- *
+ * Test case for {@link XslPosts}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
  */
-@Immutable
-public interface JiraIssue {
+public final class XslPostsTest {
 
     /**
-     * Its key.
-     * @return Key of the issue, e.g. TEST-1242
+     * XslPosts can post an XML to Jira ticket.
+     * @throws IOException If some problem inside
      */
-    String key();
-
-    /**
-     * Assign it to another user.
-     * @param name Name of the user to assign to
-     */
-    void assign(String name);
-
-    /**
-     * Revert it back to the original owner before the latest change.
-     * @param message Error message to show
-     */
-    void revert(String message);
-
-    /**
-     * Get its comments (in reverse order, latest first).
-     * @return Comments
-     */
-    Iterable<JiraComment> comments();
-
-    /**
-     * Post a comment.
-     * @param body Body of it
-     */
-    void post(String body);
+    @Test
+    public void postsXmlToJira() throws IOException {
+        final JiraIssue issue = Mockito.mock(JiraIssue.class);
+        final MergeRequest request = Mockito.mock(MergeRequest.class);
+        final Refinement ref = new XslPosts("", "", "");
+        ref.refine(request, issue).started();
+        Mockito.verify(issue).post("");
+    }
 
 }

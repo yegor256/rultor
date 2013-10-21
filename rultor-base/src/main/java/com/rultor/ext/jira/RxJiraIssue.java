@@ -29,6 +29,7 @@
  */
 package com.rultor.ext.jira;
 
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.RestTester;
@@ -111,6 +112,22 @@ final class RxJiraIssue implements JiraIssue {
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
             .put("assigning issue", json.toString())
             .assertStatus(HttpURLConnection.HTTP_NO_CONTENT);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void revert(final String message) {
+        final Iterable<JiraComment> comments = this.comments();
+        if (Iterables.isEmpty(comments)) {
+            this.assign("");
+        } else {
+            this.assign(comments.iterator().next().author());
+        }
+        if (!message.isEmpty()) {
+            this.post(message);
+        }
     }
 
     /**

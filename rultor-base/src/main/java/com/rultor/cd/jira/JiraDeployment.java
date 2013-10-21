@@ -90,8 +90,7 @@ final class JiraDeployment implements Deployment {
      */
     @Override
     public void succeeded() {
-        this.issue.assign(this.issue.comments().iterator().next().author());
-        this.issue.post(
+        this.issue.revert(
             Radar.render(
                 this.getClass().getResourceAsStream("jira-succeeded.xsl")
             )
@@ -103,8 +102,7 @@ final class JiraDeployment implements Deployment {
      */
     @Override
     public void failed() {
-        this.issue.assign(this.issue.comments().iterator().next().author());
-        this.issue.post(
+        this.issue.revert(
             Radar.render(
                 this.getClass().getResourceAsStream("jira-failed.xsl")
             )

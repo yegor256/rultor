@@ -29,23 +29,23 @@
  */
 package com.rultor.guard.jira;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.ext.jira.Jira;
 import com.rultor.ext.jira.JiraIssue;
 import com.rultor.guard.MergeRequest;
-import com.rultor.guard.MergeRequests;
 import com.rultor.scm.Branch;
+import com.rultor.snapshot.Radar;
+import com.rultor.snapshot.Step;
+import com.rultor.snapshot.XSLT;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
+import javax.xml.transform.TransformerException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.xembly.ImpossibleModificationException;
+import org.xembly.XemblySyntaxException;
 
 /**
- * Merge requests in JIRA.
+ * Three XSL posts into JIRA issue.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -53,112 +53,85 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = {"jira", "jql", "refinement"})
+@EqualsAndHashCode(of = "issue")
 @Loggable(Loggable.DEBUG)
-public final class JiraRequests implements MergeRequests {
+public final class XslPosts implements Refinement {
 
     /**
-     * JIRA client.
+     * XSL for started.
      */
-    private final transient Jira jira;
+    private final transient String start;
 
     /**
-     * JQL query.
+     * XSL for good.
      */
-    private final transient String jql;
+    private final transient String good;
 
     /**
-     * Refinement to use.
+     * XSL for bad.
      */
-    private final transient Refinement refinement;
-
-    /**
-     * Public ctor.
-     * @param jra JIRA client
-     * @param query JQL query
-     * @param ref Refinement
-     */
-    public JiraRequests(final Jira jra, final String query,
-        final Refinement ref) {
-        this.jira = jra;
-        this.jql = query;
-        this.refinement = ref;
-    }
+    private final transient String bad;
 
     /**
      * Public ctor.
-     * @param jra JIRA client
-     * @param query JQL query
-     * @param refs Refinements
+     * @param started XSL for "started" post
+     * @param accept XSL for "accept" post
+     * @param reject XSL for "reject" post
      */
-    public JiraRequests(final Jira jra, final String query,
-        final Collection<Refinement> refs) {
-        this(
-            jra, query,
-            new Refinement() {
-                @Override
-                public MergeRequest refine(final MergeRequest request,
-                    final JiraIssue issue) {
-                    MergeRequest refined = request;
-                    for (Refinement ref : refs) {
-                        refined = ref.refine(refined, issue);
-                    }
-                    return refined;
-                }
-            }
-        );
+    public XslPosts(final String started, final String accept,
+        final String reject) {
+        this.start = started;
+        this.good = accept;
+        this.bad = reject;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Iterator<MergeRequest> iterator() {
-        return Iterators.transform(
-            this.jira.search(this.jql).iterator(),
-            new Function<JiraIssue, MergeRequest>() {
-                @Override
-                public MergeRequest apply(final JiraIssue issue) {
-                    return JiraRequests.this.refinement.refine(
-                        JiraRequests.request(issue), issue
-                    );
-                }
-            }
-        );
-    }
-
-    /**
-     * Make a default request with the given issue.
-     * @param issue Jira issue
-     * @return Merge request
-     */
-    private static MergeRequest request(final JiraIssue issue) {
+    public MergeRequest refine(final MergeRequest request,
+        final JiraIssue issue) {
         return new MergeRequest() {
             @Override
             public String name() {
-                return issue.key();
+                return request.name();
             }
             @Override
             public Branch source() {
-                throw new UnsupportedOperationException("source()");
+                return request.source();
             }
             @Override
             public Branch destination() {
-                throw new UnsupportedOperationException("destination()");
+                return request.destination();
             }
             @Override
+            @Step("notified JIRA issue ${this.issue} that merging started")
             public void started() throws IOException {
-                assert issue != null;
+                issue.post(XslPosts.render(XslPosts.this.start));
             }
             @Override
+            @Step("accepted JIRA request in ${this.issue}")
             public void accept() throws IOException {
-                assert issue != null;
+                issue.revert(XslPosts.render(XslPosts.this.good));
             }
             @Override
+            @Step("rejected JIRA request in ${this.issue}")
             public void reject() throws IOException {
-                assert issue != null;
+                issue.revert(XslPosts.render(XslPosts.this.bad));
             }
         };
     }
-
+    /**
+     * Render current snapshot using provided XSL.
+     * @param xsl XSL to use
+     * @return Snapshot rendered
+     */
+    private static String render(final String xsl) {
+        try {
+            return new XSLT(Radar.snapshot(), xsl).xml();
+        } catch (TransformerException e) {
+            throw new IllegalStateException(e);
+        } catch (ImpossibleModificationException e) {
+            throw new IllegalStateException(e);
+        } catch (XemblySyntaxException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 }

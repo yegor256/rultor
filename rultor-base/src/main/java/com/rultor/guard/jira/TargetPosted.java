@@ -29,23 +29,22 @@
  */
 package com.rultor.guard.jira;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterators;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rultor.ext.jira.Jira;
+import com.rultor.ext.jira.JiraComment;
 import com.rultor.ext.jira.JiraIssue;
 import com.rultor.guard.MergeRequest;
-import com.rultor.guard.MergeRequests;
 import com.rultor.scm.Branch;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
+import java.net.URI;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Merge requests in JIRA.
+ * Uni-direct merging.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -53,112 +52,96 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = {"jira", "jql", "refinement"})
+@EqualsAndHashCode(of = { "msg", "uri" })
 @Loggable(Loggable.DEBUG)
-public final class JiraRequests implements MergeRequests {
+public final class TargetPosted implements Refinement {
 
     /**
-     * JIRA client.
+     * Destination branch pattern.
      */
-    private final transient Jira jira;
+    private final transient String msg;
 
     /**
-     * JQL query.
+     * URI of destination.
      */
-    private final transient String jql;
-
-    /**
-     * Refinement to use.
-     */
-    private final transient Refinement refinement;
+    private final transient String uri;
 
     /**
      * Public ctor.
-     * @param jra JIRA client
-     * @param query JQL query
-     * @param ref Refinement
+     * @param ptn Pattern for the message to search
+     * @param scm URI of SCM
      */
-    public JiraRequests(final Jira jra, final String query,
-        final Refinement ref) {
-        this.jira = jra;
-        this.jql = query;
-        this.refinement = ref;
+    public TargetPosted(final String ptn, final String scm) {
+        this.msg = ptn;
+        this.uri = scm;
     }
 
-    /**
-     * Public ctor.
-     * @param jra JIRA client
-     * @param query JQL query
-     * @param refs Refinements
-     */
-    public JiraRequests(final Jira jra, final String query,
-        final Collection<Refinement> refs) {
-        this(
-            jra, query,
-            new Refinement() {
-                @Override
-                public MergeRequest refine(final MergeRequest request,
-                    final JiraIssue issue) {
-                    MergeRequest refined = request;
-                    for (Refinement ref : refs) {
-                        refined = ref.refine(refined, issue);
-                    }
-                    return refined;
-                }
-            }
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Iterator<MergeRequest> iterator() {
-        return Iterators.transform(
-            this.jira.search(this.jql).iterator(),
-            new Function<JiraIssue, MergeRequest>() {
-                @Override
-                public MergeRequest apply(final JiraIssue issue) {
-                    return JiraRequests.this.refinement.refine(
-                        JiraRequests.request(issue), issue
-                    );
-                }
-            }
-        );
-    }
-
-    /**
-     * Make a default request with the given issue.
-     * @param issue Jira issue
-     * @return Merge request
-     */
-    private static MergeRequest request(final JiraIssue issue) {
+    public MergeRequest refine(final MergeRequest request,
+        final JiraIssue issue) {
         return new MergeRequest() {
             @Override
             public String name() {
-                return issue.key();
+                return request.name();
             }
             @Override
             public Branch source() {
-                throw new UnsupportedOperationException("source()");
+                return request.source();
             }
             @Override
             public Branch destination() {
-                throw new UnsupportedOperationException("destination()");
+                return new Branch.Passive(
+                    URI.create(TargetPosted.this.uri),
+                    TargetPosted.this.branch(issue)
+                );
             }
             @Override
             public void started() throws IOException {
-                assert issue != null;
+                TargetPosted.this.branch(issue);
+                request.started();
             }
             @Override
             public void accept() throws IOException {
-                assert issue != null;
+                request.accept();
             }
             @Override
             public void reject() throws IOException {
-                assert issue != null;
+                request.reject();
             }
         };
     }
-
+    /**
+     * Get destination branch from the issue.
+     * @param issue The issue
+     * @return Destination branch name
+     */
+    private String branch(final JiraIssue issue) {
+        final Iterable<JiraComment> comments = issue.comments();
+        if (Iterables.isEmpty(comments)) {
+            issue.revert(
+                // @checkstyle LineLength (1 line)
+                "Please, tell me which branch you want it to be merge into"
+            );
+            throw new IllegalStateException(
+                String.format(
+                    "destination branch is not specified in %s", issue
+                )
+            );
+        }
+        final String body = comments.iterator().next().body();
+        final Matcher matcher = Pattern.compile(this.msg).matcher(body);
+        if (!matcher.matches()) {
+            issue.revert(
+                String.format(
+                    "I didn't get what you said here: \"%s\"", body
+                )
+            );
+            throw new IllegalStateException(
+                String.format(
+                    "message is not parseable: '%s'", body
+                )
+            );
+        }
+        return matcher.group(1);
+    }
 }
