@@ -53,9 +53,6 @@ public final class AuthKeys implements HttpBasic.Vault {
      */
     private final transient String key = Manifests.read("Rultor-SecurityKey");
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Identity authenticate(@NotNull(message = "user can't be NULL")
         final String user, @NotNull(message = "password can't be NULL")

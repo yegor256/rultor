@@ -66,9 +66,6 @@ public final class Either implements ACL {
         this.acls = new Array<ACL>(list);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean canView(final URN urn) {
         boolean allowed = false;
@@ -81,9 +78,6 @@ public final class Either implements ACL {
         return allowed;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean canPost(final String key) {
         boolean allowed = false;

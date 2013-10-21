@@ -86,9 +86,6 @@ public final class Dollars {
         return new Dollars(points);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         final double usd = Math.abs((double) this.amount / Tv.MILLION);

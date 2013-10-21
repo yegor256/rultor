@@ -95,17 +95,11 @@ public final class ObjectDrain implements Drain {
         this.key = name;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<Time, Time> pulses() {
         return new Pageable.Array<Time>();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void append(final Iterable<String> lines) throws IOException {
         final AmazonS3 aws = this.client.get();
@@ -161,9 +155,6 @@ public final class ObjectDrain implements Drain {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InputStream read() throws IOException {
         final AmazonS3 aws = this.client.get();

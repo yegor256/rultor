@@ -81,9 +81,6 @@ public interface SESClient {
             this.key = akey;
             this.secret = scrt;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public AmazonSimpleEmailService get() {
             return new AmazonSimpleEmailServiceClient(

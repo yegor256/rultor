@@ -72,9 +72,6 @@ public final class ASCIIOutputStream extends OutputStream {
         this.origin = stream;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void write(final int chr) throws IOException {
         if (chr == '\015') {

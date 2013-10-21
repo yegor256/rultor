@@ -78,9 +78,6 @@ public final class ItemSpinbox implements Spinbox {
         this.item = itm;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @RetryOnFailure(verbose = false)
     public long add(final long value) {

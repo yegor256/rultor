@@ -83,17 +83,11 @@ public final class RestStands implements Stands {
         this.token = tkn;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<Stand> iterator() {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Stand get(final String name) {
         return new RestStand(
@@ -114,9 +108,6 @@ public final class RestStands implements Stands {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void create(final String name) {
         try {
@@ -140,9 +131,6 @@ public final class RestStands implements Stands {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean contains(final String name) {
         return !RestTester.start(UriBuilder.fromUri(this.home))
@@ -154,9 +142,6 @@ public final class RestStands implements Stands {
             .isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pulses flow() {
         throw new UnsupportedOperationException();

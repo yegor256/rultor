@@ -85,17 +85,11 @@ public final class PaidRegion implements Region {
         this.origin = region;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public AmazonSimpleDB aws() {
         return this.origin.aws();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Domain domain(final String name) {
         final Domain domain = this.origin.domain(name);

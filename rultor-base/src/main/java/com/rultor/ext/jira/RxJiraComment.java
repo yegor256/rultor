@@ -66,9 +66,6 @@ final class RxJiraComment implements JiraComment {
         this.url = srv.toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String body() {
         return RestTester.start(URI.create(this.url))
@@ -80,9 +77,6 @@ final class RxJiraComment implements JiraComment {
             .getString("body");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String author() {
         return RestTester.start(URI.create(this.url))

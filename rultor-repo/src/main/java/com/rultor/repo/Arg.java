@@ -103,9 +103,6 @@ final class Arg implements Variable<Object> {
         return args.get(this.position);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String asText() {
         return String.format("${%d:%s}", this.position, this.desc);

@@ -76,9 +76,6 @@ final class RxJiraIssue implements JiraIssue {
         this.url = srv.toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String key() {
         final URI uri = UriBuilder.fromUri(this.url)
@@ -94,9 +91,6 @@ final class RxJiraIssue implements JiraIssue {
             .getString("key");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void assign(final String name) {
         final URI uri = UriBuilder.fromUri(this.url)
@@ -114,9 +108,6 @@ final class RxJiraIssue implements JiraIssue {
             .assertStatus(HttpURLConnection.HTTP_NO_CONTENT);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void revert(final String message) {
         final Iterable<JiraComment> comments = this.comments();
@@ -164,9 +155,6 @@ final class RxJiraIssue implements JiraIssue {
         return lst;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void post(final String body) {
         final URI uri = UriBuilder.fromUri(this.url)

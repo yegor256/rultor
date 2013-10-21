@@ -83,9 +83,6 @@ final class WithCoords implements Instance {
         this.origin = instance;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @LogExceptions
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)

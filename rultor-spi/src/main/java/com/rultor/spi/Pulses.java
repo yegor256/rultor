@@ -81,23 +81,14 @@ public interface Pulses extends Pageable<Pulse, Coordinates> {
             final Collection<Pulse> data) {
             this.array = new com.jcabi.immutable.Array<Pulse>(data);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Iterator<Pulse> iterator() {
             return this.array.iterator();
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Pageable<Pulse, Coordinates> tail(final Coordinates head) {
             return this;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Query query() {
             return new Query() {

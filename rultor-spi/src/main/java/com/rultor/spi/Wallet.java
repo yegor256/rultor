@@ -98,16 +98,10 @@ public interface Wallet {
     @EqualsAndHashCode
     @Loggable(Loggable.INFO)
     final class Empty implements Wallet {
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void charge(final String details, final Dollars amount) {
             assert details != null;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Wallet delegate(final URN urn, final String rule) {
             return this;

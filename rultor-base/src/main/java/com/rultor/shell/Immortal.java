@@ -66,9 +66,6 @@ public final class Immortal implements Shells {
         this.origin = shls;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Shell acquire() throws IOException {
         final Shell shell = this.origin.acquire();

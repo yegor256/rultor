@@ -81,9 +81,6 @@ final class MongoPulse implements Pulse {
         this.map = new ArrayMap<String, Object>(object.toMap());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String xembly() throws IOException {
         final DBObject object = this.collection().findOne(
@@ -103,17 +100,11 @@ final class MongoPulse implements Pulse {
             .toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InputStream stream() throws IOException {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Coordinates coordinates() {
         return new MongoCoords(
@@ -121,9 +112,6 @@ final class MongoPulse implements Pulse {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Tags tags() {
@@ -136,9 +124,6 @@ final class MongoPulse implements Pulse {
         return new Tags.Simple(tags);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String stand() {
         return this.map.get(MongoStand.ATTR_STAND).toString();

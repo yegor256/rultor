@@ -85,9 +85,6 @@ public interface Github {
         public Repo(@NotNull final URI uri) {
             this(uri.getPath().replaceAll("^/|\\.git$", ""));
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String generateId() {
             return String.format("%s/%s", this.login, this.name);
@@ -133,9 +130,6 @@ public interface Github {
             this.username = user;
             this.password = pwd;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public GitHubClient client() {
             final GitHubClient client = new GitHubClient();

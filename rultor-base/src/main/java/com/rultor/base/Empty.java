@@ -69,9 +69,6 @@ public final class Empty implements Instance {
         assert arg != null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void pulse() throws Exception {
         Logger.info(this, "nothing to do");

@@ -80,17 +80,11 @@ public final class UnseenBranches implements SCM {
         this.notepad = ntp;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Branch checkout(final String name) throws IOException {
         return this.origin.checkout(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<String> branches() throws IOException {
@@ -111,9 +105,6 @@ public final class UnseenBranches implements SCM {
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public URI uri() {
         return this.origin.uri();

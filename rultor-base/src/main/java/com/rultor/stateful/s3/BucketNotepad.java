@@ -93,57 +93,36 @@ public final class BucketNotepad implements Notepad {
         this(wrk, "", clnt);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int size() {
         return this.notepad().size();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isEmpty() {
         return this.notepad().isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean contains(final Object object) {
         return this.notepad().contains(object);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<String> iterator() {
         return this.notepad().iterator();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object[] toArray() {
         return this.notepad().toArray();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public <T> T[] toArray(final T[] array) {
         return this.notepad().toArray(array);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean add(final String line) {
         return this.notepad().add(line);
@@ -154,41 +133,26 @@ public final class BucketNotepad implements Notepad {
         return this.notepad().remove(line);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean containsAll(final Collection<?> list) {
         return this.notepad().containsAll(list);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean addAll(final Collection<? extends String> list) {
         return this.notepad().addAll(list);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean removeAll(final Collection<?> list) {
         return this.notepad().removeAll(list);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean retainAll(final Collection<?> list) {
         return this.notepad().retainAll(list);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void clear() {
         this.notepad().clear();

@@ -77,17 +77,11 @@ public final class Shallow implements Shell {
         return this.shells.acquire().exec(command, stdin, stdout, stderr);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         // nothing to do;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void badge(final String name, final String value) {
         throw new UnsupportedOperationException();

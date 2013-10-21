@@ -73,9 +73,6 @@ public final class Followed implements Shells {
         this.origin = shells;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Shell acquire() throws IOException {
         return new Followed.Sequeled(this.origin.acquire(), this.sequel);
@@ -117,9 +114,6 @@ public final class Followed implements Shells {
             throws IOException {
             return this.origin.exec(command, stdin, stdout, stderr);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void close() throws IOException {
             try {
@@ -128,9 +122,6 @@ public final class Followed implements Shells {
                 this.origin.close();
             }
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void badge(final String name, final String value) {
             this.origin.badge(name, value);

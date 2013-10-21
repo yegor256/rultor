@@ -74,9 +74,6 @@ public final class Seasoned implements Branch {
         this.minimum = TimeUnit.MINUTES.toMillis(min);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<Commit> log() throws IOException {
@@ -92,17 +89,11 @@ public final class Seasoned implements Branch {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String name() {
         return this.origin.name();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public SCM scm() {
         return this.origin.scm();

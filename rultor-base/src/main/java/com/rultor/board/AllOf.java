@@ -63,9 +63,6 @@ public final class AllOf implements Billboard {
         this.boards = new Array<Billboard>(brds);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void announce(final boolean success) throws IOException {
         for (Billboard board : this.boards) {

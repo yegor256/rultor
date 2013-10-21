@@ -84,9 +84,6 @@ public final class Prerequisites implements Shells {
         this.map = new ArrayMap<String, Object>(pres);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Shell acquire() throws IOException {
         final Shell shell = this.origin.acquire();

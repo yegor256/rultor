@@ -84,9 +84,6 @@ public final class OnTag implements Instance {
         this.board = brd;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {

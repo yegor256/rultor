@@ -86,9 +86,6 @@ final class RestSheet implements Sheet {
         this.token = tkn;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public List<Column> columns() {
@@ -112,50 +109,32 @@ final class RestSheet implements Sheet {
         return columns;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Sheet orderBy(final String column, final boolean asc) {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Sheet groupBy(final String column) {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Sheet between(final Time left, final Time right) {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<List<Object>, Integer> tail(final Integer head)
         throws IOException {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<List<Object>> iterator() {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Sheet.Condition where() {
         throw new UnsupportedOperationException();

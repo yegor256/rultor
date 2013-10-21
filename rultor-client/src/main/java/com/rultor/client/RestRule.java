@@ -80,9 +80,6 @@ final class RestRule implements Rule {
         this.token = auth;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void update(final Spec spec, final Spec drain) {
         try {
@@ -107,9 +104,6 @@ final class RestRule implements Rule {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Spec spec() {
         return new Spec.Simple(
@@ -123,9 +117,6 @@ final class RestRule implements Rule {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String name() {
         return RestTester.start(UriBuilder.fromUri(this.home))
@@ -137,18 +128,12 @@ final class RestRule implements Rule {
             .get(0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Wallet wallet(final Coordinates work, final URN urn,
         final String rule) {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Spec drain() {
         return new Spec.Simple(
@@ -162,17 +147,11 @@ final class RestRule implements Rule {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void failure(final String desc) {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String failure() {
         throw new UnsupportedOperationException();

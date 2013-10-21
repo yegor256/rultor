@@ -96,9 +96,6 @@ public final class PgUsers implements Users, Runnable, Closeable {
         this.origin = users;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<User> iterator() {
         final Iterator<User> iter = this.origin.iterator();
@@ -118,25 +115,16 @@ public final class PgUsers implements Users, Runnable, Closeable {
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public User get(final URN name) {
         return new PgUser(this.client, this.origin.get(name));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Stand stand(final String name) {
         return this.origin.stand(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void run() {
         try {
@@ -146,17 +134,11 @@ public final class PgUsers implements Users, Runnable, Closeable {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         this.archiver.close();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pulses flow() {
         return this.origin.flow();

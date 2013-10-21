@@ -109,9 +109,6 @@ public final class RestUser implements User {
         this(URI.create("http://www.rultor.com"), urn, key);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public URN urn() {
         return URN.create(
@@ -126,9 +123,6 @@ public final class RestUser implements User {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Rules rules() {
         return new RestRules(
@@ -146,9 +140,6 @@ public final class RestUser implements User {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Stands stands() {
         return new RestStands(
@@ -166,9 +157,6 @@ public final class RestUser implements User {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Account account() {
         return new RestAccount(URI.create(this.home), this.token);

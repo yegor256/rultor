@@ -149,9 +149,6 @@ public final class HttpServer implements Closeable {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         this.server.close();

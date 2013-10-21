@@ -133,9 +133,6 @@ public final class DirectoryDrain implements Drain {
         this.dir = name;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<Time, Time> pulses() throws IOException {
         return new Pageable.Array<Time>(
@@ -152,17 +149,11 @@ public final class DirectoryDrain implements Drain {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void append(final Iterable<String> lines) throws IOException {
         this.file().append(lines);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InputStream read() throws IOException {
         return new SequenceInputStream(

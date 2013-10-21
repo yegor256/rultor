@@ -64,17 +64,11 @@ public final class MD5Keyed implements ACL {
         this.hash = txt;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean canView(final URN urn) {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean canPost(final String key) {
         return DigestUtils.md5Hex(key).equals(this.hash);

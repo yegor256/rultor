@@ -49,17 +49,11 @@ import lombok.ToString;
 @Loggable(Loggable.DEBUG)
 public final class Prohibited implements ACL {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean canView(final URN urn) {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean canPost(final String key) {
         return false;

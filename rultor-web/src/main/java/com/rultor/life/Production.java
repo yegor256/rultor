@@ -90,18 +90,12 @@ final class Production implements Profile {
         )
     );
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable(forever = true)
     public Repo repo() {
         return new ClasspathRepo();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable(forever = true)
     public Users users() {
@@ -140,9 +134,6 @@ final class Production implements Profile {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable(forever = true)
     public Queue queue() {
@@ -155,9 +146,6 @@ final class Production implements Profile {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         this.quartz.close();

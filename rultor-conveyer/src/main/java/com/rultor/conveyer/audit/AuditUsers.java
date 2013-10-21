@@ -70,9 +70,6 @@ public final class AuditUsers implements Users, Runnable {
         this.origin = users;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<User> iterator() {
         final Iterator<User> iter = this.origin.iterator();
@@ -92,25 +89,16 @@ public final class AuditUsers implements Users, Runnable {
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public User get(final URN name) {
         return new AuditUser(this.origin.get(name));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Stand stand(final String name) {
         return this.origin.stand(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void run() {
         final FreeTier tier = new FreeTier();
@@ -119,9 +107,6 @@ public final class AuditUsers implements Users, Runnable {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pulses flow() {
         return this.origin.flow();

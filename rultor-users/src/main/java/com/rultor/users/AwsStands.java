@@ -85,9 +85,6 @@ final class AwsStands implements Stands {
         this.owner = urn;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<Stand> iterator() {
         final Iterator<Item> items = this.fetch().iterator();
@@ -108,9 +105,6 @@ final class AwsStands implements Stands {
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable.FlushAfter
     @RetryOnFailure(verbose = false)
@@ -129,9 +123,6 @@ final class AwsStands implements Stands {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     @RetryOnFailure(verbose = false)
@@ -143,9 +134,6 @@ final class AwsStands implements Stands {
             .isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @RetryOnFailure(verbose = false)
     public Stand get(@NotNull @Pattern(regexp = ".+")final String name) {
@@ -162,9 +150,6 @@ final class AwsStands implements Stands {
         return new AwsStand(items.iterator().next());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pulses flow() {
         throw new UnsupportedOperationException();

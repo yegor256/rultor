@@ -64,33 +64,21 @@ public final class Symmetrical implements Bill {
         this.origin = bill;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String body() {
         return this.origin.body();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String subject() {
         return this.origin.body();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String sender() {
         return this.origin.sender();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Collection<String> recipients() {
         return this.origin.recipients();

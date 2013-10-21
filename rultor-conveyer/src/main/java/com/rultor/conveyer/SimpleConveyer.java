@@ -157,9 +157,6 @@ final class SimpleConveyer implements Closeable {
         this.server.listen();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.INFO, limit = Integer.MAX_VALUE)
     public void close() throws IOException {

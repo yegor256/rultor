@@ -54,9 +54,6 @@ public final class Lifespan implements ServletContextListener {
      */
     private transient Profile profile;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void contextInitialized(final ServletContextEvent event) {
         try {
@@ -80,9 +77,6 @@ public final class Lifespan implements ServletContextListener {
         context.setAttribute(Queue.class.getName(), queue);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void contextDestroyed(final ServletContextEvent event) {
         IOUtils.closeQuietly(this.profile);

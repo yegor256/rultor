@@ -94,17 +94,11 @@ public final class ProvisionedShell implements Shell {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void badge(final String name, final String value) {
         this.shell.badge(name, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         this.shell.close();

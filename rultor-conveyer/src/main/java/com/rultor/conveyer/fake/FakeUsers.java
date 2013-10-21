@@ -75,33 +75,21 @@ public final class FakeUsers implements Users {
         this.spec = spc;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<User> iterator() {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public User get(final URN name) {
         return new FakeUser(this.work, this.spec);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Stand stand(final String name) {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pulses flow() {
         throw new UnsupportedOperationException();

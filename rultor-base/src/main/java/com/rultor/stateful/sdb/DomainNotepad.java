@@ -118,33 +118,21 @@ public final class DomainNotepad implements Notepad {
         this(wrk, region.domain(name));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int size() {
         return Iterators.size(this.iterator());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isEmpty() {
         return Iterators.size(this.iterator()) == 0;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean contains(final Object object) {
         return !this.domain.item(this.name(object.toString())).isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @RetryOnFailure(verbose = false)
     public Iterator<String> iterator() {
@@ -171,26 +159,17 @@ public final class DomainNotepad implements Notepad {
         return texts.iterator();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object[] toArray() {
         return Iterators.toArray(this.iterator(), Object.class);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SuppressWarnings("unchecked")
     public <T> T[] toArray(final T[] array) {
         return (T[]) Iterators.toArray(this.iterator(), String.class);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @RetryOnFailure(verbose = false)
     public boolean add(final String line) {
@@ -205,9 +184,6 @@ public final class DomainNotepad implements Notepad {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @RetryOnFailure(verbose = false)
     public boolean remove(final Object line) {
@@ -215,17 +191,11 @@ public final class DomainNotepad implements Notepad {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean containsAll(final Collection<?> list) {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean addAll(final Collection<? extends String> list) {
         for (String line : list) {
@@ -234,9 +204,6 @@ public final class DomainNotepad implements Notepad {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean removeAll(final Collection<?> list) {
         for (Object line : list) {
@@ -245,17 +212,11 @@ public final class DomainNotepad implements Notepad {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean retainAll(final Collection<?> list) {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void clear() {
         for (String line : this) {

@@ -53,9 +53,6 @@ import org.xembly.XemblySyntaxException;
 @Loggable(Loggable.DEBUG)
 public final class Echo implements Billboard {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void announce(final boolean success) throws IOException {
         try {

@@ -73,9 +73,6 @@ final class OwnWallet implements Wallet {
         this.rule = rle;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void charge(final String details, final Dollars amount) {
         throw new UnsupportedOperationException(

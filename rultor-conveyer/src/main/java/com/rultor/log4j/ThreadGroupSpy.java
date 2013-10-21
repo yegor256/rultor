@@ -129,9 +129,6 @@ public final class ThreadGroupSpy implements Instance {
         this(wrk, Level.INFO.toString(), "%m", instance, drain);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {

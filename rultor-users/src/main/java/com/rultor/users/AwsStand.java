@@ -98,9 +98,6 @@ final class AwsStand implements Stand {
         this.item = itm;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable.FlushAfter
     @RetryOnFailure(verbose = false)
@@ -114,9 +111,6 @@ final class AwsStand implements Stand {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull(message = "ACL of a stand is never NULL")
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
@@ -131,9 +125,6 @@ final class AwsStand implements Stand {
         return spec;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull(message = "widgets of a stand is never NULL")
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
@@ -150,9 +141,6 @@ final class AwsStand implements Stand {
         return spec;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     @RetryOnFailure(verbose = false)
@@ -160,9 +148,6 @@ final class AwsStand implements Stand {
         return this.item.get(AwsStand.RANGE_STAND).getS();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     @RetryOnFailure(verbose = false)
@@ -170,17 +155,11 @@ final class AwsStand implements Stand {
         return URN.create(this.item.get(AwsStand.HASH_OWNER).getS());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pulses pulses() {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void post(final Coordinates pulse, final long nano,
         final String xembly) {

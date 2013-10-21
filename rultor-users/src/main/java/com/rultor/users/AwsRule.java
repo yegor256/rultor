@@ -115,9 +115,6 @@ final class AwsRule implements Rule {
         this.item = itm;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @RetryOnFailure(verbose = false)
     public void update(
@@ -131,9 +128,6 @@ final class AwsRule implements Rule {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull(message = "spec of a rule is never NULL")
     @RetryOnFailure(verbose = false)
@@ -147,18 +141,12 @@ final class AwsRule implements Rule {
         return spec;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @RetryOnFailure(verbose = false)
     public String name() {
         return this.item.get(AwsRule.RANGE_NAME).getS();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Wallet wallet(final Coordinates work,
         final URN taker, final String rule) {
@@ -169,9 +157,6 @@ final class AwsRule implements Rule {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @RetryOnFailure(verbose = false)
     public Spec drain() {
@@ -184,9 +169,6 @@ final class AwsRule implements Rule {
         return spec;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @RetryOnFailure(verbose = false)
     public void failure(final String desc) {
@@ -198,9 +180,6 @@ final class AwsRule implements Rule {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @RetryOnFailure(verbose = false)
     public String failure() {

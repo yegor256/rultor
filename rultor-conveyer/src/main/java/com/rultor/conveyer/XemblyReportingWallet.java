@@ -63,9 +63,6 @@ final class XemblyReportingWallet implements Wallet {
         this.wallet = underlying;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void charge(final String details, final Dollars amount) {
         this.wallet.charge(details, amount);

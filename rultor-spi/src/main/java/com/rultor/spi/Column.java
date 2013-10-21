@@ -94,23 +94,14 @@ public interface Column {
             this.grp = group;
             this.sum = summ;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String title() {
             return this.name;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean isGroup() {
             return this.grp;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean isSum() {
             return this.sum;

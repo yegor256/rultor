@@ -98,9 +98,6 @@ public final class SQSQuartz implements Runnable, Closeable {
         this.client = clnt;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Loggable(value = Loggable.DEBUG, limit = 2, unit = TimeUnit.MINUTES)
@@ -108,9 +105,6 @@ public final class SQSQuartz implements Runnable, Closeable {
         this.publish(this.passed(this.next()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         // nothing to do

@@ -205,9 +205,6 @@ public final class ClasspathRepoTest {
         public Const(final int val) {
             this.value = val;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public int calc() {
             return this.value;
@@ -237,9 +234,6 @@ public final class ClasspathRepoTest {
             this.left = first;
             this.right = second;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public int calc() {
             return this.left.calc() + this.right.calc();

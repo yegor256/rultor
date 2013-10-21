@@ -64,26 +64,17 @@ public final class Head implements Branch {
         this.origin = brn;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
     public Iterable<Commit> log() throws IOException {
         return Iterables.limit(this.origin.log(), 1);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String name() {
         return this.origin.name();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public SCM scm() {
         return this.origin.scm();

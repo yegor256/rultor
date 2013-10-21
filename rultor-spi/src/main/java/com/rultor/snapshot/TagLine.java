@@ -91,9 +91,6 @@ public final class TagLine {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return this.directives().toString();

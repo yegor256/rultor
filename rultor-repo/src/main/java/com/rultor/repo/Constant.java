@@ -82,9 +82,6 @@ final class Constant<T> implements Variable<Object> {
         return this.value;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String asText() {
         String text;
@@ -100,9 +97,6 @@ final class Constant<T> implements Variable<Object> {
         return text;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Map<Integer, String> arguments() {
         return new ConcurrentHashMap<Integer, String>(0);

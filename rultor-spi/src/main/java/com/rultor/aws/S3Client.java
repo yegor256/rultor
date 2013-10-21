@@ -94,18 +94,12 @@ public interface S3Client {
             this.secret = scrt;
             this.bkt = bucket;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public AmazonS3 get() {
             return new AmazonS3Client(
                 new BasicAWSCredentials(this.key, this.secret)
             );
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String bucket() {
             return this.bkt;

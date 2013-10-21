@@ -65,17 +65,11 @@ final class JiraDeployment implements Deployment {
         new TagLine("jira").attr("key", iss.key()).log();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String name() {
         return this.issue.key();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void started() {
         this.issue.post(
@@ -85,9 +79,6 @@ final class JiraDeployment implements Deployment {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void succeeded() {
         this.issue.revert(
@@ -97,9 +88,6 @@ final class JiraDeployment implements Deployment {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void failed() {
         this.issue.revert(

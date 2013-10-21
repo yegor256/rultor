@@ -145,49 +145,31 @@ final class MongoStand implements Stand {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pulses pulses() {
         return new MongoPulses(this.mongo, this.origin);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String name() {
         return this.origin.name();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public URN owner() {
         return this.origin.owner();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void update(final Spec spec, final Spec widgets) {
         this.origin.update(spec, widgets);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Spec acl() {
         return this.origin.acl();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Spec widgets() {
         return this.origin.widgets();

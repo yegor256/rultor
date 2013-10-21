@@ -216,17 +216,11 @@ public final class SSHChannel implements Shell {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         // nothing to do
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void badge(final String name, final String value) {
         throw new UnsupportedOperationException();

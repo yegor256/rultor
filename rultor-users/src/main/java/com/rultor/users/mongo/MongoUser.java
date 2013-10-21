@@ -72,33 +72,21 @@ final class MongoUser implements User {
         this.origin = user;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public URN urn() {
         return this.origin.urn();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Rules rules() {
         return this.origin.rules();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Stands stands() {
         return new MongoStands(this.mongo, this.origin.stands());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Account account() {
         throw new UnsupportedOperationException();

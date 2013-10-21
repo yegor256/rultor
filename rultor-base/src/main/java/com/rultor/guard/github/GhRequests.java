@@ -120,9 +120,6 @@ public final class GhRequests implements MergeRequests {
         this.approval = appr;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<MergeRequest> iterator() {
         try {

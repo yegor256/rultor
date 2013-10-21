@@ -130,9 +130,6 @@ public final class Git implements SCM {
         new TagLine("git").attr("url", this.address).log();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Step("Git branch `${args[0]}` checked out")
     @RetryOnFailure(verbose = false)
@@ -141,9 +138,6 @@ public final class Git implements SCM {
         return new GitBranch(this, name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Step("found ${result.size()} refs in Git")
     @RetryOnFailure(verbose = false)
@@ -172,9 +166,6 @@ public final class Git implements SCM {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public URI uri() {
         return URI.create(this.address);

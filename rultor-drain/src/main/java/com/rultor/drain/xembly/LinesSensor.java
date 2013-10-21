@@ -94,17 +94,11 @@ public final class LinesSensor implements Drain {
         this.origin = drain;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<Time, Time> pulses() throws IOException {
         return this.origin.pulses();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void append(final Iterable<String> lines) throws IOException {
         final long before = this.spinbox.add(0);
@@ -124,9 +118,6 @@ public final class LinesSensor implements Drain {
         this.origin.append(lines);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InputStream read() throws IOException {
         return new SequenceInputStream(

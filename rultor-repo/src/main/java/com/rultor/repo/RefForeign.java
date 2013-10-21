@@ -127,9 +127,6 @@ final class RefForeign implements Variable<Object> {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String asText() {
         return new StringBuilder()

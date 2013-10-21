@@ -92,9 +92,6 @@ public final class Arguments {
         this.values = new Array<Object>(Lists.newArrayList(vals));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return StringUtils.join(Iterables.skip(this.values, 1), " and ");

@@ -70,41 +70,26 @@ final class AuditRules implements Rules {
         this.error = problem;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean contains(final String name) {
         return this.origin.contains(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Rule get(final String name) {
         return new AuditRule(this.origin.get(name), this.error);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void remove(final String name) {
         this.origin.remove(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void create(final String name) {
         this.origin.create(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<Rule> iterator() {
         final Iterator<Rule> iterator = this.origin.iterator();

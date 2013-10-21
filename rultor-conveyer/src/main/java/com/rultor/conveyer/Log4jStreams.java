@@ -82,17 +82,11 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
         this.setLayout(new PatternLayout("%p %m%n"));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() {
         Logger.getRootLogger().removeAppender(this);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String register() {
         final String key = DigestUtils.md5Hex(
@@ -106,9 +100,6 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
         return key;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void unregister(final String key) {
         final ThreadGroup group = Thread.currentThread().getThreadGroup();
@@ -118,9 +109,6 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
         this.buffers.remove(key);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InputStream stream(final String key) throws IOException {
         final ThreadGroup group = ImmutableBiMap.copyOf(this.groups)
@@ -157,9 +145,6 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
         return stream;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String interrupt(final String key) {
         final ThreadGroup group = ImmutableBiMap.copyOf(this.groups)
@@ -174,9 +159,6 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
         return response;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void append(final LoggingEvent event) {
         final String key = this.groups.get(
@@ -199,9 +181,6 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         final StringBuilder text = new StringBuilder()
@@ -218,9 +197,6 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
         return text.toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean requiresLayout() {
         return true;

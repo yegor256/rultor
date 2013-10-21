@@ -132,9 +132,6 @@ public interface Drain {
                 this.lvl = level.toString();
                 this.msg = message;
             }
-            /**
-             * {@inheritDoc}
-             */
             @Override
             public String toString() {
                 return String.format(
@@ -146,16 +143,10 @@ public interface Drain {
                     this.msg
                 );
             }
-            /**
-             * {@inheritDoc}
-             */
             @Override
             public long msec() {
                 return this.when;
             }
-            /**
-             * {@inheritDoc}
-             */
             @Override
             public Level level() {
                 return Level.parse(this.lvl);

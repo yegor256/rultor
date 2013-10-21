@@ -126,33 +126,21 @@ final class MongoCoords implements Coordinates {
             .append(MongoCoords.ATTR_SCHEDULED, this.scheduled().toString());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Time scheduled() {
         return this.time;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public URN owner() {
         return this.urn;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String rule() {
         return this.name;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int compareTo(final Coordinates coords) {
         return this.time.compareTo(coords.scheduled());

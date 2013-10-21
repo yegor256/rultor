@@ -123,25 +123,16 @@ public final class BufferedWrite implements Drain, Closeable {
         this.origin = drain;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() {
         BufferedWrite.FLUSH.flush(true);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<Time, Time> pulses() throws IOException {
         return this.origin.pulses();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void append(final Iterable<String> lines) throws IOException {
         synchronized (this.work) {
@@ -152,9 +143,6 @@ public final class BufferedWrite implements Drain, Closeable {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InputStream read() throws IOException {
         return new SequenceInputStream(

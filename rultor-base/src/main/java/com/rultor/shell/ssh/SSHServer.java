@@ -98,17 +98,11 @@ public final class SSHServer implements Shell {
             .exec(command, stdin, stdout, stderr);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         this.env.close();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void badge(final String name, final String value) {
         throw new UnsupportedOperationException();

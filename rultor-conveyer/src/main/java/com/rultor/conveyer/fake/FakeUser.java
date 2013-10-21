@@ -149,25 +149,16 @@ final class FakeUser implements User {
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public URN urn() {
         return FakeUser.this.work.owner();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Stands stands() {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Account account() {
         // @checkstyle AnonInnerLengthCheck (1 line)

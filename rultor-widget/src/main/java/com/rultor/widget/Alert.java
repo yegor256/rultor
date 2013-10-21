@@ -63,9 +63,6 @@ public final class Alert implements Widget {
         this.text = txt;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Directives render(final Stand stand) {
         return new Directives().add("error").set(this.text);

@@ -79,33 +79,21 @@ public interface Coordinates extends Comparable<Coordinates> {
     @ToString
     @EqualsAndHashCode
     final class None implements Coordinates {
-        /**
-         * {@inheritDoc}
-         */
         @NotNull
         @Override
         public Time scheduled() {
             throw new UnsupportedOperationException();
         }
-        /**
-         * {@inheritDoc}
-         */
         @NotNull
         @Override
         public URN owner() {
             throw new UnsupportedOperationException();
         }
-        /**
-         * {@inheritDoc}
-         */
         @NotNull
         @Override
         public String rule() {
             throw new UnsupportedOperationException();
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public int compareTo(final Coordinates coords) {
             return 1;
@@ -170,9 +158,6 @@ public interface Coordinates extends Comparable<Coordinates> {
             this.label = name;
             this.time = when;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String toString() {
             return String.format(
@@ -197,32 +182,20 @@ public interface Coordinates extends Comparable<Coordinates> {
                 URN.create(parts[2]), parts[1], new Time(parts[0])
             );
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public int compareTo(final Coordinates coords) {
             return this.time.compareTo(coords.scheduled());
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         @NotNull(message = "time of work is never NULL")
         public Time scheduled() {
             return this.time;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         @NotNull(message = "URN of owner of work is never NULL")
         public URN owner() {
             return this.urn;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         @NotNull(message = "rule name of work is never NULL")
         public String rule() {

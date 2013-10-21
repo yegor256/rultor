@@ -99,9 +99,6 @@ public final class Concat implements Proxy<String> {
         this.commands = new Array<Vext>(vexts);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String object() {
         return this.script().velocity();

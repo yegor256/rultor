@@ -172,25 +172,16 @@ final class PgSheet implements Sheet {
         this.since = first;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return this.query();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Column> columns() {
         return Collections.unmodifiableList(PgSheet.COLS);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Sheet orderBy(final String column, final boolean asc) {
         return new PgSheet(
@@ -199,9 +190,6 @@ final class PgSheet implements Sheet {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Sheet groupBy(final String column) {
         return new PgSheet(
@@ -210,9 +198,6 @@ final class PgSheet implements Sheet {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<List<Object>, Integer> tail(final Integer head)
         throws IOException {
@@ -222,9 +207,6 @@ final class PgSheet implements Sheet {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<List<Object>> iterator() {
         final String sql = this.query();
@@ -251,9 +233,6 @@ final class PgSheet implements Sheet {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Sheet between(final Time left, final Time right) {
         return new PgSheet(

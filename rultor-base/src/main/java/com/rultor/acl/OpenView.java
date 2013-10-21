@@ -49,17 +49,11 @@ import lombok.ToString;
 @Loggable(Loggable.DEBUG)
 public final class OpenView implements ACL {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean canView(final URN urn) {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean canPost(final String key) {
         return false;

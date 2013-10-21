@@ -95,17 +95,11 @@ public final class Time implements Comparable<Time> {
         this(Time.parse(date));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return DateFormatUtils.formatUTC(this.msec, Time.FORMAT);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int compareTo(final Time time) {
         final int cmp;

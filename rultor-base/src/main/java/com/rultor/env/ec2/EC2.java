@@ -208,17 +208,11 @@ public final class EC2 implements Environments {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Environment acquire() throws IOException {
         return this.env(this.create().getInstanceId());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<Environment> iterator() {
         final AmazonEC2 aws = this.client.get();

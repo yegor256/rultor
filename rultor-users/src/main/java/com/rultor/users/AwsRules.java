@@ -95,9 +95,6 @@ final class AwsRules implements Rules {
         this.owner = urn;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull(message = "list of rules of a user is never NULL")
     public Iterator<Rule> iterator() {
@@ -119,9 +116,6 @@ final class AwsRules implements Rules {
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable.FlushAfter
     @RetryOnFailure(verbose = false)
@@ -145,9 +139,6 @@ final class AwsRules implements Rules {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable.FlushAfter
     @RetryOnFailure(verbose = false)
@@ -167,9 +158,6 @@ final class AwsRules implements Rules {
         items.remove();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     @RetryOnFailure(verbose = false)
@@ -190,9 +178,6 @@ final class AwsRules implements Rules {
         return this.toRule(items.iterator().next());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     @RetryOnFailure(verbose = false)

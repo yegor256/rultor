@@ -92,9 +92,6 @@ public final class SNS implements Billboard {
         this.bill = bll;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Step("notification sent to ${this.topic}")
     public void announce(final boolean success) throws IOException {

@@ -79,9 +79,6 @@ final class PgAccount implements Account {
         this.owner = urn;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable(lifetime = Tv.FIFTEEN, unit = TimeUnit.MINUTES)
     public Dollars balance() {
@@ -97,17 +94,11 @@ final class PgAccount implements Account {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Sheet sheet() {
         return new PgSheet(this.client, this.owner);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable.FlushAfter
     public void fund(final Dollars amount, final String details) {

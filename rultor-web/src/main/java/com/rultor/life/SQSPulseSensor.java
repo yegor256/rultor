@@ -128,9 +128,6 @@ public final class SQSPulseSensor implements Runnable, Closeable {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void run() {
@@ -151,9 +148,6 @@ public final class SQSPulseSensor implements Runnable, Closeable {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         this.service.shutdown();

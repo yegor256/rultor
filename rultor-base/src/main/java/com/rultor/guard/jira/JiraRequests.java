@@ -109,9 +109,6 @@ public final class JiraRequests implements MergeRequests {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<MergeRequest> iterator() {
         return Iterators.transform(

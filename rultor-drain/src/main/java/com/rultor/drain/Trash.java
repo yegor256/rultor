@@ -54,26 +54,17 @@ import org.apache.commons.io.IOUtils;
 @Loggable(Loggable.DEBUG)
 public final class Trash implements Drain {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Pageable<Time, Time> pulses() throws IOException {
         return new Pageable.Array<Time>();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void append(final Iterable<String> lines)
         throws IOException {
         // nothing to do
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public InputStream read() throws IOException {
         return IOUtils.toInputStream("");

@@ -81,9 +81,6 @@ public interface SNSClient {
             this.key = akey;
             this.secret = scrt;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public AmazonSNS get() {
             return new AmazonSNSClient(

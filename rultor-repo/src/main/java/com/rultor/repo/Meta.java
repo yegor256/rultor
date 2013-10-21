@@ -102,9 +102,6 @@ final class Meta implements Variable<Object> {
         return obj;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String asText() {
         return String.format("${%s}", this.mnemo);

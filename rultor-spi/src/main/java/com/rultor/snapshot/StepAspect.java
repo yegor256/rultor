@@ -184,9 +184,6 @@ public final class StepAspect {
         protected Open(final Object subj) {
             this.subject = subj;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String toString() {
             return this.subject.toString();

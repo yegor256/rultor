@@ -67,97 +67,61 @@ public final class SecretMap implements Map<String, Object> {
         this.origin = new ArrayMap<String, Object>(map);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int size() {
         return this.origin.size();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isEmpty() {
         return this.origin.isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean containsKey(final Object key) {
         return this.origin.containsKey(key);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean containsValue(final Object value) {
         return this.origin.containsValue(value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object get(final Object key) {
         return this.origin.get(key);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object put(final String key, final Object value) {
         return this.origin.put(key, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object remove(final Object key) {
         return this.origin.remove(key);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void putAll(final Map<? extends String, ? extends Object> map) {
         this.origin.putAll(map);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void clear() {
         this.origin.clear();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Set<String> keySet() {
         return this.origin.keySet();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Collection<Object> values() {
         return this.origin.values();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Set<Entry<String, Object>> entrySet() {
         return this.origin.entrySet();
