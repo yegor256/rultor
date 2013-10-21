@@ -112,8 +112,7 @@ public interface Mongo {
         public DB get() throws IOException {
             final MongoClient client = new MongoClient(this.host, this.port);
             final DB database = client.getDB(this.name);
-            if (!StringUtils.isEmpty(this.user)
-                && !StringUtils.isEmpty(this.password)) {
+            if (!StringUtils.isEmpty(this.user)) {
                 Validate.isTrue(
                     database.authenticate(
                         this.user,
