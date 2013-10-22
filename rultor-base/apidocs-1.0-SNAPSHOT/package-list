@@ -9,6 +9,7 @@ com.rultor.env.ec2
 com.rultor.ext.jira
 com.rultor.guard
 com.rultor.guard.github
+com.rultor.guard.jira
 com.rultor.scm
 com.rultor.scm.git
 com.rultor.shell
