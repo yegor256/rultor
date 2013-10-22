@@ -34,7 +34,10 @@ import com.jcabi.aspects.Loggable;
 import com.rultor.shell.Shell;
 import com.rultor.shell.Shells;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -76,4 +79,70 @@ public final class Provisioned implements Shells {
         return new ProvisionedShell(this.script, this.shells.acquire());
     }
 
+    /**
+     * Shell executing script prepended by another script.
+     *
+     * @author Evgeniy Nyavro (e.nyavro@gmail.com)
+     * @version $Id$
+     * @since 1.0
+     */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = {"shell", "script" })
+    @Loggable(Loggable.DEBUG)
+    public static final class ProvisionedShell implements Shell {
+
+        /**
+         * Underlying shell.
+         */
+        private final transient Shell shell;
+
+        /**
+         * Script to prepend with.
+         */
+        private final transient String script;
+
+        /**
+         * Public ctor.
+         * @param scrt Script to prepend with
+         * @param shl Underlying Shell
+         */
+        public ProvisionedShell(
+            @NotNull(message = "script can't be NULL") final String scrt,
+            @NotNull(message = "shell can't be NULL") final Shell shl) {
+            this.script = scrt;
+            this.shell = shl;
+        }
+
+        /**
+         * {@inheritDoc}
+         * @checkstyle ParameterNumber (8 lines)
+         */
+        @Override
+        public int exec(
+            @NotNull(message = "command can't be NULL") final String command,
+            @NotNull(message = "stdin can't be NULL") final InputStream stdin,
+            @NotNull(message = "stdout can't be NULL")
+            final OutputStream stdout,
+            @NotNull(message = "stderr can't be NULL") final OutputStream stderr
+        ) throws IOException {
+            return this.shell.exec(
+                new StringBuilder(this.script)
+                    .append(" && ")
+                    .append(command)
+                    .toString(),
+                stdin, stdout, stderr
+            );
+        }
+
+        @Override
+        public void badge(final String name, final String value) {
+            this.shell.badge(name, value);
+        }
+
+        @Override
+        public void close() throws IOException {
+            this.shell.close();
+        }
+    }
 }

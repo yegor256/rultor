@@ -60,7 +60,7 @@ public final class S3CmdPutTest {
             "30KFuodpOPX07QIaO4+QoLdTR5/MW/FN5qUDqxs="
         );
         cmd.exec(
-            new ProvisionedShell(
+            new Provisioned.ProvisionedShell(
                 "PATH=.:$PATH && chmod +x s3cmd",
                 new ShellMocker.Bash(dir)
             )
@@ -82,7 +82,7 @@ public final class S3CmdPutTest {
             "text/html", "utf-8"
         );
         cmd.exec(
-            new ProvisionedShell(
+            new Provisioned.ProvisionedShell(
                 "PATH=.:$PATH && chmod +x s3cmd",
                 new ShellMocker.Bash(dir)
             )
@@ -109,7 +109,7 @@ public final class S3CmdPutTest {
             "text/plain", "win-1252"
         );
         cmd.exec(
-            new ProvisionedShell(
+            new Provisioned.ProvisionedShell(
                 "PATH=.:$PATH && chmod +x s3cmd",
                 new ShellMocker.Bash(dir)
             )

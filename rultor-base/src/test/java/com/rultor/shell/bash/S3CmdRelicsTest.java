@@ -60,7 +60,7 @@ public final class S3CmdRelicsTest {
             "AAAAAAAAAAAAAAAAAAEE",
             "30KFuodpOPX07QIaO4+QoLdTR5/MW/FN5qUDqxsL"
         ).exec(
-            new ProvisionedShell(
+            new Provisioned.ProvisionedShell(
                 "PATH=.:$PATH && chmod +x s3cmd",
                 new ShellMocker.Bash(dir)
             )

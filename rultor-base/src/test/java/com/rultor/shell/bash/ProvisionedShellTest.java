@@ -39,7 +39,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test case for {@link ProvisionedShell}.
+ * Test case for {@link com.rultor.shell.bash.Provisioned.ProvisionedShell}.
  * @author Evgeniy Nyavro (e.nyavro@gmail.com)
  * @version $Id$
  */
@@ -52,7 +52,7 @@ public final class ProvisionedShellTest {
     @Test
     public void prependsExecWithCommand() throws Exception {
         final Shell shell = Mockito.mock(Shell.class);
-        new ProvisionedShell("echo OK", shell)
+        new Provisioned.ProvisionedShell("echo OK", shell)
             .exec(
                 "echo Hi",
                 IOUtils.toInputStream(""),
