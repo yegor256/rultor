@@ -142,65 +142,56 @@
 <a class="jxr_linenumber" name="132" href="#132">132</a>                 <strong class="jxr_keyword">this</strong>.lvl = level.toString();
 <a class="jxr_linenumber" name="133" href="#133">133</a>                 <strong class="jxr_keyword">this</strong>.msg = message;
 <a class="jxr_linenumber" name="134" href="#134">134</a>             }
-<a class="jxr_linenumber" name="135" href="#135">135</a>             <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="136" href="#136">136</a> <em class="jxr_javadoccomment">             * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="137" href="#137">137</a> <em class="jxr_javadoccomment">             */</em>
-<a class="jxr_linenumber" name="138" href="#138">138</a>             @Override
-<a class="jxr_linenumber" name="139" href="#139">139</a>             <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="140" href="#140">140</a>                 <strong class="jxr_keyword">return</strong> String.format(
-<a class="jxr_linenumber" name="141" href="#141">141</a>                     <span class="jxr_string">"%3d:%02d %s %s"</span>,
-<a class="jxr_linenumber" name="142" href="#142">142</a>                     <strong class="jxr_keyword">this</strong>.when / DateUtils.MILLIS_PER_MINUTE,
-<a class="jxr_linenumber" name="143" href="#143">143</a>                     (<strong class="jxr_keyword">this</strong>.when % DateUtils.MILLIS_PER_MINUTE)
-<a class="jxr_linenumber" name="144" href="#144">144</a>                         / DateUtils.MILLIS_PER_SECOND,
-<a class="jxr_linenumber" name="145" href="#145">145</a>                     <strong class="jxr_keyword">this</strong>.lvl,
-<a class="jxr_linenumber" name="146" href="#146">146</a>                     <strong class="jxr_keyword">this</strong>.msg
-<a class="jxr_linenumber" name="147" href="#147">147</a>                 );
-<a class="jxr_linenumber" name="148" href="#148">148</a>             }
-<a class="jxr_linenumber" name="149" href="#149">149</a>             <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="150" href="#150">150</a> <em class="jxr_javadoccomment">             * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="151" href="#151">151</a> <em class="jxr_javadoccomment">             */</em>
-<a class="jxr_linenumber" name="152" href="#152">152</a>             @Override
-<a class="jxr_linenumber" name="153" href="#153">153</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">long</strong> msec() {
-<a class="jxr_linenumber" name="154" href="#154">154</a>                 <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.when;
-<a class="jxr_linenumber" name="155" href="#155">155</a>             }
-<a class="jxr_linenumber" name="156" href="#156">156</a>             <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="157" href="#157">157</a> <em class="jxr_javadoccomment">             * {@inheritDoc}</em>
+<a class="jxr_linenumber" name="135" href="#135">135</a>             @Override
+<a class="jxr_linenumber" name="136" href="#136">136</a>             <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="137" href="#137">137</a>                 <strong class="jxr_keyword">return</strong> String.format(
+<a class="jxr_linenumber" name="138" href="#138">138</a>                     <span class="jxr_string">"%3d:%02d %s %s"</span>,
+<a class="jxr_linenumber" name="139" href="#139">139</a>                     <strong class="jxr_keyword">this</strong>.when / DateUtils.MILLIS_PER_MINUTE,
+<a class="jxr_linenumber" name="140" href="#140">140</a>                     (<strong class="jxr_keyword">this</strong>.when % DateUtils.MILLIS_PER_MINUTE)
+<a class="jxr_linenumber" name="141" href="#141">141</a>                         / DateUtils.MILLIS_PER_SECOND,
+<a class="jxr_linenumber" name="142" href="#142">142</a>                     <strong class="jxr_keyword">this</strong>.lvl,
+<a class="jxr_linenumber" name="143" href="#143">143</a>                     <strong class="jxr_keyword">this</strong>.msg
+<a class="jxr_linenumber" name="144" href="#144">144</a>                 );
+<a class="jxr_linenumber" name="145" href="#145">145</a>             }
+<a class="jxr_linenumber" name="146" href="#146">146</a>             @Override
+<a class="jxr_linenumber" name="147" href="#147">147</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">long</strong> msec() {
+<a class="jxr_linenumber" name="148" href="#148">148</a>                 <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.when;
+<a class="jxr_linenumber" name="149" href="#149">149</a>             }
+<a class="jxr_linenumber" name="150" href="#150">150</a>             @Override
+<a class="jxr_linenumber" name="151" href="#151">151</a>             <strong class="jxr_keyword">public</strong> Level level() {
+<a class="jxr_linenumber" name="152" href="#152">152</a>                 <strong class="jxr_keyword">return</strong> Level.parse(<strong class="jxr_keyword">this</strong>.lvl);
+<a class="jxr_linenumber" name="153" href="#153">153</a>             }
+<a class="jxr_linenumber" name="154" href="#154">154</a>             <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="155" href="#155">155</a> <em class="jxr_javadoccomment">             * The text has a line inside.</em>
+<a class="jxr_linenumber" name="156" href="#156">156</a> <em class="jxr_javadoccomment">             * @param text Text to try</em>
+<a class="jxr_linenumber" name="157" href="#157">157</a> <em class="jxr_javadoccomment">             * @return TRUE if it's a line</em>
 <a class="jxr_linenumber" name="158" href="#158">158</a> <em class="jxr_javadoccomment">             */</em>
-<a class="jxr_linenumber" name="159" href="#159">159</a>             @Override
-<a class="jxr_linenumber" name="160" href="#160">160</a>             <strong class="jxr_keyword">public</strong> Level level() {
-<a class="jxr_linenumber" name="161" href="#161">161</a>                 <strong class="jxr_keyword">return</strong> Level.parse(<strong class="jxr_keyword">this</strong>.lvl);
-<a class="jxr_linenumber" name="162" href="#162">162</a>             }
-<a class="jxr_linenumber" name="163" href="#163">163</a>             <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="164" href="#164">164</a> <em class="jxr_javadoccomment">             * The text has a line inside.</em>
-<a class="jxr_linenumber" name="165" href="#165">165</a> <em class="jxr_javadoccomment">             * @param text Text to try</em>
-<a class="jxr_linenumber" name="166" href="#166">166</a> <em class="jxr_javadoccomment">             * @return TRUE if it's a line</em>
-<a class="jxr_linenumber" name="167" href="#167">167</a> <em class="jxr_javadoccomment">             */</em>
-<a class="jxr_linenumber" name="168" href="#168">168</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> has(<strong class="jxr_keyword">final</strong> String text) {
-<a class="jxr_linenumber" name="169" href="#169">169</a>                 <strong class="jxr_keyword">return</strong> Drain.Line.Simple.PTN.matcher(text).matches();
-<a class="jxr_linenumber" name="170" href="#170">170</a>             }
-<a class="jxr_linenumber" name="171" href="#171">171</a>             <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="172" href="#172">172</a> <em class="jxr_javadoccomment">             * Parse it back to live (or runtime exception if not found).</em>
-<a class="jxr_linenumber" name="173" href="#173">173</a> <em class="jxr_javadoccomment">             * @param text Text to parse</em>
-<a class="jxr_linenumber" name="174" href="#174">174</a> <em class="jxr_javadoccomment">             * @return Line, if possible to get it from there</em>
-<a class="jxr_linenumber" name="175" href="#175">175</a> <em class="jxr_javadoccomment">             */</em>
-<a class="jxr_linenumber" name="176" href="#176">176</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Drain.Line parse(<strong class="jxr_keyword">final</strong> String text) {
-<a class="jxr_linenumber" name="177" href="#177">177</a>                 <strong class="jxr_keyword">final</strong> Matcher matcher = Drain.Line.Simple.PTN.matcher(text);
-<a class="jxr_linenumber" name="178" href="#178">178</a>                 Validate.isTrue(matcher.matches(), <span class="jxr_string">"invalid line '%s'"</span>, text);
-<a class="jxr_linenumber" name="179" href="#179">179</a>                 <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Drain.Line.Simple(
-<a class="jxr_linenumber" name="180" href="#180">180</a>                     Long.parseLong(
-<a class="jxr_linenumber" name="181" href="#181">181</a>                         matcher.group(1)
-<a class="jxr_linenumber" name="182" href="#182">182</a>                     ) * DateUtils.MILLIS_PER_MINUTE
-<a class="jxr_linenumber" name="183" href="#183">183</a>                     + Long.parseLong(
-<a class="jxr_linenumber" name="184" href="#184">184</a>                         matcher.group(2)
-<a class="jxr_linenumber" name="185" href="#185">185</a>                     ) * DateUtils.MILLIS_PER_SECOND,
-<a class="jxr_linenumber" name="186" href="#186">186</a>                     Level.parse(matcher.group(Tv.THREE)),
-<a class="jxr_linenumber" name="187" href="#187">187</a>                     matcher.group(Tv.FOUR)
-<a class="jxr_linenumber" name="188" href="#188">188</a>                 );
-<a class="jxr_linenumber" name="189" href="#189">189</a>             }
-<a class="jxr_linenumber" name="190" href="#190">190</a>         }
-<a class="jxr_linenumber" name="191" href="#191">191</a>     }
-<a class="jxr_linenumber" name="192" href="#192">192</a> 
-<a class="jxr_linenumber" name="193" href="#193">193</a> }
+<a class="jxr_linenumber" name="159" href="#159">159</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> has(<strong class="jxr_keyword">final</strong> String text) {
+<a class="jxr_linenumber" name="160" href="#160">160</a>                 <strong class="jxr_keyword">return</strong> Drain.Line.Simple.PTN.matcher(text).matches();
+<a class="jxr_linenumber" name="161" href="#161">161</a>             }
+<a class="jxr_linenumber" name="162" href="#162">162</a>             <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="163" href="#163">163</a> <em class="jxr_javadoccomment">             * Parse it back to live (or runtime exception if not found).</em>
+<a class="jxr_linenumber" name="164" href="#164">164</a> <em class="jxr_javadoccomment">             * @param text Text to parse</em>
+<a class="jxr_linenumber" name="165" href="#165">165</a> <em class="jxr_javadoccomment">             * @return Line, if possible to get it from there</em>
+<a class="jxr_linenumber" name="166" href="#166">166</a> <em class="jxr_javadoccomment">             */</em>
+<a class="jxr_linenumber" name="167" href="#167">167</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Drain.Line parse(<strong class="jxr_keyword">final</strong> String text) {
+<a class="jxr_linenumber" name="168" href="#168">168</a>                 <strong class="jxr_keyword">final</strong> Matcher matcher = Drain.Line.Simple.PTN.matcher(text);
+<a class="jxr_linenumber" name="169" href="#169">169</a>                 Validate.isTrue(matcher.matches(), <span class="jxr_string">"invalid line '%s'"</span>, text);
+<a class="jxr_linenumber" name="170" href="#170">170</a>                 <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Drain.Line.Simple(
+<a class="jxr_linenumber" name="171" href="#171">171</a>                     Long.parseLong(
+<a class="jxr_linenumber" name="172" href="#172">172</a>                         matcher.group(1)
+<a class="jxr_linenumber" name="173" href="#173">173</a>                     ) * DateUtils.MILLIS_PER_MINUTE
+<a class="jxr_linenumber" name="174" href="#174">174</a>                     + Long.parseLong(
+<a class="jxr_linenumber" name="175" href="#175">175</a>                         matcher.group(2)
+<a class="jxr_linenumber" name="176" href="#176">176</a>                     ) * DateUtils.MILLIS_PER_SECOND,
+<a class="jxr_linenumber" name="177" href="#177">177</a>                     Level.parse(matcher.group(Tv.THREE)),
+<a class="jxr_linenumber" name="178" href="#178">178</a>                     matcher.group(Tv.FOUR)
+<a class="jxr_linenumber" name="179" href="#179">179</a>                 );
+<a class="jxr_linenumber" name="180" href="#180">180</a>             }
+<a class="jxr_linenumber" name="181" href="#181">181</a>         }
+<a class="jxr_linenumber" name="182" href="#182">182</a>     }
+<a class="jxr_linenumber" name="183" href="#183">183</a> 
+<a class="jxr_linenumber" name="184" href="#184">184</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

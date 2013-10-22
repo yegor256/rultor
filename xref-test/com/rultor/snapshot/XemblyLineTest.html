@@ -66,7 +66,7 @@
 <a class="jxr_linenumber" name="56" href="#56">56</a>              .add(<span class="jxr_string">"test"</span>)
 <a class="jxr_linenumber" name="57" href="#57">57</a>              .set(<span class="jxr_string">"hello,\n\&quot;'друг'\&quot;!"</span>)
 <a class="jxr_linenumber" name="58" href="#58">58</a>              .add(<span class="jxr_string">"foo"</span>)
-<a class="jxr_linenumber" name="59" href="#59">59</a>              .set(RandomStringUtils.random(Tv.TEN));
+<a class="jxr_linenumber" name="59" href="#59">59</a>              .set(RandomStringUtils.randomAscii(Tv.TEN));
 <a class="jxr_linenumber" name="60" href="#60">60</a>          MatcherAssert.assertThat(
 <a class="jxr_linenumber" name="61" href="#61">61</a>              XemblyLine.existsIn(<strong class="jxr_keyword">new</strong> XemblyLine(dirs).toString()),
 <a class="jxr_linenumber" name="62" href="#62">62</a>              Matchers.is(<strong class="jxr_keyword">true</strong>)

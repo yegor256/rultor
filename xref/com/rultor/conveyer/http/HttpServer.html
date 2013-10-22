@@ -159,64 +159,61 @@
 <a class="jxr_linenumber" name="149" href="#149">149</a>         );
 <a class="jxr_linenumber" name="150" href="#150">150</a>     }
 <a class="jxr_linenumber" name="151" href="#151">151</a> 
-<a class="jxr_linenumber" name="152" href="#152">152</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="153" href="#153">153</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="154" href="#154">154</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="155" href="#155">155</a>     @Override
-<a class="jxr_linenumber" name="156" href="#156">156</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> close() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="157" href="#157">157</a>         <strong class="jxr_keyword">this</strong>.server.close();
-<a class="jxr_linenumber" name="158" href="#158">158</a>         <strong class="jxr_keyword">this</strong>.shutdown(<strong class="jxr_keyword">this</strong>.frontend);
-<a class="jxr_linenumber" name="159" href="#159">159</a>         <strong class="jxr_keyword">this</strong>.shutdown(<strong class="jxr_keyword">this</strong>.backend);
-<a class="jxr_linenumber" name="160" href="#160">160</a>     }
-<a class="jxr_linenumber" name="161" href="#161">161</a> 
-<a class="jxr_linenumber" name="162" href="#162">162</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="163" href="#163">163</a> <em class="jxr_javadoccomment">     * Process one socket.</em>
-<a class="jxr_linenumber" name="164" href="#164">164</a> <em class="jxr_javadoccomment">     * @throws InterruptedException When thread is interrupted.</em>
-<a class="jxr_linenumber" name="165" href="#165">165</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="166" href="#166">166</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> process() <strong class="jxr_keyword">throws</strong> InterruptedException {
-<a class="jxr_linenumber" name="167" href="#167">167</a>         Socket socket;
-<a class="jxr_linenumber" name="168" href="#168">168</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="169" href="#169">169</a>             socket = <strong class="jxr_keyword">this</strong>.server.accept();
-<a class="jxr_linenumber" name="170" href="#170">170</a>         } <strong class="jxr_keyword">catch</strong> (java.io.IOException ex) {
-<a class="jxr_linenumber" name="171" href="#171">171</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(ex);
-<a class="jxr_linenumber" name="172" href="#172">172</a>         }
-<a class="jxr_linenumber" name="173" href="#173">173</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="174" href="#174">174</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> consumed = <strong class="jxr_keyword">this</strong>.sockets
-<a class="jxr_linenumber" name="175" href="#175">175</a>                 .offer(socket, 1, TimeUnit.SECONDS);
-<a class="jxr_linenumber" name="176" href="#176">176</a>             <strong class="jxr_keyword">if</strong> (!consumed) {
-<a class="jxr_linenumber" name="177" href="#177">177</a>                 socket.close();
-<a class="jxr_linenumber" name="178" href="#178">178</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IOException(<span class="jxr_string">"too many sockets"</span>);
-<a class="jxr_linenumber" name="179" href="#179">179</a>             }
-<a class="jxr_linenumber" name="180" href="#180">180</a>         } <strong class="jxr_keyword">catch</strong> (IOException ex) {
-<a class="jxr_linenumber" name="181" href="#181">181</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(ex);
-<a class="jxr_linenumber" name="182" href="#182">182</a>         }
-<a class="jxr_linenumber" name="183" href="#183">183</a>     }
-<a class="jxr_linenumber" name="184" href="#184">184</a> 
-<a class="jxr_linenumber" name="185" href="#185">185</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="186" href="#186">186</a> <em class="jxr_javadoccomment">     * Shutdown a service.</em>
-<a class="jxr_linenumber" name="187" href="#187">187</a> <em class="jxr_javadoccomment">     * @param service The service to shut down</em>
-<a class="jxr_linenumber" name="188" href="#188">188</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="189" href="#189">189</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> shutdown(<strong class="jxr_keyword">final</strong> ScheduledExecutorService service) {
-<a class="jxr_linenumber" name="190" href="#190">190</a>         service.shutdown();
-<a class="jxr_linenumber" name="191" href="#191">191</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="192" href="#192">192</a>             <strong class="jxr_keyword">if</strong> (service.awaitTermination(1, TimeUnit.SECONDS)) {
-<a class="jxr_linenumber" name="193" href="#193">193</a>                 Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"#shutdown(): succeeded"</span>);
-<a class="jxr_linenumber" name="194" href="#194">194</a>             } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="195" href="#195">195</a>                 Logger.warn(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"#shutdown(): failed"</span>);
-<a class="jxr_linenumber" name="196" href="#196">196</a>                 service.shutdownNow();
-<a class="jxr_linenumber" name="197" href="#197">197</a>                 <strong class="jxr_keyword">if</strong> (service.awaitTermination(1, TimeUnit.SECONDS)) {
-<a class="jxr_linenumber" name="198" href="#198">198</a>                     Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"#shutdown(): shutdownNow() succeeded"</span>);
-<a class="jxr_linenumber" name="199" href="#199">199</a>                 } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="200" href="#200">200</a>                     Logger.error(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"#shutdown(): failed to stop threads"</span>);
-<a class="jxr_linenumber" name="201" href="#201">201</a>                 }
-<a class="jxr_linenumber" name="202" href="#202">202</a>             }
-<a class="jxr_linenumber" name="203" href="#203">203</a>         } <strong class="jxr_keyword">catch</strong> (InterruptedException ex) {
-<a class="jxr_linenumber" name="204" href="#204">204</a>             service.shutdownNow();
-<a class="jxr_linenumber" name="205" href="#205">205</a>             Thread.currentThread().interrupt();
-<a class="jxr_linenumber" name="206" href="#206">206</a>         }
-<a class="jxr_linenumber" name="207" href="#207">207</a>     }
-<a class="jxr_linenumber" name="208" href="#208">208</a> 
-<a class="jxr_linenumber" name="209" href="#209">209</a> }
+<a class="jxr_linenumber" name="152" href="#152">152</a>     @Override
+<a class="jxr_linenumber" name="153" href="#153">153</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> close() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="154" href="#154">154</a>         <strong class="jxr_keyword">this</strong>.server.close();
+<a class="jxr_linenumber" name="155" href="#155">155</a>         <strong class="jxr_keyword">this</strong>.shutdown(<strong class="jxr_keyword">this</strong>.frontend);
+<a class="jxr_linenumber" name="156" href="#156">156</a>         <strong class="jxr_keyword">this</strong>.shutdown(<strong class="jxr_keyword">this</strong>.backend);
+<a class="jxr_linenumber" name="157" href="#157">157</a>     }
+<a class="jxr_linenumber" name="158" href="#158">158</a> 
+<a class="jxr_linenumber" name="159" href="#159">159</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="160" href="#160">160</a> <em class="jxr_javadoccomment">     * Process one socket.</em>
+<a class="jxr_linenumber" name="161" href="#161">161</a> <em class="jxr_javadoccomment">     * @throws InterruptedException When thread is interrupted.</em>
+<a class="jxr_linenumber" name="162" href="#162">162</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="163" href="#163">163</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> process() <strong class="jxr_keyword">throws</strong> InterruptedException {
+<a class="jxr_linenumber" name="164" href="#164">164</a>         Socket socket;
+<a class="jxr_linenumber" name="165" href="#165">165</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="166" href="#166">166</a>             socket = <strong class="jxr_keyword">this</strong>.server.accept();
+<a class="jxr_linenumber" name="167" href="#167">167</a>         } <strong class="jxr_keyword">catch</strong> (java.io.IOException ex) {
+<a class="jxr_linenumber" name="168" href="#168">168</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(ex);
+<a class="jxr_linenumber" name="169" href="#169">169</a>         }
+<a class="jxr_linenumber" name="170" href="#170">170</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="171" href="#171">171</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> consumed = <strong class="jxr_keyword">this</strong>.sockets
+<a class="jxr_linenumber" name="172" href="#172">172</a>                 .offer(socket, 1, TimeUnit.SECONDS);
+<a class="jxr_linenumber" name="173" href="#173">173</a>             <strong class="jxr_keyword">if</strong> (!consumed) {
+<a class="jxr_linenumber" name="174" href="#174">174</a>                 socket.close();
+<a class="jxr_linenumber" name="175" href="#175">175</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IOException(<span class="jxr_string">"too many sockets"</span>);
+<a class="jxr_linenumber" name="176" href="#176">176</a>             }
+<a class="jxr_linenumber" name="177" href="#177">177</a>         } <strong class="jxr_keyword">catch</strong> (IOException ex) {
+<a class="jxr_linenumber" name="178" href="#178">178</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(ex);
+<a class="jxr_linenumber" name="179" href="#179">179</a>         }
+<a class="jxr_linenumber" name="180" href="#180">180</a>     }
+<a class="jxr_linenumber" name="181" href="#181">181</a> 
+<a class="jxr_linenumber" name="182" href="#182">182</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="183" href="#183">183</a> <em class="jxr_javadoccomment">     * Shutdown a service.</em>
+<a class="jxr_linenumber" name="184" href="#184">184</a> <em class="jxr_javadoccomment">     * @param service The service to shut down</em>
+<a class="jxr_linenumber" name="185" href="#185">185</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="186" href="#186">186</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> shutdown(<strong class="jxr_keyword">final</strong> ScheduledExecutorService service) {
+<a class="jxr_linenumber" name="187" href="#187">187</a>         service.shutdown();
+<a class="jxr_linenumber" name="188" href="#188">188</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="189" href="#189">189</a>             <strong class="jxr_keyword">if</strong> (service.awaitTermination(1, TimeUnit.SECONDS)) {
+<a class="jxr_linenumber" name="190" href="#190">190</a>                 Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"#shutdown(): succeeded"</span>);
+<a class="jxr_linenumber" name="191" href="#191">191</a>             } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="192" href="#192">192</a>                 Logger.warn(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"#shutdown(): failed"</span>);
+<a class="jxr_linenumber" name="193" href="#193">193</a>                 service.shutdownNow();
+<a class="jxr_linenumber" name="194" href="#194">194</a>                 <strong class="jxr_keyword">if</strong> (service.awaitTermination(1, TimeUnit.SECONDS)) {
+<a class="jxr_linenumber" name="195" href="#195">195</a>                     Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"#shutdown(): shutdownNow() succeeded"</span>);
+<a class="jxr_linenumber" name="196" href="#196">196</a>                 } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="197" href="#197">197</a>                     Logger.error(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"#shutdown(): failed to stop threads"</span>);
+<a class="jxr_linenumber" name="198" href="#198">198</a>                 }
+<a class="jxr_linenumber" name="199" href="#199">199</a>             }
+<a class="jxr_linenumber" name="200" href="#200">200</a>         } <strong class="jxr_keyword">catch</strong> (InterruptedException ex) {
+<a class="jxr_linenumber" name="201" href="#201">201</a>             service.shutdownNow();
+<a class="jxr_linenumber" name="202" href="#202">202</a>             Thread.currentThread().interrupt();
+<a class="jxr_linenumber" name="203" href="#203">203</a>         }
+<a class="jxr_linenumber" name="204" href="#204">204</a>     }
+<a class="jxr_linenumber" name="205" href="#205">205</a> 
+<a class="jxr_linenumber" name="206" href="#206">206</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

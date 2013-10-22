@@ -125,117 +125,96 @@
 <a class="jxr_linenumber" name="115" href="#115">115</a>         <strong class="jxr_keyword">this</strong>.item = itm;
 <a class="jxr_linenumber" name="116" href="#116">116</a>     }
 <a class="jxr_linenumber" name="117" href="#117">117</a> 
-<a class="jxr_linenumber" name="118" href="#118">118</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="119" href="#119">119</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="120" href="#120">120</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="121" href="#121">121</a>     @Override
-<a class="jxr_linenumber" name="122" href="#122">122</a>     @RetryOnFailure(verbose = false)
-<a class="jxr_linenumber" name="123" href="#123">123</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> update(
-<a class="jxr_linenumber" name="124" href="#124">124</a>         @NotNull(message = <span class="jxr_string">"spec can't be NULL"</span>) <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec,
-<a class="jxr_linenumber" name="125" href="#125">125</a>         @NotNull(message = <span class="jxr_string">"drain can't be NULL"</span>) <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> drain) {
-<a class="jxr_linenumber" name="126" href="#126">126</a>         <strong class="jxr_keyword">this</strong>.item.put(
-<a class="jxr_linenumber" name="127" href="#127">127</a>             <strong class="jxr_keyword">new</strong> Attributes()
-<a class="jxr_linenumber" name="128" href="#128">128</a>                 .with(AwsRule.FIELD_SPEC, spec.asText())
-<a class="jxr_linenumber" name="129" href="#129">129</a>                 .with(AwsRule.FIELD_DRAIN, drain.asText())
-<a class="jxr_linenumber" name="130" href="#130">130</a>                 .with(AwsRule.FIELD_FAILURE, AwsRule.NO_FAILURE)
-<a class="jxr_linenumber" name="131" href="#131">131</a>         );
-<a class="jxr_linenumber" name="132" href="#132">132</a>     }
-<a class="jxr_linenumber" name="133" href="#133">133</a> 
-<a class="jxr_linenumber" name="134" href="#134">134</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="135" href="#135">135</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="136" href="#136">136</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="137" href="#137">137</a>     @Override
-<a class="jxr_linenumber" name="138" href="#138">138</a>     @NotNull(message = <span class="jxr_string">"spec of a rule is never NULL"</span>)
-<a class="jxr_linenumber" name="139" href="#139">139</a>     @RetryOnFailure(verbose = false)
-<a class="jxr_linenumber" name="140" href="#140">140</a>     <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec() {
-<a class="jxr_linenumber" name="141" href="#141">141</a>         <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec;
-<a class="jxr_linenumber" name="142" href="#142">142</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.item.has(AwsRule.FIELD_SPEC)) {
-<a class="jxr_linenumber" name="143" href="#143">143</a>             spec = <strong class="jxr_keyword">new</strong> Spec.Simple(<strong class="jxr_keyword">this</strong>.item.get(AwsRule.FIELD_SPEC).getS());
-<a class="jxr_linenumber" name="144" href="#144">144</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="145" href="#145">145</a>             spec = <strong class="jxr_keyword">new</strong> Spec.Simple();
-<a class="jxr_linenumber" name="146" href="#146">146</a>         }
-<a class="jxr_linenumber" name="147" href="#147">147</a>         <strong class="jxr_keyword">return</strong> spec;
+<a class="jxr_linenumber" name="118" href="#118">118</a>     @Override
+<a class="jxr_linenumber" name="119" href="#119">119</a>     @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="120" href="#120">120</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> update(
+<a class="jxr_linenumber" name="121" href="#121">121</a>         @NotNull(message = <span class="jxr_string">"spec can't be NULL"</span>) <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec,
+<a class="jxr_linenumber" name="122" href="#122">122</a>         @NotNull(message = <span class="jxr_string">"drain can't be NULL"</span>) <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> drain) {
+<a class="jxr_linenumber" name="123" href="#123">123</a>         <strong class="jxr_keyword">this</strong>.item.put(
+<a class="jxr_linenumber" name="124" href="#124">124</a>             <strong class="jxr_keyword">new</strong> Attributes()
+<a class="jxr_linenumber" name="125" href="#125">125</a>                 .with(AwsRule.FIELD_SPEC, spec.asText())
+<a class="jxr_linenumber" name="126" href="#126">126</a>                 .with(AwsRule.FIELD_DRAIN, drain.asText())
+<a class="jxr_linenumber" name="127" href="#127">127</a>                 .with(AwsRule.FIELD_FAILURE, AwsRule.NO_FAILURE)
+<a class="jxr_linenumber" name="128" href="#128">128</a>         );
+<a class="jxr_linenumber" name="129" href="#129">129</a>     }
+<a class="jxr_linenumber" name="130" href="#130">130</a> 
+<a class="jxr_linenumber" name="131" href="#131">131</a>     @Override
+<a class="jxr_linenumber" name="132" href="#132">132</a>     @NotNull(message = <span class="jxr_string">"spec of a rule is never NULL"</span>)
+<a class="jxr_linenumber" name="133" href="#133">133</a>     @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="134" href="#134">134</a>     <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec() {
+<a class="jxr_linenumber" name="135" href="#135">135</a>         <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec;
+<a class="jxr_linenumber" name="136" href="#136">136</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.item.has(AwsRule.FIELD_SPEC)) {
+<a class="jxr_linenumber" name="137" href="#137">137</a>             spec = <strong class="jxr_keyword">new</strong> Spec.Simple(<strong class="jxr_keyword">this</strong>.item.get(AwsRule.FIELD_SPEC).getS());
+<a class="jxr_linenumber" name="138" href="#138">138</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="139" href="#139">139</a>             spec = <strong class="jxr_keyword">new</strong> Spec.Simple();
+<a class="jxr_linenumber" name="140" href="#140">140</a>         }
+<a class="jxr_linenumber" name="141" href="#141">141</a>         <strong class="jxr_keyword">return</strong> spec;
+<a class="jxr_linenumber" name="142" href="#142">142</a>     }
+<a class="jxr_linenumber" name="143" href="#143">143</a> 
+<a class="jxr_linenumber" name="144" href="#144">144</a>     @Override
+<a class="jxr_linenumber" name="145" href="#145">145</a>     @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="146" href="#146">146</a>     <strong class="jxr_keyword">public</strong> String name() {
+<a class="jxr_linenumber" name="147" href="#147">147</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.item.get(AwsRule.RANGE_NAME).getS();
 <a class="jxr_linenumber" name="148" href="#148">148</a>     }
 <a class="jxr_linenumber" name="149" href="#149">149</a> 
-<a class="jxr_linenumber" name="150" href="#150">150</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="151" href="#151">151</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="152" href="#152">152</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="153" href="#153">153</a>     @Override
-<a class="jxr_linenumber" name="154" href="#154">154</a>     @RetryOnFailure(verbose = false)
-<a class="jxr_linenumber" name="155" href="#155">155</a>     <strong class="jxr_keyword">public</strong> String name() {
-<a class="jxr_linenumber" name="156" href="#156">156</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.item.get(AwsRule.RANGE_NAME).getS();
-<a class="jxr_linenumber" name="157" href="#157">157</a>     }
-<a class="jxr_linenumber" name="158" href="#158">158</a> 
-<a class="jxr_linenumber" name="159" href="#159">159</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="160" href="#160">160</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="161" href="#161">161</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="162" href="#162">162</a>     @Override
-<a class="jxr_linenumber" name="163" href="#163">163</a>     <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Wallet.html">Wallet</a> wallet(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Coordinates.html">Coordinates</a> work,
-<a class="jxr_linenumber" name="164" href="#164">164</a>         <strong class="jxr_keyword">final</strong> URN taker, <strong class="jxr_keyword">final</strong> String rule) {
-<a class="jxr_linenumber" name="165" href="#165">165</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/users/SQSWallet.html">SQSWallet</a>(
-<a class="jxr_linenumber" name="166" href="#166">166</a>             <strong class="jxr_keyword">this</strong>.client, work,
-<a class="jxr_linenumber" name="167" href="#167">167</a>             <strong class="jxr_keyword">this</strong>.owner(), <strong class="jxr_keyword">this</strong>.name(),
-<a class="jxr_linenumber" name="168" href="#168">168</a>             taker, rule
-<a class="jxr_linenumber" name="169" href="#169">169</a>         );
+<a class="jxr_linenumber" name="150" href="#150">150</a>     @Override
+<a class="jxr_linenumber" name="151" href="#151">151</a>     <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Wallet.html">Wallet</a> wallet(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Coordinates.html">Coordinates</a> work,
+<a class="jxr_linenumber" name="152" href="#152">152</a>         <strong class="jxr_keyword">final</strong> URN taker, <strong class="jxr_keyword">final</strong> String rule) {
+<a class="jxr_linenumber" name="153" href="#153">153</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/users/SQSWallet.html">SQSWallet</a>(
+<a class="jxr_linenumber" name="154" href="#154">154</a>             <strong class="jxr_keyword">this</strong>.client, work,
+<a class="jxr_linenumber" name="155" href="#155">155</a>             <strong class="jxr_keyword">this</strong>.owner(), <strong class="jxr_keyword">this</strong>.name(),
+<a class="jxr_linenumber" name="156" href="#156">156</a>             taker, rule
+<a class="jxr_linenumber" name="157" href="#157">157</a>         );
+<a class="jxr_linenumber" name="158" href="#158">158</a>     }
+<a class="jxr_linenumber" name="159" href="#159">159</a> 
+<a class="jxr_linenumber" name="160" href="#160">160</a>     @Override
+<a class="jxr_linenumber" name="161" href="#161">161</a>     @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="162" href="#162">162</a>     <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> drain() {
+<a class="jxr_linenumber" name="163" href="#163">163</a>         <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec;
+<a class="jxr_linenumber" name="164" href="#164">164</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.item.has(AwsRule.FIELD_DRAIN)) {
+<a class="jxr_linenumber" name="165" href="#165">165</a>             spec = <strong class="jxr_keyword">new</strong> Spec.Simple(<strong class="jxr_keyword">this</strong>.item.get(AwsRule.FIELD_DRAIN).getS());
+<a class="jxr_linenumber" name="166" href="#166">166</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="167" href="#167">167</a>             spec = <strong class="jxr_keyword">new</strong> Spec.Simple(<span class="jxr_string">"com.rultor.drain.Trash()"</span>);
+<a class="jxr_linenumber" name="168" href="#168">168</a>         }
+<a class="jxr_linenumber" name="169" href="#169">169</a>         <strong class="jxr_keyword">return</strong> spec;
 <a class="jxr_linenumber" name="170" href="#170">170</a>     }
 <a class="jxr_linenumber" name="171" href="#171">171</a> 
-<a class="jxr_linenumber" name="172" href="#172">172</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="173" href="#173">173</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="174" href="#174">174</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="175" href="#175">175</a>     @Override
-<a class="jxr_linenumber" name="176" href="#176">176</a>     @RetryOnFailure(verbose = false)
-<a class="jxr_linenumber" name="177" href="#177">177</a>     <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> drain() {
-<a class="jxr_linenumber" name="178" href="#178">178</a>         <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec;
-<a class="jxr_linenumber" name="179" href="#179">179</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.item.has(AwsRule.FIELD_DRAIN)) {
-<a class="jxr_linenumber" name="180" href="#180">180</a>             spec = <strong class="jxr_keyword">new</strong> Spec.Simple(<strong class="jxr_keyword">this</strong>.item.get(AwsRule.FIELD_DRAIN).getS());
-<a class="jxr_linenumber" name="181" href="#181">181</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="182" href="#182">182</a>             spec = <strong class="jxr_keyword">new</strong> Spec.Simple(<span class="jxr_string">"com.rultor.drain.Trash()"</span>);
-<a class="jxr_linenumber" name="183" href="#183">183</a>         }
-<a class="jxr_linenumber" name="184" href="#184">184</a>         <strong class="jxr_keyword">return</strong> spec;
-<a class="jxr_linenumber" name="185" href="#185">185</a>     }
-<a class="jxr_linenumber" name="186" href="#186">186</a> 
-<a class="jxr_linenumber" name="187" href="#187">187</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="188" href="#188">188</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="189" href="#189">189</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="190" href="#190">190</a>     @Override
-<a class="jxr_linenumber" name="191" href="#191">191</a>     @RetryOnFailure(verbose = false)
-<a class="jxr_linenumber" name="192" href="#192">192</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> failure(<strong class="jxr_keyword">final</strong> String desc) {
-<a class="jxr_linenumber" name="193" href="#193">193</a>         <strong class="jxr_keyword">this</strong>.item.put(
-<a class="jxr_linenumber" name="194" href="#194">194</a>             <strong class="jxr_keyword">new</strong> Attributes()
-<a class="jxr_linenumber" name="195" href="#195">195</a>                 .with(AwsRule.FIELD_SPEC, <strong class="jxr_keyword">this</strong>.spec().asText())
-<a class="jxr_linenumber" name="196" href="#196">196</a>                 .with(AwsRule.FIELD_DRAIN, <strong class="jxr_keyword">this</strong>.drain().asText())
-<a class="jxr_linenumber" name="197" href="#197">197</a>                 .with(AwsRule.FIELD_FAILURE, desc)
-<a class="jxr_linenumber" name="198" href="#198">198</a>         );
-<a class="jxr_linenumber" name="199" href="#199">199</a>     }
-<a class="jxr_linenumber" name="200" href="#200">200</a> 
-<a class="jxr_linenumber" name="201" href="#201">201</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="202" href="#202">202</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="203" href="#203">203</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="204" href="#204">204</a>     @Override
-<a class="jxr_linenumber" name="205" href="#205">205</a>     @RetryOnFailure(verbose = false)
-<a class="jxr_linenumber" name="206" href="#206">206</a>     <strong class="jxr_keyword">public</strong> String failure() {
-<a class="jxr_linenumber" name="207" href="#207">207</a>         String failure;
-<a class="jxr_linenumber" name="208" href="#208">208</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.item.has(AwsRule.FIELD_FAILURE)) {
-<a class="jxr_linenumber" name="209" href="#209">209</a>             failure = <strong class="jxr_keyword">this</strong>.item.get(AwsRule.FIELD_FAILURE).getS();
-<a class="jxr_linenumber" name="210" href="#210">210</a>             <strong class="jxr_keyword">if</strong> (failure.equals(AwsRule.NO_FAILURE)) {
-<a class="jxr_linenumber" name="211" href="#211">211</a>                 failure = <span class="jxr_string">""</span>;
-<a class="jxr_linenumber" name="212" href="#212">212</a>             }
-<a class="jxr_linenumber" name="213" href="#213">213</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="214" href="#214">214</a>             failure = <span class="jxr_string">""</span>;
-<a class="jxr_linenumber" name="215" href="#215">215</a>         }
-<a class="jxr_linenumber" name="216" href="#216">216</a>         <strong class="jxr_keyword">return</strong> failure;
-<a class="jxr_linenumber" name="217" href="#217">217</a>     }
-<a class="jxr_linenumber" name="218" href="#218">218</a> 
-<a class="jxr_linenumber" name="219" href="#219">219</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="220" href="#220">220</a> <em class="jxr_javadoccomment">     * Owner of it.</em>
-<a class="jxr_linenumber" name="221" href="#221">221</a> <em class="jxr_javadoccomment">     * @return URN of the owner</em>
-<a class="jxr_linenumber" name="222" href="#222">222</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="223" href="#223">223</a>     @RetryOnFailure(verbose = false)
-<a class="jxr_linenumber" name="224" href="#224">224</a>     <strong class="jxr_keyword">private</strong> URN owner() {
-<a class="jxr_linenumber" name="225" href="#225">225</a>         <strong class="jxr_keyword">return</strong> URN.create(<strong class="jxr_keyword">this</strong>.item.get(AwsRule.HASH_OWNER).getS());
-<a class="jxr_linenumber" name="226" href="#226">226</a>     }
-<a class="jxr_linenumber" name="227" href="#227">227</a> 
-<a class="jxr_linenumber" name="228" href="#228">228</a> }
+<a class="jxr_linenumber" name="172" href="#172">172</a>     @Override
+<a class="jxr_linenumber" name="173" href="#173">173</a>     @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="174" href="#174">174</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> failure(<strong class="jxr_keyword">final</strong> String desc) {
+<a class="jxr_linenumber" name="175" href="#175">175</a>         <strong class="jxr_keyword">this</strong>.item.put(
+<a class="jxr_linenumber" name="176" href="#176">176</a>             <strong class="jxr_keyword">new</strong> Attributes()
+<a class="jxr_linenumber" name="177" href="#177">177</a>                 .with(AwsRule.FIELD_SPEC, <strong class="jxr_keyword">this</strong>.spec().asText())
+<a class="jxr_linenumber" name="178" href="#178">178</a>                 .with(AwsRule.FIELD_DRAIN, <strong class="jxr_keyword">this</strong>.drain().asText())
+<a class="jxr_linenumber" name="179" href="#179">179</a>                 .with(AwsRule.FIELD_FAILURE, desc)
+<a class="jxr_linenumber" name="180" href="#180">180</a>         );
+<a class="jxr_linenumber" name="181" href="#181">181</a>     }
+<a class="jxr_linenumber" name="182" href="#182">182</a> 
+<a class="jxr_linenumber" name="183" href="#183">183</a>     @Override
+<a class="jxr_linenumber" name="184" href="#184">184</a>     @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="185" href="#185">185</a>     <strong class="jxr_keyword">public</strong> String failure() {
+<a class="jxr_linenumber" name="186" href="#186">186</a>         String failure;
+<a class="jxr_linenumber" name="187" href="#187">187</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.item.has(AwsRule.FIELD_FAILURE)) {
+<a class="jxr_linenumber" name="188" href="#188">188</a>             failure = <strong class="jxr_keyword">this</strong>.item.get(AwsRule.FIELD_FAILURE).getS();
+<a class="jxr_linenumber" name="189" href="#189">189</a>             <strong class="jxr_keyword">if</strong> (failure.equals(AwsRule.NO_FAILURE)) {
+<a class="jxr_linenumber" name="190" href="#190">190</a>                 failure = <span class="jxr_string">""</span>;
+<a class="jxr_linenumber" name="191" href="#191">191</a>             }
+<a class="jxr_linenumber" name="192" href="#192">192</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="193" href="#193">193</a>             failure = <span class="jxr_string">""</span>;
+<a class="jxr_linenumber" name="194" href="#194">194</a>         }
+<a class="jxr_linenumber" name="195" href="#195">195</a>         <strong class="jxr_keyword">return</strong> failure;
+<a class="jxr_linenumber" name="196" href="#196">196</a>     }
+<a class="jxr_linenumber" name="197" href="#197">197</a> 
+<a class="jxr_linenumber" name="198" href="#198">198</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="199" href="#199">199</a> <em class="jxr_javadoccomment">     * Owner of it.</em>
+<a class="jxr_linenumber" name="200" href="#200">200</a> <em class="jxr_javadoccomment">     * @return URN of the owner</em>
+<a class="jxr_linenumber" name="201" href="#201">201</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="202" href="#202">202</a>     @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="203" href="#203">203</a>     <strong class="jxr_keyword">private</strong> URN owner() {
+<a class="jxr_linenumber" name="204" href="#204">204</a>         <strong class="jxr_keyword">return</strong> URN.create(<strong class="jxr_keyword">this</strong>.item.get(AwsRule.HASH_OWNER).getS());
+<a class="jxr_linenumber" name="205" href="#205">205</a>     }
+<a class="jxr_linenumber" name="206" href="#206">206</a> 
+<a class="jxr_linenumber" name="207" href="#207">207</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

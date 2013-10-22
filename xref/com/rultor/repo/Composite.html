@@ -149,115 +149,112 @@
 <a class="jxr_linenumber" name="139" href="#139">139</a>         <strong class="jxr_keyword">return</strong> object;
 <a class="jxr_linenumber" name="140" href="#140">140</a>     }
 <a class="jxr_linenumber" name="141" href="#141">141</a> 
-<a class="jxr_linenumber" name="142" href="#142">142</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="143" href="#143">143</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="144" href="#144">144</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="145" href="#145">145</a>     @Override
-<a class="jxr_linenumber" name="146" href="#146">146</a>     <strong class="jxr_keyword">public</strong> String asText() {
-<a class="jxr_linenumber" name="147" href="#147">147</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> StringBuilder()
-<a class="jxr_linenumber" name="148" href="#148">148</a>             .append(<strong class="jxr_keyword">this</strong>.type)
-<a class="jxr_linenumber" name="149" href="#149">149</a>             .append('(')
-<a class="jxr_linenumber" name="150" href="#150">150</a>             .append(<strong class="jxr_keyword">new</strong> Brackets&lt;Variable&lt;?&gt;&gt;(<strong class="jxr_keyword">this</strong>.vars))
-<a class="jxr_linenumber" name="151" href="#151">151</a>             .append(')')
-<a class="jxr_linenumber" name="152" href="#152">152</a>             .toString();
-<a class="jxr_linenumber" name="153" href="#153">153</a>     }
-<a class="jxr_linenumber" name="154" href="#154">154</a> 
-<a class="jxr_linenumber" name="155" href="#155">155</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="156" href="#156">156</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="157" href="#157">157</a> <em class="jxr_javadoccomment">     * @checkstyle RedundantThrows (5 lines)</em>
-<a class="jxr_linenumber" name="158" href="#158">158</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="159" href="#159">159</a>     @Override
-<a class="jxr_linenumber" name="160" href="#160">160</a>     <strong class="jxr_keyword">public</strong> Map&lt;Integer, String&gt; arguments() <strong class="jxr_keyword">throws</strong> SpecException {
-<a class="jxr_linenumber" name="161" href="#161">161</a>         <strong class="jxr_keyword">final</strong> ConcurrentMap&lt;Integer, String&gt; args =
-<a class="jxr_linenumber" name="162" href="#162">162</a>             <strong class="jxr_keyword">new</strong> ConcurrentSkipListMap&lt;Integer, String&gt;();
-<a class="jxr_linenumber" name="163" href="#163">163</a>         <strong class="jxr_keyword">for</strong> (Variable&lt;?&gt; <strong class="jxr_keyword">var</strong> : <strong class="jxr_keyword">this</strong>.vars) {
-<a class="jxr_linenumber" name="164" href="#164">164</a>             args.putAll(<strong class="jxr_keyword">var</strong>.arguments());
-<a class="jxr_linenumber" name="165" href="#165">165</a>         }
-<a class="jxr_linenumber" name="166" href="#166">166</a>         <strong class="jxr_keyword">return</strong> args;
-<a class="jxr_linenumber" name="167" href="#167">167</a>     }
-<a class="jxr_linenumber" name="168" href="#168">168</a> 
-<a class="jxr_linenumber" name="169" href="#169">169</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="170" href="#170">170</a> <em class="jxr_javadoccomment">     * Find the best matching constructor.</em>
-<a class="jxr_linenumber" name="171" href="#171">171</a> <em class="jxr_javadoccomment">     * @param types Types</em>
-<a class="jxr_linenumber" name="172" href="#172">172</a> <em class="jxr_javadoccomment">     * @return The ctor</em>
-<a class="jxr_linenumber" name="173" href="#173">173</a> <em class="jxr_javadoccomment">     * @throws SpecException If can't get it</em>
-<a class="jxr_linenumber" name="174" href="#174">174</a> <em class="jxr_javadoccomment">     * @checkstyle RedundantThrows (5 lines)</em>
-<a class="jxr_linenumber" name="175" href="#175">175</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="176" href="#176">176</a>     <strong class="jxr_keyword">private</strong> Constructor&lt;?&gt; ctor(<strong class="jxr_keyword">final</strong> Class&lt;?&gt;[] types)
-<a class="jxr_linenumber" name="177" href="#177">177</a>         <strong class="jxr_keyword">throws</strong> <a href="../../../com/rultor/spi/SpecException.html">SpecException</a> {
-<a class="jxr_linenumber" name="178" href="#178">178</a>         <strong class="jxr_keyword">final</strong> Class&lt;?&gt; cls;
-<a class="jxr_linenumber" name="179" href="#179">179</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="180" href="#180">180</a>             cls = Class.forName(<strong class="jxr_keyword">this</strong>.type);
-<a class="jxr_linenumber" name="181" href="#181">181</a>         } <strong class="jxr_keyword">catch</strong> (ClassNotFoundException ex) {
-<a class="jxr_linenumber" name="182" href="#182">182</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/SpecException.html">SpecException</a>(ex);
-<a class="jxr_linenumber" name="183" href="#183">183</a>         }
-<a class="jxr_linenumber" name="184" href="#184">184</a>         Constructor&lt;?&gt; ctor = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="185" href="#185">185</a>         <strong class="jxr_keyword">for</strong> (Constructor&lt;?&gt; opt : cls.getConstructors()) {
-<a class="jxr_linenumber" name="186" href="#186">186</a>             <strong class="jxr_keyword">if</strong> (Composite.inherit(opt.getParameterTypes(), types)) {
-<a class="jxr_linenumber" name="187" href="#187">187</a>                 ctor = opt;
-<a class="jxr_linenumber" name="188" href="#188">188</a>                 <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="189" href="#189">189</a>             }
-<a class="jxr_linenumber" name="190" href="#190">190</a>         }
-<a class="jxr_linenumber" name="191" href="#191">191</a>         <strong class="jxr_keyword">if</strong> (ctor == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="192" href="#192">192</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/SpecException.html">SpecException</a>(
-<a class="jxr_linenumber" name="193" href="#193">193</a>                 String.format(
-<a class="jxr_linenumber" name="194" href="#194">194</a>                     <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
-<a class="jxr_linenumber" name="195" href="#195">195</a>                     <span class="jxr_string">"can't find constructor %s%s, available alternatives are: %s"</span>,
-<a class="jxr_linenumber" name="196" href="#196">196</a>                     <strong class="jxr_keyword">this</strong>.type,
-<a class="jxr_linenumber" name="197" href="#197">197</a>                     Arrays.asList(types),
-<a class="jxr_linenumber" name="198" href="#198">198</a>                     Arrays.asList(cls.getConstructors())
-<a class="jxr_linenumber" name="199" href="#199">199</a>                 )
-<a class="jxr_linenumber" name="200" href="#200">200</a>             );
-<a class="jxr_linenumber" name="201" href="#201">201</a>         }
-<a class="jxr_linenumber" name="202" href="#202">202</a>         <strong class="jxr_keyword">return</strong> ctor;
-<a class="jxr_linenumber" name="203" href="#203">203</a>     }
-<a class="jxr_linenumber" name="204" href="#204">204</a> 
-<a class="jxr_linenumber" name="205" href="#205">205</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="206" href="#206">206</a> <em class="jxr_javadoccomment">     * Right set of types inherits types from the left.</em>
-<a class="jxr_linenumber" name="207" href="#207">207</a> <em class="jxr_javadoccomment">     * @param parents Supposedly parent types</em>
-<a class="jxr_linenumber" name="208" href="#208">208</a> <em class="jxr_javadoccomment">     * @param kids Child types</em>
-<a class="jxr_linenumber" name="209" href="#209">209</a> <em class="jxr_javadoccomment">     * @return TRUE if they match</em>
-<a class="jxr_linenumber" name="210" href="#210">210</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="211" href="#211">211</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> inherit(<strong class="jxr_keyword">final</strong> Class&lt;?&gt;[] parents,
-<a class="jxr_linenumber" name="212" href="#212">212</a>         <strong class="jxr_keyword">final</strong> Class&lt;?&gt;[] kids) {
-<a class="jxr_linenumber" name="213" href="#213">213</a>         <strong class="jxr_keyword">boolean</strong> match;
-<a class="jxr_linenumber" name="214" href="#214">214</a>         <strong class="jxr_keyword">if</strong> (parents.length == kids.length) {
-<a class="jxr_linenumber" name="215" href="#215">215</a>             match = <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="216" href="#216">216</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> idx = 0; idx &lt; parents.length; ++idx) {
-<a class="jxr_linenumber" name="217" href="#217">217</a>                 <strong class="jxr_keyword">if</strong> (!Composite.box(parents[idx])
-<a class="jxr_linenumber" name="218" href="#218">218</a>                     .isAssignableFrom(Composite.box(kids[idx]))) {
-<a class="jxr_linenumber" name="219" href="#219">219</a>                     match = false;
-<a class="jxr_linenumber" name="220" href="#220">220</a>                     <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="221" href="#221">221</a>                 }
-<a class="jxr_linenumber" name="222" href="#222">222</a>             }
-<a class="jxr_linenumber" name="223" href="#223">223</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="224" href="#224">224</a>             match = false;
-<a class="jxr_linenumber" name="225" href="#225">225</a>         }
-<a class="jxr_linenumber" name="226" href="#226">226</a>         <strong class="jxr_keyword">return</strong> match;
-<a class="jxr_linenumber" name="227" href="#227">227</a>     }
-<a class="jxr_linenumber" name="228" href="#228">228</a> 
-<a class="jxr_linenumber" name="229" href="#229">229</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="230" href="#230">230</a> <em class="jxr_javadoccomment">     * Auto-box the type.</em>
-<a class="jxr_linenumber" name="231" href="#231">231</a> <em class="jxr_javadoccomment">     * @param type Type to auto-box</em>
-<a class="jxr_linenumber" name="232" href="#232">232</a> <em class="jxr_javadoccomment">     * @return Non-scalar type</em>
-<a class="jxr_linenumber" name="233" href="#233">233</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="234" href="#234">234</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Class&lt;?&gt; box(<strong class="jxr_keyword">final</strong> Class&lt;?&gt; type) {
-<a class="jxr_linenumber" name="235" href="#235">235</a>         Class&lt;?&gt; out;
-<a class="jxr_linenumber" name="236" href="#236">236</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">int</strong>.<strong class="jxr_keyword">class</strong>.equals(type)) {
-<a class="jxr_linenumber" name="237" href="#237">237</a>             out = Integer.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="238" href="#238">238</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">long</strong>.<strong class="jxr_keyword">class</strong>.equals(type)) {
-<a class="jxr_linenumber" name="239" href="#239">239</a>             out = Long.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="240" href="#240">240</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">double</strong>.<strong class="jxr_keyword">class</strong>.equals(type)) {
-<a class="jxr_linenumber" name="241" href="#241">241</a>             out = Double.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="242" href="#242">242</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">boolean</strong>.<strong class="jxr_keyword">class</strong>.equals(type)) {
-<a class="jxr_linenumber" name="243" href="#243">243</a>             out = Boolean.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="244" href="#244">244</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="245" href="#245">245</a>             out = type;
-<a class="jxr_linenumber" name="246" href="#246">246</a>         }
-<a class="jxr_linenumber" name="247" href="#247">247</a>         <strong class="jxr_keyword">return</strong> out;
-<a class="jxr_linenumber" name="248" href="#248">248</a>     }
-<a class="jxr_linenumber" name="249" href="#249">249</a> 
-<a class="jxr_linenumber" name="250" href="#250">250</a> }
+<a class="jxr_linenumber" name="142" href="#142">142</a>     @Override
+<a class="jxr_linenumber" name="143" href="#143">143</a>     <strong class="jxr_keyword">public</strong> String asText() {
+<a class="jxr_linenumber" name="144" href="#144">144</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> StringBuilder()
+<a class="jxr_linenumber" name="145" href="#145">145</a>             .append(<strong class="jxr_keyword">this</strong>.type)
+<a class="jxr_linenumber" name="146" href="#146">146</a>             .append('(')
+<a class="jxr_linenumber" name="147" href="#147">147</a>             .append(<strong class="jxr_keyword">new</strong> Brackets&lt;Variable&lt;?&gt;&gt;(<strong class="jxr_keyword">this</strong>.vars))
+<a class="jxr_linenumber" name="148" href="#148">148</a>             .append(')')
+<a class="jxr_linenumber" name="149" href="#149">149</a>             .toString();
+<a class="jxr_linenumber" name="150" href="#150">150</a>     }
+<a class="jxr_linenumber" name="151" href="#151">151</a> 
+<a class="jxr_linenumber" name="152" href="#152">152</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="153" href="#153">153</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a class="jxr_linenumber" name="154" href="#154">154</a> <em class="jxr_javadoccomment">     * @checkstyle RedundantThrows (5 lines)</em>
+<a class="jxr_linenumber" name="155" href="#155">155</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="156" href="#156">156</a>     @Override
+<a class="jxr_linenumber" name="157" href="#157">157</a>     <strong class="jxr_keyword">public</strong> Map&lt;Integer, String&gt; arguments() <strong class="jxr_keyword">throws</strong> SpecException {
+<a class="jxr_linenumber" name="158" href="#158">158</a>         <strong class="jxr_keyword">final</strong> ConcurrentMap&lt;Integer, String&gt; args =
+<a class="jxr_linenumber" name="159" href="#159">159</a>             <strong class="jxr_keyword">new</strong> ConcurrentSkipListMap&lt;Integer, String&gt;();
+<a class="jxr_linenumber" name="160" href="#160">160</a>         <strong class="jxr_keyword">for</strong> (Variable&lt;?&gt; <strong class="jxr_keyword">var</strong> : <strong class="jxr_keyword">this</strong>.vars) {
+<a class="jxr_linenumber" name="161" href="#161">161</a>             args.putAll(<strong class="jxr_keyword">var</strong>.arguments());
+<a class="jxr_linenumber" name="162" href="#162">162</a>         }
+<a class="jxr_linenumber" name="163" href="#163">163</a>         <strong class="jxr_keyword">return</strong> args;
+<a class="jxr_linenumber" name="164" href="#164">164</a>     }
+<a class="jxr_linenumber" name="165" href="#165">165</a> 
+<a class="jxr_linenumber" name="166" href="#166">166</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="167" href="#167">167</a> <em class="jxr_javadoccomment">     * Find the best matching constructor.</em>
+<a class="jxr_linenumber" name="168" href="#168">168</a> <em class="jxr_javadoccomment">     * @param types Types</em>
+<a class="jxr_linenumber" name="169" href="#169">169</a> <em class="jxr_javadoccomment">     * @return The ctor</em>
+<a class="jxr_linenumber" name="170" href="#170">170</a> <em class="jxr_javadoccomment">     * @throws SpecException If can't get it</em>
+<a class="jxr_linenumber" name="171" href="#171">171</a> <em class="jxr_javadoccomment">     * @checkstyle RedundantThrows (5 lines)</em>
+<a class="jxr_linenumber" name="172" href="#172">172</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="173" href="#173">173</a>     <strong class="jxr_keyword">private</strong> Constructor&lt;?&gt; ctor(<strong class="jxr_keyword">final</strong> Class&lt;?&gt;[] types)
+<a class="jxr_linenumber" name="174" href="#174">174</a>         <strong class="jxr_keyword">throws</strong> <a href="../../../com/rultor/spi/SpecException.html">SpecException</a> {
+<a class="jxr_linenumber" name="175" href="#175">175</a>         <strong class="jxr_keyword">final</strong> Class&lt;?&gt; cls;
+<a class="jxr_linenumber" name="176" href="#176">176</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="177" href="#177">177</a>             cls = Class.forName(<strong class="jxr_keyword">this</strong>.type);
+<a class="jxr_linenumber" name="178" href="#178">178</a>         } <strong class="jxr_keyword">catch</strong> (ClassNotFoundException ex) {
+<a class="jxr_linenumber" name="179" href="#179">179</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/SpecException.html">SpecException</a>(ex);
+<a class="jxr_linenumber" name="180" href="#180">180</a>         }
+<a class="jxr_linenumber" name="181" href="#181">181</a>         Constructor&lt;?&gt; ctor = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="182" href="#182">182</a>         <strong class="jxr_keyword">for</strong> (Constructor&lt;?&gt; opt : cls.getConstructors()) {
+<a class="jxr_linenumber" name="183" href="#183">183</a>             <strong class="jxr_keyword">if</strong> (Composite.inherit(opt.getParameterTypes(), types)) {
+<a class="jxr_linenumber" name="184" href="#184">184</a>                 ctor = opt;
+<a class="jxr_linenumber" name="185" href="#185">185</a>                 <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="186" href="#186">186</a>             }
+<a class="jxr_linenumber" name="187" href="#187">187</a>         }
+<a class="jxr_linenumber" name="188" href="#188">188</a>         <strong class="jxr_keyword">if</strong> (ctor == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="189" href="#189">189</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/SpecException.html">SpecException</a>(
+<a class="jxr_linenumber" name="190" href="#190">190</a>                 String.format(
+<a class="jxr_linenumber" name="191" href="#191">191</a>                     <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
+<a class="jxr_linenumber" name="192" href="#192">192</a>                     <span class="jxr_string">"can't find constructor %s%s, available alternatives are: %s"</span>,
+<a class="jxr_linenumber" name="193" href="#193">193</a>                     <strong class="jxr_keyword">this</strong>.type,
+<a class="jxr_linenumber" name="194" href="#194">194</a>                     Arrays.asList(types),
+<a class="jxr_linenumber" name="195" href="#195">195</a>                     Arrays.asList(cls.getConstructors())
+<a class="jxr_linenumber" name="196" href="#196">196</a>                 )
+<a class="jxr_linenumber" name="197" href="#197">197</a>             );
+<a class="jxr_linenumber" name="198" href="#198">198</a>         }
+<a class="jxr_linenumber" name="199" href="#199">199</a>         <strong class="jxr_keyword">return</strong> ctor;
+<a class="jxr_linenumber" name="200" href="#200">200</a>     }
+<a class="jxr_linenumber" name="201" href="#201">201</a> 
+<a class="jxr_linenumber" name="202" href="#202">202</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="203" href="#203">203</a> <em class="jxr_javadoccomment">     * Right set of types inherits types from the left.</em>
+<a class="jxr_linenumber" name="204" href="#204">204</a> <em class="jxr_javadoccomment">     * @param parents Supposedly parent types</em>
+<a class="jxr_linenumber" name="205" href="#205">205</a> <em class="jxr_javadoccomment">     * @param kids Child types</em>
+<a class="jxr_linenumber" name="206" href="#206">206</a> <em class="jxr_javadoccomment">     * @return TRUE if they match</em>
+<a class="jxr_linenumber" name="207" href="#207">207</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="208" href="#208">208</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> inherit(<strong class="jxr_keyword">final</strong> Class&lt;?&gt;[] parents,
+<a class="jxr_linenumber" name="209" href="#209">209</a>         <strong class="jxr_keyword">final</strong> Class&lt;?&gt;[] kids) {
+<a class="jxr_linenumber" name="210" href="#210">210</a>         <strong class="jxr_keyword">boolean</strong> match;
+<a class="jxr_linenumber" name="211" href="#211">211</a>         <strong class="jxr_keyword">if</strong> (parents.length == kids.length) {
+<a class="jxr_linenumber" name="212" href="#212">212</a>             match = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="213" href="#213">213</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> idx = 0; idx &lt; parents.length; ++idx) {
+<a class="jxr_linenumber" name="214" href="#214">214</a>                 <strong class="jxr_keyword">if</strong> (!Composite.box(parents[idx])
+<a class="jxr_linenumber" name="215" href="#215">215</a>                     .isAssignableFrom(Composite.box(kids[idx]))) {
+<a class="jxr_linenumber" name="216" href="#216">216</a>                     match = false;
+<a class="jxr_linenumber" name="217" href="#217">217</a>                     <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="218" href="#218">218</a>                 }
+<a class="jxr_linenumber" name="219" href="#219">219</a>             }
+<a class="jxr_linenumber" name="220" href="#220">220</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="221" href="#221">221</a>             match = false;
+<a class="jxr_linenumber" name="222" href="#222">222</a>         }
+<a class="jxr_linenumber" name="223" href="#223">223</a>         <strong class="jxr_keyword">return</strong> match;
+<a class="jxr_linenumber" name="224" href="#224">224</a>     }
+<a class="jxr_linenumber" name="225" href="#225">225</a> 
+<a class="jxr_linenumber" name="226" href="#226">226</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="227" href="#227">227</a> <em class="jxr_javadoccomment">     * Auto-box the type.</em>
+<a class="jxr_linenumber" name="228" href="#228">228</a> <em class="jxr_javadoccomment">     * @param type Type to auto-box</em>
+<a class="jxr_linenumber" name="229" href="#229">229</a> <em class="jxr_javadoccomment">     * @return Non-scalar type</em>
+<a class="jxr_linenumber" name="230" href="#230">230</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="231" href="#231">231</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Class&lt;?&gt; box(<strong class="jxr_keyword">final</strong> Class&lt;?&gt; type) {
+<a class="jxr_linenumber" name="232" href="#232">232</a>         Class&lt;?&gt; out;
+<a class="jxr_linenumber" name="233" href="#233">233</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">int</strong>.<strong class="jxr_keyword">class</strong>.equals(type)) {
+<a class="jxr_linenumber" name="234" href="#234">234</a>             out = Integer.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="235" href="#235">235</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">long</strong>.<strong class="jxr_keyword">class</strong>.equals(type)) {
+<a class="jxr_linenumber" name="236" href="#236">236</a>             out = Long.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="237" href="#237">237</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">double</strong>.<strong class="jxr_keyword">class</strong>.equals(type)) {
+<a class="jxr_linenumber" name="238" href="#238">238</a>             out = Double.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="239" href="#239">239</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">boolean</strong>.<strong class="jxr_keyword">class</strong>.equals(type)) {
+<a class="jxr_linenumber" name="240" href="#240">240</a>             out = Boolean.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="241" href="#241">241</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="242" href="#242">242</a>             out = type;
+<a class="jxr_linenumber" name="243" href="#243">243</a>         }
+<a class="jxr_linenumber" name="244" href="#244">244</a>         <strong class="jxr_keyword">return</strong> out;
+<a class="jxr_linenumber" name="245" href="#245">245</a>     }
+<a class="jxr_linenumber" name="246" href="#246">246</a> 
+<a class="jxr_linenumber" name="247" href="#247">247</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

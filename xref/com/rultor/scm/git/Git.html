@@ -140,133 +140,124 @@
 <a class="jxr_linenumber" name="130" href="#130">130</a>         <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/snapshot/TagLine.html">TagLine</a>(<span class="jxr_string">"git"</span>).attr(<span class="jxr_string">"url"</span>, <strong class="jxr_keyword">this</strong>.address).log();
 <a class="jxr_linenumber" name="131" href="#131">131</a>     }
 <a class="jxr_linenumber" name="132" href="#132">132</a> 
-<a class="jxr_linenumber" name="133" href="#133">133</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="134" href="#134">134</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="135" href="#135">135</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="136" href="#136">136</a>     @Override
-<a class="jxr_linenumber" name="137" href="#137">137</a>     @Step(<span class="jxr_string">"Git branch `${args[0]}` checked out"</span>)
-<a class="jxr_linenumber" name="138" href="#138">138</a>     @RetryOnFailure(verbose = false)
-<a class="jxr_linenumber" name="139" href="#139">139</a>     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
-<a class="jxr_linenumber" name="140" href="#140">140</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/rultor/scm/Branch.html">Branch</a> checkout(<strong class="jxr_keyword">final</strong> String name) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="141" href="#141">141</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/scm/git/GitBranch.html">GitBranch</a>(<strong class="jxr_keyword">this</strong>, name);
-<a class="jxr_linenumber" name="142" href="#142">142</a>     }
-<a class="jxr_linenumber" name="143" href="#143">143</a> 
-<a class="jxr_linenumber" name="144" href="#144">144</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="145" href="#145">145</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="146" href="#146">146</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="147" href="#147">147</a>     @Override
-<a class="jxr_linenumber" name="148" href="#148">148</a>     @Step(<span class="jxr_string">"found ${result.size()} refs in Git"</span>)
-<a class="jxr_linenumber" name="149" href="#149">149</a>     @RetryOnFailure(verbose = false)
-<a class="jxr_linenumber" name="150" href="#150">150</a>     <strong class="jxr_keyword">public</strong> Collection&lt;String&gt; branches() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="151" href="#151">151</a>         <strong class="jxr_keyword">return</strong> Collections2.transform(
-<a class="jxr_linenumber" name="152" href="#152">152</a>             Arrays.asList(
-<a class="jxr_linenumber" name="153" href="#153">153</a>                 <strong class="jxr_keyword">this</strong>.terminal.exec(
-<a class="jxr_linenumber" name="154" href="#154">154</a>                     <strong class="jxr_keyword">new</strong> StringBuilder(<strong class="jxr_keyword">this</strong>.reset())
-<a class="jxr_linenumber" name="155" href="#155">155</a>                         <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
-<a class="jxr_linenumber" name="156" href="#156">156</a>                         .append(<span class="jxr_string">" &amp;&amp; git for-each-ref --format='%(refname:short)' refs/remotes/origin refs/tags"</span>)
-<a class="jxr_linenumber" name="157" href="#157">157</a>                         .toString(),
-<a class="jxr_linenumber" name="158" href="#158">158</a>                     <strong class="jxr_keyword">this</strong>.key.asText()
-<a class="jxr_linenumber" name="159" href="#159">159</a>                     <em class="jxr_comment">// @checkstyle MultipleStringLiterals (1 line)</em>
-<a class="jxr_linenumber" name="160" href="#160">160</a>                 ).split(<span class="jxr_string">"\n"</span>)
-<a class="jxr_linenumber" name="161" href="#161">161</a>             ),
-<a class="jxr_linenumber" name="162" href="#162">162</a>             <strong class="jxr_keyword">new</strong> Function&lt;String, String&gt;() {
-<a class="jxr_linenumber" name="163" href="#163">163</a>                 @Override
-<a class="jxr_linenumber" name="164" href="#164">164</a>                 <strong class="jxr_keyword">public</strong> String apply(<strong class="jxr_keyword">final</strong> String input) {
-<a class="jxr_linenumber" name="165" href="#165">165</a>                     String name = input;
-<a class="jxr_linenumber" name="166" href="#166">166</a>                     <strong class="jxr_keyword">if</strong> (input.startsWith(<span class="jxr_string">"origin/"</span>)) {
-<a class="jxr_linenumber" name="167" href="#167">167</a>                         name = input.substring(Tv.SEVEN);
-<a class="jxr_linenumber" name="168" href="#168">168</a>                     }
-<a class="jxr_linenumber" name="169" href="#169">169</a>                     <strong class="jxr_keyword">return</strong> name;
-<a class="jxr_linenumber" name="170" href="#170">170</a>                 }
-<a class="jxr_linenumber" name="171" href="#171">171</a>             }
-<a class="jxr_linenumber" name="172" href="#172">172</a>         );
-<a class="jxr_linenumber" name="173" href="#173">173</a>     }
-<a class="jxr_linenumber" name="174" href="#174">174</a> 
-<a class="jxr_linenumber" name="175" href="#175">175</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="176" href="#176">176</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="177" href="#177">177</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="178" href="#178">178</a>     @Override
-<a class="jxr_linenumber" name="179" href="#179">179</a>     <strong class="jxr_keyword">public</strong> URI uri() {
-<a class="jxr_linenumber" name="180" href="#180">180</a>         <strong class="jxr_keyword">return</strong> URI.create(<strong class="jxr_keyword">this</strong>.address);
-<a class="jxr_linenumber" name="181" href="#181">181</a>     }
-<a class="jxr_linenumber" name="182" href="#182">182</a> 
-<a class="jxr_linenumber" name="183" href="#183">183</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="184" href="#184">184</a> <em class="jxr_javadoccomment">     * Get log of the branch.</em>
-<a class="jxr_linenumber" name="185" href="#185">185</a> <em class="jxr_javadoccomment">     * @param branch Branch name</em>
-<a class="jxr_linenumber" name="186" href="#186">186</a> <em class="jxr_javadoccomment">     * @return Iterable commits</em>
-<a class="jxr_linenumber" name="187" href="#187">187</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
-<a class="jxr_linenumber" name="188" href="#188">188</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="189" href="#189">189</a>     @RetryOnFailure(verbose = false)
-<a class="jxr_linenumber" name="190" href="#190">190</a>     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
-<a class="jxr_linenumber" name="191" href="#191">191</a>     <strong class="jxr_keyword">public</strong> Iterable&lt;Commit&gt; log(<strong class="jxr_keyword">final</strong> String branch) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="192" href="#192">192</a>         <strong class="jxr_keyword">final</strong> String stdout = <strong class="jxr_keyword">this</strong>.terminal.exec(
-<a class="jxr_linenumber" name="193" href="#193">193</a>             <strong class="jxr_keyword">new</strong> StringBuilder(<strong class="jxr_keyword">this</strong>.reset())
-<a class="jxr_linenumber" name="194" href="#194">194</a>                 .append(<span class="jxr_string">" &amp;&amp; BRANCH="</span>)
-<a class="jxr_linenumber" name="195" href="#195">195</a>                 .append(Terminal.quotate(Terminal.escape(branch)))
-<a class="jxr_linenumber" name="196" href="#196">196</a>                 <em class="jxr_comment">// @checkstyle LineLength (3 lines)</em>
-<a class="jxr_linenumber" name="197" href="#197">197</a>                 .append(<span class="jxr_string">" &amp;&amp; if [ $(git rev-parse --abbrev-ref HEAD) != $BRANCH ]; then git checkout $BRANCH; fi"</span>)
-<a class="jxr_linenumber" name="198" href="#198">198</a>                 .append(<span class="jxr_string">" &amp;&amp; if git for-each-ref refs/heads/$BRANCH | grep commit; then git pull; fi"</span>)
-<a class="jxr_linenumber" name="199" href="#199">199</a>                 .append(<span class="jxr_string">" &amp;&amp; git log --pretty=format:'%H %ae %cd %s' --date=iso8601"</span>)
-<a class="jxr_linenumber" name="200" href="#200">200</a>                 .toString()
-<a class="jxr_linenumber" name="201" href="#201">201</a>         );
-<a class="jxr_linenumber" name="202" href="#202">202</a>         Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"Git log in branch `%s` retrieved"</span>, branch);
-<a class="jxr_linenumber" name="203" href="#203">203</a>         <strong class="jxr_keyword">final</strong> Iterable&lt;String&gt; lines = Iterables.filter(
-<a class="jxr_linenumber" name="204" href="#204">204</a>             Arrays.asList(stdout.split(<span class="jxr_string">"\n"</span>)),
-<a class="jxr_linenumber" name="205" href="#205">205</a>             <strong class="jxr_keyword">new</strong> Predicate&lt;String&gt;() {
-<a class="jxr_linenumber" name="206" href="#206">206</a>                 @Override
-<a class="jxr_linenumber" name="207" href="#207">207</a>                 <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> apply(<strong class="jxr_keyword">final</strong> String line) {
-<a class="jxr_linenumber" name="208" href="#208">208</a>                     <strong class="jxr_keyword">return</strong> GitCommit.LINE.matcher(line).matches();
-<a class="jxr_linenumber" name="209" href="#209">209</a>                 }
-<a class="jxr_linenumber" name="210" href="#210">210</a>             }
-<a class="jxr_linenumber" name="211" href="#211">211</a>         );
-<a class="jxr_linenumber" name="212" href="#212">212</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Iterable&lt;Commit&gt;() {
-<a class="jxr_linenumber" name="213" href="#213">213</a>             @Override
-<a class="jxr_linenumber" name="214" href="#214">214</a>             <strong class="jxr_keyword">public</strong> Iterator&lt;Commit&gt; iterator() {
-<a class="jxr_linenumber" name="215" href="#215">215</a>                 <strong class="jxr_keyword">final</strong> Iterator&lt;String&gt; iterator = lines.iterator();
-<a class="jxr_linenumber" name="216" href="#216">216</a>                 <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Iterator&lt;Commit&gt;() {
-<a class="jxr_linenumber" name="217" href="#217">217</a>                     @Override
-<a class="jxr_linenumber" name="218" href="#218">218</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasNext() {
-<a class="jxr_linenumber" name="219" href="#219">219</a>                         <strong class="jxr_keyword">return</strong> iterator.hasNext();
-<a class="jxr_linenumber" name="220" href="#220">220</a>                     }
-<a class="jxr_linenumber" name="221" href="#221">221</a>                     @Override
-<a class="jxr_linenumber" name="222" href="#222">222</a>                     <strong class="jxr_keyword">public</strong> <a href="../../../../com/rultor/scm/Commit.html">Commit</a> next() {
-<a class="jxr_linenumber" name="223" href="#223">223</a>                         <strong class="jxr_keyword">return</strong> GitCommit.parse(iterator.next());
-<a class="jxr_linenumber" name="224" href="#224">224</a>                     }
-<a class="jxr_linenumber" name="225" href="#225">225</a>                     @Override
-<a class="jxr_linenumber" name="226" href="#226">226</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> remove() {
-<a class="jxr_linenumber" name="227" href="#227">227</a>                         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException();
-<a class="jxr_linenumber" name="228" href="#228">228</a>                     }
-<a class="jxr_linenumber" name="229" href="#229">229</a>                 };
-<a class="jxr_linenumber" name="230" href="#230">230</a>             }
-<a class="jxr_linenumber" name="231" href="#231">231</a>         };
-<a class="jxr_linenumber" name="232" href="#232">232</a>     }
-<a class="jxr_linenumber" name="233" href="#233">233</a> 
-<a class="jxr_linenumber" name="234" href="#234">234</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="235" href="#235">235</a> <em class="jxr_javadoccomment">     * Start script, to clone the repo.</em>
-<a class="jxr_linenumber" name="236" href="#236">236</a> <em class="jxr_javadoccomment">     * @return Script to start</em>
-<a class="jxr_linenumber" name="237" href="#237">237</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="238" href="#238">238</a>     <strong class="jxr_keyword">private</strong> String reset() {
-<a class="jxr_linenumber" name="239" href="#239">239</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> StringBuilder()
-<a class="jxr_linenumber" name="240" href="#240">240</a>             .append(<span class="jxr_string">"DIR=$(pwd)/"</span>)
-<a class="jxr_linenumber" name="241" href="#241">241</a>             .append(Terminal.quotate(Terminal.escape(<strong class="jxr_keyword">this</strong>.dir)))
-<a class="jxr_linenumber" name="242" href="#242">242</a>             .append(<span class="jxr_string">" &amp;&amp; URL="</span>)
-<a class="jxr_linenumber" name="243" href="#243">243</a>             .append(Terminal.quotate(Terminal.escape(<strong class="jxr_keyword">this</strong>.address)))
-<a class="jxr_linenumber" name="244" href="#244">244</a>             .append(<span class="jxr_string">" &amp;&amp; mkdir -p \&quot;$DIR\&quot;"</span>)
-<a class="jxr_linenumber" name="245" href="#245">245</a>             .append(<span class="jxr_string">" &amp;&amp; ( cat &gt; \&quot;$DIR/id_rsa\&quot; )"</span>)
-<a class="jxr_linenumber" name="246" href="#246">246</a>             <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
-<a class="jxr_linenumber" name="247" href="#247">247</a>             .append(<span class="jxr_string">" &amp;&amp; ( echo \&quot;set -x &amp;&amp; git -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i &#92;&#92;\&quot;$DIR/id_rsa&#92;&#92;\&quot; $@\&quot; &gt; \&quot;$DIR/git-ssh.sh\&quot; )"</span>)
-<a class="jxr_linenumber" name="248" href="#248">248</a>             .append(<span class="jxr_string">" &amp;&amp; GIT_SSH=$DIR/git-ssh.sh"</span>)
-<a class="jxr_linenumber" name="249" href="#249">249</a>             <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
-<a class="jxr_linenumber" name="250" href="#250">250</a>             .append(<span class="jxr_string">" &amp;&amp; if [ ! -d $DIR/repo ]; then git clone $URL $DIR/repo; fi"</span>)
-<a class="jxr_linenumber" name="251" href="#251">251</a>             .append(<span class="jxr_string">" &amp;&amp; cd $DIR/repo"</span>)
-<a class="jxr_linenumber" name="252" href="#252">252</a>             .append(<span class="jxr_string">" &amp;&amp; git remote set-url origin $URL"</span>)
-<a class="jxr_linenumber" name="253" href="#253">253</a>             .append(<span class="jxr_string">" &amp;&amp; git remote update -p"</span>)
-<a class="jxr_linenumber" name="254" href="#254">254</a>             .append(<span class="jxr_string">" &amp;&amp; git fetch origin --prune --tags"</span>)
-<a class="jxr_linenumber" name="255" href="#255">255</a>             .append(<span class="jxr_string">" &amp;&amp; git reset --hard"</span>)
-<a class="jxr_linenumber" name="256" href="#256">256</a>             .append(<span class="jxr_string">" &amp;&amp; git clean -f -d"</span>)
-<a class="jxr_linenumber" name="257" href="#257">257</a>             .toString();
-<a class="jxr_linenumber" name="258" href="#258">258</a>     }
-<a class="jxr_linenumber" name="259" href="#259">259</a> }
+<a class="jxr_linenumber" name="133" href="#133">133</a>     @Override
+<a class="jxr_linenumber" name="134" href="#134">134</a>     @Step(<span class="jxr_string">"Git branch `${args[0]}` checked out"</span>)
+<a class="jxr_linenumber" name="135" href="#135">135</a>     @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="136" href="#136">136</a>     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
+<a class="jxr_linenumber" name="137" href="#137">137</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/rultor/scm/Branch.html">Branch</a> checkout(<strong class="jxr_keyword">final</strong> String name) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="138" href="#138">138</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/scm/git/GitBranch.html">GitBranch</a>(<strong class="jxr_keyword">this</strong>, name);
+<a class="jxr_linenumber" name="139" href="#139">139</a>     }
+<a class="jxr_linenumber" name="140" href="#140">140</a> 
+<a class="jxr_linenumber" name="141" href="#141">141</a>     @Override
+<a class="jxr_linenumber" name="142" href="#142">142</a>     @Step(<span class="jxr_string">"found ${result.size()} refs in Git"</span>)
+<a class="jxr_linenumber" name="143" href="#143">143</a>     @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="144" href="#144">144</a>     <strong class="jxr_keyword">public</strong> Collection&lt;String&gt; branches() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="145" href="#145">145</a>         <strong class="jxr_keyword">return</strong> Collections2.transform(
+<a class="jxr_linenumber" name="146" href="#146">146</a>             Arrays.asList(
+<a class="jxr_linenumber" name="147" href="#147">147</a>                 <strong class="jxr_keyword">this</strong>.terminal.exec(
+<a class="jxr_linenumber" name="148" href="#148">148</a>                     <strong class="jxr_keyword">new</strong> StringBuilder(<strong class="jxr_keyword">this</strong>.reset())
+<a class="jxr_linenumber" name="149" href="#149">149</a>                         <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
+<a class="jxr_linenumber" name="150" href="#150">150</a>                         .append(<span class="jxr_string">" &amp;&amp; git for-each-ref --format='%(refname:short)' refs/remotes/origin refs/tags"</span>)
+<a class="jxr_linenumber" name="151" href="#151">151</a>                         .toString(),
+<a class="jxr_linenumber" name="152" href="#152">152</a>                     <strong class="jxr_keyword">this</strong>.key.asText()
+<a class="jxr_linenumber" name="153" href="#153">153</a>                     <em class="jxr_comment">// @checkstyle MultipleStringLiterals (1 line)</em>
+<a class="jxr_linenumber" name="154" href="#154">154</a>                 ).split(<span class="jxr_string">"\n"</span>)
+<a class="jxr_linenumber" name="155" href="#155">155</a>             ),
+<a class="jxr_linenumber" name="156" href="#156">156</a>             <strong class="jxr_keyword">new</strong> Function&lt;String, String&gt;() {
+<a class="jxr_linenumber" name="157" href="#157">157</a>                 @Override
+<a class="jxr_linenumber" name="158" href="#158">158</a>                 <strong class="jxr_keyword">public</strong> String apply(<strong class="jxr_keyword">final</strong> String input) {
+<a class="jxr_linenumber" name="159" href="#159">159</a>                     String name = input;
+<a class="jxr_linenumber" name="160" href="#160">160</a>                     <strong class="jxr_keyword">if</strong> (input.startsWith(<span class="jxr_string">"origin/"</span>)) {
+<a class="jxr_linenumber" name="161" href="#161">161</a>                         name = input.substring(Tv.SEVEN);
+<a class="jxr_linenumber" name="162" href="#162">162</a>                     }
+<a class="jxr_linenumber" name="163" href="#163">163</a>                     <strong class="jxr_keyword">return</strong> name;
+<a class="jxr_linenumber" name="164" href="#164">164</a>                 }
+<a class="jxr_linenumber" name="165" href="#165">165</a>             }
+<a class="jxr_linenumber" name="166" href="#166">166</a>         );
+<a class="jxr_linenumber" name="167" href="#167">167</a>     }
+<a class="jxr_linenumber" name="168" href="#168">168</a> 
+<a class="jxr_linenumber" name="169" href="#169">169</a>     @Override
+<a class="jxr_linenumber" name="170" href="#170">170</a>     <strong class="jxr_keyword">public</strong> URI uri() {
+<a class="jxr_linenumber" name="171" href="#171">171</a>         <strong class="jxr_keyword">return</strong> URI.create(<strong class="jxr_keyword">this</strong>.address);
+<a class="jxr_linenumber" name="172" href="#172">172</a>     }
+<a class="jxr_linenumber" name="173" href="#173">173</a> 
+<a class="jxr_linenumber" name="174" href="#174">174</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="175" href="#175">175</a> <em class="jxr_javadoccomment">     * Get log of the branch.</em>
+<a class="jxr_linenumber" name="176" href="#176">176</a> <em class="jxr_javadoccomment">     * @param branch Branch name</em>
+<a class="jxr_linenumber" name="177" href="#177">177</a> <em class="jxr_javadoccomment">     * @return Iterable commits</em>
+<a class="jxr_linenumber" name="178" href="#178">178</a> <em class="jxr_javadoccomment">     * @throws IOException If fails</em>
+<a class="jxr_linenumber" name="179" href="#179">179</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="180" href="#180">180</a>     @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="181" href="#181">181</a>     @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
+<a class="jxr_linenumber" name="182" href="#182">182</a>     <strong class="jxr_keyword">public</strong> Iterable&lt;Commit&gt; log(<strong class="jxr_keyword">final</strong> String branch) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="183" href="#183">183</a>         <strong class="jxr_keyword">final</strong> String stdout = <strong class="jxr_keyword">this</strong>.terminal.exec(
+<a class="jxr_linenumber" name="184" href="#184">184</a>             <strong class="jxr_keyword">new</strong> StringBuilder(<strong class="jxr_keyword">this</strong>.reset())
+<a class="jxr_linenumber" name="185" href="#185">185</a>                 .append(<span class="jxr_string">" &amp;&amp; BRANCH="</span>)
+<a class="jxr_linenumber" name="186" href="#186">186</a>                 .append(Terminal.quotate(Terminal.escape(branch)))
+<a class="jxr_linenumber" name="187" href="#187">187</a>                 <em class="jxr_comment">// @checkstyle LineLength (3 lines)</em>
+<a class="jxr_linenumber" name="188" href="#188">188</a>                 .append(<span class="jxr_string">" &amp;&amp; if [ $(git rev-parse --abbrev-ref HEAD) != $BRANCH ]; then git checkout $BRANCH; fi"</span>)
+<a class="jxr_linenumber" name="189" href="#189">189</a>                 .append(<span class="jxr_string">" &amp;&amp; if git for-each-ref refs/heads/$BRANCH | grep commit; then git pull; fi"</span>)
+<a class="jxr_linenumber" name="190" href="#190">190</a>                 .append(<span class="jxr_string">" &amp;&amp; git log --pretty=format:'%H %ae %cd %s' --date=iso8601"</span>)
+<a class="jxr_linenumber" name="191" href="#191">191</a>                 .toString()
+<a class="jxr_linenumber" name="192" href="#192">192</a>         );
+<a class="jxr_linenumber" name="193" href="#193">193</a>         Logger.info(<strong class="jxr_keyword">this</strong>, <span class="jxr_string">"Git log in branch `%s` retrieved"</span>, branch);
+<a class="jxr_linenumber" name="194" href="#194">194</a>         <strong class="jxr_keyword">final</strong> Iterable&lt;String&gt; lines = Iterables.filter(
+<a class="jxr_linenumber" name="195" href="#195">195</a>             Arrays.asList(stdout.split(<span class="jxr_string">"\n"</span>)),
+<a class="jxr_linenumber" name="196" href="#196">196</a>             <strong class="jxr_keyword">new</strong> Predicate&lt;String&gt;() {
+<a class="jxr_linenumber" name="197" href="#197">197</a>                 @Override
+<a class="jxr_linenumber" name="198" href="#198">198</a>                 <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> apply(<strong class="jxr_keyword">final</strong> String line) {
+<a class="jxr_linenumber" name="199" href="#199">199</a>                     <strong class="jxr_keyword">return</strong> GitCommit.LINE.matcher(line).matches();
+<a class="jxr_linenumber" name="200" href="#200">200</a>                 }
+<a class="jxr_linenumber" name="201" href="#201">201</a>             }
+<a class="jxr_linenumber" name="202" href="#202">202</a>         );
+<a class="jxr_linenumber" name="203" href="#203">203</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Iterable&lt;Commit&gt;() {
+<a class="jxr_linenumber" name="204" href="#204">204</a>             @Override
+<a class="jxr_linenumber" name="205" href="#205">205</a>             <strong class="jxr_keyword">public</strong> Iterator&lt;Commit&gt; iterator() {
+<a class="jxr_linenumber" name="206" href="#206">206</a>                 <strong class="jxr_keyword">final</strong> Iterator&lt;String&gt; iterator = lines.iterator();
+<a class="jxr_linenumber" name="207" href="#207">207</a>                 <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Iterator&lt;Commit&gt;() {
+<a class="jxr_linenumber" name="208" href="#208">208</a>                     @Override
+<a class="jxr_linenumber" name="209" href="#209">209</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasNext() {
+<a class="jxr_linenumber" name="210" href="#210">210</a>                         <strong class="jxr_keyword">return</strong> iterator.hasNext();
+<a class="jxr_linenumber" name="211" href="#211">211</a>                     }
+<a class="jxr_linenumber" name="212" href="#212">212</a>                     @Override
+<a class="jxr_linenumber" name="213" href="#213">213</a>                     <strong class="jxr_keyword">public</strong> <a href="../../../../com/rultor/scm/Commit.html">Commit</a> next() {
+<a class="jxr_linenumber" name="214" href="#214">214</a>                         <strong class="jxr_keyword">return</strong> GitCommit.parse(iterator.next());
+<a class="jxr_linenumber" name="215" href="#215">215</a>                     }
+<a class="jxr_linenumber" name="216" href="#216">216</a>                     @Override
+<a class="jxr_linenumber" name="217" href="#217">217</a>                     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> remove() {
+<a class="jxr_linenumber" name="218" href="#218">218</a>                         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException();
+<a class="jxr_linenumber" name="219" href="#219">219</a>                     }
+<a class="jxr_linenumber" name="220" href="#220">220</a>                 };
+<a class="jxr_linenumber" name="221" href="#221">221</a>             }
+<a class="jxr_linenumber" name="222" href="#222">222</a>         };
+<a class="jxr_linenumber" name="223" href="#223">223</a>     }
+<a class="jxr_linenumber" name="224" href="#224">224</a> 
+<a class="jxr_linenumber" name="225" href="#225">225</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="226" href="#226">226</a> <em class="jxr_javadoccomment">     * Start script, to clone the repo.</em>
+<a class="jxr_linenumber" name="227" href="#227">227</a> <em class="jxr_javadoccomment">     * @return Script to start</em>
+<a class="jxr_linenumber" name="228" href="#228">228</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="229" href="#229">229</a>     <strong class="jxr_keyword">private</strong> String reset() {
+<a class="jxr_linenumber" name="230" href="#230">230</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> StringBuilder()
+<a class="jxr_linenumber" name="231" href="#231">231</a>             .append(<span class="jxr_string">"DIR=$(pwd)/"</span>)
+<a class="jxr_linenumber" name="232" href="#232">232</a>             .append(Terminal.quotate(Terminal.escape(<strong class="jxr_keyword">this</strong>.dir)))
+<a class="jxr_linenumber" name="233" href="#233">233</a>             .append(<span class="jxr_string">" &amp;&amp; URL="</span>)
+<a class="jxr_linenumber" name="234" href="#234">234</a>             .append(Terminal.quotate(Terminal.escape(<strong class="jxr_keyword">this</strong>.address)))
+<a class="jxr_linenumber" name="235" href="#235">235</a>             .append(<span class="jxr_string">" &amp;&amp; mkdir -p \&quot;$DIR\&quot;"</span>)
+<a class="jxr_linenumber" name="236" href="#236">236</a>             .append(<span class="jxr_string">" &amp;&amp; ( cat &gt; \&quot;$DIR/id_rsa\&quot; )"</span>)
+<a class="jxr_linenumber" name="237" href="#237">237</a>             <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
+<a class="jxr_linenumber" name="238" href="#238">238</a>             .append(<span class="jxr_string">" &amp;&amp; ( echo \&quot;set -x &amp;&amp; git -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i &#92;&#92;\&quot;$DIR/id_rsa&#92;&#92;\&quot; $@\&quot; &gt; \&quot;$DIR/git-ssh.sh\&quot; )"</span>)
+<a class="jxr_linenumber" name="239" href="#239">239</a>             .append(<span class="jxr_string">" &amp;&amp; GIT_SSH=$DIR/git-ssh.sh"</span>)
+<a class="jxr_linenumber" name="240" href="#240">240</a>             <em class="jxr_comment">// @checkstyle LineLength (1 line)</em>
+<a class="jxr_linenumber" name="241" href="#241">241</a>             .append(<span class="jxr_string">" &amp;&amp; if [ ! -d $DIR/repo ]; then git clone $URL $DIR/repo; fi"</span>)
+<a class="jxr_linenumber" name="242" href="#242">242</a>             .append(<span class="jxr_string">" &amp;&amp; cd $DIR/repo"</span>)
+<a class="jxr_linenumber" name="243" href="#243">243</a>             .append(<span class="jxr_string">" &amp;&amp; git remote set-url origin $URL"</span>)
+<a class="jxr_linenumber" name="244" href="#244">244</a>             .append(<span class="jxr_string">" &amp;&amp; git remote update -p"</span>)
+<a class="jxr_linenumber" name="245" href="#245">245</a>             .append(<span class="jxr_string">" &amp;&amp; git fetch origin --prune --tags"</span>)
+<a class="jxr_linenumber" name="246" href="#246">246</a>             .append(<span class="jxr_string">" &amp;&amp; git reset --hard"</span>)
+<a class="jxr_linenumber" name="247" href="#247">247</a>             .append(<span class="jxr_string">" &amp;&amp; git clean -f -d"</span>)
+<a class="jxr_linenumber" name="248" href="#248">248</a>             .toString();
+<a class="jxr_linenumber" name="249" href="#249">249</a>     }
+<a class="jxr_linenumber" name="250" href="#250">250</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

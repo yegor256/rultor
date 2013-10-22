@@ -105,214 +105,199 @@
 <a class="jxr_linenumber" name="95" href="#95">95</a>          <strong class="jxr_keyword">this</strong>.owner = urn;
 <a class="jxr_linenumber" name="96" href="#96">96</a>      }
 <a class="jxr_linenumber" name="97" href="#97">97</a>  
-<a class="jxr_linenumber" name="98" href="#98">98</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="99" href="#99">99</a>  <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="100" href="#100">100</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="101" href="#101">101</a>     @Override
-<a class="jxr_linenumber" name="102" href="#102">102</a>     @NotNull(message = <span class="jxr_string">"list of rules of a user is never NULL"</span>)
-<a class="jxr_linenumber" name="103" href="#103">103</a>     <strong class="jxr_keyword">public</strong> Iterator&lt;Rule&gt; iterator() {
-<a class="jxr_linenumber" name="104" href="#104">104</a>         <strong class="jxr_keyword">final</strong> Iterator&lt;Item&gt; items = <strong class="jxr_keyword">this</strong>.fetch().iterator();
-<a class="jxr_linenumber" name="105" href="#105">105</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Iterator&lt;Rule&gt;() {
-<a class="jxr_linenumber" name="106" href="#106">106</a>             @Override
-<a class="jxr_linenumber" name="107" href="#107">107</a>             @RetryOnFailure(verbose = false)
-<a class="jxr_linenumber" name="108" href="#108">108</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasNext() {
-<a class="jxr_linenumber" name="109" href="#109">109</a>                 <strong class="jxr_keyword">return</strong> items.hasNext();
-<a class="jxr_linenumber" name="110" href="#110">110</a>             }
-<a class="jxr_linenumber" name="111" href="#111">111</a>             @Override
-<a class="jxr_linenumber" name="112" href="#112">112</a>             <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Rule.html">Rule</a> next() {
-<a class="jxr_linenumber" name="113" href="#113">113</a>                 <strong class="jxr_keyword">return</strong> AwsRules.<strong class="jxr_keyword">this</strong>.toRule(items.next());
-<a class="jxr_linenumber" name="114" href="#114">114</a>             }
-<a class="jxr_linenumber" name="115" href="#115">115</a>             @Override
-<a class="jxr_linenumber" name="116" href="#116">116</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> remove() {
-<a class="jxr_linenumber" name="117" href="#117">117</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException();
-<a class="jxr_linenumber" name="118" href="#118">118</a>             }
-<a class="jxr_linenumber" name="119" href="#119">119</a>         };
-<a class="jxr_linenumber" name="120" href="#120">120</a>     }
-<a class="jxr_linenumber" name="121" href="#121">121</a> 
-<a class="jxr_linenumber" name="122" href="#122">122</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="123" href="#123">123</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="124" href="#124">124</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="125" href="#125">125</a>     @Override
-<a class="jxr_linenumber" name="126" href="#126">126</a>     @Cacheable.FlushAfter
-<a class="jxr_linenumber" name="127" href="#127">127</a>     @RetryOnFailure(verbose = false)
-<a class="jxr_linenumber" name="128" href="#128">128</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> create(
-<a class="jxr_linenumber" name="129" href="#129">129</a>         @NotNull(message = <span class="jxr_string">"rule name is mandatory when creating new rule"</span>)
-<a class="jxr_linenumber" name="130" href="#130">130</a>         @Pattern(
-<a class="jxr_linenumber" name="131" href="#131">131</a>             regexp = <span class="jxr_string">"[a-z][-a-z0-9]{2,}"</span>,
-<a class="jxr_linenumber" name="132" href="#132">132</a>             message = <span class="jxr_string">"Only numbers, letters, and dashes are allowed"</span>
-<a class="jxr_linenumber" name="133" href="#133">133</a>         )
-<a class="jxr_linenumber" name="134" href="#134">134</a>         <strong class="jxr_keyword">final</strong> String unt) {
-<a class="jxr_linenumber" name="135" href="#135">135</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.contains(unt)) {
-<a class="jxr_linenumber" name="136" href="#136">136</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(
-<a class="jxr_linenumber" name="137" href="#137">137</a>                 String.format(<span class="jxr_string">"Rule `%s` already exists"</span>, unt)
-<a class="jxr_linenumber" name="138" href="#138">138</a>             );
-<a class="jxr_linenumber" name="139" href="#139">139</a>         }
-<a class="jxr_linenumber" name="140" href="#140">140</a>         <strong class="jxr_keyword">this</strong>.region.table(AwsRule.TABLE).put(
-<a class="jxr_linenumber" name="141" href="#141">141</a>             <strong class="jxr_keyword">new</strong> Attributes()
-<a class="jxr_linenumber" name="142" href="#142">142</a>                 .with(AwsRule.HASH_OWNER, <strong class="jxr_keyword">this</strong>.owner.toString())
-<a class="jxr_linenumber" name="143" href="#143">143</a>                 .with(AwsRule.RANGE_NAME, unt)
-<a class="jxr_linenumber" name="144" href="#144">144</a>                 .with(AwsRule.FIELD_SPEC, <strong class="jxr_keyword">new</strong> Spec.Simple().asText())
-<a class="jxr_linenumber" name="145" href="#145">145</a>         );
-<a class="jxr_linenumber" name="146" href="#146">146</a>     }
-<a class="jxr_linenumber" name="147" href="#147">147</a> 
-<a class="jxr_linenumber" name="148" href="#148">148</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="149" href="#149">149</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="150" href="#150">150</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="151" href="#151">151</a>     @Override
-<a class="jxr_linenumber" name="152" href="#152">152</a>     @Cacheable.FlushAfter
-<a class="jxr_linenumber" name="153" href="#153">153</a>     @RetryOnFailure(verbose = false)
-<a class="jxr_linenumber" name="154" href="#154">154</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> remove(@NotNull(message = <span class="jxr_string">"rule name is mandatory"</span>)
-<a class="jxr_linenumber" name="155" href="#155">155</a>         <strong class="jxr_keyword">final</strong> String rule) {
-<a class="jxr_linenumber" name="156" href="#156">156</a>         <strong class="jxr_keyword">final</strong> Iterator&lt;Item&gt; items = <strong class="jxr_keyword">this</strong>.region.table(AwsRule.TABLE).frame()
-<a class="jxr_linenumber" name="157" href="#157">157</a>             .where(AwsRule.HASH_OWNER, <strong class="jxr_keyword">this</strong>.owner.toString())
-<a class="jxr_linenumber" name="158" href="#158">158</a>             .where(AwsRule.RANGE_NAME, rule)
-<a class="jxr_linenumber" name="159" href="#159">159</a>             .through(<strong class="jxr_keyword">new</strong> QueryValve())
-<a class="jxr_linenumber" name="160" href="#160">160</a>             .iterator();
-<a class="jxr_linenumber" name="161" href="#161">161</a>         <strong class="jxr_keyword">if</strong> (!items.hasNext()) {
-<a class="jxr_linenumber" name="162" href="#162">162</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NoSuchElementException(
-<a class="jxr_linenumber" name="163" href="#163">163</a>                 String.format(<span class="jxr_string">"Rule `%s` not found"</span>, rule)
-<a class="jxr_linenumber" name="164" href="#164">164</a>             );
-<a class="jxr_linenumber" name="165" href="#165">165</a>         }
-<a class="jxr_linenumber" name="166" href="#166">166</a>         items.next();
-<a class="jxr_linenumber" name="167" href="#167">167</a>         items.remove();
-<a class="jxr_linenumber" name="168" href="#168">168</a>     }
-<a class="jxr_linenumber" name="169" href="#169">169</a> 
-<a class="jxr_linenumber" name="170" href="#170">170</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="171" href="#171">171</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="172" href="#172">172</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="173" href="#173">173</a>     @Override
-<a class="jxr_linenumber" name="174" href="#174">174</a>     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-<a class="jxr_linenumber" name="175" href="#175">175</a>     @RetryOnFailure(verbose = false)
-<a class="jxr_linenumber" name="176" href="#176">176</a>     <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Rule.html">Rule</a> get(
-<a class="jxr_linenumber" name="177" href="#177">177</a>         @NotNull(message = <span class="jxr_string">"rule name can't be NULL"</span>)
-<a class="jxr_linenumber" name="178" href="#178">178</a>         @Pattern(regexp = <span class="jxr_string">".+"</span>, message = <span class="jxr_string">"rule shouldn't be blank"</span>)
-<a class="jxr_linenumber" name="179" href="#179">179</a>         <strong class="jxr_keyword">final</strong> String rule) {
-<a class="jxr_linenumber" name="180" href="#180">180</a>         <strong class="jxr_keyword">final</strong> Collection&lt;Item&gt; items = <strong class="jxr_keyword">this</strong>.region.table(AwsRule.TABLE)
-<a class="jxr_linenumber" name="181" href="#181">181</a>             .frame()
-<a class="jxr_linenumber" name="182" href="#182">182</a>             .where(AwsRule.HASH_OWNER, <strong class="jxr_keyword">this</strong>.owner.toString())
-<a class="jxr_linenumber" name="183" href="#183">183</a>             .where(AwsRule.RANGE_NAME, rule)
-<a class="jxr_linenumber" name="184" href="#184">184</a>             .through(<strong class="jxr_keyword">new</strong> QueryValve());
-<a class="jxr_linenumber" name="185" href="#185">185</a>         <strong class="jxr_keyword">if</strong> (items.isEmpty()) {
-<a class="jxr_linenumber" name="186" href="#186">186</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NoSuchElementException(
-<a class="jxr_linenumber" name="187" href="#187">187</a>                 String.format(<span class="jxr_string">"Rule `%s` doesn't exist"</span>, rule)
-<a class="jxr_linenumber" name="188" href="#188">188</a>             );
-<a class="jxr_linenumber" name="189" href="#189">189</a>         }
-<a class="jxr_linenumber" name="190" href="#190">190</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.toRule(items.iterator().next());
-<a class="jxr_linenumber" name="191" href="#191">191</a>     }
-<a class="jxr_linenumber" name="192" href="#192">192</a> 
-<a class="jxr_linenumber" name="193" href="#193">193</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="194" href="#194">194</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="195" href="#195">195</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="196" href="#196">196</a>     @Override
-<a class="jxr_linenumber" name="197" href="#197">197</a>     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-<a class="jxr_linenumber" name="198" href="#198">198</a>     @RetryOnFailure(verbose = false)
-<a class="jxr_linenumber" name="199" href="#199">199</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> contains(
-<a class="jxr_linenumber" name="200" href="#200">200</a>         @NotNull(message = <span class="jxr_string">"rule name can't be NULL"</span>)
-<a class="jxr_linenumber" name="201" href="#201">201</a>         @Pattern(regexp = <span class="jxr_string">".+"</span>, message = <span class="jxr_string">"rule shouldn't be blank"</span>)
-<a class="jxr_linenumber" name="202" href="#202">202</a>         <strong class="jxr_keyword">final</strong> String rule) {
-<a class="jxr_linenumber" name="203" href="#203">203</a>         <strong class="jxr_keyword">return</strong> !<strong class="jxr_keyword">this</strong>.region.table(AwsRule.TABLE)
+<a class="jxr_linenumber" name="98" href="#98">98</a>      @Override
+<a class="jxr_linenumber" name="99" href="#99">99</a>      @NotNull(message = <span class="jxr_string">"list of rules of a user is never NULL"</span>)
+<a class="jxr_linenumber" name="100" href="#100">100</a>     <strong class="jxr_keyword">public</strong> Iterator&lt;Rule&gt; iterator() {
+<a class="jxr_linenumber" name="101" href="#101">101</a>         <strong class="jxr_keyword">final</strong> Iterator&lt;Item&gt; items = <strong class="jxr_keyword">this</strong>.fetch().iterator();
+<a class="jxr_linenumber" name="102" href="#102">102</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Iterator&lt;Rule&gt;() {
+<a class="jxr_linenumber" name="103" href="#103">103</a>             @Override
+<a class="jxr_linenumber" name="104" href="#104">104</a>             @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="105" href="#105">105</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasNext() {
+<a class="jxr_linenumber" name="106" href="#106">106</a>                 <strong class="jxr_keyword">return</strong> items.hasNext();
+<a class="jxr_linenumber" name="107" href="#107">107</a>             }
+<a class="jxr_linenumber" name="108" href="#108">108</a>             @Override
+<a class="jxr_linenumber" name="109" href="#109">109</a>             <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Rule.html">Rule</a> next() {
+<a class="jxr_linenumber" name="110" href="#110">110</a>                 <strong class="jxr_keyword">return</strong> AwsRules.<strong class="jxr_keyword">this</strong>.toRule(items.next());
+<a class="jxr_linenumber" name="111" href="#111">111</a>             }
+<a class="jxr_linenumber" name="112" href="#112">112</a>             @Override
+<a class="jxr_linenumber" name="113" href="#113">113</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> remove() {
+<a class="jxr_linenumber" name="114" href="#114">114</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException();
+<a class="jxr_linenumber" name="115" href="#115">115</a>             }
+<a class="jxr_linenumber" name="116" href="#116">116</a>         };
+<a class="jxr_linenumber" name="117" href="#117">117</a>     }
+<a class="jxr_linenumber" name="118" href="#118">118</a> 
+<a class="jxr_linenumber" name="119" href="#119">119</a>     @Override
+<a class="jxr_linenumber" name="120" href="#120">120</a>     @Cacheable.FlushAfter
+<a class="jxr_linenumber" name="121" href="#121">121</a>     @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="122" href="#122">122</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> create(
+<a class="jxr_linenumber" name="123" href="#123">123</a>         @NotNull(message = <span class="jxr_string">"rule name is mandatory when creating new rule"</span>)
+<a class="jxr_linenumber" name="124" href="#124">124</a>         @Pattern(
+<a class="jxr_linenumber" name="125" href="#125">125</a>             regexp = <span class="jxr_string">"[a-z][-a-z0-9]{2,}"</span>,
+<a class="jxr_linenumber" name="126" href="#126">126</a>             message = <span class="jxr_string">"Only numbers, letters, and dashes are allowed"</span>
+<a class="jxr_linenumber" name="127" href="#127">127</a>         )
+<a class="jxr_linenumber" name="128" href="#128">128</a>         <strong class="jxr_keyword">final</strong> String unt) {
+<a class="jxr_linenumber" name="129" href="#129">129</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.contains(unt)) {
+<a class="jxr_linenumber" name="130" href="#130">130</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(
+<a class="jxr_linenumber" name="131" href="#131">131</a>                 String.format(<span class="jxr_string">"Rule `%s` already exists"</span>, unt)
+<a class="jxr_linenumber" name="132" href="#132">132</a>             );
+<a class="jxr_linenumber" name="133" href="#133">133</a>         }
+<a class="jxr_linenumber" name="134" href="#134">134</a>         <strong class="jxr_keyword">this</strong>.region.table(AwsRule.TABLE).put(
+<a class="jxr_linenumber" name="135" href="#135">135</a>             <strong class="jxr_keyword">new</strong> Attributes()
+<a class="jxr_linenumber" name="136" href="#136">136</a>                 .with(AwsRule.HASH_OWNER, <strong class="jxr_keyword">this</strong>.owner.toString())
+<a class="jxr_linenumber" name="137" href="#137">137</a>                 .with(AwsRule.RANGE_NAME, unt)
+<a class="jxr_linenumber" name="138" href="#138">138</a>                 .with(AwsRule.FIELD_SPEC, <strong class="jxr_keyword">new</strong> Spec.Simple().asText())
+<a class="jxr_linenumber" name="139" href="#139">139</a>         );
+<a class="jxr_linenumber" name="140" href="#140">140</a>     }
+<a class="jxr_linenumber" name="141" href="#141">141</a> 
+<a class="jxr_linenumber" name="142" href="#142">142</a>     @Override
+<a class="jxr_linenumber" name="143" href="#143">143</a>     @Cacheable.FlushAfter
+<a class="jxr_linenumber" name="144" href="#144">144</a>     @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="145" href="#145">145</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> remove(@NotNull(message = <span class="jxr_string">"rule name is mandatory"</span>)
+<a class="jxr_linenumber" name="146" href="#146">146</a>         <strong class="jxr_keyword">final</strong> String rule) {
+<a class="jxr_linenumber" name="147" href="#147">147</a>         <strong class="jxr_keyword">final</strong> Iterator&lt;Item&gt; items = <strong class="jxr_keyword">this</strong>.region.table(AwsRule.TABLE).frame()
+<a class="jxr_linenumber" name="148" href="#148">148</a>             .where(AwsRule.HASH_OWNER, <strong class="jxr_keyword">this</strong>.owner.toString())
+<a class="jxr_linenumber" name="149" href="#149">149</a>             .where(AwsRule.RANGE_NAME, rule)
+<a class="jxr_linenumber" name="150" href="#150">150</a>             .through(<strong class="jxr_keyword">new</strong> QueryValve())
+<a class="jxr_linenumber" name="151" href="#151">151</a>             .iterator();
+<a class="jxr_linenumber" name="152" href="#152">152</a>         <strong class="jxr_keyword">if</strong> (!items.hasNext()) {
+<a class="jxr_linenumber" name="153" href="#153">153</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NoSuchElementException(
+<a class="jxr_linenumber" name="154" href="#154">154</a>                 String.format(<span class="jxr_string">"Rule `%s` not found"</span>, rule)
+<a class="jxr_linenumber" name="155" href="#155">155</a>             );
+<a class="jxr_linenumber" name="156" href="#156">156</a>         }
+<a class="jxr_linenumber" name="157" href="#157">157</a>         items.next();
+<a class="jxr_linenumber" name="158" href="#158">158</a>         items.remove();
+<a class="jxr_linenumber" name="159" href="#159">159</a>     }
+<a class="jxr_linenumber" name="160" href="#160">160</a> 
+<a class="jxr_linenumber" name="161" href="#161">161</a>     @Override
+<a class="jxr_linenumber" name="162" href="#162">162</a>     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+<a class="jxr_linenumber" name="163" href="#163">163</a>     @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="164" href="#164">164</a>     <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Rule.html">Rule</a> get(
+<a class="jxr_linenumber" name="165" href="#165">165</a>         @NotNull(message = <span class="jxr_string">"rule name can't be NULL"</span>)
+<a class="jxr_linenumber" name="166" href="#166">166</a>         @Pattern(regexp = <span class="jxr_string">".+"</span>, message = <span class="jxr_string">"rule shouldn't be blank"</span>)
+<a class="jxr_linenumber" name="167" href="#167">167</a>         <strong class="jxr_keyword">final</strong> String rule) {
+<a class="jxr_linenumber" name="168" href="#168">168</a>         <strong class="jxr_keyword">final</strong> Collection&lt;Item&gt; items = <strong class="jxr_keyword">this</strong>.region.table(AwsRule.TABLE)
+<a class="jxr_linenumber" name="169" href="#169">169</a>             .frame()
+<a class="jxr_linenumber" name="170" href="#170">170</a>             .where(AwsRule.HASH_OWNER, <strong class="jxr_keyword">this</strong>.owner.toString())
+<a class="jxr_linenumber" name="171" href="#171">171</a>             .where(AwsRule.RANGE_NAME, rule)
+<a class="jxr_linenumber" name="172" href="#172">172</a>             .through(<strong class="jxr_keyword">new</strong> QueryValve());
+<a class="jxr_linenumber" name="173" href="#173">173</a>         <strong class="jxr_keyword">if</strong> (items.isEmpty()) {
+<a class="jxr_linenumber" name="174" href="#174">174</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NoSuchElementException(
+<a class="jxr_linenumber" name="175" href="#175">175</a>                 String.format(<span class="jxr_string">"Rule `%s` doesn't exist"</span>, rule)
+<a class="jxr_linenumber" name="176" href="#176">176</a>             );
+<a class="jxr_linenumber" name="177" href="#177">177</a>         }
+<a class="jxr_linenumber" name="178" href="#178">178</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.toRule(items.iterator().next());
+<a class="jxr_linenumber" name="179" href="#179">179</a>     }
+<a class="jxr_linenumber" name="180" href="#180">180</a> 
+<a class="jxr_linenumber" name="181" href="#181">181</a>     @Override
+<a class="jxr_linenumber" name="182" href="#182">182</a>     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+<a class="jxr_linenumber" name="183" href="#183">183</a>     @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="184" href="#184">184</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> contains(
+<a class="jxr_linenumber" name="185" href="#185">185</a>         @NotNull(message = <span class="jxr_string">"rule name can't be NULL"</span>)
+<a class="jxr_linenumber" name="186" href="#186">186</a>         @Pattern(regexp = <span class="jxr_string">".+"</span>, message = <span class="jxr_string">"rule shouldn't be blank"</span>)
+<a class="jxr_linenumber" name="187" href="#187">187</a>         <strong class="jxr_keyword">final</strong> String rule) {
+<a class="jxr_linenumber" name="188" href="#188">188</a>         <strong class="jxr_keyword">return</strong> !<strong class="jxr_keyword">this</strong>.region.table(AwsRule.TABLE)
+<a class="jxr_linenumber" name="189" href="#189">189</a>             .frame()
+<a class="jxr_linenumber" name="190" href="#190">190</a>             .where(AwsRule.HASH_OWNER, <strong class="jxr_keyword">this</strong>.owner.toString())
+<a class="jxr_linenumber" name="191" href="#191">191</a>             .where(AwsRule.RANGE_NAME, rule)
+<a class="jxr_linenumber" name="192" href="#192">192</a>             .through(<strong class="jxr_keyword">new</strong> QueryValve())
+<a class="jxr_linenumber" name="193" href="#193">193</a>             .isEmpty();
+<a class="jxr_linenumber" name="194" href="#194">194</a>     }
+<a class="jxr_linenumber" name="195" href="#195">195</a> 
+<a class="jxr_linenumber" name="196" href="#196">196</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="197" href="#197">197</a> <em class="jxr_javadoccomment">     * Fetch them all.</em>
+<a class="jxr_linenumber" name="198" href="#198">198</a> <em class="jxr_javadoccomment">     * @return All Rules</em>
+<a class="jxr_linenumber" name="199" href="#199">199</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="200" href="#200">200</a>     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+<a class="jxr_linenumber" name="201" href="#201">201</a>     @RetryOnFailure(verbose = false)
+<a class="jxr_linenumber" name="202" href="#202">202</a>     <strong class="jxr_keyword">private</strong> Collection&lt;Item&gt; fetch() {
+<a class="jxr_linenumber" name="203" href="#203">203</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.region.table(AwsRule.TABLE)
 <a class="jxr_linenumber" name="204" href="#204">204</a>             .frame()
 <a class="jxr_linenumber" name="205" href="#205">205</a>             .where(AwsRule.HASH_OWNER, <strong class="jxr_keyword">this</strong>.owner.toString())
-<a class="jxr_linenumber" name="206" href="#206">206</a>             .where(AwsRule.RANGE_NAME, rule)
-<a class="jxr_linenumber" name="207" href="#207">207</a>             .through(<strong class="jxr_keyword">new</strong> QueryValve())
-<a class="jxr_linenumber" name="208" href="#208">208</a>             .isEmpty();
-<a class="jxr_linenumber" name="209" href="#209">209</a>     }
-<a class="jxr_linenumber" name="210" href="#210">210</a> 
-<a class="jxr_linenumber" name="211" href="#211">211</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="212" href="#212">212</a> <em class="jxr_javadoccomment">     * Fetch them all.</em>
-<a class="jxr_linenumber" name="213" href="#213">213</a> <em class="jxr_javadoccomment">     * @return All Rules</em>
-<a class="jxr_linenumber" name="214" href="#214">214</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="215" href="#215">215</a>     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-<a class="jxr_linenumber" name="216" href="#216">216</a>     @RetryOnFailure(verbose = false)
-<a class="jxr_linenumber" name="217" href="#217">217</a>     <strong class="jxr_keyword">private</strong> Collection&lt;Item&gt; fetch() {
-<a class="jxr_linenumber" name="218" href="#218">218</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.region.table(AwsRule.TABLE)
-<a class="jxr_linenumber" name="219" href="#219">219</a>             .frame()
-<a class="jxr_linenumber" name="220" href="#220">220</a>             .where(AwsRule.HASH_OWNER, <strong class="jxr_keyword">this</strong>.owner.toString())
-<a class="jxr_linenumber" name="221" href="#221">221</a>             .through(
-<a class="jxr_linenumber" name="222" href="#222">222</a>                 <strong class="jxr_keyword">new</strong> QueryValve().withAttributesToGet(
-<a class="jxr_linenumber" name="223" href="#223">223</a>                     AwsRule.FIELD_SPEC,
-<a class="jxr_linenumber" name="224" href="#224">224</a>                     AwsRule.FIELD_DRAIN,
-<a class="jxr_linenumber" name="225" href="#225">225</a>                     AwsRule.FIELD_FAILURE
-<a class="jxr_linenumber" name="226" href="#226">226</a>                 )
-<a class="jxr_linenumber" name="227" href="#227">227</a>             );
-<a class="jxr_linenumber" name="228" href="#228">228</a>     }
-<a class="jxr_linenumber" name="229" href="#229">229</a> 
-<a class="jxr_linenumber" name="230" href="#230">230</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="231" href="#231">231</a> <em class="jxr_javadoccomment">     * Marker to flush cash.</em>
-<a class="jxr_linenumber" name="232" href="#232">232</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="233" href="#233">233</a>     @Cacheable.FlushAfter
-<a class="jxr_linenumber" name="234" href="#234">234</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> flush() {
-<a class="jxr_linenumber" name="235" href="#235">235</a>         <em class="jxr_comment">// nothing todo</em>
-<a class="jxr_linenumber" name="236" href="#236">236</a>     }
-<a class="jxr_linenumber" name="237" href="#237">237</a> 
-<a class="jxr_linenumber" name="238" href="#238">238</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="239" href="#239">239</a> <em class="jxr_javadoccomment">     * Convert item to rule.</em>
-<a class="jxr_linenumber" name="240" href="#240">240</a> <em class="jxr_javadoccomment">     * @param item Item from AWS</em>
-<a class="jxr_linenumber" name="241" href="#241">241</a> <em class="jxr_javadoccomment">     * @return Rule</em>
-<a class="jxr_linenumber" name="242" href="#242">242</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="243" href="#243">243</a>     <strong class="jxr_keyword">private</strong> <a href="../../../com/rultor/spi/Rule.html">Rule</a> toRule(<strong class="jxr_keyword">final</strong> Item item) {
-<a class="jxr_linenumber" name="244" href="#244">244</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/users/AwsRules.html">CacheableRule</a>(<strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/users/AwsRule.html">AwsRule</a>(<strong class="jxr_keyword">this</strong>.client, item));
-<a class="jxr_linenumber" name="245" href="#245">245</a>     }
-<a class="jxr_linenumber" name="246" href="#246">246</a> 
-<a class="jxr_linenumber" name="247" href="#247">247</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="248" href="#248">248</a> <em class="jxr_javadoccomment">     * Rule that caches its calls.</em>
-<a class="jxr_linenumber" name="249" href="#249">249</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="250" href="#250">250</a>     @ToString
-<a class="jxr_linenumber" name="251" href="#251">251</a>     @EqualsAndHashCode(of = <span class="jxr_string">"origin"</span>)
-<a class="jxr_linenumber" name="252" href="#252">252</a>     @Loggable(Loggable.DEBUG)
-<a class="jxr_linenumber" name="253" href="#253">253</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/users/AwsRules.html">CacheableRule</a> <strong class="jxr_keyword">implements</strong> <a href="../../../com/rultor/spi/Rule.html">Rule</a> {
-<a class="jxr_linenumber" name="254" href="#254">254</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="255" href="#255">255</a> <em class="jxr_javadoccomment">         * Original rule.</em>
-<a class="jxr_linenumber" name="256" href="#256">256</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="257" href="#257">257</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> <a href="../../../com/rultor/spi/Rule.html">Rule</a> origin;
-<a class="jxr_linenumber" name="258" href="#258">258</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="259" href="#259">259</a> <em class="jxr_javadoccomment">         * Ctor.</em>
-<a class="jxr_linenumber" name="260" href="#260">260</a> <em class="jxr_javadoccomment">         * @param rule Rule to wrap</em>
-<a class="jxr_linenumber" name="261" href="#261">261</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="262" href="#262">262</a>         <strong class="jxr_keyword">protected</strong> <a href="../../../com/rultor/users/AwsRules.html">CacheableRule</a>(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Rule.html">Rule</a> rule) {
-<a class="jxr_linenumber" name="263" href="#263">263</a>             <strong class="jxr_keyword">this</strong>.origin = rule;
-<a class="jxr_linenumber" name="264" href="#264">264</a>         }
-<a class="jxr_linenumber" name="265" href="#265">265</a>         @Override
-<a class="jxr_linenumber" name="266" href="#266">266</a>         @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-<a class="jxr_linenumber" name="267" href="#267">267</a>         <strong class="jxr_keyword">public</strong> String name() {
-<a class="jxr_linenumber" name="268" href="#268">268</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.origin.name();
-<a class="jxr_linenumber" name="269" href="#269">269</a>         }
-<a class="jxr_linenumber" name="270" href="#270">270</a>         @Override
-<a class="jxr_linenumber" name="271" href="#271">271</a>         @Cacheable.FlushAfter
-<a class="jxr_linenumber" name="272" href="#272">272</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> update(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec, <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> drain) {
-<a class="jxr_linenumber" name="273" href="#273">273</a>             <strong class="jxr_keyword">this</strong>.origin.update(spec, drain);
-<a class="jxr_linenumber" name="274" href="#274">274</a>             AwsRules.<strong class="jxr_keyword">this</strong>.flush();
-<a class="jxr_linenumber" name="275" href="#275">275</a>         }
-<a class="jxr_linenumber" name="276" href="#276">276</a>         @Override
-<a class="jxr_linenumber" name="277" href="#277">277</a>         @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-<a class="jxr_linenumber" name="278" href="#278">278</a>         <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec() {
-<a class="jxr_linenumber" name="279" href="#279">279</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.origin.spec();
-<a class="jxr_linenumber" name="280" href="#280">280</a>         }
-<a class="jxr_linenumber" name="281" href="#281">281</a>         @Override
-<a class="jxr_linenumber" name="282" href="#282">282</a>         @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-<a class="jxr_linenumber" name="283" href="#283">283</a>         <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> drain() {
-<a class="jxr_linenumber" name="284" href="#284">284</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.origin.drain();
-<a class="jxr_linenumber" name="285" href="#285">285</a>         }
-<a class="jxr_linenumber" name="286" href="#286">286</a>         @Override
-<a class="jxr_linenumber" name="287" href="#287">287</a>         @Cacheable.FlushAfter
-<a class="jxr_linenumber" name="288" href="#288">288</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> failure(<strong class="jxr_keyword">final</strong> String desc) {
-<a class="jxr_linenumber" name="289" href="#289">289</a>             <strong class="jxr_keyword">this</strong>.origin.failure(desc);
-<a class="jxr_linenumber" name="290" href="#290">290</a>             AwsRules.<strong class="jxr_keyword">this</strong>.flush();
-<a class="jxr_linenumber" name="291" href="#291">291</a>         }
-<a class="jxr_linenumber" name="292" href="#292">292</a>         @Override
-<a class="jxr_linenumber" name="293" href="#293">293</a>         @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-<a class="jxr_linenumber" name="294" href="#294">294</a>         <strong class="jxr_keyword">public</strong> String failure() {
-<a class="jxr_linenumber" name="295" href="#295">295</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.origin.failure();
-<a class="jxr_linenumber" name="296" href="#296">296</a>         }
-<a class="jxr_linenumber" name="297" href="#297">297</a>         <em class="jxr_comment">// @checkstyle RedundantThrows (5 lines)</em>
-<a class="jxr_linenumber" name="298" href="#298">298</a>         @Override
-<a class="jxr_linenumber" name="299" href="#299">299</a>         <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Wallet.html">Wallet</a> wallet(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Coordinates.html">Coordinates</a> work, <strong class="jxr_keyword">final</strong> URN taker,
-<a class="jxr_linenumber" name="300" href="#300">300</a>             <strong class="jxr_keyword">final</strong> String rule) <strong class="jxr_keyword">throws</strong> Wallet.NotEnoughFundsException {
-<a class="jxr_linenumber" name="301" href="#301">301</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.origin.wallet(work, taker, rule);
-<a class="jxr_linenumber" name="302" href="#302">302</a>         }
-<a class="jxr_linenumber" name="303" href="#303">303</a>     }
-<a class="jxr_linenumber" name="304" href="#304">304</a> 
-<a class="jxr_linenumber" name="305" href="#305">305</a> }
+<a class="jxr_linenumber" name="206" href="#206">206</a>             .through(
+<a class="jxr_linenumber" name="207" href="#207">207</a>                 <strong class="jxr_keyword">new</strong> QueryValve().withAttributesToGet(
+<a class="jxr_linenumber" name="208" href="#208">208</a>                     AwsRule.FIELD_SPEC,
+<a class="jxr_linenumber" name="209" href="#209">209</a>                     AwsRule.FIELD_DRAIN,
+<a class="jxr_linenumber" name="210" href="#210">210</a>                     AwsRule.FIELD_FAILURE
+<a class="jxr_linenumber" name="211" href="#211">211</a>                 )
+<a class="jxr_linenumber" name="212" href="#212">212</a>             );
+<a class="jxr_linenumber" name="213" href="#213">213</a>     }
+<a class="jxr_linenumber" name="214" href="#214">214</a> 
+<a class="jxr_linenumber" name="215" href="#215">215</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="216" href="#216">216</a> <em class="jxr_javadoccomment">     * Marker to flush cash.</em>
+<a class="jxr_linenumber" name="217" href="#217">217</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="218" href="#218">218</a>     @Cacheable.FlushAfter
+<a class="jxr_linenumber" name="219" href="#219">219</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> flush() {
+<a class="jxr_linenumber" name="220" href="#220">220</a>         <em class="jxr_comment">// nothing todo</em>
+<a class="jxr_linenumber" name="221" href="#221">221</a>     }
+<a class="jxr_linenumber" name="222" href="#222">222</a> 
+<a class="jxr_linenumber" name="223" href="#223">223</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="224" href="#224">224</a> <em class="jxr_javadoccomment">     * Convert item to rule.</em>
+<a class="jxr_linenumber" name="225" href="#225">225</a> <em class="jxr_javadoccomment">     * @param item Item from AWS</em>
+<a class="jxr_linenumber" name="226" href="#226">226</a> <em class="jxr_javadoccomment">     * @return Rule</em>
+<a class="jxr_linenumber" name="227" href="#227">227</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="228" href="#228">228</a>     <strong class="jxr_keyword">private</strong> <a href="../../../com/rultor/spi/Rule.html">Rule</a> toRule(<strong class="jxr_keyword">final</strong> Item item) {
+<a class="jxr_linenumber" name="229" href="#229">229</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/users/AwsRules.html">CacheableRule</a>(<strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/users/AwsRule.html">AwsRule</a>(<strong class="jxr_keyword">this</strong>.client, item));
+<a class="jxr_linenumber" name="230" href="#230">230</a>     }
+<a class="jxr_linenumber" name="231" href="#231">231</a> 
+<a class="jxr_linenumber" name="232" href="#232">232</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="233" href="#233">233</a> <em class="jxr_javadoccomment">     * Rule that caches its calls.</em>
+<a class="jxr_linenumber" name="234" href="#234">234</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="235" href="#235">235</a>     @ToString
+<a class="jxr_linenumber" name="236" href="#236">236</a>     @EqualsAndHashCode(of = <span class="jxr_string">"origin"</span>)
+<a class="jxr_linenumber" name="237" href="#237">237</a>     @Loggable(Loggable.DEBUG)
+<a class="jxr_linenumber" name="238" href="#238">238</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/users/AwsRules.html">CacheableRule</a> <strong class="jxr_keyword">implements</strong> <a href="../../../com/rultor/spi/Rule.html">Rule</a> {
+<a class="jxr_linenumber" name="239" href="#239">239</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="240" href="#240">240</a> <em class="jxr_javadoccomment">         * Original rule.</em>
+<a class="jxr_linenumber" name="241" href="#241">241</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="242" href="#242">242</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> <a href="../../../com/rultor/spi/Rule.html">Rule</a> origin;
+<a class="jxr_linenumber" name="243" href="#243">243</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="244" href="#244">244</a> <em class="jxr_javadoccomment">         * Ctor.</em>
+<a class="jxr_linenumber" name="245" href="#245">245</a> <em class="jxr_javadoccomment">         * @param rule Rule to wrap</em>
+<a class="jxr_linenumber" name="246" href="#246">246</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="247" href="#247">247</a>         <strong class="jxr_keyword">protected</strong> <a href="../../../com/rultor/users/AwsRules.html">CacheableRule</a>(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Rule.html">Rule</a> rule) {
+<a class="jxr_linenumber" name="248" href="#248">248</a>             <strong class="jxr_keyword">this</strong>.origin = rule;
+<a class="jxr_linenumber" name="249" href="#249">249</a>         }
+<a class="jxr_linenumber" name="250" href="#250">250</a>         @Override
+<a class="jxr_linenumber" name="251" href="#251">251</a>         @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+<a class="jxr_linenumber" name="252" href="#252">252</a>         <strong class="jxr_keyword">public</strong> String name() {
+<a class="jxr_linenumber" name="253" href="#253">253</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.origin.name();
+<a class="jxr_linenumber" name="254" href="#254">254</a>         }
+<a class="jxr_linenumber" name="255" href="#255">255</a>         @Override
+<a class="jxr_linenumber" name="256" href="#256">256</a>         @Cacheable.FlushAfter
+<a class="jxr_linenumber" name="257" href="#257">257</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> update(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec, <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> drain) {
+<a class="jxr_linenumber" name="258" href="#258">258</a>             <strong class="jxr_keyword">this</strong>.origin.update(spec, drain);
+<a class="jxr_linenumber" name="259" href="#259">259</a>             AwsRules.<strong class="jxr_keyword">this</strong>.flush();
+<a class="jxr_linenumber" name="260" href="#260">260</a>         }
+<a class="jxr_linenumber" name="261" href="#261">261</a>         @Override
+<a class="jxr_linenumber" name="262" href="#262">262</a>         @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+<a class="jxr_linenumber" name="263" href="#263">263</a>         <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec() {
+<a class="jxr_linenumber" name="264" href="#264">264</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.origin.spec();
+<a class="jxr_linenumber" name="265" href="#265">265</a>         }
+<a class="jxr_linenumber" name="266" href="#266">266</a>         @Override
+<a class="jxr_linenumber" name="267" href="#267">267</a>         @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+<a class="jxr_linenumber" name="268" href="#268">268</a>         <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> drain() {
+<a class="jxr_linenumber" name="269" href="#269">269</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.origin.drain();
+<a class="jxr_linenumber" name="270" href="#270">270</a>         }
+<a class="jxr_linenumber" name="271" href="#271">271</a>         @Override
+<a class="jxr_linenumber" name="272" href="#272">272</a>         @Cacheable.FlushAfter
+<a class="jxr_linenumber" name="273" href="#273">273</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> failure(<strong class="jxr_keyword">final</strong> String desc) {
+<a class="jxr_linenumber" name="274" href="#274">274</a>             <strong class="jxr_keyword">this</strong>.origin.failure(desc);
+<a class="jxr_linenumber" name="275" href="#275">275</a>             AwsRules.<strong class="jxr_keyword">this</strong>.flush();
+<a class="jxr_linenumber" name="276" href="#276">276</a>         }
+<a class="jxr_linenumber" name="277" href="#277">277</a>         @Override
+<a class="jxr_linenumber" name="278" href="#278">278</a>         @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+<a class="jxr_linenumber" name="279" href="#279">279</a>         <strong class="jxr_keyword">public</strong> String failure() {
+<a class="jxr_linenumber" name="280" href="#280">280</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.origin.failure();
+<a class="jxr_linenumber" name="281" href="#281">281</a>         }
+<a class="jxr_linenumber" name="282" href="#282">282</a>         <em class="jxr_comment">// @checkstyle RedundantThrows (5 lines)</em>
+<a class="jxr_linenumber" name="283" href="#283">283</a>         @Override
+<a class="jxr_linenumber" name="284" href="#284">284</a>         <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Wallet.html">Wallet</a> wallet(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Coordinates.html">Coordinates</a> work, <strong class="jxr_keyword">final</strong> URN taker,
+<a class="jxr_linenumber" name="285" href="#285">285</a>             <strong class="jxr_keyword">final</strong> String rule) <strong class="jxr_keyword">throws</strong> Wallet.NotEnoughFundsException {
+<a class="jxr_linenumber" name="286" href="#286">286</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.origin.wallet(work, taker, rule);
+<a class="jxr_linenumber" name="287" href="#287">287</a>         }
+<a class="jxr_linenumber" name="288" href="#288">288</a>     }
+<a class="jxr_linenumber" name="289" href="#289">289</a> 
+<a class="jxr_linenumber" name="290" href="#290">290</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

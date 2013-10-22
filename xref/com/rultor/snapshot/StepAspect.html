@@ -104,7 +104,7 @@
 <a class="jxr_linenumber" name="94" href="#94">94</a>                  .xpath(<span class="jxr_string">"/snapshot"</span>).addIf(<span class="jxr_string">"steps"</span>).add(<span class="jxr_string">"step"</span>)
 <a class="jxr_linenumber" name="95" href="#95">95</a>                  .attr(<span class="jxr_string">"id"</span>, label)
 <a class="jxr_linenumber" name="96" href="#96">96</a>                  <em class="jxr_comment">// @checkstyle MultipleStringLiterals (1 line)</em>
-<a class="jxr_linenumber" name="97" href="#97">97</a>                  .attr(<span class="jxr_string">"class"</span>, method.getDeclaringClass().getCanonicalName())
+<a class="jxr_linenumber" name="97" href="#97">97</a>                  .attr(<span class="jxr_string">"class"</span>, method.getDeclaringClass().getName())
 <a class="jxr_linenumber" name="98" href="#98">98</a>                  .attr(<span class="jxr_string">"method"</span>, method.getName())
 <a class="jxr_linenumber" name="99" href="#99">99</a>                  .add(<span class="jxr_string">"start"</span>).set(<strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/tools/Time.html">Time</a>().toString()).up()
 <a class="jxr_linenumber" name="100" href="#100">100</a>                 .add(<span class="jxr_string">"summary"</span>)
@@ -116,7 +116,7 @@
 <a class="jxr_linenumber" name="106" href="#106">106</a>             <strong class="jxr_keyword">if</strong> (result != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="107" href="#107">107</a>                 args.put(<span class="jxr_string">"result"</span>, result);
 <a class="jxr_linenumber" name="108" href="#108">108</a>             }
-<a class="jxr_linenumber" name="109" href="#109">109</a>             <strong class="jxr_keyword">this</strong>.mark(label, Level.INFO);
+<a class="jxr_linenumber" name="109" href="#109">109</a>             StepAspect.mark(label, Level.INFO);
 <a class="jxr_linenumber" name="110" href="#110">110</a>             <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/snapshot/XemblyLine.html">XemblyLine</a>(
 <a class="jxr_linenumber" name="111" href="#111">111</a>                 <strong class="jxr_keyword">new</strong> Directives().xpath(
 <a class="jxr_linenumber" name="112" href="#112">112</a>                     String.format(<span class="jxr_string">"/snapshot/steps/step[@id=%s]/summary"</span>, label)
@@ -125,7 +125,7 @@
 <a class="jxr_linenumber" name="115" href="#115">115</a>             <strong class="jxr_keyword">return</strong> result;
 <a class="jxr_linenumber" name="116" href="#116">116</a>         <em class="jxr_comment">// @checkstyle IllegalCatch (1 line)</em>
 <a class="jxr_linenumber" name="117" href="#117">117</a>         } <strong class="jxr_keyword">catch</strong> (Throwable ex) {
-<a class="jxr_linenumber" name="118" href="#118">118</a>             <strong class="jxr_keyword">this</strong>.mark(label, Level.SEVERE);
+<a class="jxr_linenumber" name="118" href="#118">118</a>             StepAspect.mark(label, Level.SEVERE);
 <a class="jxr_linenumber" name="119" href="#119">119</a>             <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/snapshot/XemblyLine.html">XemblyLine</a>(
 <a class="jxr_linenumber" name="120" href="#120">120</a>                 <strong class="jxr_keyword">new</strong> Directives()
 <a class="jxr_linenumber" name="121" href="#121">121</a>                     <em class="jxr_comment">// @checkstyle MultipleStringLiterals (1 line)</em>
@@ -155,7 +155,7 @@
 <a class="jxr_linenumber" name="145" href="#145">145</a> <em class="jxr_javadoccomment">     * @param label Label of the step</em>
 <a class="jxr_linenumber" name="146" href="#146">146</a> <em class="jxr_javadoccomment">     * @param level Level to set</em>
 <a class="jxr_linenumber" name="147" href="#147">147</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="148" href="#148">148</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> mark(<strong class="jxr_keyword">final</strong> String label, <strong class="jxr_keyword">final</strong> Level level) {
+<a class="jxr_linenumber" name="148" href="#148">148</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> mark(<strong class="jxr_keyword">final</strong> String label, <strong class="jxr_keyword">final</strong> Level level) {
 <a class="jxr_linenumber" name="149" href="#149">149</a>         <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/snapshot/XemblyLine.html">XemblyLine</a>(
 <a class="jxr_linenumber" name="150" href="#150">150</a>             <strong class="jxr_keyword">new</strong> Directives()
 <a class="jxr_linenumber" name="151" href="#151">151</a>                 .xpath(String.format(<span class="jxr_string">"/snapshot/steps/step[@id=%s]"</span>, label))
@@ -170,7 +170,7 @@
 <a class="jxr_linenumber" name="160" href="#160">160</a> <em class="jxr_javadoccomment">     * @return Array of wrappers</em>
 <a class="jxr_linenumber" name="161" href="#161">161</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="162" href="#162">162</a>     @SuppressWarnings(<span class="jxr_string">"PMD.AvoidInstantiatingObjectsInLoops"</span>)
-<a class="jxr_linenumber" name="163" href="#163">163</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Object[] wrap(<strong class="jxr_keyword">final</strong> Object[] array) {
+<a class="jxr_linenumber" name="163" href="#163">163</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Object[] wrap(<strong class="jxr_keyword">final</strong> Object... array) {
 <a class="jxr_linenumber" name="164" href="#164">164</a>         <strong class="jxr_keyword">final</strong> Object[] output = <strong class="jxr_keyword">new</strong> Object[array.length];
 <a class="jxr_linenumber" name="165" href="#165">165</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> idx = 0; idx &lt; array.length; ++idx) {
 <a class="jxr_linenumber" name="166" href="#166">166</a>             output[idx] = <strong class="jxr_keyword">new</strong> StepAspect.Open(array[idx]);
@@ -194,38 +194,35 @@
 <a class="jxr_linenumber" name="184" href="#184">184</a>         <strong class="jxr_keyword">protected</strong> <a href="../../../com/rultor/snapshot/StepAspect.html">Open</a>(<strong class="jxr_keyword">final</strong> Object subj) {
 <a class="jxr_linenumber" name="185" href="#185">185</a>             <strong class="jxr_keyword">this</strong>.subject = subj;
 <a class="jxr_linenumber" name="186" href="#186">186</a>         }
-<a class="jxr_linenumber" name="187" href="#187">187</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="188" href="#188">188</a> <em class="jxr_javadoccomment">         * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="189" href="#189">189</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="190" href="#190">190</a>         @Override
-<a class="jxr_linenumber" name="191" href="#191">191</a>         <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="192" href="#192">192</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.subject.toString();
-<a class="jxr_linenumber" name="193" href="#193">193</a>         }
-<a class="jxr_linenumber" name="194" href="#194">194</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="195" href="#195">195</a> <em class="jxr_javadoccomment">         * Get property.</em>
-<a class="jxr_linenumber" name="196" href="#196">196</a> <em class="jxr_javadoccomment">         * @param name Name of it</em>
-<a class="jxr_linenumber" name="197" href="#197">197</a> <em class="jxr_javadoccomment">         * @return The object or exception if it's absent</em>
-<a class="jxr_linenumber" name="198" href="#198">198</a> <em class="jxr_javadoccomment">         * @throws Exception If fails</em>
-<a class="jxr_linenumber" name="199" href="#199">199</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="200" href="#200">200</a>         <strong class="jxr_keyword">public</strong> Object get(<strong class="jxr_keyword">final</strong> String name) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="201" href="#201">201</a>             Object value;
-<a class="jxr_linenumber" name="202" href="#202">202</a>             <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="203" href="#203">203</a>                 <strong class="jxr_keyword">final</strong> Method method = <strong class="jxr_keyword">this</strong>.subject.getClass()
-<a class="jxr_linenumber" name="204" href="#204">204</a>                     .getDeclaredMethod(name);
-<a class="jxr_linenumber" name="205" href="#205">205</a>                 method.setAccessible(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="206" href="#206">206</a>                 value = method.invoke(<strong class="jxr_keyword">this</strong>.subject);
-<a class="jxr_linenumber" name="207" href="#207">207</a>             } <strong class="jxr_keyword">catch</strong> (NoSuchMethodException ex) {
-<a class="jxr_linenumber" name="208" href="#208">208</a>                 <strong class="jxr_keyword">final</strong> Field field = <strong class="jxr_keyword">this</strong>.subject.getClass()
-<a class="jxr_linenumber" name="209" href="#209">209</a>                     .getDeclaredField(name);
-<a class="jxr_linenumber" name="210" href="#210">210</a>                 field.setAccessible(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="211" href="#211">211</a>                 value = field.get(<strong class="jxr_keyword">this</strong>.subject);
-<a class="jxr_linenumber" name="212" href="#212">212</a>             }
-<a class="jxr_linenumber" name="213" href="#213">213</a>             <strong class="jxr_keyword">return</strong> value;
-<a class="jxr_linenumber" name="214" href="#214">214</a>         }
-<a class="jxr_linenumber" name="215" href="#215">215</a>     }
-<a class="jxr_linenumber" name="216" href="#216">216</a> 
-<a class="jxr_linenumber" name="217" href="#217">217</a> }
-<a class="jxr_linenumber" name="218" href="#218">218</a> 
+<a class="jxr_linenumber" name="187" href="#187">187</a>         @Override
+<a class="jxr_linenumber" name="188" href="#188">188</a>         <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="189" href="#189">189</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.subject.toString();
+<a class="jxr_linenumber" name="190" href="#190">190</a>         }
+<a class="jxr_linenumber" name="191" href="#191">191</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="192" href="#192">192</a> <em class="jxr_javadoccomment">         * Get property.</em>
+<a class="jxr_linenumber" name="193" href="#193">193</a> <em class="jxr_javadoccomment">         * @param name Name of it</em>
+<a class="jxr_linenumber" name="194" href="#194">194</a> <em class="jxr_javadoccomment">         * @return The object or exception if it's absent</em>
+<a class="jxr_linenumber" name="195" href="#195">195</a> <em class="jxr_javadoccomment">         * @throws Exception If fails</em>
+<a class="jxr_linenumber" name="196" href="#196">196</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="197" href="#197">197</a>         <strong class="jxr_keyword">public</strong> Object get(<strong class="jxr_keyword">final</strong> String name) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="198" href="#198">198</a>             Object value;
+<a class="jxr_linenumber" name="199" href="#199">199</a>             <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="200" href="#200">200</a>                 <strong class="jxr_keyword">final</strong> Method method = <strong class="jxr_keyword">this</strong>.subject.getClass()
+<a class="jxr_linenumber" name="201" href="#201">201</a>                     .getDeclaredMethod(name);
+<a class="jxr_linenumber" name="202" href="#202">202</a>                 method.setAccessible(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="203" href="#203">203</a>                 value = method.invoke(<strong class="jxr_keyword">this</strong>.subject);
+<a class="jxr_linenumber" name="204" href="#204">204</a>             } <strong class="jxr_keyword">catch</strong> (NoSuchMethodException ex) {
+<a class="jxr_linenumber" name="205" href="#205">205</a>                 <strong class="jxr_keyword">final</strong> Field field = <strong class="jxr_keyword">this</strong>.subject.getClass()
+<a class="jxr_linenumber" name="206" href="#206">206</a>                     .getDeclaredField(name);
+<a class="jxr_linenumber" name="207" href="#207">207</a>                 field.setAccessible(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="208" href="#208">208</a>                 value = field.get(<strong class="jxr_keyword">this</strong>.subject);
+<a class="jxr_linenumber" name="209" href="#209">209</a>             }
+<a class="jxr_linenumber" name="210" href="#210">210</a>             <strong class="jxr_keyword">return</strong> value;
+<a class="jxr_linenumber" name="211" href="#211">211</a>         }
+<a class="jxr_linenumber" name="212" href="#212">212</a>     }
+<a class="jxr_linenumber" name="213" href="#213">213</a> 
+<a class="jxr_linenumber" name="214" href="#214">214</a> }
+<a class="jxr_linenumber" name="215" href="#215">215</a> 
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

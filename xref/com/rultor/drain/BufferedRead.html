@@ -131,118 +131,106 @@
 <a class="jxr_linenumber" name="121" href="#121">121</a>         <strong class="jxr_keyword">this</strong>.origin = drain;
 <a class="jxr_linenumber" name="122" href="#122">122</a>     }
 <a class="jxr_linenumber" name="123" href="#123">123</a> 
-<a class="jxr_linenumber" name="124" href="#124">124</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="125" href="#125">125</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="126" href="#126">126</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="127" href="#127">127</a>     @Override
-<a class="jxr_linenumber" name="128" href="#128">128</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> close() {
-<a class="jxr_linenumber" name="129" href="#129">129</a>         BufferedRead.CLEANER.run();
-<a class="jxr_linenumber" name="130" href="#130">130</a>     }
-<a class="jxr_linenumber" name="131" href="#131">131</a> 
-<a class="jxr_linenumber" name="132" href="#132">132</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="133" href="#133">133</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="134" href="#134">134</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="135" href="#135">135</a>     @Override
-<a class="jxr_linenumber" name="136" href="#136">136</a>     <strong class="jxr_keyword">public</strong> Pageable&lt;Time, Time&gt; pulses() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="137" href="#137">137</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.origin.pulses();
+<a class="jxr_linenumber" name="124" href="#124">124</a>     @Override
+<a class="jxr_linenumber" name="125" href="#125">125</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> close() {
+<a class="jxr_linenumber" name="126" href="#126">126</a>         BufferedRead.CLEANER.run();
+<a class="jxr_linenumber" name="127" href="#127">127</a>     }
+<a class="jxr_linenumber" name="128" href="#128">128</a> 
+<a class="jxr_linenumber" name="129" href="#129">129</a>     @Override
+<a class="jxr_linenumber" name="130" href="#130">130</a>     <strong class="jxr_keyword">public</strong> Pageable&lt;Time, Time&gt; pulses() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="131" href="#131">131</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.origin.pulses();
+<a class="jxr_linenumber" name="132" href="#132">132</a>     }
+<a class="jxr_linenumber" name="133" href="#133">133</a> 
+<a class="jxr_linenumber" name="134" href="#134">134</a>     @Override
+<a class="jxr_linenumber" name="135" href="#135">135</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> append(<strong class="jxr_keyword">final</strong> Iterable&lt;String&gt; lines) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="136" href="#136">136</a>         <strong class="jxr_keyword">this</strong>.origin.append(lines);
+<a class="jxr_linenumber" name="137" href="#137">137</a>         BufferedRead.BUFFERS.remove(<strong class="jxr_keyword">this</strong>);
 <a class="jxr_linenumber" name="138" href="#138">138</a>     }
 <a class="jxr_linenumber" name="139" href="#139">139</a> 
-<a class="jxr_linenumber" name="140" href="#140">140</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="141" href="#141">141</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="142" href="#142">142</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="143" href="#143">143</a>     @Override
-<a class="jxr_linenumber" name="144" href="#144">144</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> append(<strong class="jxr_keyword">final</strong> Iterable&lt;String&gt; lines) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="145" href="#145">145</a>         <strong class="jxr_keyword">this</strong>.origin.append(lines);
-<a class="jxr_linenumber" name="146" href="#146">146</a>         BufferedRead.BUFFERS.remove(<strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="147" href="#147">147</a>     }
-<a class="jxr_linenumber" name="148" href="#148">148</a> 
-<a class="jxr_linenumber" name="149" href="#149">149</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="150" href="#150">150</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="151" href="#151">151</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="152" href="#152">152</a>     @Override
-<a class="jxr_linenumber" name="153" href="#153">153</a>     <strong class="jxr_keyword">public</strong> InputStream read() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="154" href="#154">154</a>         <strong class="jxr_keyword">final</strong> BufferedRead.Buffer buffer;
-<a class="jxr_linenumber" name="155" href="#155">155</a>         <strong class="jxr_keyword">synchronized</strong> (BufferedRead.BUFFERS) {
-<a class="jxr_linenumber" name="156" href="#156">156</a>             <strong class="jxr_keyword">if</strong> (!BufferedRead.BUFFERS.containsKey(<strong class="jxr_keyword">this</strong>)) {
-<a class="jxr_linenumber" name="157" href="#157">157</a>                 BufferedRead.BUFFERS.put(
-<a class="jxr_linenumber" name="158" href="#158">158</a>                     <strong class="jxr_keyword">this</strong>,
-<a class="jxr_linenumber" name="159" href="#159">159</a>                     <strong class="jxr_keyword">new</strong> BufferedRead.Buffer()
-<a class="jxr_linenumber" name="160" href="#160">160</a>                 );
-<a class="jxr_linenumber" name="161" href="#161">161</a>             }
-<a class="jxr_linenumber" name="162" href="#162">162</a>             buffer = BufferedRead.BUFFERS.get(<strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="163" href="#163">163</a>         }
-<a class="jxr_linenumber" name="164" href="#164">164</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> SequenceInputStream(
-<a class="jxr_linenumber" name="165" href="#165">165</a>             IOUtils.toInputStream(
-<a class="jxr_linenumber" name="166" href="#166">166</a>                 Logger.format(
-<a class="jxr_linenumber" name="167" href="#167">167</a>                     <span class="jxr_string">"BufferedRead: lifetime=%[ms]s, work='%s'\n"</span>,
-<a class="jxr_linenumber" name="168" href="#168">168</a>                     <strong class="jxr_keyword">this</strong>.lifetime, <strong class="jxr_keyword">this</strong>.work
-<a class="jxr_linenumber" name="169" href="#169">169</a>                 )
-<a class="jxr_linenumber" name="170" href="#170">170</a>             ),
-<a class="jxr_linenumber" name="171" href="#171">171</a>             buffer.stream()
-<a class="jxr_linenumber" name="172" href="#172">172</a>         );
-<a class="jxr_linenumber" name="173" href="#173">173</a>     }
-<a class="jxr_linenumber" name="174" href="#174">174</a> 
-<a class="jxr_linenumber" name="175" href="#175">175</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="176" href="#176">176</a> <em class="jxr_javadoccomment">     * Thread-safe buffer to the real drain.</em>
-<a class="jxr_linenumber" name="177" href="#177">177</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="178" href="#178">178</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/drain/Temporary.html">Buffer</a> {
-<a class="jxr_linenumber" name="179" href="#179">179</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="180" href="#180">180</a> <em class="jxr_javadoccomment">         * When was is scheduled.</em>
-<a class="jxr_linenumber" name="181" href="#181">181</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="182" href="#182">182</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> <strong class="jxr_keyword">long</strong> start = System.currentTimeMillis();
-<a class="jxr_linenumber" name="183" href="#183">183</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="184" href="#184">184</a> <em class="jxr_javadoccomment">         * Buffered data.</em>
-<a class="jxr_linenumber" name="185" href="#185">185</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="186" href="#186">186</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> byte[] data;
-<a class="jxr_linenumber" name="187" href="#187">187</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="188" href="#188">188</a> <em class="jxr_javadoccomment">         * Public ctor.</em>
-<a class="jxr_linenumber" name="189" href="#189">189</a> <em class="jxr_javadoccomment">         * @throws IOException If some error with the stream</em>
-<a class="jxr_linenumber" name="190" href="#190">190</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="191" href="#191">191</a>         <strong class="jxr_keyword">protected</strong> <a href="../../../com/rultor/drain/Temporary.html">Buffer</a>() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="192" href="#192">192</a>             <strong class="jxr_keyword">final</strong> ByteArrayOutputStream baos = <strong class="jxr_keyword">new</strong> ByteArrayOutputStream();
-<a class="jxr_linenumber" name="193" href="#193">193</a>             IOUtils.copyLarge(BufferedRead.<strong class="jxr_keyword">this</strong>.origin.read(), baos);
-<a class="jxr_linenumber" name="194" href="#194">194</a>             <strong class="jxr_keyword">this</strong>.data = baos.toByteArray();
-<a class="jxr_linenumber" name="195" href="#195">195</a>         }
-<a class="jxr_linenumber" name="196" href="#196">196</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="197" href="#197">197</a> <em class="jxr_javadoccomment">         * Read it as a stream.</em>
-<a class="jxr_linenumber" name="198" href="#198">198</a> <em class="jxr_javadoccomment">         * @return Stream</em>
-<a class="jxr_linenumber" name="199" href="#199">199</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="200" href="#200">200</a>         <strong class="jxr_keyword">public</strong> InputStream stream() {
-<a class="jxr_linenumber" name="201" href="#201">201</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> ByteArrayInputStream(<strong class="jxr_keyword">this</strong>.data);
-<a class="jxr_linenumber" name="202" href="#202">202</a>         }
-<a class="jxr_linenumber" name="203" href="#203">203</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="204" href="#204">204</a> <em class="jxr_javadoccomment">         * Is it too old?</em>
-<a class="jxr_linenumber" name="205" href="#205">205</a> <em class="jxr_javadoccomment">         * @return TRUE if it is too old</em>
-<a class="jxr_linenumber" name="206" href="#206">206</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="207" href="#207">207</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> expired() {
-<a class="jxr_linenumber" name="208" href="#208">208</a>             <strong class="jxr_keyword">return</strong> System.currentTimeMillis() - <strong class="jxr_keyword">this</strong>.start
-<a class="jxr_linenumber" name="209" href="#209">209</a>                 &gt; BufferedRead.<strong class="jxr_keyword">this</strong>.lifetime;
-<a class="jxr_linenumber" name="210" href="#210">210</a>         }
-<a class="jxr_linenumber" name="211" href="#211">211</a>     }
-<a class="jxr_linenumber" name="212" href="#212">212</a> 
-<a class="jxr_linenumber" name="213" href="#213">213</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="214" href="#214">214</a> <em class="jxr_javadoccomment">     * Flush.</em>
-<a class="jxr_linenumber" name="215" href="#215">215</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="216" href="#216">216</a>     @ToString
-<a class="jxr_linenumber" name="217" href="#217">217</a>     @Immutable
-<a class="jxr_linenumber" name="218" href="#218">218</a>     @EqualsAndHashCode
-<a class="jxr_linenumber" name="219" href="#219">219</a>     @ScheduleWithFixedDelay(
-<a class="jxr_linenumber" name="220" href="#220">220</a>         delay = 1, unit = TimeUnit.SECONDS,
-<a class="jxr_linenumber" name="221" href="#221">221</a>         await = 1, awaitUnit = TimeUnit.MINUTES,
-<a class="jxr_linenumber" name="222" href="#222">222</a>         shutdownAttempts = Tv.FIVE
-<a class="jxr_linenumber" name="223" href="#223">223</a>     )
-<a class="jxr_linenumber" name="224" href="#224">224</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/drain/Temporary.html">Cleaner</a> <strong class="jxr_keyword">implements</strong> Runnable {
-<a class="jxr_linenumber" name="225" href="#225">225</a>         @Override
-<a class="jxr_linenumber" name="226" href="#226">226</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> run() {
-<a class="jxr_linenumber" name="227" href="#227">227</a>             <strong class="jxr_keyword">for</strong> (BufferedRead client : BufferedRead.BUFFERS.keySet()) {
-<a class="jxr_linenumber" name="228" href="#228">228</a>                 <strong class="jxr_keyword">if</strong> (BufferedRead.BUFFERS.get(client).expired()) {
-<a class="jxr_linenumber" name="229" href="#229">229</a>                     BufferedRead.BUFFERS.remove(client);
-<a class="jxr_linenumber" name="230" href="#230">230</a>                 }
-<a class="jxr_linenumber" name="231" href="#231">231</a>             }
-<a class="jxr_linenumber" name="232" href="#232">232</a>         }
-<a class="jxr_linenumber" name="233" href="#233">233</a>     }
-<a class="jxr_linenumber" name="234" href="#234">234</a> 
-<a class="jxr_linenumber" name="235" href="#235">235</a> }
+<a class="jxr_linenumber" name="140" href="#140">140</a>     @Override
+<a class="jxr_linenumber" name="141" href="#141">141</a>     <strong class="jxr_keyword">public</strong> InputStream read() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="142" href="#142">142</a>         <strong class="jxr_keyword">final</strong> BufferedRead.Buffer buffer;
+<a class="jxr_linenumber" name="143" href="#143">143</a>         <strong class="jxr_keyword">synchronized</strong> (BufferedRead.BUFFERS) {
+<a class="jxr_linenumber" name="144" href="#144">144</a>             <strong class="jxr_keyword">if</strong> (!BufferedRead.BUFFERS.containsKey(<strong class="jxr_keyword">this</strong>)) {
+<a class="jxr_linenumber" name="145" href="#145">145</a>                 BufferedRead.BUFFERS.put(
+<a class="jxr_linenumber" name="146" href="#146">146</a>                     <strong class="jxr_keyword">this</strong>,
+<a class="jxr_linenumber" name="147" href="#147">147</a>                     <strong class="jxr_keyword">new</strong> BufferedRead.Buffer()
+<a class="jxr_linenumber" name="148" href="#148">148</a>                 );
+<a class="jxr_linenumber" name="149" href="#149">149</a>             }
+<a class="jxr_linenumber" name="150" href="#150">150</a>             buffer = BufferedRead.BUFFERS.get(<strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="151" href="#151">151</a>         }
+<a class="jxr_linenumber" name="152" href="#152">152</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> SequenceInputStream(
+<a class="jxr_linenumber" name="153" href="#153">153</a>             IOUtils.toInputStream(
+<a class="jxr_linenumber" name="154" href="#154">154</a>                 Logger.format(
+<a class="jxr_linenumber" name="155" href="#155">155</a>                     <span class="jxr_string">"BufferedRead: lifetime=%[ms]s, work='%s'\n"</span>,
+<a class="jxr_linenumber" name="156" href="#156">156</a>                     <strong class="jxr_keyword">this</strong>.lifetime, <strong class="jxr_keyword">this</strong>.work
+<a class="jxr_linenumber" name="157" href="#157">157</a>                 )
+<a class="jxr_linenumber" name="158" href="#158">158</a>             ),
+<a class="jxr_linenumber" name="159" href="#159">159</a>             buffer.stream()
+<a class="jxr_linenumber" name="160" href="#160">160</a>         );
+<a class="jxr_linenumber" name="161" href="#161">161</a>     }
+<a class="jxr_linenumber" name="162" href="#162">162</a> 
+<a class="jxr_linenumber" name="163" href="#163">163</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="164" href="#164">164</a> <em class="jxr_javadoccomment">     * Thread-safe buffer to the real drain.</em>
+<a class="jxr_linenumber" name="165" href="#165">165</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="166" href="#166">166</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/drain/Temporary.html">Buffer</a> {
+<a class="jxr_linenumber" name="167" href="#167">167</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="168" href="#168">168</a> <em class="jxr_javadoccomment">         * When was is scheduled.</em>
+<a class="jxr_linenumber" name="169" href="#169">169</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="170" href="#170">170</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> <strong class="jxr_keyword">long</strong> start = System.currentTimeMillis();
+<a class="jxr_linenumber" name="171" href="#171">171</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="172" href="#172">172</a> <em class="jxr_javadoccomment">         * Buffered data.</em>
+<a class="jxr_linenumber" name="173" href="#173">173</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="174" href="#174">174</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> byte[] data;
+<a class="jxr_linenumber" name="175" href="#175">175</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="176" href="#176">176</a> <em class="jxr_javadoccomment">         * Public ctor.</em>
+<a class="jxr_linenumber" name="177" href="#177">177</a> <em class="jxr_javadoccomment">         * @throws IOException If some error with the stream</em>
+<a class="jxr_linenumber" name="178" href="#178">178</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="179" href="#179">179</a>         <strong class="jxr_keyword">protected</strong> <a href="../../../com/rultor/drain/Temporary.html">Buffer</a>() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="180" href="#180">180</a>             <strong class="jxr_keyword">final</strong> ByteArrayOutputStream baos = <strong class="jxr_keyword">new</strong> ByteArrayOutputStream();
+<a class="jxr_linenumber" name="181" href="#181">181</a>             IOUtils.copyLarge(BufferedRead.<strong class="jxr_keyword">this</strong>.origin.read(), baos);
+<a class="jxr_linenumber" name="182" href="#182">182</a>             <strong class="jxr_keyword">this</strong>.data = baos.toByteArray();
+<a class="jxr_linenumber" name="183" href="#183">183</a>         }
+<a class="jxr_linenumber" name="184" href="#184">184</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="185" href="#185">185</a> <em class="jxr_javadoccomment">         * Read it as a stream.</em>
+<a class="jxr_linenumber" name="186" href="#186">186</a> <em class="jxr_javadoccomment">         * @return Stream</em>
+<a class="jxr_linenumber" name="187" href="#187">187</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="188" href="#188">188</a>         <strong class="jxr_keyword">public</strong> InputStream stream() {
+<a class="jxr_linenumber" name="189" href="#189">189</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> ByteArrayInputStream(<strong class="jxr_keyword">this</strong>.data);
+<a class="jxr_linenumber" name="190" href="#190">190</a>         }
+<a class="jxr_linenumber" name="191" href="#191">191</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="192" href="#192">192</a> <em class="jxr_javadoccomment">         * Is it too old?</em>
+<a class="jxr_linenumber" name="193" href="#193">193</a> <em class="jxr_javadoccomment">         * @return TRUE if it is too old</em>
+<a class="jxr_linenumber" name="194" href="#194">194</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="195" href="#195">195</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> expired() {
+<a class="jxr_linenumber" name="196" href="#196">196</a>             <strong class="jxr_keyword">return</strong> System.currentTimeMillis() - <strong class="jxr_keyword">this</strong>.start
+<a class="jxr_linenumber" name="197" href="#197">197</a>                 &gt; BufferedRead.<strong class="jxr_keyword">this</strong>.lifetime;
+<a class="jxr_linenumber" name="198" href="#198">198</a>         }
+<a class="jxr_linenumber" name="199" href="#199">199</a>     }
+<a class="jxr_linenumber" name="200" href="#200">200</a> 
+<a class="jxr_linenumber" name="201" href="#201">201</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="202" href="#202">202</a> <em class="jxr_javadoccomment">     * Flush.</em>
+<a class="jxr_linenumber" name="203" href="#203">203</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="204" href="#204">204</a>     @ToString
+<a class="jxr_linenumber" name="205" href="#205">205</a>     @Immutable
+<a class="jxr_linenumber" name="206" href="#206">206</a>     @EqualsAndHashCode
+<a class="jxr_linenumber" name="207" href="#207">207</a>     @ScheduleWithFixedDelay(
+<a class="jxr_linenumber" name="208" href="#208">208</a>         delay = 1, unit = TimeUnit.SECONDS,
+<a class="jxr_linenumber" name="209" href="#209">209</a>         await = 1, awaitUnit = TimeUnit.MINUTES,
+<a class="jxr_linenumber" name="210" href="#210">210</a>         shutdownAttempts = Tv.FIVE
+<a class="jxr_linenumber" name="211" href="#211">211</a>     )
+<a class="jxr_linenumber" name="212" href="#212">212</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/drain/Temporary.html">Cleaner</a> <strong class="jxr_keyword">implements</strong> Runnable {
+<a class="jxr_linenumber" name="213" href="#213">213</a>         @Override
+<a class="jxr_linenumber" name="214" href="#214">214</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> run() {
+<a class="jxr_linenumber" name="215" href="#215">215</a>             <strong class="jxr_keyword">for</strong> (BufferedRead client : BufferedRead.BUFFERS.keySet()) {
+<a class="jxr_linenumber" name="216" href="#216">216</a>                 <strong class="jxr_keyword">if</strong> (BufferedRead.BUFFERS.get(client).expired()) {
+<a class="jxr_linenumber" name="217" href="#217">217</a>                     BufferedRead.BUFFERS.remove(client);
+<a class="jxr_linenumber" name="218" href="#218">218</a>                 }
+<a class="jxr_linenumber" name="219" href="#219">219</a>             }
+<a class="jxr_linenumber" name="220" href="#220">220</a>         }
+<a class="jxr_linenumber" name="221" href="#221">221</a>     }
+<a class="jxr_linenumber" name="222" href="#222">222</a> 
+<a class="jxr_linenumber" name="223" href="#223">223</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
