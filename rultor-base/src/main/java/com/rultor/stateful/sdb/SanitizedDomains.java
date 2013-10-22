@@ -111,23 +111,34 @@ public final class SanitizedDomains implements Region {
                 return new Iterable<Item>() {
                     @Override
                     public Iterator<Item> iterator() {
-                        final Iterable<Item> iterable = domain.select(request);
-                        Iterators.removeIf(
-                            iterable.iterator(),
+                        return Iterators.filter(
+                            domain.select(request).iterator(),
                             new Predicate<Item>() {
                                 @Override
                                 public boolean apply(final Item item) {
-                                    return TimeUnit.MILLISECONDS.toMinutes(
-                                        System.currentTimeMillis()
-                                        - new Time(item.get("time")).millis()
-                                    ) > SanitizedDomains.this.limit;
+                                    final boolean good =
+                                        SanitizedDomains.this.good(item);
+                                    if (!good) {
+                                        item.clear();
+                                    }
+                                    return good;
                                 }
                             }
                         );
-                        return iterable.iterator();
                     }
                 };
             }
         };
+    }
+
+    /**
+     * Checks if item is not too old.
+     * @param item Item to check
+     * @return True if item is good
+     */
+    private boolean good(final Item item) {
+        return TimeUnit.MILLISECONDS.toMinutes(
+            System.currentTimeMillis() - new Time(item.get("time")).millis()
+        ) < SanitizedDomains.this.limit;
     }
 }

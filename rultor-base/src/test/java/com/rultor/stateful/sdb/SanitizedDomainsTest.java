@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -62,14 +63,15 @@ public final class SanitizedDomainsTest {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void filtersOldItems() {
         final Domain dmn = Mockito.mock(Domain.class);
-        final Iterable<Item> list = new ArrayList<Item>(
+        final Set<String> cleared = new HashSet<String>();
+        final List<Item> list = new ArrayList<Item>(
             Arrays.asList(
                 // @checkstyle MultipleStringLiterals (6 lines)
                 // @checkstyle MagicNumberCheck (5 lines)
-                this.create("item1", 2000),
-                this.create("item2", 3000),
-                this.create("item3", 1000),
-                this.create("item4", 2500)
+                this.create("item1", 2000, cleared),
+                this.create("item2", 3000, cleared),
+                this.create("item3", 1000, cleared),
+                this.create("item4", 2500, cleared)
             )
         );
         Mockito.when(dmn.select(Mockito.any(SelectRequest.class)))
@@ -89,15 +91,27 @@ public final class SanitizedDomainsTest {
                 Matchers.hasItems("item1", "item3")
             )
         );
+        MatcherAssert.assertThat(
+            cleared,
+            Matchers.<Set<String>>allOf(
+                Matchers.hasSize(2),
+                Matchers.hasItems("item2", "item4")
+            )
+        );
     }
 
     /**
      * Create the item with given name and age.
+     *
      * @param name The name of item
      * @param age The age of item in minutes
+     * @param cleared List of cleared items
      * @return Wrapped one
      */
-    private Item create(final String name, final long age) {
+    private Item create(
+        final String name,
+        final long age,
+        final Set<String> cleared) {
         // @checkstyle AnonInnerLength (60 lines)
         return new Item() {
             @Override
@@ -141,7 +155,7 @@ public final class SanitizedDomainsTest {
             }
             @Override
             public void clear() {
-                throw new UnsupportedOperationException();
+                cleared.add(name);
             }
             @Override
             public Set<String> keySet() {
