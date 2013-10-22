@@ -30,6 +30,7 @@
 package com.rultor.tools;
 
 import com.google.common.collect.ImmutableMap;
+import org.apache.velocity.exception.VelocityException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -57,4 +58,21 @@ public final class VextTest {
         );
     }
 
+    /**
+     * Vext#print throws informative exceptions.
+     */
+    @Test
+    public void printThrowsInformativeExceptions() {
+        final String text = "#a(-+uuu)";
+        try {
+            new Vext(text).print(
+                new ImmutableMap.Builder<String, Object>().build()
+            );
+        } catch (VelocityException ex) {
+            MatcherAssert.assertThat(
+                ex.getMessage(),
+                Matchers.containsString(text)
+            );
+        }
+    }
 }
