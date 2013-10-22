@@ -90,7 +90,7 @@ public final class Provisioned implements Shells {
     @ToString
     @EqualsAndHashCode(of = {"shell", "script" })
     @Loggable(Loggable.DEBUG)
-    public static final class ProvisionedShell implements Shell {
+    private static final class ProvisionedShell implements Shell {
 
         /**
          * Underlying shell.

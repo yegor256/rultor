@@ -31,11 +31,13 @@ package com.rultor.shell.bash;
 
 import com.google.common.io.Files;
 import com.rultor.shell.ShellMocker;
+import com.rultor.shell.Shells;
 import java.io.File;
 import org.apache.commons.io.FileUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link com.rultor.shell.bash.S3CmdPut}.
@@ -59,11 +61,10 @@ public final class S3CmdPutTest {
             "AAAAAAAAAAAAAAAAAAAA",
             "30KFuodpOPX07QIaO4+QoLdTR5/MW/FN5qUDqxs="
         );
+        final Shells shells = Mockito.mock(Shells.class);
+        Mockito.when(shells.acquire()).thenReturn(new ShellMocker.Bash(dir));
         cmd.exec(
-            new Provisioned.ProvisionedShell(
-                "PATH=.:$PATH && chmod +x s3cmd",
-                new ShellMocker.Bash(dir)
-            )
+            new Provisioned("PATH=.:$PATH && chmod +x s3cmd", shells).acquire()
         );
     }
 
@@ -81,11 +82,10 @@ public final class S3CmdPutTest {
             "30KFuodpOPX07QIaO4+QoLdTR5/MW/FN5qUDqxsL",
             "text/html", "utf-8"
         );
+        final Shells shells = Mockito.mock(Shells.class);
+        Mockito.when(shells.acquire()).thenReturn(new ShellMocker.Bash(dir));
         cmd.exec(
-            new Provisioned.ProvisionedShell(
-                "PATH=.:$PATH && chmod +x s3cmd",
-                new ShellMocker.Bash(dir)
-            )
+            new Provisioned("PATH=.:$PATH && chmod +x s3cmd", shells).acquire()
         );
         MatcherAssert.assertThat(
             FileUtils.readFileToString(new File(dir, "stdout")),
@@ -108,11 +108,10 @@ public final class S3CmdPutTest {
             "cQTLve84UnNzYyo848o1oVkIX7RhOFimeQoM7vJl",
             "text/plain", "win-1252"
         );
+        final Shells shells = Mockito.mock(Shells.class);
+        Mockito.when(shells.acquire()).thenReturn(new ShellMocker.Bash(dir));
         cmd.exec(
-            new Provisioned.ProvisionedShell(
-                "PATH=.:$PATH && chmod +x s3cmd",
-                new ShellMocker.Bash(dir)
-            )
+            new Provisioned("PATH=.:$PATH && chmod +x s3cmd", shells).acquire()
         );
         MatcherAssert.assertThat(
             FileUtils.readFileToString(new File(dir, "stdout")),

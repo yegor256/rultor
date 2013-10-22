@@ -32,10 +32,12 @@ package com.rultor.shell.bash;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
 import com.rultor.shell.ShellMocker;
+import com.rultor.shell.Shells;
 import com.rultor.spi.Coordinates;
 import java.io.File;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link S3CmdRelics}.
@@ -52,6 +54,8 @@ public final class S3CmdRelicsTest {
     public void skipsWhenFileNotFound() throws Exception {
         final File dir = Files.createTempDir();
         FileUtils.write(new File(dir, "s3cmd"), "echo $@ > cmd");
+        final Shells shells = Mockito.mock(Shells.class);
+        Mockito.when(shells.acquire()).thenReturn(new ShellMocker.Bash(dir));
         new S3CmdRelics(
             new Coordinates.Simple(),
             new ImmutableMap.Builder<String, String>()
@@ -60,10 +64,7 @@ public final class S3CmdRelicsTest {
             "AAAAAAAAAAAAAAAAAAEE",
             "30KFuodpOPX07QIaO4+QoLdTR5/MW/FN5qUDqxsL"
         ).exec(
-            new Provisioned.ProvisionedShell(
-                "PATH=.:$PATH && chmod +x s3cmd",
-                new ShellMocker.Bash(dir)
-            )
+            new Provisioned("PATH=.:$PATH && chmod +x s3cmd", shells).acquire()
         );
     }
 
