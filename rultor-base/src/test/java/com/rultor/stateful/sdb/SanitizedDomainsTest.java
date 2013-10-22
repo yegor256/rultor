@@ -34,11 +34,14 @@ import com.amazonaws.services.simpledb.model.SelectRequest;
 import com.jcabi.simpledb.Domain;
 import com.jcabi.simpledb.Item;
 import com.jcabi.simpledb.Region;
+import com.rultor.tools.Time;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -59,20 +62,22 @@ public final class SanitizedDomainsTest {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void filtersOldItems() {
         final Domain dmn = Mockito.mock(Domain.class);
+        final Iterable<Item> list = new ArrayList<Item>(
+            Arrays.asList(
+                // @checkstyle MultipleStringLiterals (6 lines)
+                // @checkstyle MagicNumberCheck (5 lines)
+                this.create("item1", 2000),
+                this.create("item2", 3000),
+                this.create("item3", 1000),
+                this.create("item4", 2500)
+            )
+        );
         Mockito.when(dmn.select(Mockito.any(SelectRequest.class)))
-            .thenReturn(
-                Arrays.asList(
-                    // @checkstyle MultipleStringLiterals (3 line)
-                    create("item1", "2000"),
-                    create("item2", "3000"),
-                    create("item3", "1000"),
-                    create("item4", "2500")
-                )
-            );
+            .thenReturn(list);
         final Region region = Mockito.mock(Region.class);
         Mockito.when(region.domain(Mockito.any(String.class))).thenReturn(dmn);
         final Set<String> set = new HashSet<String>();
-        // @checkstyle MagicNumberCheck (1 lines)
+        // @checkstyle MagicNumberCheck (1 line)
         for (Item item : new SanitizedDomains(region, 2300).domain("")
             .select(new SelectRequest())) {
             set.add(item.name());
@@ -87,12 +92,12 @@ public final class SanitizedDomainsTest {
     }
 
     /**
-     * Create the item with given name and time.
+     * Create the item with given name and age.
      * @param name The name of item
-     * @param time The time of item
+     * @param age The age of item in minutes
      * @return Wrapped one
      */
-    private Item create(final String name, final String time) {
+    private Item create(final String name, final long age) {
         // @checkstyle AnonInnerLength (60 lines)
         return new Item() {
             @Override
@@ -117,7 +122,9 @@ public final class SanitizedDomainsTest {
             }
             @Override
             public String get(final Object key) {
-                return time;
+                return new Time(
+                    System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(age)
+                ).toString();
             }
             @Override
             public String put(final String key, final String value) {

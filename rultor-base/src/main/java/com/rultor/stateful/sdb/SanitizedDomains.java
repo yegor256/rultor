@@ -38,7 +38,9 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.simpledb.Domain;
 import com.jcabi.simpledb.Item;
 import com.jcabi.simpledb.Region;
+import com.rultor.tools.Time;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -58,7 +60,7 @@ import lombok.ToString;
 public final class SanitizedDomains implements Region {
 
     /**
-     * Wallet to charge.
+     * Max age of item in underlying region domain's items.
      */
     private final transient long limit;
 
@@ -70,7 +72,7 @@ public final class SanitizedDomains implements Region {
     /**
      * Public ctor.
      * @param region Origin region
-     * @param lmt Limit of item's age
+     * @param lmt Max age of item in underlying region domain's items, minutes
      */
     public SanitizedDomains(
         @NotNull(message = "region can't be NULL") final Region region,
@@ -109,16 +111,20 @@ public final class SanitizedDomains implements Region {
                 return new Iterable<Item>() {
                     @Override
                     public Iterator<Item> iterator() {
-                        return Iterators.filter(
-                            domain.select(request).iterator(),
+                        final Iterable<Item> iterable = domain.select(request);
+                        Iterators.removeIf(
+                            iterable.iterator(),
                             new Predicate<Item>() {
                                 @Override
                                 public boolean apply(final Item item) {
-                                    return Long.parseLong(item.get("time"))
-                                        < SanitizedDomains.this.limit;
+                                    return TimeUnit.MILLISECONDS.toMinutes(
+                                        System.currentTimeMillis()
+                                        - new Time(item.get("time")).millis()
+                                    ) > SanitizedDomains.this.limit;
                                 }
                             }
                         );
+                        return iterable.iterator();
                     }
                 };
             }
