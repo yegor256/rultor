@@ -217,7 +217,7 @@ final class AwsRules implements Rules {
      */
     @Cacheable.FlushAfter
     private void flush() {
-        // nothing todo
+        // nothing to do here
     }
 
     /**

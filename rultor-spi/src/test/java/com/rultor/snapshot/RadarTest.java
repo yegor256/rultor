@@ -27,24 +27,36 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.client;
+package com.rultor.snapshot;
 
+import com.rexsl.test.XhtmlMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.Test;
+import org.xembly.Directives;
 
 /**
- * Test case for {@link RestPulse}.
+ * Test case for {@link Radar}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class RestPulseTest {
+public final class RadarTest {
 
     /**
-     * RestPulse can work.
+     * Radar can process xembly lines and build snapshots.
      * @throws Exception If some problem inside
      */
     @Test
-    public void works() throws Exception {
-        // implement it later
+    public void consumesXemblyLinesAndBuildsSnapshot() throws Exception {
+        final Radar radar = new Radar();
+        radar.append(
+            new XemblyLine(
+                new Directives().add("test").set("hello")
+            ).toString()
+        );
+        MatcherAssert.assertThat(
+            radar.snapshot().xml(),
+            XhtmlMatchers.hasXPath("/snapshot/test[.='hello']")
+        );
     }
 
 }
