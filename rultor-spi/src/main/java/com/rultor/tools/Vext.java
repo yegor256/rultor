@@ -40,6 +40,8 @@ import org.apache.commons.lang3.Validate;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
+import org.apache.velocity.exception.ParseErrorException;
+import org.apache.velocity.exception.VelocityException;
 import org.apache.velocity.runtime.RuntimeConstants;
 
 /**
@@ -103,11 +105,22 @@ public final class Vext {
             "org.apache.velocity"
         );
         engine.init();
-        final boolean success = engine.evaluate(
-            context, writer,
-            this.getClass().getName(), this.template
-        );
-        Validate.isTrue(success, "failed to compile VTL");
+        try {
+            final boolean success = engine.evaluate(
+                context, writer,
+                this.getClass().getName(), this.template
+            );
+            Validate.isTrue(success, "failed to compile VTL");
+        } catch (ParseErrorException ex) {
+            throw new VelocityException(
+                String.format(
+                    "Invalid template: %s. %s",
+                    this.template,
+                    ex.getMessage()
+                ),
+                ex
+            );
+        }
         return writer.toString();
     }
 
