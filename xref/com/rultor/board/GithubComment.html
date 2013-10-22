@@ -43,18 +43,18 @@
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Loggable;
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rultor.guard.github.Github;
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.snapshot.Radar;
-<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Tag;
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Tags;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
-<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> java.net.URI;
-<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> javax.validation.constraints.NotNull;
-<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
-<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> lombok.ToString;
-<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> org.eclipse.egit.github.core.CommitComment;
-<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> org.eclipse.egit.github.core.client.GitHubClient;
-<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> org.eclipse.egit.github.core.service.CommitService;
-<a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> org.xembly.ImpossibleModificationException;
-<a class="jxr_linenumber" name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> org.xembly.XemblySyntaxException;
+<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.snapshot.XemblyException;
+<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Tag;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Tags;
+<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> java.net.URI;
+<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> javax.validation.constraints.NotNull;
+<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
+<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> lombok.ToString;
+<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> org.eclipse.egit.github.core.CommitComment;
+<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> org.eclipse.egit.github.core.client.GitHubClient;
+<a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> org.eclipse.egit.github.core.service.CommitService;
+<a class="jxr_linenumber" name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> org.xembly.SyntaxException;
 <a class="jxr_linenumber" name="48" href="#48">48</a>  
 <a class="jxr_linenumber" name="49" href="#49">49</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="50" href="#50">50</a>  <em class="jxr_javadoccomment"> * Posting a comment to Github.</em>
@@ -89,10 +89,10 @@
 <a class="jxr_linenumber" name="79" href="#79">79</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> announce(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> success) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="80" href="#80">80</a>          <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Tags.html">Tags</a> tags;
 <a class="jxr_linenumber" name="81" href="#81">81</a>          <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="82" href="#82">82</a>              tags = <strong class="jxr_keyword">new</strong> Tags.Simple(Radar.snapshot().tags());
-<a class="jxr_linenumber" name="83" href="#83">83</a>          } <strong class="jxr_keyword">catch</strong> (XemblySyntaxException ex) {
+<a class="jxr_linenumber" name="82" href="#82">82</a>              tags = <strong class="jxr_keyword">new</strong> Tags.Simple(<strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/snapshot/Radar.html">Radar</a>().snapshot().tags());
+<a class="jxr_linenumber" name="83" href="#83">83</a>          } <strong class="jxr_keyword">catch</strong> (SyntaxException ex) {
 <a class="jxr_linenumber" name="84" href="#84">84</a>              <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IOException(ex);
-<a class="jxr_linenumber" name="85" href="#85">85</a>          } <strong class="jxr_keyword">catch</strong> (ImpossibleModificationException ex) {
+<a class="jxr_linenumber" name="85" href="#85">85</a>          } <strong class="jxr_keyword">catch</strong> (XemblyException ex) {
 <a class="jxr_linenumber" name="86" href="#86">86</a>              <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IOException(ex);
 <a class="jxr_linenumber" name="87" href="#87">87</a>          }
 <a class="jxr_linenumber" name="88" href="#88">88</a>          <em class="jxr_comment">// @checkstyle MultipleStringLiterals (10 lines)</em>

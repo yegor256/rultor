@@ -43,12 +43,12 @@
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Loggable;
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.immutable.Array;
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.snapshot.Radar;
-<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> java.util.Collection;
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> java.util.Collections;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
-<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> lombok.ToString;
-<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> org.xembly.ImpossibleModificationException;
-<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> org.xembly.XemblySyntaxException;
+<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.snapshot.XemblyException;
+<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> java.util.Collection;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> java.util.Collections;
+<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> lombok.ToString;
+<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> org.xembly.SyntaxException;
 <a class="jxr_linenumber" name="42" href="#42">42</a>  
 <a class="jxr_linenumber" name="43" href="#43">43</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="44" href="#44">44</a>  <em class="jxr_javadoccomment"> * Bill to post on billboard.</em>
@@ -119,10 +119,10 @@
 <a class="jxr_linenumber" name="109" href="#109">109</a>         @Override
 <a class="jxr_linenumber" name="110" href="#110">110</a>         <strong class="jxr_keyword">public</strong> String body() {
 <a class="jxr_linenumber" name="111" href="#111">111</a>             <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="112" href="#112">112</a>                 <strong class="jxr_keyword">return</strong> Radar.snapshot().xml().toString();
-<a class="jxr_linenumber" name="113" href="#113">113</a>             } <strong class="jxr_keyword">catch</strong> (XemblySyntaxException ex) {
+<a class="jxr_linenumber" name="112" href="#112">112</a>                 <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/snapshot/Radar.html">Radar</a>().snapshot().xml().toString();
+<a class="jxr_linenumber" name="113" href="#113">113</a>             } <strong class="jxr_keyword">catch</strong> (SyntaxException ex) {
 <a class="jxr_linenumber" name="114" href="#114">114</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(ex);
-<a class="jxr_linenumber" name="115" href="#115">115</a>             } <strong class="jxr_keyword">catch</strong> (ImpossibleModificationException ex) {
+<a class="jxr_linenumber" name="115" href="#115">115</a>             } <strong class="jxr_keyword">catch</strong> (XemblyException ex) {
 <a class="jxr_linenumber" name="116" href="#116">116</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(ex);
 <a class="jxr_linenumber" name="117" href="#117">117</a>             }
 <a class="jxr_linenumber" name="118" href="#118">118</a>         }

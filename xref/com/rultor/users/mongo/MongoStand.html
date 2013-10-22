@@ -47,23 +47,23 @@
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.mongodb.DBObject;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.mongodb.WriteResult;
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.snapshot.Snapshot;
-<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Coordinates;
-<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Pulses;
-<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Spec;
-<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Stand;
-<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Tag;
-<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
-<a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
-<a class="jxr_linenumber" name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> java.util.Collection;
-<a class="jxr_linenumber" name="48" href="#48">48</a>  <strong class="jxr_keyword">import</strong> java.util.LinkedList;
-<a class="jxr_linenumber" name="49" href="#49">49</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.ConcurrentMap;
-<a class="jxr_linenumber" name="50" href="#50">50</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.ConcurrentSkipListMap;
-<a class="jxr_linenumber" name="51" href="#51">51</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
-<a class="jxr_linenumber" name="52" href="#52">52</a>  <strong class="jxr_keyword">import</strong> lombok.ToString;
-<a class="jxr_linenumber" name="53" href="#53">53</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.lang3.StringUtils;
-<a class="jxr_linenumber" name="54" href="#54">54</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.lang3.Validate;
-<a class="jxr_linenumber" name="55" href="#55">55</a>  <strong class="jxr_keyword">import</strong> org.xembly.ImpossibleModificationException;
-<a class="jxr_linenumber" name="56" href="#56">56</a>  <strong class="jxr_keyword">import</strong> org.xembly.XemblySyntaxException;
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rultor.snapshot.XemblyException;
+<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Coordinates;
+<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Pulses;
+<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Spec;
+<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Stand;
+<a class="jxr_linenumber" name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Tag;
+<a class="jxr_linenumber" name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Time;
+<a class="jxr_linenumber" name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="48" href="#48">48</a>  <strong class="jxr_keyword">import</strong> java.util.Collection;
+<a class="jxr_linenumber" name="49" href="#49">49</a>  <strong class="jxr_keyword">import</strong> java.util.LinkedList;
+<a class="jxr_linenumber" name="50" href="#50">50</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.ConcurrentMap;
+<a class="jxr_linenumber" name="51" href="#51">51</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.ConcurrentSkipListMap;
+<a class="jxr_linenumber" name="52" href="#52">52</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
+<a class="jxr_linenumber" name="53" href="#53">53</a>  <strong class="jxr_keyword">import</strong> lombok.ToString;
+<a class="jxr_linenumber" name="54" href="#54">54</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.lang3.StringUtils;
+<a class="jxr_linenumber" name="55" href="#55">55</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.lang3.Validate;
+<a class="jxr_linenumber" name="56" href="#56">56</a>  <strong class="jxr_keyword">import</strong> org.xembly.SyntaxException;
 <a class="jxr_linenumber" name="57" href="#57">57</a>  
 <a class="jxr_linenumber" name="58" href="#58">58</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="59" href="#59">59</a>  <em class="jxr_javadoccomment"> * Stand in Mongo.</em>
@@ -259,9 +259,9 @@
 <a class="jxr_linenumber" name="249" href="#249">249</a>         <strong class="jxr_keyword">final</strong> Collection&lt;Tag&gt; found = <strong class="jxr_keyword">new</strong> LinkedList&lt;Tag&gt;();
 <a class="jxr_linenumber" name="250" href="#250">250</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="251" href="#251">251</a>             found.addAll(<strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/snapshot/Snapshot.html">Snapshot</a>(after).tags());
-<a class="jxr_linenumber" name="252" href="#252">252</a>         } <strong class="jxr_keyword">catch</strong> (ImpossibleModificationException ex) {
+<a class="jxr_linenumber" name="252" href="#252">252</a>         } <strong class="jxr_keyword">catch</strong> (XemblyException ex) {
 <a class="jxr_linenumber" name="253" href="#253">253</a>             assert ex != <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="254" href="#254">254</a>         } <strong class="jxr_keyword">catch</strong> (XemblySyntaxException ex) {
+<a class="jxr_linenumber" name="254" href="#254">254</a>         } <strong class="jxr_keyword">catch</strong> (SyntaxException ex) {
 <a class="jxr_linenumber" name="255" href="#255">255</a>             assert ex != <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="256" href="#256">256</a>         }
 <a class="jxr_linenumber" name="257" href="#257">257</a>         <strong class="jxr_keyword">final</strong> Collection&lt;DBObject&gt; tags = <strong class="jxr_keyword">new</strong> LinkedList&lt;DBObject&gt;();

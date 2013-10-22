@@ -47,11 +47,11 @@
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.snapshot.Radar;
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> com.rultor.snapshot.Step;
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> com.rultor.snapshot.XSLT;
-<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> javax.xml.transform.TransformerException;
-<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
-<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> lombok.ToString;
-<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> org.xembly.ImpossibleModificationException;
-<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> org.xembly.XemblySyntaxException;
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> com.rultor.snapshot.XemblyException;
+<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> javax.xml.transform.TransformerException;
+<a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
+<a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> lombok.ToString;
+<a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> org.xembly.SyntaxException;
 <a class="jxr_linenumber" name="45" href="#45">45</a>  
 <a class="jxr_linenumber" name="46" href="#46">46</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="47" href="#47">47</a>  <em class="jxr_javadoccomment"> * Three XSL posts into JIRA issue.</em>
@@ -136,12 +136,12 @@
 <a class="jxr_linenumber" name="126" href="#126">126</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="127" href="#127">127</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> String render(<strong class="jxr_keyword">final</strong> String xsl) {
 <a class="jxr_linenumber" name="128" href="#128">128</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="129" href="#129">129</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/snapshot/XSLT.html">XSLT</a>(Radar.snapshot(), xsl).xml();
+<a class="jxr_linenumber" name="129" href="#129">129</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/snapshot/XSLT.html">XSLT</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/snapshot/Radar.html">Radar</a>().snapshot(), xsl).xml();
 <a class="jxr_linenumber" name="130" href="#130">130</a>         } <strong class="jxr_keyword">catch</strong> (TransformerException ex) {
 <a class="jxr_linenumber" name="131" href="#131">131</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(ex);
-<a class="jxr_linenumber" name="132" href="#132">132</a>         } <strong class="jxr_keyword">catch</strong> (ImpossibleModificationException ex) {
+<a class="jxr_linenumber" name="132" href="#132">132</a>         } <strong class="jxr_keyword">catch</strong> (XemblyException ex) {
 <a class="jxr_linenumber" name="133" href="#133">133</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(ex);
-<a class="jxr_linenumber" name="134" href="#134">134</a>         } <strong class="jxr_keyword">catch</strong> (XemblySyntaxException ex) {
+<a class="jxr_linenumber" name="134" href="#134">134</a>         } <strong class="jxr_keyword">catch</strong> (SyntaxException ex) {
 <a class="jxr_linenumber" name="135" href="#135">135</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(ex);
 <a class="jxr_linenumber" name="136" href="#136">136</a>         }
 <a class="jxr_linenumber" name="137" href="#137">137</a>     }

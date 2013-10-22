@@ -140,7 +140,7 @@
 <a class="jxr_linenumber" name="130" href="#130">130</a>         <strong class="jxr_keyword">final</strong> IssueService issues = <strong class="jxr_keyword">new</strong> IssueService(client);
 <a class="jxr_linenumber" name="131" href="#131">131</a>         issues.createComment(
 <a class="jxr_linenumber" name="132" href="#132">132</a>             <strong class="jxr_keyword">this</strong>.repository, <strong class="jxr_keyword">this</strong>.issue,
-<a class="jxr_linenumber" name="133" href="#133">133</a>             Radar.render(
+<a class="jxr_linenumber" name="133" href="#133">133</a>             <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/snapshot/Radar.html">Radar</a>().render(
 <a class="jxr_linenumber" name="134" href="#134">134</a>                 <strong class="jxr_keyword">this</strong>.getClass().getResourceAsStream(<span class="jxr_string">"github-started.xsl"</span>)
 <a class="jxr_linenumber" name="135" href="#135">135</a>             )
 <a class="jxr_linenumber" name="136" href="#136">136</a>         );
@@ -153,7 +153,7 @@
 <a class="jxr_linenumber" name="143" href="#143">143</a>         <strong class="jxr_keyword">final</strong> IssueService issues = <strong class="jxr_keyword">new</strong> IssueService(client);
 <a class="jxr_linenumber" name="144" href="#144">144</a>         issues.createComment(
 <a class="jxr_linenumber" name="145" href="#145">145</a>             <strong class="jxr_keyword">this</strong>.repository, <strong class="jxr_keyword">this</strong>.issue,
-<a class="jxr_linenumber" name="146" href="#146">146</a>             Radar.render(
+<a class="jxr_linenumber" name="146" href="#146">146</a>             <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/snapshot/Radar.html">Radar</a>().render(
 <a class="jxr_linenumber" name="147" href="#147">147</a>                 <strong class="jxr_keyword">this</strong>.getClass().getResourceAsStream(<span class="jxr_string">"github-accept.xsl"</span>)
 <a class="jxr_linenumber" name="148" href="#148">148</a>             )
 <a class="jxr_linenumber" name="149" href="#149">149</a>         );
@@ -178,7 +178,7 @@
 <a class="jxr_linenumber" name="168" href="#168">168</a>         <strong class="jxr_keyword">final</strong> IssueService svc = <strong class="jxr_keyword">new</strong> IssueService(client);
 <a class="jxr_linenumber" name="169" href="#169">169</a>         svc.createComment(
 <a class="jxr_linenumber" name="170" href="#170">170</a>             <strong class="jxr_keyword">this</strong>.repository, <strong class="jxr_keyword">this</strong>.issue,
-<a class="jxr_linenumber" name="171" href="#171">171</a>             Radar.render(
+<a class="jxr_linenumber" name="171" href="#171">171</a>             <strong class="jxr_keyword">new</strong> <a href="../../../../com/rultor/snapshot/Radar.html">Radar</a>().render(
 <a class="jxr_linenumber" name="172" href="#172">172</a>                 <strong class="jxr_keyword">this</strong>.getClass().getResourceAsStream(<span class="jxr_string">"github-reject.xsl"</span>)
 <a class="jxr_linenumber" name="173" href="#173">173</a>             )
 <a class="jxr_linenumber" name="174" href="#174">174</a>         );
