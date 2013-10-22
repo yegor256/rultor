@@ -27,12 +27,6 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * @todo #1 Would be nice to hide certain elements in the upper
- *  inline menu with Bootstrap responsive utility classes, however
- *  this only will be possible in version 3.1:
- *  https://github.com/twbs/bootstrap/issues/8869
- *
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:include href="./common.xsl"/>

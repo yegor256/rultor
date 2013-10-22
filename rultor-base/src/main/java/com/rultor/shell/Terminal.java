@@ -72,7 +72,9 @@ public final class Terminal {
      * Escape argument.
      * @param arg Argument
      * @return Escaped
-     * @todo #34 This implementation is extremely bad
+     * @todo #34 This implementation is extremely bad and doesn't comply
+     *  with any standards. Let's find out what is the right way to
+     *  escape strings for BASH and implement it here
      */
     public static String escape(@NotNull(message = "argument can't be NULL")
         final String arg) {

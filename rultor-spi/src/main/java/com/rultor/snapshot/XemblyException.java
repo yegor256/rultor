@@ -27,24 +27,28 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.client;
-
-import org.junit.Test;
+package com.rultor.snapshot;
 
 /**
- * Test case for {@link RestPulse}.
+ * When Xembly instructions are broken.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class RestPulseTest {
+public final class XemblyException extends Exception {
 
     /**
-     * RestPulse can work.
-     * @throws Exception If some problem inside
+     * Serialization marker.
      */
-    @Test
-    public void works() throws Exception {
-        // implement it later
+    private static final long serialVersionUID = -439225931028469863L;
+
+    /**
+     * Public ctor.
+     * @param cause Cause of it
+     */
+    public XemblyException(final Throwable cause) {
+        super(cause);
     }
 
 }

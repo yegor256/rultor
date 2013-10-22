@@ -130,7 +130,7 @@ final class GhRequest implements MergeRequest {
         final IssueService issues = new IssueService(client);
         issues.createComment(
             this.repository, this.issue,
-            Radar.render(
+            new Radar().render(
                 this.getClass().getResourceAsStream("github-started.xsl")
             )
         );
@@ -143,7 +143,7 @@ final class GhRequest implements MergeRequest {
         final IssueService issues = new IssueService(client);
         issues.createComment(
             this.repository, this.issue,
-            Radar.render(
+            new Radar().render(
                 this.getClass().getResourceAsStream("github-accept.xsl")
             )
         );
@@ -168,7 +168,7 @@ final class GhRequest implements MergeRequest {
         final IssueService svc = new IssueService(client);
         svc.createComment(
             this.repository, this.issue,
-            Radar.render(
+            new Radar().render(
                 this.getClass().getResourceAsStream("github-reject.xsl")
             )
         );

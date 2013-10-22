@@ -41,11 +41,10 @@ import com.rultor.spi.Tags;
 import com.rultor.spi.Widget;
 import java.util.Arrays;
 import java.util.logging.Level;
-import javax.xml.parsers.DocumentBuilderFactory;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.w3c.dom.Document;
+import org.xembly.Directives;
 import org.xembly.Xembler;
 
 /**
@@ -66,9 +65,6 @@ public final class MergeHistoryTest {
     @SuppressWarnings("unchecked")
     public void findsRecentMerges() throws Exception {
         final Widget widget = new MergeHistory();
-        final Document dom = DocumentBuilderFactory.newInstance()
-            .newDocumentBuilder().newDocument();
-        dom.appendChild(dom.createElement("widget"));
         final Pulse first = Mockito.mock(Pulse.class);
         Mockito.doReturn(
             new Coordinates.Simple(new URN("urn:test:44"), "rule-x")
@@ -108,9 +104,10 @@ public final class MergeHistoryTest {
         final Pulses pulses = new Pulses.Row(Arrays.asList(first, second));
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(pulses).when(stand).pulses();
-        new Xembler(widget.render(stand)).apply(dom);
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(dom),
+            new Xembler(
+                new Directives().add("widget").append(widget.render(stand))
+            ).xml(),
             XhtmlMatchers.hasXPaths(
                 "/widget[not(title)]",
                 "/widget[width='6']",
@@ -133,9 +130,6 @@ public final class MergeHistoryTest {
     @SuppressWarnings("unchecked")
     public void gracefullyHandlesEmptyTags() throws Exception {
         final Widget widget = new MergeHistory();
-        final Document dom = DocumentBuilderFactory.newInstance()
-            .newDocumentBuilder().newDocument();
-        dom.appendChild(dom.createElement("widget"));
         final Pulse first = Mockito.mock(Pulse.class);
         final Coordinates coords = new Coordinates.Simple(
             new URN("urn:test:3"), "rule-a"
@@ -151,9 +145,10 @@ public final class MergeHistoryTest {
         final Pulses pulses = new Pulses.Row(Arrays.asList(first));
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(pulses).when(stand).pulses();
-        new Xembler(widget.render(stand)).apply(dom);
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(dom),
+            new Xembler(
+                new Directives().add("widget").append(widget.render(stand))
+            ).xml(),
             XhtmlMatchers.hasXPath("/widget/merges[count(merge)=1]")
         );
     }
@@ -166,15 +161,13 @@ public final class MergeHistoryTest {
     @SuppressWarnings("unchecked")
     public void reportsEmptyWidgetWhenNoTagsFound() throws Exception {
         final Widget widget = new MergeHistory();
-        final Document dom = DocumentBuilderFactory.newInstance()
-            .newDocumentBuilder().newDocument();
-        dom.appendChild(dom.createElement("widget"));
         final Pulses pulses = new Pulses.Row();
         final Stand stand = Mockito.mock(Stand.class);
         Mockito.doReturn(pulses).when(stand).pulses();
-        new Xembler(widget.render(stand)).apply(dom);
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(dom),
+            new Xembler(
+                new Directives().add("widget").append(widget.render(stand))
+            ).xml(),
             XhtmlMatchers.hasXPath("/widget/merges[count(merge) = 0]")
         );
     }

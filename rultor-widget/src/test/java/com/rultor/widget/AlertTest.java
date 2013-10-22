@@ -32,11 +32,10 @@ package com.rultor.widget;
 import com.rexsl.test.XhtmlMatchers;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Widget;
-import javax.xml.parsers.DocumentBuilderFactory;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.w3c.dom.Document;
+import org.xembly.Directives;
 import org.xembly.Xembler;
 
 /**
@@ -53,13 +52,11 @@ public final class AlertTest {
     @Test
     public void showsMessageInWidget() throws Exception {
         final Widget widget = new Alert("test message");
-        final Document dom = DocumentBuilderFactory.newInstance()
-            .newDocumentBuilder().newDocument();
-        dom.appendChild(dom.createElement("widget"));
         final Stand stand = Mockito.mock(Stand.class);
-        new Xembler(widget.render(stand)).apply(dom);
         MatcherAssert.assertThat(
-            XhtmlMatchers.xhtml(dom),
+            new Xembler(
+                new Directives().add("widget").append(widget.render(stand))
+            ).xml(),
             XhtmlMatchers.hasXPath("/widget[error='test message']")
         );
     }

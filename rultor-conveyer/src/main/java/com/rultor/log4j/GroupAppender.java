@@ -96,6 +96,11 @@ final class GroupAppender extends AppenderSkeleton
         Thread.currentThread().getThreadGroup();
 
     /**
+     * Radar.
+     */
+    private final transient Radar radar = new Radar();
+
+    /**
      * When the work was scheduled.
      */
     private final transient Time start;
@@ -116,7 +121,7 @@ final class GroupAppender extends AppenderSkeleton
         super();
         this.start = date;
         this.drain = drn;
-        Radar.clean();
+        this.radar.clean();
     }
 
     @Override
@@ -137,7 +142,7 @@ final class GroupAppender extends AppenderSkeleton
                     msg
                 ).toString()
             );
-            Radar.append(msg);
+            this.radar.append(msg);
         }
     }
 

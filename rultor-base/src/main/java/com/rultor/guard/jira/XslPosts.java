@@ -37,11 +37,11 @@ import com.rultor.scm.Branch;
 import com.rultor.snapshot.Radar;
 import com.rultor.snapshot.Step;
 import com.rultor.snapshot.XSLT;
+import com.rultor.snapshot.XemblyException;
 import javax.xml.transform.TransformerException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.xembly.ImpossibleModificationException;
-import org.xembly.XemblySyntaxException;
+import org.xembly.SyntaxException;
 
 /**
  * Three XSL posts into JIRA issue.
@@ -126,12 +126,12 @@ public final class XslPosts implements Refinement {
      */
     private static String render(final String xsl) {
         try {
-            return new XSLT(Radar.snapshot(), xsl).xml();
+            return new XSLT(new Radar().snapshot(), xsl).xml();
         } catch (TransformerException ex) {
             throw new IllegalStateException(ex);
-        } catch (ImpossibleModificationException ex) {
+        } catch (XemblyException ex) {
             throw new IllegalStateException(ex);
-        } catch (XemblySyntaxException ex) {
+        } catch (SyntaxException ex) {
             throw new IllegalStateException(ex);
         }
     }

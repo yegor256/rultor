@@ -30,8 +30,6 @@
 package com.rultor.snapshot;
 
 import com.google.common.collect.ImmutableMap;
-import com.jcabi.aspects.Immutable;
-import com.jcabi.immutable.Array;
 import com.rexsl.test.SimpleXml;
 import com.rexsl.test.XmlDocument;
 import com.rultor.spi.Tag;
@@ -47,13 +45,14 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.w3c.dom.Document;
 import org.xembly.Directive;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
+import org.xembly.SyntaxException;
 import org.xembly.Xembler;
-import org.xembly.XemblySyntaxException;
 
 /**
  * Snapshot.
@@ -63,7 +62,6 @@ import org.xembly.XemblySyntaxException;
  * @since 1.0
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Immutable
 @ToString
 @EqualsAndHashCode(of = "directives")
 public final class Snapshot {
@@ -71,28 +69,28 @@ public final class Snapshot {
     /**
      * Xembly directives.
      */
-    private final transient Array<Directive> directives;
+    private final transient Directives directives;
 
     /**
      * Public ctor.
      * @param stream Stream to read it from
      * @throws IOException If fails to read
-     * @throws XemblySyntaxException If some syntax exception inside
+     * @throws SyntaxException If some syntax exception inside
      * @checkstyle ThrowsCount (5 lines)
      * @checkstyle RedundantThrows (5 lines)
      */
     public Snapshot(final InputStream stream)
-        throws IOException, XemblySyntaxException {
+        throws IOException, SyntaxException {
         this(Snapshot.fetch(stream));
     }
 
     /**
      * Public ctor.
      * @param script Script
-     * @throws XemblySyntaxException If can't parse
+     * @throws SyntaxException If can't parse
      * @checkstyle RedundantThrows (5 lines)
      */
-    public Snapshot(final String script) throws XemblySyntaxException {
+    public Snapshot(final String script) throws SyntaxException {
         this(new Directives(script));
     }
 
@@ -100,8 +98,8 @@ public final class Snapshot {
      * Public ctor.
      * @param dirs Directives
      */
-    public Snapshot(final Directives dirs) {
-        this.directives = new Array<Directive>(dirs);
+    public Snapshot(final Collection<Directive> dirs) {
+        this.directives = new Directives().add("snapshot").append(dirs);
     }
 
     /**
@@ -115,41 +113,38 @@ public final class Snapshot {
     /**
      * Make XML out of it.
      * @return The XML
-     * @throws ImpossibleModificationException If can't apply
+     * @throws XemblyException If can't apply
      * @checkstyle RedundantThrows (3 lines)
      */
-    public XmlDocument xml() throws ImpossibleModificationException {
-        final Document dom = new Xembler(this.directives).dom("snapshot");
+    public XmlDocument xml() throws XemblyException {
+        final Document dom;
         try {
-            return new SimpleXml(
-                new DOMSource(
-                    new XSLT(
-                        dom,
-                        this.getClass().getResourceAsStream(
-                            "remove-duplicate-tags.xsl"
-                        )
-                    ).dom()
-                )
-            );
+            dom = new Xembler(this.directives).dom();
+        } catch (ImpossibleModificationException ex) {
+            throw new XemblyException(ex);
+        }
+        final InputStream xsl = this.getClass().getResourceAsStream(
+            "remove-duplicate-tags.xsl"
+        );
+        try {
+            return new SimpleXml(new DOMSource(new XSLT(dom, xsl).dom()));
         } catch (TransformerException ex) {
-            throw new ImpossibleModificationException(
-                "Failed to transform",
-                ex
-            );
+            throw new XemblyException(ex);
+        } finally {
+            IOUtils.closeQuietly(xsl);
         }
     }
 
     /**
      * Get all tags.
      * @return Collection of tags found
-     * @throws ImpossibleModificationException If can't parse it
-     * @checkstyle RedundantThrows (3 lines)
+     * @throws XemblyException If fails
      */
-    public Collection<Tag> tags() throws ImpossibleModificationException {
+    public Collection<Tag> tags() throws XemblyException {
         final Collection<XmlDocument> nodes = this.xml()
             .nodes("/snapshot/tags/tag");
         final Collection<Tag> tags = new ArrayList<Tag>(nodes.size());
-        for (XmlDocument node : nodes) {
+        for (final XmlDocument node : nodes) {
             tags.add(this.tag(node));
         }
         return Collections.unmodifiableCollection(tags);
@@ -175,7 +170,7 @@ public final class Snapshot {
         }
         final ImmutableMap.Builder<String, String> attrs =
             new ImmutableMap.Builder<String, String>();
-        for (XmlDocument attr : node.nodes("attributes/attribute")) {
+        for (final XmlDocument attr : node.nodes("attributes/attribute")) {
             attrs.put(
                 attr.xpath("name/text()").get(0),
                 attr.xpath("value/text()").get(0)
@@ -194,29 +189,33 @@ public final class Snapshot {
      * @param stream Input stream where to find details
      * @return The script
      * @throws IOException If IO problem inside
-     * @throws XemblySyntaxException If broken syntax
+     * @throws SyntaxException If broken syntax
      * @checkstyle ThrowsCount (5 lines)
      * @checkstyle RedundantThrows (4 lines)
      */
     private static String fetch(final InputStream stream)
-        throws IOException, XemblySyntaxException {
+        throws IOException, SyntaxException {
         final BufferedReader reader = new BufferedReader(
             new InputStreamReader(stream, CharEncoding.UTF_8)
         );
-        final StringBuilder buf = new StringBuilder();
-        while (true) {
-            final String line = reader.readLine();
-            if (line == null) {
-                break;
+        try {
+            final StringBuilder buf = new StringBuilder(0);
+            while (true) {
+                final String line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                if (XemblyLine.existsIn(line)) {
+                    buf.append(XemblyLine.parse(line).xembly());
+                }
             }
-            if (XemblyLine.existsIn(line)) {
-                buf.append(XemblyLine.parse(line).xembly());
+            if (buf.length() == 0) {
+                buf.append("XPATH '/snapshot';");
             }
+            return buf.toString();
+        } finally {
+            reader.close();
         }
-        if (buf.length() == 0) {
-            buf.append("XPATH '/snapshot';");
-        }
-        return buf.toString();
     }
 
 }

@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArrayMap;
 import com.rultor.snapshot.Radar;
+import com.rultor.snapshot.XemblyException;
 import com.rultor.spi.Tag;
 import com.rultor.tools.Exceptions;
 import java.io.IOException;
@@ -43,8 +44,7 @@ import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.xembly.ImpossibleModificationException;
-import org.xembly.XemblySyntaxException;
+import org.xembly.SyntaxException;
 
 /**
  * Environments automatically badged by tags in log.
@@ -104,11 +104,11 @@ public final class Badged implements Environments {
         final Environment env = this.origin.acquire();
         Collection<Tag> tags;
         try {
-            tags = Radar.snapshot().tags();
-        } catch (XemblySyntaxException ex) {
+            tags = new Radar().snapshot().tags();
+        } catch (SyntaxException ex) {
             tags = new ArrayList<Tag>(0);
             Exceptions.warn(this, ex);
-        } catch (ImpossibleModificationException ex) {
+        } catch (XemblyException ex) {
             tags = new ArrayList<Tag>(0);
             Exceptions.warn(this, ex);
         }

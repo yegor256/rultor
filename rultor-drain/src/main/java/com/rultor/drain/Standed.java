@@ -72,7 +72,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
-import org.xembly.XemblySyntaxException;
+import org.xembly.SyntaxException;
 
 /**
  * Mirrored to a web {@link Stand}.
@@ -213,7 +213,7 @@ public final class Standed implements Drain {
                         public String apply(final String line) {
                             try {
                                 return XemblyLine.parse(line).xembly();
-                            } catch (XemblySyntaxException ex) {
+                            } catch (SyntaxException ex) {
                                 Exceptions.warn(this, ex);
                             }
                             return null;
