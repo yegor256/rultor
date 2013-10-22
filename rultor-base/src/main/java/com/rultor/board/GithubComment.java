@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.guard.github.Github;
 import com.rultor.snapshot.Radar;
+import com.rultor.snapshot.XemblyException;
 import com.rultor.spi.Tag;
 import com.rultor.spi.Tags;
 import java.io.IOException;
@@ -43,8 +44,7 @@ import lombok.ToString;
 import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.CommitService;
-import org.xembly.ImpossibleModificationException;
-import org.xembly.XemblySyntaxException;
+import org.xembly.SyntaxException;
 
 /**
  * Posting a comment to Github.
@@ -79,10 +79,10 @@ public final class GithubComment implements Billboard {
     public void announce(final boolean success) throws IOException {
         final Tags tags;
         try {
-            tags = new Tags.Simple(Radar.snapshot().tags());
-        } catch (XemblySyntaxException ex) {
+            tags = new Tags.Simple(new Radar().snapshot().tags());
+        } catch (SyntaxException ex) {
             throw new IOException(ex);
-        } catch (ImpossibleModificationException ex) {
+        } catch (XemblyException ex) {
             throw new IOException(ex);
         }
         // @checkstyle MultipleStringLiterals (10 lines)

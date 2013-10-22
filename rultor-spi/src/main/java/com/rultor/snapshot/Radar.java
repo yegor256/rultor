@@ -29,7 +29,6 @@
  */
 package com.rultor.snapshot;
 
-import com.jcabi.aspects.Immutable;
 import com.rultor.tools.Exceptions;
 import java.io.InputStream;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,8 +36,7 @@ import java.util.concurrent.ConcurrentMap;
 import javax.xml.transform.TransformerException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.xembly.ImpossibleModificationException;
-import org.xembly.XemblySyntaxException;
+import org.xembly.SyntaxException;
 
 /**
  * Radar that listens to log events and organizes them in snapshots.
@@ -47,7 +45,6 @@ import org.xembly.XemblySyntaxException;
  * @version $Id$
  * @since 1.0
  */
-@Immutable
 @ToString
 @EqualsAndHashCode
 public final class Radar {
@@ -59,27 +56,25 @@ public final class Radar {
         new ConcurrentHashMap<ThreadGroup, StringBuffer>(0);
 
     /**
-     * Utility class.
+     * Current thread group we're in.
      */
-    private Radar() {
-        // intentionally empty
-    }
+    private final transient ThreadGroup group =
+        Thread.currentThread().getThreadGroup();
 
     /**
      * Add new line.
      * @param line The line to append
      */
-    public static void append(final String line) {
+    public void append(final String line) {
         if (XemblyLine.existsIn(line)) {
-            final ThreadGroup group = Thread.currentThread().getThreadGroup();
-            StringBuffer buffer = Radar.LINES.get(group);
+            StringBuffer buffer = Radar.LINES.get(this.group);
             if (buffer == null) {
-                buffer = new StringBuffer();
-                Radar.LINES.put(group, buffer);
+                buffer = new StringBuffer(0);
+                Radar.LINES.put(this.group, buffer);
             }
             try {
                 buffer.append(XemblyLine.parse(line).xembly());
-            } catch (XemblySyntaxException ex) {
+            } catch (SyntaxException ex) {
                 assert ex != null;
             }
         }
@@ -88,12 +83,11 @@ public final class Radar {
     /**
      * Get snapshot of the current thread.
      * @return The snapshot
-     * @throws XemblySyntaxException If fails
+     * @throws SyntaxException If fails
      * @checkstyle RedundantThrows (5 lines)
      */
-    public static Snapshot snapshot() throws XemblySyntaxException {
-        final ThreadGroup group = Thread.currentThread().getThreadGroup();
-        final StringBuffer buffer = Radar.LINES.get(group);
+    public Snapshot snapshot() throws SyntaxException {
+        final StringBuffer buffer = Radar.LINES.get(this.group);
         final String input;
         if (buffer == null) {
             input = "XPATH '/snapshot';";
@@ -106,8 +100,8 @@ public final class Radar {
     /**
      * Remove all lines for the current thread group.
      */
-    public static void clean() {
-        Radar.LINES.remove(Thread.currentThread().getThreadGroup());
+    public void clean() {
+        Radar.LINES.remove(this.group);
     }
 
     /**
@@ -115,15 +109,15 @@ public final class Radar {
      * @param stream Input stream with XSL
      * @return Rendered text
      */
-    public static String render(final InputStream stream) {
+    public String render(final InputStream stream) {
         String summary;
         try {
-            summary = new XSLT(Radar.snapshot(), stream).xml();
+            summary = new XSLT(this.snapshot(), stream).xml();
         } catch (TransformerException ex) {
             summary = Exceptions.stacktrace(ex);
-        } catch (ImpossibleModificationException ex) {
+        } catch (XemblyException ex) {
             summary = Exceptions.stacktrace(ex);
-        } catch (XemblySyntaxException ex) {
+        } catch (SyntaxException ex) {
             summary = Exceptions.stacktrace(ex);
         }
         return summary;

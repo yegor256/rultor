@@ -39,6 +39,11 @@ package com.rultor.snapshot;
 public final class XemblyException extends Exception {
 
     /**
+     * Serialization marker.
+     */
+    private static final long serialVersionUID = -439225931028469863L;
+
+    /**
      * Public ctor.
      * @param cause Cause of it
      */

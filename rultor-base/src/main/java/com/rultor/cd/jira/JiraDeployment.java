@@ -73,7 +73,7 @@ final class JiraDeployment implements Deployment {
     @Override
     public void started() {
         this.issue.post(
-            Radar.render(
+            new Radar().render(
                 this.getClass().getResourceAsStream("jira-started.xsl")
             )
         );
@@ -82,7 +82,7 @@ final class JiraDeployment implements Deployment {
     @Override
     public void succeeded() {
         this.issue.revert(
-            Radar.render(
+            new Radar().render(
                 this.getClass().getResourceAsStream("jira-succeeded.xsl")
             )
         );
@@ -91,7 +91,7 @@ final class JiraDeployment implements Deployment {
     @Override
     public void failed() {
         this.issue.revert(
-            Radar.render(
+            new Radar().render(
                 this.getClass().getResourceAsStream("jira-failed.xsl")
             )
         );

@@ -39,6 +39,7 @@ import com.rexsl.page.PageBuilder;
 import com.rexsl.page.auth.Identity;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
+import com.rultor.snapshot.XemblyException;
 import com.rultor.spi.ACL;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
@@ -79,8 +80,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
+import org.xembly.SyntaxException;
 import org.xembly.Xembler;
-import org.xembly.XemblySyntaxException;
 
 /**
  * Stand front page.
@@ -396,14 +397,14 @@ public final class StandRs extends BaseRs {
                         this.getClass().getResourceAsStream("post.xsl")
                     ).dom().getDocumentElement()
                 );
-            } catch (ImpossibleModificationException ex) {
+            } catch (XemblyException ex) {
                 output = this.bug(output, ex);
             } catch (TransformerException ex) {
                 output = this.bug(output, ex);
             }
         } catch (IOException ex) {
             output = this.bug(output, ex);
-        } catch (XemblySyntaxException ex) {
+        } catch (SyntaxException ex) {
             output = this.bug(output, ex);
         }
         return output;
@@ -413,11 +414,10 @@ public final class StandRs extends BaseRs {
      * Get snapshot from xembly.
      * @param xembly Xembly script
      * @return Its snapshot
-     * @throws XemblySyntaxException If fails
+     * @throws SyntaxException If fails
      * @checkstyle RedundantThrows (5 lines)
      */
-    private Snapshot snapshot(final String xembly)
-        throws XemblySyntaxException {
+    private Snapshot snapshot(final String xembly) throws SyntaxException {
         return new Snapshot(
             new Directives(xembly).xpath("/snapshot/spec").remove()
         );

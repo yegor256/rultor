@@ -30,8 +30,6 @@
 package com.rultor.snapshot;
 
 import com.google.common.collect.ImmutableMap;
-import com.jcabi.aspects.Immutable;
-import com.jcabi.immutable.Array;
 import com.rexsl.test.SimpleXml;
 import com.rexsl.test.XmlDocument;
 import com.rultor.spi.Tag;
@@ -40,8 +38,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.logging.Level;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
@@ -64,7 +62,6 @@ import org.xembly.Xembler;
  * @since 1.0
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Immutable
 @ToString
 @EqualsAndHashCode(of = "directives")
 public final class Snapshot {
@@ -72,7 +69,7 @@ public final class Snapshot {
     /**
      * Xembly directives.
      */
-    private final transient Array<Directive> directives;
+    private final transient Directives directives;
 
     /**
      * Public ctor.
@@ -101,8 +98,8 @@ public final class Snapshot {
      * Public ctor.
      * @param dirs Directives
      */
-    public Snapshot(final Directives dirs) {
-        this.directives = new Array<Directive>(dirs);
+    public Snapshot(final Collection<Directive> dirs) {
+        this.directives = new Directives().add("snapshot").append(dirs);
     }
 
     /**

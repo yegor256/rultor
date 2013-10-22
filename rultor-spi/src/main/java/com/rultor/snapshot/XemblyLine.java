@@ -40,7 +40,7 @@ import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
-import org.xembly.XemblySyntaxException;
+import org.xembly.SyntaxException;
 
 /**
  * Log line in Xembly.
@@ -98,18 +98,19 @@ public final class XemblyLine {
      * @return TRUE if yes (no strong guarantee though)
      */
     public static boolean existsIn(final String line) {
-        return line.contains(XemblyLine.MARK) && line.endsWith("'");
+        return line.contains(XemblyLine.MARK)
+            && line.charAt(line.length() - 1) == '\'';
     }
 
     /**
      * Decode text.
      * @param text Text to decode
      * @return Detail found or runtime exception
-     * @throws XemblySyntaxException If can't parse
+     * @throws SyntaxException If can't parse
      * @checkstyle RedundantThrows (4 lines)
      */
     public static XemblyLine parse(final String text)
-        throws XemblySyntaxException {
+        throws SyntaxException {
         final Matcher matcher = XemblyLine.PTN.matcher(text);
         final XemblyLine line;
         if (matcher.matches()) {

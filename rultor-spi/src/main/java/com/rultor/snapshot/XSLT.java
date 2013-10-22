@@ -52,7 +52,6 @@ import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xembly.ImpossibleModificationException;
 
 /**
  * XSLT post processor of a snapshot.
@@ -92,11 +91,11 @@ public final class XSLT {
      * Ctor.
      * @param snapshot Snapshot
      * @param text XSL as text
-     * @throws ImpossibleModificationException If can't build
+     * @throws XemblyException If can't build
      * @checkstyle RedundantThrows (5 lines)
      */
     public XSLT(final Snapshot snapshot, final String text)
-        throws ImpossibleModificationException {
+        throws XemblyException {
         this(snapshot, IOUtils.toInputStream(text, Charsets.UTF_8));
     }
 
@@ -104,11 +103,11 @@ public final class XSLT {
      * Ctor.
      * @param snapshot Snapshot
      * @param stream XSL
-     * @throws ImpossibleModificationException If can't build
+     * @throws XemblyException If can't build
      * @checkstyle RedundantThrows (5 lines)
      */
     public XSLT(final Snapshot snapshot, final InputStream stream)
-        throws ImpossibleModificationException {
+        throws XemblyException {
         this(new DOMSource(snapshot.xml().node()), new StreamSource(stream));
     }
 

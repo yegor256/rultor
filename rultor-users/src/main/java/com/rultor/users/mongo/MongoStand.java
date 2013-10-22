@@ -37,6 +37,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import com.rultor.snapshot.Snapshot;
+import com.rultor.snapshot.XemblyException;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Spec;
@@ -52,8 +53,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.xembly.ImpossibleModificationException;
-import org.xembly.XemblySyntaxException;
+import org.xembly.SyntaxException;
 
 /**
  * Stand in Mongo.
@@ -249,9 +249,9 @@ final class MongoStand implements Stand {
         final Collection<Tag> found = new LinkedList<Tag>();
         try {
             found.addAll(new Snapshot(after).tags());
-        } catch (ImpossibleModificationException ex) {
+        } catch (XemblyException ex) {
             assert ex != null;
-        } catch (XemblySyntaxException ex) {
+        } catch (SyntaxException ex) {
             assert ex != null;
         }
         final Collection<DBObject> tags = new LinkedList<DBObject>();

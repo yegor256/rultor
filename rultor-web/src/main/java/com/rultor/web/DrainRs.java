@@ -36,6 +36,7 @@ import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
+import com.rultor.snapshot.XemblyException;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
@@ -58,8 +59,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.xml.transform.TransformerException;
-import org.xembly.ImpossibleModificationException;
-import org.xembly.XemblySyntaxException;
+import org.xembly.SyntaxException;
 
 /**
  * Drain of a rule.
@@ -304,14 +304,14 @@ public final class DrainRs extends BaseRs {
                         this.getClass().getResourceAsStream("post.xsl")
                     ).dom().getDocumentElement()
                 );
-            } catch (ImpossibleModificationException ex) {
+            } catch (XemblyException ex) {
                 bugs.add(ex);
             } catch (TransformerException ex) {
                 bugs.add(ex);
             }
         } catch (IOException ex) {
             bugs.add(ex);
-        } catch (XemblySyntaxException ex) {
+        } catch (SyntaxException ex) {
             bugs.add(ex);
         }
         return bundle.add(

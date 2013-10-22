@@ -33,12 +33,12 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
 import com.rultor.snapshot.Radar;
+import com.rultor.snapshot.XemblyException;
 import java.util.Collection;
 import java.util.Collections;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.xembly.ImpossibleModificationException;
-import org.xembly.XemblySyntaxException;
+import org.xembly.SyntaxException;
 
 /**
  * Bill to post on billboard.
@@ -109,10 +109,10 @@ public interface Bill {
         @Override
         public String body() {
             try {
-                return Radar.snapshot().xml().toString();
-            } catch (XemblySyntaxException ex) {
+                return new Radar().snapshot().xml().toString();
+            } catch (SyntaxException ex) {
                 throw new IllegalStateException(ex);
-            } catch (ImpossibleModificationException ex) {
+            } catch (XemblyException ex) {
                 throw new IllegalStateException(ex);
             }
         }

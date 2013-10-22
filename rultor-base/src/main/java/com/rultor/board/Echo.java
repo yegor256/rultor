@@ -33,12 +33,12 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rultor.snapshot.Radar;
+import com.rultor.snapshot.XemblyException;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.xembly.ImpossibleModificationException;
-import org.xembly.XemblySyntaxException;
+import org.xembly.SyntaxException;
 
 /**
  * Transmits all announcements to log.
@@ -58,11 +58,13 @@ public final class Echo implements Billboard {
         try {
             Logger.info(
                 this,
-                StringEscapeUtils.escapeJava(Radar.snapshot().xml().toString())
+                StringEscapeUtils.escapeJava(
+                    new Radar().snapshot().xml().toString()
+                )
             );
-        } catch (XemblySyntaxException ex) {
+        } catch (SyntaxException ex) {
             throw new IOException(ex);
-        } catch (ImpossibleModificationException ex) {
+        } catch (XemblyException ex) {
             throw new IOException(ex);
         }
     }
