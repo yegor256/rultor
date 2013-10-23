@@ -111,6 +111,13 @@
                 <artifactId>rultor-maven-plugin</artifactId>
                 <version>0.2</version>
                 <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>steps</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-site-plugin</artifactId>
