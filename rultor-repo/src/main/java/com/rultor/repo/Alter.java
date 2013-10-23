@@ -38,6 +38,7 @@ import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.tools.Vext;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
