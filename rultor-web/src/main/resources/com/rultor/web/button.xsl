@@ -30,11 +30,10 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns="http://www.w3.org/1999/xhtml" version="2.0"
+                xmlns="http://www.w3.org/2000/svg" version="2.0"
                 exclude-result-prefixes="xs">
-    <xsl:template
-        match="/page/widgets/widget[@class='com.rultor.widget.BuildHealth']/builds/build[coordinates/rule='%s'][1]">
-        <svg xmlns="http://www.w3.org/2000/svg" font-size="10" viewBox="0 0 100 50">
+    <xsl:template match="/">
+        <svg font-size="10" viewBox="0 0 100 50">
             <defs>
                 <style type="text/css"><![CDATA[
                     @font-face {
@@ -47,6 +46,18 @@
                     }
                 ]]></style>
             </defs>
+            <xsl:choose>
+                <xsl:when test="count(/page/widgets/widget[@class='com.rultor.widget.BuildHealth']/builds/build[coordinates/rule='%1$s']) > 0">
+                    <xsl:apply-templates/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:call-template name="noMatch"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </svg>
+    </xsl:template>
+    <xsl:template
+        match="/page/widgets/widget[@class='com.rultor.widget.BuildHealth']/builds/build[coordinates/rule='%1$s'][1]">
             <rect x="0" y="0"
              width="100" height="50"
              fill="white" stroke="black"
@@ -61,7 +72,20 @@
                     <tspan x="0" dy="10"><xsl:value-of select="health"/></tspan>
                 </text>
             </g>
-        </svg>
+    </xsl:template>
+    <xsl:template name="noMatch">
+            <rect x="0" y="0"
+             width="100" height="50"
+             fill="red" stroke="black"
+             />
+            <g>
+                <text font-family="Rultor-Logo" font-size="40" x="82" xml:space="preserve" y="25" text-anchor="middle" dominant-baseline="middle">
+                    <xsl:text>R</xsl:text>
+                </text>
+                <text dominant-baseline="middle" x="0" y="25">
+                    <xsl:text>ERROR</xsl:text>
+                </text>
+            </g>
     </xsl:template>
     <xsl:template match="text()"/>
 </xsl:stylesheet>
