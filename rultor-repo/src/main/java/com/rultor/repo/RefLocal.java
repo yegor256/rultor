@@ -29,6 +29,7 @@
  */
 package com.rultor.repo;
 
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
@@ -39,8 +40,6 @@ import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -86,7 +85,7 @@ final class RefLocal implements Variable<Object> {
      * @param childs Enclosed parameters
      * @checkstyle ParameterNumber (5 lines)
      */
-    protected RefLocal(final Grammar grm, final URN urn, final String ref,
+    RefLocal(final Grammar grm, final URN urn, final String ref,
         final Collection<Variable<?>> childs) {
         this.grammar = grm;
         this.owner = urn;
@@ -112,7 +111,7 @@ final class RefLocal implements Variable<Object> {
     @Override
     @NotNull(message = "text is never NULL")
     public String asText() {
-        return new StringBuilder()
+        return new StringBuilder(0)
             .append(this.name)
             .append('(')
             .append(new Brackets<Variable<?>>(this.children))
@@ -126,12 +125,12 @@ final class RefLocal implements Variable<Object> {
      */
     @Override
     public Map<Integer, String> arguments() throws SpecException {
-        final ConcurrentMap<Integer, String> args =
-            new ConcurrentSkipListMap<Integer, String>();
-        for (Variable<?> var : this.children) {
-            args.putAll(var.arguments());
+        final ImmutableMap.Builder<Integer, String> args =
+            new ImmutableMap.Builder<Integer, String>();
+        for (final Variable<?> child : this.children) {
+            args.putAll(child.arguments());
         }
-        return args;
+        return args.build();
     }
 
 }

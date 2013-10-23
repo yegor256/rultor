@@ -77,7 +77,7 @@ final class Brackets<T> {
      * Public ctor.
      * @param args Arguments
      */
-    protected Brackets(final Collection<T> args) {
+    Brackets(final Collection<T> args) {
         this(
             args,
             new Brackets.Format<T>() {
@@ -94,7 +94,7 @@ final class Brackets<T> {
      * @param args Arguments
      * @param fmt Format to use for printing
      */
-    protected Brackets(final Collection<T> args, final Brackets.Format<T> fmt) {
+    Brackets(final Collection<T> args, final Brackets.Format<T> fmt) {
         this.vars = new Array<T>(args);
         this.format = fmt;
     }
@@ -103,14 +103,14 @@ final class Brackets<T> {
     public String toString() {
         final StringBuilder text = new StringBuilder();
         final List<String> kids = new ArrayList<String>(this.vars.size());
-        for (T var : this.vars) {
+        for (final T var : this.vars) {
             kids.add(this.format.print(var));
         }
         final String line = StringUtils.join(kids, ", ");
         if (line.length() < Tv.FIFTY && !line.contains(Brackets.EOL)) {
             text.append(line);
         } else {
-            final String shift = new StringBuilder()
+            final String shift = new StringBuilder(Brackets.INDENT.length() + 1)
                 .append(CharUtils.LF).append(Brackets.INDENT).toString();
             int idx;
             for (idx = 0; idx < kids.size(); ++idx) {

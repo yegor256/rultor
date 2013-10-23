@@ -32,7 +32,6 @@ package com.rultor.repo;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rultor.spi.Arguments;
-import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import java.util.Map;
@@ -64,7 +63,7 @@ final class Text implements Variable<String>, Comparable<Variable<String>> {
      * Public ctor.
      * @param val Value
      */
-    protected Text(final String val) {
+    Text(final String val) {
         this.value = val;
     }
 
@@ -76,8 +75,7 @@ final class Text implements Variable<String>, Comparable<Variable<String>> {
     @NotNull
     public String instantiate(
         @NotNull(message = "users can't be NULL") final Users users,
-        @NotNull(message = "arguments can't be NULL") final Arguments args)
-        throws SpecException {
+        @NotNull(message = "arguments can't be NULL") final Arguments args) {
         return this.value;
     }
 

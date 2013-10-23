@@ -29,6 +29,7 @@
  */
 package com.rultor.repo;
 
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
@@ -42,8 +43,6 @@ import com.rultor.spi.Wallet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -92,7 +91,7 @@ final class RefForeign implements Variable<Object> {
      * @param childs Enclosed child parameters
      * @checkstyle ParameterNumber (4 lines)
      */
-    protected RefForeign(final Grammar grm, final URN urn,
+    RefForeign(final Grammar grm, final URN urn,
         final String ref, final Collection<Variable<?>> childs) {
         Validate.matchesPattern(ref, "[-_\\w]+");
         this.grammar = grm;
@@ -129,7 +128,7 @@ final class RefForeign implements Variable<Object> {
 
     @Override
     public String asText() {
-        return new StringBuilder()
+        return new StringBuilder(0)
             .append(this.owner)
             .append(':')
             .append(this.name)
@@ -145,12 +144,12 @@ final class RefForeign implements Variable<Object> {
      */
     @Override
     public Map<Integer, String> arguments() throws SpecException {
-        final ConcurrentMap<Integer, String> args =
-            new ConcurrentSkipListMap<Integer, String>();
-        for (Variable<?> var : this.children) {
-            args.putAll(var.arguments());
+        final ImmutableMap.Builder<Integer, String> args =
+            new ImmutableMap.Builder<Integer, String>();
+        for (final Variable<?> child : this.children) {
+            args.putAll(child.arguments());
         }
-        return args;
+        return args.build();
     }
 
     /**
@@ -165,8 +164,8 @@ final class RefForeign implements Variable<Object> {
         throws SpecException {
         final Collection<Object> values =
             new ArrayList<Object>(this.children.size());
-        for (Variable<?> var : this.children) {
-            values.add(var.instantiate(users, args));
+        for (final Variable<?> child : this.children) {
+            values.add(child.instantiate(users, args));
         }
         try {
             return new Arguments(

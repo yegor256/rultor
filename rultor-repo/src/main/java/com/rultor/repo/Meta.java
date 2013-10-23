@@ -73,7 +73,7 @@ final class Meta implements Variable<Object> {
      * Public ctor.
      * @param text Text to parse
      */
-    protected Meta(final String text) {
+    Meta(final String text) {
         final Matcher matcher = Meta.PTN.matcher(text);
         Validate.isTrue(matcher.matches(), "invalid meta '%s'", text);
         this.mnemo = matcher.group(1);

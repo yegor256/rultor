@@ -40,6 +40,7 @@ import lombok.ToString;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
 
 /**
@@ -63,7 +64,7 @@ final class AntlrGrammar implements Grammar {
     @Override
     @NotNull(message = "variable is never NULL")
     public Variable<?> parse(
-        @NotNull(message = "URN can't be NULL") final URN urn,
+        @NotNull(message = "URN can't be NULL") final URN owner,
         @NotNull(message = "text can't be NULL") final String text)
         throws SpecException {
         final CharStream input = new ANTLRStringStream(text);
@@ -71,11 +72,11 @@ final class AntlrGrammar implements Grammar {
         final TokenStream tokens = new CommonTokenStream(lexer);
         final SpecParser parser = new SpecParser(tokens);
         parser.setGrammar(this);
-        parser.setOwner(urn);
-        Variable<?> var;
+        parser.setOwner(owner);
+        final Variable<?> var;
         try {
             var = parser.spec();
-        } catch (org.antlr.runtime.RecognitionException ex) {
+        } catch (RecognitionException ex) {
             throw new SpecException(ex);
         } catch (IllegalArgumentException ex) {
             throw new SpecException(ex);

@@ -29,6 +29,7 @@
  */
 package com.rultor.repo;
 
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
@@ -40,8 +41,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -68,8 +67,8 @@ final class Chain implements Variable<List<Object>> {
      * Public ctor.
      * @param vals Values
      */
-    protected Chain(final Collection<Variable<?>> vals) {
-        this.values = new com.jcabi.immutable.Array<Variable<?>>(vals);
+    Chain(final Collection<Variable<?>> vals) {
+        this.values = new Array<Variable<?>>(vals);
     }
 
     /**
@@ -92,7 +91,7 @@ final class Chain implements Variable<List<Object>> {
 
     @Override
     public String asText() {
-        return new StringBuilder()
+        return new StringBuilder(0)
             .append('[')
             .append(new Brackets<Variable<?>>(this.values))
             .append(']')
@@ -105,12 +104,12 @@ final class Chain implements Variable<List<Object>> {
      */
     @Override
     public Map<Integer, String> arguments() throws SpecException {
-        final ConcurrentMap<Integer, String> args =
-            new ConcurrentSkipListMap<Integer, String>();
-        for (Variable<?> var : this.values) {
+        final ImmutableMap.Builder<Integer, String> args =
+            new ImmutableMap.Builder<Integer, String>();
+        for (final Variable<?> var : this.values) {
             args.putAll(var.arguments());
         }
-        return args;
+        return args.build();
     }
 
 }

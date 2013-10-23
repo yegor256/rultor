@@ -29,6 +29,7 @@
  */
 package com.rultor.repo;
 
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
@@ -43,8 +44,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -78,7 +77,7 @@ final class Composite implements Variable<Object> {
      * @param name Name of type
      * @param args Arguments
      */
-    protected Composite(final String name, final Collection<Variable<?>> args) {
+    Composite(final String name, final Collection<Variable<?>> args) {
         this.type = name;
         this.vars = new Array<Variable<?>>(args);
     }
@@ -95,7 +94,8 @@ final class Composite implements Variable<Object> {
         throws SpecException {
         final Object[] args = new Object[this.vars.size()];
         final Class<?>[] types = new Class<?>[this.vars.size()];
-        for (int idx = 0; idx < this.vars.size(); ++idx) {
+        final int size = this.vars.size();
+        for (int idx = 0; idx < size; ++idx) {
             final Object object = this.vars.get(idx)
                 .instantiate(users, arguments);
             args[idx] = object;
@@ -141,7 +141,7 @@ final class Composite implements Variable<Object> {
 
     @Override
     public String asText() {
-        return new StringBuilder()
+        return new StringBuilder(0)
             .append(this.type)
             .append('(')
             .append(new Brackets<Variable<?>>(this.vars))
@@ -155,12 +155,12 @@ final class Composite implements Variable<Object> {
      */
     @Override
     public Map<Integer, String> arguments() throws SpecException {
-        final ConcurrentMap<Integer, String> args =
-            new ConcurrentSkipListMap<Integer, String>();
-        for (Variable<?> var : this.vars) {
+        final ImmutableMap.Builder<Integer, String> args =
+            new ImmutableMap.Builder<Integer, String>();
+        for (final Variable<?> var : this.vars) {
             args.putAll(var.arguments());
         }
-        return args;
+        return args.build();
     }
 
     /**
@@ -170,7 +170,7 @@ final class Composite implements Variable<Object> {
      * @throws SpecException If can't get it
      * @checkstyle RedundantThrows (5 lines)
      */
-    private Constructor<?> ctor(final Class<?>[] types)
+    private Constructor<?> ctor(final Class<?>... types)
         throws SpecException {
         final Class<?> cls;
         try {
@@ -179,8 +179,8 @@ final class Composite implements Variable<Object> {
             throw new SpecException(ex);
         }
         Constructor<?> ctor = null;
-        for (Constructor<?> opt : cls.getConstructors()) {
-            if (Composite.inherit(opt.getParameterTypes(), types)) {
+        for (final Constructor<?> opt : cls.getConstructors()) {
+            if (Composite.isInherited(opt.getParameterTypes(), types)) {
                 ctor = opt;
                 break;
             }
@@ -205,7 +205,7 @@ final class Composite implements Variable<Object> {
      * @param kids Child types
      * @return TRUE if they match
      */
-    private static boolean inherit(final Class<?>[] parents,
+    private static boolean isInherited(final Class<?>[] parents,
         final Class<?>[] kids) {
         boolean match;
         if (parents.length == kids.length) {
@@ -225,21 +225,21 @@ final class Composite implements Variable<Object> {
 
     /**
      * Auto-box the type.
-     * @param type Type to auto-box
+     * @param origin Type to auto-box
      * @return Non-scalar type
      */
-    private static Class<?> box(final Class<?> type) {
-        Class<?> out;
-        if (int.class.equals(type)) {
+    private static Class<?> box(final Class<?> origin) {
+        final Class<?> out;
+        if (int.class.equals(origin)) {
             out = Integer.class;
-        } else if (long.class.equals(type)) {
+        } else if (long.class.equals(origin)) {
             out = Long.class;
-        } else if (double.class.equals(type)) {
+        } else if (double.class.equals(origin)) {
             out = Double.class;
-        } else if (boolean.class.equals(type)) {
+        } else if (boolean.class.equals(origin)) {
             out = Boolean.class;
         } else {
-            out = type;
+            out = origin;
         }
         return out;
     }

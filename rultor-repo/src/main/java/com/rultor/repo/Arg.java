@@ -79,7 +79,7 @@ final class Arg implements Variable<Object> {
      * Public ctor.
      * @param text Text to parse
      */
-    protected Arg(final String text) {
+    Arg(final String text) {
         final Matcher matcher = Arg.PTN.matcher(text);
         Validate.isTrue(matcher.matches(), "invalid input '%s'", text);
         this.position = Integer.parseInt(matcher.group(1));

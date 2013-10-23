@@ -29,6 +29,7 @@
  */
 package com.rultor.repo;
 
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArrayMap;
@@ -37,7 +38,6 @@ import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import javax.validation.constraints.NotNull;
@@ -66,8 +66,7 @@ final class Dictionary implements Variable<Map<String, Object>> {
      * Public ctor.
      * @param vals Values
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    protected Dictionary(final Map<Variable<String>, Variable<?>> vals) {
+    Dictionary(final Map<Variable<String>, Variable<?>> vals) {
         this.map = new ArrayMap<Variable<String>, Variable<?>>(vals);
     }
 
@@ -81,16 +80,16 @@ final class Dictionary implements Variable<Map<String, Object>> {
         @NotNull(message = "users can't be NULL") final Users users,
         @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
-        final ConcurrentMap<String, Object> objects =
-            new ConcurrentHashMap<String, Object>(this.map.size());
-        for (Map.Entry<Variable<String>, Variable<?>> pair
+        final ImmutableMap.Builder<String, Object> objects =
+            new ImmutableMap.Builder<String, Object>();
+        for (final Map.Entry<Variable<String>, Variable<?>> pair
             : this.map.entrySet()) {
             objects.put(
                 pair.getKey().instantiate(users, args),
                 pair.getValue().instantiate(users, args)
             );
         }
-        return objects;
+        return objects.build();
     }
 
     @Override
@@ -110,7 +109,7 @@ final class Dictionary implements Variable<Map<String, Object>> {
     public Map<Integer, String> arguments() throws SpecException {
         final ConcurrentMap<Integer, String> args =
             new ConcurrentSkipListMap<Integer, String>();
-        for (Variable<?> var : this.map.values()) {
+        for (final Variable<?> var : this.map.values()) {
             args.putAll(var.arguments());
         }
         return args;

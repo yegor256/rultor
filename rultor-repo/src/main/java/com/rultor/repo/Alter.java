@@ -74,7 +74,7 @@ final class Alter implements Variable<String>, Comparable<Variable<String>> {
      * Public ctor.
      * @param val Value
      */
-    protected Alter(final String val) {
+    Alter(final String val) {
         this.value = val;
     }
 
@@ -89,7 +89,7 @@ final class Alter implements Variable<String>, Comparable<Variable<String>> {
         @NotNull(message = "arguments can't be NULL") final Arguments args)
         throws SpecException {
         return new Vext(
-            new StringBuilder()
+            new StringBuilder(0)
                 .append("#macro(arg $pos $desc)$arguments.get($pos)#end#**#")
                 .append(this.value)
                 .toString()

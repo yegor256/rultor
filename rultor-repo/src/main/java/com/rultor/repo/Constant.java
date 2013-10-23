@@ -65,7 +65,7 @@ final class Constant<T> implements Variable<Object> {
      * Public ctor.
      * @param val Value
      */
-    protected Constant(final T val) {
+    Constant(final T val) {
         this.value = val;
     }
 
@@ -84,9 +84,9 @@ final class Constant<T> implements Variable<Object> {
 
     @Override
     public String asText() {
-        String text;
+        final String text;
         if (this.value instanceof Long) {
-            text = String.format("%dL", this.value);
+            text = String.format("%dL", Long.class.cast(this.value));
         } else if (this.value instanceof Double) {
             text = new DecimalFormat("#.0####").format(this.value);
         } else if (this.value instanceof Boolean) {
