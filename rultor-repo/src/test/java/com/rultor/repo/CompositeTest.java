@@ -97,4 +97,26 @@ public final class CompositeTest {
         );
     }
 
+    /**
+     * Composite can combine arguments.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void combinesArguments() throws Exception {
+        final Variable<Object> var = new Composite(
+            "java.lang.Integer",
+            Arrays.<Variable<?>>asList(
+                new Alter("#arg(0,'test')"),
+                new Alter("#arg(0,'another test')")
+            )
+        );
+        MatcherAssert.assertThat(
+            var.arguments(),
+            Matchers.hasEntry(
+                Matchers.equalTo(0),
+                Matchers.equalTo("another test")
+            )
+        );
+    }
+
 }
