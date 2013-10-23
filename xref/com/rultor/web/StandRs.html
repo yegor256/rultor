@@ -527,54 +527,56 @@
 <a class="jxr_linenumber" name="517" href="#517">517</a>         <strong class="jxr_keyword">final</strong> Element root = dom.createElement(<span class="jxr_string">"widget"</span>);
 <a class="jxr_linenumber" name="518" href="#518">518</a>         root.setAttribute(<span class="jxr_string">"class"</span>, widget.getClass().getCanonicalName());
 <a class="jxr_linenumber" name="519" href="#519">519</a>         dom.appendChild(root);
-<a class="jxr_linenumber" name="520" href="#520">520</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="521" href="#521">521</a>             <strong class="jxr_keyword">new</strong> Xembler(widget.render(<strong class="jxr_keyword">this</strong>.stand())).apply(dom);
-<a class="jxr_linenumber" name="522" href="#522">522</a>         } <strong class="jxr_keyword">catch</strong> (ImpossibleModificationException ex) {
-<a class="jxr_linenumber" name="523" href="#523">523</a>             <strong class="jxr_keyword">final</strong> Element error = dom.createElement(<span class="jxr_string">"error"</span>);
-<a class="jxr_linenumber" name="524" href="#524">524</a>             error.setTextContent(Exceptions.stacktrace(ex));
-<a class="jxr_linenumber" name="525" href="#525">525</a>             dom.getDocumentElement().appendChild(error);
-<a class="jxr_linenumber" name="526" href="#526">526</a>         }
-<a class="jxr_linenumber" name="527" href="#527">527</a>         <strong class="jxr_keyword">return</strong> dom.getDocumentElement();
-<a class="jxr_linenumber" name="528" href="#528">528</a>     }
-<a class="jxr_linenumber" name="529" href="#529">529</a> 
-<a class="jxr_linenumber" name="530" href="#530">530</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="531" href="#531">531</a> <em class="jxr_javadoccomment">     * Bundle a tag.</em>
-<a class="jxr_linenumber" name="532" href="#532">532</a> <em class="jxr_javadoccomment">     * @param tag A tag</em>
-<a class="jxr_linenumber" name="533" href="#533">533</a> <em class="jxr_javadoccomment">     * @return Bundle</em>
-<a class="jxr_linenumber" name="534" href="#534">534</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="535" href="#535">535</a>     <strong class="jxr_keyword">private</strong> JaxbBundle bundle(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Tag.html">Tag</a> tag) {
-<a class="jxr_linenumber" name="536" href="#536">536</a>         <strong class="jxr_keyword">final</strong> Set&lt;String&gt; labels = <strong class="jxr_keyword">new</strong> TreeSet&lt;String&gt;();
-<a class="jxr_linenumber" name="537" href="#537">537</a>         labels.addAll(<strong class="jxr_keyword">this</strong>.tags);
-<a class="jxr_linenumber" name="538" href="#538">538</a>         labels.add(tag.label());
-<a class="jxr_linenumber" name="539" href="#539">539</a>         <strong class="jxr_keyword">final</strong> Object[] args = <strong class="jxr_keyword">new</strong> String[labels.size()];
-<a class="jxr_linenumber" name="540" href="#540">540</a>         <strong class="jxr_keyword">final</strong> Object[] values = <strong class="jxr_keyword">new</strong> String[labels.size() + 1];
-<a class="jxr_linenumber" name="541" href="#541">541</a>         <strong class="jxr_keyword">int</strong> idx = 0;
-<a class="jxr_linenumber" name="542" href="#542">542</a>         values[0] = <strong class="jxr_keyword">this</strong>.name;
-<a class="jxr_linenumber" name="543" href="#543">543</a>         <strong class="jxr_keyword">for</strong> (String label : labels) {
-<a class="jxr_linenumber" name="544" href="#544">544</a>             args[idx] = String.format(<span class="jxr_string">"{arg%d}"</span>, idx);
-<a class="jxr_linenumber" name="545" href="#545">545</a>             values[idx + 1] = label;
-<a class="jxr_linenumber" name="546" href="#546">546</a>             ++idx;
-<a class="jxr_linenumber" name="547" href="#547">547</a>         }
-<a class="jxr_linenumber" name="548" href="#548">548</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> JaxbBundle(<span class="jxr_string">"tag"</span>)
-<a class="jxr_linenumber" name="549" href="#549">549</a>             .add(<span class="jxr_string">"label"</span>, tag.label())
-<a class="jxr_linenumber" name="550" href="#550">550</a>             .up()
-<a class="jxr_linenumber" name="551" href="#551">551</a>             .add(<span class="jxr_string">"level"</span>, tag.level().toString())
+<a class="jxr_linenumber" name="520" href="#520">520</a>         <strong class="jxr_keyword">final</strong> Directives dirs = <strong class="jxr_keyword">new</strong> Directives().xpath(<span class="jxr_string">"/widget"</span>);
+<a class="jxr_linenumber" name="521" href="#521">521</a>         dirs.addAll(widget.render(<strong class="jxr_keyword">this</strong>.stand()));
+<a class="jxr_linenumber" name="522" href="#522">522</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="523" href="#523">523</a>             <strong class="jxr_keyword">new</strong> Xembler(dirs).apply(dom);
+<a class="jxr_linenumber" name="524" href="#524">524</a>         } <strong class="jxr_keyword">catch</strong> (ImpossibleModificationException ex) {
+<a class="jxr_linenumber" name="525" href="#525">525</a>             <strong class="jxr_keyword">final</strong> Element error = dom.createElement(<span class="jxr_string">"error"</span>);
+<a class="jxr_linenumber" name="526" href="#526">526</a>             error.setTextContent(Exceptions.stacktrace(ex));
+<a class="jxr_linenumber" name="527" href="#527">527</a>             dom.getDocumentElement().appendChild(error);
+<a class="jxr_linenumber" name="528" href="#528">528</a>         }
+<a class="jxr_linenumber" name="529" href="#529">529</a>         <strong class="jxr_keyword">return</strong> dom.getDocumentElement();
+<a class="jxr_linenumber" name="530" href="#530">530</a>     }
+<a class="jxr_linenumber" name="531" href="#531">531</a> 
+<a class="jxr_linenumber" name="532" href="#532">532</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="533" href="#533">533</a> <em class="jxr_javadoccomment">     * Bundle a tag.</em>
+<a class="jxr_linenumber" name="534" href="#534">534</a> <em class="jxr_javadoccomment">     * @param tag A tag</em>
+<a class="jxr_linenumber" name="535" href="#535">535</a> <em class="jxr_javadoccomment">     * @return Bundle</em>
+<a class="jxr_linenumber" name="536" href="#536">536</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="537" href="#537">537</a>     <strong class="jxr_keyword">private</strong> JaxbBundle bundle(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Tag.html">Tag</a> tag) {
+<a class="jxr_linenumber" name="538" href="#538">538</a>         <strong class="jxr_keyword">final</strong> Set&lt;String&gt; labels = <strong class="jxr_keyword">new</strong> TreeSet&lt;String&gt;();
+<a class="jxr_linenumber" name="539" href="#539">539</a>         labels.addAll(<strong class="jxr_keyword">this</strong>.tags);
+<a class="jxr_linenumber" name="540" href="#540">540</a>         labels.add(tag.label());
+<a class="jxr_linenumber" name="541" href="#541">541</a>         <strong class="jxr_keyword">final</strong> Object[] args = <strong class="jxr_keyword">new</strong> String[labels.size()];
+<a class="jxr_linenumber" name="542" href="#542">542</a>         <strong class="jxr_keyword">final</strong> Object[] values = <strong class="jxr_keyword">new</strong> String[labels.size() + 1];
+<a class="jxr_linenumber" name="543" href="#543">543</a>         <strong class="jxr_keyword">int</strong> idx = 0;
+<a class="jxr_linenumber" name="544" href="#544">544</a>         values[0] = <strong class="jxr_keyword">this</strong>.name;
+<a class="jxr_linenumber" name="545" href="#545">545</a>         <strong class="jxr_keyword">for</strong> (String label : labels) {
+<a class="jxr_linenumber" name="546" href="#546">546</a>             args[idx] = String.format(<span class="jxr_string">"{arg%d}"</span>, idx);
+<a class="jxr_linenumber" name="547" href="#547">547</a>             values[idx + 1] = label;
+<a class="jxr_linenumber" name="548" href="#548">548</a>             ++idx;
+<a class="jxr_linenumber" name="549" href="#549">549</a>         }
+<a class="jxr_linenumber" name="550" href="#550">550</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> JaxbBundle(<span class="jxr_string">"tag"</span>)
+<a class="jxr_linenumber" name="551" href="#551">551</a>             .add(<span class="jxr_string">"label"</span>, tag.label())
 <a class="jxr_linenumber" name="552" href="#552">552</a>             .up()
-<a class="jxr_linenumber" name="553" href="#553">553</a>             .add(<span class="jxr_string">"markdown"</span>, tag.markdown())
+<a class="jxr_linenumber" name="553" href="#553">553</a>             .add(<span class="jxr_string">"level"</span>, tag.level().toString())
 <a class="jxr_linenumber" name="554" href="#554">554</a>             .up()
-<a class="jxr_linenumber" name="555" href="#555">555</a>             .link(
-<a class="jxr_linenumber" name="556" href="#556">556</a>                 <strong class="jxr_keyword">new</strong> Link(
-<a class="jxr_linenumber" name="557" href="#557">557</a>                     <span class="jxr_string">"filter"</span>,
-<a class="jxr_linenumber" name="558" href="#558">558</a>                     <strong class="jxr_keyword">this</strong>.uriInfo().getBaseUriBuilder()
-<a class="jxr_linenumber" name="559" href="#559">559</a>                         .clone()
-<a class="jxr_linenumber" name="560" href="#560">560</a>                         .path(StandRs.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="561" href="#561">561</a>                         .queryParam(StandRs.QUERY_TAGS, args)
-<a class="jxr_linenumber" name="562" href="#562">562</a>                         .build(values)
-<a class="jxr_linenumber" name="563" href="#563">563</a>                 )
-<a class="jxr_linenumber" name="564" href="#564">564</a>             );
-<a class="jxr_linenumber" name="565" href="#565">565</a>     }
-<a class="jxr_linenumber" name="566" href="#566">566</a> 
-<a class="jxr_linenumber" name="567" href="#567">567</a> }
+<a class="jxr_linenumber" name="555" href="#555">555</a>             .add(<span class="jxr_string">"markdown"</span>, tag.markdown())
+<a class="jxr_linenumber" name="556" href="#556">556</a>             .up()
+<a class="jxr_linenumber" name="557" href="#557">557</a>             .link(
+<a class="jxr_linenumber" name="558" href="#558">558</a>                 <strong class="jxr_keyword">new</strong> Link(
+<a class="jxr_linenumber" name="559" href="#559">559</a>                     <span class="jxr_string">"filter"</span>,
+<a class="jxr_linenumber" name="560" href="#560">560</a>                     <strong class="jxr_keyword">this</strong>.uriInfo().getBaseUriBuilder()
+<a class="jxr_linenumber" name="561" href="#561">561</a>                         .clone()
+<a class="jxr_linenumber" name="562" href="#562">562</a>                         .path(StandRs.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="563" href="#563">563</a>                         .queryParam(StandRs.QUERY_TAGS, args)
+<a class="jxr_linenumber" name="564" href="#564">564</a>                         .build(values)
+<a class="jxr_linenumber" name="565" href="#565">565</a>                 )
+<a class="jxr_linenumber" name="566" href="#566">566</a>             );
+<a class="jxr_linenumber" name="567" href="#567">567</a>     }
+<a class="jxr_linenumber" name="568" href="#568">568</a> 
+<a class="jxr_linenumber" name="569" href="#569">569</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
