@@ -83,7 +83,7 @@
 <a class="jxr_linenumber" name="73" href="#73">73</a>  <em class="jxr_javadoccomment">     * Public ctor.</em>
 <a class="jxr_linenumber" name="74" href="#74">74</a>  <em class="jxr_javadoccomment">     * @param text Text to parse</em>
 <a class="jxr_linenumber" name="75" href="#75">75</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="76" href="#76">76</a>      <strong class="jxr_keyword">protected</strong> <a href="../../../com/rultor/repo/Meta.html">Meta</a>(<strong class="jxr_keyword">final</strong> String text) {
+<a class="jxr_linenumber" name="76" href="#76">76</a>      <a href="../../../com/rultor/repo/Meta.html">Meta</a>(<strong class="jxr_keyword">final</strong> String text) {
 <a class="jxr_linenumber" name="77" href="#77">77</a>          <strong class="jxr_keyword">final</strong> Matcher matcher = Meta.PTN.matcher(text);
 <a class="jxr_linenumber" name="78" href="#78">78</a>          Validate.isTrue(matcher.matches(), <span class="jxr_string">"invalid meta '%s'"</span>, text);
 <a class="jxr_linenumber" name="79" href="#79">79</a>          <strong class="jxr_keyword">this</strong>.mnemo = matcher.group(1);

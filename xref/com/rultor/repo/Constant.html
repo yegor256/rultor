@@ -75,7 +75,7 @@
 <a class="jxr_linenumber" name="65" href="#65">65</a>  <em class="jxr_javadoccomment">     * Public ctor.</em>
 <a class="jxr_linenumber" name="66" href="#66">66</a>  <em class="jxr_javadoccomment">     * @param val Value</em>
 <a class="jxr_linenumber" name="67" href="#67">67</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="68" href="#68">68</a>      <strong class="jxr_keyword">protected</strong> <a href="../../../com/rultor/repo/Constant.html">Constant</a>(<strong class="jxr_keyword">final</strong> T val) {
+<a class="jxr_linenumber" name="68" href="#68">68</a>      <a href="../../../com/rultor/repo/Constant.html">Constant</a>(<strong class="jxr_keyword">final</strong> T val) {
 <a class="jxr_linenumber" name="69" href="#69">69</a>          <strong class="jxr_keyword">this</strong>.value = val;
 <a class="jxr_linenumber" name="70" href="#70">70</a>      }
 <a class="jxr_linenumber" name="71" href="#71">71</a>  
@@ -94,9 +94,9 @@
 <a class="jxr_linenumber" name="84" href="#84">84</a>  
 <a class="jxr_linenumber" name="85" href="#85">85</a>      @Override
 <a class="jxr_linenumber" name="86" href="#86">86</a>      <strong class="jxr_keyword">public</strong> String asText() {
-<a class="jxr_linenumber" name="87" href="#87">87</a>          String text;
+<a class="jxr_linenumber" name="87" href="#87">87</a>          <strong class="jxr_keyword">final</strong> String text;
 <a class="jxr_linenumber" name="88" href="#88">88</a>          <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.value instanceof Long) {
-<a class="jxr_linenumber" name="89" href="#89">89</a>              text = String.format(<span class="jxr_string">"%dL"</span>, <strong class="jxr_keyword">this</strong>.value);
+<a class="jxr_linenumber" name="89" href="#89">89</a>              text = String.format(<span class="jxr_string">"%dL"</span>, Long.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(<strong class="jxr_keyword">this</strong>.value));
 <a class="jxr_linenumber" name="90" href="#90">90</a>          } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.value instanceof Double) {
 <a class="jxr_linenumber" name="91" href="#91">91</a>              text = <strong class="jxr_keyword">new</strong> DecimalFormat(<span class="jxr_string">"#.0####"</span>).format(<strong class="jxr_keyword">this</strong>.value);
 <a class="jxr_linenumber" name="92" href="#92">92</a>          } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.value instanceof Boolean) {
