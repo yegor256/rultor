@@ -67,12 +67,69 @@ public final class ButtonRsTest {
                 }
             }
         );
+        this.prepare(rule, res);
+        MatcherAssert.assertThat(
+            URLConnection.guessContentTypeFromStream(
+                new ByteArrayInputStream((byte[]) res.button().getEntity())
+            ),
+            Matchers.equalTo(MediaType.PNG.toString())
+        );
+    }
+
+    /**
+     * Premare mocks for tests.
+     * @param rule Rule to use.
+     * @param res Button
+     */
+    private void prepare(final String rule, final ButtonRs res) {
         res.setUriInfo(new UriInfoMocker().mock());
         res.setHttpHeaders(new HttpHeadersMocker().mock());
         res.setSecurityContext(Mockito.mock(SecurityContext.class));
         res.setStand("stand");
         res.setRule(rule);
-        context(res);
+        this.context(res);
+    }
+
+    /**
+     * ButtonRs can produce image even when missing build information.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void buildImageWithEmptyBuildInfo() throws Exception {
+        final ButtonRs res = new ButtonRs(
+            new ButtonRs.Build() {
+                @Override
+                public String info(final URI uri) {
+                    return "";
+                }
+            }
+        );
+        this.prepare("foo-rule", res);
+        MatcherAssert.assertThat(
+            URLConnection.guessContentTypeFromStream(
+                new ByteArrayInputStream((byte[]) res.button().getEntity())
+            ),
+            Matchers.equalTo(MediaType.PNG.toString())
+        );
+    }
+
+    /**
+     * ButtonRs can produce image even when missing build information.
+     *
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void buildImageWhenMissingBuildInfo() throws Exception {
+        final ButtonRs res = new ButtonRs(
+            new ButtonRs.Build() {
+                @Override
+                public String info(final URI uri) {
+                    return "<page><widgets></widgets></page>";
+                }
+            }
+        );
+        this.prepare("bar-rule", res);
         MatcherAssert.assertThat(
             URLConnection.guessContentTypeFromStream(
                 new ByteArrayInputStream((byte[]) res.button().getEntity())

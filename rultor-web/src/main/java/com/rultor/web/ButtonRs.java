@@ -49,6 +49,7 @@ import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Health button.
@@ -163,9 +164,12 @@ public final class ButtonRs extends BaseRs {
         return new XSLT(
             new StreamSource(
                 IOUtils.toInputStream(
-                    this.build.info(
-                        UriBuilder.fromUri(this.uriInfo().getBaseUri())
-                            .segment("s", this.stand).build()
+                    StringUtils.defaultIfBlank(
+                        this.build.info(
+                            UriBuilder.fromUri(this.uriInfo().getBaseUri())
+                                .segment("s", this.stand).build()
+                        ),
+                        "<page></page>"
                     )
                 )
             ),
