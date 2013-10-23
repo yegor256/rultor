@@ -29,7 +29,6 @@
  */
 package com.rultor.repo;
 
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
@@ -44,6 +43,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -155,12 +155,12 @@ final class Composite implements Variable<Object> {
      */
     @Override
     public Map<Integer, String> arguments() throws SpecException {
-        final ImmutableMap.Builder<Integer, String> args =
-            new ImmutableMap.Builder<Integer, String>();
-        for (final Variable<?> var : this.vars) {
-            args.putAll(var.arguments());
+        final Map<Integer, String> args =
+            new ConcurrentSkipListMap<Integer, String>();
+        for (final Variable<?> child : this.vars) {
+            args.putAll(child.arguments());
         }
-        return args.build();
+        return args;
     }
 
     /**

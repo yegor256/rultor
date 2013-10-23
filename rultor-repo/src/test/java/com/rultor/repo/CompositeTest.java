@@ -104,7 +104,7 @@ public final class CompositeTest {
     @Test
     public void combinesArguments() throws Exception {
         final Variable<Object> var = new Composite(
-            "java.lang.Integer",
+            "java.lang.Long",
             Arrays.<Variable<?>>asList(
                 new Alter("#arg(0,'test')"),
                 new Alter("#arg(0,'another test')")

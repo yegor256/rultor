@@ -93,7 +93,8 @@ public final class AlterTest {
      */
     @Test
     public void findsArguments() throws Exception {
-        final String text = "hello: #arg(0, 'hey you \u20ac')boom #arg(2,'')";
+        final String text =
+            "hello: #arg(0, 'hey you \u20ac')boom #arg(2,'') #arg(2,'')";
         final Variable<String> var = new Alter(text);
         MatcherAssert.assertThat(
             var.arguments(),

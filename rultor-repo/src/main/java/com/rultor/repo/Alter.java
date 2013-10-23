@@ -38,6 +38,7 @@ import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import com.rultor.tools.Vext;
 import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
@@ -113,13 +114,13 @@ final class Alter implements Variable<String>, Comparable<Variable<String>> {
 
     @Override
     public Map<Integer, String> arguments() {
-        final ImmutableMap.Builder<Integer, String> args =
-            new ImmutableMap.Builder<Integer, String>();
+        final Map<Integer, String> args =
+            new ConcurrentSkipListMap<Integer, String>();
         final Matcher matcher = Alter.MACROS.matcher(this.value);
         while (matcher.find()) {
             args.put(Integer.valueOf(matcher.group(1)), matcher.group(2));
         }
-        return args.build();
+        return args;
     }
 
     @Override
