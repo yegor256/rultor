@@ -114,7 +114,7 @@ final class Alter implements Variable<String>, Comparable<Variable<String>> {
 
     @Override
     public Map<Integer, String> arguments() {
-        final Map<Integer, String> args =
+        final ConcurrentMap<Integer, String> args =
             new ConcurrentSkipListMap<Integer, String>();
         final Matcher matcher = Alter.MACROS.matcher(this.value);
         while (matcher.find()) {

@@ -43,6 +43,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -155,7 +156,7 @@ final class Composite implements Variable<Object> {
      */
     @Override
     public Map<Integer, String> arguments() throws SpecException {
-        final Map<Integer, String> args =
+        final ConcurrentMap<Integer, String> args =
             new ConcurrentSkipListMap<Integer, String>();
         for (final Variable<?> child : this.vars) {
             args.putAll(child.arguments());
