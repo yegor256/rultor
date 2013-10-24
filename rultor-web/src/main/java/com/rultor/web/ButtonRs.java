@@ -58,7 +58,7 @@ import org.apache.commons.lang3.StringUtils;
  * @version $Id$
  * @since 1.0
  */
-@Path("/b/stand/{stand:[\\w\\-]+}/{rule:[\\w\\-]+}.png")
+@Path("/b/stand/{stand:[\\w\\-]+}/")
 @Loggable(Loggable.DEBUG)
 public final class ButtonRs extends BaseRs {
 
@@ -89,11 +89,6 @@ public final class ButtonRs extends BaseRs {
     private transient String stand;
 
     /**
-     * Rule name.
-     */
-    private transient String rule;
-
-    /**
      * Public constructor.
      */
     public ButtonRs() {
@@ -120,24 +115,16 @@ public final class ButtonRs extends BaseRs {
     }
 
     /**
-     * Inject it from query.
-     * @param rle Rule name
-     */
-    @PathParam("rule")
-    public void setRule(@NotNull(message = "rule name can't be NULL")
-        final String rle) {
-        this.rule = rle;
-    }
-
-    /**
-     * Draw image with build stats.
+     * Draw PNG image with build stats.
+     * @param rule Rule to use.
      * @return Image generated.
      * @throws Exception In case of problems generating image.
      */
     @GET
-    @Path("/")
+    @Path("{rule:[\\w\\-]+}.png")
     @Produces("image/png")
-    public Response button() throws Exception {
+    public Response pngButton(@PathParam("rule") final String rule)
+        throws Exception {
         final PNGTranscoder transcoder = new PNGTranscoder();
         transcoder.addTranscodingHint(
             PNGTranscoder.KEY_WIDTH, (float) Tv.HUNDRED
@@ -147,7 +134,7 @@ public final class ButtonRs extends BaseRs {
         );
         final ByteArrayOutputStream png = new ByteArrayOutputStream();
         transcoder.transcode(
-            new TranscoderInput(IOUtils.toInputStream(this.svg())),
+            new TranscoderInput(IOUtils.toInputStream(this.svg(rule))),
             new TranscoderOutput(png)
         );
         return Response
@@ -156,11 +143,28 @@ public final class ButtonRs extends BaseRs {
     }
 
     /**
+     * Draw SVG image with build stats.
+     * @param rule Rule to use.
+     * @return Image generated.
+     * @throws Exception In case of problems generating image.
+     */
+    @GET
+    @Path("{rule:[\\w\\-]+}.svg")
+    @Produces("image/svg+xml")
+    public Response svgButton(@PathParam("rule") final String rule)
+        throws Exception {
+        return Response
+            .ok(this.svg(rule), MediaType.SVG_UTF_8.toString())
+            .build();
+    }
+
+    /**
      * Create SVG from build.
+     * @param rule Rule to use.
      * @return String with SVG.
      * @throws Exception In case of transformation error.
      */
-    private String svg() throws Exception {
+    private String svg(final String rule) throws Exception {
         return new XSLT(
             new StreamSource(
                 IOUtils.toInputStream(
@@ -181,7 +185,7 @@ public final class ButtonRs extends BaseRs {
                                 "button.xsl"
                             )
                         ),
-                        this.rule
+                        rule
                     )
                 )
             )
