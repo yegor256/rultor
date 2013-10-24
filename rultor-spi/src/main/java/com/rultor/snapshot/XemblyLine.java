@@ -29,11 +29,8 @@
  */
 package com.rultor.snapshot;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
@@ -49,7 +46,6 @@ import org.xembly.SyntaxException;
  * @version $Id$
  * @since 1.0
  */
-@Immutable
 @EqualsAndHashCode(of = "directives")
 public final class XemblyLine {
 
@@ -68,14 +64,14 @@ public final class XemblyLine {
     /**
      * Encapsulated xembly directives.
      */
-    private final transient Array<Directive> directives;
+    private final transient Iterable<Directive> directives;
 
     /**
      * Public ctor.
      * @param dirs Xembly directives to encapsulate
      */
-    public XemblyLine(final Collection<Directive> dirs) {
-        this.directives = new Array<Directive>(dirs);
+    public XemblyLine(final Iterable<Directive> dirs) {
+        this.directives = dirs;
     }
 
     @Override
@@ -109,7 +105,7 @@ public final class XemblyLine {
      * @throws SyntaxException If can't parse
      * @checkstyle RedundantThrows (4 lines)
      */
-    public static XemblyLine parse(final String text)
+    public static XemblyLine parse(final CharSequence text)
         throws SyntaxException {
         final Matcher matcher = XemblyLine.PTN.matcher(text);
         final XemblyLine line;

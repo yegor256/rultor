@@ -115,7 +115,7 @@
             <dependency>
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk</artifactId>
-                <version>1.4.3</version>
+                <version>1.6.2</version>
             </dependency>
             <dependency>
                 <groupId>javax.json</groupId>
@@ -126,7 +126,7 @@
             <dependency>
                 <groupId>org.glassfish</groupId>
                 <artifactId>javax.json</artifactId>
-                <version>1.0</version>
+                <version>1.0.3</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
@@ -136,7 +136,8 @@
             </dependency>
             <dependency>
                 <groupId>com.jcabi</groupId>
-                <artifactId>jcabi-log</artifactId>
+                <artifactId>jcabi-aspects</artifactId>
+                <version>0.12</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

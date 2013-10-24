@@ -517,10 +517,12 @@ public final class StandRs extends BaseRs {
         final Element root = dom.createElement("widget");
         root.setAttribute("class", widget.getClass().getCanonicalName());
         dom.appendChild(root);
-        final Directives dirs = new Directives().xpath("/widget");
-        dirs.addAll(widget.render(this.stand()));
         try {
-            new Xembler(dirs).apply(dom);
+            new Xembler(
+                new Directives()
+                    .xpath("/widget")
+                    .append(widget.render(this.stand()))
+            ).apply(dom);
         } catch (ImpossibleModificationException ex) {
             final Element error = dom.createElement("error");
             error.setTextContent(Exceptions.stacktrace(ex));

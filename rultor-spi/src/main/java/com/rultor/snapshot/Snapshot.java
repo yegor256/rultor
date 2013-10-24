@@ -98,7 +98,7 @@ public final class Snapshot {
      * Public ctor.
      * @param dirs Directives
      */
-    public Snapshot(final Collection<Directive> dirs) {
+    public Snapshot(final Iterable<Directive> dirs) {
         this.directives = new Directives().add("snapshot").append(dirs);
     }
 

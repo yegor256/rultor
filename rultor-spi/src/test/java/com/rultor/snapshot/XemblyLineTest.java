@@ -51,7 +51,7 @@ public final class XemblyLineTest {
      */
     @Test
     public void printsAndParses() throws Exception {
-        final Collection<Directive> dirs = new Directives()
+        final Iterable<Directive> dirs = new Directives()
             .xpath("/snapshot")
             .add("test")
             .set("hello,\n\"'друг'\"!")
