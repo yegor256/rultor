@@ -50,6 +50,7 @@ import org.mockito.Mockito;
  * @version $Id$
  * @since 1.0
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public final class ButtonRsTest {
 
     /**
@@ -67,26 +68,48 @@ public final class ButtonRsTest {
                 }
             }
         );
-        this.prepare(rule, res);
+        this.prepare(res);
         MatcherAssert.assertThat(
             URLConnection.guessContentTypeFromStream(
-                new ByteArrayInputStream((byte[]) res.button().getEntity())
+                new ByteArrayInputStream(
+                    (byte[]) res.pngButton(rule).getEntity()
+                )
             ),
             Matchers.equalTo(MediaType.PNG.toString())
         );
     }
 
     /**
+     * ButtonRs can build SVG image.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void buildBasicSvgImage() throws Exception {
+        final String rule = "rultor-on-commit-svg";
+        final ButtonRs res = new ButtonRs(
+            new ButtonRs.Build() {
+                @Override
+                public String info(final URI uri) {
+                    return ButtonRsTest.this.page(rule);
+                }
+            }
+        );
+        this.prepare(res);
+        MatcherAssert.assertThat(
+            (String) res.svgButton(rule).getEntity(),
+            Matchers.startsWith("<svg")
+        );
+    }
+
+    /**
      * Premare mocks for tests.
-     * @param rule Rule to use.
      * @param res Button
      */
-    private void prepare(final String rule, final ButtonRs res) {
+    private void prepare(final ButtonRs res) {
         res.setUriInfo(new UriInfoMocker().mock());
         res.setHttpHeaders(new HttpHeadersMocker().mock());
         res.setSecurityContext(Mockito.mock(SecurityContext.class));
         res.setStand("stand");
-        res.setRule(rule);
         this.context(res);
     }
 
@@ -105,10 +128,12 @@ public final class ButtonRsTest {
                 }
             }
         );
-        this.prepare("foo-rule", res);
+        this.prepare(res);
         MatcherAssert.assertThat(
             URLConnection.guessContentTypeFromStream(
-                new ByteArrayInputStream((byte[]) res.button().getEntity())
+                new ByteArrayInputStream(
+                    (byte[]) res.pngButton("foo-rule").getEntity()
+                )
             ),
             Matchers.equalTo(MediaType.PNG.toString())
         );
@@ -129,10 +154,12 @@ public final class ButtonRsTest {
                 }
             }
         );
-        this.prepare("bar-rule", res);
+        this.prepare(res);
         MatcherAssert.assertThat(
             URLConnection.guessContentTypeFromStream(
-                new ByteArrayInputStream((byte[]) res.button().getEntity())
+                new ByteArrayInputStream(
+                    (byte[]) res.pngButton("bar-rule").getEntity()
+                )
             ),
             Matchers.equalTo(MediaType.PNG.toString())
         );
@@ -202,9 +229,8 @@ public final class ButtonRsTest {
         );
         res.setHttpHeaders(new HttpHeadersMocker().mock());
         res.setStand(stand);
-        res.setRule(rule);
         this.context(res);
-        res.button();
+        res.pngButton(rule);
         MatcherAssert.assertThat(called.get(), Matchers.is(true));
     }
 }
