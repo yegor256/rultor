@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type='text/xsl' href='puzzles.xsl'?><puzzles>
+   <puzzle>
+      <ticket>162</ticket>
+      <file>rultor-drain/src/main/java/com/rultor/drain/Standed.java</file>
+      <prefix> * </prefix>
+      <body>As soon as rexsl #716 is resolved remove SQSEntry interface and use TestClient directly.</body>
+      <estimate>30</estimate>
+      <lines>83-84</lines>
+      <owner>someone</owner>
+   </puzzle>
+   <puzzle>
+      <ticket>285</ticket>
+      <file>rultor-drain/src/main/java/com/rultor/drain/Standed.java</file>
+      <prefix>     * </prefix>
+      <body>Due to a problem with concurrency we're using this same thread executor. When the problem is fixed we should use Executors.newFixedThreadPool(Standed.THREADS, new VerboseThreads())</body>
+      <estimate>0</estimate>
+      <lines>146-148</lines>
+      <owner>someone</owner>
+   </puzzle>
+   <puzzle>
+      <ticket>201</ticket>
+      <file>rultor-widget/src/main/java/com/rultor/widget/BuildHealth.java</file>
+      <prefix>     * </prefix>
+      <body>If we increase the amount of elements to be processes, an OutOfMemory exception will be thrown. I don't understand why and how memory leakage is happening... http://stackoverflow.com/questions/18684598</body>
+      <estimate>0</estimate>
+      <lines>69-72</lines>
+      <owner>someone</owner>
+   </puzzle>
+   <puzzle>
+      <ticket>34</ticket>
+      <file>rultor-base/src/main/java/com/rultor/shell/Terminal.java</file>
+      <prefix>     * </prefix>
+      <body>This implementation is extremely bad and doesn't comply with any standards. Let's find out what is the right way to escape strings for BASH and implement it here</body>
+      <estimate>0</estimate>
+      <lines>75-77</lines>
+      <owner>someone</owner>
+   </puzzle>
+   <puzzle>
+      <ticket>307</ticket>
+      <file>rultor-base/src/main/java/com/rultor/ext/jira/RxJiraIssue.java</file>
+      <prefix>     * </prefix>
+      <body>Paging is not implemented</body>
+      <estimate>0</estimate>
+      <lines>127-127</lines>
+      <owner>someone</owner>
+   </puzzle>
+   <puzzle>
+      <ticket>360</ticket>
+      <file>rultor-web/pom.xml</file>
+      <prefix>                            </prefix>
+      <body>After rexsl#723 is fixed add exclude for batik library (which contains xml api classes reported bug for that https://issues.apache.org/jira/browse/BATIK-1059).</body>
+      <estimate>0</estimate>
+      <lines>361-363</lines>
+      <owner>someone</owner>
+   </puzzle>
+   <puzzle>
+      <ticket>215</ticket>
+      <file>rultor-users/src/test/java/com/rultor/users/pgsql/ArchiverITCase.java</file>
+      <prefix>     * </prefix>
+      <body>Refactor test so it can run VACUUM correctly, right now it throws "VACUUM cannot run inside a transaction block".</body>
+      <estimate>0</estimate>
+      <lines>64-65</lines>
+      <owner>someone</owner>
+   </puzzle>
+   <puzzle>
+      <ticket>275</ticket>
+      <file>rultor-conveyer/src/main/resources/start.sh</file>
+      <prefix># </prefix>
+      <body>This design is wrong, for one important reason - it doesn't take into account a version of software being deployed. Version is hardcoded in ec2-pom.xml as 1.0-SNAPSHOT. This should be changed. An alternative approach is to specify version as user data parameter, and use Maven only to download one required executable JAR file. Then, just run it with provided user data arguments.</body>
+      <estimate>0</estimate>
+      <lines>78-83</lines>
+      <owner>someone</owner>
+   </puzzle>
+</puzzles>
