@@ -30,7 +30,6 @@
 package com.rultor.snapshot;
 
 import com.jcabi.aspects.Tv;
-import java.util.Collection;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
