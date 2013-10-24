@@ -33,7 +33,7 @@
     <parent>
         <groupId>com.jcabi</groupId>
         <artifactId>parent</artifactId>
-        <version>0.11.2</version>
+        <version>0.12</version>
     </parent>
     <groupId>com.rultor</groupId>
     <artifactId>rultor</artifactId>
@@ -104,41 +104,6 @@
         <jersey.version>1.17.1</jersey.version>
         <github.global.server>github</github.global.server>
     </properties>
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-site-plugin</artifactId>
-                <configuration>
-                    <skipDeploy>true</skipDeploy>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.doxia</groupId>
-                        <artifactId>doxia-module-markdown</artifactId>
-                        <version>1.4</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>com.github.github</groupId>
-                <artifactId>site-maven-plugin</artifactId>
-                <version>0.8</version>
-                <configuration>
-                    <message>site for ${project.version}</message>
-                    <path></path>
-                    <merge>true</merge>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>site-deploy</phase>
-                        <goals>
-                            <goal>site</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -167,44 +132,15 @@
             <dependency>
                 <groupId>com.jcabi.incubator</groupId>
                 <artifactId>xembly</artifactId>
-                <version>0.10.2</version>
+                <version>0.11</version>
             </dependency>
             <dependency>
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-log</artifactId>
-                <version>0.10</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
     <profiles>
-        <profile>
-            <id>site</id>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <artifactId>maven-site-plugin</artifactId>
-                            <inherited>false</inherited>
-                            <configuration>
-                                <reportPlugins combine.children="append">
-                                    <plugin>
-                                        <artifactId>maven-changes-plugin</artifactId>
-                                        <reportSets>
-                                            <reportSet>
-                                                <reports>
-                                                    <report>github-report</report>
-                                                    <report>changes-report</report>
-                                                </reports>
-                                            </reportSet>
-                                        </reportSets>
-                                    </plugin>
-                                </reportPlugins>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
         <profile>
             <id>qulice</id>
             <build>
