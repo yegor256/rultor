@@ -36,6 +36,6 @@ import org.phandom.Phandom
 MatcherAssert.assertThat(
     XhtmlMatchers.xhtml(new Phandom(rexsl.document).dom()),
     XhtmlMatchers.hasXPaths(
-        '//xhtml:html/xhtml:head/xhtml:title'
+        '/xhtml:html'
     )
 )
