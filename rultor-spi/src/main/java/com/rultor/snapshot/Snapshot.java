@@ -30,8 +30,8 @@
 package com.rultor.snapshot;
 
 import com.google.common.collect.ImmutableMap;
-import com.rexsl.test.SimpleXml;
-import com.rexsl.test.XmlDocument;
+import com.jcabi.xml.XML;
+import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Tag;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -116,7 +116,7 @@ public final class Snapshot {
      * @throws XemblyException If can't apply
      * @checkstyle RedundantThrows (3 lines)
      */
-    public XmlDocument xml() throws XemblyException {
+    public XML xml() throws XemblyException {
         final Document dom;
         try {
             dom = new Xembler(this.directives).dom();
@@ -127,7 +127,7 @@ public final class Snapshot {
             "remove-duplicate-tags.xsl"
         );
         try {
-            return new SimpleXml(new DOMSource(new XSLT(dom, xsl).dom()));
+            return new XMLDocument(new DOMSource(new XSLT(dom, xsl).dom()));
         } catch (TransformerException ex) {
             throw new XemblyException(ex);
         } finally {
@@ -141,10 +141,10 @@ public final class Snapshot {
      * @throws XemblyException If fails
      */
     public Collection<Tag> tags() throws XemblyException {
-        final Collection<XmlDocument> nodes = this.xml()
+        final Collection<XML> nodes = this.xml()
             .nodes("/snapshot/tags/tag");
         final Collection<Tag> tags = new ArrayList<Tag>(nodes.size());
-        for (final XmlDocument node : nodes) {
+        for (final XML node : nodes) {
             tags.add(this.tag(node));
         }
         return Collections.unmodifiableCollection(tags);
@@ -155,7 +155,7 @@ public final class Snapshot {
      * @param node The node
      * @return Tag made
      */
-    public Tag tag(final XmlDocument node) {
+    public Tag tag(final XML node) {
         final Level level;
         if (node.nodes("level").isEmpty()) {
             level = Level.INFO;
@@ -170,7 +170,7 @@ public final class Snapshot {
         }
         final ImmutableMap.Builder<String, String> attrs =
             new ImmutableMap.Builder<String, String>();
-        for (final XmlDocument attr : node.nodes("attributes/attribute")) {
+        for (final XML attr : node.nodes("attributes/attribute")) {
             attrs.put(
                 attr.xpath("name/text()").get(0),
                 attr.xpath("value/text()").get(0)

@@ -276,7 +276,7 @@
     <xsl:template match="tags">
         <ul class="list-inline spacious-inline-list">
             <xsl:apply-templates select="tag"/>
-            <xsl:if test="../updated">
+            <xsl:if test="../updated != ''">
                 <li class="text-muted">
                     <xsl:text>updated </xsl:text>
                     <span class="timeago"><xsl:value-of select="../updated"/></span>

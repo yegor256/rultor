@@ -31,8 +31,8 @@ package com.rultor.client;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.xml.XML;
 import com.rexsl.test.RestTester;
-import com.rexsl.test.XmlDocument;
 import com.rultor.spi.Column;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Sheet;
@@ -79,7 +79,7 @@ final class RestSheet implements Sheet {
      * @param entry Entry point (URI)
      * @param tkn Token
      */
-    protected RestSheet(
+    RestSheet(
         @NotNull(message = "URI can't be NULL") final URI entry,
         @NotNull(message = "token can't be NULL") final String tkn) {
         this.home = entry.toString();
@@ -89,7 +89,7 @@ final class RestSheet implements Sheet {
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public List<Column> columns() {
-        final Collection<XmlDocument> nodes = RestTester
+        final Collection<XML> nodes = RestTester
             .start(UriBuilder.fromUri(this.home))
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
             .header(HttpHeaders.AUTHORIZATION, this.token)
@@ -97,7 +97,7 @@ final class RestSheet implements Sheet {
             .assertStatus(HttpURLConnection.HTTP_OK)
             .nodes("/page/columns/column");
         final List<Column> columns = new ArrayList<Column>(nodes.size());
-        for (XmlDocument node : nodes) {
+        for (final XML node : nodes) {
             columns.add(
                 new Column.Simple(
                     node.xpath("title/text()").get(0),

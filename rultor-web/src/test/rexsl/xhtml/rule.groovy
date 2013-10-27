@@ -31,10 +31,11 @@ package com.rultor.web.rexsl.xhtml
 
 import com.rexsl.test.XhtmlMatchers
 import org.hamcrest.MatcherAssert
+import org.phandom.Phandom
 
 MatcherAssert.assertThat(
-    rexsl.document,
+    XhtmlMatchers.xhtml(new Phandom(rexsl.document).dom()),
     XhtmlMatchers.hasXPaths(
-        '//xhtml:html/xhtml:head/xhtml:title'
+        '/xhtml:html'
     )
 )

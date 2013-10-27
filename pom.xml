@@ -100,9 +100,8 @@
         </site>
     </distributionManagement>
     <properties>
-        <rexsl.version>0.5.1</rexsl.version>
+        <rexsl.version>0.6</rexsl.version>
         <jersey.version>1.17.1</jersey.version>
-        <github.global.server>github</github.global.server>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -138,6 +137,11 @@
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-aspects</artifactId>
                 <version>0.12</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jcabi</groupId>
+                <artifactId>jcabi-xml</artifactId>
+                <version>0.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
