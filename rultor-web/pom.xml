@@ -511,6 +511,21 @@
                             </ignoredDependencies>
                         </configuration>
                     </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>jslint-maven-plugin</artifactId>
+                        <version>1.0.1</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>jslint</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceJsFolder>${basedir}/src/main/webapp/js</sourceJsFolder>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
         </profile>

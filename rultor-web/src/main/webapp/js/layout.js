@@ -28,6 +28,8 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*globals $: false, moment: false, markdown: false */
+
 var RULTOR = {
     format: function($block) {
         $block.find('span.timeago').each(
@@ -53,7 +55,7 @@ $(document).ready(
 
 $(document).keyup(
     function(event) {
-        if (event.keyCode == 27) {
+        if (event.keyCode === 27) {
             $('.overlay').hide();
             $('.menu').hide();
         }

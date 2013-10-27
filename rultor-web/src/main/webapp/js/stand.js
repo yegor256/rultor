@@ -28,6 +28,8 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*globals $: false, console: false, RULTOR: false */
+
 function fetch($div) {
     var entry = $div.attr('data-fetch-url');
     if (!entry) {
@@ -41,7 +43,7 @@ function fetch($div) {
     $div.find('.snapshot').load(
         entry,
         function(text, status, xhr) {
-            if (status == "error") {
+            if (status === "error") {
                 $div.find('.heart').addClass('text-danger');
                 $div.find('.heart').attr('title', text);
             } else {
@@ -64,9 +66,9 @@ $(document).ready(
             function () {
                 $(this).click(
                     function() {
-                        var $div = $(this).closest('div.panel');
-                        var $icon = $(this).find('i');
-                        var $msg = $(this).closest('ul').find('li.msg')
+                        var $div = $(this).closest('div.panel'),
+                            $icon = $(this).find('i'),
+                            $msg = $(this).closest('ul').find('li.msg');
                         if ($div.attr('data-fetch-stop')) {
                             $div.removeAttr('data-fetch-stop');
                             $icon.removeClass('text-danger');
