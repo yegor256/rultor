@@ -1,4 +1,4 @@
-<img src="http://img.rultor.com/logo-64x64.png"/> <img src="http://www.rultor.com/b/stand/rultor/rultor-on-commit"/>
+<img src="http://img.rultor.com/logo-64x64.png"/> [![Build Status](http://www.rultor.com/b/stand/rultor/rultor-on-commit.png)](http://www.rultor.com/s/rultor)
 
 Rultor.com is a Programmable Enforcer of a Software Development Process.
 
