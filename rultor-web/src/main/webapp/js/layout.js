@@ -35,8 +35,10 @@ var RULTOR = {
         $block.find('span.timeago').each(
             function (span) {
                 var iso = $(this).text();
-                $(this).text(moment(iso).fromNow());
-                $(this).attr('title', iso);
+                if (iso !== null) {
+                    $(this).text(moment(iso).fromNow());
+                    $(this).attr('title', iso);
+                }
             }
         );
         $block.find('span.markdown').each(

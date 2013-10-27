@@ -376,6 +376,11 @@
                 <dependencies>
                     <dependency>
                         <groupId>com.jcabi</groupId>
+                        <artifactId>jcabi-log</artifactId>
+                        <version>0.11</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.jcabi</groupId>
                         <artifactId>jcabi-aspects</artifactId>
                         <version>0.8</version>
                     </dependency>
