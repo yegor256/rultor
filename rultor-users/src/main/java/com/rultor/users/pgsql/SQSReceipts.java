@@ -36,6 +36,7 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.jdbc.JdbcSession;
 import com.rultor.aws.SQSClient;
@@ -93,6 +94,7 @@ final class SQSReceipts {
      * @throws SQLException If fails
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    @RetryOnFailure(verbose = false)
     public int process() throws SQLException {
         final AmazonSQS aws = this.queue.get();
         final ReceiveMessageResult result = aws.receiveMessage(
