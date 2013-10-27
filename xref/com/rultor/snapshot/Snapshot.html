@@ -40,8 +40,8 @@
 <a class="jxr_linenumber" name="30" href="#30">30</a>  <strong class="jxr_keyword">package</strong> com.rultor.snapshot;
 <a class="jxr_linenumber" name="31" href="#31">31</a>  
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.google.common.collect.ImmutableMap;
-<a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.rexsl.test.SimpleXml;
-<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.rexsl.test.XmlDocument;
+<a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.xml.XML;
+<a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.xml.XMLDocument;
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rultor.spi.Tag;
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> java.io.BufferedReader;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
@@ -126,7 +126,7 @@
 <a class="jxr_linenumber" name="116" href="#116">116</a> <em class="jxr_javadoccomment">     * @throws XemblyException If can't apply</em>
 <a class="jxr_linenumber" name="117" href="#117">117</a> <em class="jxr_javadoccomment">     * @checkstyle RedundantThrows (3 lines)</em>
 <a class="jxr_linenumber" name="118" href="#118">118</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="119" href="#119">119</a>     <strong class="jxr_keyword">public</strong> XmlDocument xml() <strong class="jxr_keyword">throws</strong> XemblyException {
+<a class="jxr_linenumber" name="119" href="#119">119</a>     <strong class="jxr_keyword">public</strong> XML xml() <strong class="jxr_keyword">throws</strong> XemblyException {
 <a class="jxr_linenumber" name="120" href="#120">120</a>         <strong class="jxr_keyword">final</strong> Document dom;
 <a class="jxr_linenumber" name="121" href="#121">121</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="122" href="#122">122</a>             dom = <strong class="jxr_keyword">new</strong> Xembler(<strong class="jxr_keyword">this</strong>.directives).dom();
@@ -137,7 +137,7 @@
 <a class="jxr_linenumber" name="127" href="#127">127</a>             <span class="jxr_string">"remove-duplicate-tags.xsl"</span>
 <a class="jxr_linenumber" name="128" href="#128">128</a>         );
 <a class="jxr_linenumber" name="129" href="#129">129</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="130" href="#130">130</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> SimpleXml(<strong class="jxr_keyword">new</strong> DOMSource(<strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/snapshot/XSLT.html">XSLT</a>(dom, xsl).dom()));
+<a class="jxr_linenumber" name="130" href="#130">130</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> XMLDocument(<strong class="jxr_keyword">new</strong> DOMSource(<strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/snapshot/XSLT.html">XSLT</a>(dom, xsl).dom()));
 <a class="jxr_linenumber" name="131" href="#131">131</a>         } <strong class="jxr_keyword">catch</strong> (TransformerException ex) {
 <a class="jxr_linenumber" name="132" href="#132">132</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/snapshot/XemblyException.html">XemblyException</a>(ex);
 <a class="jxr_linenumber" name="133" href="#133">133</a>         } <strong class="jxr_keyword">finally</strong> {
@@ -151,10 +151,10 @@
 <a class="jxr_linenumber" name="141" href="#141">141</a> <em class="jxr_javadoccomment">     * @throws XemblyException If fails</em>
 <a class="jxr_linenumber" name="142" href="#142">142</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="143" href="#143">143</a>     <strong class="jxr_keyword">public</strong> Collection&lt;Tag&gt; tags() <strong class="jxr_keyword">throws</strong> XemblyException {
-<a class="jxr_linenumber" name="144" href="#144">144</a>         <strong class="jxr_keyword">final</strong> Collection&lt;XmlDocument&gt; nodes = <strong class="jxr_keyword">this</strong>.xml()
+<a class="jxr_linenumber" name="144" href="#144">144</a>         <strong class="jxr_keyword">final</strong> Collection&lt;XML&gt; nodes = <strong class="jxr_keyword">this</strong>.xml()
 <a class="jxr_linenumber" name="145" href="#145">145</a>             .nodes(<span class="jxr_string">"/snapshot/tags/tag"</span>);
 <a class="jxr_linenumber" name="146" href="#146">146</a>         <strong class="jxr_keyword">final</strong> Collection&lt;Tag&gt; tags = <strong class="jxr_keyword">new</strong> ArrayList&lt;Tag&gt;(nodes.size());
-<a class="jxr_linenumber" name="147" href="#147">147</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> XmlDocument node : nodes) {
+<a class="jxr_linenumber" name="147" href="#147">147</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> XML node : nodes) {
 <a class="jxr_linenumber" name="148" href="#148">148</a>             tags.add(<strong class="jxr_keyword">this</strong>.tag(node));
 <a class="jxr_linenumber" name="149" href="#149">149</a>         }
 <a class="jxr_linenumber" name="150" href="#150">150</a>         <strong class="jxr_keyword">return</strong> Collections.unmodifiableCollection(tags);
@@ -165,7 +165,7 @@
 <a class="jxr_linenumber" name="155" href="#155">155</a> <em class="jxr_javadoccomment">     * @param node The node</em>
 <a class="jxr_linenumber" name="156" href="#156">156</a> <em class="jxr_javadoccomment">     * @return Tag made</em>
 <a class="jxr_linenumber" name="157" href="#157">157</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="158" href="#158">158</a>     <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Tag.html">Tag</a> tag(<strong class="jxr_keyword">final</strong> XmlDocument node) {
+<a class="jxr_linenumber" name="158" href="#158">158</a>     <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Tag.html">Tag</a> tag(<strong class="jxr_keyword">final</strong> XML node) {
 <a class="jxr_linenumber" name="159" href="#159">159</a>         <strong class="jxr_keyword">final</strong> Level level;
 <a class="jxr_linenumber" name="160" href="#160">160</a>         <strong class="jxr_keyword">if</strong> (node.nodes(<span class="jxr_string">"level"</span>).isEmpty()) {
 <a class="jxr_linenumber" name="161" href="#161">161</a>             level = Level.INFO;
@@ -180,7 +180,7 @@
 <a class="jxr_linenumber" name="170" href="#170">170</a>         }
 <a class="jxr_linenumber" name="171" href="#171">171</a>         <strong class="jxr_keyword">final</strong> ImmutableMap.Builder&lt;String, String&gt; attrs =
 <a class="jxr_linenumber" name="172" href="#172">172</a>             <strong class="jxr_keyword">new</strong> ImmutableMap.Builder&lt;String, String&gt;();
-<a class="jxr_linenumber" name="173" href="#173">173</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> XmlDocument attr : node.nodes(<span class="jxr_string">"attributes/attribute"</span>)) {
+<a class="jxr_linenumber" name="173" href="#173">173</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> XML attr : node.nodes(<span class="jxr_string">"attributes/attribute"</span>)) {
 <a class="jxr_linenumber" name="174" href="#174">174</a>             attrs.put(
 <a class="jxr_linenumber" name="175" href="#175">175</a>                 attr.xpath(<span class="jxr_string">"name/text()"</span>).get(0),
 <a class="jxr_linenumber" name="176" href="#176">176</a>                 attr.xpath(<span class="jxr_string">"value/text()"</span>).get(0)

@@ -46,15 +46,6 @@
       <owner>someone</owner>
    </puzzle>
    <puzzle>
-      <ticket>360</ticket>
-      <file>rultor-web/pom.xml</file>
-      <prefix>                            </prefix>
-      <body>After rexsl#723 is fixed add exclude for batik library (which contains xml api classes reported bug for that https://issues.apache.org/jira/browse/BATIK-1059).</body>
-      <estimate>0</estimate>
-      <lines>361-363</lines>
-      <owner>someone</owner>
-   </puzzle>
-   <puzzle>
       <ticket>215</ticket>
       <file>rultor-users/src/test/java/com/rultor/users/pgsql/ArchiverITCase.java</file>
       <prefix>     * </prefix>
