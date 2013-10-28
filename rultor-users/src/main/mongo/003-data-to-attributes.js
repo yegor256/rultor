@@ -28,6 +28,8 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*globals db:false, print:false */
+
 /**
  * Convert DATA into ATTRIBUTES.
  */
@@ -45,7 +47,7 @@ db.stands.find({tags: {"$exists": true}}).forEach(
                     delete tag.data;
                     print("converted DATA into ATTRIBUTE(S) in " + item.pulse);
                 }
-                if (Object.prototype.toString.call(tag.attributes) == '[object Array]') {
+                if (Object.prototype.toString.call(tag.attributes) === '[object Array]') {
                     tag.attributes = {};
                     print("converted empty ATTRIBUTE(S) to MAP in " + item.pulse);
                 }

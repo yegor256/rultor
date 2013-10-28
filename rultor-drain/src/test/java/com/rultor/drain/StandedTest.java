@@ -30,6 +30,9 @@
 package com.rultor.drain;
 
 import com.google.common.util.concurrent.MoreExecutors;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Timeable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
 import com.rexsl.test.TestClient;
 import com.rexsl.test.TestResponse;
@@ -42,6 +45,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -54,6 +59,7 @@ import org.xembly.Directives;
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class StandedTest {
 
@@ -144,7 +150,17 @@ public final class StandedTest {
         final TestClient client = Mockito.mock(TestClient.class);
         Mockito.doThrow(new IllegalStateException("failure!")).when(client)
             .header(Mockito.anyString(), Mockito.anyString());
-        this.standed(client).append(this.xemblies(1));
+        new Callable<Void>() {
+            @Override
+            @Timeable(limit = Tv.FIVE, unit = TimeUnit.SECONDS)
+            @Loggable(Loggable.DEBUG)
+            public Void call() throws IOException {
+                StandedTest.this.standed(client).append(
+                    StandedTest.this.xemblies(1)
+                );
+                return null;
+            }
+        } .call();
     }
 
     /**
@@ -171,7 +187,7 @@ public final class StandedTest {
     private Matcher<String> matcher(final int... identifiers) {
         final List<Matcher<String>> matchers =
             new ArrayList<Matcher<String>>(identifiers.length);
-        for (int identifier : identifiers) {
+        for (final int identifier : identifiers) {
             matchers.add(
                 Matchers.allOf(
                     Matchers.containsString(

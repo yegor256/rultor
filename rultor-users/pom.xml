@@ -39,7 +39,6 @@
     <packaging>jar</packaging>
     <name>rultor-users</name>
     <properties>
-        <dynamodblocal.tgz>${com.jcabi:DynamoDBLocal:tgz}</dynamodblocal.tgz>
         <failsafe.pgsql.username>postgres</failsafe.pgsql.username>
         <failsafe.pgsql.password>secure</failsafe.pgsql.password>
         <failsafe.pgsql.db>test</failsafe.pgsql.db>
@@ -70,18 +69,10 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-jdbc</artifactId>
-            <version>0.10</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>DynamoDBLocal</artifactId>
-            <version>2013-09-12</version>
-            <type>tgz</type>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>postgresql</groupId>
@@ -112,7 +103,6 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-dynamo</artifactId>
-            <version>0.8.3</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
@@ -174,6 +164,8 @@
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
+                        <!-- @todo #1 integration tests are not ready for parallel execution yet -->
+                        <parallel>none</parallel>
                         <systemPropertyVariables>
                             <dynamodb.port>${dynamodblocal.port}</dynamodb.port>
                             <failsafe.mongo.host>localhost</failsafe.mongo.host>
@@ -297,19 +289,38 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>copy-properties</id>
                         <goals>
                             <goal>properties</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>unpack-dynamodb-local</id>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.jcabi</groupId>
+                                    <artifactId>DynamoDBLocal</artifactId>
+                                    <version>2013-09-12</version>
+                                    <type>zip</type>
+                                    <outputDirectory>${project.build.directory}/dynamodb-dist</outputDirectory>
+                                    <overWrite>false</overWrite>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-dynamodb-maven-plugin</artifactId>
-                <version>0.2</version>
+                <version>0.4.1</version>
                 <configuration>
                     <port>${dynamodblocal.port}</port>
-                    <tgz>${dynamodblocal.tgz}</tgz>
+                    <dist>${project.build.directory}/dynamodb-dist</dist>
                 </configuration>
                 <executions>
                     <execution>

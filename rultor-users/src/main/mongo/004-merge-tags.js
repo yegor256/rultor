@@ -28,20 +28,22 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*globals db:false, print:false */
+
 function merge(input, left, right) {
-    var tags = new Array();
+    var tags = [];
     input.forEach(
         function (tag) {
-            if (tag.label != right) {
+            if (tag.label !== right) {
                 return;
             }
             var merged = false;
             tags.forEach(
                 function (etag) {
-                    if (tag.label != left) {
+                    if (tag.label !== left) {
                         return;
                     }
-                    if (etag.label == tag.label) {
+                    if (etag.label === tag.label) {
                         tag.attributes.forEach(
                             function(value, key) {
                                 etag.attributes[key] = value;

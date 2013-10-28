@@ -28,12 +28,14 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*globals db:false, print:false */
+
 /**
  * Convert plain-text tags to objects.
  */
 db.stands.find({tags: {"$exists": true}}).forEach(
     function(item) {
-        var tags = new Array();
+        var tags = [];
         item.tags.forEach(
             function(tag) {
                 if (typeof tag === 'string') {

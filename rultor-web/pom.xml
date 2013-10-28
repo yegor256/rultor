@@ -56,12 +56,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-jdbc</artifactId>
-            <version>0.10</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>rultor-drain</artifactId>
             <version>${project.version}</version>
@@ -158,7 +152,6 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-dynamo</artifactId>
-            <version>0.8.3</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
@@ -210,13 +203,6 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>2.2.11</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.xml.bind</groupId>
-                    <artifactId>jsr173_api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -233,7 +219,6 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-manifests</artifactId>
-            <version>0.8</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -254,8 +239,6 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-            <version>3.0-alpha-1</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
@@ -382,7 +365,7 @@
                     <dependency>
                         <groupId>com.jcabi</groupId>
                         <artifactId>jcabi-aspects</artifactId>
-                        <version>0.8</version>
+                        <version>0.12</version>
                     </dependency>
                     <dependency>
                         <groupId>com.jcabi.incubator</groupId>
@@ -515,21 +498,6 @@
                                 </dependency>
                             </ignoredDependencies>
                         </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>jslint-maven-plugin</artifactId>
-                        <version>1.0.1</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>jslint</goal>
-                                </goals>
-                                <configuration>
-                                    <sourceJsFolder>${basedir}/src/main/webapp/js</sourceJsFolder>
-                                </configuration>
-                            </execution>
-                        </executions>
                     </plugin>
                 </plugins>
             </build>
