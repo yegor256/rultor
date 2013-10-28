@@ -129,6 +129,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.rexsl</groupId>
