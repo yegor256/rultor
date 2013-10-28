@@ -133,7 +133,6 @@ final class MongoStand implements Stand {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
     public void post(final Coordinates pulse, final long nano,

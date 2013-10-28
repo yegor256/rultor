@@ -71,7 +71,6 @@ final class Constant<T> implements Variable<Object> {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (8 lines)
      */
     @Override
     @NotNull

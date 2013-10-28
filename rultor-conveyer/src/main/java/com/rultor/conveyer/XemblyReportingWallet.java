@@ -76,7 +76,6 @@ final class XemblyReportingWallet implements Wallet {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
     public Wallet delegate(final URN urn, final String name)

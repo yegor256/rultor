@@ -261,7 +261,6 @@ final class Testing implements Profile {
                 }
                 /**
                  * {@inheritDoc}
-                 * @checkstyle RedundantThrowsCheck (4 lines)
                  */
                 @Override
                 public void fund(final String code)

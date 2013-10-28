@@ -89,7 +89,6 @@ final class AuditRule implements Rule {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
     public Wallet wallet(final Coordinates work, final URN taker,

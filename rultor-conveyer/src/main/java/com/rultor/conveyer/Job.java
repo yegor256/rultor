@@ -116,7 +116,6 @@ final class Job {
      * @param decor Decorator to use
      * @return Instance
      * @throws SpecException If incorrect spec
-     * @checkstyle RedundantThrows (4 lines)
      */
     private Instance make(final User owner, final Rule rule,
         final Job.Decor decor) throws SpecException {
@@ -150,7 +149,6 @@ final class Job {
      * @param spec Spec itself
      * @return Variable
      * @throws SpecException If fails
-     * @checkstyle RedundantThrows (5 lines)
      */
     private Variable<?> var(final User owner, final Spec spec)
         throws SpecException {

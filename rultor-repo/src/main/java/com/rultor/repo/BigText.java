@@ -105,7 +105,6 @@ final class BigText implements Variable<String> {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (8 lines)
      */
     @Override
     @NotNull

@@ -117,7 +117,6 @@ final class PgAccount implements Account {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrowsCheck (3 lines)
      */
     @Override
     public void fund(@NotNull final String code) throws InvalidCouponException {

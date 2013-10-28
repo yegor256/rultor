@@ -85,7 +85,6 @@ final class Composite implements Variable<Object> {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (10 lines)
      */
     @Override
     @NotNull
@@ -152,7 +151,6 @@ final class Composite implements Variable<Object> {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
     public Map<Integer, String> arguments() throws SpecException {
@@ -169,7 +167,6 @@ final class Composite implements Variable<Object> {
      * @param types Types
      * @return The ctor
      * @throws SpecException If can't get it
-     * @checkstyle RedundantThrows (5 lines)
      */
     private Constructor<?> ctor(final Class<?>... types)
         throws SpecException {

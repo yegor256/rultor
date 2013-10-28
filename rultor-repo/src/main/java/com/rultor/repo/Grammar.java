@@ -51,7 +51,6 @@ interface Grammar {
      * @param text Text to convert
      * @return The variable
      * @throws SpecException If fails
-     * @checkstyle RedundantThrows (10 lines)
      */
     @NotNull(message = "variable is never NULL")
     Variable<?> parse(

@@ -103,7 +103,6 @@ public final class XemblyLine {
      * @param text Text to decode
      * @return Detail found or runtime exception
      * @throws SyntaxException If can't parse
-     * @checkstyle RedundantThrows (4 lines)
      */
     public static XemblyLine parse(final CharSequence text)
         throws SyntaxException {

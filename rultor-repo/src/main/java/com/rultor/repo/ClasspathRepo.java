@@ -73,7 +73,6 @@ public final class ClasspathRepo implements Repo {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (8 lines)
      */
     @Override
     @NotNull

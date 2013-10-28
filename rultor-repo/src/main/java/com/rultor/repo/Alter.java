@@ -82,7 +82,6 @@ final class Alter implements Variable<String>, Comparable<Variable<String>> {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (10 lines)
      */
     @Override
     @NotNull(message = "text produced is never NULL")

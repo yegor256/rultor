@@ -84,7 +84,6 @@ public final class Radar {
      * Get snapshot of the current thread.
      * @return The snapshot
      * @throws SyntaxException If fails
-     * @checkstyle RedundantThrows (5 lines)
      */
     public Snapshot snapshot() throws SyntaxException {
         final StringBuffer buffer = Radar.LINES.get(this.group);

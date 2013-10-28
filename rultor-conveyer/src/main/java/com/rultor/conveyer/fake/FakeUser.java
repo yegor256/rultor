@@ -177,7 +177,6 @@ final class FakeUser implements User {
             }
             /**
              * {@inheritDoc}
-             * @checkstyle RedundantThrowsCheck (3 lines)
              */
             @Override
             public void fund(final String code) throws InvalidCouponException {

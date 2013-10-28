@@ -92,7 +92,6 @@ public final class XSLT {
      * @param snapshot Snapshot
      * @param text XSL as text
      * @throws XemblyException If can't build
-     * @checkstyle RedundantThrows (5 lines)
      */
     public XSLT(final Snapshot snapshot, final String text)
         throws XemblyException {
@@ -104,7 +103,6 @@ public final class XSLT {
      * @param snapshot Snapshot
      * @param stream XSL
      * @throws XemblyException If can't build
-     * @checkstyle RedundantThrows (5 lines)
      */
     public XSLT(final Snapshot snapshot, final InputStream stream)
         throws XemblyException {
@@ -115,7 +113,6 @@ public final class XSLT {
      * Ctor.
      * @param dom DOM source
      * @param stream XSL
-     * @checkstyle RedundantThrows (5 lines)
      */
     public XSLT(final Node dom, final InputStream stream) {
         this(new DOMSource(dom), new StreamSource(stream));

@@ -102,7 +102,6 @@ final class RefForeign implements Variable<Object> {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (8 lines)
      */
     @Override
     @NotNull
@@ -140,7 +139,6 @@ final class RefForeign implements Variable<Object> {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
     public Map<Integer, String> arguments() throws SpecException {
@@ -158,7 +156,6 @@ final class RefForeign implements Variable<Object> {
      * @param args Arguments received from the upper level caller
      * @return Arguments to use
      * @throws SpecException If fails
-     * @checkstyle RedundantThrows (5 lines)
      */
     private Arguments mapping(final Users users, final Arguments args)
         throws SpecException {

@@ -415,7 +415,6 @@ public final class StandRs extends BaseRs {
      * @param xembly Xembly script
      * @return Its snapshot
      * @throws SyntaxException If fails
-     * @checkstyle RedundantThrows (5 lines)
      */
     private Snapshot snapshot(final String xembly) throws SyntaxException {
         return new Snapshot(

@@ -59,7 +59,6 @@ final class AntlrGrammar implements Grammar {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (10 lines)
      */
     @Override
     @NotNull(message = "variable is never NULL")

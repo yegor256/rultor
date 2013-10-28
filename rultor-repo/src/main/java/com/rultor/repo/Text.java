@@ -69,7 +69,6 @@ final class Text implements Variable<String>, Comparable<Variable<String>> {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (10 lines)
      */
     @Override
     @NotNull

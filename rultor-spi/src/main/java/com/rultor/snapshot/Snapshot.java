@@ -77,7 +77,6 @@ public final class Snapshot {
      * @throws IOException If fails to read
      * @throws SyntaxException If some syntax exception inside
      * @checkstyle ThrowsCount (5 lines)
-     * @checkstyle RedundantThrows (5 lines)
      */
     public Snapshot(final InputStream stream)
         throws IOException, SyntaxException {
@@ -88,7 +87,6 @@ public final class Snapshot {
      * Public ctor.
      * @param script Script
      * @throws SyntaxException If can't parse
-     * @checkstyle RedundantThrows (5 lines)
      */
     public Snapshot(final String script) throws SyntaxException {
         this(new Directives(script));
@@ -114,7 +112,6 @@ public final class Snapshot {
      * Make XML out of it.
      * @return The XML
      * @throws XemblyException If can't apply
-     * @checkstyle RedundantThrows (3 lines)
      */
     public XML xml() throws XemblyException {
         final Document dom;
@@ -191,7 +188,6 @@ public final class Snapshot {
      * @throws IOException If IO problem inside
      * @throws SyntaxException If broken syntax
      * @checkstyle ThrowsCount (5 lines)
-     * @checkstyle RedundantThrows (4 lines)
      */
     private static String fetch(final InputStream stream)
         throws IOException, SyntaxException {

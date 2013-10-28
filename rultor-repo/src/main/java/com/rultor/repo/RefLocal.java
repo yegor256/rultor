@@ -95,7 +95,6 @@ final class RefLocal implements Variable<Object> {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (8 lines)
      */
     @Override
     @NotNull
@@ -121,7 +120,6 @@ final class RefLocal implements Variable<Object> {
 
     /**
      * {@inheritDoc}
-     * @checkstyle RedundantThrows (5 lines)
      */
     @Override
     public Map<Integer, String> arguments() throws SpecException {
