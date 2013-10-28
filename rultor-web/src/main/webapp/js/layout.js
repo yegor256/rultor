@@ -35,7 +35,7 @@ var RULTOR = {
         $block.find('span.timeago').each(
             function (span) {
                 var iso = $(this).text();
-                if (iso.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)) {
+                if (iso.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?Z/)) {
                     $(this).text(moment(iso).fromNow());
                     $(this).attr('title', iso);
                 }
