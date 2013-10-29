@@ -279,6 +279,10 @@ final class AwsRules implements Rules {
         public String failure() {
             return this.origin.failure();
         }
+        /**
+         * {@inheritDoc}
+         * @checkstyle RedundantThrows (5 lines)
+         */
         @Override
         public Wallet wallet(final Coordinates work, final URN taker,
             final String rule) throws Wallet.NotEnoughFundsException {

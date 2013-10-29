@@ -221,6 +221,7 @@ public final class SQSQueue implements Queue {
      * @param text Text to un-serialize
      * @return Coordinates
      * @throws NormJson.JsonException If can't parse it
+     * @checkstyle RedundantThrows (5 lines)
      */
     private static Coordinates unserialize(final String text)
         throws NormJson.JsonException {
