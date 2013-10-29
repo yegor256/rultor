@@ -425,160 +425,159 @@
 <a class="jxr_linenumber" name="415" href="#415">415</a> <em class="jxr_javadoccomment">     * @param xembly Xembly script</em>
 <a class="jxr_linenumber" name="416" href="#416">416</a> <em class="jxr_javadoccomment">     * @return Its snapshot</em>
 <a class="jxr_linenumber" name="417" href="#417">417</a> <em class="jxr_javadoccomment">     * @throws SyntaxException If fails</em>
-<a class="jxr_linenumber" name="418" href="#418">418</a> <em class="jxr_javadoccomment">     * @checkstyle RedundantThrows (5 lines)</em>
-<a class="jxr_linenumber" name="419" href="#419">419</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="420" href="#420">420</a>     <strong class="jxr_keyword">private</strong> <a href="../../../com/rultor/snapshot/Snapshot.html">Snapshot</a> snapshot(<strong class="jxr_keyword">final</strong> String xembly) <strong class="jxr_keyword">throws</strong> SyntaxException {
-<a class="jxr_linenumber" name="421" href="#421">421</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/snapshot/Snapshot.html">Snapshot</a>(
-<a class="jxr_linenumber" name="422" href="#422">422</a>             <strong class="jxr_keyword">new</strong> Directives(xembly).xpath(<span class="jxr_string">"/snapshot/spec"</span>).remove()
-<a class="jxr_linenumber" name="423" href="#423">423</a>         );
-<a class="jxr_linenumber" name="424" href="#424">424</a>     }
-<a class="jxr_linenumber" name="425" href="#425">425</a> 
-<a class="jxr_linenumber" name="426" href="#426">426</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="427" href="#427">427</a> <em class="jxr_javadoccomment">     * Add bug to bundle.</em>
-<a class="jxr_linenumber" name="428" href="#428">428</a> <em class="jxr_javadoccomment">     * @param bundle Bundle to render into</em>
-<a class="jxr_linenumber" name="429" href="#429">429</a> <em class="jxr_javadoccomment">     * @param exc Exception</em>
-<a class="jxr_linenumber" name="430" href="#430">430</a> <em class="jxr_javadoccomment">     * @return Bundle</em>
-<a class="jxr_linenumber" name="431" href="#431">431</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="432" href="#432">432</a>     <strong class="jxr_keyword">private</strong> JaxbBundle bug(<strong class="jxr_keyword">final</strong> JaxbBundle bundle, <strong class="jxr_keyword">final</strong> Exception exc) {
-<a class="jxr_linenumber" name="433" href="#433">433</a>         <strong class="jxr_keyword">return</strong> bundle.add(<span class="jxr_string">"error"</span>, Exceptions.stacktrace(exc)).up();
-<a class="jxr_linenumber" name="434" href="#434">434</a>     }
-<a class="jxr_linenumber" name="435" href="#435">435</a> 
-<a class="jxr_linenumber" name="436" href="#436">436</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="437" href="#437">437</a> <em class="jxr_javadoccomment">     * Get ACL of the stand.</em>
-<a class="jxr_linenumber" name="438" href="#438">438</a> <em class="jxr_javadoccomment">     * @param stand The stand</em>
-<a class="jxr_linenumber" name="439" href="#439">439</a> <em class="jxr_javadoccomment">     * @return ACL</em>
-<a class="jxr_linenumber" name="440" href="#440">440</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="441" href="#441">441</a>     <strong class="jxr_keyword">private</strong> <a href="../../../com/rultor/spi/ACL.html">ACL</a> acl(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Stand.html">Stand</a> stand) {
-<a class="jxr_linenumber" name="442" href="#442">442</a>         <a href="../../../com/rultor/spi/ACL.html">ACL</a> acl;
-<a class="jxr_linenumber" name="443" href="#443">443</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="444" href="#444">444</a>             acl = ACL.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(
-<a class="jxr_linenumber" name="445" href="#445">445</a>                 <strong class="jxr_keyword">this</strong>.repo().make(<strong class="jxr_keyword">new</strong> User.Nobody(), stand.acl()).instantiate(
-<a class="jxr_linenumber" name="446" href="#446">446</a>                     <strong class="jxr_keyword">this</strong>.users(),
-<a class="jxr_linenumber" name="447" href="#447">447</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/Arguments.html">Arguments</a>(
-<a class="jxr_linenumber" name="448" href="#448">448</a>                         <strong class="jxr_keyword">new</strong> Coordinates.None(), <strong class="jxr_keyword">new</strong> Wallet.Empty()
-<a class="jxr_linenumber" name="449" href="#449">449</a>                     )
-<a class="jxr_linenumber" name="450" href="#450">450</a>                 )
-<a class="jxr_linenumber" name="451" href="#451">451</a>             );
-<a class="jxr_linenumber" name="452" href="#452">452</a>         } <strong class="jxr_keyword">catch</strong> (SpecException ex) {
-<a class="jxr_linenumber" name="453" href="#453">453</a>             Exceptions.warn(<strong class="jxr_keyword">this</strong>, ex);
-<a class="jxr_linenumber" name="454" href="#454">454</a>             acl = <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/ACL.html">ACL</a>() {
-<a class="jxr_linenumber" name="455" href="#455">455</a>                 @Override
-<a class="jxr_linenumber" name="456" href="#456">456</a>                 <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> canView(<strong class="jxr_keyword">final</strong> URN urn) {
-<a class="jxr_linenumber" name="457" href="#457">457</a>                     <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="458" href="#458">458</a>                 }
-<a class="jxr_linenumber" name="459" href="#459">459</a>                 @Override
-<a class="jxr_linenumber" name="460" href="#460">460</a>                 <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> canPost(<strong class="jxr_keyword">final</strong> String key) {
-<a class="jxr_linenumber" name="461" href="#461">461</a>                     <strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="462" href="#462">462</a>                 }
-<a class="jxr_linenumber" name="463" href="#463">463</a>             };
-<a class="jxr_linenumber" name="464" href="#464">464</a>         }
-<a class="jxr_linenumber" name="465" href="#465">465</a>         <strong class="jxr_keyword">return</strong> acl;
-<a class="jxr_linenumber" name="466" href="#466">466</a>     }
-<a class="jxr_linenumber" name="467" href="#467">467</a> 
-<a class="jxr_linenumber" name="468" href="#468">468</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="469" href="#469">469</a> <em class="jxr_javadoccomment">     * All widgets of the stand.</em>
-<a class="jxr_linenumber" name="470" href="#470">470</a> <em class="jxr_javadoccomment">     * @param spec Spec of array of widgets</em>
-<a class="jxr_linenumber" name="471" href="#471">471</a> <em class="jxr_javadoccomment">     * @return Collection of JAXB widgets</em>
-<a class="jxr_linenumber" name="472" href="#472">472</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="473" href="#473">473</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="474" href="#474">474</a>     <strong class="jxr_keyword">private</strong> Collection&lt;Widget&gt; widgets(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec) {
-<a class="jxr_linenumber" name="475" href="#475">475</a>         Collection&lt;Widget&gt; list;
-<a class="jxr_linenumber" name="476" href="#476">476</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="477" href="#477">477</a>             list = Collection.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(
-<a class="jxr_linenumber" name="478" href="#478">478</a>                 <strong class="jxr_keyword">this</strong>.repo().make(<strong class="jxr_keyword">new</strong> User.Nobody(), spec).instantiate(
-<a class="jxr_linenumber" name="479" href="#479">479</a>                     <strong class="jxr_keyword">this</strong>.users(),
-<a class="jxr_linenumber" name="480" href="#480">480</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/Arguments.html">Arguments</a>(
-<a class="jxr_linenumber" name="481" href="#481">481</a>                         <strong class="jxr_keyword">new</strong> Coordinates.None(), <strong class="jxr_keyword">new</strong> Wallet.Empty()
-<a class="jxr_linenumber" name="482" href="#482">482</a>                     )
-<a class="jxr_linenumber" name="483" href="#483">483</a>                 )
-<a class="jxr_linenumber" name="484" href="#484">484</a>             );
-<a class="jxr_linenumber" name="485" href="#485">485</a>         } <strong class="jxr_keyword">catch</strong> (SpecException ex) {
-<a class="jxr_linenumber" name="486" href="#486">486</a>             list = Arrays.&lt;Widget&gt;asList(<strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/widget/Alert.html">Alert</a>(Exceptions.stacktrace(ex)));
-<a class="jxr_linenumber" name="487" href="#487">487</a>         }
-<a class="jxr_linenumber" name="488" href="#488">488</a>         <strong class="jxr_keyword">return</strong> list;
-<a class="jxr_linenumber" name="489" href="#489">489</a>     }
-<a class="jxr_linenumber" name="490" href="#490">490</a> 
-<a class="jxr_linenumber" name="491" href="#491">491</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="492" href="#492">492</a> <em class="jxr_javadoccomment">     * All widgets of the stand.</em>
-<a class="jxr_linenumber" name="493" href="#493">493</a> <em class="jxr_javadoccomment">     * @param widgets Collection of widgets</em>
-<a class="jxr_linenumber" name="494" href="#494">494</a> <em class="jxr_javadoccomment">     * @return Collection of JAXB widgets</em>
-<a class="jxr_linenumber" name="495" href="#495">495</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="496" href="#496">496</a>     <strong class="jxr_keyword">private</strong> JaxbBundle widgets(<strong class="jxr_keyword">final</strong> Collection&lt;Widget&gt; widgets) {
-<a class="jxr_linenumber" name="497" href="#497">497</a>         JaxbBundle bundle = <strong class="jxr_keyword">new</strong> JaxbBundle(<span class="jxr_string">"widgets"</span>);
-<a class="jxr_linenumber" name="498" href="#498">498</a>         <strong class="jxr_keyword">for</strong> (Widget widget : widgets) {
-<a class="jxr_linenumber" name="499" href="#499">499</a>             bundle = bundle.add(<strong class="jxr_keyword">this</strong>.widget(widget));
-<a class="jxr_linenumber" name="500" href="#500">500</a>         }
-<a class="jxr_linenumber" name="501" href="#501">501</a>         <strong class="jxr_keyword">return</strong> bundle;
-<a class="jxr_linenumber" name="502" href="#502">502</a>     }
-<a class="jxr_linenumber" name="503" href="#503">503</a> 
-<a class="jxr_linenumber" name="504" href="#504">504</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="505" href="#505">505</a> <em class="jxr_javadoccomment">     * Render one widget.</em>
-<a class="jxr_linenumber" name="506" href="#506">506</a> <em class="jxr_javadoccomment">     * @param widget Widget to render</em>
-<a class="jxr_linenumber" name="507" href="#507">507</a> <em class="jxr_javadoccomment">     * @return DOM element</em>
-<a class="jxr_linenumber" name="508" href="#508">508</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="509" href="#509">509</a>     <strong class="jxr_keyword">private</strong> Element widget(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Widget.html">Widget</a> widget) {
-<a class="jxr_linenumber" name="510" href="#510">510</a>         <strong class="jxr_keyword">final</strong> Document dom;
-<a class="jxr_linenumber" name="511" href="#511">511</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="512" href="#512">512</a>             dom = DocumentBuilderFactory.newInstance()
-<a class="jxr_linenumber" name="513" href="#513">513</a>                 .newDocumentBuilder().newDocument();
-<a class="jxr_linenumber" name="514" href="#514">514</a>         } <strong class="jxr_keyword">catch</strong> (ParserConfigurationException ex) {
-<a class="jxr_linenumber" name="515" href="#515">515</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(ex);
-<a class="jxr_linenumber" name="516" href="#516">516</a>         }
-<a class="jxr_linenumber" name="517" href="#517">517</a>         <strong class="jxr_keyword">final</strong> Element root = dom.createElement(<span class="jxr_string">"widget"</span>);
-<a class="jxr_linenumber" name="518" href="#518">518</a>         root.setAttribute(<span class="jxr_string">"class"</span>, widget.getClass().getCanonicalName());
-<a class="jxr_linenumber" name="519" href="#519">519</a>         dom.appendChild(root);
-<a class="jxr_linenumber" name="520" href="#520">520</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="521" href="#521">521</a>             <strong class="jxr_keyword">new</strong> Xembler(
-<a class="jxr_linenumber" name="522" href="#522">522</a>                 <strong class="jxr_keyword">new</strong> Directives()
-<a class="jxr_linenumber" name="523" href="#523">523</a>                     .xpath(<span class="jxr_string">"/widget"</span>)
-<a class="jxr_linenumber" name="524" href="#524">524</a>                     .append(widget.render(<strong class="jxr_keyword">this</strong>.stand()))
-<a class="jxr_linenumber" name="525" href="#525">525</a>             ).apply(dom);
-<a class="jxr_linenumber" name="526" href="#526">526</a>         } <strong class="jxr_keyword">catch</strong> (ImpossibleModificationException ex) {
-<a class="jxr_linenumber" name="527" href="#527">527</a>             <strong class="jxr_keyword">final</strong> Element error = dom.createElement(<span class="jxr_string">"error"</span>);
-<a class="jxr_linenumber" name="528" href="#528">528</a>             error.setTextContent(Exceptions.stacktrace(ex));
-<a class="jxr_linenumber" name="529" href="#529">529</a>             dom.getDocumentElement().appendChild(error);
-<a class="jxr_linenumber" name="530" href="#530">530</a>         }
-<a class="jxr_linenumber" name="531" href="#531">531</a>         <strong class="jxr_keyword">return</strong> dom.getDocumentElement();
-<a class="jxr_linenumber" name="532" href="#532">532</a>     }
-<a class="jxr_linenumber" name="533" href="#533">533</a> 
-<a class="jxr_linenumber" name="534" href="#534">534</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="535" href="#535">535</a> <em class="jxr_javadoccomment">     * Bundle a tag.</em>
-<a class="jxr_linenumber" name="536" href="#536">536</a> <em class="jxr_javadoccomment">     * @param tag A tag</em>
-<a class="jxr_linenumber" name="537" href="#537">537</a> <em class="jxr_javadoccomment">     * @return Bundle</em>
-<a class="jxr_linenumber" name="538" href="#538">538</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="539" href="#539">539</a>     <strong class="jxr_keyword">private</strong> JaxbBundle bundle(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Tag.html">Tag</a> tag) {
-<a class="jxr_linenumber" name="540" href="#540">540</a>         <strong class="jxr_keyword">final</strong> Set&lt;String&gt; labels = <strong class="jxr_keyword">new</strong> TreeSet&lt;String&gt;();
-<a class="jxr_linenumber" name="541" href="#541">541</a>         labels.addAll(<strong class="jxr_keyword">this</strong>.tags);
-<a class="jxr_linenumber" name="542" href="#542">542</a>         labels.add(tag.label());
-<a class="jxr_linenumber" name="543" href="#543">543</a>         <strong class="jxr_keyword">final</strong> Object[] args = <strong class="jxr_keyword">new</strong> String[labels.size()];
-<a class="jxr_linenumber" name="544" href="#544">544</a>         <strong class="jxr_keyword">final</strong> Object[] values = <strong class="jxr_keyword">new</strong> String[labels.size() + 1];
-<a class="jxr_linenumber" name="545" href="#545">545</a>         <strong class="jxr_keyword">int</strong> idx = 0;
-<a class="jxr_linenumber" name="546" href="#546">546</a>         values[0] = <strong class="jxr_keyword">this</strong>.name;
-<a class="jxr_linenumber" name="547" href="#547">547</a>         <strong class="jxr_keyword">for</strong> (String label : labels) {
-<a class="jxr_linenumber" name="548" href="#548">548</a>             args[idx] = String.format(<span class="jxr_string">"{arg%d}"</span>, idx);
-<a class="jxr_linenumber" name="549" href="#549">549</a>             values[idx + 1] = label;
-<a class="jxr_linenumber" name="550" href="#550">550</a>             ++idx;
-<a class="jxr_linenumber" name="551" href="#551">551</a>         }
-<a class="jxr_linenumber" name="552" href="#552">552</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> JaxbBundle(<span class="jxr_string">"tag"</span>)
-<a class="jxr_linenumber" name="553" href="#553">553</a>             .add(<span class="jxr_string">"label"</span>, tag.label())
-<a class="jxr_linenumber" name="554" href="#554">554</a>             .up()
-<a class="jxr_linenumber" name="555" href="#555">555</a>             .add(<span class="jxr_string">"level"</span>, tag.level().toString())
-<a class="jxr_linenumber" name="556" href="#556">556</a>             .up()
-<a class="jxr_linenumber" name="557" href="#557">557</a>             .add(<span class="jxr_string">"markdown"</span>, tag.markdown())
-<a class="jxr_linenumber" name="558" href="#558">558</a>             .up()
-<a class="jxr_linenumber" name="559" href="#559">559</a>             .link(
-<a class="jxr_linenumber" name="560" href="#560">560</a>                 <strong class="jxr_keyword">new</strong> Link(
-<a class="jxr_linenumber" name="561" href="#561">561</a>                     <span class="jxr_string">"filter"</span>,
-<a class="jxr_linenumber" name="562" href="#562">562</a>                     <strong class="jxr_keyword">this</strong>.uriInfo().getBaseUriBuilder()
-<a class="jxr_linenumber" name="563" href="#563">563</a>                         .clone()
-<a class="jxr_linenumber" name="564" href="#564">564</a>                         .path(StandRs.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="565" href="#565">565</a>                         .queryParam(StandRs.QUERY_TAGS, args)
-<a class="jxr_linenumber" name="566" href="#566">566</a>                         .build(values)
-<a class="jxr_linenumber" name="567" href="#567">567</a>                 )
-<a class="jxr_linenumber" name="568" href="#568">568</a>             );
-<a class="jxr_linenumber" name="569" href="#569">569</a>     }
-<a class="jxr_linenumber" name="570" href="#570">570</a> 
-<a class="jxr_linenumber" name="571" href="#571">571</a> }
+<a class="jxr_linenumber" name="418" href="#418">418</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="419" href="#419">419</a>     <strong class="jxr_keyword">private</strong> <a href="../../../com/rultor/snapshot/Snapshot.html">Snapshot</a> snapshot(<strong class="jxr_keyword">final</strong> String xembly) <strong class="jxr_keyword">throws</strong> SyntaxException {
+<a class="jxr_linenumber" name="420" href="#420">420</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/snapshot/Snapshot.html">Snapshot</a>(
+<a class="jxr_linenumber" name="421" href="#421">421</a>             <strong class="jxr_keyword">new</strong> Directives(xembly).xpath(<span class="jxr_string">"/snapshot/spec"</span>).remove()
+<a class="jxr_linenumber" name="422" href="#422">422</a>         );
+<a class="jxr_linenumber" name="423" href="#423">423</a>     }
+<a class="jxr_linenumber" name="424" href="#424">424</a> 
+<a class="jxr_linenumber" name="425" href="#425">425</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="426" href="#426">426</a> <em class="jxr_javadoccomment">     * Add bug to bundle.</em>
+<a class="jxr_linenumber" name="427" href="#427">427</a> <em class="jxr_javadoccomment">     * @param bundle Bundle to render into</em>
+<a class="jxr_linenumber" name="428" href="#428">428</a> <em class="jxr_javadoccomment">     * @param exc Exception</em>
+<a class="jxr_linenumber" name="429" href="#429">429</a> <em class="jxr_javadoccomment">     * @return Bundle</em>
+<a class="jxr_linenumber" name="430" href="#430">430</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="431" href="#431">431</a>     <strong class="jxr_keyword">private</strong> JaxbBundle bug(<strong class="jxr_keyword">final</strong> JaxbBundle bundle, <strong class="jxr_keyword">final</strong> Exception exc) {
+<a class="jxr_linenumber" name="432" href="#432">432</a>         <strong class="jxr_keyword">return</strong> bundle.add(<span class="jxr_string">"error"</span>, Exceptions.stacktrace(exc)).up();
+<a class="jxr_linenumber" name="433" href="#433">433</a>     }
+<a class="jxr_linenumber" name="434" href="#434">434</a> 
+<a class="jxr_linenumber" name="435" href="#435">435</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="436" href="#436">436</a> <em class="jxr_javadoccomment">     * Get ACL of the stand.</em>
+<a class="jxr_linenumber" name="437" href="#437">437</a> <em class="jxr_javadoccomment">     * @param stand The stand</em>
+<a class="jxr_linenumber" name="438" href="#438">438</a> <em class="jxr_javadoccomment">     * @return ACL</em>
+<a class="jxr_linenumber" name="439" href="#439">439</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="440" href="#440">440</a>     <strong class="jxr_keyword">private</strong> <a href="../../../com/rultor/spi/ACL.html">ACL</a> acl(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Stand.html">Stand</a> stand) {
+<a class="jxr_linenumber" name="441" href="#441">441</a>         <a href="../../../com/rultor/spi/ACL.html">ACL</a> acl;
+<a class="jxr_linenumber" name="442" href="#442">442</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="443" href="#443">443</a>             acl = ACL.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(
+<a class="jxr_linenumber" name="444" href="#444">444</a>                 <strong class="jxr_keyword">this</strong>.repo().make(<strong class="jxr_keyword">new</strong> User.Nobody(), stand.acl()).instantiate(
+<a class="jxr_linenumber" name="445" href="#445">445</a>                     <strong class="jxr_keyword">this</strong>.users(),
+<a class="jxr_linenumber" name="446" href="#446">446</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/Arguments.html">Arguments</a>(
+<a class="jxr_linenumber" name="447" href="#447">447</a>                         <strong class="jxr_keyword">new</strong> Coordinates.None(), <strong class="jxr_keyword">new</strong> Wallet.Empty()
+<a class="jxr_linenumber" name="448" href="#448">448</a>                     )
+<a class="jxr_linenumber" name="449" href="#449">449</a>                 )
+<a class="jxr_linenumber" name="450" href="#450">450</a>             );
+<a class="jxr_linenumber" name="451" href="#451">451</a>         } <strong class="jxr_keyword">catch</strong> (SpecException ex) {
+<a class="jxr_linenumber" name="452" href="#452">452</a>             Exceptions.warn(<strong class="jxr_keyword">this</strong>, ex);
+<a class="jxr_linenumber" name="453" href="#453">453</a>             acl = <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/ACL.html">ACL</a>() {
+<a class="jxr_linenumber" name="454" href="#454">454</a>                 @Override
+<a class="jxr_linenumber" name="455" href="#455">455</a>                 <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> canView(<strong class="jxr_keyword">final</strong> URN urn) {
+<a class="jxr_linenumber" name="456" href="#456">456</a>                     <strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="457" href="#457">457</a>                 }
+<a class="jxr_linenumber" name="458" href="#458">458</a>                 @Override
+<a class="jxr_linenumber" name="459" href="#459">459</a>                 <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> canPost(<strong class="jxr_keyword">final</strong> String key) {
+<a class="jxr_linenumber" name="460" href="#460">460</a>                     <strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="461" href="#461">461</a>                 }
+<a class="jxr_linenumber" name="462" href="#462">462</a>             };
+<a class="jxr_linenumber" name="463" href="#463">463</a>         }
+<a class="jxr_linenumber" name="464" href="#464">464</a>         <strong class="jxr_keyword">return</strong> acl;
+<a class="jxr_linenumber" name="465" href="#465">465</a>     }
+<a class="jxr_linenumber" name="466" href="#466">466</a> 
+<a class="jxr_linenumber" name="467" href="#467">467</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="468" href="#468">468</a> <em class="jxr_javadoccomment">     * All widgets of the stand.</em>
+<a class="jxr_linenumber" name="469" href="#469">469</a> <em class="jxr_javadoccomment">     * @param spec Spec of array of widgets</em>
+<a class="jxr_linenumber" name="470" href="#470">470</a> <em class="jxr_javadoccomment">     * @return Collection of JAXB widgets</em>
+<a class="jxr_linenumber" name="471" href="#471">471</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="472" href="#472">472</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="473" href="#473">473</a>     <strong class="jxr_keyword">private</strong> Collection&lt;Widget&gt; widgets(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec) {
+<a class="jxr_linenumber" name="474" href="#474">474</a>         Collection&lt;Widget&gt; list;
+<a class="jxr_linenumber" name="475" href="#475">475</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="476" href="#476">476</a>             list = Collection.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(
+<a class="jxr_linenumber" name="477" href="#477">477</a>                 <strong class="jxr_keyword">this</strong>.repo().make(<strong class="jxr_keyword">new</strong> User.Nobody(), spec).instantiate(
+<a class="jxr_linenumber" name="478" href="#478">478</a>                     <strong class="jxr_keyword">this</strong>.users(),
+<a class="jxr_linenumber" name="479" href="#479">479</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/spi/Arguments.html">Arguments</a>(
+<a class="jxr_linenumber" name="480" href="#480">480</a>                         <strong class="jxr_keyword">new</strong> Coordinates.None(), <strong class="jxr_keyword">new</strong> Wallet.Empty()
+<a class="jxr_linenumber" name="481" href="#481">481</a>                     )
+<a class="jxr_linenumber" name="482" href="#482">482</a>                 )
+<a class="jxr_linenumber" name="483" href="#483">483</a>             );
+<a class="jxr_linenumber" name="484" href="#484">484</a>         } <strong class="jxr_keyword">catch</strong> (SpecException ex) {
+<a class="jxr_linenumber" name="485" href="#485">485</a>             list = Arrays.&lt;Widget&gt;asList(<strong class="jxr_keyword">new</strong> <a href="../../../com/rultor/widget/Alert.html">Alert</a>(Exceptions.stacktrace(ex)));
+<a class="jxr_linenumber" name="486" href="#486">486</a>         }
+<a class="jxr_linenumber" name="487" href="#487">487</a>         <strong class="jxr_keyword">return</strong> list;
+<a class="jxr_linenumber" name="488" href="#488">488</a>     }
+<a class="jxr_linenumber" name="489" href="#489">489</a> 
+<a class="jxr_linenumber" name="490" href="#490">490</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="491" href="#491">491</a> <em class="jxr_javadoccomment">     * All widgets of the stand.</em>
+<a class="jxr_linenumber" name="492" href="#492">492</a> <em class="jxr_javadoccomment">     * @param widgets Collection of widgets</em>
+<a class="jxr_linenumber" name="493" href="#493">493</a> <em class="jxr_javadoccomment">     * @return Collection of JAXB widgets</em>
+<a class="jxr_linenumber" name="494" href="#494">494</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="495" href="#495">495</a>     <strong class="jxr_keyword">private</strong> JaxbBundle widgets(<strong class="jxr_keyword">final</strong> Collection&lt;Widget&gt; widgets) {
+<a class="jxr_linenumber" name="496" href="#496">496</a>         JaxbBundle bundle = <strong class="jxr_keyword">new</strong> JaxbBundle(<span class="jxr_string">"widgets"</span>);
+<a class="jxr_linenumber" name="497" href="#497">497</a>         <strong class="jxr_keyword">for</strong> (Widget widget : widgets) {
+<a class="jxr_linenumber" name="498" href="#498">498</a>             bundle = bundle.add(<strong class="jxr_keyword">this</strong>.widget(widget));
+<a class="jxr_linenumber" name="499" href="#499">499</a>         }
+<a class="jxr_linenumber" name="500" href="#500">500</a>         <strong class="jxr_keyword">return</strong> bundle;
+<a class="jxr_linenumber" name="501" href="#501">501</a>     }
+<a class="jxr_linenumber" name="502" href="#502">502</a> 
+<a class="jxr_linenumber" name="503" href="#503">503</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="504" href="#504">504</a> <em class="jxr_javadoccomment">     * Render one widget.</em>
+<a class="jxr_linenumber" name="505" href="#505">505</a> <em class="jxr_javadoccomment">     * @param widget Widget to render</em>
+<a class="jxr_linenumber" name="506" href="#506">506</a> <em class="jxr_javadoccomment">     * @return DOM element</em>
+<a class="jxr_linenumber" name="507" href="#507">507</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="508" href="#508">508</a>     <strong class="jxr_keyword">private</strong> Element widget(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Widget.html">Widget</a> widget) {
+<a class="jxr_linenumber" name="509" href="#509">509</a>         <strong class="jxr_keyword">final</strong> Document dom;
+<a class="jxr_linenumber" name="510" href="#510">510</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="511" href="#511">511</a>             dom = DocumentBuilderFactory.newInstance()
+<a class="jxr_linenumber" name="512" href="#512">512</a>                 .newDocumentBuilder().newDocument();
+<a class="jxr_linenumber" name="513" href="#513">513</a>         } <strong class="jxr_keyword">catch</strong> (ParserConfigurationException ex) {
+<a class="jxr_linenumber" name="514" href="#514">514</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(ex);
+<a class="jxr_linenumber" name="515" href="#515">515</a>         }
+<a class="jxr_linenumber" name="516" href="#516">516</a>         <strong class="jxr_keyword">final</strong> Element root = dom.createElement(<span class="jxr_string">"widget"</span>);
+<a class="jxr_linenumber" name="517" href="#517">517</a>         root.setAttribute(<span class="jxr_string">"class"</span>, widget.getClass().getCanonicalName());
+<a class="jxr_linenumber" name="518" href="#518">518</a>         dom.appendChild(root);
+<a class="jxr_linenumber" name="519" href="#519">519</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="520" href="#520">520</a>             <strong class="jxr_keyword">new</strong> Xembler(
+<a class="jxr_linenumber" name="521" href="#521">521</a>                 <strong class="jxr_keyword">new</strong> Directives()
+<a class="jxr_linenumber" name="522" href="#522">522</a>                     .xpath(<span class="jxr_string">"/widget"</span>)
+<a class="jxr_linenumber" name="523" href="#523">523</a>                     .append(widget.render(<strong class="jxr_keyword">this</strong>.stand()))
+<a class="jxr_linenumber" name="524" href="#524">524</a>             ).apply(dom);
+<a class="jxr_linenumber" name="525" href="#525">525</a>         } <strong class="jxr_keyword">catch</strong> (ImpossibleModificationException ex) {
+<a class="jxr_linenumber" name="526" href="#526">526</a>             <strong class="jxr_keyword">final</strong> Element error = dom.createElement(<span class="jxr_string">"error"</span>);
+<a class="jxr_linenumber" name="527" href="#527">527</a>             error.setTextContent(Exceptions.stacktrace(ex));
+<a class="jxr_linenumber" name="528" href="#528">528</a>             dom.getDocumentElement().appendChild(error);
+<a class="jxr_linenumber" name="529" href="#529">529</a>         }
+<a class="jxr_linenumber" name="530" href="#530">530</a>         <strong class="jxr_keyword">return</strong> dom.getDocumentElement();
+<a class="jxr_linenumber" name="531" href="#531">531</a>     }
+<a class="jxr_linenumber" name="532" href="#532">532</a> 
+<a class="jxr_linenumber" name="533" href="#533">533</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="534" href="#534">534</a> <em class="jxr_javadoccomment">     * Bundle a tag.</em>
+<a class="jxr_linenumber" name="535" href="#535">535</a> <em class="jxr_javadoccomment">     * @param tag A tag</em>
+<a class="jxr_linenumber" name="536" href="#536">536</a> <em class="jxr_javadoccomment">     * @return Bundle</em>
+<a class="jxr_linenumber" name="537" href="#537">537</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="538" href="#538">538</a>     <strong class="jxr_keyword">private</strong> JaxbBundle bundle(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Tag.html">Tag</a> tag) {
+<a class="jxr_linenumber" name="539" href="#539">539</a>         <strong class="jxr_keyword">final</strong> Set&lt;String&gt; labels = <strong class="jxr_keyword">new</strong> TreeSet&lt;String&gt;();
+<a class="jxr_linenumber" name="540" href="#540">540</a>         labels.addAll(<strong class="jxr_keyword">this</strong>.tags);
+<a class="jxr_linenumber" name="541" href="#541">541</a>         labels.add(tag.label());
+<a class="jxr_linenumber" name="542" href="#542">542</a>         <strong class="jxr_keyword">final</strong> Object[] args = <strong class="jxr_keyword">new</strong> String[labels.size()];
+<a class="jxr_linenumber" name="543" href="#543">543</a>         <strong class="jxr_keyword">final</strong> Object[] values = <strong class="jxr_keyword">new</strong> String[labels.size() + 1];
+<a class="jxr_linenumber" name="544" href="#544">544</a>         <strong class="jxr_keyword">int</strong> idx = 0;
+<a class="jxr_linenumber" name="545" href="#545">545</a>         values[0] = <strong class="jxr_keyword">this</strong>.name;
+<a class="jxr_linenumber" name="546" href="#546">546</a>         <strong class="jxr_keyword">for</strong> (String label : labels) {
+<a class="jxr_linenumber" name="547" href="#547">547</a>             args[idx] = String.format(<span class="jxr_string">"{arg%d}"</span>, idx);
+<a class="jxr_linenumber" name="548" href="#548">548</a>             values[idx + 1] = label;
+<a class="jxr_linenumber" name="549" href="#549">549</a>             ++idx;
+<a class="jxr_linenumber" name="550" href="#550">550</a>         }
+<a class="jxr_linenumber" name="551" href="#551">551</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> JaxbBundle(<span class="jxr_string">"tag"</span>)
+<a class="jxr_linenumber" name="552" href="#552">552</a>             .add(<span class="jxr_string">"label"</span>, tag.label())
+<a class="jxr_linenumber" name="553" href="#553">553</a>             .up()
+<a class="jxr_linenumber" name="554" href="#554">554</a>             .add(<span class="jxr_string">"level"</span>, tag.level().toString())
+<a class="jxr_linenumber" name="555" href="#555">555</a>             .up()
+<a class="jxr_linenumber" name="556" href="#556">556</a>             .add(<span class="jxr_string">"markdown"</span>, tag.markdown())
+<a class="jxr_linenumber" name="557" href="#557">557</a>             .up()
+<a class="jxr_linenumber" name="558" href="#558">558</a>             .link(
+<a class="jxr_linenumber" name="559" href="#559">559</a>                 <strong class="jxr_keyword">new</strong> Link(
+<a class="jxr_linenumber" name="560" href="#560">560</a>                     <span class="jxr_string">"filter"</span>,
+<a class="jxr_linenumber" name="561" href="#561">561</a>                     <strong class="jxr_keyword">this</strong>.uriInfo().getBaseUriBuilder()
+<a class="jxr_linenumber" name="562" href="#562">562</a>                         .clone()
+<a class="jxr_linenumber" name="563" href="#563">563</a>                         .path(StandRs.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="564" href="#564">564</a>                         .queryParam(StandRs.QUERY_TAGS, args)
+<a class="jxr_linenumber" name="565" href="#565">565</a>                         .build(values)
+<a class="jxr_linenumber" name="566" href="#566">566</a>                 )
+<a class="jxr_linenumber" name="567" href="#567">567</a>             );
+<a class="jxr_linenumber" name="568" href="#568">568</a>     }
+<a class="jxr_linenumber" name="569" href="#569">569</a> 
+<a class="jxr_linenumber" name="570" href="#570">570</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

@@ -271,66 +271,65 @@
 <a class="jxr_linenumber" name="261" href="#261">261</a>                 }
 <a class="jxr_linenumber" name="262" href="#262">262</a>                 <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="263" href="#263">263</a> <em class="jxr_javadoccomment">                 * {@inheritDoc}</em>
-<a class="jxr_linenumber" name="264" href="#264">264</a> <em class="jxr_javadoccomment">                 * @checkstyle RedundantThrowsCheck (4 lines)</em>
-<a class="jxr_linenumber" name="265" href="#265">265</a> <em class="jxr_javadoccomment">                 */</em>
-<a class="jxr_linenumber" name="266" href="#266">266</a>                 @Override
-<a class="jxr_linenumber" name="267" href="#267">267</a>                 <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> fund(<strong class="jxr_keyword">final</strong> String code)
-<a class="jxr_linenumber" name="268" href="#268">268</a>                     <strong class="jxr_keyword">throws</strong> <a href="../../../com/rultor/spi/InvalidCouponException.html">InvalidCouponException</a> {
-<a class="jxr_linenumber" name="269" href="#269">269</a>                     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException();
-<a class="jxr_linenumber" name="270" href="#270">270</a>                 }
-<a class="jxr_linenumber" name="271" href="#271">271</a>             };
-<a class="jxr_linenumber" name="272" href="#272">272</a>         }
-<a class="jxr_linenumber" name="273" href="#273">273</a>     }
-<a class="jxr_linenumber" name="274" href="#274">274</a> 
-<a class="jxr_linenumber" name="275" href="#275">275</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="276" href="#276">276</a> <em class="jxr_javadoccomment">     * In-memory rule.</em>
-<a class="jxr_linenumber" name="277" href="#277">277</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="278" href="#278">278</a>     @Immutable
-<a class="jxr_linenumber" name="279" href="#279">279</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/life/Testing.html">MemoryRule</a> <strong class="jxr_keyword">implements</strong> <a href="../../../com/rultor/spi/Rule.html">Rule</a> {
-<a class="jxr_linenumber" name="280" href="#280">280</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="281" href="#281">281</a> <em class="jxr_javadoccomment">         * Name of the rule.</em>
-<a class="jxr_linenumber" name="282" href="#282">282</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="283" href="#283">283</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> String label;
-<a class="jxr_linenumber" name="284" href="#284">284</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="285" href="#285">285</a> <em class="jxr_javadoccomment">         * Public ctor.</em>
-<a class="jxr_linenumber" name="286" href="#286">286</a> <em class="jxr_javadoccomment">         * @param rule Name of it</em>
-<a class="jxr_linenumber" name="287" href="#287">287</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="288" href="#288">288</a>         <strong class="jxr_keyword">protected</strong> <a href="../../../com/rultor/life/Testing.html">MemoryRule</a>(<strong class="jxr_keyword">final</strong> String rule) {
-<a class="jxr_linenumber" name="289" href="#289">289</a>             Testing.SPECS.put(rule, <strong class="jxr_keyword">new</strong> Spec.Simple());
-<a class="jxr_linenumber" name="290" href="#290">290</a>             <strong class="jxr_keyword">this</strong>.label = rule;
-<a class="jxr_linenumber" name="291" href="#291">291</a>         }
-<a class="jxr_linenumber" name="292" href="#292">292</a>         @Override
-<a class="jxr_linenumber" name="293" href="#293">293</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> update(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec, <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> drain) {
-<a class="jxr_linenumber" name="294" href="#294">294</a>             Testing.SPECS.put(<strong class="jxr_keyword">this</strong>.label, spec);
-<a class="jxr_linenumber" name="295" href="#295">295</a>         }
-<a class="jxr_linenumber" name="296" href="#296">296</a>         @Override
-<a class="jxr_linenumber" name="297" href="#297">297</a>         <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec() {
-<a class="jxr_linenumber" name="298" href="#298">298</a>             <strong class="jxr_keyword">return</strong> Testing.SPECS.get(<strong class="jxr_keyword">this</strong>.label);
-<a class="jxr_linenumber" name="299" href="#299">299</a>         }
-<a class="jxr_linenumber" name="300" href="#300">300</a>         @Override
-<a class="jxr_linenumber" name="301" href="#301">301</a>         <strong class="jxr_keyword">public</strong> String name() {
-<a class="jxr_linenumber" name="302" href="#302">302</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.label;
-<a class="jxr_linenumber" name="303" href="#303">303</a>         }
-<a class="jxr_linenumber" name="304" href="#304">304</a>         @Override
-<a class="jxr_linenumber" name="305" href="#305">305</a>         <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Wallet.html">Wallet</a> wallet(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Coordinates.html">Coordinates</a> work, <strong class="jxr_keyword">final</strong> URN urn,
-<a class="jxr_linenumber" name="306" href="#306">306</a>             <strong class="jxr_keyword">final</strong> String unt) {
-<a class="jxr_linenumber" name="307" href="#307">307</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException();
-<a class="jxr_linenumber" name="308" href="#308">308</a>         }
-<a class="jxr_linenumber" name="309" href="#309">309</a>         @Override
-<a class="jxr_linenumber" name="310" href="#310">310</a>         <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> drain() {
-<a class="jxr_linenumber" name="311" href="#311">311</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Spec.Simple(<span class="jxr_string">"com.rultor.drain.Trash()"</span>);
-<a class="jxr_linenumber" name="312" href="#312">312</a>         }
-<a class="jxr_linenumber" name="313" href="#313">313</a>         @Override
-<a class="jxr_linenumber" name="314" href="#314">314</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> failure(<strong class="jxr_keyword">final</strong> String desc) {
-<a class="jxr_linenumber" name="315" href="#315">315</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException();
-<a class="jxr_linenumber" name="316" href="#316">316</a>         }
-<a class="jxr_linenumber" name="317" href="#317">317</a>         @Override
-<a class="jxr_linenumber" name="318" href="#318">318</a>         <strong class="jxr_keyword">public</strong> String failure() {
-<a class="jxr_linenumber" name="319" href="#319">319</a>             <strong class="jxr_keyword">return</strong> <span class="jxr_string">""</span>;
-<a class="jxr_linenumber" name="320" href="#320">320</a>         }
-<a class="jxr_linenumber" name="321" href="#321">321</a>     }
-<a class="jxr_linenumber" name="322" href="#322">322</a> 
-<a class="jxr_linenumber" name="323" href="#323">323</a> }
+<a class="jxr_linenumber" name="264" href="#264">264</a> <em class="jxr_javadoccomment">                 */</em>
+<a class="jxr_linenumber" name="265" href="#265">265</a>                 @Override
+<a class="jxr_linenumber" name="266" href="#266">266</a>                 <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> fund(<strong class="jxr_keyword">final</strong> String code)
+<a class="jxr_linenumber" name="267" href="#267">267</a>                     <strong class="jxr_keyword">throws</strong> <a href="../../../com/rultor/spi/InvalidCouponException.html">InvalidCouponException</a> {
+<a class="jxr_linenumber" name="268" href="#268">268</a>                     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException();
+<a class="jxr_linenumber" name="269" href="#269">269</a>                 }
+<a class="jxr_linenumber" name="270" href="#270">270</a>             };
+<a class="jxr_linenumber" name="271" href="#271">271</a>         }
+<a class="jxr_linenumber" name="272" href="#272">272</a>     }
+<a class="jxr_linenumber" name="273" href="#273">273</a> 
+<a class="jxr_linenumber" name="274" href="#274">274</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="275" href="#275">275</a> <em class="jxr_javadoccomment">     * In-memory rule.</em>
+<a class="jxr_linenumber" name="276" href="#276">276</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="277" href="#277">277</a>     @Immutable
+<a class="jxr_linenumber" name="278" href="#278">278</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../com/rultor/life/Testing.html">MemoryRule</a> <strong class="jxr_keyword">implements</strong> <a href="../../../com/rultor/spi/Rule.html">Rule</a> {
+<a class="jxr_linenumber" name="279" href="#279">279</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="280" href="#280">280</a> <em class="jxr_javadoccomment">         * Name of the rule.</em>
+<a class="jxr_linenumber" name="281" href="#281">281</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="282" href="#282">282</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">transient</strong> String label;
+<a class="jxr_linenumber" name="283" href="#283">283</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="284" href="#284">284</a> <em class="jxr_javadoccomment">         * Public ctor.</em>
+<a class="jxr_linenumber" name="285" href="#285">285</a> <em class="jxr_javadoccomment">         * @param rule Name of it</em>
+<a class="jxr_linenumber" name="286" href="#286">286</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="287" href="#287">287</a>         <strong class="jxr_keyword">protected</strong> <a href="../../../com/rultor/life/Testing.html">MemoryRule</a>(<strong class="jxr_keyword">final</strong> String rule) {
+<a class="jxr_linenumber" name="288" href="#288">288</a>             Testing.SPECS.put(rule, <strong class="jxr_keyword">new</strong> Spec.Simple());
+<a class="jxr_linenumber" name="289" href="#289">289</a>             <strong class="jxr_keyword">this</strong>.label = rule;
+<a class="jxr_linenumber" name="290" href="#290">290</a>         }
+<a class="jxr_linenumber" name="291" href="#291">291</a>         @Override
+<a class="jxr_linenumber" name="292" href="#292">292</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> update(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec, <strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> drain) {
+<a class="jxr_linenumber" name="293" href="#293">293</a>             Testing.SPECS.put(<strong class="jxr_keyword">this</strong>.label, spec);
+<a class="jxr_linenumber" name="294" href="#294">294</a>         }
+<a class="jxr_linenumber" name="295" href="#295">295</a>         @Override
+<a class="jxr_linenumber" name="296" href="#296">296</a>         <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> spec() {
+<a class="jxr_linenumber" name="297" href="#297">297</a>             <strong class="jxr_keyword">return</strong> Testing.SPECS.get(<strong class="jxr_keyword">this</strong>.label);
+<a class="jxr_linenumber" name="298" href="#298">298</a>         }
+<a class="jxr_linenumber" name="299" href="#299">299</a>         @Override
+<a class="jxr_linenumber" name="300" href="#300">300</a>         <strong class="jxr_keyword">public</strong> String name() {
+<a class="jxr_linenumber" name="301" href="#301">301</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.label;
+<a class="jxr_linenumber" name="302" href="#302">302</a>         }
+<a class="jxr_linenumber" name="303" href="#303">303</a>         @Override
+<a class="jxr_linenumber" name="304" href="#304">304</a>         <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Wallet.html">Wallet</a> wallet(<strong class="jxr_keyword">final</strong> <a href="../../../com/rultor/spi/Coordinates.html">Coordinates</a> work, <strong class="jxr_keyword">final</strong> URN urn,
+<a class="jxr_linenumber" name="305" href="#305">305</a>             <strong class="jxr_keyword">final</strong> String unt) {
+<a class="jxr_linenumber" name="306" href="#306">306</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException();
+<a class="jxr_linenumber" name="307" href="#307">307</a>         }
+<a class="jxr_linenumber" name="308" href="#308">308</a>         @Override
+<a class="jxr_linenumber" name="309" href="#309">309</a>         <strong class="jxr_keyword">public</strong> <a href="../../../com/rultor/spi/Spec.html">Spec</a> drain() {
+<a class="jxr_linenumber" name="310" href="#310">310</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Spec.Simple(<span class="jxr_string">"com.rultor.drain.Trash()"</span>);
+<a class="jxr_linenumber" name="311" href="#311">311</a>         }
+<a class="jxr_linenumber" name="312" href="#312">312</a>         @Override
+<a class="jxr_linenumber" name="313" href="#313">313</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> failure(<strong class="jxr_keyword">final</strong> String desc) {
+<a class="jxr_linenumber" name="314" href="#314">314</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException();
+<a class="jxr_linenumber" name="315" href="#315">315</a>         }
+<a class="jxr_linenumber" name="316" href="#316">316</a>         @Override
+<a class="jxr_linenumber" name="317" href="#317">317</a>         <strong class="jxr_keyword">public</strong> String failure() {
+<a class="jxr_linenumber" name="318" href="#318">318</a>             <strong class="jxr_keyword">return</strong> <span class="jxr_string">""</span>;
+<a class="jxr_linenumber" name="319" href="#319">319</a>         }
+<a class="jxr_linenumber" name="320" href="#320">320</a>     }
+<a class="jxr_linenumber" name="321" href="#321">321</a> 
+<a class="jxr_linenumber" name="322" href="#322">322</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
