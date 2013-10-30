@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type='text/xsl' href='puzzles.xsl'?><puzzles>
+   <puzzle>
+      <ticket>215</ticket>
+      <file>src/test/java/com/rultor/users/pgsql/ArchiverITCase.java</file>
+      <prefix>     * </prefix>
+      <body>Refactor test so it can run VACUUM correctly, right now it throws "VACUUM cannot run inside a transaction block".</body>
+      <estimate>0</estimate>
+      <lines>64-65</lines>
+      <owner>someone</owner>
+   </puzzle>
+</puzzles>
