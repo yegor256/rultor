@@ -33,6 +33,9 @@ import com.rexsl.test.XhtmlMatchers
 import org.hamcrest.MatcherAssert
 import org.phandom.Phandom
 
+if (!Phandom.isInstalled()) {
+    return
+}
 MatcherAssert.assertThat(
     XhtmlMatchers.xhtml(new Phandom(rexsl.document).dom()),
     XhtmlMatchers.hasXPaths(
