@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type='text/xsl' href='puzzles.xsl'?><puzzles>
+   <puzzle>
+      <ticket>162</ticket>
+      <file>src/main/java/com/rultor/drain/Standed.java</file>
+      <prefix> * </prefix>
+      <body>As soon as rexsl #716 is resolved remove SQSEntry interface and use TestClient directly.</body>
+      <estimate>30</estimate>
+      <lines>83-84</lines>
+      <owner>someone</owner>
+   </puzzle>
+   <puzzle>
+      <ticket>285</ticket>
+      <file>src/main/java/com/rultor/drain/Standed.java</file>
+      <prefix>     * </prefix>
+      <body>Due to a problem with concurrency we're using this same thread executor. When the problem is fixed we should use Executors.newFixedThreadPool(Standed.THREADS, new VerboseThreads())</body>
+      <estimate>0</estimate>
+      <lines>146-148</lines>
+      <owner>someone</owner>
+   </puzzle>
+</puzzles>
