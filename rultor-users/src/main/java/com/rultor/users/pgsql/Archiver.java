@@ -82,7 +82,7 @@ public final class Archiver implements Runnable, Closeable {
                 .sql("SELECT archive()")
                 .select(new VoidHandler());
             new JdbcSession(this.client.get())
-                .sql("VACUUM")
+                .sql("VACUUM FULL")
                 .execute();
         } catch (SQLException ex) {
             throw new IllegalStateException(ex);

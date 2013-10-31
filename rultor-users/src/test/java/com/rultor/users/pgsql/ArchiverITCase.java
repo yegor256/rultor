@@ -30,7 +30,6 @@
 package com.rultor.users.pgsql;
 
 import org.junit.Assume;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -65,7 +64,6 @@ public final class ArchiverITCase {
      *  throws "VACUUM cannot run inside a transaction block".
      */
     @Test
-    @Ignore
     public void archivesDatabase() throws Exception {
         Assume.assumeNotNull(ArchiverITCase.URL);
         final Archiver arch = new Archiver(
