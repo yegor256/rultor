@@ -53,7 +53,8 @@ public final class XemblyLineTest {
         final Iterable<Directive> dirs = new Directives()
             .xpath("/snapshot")
             .add("test")
-            .set("hello,\n\"'друг'\"!")
+            .set("hello,\n\"\"test\"\\'&<>,; 'друг'\"!\\")
+            .set(XemblyLine.MARK)
             .add("foo")
             .set(RandomStringUtils.randomAscii(Tv.TEN));
         MatcherAssert.assertThat(
