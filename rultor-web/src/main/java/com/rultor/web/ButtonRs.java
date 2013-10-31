@@ -34,6 +34,8 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rexsl.test.RestTester;
 import com.rultor.snapshot.XSLT;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import javax.validation.constraints.NotNull;
@@ -125,6 +127,14 @@ public final class ButtonRs extends BaseRs {
     @Produces("image/png")
     public Response pngButton(@PathParam("rule") final String rule)
         throws Exception {
+        GraphicsEnvironment.getLocalGraphicsEnvironment()
+            .registerFont(
+                Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    UriBuilder.fromPath("http://img.rultor.com/rultor.ttf")
+                        .build().toURL().openStream()
+                )
+            );
         final PNGTranscoder transcoder = new PNGTranscoder();
         transcoder.addTranscodingHint(
             PNGTranscoder.KEY_WIDTH, (float) Tv.HUNDRED
