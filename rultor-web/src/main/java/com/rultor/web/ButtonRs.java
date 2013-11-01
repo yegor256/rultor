@@ -97,20 +97,11 @@ public final class ButtonRs extends BaseRs {
      */
     public ButtonRs() {
         this(ButtonRs.DEFAULT_BUILD);
-        try {
-            GraphicsEnvironment.getLocalGraphicsEnvironment()
-                .registerFont(
-                    Font.createFont(
-                        Font.TRUETYPE_FONT,
-                        UriBuilder.fromPath("http://img.rultor.com/rultor.ttf")
-                            .build().toURL().openStream()
-                    )
-                );
-        } catch (FontFormatException ex) {
-            throw new IllegalStateException(ex);
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+        final GraphicsEnvironment env = GraphicsEnvironment
+            .getLocalGraphicsEnvironment();
+        font(env, "http://img.rultor.com/rultor.ttf");
+        // @checkstyle LineLength (1 line)
+        font(env, "http://img.rultor.com/helveticaneue.ttf");
     }
 
     /**
@@ -208,6 +199,27 @@ public final class ButtonRs extends BaseRs {
                 )
             )
         ).xml();
+    }
+
+    /**
+     * Register a new font.
+     * @param env Environment to register in.
+     * @param file Font file to register.
+     */
+    private void font(final GraphicsEnvironment env, final String file) {
+        try {
+            env.registerFont(
+                Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    UriBuilder.fromPath(file)
+                        .build().toURL().openStream()
+                )
+            );
+        } catch (FontFormatException ex) {
+            throw new IllegalStateException(ex);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**
