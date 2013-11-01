@@ -8,17 +8,3 @@ Rultor-GithubSecret: 1234567
 Rultor-Version: 1.0-SNAPSHOT
 Rultor-Revision: 12345
 Rultor-Date: 9-Dec-2012
-Rultor-DynamoKey: ${failsafe.dynamo.key}
-Rultor-DynamoSecret: ${failsafe.dynamo.secret}
-Rultor-DynamoPrefix: ${failsafe.dynamo.prefix}
-Rultor-SQSKey: ${failsafe.sqs.key}
-Rultor-SQSSecret: ${failsafe.sqs.secret}
-Rultor-SQSUrl: ${failsafe.sqs.url}
-Rultor-SQSWalletUrl: ${failsafe.sqs.url}
-Rultor-PgsqlJdbc: ${failsafe.pgsql.jdbc}
-Rultor-PgsqlPassword: ${failsafe.pgsql.password}
-Rultor-MongoHost: ${failsafe.mongo.host}
-Rultor-MongoPort: ${failsafe.mongo.port}
-Rultor-MongoName: ${failsafe.mongo.name}
-Rultor-MongoUser: ${failsafe.mongo.user}
-Rultor-MongoPassword: ${failsafe.mongo.password}
