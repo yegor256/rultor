@@ -99,9 +99,8 @@ public final class ButtonRs extends BaseRs {
         this(ButtonRs.DEFAULT_BUILD);
         final GraphicsEnvironment env = GraphicsEnvironment
             .getLocalGraphicsEnvironment();
-        font(env, "http://img.rultor.com/rultor.ttf");
-        // @checkstyle LineLength (1 line)
-        font(env, "http://img.rultor.com/helveticaneue.ttf");
+        this.font(env, "http://img.rultor.com/rultor.ttf");
+        this.font(env, "http://img.rultor.com/helveticaneue.ttf");
     }
 
     /**
