@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type='text/xsl' href='puzzles.xsl'?><puzzles>
+   <puzzle>
+      <ticket>238</ticket>
+      <file>src/test/java/com/rultor/web/AuthKeysTest.java</file>
+      <prefix>     * </prefix>
+      <body>AuthKeys should validate empty string.</body>
+      <estimate>0</estimate>
+      <lines>82-82</lines>
+      <owner>someone</owner>
+   </puzzle>
+</puzzles>
