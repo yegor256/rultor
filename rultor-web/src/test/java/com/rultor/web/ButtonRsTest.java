@@ -35,9 +35,11 @@ import com.rexsl.page.UriInfoMocker;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.net.URLConnection;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.SecurityContext;
+import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -232,5 +234,32 @@ public final class ButtonRsTest {
         this.context(res);
         res.pngButton(rule);
         MatcherAssert.assertThat(called.get(), Matchers.is(true));
+    }
+
+    /**
+     * BuildRs should create image with correct fonts.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void buildImageWithCorrectFont() throws Exception {
+        final String rule = "other-rule";
+        final ButtonRs res = new ButtonRs(
+            new ButtonRs.Build() {
+                @Override
+                public String info(final URI uri) {
+                    return ButtonRsTest.this.page(rule);
+                }
+            }
+        );
+        this.prepare(res);
+        MatcherAssert.assertThat(
+            Arrays.equals(
+                (byte[]) res.pngButton(rule).getEntity(),
+                IOUtils.toByteArray(
+                    this.getClass().getResourceAsStream("build.png")
+                )
+            ),
+            Matchers.equalTo(true)
+        );
     }
 }

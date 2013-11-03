@@ -34,7 +34,11 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rexsl.test.RestTester;
 import com.rultor.snapshot.XSLT;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -93,6 +97,10 @@ public final class ButtonRs extends BaseRs {
      */
     public ButtonRs() {
         this(ButtonRs.DEFAULT_BUILD);
+        final GraphicsEnvironment env = GraphicsEnvironment
+            .getLocalGraphicsEnvironment();
+        this.font(env, "http://img.rultor.com/rultor.ttf");
+        this.font(env, "http://img.rultor.com/helveticaneue.ttf");
     }
 
     /**
@@ -190,6 +198,27 @@ public final class ButtonRs extends BaseRs {
                 )
             )
         ).xml();
+    }
+
+    /**
+     * Register a new font.
+     * @param env Environment to register in.
+     * @param file Font file to register.
+     */
+    private void font(final GraphicsEnvironment env, final String file) {
+        try {
+            env.registerFont(
+                Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    UriBuilder.fromPath(file)
+                        .build().toURL().openStream()
+                )
+            );
+        } catch (FontFormatException ex) {
+            throw new IllegalStateException(ex);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**

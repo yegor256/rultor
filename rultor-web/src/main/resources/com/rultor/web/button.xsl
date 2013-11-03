@@ -33,7 +33,7 @@
                 xmlns="http://www.w3.org/2000/svg" version="2.0"
                 exclude-result-prefixes="xs">
     <xsl:template match="/">
-        <svg font-size="10" viewBox="0 0 100 50">
+        <svg font-size="10" font-family="helveticaneue" viewBox="0 0 100 50">
             <defs>
                 <style type="text/css"><![CDATA[
                     @font-face {
@@ -63,7 +63,7 @@
              fill="white" stroke="black"
              />
             <g>
-                <text font-family="Rultor-Logo" font-size="40" x="55" xml:space="preserve" y="27" text-anchor="middle" dominant-baseline="middle">
+                <text font-family="rultor" font-size="40" x="55" xml:space="preserve" y="27" text-anchor="middle" dominant-baseline="middle">
                     <xsl:text>R</xsl:text>
                 </text>
                 <text y="10">
@@ -79,7 +79,7 @@
              fill="red" stroke="black"
              />
             <g>
-                <text font-family="Rultor-Logo" font-size="40" x="55" xml:space="preserve" y="28" text-anchor="middle" dominant-baseline="middle">
+                <text font-family="rultor" font-size="40" x="55" xml:space="preserve" y="28" text-anchor="middle" dominant-baseline="middle">
                     <xsl:text>R</xsl:text>
                 </text>
                 <text dominant-baseline="middle" x="0" y="25">
