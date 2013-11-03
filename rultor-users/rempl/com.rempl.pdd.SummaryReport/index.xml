@@ -6,7 +6,7 @@
       <prefix>     * </prefix>
       <body>Refactor test so it can run VACUUM correctly, right now it throws "VACUUM cannot run inside a transaction block".</body>
       <estimate>0</estimate>
-      <lines>64-65</lines>
+      <lines>63-64</lines>
       <owner>someone</owner>
    </puzzle>
 </puzzles>
