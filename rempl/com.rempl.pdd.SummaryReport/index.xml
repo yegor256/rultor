@@ -46,12 +46,21 @@
       <owner>someone</owner>
    </puzzle>
    <puzzle>
+      <ticket>238</ticket>
+      <file>rultor-web/src/test/java/com/rultor/web/AuthKeysTest.java</file>
+      <prefix>     * </prefix>
+      <body>AuthKeys should validate empty string.</body>
+      <estimate>0</estimate>
+      <lines>82-82</lines>
+      <owner>someone</owner>
+   </puzzle>
+   <puzzle>
       <ticket>215</ticket>
       <file>rultor-users/src/test/java/com/rultor/users/pgsql/ArchiverITCase.java</file>
       <prefix>     * </prefix>
       <body>Refactor test so it can run VACUUM correctly, right now it throws "VACUUM cannot run inside a transaction block".</body>
       <estimate>0</estimate>
-      <lines>64-65</lines>
+      <lines>63-64</lines>
       <owner>someone</owner>
    </puzzle>
    <puzzle>
