@@ -138,12 +138,28 @@ final class GroupAppender extends AppenderSkeleton
             this.lines.add(
                 new Drain.Line.Simple(
                     new Time().delta(this.start),
-                    GroupAppender.LEVELS.get(event.getLevel()),
+                    this.level(event.getLevel()),
                     msg
                 ).toString()
             );
             this.radar.append(msg);
         }
+    }
+
+    /**
+     * Convert log4j logging level to java.util.logging one.
+     * When log4j level is unknown it will return Level.INFO.
+     * @param level Log4j logging level.
+     * @return Level in java.util.logging.
+     */
+    private java.util.logging.Level level(final Level level) {
+        final java.util.logging.Level jlevel;
+        if (GroupAppender.LEVELS.containsKey(level)) {
+            jlevel = GroupAppender.LEVELS.get(level);
+        } else {
+            jlevel = java.util.logging.Level.INFO;
+        }
+        return jlevel;
     }
 
     @Override

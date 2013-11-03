@@ -42,8 +42,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.spi.LoggingEvent;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -200,4 +202,19 @@ public final class GroupAppenderTest {
         );
     }
 
+    /**
+     * GroupAppender should use a default log level when it receives an unknown
+     * one.
+     */
+    @Test
+    public void logsMessagesWithWrongLogLevel() {
+        final Drain drain = Mockito.mock(Drain.class);
+        final LoggingEvent event = Mockito.mock(LoggingEvent.class);
+        final Level level = Mockito.mock(Level.class);
+        Mockito.when(event.getLevel()).thenReturn(level);
+        final GroupAppender appender = new GroupAppender(new Time(), drain);
+        appender.setLayout(new SimpleLayout());
+        appender.append(event);
+        Mockito.verify(event, Mockito.atLeast(1)).getLevel();
+    }
 }
