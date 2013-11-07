@@ -76,7 +76,7 @@ final class AwsUser implements User {
      * @param sqs SQS client
      * @param urn URN of the user
      */
-    protected AwsUser(final Region reg, final SQSClient sqs, final URN urn) {
+    AwsUser(final Region reg, final SQSClient sqs, final URN urn) {
         this.region = reg;
         this.client = sqs;
         this.name = urn;

@@ -32,6 +32,7 @@ package com.rultor.conveyer;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.retry.ReRegion;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.conveyer.audit.AuditUsers;
@@ -77,7 +78,7 @@ final class ConveyerBuilder {
      * Ctor.
      * @param opts Options
      */
-    protected ConveyerBuilder(final OptionSet opts) {
+    ConveyerBuilder(final OptionSet opts) {
         this.options = opts;
     }
 
@@ -154,7 +155,7 @@ final class ConveyerBuilder {
                         this.options.valueOf("pgsql-password").toString()
                     ),
                     receipts,
-                    new AwsUsers(region, receipts)
+                    new AwsUsers(new ReRegion(region), receipts)
                 )
             ),
             Integer.parseInt(this.options.valueOf("threads").toString())

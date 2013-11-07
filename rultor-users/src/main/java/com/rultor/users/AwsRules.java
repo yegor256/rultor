@@ -32,7 +32,6 @@ package com.rultor.users;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
@@ -89,7 +88,7 @@ final class AwsRules implements Rules {
      * @param sqs SQS client
      * @param urn URN of the user
      */
-    protected AwsRules(final Region reg, final SQSClient sqs, final URN urn) {
+    AwsRules(final Region reg, final SQSClient sqs, final URN urn) {
         this.region = reg;
         this.client = sqs;
         this.owner = urn;
@@ -101,7 +100,6 @@ final class AwsRules implements Rules {
         final Iterator<Item> items = this.fetch().iterator();
         return new Iterator<Rule>() {
             @Override
-            @RetryOnFailure(verbose = false)
             public boolean hasNext() {
                 return items.hasNext();
             }
@@ -118,7 +116,6 @@ final class AwsRules implements Rules {
 
     @Override
     @Cacheable.FlushAfter
-    @RetryOnFailure(verbose = false)
     public void create(
         @NotNull(message = "rule name is mandatory when creating new rule")
         @Pattern(
@@ -141,7 +138,6 @@ final class AwsRules implements Rules {
 
     @Override
     @Cacheable.FlushAfter
-    @RetryOnFailure(verbose = false)
     public void remove(@NotNull(message = "rule name is mandatory")
         final String rule) {
         final Iterator<Item> items = this.region.table(AwsRule.TABLE).frame()
@@ -160,7 +156,6 @@ final class AwsRules implements Rules {
 
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-    @RetryOnFailure(verbose = false)
     public Rule get(
         @NotNull(message = "rule name can't be NULL")
         @Pattern(regexp = ".+", message = "rule shouldn't be blank")
@@ -180,7 +175,6 @@ final class AwsRules implements Rules {
 
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-    @RetryOnFailure(verbose = false)
     public boolean contains(
         @NotNull(message = "rule name can't be NULL")
         @Pattern(regexp = ".+", message = "rule shouldn't be blank")
@@ -198,7 +192,6 @@ final class AwsRules implements Rules {
      * @return All Rules
      */
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-    @RetryOnFailure(verbose = false)
     private Collection<Item> fetch() {
         return this.region.table(AwsRule.TABLE)
             .frame()
@@ -244,7 +237,7 @@ final class AwsRules implements Rules {
          * Ctor.
          * @param rule Rule to wrap
          */
-        protected CacheableRule(final Rule rule) {
+        CacheableRule(final Rule rule) {
             this.origin = rule;
         }
         @Override

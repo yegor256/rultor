@@ -80,7 +80,7 @@ final class AwsStands implements Stands {
      * @param reg Region in Dynamo
      * @param urn URN of the user
      */
-    protected AwsStands(final Region reg, final URN urn) {
+    AwsStands(final Region reg, final URN urn) {
         this.region = reg;
         this.owner = urn;
     }
@@ -107,7 +107,6 @@ final class AwsStands implements Stands {
 
     @Override
     @Cacheable.FlushAfter
-    @RetryOnFailure(verbose = false)
     public void create(
         @NotNull(message = "stand name is mandatory when creating")
         @Pattern(
@@ -125,7 +124,6 @@ final class AwsStands implements Stands {
 
     @Override
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-    @RetryOnFailure(verbose = false)
     public boolean contains(
         @NotNull @Pattern(regexp = ".+") final String name) {
         return !this.region.table(AwsStand.TABLE).frame()
@@ -135,7 +133,6 @@ final class AwsStands implements Stands {
     }
 
     @Override
-    @RetryOnFailure(verbose = false)
     public Stand get(@NotNull @Pattern(regexp = ".+")final String name) {
         final Collection<Item> items = this.region.table(AwsStand.TABLE)
             .frame()
@@ -160,7 +157,6 @@ final class AwsStands implements Stands {
      * @return All stands
      */
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
-    @RetryOnFailure(verbose = false)
     private Collection<Item> fetch() {
         return this.region.table(AwsStand.TABLE)
             .frame()
