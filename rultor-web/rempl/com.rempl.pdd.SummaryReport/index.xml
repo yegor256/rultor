@@ -9,4 +9,13 @@
       <lines>82-82</lines>
       <owner>someone</owner>
    </puzzle>
+   <puzzle>
+      <ticket>439</ticket>
+      <file>src/test/java/com/rultor/web/ButtonRsTest.java</file>
+      <prefix>     * </prefix>
+      <body>This test fails on Linux Ubuntu 12.04 and on Mac OSX, see more details in https://github.com/rultor/rultor/issues/439</body>
+      <estimate>0</estimate>
+      <lines>242-243</lines>
+      <owner>someone</owner>
+   </puzzle>
 </puzzles>
