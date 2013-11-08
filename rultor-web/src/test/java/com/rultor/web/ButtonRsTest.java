@@ -239,11 +239,8 @@ public final class ButtonRsTest {
     /**
      * BuildRs should create image with correct fonts.
      * @throws Exception In case of error.
-     * @todo #439 This test fails on Linux Ubuntu 12.04 and on Mac OSX,
-     *  see more details in https://github.com/rultor/rultor/issues/439
      */
     @Test
-    @org.junit.Ignore
     public void buildImageWithCorrectFont() throws Exception {
         final String rule = "other-rule";
         final ButtonRs res = new ButtonRs(
