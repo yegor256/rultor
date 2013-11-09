@@ -100,7 +100,6 @@ public final class ButtonRs extends BaseRs {
         final GraphicsEnvironment env = GraphicsEnvironment
             .getLocalGraphicsEnvironment();
         this.font(env, "http://img.rultor.com/rultor.ttf");
-        this.font(env, "http://img.rultor.com/helveticaneue.ttf");
     }
 
     /**

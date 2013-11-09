@@ -33,11 +33,11 @@
                 xmlns="http://www.w3.org/2000/svg" version="2.0"
                 exclude-result-prefixes="xs">
     <xsl:template match="/">
-        <svg font-size="10" font-family="Helvetica Neue Regular" viewBox="0 0 100 50">
+        <svg font-size="10" viewBox="0 0 100 50">
             <defs>
                 <style type="text/css"><![CDATA[
                     @font-face {
-                        font-family: 'Rultor-Logo';
+                        font-family: 'rultor';
                         src: url('//img.rultor.com/rultor.eot');
                         src: url('//img.rultor.com/rultor.eot?#iefix') format('embedded-opentype'),
                             url('//img.rultor.com/rultor.woff') format('woff'),

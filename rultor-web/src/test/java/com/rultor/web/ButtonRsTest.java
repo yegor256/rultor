@@ -40,6 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.SecurityContext;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -66,7 +67,7 @@ public final class ButtonRsTest {
             new ButtonRs.Build() {
                 @Override
                 public String info(final URI uri) {
-                    return ButtonRsTest.this.page(rule);
+                    return ButtonRsTest.this.page(rule, "1", "2", "3");
                 }
             }
         );
@@ -92,7 +93,7 @@ public final class ButtonRsTest {
             new ButtonRs.Build() {
                 @Override
                 public String info(final URI uri) {
-                    return ButtonRsTest.this.page(rule);
+                    return ButtonRsTest.this.page(rule, "4", "5", "6");
                 }
             }
         );
@@ -185,19 +186,24 @@ public final class ButtonRsTest {
     /**
      * Generate build health page.
      * @param rule Rule to use in page.
+     * @param duration Duration
+     * @param code Code
+     * @param health Health
      * @return Page source.
+     * @checkstyle ParameterNumberCheck (3 lines)
      */
-    private String page(final String rule) {
+    private String page(final String rule, final String duration,
+        final String code, final String health) {
         return String.format(
             // @checkstyle StringLiteralsConcatenation (8 lines)
             // @checkstyle LineLength (1 line)
             "<page><widgets><widget class=\"com.rultor.widget.BuildHealth\"><builds><build>"
                 + "  <coordinates><rule>%s</rule></coordinates>"
-                + "  <duration>1212602</duration>"
-                + "  <code>0</code>"
-                + "  <health>0.6153846153846154</health>"
+                + "  <duration>%s</duration>"
+                + "  <code>%s</code>"
+                + "  <health>%s</health>"
                 + "</build></builds></widget></widgets></page>",
-            rule
+            rule, duration, code, health
         );
     }
 
@@ -222,7 +228,7 @@ public final class ButtonRsTest {
                         )
                     );
                     called.set(true);
-                    return ButtonRsTest.this.page(rule);
+                    return ButtonRsTest.this.page(rule, "7", "8", "9");
                 }
             }
         );
@@ -247,7 +253,10 @@ public final class ButtonRsTest {
             new ButtonRs.Build() {
                 @Override
                 public String info(final URI uri) {
-                    return ButtonRsTest.this.page(rule);
+                    return ButtonRsTest.this.page(
+                        rule,
+                        StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY
+                    );
                 }
             }
         );
