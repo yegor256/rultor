@@ -247,10 +247,11 @@ public final class ButtonRsTest {
      * BuildRs should create image with correct fonts.
      * @throws Exception In case of error.
      * @todo #439 Batik image generation depends on JDK used and in some cases
-     *  leads to different results (e.g. different anti-aliasing in images) as
-     *  a result the images can't be compared using bytes. This problem can be
-     *  recreated with OpenJDK and Oracle JDK. Possible solution would be to use
-     *  vector image or a different library to generate images.
+     *  leads to different images for the same data (e.g. different
+     *  anti-aliasing in images) as a result the images can't be compared byte
+     *  by byte. This problem can be recreated by running image generation with
+     *  OpenJDK and Oracle JDK. Possible solution would be to use vector images
+     *  or a different library to generate images.
      */
     @Test
     @Ignore
