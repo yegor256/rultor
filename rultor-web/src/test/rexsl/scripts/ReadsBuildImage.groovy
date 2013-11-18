@@ -43,11 +43,9 @@ MatcherAssert.assertThat(
     URLConnection.guessContentTypeFromStream(
         new ByteArrayInputStream(
             IOUtils.toByteArray(
-                UriBuilder.fromUri(rexsl.home)
-                    .segment(
+                UriBuilder.fromUri(rexsl.home).segment(
                     'b', 'stand', 'stand-that-does-not-exist', 'some-rule.png'
-                )
-                    .build()
+                ).build()
             )
         )
     ),
