@@ -40,7 +40,8 @@ import javax.ws.rs.core.UriBuilder
 //  different image.
 
 MatcherAssert.assertThat(
-        URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(
+    URLConnection.guessContentTypeFromStream(
+        new ByteArrayInputStream(
             IOUtils.toByteArray(
                 UriBuilder.fromUri(rexsl.home)
                     .segment(
