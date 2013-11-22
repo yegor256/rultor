@@ -32,7 +32,10 @@ package com.rultor.client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.xml.XML;
-import com.rexsl.test.RestTester;
+import com.rexsl.test.JdkRequest;
+import com.rexsl.test.Request;
+import com.rexsl.test.RestResponse;
+import com.rexsl.test.XmlResponse;
 import com.rultor.spi.Column;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Sheet;
@@ -89,13 +92,23 @@ final class RestSheet implements Sheet {
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public List<Column> columns() {
-        final Collection<XML> nodes = RestTester
-            .start(UriBuilder.fromUri(this.home))
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-            .header(HttpHeaders.AUTHORIZATION, this.token)
-            .get("#balance()")
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .nodes("/page/columns/column");
+        final Collection<XML> nodes;
+        try {
+            nodes = new JdkRequest(
+                UriBuilder.fromUri(this.home).build()
+            )
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
+                .method(Request.GET)
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
+                .xml()
+                .nodes("/page/columns/column");
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
         final List<Column> columns = new ArrayList<Column>(nodes.size());
         for (final XML node : nodes) {
             columns.add(

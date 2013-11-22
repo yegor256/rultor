@@ -32,11 +32,15 @@ package com.rultor.client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
-import com.rexsl.test.RestTester;
+import com.rexsl.test.JdkRequest;
+import com.rexsl.test.Request;
+import com.rexsl.test.RestResponse;
+import com.rexsl.test.XmlResponse;
 import com.rultor.spi.Account;
 import com.rultor.spi.Rules;
 import com.rultor.spi.Stands;
 import com.rultor.spi.User;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -111,50 +115,74 @@ public final class RestUser implements User {
 
     @Override
     public URN urn() {
-        return URN.create(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("#urn()")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .assertXPath("/page/identity")
-                .xpath("/page/identity/urn/text()")
-                .get(0)
-        );
+        try {
+            return URN.create(
+                new JdkRequest(UriBuilder.fromUri(this.home).build())
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .header(HttpHeaders.AUTHORIZATION, this.token)
+                    .method(Request.GET)
+                    .fetch()
+                    .as(RestResponse.class)
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .as(XmlResponse.class)
+                    .assertXPath("/page/identity")
+                    .xml()
+                    .xpath("/page/identity/urn/text()")
+                    .get(0)
+            );
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     public Rules rules() {
-        return new RestRules(
-            URI.create(
-                RestTester.start(UriBuilder.fromUri(this.home))
-                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                    .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .get("#rules()")
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .assertXPath("/page/links/link[@rel='rules']")
-                    .xpath("/page/links/link[@rel='rules']/@href")
-                    .get(0)
-            ),
-            this.token
-        );
+        try {
+            return new RestRules(
+                URI.create(
+                    new JdkRequest(UriBuilder.fromUri(this.home).build())
+                        .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                        .header(HttpHeaders.AUTHORIZATION, this.token)
+                        .method(Request.GET)
+                        .fetch()
+                        .as(RestResponse.class)
+                        .assertStatus(HttpURLConnection.HTTP_OK)
+                        .as(XmlResponse.class)
+                        .assertXPath("/page/links/link[@rel='rules']")
+                        .xml()
+                        .xpath("/page/links/link[@rel='rules']/@href")
+                        .get(0)
+                ),
+                this.token
+            );
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     public Stands stands() {
-        return new RestStands(
-            URI.create(
-                RestTester.start(UriBuilder.fromUri(this.home))
-                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                    .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .get("#stands()")
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .assertXPath("/page/links/link[@rel='stands']")
-                    .xpath("/page/links/link[@rel='stands']/@href")
-                    .get(0)
-            ),
-            this.token
-        );
+        try {
+            return new RestStands(
+                URI.create(
+                    new JdkRequest(UriBuilder.fromUri(this.home).build())
+                        .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                        .header(HttpHeaders.AUTHORIZATION, this.token)
+                        .method(Request.GET)
+                        .fetch()
+                        .as(RestResponse.class)
+                        .assertStatus(HttpURLConnection.HTTP_OK)
+                        .as(XmlResponse.class)
+                        .assertXPath("/page/links/link[@rel='stands']")
+                        .xml()
+                        .xpath("/page/links/link[@rel='stands']/@href")
+                        .get(0)
+                ),
+                this.token
+            );
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override

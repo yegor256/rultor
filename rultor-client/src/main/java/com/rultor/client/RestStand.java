@@ -32,11 +32,15 @@ package com.rultor.client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
-import com.rexsl.test.RestTester;
+import com.rexsl.test.JdkRequest;
+import com.rexsl.test.Request;
+import com.rexsl.test.RestResponse;
+import com.rexsl.test.XmlResponse;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
@@ -83,75 +87,115 @@ final class RestStand implements Stand {
     @Override
     public void update(final Spec spec, final Spec widgets) {
         try {
-            RestTester.start(UriBuilder.fromUri(this.home))
+            new JdkRequest(UriBuilder.fromUri(this.home).build())
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get(String.format("preparing for #update(%s)", spec))
+                .method(Request.GET)
+                .fetch()
+                .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
                 .rel("/page/links/link[@rel='save']/@href")
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .post(
-                    "#update(..)",
+                .body()
+                .set(
                     String.format(
                         "spec=%s&widgets=%s",
                         URLEncoder.encode(spec.asText(), CharEncoding.UTF_8),
                         URLEncoder.encode(widgets.asText(), CharEncoding.UTF_8)
                     )
                 )
-                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+                .back()
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK);
         } catch (UnsupportedEncodingException ex) {
+            throw new IllegalStateException(ex);
+        } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
 
     @Override
     public Spec acl() {
-        return new Spec.Simple(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("#spec()")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath("/page/stand/acl/text()")
-                .get(0)
-        );
+        try {
+            return new Spec.Simple(
+                new JdkRequest(UriBuilder.fromUri(this.home).build())
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .header(HttpHeaders.AUTHORIZATION, this.token)
+                    .method(Request.GET)
+                    .fetch()
+                    .as(RestResponse.class)
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .as(XmlResponse.class)
+                    .xml()
+                    .xpath("/page/stand/acl/text()")
+                    .get(0)
+            );
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     public Spec widgets() {
-        return new Spec.Simple(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("#widgets()")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath("/page/stand/widgets/text()")
-                .get(0)
-        );
+        try {
+            return new Spec.Simple(
+                new JdkRequest(UriBuilder.fromUri(this.home).build())
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .header(HttpHeaders.AUTHORIZATION, this.token)
+                    .method(Request.GET)
+                    .fetch()
+                    .as(RestResponse.class)
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .as(XmlResponse.class)
+                    .xml()
+                    .xpath("/page/stand/widgets/text()")
+                    .get(0)
+            );
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     public String name() {
-        return RestTester.start(UriBuilder.fromUri(this.home))
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-            .header(HttpHeaders.AUTHORIZATION, this.token)
-            .get("#name()")
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .xpath("/page/stand/name/text()")
-            .get(0);
+        try {
+            return new JdkRequest(UriBuilder.fromUri(this.home).build())
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
+                .method(Request.GET)
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
+                .xml()
+                .xpath("/page/stand/name/text()")
+                .get(0);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     public URN owner() {
-        return URN.create(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("#owner()")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath("/page/identity/urn/text()")
-                .get(0)
-        );
+        try {
+            return URN.create(
+                new JdkRequest(UriBuilder.fromUri(this.home).build())
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .header(HttpHeaders.AUTHORIZATION, this.token)
+                    .method(Request.GET)
+                    .fetch()
+                    .as(RestResponse.class)
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .as(XmlResponse.class)
+                    .xml()
+                    .xpath("/page/identity/urn/text()")
+                    .get(0)
+            );
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override

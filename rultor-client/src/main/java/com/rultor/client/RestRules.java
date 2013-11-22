@@ -31,9 +31,13 @@ package com.rultor.client;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.test.RestTester;
+import com.rexsl.test.JdkRequest;
+import com.rexsl.test.Request;
+import com.rexsl.test.RestResponse;
+import com.rexsl.test.XmlResponse;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Rules;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -89,74 +93,108 @@ final class RestRules implements Rules {
 
     @Override
     public Rule get(final String name) {
-        return new RestRule(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get(String.format("#get(%s)", name))
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath(
-                    String.format(
-                        // @checkstyle LineLength (1 line)
-                        "/page/rules/rule[name='%s']/links/link[@rel='edit']/@href",
-                        name
+        try {
+            return new RestRule(
+                new JdkRequest(UriBuilder.fromUri(this.home).build())
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .header(HttpHeaders.AUTHORIZATION, this.token)
+                    .method(Request.GET)
+                    .fetch()
+                    .as(RestResponse.class)
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .as(XmlResponse.class)
+                    .xml()
+                    .xpath(
+                        String.format(
+                            // @checkstyle LineLength (1 line)
+                            "/page/rules/rule[name='%s']/links/link[@rel='edit']/@href",
+                            name
+                        )
                     )
-                )
-                .get(0),
-            this.token
-        );
+                    .get(0),
+                this.token
+            );
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     public void create(final String name) {
         try {
-            RestTester.start(UriBuilder.fromUri(this.home))
+            new JdkRequest(UriBuilder.fromUri(this.home).build())
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get(String.format("preparing to #create(%s)", name))
+                .method(Request.GET)
+                .fetch()
+                .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
                 .rel("/page/links/link[@rel='create']/@href")
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .post(
-                    String.format("#create(%s)", name),
+                .method(Request.POST)
+                .body()
+                .set(
                     String.format(
                         "name=%s",
                         URLEncoder.encode(name, CharEncoding.UTF_8)
                     )
                 )
-                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+                .back()
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK);
         } catch (UnsupportedEncodingException ex) {
+            throw new IllegalStateException(ex);
+        } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
 
     @Override
     public void remove(final String name) {
-        RestTester.start(UriBuilder.fromUri(this.home))
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-            .header(HttpHeaders.AUTHORIZATION, this.token)
-            .get(String.format("preparing to #remove(%s)", name))
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .rel(
-                String.format(
-                    // @checkstyle LineLength (1 line)
-                    "/page/rules/rule[name='%s']/links/link[@rel='remove']/@href",
-                    name
+        try {
+            new JdkRequest(UriBuilder.fromUri(this.home).build())
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
+                .method(Request.GET)
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
+                .rel(
+                    String.format(
+                        // @checkstyle LineLength (1 line)
+                        "/page/rules/rule[name='%s']/links/link[@rel='remove']/@href",
+                        name
+                    )
                 )
-            )
-            .get(String.format("#remove(%s)", name))
-            .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+                .method(Request.GET)
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     public boolean contains(final String name) {
-        return !RestTester.start(UriBuilder.fromUri(this.home))
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-            .header(HttpHeaders.AUTHORIZATION, this.token)
-            .get(String.format("#contains(%s)", name))
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .xpath(String.format("/page/rules/rule[name='%s']", name))
-            .isEmpty();
+        try {
+            return !new JdkRequest(UriBuilder.fromUri(this.home).build())
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
+                .method(Request.GET)
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
+                .xml()
+                .xpath(String.format("/page/rules/rule[name='%s']", name))
+                .isEmpty();
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
 }

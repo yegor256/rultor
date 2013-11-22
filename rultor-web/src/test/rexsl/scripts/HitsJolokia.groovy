@@ -29,7 +29,9 @@
  */
 package com.rultor.web.rexsl.scripts
 
-import com.rexsl.test.RestTester
+import com.rexsl.test.JdkRequest
+import com.rexsl.test.Request
+import com.rexsl.test.RestResponse
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.UriBuilder
@@ -38,8 +40,10 @@ import javax.ws.rs.core.UriBuilder
     '/jolokia/',
     '/jolokia/read/java.lang:type=Memory/HeapMemoryUsage',
 ].each {
-    RestTester.start(UriBuilder.fromUri(rexsl.home).path(it))
+    new JdkRequest(UriBuilder.fromUri(rexsl.home).path(it).build())
         .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-        .get('hits jolokia')
+        .method(Request.GET)
+        .fetch()
+        .as(RestResponse)
         .assertStatus(HttpURLConnection.HTTP_OK)
 }

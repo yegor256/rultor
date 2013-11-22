@@ -31,7 +31,11 @@ package com.rultor.ext.jira;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.test.RestTester;
+import com.rexsl.test.JdkRequest;
+import com.rexsl.test.JsonResponse;
+import com.rexsl.test.Request;
+import com.rexsl.test.RestResponse;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import javax.ws.rs.core.MediaType;
@@ -68,25 +72,35 @@ final class RxJiraComment implements JiraComment {
 
     @Override
     public String body() {
-        return RestTester.start(URI.create(this.url))
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .get("fetching body of the comment")
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .getJson()
-            .readObject()
-            .getString("body");
+        try {
+            return new JdkRequest(URI.create(this.url))
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                .method(Request.GET).fetch().as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(JsonResponse.class)
+                .json()
+                .readObject()
+                .getString("body");
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     public String author() {
-        return RestTester.start(URI.create(this.url))
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .get("fetching author name of the comment")
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .getJson()
-            .readObject()
-            .getJsonObject("author")
-            .getString("name");
+        try {
+            return new JdkRequest(URI.create(this.url))
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                .method(Request.GET).fetch().as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(JsonResponse.class)
+                .json()
+                .readObject()
+                .getJsonObject("author")
+                .getString("name");
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
 }

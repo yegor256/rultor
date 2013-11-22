@@ -29,10 +29,16 @@
  */
 package com.rultor.web.rexsl.scripts
 
-import com.rexsl.test.RestTester
+import com.rexsl.test.JdkRequest
+import com.rexsl.test.Request
+import com.rexsl.test.RestResponse
+import com.rexsl.test.XmlResponse
 import javax.ws.rs.core.UriBuilder
 
-RestTester.start(UriBuilder.fromUri(rexsl.home).path('/trap'))
-    .get('hits exception trap')
+new JdkRequest(UriBuilder.fromUri(rexsl.home).path('/trap').build())
+    .method(Request.GET)
+    .fetch()
+    .as(RestResponse)
     .assertStatus(HttpURLConnection.HTTP_OK)
+    .as(XmlResponse)
     .assertXPath('//xhtml:title[.="Internal application error"]')

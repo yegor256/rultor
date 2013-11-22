@@ -32,7 +32,9 @@ package com.rultor.web;
 import com.google.common.net.MediaType;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.rexsl.test.RestTester;
+import com.rexsl.test.JdkRequest;
+import com.rexsl.test.Request;
+import com.rexsl.test.RestResponse;
 import com.rultor.snapshot.XSLT;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -61,6 +63,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Path("/b/stand/{stand:[\\w\\-]+}/")
 @Loggable(Loggable.DEBUG)
@@ -72,13 +75,19 @@ public final class ButtonRs extends BaseRs {
     private static final Build DEFAULT_BUILD = new Build() {
         @Override
         public String info(final URI uri) {
-            return RestTester.start(uri)
-                .header(
-                    HttpHeaders.ACCEPT,
-                    MediaType.APPLICATION_XML_UTF_8.toString()
+            try {
+                return new JdkRequest(uri)
+                    .header(
+                        HttpHeaders.ACCEPT,
+                        MediaType.APPLICATION_XML_UTF_8.toString()
                 )
-                .get("retrieve stand")
-                .getBody();
+                    .method(Request.GET)
+                    .fetch()
+                    .as(RestResponse.class)
+                    .body();
+            } catch (IOException ex) {
+                throw new IllegalStateException(ex);
+            }
         }
     };
 

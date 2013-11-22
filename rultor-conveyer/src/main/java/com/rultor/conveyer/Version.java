@@ -33,7 +33,10 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
-import com.rexsl.test.RestTester;
+import com.rexsl.test.JdkRequest;
+import com.rexsl.test.Request;
+import com.rexsl.test.RestResponse;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import lombok.EqualsAndHashCode;
@@ -60,11 +63,19 @@ final class Version {
         boolean same;
         final String mine = Manifests.read("Rultor-Revision");
         try {
-            final String base = RestTester
-                .start(URI.create("http://www.rultor.com/misc/version"))
-                .get("read revision from web node")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .getBody();
+            final String base;
+            try {
+                base = new JdkRequest(
+                    URI.create("http://www.rultor.com/misc/version")
+                )
+                    .method(Request.GET)
+                    .fetch()
+                    .as(RestResponse.class)
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .body();
+            } catch (IOException ex) {
+                throw new IllegalStateException(ex);
+            }
             if (mine.equals(base) || !base.matches("[a-f0-9]+")) {
                 same = true;
             } else {
