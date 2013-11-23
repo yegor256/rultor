@@ -49,7 +49,6 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -93,9 +92,7 @@ final class RestSheet implements Sheet {
     public List<Column> columns() {
         final Collection<XML> nodes;
         try {
-            nodes = new JdkRequest(
-                UriBuilder.fromUri(this.home).build()
-            )
+            nodes = new JdkRequest(this.home)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
                 .fetch()
