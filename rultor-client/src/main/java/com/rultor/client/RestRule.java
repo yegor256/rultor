@@ -43,13 +43,10 @@ import com.rultor.spi.Wallet;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URLEncoder;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.CharEncoding;
 
 /**
  * RESTful Rule.
@@ -87,10 +84,9 @@ final class RestRule implements Rule {
     @Override
     public void update(final Spec spec, final Spec drain) {
         try {
-            new JdkRequest(UriBuilder.fromUri(this.home).build())
+            new JdkRequest(this.home)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .method(Request.GET)
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
@@ -99,13 +95,8 @@ final class RestRule implements Rule {
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .method(Request.POST)
                 .body()
-                .set(
-                    String.format(
-                        "spec=%s&drain=%s",
-                        URLEncoder.encode(spec.asText(), CharEncoding.UTF_8),
-                        URLEncoder.encode(drain.asText(), CharEncoding.UTF_8)
-                    )
-                )
+                .formParam("spec", spec.asText())
+                .formParam("drain", drain.asText())
                 .back()
                 .fetch()
                 .as(RestResponse.class)
@@ -121,10 +112,9 @@ final class RestRule implements Rule {
     public Spec spec() {
         try {
             return new Spec.Simple(
-                new JdkRequest(UriBuilder.fromUri(this.home).build())
+                new JdkRequest(this.home)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                     .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .method(Request.GET)
                     .fetch()
                     .as(RestResponse.class)
                     .assertStatus(HttpURLConnection.HTTP_OK)
@@ -141,10 +131,9 @@ final class RestRule implements Rule {
     @Override
     public String name() {
         try {
-            return new JdkRequest(UriBuilder.fromUri(this.home).build())
+            return new JdkRequest(this.home)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .method(Request.GET)
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
@@ -167,10 +156,9 @@ final class RestRule implements Rule {
     public Spec drain() {
         try {
             return new Spec.Simple(
-                new JdkRequest(UriBuilder.fromUri(this.home).build())
+                new JdkRequest(this.home)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                     .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .method(Request.GET)
                     .fetch()
                     .as(RestResponse.class)
                     .assertStatus(HttpURLConnection.HTTP_OK)

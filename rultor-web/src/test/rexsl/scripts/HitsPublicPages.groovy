@@ -32,7 +32,6 @@ package com.rultor.web.rexsl.scripts
 import com.rexsl.test.JdkRequest
 import com.rexsl.test.Request
 import com.rexsl.test.RestResponse
-import javax.ws.rs.core.UriBuilder
 
 [
     '/',
@@ -42,7 +41,7 @@ import javax.ws.rs.core.UriBuilder
     '/css/main.css',
     '/stylesheets',
 ].each {
-    new JdkRequest(UriBuilder.fromUri(rexsl.home).path(it).build())
+    new JdkRequest(rexsl.home).uri().path(it).back()
         .method(Request.GET)
         .fetch()
         .as(RestResponse)

@@ -41,15 +41,12 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URLEncoder;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.CharEncoding;
 
 /**
  * RESTful Rules.
@@ -95,10 +92,9 @@ final class RestRules implements Rules {
     public Rule get(final String name) {
         try {
             return new RestRule(
-                new JdkRequest(UriBuilder.fromUri(this.home).build())
+                new JdkRequest(this.home)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                     .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .method(Request.GET)
                     .fetch()
                     .as(RestResponse.class)
                     .assertStatus(HttpURLConnection.HTTP_OK)
@@ -122,10 +118,9 @@ final class RestRules implements Rules {
     @Override
     public void create(final String name) {
         try {
-            new JdkRequest(UriBuilder.fromUri(this.home).build())
+            new JdkRequest(this.home)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .method(Request.GET)
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
@@ -134,12 +129,7 @@ final class RestRules implements Rules {
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .method(Request.POST)
                 .body()
-                .set(
-                    String.format(
-                        "name=%s",
-                        URLEncoder.encode(name, CharEncoding.UTF_8)
-                    )
-                )
+                .formParam("name", name)
                 .back()
                 .fetch()
                 .as(RestResponse.class)
@@ -154,10 +144,9 @@ final class RestRules implements Rules {
     @Override
     public void remove(final String name) {
         try {
-            new JdkRequest(UriBuilder.fromUri(this.home).build())
+            new JdkRequest(this.home)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .method(Request.GET)
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
@@ -169,7 +158,6 @@ final class RestRules implements Rules {
                         name
                     )
                 )
-                .method(Request.GET)
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK);
@@ -181,10 +169,9 @@ final class RestRules implements Rules {
     @Override
     public boolean contains(final String name) {
         try {
-            return !new JdkRequest(UriBuilder.fromUri(this.home).build())
+            return !new JdkRequest(this.home)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .method(Request.GET)
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)

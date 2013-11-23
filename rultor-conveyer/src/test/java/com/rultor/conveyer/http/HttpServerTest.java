@@ -33,7 +33,6 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
 import com.rexsl.test.JdkRequest;
-import com.rexsl.test.Request;
 import com.rexsl.test.RestResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -96,7 +95,6 @@ public final class HttpServerTest {
                 start.await();
                 new JdkRequest(path)
                     .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-                    .method(Request.GET)
                     .fetch()
                     .as(RestResponse.class)
                     .assertStatus(HttpURLConnection.HTTP_OK)

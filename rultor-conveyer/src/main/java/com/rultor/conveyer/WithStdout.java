@@ -34,7 +34,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.LogExceptions;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.JdkRequest;
-import com.rexsl.test.Request;
 import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Instance;
 import java.io.IOException;
@@ -138,7 +137,8 @@ final class WithStdout implements Instance {
         String address;
         try {
             address = new JdkRequest(WithStdout.META_IP)
-                .method(Request.GET).fetch().body();
+                .fetch()
+                .body();
         } catch (IOException ex) {
             address = WithStdout.LOCALHOST;
         } catch (AssertionError ex) {

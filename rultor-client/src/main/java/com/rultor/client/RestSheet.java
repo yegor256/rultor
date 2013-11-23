@@ -33,7 +33,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.xml.XML;
 import com.rexsl.test.JdkRequest;
-import com.rexsl.test.Request;
 import com.rexsl.test.RestResponse;
 import com.rexsl.test.XmlResponse;
 import com.rultor.spi.Column;
@@ -99,7 +98,6 @@ final class RestSheet implements Sheet {
             )
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .method(Request.GET)
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)

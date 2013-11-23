@@ -32,7 +32,6 @@ package com.rultor.client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.JdkRequest;
-import com.rexsl.test.Request;
 import com.rexsl.test.RestResponse;
 import com.rexsl.test.XmlResponse;
 import com.rultor.spi.Account;
@@ -45,7 +44,6 @@ import java.net.URI;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -88,10 +86,9 @@ final class RestAccount implements Account {
     public Dollars balance() {
         try {
             return Dollars.valueOf(
-                new JdkRequest(UriBuilder.fromUri(this.home).build())
+                new JdkRequest(this.home)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                     .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .method(Request.GET)
                     .fetch()
                     .as(RestResponse.class)
                     .assertStatus(HttpURLConnection.HTTP_OK)
@@ -110,10 +107,9 @@ final class RestAccount implements Account {
         try {
             return new RestSheet(
                 URI.create(
-                    new JdkRequest(UriBuilder.fromUri(this.home).build())
+                    new JdkRequest(this.home)
                         .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                         .header(HttpHeaders.AUTHORIZATION, this.token)
-                        .method(Request.GET)
                         .fetch()
                         .as(RestResponse.class)
                         .assertStatus(HttpURLConnection.HTTP_OK)

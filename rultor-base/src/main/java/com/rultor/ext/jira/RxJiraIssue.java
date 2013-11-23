@@ -89,7 +89,8 @@ final class RxJiraIssue implements JiraIssue {
         try {
             return new JdkRequest(uri)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .method(Request.GET).fetch().as(RestResponse.class)
+                .fetch()
+                .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .as(JsonResponse.class)
                 .json()
@@ -155,7 +156,8 @@ final class RxJiraIssue implements JiraIssue {
         try {
             json = new JdkRequest(uri)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .method(Request.GET).fetch().as(RestResponse.class)
+                .fetch()
+                .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .as(JsonResponse.class)
                 .json()

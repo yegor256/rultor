@@ -33,7 +33,6 @@ import com.google.common.net.MediaType;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rexsl.test.JdkRequest;
-import com.rexsl.test.Request;
 import com.rexsl.test.RestResponse;
 import com.rultor.snapshot.XSLT;
 import java.awt.Font;
@@ -81,7 +80,6 @@ public final class ButtonRs extends BaseRs {
                         HttpHeaders.ACCEPT,
                         MediaType.APPLICATION_XML_UTF_8.toString()
                 )
-                    .method(Request.GET)
                     .fetch()
                     .as(RestResponse.class)
                     .body();

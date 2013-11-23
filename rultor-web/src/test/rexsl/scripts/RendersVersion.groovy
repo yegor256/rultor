@@ -31,7 +31,6 @@ package com.rultor.web.rexsl.scripts
 
 import com.jcabi.manifests.Manifests
 import com.rexsl.test.JdkRequest
-import com.rexsl.test.Request
 import com.rexsl.test.RestResponse
 import com.rexsl.test.XmlResponse
 import javax.ws.rs.core.HttpHeaders
@@ -41,7 +40,6 @@ Manifests.append(new File(rexsl.basedir, 'src/test/resources/META-INF/MANIFEST.M
 
 new JdkRequest(rexsl.home)
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-    .method(Request.GET)
     .fetch()
     .as(RestResponse)
     .assertStatus(HttpURLConnection.HTTP_OK)

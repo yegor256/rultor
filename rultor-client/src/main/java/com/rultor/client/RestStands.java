@@ -32,7 +32,6 @@ package com.rultor.client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.JdkRequest;
-import com.rexsl.test.Request;
 import com.rexsl.test.RestResponse;
 import com.rexsl.test.XmlResponse;
 import com.rultor.spi.Pulses;
@@ -42,15 +41,12 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URLEncoder;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.CharEncoding;
 
 /**
  * RESTful Stands.
@@ -96,10 +92,9 @@ public final class RestStands implements Stands {
     public Stand get(final String name) {
         try {
             return new RestStand(
-                new JdkRequest(UriBuilder.fromUri(this.home).build())
+                new JdkRequest(this.home)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                     .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .method(Request.GET)
                     .fetch()
                     .as(RestResponse.class)
                     .assertStatus(HttpURLConnection.HTTP_OK)
@@ -123,10 +118,9 @@ public final class RestStands implements Stands {
     @Override
     public void create(final String name) {
         try {
-            new JdkRequest(UriBuilder.fromUri(this.home).build())
+            new JdkRequest(this.home)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .method(Request.GET)
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
@@ -134,12 +128,7 @@ public final class RestStands implements Stands {
                 .rel("/page/links/link[@rel='create']/@href")
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .body()
-                .set(
-                    String.format(
-                        "name=%s",
-                        URLEncoder.encode(name, CharEncoding.UTF_8)
-                    )
-                )
+                .formParam("name", name)
                 .back()
                 .fetch()
                 .as(RestResponse.class)
@@ -154,13 +143,12 @@ public final class RestStands implements Stands {
     @Override
     public boolean contains(final String name) {
         try {
-            return !new JdkRequest(UriBuilder.fromUri(this.home).build())
+            return !new JdkRequest(this.home)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .method(Request.GET)
                 .fetch()
                 .as(RestResponse.class)
-                .assertStatus(HttopURLConnection.HTTP_OK)
+                .assertStatus(HttpURLConnection.HTTP_OK)
                 .as(XmlResponse.class)
                 .xml()
                 .xpath(String.format("/page/stands/stand[name='%s']", name))

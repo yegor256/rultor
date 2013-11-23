@@ -33,14 +33,13 @@ import com.rexsl.test.JdkRequest
 import com.rexsl.test.Request
 import com.rexsl.test.RestResponse
 import com.rexsl.test.XmlResponse
-import javax.ws.rs.core.UriBuilder
 
 [
     '/page-doesnt-exist',
     '/xsl/xsl-stylesheet-doesnt-exist.xsl',
     '/css/stylesheet-is-absent.css',
 ].each {
-    new JdkRequest(UriBuilder.fromUri(rexsl.home).path(it).build())
+    new JdkRequest(rexsl.home).uri().path(it).back()
         .method(Request.GET)
         .fetch()
         .as(RestResponse)

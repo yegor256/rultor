@@ -39,7 +39,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.AbstractMap;
@@ -163,7 +162,7 @@ public final class IpnRs extends BaseRs {
         );
         ext.addAll(pairs);
         try {
-            new JdkRequest(URI.create("https://www.paypal.com/cgi-bin/webscr"))
+            new JdkRequest("https://www.paypal.com/cgi-bin/webscr")
                 .body()
                 .set(this.join(ext))
                 .back()

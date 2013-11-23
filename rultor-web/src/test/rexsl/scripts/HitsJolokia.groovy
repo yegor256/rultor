@@ -34,13 +34,12 @@ import com.rexsl.test.Request
 import com.rexsl.test.RestResponse
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.UriBuilder
 
 [
     '/jolokia/',
     '/jolokia/read/java.lang:type=Memory/HeapMemoryUsage',
 ].each {
-    new JdkRequest(UriBuilder.fromUri(rexsl.home).path(it).build())
+    new JdkRequest(rexsl.home).uri().path(it).back()
         .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
         .method(Request.GET)
         .fetch()

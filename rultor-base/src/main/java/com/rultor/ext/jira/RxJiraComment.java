@@ -33,7 +33,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.test.JdkRequest;
 import com.rexsl.test.JsonResponse;
-import com.rexsl.test.Request;
 import com.rexsl.test.RestResponse;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -73,9 +72,10 @@ final class RxJiraComment implements JiraComment {
     @Override
     public String body() {
         try {
-            return new JdkRequest(URI.create(this.url))
+            return new JdkRequest(this.url)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .method(Request.GET).fetch().as(RestResponse.class)
+                .fetch()
+                .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .as(JsonResponse.class)
                 .json()
@@ -89,9 +89,10 @@ final class RxJiraComment implements JiraComment {
     @Override
     public String author() {
         try {
-            return new JdkRequest(URI.create(this.url))
+            return new JdkRequest(this.url)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .method(Request.GET).fetch().as(RestResponse.class)
+                .fetch()
+                .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .as(JsonResponse.class)
                 .json()

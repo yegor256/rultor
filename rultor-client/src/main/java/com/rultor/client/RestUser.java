@@ -33,7 +33,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import com.rexsl.test.JdkRequest;
-import com.rexsl.test.Request;
 import com.rexsl.test.RestResponse;
 import com.rexsl.test.XmlResponse;
 import com.rultor.spi.Account;
@@ -48,7 +47,6 @@ import java.net.URLEncoder;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.codec.Charsets;
@@ -117,10 +115,9 @@ public final class RestUser implements User {
     public URN urn() {
         try {
             return URN.create(
-                new JdkRequest(UriBuilder.fromUri(this.home).build())
+                new JdkRequest(this.home)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                     .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .method(Request.GET)
                     .fetch()
                     .as(RestResponse.class)
                     .assertStatus(HttpURLConnection.HTTP_OK)
@@ -140,10 +137,9 @@ public final class RestUser implements User {
         try {
             return new RestRules(
                 URI.create(
-                    new JdkRequest(UriBuilder.fromUri(this.home).build())
+                    new JdkRequest(this.home)
                         .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                         .header(HttpHeaders.AUTHORIZATION, this.token)
-                        .method(Request.GET)
                         .fetch()
                         .as(RestResponse.class)
                         .assertStatus(HttpURLConnection.HTTP_OK)
@@ -165,10 +161,9 @@ public final class RestUser implements User {
         try {
             return new RestStands(
                 URI.create(
-                    new JdkRequest(UriBuilder.fromUri(this.home).build())
+                    new JdkRequest(this.home)
                         .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                         .header(HttpHeaders.AUTHORIZATION, this.token)
-                        .method(Request.GET)
                         .fetch()
                         .as(RestResponse.class)
                         .assertStatus(HttpURLConnection.HTTP_OK)

@@ -34,11 +34,9 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.rexsl.test.JdkRequest;
-import com.rexsl.test.Request;
 import com.rexsl.test.RestResponse;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -65,10 +63,7 @@ final class Version {
         try {
             final String base;
             try {
-                base = new JdkRequest(
-                    URI.create("http://www.rultor.com/misc/version")
-                )
-                    .method(Request.GET)
+                base = new JdkRequest("http://www.rultor.com/misc/version")
                     .fetch()
                     .as(RestResponse.class)
                     .assertStatus(HttpURLConnection.HTTP_OK)

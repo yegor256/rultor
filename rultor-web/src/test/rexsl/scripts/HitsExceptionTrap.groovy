@@ -33,9 +33,8 @@ import com.rexsl.test.JdkRequest
 import com.rexsl.test.Request
 import com.rexsl.test.RestResponse
 import com.rexsl.test.XmlResponse
-import javax.ws.rs.core.UriBuilder
 
-new JdkRequest(UriBuilder.fromUri(rexsl.home).path('/trap').build())
+new JdkRequest(rexsl.home).uri().path('/trap').back()
     .method(Request.GET)
     .fetch()
     .as(RestResponse)
