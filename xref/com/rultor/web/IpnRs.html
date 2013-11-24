@@ -42,13 +42,13 @@
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Loggable;
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> com.jcabi.aspects.Tv;
 <a class="jxr_linenumber" name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> com.jcabi.urn.URN;
-<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rexsl.test.RestTester;
-<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Dollars;
-<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
-<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> java.io.InputStream;
-<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> java.io.UnsupportedEncodingException;
-<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> java.math.BigDecimal;
-<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> java.net.URI;
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> com.rexsl.test.JdkRequest;
+<a class="jxr_linenumber" name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> com.rexsl.test.RestResponse;
+<a class="jxr_linenumber" name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> com.rultor.tools.Dollars;
+<a class="jxr_linenumber" name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> java.io.InputStream;
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> java.io.UnsupportedEncodingException;
+<a class="jxr_linenumber" name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> java.math.BigDecimal;
 <a class="jxr_linenumber" name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> java.net.URLDecoder;
 <a class="jxr_linenumber" name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> java.net.URLEncoder;
 <a class="jxr_linenumber" name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> java.util.AbstractMap;
@@ -171,48 +171,56 @@
 <a class="jxr_linenumber" name="161" href="#161">161</a>             )
 <a class="jxr_linenumber" name="162" href="#162">162</a>         );
 <a class="jxr_linenumber" name="163" href="#163">163</a>         ext.addAll(pairs);
-<a class="jxr_linenumber" name="164" href="#164">164</a>         RestTester.start(URI.create(<span class="jxr_string">"https://www.paypal.com/cgi-bin/webscr"</span>))
-<a class="jxr_linenumber" name="165" href="#165">165</a>             .post(<span class="jxr_string">"validating request via PayPal"</span>, <strong class="jxr_keyword">this</strong>.join(ext))
-<a class="jxr_linenumber" name="166" href="#166">166</a>             .assertBody(Matchers.equalTo(<span class="jxr_string">"VERIFIED"</span>));
-<a class="jxr_linenumber" name="167" href="#167">167</a>         <strong class="jxr_keyword">return</strong> pairs;
-<a class="jxr_linenumber" name="168" href="#168">168</a>     }
-<a class="jxr_linenumber" name="169" href="#169">169</a> 
-<a class="jxr_linenumber" name="170" href="#170">170</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="171" href="#171">171</a> <em class="jxr_javadoccomment">     * Join them into a URL.</em>
-<a class="jxr_linenumber" name="172" href="#172">172</a> <em class="jxr_javadoccomment">     * @param pairs Pairs</em>
-<a class="jxr_linenumber" name="173" href="#173">173</a> <em class="jxr_javadoccomment">     * @return Joined</em>
-<a class="jxr_linenumber" name="174" href="#174">174</a> <em class="jxr_javadoccomment">     * @throws UnsupportedEncodingException If fails</em>
-<a class="jxr_linenumber" name="175" href="#175">175</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="176" href="#176">176</a>     <strong class="jxr_keyword">private</strong> String join(<strong class="jxr_keyword">final</strong> List&lt;Map.Entry&lt;String, String&gt;&gt; pairs)
-<a class="jxr_linenumber" name="177" href="#177">177</a>         <strong class="jxr_keyword">throws</strong> UnsupportedEncodingException {
-<a class="jxr_linenumber" name="178" href="#178">178</a>         <strong class="jxr_keyword">final</strong> StringBuilder text = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="179" href="#179">179</a>         <strong class="jxr_keyword">for</strong> (Map.Entry&lt;String, String&gt; pair : pairs) {
-<a class="jxr_linenumber" name="180" href="#180">180</a>             <strong class="jxr_keyword">if</strong> (text.length() &gt; 0) {
-<a class="jxr_linenumber" name="181" href="#181">181</a>                 text.append('&amp;');
-<a class="jxr_linenumber" name="182" href="#182">182</a>             }
-<a class="jxr_linenumber" name="183" href="#183">183</a>             text.append(pair.getKey())
-<a class="jxr_linenumber" name="184" href="#184">184</a>                 .append('=')
-<a class="jxr_linenumber" name="185" href="#185">185</a>                 .append(URLEncoder.encode(pair.getValue(), CharEncoding.UTF_8));
-<a class="jxr_linenumber" name="186" href="#186">186</a>         }
-<a class="jxr_linenumber" name="187" href="#187">187</a>         <strong class="jxr_keyword">return</strong> text.toString();
-<a class="jxr_linenumber" name="188" href="#188">188</a>     }
-<a class="jxr_linenumber" name="189" href="#189">189</a> 
-<a class="jxr_linenumber" name="190" href="#190">190</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="191" href="#191">191</a> <em class="jxr_javadoccomment">     * Convert them to a map.</em>
-<a class="jxr_linenumber" name="192" href="#192">192</a> <em class="jxr_javadoccomment">     * @param pairs Pairs</em>
-<a class="jxr_linenumber" name="193" href="#193">193</a> <em class="jxr_javadoccomment">     * @return Map</em>
-<a class="jxr_linenumber" name="194" href="#194">194</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="195" href="#195">195</a>     <strong class="jxr_keyword">private</strong> ConcurrentMap&lt;String, String&gt; map(
-<a class="jxr_linenumber" name="196" href="#196">196</a>         <strong class="jxr_keyword">final</strong> List&lt;Map.Entry&lt;String, String&gt;&gt; pairs) {
-<a class="jxr_linenumber" name="197" href="#197">197</a>         <strong class="jxr_keyword">final</strong> ConcurrentMap&lt;String, String&gt; map =
-<a class="jxr_linenumber" name="198" href="#198">198</a>             <strong class="jxr_keyword">new</strong> ConcurrentHashMap&lt;String, String&gt;(0);
-<a class="jxr_linenumber" name="199" href="#199">199</a>         <strong class="jxr_keyword">for</strong> (Map.Entry&lt;String, String&gt; pair : pairs) {
-<a class="jxr_linenumber" name="200" href="#200">200</a>             map.put(pair.getKey(), pair.getValue());
-<a class="jxr_linenumber" name="201" href="#201">201</a>         }
-<a class="jxr_linenumber" name="202" href="#202">202</a>         <strong class="jxr_keyword">return</strong> map;
-<a class="jxr_linenumber" name="203" href="#203">203</a>     }
-<a class="jxr_linenumber" name="204" href="#204">204</a> 
-<a class="jxr_linenumber" name="205" href="#205">205</a> }
+<a class="jxr_linenumber" name="164" href="#164">164</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="165" href="#165">165</a>             <strong class="jxr_keyword">new</strong> JdkRequest(<span class="jxr_string">"https://www.paypal.com/cgi-bin/webscr"</span>)
+<a class="jxr_linenumber" name="166" href="#166">166</a>                 .body()
+<a class="jxr_linenumber" name="167" href="#167">167</a>                 .set(<strong class="jxr_keyword">this</strong>.join(ext))
+<a class="jxr_linenumber" name="168" href="#168">168</a>                 .back()
+<a class="jxr_linenumber" name="169" href="#169">169</a>                 .fetch()
+<a class="jxr_linenumber" name="170" href="#170">170</a>                 .as(RestResponse.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="171" href="#171">171</a>                 .assertBody(Matchers.equalTo(<span class="jxr_string">"VERIFIED"</span>));
+<a class="jxr_linenumber" name="172" href="#172">172</a>         } <strong class="jxr_keyword">catch</strong> (IOException ex) {
+<a class="jxr_linenumber" name="173" href="#173">173</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(ex);
+<a class="jxr_linenumber" name="174" href="#174">174</a>         }
+<a class="jxr_linenumber" name="175" href="#175">175</a>         <strong class="jxr_keyword">return</strong> pairs;
+<a class="jxr_linenumber" name="176" href="#176">176</a>     }
+<a class="jxr_linenumber" name="177" href="#177">177</a> 
+<a class="jxr_linenumber" name="178" href="#178">178</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="179" href="#179">179</a> <em class="jxr_javadoccomment">     * Join them into a URL.</em>
+<a class="jxr_linenumber" name="180" href="#180">180</a> <em class="jxr_javadoccomment">     * @param pairs Pairs</em>
+<a class="jxr_linenumber" name="181" href="#181">181</a> <em class="jxr_javadoccomment">     * @return Joined</em>
+<a class="jxr_linenumber" name="182" href="#182">182</a> <em class="jxr_javadoccomment">     * @throws UnsupportedEncodingException If fails</em>
+<a class="jxr_linenumber" name="183" href="#183">183</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="184" href="#184">184</a>     <strong class="jxr_keyword">private</strong> String join(<strong class="jxr_keyword">final</strong> List&lt;Map.Entry&lt;String, String&gt;&gt; pairs)
+<a class="jxr_linenumber" name="185" href="#185">185</a>         <strong class="jxr_keyword">throws</strong> UnsupportedEncodingException {
+<a class="jxr_linenumber" name="186" href="#186">186</a>         <strong class="jxr_keyword">final</strong> StringBuilder text = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="187" href="#187">187</a>         <strong class="jxr_keyword">for</strong> (Map.Entry&lt;String, String&gt; pair : pairs) {
+<a class="jxr_linenumber" name="188" href="#188">188</a>             <strong class="jxr_keyword">if</strong> (text.length() &gt; 0) {
+<a class="jxr_linenumber" name="189" href="#189">189</a>                 text.append('&amp;');
+<a class="jxr_linenumber" name="190" href="#190">190</a>             }
+<a class="jxr_linenumber" name="191" href="#191">191</a>             text.append(pair.getKey())
+<a class="jxr_linenumber" name="192" href="#192">192</a>                 .append('=')
+<a class="jxr_linenumber" name="193" href="#193">193</a>                 .append(URLEncoder.encode(pair.getValue(), CharEncoding.UTF_8));
+<a class="jxr_linenumber" name="194" href="#194">194</a>         }
+<a class="jxr_linenumber" name="195" href="#195">195</a>         <strong class="jxr_keyword">return</strong> text.toString();
+<a class="jxr_linenumber" name="196" href="#196">196</a>     }
+<a class="jxr_linenumber" name="197" href="#197">197</a> 
+<a class="jxr_linenumber" name="198" href="#198">198</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="199" href="#199">199</a> <em class="jxr_javadoccomment">     * Convert them to a map.</em>
+<a class="jxr_linenumber" name="200" href="#200">200</a> <em class="jxr_javadoccomment">     * @param pairs Pairs</em>
+<a class="jxr_linenumber" name="201" href="#201">201</a> <em class="jxr_javadoccomment">     * @return Map</em>
+<a class="jxr_linenumber" name="202" href="#202">202</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="203" href="#203">203</a>     <strong class="jxr_keyword">private</strong> ConcurrentMap&lt;String, String&gt; map(
+<a class="jxr_linenumber" name="204" href="#204">204</a>         <strong class="jxr_keyword">final</strong> List&lt;Map.Entry&lt;String, String&gt;&gt; pairs) {
+<a class="jxr_linenumber" name="205" href="#205">205</a>         <strong class="jxr_keyword">final</strong> ConcurrentMap&lt;String, String&gt; map =
+<a class="jxr_linenumber" name="206" href="#206">206</a>             <strong class="jxr_keyword">new</strong> ConcurrentHashMap&lt;String, String&gt;(0);
+<a class="jxr_linenumber" name="207" href="#207">207</a>         <strong class="jxr_keyword">for</strong> (Map.Entry&lt;String, String&gt; pair : pairs) {
+<a class="jxr_linenumber" name="208" href="#208">208</a>             map.put(pair.getKey(), pair.getValue());
+<a class="jxr_linenumber" name="209" href="#209">209</a>         }
+<a class="jxr_linenumber" name="210" href="#210">210</a>         <strong class="jxr_keyword">return</strong> map;
+<a class="jxr_linenumber" name="211" href="#211">211</a>     }
+<a class="jxr_linenumber" name="212" href="#212">212</a> 
+<a class="jxr_linenumber" name="213" href="#213">213</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
