@@ -32,13 +32,13 @@ package com.rultor.web;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.urn.URN;
-import com.rexsl.test.RestTester;
+import com.rexsl.test.JdkRequest;
+import com.rexsl.test.RestResponse;
 import com.rultor.tools.Dollars;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.AbstractMap;
@@ -161,9 +161,17 @@ public final class IpnRs extends BaseRs {
             )
         );
         ext.addAll(pairs);
-        RestTester.start(URI.create("https://www.paypal.com/cgi-bin/webscr"))
-            .post("validating request via PayPal", this.join(ext))
-            .assertBody(Matchers.equalTo("VERIFIED"));
+        try {
+            new JdkRequest("https://www.paypal.com/cgi-bin/webscr")
+                .body()
+                .set(this.join(ext))
+                .back()
+                .fetch()
+                .as(RestResponse.class)
+                .assertBody(Matchers.equalTo("VERIFIED"));
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
         return pairs;
     }
 

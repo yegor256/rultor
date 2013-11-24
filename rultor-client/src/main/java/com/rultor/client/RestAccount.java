@@ -31,17 +31,19 @@ package com.rultor.client;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.test.RestTester;
+import com.rexsl.test.JdkRequest;
+import com.rexsl.test.RestResponse;
+import com.rexsl.test.XmlResponse;
 import com.rultor.spi.Account;
 import com.rultor.spi.InvalidCouponException;
 import com.rultor.spi.Sheet;
 import com.rultor.tools.Dollars;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -82,31 +84,45 @@ final class RestAccount implements Account {
 
     @Override
     public Dollars balance() {
-        return Dollars.valueOf(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("#balance()")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath("/page/balance/text()")
-                .get(0)
-        );
+        try {
+            return Dollars.valueOf(
+                new JdkRequest(this.home)
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .header(HttpHeaders.AUTHORIZATION, this.token)
+                    .fetch()
+                    .as(RestResponse.class)
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .as(XmlResponse.class)
+                    .xml()
+                    .xpath("/page/balance/text()")
+                    .get(0)
+            );
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     public Sheet sheet() {
-        return new RestSheet(
-            URI.create(
-                RestTester.start(UriBuilder.fromUri(this.home))
-                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                    .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .get("#sheet()")
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .xpath("/page/links/link[@rel='account']/@href")
-                    .get(0)
-            ),
-            this.token
-        );
+        try {
+            return new RestSheet(
+                URI.create(
+                    new JdkRequest(this.home)
+                        .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                        .header(HttpHeaders.AUTHORIZATION, this.token)
+                        .fetch()
+                        .as(RestResponse.class)
+                        .assertStatus(HttpURLConnection.HTTP_OK)
+                        .as(XmlResponse.class)
+                        .xml()
+                        .xpath("/page/links/link[@rel='account']/@href")
+                        .get(0)
+                ),
+                this.token
+            );
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override

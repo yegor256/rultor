@@ -33,9 +33,10 @@ import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.LogExceptions;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.test.RestTester;
+import com.rexsl.test.JdkRequest;
 import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Instance;
+import java.io.IOException;
 import java.net.URI;
 import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
@@ -60,6 +61,11 @@ final class WithStdout implements Instance {
     private static final URI META_IP = URI.create(
         "http://169.254.169.254/latest/meta-data/public-ipv4"
     );
+
+    /**
+     * Local host name.
+     */
+    private static final String LOCALHOST = "localhost";
 
     /**
      * Port we're listening to.
@@ -130,10 +136,13 @@ final class WithStdout implements Instance {
     private static String address() {
         String address;
         try {
-            address = RestTester.start(WithStdout.META_IP)
-                .get("fetch EC2 public IP").getBody();
+            address = new JdkRequest(WithStdout.META_IP)
+                .fetch()
+                .body();
+        } catch (IOException ex) {
+            address = WithStdout.LOCALHOST;
         } catch (AssertionError ex) {
-            address = "localhost";
+            address = WithStdout.LOCALHOST;
         }
         return address;
     }

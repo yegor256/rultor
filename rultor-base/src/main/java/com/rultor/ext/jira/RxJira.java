@@ -31,7 +31,10 @@ package com.rultor.ext.jira;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.test.RestTester;
+import com.rexsl.test.JdkRequest;
+import com.rexsl.test.JsonResponse;
+import com.rexsl.test.RestResponse;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.ArrayList;
@@ -81,13 +84,20 @@ public final class RxJira implements Jira {
             .queryParam("fields", "")
             .queryParam("expand", "")
             .build(jql);
-        final JsonArray json = RestTester.start(uri)
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .get("fetch list of issues from JIRA")
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .getJson()
-            .readObject()
-            .getJsonArray("issues");
+        final JsonArray json;
+        try {
+            json = new JdkRequest(uri)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(JsonResponse.class)
+                .json()
+                .readObject()
+                .getJsonArray("issues");
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
         final Collection<JiraIssue> lst = new ArrayList<JiraIssue>(json.size());
         for (JsonValue obj : json) {
             lst.add(
