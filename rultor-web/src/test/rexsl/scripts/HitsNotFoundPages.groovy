@@ -29,16 +29,21 @@
  */
 package com.rultor.web.rexsl.scripts
 
-import com.rexsl.test.RestTester
-import javax.ws.rs.core.UriBuilder
+import com.rexsl.test.JdkRequest
+import com.rexsl.test.Request
+import com.rexsl.test.RestResponse
+import com.rexsl.test.XmlResponse
 
 [
     '/page-doesnt-exist',
     '/xsl/xsl-stylesheet-doesnt-exist.xsl',
     '/css/stylesheet-is-absent.css',
 ].each {
-    RestTester.start(UriBuilder.fromUri(rexsl.home).path(it))
-        .get('hits non-found page')
+    new JdkRequest(rexsl.home).uri().path(it).back()
+        .method(Request.GET)
+        .fetch()
+        .as(RestResponse)
         .assertStatus(HttpURLConnection.HTTP_NOT_FOUND)
+        .as(XmlResponse)
         .assertXPath('//xhtml:title[contains(.,"page not found")]')
 }

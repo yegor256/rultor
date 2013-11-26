@@ -29,8 +29,9 @@
  */
 package com.rultor.web.rexsl.scripts
 
-import com.rexsl.test.RestTester
-import javax.ws.rs.core.UriBuilder
+import com.rexsl.test.JdkRequest
+import com.rexsl.test.Request
+import com.rexsl.test.RestResponse
 
 [
     '/',
@@ -40,7 +41,9 @@ import javax.ws.rs.core.UriBuilder
     '/css/main.css',
     '/stylesheets',
 ].each {
-    RestTester.start(UriBuilder.fromUri(rexsl.home).path(it))
-        .get('hits existing page')
+    new JdkRequest(rexsl.home).uri().path(it).back()
+        .method(Request.GET)
+        .fetch()
+        .as(RestResponse)
         .assertStatus(HttpURLConnection.HTTP_OK)
 }

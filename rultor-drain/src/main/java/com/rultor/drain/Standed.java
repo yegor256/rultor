@@ -40,8 +40,10 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseRunnable;
-import com.rexsl.test.RestTester;
-import com.rexsl.test.TestClient;
+import com.rexsl.test.JdkRequest;
+import com.rexsl.test.Request;
+import com.rexsl.test.RestResponse;
+import com.rexsl.test.XmlResponse;
 import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
@@ -81,7 +83,7 @@ import org.xembly.SyntaxException;
  * @version $Id$
  * @since 1.0
  * @todo #162:0.5hr As soon as rexsl #716 is resolved remove
- *  SQSEntry interface and use TestClient directly.
+ *  SQSEntry interface and use Request directly.
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
@@ -153,7 +155,7 @@ public final class Standed implements Drain {
         @NotNull(message = "key can't be NULL") final String secret,
         @NotNull(message = "drain can't be NULL") final Drain drain) {
         this(
-            wrk, name, secret, drain, RestTester.start(Stand.QUEUE),
+            wrk, name, secret, drain, new JdkRequest(Stand.QUEUE),
             MoreExecutors.sameThreadExecutor()
         );
     }
@@ -170,7 +172,7 @@ public final class Standed implements Drain {
      */
     public Standed(final Coordinates wrk, final String name,
         final String secret,
-        final Drain drain, final TestClient client,
+        final Drain drain, final Request client,
         final ExecutorService executor) {
         this.work = wrk;
         this.stand = name;
@@ -178,7 +180,7 @@ public final class Standed implements Drain {
         this.origin = drain;
         this.entry = new Standed.SQSEntry() {
             @Override
-            public TestClient get() {
+            public Request get() {
                 return client;
             }
         };
@@ -318,21 +320,34 @@ public final class Standed implements Drain {
      * @return List of message IDs that were not enqueued.
      * @throws UnsupportedEncodingException When unable to find UTF-8 encoding.
      */
-    private List<String> enqueue(final TestClient client, final String body)
+    private List<String> enqueue(final Request client, final String body)
         throws UnsupportedEncodingException {
-        return client.header(HttpHeaders.CONTENT_ENCODING, CharEncoding.UTF_8)
-            .header(
-                HttpHeaders.CONTENT_LENGTH,
-                body.getBytes(CharEncoding.UTF_8).length
+        try {
+            return client.header(
+                HttpHeaders.CONTENT_ENCODING, CharEncoding.UTF_8
             )
-            .header(
-                HttpHeaders.CONTENT_TYPE,
-                MediaType.APPLICATION_FORM_URLENCODED
-            )
-            .post("sending batch of lines to stand SQS queue", body)
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            // @checkstyle LineLength (1 line)
-            .xpath("/SendMessageBatchResponse/BatchResultError/BatchResultErrorEntry/Id/text()");
+                .header(
+                    HttpHeaders.CONTENT_LENGTH,
+                    body.getBytes(CharEncoding.UTF_8).length
+                )
+                .header(
+                    HttpHeaders.CONTENT_TYPE,
+                    MediaType.APPLICATION_FORM_URLENCODED
+                )
+                .method(Request.POST)
+                .body()
+                .set(body)
+                .back()
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
+                .xml()
+                // @checkstyle LineLength (1 line)
+                .xpath("/SendMessageBatchResponse/BatchResultError/BatchResultErrorEntry/Id/text()");
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**
@@ -369,7 +384,7 @@ public final class Standed implements Drain {
          * Provide SQS connection.
          * @return SQS connection.
          */
-        TestClient get();
+        Request get();
     }
 
     /**

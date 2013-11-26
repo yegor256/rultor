@@ -32,7 +32,8 @@ package com.rultor.conveyer.http;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
-import com.rexsl.test.RestTester;
+import com.rexsl.test.JdkRequest;
+import com.rexsl.test.RestResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -92,9 +93,10 @@ public final class HttpServerTest {
             @Override
             public Void call() throws Exception {
                 start.await();
-                RestTester.start(path)
+                new JdkRequest(path)
                     .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-                    .get("read sample stream")
+                    .fetch()
+                    .as(RestResponse.class)
                     .assertStatus(HttpURLConnection.HTTP_OK)
                     .assertBody(Matchers.startsWith("one\n"));
                 finished.countDown();

@@ -32,20 +32,21 @@ package com.rultor.client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
-import com.rexsl.test.RestTester;
+import com.rexsl.test.JdkRequest;
+import com.rexsl.test.Request;
+import com.rexsl.test.RestResponse;
+import com.rexsl.test.XmlResponse;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Wallet;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URLEncoder;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.CharEncoding;
 
 /**
  * RESTful Rule.
@@ -83,49 +84,66 @@ final class RestRule implements Rule {
     @Override
     public void update(final Spec spec, final Spec drain) {
         try {
-            RestTester.start(UriBuilder.fromUri(this.home))
+            new JdkRequest(this.home)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get(String.format("preparing for #spec(%s)", spec))
+                .fetch()
+                .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
                 .rel("/page/links/link[@rel='save']/@href")
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .post(
-                    String.format("#update(..)"),
-                    String.format(
-                        "spec=%s&drain=%s",
-                        URLEncoder.encode(spec.asText(), CharEncoding.UTF_8),
-                        URLEncoder.encode(drain.asText(), CharEncoding.UTF_8)
-                    )
-                )
-                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+                .method(Request.POST)
+                .body()
+                .formParam("spec", spec.asText())
+                .formParam("drain", drain.asText())
+                .back()
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK);
         } catch (UnsupportedEncodingException ex) {
+            throw new IllegalStateException(ex);
+        } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
 
     @Override
     public Spec spec() {
-        return new Spec.Simple(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("#spec()")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath("/page/rule/spec/text()")
-                .get(0)
-        );
+        try {
+            return new Spec.Simple(
+                new JdkRequest(this.home)
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .header(HttpHeaders.AUTHORIZATION, this.token)
+                    .fetch()
+                    .as(RestResponse.class)
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .as(XmlResponse.class)
+                    .xml()
+                    .xpath("/page/rule/spec/text()")
+                    .get(0)
+            );
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     public String name() {
-        return RestTester.start(UriBuilder.fromUri(this.home))
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-            .header(HttpHeaders.AUTHORIZATION, this.token)
-            .get("#name()")
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .xpath("/page/rule/name/text()")
-            .get(0);
+        try {
+            return new JdkRequest(this.home)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .header(HttpHeaders.AUTHORIZATION, this.token)
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(XmlResponse.class)
+                .xml()
+                .xpath("/page/rule/name/text()")
+                .get(0);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
@@ -136,15 +154,22 @@ final class RestRule implements Rule {
 
     @Override
     public Spec drain() {
-        return new Spec.Simple(
-            RestTester.start(UriBuilder.fromUri(this.home))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .get("#drain()")
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .xpath("/page/rule/drain/text()")
-                .get(0)
-        );
+        try {
+            return new Spec.Simple(
+                new JdkRequest(this.home)
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .header(HttpHeaders.AUTHORIZATION, this.token)
+                    .fetch()
+                    .as(RestResponse.class)
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .as(XmlResponse.class)
+                    .xml()
+                    .xpath("/page/rule/drain/text()")
+                    .get(0)
+            );
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override

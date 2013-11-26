@@ -29,20 +29,25 @@
  */
 package com.rultor.web.rexsl.scripts
 
-import com.rexsl.test.JdkRequest
-import com.rexsl.test.Request
-import com.rexsl.test.RestResponse
-import javax.ws.rs.core.HttpHeaders
-import javax.ws.rs.core.MediaType
+import org.apache.commons.io.IOUtils
+import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
 
-[
-    '/jolokia/',
-    '/jolokia/read/java.lang:type=Memory/HeapMemoryUsage',
-].each {
-    new JdkRequest(rexsl.home).uri().path(it).back()
-        .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-        .method(Request.GET)
-        .fetch()
-        .as(RestResponse)
-        .assertStatus(HttpURLConnection.HTTP_OK)
-}
+import javax.ws.rs.core.UriBuilder
+
+// @todo #408 When PostsToStand.groovy test is working add in this file also a
+//  positive test for newly created stand and make sure that both cases produce
+//  different image.
+
+MatcherAssert.assertThat(
+    URLConnection.guessContentTypeFromStream(
+        new ByteArrayInputStream(
+            IOUtils.toByteArray(
+                UriBuilder.fromUri(rexsl.home).segment(
+                    'b', 'stand', 'stand-that-does-not-exist', 'some-rule.png'
+                ).build()
+            )
+        )
+    ),
+    Matchers.equalTo('image/png')
+)

@@ -32,7 +32,11 @@ package com.rultor.ext.jira;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.test.RestTester;
+import com.rexsl.test.JdkRequest;
+import com.rexsl.test.JsonResponse;
+import com.rexsl.test.Request;
+import com.rexsl.test.RestResponse;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -82,13 +86,19 @@ final class RxJiraIssue implements JiraIssue {
             .queryParam("fields", "")
             .queryParam("expand", "")
             .build();
-        return RestTester.start(uri)
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .get("fetching issue key")
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .getJson()
-            .readObject()
-            .getString("key");
+        try {
+            return new JdkRequest(uri)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(JsonResponse.class)
+                .json()
+                .readObject()
+                .getString("key");
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
@@ -102,10 +112,19 @@ final class RxJiraIssue implements JiraIssue {
             .write("name", name)
             .writeEnd()
             .close();
-        RestTester.start(uri)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-            .put("assigning issue", json.toString())
-            .assertStatus(HttpURLConnection.HTTP_NO_CONTENT);
+        try {
+            new JdkRequest(uri)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .method(Request.PUT)
+                .body()
+                .set(json.toString())
+                .back()
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_NO_CONTENT);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
@@ -133,13 +152,20 @@ final class RxJiraIssue implements JiraIssue {
             // @checkstyle MultipleStringLiterals (1 line)
             .path("/comment")
             .build();
-        final JsonArray json = RestTester.start(uri)
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-            .get("fetch list of comments of an issue")
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .getJson()
-            .readObject()
-            .getJsonArray("comments");
+        final JsonArray json;
+        try {
+            json = new JdkRequest(uri)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .as(JsonResponse.class)
+                .json()
+                .readObject()
+                .getJsonArray("comments");
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
         final List<JiraComment> lst =
             new ArrayList<JiraComment>(json.size());
         for (JsonValue obj : json) {
@@ -166,10 +192,19 @@ final class RxJiraIssue implements JiraIssue {
             .write("body", body)
             .writeEnd()
             .close();
-        RestTester.start(uri)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-            .post("posting comment", json.toString())
-            .assertStatus(HttpURLConnection.HTTP_CREATED);
+        try {
+            new JdkRequest(uri)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .method(Request.POST)
+                .body()
+                .set(json.toString())
+                .back()
+                .fetch()
+                .as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_CREATED);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
 }
