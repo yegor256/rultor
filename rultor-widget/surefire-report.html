@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Programmable Enforcer of a Software Development Process"/>
+        <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
+        <meta name="author" content="rultor.com"/>
+        <title>rultor-base - Surefire Report</title>
+        <link rel="shortcut icon" type="image/gif" href="//img.rultor.com/favicon.ico" />
+        <style>
+            body {
+                background-image: url('//img.rultor.com/background.png');
+            }
+            .main {
+                text-align: justify;
+            }
+            h1,
+            h2 {
+                text-align: center;
+            }
+        </style>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="//www.rultor.com/css/main.css" rel="stylesheet" />
+        <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script>
+            $(document).ready(
+                function() {
+                    $('tt').replaceWith(
+                        function() {
+                            return '<code>' + $(this).text() + '</code>';
+                        }
+                    )
+                }
+            );
+        </script>
+        <script>
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-1963507-10']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <header>
+                <p class="text-center">
+                    <a class="logo" href="/index.html">R</a>
+                </p>
+            </header>
+            <div class="row">
+                <article class="main col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-8 col-sm-12 col-xs-12">
+                    <script type="text/javascript">
+//<![CDATA[
+function toggleDisplay(elementId) {
+ var elm = document.getElementById(elementId + 'error');
+ if (elm && typeof elm.style != "undefined") {
+ if (elm.style.display == "none") {
+ elm.style.display = "";
+ document.getElementById(elementId + 'off').style.display = "none";
+ document.getElementById(elementId + 'on').style.display = "inline";
+ } else if (elm.style.display == "") { elm.style.display = "none";
+ document.getElementById(elementId + 'off').style.display = "inline";
+ document.getElementById(elementId + 'on').style.display = "none";
+ } 
+ } 
+ }
+//]]>
+</script>
+<div class="section">
+<h2>Surefire Report<a name="Surefire_Report"></a></h2></div>
+<div class="section">
+<h2>Summary<a name="Summary"></a></h2><a name="Summary"></a>
+<p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br />
+<table border="1" class="bodyTable">
+<tr class="a">
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td>14</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>16.295</td></tr></table><br />
+<p>Note: failures are anticipated and checked for with assertions while errors are unanticipated.</p><br /></div>
+<div class="section">
+<h2>Package List<a name="Package_List"></a></h2><a name="Package_List"></a>
+<p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br />
+<table border="1" class="bodyTable">
+<tr class="a">
+<th>Package</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#com.rultor.widget">com.rultor.widget</a></td>
+<td>14</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>16.295</td></tr></table><br />
+<p>Note: package statistics are not computed recursively, they only sum up all of its testsuites numbers.</p>
+<div class="section">
+<h3>com.rultor.widget<a name="com.rultor.widget"></a></h3><a name="com.rultor.widget"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#com.rultor.widgetMergeHistoryTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.widgetMergeHistoryTest">MergeHistoryTest</a></td>
+<td>4</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.725</td></tr>
+<tr class="a">
+<td><a href="#com.rultor.widgetAlertTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.widgetAlertTest">AlertTest</a></td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.283</td></tr>
+<tr class="b">
+<td><a href="#com.rultor.widgetBuildHistoryTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.widgetBuildHistoryTest">BuildHistoryTest</a></td>
+<td>4</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>2.032</td></tr>
+<tr class="a">
+<td><a href="#com.rultor.widgetBuildHealthTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.widgetBuildHealthTest">BuildHealthTest</a></td>
+<td>4</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>11.255</td></tr></table></div><br /></div>
+<div class="section">
+<h2>Test Cases<a name="Test_Cases"></a></h2><a name="Test_Cases"></a>
+<p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p>
+<div class="section">
+<h3>MergeHistoryTest<a name="MergeHistoryTest"></a></h3><a name="com.rultor.widgetMergeHistoryTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>reportsEmptyWidgetWhenNoTagsFound</td>
+<td>0.13</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>gracefullyHandlesEmptyTags</td>
+<td>0.05</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>findsRecentMerges</td>
+<td>0.435</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>rendersXmlInPhandom</td>
+<td>1.11</td></tr></table></div>
+<div class="section">
+<h3>AlertTest<a name="AlertTest"></a></h3><a name="com.rultor.widgetAlertTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>showsMessageInWidget</td>
+<td>0.055</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>rendersXmlInPhandom</td>
+<td>1.228</td></tr></table></div>
+<div class="section">
+<h3>BuildHistoryTest<a name="BuildHistoryTest"></a></h3><a name="com.rultor.widgetBuildHistoryTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>reportsEmptyWidgetWhenNoTagsFound</td>
+<td>0.059</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>gracefullyHandlesEmptyTags</td>
+<td>0.053</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>findsRecentBuilds</td>
+<td>0.774</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>rendersXmlInPhandom</td>
+<td>1.146</td></tr></table></div>
+<div class="section">
+<h3>BuildHealthTest<a name="BuildHealthTest"></a></h3><a name="com.rultor.widgetBuildHealthTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>reportsEmptyWidgetWhenNoTagsFound</td>
+<td>3.105</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>findsBuildsAndTheirHealth</td>
+<td>3.257</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>findsMultipleBuilds</td>
+<td>3.155</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>rendersXmlInPhandom</td>
+<td>1.738</td></tr></table></div><br /></div>
+                </article>
+            </div>
+            <footer class="text-muted">
+                <ul class="list-inline text-center">
+                    <li>
+                        <small>1.0-SNAPSHOT</small>
+                    </li>
+                    <li>
+                        <small>
+                            
+                            26-Nov-2013
+                        </small>
+                    </li>
+                </ul>
+            </footer>
+        </div>
+    </body>
+</html>
