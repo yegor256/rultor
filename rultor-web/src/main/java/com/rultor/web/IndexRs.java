@@ -29,6 +29,8 @@
  */
 package com.rultor.web;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rexsl.page.JaxbBundle;
@@ -70,7 +72,27 @@ public final class IndexRs extends BaseRs {
                 .build(EmptyPage.class)
                 .init(this)
                 .append(new Breadcrumbs().with("self", "home").bundle())
-                .append(this.pulses(this.users().flow().iterator(), Tv.TWENTY))
+                .append(
+                    this.pulses(
+                        Iterators.filter(
+                            this.users().flow().iterator(),
+                            new Predicate<Pulse>() {
+                                @Override
+                                public boolean apply(final Pulse pulse) {
+                                    return IndexRs.this.acl(
+                                        IndexRs.this.users()
+                                            .stand(pulse.stand())
+                                    )
+                                        .canView(
+                                            IndexRs.this.auth()
+                                                .identity().urn()
+                                        );
+                                }
+                            }
+                        ),
+                        Tv.TWENTY
+                    )
+                )
                 .render()
                 .build();
         } else {

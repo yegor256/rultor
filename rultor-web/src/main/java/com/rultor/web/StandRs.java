@@ -32,7 +32,6 @@ package com.rultor.web;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.immutable.ArraySet;
-import com.jcabi.urn.URN;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
@@ -40,7 +39,6 @@ import com.rexsl.page.auth.Identity;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
 import com.rultor.snapshot.XemblyException;
-import com.rultor.spi.ACL;
 import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulse;
@@ -430,38 +428,6 @@ public final class StandRs extends BaseRs {
      */
     private JaxbBundle bug(final JaxbBundle bundle, final Exception exc) {
         return bundle.add("error", Exceptions.stacktrace(exc)).up();
-    }
-
-    /**
-     * Get ACL of the stand.
-     * @param stand The stand
-     * @return ACL
-     */
-    private ACL acl(final Stand stand) {
-        ACL acl;
-        try {
-            acl = ACL.class.cast(
-                this.repo().make(new User.Nobody(), stand.acl()).instantiate(
-                    this.users(),
-                    new Arguments(
-                        new Coordinates.None(), new Wallet.Empty()
-                    )
-                )
-            );
-        } catch (SpecException ex) {
-            Exceptions.warn(this, ex);
-            acl = new ACL() {
-                @Override
-                public boolean canView(final URN urn) {
-                    return false;
-                }
-                @Override
-                public boolean canPost(final String key) {
-                    return false;
-                }
-            };
-        }
-        return acl;
     }
 
     /**

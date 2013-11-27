@@ -260,6 +260,14 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <!-- @todo #433 Manifests class should be fixed to handle execution of parallel
+                              tests, when it is fixed remove the parallel section below. -->
+                        <parallel>suites</parallel>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
                     <configuration>
                         <skip>true</skip>
