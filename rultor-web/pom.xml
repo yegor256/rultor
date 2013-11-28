@@ -262,8 +262,9 @@
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
-                        <!-- @todo #433 Manifests class should be fixed to handle execution of parallel
-                              tests, when it is fixed remove the parallel section below. -->
+                        <!-- @todo #433 When Manifests class is fixed to work in
+                              parallel (https://github.com/jcabi/jcabi-manifests/issues/2)
+                              this configuration can be removed. -->
                         <parallel>suites</parallel>
                     </configuration>
                 </plugin>
