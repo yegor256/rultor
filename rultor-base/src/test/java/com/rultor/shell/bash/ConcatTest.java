@@ -171,7 +171,7 @@ public final class ConcatTest {
             new Permanent(new ShellMocker.Bash(dir)),
             new Concat(
                 Arrays.asList(
-                    "( for i in {1..75}; do echo -$i-; done; exit 1 ) >&2"
+                    "( for i in {1..75}; do echo -$i-; done; sync; exit 1 ) >&2"
                 )
             ).object()
         ).exec(new ImmutableMap.Builder<String, String>().build(), stdout);
@@ -183,7 +183,6 @@ public final class ConcatTest {
             ),
             XhtmlMatchers.hasXPaths(
                 "//exception[contains(stacktrace, '-24-')]",
-                // @checkstyle LineLength (1 lines)
                 "//exception[not(contains(stacktrace, 'lines skipped'))]",
                 "//exception[contains(stacktrace, '75')]"
             )
