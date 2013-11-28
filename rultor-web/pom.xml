@@ -260,6 +260,15 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <!-- @todo #433 When Manifests class is fixed to work in
+                              parallel (https://github.com/jcabi/jcabi-manifests/issues/2)
+                              this configuration can be removed. -->
+                        <parallel>suites</parallel>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
                     <configuration>
                         <skip>true</skip>

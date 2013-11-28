@@ -48,11 +48,17 @@ import com.rexsl.page.auth.Provider;
 import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
+import com.rultor.spi.ACL;
+import com.rultor.spi.Arguments;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Repo;
+import com.rultor.spi.SpecException;
+import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import com.rultor.spi.Wallet;
 import com.rultor.tools.Dollars;
+import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
 import java.io.IOException;
 import java.net.URI;
@@ -70,6 +76,7 @@ import javax.ws.rs.core.Response;
  * @since 1.0
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  * @checkstyle MultipleStringLiterals (500 lines)
+ * @checkstyle ClassFanOutComplexityCheck (500 lines)
  */
 @Resource.Forwarded
 @Loggable(Loggable.DEBUG)
@@ -325,4 +332,35 @@ public class BaseRs extends BaseResource {
         return this.user().account().balance();
     }
 
+    /**
+     * Get ACL of the stand.
+     * @param stand The stand
+     * @return ACL
+     */
+    protected final ACL acl(final Stand stand) {
+        ACL acl;
+        try {
+            acl = ACL.class.cast(
+                this.repo().make(new User.Nobody(), stand.acl()).instantiate(
+                    this.users(),
+                    new Arguments(
+                        new Coordinates.None(), new Wallet.Empty()
+                    )
+                )
+            );
+        } catch (SpecException ex) {
+            Exceptions.warn(this, ex);
+            acl = new ACL() {
+                @Override
+                public boolean canView(final URN urn) {
+                    return false;
+                }
+                @Override
+                public boolean canPost(final String key) {
+                    return false;
+                }
+            };
+        }
+        return acl;
+    }
 }
