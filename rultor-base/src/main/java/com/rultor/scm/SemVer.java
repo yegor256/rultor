@@ -29,6 +29,7 @@
  */
 package com.rultor.scm;
 
+import com.github.zafarkhaja.semver.Version;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -96,6 +97,8 @@ public final class SemVer implements SCM {
     public List<String> branches() throws IOException {
         final List<String> ordered = new LinkedList<String>();
         final Pattern pattern = Pattern.compile(this.regex);
+        // @checkstyle LineLength (1 line)
+        final Pattern version = Pattern.compile("^((\\d+)\\.(\\d+)\\.(\\d+))(?:-([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?(?:\\+([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?$");
         ordered.addAll(
             Lists.newLinkedList(
                 Iterables.filter(
@@ -103,7 +106,9 @@ public final class SemVer implements SCM {
                     new Predicate<String>() {
                         @Override
                         public boolean apply(final String name) {
-                            return pattern.matcher(name).matches();
+                            final Matcher matcher = pattern.matcher(name);
+                            return matcher.matches()
+                                && version.matcher(matcher.group(1)).matches();
                         }
                     }
                 )
@@ -118,7 +123,8 @@ public final class SemVer implements SCM {
                     lft.matches();
                     final Matcher rht = pattern.matcher(right);
                     rht.matches();
-                    return SemVer.compare(lft.group(1), rht.group(1));
+                    return Version.valueOf(lft.group(1))
+                        .compareTo(Version.valueOf(rht.group(1)));
                 }
             }
         );
@@ -128,29 +134,6 @@ public final class SemVer implements SCM {
     @Override
     public URI uri() {
         return this.scm.uri();
-    }
-
-    /**
-     * Compare two versions.
-     * @param left Left version
-     * @param right Right version
-     * @return Positive if right is newer than left
-     */
-    private static int compare(final String left, final String right) {
-        return SemVer.normalized(left).compareTo(SemVer.normalized(right));
-    }
-
-    /**
-     * Normalize the version.
-     * @param ver Version
-     * @return Normalized version
-     */
-    private static String normalized(final String ver) {
-        final StringBuilder output = new StringBuilder();
-        for (String part : ver.split("\\.")) {
-            output.append(String.format("%3s", part));
-        }
-        return output.toString();
     }
 
 }
