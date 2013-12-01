@@ -54,13 +54,15 @@ public final class SemVerTest {
     public void sortsBranches() throws Exception {
         final SCM origin = Mockito.mock(SCM.class);
         Mockito.doReturn(
-            Arrays.asList("a-0.5.1", "a-0.4", "beta", "g", "", "a-13-alpha")
+            Arrays.asList(
+                "a-0.5.1", "a-0.4.0", "beta", "g", "", "a-13.0.0-alpha"
+            )
         ).when(origin).branches();
         MatcherAssert.assertThat(
             new SemVer("a\\-(.*)", origin).branches(),
             Matchers.allOf(
                 (Matcher) Matchers.hasSize(Tv.THREE),
-                Matchers.contains("a-0.4", "a-0.5.1", "a-13-alpha")
+                Matchers.contains("a-0.4.0", "a-0.5.1", "a-13.0.0-alpha")
             )
         );
     }
