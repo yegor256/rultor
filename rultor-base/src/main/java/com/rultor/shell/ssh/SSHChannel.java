@@ -275,10 +275,11 @@ public final class SSHChannel implements Shell {
      * @throws IOException If some IO problem inside
      */
     @RetryOnFailure(
-        attempts = Tv.TEN,
+        attempts = Tv.FIVE,
         delay = 1,
         unit = TimeUnit.MINUTES,
-        verbose = false
+        verbose = false,
+        randomize = false
     )
     private Session session() throws IOException {
         try {
