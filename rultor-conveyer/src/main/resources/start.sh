@@ -55,7 +55,7 @@ for table in units stands
 do
     while true
     do
-        dynamic-dynamodb --log-level WARNING \
+        dynamic-dynamodb --log-level warning \
             --table-name "${DYNAMO_PREFIX}${table}" \
             --increase-reads-with 50 \
             --decrease-reads-with 25 \
