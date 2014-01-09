@@ -193,6 +193,7 @@
                     <configuration>
                         <!-- logs break rultor parsing, because they produce Xembly directives -->
                         <streamLogs>false</streamLogs>
+                        <mergeUserSettings>true</mergeUserSettings>
                     </configuration>
                 </plugin>
                 <plugin>
