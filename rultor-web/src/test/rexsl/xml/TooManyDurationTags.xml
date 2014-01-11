@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!--
+ * Copyright (c) 2009-2013, rultor.com
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met: 1) Redistributions of source code must retain the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer. 2) Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3) Neither the name of the rultor.com nor
+ * the names of its contributors may be used to endorse or promote
+ * products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+ * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ -->
+<?xml-stylesheet type='text/xsl' href='/xsl/stand.xsl'?>
+<page identifier="2012-08-23T13:25:33.968+02:00">
+    <identity>
+        <urn>urn:facebook:1</urn>
+        <name>Jeff Lebowski</name>
+        <photo>http://images.sodahead.com/polls/002320349/200261278_The_Big_Lebowski___Jeff_Bridges_answer_9_xlarge.jpeg</photo>
+    </identity>
+    <version>
+        <name>1.0-SNAPSHOT</name>
+        <revision>123</revision>
+        <identifier>22-Aug-2012</identifier>
+    </version>
+    <links>
+        <link href="/" rel="root" type="text/xml"/>
+        <link href="/xml/drain.xml" rel="self" type="text/xml"/>
+        <link href="/xml/index.xml" rel="home" type="text/xml"/>
+        <link href="/xml/drain.xml" rel="more" type="text/xml"/>
+        <link href="/xml/account.xml" rel="account" type="text/xml"/>
+        <link href="/xml/rules.xml" rel="rules" type="text/xml"/>
+        <link href="/xml/stands.xml" rel="stands" type="text/xml"/>
+    </links>
+    <breadcrumbs>
+        <crumb rel="stands">stands</crumb>
+        <crumb rel="edit">nightly-build</crumb>
+        <crumb rel="self">stand</crumb>
+    </breadcrumbs>
+    <nav>
+        <item rel="rules">Rules</item>
+        <item rel="stands">Stands</item>
+        <item rel="account">Account</item>
+    </nav>
+    <stand>nightly-build</stand>
+    <since>2012-08-23T13:25:33Z</since>
+    <balance>$0.45</balance>
+    <filters>
+        <filter>on-commit</filter>
+        <filter>stdout</filter>
+    </filters>
+    <pulses>
+        <pulse>
+            <coordinates>
+                <owner>urn:test:55</owner>
+                <rule>on-commit</rule>
+                <scheduled>2012-08-31T13:23Z</scheduled>
+            </coordinates>
+            <snapshot>
+                <version>1.0-SNAPSHOT eb6785af 1-Aug-2013</version>
+                <work>
+                    <owner>urn:test:1</owner>
+                    <rule>nightly-build</rule>
+                    <scheduled>2012-08-23T13:25Z</scheduled>
+                </work>
+                <updated></updated>
+                <stdout>http://127.0.0.1/s4378h9892fu8i9890</stdout>
+                <start>2012-08-23T13:25Z</start>
+                <eta>2013-08-23T17:57Z</eta>
+                <spec>some specificiation</spec>
+                <lines>6473</lines>
+                <tags>
+                    <tag>
+                        <level>INFO</level>
+                        <label>pull-request</label>
+                    </tag>
+                </tags>
+                <steps>
+                    <step>
+                        <id>ec2-instance</id>
+                        <start at="0.3">2012-08-23T13:25Z</start>
+                        <finish>2013-08-23T17:57Z</finish>
+                        <summary>created EC2 instance `i-09aeb44` of `m1.small` type</summary>
+                        <level>INFO</level>
+                        <duration>119187</duration>
+                        <finish at="0.687">2013-11-28T14:41:06Z</finish>
+                        <level>INFO</level>
+                        <duration>164388</duration>
+                    </step>
+                    <step>
+                        <id>other</id>
+                        <start at="0.3">2012-08-23T14:25Z</start>
+                        <finish>2013-08-23T17:57Z</finish>
+                        <summary>not important</summary>
+                        <level>INFO</level>
+                        <duration>119187</duration>
+                    </step>
+                </steps>
+            </snapshot>
+            <links>
+                <link href="/xml/stand.xml" rel="close" type="text/xml"/>
+            </links>
+        </pulse>
+    </pulses>
+</page>
