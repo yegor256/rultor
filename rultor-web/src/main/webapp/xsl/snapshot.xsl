@@ -80,7 +80,7 @@
             <xsl:if test="duration">
                 <li>
                     <xsl:call-template name="millis">
-                        <xsl:with-param name="millis" select="duration"/>
+                        <xsl:with-param name="millis" select="duration[1]"/>
                     </xsl:call-template>
                 </li>
             </xsl:if>
@@ -259,7 +259,7 @@
                 <xsl:if test="duration">
                     <xsl:text> </xsl:text>
                     <xsl:call-template name="millis">
-                        <xsl:with-param name="millis" select="duration"/>
+                        <xsl:with-param name="millis" select="duration[1]"/>
                     </xsl:call-template>
                 </xsl:if>
             </span>
