@@ -189,6 +189,13 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <!-- Log4jStreamsTest fails if there are other tests being run -->
+                        <parallel>suites</parallel>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <artifactId>maven-invoker-plugin</artifactId>
                     <configuration>
                         <!-- logs break rultor parsing, because they produce Xembly directives -->
