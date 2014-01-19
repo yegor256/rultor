@@ -44,8 +44,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -58,6 +58,8 @@ import lombok.ToString;
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @todo #158 Remove total field from this class and refactor callers to call
+ *  constructor without this parameter.
  */
 @Loggable(Loggable.INFO)
 @ToString
@@ -106,9 +108,14 @@ final class SimpleConveyer implements Closeable {
     private final transient ConveyerThreads threads;
 
     /**
-     * Consumer and executer of new specs from Queue.
+     * Threads that read from queue and submit tasks to processors.
      */
-    private final transient ScheduledExecutorService svc;
+    private final transient ExecutorService providers;
+
+    /**
+     * Threads that execute tasks.
+     */
+    private final transient ExecutorService processors;
 
     /**
      * Public ctor.
@@ -131,53 +138,33 @@ final class SimpleConveyer implements Closeable {
         this.total = max;
         this.server = new HttpServer(this.streams, SimpleConveyer.PORT);
         this.threads = new ConveyerThreads();
-        this.svc = Executors.newScheduledThreadPool(this.total, this.threads);
+        this.processors = Executors.newCachedThreadPool();
+        this.providers = Executors.newSingleThreadExecutor();
     }
 
     /**
      * Start the conveyer.
      */
     public void start() {
-        final Runnable runnable = new VerboseRunnable(
+        this.providers.submit(
             new Callable<Void>() {
                 @Override
                 public Void call() throws InterruptedException {
                     SimpleConveyer.this.process();
+                    SimpleConveyer.this.providers.submit(this);
                     return null;
                 }
-            },
-            true, false
+            }
         );
-        for (int thread = 0; thread < this.total; ++thread) {
-            this.svc.scheduleWithFixedDelay(
-                runnable,
-                TimeUnit.SECONDS.toMicros(1), 1, TimeUnit.MICROSECONDS
-            );
-        }
         this.server.listen();
     }
 
     @Override
     @Loggable(value = Loggable.INFO, limit = Integer.MAX_VALUE)
     public void close() throws IOException {
-        final Random rand = new Random();
-        final long start = System.currentTimeMillis();
         try {
-            while (true) {
-                final long age = System.currentTimeMillis() - start;
-                if (age > TimeUnit.HOURS.toMillis(2)) {
-                    this.svc.shutdownNow();
-                } else {
-                    this.svc.shutdown();
-                }
-                if (this.svc.awaitTermination(1, TimeUnit.SECONDS)) {
-                    break;
-                }
-                TimeUnit.SECONDS.sleep(rand.nextInt(Tv.HUNDRED));
-                Logger.info(
-                    this, "waiting %[ms]s for threads termination", age
-                );
-            }
+            this.stop(this.providers, TimeUnit.SECONDS.toMillis(1));
+            this.stop(this.processors, TimeUnit.HOURS.toMillis(2));
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
             throw new IOException(ex);
@@ -187,13 +174,51 @@ final class SimpleConveyer implements Closeable {
     }
 
     /**
+     * Stop given ExecutorService.
+     * @param exec ExecutorService to stop.
+     * @param millis How long to wait before forceful shutdown.
+     * @throws InterruptedException When thread interrupted.
+     */
+    private void stop(final ExecutorService exec, final long millis)
+        throws InterruptedException {
+        final Random rand = new Random();
+        final long start = System.currentTimeMillis();
+        while (true) {
+            final long age = System.currentTimeMillis() - start;
+            if (age > millis) {
+                exec.shutdownNow();
+            } else {
+                exec.shutdown();
+            }
+            if (exec.awaitTermination(1, TimeUnit.SECONDS)) {
+                break;
+            }
+            TimeUnit.SECONDS.sleep(rand.nextInt(Tv.HUNDRED));
+            Logger.info(
+                this, "waiting %[ms]s for threads termination", age
+            );
+        }
+    }
+
+    /**
      * Process the next work from the queue.
      * @throws InterruptedException If interrupted
      */
     private void process() throws InterruptedException {
         final Coordinates work = this.queue.pull(1, TimeUnit.SECONDS);
         if (!work.equals(new Coordinates.None())) {
-            this.process(work);
+            SimpleConveyer.this.processors.submit(
+                new VerboseRunnable(
+                    new Callable<Void>() {
+                        @Override
+                        public Void call() throws Exception {
+                            SimpleConveyer.this.process(work);
+                            return null;
+                        }
+                    },
+                    true, false
+                )
+            );
         }
     }
 
