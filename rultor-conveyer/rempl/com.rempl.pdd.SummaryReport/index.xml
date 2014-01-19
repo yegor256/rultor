@@ -9,4 +9,13 @@
       <lines>78-83</lines>
       <owner>someone</owner>
    </puzzle>
+   <puzzle>
+      <ticket>158</ticket>
+      <file>src/main/java/com/rultor/conveyer/SimpleConveyer.java</file>
+      <prefix> * </prefix>
+      <body>Remove total field from this class and refactor callers to call constructor without this parameter.</body>
+      <estimate>0</estimate>
+      <lines>61-62</lines>
+      <owner>someone</owner>
+   </puzzle>
 </puzzles>
