@@ -298,7 +298,7 @@ public final class SSHChannel implements Shell {
             final Session session = jsch.getSession(
                 this.login, this.addr, this.port
             );
-            session.setServerAliveInterval((int) TimeUnit.SECONDS.toMillis(1));
+            session.setServerAliveInterval((int) TimeUnit.SECONDS.toMillis(10));
             session.setServerAliveCountMax(Tv.MILLION);
             session.connect();
             return session;
