@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import java.math.BigDecimal;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
@@ -94,15 +95,15 @@ public final class Dollars {
             body = "$0.00";
         // @checkstyle MagicNumber (8 lines)
         } else if (usd < 0.00001d) {
-            body = String.format("$%.6f", usd);
+            body = String.format(Locale.ENGLISH, "$%.6f", usd);
         } else if (usd < 0.0001d) {
-            body = String.format("$%.5f", usd);
+            body = String.format(Locale.ENGLISH, "$%.5f", usd);
         } else if (usd < 0.001d) {
-            body = String.format("$%.4f", usd);
+            body = String.format(Locale.ENGLISH, "$%.4f", usd);
         } else if (usd < 0.01d) {
-            body = String.format("$%.3f", usd);
+            body = String.format(Locale.ENGLISH, "$%.3f", usd);
         } else {
-            body = String.format("$%.2f", usd);
+            body = String.format(Locale.ENGLISH, "$%.2f", usd);
         }
         if (this.amount < 0) {
             body = String.format("(%s)", body);
