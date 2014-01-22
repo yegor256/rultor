@@ -31,6 +31,7 @@ package com.rultor.tools;
 
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Tv;
+import java.util.Locale;
 import java.util.Map;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -70,4 +71,17 @@ public final class DollarsTest {
         }
     }
 
+    /**
+     * Dollars should always print itself using english locale.
+     */
+    @Test
+    public void printsItselfAlwaysWithEnglishLocale() {
+        final Locale def = Locale.getDefault();
+        Locale.setDefault(Locale.FRENCH);
+        MatcherAssert.assertThat(
+            new Dollars(Tv.MILLION + (Tv.TEN * Tv.THOUSAND)).toString(),
+            Matchers.equalTo("$1.01")
+        );
+        Locale.setDefault(def);
+    }
 }
