@@ -183,7 +183,7 @@
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:text>margin-right:</xsl:text>
-                        <xsl:value-of select="100 * (1 - start/@at)"/>
+                        <xsl:value-of select="100 * (1 - start[1]/@at)"/>
                         <xsl:text>%;text-align:right;</xsl:text>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -195,7 +195,7 @@
                 <span class="step-mark">
                     <xsl:attribute name="style">
                         <xsl:text>width:</xsl:text>
-                        <xsl:value-of select="100 * (finish/@at - start/@at)"/>
+                        <xsl:value-of select="100 * (finish[1]/@at - start[1]/@at)"/>
                         <xsl:text>%;</xsl:text>
                         <xsl:choose>
                             <xsl:when test="$left">
