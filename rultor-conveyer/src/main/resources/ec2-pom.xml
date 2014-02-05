@@ -96,6 +96,7 @@
                                 <arg>-classpath</arg>
                                 <classpath/>
                                 <arg>com.rultor.conveyer.Main</arg>
+                                <arg>--lifetime=86400000</arg>
                                 <arg>--threads=100</arg>
                                 <arg>--sqs-url=${sqs-url}</arg>
                                 <arg>--sqs-wallet-url=${sqs-wallet-url}</arg>
