@@ -93,6 +93,7 @@
                             <executable>java</executable>
                             <arguments>
                                 <arg>-javaagent:${project.build.directory}/jolokia-agent.jar=port=9096,host=localhost</arg>
+                                <arg>-javaagent:/home/ubuntu/newrelic/newrelic.jar</arg>
                                 <arg>-classpath</arg>
                                 <classpath/>
                                 <arg>com.rultor.conveyer.Main</arg>
