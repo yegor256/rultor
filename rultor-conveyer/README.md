@@ -34,10 +34,10 @@ Create new AS launch configuration ([more info](http://docs.aws.amazon.com/AutoS
 
 ```
 $ as-create-launch-config rultor-conveyer-16 \
-  --image-id ami-80a0d9e9 --instance-type t1.micro \
+  --image-id ami-80a0d9e9 --instance-type m1.small \
   --group rultor-conveyer --monitoring-disabled \
   --iam-instance-profile rultor-conveyer \
-  --user-data '{"version":"url":"...","wallet_url":"","prefix":"...","pgsql_url":"...","pgsql_password":"..."}'
+  --user-data '{"url":"...","wallet_url":"...","prefix":"...","pgsql_url":"...","pgsql_password":"..."}'
 ```
 
 Create AS group:
