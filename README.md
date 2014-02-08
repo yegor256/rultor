@@ -26,3 +26,7 @@ If you have questions or general suggestions, don't hesitate to submit
 a new [Github issue](https://github.com/rultor/rultor/issues/new),
 or a question to our
 [Google Group](https://groups.google.com/forum/#!forum/rultor).
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/rultor/rultor/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
