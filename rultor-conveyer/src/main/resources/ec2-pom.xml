@@ -92,6 +92,9 @@
                         <configuration>
                             <executable>java</executable>
                             <arguments>
+                                <arg>-Xmx1024m</arg>
+                                <arg>-XX:MaxPermSize=256m</arg>
+                                <arg>-Djdk.xml.entityExpansionLimit=0</arg>
                                 <arg>-javaagent:${project.build.directory}/jolokia-agent.jar=port=9096,host=localhost</arg>
                                 <arg>-javaagent:/home/ubuntu/newrelic/newrelic.jar</arg>
                                 <arg>-classpath</arg>
