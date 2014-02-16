@@ -27,75 +27,50 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.guard.github;
+package com.rultor.guard.github.jcabi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
-import com.rultor.snapshot.Step;
+import com.jcabi.github.Pull;
+import com.jcabi.github.Repo;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.eclipse.egit.github.core.Issue;
-import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.github.core.User;
-import org.eclipse.egit.github.core.client.RequestException;
-import org.eclipse.egit.github.core.service.IssueService;
 
 /**
- * Reassigns to user.
- * @author Bharath Bolisetty (bharathbolisetty@gmail.com)
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * Approves assigned user.
+ * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
  * @version $Id$
- * @todo #445 Migrate this class to jcabi-github and move the logic to jcabi
- *  subpackage.
+ * @todo #445 When jcabi-github#491 issue is resolved implement logic in
+ *  method has(...) to compare user with the pull request assigned one, and
+ *  remove PMD suppressions.
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "user")
+@EqualsAndHashCode(of = { "user" })
 @Loggable(Loggable.DEBUG)
-public final class ReassignTo implements Approval {
+@SuppressWarnings({ "PMD.SingularField", "PMD.UnusedPrivateField" })
+public final class AssignedTo implements Approval {
 
     /**
-     * Login to reassign to.
+     * First approval to ask.
      */
     private final transient String user;
 
     /**
      * Public ctor.
-     * @param login Login to assign to
+     * @param assignee Assignee
      */
-    public ReassignTo(
-        @NotNull(message = "login can not be null") final String login) {
-        this.user = login;
+    public AssignedTo(
+        @NotNull(message = "Assignee can't be NULL")
+        final String assignee) {
+        this.user = assignee;
     }
 
     @Override
-    @Step("assigned pull request #${args[0].number} to `${args[0].user.login}`")
-    public boolean has(final PullRequest request, final Github client,
-        final Github.Repo repo) throws IOException {
-        final IssueService svc = new IssueService(client.client());
-        final Issue issue = svc.getIssue(repo, request.getNumber());
-        User assignee = issue.getAssignee();
-        if (assignee == null) {
-            assignee = new User();
-            assignee.setLogin("");
-        }
-        if (!assignee.getLogin().equals(this.user)) {
-            assignee.setLogin(this.user);
-            issue.setAssignee(assignee);
-            try {
-                svc.editIssue(repo, issue);
-            } catch (RequestException ex) {
-                if ("Server Error (500)".equals(ex.getMessage())) {
-                    Logger.warn(this, "strange error on Github side: %s", ex);
-                } else {
-                    throw ex;
-                }
-            }
-        }
+    public boolean has(final Pull request, final Github client,
+        final Repo repo) throws IOException {
         return true;
     }
-
 }
