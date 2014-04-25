@@ -32,10 +32,10 @@ package com.rultor.ext.jira;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.test.JdkRequest;
-import com.rexsl.test.JsonResponse;
-import com.rexsl.test.Request;
-import com.rexsl.test.RestResponse;
+import com.jcabi.http.Request;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.JsonResponse;
+import com.jcabi.http.response.RestResponse;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
@@ -76,7 +76,7 @@ final class RxJiraIssue implements JiraIssue {
      * Public ctor.
      * @param srv Server URL
      */
-    protected RxJiraIssue(final URI srv) {
+    RxJiraIssue(final URI srv) {
         this.url = srv.toString();
     }
 
@@ -96,7 +96,7 @@ final class RxJiraIssue implements JiraIssue {
                 .json()
                 .readObject()
                 .getString("key");
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -122,7 +122,7 @@ final class RxJiraIssue implements JiraIssue {
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_NO_CONTENT);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -163,12 +163,12 @@ final class RxJiraIssue implements JiraIssue {
                 .json()
                 .readObject()
                 .getJsonArray("comments");
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
         final List<JiraComment> lst =
             new ArrayList<JiraComment>(json.size());
-        for (JsonValue obj : json) {
+        for (final JsonValue obj : json) {
             lst.add(
                 new RxJiraComment(
                     UriBuilder.fromUri(
@@ -202,7 +202,7 @@ final class RxJiraIssue implements JiraIssue {
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_CREATED);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

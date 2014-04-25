@@ -151,7 +151,7 @@ public final class Crontab implements Instance {
     public long lag(final Time date) {
         final Calendar today = Crontab.calendar(date);
         long lag = 0;
-        for (Crontab.Gate<Calendar> gate : this.gates) {
+        for (final Crontab.Gate<Calendar> gate : this.gates) {
             lag += gate.lag(today);
         }
         return lag;
@@ -165,7 +165,7 @@ public final class Crontab implements Instance {
     private boolean allowed() {
         final Calendar today = Crontab.calendar(this.work.scheduled());
         Crontab.Gate<Calendar> denier = null;
-        for (Crontab.Gate<Calendar> gate : this.gates) {
+        for (final Crontab.Gate<Calendar> gate : this.gates) {
             if (!gate.pass(today)) {
                 denier = gate;
                 break;
@@ -208,7 +208,7 @@ public final class Crontab implements Instance {
             );
         } else if (part.matches("\\*/\\d+")) {
             alternative = new Crontab.ModuloGate(
-                Integer.valueOf(part.substring(part.indexOf('/') + 1))
+                Integer.parseInt(part.substring(part.indexOf('/') + 1))
             );
         // @checkstyle MultipleStringLiterals (1 line)
         } else if ("*".equals(part)) {
@@ -384,7 +384,7 @@ public final class Crontab implements Instance {
          */
         protected boolean matches(final int input) {
             boolean matches = false;
-            for (Crontab.Gate<Integer> alternative : this.alternatives) {
+            for (final Crontab.Gate<Integer> alternative : this.alternatives) {
                 if (alternative.pass(input)) {
                     matches = true;
                     break;
@@ -399,7 +399,7 @@ public final class Crontab implements Instance {
          */
         protected long lag(final int input) {
             long lag = Long.MAX_VALUE;
-            for (Crontab.Gate<Integer> alternative : this.alternatives) {
+            for (final Crontab.Gate<Integer> alternative : this.alternatives) {
                 lag = Math.min(lag, alternative.lag(input));
             }
             return lag;

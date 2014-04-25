@@ -198,13 +198,13 @@ public final class AwsRulesITCase {
             rules.create(name);
             names.add(name);
         }
-        for (String name : names) {
+        for (final String name : names) {
             MatcherAssert.assertThat(rules.contains(name), Matchers.is(true));
         }
-        for (String name : names) {
+        for (final String name : names) {
             rules.remove(name);
         }
-        for (String name : names) {
+        for (final String name : names) {
             MatcherAssert.assertThat(rules.contains(name), Matchers.is(false));
         }
     }

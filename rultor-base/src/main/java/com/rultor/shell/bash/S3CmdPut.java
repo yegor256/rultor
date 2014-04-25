@@ -87,9 +87,9 @@ public final class S3CmdPut implements Sequel {
     private final transient String secret;
 
     /**
-     * Content type.
+     * Content ctype.
      */
-    private final transient String contentType;
+    private final transient String ctype;
 
     /**
      * Encoding.
@@ -119,7 +119,7 @@ public final class S3CmdPut implements Sequel {
      * @param pfx Prefix in S3 bucket
      * @param akey S3 authorization key
      * @param scrt S3 authorization secret
-     * @param type Content type
+     * @param type Content ctype
      * @param enc Encoding
      * @checkstyle ParameterNumber (8 lines)
      */
@@ -150,7 +150,7 @@ public final class S3CmdPut implements Sequel {
         );
         this.secret = scrt;
         Validate.notBlank(type, "content type can't be empty");
-        this.contentType = type;
+        this.ctype = type;
         Validate.notBlank(enc, "encoding can't be empty");
         this.encoding = enc;
     }
@@ -201,7 +201,7 @@ public final class S3CmdPut implements Sequel {
                 .append("access_key=").append(this.key).append('\n')
                 .append("secret_key=").append(this.secret).append('\n')
                 .append("encoding=").append(this.encoding).append('\n')
-                .append("mime-type=").append(this.contentType).append('\n')
+                .append("mime-type=").append(this.ctype).append('\n')
                 .toString()
         ).split("\n").length;
         if (mask.contains("*")) {

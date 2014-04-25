@@ -131,7 +131,7 @@ final class BucketPulses implements Pageable<Time, Time> {
                     .withMaxKeys(Tv.TEN)
                     .withPrefix(BucketPulses.this.prefix);
                 final ObjectListing listing = aws.listObjects(request);
-                for (S3ObjectSummary sum : listing.getObjectSummaries()) {
+                for (final S3ObjectSummary sum : listing.getObjectSummaries()) {
                     this.queue.add(
                         Key.valueOf(
                             sum.getKey().substring(

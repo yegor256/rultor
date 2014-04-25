@@ -63,7 +63,7 @@ public final class BuildHistory implements Widget {
             stand.pulses().query().withTag("on-commit").fetch(),
             Tv.TEN
         );
-        for (Pulse pulse : pulses) {
+        for (final Pulse pulse : pulses) {
             final Coordinates coords = pulse.coordinates();
             dirs.add("build")
                 .add("coordinates")

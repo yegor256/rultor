@@ -32,8 +32,8 @@ package com.rultor.web;
 import com.google.common.net.MediaType;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import com.rexsl.test.JdkRequest;
-import com.rexsl.test.RestResponse;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
 import com.rultor.snapshot.XSLT;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -83,7 +83,7 @@ public final class ButtonRs extends BaseRs {
                     .fetch()
                     .as(RestResponse.class)
                     .body();
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 throw new IllegalStateException(ex);
             }
         }
@@ -220,9 +220,9 @@ public final class ButtonRs extends BaseRs {
                         .build().toURL().openStream()
                 )
             );
-        } catch (FontFormatException ex) {
+        } catch (final FontFormatException ex) {
             throw new IllegalStateException(ex);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

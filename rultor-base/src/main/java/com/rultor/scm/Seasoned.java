@@ -112,7 +112,7 @@ public final class Seasoned implements Branch {
     private boolean isBefore(final Commit commit, final Time current) {
         try {
             return current.delta(commit.time()) >= this.minimum;
-        } catch (IOException ioe) {
+        } catch (final IOException ioe) {
             throw new IllegalStateException(ioe);
         }
     }

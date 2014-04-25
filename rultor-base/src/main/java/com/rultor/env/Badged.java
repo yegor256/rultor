@@ -105,14 +105,14 @@ public final class Badged implements Environments {
         Collection<Tag> tags;
         try {
             tags = new Radar().snapshot().tags();
-        } catch (SyntaxException ex) {
+        } catch (final SyntaxException ex) {
             tags = new ArrayList<Tag>(0);
             Exceptions.warn(this, ex);
-        } catch (XemblyException ex) {
+        } catch (final XemblyException ex) {
             tags = new ArrayList<Tag>(0);
             Exceptions.warn(this, ex);
         }
-        for (Tag tag : tags) {
+        for (final Tag tag : tags) {
             this.attach(env, tag);
         }
         return env;
@@ -129,7 +129,8 @@ public final class Badged implements Environments {
      * @param tag The tag to process
      */
     private void attach(final Environment env, final Tag tag) {
-        for (Map.Entry<String, String> attr : tag.attributes().entrySet()) {
+        for (final Map.Entry<String, String> attr
+            : tag.attributes().entrySet()) {
             final String label = String.format(
                 "%s:%s", tag.label(), attr.getKey()
             );

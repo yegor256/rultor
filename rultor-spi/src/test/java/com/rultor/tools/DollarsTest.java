@@ -59,7 +59,7 @@ public final class DollarsTest {
                 .put(new Dollars(Tv.TEN * Tv.THOUSAND), "$0.01")
                 .put(new Dollars(-Tv.FIVE * Tv.MILLION), "($5.00)")
                 .build();
-        for (Map.Entry<Dollars, String> entry : map.entrySet()) {
+        for (final Map.Entry<Dollars, String> entry : map.entrySet()) {
             MatcherAssert.assertThat(
                 entry.getKey(),
                 Matchers.hasToString(entry.getValue())

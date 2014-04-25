@@ -58,7 +58,7 @@ public final class Lifespan implements ServletContextListener {
     public void contextInitialized(final ServletContextEvent event) {
         try {
             Manifests.append(event.getServletContext());
-        } catch (java.io.IOException ex) {
+        } catch (final java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }
         final ServletContext context = event.getServletContext();

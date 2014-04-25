@@ -83,9 +83,6 @@ final class Composite implements Variable<Object> {
         this.vars = new Array<Variable<?>>(args);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     public Object instantiate(
@@ -105,7 +102,7 @@ final class Composite implements Variable<Object> {
         Object object;
         try {
             object = ctor.newInstance(args);
-        } catch (InstantiationException ex) {
+        } catch (final InstantiationException ex) {
             throw new SpecException(
                 String.format(
                     "failed to instantiate using \"%s\" constructor: %s",
@@ -114,7 +111,7 @@ final class Composite implements Variable<Object> {
                 ),
                 ex
             );
-        } catch (IllegalAccessException ex) {
+        } catch (final IllegalAccessException ex) {
             throw new SpecException(
                 String.format(
                     "failed to access \"%s\": %s",
@@ -123,7 +120,7 @@ final class Composite implements Variable<Object> {
                 ),
                 ex
             );
-        } catch (InvocationTargetException ex) {
+        } catch (final InvocationTargetException ex) {
             throw new SpecException(
                 String.format(
                     "failed to invoke \"%s\": %s",
@@ -149,9 +146,6 @@ final class Composite implements Variable<Object> {
             .toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Map<Integer, String> arguments() throws SpecException {
         final ConcurrentMap<Integer, String> args =
@@ -173,7 +167,7 @@ final class Composite implements Variable<Object> {
         final Class<?> cls;
         try {
             cls = Class.forName(this.type);
-        } catch (ClassNotFoundException ex) {
+        } catch (final ClassNotFoundException ex) {
             throw new SpecException(ex);
         }
         Constructor<?> ctor = null;

@@ -86,7 +86,7 @@ public final class DrainTest {
                 .put(185000L, "3:05")
                 .put(24005000L, "400:05")
                 .build();
-        for (Map.Entry<Long, String> entry : map.entrySet()) {
+        for (final Map.Entry<Long, String> entry : map.entrySet()) {
             final Drain.Line line = new Drain.Line.Simple(
                 entry.getKey(), Level.INFO, "text msg"
             );

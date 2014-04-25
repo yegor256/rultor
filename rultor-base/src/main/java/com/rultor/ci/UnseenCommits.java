@@ -123,7 +123,7 @@ public final class UnseenCommits implements Branch {
         final String name;
         try {
             name = head.name();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
         final boolean seen = this.notepad.contains(name);

@@ -149,7 +149,7 @@ public final class ItemLineup implements Lineup {
                 }
             );
         // @checkstyle IllegalCatch (1 line)
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             throw new IllegalArgumentException(ex);
         }
     }

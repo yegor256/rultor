@@ -219,8 +219,8 @@ public final class EC2 implements Environments {
         try {
             final Collection<Environment> envs = new LinkedList<Environment>();
             final DescribeInstancesResult result = aws.describeInstances();
-            for (Reservation res : result.getReservations()) {
-                for (Instance inst : res.getInstances()) {
+            for (final Reservation res : result.getReservations()) {
+                for (final Instance inst : res.getInstances()) {
                     envs.add(this.env(inst.getInstanceId()));
                 }
             }
@@ -315,7 +315,7 @@ public final class EC2 implements Environments {
         }
         final Collection<BlockDeviceMapping> devices =
             result.getImages().get(0).getBlockDeviceMappings();
-        for (BlockDeviceMapping device : devices) {
+        for (final BlockDeviceMapping device : devices) {
             if (device.getEbs() != null) {
                 device.getEbs().setDeleteOnTermination(true);
             }

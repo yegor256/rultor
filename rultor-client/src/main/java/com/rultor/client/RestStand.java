@@ -31,10 +31,10 @@ package com.rultor.client;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
+import com.jcabi.http.response.XmlResponse;
 import com.jcabi.urn.URN;
-import com.rexsl.test.JdkRequest;
-import com.rexsl.test.RestResponse;
-import com.rexsl.test.XmlResponse;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Spec;
@@ -75,7 +75,7 @@ final class RestStand implements Stand {
      * @param uri URI of home page
      * @param auth Authentication token
      */
-    protected RestStand(final String uri, final String auth) {
+    RestStand(final String uri, final String auth) {
         this.home = uri;
         this.token = auth;
     }
@@ -99,9 +99,9 @@ final class RestStand implements Stand {
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK);
-        } catch (UnsupportedEncodingException ex) {
+        } catch (final UnsupportedEncodingException ex) {
             throw new IllegalStateException(ex);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -121,7 +121,7 @@ final class RestStand implements Stand {
                     .xpath("/page/stand/acl/text()")
                     .get(0)
             );
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -141,7 +141,7 @@ final class RestStand implements Stand {
                     .xpath("/page/stand/widgets/text()")
                     .get(0)
             );
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -159,7 +159,7 @@ final class RestStand implements Stand {
                 .xml()
                 .xpath("/page/stand/name/text()")
                 .get(0);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -179,7 +179,7 @@ final class RestStand implements Stand {
                     .xpath("/page/identity/urn/text()")
                     .get(0)
             );
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

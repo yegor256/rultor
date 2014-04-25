@@ -88,7 +88,7 @@ public final class XsltSubject implements Bill {
                 new StreamSource(new StringReader(this.origin.subject())),
                 new StreamSource(new StringReader(this.xslt))
             ).xml();
-        } catch (TransformerException ex) {
+        } catch (final TransformerException ex) {
             throw new IllegalArgumentException(ex);
         }
     }

@@ -114,7 +114,7 @@ public final class SQSPulseSensor implements Runnable, Closeable {
      * @param rpo Repo
      * @param clnt SQS client for quartz queue
      */
-    protected SQSPulseSensor(final Users usr, final Repo rpo,
+    SQSPulseSensor(final Users usr, final Repo rpo,
         final SQSClient clnt) {
         this.users = usr;
         this.repo = rpo;
@@ -122,7 +122,7 @@ public final class SQSPulseSensor implements Runnable, Closeable {
         final Runnable runnable = new VerboseRunnable(this, true, false);
         for (int thread = 0; thread < SQSPulseSensor.THREADS; ++thread) {
             this.service.scheduleWithFixedDelay(
-                runnable, TimeUnit.SECONDS.toMillis(1), 1,
+                runnable, TimeUnit.SECONDS.toMillis(1L), 1L,
                 TimeUnit.MILLISECONDS
             );
         }
@@ -140,7 +140,7 @@ public final class SQSPulseSensor implements Runnable, Closeable {
                     .withVisibilityTimeout(Tv.FIVE)
                     .withMaxNumberOfMessages(Tv.TEN)
             );
-            for (Message msg : result.getMessages()) {
+            for (final Message msg : result.getMessages()) {
                 this.process(aws, msg);
             }
         } finally {
@@ -161,11 +161,11 @@ public final class SQSPulseSensor implements Runnable, Closeable {
     private void process(final AmazonSQS aws, final Message msg) {
         try {
             this.post(SQSPulseSensor.NORM.readObject(msg.getBody()));
-        } catch (SecurityException ex) {
+        } catch (final SecurityException ex) {
             Exceptions.info(this, ex);
-        } catch (Stand.BrokenXemblyException ex) {
+        } catch (final Stand.BrokenXemblyException ex) {
             throw new IllegalArgumentException(ex);
-        } catch (NormJson.JsonException ex) {
+        } catch (final NormJson.JsonException ex) {
             throw new IllegalArgumentException(ex);
         } finally {
             aws.deleteMessage(
@@ -222,7 +222,7 @@ public final class SQSPulseSensor implements Runnable, Closeable {
                         )
                     )
             );
-        } catch (SpecException ex) {
+        } catch (final SpecException ex) {
             throw new IllegalStateException(ex);
         }
     }

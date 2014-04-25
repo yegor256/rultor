@@ -86,7 +86,7 @@ public final class GetterOf implements Proxy<Object> {
      */
     private Method find(final BeanInfo info) {
         Method found = null;
-        for (PropertyDescriptor descr : info.getPropertyDescriptors()) {
+        for (final PropertyDescriptor descr : info.getPropertyDescriptors()) {
             if (descr.getName().equals(this.property)
                 && (descr.getReadMethod() != null)) {
                 found = descr.getReadMethod();
@@ -94,7 +94,7 @@ public final class GetterOf implements Proxy<Object> {
             }
         }
         if (found == null) {
-            for (MethodDescriptor descr : info.getMethodDescriptors()) {
+            for (final MethodDescriptor descr : info.getMethodDescriptors()) {
                 if (descr.getName().equals(this.property)
                     && (descr.getMethod().getParameterTypes().length == 0)) {
                     found = descr.getMethod();
@@ -120,11 +120,11 @@ public final class GetterOf implements Proxy<Object> {
                 this.find(Introspector.getBeanInfo(this.source.getClass()));
             method.setAccessible(true);
             return method.invoke(this.source);
-        } catch (IntrospectionException ex) {
+        } catch (final IntrospectionException ex) {
             throw new IllegalArgumentException(ex);
-        } catch (InvocationTargetException ex) {
+        } catch (final InvocationTargetException ex) {
             throw new IllegalArgumentException(ex);
-        } catch (IllegalAccessException ex) {
+        } catch (final IllegalAccessException ex) {
             throw new IllegalArgumentException(ex);
         }
     }

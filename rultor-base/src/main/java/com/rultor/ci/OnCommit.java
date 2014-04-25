@@ -98,7 +98,7 @@ public final class OnCommit implements Instance {
         ignore = IOException.class
     )
     public void pulse() throws Exception {
-        for (Commit commit : Iterables.limit(this.branch.log(), 1)) {
+        for (final Commit commit : Iterables.limit(this.branch.log(), 1)) {
             this.build(commit);
         }
     }

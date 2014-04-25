@@ -62,9 +62,9 @@ public final class Echo implements Billboard {
                     new Radar().snapshot().xml().toString()
                 )
             );
-        } catch (SyntaxException ex) {
+        } catch (final SyntaxException ex) {
             throw new IOException(ex);
-        } catch (XemblyException ex) {
+        } catch (final XemblyException ex) {
             throw new IOException(ex);
         }
     }

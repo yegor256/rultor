@@ -114,7 +114,7 @@ public final class RulesRs extends BaseRs {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public String resave() {
         final StringBuilder text = new StringBuilder();
-        for (Rule rule : this.user().rules()) {
+        for (final Rule rule : this.user().rules()) {
             final String name = rule.name();
             text.append(name).append(": ");
             try {
@@ -129,7 +129,7 @@ public final class RulesRs extends BaseRs {
                     )
                 );
                 text.append("OK");
-            } catch (SpecException ex) {
+            } catch (final SpecException ex) {
                 text.append('\n').append(Exceptions.stacktrace(ex));
             }
             text.append("\n\n");

@@ -80,9 +80,9 @@ public final class GithubComment implements Billboard {
         final Tags tags;
         try {
             tags = new Tags.Simple(new Radar().snapshot().tags());
-        } catch (SyntaxException ex) {
+        } catch (final SyntaxException ex) {
             throw new IOException(ex);
-        } catch (XemblyException ex) {
+        } catch (final XemblyException ex) {
             throw new IOException(ex);
         }
         // @checkstyle MultipleStringLiterals (10 lines)

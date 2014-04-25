@@ -28,10 +28,11 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*globals $: false, moment: false, markdown: false */
+/*globals $: false, moment: false, markdown: false, document: false */
 
 var RULTOR = {
-    format: function($block) {
+    format: function ($block) {
+        "use strict";
         $block.find('span.timeago').each(
             function (span) {
                 var iso = $(this).text();
@@ -43,20 +44,24 @@ var RULTOR = {
         );
         $block.find('span.markdown').each(
             function (span) {
-                $(this).html(markdown.toHTML($(this).text()).replace(/<\/?p *>/g,''));
+                $(this).html(
+                    markdown.toHTML($(this).text()).replace(/<\/?p *>/g, '')
+                );
             }
         );
     }
 };
 
 $(document).ready(
-    function() {
+    function () {
+        "use strict";
         RULTOR.format($('body'));
     }
 );
 
 $(document).keyup(
-    function(event) {
+    function (event) {
+        "use strict";
         if (event.keyCode === 27) {
             $('.overlay').hide();
             $('.menu').hide();

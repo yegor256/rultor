@@ -171,10 +171,10 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
                 try {
                     bytes = this.getLayout().format(event)
                         .getBytes(CharEncoding.UTF_8);
-                } catch (UnsupportedEncodingException ex) {
+                } catch (final UnsupportedEncodingException ex) {
                     throw new IllegalStateException(ex);
                 }
-                for (byte data : bytes) {
+                for (final byte data : bytes) {
                     buffer.write(data);
                 }
             }
@@ -188,7 +188,8 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
             .append('\n')
             .append(this.groups.size())
             .append(" running thread group(s):\n");
-        for (Map.Entry<ThreadGroup, String> entry : this.groups.entrySet()) {
+        for (final Map.Entry<ThreadGroup, String> entry
+            : this.groups.entrySet()) {
             text.append(entry.getKey())
                 .append(": ")
                 .append(entry.getValue().substring(0, Tv.FIVE))
@@ -211,7 +212,7 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
         while (buffer.isEmpty()) {
             try {
                 TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException ex) {
+            } catch (final InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 throw new IllegalStateException(ex);
             }

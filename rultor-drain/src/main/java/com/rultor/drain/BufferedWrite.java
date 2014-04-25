@@ -219,14 +219,14 @@ public final class BufferedWrite implements Drain, Closeable {
          * @param force Flush in any case
          */
         public void flush(final boolean force) {
-            for (BufferedWrite client : BufferedWrite.TUNNELS.keySet()) {
+            for (final BufferedWrite client : BufferedWrite.TUNNELS.keySet()) {
                 try {
                     synchronized (client.work) {
                         if (BufferedWrite.TUNNELS.get(client).flush(force)) {
                             BufferedWrite.TUNNELS.remove(client);
                         }
                     }
-                } catch (IOException ex) {
+                } catch (final IOException ex) {
                     Logger.warn(this, "#run(): %s", ex);
                     BufferedWrite.TUNNELS.remove(client);
                 }

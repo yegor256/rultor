@@ -82,7 +82,7 @@ final class Chain implements Variable<List<Object>> {
         throws SpecException {
         final List<Object> objects =
             new ArrayList<Object>(this.values.size());
-        for (Variable<?> var : this.values) {
+        for (final Variable<?> var : this.values) {
             objects.add(var.instantiate(users, args));
         }
         return objects;

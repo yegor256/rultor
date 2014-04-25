@@ -65,7 +65,7 @@ public final class WhiteList implements ACL {
     public WhiteList(@NotNull(message = "list of friends can't be NULL")
         final Collection<String> urns) {
         final Collection<URN> list = new ArrayList<URN>(urns.size());
-        for (String urn : urns) {
+        for (final String urn : urns) {
             list.add(URN.create(urn));
         }
         this.friends = new Array<URN>(list);
@@ -74,7 +74,7 @@ public final class WhiteList implements ACL {
     @Override
     public boolean canView(final URN urn) {
         boolean allowed = false;
-        for (URN friend : this.friends) {
+        for (final URN friend : this.friends) {
             if (friend.equals(urn)) {
                 allowed = true;
                 break;

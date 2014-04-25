@@ -89,7 +89,7 @@ final class PgAccount implements Account {
                     .set(this.owner)
                     .select(new SingleHandler<Long>(Long.class))
             );
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -110,7 +110,7 @@ final class PgAccount implements Account {
                 .set(amount.points())
                 .set(details)
                 .execute();
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -132,7 +132,7 @@ final class PgAccount implements Account {
                 .set(code)
                 .execute();
             this.fund(amount, String.format("coupon %s redeemed", code));
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             throw new InvalidCouponException(ex);
         }
     }

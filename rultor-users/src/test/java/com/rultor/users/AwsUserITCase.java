@@ -132,7 +132,7 @@ public final class AwsUserITCase {
             this.region, Mockito.mock(SQSClient.class), urn
         );
         MatcherAssert.assertThat(user.urn(), Matchers.equalTo(urn));
-        for (Rule rule : user.rules()) {
+        for (final Rule rule : user.rules()) {
             user.rules().remove(rule.name());
         }
         final String name = "simple-rule";

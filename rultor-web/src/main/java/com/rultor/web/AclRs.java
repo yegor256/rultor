@@ -125,7 +125,7 @@ public final class AclRs extends BaseRs {
                     new Coordinates.None(), Collection.class
                 )
             );
-        } catch (SpecException ex) {
+        } catch (final SpecException ex) {
             return this.head()
                 .append(FlashInset.bundle(Level.SEVERE, Exceptions.message(ex)))
                 .append(
@@ -162,7 +162,7 @@ public final class AclRs extends BaseRs {
         final Stand stand;
         try {
             stand = this.users().stand(this.name);
-        } catch (NoSuchElementException ex) {
+        } catch (final NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
         if (!stand.owner().equals(this.user().urn())) {

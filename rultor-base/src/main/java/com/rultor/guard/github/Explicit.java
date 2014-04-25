@@ -103,7 +103,7 @@ public final class Explicit implements Approval {
         final Pattern ptn = Pattern.compile(
             this.regex, Pattern.DOTALL | Pattern.MULTILINE
         );
-        for (Comment comment : comments) {
+        for (final Comment comment : comments) {
             if (latest.date().compareTo(comment.getUpdatedAt()) > 0) {
                 continue;
             }
@@ -170,7 +170,7 @@ public final class Explicit implements Approval {
         final GitHubClient client = github.client();
         final PullRequestService psvc = new PullRequestService(client);
         Time latest = new Time(0);
-        for (RepositoryCommit commit
+        for (final RepositoryCommit commit
             : psvc.getCommits(repo, request.getNumber())) {
             final Time time = new Time(
                 commit.getCommit().getCommitter().getDate()

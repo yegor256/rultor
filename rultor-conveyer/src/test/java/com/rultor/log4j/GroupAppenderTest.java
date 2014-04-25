@@ -160,7 +160,7 @@ public final class GroupAppenderTest {
                         text,
                         new IllegalArgumentException()
                     );
-                    for (GroupAppender app : appenders) {
+                    for (final GroupAppender app : appenders) {
                         app.append(event);
                         app.run();
                     }
@@ -192,12 +192,12 @@ public final class GroupAppenderTest {
             svc.submit(runnable);
         }
         MatcherAssert.assertThat(
-            ready.await(1, TimeUnit.SECONDS),
+            ready.await(1L, TimeUnit.SECONDS),
             Matchers.is(true)
         );
         start.countDown();
         MatcherAssert.assertThat(
-            done.await(1, TimeUnit.SECONDS),
+            done.await(1L, TimeUnit.SECONDS),
             Matchers.is(true)
         );
     }

@@ -112,7 +112,7 @@ final class HttpThread {
                 }
                 IOUtils.closeQuietly(output);
             }
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             Logger.warn(this, "failed to dispatch %s: %s", socket, ex);
         } finally {
             IOUtils.closeQuietly(socket);

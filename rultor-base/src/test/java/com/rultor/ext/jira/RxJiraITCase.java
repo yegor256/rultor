@@ -69,7 +69,7 @@ public final class RxJiraITCase {
             issues,
             Matchers.<JiraIssue>iterableWithSize(1)
         );
-        for (JiraIssue issue : issues) {
+        for (final JiraIssue issue : issues) {
             MatcherAssert.assertThat(
                 issue.key(),
                 Matchers.equalTo(RxJiraITCase.KEY)
@@ -78,7 +78,7 @@ public final class RxJiraITCase {
                 issue.comments(),
                 Matchers.not(Matchers.emptyIterable())
             );
-            for (JiraComment comment : issue.comments()) {
+            for (final JiraComment comment : issue.comments()) {
                 MatcherAssert.assertThat(
                     comment.body(),
                     Matchers.notNullValue()

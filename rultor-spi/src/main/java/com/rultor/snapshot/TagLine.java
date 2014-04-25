@@ -148,7 +148,7 @@ public final class TagLine {
             .add("markdown").set(this.mdwn).up()
             .add("level").set(this.lvl.toString()).up()
             .add("attributes");
-        for (Map.Entry<String, String> entry : this.attrs.entrySet()) {
+        for (final Map.Entry<String, String> entry : this.attrs.entrySet()) {
             dirs.add("attribute")
                 .add("name").set(entry.getKey()).up()
                 .add("value").set(entry.getValue()).up().up();

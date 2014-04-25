@@ -238,7 +238,7 @@ public interface Spec {
                 );
                 try {
                     object.toString();
-                } catch (SecurityException ex) {
+                } catch (final SecurityException ex) {
                     throw new SpecException(ex);
                 }
                 if (!type.isAssignableFrom(object.getClass())) {

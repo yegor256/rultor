@@ -108,7 +108,7 @@ public final class HttpServer implements Closeable {
                 public void run() {
                     try {
                         thread.dispatch();
-                    } catch (InterruptedException ex) {
+                    } catch (final InterruptedException ex) {
                         Thread.currentThread().interrupt();
                     }
                 }
@@ -118,7 +118,7 @@ public final class HttpServer implements Closeable {
         for (int idx = 0; idx < HttpServer.THREADS; ++idx) {
             this.backend.scheduleWithFixedDelay(
                 runnable,
-                TimeUnit.SECONDS.toNanos(Tv.FIVE), 1, TimeUnit.NANOSECONDS
+                TimeUnit.SECONDS.toNanos(Tv.FIVE), 1L, TimeUnit.NANOSECONDS
             );
         }
         Logger.info(
@@ -138,7 +138,7 @@ public final class HttpServer implements Closeable {
                     public void run() {
                         try {
                             HttpServer.this.process();
-                        } catch (InterruptedException ex) {
+                        } catch (final InterruptedException ex) {
                             Thread.currentThread().interrupt();
                         }
                     }
@@ -164,17 +164,17 @@ public final class HttpServer implements Closeable {
         Socket socket;
         try {
             socket = this.server.accept();
-        } catch (java.io.IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
         try {
             final boolean consumed = this.sockets
-                .offer(socket, 1, TimeUnit.SECONDS);
+                .offer(socket, 1L, TimeUnit.SECONDS);
             if (!consumed) {
                 socket.close();
                 throw new IOException("too many sockets");
             }
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -186,18 +186,18 @@ public final class HttpServer implements Closeable {
     private void shutdown(final ScheduledExecutorService service) {
         service.shutdown();
         try {
-            if (service.awaitTermination(1, TimeUnit.SECONDS)) {
+            if (service.awaitTermination(1L, TimeUnit.SECONDS)) {
                 Logger.info(this, "#shutdown(): succeeded");
             } else {
                 Logger.warn(this, "#shutdown(): failed");
                 service.shutdownNow();
-                if (service.awaitTermination(1, TimeUnit.SECONDS)) {
+                if (service.awaitTermination(1L, TimeUnit.SECONDS)) {
                     Logger.info(this, "#shutdown(): shutdownNow() succeeded");
                 } else {
                     Logger.error(this, "#shutdown(): failed to stop threads");
                 }
             }
-        } catch (InterruptedException ex) {
+        } catch (final InterruptedException ex) {
             service.shutdownNow();
             Thread.currentThread().interrupt();
         }

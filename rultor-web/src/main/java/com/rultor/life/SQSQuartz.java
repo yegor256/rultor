@@ -119,7 +119,7 @@ public final class SQSQuartz implements Runnable, Closeable {
         while (time.millis() > System.currentTimeMillis()) {
             try {
                 TimeUnit.SECONDS.sleep(Tv.FIVE);
-            } catch (InterruptedException ex) {
+            } catch (final InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 throw new IllegalStateException(ex);
             }
@@ -158,7 +158,7 @@ public final class SQSQuartz implements Runnable, Closeable {
                     .withDelaySeconds(0)
                     .withMessageBody(next.toString())
             );
-            for (Message msg : result.getMessages()) {
+            for (final Message msg : result.getMessages()) {
                 aws.deleteMessage(
                     new DeleteMessageRequest()
                         .withQueueUrl(this.client.url())
@@ -177,8 +177,8 @@ public final class SQSQuartz implements Runnable, Closeable {
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private void publish(final Time time) {
-        for (User user : this.users) {
-            for (Rule rule : user.rules()) {
+        for (final User user : this.users) {
+            for (final Rule rule : user.rules()) {
                 this.queue.push(
                     new Coordinates.Simple(user.urn(), rule.name(), time)
                 );

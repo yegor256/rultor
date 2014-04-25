@@ -38,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTPClient;
@@ -86,7 +87,7 @@ final class FtpBatch {
      * @param prt FTP port
      * @checkstyle ParameterNumber (4 lines)
      */
-    protected FtpBatch(final String hst, final String user, final String pwd,
+    FtpBatch(final String hst, final String user, final String pwd,
         final int prt) {
         this.host = hst;
         this.login = user;
@@ -109,7 +110,10 @@ final class FtpBatch {
         ftp.setRemoteVerificationEnabled(false);
         ftp.addProtocolCommandListener(
             new PrintCommandListener(
-                new PrintStream(Logger.stream(Level.FINE, this))
+                new PrintStream(
+                    Logger.stream(Level.FINE, this),
+                    true, CharEncoding.UTF_8
+                )
             )
         );
         ftp.connect(this.host, this.port);
@@ -173,7 +177,7 @@ final class FtpBatch {
      */
     private void chdir(final FTPClient ftp, final String dir)
         throws IOException {
-        for (String part : StringUtils.split(dir, '/')) {
+        for (final String part : StringUtils.split(dir, '/')) {
             if (!this.exists(ftp, part) && !ftp.makeDirectory(part)) {
                 throw new IOException(
                     String.format(
@@ -216,7 +220,7 @@ final class FtpBatch {
                 )
             );
         }
-        for (FTPFile file : files) {
+        for (final FTPFile file : files) {
             if (file.getName().equals(dir)) {
                 exists = true;
                 break;

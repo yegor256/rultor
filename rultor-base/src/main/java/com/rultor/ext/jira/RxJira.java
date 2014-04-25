@@ -31,9 +31,9 @@ package com.rultor.ext.jira;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.test.JdkRequest;
-import com.rexsl.test.JsonResponse;
-import com.rexsl.test.RestResponse;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.JsonResponse;
+import com.jcabi.http.response.RestResponse;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -95,11 +95,11 @@ public final class RxJira implements Jira {
                 .json()
                 .readObject()
                 .getJsonArray("issues");
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
         final Collection<JiraIssue> lst = new ArrayList<JiraIssue>(json.size());
-        for (JsonValue obj : json) {
+        for (final JsonValue obj : json) {
             lst.add(
                 new RxJiraIssue(
                     UriBuilder.fromUri(

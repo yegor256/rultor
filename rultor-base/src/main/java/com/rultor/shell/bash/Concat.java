@@ -93,7 +93,7 @@ public final class Concat implements Proxy<String> {
         @NotNull(message = "list of commands can't be NULL")
         final Collection<String> cmds) {
         final Collection<Vext> vexts = new ArrayList<Vext>(cmds.size());
-        for (String cmd : cmds) {
+        for (final String cmd : cmds) {
             vexts.add(new Vext(cmd));
         }
         this.commands = new Array<Vext>(vexts);
@@ -124,7 +124,7 @@ public final class Concat implements Proxy<String> {
             .append("ESCAPE=")
             .append(Terminal.quotate(Terminal.escape(Concat.escape())))
             .append(';').append('\n');
-        for (Vext cmd : this.commands) {
+        for (final Vext cmd : this.commands) {
             script.append(this.script(cmd));
         }
         return new Vext(script.toString());
@@ -289,7 +289,7 @@ public final class Concat implements Proxy<String> {
      */
     private static String escape(final String text) {
         final StringBuilder out = new StringBuilder();
-        for (byte chr : text.getBytes(Charsets.UTF_8)) {
+        for (final byte chr : text.getBytes(Charsets.UTF_8)) {
             out.append("\\x").append(String.format("%X", chr));
         }
         return out.toString();
@@ -324,7 +324,7 @@ public final class Concat implements Proxy<String> {
                 .put(">", "&gt;")
                 .build();
         final StringBuilder script = new StringBuilder().append("cat");
-        for (Map.Entry<String, String> pair : pairs.entrySet()) {
+        for (final Map.Entry<String, String> pair : pairs.entrySet()) {
             script.append(" | LANG=C sed -e 's/")
                 .append(pair.getKey())
                 .append("/\\")

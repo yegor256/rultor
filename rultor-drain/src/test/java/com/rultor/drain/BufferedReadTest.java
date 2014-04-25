@@ -103,7 +103,7 @@ public final class BufferedReadTest {
                         return IOUtils.toInputStream(
                             content, CharEncoding.UTF_8
                         );
-                    } catch (IOException ex) {
+                    } catch (final IOException ex) {
                         throw new IllegalStateException(ex);
                     }
                 }

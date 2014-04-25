@@ -138,7 +138,7 @@ public final class XSLT {
         final Document dom;
         try {
             dom = XSLT.DFACTORY.newDocumentBuilder().newDocument();
-        } catch (ParserConfigurationException ex) {
+        } catch (final ParserConfigurationException ex) {
             throw new IllegalStateException(ex);
         }
         trans.transform(this.source, new DOMResult(dom));
@@ -163,7 +163,7 @@ public final class XSLT {
                 )
             );
             return output.toString(CharEncoding.UTF_8);
-        } catch (UnsupportedEncodingException ex) {
+        } catch (final UnsupportedEncodingException ex) {
             throw new TransformerException(ex);
         }
     }

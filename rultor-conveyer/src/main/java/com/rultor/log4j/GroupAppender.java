@@ -180,7 +180,7 @@ final class GroupAppender extends AppenderSkeleton
     public void flush(final Collection<String> lns) {
         try {
             this.drain.append(lns);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalArgumentException(ex);
         }
     }

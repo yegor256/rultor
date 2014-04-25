@@ -27,60 +27,8 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.aws;
+package com.rultor.web.rexsl.setup
 
-import java.io.IOException;
-import java.net.URL;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import com.jcabi.manifests.Manifests
 
-/**
- * Test case for {@link EC2Client}.
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- */
-public final class EC2ClientTest {
-
-    /**
-     * Assume we're online.
-     */
-    @Before
-    public void weAreOnline() {
-        try {
-            new URL("http://www.google.com").getContent();
-        } catch (final IOException ex) {
-            Assume.assumeTrue(false);
-        }
-    }
-
-    /**
-     * EC2Client.Simple can make an AWS client.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void makesAwsClient() throws Exception {
-        MatcherAssert.assertThat(
-            new EC2Client.Simple("key", "secret").get(),
-            Matchers.notNullValue()
-        );
-    }
-
-    /**
-     * EC2Client.Regional can make an AWS client.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void makesRegionalAwsClient() throws Exception {
-        MatcherAssert.assertThat(
-            new EC2Client.Regional(
-                "eu-west-1",
-                new EC2Client.Simple("AAA", "FFF")
-            ).get(),
-            Matchers.notNullValue()
-        );
-    }
-
-}
+Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))

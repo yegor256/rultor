@@ -87,7 +87,7 @@ public final class OnTag implements Instance {
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public void pulse() throws Exception {
-        for (String tag : this.scm.branches()) {
+        for (final String tag : this.scm.branches()) {
             this.build(tag);
         }
     }

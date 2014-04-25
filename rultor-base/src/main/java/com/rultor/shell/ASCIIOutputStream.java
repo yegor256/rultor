@@ -83,7 +83,7 @@ public final class ASCIIOutputStream extends OutputStream {
                 }
             }
         } else if (chr == '\011') {
-            final int lag = Tv.EIGHT - (this.line.length() % Tv.EIGHT);
+            final int lag = Tv.EIGHT - this.line.length() % Tv.EIGHT;
             for (int space = 0; space < lag; ++space) {
                 this.line.append(' ');
             }

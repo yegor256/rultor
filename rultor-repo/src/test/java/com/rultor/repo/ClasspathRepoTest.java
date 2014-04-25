@@ -77,7 +77,7 @@ public final class ClasspathRepoTest {
         final User user = Mockito.mock(User.class);
         final URN urn = new URN("urn:facebook:1");
         Mockito.doReturn(urn).when(user).urn();
-        for (String text : texts) {
+        for (final String text : texts) {
             MatcherAssert.assertThat(
                 repo.make(user, new Spec.Simple(text)).asText(),
                 Matchers.equalTo(
@@ -102,7 +102,7 @@ public final class ClasspathRepoTest {
         final User user = Mockito.mock(User.class);
         final URN urn = new URN("urn:facebook:2");
         Mockito.doReturn(urn).when(user).urn();
-        for (String text : texts) {
+        for (final String text : texts) {
             final Spec spec = new Spec.Simple(text);
             final Object obj = repo.make(user, spec);
             MatcherAssert.assertThat(obj, Matchers.notNullValue());

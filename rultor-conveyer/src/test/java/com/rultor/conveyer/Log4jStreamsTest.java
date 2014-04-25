@@ -70,7 +70,7 @@ public final class Log4jStreamsTest {
                             while (true) {
                                 baos.write(input.read());
                             }
-                        } catch (IOException ex) {
+                        } catch (final IOException ex) {
                             throw new IllegalStateException(ex);
                         }
                     }

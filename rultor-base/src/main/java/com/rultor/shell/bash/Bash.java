@@ -147,11 +147,11 @@ public final class Bash implements Batch {
      * @return The same shell, but with badges
      */
     private Shell badged(final Shell shell, final Map<String, String> args) {
-        for (Map.Entry<String, String> entry : args.entrySet()) {
+        for (final Map.Entry<String, String> entry : args.entrySet()) {
             if (!URN.isValid(entry.getKey())) {
                 continue;
             }
-            shell.badge(entry.getKey(), entry.getValue().toString());
+            shell.badge(entry.getKey(), entry.getValue());
         }
         return shell;
     }

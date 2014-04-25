@@ -150,7 +150,7 @@ public final class DomainNotepad implements Notepad {
             ).withConsistentRead(true)
         );
         final Collection<String> texts = new LinkedList<String>();
-        for (Item item : items) {
+        for (final Item item : items) {
             final String text = this.name(item.get(DomainNotepad.ATTR_TEXT));
             if (item.name().equals(text)) {
                 texts.add(item.get(DomainNotepad.ATTR_TEXT));
@@ -198,7 +198,7 @@ public final class DomainNotepad implements Notepad {
 
     @Override
     public boolean addAll(final Collection<? extends String> list) {
-        for (String line : list) {
+        for (final String line : list) {
             this.add(line);
         }
         return true;
@@ -206,7 +206,7 @@ public final class DomainNotepad implements Notepad {
 
     @Override
     public boolean removeAll(final Collection<?> list) {
-        for (Object line : list) {
+        for (final Object line : list) {
             this.remove(line);
         }
         return true;
@@ -219,7 +219,7 @@ public final class DomainNotepad implements Notepad {
 
     @Override
     public void clear() {
-        for (String line : this) {
+        for (final String line : this) {
             this.remove(line);
         }
     }

@@ -142,7 +142,7 @@ public final class RuleRs extends BaseRs {
                     this.coordinates(this.name), Object.class
                 )
             );
-        } catch (SpecException ex) {
+        } catch (final SpecException ex) {
             return this.head()
                 .append(FlashInset.bundle(Level.SEVERE, Exceptions.message(ex)))
                 .append(
@@ -178,7 +178,7 @@ public final class RuleRs extends BaseRs {
     private Rule rule() {
         try {
             return this.user().rules().get(this.name);
-        } catch (NoSuchElementException ex) {
+        } catch (final NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
     }

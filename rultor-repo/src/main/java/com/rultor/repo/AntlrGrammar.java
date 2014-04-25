@@ -75,9 +75,9 @@ final class AntlrGrammar implements Grammar {
         final Variable<?> var;
         try {
             var = parser.spec();
-        } catch (RecognitionException ex) {
+        } catch (final RecognitionException ex) {
             throw new SpecException(ex);
-        } catch (IllegalArgumentException ex) {
+        } catch (final IllegalArgumentException ex) {
             throw new SpecException(ex);
         }
         return var;

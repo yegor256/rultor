@@ -212,7 +212,7 @@ public final class BufferedRead implements Drain, Closeable {
     private static final class Cleaner implements Runnable {
         @Override
         public void run() {
-            for (BufferedRead client : BufferedRead.BUFFERS.keySet()) {
+            for (final BufferedRead client : BufferedRead.BUFFERS.keySet()) {
                 if (BufferedRead.BUFFERS.get(client).expired()) {
                     BufferedRead.BUFFERS.remove(client);
                 }

@@ -31,10 +31,10 @@ package com.rultor.client;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
+import com.jcabi.http.response.XmlResponse;
 import com.jcabi.xml.XML;
-import com.rexsl.test.JdkRequest;
-import com.rexsl.test.RestResponse;
-import com.rexsl.test.XmlResponse;
 import com.rultor.spi.Column;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Sheet;
@@ -101,7 +101,7 @@ final class RestSheet implements Sheet {
                 .as(XmlResponse.class)
                 .xml()
                 .nodes("/page/columns/column");
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
         final List<Column> columns = new ArrayList<Column>(nodes.size());

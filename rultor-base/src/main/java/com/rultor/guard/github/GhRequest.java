@@ -39,6 +39,7 @@ import com.rultor.snapshot.Step;
 import com.rultor.snapshot.TagLine;
 import com.rultor.tools.Exceptions;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -94,7 +95,7 @@ final class GhRequest implements MergeRequest {
      * @param rep Repository name
      * @param req Pull request from Github
      */
-    protected GhRequest(final Github ghub, final Github.Repo rep,
+    GhRequest(final Github ghub, final Github.Repo rep,
         final PullRequest req) {
         this.github = ghub;
         this.repository = rep;
@@ -128,12 +129,17 @@ final class GhRequest implements MergeRequest {
     public void started() throws IOException {
         final GitHubClient client = this.github.client();
         final IssueService issues = new IssueService(client);
-        issues.createComment(
-            this.repository, this.issue,
-            new Radar().render(
-                this.getClass().getResourceAsStream("github-started.xsl")
-            )
+        final InputStream xsl = this.getClass().getResourceAsStream(
+            "github-started.xsl"
         );
+        try {
+            issues.createComment(
+                this.repository, this.issue,
+                new Radar().render(xsl)
+            );
+        } finally {
+            xsl.close();
+        }
     }
 
     @Override
@@ -141,15 +147,20 @@ final class GhRequest implements MergeRequest {
     public void accept() throws IOException {
         final GitHubClient client = this.github.client();
         final IssueService issues = new IssueService(client);
-        issues.createComment(
-            this.repository, this.issue,
-            new Radar().render(
-                this.getClass().getResourceAsStream("github-accept.xsl")
-            )
+        final InputStream xsl = this.getClass().getResourceAsStream(
+            "github-accept.xsl"
         );
         try {
+            issues.createComment(
+                this.repository, this.issue,
+                new Radar().render(xsl)
+            );
+        } finally {
+            xsl.close();
+        }
+        try {
             this.merge();
-        } catch (RequestException ex) {
+        } catch (final RequestException ex) {
             issues.createComment(
                 this.repository, this.issue,
                 String.format(
@@ -166,12 +177,17 @@ final class GhRequest implements MergeRequest {
     public void reject() throws IOException {
         final GitHubClient client = this.github.client();
         final IssueService svc = new IssueService(client);
-        svc.createComment(
-            this.repository, this.issue,
-            new Radar().render(
-                this.getClass().getResourceAsStream("github-reject.xsl")
-            )
+        final InputStream xsl = this.getClass().getResourceAsStream(
+            "github-reject.xsl"
         );
+        try {
+            svc.createComment(
+                this.repository, this.issue,
+                new Radar().render(xsl)
+            );
+        } finally {
+            xsl.close();
+        }
     }
 
     @Override

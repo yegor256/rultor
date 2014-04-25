@@ -254,7 +254,7 @@ public final class AccountRs extends BaseRs {
                 String.format("Coupon `%s` successfully used", code),
                 Level.INFO
             );
-        } catch (InvalidCouponException ex) {
+        } catch (final InvalidCouponException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getRequestUri(),
                 String.format(
@@ -371,13 +371,13 @@ public final class AccountRs extends BaseRs {
             .queryParam(AccountRs.QUERY_SINCE, this.since)
             .queryParam(AccountRs.QUERY_START, this.start)
             .queryParam(AccountRs.QUERY_FINISH, this.finish);
-        for (String grp : this.groups) {
+        for (final String grp : this.groups) {
             builder.queryParam(AccountRs.QUERY_GROUP, grp);
         }
-        for (String col : this.asc) {
+        for (final String col : this.asc) {
             builder.queryParam(AccountRs.QUERY_ASC, col);
         }
-        for (String col : this.desc) {
+        for (final String col : this.desc) {
             builder.queryParam(AccountRs.QUERY_DESC, col);
         }
         return builder;
@@ -390,13 +390,13 @@ public final class AccountRs extends BaseRs {
     private Sheet sheet() {
         Sheet sheet = this.user().account().sheet()
             .between(this.start, this.finish);
-        for (String grp : this.groups) {
+        for (final String grp : this.groups) {
             sheet = sheet.groupBy(grp);
         }
-        for (String col : this.asc) {
+        for (final String col : this.asc) {
             sheet = sheet.orderBy(col, true);
         }
-        for (String col : this.desc) {
+        for (final String col : this.desc) {
             sheet = sheet.orderBy(col, false);
         }
         return sheet;

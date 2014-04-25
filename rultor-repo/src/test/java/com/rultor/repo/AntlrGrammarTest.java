@@ -61,7 +61,7 @@ public final class AntlrGrammarTest {
             "java.lang.String(\n  \"\"\"\n  \"hello\"\n  \"\"\"\n)",
         };
         final URN urn = new URN("urn:facebook:1");
-        for (String text : texts) {
+        for (final String text : texts) {
             MatcherAssert.assertThat(
                 grammar.parse(urn, text).asText(),
                 Matchers.describedAs(text, Matchers.equalTo(text))

@@ -31,10 +31,10 @@ package com.rultor.conveyer;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
-import com.rexsl.test.JdkRequest;
-import com.rexsl.test.RestResponse;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import lombok.EqualsAndHashCode;
@@ -68,7 +68,7 @@ final class Version {
                     .as(RestResponse.class)
                     .assertStatus(HttpURLConnection.HTTP_OK)
                     .body();
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 throw new IllegalStateException(ex);
             }
             if (mine.equals(base) || !base.matches("[a-f0-9]+")) {
@@ -82,7 +82,7 @@ final class Version {
                     base
                 );
             }
-        } catch (AssertionError ex) {
+        } catch (final AssertionError ex) {
             Logger.warn(Main.class, "#same(): %s", ex);
             same = true;
         }

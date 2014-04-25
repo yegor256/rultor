@@ -183,7 +183,7 @@ public final class SQSQueue implements Queue {
                 final Message msg = result.getMessages().get(0);
                 try {
                     work = SQSQueue.unserialize(msg.getBody());
-                } catch (NormJson.JsonException ex) {
+                } catch (final NormJson.JsonException ex) {
                     Exceptions.warn(this, ex);
                 } finally {
                     aws.deleteMessage(

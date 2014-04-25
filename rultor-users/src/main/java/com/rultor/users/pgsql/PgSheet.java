@@ -32,6 +32,7 @@ package com.rultor.users.pgsql;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.immutable.ArrayComparator;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.immutable.ArraySortedSet;
 import com.jcabi.jdbc.JdbcSession;
@@ -134,7 +135,7 @@ final class PgSheet implements Sheet {
      * @param clnt Client
      * @param urn URN of the owner
      */
-    protected PgSheet(final PgClient clnt, final URN urn) {
+    PgSheet(final PgClient clnt, final URN urn) {
         this(
             clnt, urn,
             new ArrayMap<String, Boolean>(), new ArrayList<String>(0),
@@ -156,7 +157,7 @@ final class PgSheet implements Sheet {
      * @param where Extra WHERE clause
      * @checkstyle ParameterNumber (5 lines)
      */
-    protected PgSheet(final PgClient clnt, final URN urn,
+    PgSheet(final PgClient clnt, final URN urn,
         final Map<String, Boolean> ords, final Collection<String> grps,
         final Time left, final Time right, final int first,
         final String where) {
@@ -164,7 +165,7 @@ final class PgSheet implements Sheet {
         this.owner = urn;
         this.orders = new ArrayMap<String, Boolean>(ords);
         this.groups = new ArraySortedSet<String>(
-            grps, new ArraySortedSet.Comparator.Default<String>()
+            grps, new ArrayComparator.Default<String>()
         );
         this.clause = where;
         this.start = left;
@@ -228,7 +229,7 @@ final class PgSheet implements Sheet {
                     }
                 )
                 .iterator();
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             throw new IllegalStateException(sql, ex);
         }
     }
@@ -296,7 +297,7 @@ final class PgSheet implements Sheet {
      */
     private String select() {
         final Collection<String> names = new LinkedList<String>();
-        for (Column col : this.columns()) {
+        for (final Column col : this.columns()) {
             if (this.groups.isEmpty() || this.groups.contains(col.title())) {
                 names.add(col.title());
             } else {
@@ -362,7 +363,8 @@ final class PgSheet implements Sheet {
         if (!this.orders.isEmpty()) {
             stmt.append("\nORDER BY ");
             boolean first = true;
-            for (Map.Entry<String, Boolean> order : this.orders.entrySet()) {
+            for (final Map.Entry<String, Boolean> order
+                : this.orders.entrySet()) {
                 if (!first) {
                     stmt.append(PgSheet.COMMA);
                 }

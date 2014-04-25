@@ -29,9 +29,9 @@
  */
 package com.rultor.web.rexsl.scripts
 
-import com.rexsl.test.JdkRequest
-import com.rexsl.test.Request
-import com.rexsl.test.RestResponse
+import com.jcabi.http.Request
+import com.jcabi.http.response.RestResponse
+import com.jcabi.http.request.JdkRequest
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
 

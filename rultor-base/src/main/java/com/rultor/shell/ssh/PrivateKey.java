@@ -76,7 +76,7 @@ public final class PrivateKey {
         final PemObject pem;
         try {
             pem = new PemReader(new StringReader(this.text)).readPemObject();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalArgumentException(ex);
         }
         return String.format(

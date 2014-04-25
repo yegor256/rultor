@@ -187,7 +187,7 @@ public final class DirectoryDrain implements Drain {
                 )
             );
         }
-        for (FTPFile file : files) {
+        for (final FTPFile file : files) {
             if (!file.getName().matches("\\d{20}")) {
                 continue;
             }

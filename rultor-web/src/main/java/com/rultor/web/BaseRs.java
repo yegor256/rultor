@@ -60,7 +60,6 @@ import com.rultor.spi.Wallet;
 import com.rultor.tools.Dollars;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
-import java.io.IOException;
 import java.net.URI;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -99,7 +98,7 @@ public class BaseRs extends BaseResource {
      */
     private static final Provider TEST_PROVIDER = new Provider() {
         @Override
-        public Identity identity() throws IOException {
+        public Identity identity() {
             final Identity identity;
             if ("12345".equals(Manifests.read("Rultor-Revision"))) {
                 identity = new Identity.Simple(
@@ -348,7 +347,7 @@ public class BaseRs extends BaseResource {
                     )
                 )
             );
-        } catch (SpecException ex) {
+        } catch (final SpecException ex) {
             Exceptions.warn(this, ex);
             acl = new ACL() {
                 @Override

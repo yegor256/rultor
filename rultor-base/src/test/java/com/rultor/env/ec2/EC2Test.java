@@ -71,7 +71,7 @@ public final class EC2Test {
     public void weAreOnline() {
         try {
             new URL("http://www.google.com").getContent();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             Assume.assumeTrue(false);
         }
     }

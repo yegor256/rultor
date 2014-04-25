@@ -119,7 +119,7 @@ final class SimpleConveyer implements Closeable {
      * @throws IOException If fails
      * @checkstyle ParameterNumber (4 lines)
      */
-    protected SimpleConveyer(
+    SimpleConveyer(
         @NotNull(message = "queue can't be NULL") final Queue que,
         @NotNull(message = "repo can't be NULL") final Repo rep,
         @NotNull(message = "users can't be NULL") final Users usrs,
@@ -151,7 +151,7 @@ final class SimpleConveyer implements Closeable {
         for (int thread = 0; thread < this.total; ++thread) {
             this.svc.scheduleWithFixedDelay(
                 runnable,
-                TimeUnit.SECONDS.toMicros(1), 1, TimeUnit.MICROSECONDS
+                TimeUnit.SECONDS.toMicros(1L), 1L, TimeUnit.MICROSECONDS
             );
         }
         this.server.listen();
@@ -178,7 +178,7 @@ final class SimpleConveyer implements Closeable {
                     this, "waiting %[ms]s for threads termination", age
                 );
             }
-        } catch (InterruptedException ex) {
+        } catch (final InterruptedException ex) {
             Thread.currentThread().interrupt();
             throw new IOException(ex);
         }

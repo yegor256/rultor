@@ -117,7 +117,7 @@ public final class Snapshot {
         final Document dom;
         try {
             dom = new Xembler(this.directives).dom();
-        } catch (ImpossibleModificationException ex) {
+        } catch (final ImpossibleModificationException ex) {
             throw new XemblyException(ex);
         }
         final InputStream xsl = this.getClass().getResourceAsStream(
@@ -125,7 +125,7 @@ public final class Snapshot {
         );
         try {
             return new XMLDocument(new DOMSource(new XSLT(dom, xsl).dom()));
-        } catch (TransformerException ex) {
+        } catch (final TransformerException ex) {
             throw new XemblyException(ex);
         } finally {
             IOUtils.closeQuietly(xsl);

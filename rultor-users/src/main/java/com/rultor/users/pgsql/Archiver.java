@@ -84,7 +84,7 @@ public final class Archiver implements Runnable, Closeable {
             new JdbcSession(this.client.get())
                 .sql("VACUUM FULL")
                 .execute();
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             throw new IllegalStateException(ex);
         }
     }

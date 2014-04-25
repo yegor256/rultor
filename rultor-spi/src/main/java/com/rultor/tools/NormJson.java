@@ -84,7 +84,7 @@ public final class NormJson {
     public NormJson(final InputStream json) {
         try {
             this.schema = IOUtils.toString(json, CharEncoding.UTF_8);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalArgumentException(ex);
         }
     }
@@ -103,11 +103,11 @@ public final class NormJson {
             report = NormJson.FACTORY
                 .getJsonSchema(JsonLoader.fromString(this.schema))
                 .validate(JsonLoader.fromString(json));
-        } catch (ProcessingException ex) {
+        } catch (final ProcessingException ex) {
             throw new NormJson.JsonException(ex);
-        } catch (JsonParseException ex) {
+        } catch (final JsonParseException ex) {
             throw new NormJson.JsonException(ex);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalArgumentException(ex);
         }
         if (!report.isSuccess()) {
@@ -115,7 +115,7 @@ public final class NormJson {
         }
         try {
             return Json.createReader(new StringReader(json)).readObject();
-        } catch (javax.json.JsonException ex) {
+        } catch (final javax.json.JsonException ex) {
             throw new NormJson.JsonException(ex);
         }
     }

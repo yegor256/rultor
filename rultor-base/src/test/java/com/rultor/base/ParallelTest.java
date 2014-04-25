@@ -70,7 +70,7 @@ public final class ParallelTest {
                 @Override
                 public Void answer(final InvocationOnMock inv)
                     throws Exception {
-                    TimeUnit.SECONDS.sleep(1);
+                    TimeUnit.SECONDS.sleep(1L);
                     return null;
                 }
             }

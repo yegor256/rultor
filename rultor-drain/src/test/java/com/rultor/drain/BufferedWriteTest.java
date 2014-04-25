@@ -73,7 +73,7 @@ public final class BufferedWriteTest {
         final Drain drain = Mockito.mock(Drain.class);
         final BufferedWrite first = new BufferedWrite(
             new Coordinates.Simple(new URN("urn:facebook:8"), "test-99"),
-            2, drain
+            2L, drain
         );
         final BufferedWrite second = new BufferedWrite(
             new Coordinates.Simple(new URN("urn:facebook:9"), "test-88"),
@@ -114,7 +114,7 @@ public final class BufferedWriteTest {
             new Answer<Void>() {
                 @Override
                 public Void answer(final InvocationOnMock inv) {
-                    for (Object line
+                    for (final Object line
                         : Iterable.class.cast(inv.getArguments()[0])) {
                         final long number = count.getAndIncrement();
                         if (number != Long.parseLong(line.toString())) {
@@ -131,12 +131,12 @@ public final class BufferedWriteTest {
             }
         ).when(origin).append(Mockito.any(Iterable.class));
         final BufferedWrite drain = new BufferedWrite(
-            new Coordinates.Simple(new URN("urn:test:9"), "f"), 2, origin
+            new Coordinates.Simple(new URN("urn:test:9"), "f"), 2L, origin
         );
         final long total = TimeUnit.SECONDS.toMillis(Tv.FIVE);
         for (int idx = 0; idx < total; ++idx) {
             drain.append(Arrays.asList(String.format("%d", idx)));
-            TimeUnit.MILLISECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(1L);
         }
         drain.close();
         MatcherAssert.assertThat(count.get(), Matchers.equalTo(total));

@@ -87,7 +87,7 @@ public final class Prerequisites implements Shells {
     @Override
     public Shell acquire() throws IOException {
         final Shell shell = this.origin.acquire();
-        for (Map.Entry<String, Object> pair : this.map.entrySet()) {
+        for (final Map.Entry<String, Object> pair : this.map.entrySet()) {
             this.upload(
                 shell, pair.getKey(),
                 Prerequisites.toInputStream(pair.getValue())

@@ -212,6 +212,14 @@
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-http</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-immutable</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi</groupId>
             <artifactId>jcabi-manifests</artifactId>
         </dependency>
         <dependency>
@@ -253,6 +261,11 @@
             <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>batik-codec</artifactId>
             <version>1.7</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
             <scope>runtime</scope>
         </dependency>
     </dependencies>
@@ -488,6 +501,17 @@
             <id>qulice</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>com.qulice</groupId>
+                        <artifactId>qulice-maven-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>checkstyle:/src/test/resources/com/rultor/web/.*</exclude>
+                                <exclude>checkstyle:/src/main/webapp/.*</exclude>
+                                <exclude>findbugs:.*</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
                     <plugin>
                         <groupId>com.ning.maven.plugins</groupId>
                         <artifactId>maven-duplicate-finder-plugin</artifactId>

@@ -248,13 +248,13 @@ final class MongoStand implements Stand {
         final Collection<Tag> found = new LinkedList<Tag>();
         try {
             found.addAll(new Snapshot(after).tags());
-        } catch (XemblyException ex) {
+        } catch (final XemblyException ex) {
             assert ex != null;
-        } catch (SyntaxException ex) {
+        } catch (final SyntaxException ex) {
             assert ex != null;
         }
         final Collection<DBObject> tags = new LinkedList<DBObject>();
-        for (Tag tag : found) {
+        for (final Tag tag : found) {
             tags.add(new MongoTag(tag).asObject());
         }
         return tags;
@@ -268,7 +268,7 @@ final class MongoStand implements Stand {
     public static String decode(final String script) {
         final ConcurrentMap<Long, String> lines =
             new ConcurrentSkipListMap<Long, String>();
-        for (String line : script.split("\n+")) {
+        for (final String line : script.split("\n+")) {
             final String[] parts = line.split(" ", 2);
             lines.put(Long.parseLong(parts[0]), parts[1]);
         }
@@ -282,7 +282,7 @@ final class MongoStand implements Stand {
     private DBCollection collection() {
         try {
             return this.mongo.get().getCollection(MongoStand.TABLE);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

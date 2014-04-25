@@ -73,7 +73,7 @@ public final class CrontabTest {
             "@annually",
             "59 23 31 12 6",
         };
-        for (String text : texts) {
+        for (final String text : texts) {
             final Instance origin = Mockito.mock(Instance.class);
             final Crontab crontab = new Crontab(
                 new Coordinates.Simple(), text, origin

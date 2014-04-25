@@ -99,7 +99,7 @@ public interface ConcurrentNotepad extends Notepad {
                     }
                 );
             // @checkstyle IllegalCatch (1 line)
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 throw new IllegalStateException(ex);
             }
         }
