@@ -1,2 +1,2 @@
 language: java
-script: mvn clean install -Pqulice --batch-mode --errors
+script: mvn clean install -Pqulice --quiet --batch-mode --errors
