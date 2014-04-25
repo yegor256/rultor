@@ -36,14 +36,15 @@ import com.jcabi.immutable.ArrayComparator;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.immutable.ArraySortedSet;
 import com.jcabi.jdbc.JdbcSession;
+import com.jcabi.jdbc.Outcome;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Column;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Sheet;
 import com.rultor.tools.Time;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -200,8 +201,7 @@ final class PgSheet implements Sheet {
     }
 
     @Override
-    public Pageable<List<Object>, Integer> tail(final Integer head)
-        throws IOException {
+    public Pageable<List<Object>, Integer> tail(final Integer head) {
         return new PgSheet(
             this.client, this.owner, this.orders, this.groups,
             this.start, this.end, head, this.clause
@@ -215,10 +215,11 @@ final class PgSheet implements Sheet {
             return new JdbcSession(this.client.get())
                 .sql(sql)
                 .select(
-                    new JdbcSession.Handler<Collection<List<Object>>>() {
+                    new Outcome<Collection<List<Object>>>() {
                         @Override
                         public Collection<List<Object>> handle(
-                            final ResultSet rset) throws SQLException {
+                            final ResultSet rset, final Statement stmt)
+                            throws SQLException {
                             final Collection<List<Object>> rows =
                                 new LinkedList<List<Object>>();
                             while (rset.next()) {

@@ -34,7 +34,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.jdbc.JdbcSession;
-import com.jcabi.jdbc.SingleHandler;
+import com.jcabi.jdbc.SingleOutcome;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Account;
 import com.rultor.spi.InvalidCouponException;
@@ -74,7 +74,7 @@ final class PgAccount implements Account {
      * @param clnt Client
      * @param urn Owner of the account
      */
-    protected PgAccount(final PgClient clnt, final URN urn) {
+    PgAccount(final PgClient clnt, final URN urn) {
         this.client = clnt;
         this.owner = urn;
     }
@@ -87,7 +87,7 @@ final class PgAccount implements Account {
                 new JdbcSession(this.client.get())
                     .sql("SELECT balance(?)")
                     .set(this.owner)
-                    .select(new SingleHandler<Long>(Long.class))
+                    .select(new SingleOutcome<Long>(Long.class))
             );
         } catch (final SQLException ex) {
             throw new IllegalStateException(ex);
@@ -115,9 +115,6 @@ final class PgAccount implements Account {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void fund(@NotNull final String code) throws InvalidCouponException {
         try {
@@ -125,7 +122,7 @@ final class PgAccount implements Account {
                 new JdbcSession(this.client.get())
                     .sql("SELECT amount FROM coupon WHERE code=?")
                     .set(code)
-                    .select(new SingleHandler<Long>(Long.class))
+                    .select(new SingleOutcome<Long>(Long.class))
             );
             new JdbcSession(this.client.get())
                 .sql("DELETE FROM coupon WHERE code=?")

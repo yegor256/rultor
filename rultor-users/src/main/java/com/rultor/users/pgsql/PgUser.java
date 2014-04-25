@@ -67,7 +67,7 @@ final class PgUser implements User {
      * @param clnt Client
      * @param user User
      */
-    protected PgUser(final PgClient clnt, final User user) {
+    PgUser(final PgClient clnt, final User user) {
         this.client = clnt;
         this.origin = user;
     }

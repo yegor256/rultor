@@ -62,7 +62,7 @@ final class PgCondition implements Sheet.Condition {
      * Public ctor.
      * @param sheet Parent sheet
      */
-    protected PgCondition(final PgSheet sheet) {
+    PgCondition(final PgSheet sheet) {
         this(sheet, "");
     }
 
