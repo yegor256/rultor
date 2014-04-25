@@ -75,7 +75,10 @@ public final class Seasoned implements Branch {
     }
 
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Tv.FIVE,
+        ignore = IOException.class
+    )
     public Iterable<Commit> log() throws IOException {
         final Time current = new Time();
         return Iterables.filter(

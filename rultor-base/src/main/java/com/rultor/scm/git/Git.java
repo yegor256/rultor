@@ -178,7 +178,10 @@ public final class Git implements SCM {
      * @throws IOException If fails
      */
     @RetryOnFailure(verbose = false)
-    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Tv.FIVE,
+        ignore = IOException.class
+    )
     public Iterable<Commit> log(final String branch) throws IOException {
         final String stdout = this.terminal.exec(
             new StringBuilder(this.reset())

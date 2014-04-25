@@ -39,6 +39,7 @@ import com.rultor.snapshot.Step;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Instance;
 import com.rultor.tools.Time;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -120,7 +121,10 @@ public final class Crontab implements Instance {
     }
 
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
+        ignore = IOException.class
+    )
     public void pulse() throws Exception {
         if (this.allowed()) {
             this.origin.pulse();

@@ -72,7 +72,10 @@ public final class Checkout implements Branch {
     }
 
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Tv.FIVE,
+        ignore = IOException.class
+    )
     public Iterable<Commit> log() throws IOException {
         return this.source.checkout(this.label).log();
     }

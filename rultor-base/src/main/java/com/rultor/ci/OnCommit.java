@@ -93,7 +93,10 @@ public final class OnCommit implements Instance {
     }
 
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
+        ignore = IOException.class
+    )
     public void pulse() throws Exception {
         for (Commit commit : Iterables.limit(this.branch.log(), 1)) {
             this.build(commit);

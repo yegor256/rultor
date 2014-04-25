@@ -68,14 +68,17 @@ final class GitBranch implements Branch {
      * @param scm Git SCM
      * @param branch Name of the branch
      */
-    protected GitBranch(final Git scm, final String branch) {
+    GitBranch(final Git scm, final String branch) {
         this.git = scm;
         this.label = branch;
     }
 
     @Override
     @RetryOnFailure(verbose = false)
-    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Tv.FIVE,
+        ignore = IOException.class
+    )
     public Iterable<Commit> log() throws IOException {
         return this.git.log(this.label);
     }
