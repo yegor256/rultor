@@ -225,9 +225,9 @@ final class MongoStand implements Stand {
                 )
         );
         Validate.isTrue(
-            result.getLastError().ok(),
+            result.getLastConcern().callGetLastError(),
             "failed to update pulse `%s`: %s",
-            pulse, result.getLastError().getErrorMessage()
+            pulse, result.getLastConcern().getWString()
         );
         return result.getN() == 1;
     }

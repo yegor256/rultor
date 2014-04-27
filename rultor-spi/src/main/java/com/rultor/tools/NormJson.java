@@ -30,10 +30,10 @@
 package com.rultor.tools;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.github.fge.jsonschema.exceptions.ProcessingException;
+import com.github.fge.jackson.JsonLoader;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import com.github.fge.jsonschema.report.ProcessingReport;
-import com.github.fge.jsonschema.util.JsonLoader;
 import com.jcabi.aspects.Loggable;
 import java.io.IOException;
 import java.io.InputStream;
