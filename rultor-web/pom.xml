@@ -290,7 +290,7 @@
                 <plugin>
                     <artifactId>maven-war-plugin</artifactId>
                     <configuration>
-                        <warSourceExcludes>js/**, css/**, xsl/**</warSourceExcludes>
+                        <warSourceExcludes>css/**, xsl/**</warSourceExcludes>
                         <archive>
                             <manifestEntries>
                                 <Rultor-Version>${project.version}</Rultor-Version>
