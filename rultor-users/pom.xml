@@ -119,13 +119,6 @@
             <artifactId>jcabi-immutable</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-dynamo</artifactId>
-            <version>0.10</version>
-            <scope>test</scope>
-            <classifier>mock</classifier>
-        </dependency>
-        <dependency>
             <groupId>javax.json</groupId>
             <artifactId>javax.json-api</artifactId>
         </dependency>
