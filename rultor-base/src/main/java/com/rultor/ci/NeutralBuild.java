@@ -80,7 +80,10 @@ public final class NeutralBuild implements Instance {
     }
 
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
+        ignore = IOException.class
+    )
     public void pulse() throws Exception {
         new OnCommit(
             new Branch() {

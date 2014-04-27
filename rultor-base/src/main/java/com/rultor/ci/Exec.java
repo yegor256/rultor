@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.ArrayMap;
 import com.rultor.shell.Batch;
 import com.rultor.spi.Instance;
+import java.io.IOException;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -77,7 +78,10 @@ public final class Exec implements Instance {
     }
 
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
+        ignore = IOException.class
+    )
     public void pulse() throws Exception {
         this.batch.exec(this.map, new NullOutputStream());
     }

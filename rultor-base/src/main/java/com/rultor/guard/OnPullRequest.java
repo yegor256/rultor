@@ -89,7 +89,10 @@ public final class OnPullRequest implements Instance {
     }
 
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
+        ignore = IOException.class
+    )
     public void pulse() throws Exception {
         final Iterator<MergeRequest> iterator = this.requests.iterator();
         while (iterator.hasNext()) {

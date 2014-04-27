@@ -30,13 +30,13 @@
 package com.rultor.conveyer;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.LogExceptions;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Instance;
 import com.rultor.tools.Time;
+import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.xembly.Directives;
@@ -78,14 +78,16 @@ final class WithCoords implements Instance {
      * @param wrk Coordinates we're in
      * @param instance Original instance
      */
-    protected WithCoords(final Coordinates wrk, final Instance instance) {
+    WithCoords(final Coordinates wrk, final Instance instance) {
         this.work = wrk;
         this.origin = instance;
     }
 
     @Override
-    @LogExceptions
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
+        ignore = IOException.class
+    )
     public void pulse() throws Exception {
         final long start = System.currentTimeMillis();
         new XemblyLine(

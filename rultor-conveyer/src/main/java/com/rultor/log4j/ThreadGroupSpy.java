@@ -34,6 +34,7 @@ import com.jcabi.aspects.Quietly;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
 import com.rultor.spi.Instance;
+import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -130,7 +131,10 @@ public final class ThreadGroupSpy implements Instance {
     }
 
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
+        ignore = IOException.class
+    )
     public void pulse() throws Exception {
         final GroupAppender appender = new GroupAppender(
             this.work.scheduled(), this.drn

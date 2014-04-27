@@ -31,7 +31,6 @@ package com.rultor.conveyer;
 
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.LogExceptions;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.http.request.JdkRequest;
 import com.rultor.snapshot.XemblyLine;
@@ -88,7 +87,7 @@ final class WithStdout implements Instance {
      * @param auth Stream authentication key
      * @param instance Original instance
      */
-    protected WithStdout(final int prt, final String auth,
+    WithStdout(final int prt, final String auth,
         final Instance instance) {
         this.port = prt;
         this.key = auth;
@@ -96,8 +95,10 @@ final class WithStdout implements Instance {
     }
 
     @Override
-    @LogExceptions
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
+        ignore = IOException.class
+    )
     public void pulse() throws Exception {
         new XemblyLine(
             new Directives()
