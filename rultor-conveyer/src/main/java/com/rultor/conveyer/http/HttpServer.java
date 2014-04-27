@@ -63,8 +63,10 @@ public final class HttpServer implements Closeable {
     /**
      * How many threads to use.
      */
-    private static final int THREADS =
-        Runtime.getRuntime().availableProcessors() * 8;
+    private static final int THREADS = Math.min(
+        Runtime.getRuntime().availableProcessors() * 8,
+        Tv.THIRTY
+    );
 
     /**
      * Executor service, with socket openers.

@@ -82,8 +82,10 @@ public final class SQSPulseSensor implements Runnable, Closeable {
     /**
      * How many threads to use.
      */
-    private static final int THREADS =
-        Runtime.getRuntime().availableProcessors() * Tv.FIVE;
+    private static final int THREADS = Math.min(
+        Runtime.getRuntime().availableProcessors() * Tv.FIVE,
+        Tv.TEN
+    );
 
     /**
      * Executor service.
