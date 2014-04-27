@@ -1,6 +1,5 @@
 #!/bin/bash
 set -x
-set -e
 #
 # Copyright (c) 2009-2013, rultor.com
 # All rights reserved.
@@ -83,7 +82,7 @@ done
 #  alternative approach is to specify version as user data parameter,
 #  and use Maven only to download one required executable JAR file. Then,
 #  just run it with provided user data arguments.
-curl --silent https://raw.github.com/rultor/rultor/master/rultor-conveyer/src/main/resources/ec2-pom.xml > pom.xml
+curl -L --silent https://raw.github.com/rultor/rultor/master/rultor-conveyer/src/main/resources/ec2-pom.xml > pom.xml
 mvn test --batch-mode --strict-checksums --quiet --update-snapshots \
     "-Dsqs-url=${SQS_URL}" \
     "-Dsqs-wallet-url=${SQS_WALLET_URL}" \
