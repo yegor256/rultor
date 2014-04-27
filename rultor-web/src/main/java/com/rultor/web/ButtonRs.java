@@ -187,7 +187,7 @@ public final class ButtonRs extends BaseRs {
                             UriBuilder.fromUri(this.uriInfo().getBaseUri())
                                 .segment("s", this.stand).build()
                         ),
-                        "<page></page>"
+                        "<page/>"
                     )
                 )
             ),
