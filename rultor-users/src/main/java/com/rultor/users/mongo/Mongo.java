@@ -118,9 +118,8 @@ public interface Mongo {
                 client = new MongoClient(
                     addr,
                     Collections.singletonList(
-                        MongoCredential.createPlainCredential(
-                            this.user,
-                            "$external",
+                        MongoCredential.createMongoCRCredential(
+                            this.user, this.name,
                             this.password.toCharArray()
                         )
                     )
