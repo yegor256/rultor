@@ -1,4 +1,6 @@
 #!/bin/bash
+set -x
+set -e
 #
 # Copyright (c) 2009-2013, rultor.com
 # All rights reserved.
