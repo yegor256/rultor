@@ -107,12 +107,12 @@ public final class BufferedRead implements Drain, Closeable {
         @NotNull(message = "drain can't be NULL") final Drain drain) {
         assert BufferedRead.CLEANER != null;
         Validate.isTrue(
-            sec <= TimeUnit.HOURS.toSeconds(1),
+            sec <= TimeUnit.HOURS.toSeconds(1L),
             "maximum interval allowed is one hour, while %d second(s) provided",
             sec
         );
         Validate.isTrue(
-            sec >= 2,
+            sec >= 2L,
             "minimum interval allowed is 2 seconds, while %d provided",
             sec
         );
@@ -143,12 +143,12 @@ public final class BufferedRead implements Drain, Closeable {
         synchronized (BufferedRead.BUFFERS) {
             if (!BufferedRead.BUFFERS.containsKey(this)) {
                 BufferedRead.BUFFERS.put(
-                    this,
-                    new BufferedRead.Buffer()
+                    this, new BufferedRead.Buffer()
                 );
             }
             buffer = BufferedRead.BUFFERS.get(this);
         }
+        assert buffer != null : "buffer can't be NULL due to synchronization";
         return new SequenceInputStream(
             IOUtils.toInputStream(
                 Logger.format(
@@ -176,7 +176,7 @@ public final class BufferedRead implements Drain, Closeable {
          * Public ctor.
          * @throws IOException If some error with the stream
          */
-        protected Buffer() throws IOException {
+        Buffer() throws IOException {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             IOUtils.copyLarge(BufferedRead.this.origin.read(), baos);
             this.data = baos.toByteArray();
