@@ -45,7 +45,7 @@ import com.rultor.spi.Spec;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.tools.Time;
-import java.util.Arrays;
+import java.util.Collections;
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -68,22 +68,22 @@ public final class SQSQuartzTest {
     public void publishesWorksIntoQueue() throws Exception {
         final Users users = Mockito.mock(Users.class);
         final User user = Mockito.mock(User.class);
-        Mockito.doReturn(Arrays.asList(user).iterator())
+        Mockito.doReturn(Collections.singleton(user).iterator())
             .when(users).iterator();
         Mockito.doReturn(new URN("urn:github:1")).when(user).urn();
         final Rule rule = Mockito.mock(Rule.class);
         Mockito.doReturn("some-rule").when(rule).name();
         final Rules rules = Mockito.mock(Rules.class);
         Mockito.doReturn(rules).when(user).rules();
-        Mockito.doReturn(Arrays.asList(rule).iterator())
+        Mockito.doReturn(Collections.singleton(rule).iterator())
             .when(rules).iterator();
         Mockito.doReturn(new Spec.Simple()).when(rule).spec();
         final Queue queue = Mockito.mock(Queue.class);
         final SQSClient client = Mockito.mock(SQSClient.class);
         final AmazonSQS aws = Mockito.mock(AmazonSQS.class);
         final Time time = new Time("2013-07-21T13:36:00Z");
-        final String handle = "some-random-text";
         Mockito.doReturn(aws).when(client).get();
+        final String handle = "some-random-text";
         Mockito.doReturn(
             new ReceiveMessageResult().withMessages(
                 new Message()
@@ -96,7 +96,7 @@ public final class SQSQuartzTest {
         Mockito.verify(aws).receiveMessage(
             Mockito.any(ReceiveMessageRequest.class)
         );
-        Mockito.verify(aws).sendMessage(
+        Mockito.verify(aws, Mockito.atLeastOnce()).sendMessage(
             Mockito.argThat(
                 Matchers.<SendMessageRequest>hasProperty(
                     "messageBody",
@@ -104,7 +104,7 @@ public final class SQSQuartzTest {
                 )
             )
         );
-        Mockito.verify(aws).deleteMessage(
+        Mockito.verify(aws, Mockito.atLeastOnce()).deleteMessage(
             Mockito.argThat(
                 Matchers.<DeleteMessageRequest>hasProperty(
                     "receiptHandle",
@@ -112,7 +112,7 @@ public final class SQSQuartzTest {
                 )
             )
         );
-        Mockito.verify(queue).push(
+        Mockito.verify(queue, Mockito.atLeastOnce()).push(
             Mockito.argThat(
                 new CustomMatcher<Coordinates>("expected work") {
                     @Override
