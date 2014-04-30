@@ -33,7 +33,6 @@ import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
-import com.jcabi.dynamo.retry.ReRegion;
 import com.jcabi.manifests.Manifests;
 import com.rultor.aws.SQSClient;
 import com.rultor.queue.SQSQueue;
@@ -120,16 +119,14 @@ final class Production implements Profile {
                     Manifests.read("Rultor-MongoPassword")
                 ),
                 new AwsUsers(
-                    new ReRegion(
-                        new Region.Prefixed(
-                            new Region.Simple(
-                                new Credentials.Simple(
-                                    Manifests.read("Rultor-DynamoKey"),
-                                    Manifests.read("Rultor-DynamoSecret")
-                                )
-                            ),
-                            Manifests.read("Rultor-DynamoPrefix")
-                        )
+                    new Region.Prefixed(
+                        new Region.Simple(
+                            new Credentials.Simple(
+                                Manifests.read("Rultor-DynamoKey"),
+                                Manifests.read("Rultor-DynamoSecret")
+                            )
+                        ),
+                        Manifests.read("Rultor-DynamoPrefix")
                     ),
                     wallet
                 )

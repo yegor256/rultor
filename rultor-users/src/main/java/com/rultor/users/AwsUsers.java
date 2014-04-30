@@ -38,6 +38,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.retry.ReRegion;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
@@ -93,7 +94,7 @@ public final class AwsUsers implements Users {
             AwsUsers.class, "Amazon DynamoDB is ready with %d rule(s)",
             result.getTable().getItemCount()
         );
-        this.region = reg;
+        this.region = new ReRegion(reg);
         this.client = sqs;
     }
 
