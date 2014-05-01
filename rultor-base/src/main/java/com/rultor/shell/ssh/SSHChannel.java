@@ -275,11 +275,12 @@ public final class SSHChannel implements Shell {
      * @throws IOException If some IO problem inside
      */
     @RetryOnFailure(
-        attempts = Tv.FIVE,
+        attempts = Tv.SEVEN,
         delay = 1,
         unit = TimeUnit.MINUTES,
         verbose = false,
-        randomize = false
+        randomize = true,
+        types = IOException.class
     )
     private Session session() throws IOException {
         try {
@@ -299,7 +300,7 @@ public final class SSHChannel implements Shell {
                 this.login, this.addr, this.port
             );
             session.setServerAliveInterval(
-                (int) TimeUnit.SECONDS.toMillis(Tv.TEN)
+                (int) TimeUnit.SECONDS.toMillis((long) Tv.TEN)
             );
             session.setServerAliveCountMax(Tv.MILLION);
             session.connect();
