@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?xml-stylesheet type='text/xsl' href='puzzles.xsl'?><puzzles>
-   <puzzle>
-      <ticket>201</ticket>
-      <file>src/main/java/com/rultor/widget/BuildHealth.java</file>
-      <prefix>     * </prefix>
-      <body>If we increase the amount of elements to be processes, an OutOfMemory exception will be thrown. I don't understand why and how memory leakage is happening... http://stackoverflow.com/questions/18684598</body>
-      <estimate>0</estimate>
-      <lines>69-72</lines>
-      <owner>someone</owner>
-   </puzzle>
+<puzzle>
+<ticket>201</ticket>
+<file>src/main/java/com/rultor/widget/BuildHealth.java</file>
+<prefix>     * </prefix>
+<body>If we increase the amount of elements to be processes, an OutOfMemory exception will be thrown. I don't understand why and how memory leakage is happening... http://stackoverflow.com/questions/18684598</body>
+<estimate>0</estimate>
+<lines>69-72</lines>
+<owner>someone</owner>
+</puzzle>
 </puzzles>
