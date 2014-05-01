@@ -1,21 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?xml-stylesheet type='text/xsl' href='puzzles.xsl'?><puzzles>
-   <puzzle>
-      <ticket>238</ticket>
-      <file>src/test/java/com/rultor/web/AuthKeysTest.java</file>
-      <prefix>     * </prefix>
-      <body>AuthKeys should validate empty string.</body>
-      <estimate>0</estimate>
-      <lines>82-82</lines>
-      <owner>someone</owner>
-   </puzzle>
-   <puzzle>
-      <ticket>439</ticket>
-      <file>src/test/java/com/rultor/web/ButtonRsTest.java</file>
-      <prefix>     * </prefix>
-      <body>Batik image generation depends on JDK used and in some cases leads to different images for the same data (e.g. different anti-aliasing in images) as a result the images can't be compared byte by byte. This problem can be recreated by running image generation with OpenJDK and Oracle JDK. Possible solution would be to use vector images or a different library to generate images.</body>
-      <estimate>0</estimate>
-      <lines>249-254</lines>
-      <owner>someone</owner>
-   </puzzle>
+<puzzle>
+<ticket>238</ticket>
+<file>src/test/java/com/rultor/web/AuthKeysTest.java</file>
+<prefix>     * </prefix>
+<body>AuthKeys should validate empty string.</body>
+<estimate>0</estimate>
+<lines>82-82</lines>
+<owner>someone</owner>
+</puzzle>
+<puzzle>
+<ticket>439</ticket>
+<file>src/test/java/com/rultor/web/ButtonRsTest.java</file>
+<prefix>     * </prefix>
+<body>Batik image generation depends on JDK used and in some cases leads to different images for the same data (e.g. different anti-aliasing in images) as a result the images can't be compared byte by byte. This problem can be recreated by running image generation with OpenJDK and Oracle JDK. Possible solution would be to use vector images or a different library to generate images.</body>
+<estimate>0</estimate>
+<lines>249-254</lines>
+<owner>someone</owner>
+</puzzle>
 </puzzles>
