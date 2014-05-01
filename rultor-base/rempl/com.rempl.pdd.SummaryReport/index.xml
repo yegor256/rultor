@@ -1,21 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?xml-stylesheet type='text/xsl' href='puzzles.xsl'?><puzzles>
-   <puzzle>
-      <ticket>34</ticket>
-      <file>src/main/java/com/rultor/shell/Terminal.java</file>
-      <prefix>     * </prefix>
-      <body>This implementation is extremely bad and doesn't comply with any standards. Let's find out what is the right way to escape strings for BASH and implement it here</body>
-      <estimate>0</estimate>
-      <lines>75-77</lines>
-      <owner>someone</owner>
-   </puzzle>
-   <puzzle>
-      <ticket>307</ticket>
-      <file>src/main/java/com/rultor/ext/jira/RxJiraIssue.java</file>
-      <prefix>     * </prefix>
-      <body>Paging is not implemented</body>
-      <estimate>0</estimate>
-      <lines>146-146</lines>
-      <owner>someone</owner>
-   </puzzle>
+<puzzle>
+<ticket>34</ticket>
+<file>src/main/java/com/rultor/shell/Terminal.java</file>
+<prefix>     * </prefix>
+<body>This implementation is extremely bad and doesn't comply with any standards. Let's find out what is the right way to escape strings for BASH and implement it here</body>
+<estimate>0</estimate>
+<lines>75-77</lines>
+<owner>someone</owner>
+</puzzle>
+<puzzle>
+<ticket>307</ticket>
+<file>src/main/java/com/rultor/ext/jira/RxJiraIssue.java</file>
+<prefix>     * </prefix>
+<body>Paging is not implemented</body>
+<estimate>0</estimate>
+<lines>146-146</lines>
+<owner>someone</owner>
+</puzzle>
 </puzzles>

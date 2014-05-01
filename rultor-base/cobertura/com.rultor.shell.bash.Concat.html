@@ -202,7 +202,7 @@
   <td class="src"><pre class="src">&nbsp;        @NotNull(message = <span class="string">"list of commands can't be NULL"</span>)</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;94</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        <span class="keyword">final</span> Collection&lt;String&gt; cmds) {</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;95</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        <span class="keyword">final</span> Collection&lt;Vext&gt; vexts = <span class="keyword">new</span> ArrayList&lt;Vext&gt;(cmds.size());</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;96</td>  <td class="nbHitsUncovered"><a title="Line 96: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 96: Conditional coverage 0% (0/2).">        <span class="keyword">for</span> (String cmd : cmds) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;96</td>  <td class="nbHitsUncovered"><a title="Line 96: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 96: Conditional coverage 0% (0/2).">        <span class="keyword">for</span> (<span class="keyword">final</span> String cmd : cmds) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;97</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            vexts.add(<span class="keyword">new</span> Vext(cmd));</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;98</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        }</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;99</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        <span class="keyword">this</span>.commands = <span class="keyword">new</span> Array&lt;Vext&gt;(vexts);</span></pre></td></tr>
@@ -257,7 +257,7 @@
   <td class="src"><pre class="src">&nbsp;            .append(Terminal.quotate(Terminal.escape(Concat.escape())))</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;126</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            .append(<span class="string">';'</span>).append(<span class="string">'\n'</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;127</td>  <td class="nbHitsUncovered"><a title="Line 127: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 127: Conditional coverage 0% (0/2).">        <span class="keyword">for</span> (Vext cmd : <span class="keyword">this</span>.commands) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;127</td>  <td class="nbHitsUncovered"><a title="Line 127: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 127: Conditional coverage 0% (0/2).">        <span class="keyword">for</span> (<span class="keyword">final</span> Vext cmd : <span class="keyword">this</span>.commands) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;128</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            script.append(<span class="keyword">this</span>.script(cmd));</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;129</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        }</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;130</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        <span class="keyword">return</span> <span class="keyword">new</span> Vext(script.toString());</span></pre></td></tr>
@@ -575,7 +575,7 @@
 <tr>  <td class="numLine">&nbsp;290</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="string">    private static String escape(final String text) {</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;291</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<span class="string">        final StringBuilder out = new StringBuilder();</span></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;292</td>  <td class="nbHitsUncovered"><a title="Line 292: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 292: Conditional coverage 0% (0/2)."><span class="string">        for (byte chr : text.getBytes(Charsets.UTF_8)) {</span></a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;292</td>  <td class="nbHitsUncovered"><a title="Line 292: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 292: Conditional coverage 0% (0/2)."><span class="string">        for (final byte chr : text.getBytes(Charsets.UTF_8)) {</span></a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;293</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<span class="string">            out.append("\\x").append(String.format("%X", chr));</span></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;294</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="string">        }</span></pre></td></tr>
@@ -639,7 +639,7 @@
 <tr>  <td class="numLine">&nbsp;325</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                .build();</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;326</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        <span class="keyword">final</span> StringBuilder script = <span class="keyword">new</span> StringBuilder().append(<span class="string">"cat"</span>);</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;327</td>  <td class="nbHitsUncovered"><a title="Line 327: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 327: Conditional coverage 0% (0/2).">        <span class="keyword">for</span> (Map.Entry&lt;String, String&gt; pair : pairs.entrySet()) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;327</td>  <td class="nbHitsUncovered"><a title="Line 327: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 327: Conditional coverage 0% (0/2).">        <span class="keyword">for</span> (<span class="keyword">final</span> Map.Entry&lt;String, String&gt; pair : pairs.entrySet()) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;328</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            script.append(<span class="string">" | LANG=C sed -e 's/"</span>)</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;329</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                .append(pair.getKey())</pre></td></tr>
@@ -663,6 +663,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 2/6/14 5:30 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9.4.1 on 5/1/14 12:13 PM.</div>
 </body>
 </html>
