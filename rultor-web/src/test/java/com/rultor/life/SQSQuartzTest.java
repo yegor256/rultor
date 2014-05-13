@@ -93,7 +93,7 @@ public final class SQSQuartzTest {
         ).when(aws).receiveMessage(Mockito.any(ReceiveMessageRequest.class));
         final SQSQuartz quartz = new SQSQuartz(users, queue, client);
         quartz.run();
-        Mockito.verify(aws).receiveMessage(
+        Mockito.verify(aws, Mockito.atLeastOnce()).receiveMessage(
             Mockito.any(ReceiveMessageRequest.class)
         );
         Mockito.verify(aws, Mockito.atLeastOnce()).sendMessage(
