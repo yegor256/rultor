@@ -324,14 +324,6 @@ public class BaseRs extends BaseResource {
     }
 
     /**
-     * Get balance of the current user.
-     * @return His balance
-     */
-    private Dollars balance() {
-        return this.user().account().balance();
-    }
-
-    /**
      * Get ACL of the stand.
      * @param stand The stand
      * @return ACL
@@ -362,4 +354,13 @@ public class BaseRs extends BaseResource {
         }
         return acl;
     }
+
+    /**
+     * Get balance of the current user.
+     * @return His balance
+     */
+    private Dollars balance() {
+        return this.user().account().balance();
+    }
+
 }

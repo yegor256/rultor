@@ -32,14 +32,14 @@
     <xsl:output method="xml" indent="no"/>
     <xsl:include href="http://www.rultor.com/xsl/common.xsl"/>
     <xsl:include href="http://www.rultor.com/xsl/snapshot.xsl"/>
+    <xsl:template match="/snapshot">
+        <div>
+            <xsl:apply-templates select="node()" />
+        </div>
+    </xsl:template>
     <xsl:template match="@*|node()">
         <xsl:copy>
             <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>
-    </xsl:template>
-    <xsl:template match="/">
-        <div>
-            <xsl:apply-templates select="node()" />
-        </div>
     </xsl:template>
 </xsl:stylesheet>

@@ -509,6 +509,9 @@
                                 <exclude>checkstyle:/src/test/resources/com/rultor/web/.*</exclude>
                                 <exclude>checkstyle:/src/main/webapp/.*</exclude>
                                 <exclude>findbugs:.*</exclude>
+                                <exclude>xml:/src/main/webapp/WEB-INF/web.xml</exclude>
+                                <exclude>xml:/src/test/rexsl/xml/.*</exclude>
+                                <exclude>duplicatefinder:.*</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
