@@ -92,6 +92,7 @@ public interface Rule {
      * @param rule What this money is for?
      * @return Wallet
      * @throws Wallet.NotEnoughFundsException If not enough funds
+     * @checkstyle RedundantThrowsCheck (5 lines)
      */
     @NotNull(message = "wallet is never NULL")
     Wallet wallet(Coordinates work, URN taker, String rule)

@@ -256,22 +256,6 @@ final class PgSheet implements Sheet {
     }
 
     /**
-     * Convert result set to a row of objects.
-     * @param rset Result set
-     * @return Row of objects
-     * @throws SQLException If fails
-     */
-    private static List<Object> toRow(final ResultSet rset)
-        throws SQLException {
-        final int total = rset.getMetaData().getColumnCount();
-        final List<Object> row = new ArrayList<Object>(total);
-        for (int idx = 1; idx < total + 1; ++idx) {
-            row.add(rset.getObject(idx));
-        }
-        return row;
-    }
-
-    /**
      * Make a query.
      * @return SQL query
      */
@@ -405,6 +389,22 @@ final class PgSheet implements Sheet {
             ref = String.format("_%s", column);
         }
         return ref;
+    }
+
+    /**
+     * Convert result set to a row of objects.
+     * @param rset Result set
+     * @return Row of objects
+     * @throws SQLException If fails
+     */
+    private static List<Object> toRow(final ResultSet rset)
+        throws SQLException {
+        final int total = rset.getMetaData().getColumnCount();
+        final List<Object> row = new ArrayList<Object>(total);
+        for (int idx = 1; idx < total + 1; ++idx) {
+            row.add(rset.getObject(idx));
+        }
+        return row;
     }
 
 }

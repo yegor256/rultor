@@ -314,6 +314,7 @@ public final class Concat implements Proxy<String> {
      * @return Bash script
      */
     @Cacheable(forever = true)
+    @SuppressWarnings("PMD.InsufficientStringBufferDeclaration")
     private static String escape() {
         final ImmutableMap<String, String> pairs =
             new ImmutableMap.Builder<String, String>()
@@ -323,7 +324,7 @@ public final class Concat implements Proxy<String> {
                 .put("<", "&lt;")
                 .put(">", "&gt;")
                 .build();
-        final StringBuilder script = new StringBuilder().append("cat");
+        final StringBuilder script = new StringBuilder("cat");
         for (final Map.Entry<String, String> pair : pairs.entrySet()) {
             script.append(" | LANG=C sed -e 's/")
                 .append(pair.getKey())

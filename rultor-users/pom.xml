@@ -142,6 +142,7 @@
         <dependency>
             <groupId>javax.el</groupId>
             <artifactId>javax.el-api</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
@@ -600,6 +601,7 @@
                             <excludes>
                                 <exclude>checkstyle:/src/main/mongo/.*</exclude>
                                 <exclude>findbugs:.*</exclude>
+                                <exclude>duplicatefinder:.*</exclude>
                             </excludes>
                         </configuration>
                     </plugin>

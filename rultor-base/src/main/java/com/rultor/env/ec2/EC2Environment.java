@@ -89,11 +89,6 @@ final class EC2Environment implements Environment {
             .build();
 
     /**
-     * Coordinates we're in.
-     */
-    private final transient Coordinates work;
-
-    /**
      * Wallet to charge.
      */
     private final transient Wallet wallet;
@@ -116,9 +111,9 @@ final class EC2Environment implements Environment {
      * @param clnt EC2 client
      * @checkstyle ParameterNumber (5 lines)
      */
-    protected EC2Environment(final Coordinates wrk, final Wallet wlt,
+    EC2Environment(final Coordinates wrk, final Wallet wlt,
         final String instance, final EC2Client clnt) {
-        this.work = wrk;
+        assert wrk != null;
         this.wallet = wlt;
         this.name = instance;
         this.client = clnt;

@@ -44,6 +44,7 @@ import com.rultor.spi.Rule;
 import com.rultor.spi.Rules;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Wallet;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -128,12 +129,16 @@ final class AwsRules implements Rules {
                 String.format("Rule `%s` already exists", unt)
             );
         }
-        this.region.table(AwsRule.TABLE).put(
-            new Attributes()
-                .with(AwsRule.HASH_OWNER, this.owner.toString())
-                .with(AwsRule.RANGE_NAME, unt)
-                .with(AwsRule.FIELD_SPEC, new Spec.Simple().asText())
-        );
+        try {
+            this.region.table(AwsRule.TABLE).put(
+                new Attributes()
+                    .with(AwsRule.HASH_OWNER, this.owner.toString())
+                    .with(AwsRule.RANGE_NAME, unt)
+                    .with(AwsRule.FIELD_SPEC, new Spec.Simple().asText())
+            );
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override

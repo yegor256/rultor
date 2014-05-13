@@ -30,6 +30,7 @@
 package com.rultor.snapshot;
 
 import com.google.common.collect.ImmutableMap;
+import com.jcabi.aspects.Tv;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Tag;
@@ -112,6 +113,7 @@ public final class Snapshot {
      * Make XML out of it.
      * @return The XML
      * @throws XemblyException If can't apply
+     * @checkstyle RedundantThrowsCheck (5 lines)
      */
     public XML xml() throws XemblyException {
         final Document dom;
@@ -136,6 +138,7 @@ public final class Snapshot {
      * Get all tags.
      * @return Collection of tags found
      * @throws XemblyException If fails
+     * @checkstyle RedundantThrowsCheck (5 lines)
      */
     public Collection<Tag> tags() throws XemblyException {
         final Collection<XML> nodes = this.xml()
@@ -195,7 +198,7 @@ public final class Snapshot {
             new InputStreamReader(stream, CharEncoding.UTF_8)
         );
         try {
-            final StringBuilder buf = new StringBuilder(0);
+            final StringBuilder buf = new StringBuilder(Tv.THOUSAND);
             while (true) {
                 final String line = reader.readLine();
                 if (line == null) {

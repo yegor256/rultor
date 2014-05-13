@@ -76,7 +76,7 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
     /**
      * Public ctor.
      */
-    protected Log4jStreams() {
+    Log4jStreams() {
         super();
         Logger.getRootLogger().addAppender(this);
         this.setLayout(new PatternLayout("%p %m%n"));
@@ -160,7 +160,7 @@ final class Log4jStreams extends AppenderSkeleton implements Streams {
     }
 
     @Override
-    protected void append(final LoggingEvent event) {
+    public void append(final LoggingEvent event) {
         final String key = this.groups.get(
             Thread.currentThread().getThreadGroup()
         );

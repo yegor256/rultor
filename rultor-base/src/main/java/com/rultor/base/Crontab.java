@@ -72,7 +72,9 @@ import org.apache.commons.lang3.Validate;
 @ToString
 @EqualsAndHashCode(of = { "work", "origin", "gates" })
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings({ "PMD.TooManyMethods", "PMD.CyclomaticComplexity" })
+@SuppressWarnings({
+    "PMD.TooManyMethods", "PMD.CyclomaticComplexity", "PMD.GodClass"
+})
 public final class Crontab implements Instance {
 
     /**

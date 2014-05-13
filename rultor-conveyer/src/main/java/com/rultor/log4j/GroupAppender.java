@@ -115,7 +115,7 @@ final class GroupAppender extends AppenderSkeleton
      * @param date When it starts
      * @param drn Drain to log to
      */
-    protected GroupAppender(@NotNull(message = "date can't be NULL")
+    GroupAppender(@NotNull(message = "date can't be NULL")
         final Time date, @NotNull(message = "drain can't be NULL")
         final Drain drn) {
         super();
@@ -132,7 +132,7 @@ final class GroupAppender extends AppenderSkeleton
     }
 
     @Override
-    protected void append(final LoggingEvent event) {
+    public void append(final LoggingEvent event) {
         if (Thread.currentThread().getThreadGroup().equals(this.group)) {
             final String msg = this.layout.format(event);
             this.lines.add(
@@ -144,22 +144,6 @@ final class GroupAppender extends AppenderSkeleton
             );
             this.radar.append(msg);
         }
-    }
-
-    /**
-     * Convert log4j logging level to java.util.logging one.
-     * When log4j level is unknown it will return Level.INFO.
-     * @param level Log4j logging level.
-     * @return Level in java.util.logging.
-     */
-    private java.util.logging.Level level(final Level level) {
-        final java.util.logging.Level jlevel;
-        if (GroupAppender.LEVELS.containsKey(level)) {
-            jlevel = GroupAppender.LEVELS.get(level);
-        } else {
-            jlevel = java.util.logging.Level.INFO;
-        }
-        return jlevel;
     }
 
     @Override
@@ -183,6 +167,22 @@ final class GroupAppender extends AppenderSkeleton
         } catch (final IOException ex) {
             throw new IllegalArgumentException(ex);
         }
+    }
+
+    /**
+     * Convert log4j logging level to java.util.logging one.
+     * When log4j level is unknown it will return Level.INFO.
+     * @param level Log4j logging level.
+     * @return Level in java.util.logging.
+     */
+    private java.util.logging.Level level(final Level level) {
+        final java.util.logging.Level jlevel;
+        if (GroupAppender.LEVELS.containsKey(level)) {
+            jlevel = GroupAppender.LEVELS.get(level);
+        } else {
+            jlevel = java.util.logging.Level.INFO;
+        }
+        return jlevel;
     }
 
 }

@@ -175,6 +175,21 @@ final class MongoStand implements Stand {
     }
 
     /**
+     * Decode the text into clean xembly.
+     * @param script Script with prefixes
+     * @return Clean xembly
+     */
+    public static String decode(final String script) {
+        final ConcurrentMap<Long, String> lines =
+            new ConcurrentSkipListMap<Long, String>();
+        for (final String line : script.split("\n+")) {
+            final String[] parts = line.split(" ", 2);
+            lines.put(Long.parseLong(parts[0]), parts[1]);
+        }
+        return StringUtils.join(lines.values(), "\n");
+    }
+
+    /**
      * Attempt to save.
      * @param pulse The pulse name
      * @param nano Nano ID
@@ -258,21 +273,6 @@ final class MongoStand implements Stand {
             tags.add(new MongoTag(tag).asObject());
         }
         return tags;
-    }
-
-    /**
-     * Decode the text into clean xembly.
-     * @param script Script with prefixes
-     * @return Clean xembly
-     */
-    public static String decode(final String script) {
-        final ConcurrentMap<Long, String> lines =
-            new ConcurrentSkipListMap<Long, String>();
-        for (final String line : script.split("\n+")) {
-            final String[] parts = line.split(" ", 2);
-            lines.put(Long.parseLong(parts[0]), parts[1]);
-        }
-        return StringUtils.join(lines.values(), "\n");
     }
 
     /**

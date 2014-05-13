@@ -94,6 +94,7 @@ public final class NormJson {
      * @param json JSON to parse
      * @return Object found there
      * @throws NormJson.JsonException If fails
+     * @checkstyle RedundantThrowsCheck (5 lines)
      */
     @Loggable(value = Loggable.DEBUG, ignore = NormJson.JsonException.class)
     public JsonObject readObject(final String json)

@@ -512,19 +512,6 @@
                             </excludes>
                         </configuration>
                     </plugin>
-                    <plugin>
-                        <groupId>com.ning.maven.plugins</groupId>
-                        <artifactId>maven-duplicate-finder-plugin</artifactId>
-                        <configuration>
-                            <ignoredDependencies combine.children="append">
-                                <dependency>
-                                    <groupId>org.apache.xmlgraphics</groupId>
-                                    <artifactId>batik-ext</artifactId>
-                                    <version>1.7</version>
-                                </dependency>
-                            </ignoredDependencies>
-                        </configuration>
-                    </plugin>
                 </plugins>
             </build>
         </profile>

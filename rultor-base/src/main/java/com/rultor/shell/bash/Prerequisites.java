@@ -31,6 +31,7 @@ package com.rultor.shell.bash;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.log.Logger;
 import com.rultor.shell.Shell;
@@ -120,13 +121,13 @@ public final class Prerequisites implements Shells {
      * @return Bash command
      */
     private String script(final String path) {
-        final StringBuilder script = new StringBuilder();
+        final StringBuilder script = new StringBuilder(Tv.HUNDRED);
         final String dir = FilenameUtils.getFullPathNoEndSeparator(path);
         if (!dir.isEmpty()) {
             script
                 .append("mkdir -p ")
                 .append(Terminal.quotate(Terminal.escape(dir)))
-                .append(";");
+                .append(';');
         }
         return script
             .append("cat > ")

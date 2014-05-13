@@ -118,6 +118,7 @@ public final class Arguments {
      * @param pos Position
      * @return The value
      * @throws SpecException If fails to find it
+     * @checkstyle RedundantThrowsCheck (5 lines)
      */
     public Object get(final int pos) throws SpecException {
         Validate.isTrue(pos >= 0, "position can't be negative");

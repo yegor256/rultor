@@ -221,6 +221,7 @@ public interface Spec {
          * @param type Type expected
          * @throws SpecException If fails
          * @checkstyle ParameterNumber (10 lines)
+         * @checkstyle RedundantThrowsCheck (15 lines)
          */
         public Strict(
             @NotNull(message = "spec can't be NULL") final String text,

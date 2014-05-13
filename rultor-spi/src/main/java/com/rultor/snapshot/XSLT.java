@@ -92,6 +92,7 @@ public final class XSLT {
      * @param snapshot Snapshot
      * @param text XSL as text
      * @throws XemblyException If can't build
+     * @checkstyle RedundantThrowsCheck (5 lines)
      */
     public XSLT(final Snapshot snapshot, final String text)
         throws XemblyException {
@@ -103,6 +104,7 @@ public final class XSLT {
      * @param snapshot Snapshot
      * @param stream XSL
      * @throws XemblyException If can't build
+     * @checkstyle RedundantThrowsCheck (5 lines)
      */
     public XSLT(final Snapshot snapshot, final InputStream stream)
         throws XemblyException {
@@ -134,14 +136,15 @@ public final class XSLT {
      * @throws TransformerException If fails
      */
     public Document dom() throws TransformerException {
-        final Transformer trans = XSLT.FACTORY.newTransformer(this.xsl);
         final Document dom;
         try {
             dom = XSLT.DFACTORY.newDocumentBuilder().newDocument();
         } catch (final ParserConfigurationException ex) {
             throw new IllegalStateException(ex);
         }
-        trans.transform(this.source, new DOMResult(dom));
+        XSLT.FACTORY.newTransformer(this.xsl).transform(
+            this.source, new DOMResult(dom)
+        );
         return dom;
     }
 

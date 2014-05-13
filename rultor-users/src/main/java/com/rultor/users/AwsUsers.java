@@ -46,6 +46,7 @@ import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -104,13 +105,17 @@ public final class AwsUsers implements Users {
     public Iterator<User> iterator() {
         final Collection<User> users = new HashSet<User>(0);
         for (final Item item : this.region.table(AwsRule.TABLE).frame()) {
-            users.add(
-                new AwsUser(
-                    this.region,
-                    this.client,
-                    URN.create(item.get(AwsRule.HASH_OWNER).getS())
-                )
-            );
+            try {
+                users.add(
+                    new AwsUser(
+                        this.region,
+                        this.client,
+                        URN.create(item.get(AwsRule.HASH_OWNER).getS())
+                    )
+                );
+            } catch (final IOException ex) {
+                throw new IllegalStateException(ex);
+            }
         }
         return users.iterator();
     }

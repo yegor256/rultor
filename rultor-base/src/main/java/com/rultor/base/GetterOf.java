@@ -79,6 +79,22 @@ public final class GetterOf implements Proxy<Object> {
         this.property = prop;
     }
 
+    @Override
+    public Object object() {
+        try {
+            final Method method =
+                this.find(Introspector.getBeanInfo(this.source.getClass()));
+            method.setAccessible(true);
+            return method.invoke(this.source);
+        } catch (final IntrospectionException ex) {
+            throw new IllegalArgumentException(ex);
+        } catch (final InvocationTargetException ex) {
+            throw new IllegalArgumentException(ex);
+        } catch (final IllegalAccessException ex) {
+            throw new IllegalArgumentException(ex);
+        }
+    }
+
     /**
      * Find method with getter.
      * @param info Bean info.
@@ -111,22 +127,6 @@ public final class GetterOf implements Proxy<Object> {
             );
         }
         return found;
-    }
-
-    @Override
-    public Object object() {
-        try {
-            final Method method =
-                this.find(Introspector.getBeanInfo(this.source.getClass()));
-            method.setAccessible(true);
-            return method.invoke(this.source);
-        } catch (final IntrospectionException ex) {
-            throw new IllegalArgumentException(ex);
-        } catch (final InvocationTargetException ex) {
-            throw new IllegalArgumentException(ex);
-        } catch (final IllegalAccessException ex) {
-            throw new IllegalArgumentException(ex);
-        }
     }
 
 }

@@ -61,6 +61,7 @@ public interface Wallet {
      * @param rule Name of the rule
      * @return New wallet
      * @throws Wallet.NotEnoughFundsException If not enough
+     * @checkstyle RedundantThrowsCheck (7 lines)
      */
     Wallet delegate(
         @NotNull(message = "URN can't be NULL") URN urn,
