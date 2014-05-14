@@ -124,7 +124,7 @@
             <dependency>
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-dynamo</artifactId>
-                <version>0.15</version>
+                <version>0.15.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
