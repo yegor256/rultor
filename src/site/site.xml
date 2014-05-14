@@ -35,7 +35,7 @@
     <skin>
         <groupId>com.rultor</groupId>
         <artifactId>rultor-maven-skin</artifactId>
-        <version>1.2.1</version>
+        <version>1.0</version>
     </skin>
     <googleAnalyticsAccountId>UA-1963507-10</googleAnalyticsAccountId>
     <bannerLeft>
