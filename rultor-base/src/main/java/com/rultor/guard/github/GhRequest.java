@@ -57,6 +57,8 @@ import org.eclipse.egit.github.core.service.PullRequestService;
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @todo #445 Migrate this class to jcabi-github and move the logic to jcabi
+ *  subpackage.
  */
 @Immutable
 @ToString

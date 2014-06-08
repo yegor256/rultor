@@ -55,6 +55,8 @@ import org.eclipse.egit.github.core.service.PullRequestService;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @todo #445 Migrate this class to jcabi-github and move the logic to jcabi
+ *  subpackage.
  */
 @Immutable
 @ToString
