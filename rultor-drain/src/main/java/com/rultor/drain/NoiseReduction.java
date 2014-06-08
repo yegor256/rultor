@@ -145,7 +145,7 @@ public final class NoiseReduction implements Drain {
                             NoiseReduction.this.clean.pulses()
                         ).iterator()
                     );
-                } catch (IOException ex) {
+                } catch (final IOException ex) {
                     throw new IllegalStateException(ex);
                 }
             }

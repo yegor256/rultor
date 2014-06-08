@@ -100,10 +100,10 @@ final class Job {
         if (rule.failure().isEmpty()) {
             try {
                 this.make(owner, rule, decor).pulse();
-            } catch (SpecException ex) {
+            } catch (final SpecException ex) {
                 rule.failure(Exceptions.stacktrace(ex));
             // @checkstyle IllegalCatch (1 line)
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 throw new IllegalArgumentException(ex);
             }
         }

@@ -38,6 +38,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.retry.ReRegion;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
@@ -45,6 +46,7 @@ import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.User;
 import com.rultor.spi.Users;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -93,7 +95,7 @@ public final class AwsUsers implements Users {
             AwsUsers.class, "Amazon DynamoDB is ready with %d rule(s)",
             result.getTable().getItemCount()
         );
-        this.region = reg;
+        this.region = new ReRegion(reg);
         this.client = sqs;
     }
 
@@ -103,13 +105,17 @@ public final class AwsUsers implements Users {
     public Iterator<User> iterator() {
         final Collection<User> users = new HashSet<User>(0);
         for (final Item item : this.region.table(AwsRule.TABLE).frame()) {
-            users.add(
-                new AwsUser(
-                    this.region,
-                    this.client,
-                    URN.create(item.get(AwsRule.HASH_OWNER).getS())
-                )
-            );
+            try {
+                users.add(
+                    new AwsUser(
+                        this.region,
+                        this.client,
+                        URN.create(item.get(AwsRule.HASH_OWNER).getS())
+                    )
+                );
+            } catch (final IOException ex) {
+                throw new IllegalStateException(ex);
+            }
         }
         return users.iterator();
     }

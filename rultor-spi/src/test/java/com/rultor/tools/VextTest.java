@@ -68,7 +68,7 @@ public final class VextTest {
             new Vext(text).print(
                 new ImmutableMap.Builder<String, Object>().build()
             );
-        } catch (VelocityException ex) {
+        } catch (final VelocityException ex) {
             MatcherAssert.assertThat(
                 ex.getMessage(),
                 Matchers.containsString(text)

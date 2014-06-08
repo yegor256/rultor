@@ -70,14 +70,14 @@ public final class Log4jStreamsTest {
                             while (true) {
                                 baos.write(input.read());
                             }
-                        } catch (IOException ex) {
+                        } catch (final IOException ex) {
                             throw new IllegalStateException(ex);
                         }
                     }
                 }
             );
             thread.start();
-            thread.join(TimeUnit.SECONDS.toMillis(1));
+            thread.join(TimeUnit.MINUTES.toMillis(1L));
             thread.interrupt();
             MatcherAssert.assertThat(
                 baos.toString(CharEncoding.UTF_8),

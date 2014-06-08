@@ -80,7 +80,7 @@ public final class SanitizedDomainsTest {
         Mockito.when(region.domain(Mockito.any(String.class))).thenReturn(dmn);
         final Set<String> set = new HashSet<String>();
         // @checkstyle MagicNumberCheck (1 line)
-        for (Item item : new SanitizedDomains(region, 2300).domain("")
+        for (final Item item : new SanitizedDomains(region, 2300).domain("")
             .select(new SelectRequest())) {
             set.add(item.name());
         }

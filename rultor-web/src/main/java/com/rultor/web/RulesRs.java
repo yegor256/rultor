@@ -30,6 +30,7 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
@@ -111,10 +112,13 @@ public final class RulesRs extends BaseRs {
     @GET
     @Path("/resave")
     @Produces(MediaType.TEXT_PLAIN)
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    @SuppressWarnings({
+        "PMD.AvoidInstantiatingObjectsInLoops",
+        "PMD.ConsecutiveLiteralAppends"
+    })
     public String resave() {
-        final StringBuilder text = new StringBuilder();
-        for (Rule rule : this.user().rules()) {
+        final StringBuilder text = new StringBuilder(Tv.THOUSAND);
+        for (final Rule rule : this.user().rules()) {
             final String name = rule.name();
             text.append(name).append(": ");
             try {
@@ -129,7 +133,7 @@ public final class RulesRs extends BaseRs {
                     )
                 );
                 text.append("OK");
-            } catch (SpecException ex) {
+            } catch (final SpecException ex) {
                 text.append('\n').append(Exceptions.stacktrace(ex));
             }
             text.append("\n\n");

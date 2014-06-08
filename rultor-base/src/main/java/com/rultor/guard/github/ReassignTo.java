@@ -87,7 +87,7 @@ public final class ReassignTo implements Approval {
             issue.setAssignee(assignee);
             try {
                 svc.editIssue(repo, issue);
-            } catch (RequestException ex) {
+            } catch (final RequestException ex) {
                 if ("Server Error (500)".equals(ex.getMessage())) {
                     Logger.warn(this, "strange error on Github side: %s", ex);
                 } else {

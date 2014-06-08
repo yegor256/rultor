@@ -31,10 +31,10 @@ package com.rultor.client;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
+import com.jcabi.http.response.XmlResponse;
 import com.jcabi.urn.URN;
-import com.rexsl.test.JdkRequest;
-import com.rexsl.test.RestResponse;
-import com.rexsl.test.XmlResponse;
 import com.rultor.spi.Account;
 import com.rultor.spi.Rules;
 import com.rultor.spi.Stands;
@@ -97,7 +97,7 @@ public final class RestUser implements User {
                     ).getBytes(Charsets.UTF_8)
                 )
             );
-        } catch (UnsupportedEncodingException ex) {
+        } catch (final UnsupportedEncodingException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -127,7 +127,7 @@ public final class RestUser implements User {
                     .xpath("/page/identity/urn/text()")
                     .get(0)
             );
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -151,7 +151,7 @@ public final class RestUser implements User {
                 ),
                 this.token
             );
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -175,7 +175,7 @@ public final class RestUser implements User {
                 ),
                 this.token
             );
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

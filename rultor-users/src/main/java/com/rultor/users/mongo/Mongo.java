@@ -35,11 +35,14 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.Collections;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 
 /**
  * Mongo client container.
@@ -106,20 +109,23 @@ public interface Mongo {
         @Override
         @Cacheable(forever = true)
         @RetryOnFailure(verbose = false)
-        public DB get() throws IOException {
-            final MongoClient client = new MongoClient(this.host, this.port);
-            final DB database = client.getDB(this.name);
-            if (!StringUtils.isEmpty(this.user)) {
-                Validate.isTrue(
-                    database.authenticate(
-                        this.user,
-                        this.password.toCharArray()
-                    ),
-                    "failed to authenticate with MongoDB at '%s:%d/%s' as '%s'",
-                    this.host, this.port, this.name, this.user
+        public DB get() throws UnknownHostException {
+            final ServerAddress addr = new ServerAddress(this.host, this.port);
+            final MongoClient client;
+            if (StringUtils.isEmpty(this.user)) {
+                client = new MongoClient(addr);
+            } else {
+                client = new MongoClient(
+                    addr,
+                    Collections.singletonList(
+                        MongoCredential.createMongoCRCredential(
+                            this.user, this.name,
+                            this.password.toCharArray()
+                        )
+                    )
                 );
             }
-            return database;
+            return client.getDB(this.name);
         }
     }
 

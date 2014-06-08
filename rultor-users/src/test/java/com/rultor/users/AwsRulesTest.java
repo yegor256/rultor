@@ -38,6 +38,7 @@ import com.rultor.aws.SQSClient;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Rules;
 import com.rultor.spi.Spec;
+import java.io.IOException;
 import javax.validation.ConstraintViolationException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -130,9 +131,10 @@ public final class AwsRulesTest {
 
     /**
      * AwsRules can cache and flush.
+     * @throws IOException If fails
      */
     @Test
-    public void cachesAndFlushesListOfRules() {
+    public void cachesAndFlushesListOfRules() throws IOException {
         final Item item = Mockito.mock(Item.class);
         final String name = "rule-name-test";
         Mockito.doReturn(new AttributeValue(name))
@@ -154,9 +156,10 @@ public final class AwsRulesTest {
 
     /**
      * AwsRules can cache results of get() and iterator() as same rules.
+     * @throws IOException If fails
      */
     @Test
-    public void returnsGetAndIteratorAsSameRules() {
+    public void returnsGetAndIteratorAsSameRules() throws IOException {
         final Item item = Mockito.mock(Item.class);
         final String name = "rule-name-foo";
         Mockito.doReturn(new AttributeValue(name))

@@ -69,7 +69,7 @@ public final class Either implements ACL {
     @Override
     public boolean canView(final URN urn) {
         boolean allowed = false;
-        for (ACL acl : this.acls) {
+        for (final ACL acl : this.acls) {
             if (acl.canView(urn)) {
                 allowed = true;
                 break;
@@ -81,7 +81,7 @@ public final class Either implements ACL {
     @Override
     public boolean canPost(final String key) {
         boolean allowed = false;
-        for (ACL acl : this.acls) {
+        for (final ACL acl : this.acls) {
             if (acl.canPost(key)) {
                 allowed = true;
                 break;

@@ -176,8 +176,6 @@ public final class DirectoryDrain implements Drain {
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Collection<Time> pulses(final FTPClient ftp) throws IOException {
-        final FTPFile[] files = ftp.listFiles();
-        final Collection<Time> times = new ArrayList<Time>(files.length);
         final int reply = ftp.getReplyCode();
         if (!FTPReply.isPositiveCompletion(reply)) {
             throw new IOException(
@@ -187,7 +185,9 @@ public final class DirectoryDrain implements Drain {
                 )
             );
         }
-        for (FTPFile file : files) {
+        final FTPFile[] files = ftp.listFiles();
+        final Collection<Time> times = new ArrayList<Time>(files.length);
+        for (final FTPFile file : files) {
             if (!file.getName().matches("\\d{20}")) {
                 continue;
             }

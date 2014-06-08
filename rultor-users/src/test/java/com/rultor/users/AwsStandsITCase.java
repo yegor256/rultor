@@ -39,7 +39,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
-import com.jcabi.dynamo.TableMocker;
+import com.jcabi.dynamo.mock.MadeTable;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Stand;
@@ -73,7 +73,7 @@ public final class AwsStandsITCase {
     /**
      * Table mocker to work with.
      */
-    private transient TableMocker table;
+    private transient MadeTable table;
 
     /**
      * Assume we're online.
@@ -84,7 +84,7 @@ public final class AwsStandsITCase {
         this.region = new Region.Simple(
             new Credentials.Direct(Credentials.TEST, AwsStandsITCase.PORT)
         );
-        this.table = new TableMocker(
+        this.table = new MadeTable(
             this.region,
             new CreateTableRequest()
                 .withTableName(AwsStand.TABLE)

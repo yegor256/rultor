@@ -34,6 +34,7 @@ import com.jcabi.manifests.Manifests;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Users;
+import java.io.IOException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -58,7 +59,7 @@ public final class Lifespan implements ServletContextListener {
     public void contextInitialized(final ServletContextEvent event) {
         try {
             Manifests.append(event.getServletContext());
-        } catch (java.io.IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
         final ServletContext context = event.getServletContext();

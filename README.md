@@ -1,5 +1,7 @@
 <img src="http://img.rultor.com/logo-64x64.png"/> [![Build Status](http://www.rultor.com/b/stand/rultor/rultor-on-commit.png)](http://www.rultor.com/s/rultor)
 
+[![Build Status](https://travis-ci.org/rultor/rultor.svg?branch=master)](https://travis-ci.org/rultor/rultor)
+
 Rultor.com is a Programmable Enforcer of a Software Development Process.
 
 Documentation in under construction, but these pages may help:
@@ -26,7 +28,6 @@ If you have questions or general suggestions, don't hesitate to submit
 a new [Github issue](https://github.com/rultor/rultor/issues/new),
 or a question to our
 [Google Group](https://groups.google.com/forum/#!forum/rultor).
-
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/rultor/rultor/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 

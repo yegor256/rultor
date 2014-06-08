@@ -160,7 +160,7 @@ final class MongoPulses implements Pulses {
     private DBCollection collection() {
         try {
             return this.mongo.get().getCollection(MongoStand.TABLE);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

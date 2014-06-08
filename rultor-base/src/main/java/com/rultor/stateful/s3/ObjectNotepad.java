@@ -211,7 +211,7 @@ public final class ObjectNotepad implements Notepad {
             final InputStream stream = object.getObjectContent();
             try {
                 content = IOUtils.toString(stream, CharEncoding.UTF_8);
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 throw new IllegalStateException(ex);
             } finally {
                 IOUtils.closeQuietly(stream);
@@ -223,7 +223,7 @@ public final class ObjectNotepad implements Notepad {
                 this.client.bucket(),
                 this.key
             );
-            for (String line : content.split(ObjectNotepad.EOL)) {
+            for (final String line : content.split(ObjectNotepad.EOL)) {
                 if (!line.isEmpty()) {
                     list.add(StringEscapeUtils.unescapeJava(line));
                 }
@@ -238,7 +238,7 @@ public final class ObjectNotepad implements Notepad {
      */
     private void save(final Collection<String> list) {
         final Collection<String> escaped = new ArrayList<String>(list.size());
-        for (String line : list) {
+        for (final String line : list) {
             if (!line.isEmpty()) {
                 escaped.add(StringEscapeUtils.escapeJava(line));
             }
@@ -263,7 +263,7 @@ public final class ObjectNotepad implements Notepad {
                 this.key,
                 result.getETag()
             );
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

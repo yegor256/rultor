@@ -79,7 +79,7 @@ public final class GroupAppenderTest {
                     new LoggingEvent(
                         "",
                         Logger.getLogger(this.getClass()),
-                        org.apache.log4j.Level.INFO,
+                        Level.INFO,
                         text,
                         new IllegalArgumentException()
                     )
@@ -116,7 +116,7 @@ public final class GroupAppenderTest {
             new LoggingEvent(
                 "",
                 Logger.getLogger(this.getClass()),
-                org.apache.log4j.Level.INFO,
+                Level.INFO,
                 "some text to log",
                 new IllegalArgumentException()
             )
@@ -152,15 +152,15 @@ public final class GroupAppenderTest {
                     appender.setLayout(new PatternLayout("%m%n"));
                     appenders.add(appender);
                     ready.countDown();
-                    assert start.await(1, TimeUnit.SECONDS);
+                    assert start.await(1L, TimeUnit.SECONDS);
                     final LoggingEvent event = new LoggingEvent(
                         "",
                         Logger.getLogger(this.getClass()),
-                        org.apache.log4j.Level.INFO,
+                        Level.INFO,
                         text,
                         new IllegalArgumentException()
                     );
-                    for (GroupAppender app : appenders) {
+                    for (final GroupAppender app : appenders) {
                         app.append(event);
                         app.run();
                     }
@@ -192,12 +192,12 @@ public final class GroupAppenderTest {
             svc.submit(runnable);
         }
         MatcherAssert.assertThat(
-            ready.await(1, TimeUnit.SECONDS),
+            ready.await(1L, TimeUnit.SECONDS),
             Matchers.is(true)
         );
         start.countDown();
         MatcherAssert.assertThat(
-            done.await(1, TimeUnit.SECONDS),
+            done.await(1L, TimeUnit.SECONDS),
             Matchers.is(true)
         );
     }

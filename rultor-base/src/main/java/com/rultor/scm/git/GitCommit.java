@@ -131,7 +131,7 @@ final class GitCommit implements Commit {
                 new Time(fmt.parse(matcher.group(Tv.THREE))),
                 matcher.group(2)
             );
-        } catch (ParseException ex) {
+        } catch (final ParseException ex) {
             throw new IllegalArgumentException(
                 String.format(
                     "failed to parse date `%s`",

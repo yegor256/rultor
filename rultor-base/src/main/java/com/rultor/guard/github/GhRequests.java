@@ -145,7 +145,7 @@ public final class GhRequests implements MergeRequests {
                     throw new UnsupportedOperationException();
                 }
             };
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalArgumentException(ex);
         }
     }
@@ -182,7 +182,7 @@ public final class GhRequests implements MergeRequests {
     private Collection<PullRequest> filter(final Collection<PullRequest> list)
         throws IOException {
         final Collection<PullRequest> requests = new LinkedList<PullRequest>();
-        for (PullRequest request : list) {
+        for (final PullRequest request : list) {
             if (this.approval.has(request, this.github, this.repository)) {
                 requests.add(request);
             }

@@ -67,7 +67,7 @@ public final class Markdown {
      * @return HTML
      */
     public String html() {
-        return StringEscapeUtils.escapeXml(this.text)
+        return StringEscapeUtils.escapeXml11(this.text)
             .replaceAll("\\[([^\\[]+)\\]\\(([^\\(]+)\\)", "<a href='$2'>$1</a>")
             .replaceAll("`([^`]+)`", "<code>$1</code>")
             .replaceAll("\\*{2}([^\\*]+)\\*{2}", "<strong>$1</strong>");

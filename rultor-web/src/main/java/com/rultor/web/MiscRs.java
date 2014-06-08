@@ -72,7 +72,7 @@ public final class MiscRs extends BaseRs {
             return IOUtils.toString(
                 this.getClass().getResourceAsStream("LICENSE.txt")
             );
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

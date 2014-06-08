@@ -93,7 +93,7 @@ public interface Tags extends Collection<Tag> {
         @Override
         public boolean contains(final String label) {
             boolean contains = false;
-            for (Tag tag : this.list) {
+            for (final Tag tag : this.list) {
                 if (tag.label().equals(label)) {
                     contains = true;
                     break;
@@ -104,7 +104,7 @@ public interface Tags extends Collection<Tag> {
         @Override
         public Tag get(final String label) {
             Tag found = null;
-            for (Tag tag : this.list) {
+            for (final Tag tag : this.list) {
                 if (tag.label().equals(label)) {
                     found = tag;
                     break;

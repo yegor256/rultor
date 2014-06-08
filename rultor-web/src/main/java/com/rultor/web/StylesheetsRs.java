@@ -82,7 +82,7 @@ public final class StylesheetsRs extends BaseRs {
                 .put("hrefs", this.hrefs())
                 .put(
                     "stand",
-                    StringEscapeUtils.escapeXml(
+                    StringEscapeUtils.escapeXml11(
                         this.uriInfo().getBaseUriBuilder()
                             .clone().path("/xsl/stand.xsl")
                             .build().toString()
@@ -114,9 +114,9 @@ public final class StylesheetsRs extends BaseRs {
      */
     private Collection<String> hrefs() throws IOException {
         final Collection<String> hrefs = new LinkedList<String>();
-        for (String type : StylesheetsRs.stylesheets().keySet()) {
+        for (final String type : StylesheetsRs.stylesheets().keySet()) {
             hrefs.add(
-                StringEscapeUtils.escapeXml(
+                StringEscapeUtils.escapeXml11(
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(StylesheetsRs.class)
@@ -142,7 +142,7 @@ public final class StylesheetsRs extends BaseRs {
         final Reflections reflections = new Reflections("com.rultor");
         final Collection<Class<?>> types =
             reflections.getTypesAnnotatedWith(Widget.Stylesheet.class);
-        for (Class<?> type : types) {
+        for (final Class<?> type : types) {
             stylesheets.put(type.getCanonicalName(), StylesheetsRs.load(type));
         }
         return stylesheets.build();

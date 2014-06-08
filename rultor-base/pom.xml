@@ -33,7 +33,7 @@
     <parent>
         <groupId>com.rultor</groupId>
         <artifactId>rultor</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.4</version>
     </parent>
     <artifactId>rultor-base</artifactId>
     <packaging>jar</packaging>
@@ -59,6 +59,14 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-aspects</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-immutable</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-http</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -92,12 +100,12 @@
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.1.50</version>
+            <version>0.1.51</version>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-core</artifactId>
-            <version>1.17.1</version>
+            <version>${jersey.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -148,13 +156,18 @@
         <dependency>
             <groupId>org.apache.sshd</groupId>
             <artifactId>sshd-core</artifactId>
-            <version>0.9.0</version>
+            <version>0.11.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.zafarkhaja</groupId>
             <artifactId>java-semver</artifactId>
-            <version>0.7.0</version>
+            <version>0.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
     <build>
@@ -210,4 +223,23 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>qulice</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.qulice</groupId>
+                        <artifactId>qulice-maven-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>findbugs:.*</exclude>
+                                <exclude>duplicatefinder:.*</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

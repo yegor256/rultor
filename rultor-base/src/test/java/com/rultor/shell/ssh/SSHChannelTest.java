@@ -174,7 +174,7 @@ public final class SSHChannelTest {
          * Constructor.
          * @param cmd Command to echo.
          */
-        public EchoCommand(final String cmd) {
+        EchoCommand(final String cmd) {
             this.command = cmd;
         }
 
@@ -184,8 +184,8 @@ public final class SSHChannelTest {
         }
 
         @Override
-        public void setOutputStream(final OutputStream out) {
-            this.output = out;
+        public void setOutputStream(final OutputStream stream) {
+            this.output = stream;
         }
 
         @Override

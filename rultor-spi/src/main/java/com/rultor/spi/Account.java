@@ -75,6 +75,7 @@ public interface Account {
      * Fund account with coupon.
      * @param code Coupon code to use for funding.
      * @throws InvalidCouponException When wrong coupon code is used.
+     * @checkstyle RedundantThrowsCheck (5 lines)
      */
     void fund(String code) throws InvalidCouponException;
 }

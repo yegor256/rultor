@@ -87,7 +87,7 @@ public final class JiraDeployments extends AbstractCollection<Deployment> {
             "assignee = currentUser()"
         );
         final Collection<Deployment> deps = new LinkedList<Deployment>();
-        for (JiraIssue issue : issues) {
+        for (final JiraIssue issue : issues) {
             deps.add(new JiraDeployment(issue));
         }
         return deps.iterator();

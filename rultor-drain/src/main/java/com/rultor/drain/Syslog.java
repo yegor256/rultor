@@ -109,7 +109,7 @@ public final class Syslog implements Drain {
     @Override
     public void append(final Iterable<String> lines)
         throws IOException {
-        for (String line : lines) {
+        for (final String line : lines) {
             this.send(this.compose(line));
         }
     }

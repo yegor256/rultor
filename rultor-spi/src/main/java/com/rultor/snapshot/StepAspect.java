@@ -33,12 +33,14 @@ import com.google.common.collect.ImmutableMap;
 import com.rultor.tools.Exceptions;
 import com.rultor.tools.Time;
 import com.rultor.tools.Vext;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -74,7 +76,7 @@ public final class StepAspect {
             MethodSignature.class.cast(point.getSignature()).getMethod();
         final Step step = method.getAnnotation(Step.class);
         final String label = Integer.toString(
-            Math.abs(StepAspect.RND.nextInt())
+            StepAspect.RND.nextInt(Integer.MAX_VALUE)
         );
         final ImmutableMap.Builder<String, Object> args =
             new ImmutableMap.Builder<String, Object>()
@@ -114,7 +116,7 @@ public final class StepAspect {
             ).log();
             return result;
         // @checkstyle IllegalCatch (1 line)
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             StepAspect.mark(label, Level.SEVERE);
             new XemblyLine(
                 new Directives()
@@ -181,7 +183,7 @@ public final class StepAspect {
          * Protected ctor.
          * @param subj The subject to open
          */
-        protected Open(final Object subj) {
+        Open(final Object subj) {
             this.subject = subj;
         }
         @Override
@@ -199,15 +201,37 @@ public final class StepAspect {
             try {
                 final Method method = this.subject.getClass()
                     .getDeclaredMethod(name);
-                method.setAccessible(true);
+                AccessController.doPrivileged(
+                    new StepAspect.Publicize(method)
+                );
                 value = method.invoke(this.subject);
-            } catch (NoSuchMethodException ex) {
-                final Field field = this.subject.getClass()
-                    .getDeclaredField(name);
-                field.setAccessible(true);
-                value = field.get(this.subject);
+            } catch (final NoSuchMethodException ex) {
+                value = FieldUtils.readDeclaredField(this.subject, name, true);
             }
             return value;
+        }
+    }
+
+    /**
+     * Privileged action to make a method accessible.
+     */
+    private static final class Publicize implements PrivilegedAction<Void> {
+        /**
+         * The method to change.
+         */
+        private final transient Method method;
+        /**
+         * Ctor.
+         * @param mtd The method
+         */
+        Publicize(final Method mtd) {
+            this.method = mtd;
+        }
+        @Override
+        @SuppressWarnings("PMD.AvoidAccessibilityAlteration")
+        public Void run() {
+            this.method.setAccessible(true);
+            return null;
         }
     }
 

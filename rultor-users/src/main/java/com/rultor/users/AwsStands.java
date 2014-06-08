@@ -42,6 +42,7 @@ import com.jcabi.urn.URN;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -100,7 +101,7 @@ final class AwsStands implements Stands {
             }
             @Override
             public void remove() {
-                throw new UnsupportedOperationException();
+                throw new UnsupportedOperationException("#remove()");
             }
         };
     }
@@ -114,12 +115,16 @@ final class AwsStands implements Stands {
             message = "Only numbers, letters, and dashes are allowed"
         )
         final String stand) {
-        this.region.table(AwsStand.TABLE).put(
-            new Attributes()
-                .with(AwsStand.HASH_OWNER, this.owner.toString())
-                .with(AwsStand.RANGE_STAND, stand)
-                .with(AwsStand.FIELD_ACL, "com.rultor.acl.Prohibited()")
-        );
+        try {
+            this.region.table(AwsStand.TABLE).put(
+                new Attributes()
+                    .with(AwsStand.HASH_OWNER, this.owner.toString())
+                    .with(AwsStand.RANGE_STAND, stand)
+                    .with(AwsStand.FIELD_ACL, "com.rultor.acl.Prohibited()")
+            );
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
@@ -149,7 +154,7 @@ final class AwsStands implements Stands {
 
     @Override
     public Pulses flow() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("#flow()");
     }
 
     /**

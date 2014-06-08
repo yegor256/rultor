@@ -76,7 +76,7 @@ public final class Badged implements Shells {
     @Override
     public Shell acquire() throws IOException {
         final Shell shell = this.origin.acquire();
-        for (Map.Entry<String, String> entry : this.badges.entrySet()) {
+        for (final Map.Entry<String, String> entry : this.badges.entrySet()) {
             shell.badge(entry.getKey(), entry.getValue());
         }
         return shell;

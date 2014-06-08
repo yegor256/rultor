@@ -37,6 +37,7 @@ import com.rultor.scm.SCM;
 import com.rultor.shell.Batch;
 import com.rultor.snapshot.Step;
 import com.rultor.spi.Instance;
+import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -85,9 +86,12 @@ public final class OnTag implements Instance {
     }
 
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
+        ignore = IOException.class
+    )
     public void pulse() throws Exception {
-        for (String tag : this.scm.branches()) {
+        for (final String tag : this.scm.branches()) {
             this.build(tag);
         }
     }

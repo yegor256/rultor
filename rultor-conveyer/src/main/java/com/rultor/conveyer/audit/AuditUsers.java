@@ -102,7 +102,7 @@ public final class AuditUsers implements Users, Runnable {
     @Override
     public void run() {
         final FreeTier tier = new FreeTier();
-        for (User user : this) {
+        for (final User user : this) {
             tier.fund(user.account());
         }
     }

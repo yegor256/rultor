@@ -142,7 +142,7 @@ final class MongoTag implements Tag {
         );
         this.name = label;
         this.lvl = level.toString();
-        for (String attr : map.keySet()) {
+        for (final String attr : map.keySet()) {
             Validate.isTrue(
                 attr.matches("[a-zA-Z]+"),
                 "invalid attribute name '%s'", attr

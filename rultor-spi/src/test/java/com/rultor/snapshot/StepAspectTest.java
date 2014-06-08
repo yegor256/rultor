@@ -91,7 +91,7 @@ public final class StepAspectTest {
          * Ctor.
          * @param pfx Prefix
          */
-        protected Foo(final String pfx) {
+        Foo(final String pfx) {
             this.prefix = pfx;
         }
         /**
@@ -124,17 +124,15 @@ public final class StepAspectTest {
          * Field value.
          */
         private final transient String field;
-
         /**
          * Ctor.
          * @param mtd Data to store in method.
          * @param fld Data to store in field.
          */
-        protected Bar(final String mtd, final String fld) {
+        Bar(final String mtd, final String fld) {
             this.met = mtd;
             this.field = fld;
         }
-
         /**
          * Short getter.
          * @return Value for this method.

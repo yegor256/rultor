@@ -30,11 +30,11 @@
 package com.rultor.conveyer;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.LogExceptions;
 import com.jcabi.aspects.Loggable;
 import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Instance;
 import com.rultor.spi.Spec;
+import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import org.xembly.Directives;
 
@@ -66,14 +66,16 @@ final class WithSpec implements Instance {
      * @param spc Spec to show
      * @param instance Original instance
      */
-    protected WithSpec(final Spec spc, final Instance instance) {
+    WithSpec(final Spec spc, final Instance instance) {
         this.spec = spc;
         this.origin = instance;
     }
 
     @Override
-    @LogExceptions
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
+        ignore = IOException.class
+    )
     public void pulse() throws Exception {
         new XemblyLine(
             new Directives()

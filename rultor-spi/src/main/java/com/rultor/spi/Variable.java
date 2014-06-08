@@ -50,6 +50,7 @@ public interface Variable<T> extends Spec {
      * @param arguments Arguments to use
      * @return The object
      * @throws SpecException If can't instantiate
+     * @checkstyle RedundantThrowsCheck (5 lines)
      */
     T instantiate(@NotNull(message = "users can't be NULL") Users users,
         @NotNull(message = "arguments can't be NULL") Arguments arguments)
@@ -59,6 +60,7 @@ public interface Variable<T> extends Spec {
      * Get a list of required arguments.
      * @return Their position numbers and descriptions
      * @throws SpecException If can't instantiate
+     * @checkstyle RedundantThrowsCheck (5 lines)
      */
     Map<Integer, String> arguments() throws SpecException;
 

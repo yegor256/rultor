@@ -31,9 +31,9 @@ package com.rultor.client;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.test.JdkRequest;
-import com.rexsl.test.RestResponse;
-import com.rexsl.test.XmlResponse;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
+import com.jcabi.http.response.XmlResponse;
 import com.rultor.spi.Account;
 import com.rultor.spi.InvalidCouponException;
 import com.rultor.spi.Sheet;
@@ -75,7 +75,7 @@ final class RestAccount implements Account {
      * @param entry Entry point (URI)
      * @param tkn Token
      */
-    protected RestAccount(
+    RestAccount(
         @NotNull(message = "URI can't be NULL") final URI entry,
         @NotNull(message = "token can't be NULL") final String tkn) {
         this.home = entry.toString();
@@ -97,7 +97,7 @@ final class RestAccount implements Account {
                     .xpath("/page/balance/text()")
                     .get(0)
             );
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -120,7 +120,7 @@ final class RestAccount implements Account {
                 ),
                 this.token
             );
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

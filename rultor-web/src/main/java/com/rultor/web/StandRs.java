@@ -214,7 +214,7 @@ public final class StandRs extends BaseRs {
             );
         }
         Pulses pulses = this.stand().pulses();
-        for (String tag : this.tags) {
+        for (final String tag : this.tags) {
             pulses = pulses.query().withTag(tag).fetch();
         }
         return page
@@ -256,11 +256,11 @@ public final class StandRs extends BaseRs {
                     this.getClass().getResourceAsStream("fetch.xsl")
                 ).xml()
             ).build();
-        } catch (TransformerException ex) {
+        } catch (final TransformerException ex) {
             resp = Response.serverError().entity(
                 Exceptions.stacktrace(ex)
             ).build();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             resp = Response.serverError().entity(
                 Exceptions.stacktrace(ex)
             ).build();
@@ -276,7 +276,7 @@ public final class StandRs extends BaseRs {
         final Stand stand;
         try {
             stand = this.users().stand(this.name);
-        } catch (NoSuchElementException ex) {
+        } catch (final NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
         if (!stand.owner().equals(this.auth().identity().urn())
@@ -366,7 +366,7 @@ public final class StandRs extends BaseRs {
         final Object[] labels = new String[coords.size()];
         args[0] = this.name;
         int idx = 0;
-        for (String coord : coords) {
+        for (final String coord : coords) {
             labels[idx] = String.format("{arg%d}", idx);
             args[idx + 1] = coord;
             ++idx;
@@ -395,14 +395,14 @@ public final class StandRs extends BaseRs {
                         this.getClass().getResourceAsStream("post.xsl")
                     ).dom().getDocumentElement()
                 );
-            } catch (XemblyException ex) {
+            } catch (final XemblyException ex) {
                 output = this.bug(output, ex);
-            } catch (TransformerException ex) {
+            } catch (final TransformerException ex) {
                 output = this.bug(output, ex);
             }
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             output = this.bug(output, ex);
-        } catch (SyntaxException ex) {
+        } catch (final SyntaxException ex) {
             output = this.bug(output, ex);
         }
         return output;
@@ -447,7 +447,7 @@ public final class StandRs extends BaseRs {
                     )
                 )
             );
-        } catch (SpecException ex) {
+        } catch (final SpecException ex) {
             list = Arrays.<Widget>asList(new Alert(Exceptions.stacktrace(ex)));
         }
         return list;
@@ -460,7 +460,7 @@ public final class StandRs extends BaseRs {
      */
     private JaxbBundle widgets(final Collection<Widget> widgets) {
         JaxbBundle bundle = new JaxbBundle("widgets");
-        for (Widget widget : widgets) {
+        for (final Widget widget : widgets) {
             bundle = bundle.add(this.widget(widget));
         }
         return bundle;
@@ -476,7 +476,7 @@ public final class StandRs extends BaseRs {
         try {
             dom = DocumentBuilderFactory.newInstance()
                 .newDocumentBuilder().newDocument();
-        } catch (ParserConfigurationException ex) {
+        } catch (final ParserConfigurationException ex) {
             throw new IllegalStateException(ex);
         }
         final Element root = dom.createElement("widget");
@@ -488,7 +488,7 @@ public final class StandRs extends BaseRs {
                     .xpath("/widget")
                     .append(widget.render(this.stand()))
             ).apply(dom);
-        } catch (ImpossibleModificationException ex) {
+        } catch (final ImpossibleModificationException ex) {
             final Element error = dom.createElement("error");
             error.setTextContent(Exceptions.stacktrace(ex));
             dom.getDocumentElement().appendChild(error);
@@ -509,7 +509,7 @@ public final class StandRs extends BaseRs {
         final Object[] values = new String[labels.size() + 1];
         int idx = 0;
         values[0] = this.name;
-        for (String label : labels) {
+        for (final String label : labels) {
             args[idx] = String.format("{arg%d}", idx);
             values[idx + 1] = label;
             ++idx;

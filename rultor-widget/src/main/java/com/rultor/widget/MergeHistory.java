@@ -63,7 +63,7 @@ public final class MergeHistory implements Widget {
             stand.pulses().query().withTag("on-pull-request").fetch(),
             Tv.TEN
         );
-        for (Pulse pulse : pulses) {
+        for (final Pulse pulse : pulses) {
             final Coordinates coords = pulse.coordinates();
             dirs.add("merge")
                 .add("coordinates")

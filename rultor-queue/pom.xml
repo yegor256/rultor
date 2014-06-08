@@ -33,7 +33,7 @@
     <parent>
         <groupId>com.rultor</groupId>
         <artifactId>rultor</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.4</version>
     </parent>
     <artifactId>rultor-queue</artifactId>
     <packaging>jar</packaging>
@@ -127,4 +127,22 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>qulice</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.qulice</groupId>
+                        <artifactId>qulice-maven-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>duplicatefinder:.*</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

@@ -147,7 +147,7 @@ public final class DrainRs extends BaseRs {
         } else {
             try {
                 pulses = pulses.tail(this.since);
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 throw this.flash().redirect(
                     this.uriInfo().getBaseUri(),
                     String.format(
@@ -195,7 +195,7 @@ public final class DrainRs extends BaseRs {
                         new Wallet.Empty()
                     )
                 );
-        } catch (SpecException ex) {
+        } catch (final SpecException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 String.format(
@@ -216,7 +216,7 @@ public final class DrainRs extends BaseRs {
     private Pageable<Time, Time> pulses(final Drain drain) {
         try {
             return drain.pulses();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 String.format(
@@ -236,7 +236,7 @@ public final class DrainRs extends BaseRs {
     private Rule rule() {
         try {
             return this.user().rules().get(this.name);
-        } catch (NoSuchElementException ex) {
+        } catch (final NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
     }
@@ -304,14 +304,14 @@ public final class DrainRs extends BaseRs {
                         this.getClass().getResourceAsStream("post.xsl")
                     ).dom().getDocumentElement()
                 );
-            } catch (XemblyException ex) {
+            } catch (final XemblyException ex) {
                 bugs.add(ex);
-            } catch (TransformerException ex) {
+            } catch (final TransformerException ex) {
                 bugs.add(ex);
             }
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             bugs.add(ex);
-        } catch (SyntaxException ex) {
+        } catch (final SyntaxException ex) {
             bugs.add(ex);
         }
         return bundle.add(

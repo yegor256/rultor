@@ -102,6 +102,7 @@ public interface Drain {
             /**
              * Pattern to parse it.
              */
+            @SuppressWarnings("PMD.UnusedPrivateField")
             private static final Pattern PTN = Pattern.compile(
                 "\\s*(\\d+):(\\d{2})\\s+([A-Z]+) (.*)"
             );

@@ -51,7 +51,7 @@ public final class GitTest {
      * URL to public GitHub repository.
      */
     private static final URI REPO =
-        URI.create("ssh://git@github.com/yegor256/xembly.git");
+        URI.create("http://github.com/yegor256/xembly.git");
 
     /**
      * Git public ctor args can not be null.

@@ -40,7 +40,7 @@ import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
-import com.jcabi.dynamo.TableMocker;
+import com.jcabi.dynamo.mock.MadeTable;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Rule;
@@ -80,7 +80,7 @@ public final class AwsRulesITCase {
     /**
      * Table mocker to work with.
      */
-    private transient TableMocker table;
+    private transient MadeTable table;
 
     /**
      * Assume we're online.
@@ -91,7 +91,7 @@ public final class AwsRulesITCase {
         this.region = new Region.Simple(
             new Credentials.Direct(Credentials.TEST, AwsRulesITCase.PORT)
         );
-        this.table = new TableMocker(
+        this.table = new MadeTable(
             this.region,
             new CreateTableRequest()
                 .withTableName(AwsRule.TABLE)
@@ -198,13 +198,13 @@ public final class AwsRulesITCase {
             rules.create(name);
             names.add(name);
         }
-        for (String name : names) {
+        for (final String name : names) {
             MatcherAssert.assertThat(rules.contains(name), Matchers.is(true));
         }
-        for (String name : names) {
+        for (final String name : names) {
             rules.remove(name);
         }
-        for (String name : names) {
+        for (final String name : names) {
             MatcherAssert.assertThat(rules.contains(name), Matchers.is(false));
         }
     }

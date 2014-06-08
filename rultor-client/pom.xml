@@ -33,7 +33,7 @@
     <parent>
         <groupId>com.rultor</groupId>
         <artifactId>rultor</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.4</version>
     </parent>
     <artifactId>rultor-client</artifactId>
     <packaging>jar</packaging>
@@ -59,23 +59,16 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rexsl</groupId>
-            <artifactId>rexsl-test</artifactId>
-            <version>${rexsl.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sun.jersey</groupId>
-                    <artifactId>jersey-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-urn</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-http</artifactId>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
@@ -102,4 +95,22 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>qulice</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.qulice</groupId>
+                        <artifactId>qulice-maven-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>duplicatefinder:.*</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

@@ -106,7 +106,10 @@ public final class Terminal {
      * @return Output stream
      * @throws IOException If some IO problem inside
      */
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
+        ignore = IOException.class
+    )
     public String exec(@NotNull(message = "command can't be NULL")
         final String command) throws IOException {
         return this.exec(command, "");
@@ -119,7 +122,10 @@ public final class Terminal {
      * @return Output stream
      * @throws IOException If some IO problem inside
      */
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
+        ignore = IOException.class
+    )
     public String exec(
         @NotNull(message = "command can't be NULL") final String command,
         @NotNull(message = "stdin can't be NULL") final String stdin)

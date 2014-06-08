@@ -127,11 +127,11 @@ public final class XslPosts implements Refinement {
     private static String render(final String xsl) {
         try {
             return new XSLT(new Radar().snapshot(), xsl).xml();
-        } catch (TransformerException ex) {
+        } catch (final TransformerException ex) {
             throw new IllegalStateException(ex);
-        } catch (XemblyException ex) {
+        } catch (final XemblyException ex) {
             throw new IllegalStateException(ex);
-        } catch (SyntaxException ex) {
+        } catch (final SyntaxException ex) {
             throw new IllegalStateException(ex);
         }
     }

@@ -31,11 +31,11 @@ package com.rultor.client;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.http.Request;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
+import com.jcabi.http.response.XmlResponse;
 import com.jcabi.urn.URN;
-import com.rexsl.test.JdkRequest;
-import com.rexsl.test.Request;
-import com.rexsl.test.RestResponse;
-import com.rexsl.test.XmlResponse;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Spec;
@@ -76,7 +76,7 @@ final class RestRule implements Rule {
      * @param uri URI of home page
      * @param auth Authentication token
      */
-    protected RestRule(final String uri, final String auth) {
+    RestRule(final String uri, final String auth) {
         this.home = uri;
         this.token = auth;
     }
@@ -100,10 +100,10 @@ final class RestRule implements Rule {
                 .back()
                 .fetch()
                 .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_OK);
-        } catch (UnsupportedEncodingException ex) {
+                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+        } catch (final UnsupportedEncodingException ex) {
             throw new IllegalStateException(ex);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -123,7 +123,7 @@ final class RestRule implements Rule {
                     .xpath("/page/rule/spec/text()")
                     .get(0)
             );
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -141,7 +141,7 @@ final class RestRule implements Rule {
                 .xml()
                 .xpath("/page/rule/name/text()")
                 .get(0);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -167,7 +167,7 @@ final class RestRule implements Rule {
                     .xpath("/page/rule/drain/text()")
                     .get(0)
             );
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

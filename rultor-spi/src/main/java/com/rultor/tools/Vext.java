@@ -92,7 +92,7 @@ public final class Vext {
         final Map<String, T> args) {
         final StringWriter writer = new StringWriter();
         final Context context = new VelocityContext();
-        for (Map.Entry<String, T> entry : args.entrySet()) {
+        for (final Map.Entry<String, T> entry : args.entrySet()) {
             context.put(entry.getKey(), entry.getValue());
         }
         final VelocityEngine engine = new VelocityEngine();
@@ -111,7 +111,7 @@ public final class Vext {
                 this.getClass().getName(), this.template
             );
             Validate.isTrue(success, "failed to compile VTL");
-        } catch (ParseErrorException ex) {
+        } catch (final ParseErrorException ex) {
             throw new VelocityException(
                 String.format(
                     "Invalid template: %s. %s",

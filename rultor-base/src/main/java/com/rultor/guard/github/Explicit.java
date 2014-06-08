@@ -105,7 +105,7 @@ public final class Explicit implements Approval {
         final Pattern ptn = Pattern.compile(
             this.regex, Pattern.DOTALL | Pattern.MULTILINE
         );
-        for (Comment comment : comments) {
+        for (final Comment comment : comments) {
             if (latest.date().compareTo(comment.getUpdatedAt()) > 0) {
                 continue;
             }
@@ -113,21 +113,20 @@ public final class Explicit implements Approval {
                 continue;
             }
             final String login = comment.getUser().getLogin();
-            if (!this.people.contains(login)) {
+            if (this.people.contains(login)) {
                 Logger.info(
-                    this,
-                    // @checkstyle LineLength (1 line)
-                    "message from `%s` matches `%s`, but we're listening to %[list]s",
-                    login, this.regex, this.people
+                    this, "pull request #%d is approved by %s: \"%[text]s\"",
+                    request.getId(), login, comment.getBody()
                 );
-                continue;
+                found = true;
+                break;
             }
             Logger.info(
-                this, "pull request #%d is approved by %s with \"%[text]s\"",
-                request.getId(), login, comment.getBody()
+                this,
+                // @checkstyle LineLength (1 line)
+                "message from `%s` matches `%s`, but we're listening to %[list]s",
+                login, this.regex, this.people
             );
-            found = true;
-            break;
         }
         if (!found) {
             Logger.info(
@@ -172,7 +171,7 @@ public final class Explicit implements Approval {
         final GitHubClient client = github.client();
         final PullRequestService psvc = new PullRequestService(client);
         Time latest = new Time(0);
-        for (RepositoryCommit commit
+        for (final RepositoryCommit commit
             : psvc.getCommits(repo, request.getNumber())) {
             final Time time = new Time(
                 commit.getCommit().getCommitter().getDate()

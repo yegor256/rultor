@@ -31,9 +31,9 @@ package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
 import com.jcabi.urn.URN;
-import com.rexsl.test.JdkRequest;
-import com.rexsl.test.RestResponse;
 import com.rultor.tools.Dollars;
 import java.io.IOException;
 import java.io.InputStream;
@@ -130,7 +130,7 @@ public final class IpnRs extends BaseRs {
         throws UnsupportedEncodingException {
         final List<Map.Entry<String, String>> list =
             new LinkedList<Map.Entry<String, String>>();
-        for (String pair : text.split("&")) {
+        for (final String pair : text.split("&")) {
             final String[] parts = pair.split("=", 2);
             if (parts.length == 2) {
                 list.add(
@@ -169,7 +169,7 @@ public final class IpnRs extends BaseRs {
                 .fetch()
                 .as(RestResponse.class)
                 .assertBody(Matchers.equalTo("VERIFIED"));
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
         return pairs;
@@ -184,7 +184,7 @@ public final class IpnRs extends BaseRs {
     private String join(final List<Map.Entry<String, String>> pairs)
         throws UnsupportedEncodingException {
         final StringBuilder text = new StringBuilder();
-        for (Map.Entry<String, String> pair : pairs) {
+        for (final Map.Entry<String, String> pair : pairs) {
             if (text.length() > 0) {
                 text.append('&');
             }
@@ -204,7 +204,7 @@ public final class IpnRs extends BaseRs {
         final List<Map.Entry<String, String>> pairs) {
         final ConcurrentMap<String, String> map =
             new ConcurrentHashMap<String, String>(0);
-        for (Map.Entry<String, String> pair : pairs) {
+        for (final Map.Entry<String, String> pair : pairs) {
             map.put(pair.getKey(), pair.getValue());
         }
         return map;

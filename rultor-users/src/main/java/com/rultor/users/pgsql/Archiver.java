@@ -34,7 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
 import com.jcabi.aspects.Tv;
 import com.jcabi.jdbc.JdbcSession;
-import com.jcabi.jdbc.VoidHandler;
+import com.jcabi.jdbc.Outcome;
 import java.io.Closeable;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -80,11 +80,11 @@ public final class Archiver implements Runnable, Closeable {
         try {
             new JdbcSession(this.client.get())
                 .sql("SELECT archive()")
-                .select(new VoidHandler());
+                .select(Outcome.VOID);
             new JdbcSession(this.client.get())
                 .sql("VACUUM FULL")
                 .execute();
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             throw new IllegalStateException(ex);
         }
     }

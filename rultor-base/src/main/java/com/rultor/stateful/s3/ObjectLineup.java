@@ -117,7 +117,7 @@ public final class ObjectLineup implements Lineup {
                     TimeUnit.MILLISECONDS.sleep(
                         ObjectLineup.RAND.nextInt(Tv.TEN * Tv.THOUSAND)
                     );
-                } catch (InterruptedException ex) {
+                } catch (final InterruptedException ex) {
                     Thread.currentThread().interrupt();
                     throw new IllegalStateException(ex);
                 }
@@ -168,7 +168,7 @@ public final class ObjectLineup implements Lineup {
                 }
             );
         // @checkstyle IllegalCatch (1 line)
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             throw new IllegalArgumentException(ex);
         }
     }
@@ -218,7 +218,7 @@ public final class ObjectLineup implements Lineup {
                 this.key,
                 result.getETag()
             );
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -243,12 +243,12 @@ public final class ObjectLineup implements Lineup {
                     this.client.bucket(),
                     this.key
                 );
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 throw new IllegalArgumentException(ex);
             } finally {
                 IOUtils.closeQuietly(stream);
             }
-        } catch (AmazonS3Exception ex) {
+        } catch (final AmazonS3Exception ex) {
             if (!ex.getMessage().contains("key does not exist")) {
                 throw ex;
             }

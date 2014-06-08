@@ -74,7 +74,7 @@ public final class Radar {
             }
             try {
                 buffer.append(XemblyLine.parse(line).xembly());
-            } catch (SyntaxException ex) {
+            } catch (final SyntaxException ex) {
                 assert ex != null;
             }
         }
@@ -112,11 +112,11 @@ public final class Radar {
         String summary;
         try {
             summary = new XSLT(this.snapshot(), stream).xml();
-        } catch (TransformerException ex) {
+        } catch (final TransformerException ex) {
             summary = Exceptions.stacktrace(ex);
-        } catch (XemblyException ex) {
+        } catch (final XemblyException ex) {
             summary = Exceptions.stacktrace(ex);
-        } catch (SyntaxException ex) {
+        } catch (final SyntaxException ex) {
             summary = Exceptions.stacktrace(ex);
         }
         return summary;

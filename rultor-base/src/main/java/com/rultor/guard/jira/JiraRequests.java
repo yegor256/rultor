@@ -99,7 +99,7 @@ public final class JiraRequests implements MergeRequests {
                 public MergeRequest refine(final MergeRequest request,
                     final JiraIssue issue) {
                     MergeRequest refined = request;
-                    for (Refinement ref : refs) {
+                    for (final Refinement ref : refs) {
                         refined = ref.refine(refined, issue);
                     }
                     return refined;

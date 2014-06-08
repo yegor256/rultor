@@ -31,9 +31,8 @@ package com.rultor.conveyer;
 
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.LogExceptions;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.test.JdkRequest;
+import com.jcabi.http.request.JdkRequest;
 import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Instance;
 import java.io.IOException;
@@ -88,7 +87,7 @@ final class WithStdout implements Instance {
      * @param auth Stream authentication key
      * @param instance Original instance
      */
-    protected WithStdout(final int prt, final String auth,
+    WithStdout(final int prt, final String auth,
         final Instance instance) {
         this.port = prt;
         this.key = auth;
@@ -96,8 +95,10 @@ final class WithStdout implements Instance {
     }
 
     @Override
-    @LogExceptions
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
+        ignore = IOException.class
+    )
     public void pulse() throws Exception {
         new XemblyLine(
             new Directives()
@@ -139,9 +140,9 @@ final class WithStdout implements Instance {
             address = new JdkRequest(WithStdout.META_IP)
                 .fetch()
                 .body();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             address = WithStdout.LOCALHOST;
-        } catch (AssertionError ex) {
+        } catch (final AssertionError ex) {
             address = WithStdout.LOCALHOST;
         }
         return address;

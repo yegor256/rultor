@@ -32,6 +32,7 @@ package com.rultor.spi;
 import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.ArrayComparator;
 import com.jcabi.immutable.ArraySortedSet;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -92,7 +93,7 @@ public interface Pageable<T, K> extends Iterable<T> {
         public Array(@NotNull(message = "array can't be NULL")
             final Collection<T> array) {
             this.times = new ArraySortedSet<T>(
-                array, new ArraySortedSet.Comparator.Reverse<T>()
+                array, new ArrayComparator.Reverse<T>()
             );
         }
         @Override

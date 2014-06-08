@@ -112,10 +112,10 @@ public final class Exceptions {
             "_aroundBody",
             "AjcClosure",
         };
-        for (String line : ExceptionUtils.getStackTrace(exception)
+        for (final String line : ExceptionUtils.getStackTrace(exception)
             .split(SystemUtils.LINE_SEPARATOR)) {
             boolean found = false;
-            for (String marker : markers) {
+            for (final String marker : markers) {
                 if (line.contains(marker)) {
                     found = true;
                     break;
@@ -137,7 +137,7 @@ public final class Exceptions {
      */
     public static String escape(final String text) {
         final StringBuilder output = new StringBuilder();
-        for (char chr : text.toCharArray()) {
+        for (final char chr : text.toCharArray()) {
             output.append(Exceptions.escape(chr));
         }
         return output.toString();

@@ -37,7 +37,7 @@ import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
-import com.jcabi.dynamo.TableMocker;
+import com.jcabi.dynamo.mock.MadeTable;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
 import com.rultor.spi.Rule;
@@ -72,7 +72,7 @@ public final class AwsUserITCase {
     /**
      * Table mocker to work with.
      */
-    private transient TableMocker table;
+    private transient MadeTable table;
 
     /**
      * Assume we're online.
@@ -83,7 +83,7 @@ public final class AwsUserITCase {
         this.region = new Region.Simple(
             new Credentials.Direct(Credentials.TEST, AwsUserITCase.PORT)
         );
-        this.table = new TableMocker(
+        this.table = new MadeTable(
             this.region,
             new CreateTableRequest()
                 .withTableName(AwsRule.TABLE)
@@ -132,7 +132,7 @@ public final class AwsUserITCase {
             this.region, Mockito.mock(SQSClient.class), urn
         );
         MatcherAssert.assertThat(user.urn(), Matchers.equalTo(urn));
-        for (Rule rule : user.rules()) {
+        for (final Rule rule : user.rules()) {
             user.rules().remove(rule.name());
         }
         final String name = "simple-rule";

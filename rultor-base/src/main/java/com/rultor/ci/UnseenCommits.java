@@ -86,7 +86,10 @@ public final class UnseenCommits implements Branch {
     }
 
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Tv.FIVE,
+        ignore = IOException.class
+    )
     public Iterable<Commit> log() throws IOException {
         final Iterator<Commit> iterator = this.origin.log().iterator();
         return new Iterable<Commit>() {
@@ -120,7 +123,7 @@ public final class UnseenCommits implements Branch {
         final String name;
         try {
             name = head.name();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
         final boolean seen = this.notepad.contains(name);

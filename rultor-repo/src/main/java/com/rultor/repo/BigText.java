@@ -33,7 +33,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
 import com.rultor.spi.Arguments;
-import com.rultor.spi.SpecException;
 import com.rultor.spi.Users;
 import com.rultor.spi.Variable;
 import java.util.Map;
@@ -103,15 +102,11 @@ final class BigText implements Variable<String> {
         this.lines = new Array<String>(items);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     public String instantiate(
         @NotNull(message = "users can't be NULL") final Users users,
-        @NotNull(message = "arguments can't be NULL") final Arguments args)
-        throws SpecException {
+        @NotNull(message = "arguments can't be NULL") final Arguments args) {
         return StringUtils.join(this.lines, BigText.EOL);
     }
 

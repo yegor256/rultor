@@ -32,17 +32,19 @@ package com.rultor.users.pgsql;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.immutable.ArrayComparator;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.immutable.ArraySortedSet;
 import com.jcabi.jdbc.JdbcSession;
+import com.jcabi.jdbc.Outcome;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Column;
 import com.rultor.spi.Pageable;
 import com.rultor.spi.Sheet;
 import com.rultor.tools.Time;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -134,7 +136,7 @@ final class PgSheet implements Sheet {
      * @param clnt Client
      * @param urn URN of the owner
      */
-    protected PgSheet(final PgClient clnt, final URN urn) {
+    PgSheet(final PgClient clnt, final URN urn) {
         this(
             clnt, urn,
             new ArrayMap<String, Boolean>(), new ArrayList<String>(0),
@@ -156,7 +158,7 @@ final class PgSheet implements Sheet {
      * @param where Extra WHERE clause
      * @checkstyle ParameterNumber (5 lines)
      */
-    protected PgSheet(final PgClient clnt, final URN urn,
+    PgSheet(final PgClient clnt, final URN urn,
         final Map<String, Boolean> ords, final Collection<String> grps,
         final Time left, final Time right, final int first,
         final String where) {
@@ -164,7 +166,7 @@ final class PgSheet implements Sheet {
         this.owner = urn;
         this.orders = new ArrayMap<String, Boolean>(ords);
         this.groups = new ArraySortedSet<String>(
-            grps, new ArraySortedSet.Comparator.Default<String>()
+            grps, new ArrayComparator.Default<String>()
         );
         this.clause = where;
         this.start = left;
@@ -199,8 +201,7 @@ final class PgSheet implements Sheet {
     }
 
     @Override
-    public Pageable<List<Object>, Integer> tail(final Integer head)
-        throws IOException {
+    public Pageable<List<Object>, Integer> tail(final Integer head) {
         return new PgSheet(
             this.client, this.owner, this.orders, this.groups,
             this.start, this.end, head, this.clause
@@ -214,10 +215,11 @@ final class PgSheet implements Sheet {
             return new JdbcSession(this.client.get())
                 .sql(sql)
                 .select(
-                    new JdbcSession.Handler<Collection<List<Object>>>() {
+                    new Outcome<Collection<List<Object>>>() {
                         @Override
                         public Collection<List<Object>> handle(
-                            final ResultSet rset) throws SQLException {
+                            final ResultSet rset, final Statement stmt)
+                            throws SQLException {
                             final Collection<List<Object>> rows =
                                 new LinkedList<List<Object>>();
                             while (rset.next()) {
@@ -228,7 +230,7 @@ final class PgSheet implements Sheet {
                     }
                 )
                 .iterator();
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             throw new IllegalStateException(sql, ex);
         }
     }
@@ -251,22 +253,6 @@ final class PgSheet implements Sheet {
             this.client, this.owner, this.orders, this.groups,
             this.start, this.end, this.since, where
         );
-    }
-
-    /**
-     * Convert result set to a row of objects.
-     * @param rset Result set
-     * @return Row of objects
-     * @throws SQLException If fails
-     */
-    private static List<Object> toRow(final ResultSet rset)
-        throws SQLException {
-        final int total = rset.getMetaData().getColumnCount();
-        final List<Object> row = new ArrayList<Object>(total);
-        for (int idx = 1; idx < total + 1; ++idx) {
-            row.add(rset.getObject(idx));
-        }
-        return row;
     }
 
     /**
@@ -296,7 +282,7 @@ final class PgSheet implements Sheet {
      */
     private String select() {
         final Collection<String> names = new LinkedList<String>();
-        for (Column col : this.columns()) {
+        for (final Column col : this.columns()) {
             if (this.groups.isEmpty() || this.groups.contains(col.title())) {
                 names.add(col.title());
             } else {
@@ -362,7 +348,8 @@ final class PgSheet implements Sheet {
         if (!this.orders.isEmpty()) {
             stmt.append("\nORDER BY ");
             boolean first = true;
-            for (Map.Entry<String, Boolean> order : this.orders.entrySet()) {
+            for (final Map.Entry<String, Boolean> order
+                : this.orders.entrySet()) {
                 if (!first) {
                     stmt.append(PgSheet.COMMA);
                 }
@@ -402,6 +389,22 @@ final class PgSheet implements Sheet {
             ref = String.format("_%s", column);
         }
         return ref;
+    }
+
+    /**
+     * Convert result set to a row of objects.
+     * @param rset Result set
+     * @return Row of objects
+     * @throws SQLException If fails
+     */
+    private static List<Object> toRow(final ResultSet rset)
+        throws SQLException {
+        final int total = rset.getMetaData().getColumnCount();
+        final List<Object> row = new ArrayList<Object>(total);
+        for (int idx = 1; idx < total + 1; ++idx) {
+            row.add(rset.getObject(idx));
+        }
+        return row;
     }
 
 }

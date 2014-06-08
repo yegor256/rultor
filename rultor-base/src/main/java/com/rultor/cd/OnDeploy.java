@@ -82,9 +82,12 @@ public final class OnDeploy implements Instance {
     }
 
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
+        ignore = IOException.class
+    )
     public void pulse() throws Exception {
-        for (Deployment dep : this.deployments) {
+        for (final Deployment dep : this.deployments) {
             this.deploy(dep);
         }
     }

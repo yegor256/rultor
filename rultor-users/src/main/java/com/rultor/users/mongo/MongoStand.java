@@ -175,6 +175,21 @@ final class MongoStand implements Stand {
     }
 
     /**
+     * Decode the text into clean xembly.
+     * @param script Script with prefixes
+     * @return Clean xembly
+     */
+    public static String decode(final String script) {
+        final ConcurrentMap<Long, String> lines =
+            new ConcurrentSkipListMap<Long, String>();
+        for (final String line : script.split("\n+")) {
+            final String[] parts = line.split(" ", 2);
+            lines.put(Long.parseLong(parts[0]), parts[1]);
+        }
+        return StringUtils.join(lines.values(), "\n");
+    }
+
+    /**
      * Attempt to save.
      * @param pulse The pulse name
      * @param nano Nano ID
@@ -225,9 +240,9 @@ final class MongoStand implements Stand {
                 )
         );
         Validate.isTrue(
-            result.getLastError().ok(),
+            result.getLastConcern().callGetLastError(),
             "failed to update pulse `%s`: %s",
-            pulse, result.getLastError().getErrorMessage()
+            pulse, result.getLastConcern().getWString()
         );
         return result.getN() == 1;
     }
@@ -248,31 +263,16 @@ final class MongoStand implements Stand {
         final Collection<Tag> found = new LinkedList<Tag>();
         try {
             found.addAll(new Snapshot(after).tags());
-        } catch (XemblyException ex) {
+        } catch (final XemblyException ex) {
             assert ex != null;
-        } catch (SyntaxException ex) {
+        } catch (final SyntaxException ex) {
             assert ex != null;
         }
         final Collection<DBObject> tags = new LinkedList<DBObject>();
-        for (Tag tag : found) {
+        for (final Tag tag : found) {
             tags.add(new MongoTag(tag).asObject());
         }
         return tags;
-    }
-
-    /**
-     * Decode the text into clean xembly.
-     * @param script Script with prefixes
-     * @return Clean xembly
-     */
-    public static String decode(final String script) {
-        final ConcurrentMap<Long, String> lines =
-            new ConcurrentSkipListMap<Long, String>();
-        for (String line : script.split("\n+")) {
-            final String[] parts = line.split(" ", 2);
-            lines.put(Long.parseLong(parts[0]), parts[1]);
-        }
-        return StringUtils.join(lines.values(), "\n");
     }
 
     /**
@@ -282,7 +282,7 @@ final class MongoStand implements Stand {
     private DBCollection collection() {
         try {
             return this.mongo.get().getCollection(MongoStand.TABLE);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

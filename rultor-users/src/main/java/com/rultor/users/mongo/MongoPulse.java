@@ -118,7 +118,7 @@ final class MongoPulse implements Pulse {
         final Collection<?> objects =
             Collection.class.cast(this.map.get(MongoStand.ATTR_TAGS));
         final Collection<Tag> tags = new ArrayList<Tag>(objects.size());
-        for (Object object : objects) {
+        for (final Object object : objects) {
             tags.add(new MongoTag(DBObject.class.cast(object)));
         }
         return new Tags.Simple(tags);
@@ -136,7 +136,7 @@ final class MongoPulse implements Pulse {
     private DBCollection collection() {
         try {
             return this.mongo.get().getCollection(MongoStand.TABLE);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

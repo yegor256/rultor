@@ -28,9 +28,10 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*globals $: false, console: false, RULTOR: false */
+/*globals $: false, console: false, RULTOR: false, setTimeout: false, document: false */
 
 function fetch($div) {
+    "use strict";
     var entry = $div.attr('data-fetch-url');
     if (!entry) {
         console.log('fetch URL is absent!');
@@ -42,21 +43,22 @@ function fetch($div) {
     $div.find('.heart').addClass('text-warning');
     $div.find('.snapshot').load(
         entry,
-        function(text, status, xhr) {
+        function (text, status, xhr) {
             if (status === "error") {
                 $div.find('.heart').addClass('text-danger');
                 $div.find('.heart').attr('title', text);
             } else {
                 $div.find('.heart').removeClass('text-warning');
                 RULTOR.format($div);
-                setTimeout(function() { fetch($div); }, 5000);
+                setTimeout(function () { fetch($div); }, 5000);
             }
         }
     );
 }
 
 $(document).ready(
-    function() {
+    function () {
+        "use strict";
         $('div:has(.snapshot)').each(
             function () {
                 fetch($(this));
@@ -65,7 +67,7 @@ $(document).ready(
         $('.heart').each(
             function () {
                 $(this).click(
-                    function() {
+                    function () {
                         var $div = $(this).closest('div.panel'),
                             $icon = $(this).find('i'),
                             $msg = $(this).closest('ul').find('li.msg');

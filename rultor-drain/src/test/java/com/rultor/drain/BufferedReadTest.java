@@ -67,7 +67,7 @@ public final class BufferedReadTest {
         ).when(drain).read();
         MatcherAssert.assertThat(
             IOUtils.toString(
-                new BufferedRead(work, 2, drain).read(),
+                new BufferedRead(work, 2L, drain).read(),
                 CharEncoding.UTF_8
             ),
             Matchers.containsString(text)
@@ -82,7 +82,7 @@ public final class BufferedReadTest {
     @Test
     public void printsItselfInString() throws Exception {
         MatcherAssert.assertThat(
-            new BufferedRead(new Coordinates.None(), 2, new Trash()),
+            new BufferedRead(new Coordinates.None(), 2L, new Trash()),
             Matchers.hasToString(Matchers.notNullValue())
         );
     }
@@ -103,22 +103,22 @@ public final class BufferedReadTest {
                         return IOUtils.toInputStream(
                             content, CharEncoding.UTF_8
                         );
-                    } catch (IOException ex) {
+                    } catch (final IOException ex) {
                         throw new IllegalStateException(ex);
                     }
                 }
             }
         ).when(origin).read();
         final Drain drain = new BufferedRead(
-            new Coordinates.Simple(new URN("urn:test:9"), "f"), 2, origin
+            new Coordinates.Simple(new URN("urn:test:9"), "f"), 2L, origin
         );
-        final long total = TimeUnit.SECONDS.toMillis(Tv.FIVE);
-        for (int idx = 0; idx < total; ++idx) {
+        final long total = TimeUnit.SECONDS.toMillis((long) Tv.FIVE);
+        for (long idx = 0L; idx < total; ++idx) {
             MatcherAssert.assertThat(
                 IOUtils.toString(drain.read(), CharEncoding.UTF_8),
                 Matchers.containsString(content)
             );
-            TimeUnit.MILLISECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(1L);
         }
     }
 

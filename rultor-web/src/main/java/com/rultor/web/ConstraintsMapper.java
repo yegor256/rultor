@@ -65,7 +65,8 @@ public final class ConstraintsMapper extends BaseResource
         }
         final Collection<String> violations =
             new ArrayList<String>(violation.getConstraintViolations().size());
-        for (ConstraintViolation<?> vio : violation.getConstraintViolations()) {
+        for (final ConstraintViolation<?> vio
+            : violation.getConstraintViolations()) {
             violations.add(vio.getMessage());
         }
         return Response.fromResponse(

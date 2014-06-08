@@ -75,7 +75,10 @@ public final class Seasoned implements Branch {
     }
 
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Tv.FIVE,
+        ignore = IOException.class
+    )
     public Iterable<Commit> log() throws IOException {
         final Time current = new Time();
         return Iterables.filter(
@@ -109,7 +112,7 @@ public final class Seasoned implements Branch {
     private boolean isBefore(final Commit commit, final Time current) {
         try {
             return current.delta(commit.time()) >= this.minimum;
-        } catch (IOException ioe) {
+        } catch (final IOException ioe) {
             throw new IllegalStateException(ioe);
         }
     }

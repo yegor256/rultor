@@ -37,6 +37,7 @@ import com.rultor.spi.Coordinates;
 import com.rultor.spi.Instance;
 import com.rultor.stateful.Lineup;
 import com.rultor.stateful.Notepad;
+import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -105,7 +106,10 @@ public final class Parallel implements Instance {
     }
 
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
+        ignore = IOException.class
+    )
     public void pulse() throws Exception {
         if (this.maximum > 0) {
             this.pass();

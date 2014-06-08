@@ -30,10 +30,10 @@
 package com.rultor.conveyer.http;
 
 import com.jcabi.aspects.Tv;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
-import com.rexsl.test.JdkRequest;
-import com.rexsl.test.RestResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -110,7 +110,7 @@ public final class HttpServerTest {
         }
         start.countDown();
         MatcherAssert.assertThat(
-            finished.await(1, TimeUnit.MINUTES),
+            finished.await(1L, TimeUnit.MINUTES),
             Matchers.is(true)
         );
         svc.shutdown();

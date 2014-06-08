@@ -89,11 +89,6 @@ final class EC2Environment implements Environment {
             .build();
 
     /**
-     * Coordinates we're in.
-     */
-    private final transient Coordinates work;
-
-    /**
      * Wallet to charge.
      */
     private final transient Wallet wallet;
@@ -116,9 +111,9 @@ final class EC2Environment implements Environment {
      * @param clnt EC2 client
      * @checkstyle ParameterNumber (5 lines)
      */
-    protected EC2Environment(final Coordinates wrk, final Wallet wlt,
+    EC2Environment(final Coordinates wrk, final Wallet wlt,
         final String instance, final EC2Client clnt) {
-        this.work = wrk;
+        assert wrk != null;
         this.wallet = wlt;
         this.name = instance;
         this.client = clnt;
@@ -192,7 +187,7 @@ final class EC2Environment implements Environment {
                 .get(0).getInstances().get(0).getTags();
             final ImmutableMap.Builder<String, String> map =
                 new ImmutableMap.Builder<String, String>();
-            for (Tag tag : tags) {
+            for (final Tag tag : tags) {
                 map.put(tag.getKey(), tag.getValue());
             }
             return map.build();
@@ -257,7 +252,7 @@ final class EC2Environment implements Environment {
                 }
                 try {
                     TimeUnit.SECONDS.sleep(Tv.FIFTEEN);
-                } catch (InterruptedException ex) {
+                } catch (final InterruptedException ex) {
                     Thread.currentThread().interrupt();
                     throw new IllegalStateException(ex);
                 }
@@ -282,9 +277,10 @@ final class EC2Environment implements Environment {
     private static Dollars costOf(final String type, final String zone,
         final long msec) throws IOException {
         assert zone != null;
-        final int hours = (int) (1 + msec / TimeUnit.HOURS.toMillis(1));
-        Double hourly = 1d;
-        for (Map.Entry<String, Double> ent : EC2Environment.PRICES.entrySet()) {
+        final int hours = (int) (1L + msec / TimeUnit.HOURS.toMillis(1L));
+        Double hourly = 1.0d;
+        for (final Map.Entry<String, Double> ent
+            : EC2Environment.PRICES.entrySet()) {
             if (type.matches(ent.getKey())) {
                 hourly = ent.getValue();
                 break;

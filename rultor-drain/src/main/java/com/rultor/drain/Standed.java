@@ -39,11 +39,11 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
+import com.jcabi.http.Request;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
+import com.jcabi.http.response.XmlResponse;
 import com.jcabi.log.VerboseRunnable;
-import com.rexsl.test.JdkRequest;
-import com.rexsl.test.Request;
-import com.rexsl.test.RestResponse;
-import com.rexsl.test.XmlResponse;
 import com.rultor.snapshot.XemblyLine;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Drain;
@@ -215,7 +215,7 @@ public final class Standed implements Drain {
                         public String apply(final String line) {
                             try {
                                 return XemblyLine.parse(line).xembly();
-                            } catch (SyntaxException ex) {
+                            } catch (final SyntaxException ex) {
                                 Exceptions.warn(this, ex);
                             }
                             return null;
@@ -224,7 +224,7 @@ public final class Standed implements Drain {
                 )
                 .filter(Predicates.notNull()), Standed.MAX
         );
-        for (List<String> batch : batches) {
+        for (final List<String> batch : batches) {
             this.send(batch);
         }
         this.origin.append(lines);
@@ -292,7 +292,7 @@ public final class Standed implements Drain {
      */
     private String body(final Iterable<String> xemblies) throws IOException {
         final List<String> msgs = new ArrayList<String>(0);
-        for (String xembly : xemblies) {
+        for (final String xembly : xemblies) {
             msgs.add(this.json(xembly));
         }
         final StringBuilder body = new StringBuilder()
@@ -345,7 +345,7 @@ public final class Standed implements Drain {
                 .xml()
                 // @checkstyle LineLength (1 line)
                 .xpath("/SendMessageBatchResponse/BatchResultError/BatchResultErrorEntry/Id/text()");
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

@@ -81,25 +81,27 @@ public final class ItemLineupTest {
         final CountDownLatch start = new CountDownLatch(1);
         final CountDownLatch finish = new CountDownLatch(2);
         for (int threads = 0; threads < tcount; ++threads) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        start.await();
-                    } catch (InterruptedException ex) {
-                        throw new IllegalStateException(ex);
-                    }
-                    new ItemLineup(item).exec(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                count.incrementAndGet();
-                            }
+            new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            start.await();
+                        } catch (final InterruptedException ex) {
+                            throw new IllegalStateException(ex);
                         }
-                    );
-                    finish.countDown();
+                        new ItemLineup(item).exec(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    count.incrementAndGet();
+                                }
+                            }
+                        );
+                        finish.countDown();
+                    }
                 }
-            }).start();
+            ).start();
         }
         start.countDown();
         finish.await();

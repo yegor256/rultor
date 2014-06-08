@@ -119,7 +119,7 @@ public final class Temporary implements Drain {
     @Override
     public Pageable<Time, Time> pulses() throws IOException {
         final Collection<Time> times = new LinkedList<Time>();
-        for (Temporary client : Temporary.BUFFERS.keySet()) {
+        for (final Temporary client : Temporary.BUFFERS.keySet()) {
             if (this.similar(client)) {
                 times.add(client.work.scheduled());
             }
@@ -184,7 +184,7 @@ public final class Temporary implements Drain {
     private static final class Cleaner implements Runnable {
         @Override
         public void run() {
-            for (Temporary client : Temporary.BUFFERS.keySet()) {
+            for (final Temporary client : Temporary.BUFFERS.keySet()) {
                 if (Temporary.BUFFERS.get(client).expired()) {
                     Temporary.BUFFERS.remove(client);
                 }
@@ -222,7 +222,7 @@ public final class Temporary implements Drain {
                 final PrintWriter writer = new PrintWriter(
                     new OutputStreamWriter(this.data, Charsets.UTF_8)
                 );
-                for (String line : lines) {
+                for (final String line : lines) {
                     writer.print(line);
                     writer.print('\n');
                 }

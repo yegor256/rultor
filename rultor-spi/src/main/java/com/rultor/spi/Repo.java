@@ -48,6 +48,7 @@ public interface Repo {
      * @param spec Spect
      * @return The instance
      * @throws SpecException If can't instantiate
+     * @checkstyle RedundantThrowsCheck (8 lines)
      */
     @NotNull(message = "variable is never NULL")
     Variable<?> make(

@@ -211,7 +211,7 @@ public final class SSHChannel implements Shell {
             } finally {
                 session.disconnect();
             }
-        } catch (JSchException ex) {
+        } catch (final JSchException ex) {
             throw new IOException(ex);
         }
     }
@@ -256,12 +256,12 @@ public final class SSHChannel implements Shell {
             try {
                 session.sendKeepAliveMsg();
             // @checkstyle IllegalCatch (1 line)
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 throw new IOException(ex);
             }
             try {
                 TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException ex) {
+            } catch (final InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 throw new IOException(ex);
             }
@@ -275,11 +275,12 @@ public final class SSHChannel implements Shell {
      * @throws IOException If some IO problem inside
      */
     @RetryOnFailure(
-        attempts = Tv.FIVE,
+        attempts = Tv.SEVEN,
         delay = 1,
         unit = TimeUnit.MINUTES,
         verbose = false,
-        randomize = false
+        randomize = true,
+        types = IOException.class
     )
     private Session session() throws IOException {
         try {
@@ -299,12 +300,12 @@ public final class SSHChannel implements Shell {
                 this.login, this.addr, this.port
             );
             session.setServerAliveInterval(
-                (int) TimeUnit.SECONDS.toMillis(Tv.TEN)
+                (int) TimeUnit.SECONDS.toMillis((long) Tv.TEN)
             );
             session.setServerAliveCountMax(Tv.MILLION);
             session.connect();
             return session;
-        } catch (JSchException ex) {
+        } catch (final JSchException ex) {
             throw new IOException(ex);
         }
     }

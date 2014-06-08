@@ -114,7 +114,7 @@ final class RefForeign implements Variable<Object> {
             return this.grammar.parse(
                 user.urn(), user.rules().get(this.name).spec().asText()
             ).instantiate(users, this.mapping(users, args));
-        } catch (SpecException ex) {
+        } catch (final SpecException ex) {
             throw new SpecException(
                 String.format(
                     "failed to instantiate %s:%s with %d params",
@@ -170,7 +170,7 @@ final class RefForeign implements Variable<Object> {
                 args.wallet().delegate(this.owner, this.name),
                 values
             );
-        } catch (Wallet.NotEnoughFundsException ex) {
+        } catch (final Wallet.NotEnoughFundsException ex) {
             throw new SpecException(ex);
         }
     }

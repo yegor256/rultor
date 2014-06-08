@@ -48,7 +48,6 @@ import com.rultor.spi.User;
 import com.rultor.spi.Users;
 import com.rultor.tools.Time;
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 
@@ -67,7 +66,9 @@ import lombok.EqualsAndHashCode;
     shutdownAttempts = Tv.FIVE
 )
 @EqualsAndHashCode(of = { "users", "queue", "client" })
-@SuppressWarnings("PMD.DoNotUseThreads")
+@SuppressWarnings({
+    "PMD.AvoidInstantiatingObjectsInLoops", "PMD.DoNotUseThreads"
+})
 public final class SQSQuartz implements Runnable, Closeable {
 
     /**
@@ -91,7 +92,7 @@ public final class SQSQuartz implements Runnable, Closeable {
      * @param que Queue
      * @param clnt SQS client for quartz queue
      */
-    protected SQSQuartz(final Users usr, final Queue que,
+    SQSQuartz(final Users usr, final Queue que,
         final SQSClient clnt) {
         this.users = usr;
         this.queue = que;
@@ -99,14 +100,13 @@ public final class SQSQuartz implements Runnable, Closeable {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Loggable(value = Loggable.DEBUG, limit = 2, unit = TimeUnit.MINUTES)
     public void run() {
         this.publish(this.passed(this.next()));
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         // nothing to do
     }
 
@@ -118,8 +118,8 @@ public final class SQSQuartz implements Runnable, Closeable {
     private Time passed(final Time time) {
         while (time.millis() > System.currentTimeMillis()) {
             try {
-                TimeUnit.SECONDS.sleep(Tv.FIVE);
-            } catch (InterruptedException ex) {
+                TimeUnit.SECONDS.sleep((long) Tv.FIVE);
+            } catch (final InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 throw new IllegalStateException(ex);
             }
@@ -131,7 +131,6 @@ public final class SQSQuartz implements Runnable, Closeable {
      * Pull next execution time from the quartz queue.
      * @return Time
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @RetryOnFailure(verbose = false)
     private Time next() {
         final AmazonSQS aws = this.client.get();
@@ -158,7 +157,7 @@ public final class SQSQuartz implements Runnable, Closeable {
                     .withDelaySeconds(0)
                     .withMessageBody(next.toString())
             );
-            for (Message msg : result.getMessages()) {
+            for (final Message msg : result.getMessages()) {
                 aws.deleteMessage(
                     new DeleteMessageRequest()
                         .withQueueUrl(this.client.url())
@@ -175,10 +174,9 @@ public final class SQSQuartz implements Runnable, Closeable {
      * Publish them all with the specified time.
      * @param time Time to use
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private void publish(final Time time) {
-        for (User user : this.users) {
-            for (Rule rule : user.rules()) {
+        for (final User user : this.users) {
+            for (final Rule rule : user.rules()) {
                 this.queue.push(
                     new Coordinates.Simple(user.urn(), rule.name(), time)
                 );

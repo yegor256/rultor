@@ -65,7 +65,7 @@ public final class AllOf implements Billboard {
 
     @Override
     public void announce(final boolean success) throws IOException {
-        for (Billboard board : this.boards) {
+        for (final Billboard board : this.boards) {
             board.announce(success);
         }
     }

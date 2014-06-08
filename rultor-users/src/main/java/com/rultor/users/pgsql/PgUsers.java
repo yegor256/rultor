@@ -129,7 +129,7 @@ public final class PgUsers implements Users, Runnable, Closeable {
     public void run() {
         try {
             this.receipts.process();
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             throw new IllegalStateException(ex);
         }
     }

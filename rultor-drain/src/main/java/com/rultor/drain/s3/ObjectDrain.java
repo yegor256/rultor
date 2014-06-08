@@ -142,7 +142,7 @@ public final class ObjectDrain implements Drain {
                 FileUtils.byteCountToDisplaySize(size),
                 result.getETag()
             );
-        } catch (AmazonS3Exception ex) {
+        } catch (final AmazonS3Exception ex) {
             throw new IOException(
                 String.format(
                     "failed to flush %s to `%s`: %s",
@@ -194,7 +194,7 @@ public final class ObjectDrain implements Drain {
                 ),
                 new ObjectDrain.Wrap(object.getObjectContent(), aws)
             );
-        } catch (AmazonS3Exception ex) {
+        } catch (final AmazonS3Exception ex) {
             throw new IOException(
                 String.format(
                     "failed to read %s from %s: %s",

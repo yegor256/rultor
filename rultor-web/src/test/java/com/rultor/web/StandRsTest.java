@@ -84,7 +84,7 @@ public final class StandRsTest {
             new URN("urn:test:888"), "some-rule-identifier"
         );
         Mockito.doReturn(
-            new Directives()
+            new Directives().add("snapshot")
                 .add("spec").set("some text").up()
                 .add("tags").add("tag").add("label").set("tag label")
                 .toString()
@@ -122,10 +122,7 @@ public final class StandRsTest {
                     this.getClass().getResourceAsStream("fetch.xsl")
                 ).dom()
             ),
-            XhtmlMatchers.hasXPaths(
-                "/xhtml:div",
-                "//xhtml:ul"
-            )
+            XhtmlMatchers.hasXPath("/xhtml:div/xhtml:ul")
         );
     }
 

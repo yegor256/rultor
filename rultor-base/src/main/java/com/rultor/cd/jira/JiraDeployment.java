@@ -35,8 +35,10 @@ import com.rultor.cd.Deployment;
 import com.rultor.ext.jira.JiraIssue;
 import com.rultor.snapshot.Radar;
 import com.rultor.snapshot.TagLine;
+import java.io.InputStream;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Deployment request from JIRA.
@@ -60,7 +62,7 @@ final class JiraDeployment implements Deployment {
      * Public ctor.
      * @param iss JIRA issue
      */
-    protected JiraDeployment(final JiraIssue iss) {
+    JiraDeployment(final JiraIssue iss) {
         this.issue = iss;
         new TagLine("jira").attr("key", iss.key()).log();
     }
@@ -72,29 +74,38 @@ final class JiraDeployment implements Deployment {
 
     @Override
     public void started() {
-        this.issue.post(
-            new Radar().render(
-                this.getClass().getResourceAsStream("jira-started.xsl")
-            )
+        final InputStream xsl = this.getClass().getResourceAsStream(
+            "jira-started.xsl"
         );
+        try {
+            this.issue.post(new Radar().render(xsl));
+        } finally {
+            IOUtils.closeQuietly(xsl);
+        }
     }
 
     @Override
     public void succeeded() {
-        this.issue.revert(
-            new Radar().render(
-                this.getClass().getResourceAsStream("jira-succeeded.xsl")
-            )
+        final InputStream xsl = this.getClass().getResourceAsStream(
+            "jira-succeeded.xsl"
         );
+        try {
+            this.issue.revert(new Radar().render(xsl));
+        } finally {
+            IOUtils.closeQuietly(xsl);
+        }
     }
 
     @Override
     public void failed() {
-        this.issue.revert(
-            new Radar().render(
-                this.getClass().getResourceAsStream("jira-failed.xsl")
-            )
+        final InputStream xsl = this.getClass().getResourceAsStream(
+            "jira-failed.xsl"
         );
+        try {
+            this.issue.revert(new Radar().render(xsl));
+        } finally {
+            IOUtils.closeQuietly(xsl);
+        }
     }
 
 }

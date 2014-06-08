@@ -104,10 +104,10 @@ final class SQSReceipts {
                 .withVisibilityTimeout(Tv.FIVE)
                 .withMaxNumberOfMessages(Tv.TEN)
         );
-        for (Message msg : result.getMessages()) {
+        for (final Message msg : result.getMessages()) {
             try {
                 this.process(SQSReceipts.NORM.readObject(msg.getBody()));
-            } catch (NormJson.JsonException ex) {
+            } catch (final NormJson.JsonException ex) {
                 Exceptions.warn(this, ex);
             } finally {
                 aws.deleteMessage(

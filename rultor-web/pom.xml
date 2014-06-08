@@ -33,7 +33,7 @@
     <parent>
         <groupId>com.rultor</groupId>
         <artifactId>rultor</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.4</version>
     </parent>
     <artifactId>rultor-web</artifactId>
     <packaging>war</packaging>
@@ -85,7 +85,7 @@
         <dependency>
             <groupId>org.jolokia</groupId>
             <artifactId>jolokia-core</artifactId>
-            <version>1.1.4</version>
+            <version>1.2.0</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -212,6 +212,14 @@
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-http</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-immutable</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi</groupId>
             <artifactId>jcabi-manifests</artifactId>
         </dependency>
         <dependency>
@@ -255,6 +263,11 @@
             <version>1.7</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>
@@ -277,7 +290,7 @@
                 <plugin>
                     <artifactId>maven-war-plugin</artifactId>
                     <configuration>
-                        <warSourceExcludes>js/**, css/**, xsl/**</warSourceExcludes>
+                        <warSourceExcludes>css/**, xsl/**</warSourceExcludes>
                         <archive>
                             <manifestEntries>
                                 <Rultor-Version>${project.version}</Rultor-Version>
@@ -489,16 +502,17 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>com.ning.maven.plugins</groupId>
-                        <artifactId>maven-duplicate-finder-plugin</artifactId>
+                        <groupId>com.qulice</groupId>
+                        <artifactId>qulice-maven-plugin</artifactId>
                         <configuration>
-                            <ignoredDependencies combine.children="append">
-                                <dependency>
-                                    <groupId>org.apache.xmlgraphics</groupId>
-                                    <artifactId>batik-ext</artifactId>
-                                    <version>1.7</version>
-                                </dependency>
-                            </ignoredDependencies>
+                            <excludes>
+                                <exclude>checkstyle:/src/test/resources/com/rultor/web/.*</exclude>
+                                <exclude>checkstyle:/src/main/webapp/.*</exclude>
+                                <exclude>findbugs:.*</exclude>
+                                <exclude>xml:/src/main/webapp/WEB-INF/web.xml</exclude>
+                                <exclude>xml:/src/test/rexsl/xml/.*</exclude>
+                                <exclude>duplicatefinder:.*</exclude>
+                            </excludes>
                         </configuration>
                     </plugin>
                 </plugins>

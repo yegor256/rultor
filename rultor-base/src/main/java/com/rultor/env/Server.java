@@ -93,7 +93,7 @@ public final class Server implements Environments {
     public Iterator<Environment> iterator() {
         try {
             return Arrays.asList(this.acquire()).iterator();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

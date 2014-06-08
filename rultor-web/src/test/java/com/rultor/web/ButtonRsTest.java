@@ -106,18 +106,6 @@ public final class ButtonRsTest {
     }
 
     /**
-     * Premare mocks for tests.
-     * @param res Button
-     */
-    private void prepare(final ButtonRs res) {
-        res.setUriInfo(new UriInfoMocker().mock());
-        res.setHttpHeaders(new HttpHeadersMocker().mock());
-        res.setSecurityContext(Mockito.mock(SecurityContext.class));
-        res.setStand("stand");
-        this.context(res);
-    }
-
-    /**
      * ButtonRs can produce image even when missing build information.
      *
      * @throws Exception In case of error.
@@ -166,45 +154,6 @@ public final class ButtonRsTest {
                 )
             ),
             Matchers.equalTo(MediaType.PNG.toString())
-        );
-    }
-
-    /**
-     * Setup servlet context.
-     * @param res Page to setup the context.
-     */
-    private void context(final ButtonRs res) {
-        final ServletContext context = Mockito.mock(ServletContext.class);
-        Mockito.when(context.getResourceAsStream(Mockito.anyString()))
-            .thenReturn(
-                this.getClass().getResourceAsStream(
-                    "button.xsl"
-                )
-            );
-        res.setServletContext(context);
-    }
-
-    /**
-     * Generate build health page.
-     * @param rule Rule to use in page.
-     * @param duration Duration
-     * @param code Code
-     * @param health Health
-     * @return Page source.
-     * @checkstyle ParameterNumberCheck (3 lines)
-     */
-    private String page(final String rule, final String duration,
-        final String code, final String health) {
-        return String.format(
-            // @checkstyle StringLiteralsConcatenation (8 lines)
-            // @checkstyle LineLength (1 line)
-            "<page><widgets><widget class=\"com.rultor.widget.BuildHealth\"><builds><build>"
-                + "  <coordinates><rule>%s</rule></coordinates>"
-                + "  <duration>%s</duration>"
-                + "  <code>%s</code>"
-                + "  <health>%s</health>"
-                + "</build></builds></widget></widgets></page>",
-            rule, duration, code, health
         );
     }
 
@@ -279,4 +228,57 @@ public final class ButtonRsTest {
             Matchers.equalTo(true)
         );
     }
+
+    /**
+     * Premare mocks for tests.
+     * @param res Button
+     */
+    private void prepare(final ButtonRs res) {
+        res.setUriInfo(new UriInfoMocker().mock());
+        res.setHttpHeaders(new HttpHeadersMocker().mock());
+        res.setSecurityContext(Mockito.mock(SecurityContext.class));
+        res.setStand("stand");
+        this.context(res);
+    }
+
+    /**
+     * Generate build health page.
+     * @param rule Rule to use in page.
+     * @param duration Duration
+     * @param code Code
+     * @param health Health
+     * @return Page source.
+     * @checkstyle ParameterNumberCheck (3 lines)
+     */
+    @SuppressWarnings("PMD.UseObjectForClearerAPI")
+    private String page(final String rule, final String duration,
+        final String code, final String health) {
+        return String.format(
+            // @checkstyle StringLiteralsConcatenation (8 lines)
+            // @checkstyle LineLength (1 line)
+            "<page><widgets><widget class=\"com.rultor.widget.BuildHealth\"><builds><build>"
+                + "  <coordinates><rule>%s</rule></coordinates>"
+                + "  <duration>%s</duration>"
+                + "  <code>%s</code>"
+                + "  <health>%s</health>"
+                + "</build></builds></widget></widgets></page>",
+            rule, duration, code, health
+        );
+    }
+
+    /**
+     * Setup servlet context.
+     * @param res Page to setup the context.
+     */
+    private void context(final ButtonRs res) {
+        final ServletContext context = Mockito.mock(ServletContext.class);
+        Mockito.when(context.getResourceAsStream(Mockito.anyString()))
+            .thenReturn(
+                this.getClass().getResourceAsStream(
+                    "button.xsl"
+                )
+            );
+        res.setServletContext(context);
+    }
+
 }

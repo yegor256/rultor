@@ -30,10 +30,10 @@
 package com.rultor.tools;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.github.fge.jsonschema.exceptions.ProcessingException;
+import com.github.fge.jackson.JsonLoader;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import com.github.fge.jsonschema.report.ProcessingReport;
-import com.github.fge.jsonschema.util.JsonLoader;
 import com.jcabi.aspects.Loggable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -84,7 +84,7 @@ public final class NormJson {
     public NormJson(final InputStream json) {
         try {
             this.schema = IOUtils.toString(json, CharEncoding.UTF_8);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalArgumentException(ex);
         }
     }
@@ -94,6 +94,7 @@ public final class NormJson {
      * @param json JSON to parse
      * @return Object found there
      * @throws NormJson.JsonException If fails
+     * @checkstyle RedundantThrowsCheck (5 lines)
      */
     @Loggable(value = Loggable.DEBUG, ignore = NormJson.JsonException.class)
     public JsonObject readObject(final String json)
@@ -103,11 +104,11 @@ public final class NormJson {
             report = NormJson.FACTORY
                 .getJsonSchema(JsonLoader.fromString(this.schema))
                 .validate(JsonLoader.fromString(json));
-        } catch (ProcessingException ex) {
+        } catch (final ProcessingException ex) {
             throw new NormJson.JsonException(ex);
-        } catch (JsonParseException ex) {
+        } catch (final JsonParseException ex) {
             throw new NormJson.JsonException(ex);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalArgumentException(ex);
         }
         if (!report.isSuccess()) {
@@ -115,7 +116,7 @@ public final class NormJson {
         }
         try {
             return Json.createReader(new StringReader(json)).readObject();
-        } catch (javax.json.JsonException ex) {
+        } catch (final javax.json.JsonException ex) {
             throw new NormJson.JsonException(ex);
         }
     }

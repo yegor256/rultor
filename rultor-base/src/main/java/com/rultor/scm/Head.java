@@ -65,7 +65,10 @@ public final class Head implements Branch {
     }
 
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = Tv.FIVE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Tv.FIVE,
+        ignore = IOException.class
+    )
     public Iterable<Commit> log() throws IOException {
         return Iterables.limit(this.origin.log(), 1);
     }

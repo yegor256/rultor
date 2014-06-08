@@ -82,7 +82,7 @@ public final class BuildHealth implements Widget {
                 Tv.HUNDRED
             ).iterator()
         );
-        for (BuildHealth.Build build : builds) {
+        for (final BuildHealth.Build build : builds) {
             dirs = dirs.append(build.directives()).up();
         }
         return dirs;

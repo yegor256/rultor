@@ -31,9 +31,9 @@ package com.rultor.ext.jira;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.test.JdkRequest;
-import com.rexsl.test.JsonResponse;
-import com.rexsl.test.RestResponse;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.JsonResponse;
+import com.jcabi.http.response.RestResponse;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -65,7 +65,7 @@ final class RxJiraComment implements JiraComment {
      * Public ctor.
      * @param srv Server URL
      */
-    protected RxJiraComment(final URI srv) {
+    RxJiraComment(final URI srv) {
         this.url = srv.toString();
     }
 
@@ -81,7 +81,7 @@ final class RxJiraComment implements JiraComment {
                 .json()
                 .readObject()
                 .getString("body");
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -99,7 +99,7 @@ final class RxJiraComment implements JiraComment {
                 .readObject()
                 .getJsonObject("author")
                 .getString("name");
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

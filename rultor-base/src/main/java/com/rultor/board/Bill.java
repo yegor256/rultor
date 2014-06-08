@@ -110,9 +110,9 @@ public interface Bill {
         public String body() {
             try {
                 return new Radar().snapshot().xml().toString();
-            } catch (SyntaxException ex) {
+            } catch (final SyntaxException ex) {
                 throw new IllegalStateException(ex);
-            } catch (XemblyException ex) {
+            } catch (final XemblyException ex) {
                 throw new IllegalStateException(ex);
             }
         }

@@ -63,7 +63,7 @@ public final class Console implements Drain {
         final PrintStream stream = new PrintStream(
             System.out, true, CharEncoding.UTF_8
         );
-        for (String line : lines) {
+        for (final String line : lines) {
             stream.println(String.format("CONSOLE: %s", line));
         }
     }

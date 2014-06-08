@@ -60,8 +60,8 @@ public final class MergedMapsTest {
                 .put(keyc, "secondC")
                 .build();
         final MergedMaps<String, String> map = new MergedMaps<String, String>(
-            first,
-            second);
+            first, second
+        );
         MatcherAssert.assertThat(map.containsKey(keya), Matchers.is(true));
         MatcherAssert.assertThat(map.containsKey(keyb), Matchers.is(true));
         MatcherAssert.assertThat(map.containsKey(keyc), Matchers.is(true));
@@ -83,8 +83,8 @@ public final class MergedMapsTest {
                 .put(key, val)
                 .build();
         final MergedMaps<String, String> map = new MergedMaps<String, String>(
-            first,
-            second);
+            first, second
+        );
         MatcherAssert.assertThat(map.get(key), Matchers.is(val));
     }
 
@@ -107,8 +107,8 @@ public final class MergedMapsTest {
                 .put(keyh, "secondH")
                 .build();
         final MergedMaps<String, String> map = new MergedMaps<String, String>(
-            first,
-            second);
+            first, second
+        );
         MatcherAssert.assertThat(
             map.size(),
             Matchers.is(com.jcabi.aspects.Tv.THREE)

@@ -31,7 +31,7 @@ package com.rultor.users;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Attributes;
+import com.jcabi.dynamo.AttributeUpdates;
 import com.jcabi.dynamo.Item;
 import com.jcabi.urn.URN;
 import com.rultor.aws.SQSClient;
@@ -39,6 +39,7 @@ import com.rultor.spi.Coordinates;
 import com.rultor.spi.Rule;
 import com.rultor.spi.Spec;
 import com.rultor.spi.Wallet;
+import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -118,72 +119,104 @@ final class AwsRule implements Rule {
     public void update(
         @NotNull(message = "spec can't be NULL") final Spec spec,
         @NotNull(message = "drain can't be NULL") final Spec drain) {
-        this.item.put(
-            new Attributes()
-                .with(AwsRule.FIELD_SPEC, spec.asText())
-                .with(AwsRule.FIELD_DRAIN, drain.asText())
-                .with(AwsRule.FIELD_FAILURE, AwsRule.NO_FAILURE)
-        );
+        try {
+            this.item.put(
+                new AttributeUpdates()
+                    .with(AwsRule.FIELD_SPEC, spec.asText())
+                    .with(AwsRule.FIELD_DRAIN, drain.asText())
+                    .with(AwsRule.FIELD_FAILURE, AwsRule.NO_FAILURE)
+            );
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     @NotNull(message = "spec of a rule is never NULL")
     public Spec spec() {
-        Spec spec;
-        if (this.item.has(AwsRule.FIELD_SPEC)) {
-            spec = new Spec.Simple(this.item.get(AwsRule.FIELD_SPEC).getS());
-        } else {
-            spec = new Spec.Simple();
+        final Spec spec;
+        try {
+            if (this.item.has(AwsRule.FIELD_SPEC)) {
+                spec = new Spec.Simple(
+                    this.item.get(AwsRule.FIELD_SPEC).getS()
+                );
+            } else {
+                spec = new Spec.Simple();
+            }
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
         }
         return spec;
     }
 
     @Override
     public String name() {
-        return this.item.get(AwsRule.RANGE_NAME).getS();
+        try {
+            return this.item.get(AwsRule.RANGE_NAME).getS();
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     public Wallet wallet(final Coordinates work,
         final URN taker, final String rule) {
-        return new SQSWallet(
-            this.client, work,
-            this.owner(), this.name(),
-            taker, rule
-        );
+        try {
+            return new SQSWallet(
+                this.client, work,
+                this.owner(), this.name(),
+                taker, rule
+            );
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     public Spec drain() {
-        Spec spec;
-        if (this.item.has(AwsRule.FIELD_DRAIN)) {
-            spec = new Spec.Simple(this.item.get(AwsRule.FIELD_DRAIN).getS());
-        } else {
-            spec = new Spec.Simple("com.rultor.drain.Trash()");
+        final Spec spec;
+        try {
+            if (this.item.has(AwsRule.FIELD_DRAIN)) {
+                spec = new Spec.Simple(
+                    this.item.get(AwsRule.FIELD_DRAIN).getS()
+                );
+            } else {
+                spec = new Spec.Simple("com.rultor.drain.Trash()");
+            }
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
         }
         return spec;
     }
 
     @Override
     public void failure(final String desc) {
-        this.item.put(
-            new Attributes()
-                .with(AwsRule.FIELD_SPEC, this.spec().asText())
-                .with(AwsRule.FIELD_DRAIN, this.drain().asText())
-                .with(AwsRule.FIELD_FAILURE, desc)
-        );
+        try {
+            this.item.put(
+                new AttributeUpdates()
+                    .with(AwsRule.FIELD_SPEC, this.spec().asText())
+                    .with(AwsRule.FIELD_DRAIN, this.drain().asText())
+                    .with(AwsRule.FIELD_FAILURE, desc)
+            );
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
     public String failure() {
         String failure;
-        if (this.item.has(AwsRule.FIELD_FAILURE)) {
-            failure = this.item.get(AwsRule.FIELD_FAILURE).getS();
-            if (failure.equals(AwsRule.NO_FAILURE)) {
+        try {
+            if (this.item.has(AwsRule.FIELD_FAILURE)) {
+                failure = this.item.get(AwsRule.FIELD_FAILURE).getS();
+                if (failure.equals(AwsRule.NO_FAILURE)) {
+                    failure = "";
+                }
+            } else {
                 failure = "";
             }
-        } else {
-            failure = "";
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
         }
         return failure;
     }
@@ -191,8 +224,9 @@ final class AwsRule implements Rule {
     /**
      * Owner of it.
      * @return URN of the owner
+     * @throws IOException If fails
      */
-    private URN owner() {
+    private URN owner() throws IOException {
         return URN.create(this.item.get(AwsRule.HASH_OWNER).getS());
     }
 

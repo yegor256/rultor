@@ -31,9 +31,9 @@ package com.rultor.client;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.test.JdkRequest;
-import com.rexsl.test.RestResponse;
-import com.rexsl.test.XmlResponse;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
+import com.jcabi.http.response.XmlResponse;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Stands;
@@ -110,7 +110,7 @@ public final class RestStands implements Stands {
                     .get(0),
                 this.token
             );
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -133,9 +133,9 @@ public final class RestStands implements Stands {
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK);
-        } catch (UnsupportedEncodingException ex) {
+        } catch (final UnsupportedEncodingException ex) {
             throw new IllegalStateException(ex);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -153,7 +153,7 @@ public final class RestStands implements Stands {
                 .xml()
                 .xpath(String.format("/page/stands/stand[name='%s']", name))
                 .isEmpty();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

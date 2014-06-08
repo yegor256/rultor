@@ -89,7 +89,7 @@ public final class ShellMocker {
             IOUtils.copy(process.getErrorStream(), stderr);
             try {
                 return process.waitFor();
-            } catch (InterruptedException ex) {
+            } catch (final InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 throw new IOException(ex);
             }

@@ -160,7 +160,7 @@ public final class Time implements Comparable<Time> {
         final long time;
         try {
             time = fmt.parse(text).getTime();
-        } catch (ParseException ex) {
+        } catch (final ParseException ex) {
             throw new IllegalArgumentException(ex);
         }
         assert time > 0 : "can't be negative";

@@ -104,7 +104,7 @@ public final class PulseRs extends BaseRs {
     public String stream() {
         try {
             return IOUtils.toString(this.pulse().stream());
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUriBuilder()
                     .clone()
@@ -127,7 +127,7 @@ public final class PulseRs extends BaseRs {
         final Rule rule;
         try {
             rule = this.user().rules().get(this.name);
-        } catch (NoSuchElementException ex) {
+        } catch (final NoSuchElementException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
         // @checkstyle AnonInnerLength (50 lines)
@@ -176,7 +176,7 @@ public final class PulseRs extends BaseRs {
                     )
                 )
             ).read();
-        } catch (SpecException ex) {
+        } catch (final SpecException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 String.format(
