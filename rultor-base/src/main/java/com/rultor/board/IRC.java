@@ -31,55 +31,134 @@ package com.rultor.board;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
+import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.schwering.irc.lib.IRCConnection;
 
 /**
- * IRC.
+ * The IRC client API implementation.
  *
+ * @see <a href="http://moepii.sourceforge.net/">IRClib</a>
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "host", "port", "channel" })
+@EqualsAndHashCode(of = { "channel", "nickname", "username" })
 @Loggable(Loggable.DEBUG)
 public final class IRC implements Billboard {
-
-    /**
-     * Host name.
-     */
-    private final transient String host;
-
-    /**
-     * Port number.
-     */
-    private final transient int port;
-
     /**
      * Channel name.
+     * Or generally speaking:
+     * target of PRIVMSGs (a channel or nickname)
      */
     private final transient String channel;
 
     /**
+     * Password.
+     */
+    private final transient String password;
+
+    /**
+     * Nickname.
+     */
+    private final transient String nickname;
+
+    /**
+     * Username.
+     */
+    private final transient String username;
+
+    /**
+     * Real name.
+     */
+    private final transient String realname;
+
+    /**
+     * Is SSL used.
+     */
+    private final transient boolean isSSL;
+
+    /**
+     * Bill to publish.
+     */
+    private final transient Bill bill;
+
+    /**
+     * Creates connection and stores basic connection information.
+     * Like host, port, channel.
+     */
+    private final transient IRCServer server;
+
+    /**
      * Public ctor.
+     *
+     * @param bll Bill
      * @param hst Host
      * @param prt Port
      * @param chnl Channel
+     * @param pass Password
+     * @param nick Nickname
+     * @param user Username
+     * @param name Real name
+     * @param ssl Is SSL used
+     * @checkstyle ParameterNumber (3 lines)
      */
-    public IRC(final String hst, final int prt, final String chnl) {
-        this.host = hst;
-        this.port = prt;
+    public IRC(final Bill bll, final String hst, final int prt,
+        final String chnl, final String pass, final String nick,
+        final String user, final String name, final boolean ssl) {
+        this(bll, new IRCServerDefault(hst, prt), chnl, pass, nick, user, name,
+            ssl
+        );
+    }
+
+    /**
+     * Public ctor.
+     *
+     * @param bll Bill
+     * @param srv Server
+     * @param chnl Channel
+     * @param pass Password
+     * @param nick Nickname
+     * @param user Username
+     * @param name Real name
+     * @param ssl Is SSL used
+     * @checkstyle ParameterNumber (3 lines)
+     */
+    public IRC(final Bill bll, final IRCServer srv, final String chnl,
+        final String pass, final String nick, final String user,
+        final String name, final boolean ssl
+    ) {
+        this.bill = bll;
+        this.server = srv;
         this.channel = chnl;
+        this.password = pass;
+        this.nickname = nick;
+        this.username = user;
+        this.realname = name;
+        this.isSSL = ssl;
     }
 
     @Override
     public void announce(final boolean success) {
-        assert this.host != null;
-        assert this.port != 0;
-        assert this.channel != null;
-        throw new UnsupportedOperationException();
+        final IRCConnection conn;
+        try {
+            conn = this.server.connect(
+                this.channel, this.password, this.nickname, this.username,
+                this.realname, this.isSSL
+            );
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+        final String formatted =
+            IRCServerDefault.formatChannelName(this.channel);
+        conn.doPrivmsg(formatted, this.bill.subject());
+        Logger.info(
+            this, "%s%s",
+            IRCServerDefault.formatChannelPrompt(formatted), this.bill.subject()
+        );
     }
-
 }
