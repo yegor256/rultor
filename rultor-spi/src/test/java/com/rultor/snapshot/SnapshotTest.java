@@ -29,7 +29,7 @@
  */
 package com.rultor.snapshot;
 
-import com.rexsl.test.XhtmlMatchers;
+import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Tag;
 import com.rultor.spi.Tags;
 import java.util.logging.Level;

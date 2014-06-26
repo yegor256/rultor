@@ -34,7 +34,7 @@ import com.jcabi.urn.URN;
 import com.rexsl.page.HttpHeadersMocker;
 import com.rexsl.page.ServletContextMocker;
 import com.rexsl.page.UriInfoMocker;
-import com.rexsl.test.XhtmlMatchers;
+import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
 import com.rultor.spi.Coordinates;

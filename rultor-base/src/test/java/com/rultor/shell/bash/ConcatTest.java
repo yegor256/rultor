@@ -31,7 +31,7 @@ package com.rultor.shell.bash;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
-import com.rexsl.test.XhtmlMatchers;
+import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.shell.Permanent;
 import com.rultor.shell.ShellMocker;
 import com.rultor.snapshot.Snapshot;

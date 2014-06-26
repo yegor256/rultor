@@ -30,7 +30,7 @@
 package com.rultor.web;
 
 import com.jcabi.manifests.Manifests;
-import com.rexsl.test.XhtmlMatchers;
+import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
 import java.io.IOException;

@@ -31,7 +31,7 @@ package com.rultor.web;
 
 import com.rexsl.page.HttpHeadersMocker;
 import com.rexsl.page.UriInfoMocker;
-import com.rexsl.test.XhtmlMatchers;
+import com.jcabi.matchers.XhtmlMatchers;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 

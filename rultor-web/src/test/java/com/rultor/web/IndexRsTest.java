@@ -35,7 +35,7 @@ import com.rexsl.page.HttpHeadersMocker;
 import com.rexsl.page.ServletContextMocker;
 import com.rexsl.page.UriInfoMocker;
 import com.rexsl.test.JaxbConverter;
-import com.rexsl.test.XhtmlMatchers;
+import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.repo.ClasspathRepo;
 import com.rultor.spi.Account;
 import com.rultor.spi.Coordinates;

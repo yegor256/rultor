@@ -29,7 +29,7 @@
  */
 package com.rultor.widget;
 
-import com.rexsl.test.XhtmlMatchers;
+import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.snapshot.XSLT;
 import java.net.URL;
 import javax.xml.transform.Source;

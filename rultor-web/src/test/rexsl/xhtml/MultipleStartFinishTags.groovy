@@ -29,7 +29,7 @@
  */
 package com.rultor.web.rexsl.xhtml
 
-import com.rexsl.test.XhtmlMatchers
+import com.jcabi.matchers.XhtmlMatchers
 import org.hamcrest.MatcherAssert
 import org.phandom.Phandom
 

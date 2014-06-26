@@ -163,26 +163,13 @@
         </dependency>
         <dependency>
             <groupId>com.rexsl</groupId>
-            <artifactId>rexsl-core</artifactId>
-            <version>${rexsl.version}</version>
-            <scope>runtime</scope>
+            <artifactId>rexsl</artifactId>
+            <version>1.2.1</version>
         </dependency>
         <dependency>
-            <groupId>com.rexsl</groupId>
-            <artifactId>rexsl-page</artifactId>
-            <version>${rexsl.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rexsl</groupId>
-            <artifactId>rexsl-page</artifactId>
-            <version>${rexsl.version}</version>
-            <classifier>mock</classifier>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-matchers</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.rexsl</groupId>
-            <artifactId>rexsl-test</artifactId>
-            <version>${rexsl.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
@@ -343,51 +330,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.rexsl</groupId>
-                <artifactId>rexsl-maven-plugin</artifactId>
-                <version>${rexsl.version}</version>
-                <configuration>
-                    <systemPropertyVariables>
-                        <log4j.configuration>file:${basedir}/src/test/resources/log4j.properties</log4j.configuration>
-                    </systemPropertyVariables>
-                    <check>
-                        com.rexsl.maven.checks.BinaryFilesCheck,
-                        com.rexsl.maven.checks.JigsawCssCheck,
-                        com.rexsl.maven.checks.JSStaticCheck,
-                        com.rexsl.maven.checks.FilesStructureCheck,
-                        com.rexsl.maven.checks.RexslFilesCheck,
-                        com.rexsl.maven.checks.XhtmlOutputCheck,
-                        com.rexsl.maven.checks.InContainerScriptsCheck,
-                        com.rexsl.maven.checks.WebXmlCheck
-                    </check>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                            <goal>package</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.jcabi</groupId>
-                        <artifactId>jcabi-log</artifactId>
-                        <version>0.11</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.jcabi</groupId>
-                        <artifactId>jcabi-aspects</artifactId>
-                        <version>0.12</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.jcabi.incubator</groupId>
-                        <artifactId>phandom</artifactId>
-                        <version>0.2</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>

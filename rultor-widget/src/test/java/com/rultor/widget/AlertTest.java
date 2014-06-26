@@ -29,7 +29,7 @@
  */
 package com.rultor.widget;
 
-import com.rexsl.test.XhtmlMatchers;
+import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Stand;
 import com.rultor.spi.Widget;
 import org.hamcrest.MatcherAssert;

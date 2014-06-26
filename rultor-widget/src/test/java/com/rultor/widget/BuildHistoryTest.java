@@ -31,7 +31,7 @@ package com.rultor.widget;
 
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.urn.URN;
-import com.rexsl.test.XhtmlMatchers;
+import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulse;
 import com.rultor.spi.Pulses;
