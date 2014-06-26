@@ -33,7 +33,7 @@
     <parent>
         <groupId>com.jcabi</groupId>
         <artifactId>parent</artifactId>
-        <version>0.22</version>
+        <version>0.25</version>
     </parent>
     <groupId>com.rultor</groupId>
     <artifactId>rultor</artifactId>
@@ -108,7 +108,7 @@
             <dependency>
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk</artifactId>
-                <version>1.7.7</version>
+                <version>1.8.1</version>
                 <exclusions>
                     <exclusion>
                         <groupId>com.fasterxml.jackson.core</groupId>
@@ -119,12 +119,7 @@
             <dependency>
                 <groupId>com.jcabi.incubator</groupId>
                 <artifactId>xembly</artifactId>
-                <version>0.16.2</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jcabi</groupId>
-                <artifactId>jcabi-dynamo</artifactId>
-                <version>0.15.1</version>
+                <version>0.17</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -29,7 +29,6 @@
  */
 package com.rultor.web.rexsl.scripts
 
-import com.jcabi.http.Request
 import com.jcabi.http.response.RestResponse
 import com.jcabi.http.response.XmlResponse
 import com.jcabi.http.request.JdkRequest
