@@ -34,14 +34,18 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.http.request.JdkRequest;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
-import com.rultor.spi.Pulses;
-import com.rultor.spi.Stand;
-import com.rultor.spi.Stands;
+import com.jcabi.xml.XML;
+import com.rultor.spi.Column;
+import com.rultor.spi.Pageable;
+import com.rultor.spi.Sheet;
+import com.rultor.tools.Time;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -49,7 +53,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * RESTful Stands.
+ * RESTful sheet.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -59,7 +63,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
-public final class RestStands implements Stands {
+final class RtSheet implements Sheet {
 
     /**
      * Home URI.
@@ -76,7 +80,7 @@ public final class RestStands implements Stands {
      * @param entry Entry point (URI)
      * @param tkn Token
      */
-    public RestStands(
+    RtSheet(
         @NotNull(message = "URI can't be NULL") final URI entry,
         @NotNull(message = "token can't be NULL") final String tkn) {
         this.home = entry.toString();
@@ -84,66 +88,11 @@ public final class RestStands implements Stands {
     }
 
     @Override
-    public Iterator<Stand> iterator() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Stand get(final String name) {
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    public List<Column> columns() {
+        final Collection<XML> nodes;
         try {
-            return new RestStand(
-                new JdkRequest(this.home)
-                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                    .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .fetch()
-                    .as(RestResponse.class)
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .as(XmlResponse.class)
-                    .xml()
-                    .xpath(
-                        String.format(
-                            // @checkstyle LineLength (1 line)
-                            "/page/stands/stand[name='%s']/links/link[@rel='edit']/@href",
-                            name
-                        )
-                    )
-                    .get(0),
-                this.token
-            );
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    @Override
-    public void create(final String name) {
-        try {
-            new JdkRequest(this.home)
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .fetch()
-                .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .as(XmlResponse.class)
-                .rel("/page/links/link[@rel='create']/@href")
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .body()
-                .formParam("name", name)
-                .back()
-                .fetch()
-                .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_OK);
-        } catch (final UnsupportedEncodingException ex) {
-            throw new IllegalStateException(ex);
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    @Override
-    public boolean contains(final String name) {
-        try {
-            return !new JdkRequest(this.home)
+            nodes = new JdkRequest(this.home)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
                 .fetch()
@@ -151,15 +100,51 @@ public final class RestStands implements Stands {
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .as(XmlResponse.class)
                 .xml()
-                .xpath(String.format("/page/stands/stand[name='%s']", name))
-                .isEmpty();
+                .nodes("/page/columns/column");
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
+        final List<Column> columns = new ArrayList<Column>(nodes.size());
+        for (final XML node : nodes) {
+            columns.add(
+                new Column.Simple(
+                    node.xpath("title/text()").get(0),
+                    !node.nodes("links/link[@rel='group']").isEmpty(),
+                    !node.nodes("./@sum").isEmpty()
+                )
+            );
+        }
+        return columns;
     }
 
     @Override
-    public Pulses flow() {
+    public Sheet orderBy(final String column, final boolean asc) {
+        return this;
+    }
+
+    @Override
+    public Sheet groupBy(final String column) {
+        return this;
+    }
+
+    @Override
+    public Sheet between(final Time left, final Time right) {
+        return this;
+    }
+
+    @Override
+    public Pageable<List<Object>, Integer> tail(final Integer head)
+        throws IOException {
+        return this;
+    }
+
+    @Override
+    public Iterator<List<Object>> iterator() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Sheet.Condition where() {
         throw new UnsupportedOperationException();
     }
 

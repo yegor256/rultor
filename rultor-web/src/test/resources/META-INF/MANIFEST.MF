@@ -6,7 +6,7 @@ Rultor-GoogleSecret: 1234567
 Rultor-GithubId: 1234567
 Rultor-GithubSecret: 1234567
 Rultor-Version: 1.0-SNAPSHOT
-Rultor-Revision: 12345
+Rultor-Revision: 1234567
 Rultor-Date: 9-Dec-2012
 Rultor-DynamoKey: test
 Rultor-DynamoSecret: test

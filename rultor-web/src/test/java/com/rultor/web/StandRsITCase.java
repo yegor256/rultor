@@ -27,23 +27,47 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web.rexsl.scripts
+package com.rultor.web;
 
-import com.jcabi.http.Request
-import com.jcabi.http.response.RestResponse
-import com.jcabi.http.request.JdkRequest
+import com.jcabi.urn.URN;
+import com.rultor.client.RtUser;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Stand;
+import com.rultor.spi.User;
+import java.net.URI;
+import org.junit.Test;
 
-[
-    '/',
-    '/robots.txt',
-    '/xsl/layout.xsl',
-    '/xsl/index.xsl',
-    '/css/main.css',
-    '/stylesheets',
-].each {
-    new JdkRequest(rexsl.home).uri().path(it).back()
-        .method(Request.GET)
-        .fetch()
-        .as(RestResponse)
-        .assertStatus(HttpURLConnection.HTTP_OK)
+/**
+ * Integration case for {@link RulesRs}.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 0.5
+ */
+public final class StandRsITCase {
+
+    /**
+     * Home page of Tomcat.
+     */
+    private static final String HOME = System.getProperty("tomcat.home");
+
+    /**
+     * AccountRs can render front page.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void rendersPage() throws Exception {
+        final User user = new RtUser(
+            new URI(StandRsITCase.HOME), new URN("urn:test:222"), ""
+        );
+        final String name = "sample-unit";
+        if (!user.stands().contains(name)) {
+            user.stands().create(name);
+        }
+        final Stand stand = user.stands().get(name);
+        stand.update(
+            new Spec.Simple("com.rultor.acl.FullAccess()"),
+            new Spec.Simple("com.rultor.base.Empty()")
+        );
+    }
+
 }

@@ -27,27 +27,36 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web.rexsl.scripts
+package com.rultor.acl;
 
-import org.apache.commons.io.IOUtils
-import org.hamcrest.MatcherAssert
-import org.hamcrest.Matchers
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
+import com.rultor.spi.ACL;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-import javax.ws.rs.core.UriBuilder
+/**
+ * Full access allowed.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 0.5
+ */
+@Immutable
+@ToString
+@EqualsAndHashCode
+@Loggable(Loggable.DEBUG)
+public final class FullAccess implements ACL {
 
-// @todo #408 When PostsToStand.groovy test is working add in this file also a
-//  positive test for newly created stand and make sure that both cases produce
-//  different image.
+    @Override
+    public boolean canView(final URN urn) {
+        return true;
+    }
 
-MatcherAssert.assertThat(
-    URLConnection.guessContentTypeFromStream(
-        new ByteArrayInputStream(
-            IOUtils.toByteArray(
-                UriBuilder.fromUri(rexsl.home).segment(
-                    'b', 'stand', 'stand-that-does-not-exist', 'some-rule.png'
-                ).build()
-            )
-        )
-    ),
-    Matchers.equalTo('image/png')
-)
+    @Override
+    public boolean canPost(final String key) {
+        return true;
+    }
+
+}

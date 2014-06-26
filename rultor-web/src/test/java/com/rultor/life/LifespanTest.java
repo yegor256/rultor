@@ -29,7 +29,7 @@
  */
 package com.rultor.life;
 
-import com.rexsl.page.ServletContextMocker;
+import com.rexsl.mock.MkServletContext;
 import javax.servlet.ServletContextEvent;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -50,7 +50,7 @@ public final class LifespanTest {
         final Lifespan life = new Lifespan();
         final ServletContextEvent event =
             Mockito.mock(ServletContextEvent.class);
-        Mockito.doReturn(new ServletContextMocker().mock())
+        Mockito.doReturn(new MkServletContext())
             .when(event).getServletContext();
         life.contextInitialized(event);
         life.contextDestroyed(event);

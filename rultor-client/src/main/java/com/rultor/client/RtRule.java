@@ -31,14 +31,15 @@ package com.rultor.client;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.http.Request;
 import com.jcabi.http.request.JdkRequest;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
 import com.jcabi.urn.URN;
 import com.rultor.spi.Coordinates;
-import com.rultor.spi.Pulses;
+import com.rultor.spi.Rule;
 import com.rultor.spi.Spec;
-import com.rultor.spi.Stand;
+import com.rultor.spi.Wallet;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -48,7 +49,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * RESTful Stand.
+ * RESTful Rule.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -58,7 +59,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
-final class RestStand implements Stand {
+final class RtRule implements Rule {
 
     /**
      * Home URI.
@@ -75,13 +76,13 @@ final class RestStand implements Stand {
      * @param uri URI of home page
      * @param auth Authentication token
      */
-    RestStand(final String uri, final String auth) {
+    RtRule(final String uri, final String auth) {
         this.home = uri;
         this.token = auth;
     }
 
     @Override
-    public void update(final Spec spec, final Spec widgets) {
+    public void update(final Spec spec, final Spec drain) {
         try {
             new JdkRequest(this.home)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
@@ -92,13 +93,14 @@ final class RestStand implements Stand {
                 .as(XmlResponse.class)
                 .rel("/page/links/link[@rel='save']/@href")
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                .method(Request.POST)
                 .body()
                 .formParam("spec", spec.asText())
-                .formParam("widgets", widgets.asText())
+                .formParam("drain", drain.asText())
                 .back()
                 .fetch()
                 .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_OK);
+                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
         } catch (final UnsupportedEncodingException ex) {
             throw new IllegalStateException(ex);
         } catch (final IOException ex) {
@@ -107,7 +109,7 @@ final class RestStand implements Stand {
     }
 
     @Override
-    public Spec acl() {
+    public Spec spec() {
         try {
             return new Spec.Simple(
                 new JdkRequest(this.home)
@@ -118,27 +120,7 @@ final class RestStand implements Stand {
                     .assertStatus(HttpURLConnection.HTTP_OK)
                     .as(XmlResponse.class)
                     .xml()
-                    .xpath("/page/stand/acl/text()")
-                    .get(0)
-            );
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    @Override
-    public Spec widgets() {
-        try {
-            return new Spec.Simple(
-                new JdkRequest(this.home)
-                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                    .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .fetch()
-                    .as(RestResponse.class)
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .as(XmlResponse.class)
-                    .xml()
-                    .xpath("/page/stand/widgets/text()")
+                    .xpath("/page/rule/spec/text()")
                     .get(0)
             );
         } catch (final IOException ex) {
@@ -157,7 +139,7 @@ final class RestStand implements Stand {
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .as(XmlResponse.class)
                 .xml()
-                .xpath("/page/stand/name/text()")
+                .xpath("/page/rule/name/text()")
                 .get(0);
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
@@ -165,9 +147,15 @@ final class RestStand implements Stand {
     }
 
     @Override
-    public URN owner() {
+    public Wallet wallet(final Coordinates work, final URN urn,
+        final String rule) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Spec drain() {
         try {
-            return URN.create(
+            return new Spec.Simple(
                 new JdkRequest(this.home)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                     .header(HttpHeaders.AUTHORIZATION, this.token)
@@ -176,7 +164,7 @@ final class RestStand implements Stand {
                     .assertStatus(HttpURLConnection.HTTP_OK)
                     .as(XmlResponse.class)
                     .xml()
-                    .xpath("/page/identity/urn/text()")
+                    .xpath("/page/rule/drain/text()")
                     .get(0)
             );
         } catch (final IOException ex) {
@@ -185,13 +173,12 @@ final class RestStand implements Stand {
     }
 
     @Override
-    public Pulses pulses() {
+    public void failure(final String desc) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void post(final Coordinates pulse, final long nano,
-        final String xembly) {
+    public String failure() {
         throw new UnsupportedOperationException();
     }
 

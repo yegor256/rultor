@@ -34,27 +34,21 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.http.request.JdkRequest;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
-import com.jcabi.urn.URN;
 import com.rultor.spi.Account;
-import com.rultor.spi.Rules;
-import com.rultor.spi.Stands;
-import com.rultor.spi.User;
+import com.rultor.spi.InvalidCouponException;
+import com.rultor.spi.Sheet;
+import com.rultor.tools.Dollars;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URLEncoder;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.codec.Charsets;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.CharEncoding;
 
 /**
- * RESTful User.
+ * RESTful account.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -64,7 +58,7 @@ import org.apache.commons.lang3.CharEncoding;
 @ToString
 @EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
-public final class RestUser implements User {
+final class RtAccount implements Account {
 
     /**
      * Home URI.
@@ -79,42 +73,19 @@ public final class RestUser implements User {
     /**
      * Public ctor, with custom entry point.
      * @param entry Entry point (URI)
-     * @param urn User unique name in the system
-     * @param key Secret authentication key
+     * @param tkn Token
      */
-    public RestUser(@NotNull(message = "URI can't be NULL") final URI entry,
-        @NotNull(message = "URN can't be NULL") final URN urn,
-        @NotNull(message = "key can't be NULL") final String key) {
+    RtAccount(
+        @NotNull(message = "URI can't be NULL") final URI entry,
+        @NotNull(message = "token can't be NULL") final String tkn) {
         this.home = entry.toString();
-        try {
-            this.token = String.format(
-                "Basic %s",
-                Base64.encodeBase64String(
-                    String.format(
-                        "%s:%s",
-                        URLEncoder.encode(urn.toString(), CharEncoding.UTF_8),
-                        URLEncoder.encode(key, CharEncoding.UTF_8)
-                    ).getBytes(Charsets.UTF_8)
-                )
-            );
-        } catch (final UnsupportedEncodingException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    /**
-     * Public ctor.
-     * @param urn User unique name in the system
-     * @param key Secret authentication key
-     */
-    public RestUser(final URN urn, final String key) {
-        this(URI.create("http://www.rultor.com"), urn, key);
+        this.token = tkn;
     }
 
     @Override
-    public URN urn() {
+    public Dollars balance() {
         try {
-            return URN.create(
+            return Dollars.valueOf(
                 new JdkRequest(this.home)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                     .header(HttpHeaders.AUTHORIZATION, this.token)
@@ -122,9 +93,8 @@ public final class RestUser implements User {
                     .as(RestResponse.class)
                     .assertStatus(HttpURLConnection.HTTP_OK)
                     .as(XmlResponse.class)
-                    .assertXPath("/page/identity")
                     .xml()
-                    .xpath("/page/identity/urn/text()")
+                    .xpath("/page/balance/text()")
                     .get(0)
             );
         } catch (final IOException ex) {
@@ -133,9 +103,9 @@ public final class RestUser implements User {
     }
 
     @Override
-    public Rules rules() {
+    public Sheet sheet() {
         try {
-            return new RestRules(
+            return new RtSheet(
                 URI.create(
                     new JdkRequest(this.home)
                         .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
@@ -144,9 +114,8 @@ public final class RestUser implements User {
                         .as(RestResponse.class)
                         .assertStatus(HttpURLConnection.HTTP_OK)
                         .as(XmlResponse.class)
-                        .assertXPath("/page/links/link[@rel='rules']")
                         .xml()
-                        .xpath("/page/links/link[@rel='rules']/@href")
+                        .xpath("/page/links/link[@rel='account']/@href")
                         .get(0)
                 ),
                 this.token
@@ -157,32 +126,16 @@ public final class RestUser implements User {
     }
 
     @Override
-    public Stands stands() {
-        try {
-            return new RestStands(
-                URI.create(
-                    new JdkRequest(this.home)
-                        .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                        .header(HttpHeaders.AUTHORIZATION, this.token)
-                        .fetch()
-                        .as(RestResponse.class)
-                        .assertStatus(HttpURLConnection.HTTP_OK)
-                        .as(XmlResponse.class)
-                        .assertXPath("/page/links/link[@rel='stands']")
-                        .xml()
-                        .xpath("/page/links/link[@rel='stands']/@href")
-                        .get(0)
-                ),
-                this.token
-            );
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+    public void fund(final Dollars amount, final String details) {
+        throw new UnsupportedOperationException();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Account account() {
-        return new RestAccount(URI.create(this.home), this.token);
+    public void fund(final String code) throws InvalidCouponException {
+        throw new UnsupportedOperationException();
     }
 
 }

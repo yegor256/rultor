@@ -29,9 +29,9 @@
  */
 package com.rultor.web;
 
-import com.rexsl.page.HttpHeadersMocker;
-import com.rexsl.page.UriInfoMocker;
 import com.jcabi.matchers.XhtmlMatchers;
+import com.rexsl.mock.HttpHeadersMocker;
+import com.rexsl.mock.UriInfoMocker;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 

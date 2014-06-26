@@ -30,11 +30,11 @@
 package com.rultor.web;
 
 import com.jcabi.manifests.Manifests;
-import com.jcabi.urn.URN;
-import com.rexsl.page.HttpHeadersMocker;
-import com.rexsl.page.ServletContextMocker;
-import com.rexsl.page.UriInfoMocker;
 import com.jcabi.matchers.XhtmlMatchers;
+import com.jcabi.urn.URN;
+import com.rexsl.mock.HttpHeadersMocker;
+import com.rexsl.mock.MkServletContext;
+import com.rexsl.mock.UriInfoMocker;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.snapshot.XSLT;
 import com.rultor.spi.Coordinates;
@@ -65,7 +65,7 @@ public final class StandRsTest {
      */
     @BeforeClass
     public static void manifests() throws IOException {
-        Manifests.inject("Rultor-Revision", "12345");
+        Manifests.inject("Rultor-Revision", "1234567");
     }
 
     /**
@@ -92,8 +92,7 @@ public final class StandRsTest {
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(stand).when(users).stand(Mockito.anyString());
         rest.setServletContext(
-            new ServletContextMocker()
-                .withAttribute(Users.class.getName(), users).mock()
+            new MkServletContext().withAttr(Users.class.getName(), users)
         );
         rest.setHttpHeaders(new HttpHeadersMocker().mock());
         rest.setUriInfo(new UriInfoMocker().mock());

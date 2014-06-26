@@ -30,12 +30,12 @@
 package com.rultor.web;
 
 import com.jcabi.manifests.Manifests;
-import com.jcabi.urn.URN;
-import com.rexsl.page.HttpHeadersMocker;
-import com.rexsl.page.ServletContextMocker;
-import com.rexsl.page.UriInfoMocker;
-import com.rexsl.test.JaxbConverter;
+import com.jcabi.matchers.JaxbConverter;
 import com.jcabi.matchers.XhtmlMatchers;
+import com.jcabi.urn.URN;
+import com.rexsl.mock.HttpHeadersMocker;
+import com.rexsl.mock.MkServletContext;
+import com.rexsl.mock.UriInfoMocker;
 import com.rultor.repo.ClasspathRepo;
 import com.rultor.spi.Account;
 import com.rultor.spi.Coordinates;
@@ -80,7 +80,7 @@ public final class IndexRsTest {
     @SuppressWarnings({ "unchecked", "PMD.CloseResource" })
     public void rendersFrontPage() throws Exception {
         // @checkstyle MultipleStringLiterals (1 line)
-        Manifests.inject("Rultor-Revision", "12345");
+        Manifests.inject("Rultor-Revision", "1234567");
         final IndexRs res = new IndexRs();
         res.setUriInfo(new UriInfoMocker().mock());
         res.setHttpHeaders(new HttpHeadersMocker().mock());
@@ -92,17 +92,17 @@ public final class IndexRsTest {
         Mockito.doReturn(flow).when(stands).flow();
         final Rules rules = Mockito.mock(Rules.class);
         Mockito.doReturn(rules).when(user).rules();
-        Mockito.doReturn(Collections.emptyIterator())
+        Mockito.doReturn(Collections.emptyList().iterator())
             .when(rules).iterator();
         final Users users = Mockito.mock(Users.class);
         Mockito.doReturn(user).when(users).get(Mockito.any(URN.class));
         final Account account = Mockito.mock(Account.class);
         Mockito.doReturn(account).when(user).account();
-        Mockito.doReturn(new Dollars(1)).when(account).balance();
+        Mockito.doReturn(new Dollars(1L)).when(account).balance();
         res.setServletContext(
-            new ServletContextMocker().withAttribute(
+            new MkServletContext().withAttr(
                 Users.class.getName(), users
-            ).mock()
+            )
         );
         final Response response = res.index();
         MatcherAssert.assertThat(
@@ -162,10 +162,9 @@ public final class IndexRsTest {
         res.setHttpHeaders(new HttpHeadersMocker().mock());
         res.setSecurityContext(Mockito.mock(SecurityContext.class));
         res.setServletContext(
-            new ServletContextMocker()
-                .withAttribute(Users.class.getName(), users)
-                .withAttribute(Repo.class.getName(), new ClasspathRepo())
-                .mock()
+            new MkServletContext()
+                .withAttr(Users.class.getName(), users)
+                .withAttr(Repo.class.getName(), new ClasspathRepo())
         );
         return res;
     }
@@ -186,7 +185,7 @@ public final class IndexRsTest {
         Mockito.when(pulse.stand()).thenReturn(stand);
         final Tags tags = Mockito.mock(Tags.class);
         Mockito.when(tags.iterator())
-            .thenReturn(Collections.<Tag>emptyIterator());
+            .thenReturn(Collections.<Tag>emptyList().iterator());
         Mockito.when(pulse.tags()).thenReturn(tags);
         return pulse;
     }
@@ -202,7 +201,7 @@ public final class IndexRsTest {
         final Stand stand = Mockito.mock(Stand.class);
         final Spec acl;
         if (visible) {
-            acl = new Spec.Simple("com.rultor.acl.OpenView()");
+            acl = new Spec.Simple("com.rultor.acl.FullAccess()");
         } else {
             acl = new Spec.Simple("com.rultor.acl.Prohibited()");
         }

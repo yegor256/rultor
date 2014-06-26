@@ -27,8 +27,49 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web.rexsl.setup
+package com.rultor.web;
 
-import com.jcabi.manifests.Manifests
+import com.jcabi.urn.URN;
+import com.rultor.client.RtUser;
+import com.rultor.spi.Column;
+import com.rultor.spi.User;
+import java.net.URI;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
-Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
+/**
+ * Integration case for {@link AccountRs}.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 0.5
+ */
+public final class AccountRsITCase {
+
+    /**
+     * Home page of Tomcat.
+     */
+    private static final String HOME = System.getProperty("tomcat.home");
+
+    /**
+     * AccountRs can render front page.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void rendersPage() throws Exception {
+        final User user = new RtUser(
+            new URI(AccountRsITCase.HOME), new URN("urn:test:222"), ""
+        );
+        MatcherAssert.assertThat(
+            user.account().balance(), Matchers.notNullValue()
+        );
+        MatcherAssert.assertThat(
+            user.account().sheet(), Matchers.notNullValue()
+        );
+        MatcherAssert.assertThat(
+            user.account().sheet().columns(),
+            Matchers.<Column>iterableWithSize(Matchers.greaterThan(0))
+        );
+    }
+
+}

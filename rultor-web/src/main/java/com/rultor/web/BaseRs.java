@@ -100,10 +100,10 @@ public class BaseRs extends BaseResource {
         @Override
         public Identity identity() {
             final Identity identity;
-            if ("12345".equals(Manifests.read("Rultor-Revision"))) {
+            if ("1234567".equals(Manifests.read("Rultor-Revision"))) {
                 identity = new Identity.Simple(
                     BaseRs.TEST_URN,
-                    "Local Host",
+                    "localhost",
                     URI.create("http://img.rultor.com/none.png")
                 );
             } else {

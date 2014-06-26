@@ -31,8 +31,8 @@ package com.rultor.users.mongo;
 
 import com.jcabi.aspects.Parallel;
 import com.jcabi.aspects.Tv;
-import com.jcabi.urn.URN;
 import com.jcabi.matchers.XhtmlMatchers;
+import com.jcabi.urn.URN;
 import com.rultor.snapshot.Snapshot;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.Pulse;

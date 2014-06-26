@@ -27,23 +27,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web.rexsl.scripts
+package com.rultor.client;
 
-import com.jcabi.manifests.Manifests
-import com.jcabi.urn.URN
-import com.rexsl.page.auth.Identity
-import com.rultor.client.RestUser
-import com.rultor.web.AuthKeys
-import org.hamcrest.MatcherAssert
-import org.hamcrest.Matchers
+import com.jcabi.urn.URN;
+import com.rultor.spi.User;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
-Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
-def identity = new Identity.Simple(new URN('urn:facebook:1'), '', new URI('#'))
-def key = new AuthKeys().make(identity)
-def user = new RestUser(rexsl.home, identity.urn(), key)
-MatcherAssert.assertThat(user.account().balance(), Matchers.notNullValue())
-MatcherAssert.assertThat(user.account().sheet(), Matchers.notNullValue())
-MatcherAssert.assertThat(
-    user.account().sheet().columns(),
-    Matchers.iterableWithSize(Matchers.greaterThan(0))
-)
+/**
+ * Test case for {@link RtUser}.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ */
+public final class RtUserTest {
+
+    /**
+     * RestUser can work.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void works() throws Exception {
+        final User user = new RtUser(new URN("urn:facebook:1"), "secret");
+        MatcherAssert.assertThat(user, Matchers.notNullValue());
+    }
+
+}

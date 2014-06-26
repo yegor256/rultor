@@ -31,25 +31,30 @@ package com.rultor.client;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.http.Request;
 import com.jcabi.http.request.JdkRequest;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
 import com.jcabi.urn.URN;
-import com.rultor.spi.Coordinates;
-import com.rultor.spi.Rule;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Wallet;
+import com.rultor.spi.Account;
+import com.rultor.spi.Rules;
+import com.rultor.spi.Stands;
+import com.rultor.spi.User;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URLEncoder;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.codec.Charsets;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
- * RESTful Rule.
+ * RESTful User.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -59,7 +64,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
-final class RestRule implements Rule {
+public final class RtUser implements User {
 
     /**
      * Home URI.
@@ -72,46 +77,44 @@ final class RestRule implements Rule {
     private final transient String token;
 
     /**
-     * Public ctor.
-     * @param uri URI of home page
-     * @param auth Authentication token
+     * Public ctor, with custom entry point.
+     * @param entry Entry point (URI)
+     * @param urn User unique name in the system
+     * @param key Secret authentication key
      */
-    RestRule(final String uri, final String auth) {
-        this.home = uri;
-        this.token = auth;
-    }
-
-    @Override
-    public void update(final Spec spec, final Spec drain) {
+    public RtUser(@NotNull(message = "URI can't be NULL") final URI entry,
+        @NotNull(message = "URN can't be NULL") final URN urn,
+        @NotNull(message = "key can't be NULL") final String key) {
+        this.home = entry.toString();
         try {
-            new JdkRequest(this.home)
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .fetch()
-                .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .as(XmlResponse.class)
-                .rel("/page/links/link[@rel='save']/@href")
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .method(Request.POST)
-                .body()
-                .formParam("spec", spec.asText())
-                .formParam("drain", drain.asText())
-                .back()
-                .fetch()
-                .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+            this.token = String.format(
+                "Basic %s",
+                Base64.encodeBase64String(
+                    String.format(
+                        "%s:%s",
+                        URLEncoder.encode(urn.toString(), CharEncoding.UTF_8),
+                        URLEncoder.encode(key, CharEncoding.UTF_8)
+                    ).getBytes(Charsets.UTF_8)
+                )
+            );
         } catch (final UnsupportedEncodingException ex) {
             throw new IllegalStateException(ex);
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
         }
     }
 
+    /**
+     * Public ctor.
+     * @param urn User unique name in the system
+     * @param key Secret authentication key
+     */
+    public RtUser(final URN urn, final String key) {
+        this(URI.create("http://www.rultor.com"), urn, key);
+    }
+
     @Override
-    public Spec spec() {
+    public URN urn() {
         try {
-            return new Spec.Simple(
+            return URN.create(
                 new JdkRequest(this.home)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                     .header(HttpHeaders.AUTHORIZATION, this.token)
@@ -119,8 +122,9 @@ final class RestRule implements Rule {
                     .as(RestResponse.class)
                     .assertStatus(HttpURLConnection.HTTP_OK)
                     .as(XmlResponse.class)
+                    .assertXPath("/page/identity")
                     .xml()
-                    .xpath("/page/rule/spec/text()")
+                    .xpath("/page/identity/urn/text()")
                     .get(0)
             );
         } catch (final IOException ex) {
@@ -129,43 +133,23 @@ final class RestRule implements Rule {
     }
 
     @Override
-    public String name() {
+    public Rules rules() {
         try {
-            return new JdkRequest(this.home)
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .fetch()
-                .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .as(XmlResponse.class)
-                .xml()
-                .xpath("/page/rule/name/text()")
-                .get(0);
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    @Override
-    public Wallet wallet(final Coordinates work, final URN urn,
-        final String rule) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Spec drain() {
-        try {
-            return new Spec.Simple(
-                new JdkRequest(this.home)
-                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                    .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .fetch()
-                    .as(RestResponse.class)
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .as(XmlResponse.class)
-                    .xml()
-                    .xpath("/page/rule/drain/text()")
-                    .get(0)
+            return new RtRules(
+                URI.create(
+                    new JdkRequest(this.home)
+                        .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                        .header(HttpHeaders.AUTHORIZATION, this.token)
+                        .fetch()
+                        .as(RestResponse.class)
+                        .assertStatus(HttpURLConnection.HTTP_OK)
+                        .as(XmlResponse.class)
+                        .assertXPath("/page/links/link[@rel='rules']")
+                        .xml()
+                        .xpath("/page/links/link[@rel='rules']/@href")
+                        .get(0)
+                ),
+                this.token
             );
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
@@ -173,13 +157,32 @@ final class RestRule implements Rule {
     }
 
     @Override
-    public void failure(final String desc) {
-        throw new UnsupportedOperationException();
+    public Stands stands() {
+        try {
+            return new RtStands(
+                URI.create(
+                    new JdkRequest(this.home)
+                        .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                        .header(HttpHeaders.AUTHORIZATION, this.token)
+                        .fetch()
+                        .as(RestResponse.class)
+                        .assertStatus(HttpURLConnection.HTTP_OK)
+                        .as(XmlResponse.class)
+                        .assertXPath("/page/links/link[@rel='stands']")
+                        .xml()
+                        .xpath("/page/links/link[@rel='stands']/@href")
+                        .get(0)
+                ),
+                this.token
+            );
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
-    public String failure() {
-        throw new UnsupportedOperationException();
+    public Account account() {
+        return new RtAccount(URI.create(this.home), this.token);
     }
 
 }

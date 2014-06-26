@@ -30,8 +30,8 @@
 package com.rultor.web;
 
 import com.google.common.net.MediaType;
-import com.rexsl.page.HttpHeadersMocker;
-import com.rexsl.page.UriInfoMocker;
+import com.rexsl.mock.HttpHeadersMocker;
+import com.rexsl.mock.UriInfoMocker;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.net.URLConnection;
@@ -254,14 +254,15 @@ public final class ButtonRsTest {
     private String page(final String rule, final String duration,
         final String code, final String health) {
         return String.format(
-            // @checkstyle StringLiteralsConcatenation (8 lines)
-            // @checkstyle LineLength (1 line)
-            "<page><widgets><widget class=\"com.rultor.widget.BuildHealth\"><builds><build>"
-                + "  <coordinates><rule>%s</rule></coordinates>"
-                + "  <duration>%s</duration>"
-                + "  <code>%s</code>"
-                + "  <health>%s</health>"
-                + "</build></builds></widget></widgets></page>",
+            StringUtils.join(
+                "<page><widgets><widget ",
+                "class=\"com.rultor.widget.BuildHealth\"><builds><build>",
+                "  <coordinates><rule>%s</rule></coordinates>",
+                "  <duration>%s</duration>",
+                "  <code>%s</code>",
+                "  <health>%s</health>",
+                "</build></builds></widget></widgets></page>"
+            ),
             rule, duration, code, health
         );
     }

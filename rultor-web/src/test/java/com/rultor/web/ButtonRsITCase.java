@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2014, rultor.com
  * All rights reserved.
  *
@@ -27,23 +26,54 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:complexType name="link">
-        <xs:attribute name="href" type="xs:anyURI"/>
-        <xs:attribute name="rel" type="xs:string"/>
-    </xs:complexType>
-    <xs:element name="page">
-        <xs:complexType>
-            <xs:all>
-                <xs:element name="links" minOccurs="0" maxOccurs="1">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="link" type="link" maxOccurs="unbounded"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-            </xs:all>
-        </xs:complexType>
-    </xs:element>
-</xs:schema>
+ */
+package com.rultor.web;
+
+import java.io.ByteArrayInputStream;
+import java.net.URLConnection;
+import javax.ws.rs.core.UriBuilder;
+import org.apache.commons.io.IOUtils;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+
+/**
+ * Integration case for {@link AccountRs}.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 0.5
+ */
+public final class ButtonRsITCase {
+
+    /**
+     * Home page of Tomcat.
+     */
+    private static final String HOME = System.getProperty("tomcat.home");
+
+    /**
+     * AccountRs can render front page.
+     * @throws Exception If some problem inside
+     * @todo #408 When PostsToStand.groovy test is working
+     *  add in this file also a
+     *  positive test for newly created stand
+     *  and make sure that both cases produce
+     *  different image.
+     */
+    @Test
+    public void rendersPage() throws Exception {
+        MatcherAssert.assertThat(
+            URLConnection.guessContentTypeFromStream(
+                new ByteArrayInputStream(
+                    IOUtils.toByteArray(
+                        UriBuilder.fromUri(ButtonRsITCase.HOME).segment(
+                            "b", "stand", "stand-that-does-not-exist",
+                            "some-rule.png"
+                        ).build()
+                    )
+                )
+            ),
+            Matchers.equalTo("image/png")
+        );
+    }
+
+}

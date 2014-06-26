@@ -55,7 +55,7 @@ public final class DrainRsTest {
      */
     @BeforeClass
     public static void manifests() throws IOException {
-        Manifests.inject("Rultor-Revision", "12345");
+        Manifests.inject("Rultor-Revision", "1234567");
     }
 
     /**

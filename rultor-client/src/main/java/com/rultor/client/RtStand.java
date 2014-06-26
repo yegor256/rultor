@@ -35,21 +35,23 @@ import com.jcabi.http.Request;
 import com.jcabi.http.request.JdkRequest;
 import com.jcabi.http.response.RestResponse;
 import com.jcabi.http.response.XmlResponse;
-import com.rultor.spi.Rule;
-import com.rultor.spi.Rules;
+import com.jcabi.urn.URN;
+import com.rultor.spi.Coordinates;
+import com.rultor.spi.Pulse;
+import com.rultor.spi.Pulses;
+import com.rultor.spi.Spec;
+import com.rultor.spi.Stand;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URI;
-import java.util.Iterator;
-import javax.validation.constraints.NotNull;
+import java.util.Collections;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * RESTful Rules.
+ * RESTful Stand.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -59,7 +61,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "home", "token" })
 @Loggable(Loggable.DEBUG)
-final class RestRules implements Rules {
+final class RtStand implements Stand {
 
     /**
      * Home URI.
@@ -72,51 +74,17 @@ final class RestRules implements Rules {
     private final transient String token;
 
     /**
-     * Public ctor, with custom entry point.
-     * @param entry Entry point (URI)
-     * @param tkn Token
+     * Public ctor.
+     * @param uri URI of home page
+     * @param auth Authentication token
      */
-    RestRules(
-        @NotNull(message = "URI can't be NULL") final URI entry,
-        @NotNull(message = "token can't be NULL") final String tkn) {
-        this.home = entry.toString();
-        this.token = tkn;
+    RtStand(final String uri, final String auth) {
+        this.home = uri;
+        this.token = auth;
     }
 
     @Override
-    public Iterator<Rule> iterator() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Rule get(final String name) {
-        try {
-            return new RestRule(
-                new JdkRequest(this.home)
-                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                    .header(HttpHeaders.AUTHORIZATION, this.token)
-                    .fetch()
-                    .as(RestResponse.class)
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .as(XmlResponse.class)
-                    .xml()
-                    .xpath(
-                        String.format(
-                            // @checkstyle LineLength (1 line)
-                            "/page/rules/rule[name='%s']/links/link[@rel='edit']/@href",
-                            name
-                        )
-                    )
-                    .get(0),
-                this.token
-            );
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    @Override
-    public void create(final String name) {
+    public void update(final Spec spec, final Spec widgets) {
         try {
             new JdkRequest(this.home)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
@@ -125,12 +93,13 @@ final class RestRules implements Rules {
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .as(XmlResponse.class)
-                .rel("/page/links/link[@rel='create']/@href")
+                .rel("/page/links/link[@rel='edit']/@href")
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .method(Request.POST)
                 .body()
-                .formParam("name", name)
+                .formParam("spec", spec.asText())
+                .formParam("widgets", widgets.asText())
                 .back()
+                .method(Request.POST)
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
@@ -142,34 +111,49 @@ final class RestRules implements Rules {
     }
 
     @Override
-    public void remove(final String name) {
+    public Spec acl() {
         try {
-            new JdkRequest(this.home)
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-                .header(HttpHeaders.AUTHORIZATION, this.token)
-                .fetch()
-                .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .as(XmlResponse.class)
-                .rel(
-                    String.format(
-                        // @checkstyle LineLength (1 line)
-                        "/page/rules/rule[name='%s']/links/link[@rel='remove']/@href",
-                        name
-                    )
-                )
-                .fetch()
-                .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_SEE_OTHER);
+            return new Spec.Simple(
+                new JdkRequest(this.home)
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .header(HttpHeaders.AUTHORIZATION, this.token)
+                    .fetch()
+                    .as(RestResponse.class)
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .as(XmlResponse.class)
+                    .xml()
+                    .xpath("/page/stand/acl/text()")
+                    .get(0)
+            );
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
 
     @Override
-    public boolean contains(final String name) {
+    public Spec widgets() {
         try {
-            return !new JdkRequest(this.home)
+            return new Spec.Simple(
+                new JdkRequest(this.home)
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .header(HttpHeaders.AUTHORIZATION, this.token)
+                    .fetch()
+                    .as(RestResponse.class)
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .as(XmlResponse.class)
+                    .xml()
+                    .xpath("/page/stand/widgets/text()")
+                    .get(0)
+            );
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    @Override
+    public String name() {
+        try {
+            return new JdkRequest(this.home)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
                 .header(HttpHeaders.AUTHORIZATION, this.token)
                 .fetch()
@@ -177,11 +161,42 @@ final class RestRules implements Rules {
                 .assertStatus(HttpURLConnection.HTTP_OK)
                 .as(XmlResponse.class)
                 .xml()
-                .xpath(String.format("/page/rules/rule[name='%s']", name))
-                .isEmpty();
+                .xpath("/page/stand/name/text()")
+                .get(0);
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
+    }
+
+    @Override
+    public URN owner() {
+        try {
+            return URN.create(
+                new JdkRequest(this.home)
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+                    .header(HttpHeaders.AUTHORIZATION, this.token)
+                    .fetch()
+                    .as(RestResponse.class)
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .as(XmlResponse.class)
+                    .xml()
+                    .xpath("/page/identity/urn/text()")
+                    .get(0)
+            );
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    @Override
+    public Pulses pulses() {
+        return new Pulses.Row(Collections.<Pulse>emptyList());
+    }
+
+    @Override
+    public void post(final Coordinates pulse, final long nano,
+        final String xembly) {
+        throw new UnsupportedOperationException();
     }
 
 }

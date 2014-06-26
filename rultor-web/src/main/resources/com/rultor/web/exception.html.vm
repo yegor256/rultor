@@ -3,7 +3,7 @@
     <head>
         <title>Internal application error</title>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" rel="stylesheet"/>
-        <link href="/css/main.css?${buildNumber}" rel="stylesheet" type="text/css"/>
+        <link href="/css/style.css?${buildNumber}" rel="stylesheet" type="text/css"/>
         <link rel="icon" type="image/gif" href="//img.rultor.com/favicon.ico?${buildNumber}"/>
     </head>
     <body>

@@ -38,6 +38,7 @@ import com.rultor.spi.Column;
 import com.rultor.spi.Coordinates;
 import com.rultor.spi.InvalidCouponException;
 import com.rultor.spi.Pageable;
+import com.rultor.spi.Pulse;
 import com.rultor.spi.Pulses;
 import com.rultor.spi.Queue;
 import com.rultor.spi.Repo;
@@ -55,6 +56,7 @@ import com.rultor.tools.Time;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
@@ -79,7 +81,8 @@ import lombok.ToString;
     "PMD.TooManyMethods",
     "PMD.ExcessiveImports",
     "PMD.CyclomaticComplexity",
-    "PMD.CyclomaticComplexity"
+    "PMD.CyclomaticComplexity",
+    "PMD.ExcessivePublicCount"
 })
 final class Testing implements Profile {
 
@@ -119,7 +122,11 @@ final class Testing implements Profile {
             }
             @Override
             public Stand stand(final String name) {
-                throw new UnsupportedOperationException();
+                final Stand stand = Testing.STANDS.get(name);
+                if (stand == null) {
+                    throw new IllegalArgumentException("not found");
+                }
+                return stand;
             }
             @Override
             public Pulses flow() {
@@ -151,7 +158,7 @@ final class Testing implements Profile {
          * Public ctor.
          * @param urn Name of it
          */
-        protected MemoryUser(final URN urn) {
+        MemoryUser(final URN urn) {
             this.name = urn;
         }
         @Override
@@ -188,15 +195,15 @@ final class Testing implements Profile {
             return new Stands() {
                 @Override
                 public void create(final String txt) {
-                    throw new UnsupportedOperationException();
+                    Testing.STANDS.put(txt, new MemoryStand(txt));
                 }
                 @Override
                 public boolean contains(final String txt) {
-                    throw new UnsupportedOperationException();
+                    return Testing.STANDS.containsKey(txt);
                 }
                 @Override
                 public Stand get(final String txt) {
-                    throw new UnsupportedOperationException();
+                    return Testing.STANDS.get(txt);
                 }
                 @Override
                 public Iterator<Stand> iterator() {
@@ -213,7 +220,7 @@ final class Testing implements Profile {
             return new Account() {
                 @Override
                 public Dollars balance() {
-                    return new Dollars(1);
+                    return new Dollars(1L);
                 }
                 @Override
                 public Sheet sheet() {
@@ -259,9 +266,6 @@ final class Testing implements Profile {
                 public void fund(final Dollars amount, final String details) {
                     throw new UnsupportedOperationException();
                 }
-                /**
-                 * {@inheritDoc}
-                 */
                 @Override
                 public void fund(final String code)
                     throws InvalidCouponException {
@@ -284,7 +288,7 @@ final class Testing implements Profile {
          * Public ctor.
          * @param rule Name of it
          */
-        protected MemoryRule(final String rule) {
+        MemoryRule(final String rule) {
             Testing.SPECS.put(rule, new Spec.Simple());
             this.label = rule;
         }
@@ -316,6 +320,53 @@ final class Testing implements Profile {
         @Override
         public String failure() {
             return "";
+        }
+    }
+
+    /**
+     * In-memory stand.
+     */
+    @Immutable
+    private static final class MemoryStand implements Stand {
+        /**
+         * Name of the stand.
+         */
+        private final transient String label;
+        /**
+         * Public ctor.
+         * @param rule Name of it
+         */
+        MemoryStand(final String rule) {
+            this.label = rule;
+        }
+        @Override
+        public String name() {
+            return this.label;
+        }
+        @Override
+        public URN owner() {
+            return URN.create("urn:test:1");
+        }
+        @Override
+        public void update(final Spec acl, final Spec widgets) {
+            throw new UnsupportedOperationException("#update()");
+        }
+        @Override
+        public Spec acl() {
+            return new Spec.Simple("com.rultor.acl.FullAccess()");
+        }
+        @Override
+        public Pulses pulses() {
+            return new Pulses.Row(Collections.<Pulse>emptyList());
+        }
+        @Override
+        public void post(final Coordinates pulse, final long nano,
+            final String xembly) {
+            throw new UnsupportedOperationException("#post()");
+        }
+        @Override
+        public Spec widgets() {
+            return new Spec.Simple("[]");
         }
     }
 

@@ -76,7 +76,7 @@
                 <link rel="stylesheet" type="text/css" media="all">
                     <xsl:attribute name="href">
                         <xsl:value-of select="/page/links/link[@rel='root']/@href"/>
-                        <xsl:text>css/main.css</xsl:text>
+                        <xsl:text>css/style.css</xsl:text>
                         <xsl:if test="/page/@ip">
                             <xsl:text>?</xsl:text>
                             <xsl:value-of select="/page/version/revision"/>
