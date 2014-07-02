@@ -65,10 +65,7 @@ public final class Shallow implements Shell {
         this.shells = shls;
     }
 
-    /**
-     * {@inheritDoc}
-     * @checkstyle ParameterNumber (5 lines)
-     */
+    // @checkstyle ParameterNumber (8 lines)
     @Override
     @Loggable(
         value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
