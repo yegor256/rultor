@@ -87,7 +87,10 @@ public final class SSHServer implements Shell {
      * @checkstyle ParameterNumber (10 lines)
      */
     @Override
-    @Loggable(value = Loggable.DEBUG, limit = 1, unit = TimeUnit.HOURS)
+    @Loggable(
+        value = Loggable.DEBUG, limit = 1, unit = TimeUnit.HOURS,
+        ignore = IOException.class
+    )
     public int exec(
         @NotNull(message = "command can't be NULL") final String command,
         @NotNull(message = "stdin can't be NULL") final InputStream stdin,
