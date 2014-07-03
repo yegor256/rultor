@@ -27,38 +27,36 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.life;
+package com.rultor.spi;
 
-import com.rultor.spi.Queue;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Users;
-import java.io.Closeable;
+import com.jcabi.aspects.Immutable;
 
 /**
- * Profile.
+ * Asset.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @since 1.0
  */
-interface Profile extends Closeable {
+@Immutable
+public interface Asset {
 
     /**
-     * Repository.
-     * @return Repository to use
+     * Its unique name.
+     * @return Name
      */
-    Repo repo();
+    String name();
 
     /**
-     * Users.
-     * @return Users factory
+     * Content.
+     * @return Content
      */
-    Users users();
+    String read();
 
     /**
-     * Queue.
-     * @return Queue
+     * Modify content.
+     * @param content New content
      */
-    Queue queue();
+    void write(String content);
 
 }

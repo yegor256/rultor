@@ -35,31 +35,19 @@ import com.jcabi.urn.URN;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
-import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.Resource;
 import com.rexsl.page.auth.AuthInset;
 import com.rexsl.page.auth.Facebook;
 import com.rexsl.page.auth.Github;
 import com.rexsl.page.auth.Google;
-import com.rexsl.page.auth.HttpBasic;
 import com.rexsl.page.auth.Identity;
 import com.rexsl.page.auth.Provider;
 import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
-import com.rultor.spi.ACL;
-import com.rultor.spi.Arguments;
-import com.rultor.spi.Coordinates;
-import com.rultor.spi.Repo;
-import com.rultor.spi.SpecException;
-import com.rultor.spi.Stand;
+import com.rultor.spi.Base;
 import com.rultor.spi.User;
-import com.rultor.spi.Users;
-import com.rultor.spi.Wallet;
-import com.rultor.tools.Dollars;
-import com.rultor.tools.Exceptions;
-import com.rultor.tools.Time;
 import java.net.URI;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -87,11 +75,6 @@ public class BaseRs extends BaseResource {
      * Test user.
      */
     public static final URN TEST_URN = URN.create("urn:facebook:1");
-
-    /**
-     * Authentication keys.
-     */
-    private static final AuthKeys KEYS = new AuthKeys();
 
     /**
      * Test authentication provider.
@@ -161,39 +144,6 @@ public class BaseRs extends BaseResource {
     }
 
     /**
-     * User financial stats.
-     * @return The inset
-     */
-    @Inset.Runtime
-    @NotNull(message = "finance inset can never be NULL")
-    public final Inset insetFinances() {
-        // @checkstyle AnonInnerLength (50 lines)
-        return new Inset() {
-            @Override
-            public void render(final BasePage<?, ?> page,
-                final Response.ResponseBuilder builder) {
-                if (!BaseRs.this.auth().identity().equals(Identity.ANONYMOUS)) {
-                    page.link(
-                        new Link(
-                            "account",
-                            BaseRs.this.uriInfo().getBaseUriBuilder()
-                                .clone()
-                                .path(AccountRs.class)
-                                .build()
-                        )
-                    );
-                    page.append(
-                        new JaxbBundle(
-                            "balance",
-                            BaseRs.this.balance().toString()
-                        )
-                    );
-                }
-            }
-        };
-    }
-
-    /**
      * Nagivation links.
      * @return The inset
      */
@@ -208,51 +158,29 @@ public class BaseRs extends BaseResource {
                 if (!BaseRs.this.auth().identity().equals(Identity.ANONYMOUS)) {
                     page.link(
                         new Link(
-                            "stands",
+                            "repos",
                             BaseRs.this.uriInfo().getBaseUriBuilder()
                                 .clone()
-                                .path(StandsRs.class)
+                                .path(ReposRs.class)
                                 .build()
                         )
                     );
                     page.link(
                         new Link(
-                            "rules",
+                            "assets",
                             BaseRs.this.uriInfo().getBaseUriBuilder()
                                 .clone()
-                                .path(RulesRs.class)
+                                .path(RepoRs.class)
                                 .build()
                         )
                     );
                     page.append(
                         new Menu()
                             .with("home", "Home")
-                            .with("rules", "Rules")
-                            .with("stands", "Stands")
-                            .with("account", "Account Statistics")
+                            .with("repos", "Repositories")
+                            .with("assets", "Assets")
                             .with("auth-logout", "Log out")
                             .bundle()
-                    );
-                }
-            }
-        };
-    }
-
-    /**
-     * Authentication key inset.
-     * @return The inset
-     */
-    @Inset.Runtime
-    @NotNull(message = "auth key inset can never be NULL")
-    public final Inset insetAuthKey() {
-        return new Inset() {
-            @Override
-            public void render(final BasePage<?, ?> page,
-                final Response.ResponseBuilder builder) {
-                final Identity identity = BaseRs.this.auth().identity();
-                if (!identity.equals(Identity.ANONYMOUS)) {
-                    page.append(
-                        new JaxbBundle("api-key", BaseRs.KEYS.make(identity))
                     );
                 }
             }
@@ -271,7 +199,6 @@ public class BaseRs extends BaseResource {
             .with(new Facebook(this, Manifests.read("Rultor-FbId"), Manifests.read("Rultor-FbSecret")))
             .with(new Github(this, Manifests.read("Rultor-GithubId"), Manifests.read("Rultor-GithubSecret")))
             .with(new Google(this, Manifests.read("Rultor-GoogleId"), Manifests.read("Rultor-GoogleSecret")))
-            .with(new HttpBasic(this, BaseRs.KEYS))
             .with(BaseRs.TEST_PROVIDER);
     }
 
@@ -289,78 +216,18 @@ public class BaseRs extends BaseResource {
                 Level.WARNING
             );
         }
-        return this.users().get(self.urn());
+        return this.base().user(self.urn());
     }
 
     /**
-     * Get all users.
+     * Get base.
      * @return The users
      */
-    @NotNull(message = "USERS is not injected into servlet context")
-    protected final Users users() {
-        return Users.class.cast(
-            this.servletContext().getAttribute(Users.class.getName())
+    @NotNull(message = "BASE is not injected into servlet context")
+    protected final Base base() {
+        return Base.class.cast(
+            this.servletContext().getAttribute(Base.class.getName())
         );
-    }
-
-    /**
-     * Get repo.
-     * @return Repo
-     */
-    @NotNull(message = "REPO is not injected into servlet context")
-    protected final Repo repo() {
-        return Repo.class.cast(
-            this.servletContext().getAttribute(Repo.class.getName())
-        );
-    }
-
-    /**
-     * The work we're in (while rendering).
-     * @param rule Unit being rendered
-     * @return The work
-     */
-    protected final Coordinates coordinates(final String rule) {
-        return new Coordinates.Simple(this.user().urn(), rule, new Time());
-    }
-
-    /**
-     * Get ACL of the stand.
-     * @param stand The stand
-     * @return ACL
-     */
-    protected final ACL acl(final Stand stand) {
-        ACL acl;
-        try {
-            acl = ACL.class.cast(
-                this.repo().make(new User.Nobody(), stand.acl()).instantiate(
-                    this.users(),
-                    new Arguments(
-                        new Coordinates.None(), new Wallet.Empty()
-                    )
-                )
-            );
-        } catch (final SpecException ex) {
-            Exceptions.warn(this, ex);
-            acl = new ACL() {
-                @Override
-                public boolean canView(final URN urn) {
-                    return false;
-                }
-                @Override
-                public boolean canPost(final String key) {
-                    return false;
-                }
-            };
-        }
-        return acl;
-    }
-
-    /**
-     * Get balance of the current user.
-     * @return His balance
-     */
-    private Dollars balance() {
-        return this.user().account().balance();
     }
 
 }

@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2014, rultor.com
  * All rights reserved.
  *
@@ -27,17 +26,37 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
-    <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="./layout.xsl"/>
-    <xsl:include href="./pulse.xsl"/>
-    <xsl:template name="head">
-        <title>
-            <xsl:text>index</xsl:text>
-        </title>
-    </xsl:template>
-    <xsl:template name="content">
-        <xsl:apply-templates select="/page/pulses/pulse"/>
-    </xsl:template>
-</xsl:stylesheet>
+ */
+package com.rultor.spi;
+
+import com.jcabi.aspects.Immutable;
+import java.io.InputStream;
+
+/**
+ * Daemon.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+@Immutable
+public interface Daemon {
+
+    /**
+     * Its unique number in the talk.
+     * @return Its number
+     */
+    int number();
+
+    /**
+     * Read its stream.
+     * @return Stream
+     */
+    InputStream read();
+
+    /**
+     * Terminate immediately.
+     */
+    void terminate();
+
+}

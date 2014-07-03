@@ -30,29 +30,29 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.github.Coordinates;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
-import com.rultor.spi.Stand;
+import com.rexsl.page.inset.FlashInset;
+import com.rultor.spi.Repo;
 import java.util.logging.Level;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
- * List of user's stands.
+ * Index resource, front page of the website.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  * @checkstyle MultipleStringLiterals (500 lines)
  */
-@Path("/stands")
+@Path("/r")
 @Loggable(Loggable.DEBUG)
-public final class StandsRs extends BaseRs {
+public final class ReposRs extends BaseRs {
 
     /**
      * Get entrance page JAX-RS response.
@@ -62,85 +62,96 @@ public final class StandsRs extends BaseRs {
     @Path("/")
     public Response index() {
         return new PageBuilder()
-            .stylesheet("/xsl/stands.xsl")
+            .stylesheet("/xsl/repos.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(new Breadcrumbs().with("self", "stands").bundle())
-            .append(this.mine())
-            .link(new Link("create", "./create"))
+            .append(new Breadcrumbs().with("self", "home").bundle())
+            .append(
+                new JaxbBundle("repos").add(
+                    new JaxbBundle.Group<Repo>(this.user().repos().iterate()) {
+                        @Override
+                        public JaxbBundle bundle(final Repo repo) {
+                            return ReposRs.this.bundle(repo);
+                        }
+                    }
+
+                )
+            )
+            .link(new Link("add", "./add"))
             .render()
             .build();
     }
 
     /**
-     * Create new empty stand.
-     * @param name Name of the stand to create
-     * @return The JAX-RS response
+     * Add one repo.
+     * @param coords Coordinates
      */
-    @POST
-    @Path("/create")
-    public Response create(@NotNull(message = "stand name is mandatory")
-        @FormParam("name") final String name) {
-        if (this.user().stands().contains(name)) {
-            throw this.flash().redirect(
-                this.uriInfo().getRequestUri(),
-                String.format("Stand `%s` already exists", name),
-                Level.WARNING
-            );
-        }
-        this.user().stands().create(name);
-        throw this.flash().redirect(
+    @GET
+    @Path("/add")
+    public void add(@QueryParam("coords") final String coords) {
+        final long num = this.user().repos().add(new Coordinates.Simple(coords));
+        throw FlashInset.forward(
             this.uriInfo().getBaseUriBuilder()
                 .clone()
-                .path(AclRs.class)
-                .build(name),
-            String.format("Stand `%s` successfully created", name),
+                .path(ReposRs.class)
+                .build(),
+            String.format("repository '%s' added as #%d", coords, num),
             Level.INFO
         );
     }
 
     /**
-     * All my stands.
-     * @return Collection of JAXB stands
+     * Delete one repo.
+     * @param number Its number
      */
-    private JaxbBundle mine() {
-        return new JaxbBundle("stands").add(
-            new JaxbBundle.Group<Stand>(this.user().stands()) {
-                @Override
-                public JaxbBundle bundle(final Stand stand) {
-                    return StandsRs.this.stand(stand);
-                }
-            }
+    @GET
+    @Path("/delete")
+    public void delete(@QueryParam("num") final Long number) {
+        this.user().repos().delete(number);
+        throw FlashInset.forward(
+            this.uriInfo().getBaseUriBuilder()
+                .clone()
+                .path(ReposRs.class)
+                .build(),
+            String.format("repository #%d was deleted", number),
+            Level.INFO
         );
     }
 
     /**
-     * Convert stand to JaxbBundle.
-     * @param stand Name of stand
+     * Convert repo to JaxbBundle.
+     * @param repo The repo
      * @return Bundle
      */
-    private JaxbBundle stand(final Stand stand) {
-        return new JaxbBundle("stand")
-            .add("name", stand.name())
+    private JaxbBundle bundle(final Repo repo) {
+        return new JaxbBundle("repo")
+            .add("number", Long.toString(repo.number()))
+            .up()
+            .add("coordinates", repo.coordinates().toString())
             .up()
             .link(
                 new Link(
-                    "acl",
+                    "open",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
-                        .path(AclRs.class)
-                        .build(stand.name())
+                        .path(RepoRs.class)
+                        .queryParam("num", "{n2}")
+                        .build(repo.number())
                 )
             )
+            .up()
             .link(
                 new Link(
-                    "see",
+                    "delete",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
-                        .path(StandRs.class)
-                        .build(stand.name())
+                        .path(ReposRs.class)
+                        .path(ReposRs.class, "delete")
+                        .queryParam("n", "{n1}")
+                        .build(repo.number())
                 )
-            );
+            )
+            .up();
     }
 
 }

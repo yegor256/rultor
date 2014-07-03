@@ -27,47 +27,38 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor.spi;
 
-import com.jcabi.urn.URN;
-import com.rultor.client.RtUser;
-import com.rultor.spi.Spec;
-import com.rultor.spi.Stand;
-import com.rultor.spi.User;
-import java.net.URI;
-import org.junit.Test;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.xml.XML;
+import org.xembly.Directive;
 
 /**
- * Integration case for {@link RulesRs}.
+ * Talk.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 0.5
+ * @since 1.0
  */
-public final class StandRsITCase {
+@Immutable
+public interface Talk {
 
     /**
-     * Home page of Tomcat.
+     * Its unique name.
+     * @return Its name
      */
-    private static final String HOME = System.getProperty("tomcat.home");
+    String name();
 
     /**
-     * AccountRs can render front page.
-     * @throws Exception If some problem inside
+     * Read its content.
+     * @return Content
      */
-    @Test
-    public void rendersPage() throws Exception {
-        final User user = new RtUser(
-            new URI(StandRsITCase.HOME), new URN("urn:test:222"), ""
-        );
-        final String name = "sample-unit";
-        if (!user.stands().contains(name)) {
-            user.stands().create(name);
-        }
-        final Stand stand = user.stands().get(name);
-        stand.update(
-            new Spec.Simple("com.rultor.acl.FullAccess()"),
-            new Spec.Simple("com.rultor.base.Empty()")
-        );
-    }
+    XML read();
+
+    /**
+     * Modify its content.
+     * @param dirs Directives
+     */
+    void modify(Iterable<Directive> dirs);
 
 }

@@ -29,51 +29,38 @@
  */
 package com.rultor.web;
 
-import java.io.ByteArrayInputStream;
-import java.net.URLConnection;
-import javax.ws.rs.core.UriBuilder;
-import org.apache.commons.io.IOUtils;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.manifests.Manifests;
+import com.rultor.spi.Base;
+import java.io.IOException;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 /**
- * Integration case for {@link AccountRs}.
+ * Lifespan.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 0.5
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public final class ButtonRsITCase {
+@Loggable(Loggable.INFO)
+public final class Lifespan implements ServletContextListener {
 
-    /**
-     * Home page of Tomcat.
-     */
-    private static final String HOME = System.getProperty("tomcat.home");
+    @Override
+    public void contextInitialized(final ServletContextEvent event) {
+        try {
+            Manifests.append(event.getServletContext());
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+        final ServletContext context = event.getServletContext();
+        context.setAttribute(Base.class.getName(), null);
+    }
 
-    /**
-     * AccountRs can render front page.
-     * @throws Exception If some problem inside
-     * @todo #408 When PostsToStand.groovy test is working
-     *  add in this file also a
-     *  positive test for newly created stand
-     *  and make sure that both cases produce
-     *  different image.
-     */
-    @Test
-    public void rendersPage() throws Exception {
-        MatcherAssert.assertThat(
-            URLConnection.guessContentTypeFromStream(
-                new ByteArrayInputStream(
-                    IOUtils.toByteArray(
-                        UriBuilder.fromUri(ButtonRsITCase.HOME).segment(
-                            "b", "stand", "stand-that-does-not-exist",
-                            "some-rule.png"
-                        ).build()
-                    )
-                )
-            ),
-            Matchers.equalTo("image/png")
-        );
+    @Override
+    public void contextDestroyed(final ServletContextEvent event) {
+        // nothing
     }
 
 }

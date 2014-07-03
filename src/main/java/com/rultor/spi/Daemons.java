@@ -27,55 +27,25 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor.spi;
 
-import com.jcabi.aspects.Loggable;
-import com.jcabi.manifests.Manifests;
-import com.jcabi.urn.URN;
-import com.rexsl.page.auth.HttpBasic;
-import com.rexsl.page.auth.Identity;
-import java.net.URI;
-import javax.validation.constraints.NotNull;
-import org.apache.commons.codec.digest.DigestUtils;
+import com.jcabi.aspects.Immutable;
 
 /**
- * HTTP Basic Authentication keys.
+ * Daemons.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Loggable(Loggable.DEBUG)
-public final class AuthKeys implements HttpBasic.Vault {
+@Immutable
+public interface Daemons {
 
     /**
-     * Encryption key.
+     * Get one daemon by number.
+     * @param number Its number
+     * @return Daemon
      */
-    private final transient String key = Manifests.read("Rultor-SecurityKey");
-
-    @Override
-    public Identity authenticate(@NotNull(message = "user can't be NULL")
-        final String user, @NotNull(message = "password can't be NULL")
-        final String password) {
-        Identity identity = new Identity.Simple(
-            URN.create(user), "", URI.create("#")
-        );
-        if (!this.make(identity).equals(password)) {
-            identity = Identity.ANONYMOUS;
-        }
-        return identity;
-    }
-
-    /**
-     * Make authentication key/password.
-     * @param identity Identity to make key for
-     * @return Key
-     */
-    public String make(@NotNull(message = "identity can't be NULL")
-        final Identity identity) {
-        return DigestUtils.md5Hex(
-            String.format("%s-%s", identity.urn(), this.key)
-        );
-    }
+    Daemon get(int number);
 
 }

@@ -27,12 +27,45 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.spi;
+
+import com.jcabi.aspects.Immutable;
+import com.jcabi.github.Coordinates;
 
 /**
- * Life cycle of the entire product, tests.
+ * Repositories.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-package com.rultor.life;
+@Immutable
+public interface Repos {
+
+    /**
+     * Get existing one.
+     * @param number Its number
+     * @return Repo
+     */
+    Repo get(long number);
+
+    /**
+     * All repositories.
+     * @return Repositories
+     */
+    Iterable<Repo> iterate();
+
+    /**
+     * Add new one.
+     * @param coords Coordinates
+     * @return Its number
+     */
+    long add(Coordinates coords);
+
+    /**
+     * Delete existing.
+     * @param number Number
+     */
+    void delete(long number);
+
+}

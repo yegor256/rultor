@@ -40,7 +40,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Integration case for {@link IndexRs}.
+ * Integration case for {@link LoginRs}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.5
@@ -108,27 +108,6 @@ public final class IndexRsITCase {
         final Request request = new JdkRequest(IndexRsITCase.HOME);
         for (final String page : pages) {
             request.uri().path(page).back()
-                .method(Request.GET)
-                .fetch()
-                .as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_OK);
-        }
-    }
-
-    /**
-     * IndexRs can render jolokia front page.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void rendersJolokia() throws Exception {
-        final String[] pages = {
-            "/jolokia/",
-            "/jolokia/read/java.lang:type=Memory/HeapMemoryUsage",
-        };
-        final Request request = new JdkRequest(IndexRsITCase.HOME);
-        for (final String page : pages) {
-            request.uri().path(page).back()
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
                 .method(Request.GET)
                 .fetch()
                 .as(RestResponse.class)

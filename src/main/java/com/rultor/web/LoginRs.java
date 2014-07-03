@@ -27,12 +27,49 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.web;
+
+import com.jcabi.aspects.Loggable;
+import com.rexsl.page.PageBuilder;
+import com.rexsl.page.auth.Identity;
+import com.rexsl.page.inset.FlashInset;
+import java.util.logging.Level;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
 
 /**
- * Life cycle of the entire product.
+ * Index resource, front page of the website.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-package com.rultor.life;
+@Path("/")
+@Loggable(Loggable.DEBUG)
+public final class LoginRs extends BaseRs {
+
+    /**
+     * Get entrance page JAX-RS response.
+     * @return The JAX-RS response
+     */
+    @GET
+    @Path("/")
+    public Response index() {
+        if (!this.auth().identity().equals(Identity.ANONYMOUS)) {
+            throw FlashInset.forward(
+                this.uriInfo().getBaseUri(),
+                "you are logged in already",
+                Level.INFO
+            );
+        }
+        return new PageBuilder()
+            .stylesheet("/xsl/front.xsl")
+            .build(EmptyPage.class)
+            .init(this)
+            .append(new Breadcrumbs().with("self", "home").bundle())
+            .render()
+            .build();
+    }
+
+}

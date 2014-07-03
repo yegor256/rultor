@@ -30,35 +30,6 @@
 
 /*globals $: false, moment: false, markdown: false, document: false */
 
-var RULTOR = {
-    format: function ($block) {
-        "use strict";
-        $block.find('span.timeago').each(
-            function (span) {
-                var iso = $(this).text();
-                if (iso.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?Z/)) {
-                    $(this).text(moment(iso).fromNow());
-                    $(this).attr('title', iso);
-                }
-            }
-        );
-        $block.find('span.markdown').each(
-            function (span) {
-                $(this).html(
-                    markdown.toHTML($(this).text()).replace(/<\/?p *>/g, '')
-                );
-            }
-        );
-    }
-};
-
-$(document).ready(
-    function () {
-        "use strict";
-        RULTOR.format($('body'));
-    }
-);
-
 $(document).keyup(
     function (event) {
         "use strict";

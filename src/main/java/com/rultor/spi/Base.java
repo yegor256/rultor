@@ -27,33 +27,26 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.life;
+package com.rultor.spi;
 
-import com.rexsl.mock.MkServletContext;
-import javax.servlet.ServletContextEvent;
-import org.junit.Test;
-import org.mockito.Mockito;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.urn.URN;
 
 /**
- * Test case for {@link Lifespan}.
+ * Base.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class LifespanTest {
+@Immutable
+public interface Base {
 
     /**
-     * Lifespan can start and stop.
-     * @throws Exception If some problem inside
+     * User by URN.
+     * @param urn His URN
+     * @return User
      */
-    @Test
-    public void startsAndStops() throws Exception {
-        final Lifespan life = new Lifespan();
-        final ServletContextEvent event =
-            Mockito.mock(ServletContextEvent.class);
-        Mockito.doReturn(new MkServletContext())
-            .when(event).getServletContext();
-        life.contextInitialized(event);
-        life.contextDestroyed(event);
-    }
+    User user(URN urn);
 
 }

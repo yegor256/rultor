@@ -33,7 +33,6 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.inset.FlashInset;
-import com.rultor.tools.Exceptions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -42,6 +41,7 @@ import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Maps constraint violations to JAX-RS responses.
@@ -79,7 +79,7 @@ public final class ConstraintsMapper extends BaseResource
                 ),
                 Level.WARNING
             ).getResponse()
-        ).entity(Exceptions.stacktrace(violation)).build();
+        ).entity(ExceptionUtils.getStackTrace(violation)).build();
     }
 
 }

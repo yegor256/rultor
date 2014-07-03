@@ -27,34 +27,31 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor.spi;
 
-import com.jcabi.matchers.XhtmlMatchers;
-import com.rexsl.mock.HttpHeadersMocker;
-import com.rexsl.mock.UriInfoMocker;
-import org.hamcrest.MatcherAssert;
-import org.junit.Test;
+import com.jcabi.aspects.Immutable;
 
 /**
- * Test case for {@link StylesheetRs}.
+ * Talks in a repo.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class StylesheetsRsTest {
+@Immutable
+public interface Talks {
 
     /**
-     * StylesheetRs can pre-load XSL.
-     * @throws Exception If some problem inside
+     * Create new or return existing by this name.
+     * @param name The name
+     * @return Talk
      */
-    @Test
-    public void loadsXslStylesheet() throws Exception {
-        final StylesheetsRs rest = new StylesheetsRs();
-        rest.setUriInfo(new UriInfoMocker().mock());
-        rest.setHttpHeaders(new HttpHeadersMocker().mock());
-        MatcherAssert.assertThat(
-            rest.aggregation(),
-            XhtmlMatchers.hasXPath("/xsl:stylesheet")
-        );
-    }
+    Talk get(String name);
+
+    /**
+     * Talks.
+     * @return Talks
+     */
+    Iterable<Talk> iterate();
 
 }

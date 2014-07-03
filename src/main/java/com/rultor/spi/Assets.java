@@ -27,49 +27,42 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor.spi;
 
-import com.jcabi.urn.URN;
-import com.rultor.client.RtUser;
-import com.rultor.spi.Column;
-import com.rultor.spi.User;
-import java.net.URI;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import com.jcabi.aspects.Immutable;
 
 /**
- * Integration case for {@link AccountRs}.
+ * Assets.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 0.5
+ * @since 1.0
  */
-public final class AccountRsITCase {
+@Immutable
+public interface Assets {
 
     /**
-     * Home page of Tomcat.
+     * Get by name.
+     * @param name Name of it
      */
-    private static final String HOME = System.getProperty("tomcat.home");
+    Asset get(String name);
 
     /**
-     * AccountRs can render front page.
-     * @throws Exception If some problem inside
+     * All assets.
+     * @return Assets
      */
-    @Test
-    public void rendersPage() throws Exception {
-        final User user = new RtUser(
-            new URI(AccountRsITCase.HOME), new URN("urn:test:222"), ""
-        );
-        MatcherAssert.assertThat(
-            user.account().balance(), Matchers.notNullValue()
-        );
-        MatcherAssert.assertThat(
-            user.account().sheet(), Matchers.notNullValue()
-        );
-        MatcherAssert.assertThat(
-            user.account().sheet().columns(),
-            Matchers.<Column>iterableWithSize(Matchers.greaterThan(0))
-        );
-    }
+    Iterable<Asset> assets();
+
+    /**
+     * Add new one.
+     * @param name Name of it
+     */
+    void add(String name);
+
+    /**
+     * Delete existing.
+     * @param name Name of it
+     */
+    void delete(String name);
 
 }
