@@ -33,25 +33,13 @@
     <parent>
         <groupId>com.jcabi</groupId>
         <artifactId>parent</artifactId>
-        <version>0.25</version>
+        <version>0.25.1</version>
     </parent>
     <groupId>com.rultor</groupId>
     <artifactId>rultor</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <version>2.0-SNAPSHOT</version>
+    <packaging>war</packaging>
     <name>rultor</name>
-    <modules>
-        <module>rultor-base</module>
-        <module>rultor-conveyer</module>
-        <module>rultor-client</module>
-        <module>rultor-drain</module>
-        <module>rultor-queue</module>
-        <module>rultor-repo</module>
-        <module>rultor-spi</module>
-        <module>rultor-web</module>
-        <module>rultor-widget</module>
-        <module>rultor-users</module>
-    </modules>
     <description>Rultor.com, Lightweight Integration Platform (as a Service)</description>
     <url>http://www.rultor.com</url>
     <inceptionYear>2009</inceptionYear>
@@ -102,24 +90,22 @@
     <properties>
         <jersey.version>1.18.1</jersey.version>
     </properties>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.amazonaws</groupId>
-                <artifactId>aws-java-sdk</artifactId>
-                <version>1.8.1</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.fasterxml.jackson.core</groupId>
-                        <artifactId>jackson-databind</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>com.jcabi.incubator</groupId>
-                <artifactId>xembly</artifactId>
-                <version>0.17</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>1.8.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi.incubator</groupId>
+            <artifactId>xembly</artifactId>
+            <version>0.17</version>
+        </dependency>
+    </dependencies>
 </project>
