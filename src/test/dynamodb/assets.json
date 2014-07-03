@@ -1,0 +1,27 @@
+{
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "urn",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "name",
+            "AttributeType": "S"
+        }
+    ],
+    "KeySchema": [
+        {
+            "AttributeName": "urn",
+            "KeyType": "HASH"
+        },
+        {
+            "AttributeName": "name",
+            "KeyType": "RANGE"
+        }
+    ],
+    "ProvisionedThroughput": {
+        "ReadCapacityUnits": "1",
+        "WriteCapacityUnits": "1"
+    },
+    "TableName": "rt-assets"
+}

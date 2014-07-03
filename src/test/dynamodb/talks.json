@@ -1,0 +1,27 @@
+{
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "repo",
+            "AttributeType": "N"
+        },
+        {
+            "AttributeName": "number",
+            "AttributeType": "N"
+        }
+    ],
+    "KeySchema": [
+        {
+            "AttributeName": "repo",
+            "KeyType": "HASH"
+        },
+        {
+            "AttributeName": "number",
+            "KeyType": "RANGE"
+        }
+    ],
+    "ProvisionedThroughput": {
+        "ReadCapacityUnits": "1",
+        "WriteCapacityUnits": "1"
+    },
+    "TableName": "rt-talks"
+}

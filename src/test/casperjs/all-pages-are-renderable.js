@@ -5,7 +5,8 @@
     '/xml/rule.xml',
     '/css/style.css',
     '/robots.txt',
-    '/js/stand.js',
+    '/js/layout.js',
+    '/xsl/layout.xsl',
     '/'
 ].forEach(
     function (page) {

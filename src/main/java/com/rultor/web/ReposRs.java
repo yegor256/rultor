@@ -135,7 +135,6 @@ public final class ReposRs extends BaseRs {
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(RepoRs.class)
-                        .queryParam("num", "{n2}")
                         .build(repo.number())
                 )
             )

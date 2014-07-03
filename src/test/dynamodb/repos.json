@@ -1,0 +1,27 @@
+{
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "urn",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "number",
+            "AttributeType": "N"
+        }
+    ],
+    "KeySchema": [
+        {
+            "AttributeName": "urn",
+            "KeyType": "HASH"
+        },
+        {
+            "AttributeName": "number",
+            "KeyType": "RANGE"
+        }
+    ],
+    "ProvisionedThroughput": {
+        "ReadCapacityUnits": "1",
+        "WriteCapacityUnits": "1"
+    },
+    "TableName": "rt-repos"
+}
