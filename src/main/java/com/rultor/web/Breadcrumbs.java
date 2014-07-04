@@ -39,7 +39,6 @@ import com.rexsl.page.JaxbBundle;
  * @version $Id$
  * @since 1.0
  */
-@Loggable(Loggable.DEBUG)
 final class Breadcrumbs {
 
     /**

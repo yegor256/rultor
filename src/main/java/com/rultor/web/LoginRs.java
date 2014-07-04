@@ -58,7 +58,10 @@ public final class LoginRs extends BaseRs {
     public Response index() {
         if (!this.auth().identity().equals(Identity.ANONYMOUS)) {
             throw FlashInset.forward(
-                this.uriInfo().getBaseUri(),
+                this.uriInfo().getBaseUriBuilder()
+                    .clone()
+                    .path(ReposRs.class)
+                    .build(),
                 "you are logged in already",
                 Level.INFO
             );

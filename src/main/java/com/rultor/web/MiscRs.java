@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import java.io.IOException;
 import javax.ws.rs.GET;
@@ -46,7 +45,6 @@ import org.apache.commons.io.IOUtils;
  * @since 1.0
  */
 @Path("/misc")
-@Loggable(Loggable.DEBUG)
 public final class MiscRs extends BaseRs {
 
     /**

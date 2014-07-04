@@ -52,7 +52,6 @@ import javax.ws.rs.core.Response;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Path("/d/{repo:[0-9]+}/{number:[0-9]+}")
-@Loggable(Loggable.DEBUG)
 public final class DaemonRs extends BaseRs {
 
     /**

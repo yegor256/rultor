@@ -287,9 +287,7 @@
                             <Rultor-SecurityKey>${security.key}</Rultor-SecurityKey>
                             <Rultor-SttcUrn>${sttc.urn}</Rultor-SttcUrn>
                             <Rultor-SttcToken>${sttc.token}</Rultor-SttcToken>
-                            <Rultor-S3Key>${s3.key}</Rultor-S3Key>
-                            <Rultor-S3Secret>${s3.secret}</Rultor-S3Secret>
-                            <Rultor-S3Bucket>${s3.bucket}</Rultor-S3Bucket>
+                            <Rultor-SshKey>${ssh.key}</Rultor-SshKey>
                         </manifestEntries>
                     </archive>
                     <webResources combine.children="append">
@@ -464,9 +462,6 @@
                                             <Rultor-SecurityKey>test</Rultor-SecurityKey>
                                             <Rultor-SttcUrn>urn:test:1</Rultor-SttcUrn>
                                             <Rultor-SttcToken>test</Rultor-SttcToken>
-                                            <Rultor-S3Key>test</Rultor-S3Key>
-                                            <Rultor-S3Secret>test</Rultor-S3Secret>
-                                            <Rultor-S3Bucket>test</Rultor-S3Bucket>
                                         </manifestEntries>
                                     </archive>
                                 </configuration>

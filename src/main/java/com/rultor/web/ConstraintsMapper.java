@@ -53,7 +53,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
  * @since 1.0
  */
 @Provider
-@Loggable(Loggable.DEBUG)
 public final class ConstraintsMapper extends BaseResource
     implements ExceptionMapper<ConstraintViolationException> {
 

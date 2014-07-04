@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.jcabi.aspects.Loggable;
 import com.jcabi.github.Coordinates;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
@@ -52,7 +51,6 @@ import javax.ws.rs.core.Response;
  * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Path("/r")
-@Loggable(Loggable.DEBUG)
 public final class ReposRs extends BaseRs {
 
     /**

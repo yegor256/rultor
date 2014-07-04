@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.rexsl.page.BasePage;
@@ -66,7 +65,6 @@ import javax.ws.rs.core.Response;
  * @checkstyle ClassFanOutComplexityCheck (500 lines)
  */
 @Resource.Forwarded
-@Loggable(Loggable.DEBUG)
 @Inset.Default(LinksInset.class)
 @SuppressWarnings({ "PMD.TooManyMethods", "PMD.ExcessiveImports" })
 public class BaseRs extends BaseResource {

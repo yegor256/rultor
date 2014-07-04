@@ -80,9 +80,9 @@ public final class Agents {
                 new StartsTalk(github, repo.coordinates()),
                 new TalkAgent.Wrap(
                     new RegistersShell(
-                        "build.rultor.com", 22,
-                        "rultor-build",
-                        Manifests.read("Rultor-SshPrivateKey")
+                        "b1.rultor.com", 22,
+                        "rultor",
+                        Manifests.read("Rultor-SshKey")
                     )
                 ),
                 new TalkAgent.Wrap(

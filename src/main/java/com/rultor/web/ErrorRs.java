@@ -45,7 +45,6 @@ import javax.ws.rs.core.Response;
  * @since 1.0
  */
 @Path("/error")
-@Loggable(Loggable.DEBUG)
 public final class ErrorRs extends BaseRs {
 
     /**

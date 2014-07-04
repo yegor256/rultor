@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
@@ -52,7 +51,6 @@ import javax.ws.rs.core.Response;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Path("/repo/{num:[0-9]+}")
-@Loggable(Loggable.DEBUG)
 public final class RepoRs extends BaseRs {
 
     /**

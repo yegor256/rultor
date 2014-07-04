@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 
 /**
@@ -39,7 +38,6 @@ import com.rexsl.page.JaxbBundle;
  * @version $Id$
  * @since 1.0
  */
-@Loggable(Loggable.DEBUG)
 final class Menu {
 
     /**
