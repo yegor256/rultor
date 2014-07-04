@@ -31,6 +31,7 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
+import java.io.IOException;
 import org.xembly.Directive;
 
 /**
@@ -47,19 +48,19 @@ public interface Talk {
      * Its unique name.
      * @return Its name
      */
-    String name();
+    String name() throws IOException;
 
     /**
      * Read its content.
      * @return Content
      */
-    XML read();
+    XML read() throws IOException;
 
     /**
      * Modify its content.
      * @param dirs Directives
      */
-    void modify(Iterable<Directive> dirs);
+    void modify(Iterable<Directive> dirs) throws IOException;
 
     /**
      * Archive it.

@@ -43,6 +43,8 @@ import com.rultor.agents.github.StartsTalk;
 import com.rultor.agents.merge.EndsGitMerge;
 import com.rultor.agents.merge.StartsGitMerge;
 import com.rultor.agents.shells.RegistersShell;
+import com.rultor.spi.Repo;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -60,10 +62,13 @@ public final class Agents {
 
     /**
      * Create them.
+     * @param repo Repo we're in
      * @param config YAML config
      * @return List of them
+     * @throws IOException If fails
      */
-    public Collection<Agent> make(final String config) {
+    public Collection<Agent> make(final Repo repo, final String config)
+        throws IOException {
         final Collection<Agent> agents = new LinkedList<Agent>();
         final Github github = new RtGithub(
             new RtGithub(
@@ -72,7 +77,7 @@ public final class Agents {
         );
         agents.addAll(
             Arrays.asList(
-                new StartsTalk(github),
+                new StartsTalk(github, repo.coordinates()),
                 new TalkAgent.Wrap(
                     new RegistersShell(
                         "build.rultor.com", 22,

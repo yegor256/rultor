@@ -32,7 +32,7 @@ package com.rultor.agents.shells;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Talk;
-import java.net.UnknownHostException;
+import java.io.IOException;
 
 /**
  * Shells referenced from Talks.
@@ -49,7 +49,7 @@ public final class TalkShells {
      * @param talk Talk
      * @return Issue
      */
-    public Shell get(final Talk talk) throws UnknownHostException {
+    public Shell get(final Talk talk) throws IOException {
         final XML xml = talk.read();
         return new SSH(
             xml.xpath("/talk/shell/host/text()").get(0),

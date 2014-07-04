@@ -31,6 +31,7 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Coordinates;
+import java.io.IOException;
 
 /**
  * Repo.
@@ -46,19 +47,19 @@ public interface Repo {
      * Its number.
      * @return Number
      */
-    long number();
+    long number() throws IOException;
 
     /**
      * Its coordinates in Github.
      * @return Coordinates
      */
-    Coordinates coordinates();
+    Coordinates coordinates() throws IOException;
 
     /**
      * Talks.
      * @return Talks
      */
-    Talks talks();
+    Talks talks() throws IOException;
 
     /**
      * Daemons running.

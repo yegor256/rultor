@@ -27,32 +27,74 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.dynamo;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
+import com.jcabi.dynamo.Item;
+import com.jcabi.xml.XML;
+import com.jcabi.xml.XMLDocument;
+import com.rultor.spi.Talk;
 import java.io.IOException;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.xembly.Directive;
+import org.xembly.ImpossibleModificationException;
+import org.xembly.Xembler;
 
 /**
- * Base.
+ * Talk in Dynamo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Base {
+@ToString
+@EqualsAndHashCode
+public final class DyTalk implements Talk {
 
     /**
-     * User by URN.
-     * @param urn His URN
-     * @return User
+     * Item.
      */
-    User user(URN urn);
+    private final transient Item item;
 
     /**
-     * Execute all repos.
+     * Ctor.
+     * @param itm Item
      */
-    void execute() throws IOException;
+    DyTalk(final Item itm) {
+        this.item = itm;
+    }
+
+    @Override
+    public String name() throws IOException {
+        return this.item.get(DyTalks.RANGE).getS();
+    }
+
+    @Override
+    public XML read() throws IOException {
+        return new XMLDocument(this.item.get(DyTalks.ATTR_XML).getS());
+    }
+
+    @Override
+    public void modify(final Iterable<Directive> dirs) throws IOException {
+        try {
+            this.item.put(
+                DyTalks.ATTR_XML,
+                new AttributeValueUpdate().withValue(
+                    new AttributeValue().withS(new Xembler(dirs).xml())
+                )
+            );
+        } catch (final ImpossibleModificationException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    @Override
+    public void archive() {
+        throw new UnsupportedOperationException("#archive()");
+    }
 
 }

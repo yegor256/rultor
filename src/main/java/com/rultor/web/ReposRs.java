@@ -36,6 +36,7 @@ import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
 import com.rultor.spi.Repo;
+import java.io.IOException;
 import java.util.logging.Level;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -71,7 +72,11 @@ public final class ReposRs extends BaseRs {
                     new JaxbBundle.Group<Repo>(this.user().repos().iterate()) {
                         @Override
                         public JaxbBundle bundle(final Repo repo) {
-                            return ReposRs.this.bundle(repo);
+                            try {
+                                return ReposRs.this.bundle(repo);
+                            } catch (final IOException ex) {
+                                throw new IllegalStateException(ex);
+                            }
                         }
                     }
 
@@ -85,10 +90,12 @@ public final class ReposRs extends BaseRs {
     /**
      * Add one repo.
      * @param coords Coordinates
+     * @throws IOException If fails
      */
     @GET
     @Path("/add")
-    public void add(@QueryParam("coords") final String coords) {
+    public void add(@QueryParam("coords") final String coords)
+        throws IOException {
         final long num = this.user().repos().add(new Coordinates.Simple(coords));
         throw FlashInset.forward(
             this.uriInfo().getBaseUriBuilder()
@@ -122,8 +129,9 @@ public final class ReposRs extends BaseRs {
      * Convert repo to JaxbBundle.
      * @param repo The repo
      * @return Bundle
+     * @throws IOException If fails
      */
-    private JaxbBundle bundle(final Repo repo) {
+    private JaxbBundle bundle(final Repo repo) throws IOException {
         return new JaxbBundle("repo")
             .add("number", Long.toString(repo.number()))
             .up()

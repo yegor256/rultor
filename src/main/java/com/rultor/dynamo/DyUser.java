@@ -27,32 +27,62 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.dynamo;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
-import java.io.IOException;
+import com.rultor.spi.Assets;
+import com.rultor.spi.Repos;
+import com.rultor.spi.User;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Base.
+ * Base in Dynamo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Base {
+@ToString
+@EqualsAndHashCode
+public final class DyUser implements User {
 
     /**
-     * User by URN.
-     * @param urn His URN
-     * @return User
+     * Region to work with.
      */
-    User user(URN urn);
+    private final transient Region region;
 
     /**
-     * Execute all repos.
+     * URN of the user.
      */
-    void execute() throws IOException;
+    private final transient URN name;
+
+    /**
+     * Ctor.
+     * @param reg Region
+     * @param urn Name of the user (URN)
+     */
+    DyUser(final Region reg, final URN urn) {
+        this.region = reg;
+        this.name = urn;
+    }
+
+    @Override
+    public URN urn() {
+        return this.name;
+    }
+
+    @Override
+    public Repos repos() {
+        return new DyRepos(this.region, this.name);
+    }
+
+    @Override
+    public Assets assets() {
+        throw new UnsupportedOperationException("#assets()");
+    }
 
 }

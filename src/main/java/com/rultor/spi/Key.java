@@ -30,6 +30,7 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -47,19 +48,19 @@ public interface Key {
      * Does it exist?
      * @return TRUE if exists
      */
-    boolean exists();
+    boolean exists() throws IOException;
 
     /**
      * Get value (runtime exception if absent, use {@link #exists()}.
      * @return Data
      */
-    String value();
+    String value() throws IOException;
 
     /**
      * Put data.
      * @param value Value
      */
-    void put(String value);
+    void put(String value) throws IOException;
 
     /**
      * Get or default.
@@ -86,11 +87,11 @@ public interface Key {
             this.def = dflt;
         }
         @Override
-        public boolean exists() {
+        public boolean exists() throws IOException {
             return this.origin.exists();
         }
         @Override
-        public String value() {
+        public String value() throws IOException {
             final String value;
             if (this.origin.exists()) {
                 value = this.origin.value();
@@ -101,7 +102,7 @@ public interface Key {
             return value;
         }
         @Override
-        public void put(final String value) {
+        public void put(final String value) throws IOException {
             this.origin.put(value);
         }
     }

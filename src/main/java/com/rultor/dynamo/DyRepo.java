@@ -9,7 +9,7 @@
  * disclaimer. 2) Redistributions in binary form must reproduce the above
  * copyright notice, this list of conditions and the following
  * disclaimer in the documentation and/or other materials provided
- * with the distribution. 3) Neither the name of the rultor.com nor
+ * with the distribution. 3) Neither the owner of the rultor.com nor
  * the names of its contributors may be used to endorse or promote
  * products derived from this software without specific prior written
  * permission.
@@ -27,32 +27,76 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.dynamo;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
+import com.jcabi.dynamo.Item;
+import com.jcabi.dynamo.Region;
+import com.jcabi.github.Coordinates;
+import com.rultor.spi.Daemons;
+import com.rultor.spi.Repo;
+import com.rultor.spi.State;
+import com.rultor.spi.Talks;
 import java.io.IOException;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Base.
+ * Repo in Dynamo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Base {
+@ToString
+@EqualsAndHashCode
+public final class DyRepo implements Repo {
 
     /**
-     * User by URN.
-     * @param urn His URN
-     * @return User
+     * Region to work with.
      */
-    User user(URN urn);
+    private final transient Region region;
 
     /**
-     * Execute all repos.
+     * Its item.
      */
-    void execute() throws IOException;
+    private final transient Item item;
 
+    /**
+     * Ctor.
+     * @param reg Region
+     * @param itm Item
+     */
+    DyRepo(final Region reg, final Item itm) {
+        this.region = reg;
+        this.item = itm;
+    }
+
+    @Override
+    public long number() throws IOException {
+        return Long.parseLong(this.item.get(DyRepos.RANGE).getN());
+    }
+
+    @Override
+    public Coordinates coordinates() throws IOException {
+        return new Coordinates.Simple(
+            this.item.get(DyRepos.ATTR_COORDS).getS()
+        );
+    }
+
+    @Override
+    public Talks talks() throws IOException {
+        return new DyTalks(this.region, this.number());
+    }
+
+    @Override
+    public Daemons daemons() {
+        throw new UnsupportedOperationException("#daemons()");
+    }
+
+    @Override
+    public State state() {
+        return new DyState(this.item);
+    }
 }

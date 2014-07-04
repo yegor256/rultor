@@ -35,6 +35,7 @@ import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Talk;
+import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -72,10 +73,11 @@ public final class RepoRs extends BaseRs {
     /**
      * View an existing rule or an empty one.
      * @return The JAX-RS response
+     * @throws IOException If fails
      */
     @GET
     @Path("/")
-    public Response index() {
+    public Response index() throws IOException {
         final Repo repo = this.user().repos().get(this.number);
         return new PageBuilder()
             .stylesheet("/xsl/repos.xsl")
@@ -87,7 +89,11 @@ public final class RepoRs extends BaseRs {
                     new JaxbBundle.Group<Talk>(repo.talks().iterate()) {
                         @Override
                         public JaxbBundle bundle(final Talk talk) {
-                            return RepoRs.this.bundle(talk);
+                            try {
+                                return RepoRs.this.bundle(talk);
+                            } catch (final IOException ex) {
+                                throw new IllegalStateException(ex);
+                            }
                         }
                     }
 
@@ -102,8 +108,9 @@ public final class RepoRs extends BaseRs {
      * Convert talk to JaxbBundle.
      * @param talk The talk
      * @return Bundle
+     * @throws IOException If fails
      */
-    private JaxbBundle bundle(final Talk talk) {
+    private JaxbBundle bundle(final Talk talk) throws IOException {
         return new JaxbBundle("talk")
             .add("name", talk.name())
             .up()

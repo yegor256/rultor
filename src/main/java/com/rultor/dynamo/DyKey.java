@@ -27,24 +27,24 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.github;
+package com.rultor.dynamo;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Coordinates;
-import com.jcabi.github.Github;
-import com.jcabi.github.Issue;
-import com.rultor.agents.Agent;
+import com.jcabi.dynamo.Item;
 import com.rultor.spi.Key;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Talks;
 import java.io.IOException;
-import java.util.Date;
+import java.io.StringReader;
+import java.io.StringWriter;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonValue;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.xembly.Directives;
 
 /**
- * Starts talk when I'm mentioned in a Github issue.
+ * Key in Dynamo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -52,60 +52,73 @@ import org.xembly.Directives;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "github", "coords" })
-public final class StartsTalk implements Agent {
+@EqualsAndHashCode
+public final class DyKey implements Key {
 
     /**
-     * Github.
+     * Item.
      */
-    private final transient Github github;
+    private final transient Item item;
 
     /**
-     * Github coordinates.
+     * Name of the key.
      */
-    private final transient Coordinates coords;
+    private final transient String name;
 
     /**
      * Ctor.
-     * @param ghub Github client
-     * @param crds Coordinates
+     * @param itm Item
+     * @param key The name
      */
-    public StartsTalk(final Github ghub, final Coordinates crds) {
-        this.github = ghub;
-        this.coords = crds;
+    DyKey(final Item itm, final String key) {
+        this.item = itm;
+        this.name = key;
     }
 
     @Override
-    public void execute(final Repo repo) throws IOException {
-        final Key recent = new Key.Default(
-            repo.state().get(this.getClass().getName()),
-            "1970-01-01"
-        );
-        final Iterable<Issue> issues = this.github.search().issues(
-            String.format(
-                "repo:%s mentions:%s updated:>=%s",
-                this.coords,
-                this.github.search().github().users().self().login(),
-                recent.value()
-            ),
-            "updated",
-            "asc"
-        );
-        final Talks talks = repo.talks();
-        for (final Issue issue : issues) {
-            final String name = String.format(
-                "Github Issue %s#%d", this.coords, issue.number()
-            );
-            if (!talks.exists(name)) {
-                talks.create(name);
-                talks.get(name).modify(
-                    new Directives().xpath("/talk").add("wire")
-                        .add("github")
-                        .set(Integer.toString(issue.number()))
-                );
+    public boolean exists() throws IOException {
+        return this.json().containsKey(this.name);
+    }
+
+    @Override
+    public String value() throws IOException {
+        return this.json().getString(this.name);
+    }
+
+    @Override
+    public void put(final String value) throws IOException {
+        final JsonObject json = this.json();
+        final StringWriter writer = new StringWriter();
+        json.put(
+            this.name,
+            new JsonValue() {
+                @Override
+                public String toString() {
+                    return value;
+                }
+                @Override
+                public JsonValue.ValueType getValueType() {
+                    return JsonValue.ValueType.STRING;
+                }
             }
-        }
-        recent.put(String.format("%tF", new Date()));
+        );
+        Json.createWriter(writer).writeObject(json);
+        this.item.put(
+            DyRepos.ATTR_STATE,
+            new AttributeValueUpdate().withValue(
+                new AttributeValue().withS(writer.toString())
+            )
+        );
+    }
+
+    /**
+     * Get JSON.
+     * @return Json
+     */
+    private JsonObject json() throws IOException {
+        return Json.createReader(
+            new StringReader(this.item.get(DyRepos.ATTR_STATE).getS())
+        ).readObject();
     }
 
 }

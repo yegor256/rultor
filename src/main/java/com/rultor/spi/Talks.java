@@ -30,6 +30,7 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import java.io.IOException;
 
 /**
  * Talks in a repo.
@@ -59,7 +60,7 @@ public interface Talks {
      * Create a new one (runtime exception if it exists already).
      * @param name The name
      */
-    void create(String name);
+    void create(String name) throws IOException;
 
     /**
      * Talks.

@@ -27,32 +27,42 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.dynamo;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
-import java.io.IOException;
+import com.jcabi.dynamo.Item;
+import com.rultor.spi.Key;
+import com.rultor.spi.State;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Base.
+ * State in Dynamo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Base {
+@ToString
+@EqualsAndHashCode
+public final class DyState implements State {
 
     /**
-     * User by URN.
-     * @param urn His URN
-     * @return User
+     * Item.
      */
-    User user(URN urn);
+    private final transient Item item;
 
     /**
-     * Execute all repos.
+     * Ctor.
+     * @param itm Item
      */
-    void execute() throws IOException;
+    DyState(final Item itm) {
+        this.item = itm;
+    }
 
+    @Override
+    public Key get(final String name) {
+        return new DyKey(this.item, name);
+    }
 }

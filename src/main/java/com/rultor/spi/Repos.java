@@ -31,6 +31,7 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Coordinates;
+import java.io.IOException;
 
 /**
  * Repositories.
@@ -60,7 +61,7 @@ public interface Repos {
      * @param coords Coordinates
      * @return Its number
      */
-    long add(Coordinates coords);
+    long add(Coordinates coords) throws IOException;
 
     /**
      * Delete existing.
