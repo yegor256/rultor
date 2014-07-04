@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Github;
 import com.jcabi.github.RtGithub;
 import com.jcabi.http.wire.RetryWire;
+import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.rultor.agents.daemons.EndsDaemon;
 import com.rultor.agents.daemons.StartsDaemon;
@@ -70,11 +71,7 @@ public final class Agents {
     public Collection<Agent> make(final Repo repo, final String config)
         throws IOException {
         final Collection<Agent> agents = new LinkedList<Agent>();
-        final Github github = new RtGithub(
-            new RtGithub(
-                Manifests.read("Rultor-GithubToken")
-            ).entry().through(RetryWire.class)
-        );
+        final Github github = Agents.github();
         agents.addAll(
             Arrays.asList(
                 new StartsTalk(github, repo.coordinates()),
@@ -104,6 +101,22 @@ public final class Agents {
             )
         );
         return agents;
+    }
+
+    /**
+     * Make github.
+     * @return Github
+     */
+    private static Github github() {
+        final String token = Manifests.read("Rultor-GithubToken");
+        final Github github;
+        if ("test".equals(token)) {
+            Logger.warn(Agents.class, "unauthorized access to Github");
+            github = new RtGithub();
+        } else {
+            github = new RtGithub(token);
+        }
+        return new RtGithub(github.entry().through(RetryWire.class));
     }
 
 }

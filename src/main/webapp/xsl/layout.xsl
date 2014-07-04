@@ -87,18 +87,8 @@
                     })(window, document);
                     qbaka.options = {autoStacktrace: 1, trackEvents: 1};
                     ]]></script>
-                <link rel="stylesheet">
-                    <xsl:attribute name="href">
-                        <xsl:value-of select="$proto"/>
-                        <xsl:text>://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css</xsl:text>
-                    </xsl:attribute>
-                </link>
-                <link rel="stylesheet">
-                    <xsl:attribute name="href">
-                        <xsl:value-of select="$proto"/>
-                        <xsl:text>://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css</xsl:text>
-                    </xsl:attribute>
-                </link>
+                <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+                <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"/>
                 <link rel="stylesheet" type="text/css" media="all">
                     <xsl:attribute name="href">
                         <xsl:value-of select="/page/links/link[@rel='root']/@href"/>
@@ -111,38 +101,13 @@
                 </link>
                 <link rel="icon" type="image/gif">
                     <xsl:attribute name="href">
-                        <xsl:value-of select="$proto"/>
-                        <xsl:text>://img.rultor.com/favicon.ico</xsl:text>
+                        <xsl:text>//img.rultor.com/favicon.ico</xsl:text>
                         <xsl:if test="/page/@ip">
                             <xsl:text>?</xsl:text>
                             <xsl:value-of select="/page/version/revision"/>
                         </xsl:if>
                     </xsl:attribute>
                 </link>
-                <script type="text/javascript">
-                    <xsl:attribute name="src">
-                        <xsl:value-of select="$proto"/>
-                        <xsl:text>://img.rultor.com/markdown.js</xsl:text>
-                    </xsl:attribute>
-                    <!-- this is for W3C compliance -->
-                    <xsl:text> </xsl:text>
-                </script>
-                <script type="text/javascript">
-                    <xsl:attribute name="src">
-                        <xsl:value-of select="$proto"/>
-                        <xsl:text>://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js</xsl:text>
-                    </xsl:attribute>
-                    <!-- this is for W3C compliance -->
-                    <xsl:text> </xsl:text>
-                </script>
-                <script type="text/javascript">
-                    <xsl:attribute name="src">
-                        <xsl:value-of select="$proto"/>
-                        <xsl:text>://cdnjs.cloudflare.com/ajax/libs/moment.js/2.1.0/moment.min.js</xsl:text>
-                    </xsl:attribute>
-                    <!-- this is for W3C compliance -->
-                    <xsl:text> </xsl:text>
-                </script>
                 <script type="text/javascript">
                     <xsl:attribute name="src">
                         <xsl:value-of select="/page/links/link[@rel='root']/@href"/>
@@ -248,10 +213,7 @@
             <xsl:variable name="rel" select="@rel"/>
             <xsl:choose>
                 <xsl:when test="/page/links/link[@rel=$rel]">
-                    <a>
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="/page/links/link[@rel=$rel]/@href"/>
-                        </xsl:attribute>
+                    <a href="{/page/links/link[@rel=$rel]/@href}">
                         <xsl:value-of select="$title"/>
                     </a>
                 </xsl:when>
@@ -275,10 +237,7 @@
                         <xsl:text>active</xsl:text>
                     </xsl:attribute>
                 </xsl:if>
-                <a>
-                    <xsl:attribute name="href">
-                        <xsl:value-of select="/page/links/link[@rel=$rel]/@href"/>
-                    </xsl:attribute>
+                <a href="{/page/links/link[@rel=$rel]/@href}">
                     <xsl:value-of select="."/>
                 </a>
             </li>
@@ -296,14 +255,8 @@
                     <xsl:value-of select="name"/>
                 </li>
                 <li>
-                    <a>
-                        <xsl:attribute name="href">
-                            <xsl:text>https://github.com/rultor/rultor/commit/</xsl:text>
-                            <xsl:value-of select="revision"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="title">
-                            <xsl:value-of select="revision"/>
-                        </xsl:attribute>
+                    <a href="https://github.com/rultor/rultor/commit/{revision}"
+                        title="{revision}">
                         <i class="icon-github">
                             <xsl:comment>github icon</xsl:comment>
                         </i>
@@ -360,34 +313,14 @@
     </xsl:template>
     <xsl:template match="identity">
         <li>
-            <img style="width: 25px; height: 25px;" class="img-rounded">
-                <xsl:attribute name="src">
-                    <xsl:value-of select="photo"/>
-                </xsl:attribute>
-                <xsl:attribute name="alt">
-                    <xsl:value-of select="name"/>
-                </xsl:attribute>
-            </img>
+            <img style="width: 25px; height: 25px;" class="img-rounded"
+                src="{photo}" alt="{name}"/>
         </li>
-        <li>
-            <xsl:attribute name="title">
-                <xsl:value-of select="urn"/>
-            </xsl:attribute>
+        <li title="{urn}">
             <xsl:value-of select="name"/>
         </li>
         <li>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='account']/@href"/>
-                </xsl:attribute>
-                <xsl:value-of select="/page/balance"/>
-            </a>
-        </li>
-        <li>
-            <i>
-                <xsl:attribute name="title">
-                    <xsl:value-of select="urn"/>
-                </xsl:attribute>
+            <i title="{urn}">
                 <xsl:attribute name="class">
                     <xsl:text>icon-</xsl:text>
                     <xsl:choose>
@@ -406,10 +339,7 @@
             </i>
         </li>
         <li class="icon">
-            <a title="log out">
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='auth-logout']/@href"/>
-                </xsl:attribute>
+            <a title="log out" href="{/page/links/link[@rel='rexsl:logout']/@href}">
                 <i class="icon-signout">
                     <xsl:comment>signout icon</xsl:comment>
                 </i>

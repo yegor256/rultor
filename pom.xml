@@ -95,6 +95,12 @@
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk</artifactId>
             <version>1.8.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.jcabi.incubator</groupId>
@@ -250,6 +256,13 @@
                     <groupId>org.apache.tomcat.maven</groupId>
                     <artifactId>tomcat7-maven-plugin</artifactId>
                     <version>2.2</version>
+                    <configuration>
+                        <port>9099</port>
+                        <path>/</path>
+                        <systemProperties>
+                            <log4j.configuration>file:${basedir}/src/test/resources/log4j.properties</log4j.configuration>
+                        </systemProperties>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -264,27 +277,6 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <warSourceExcludes>js/**, xsl/**, css/**</warSourceExcludes>
-                    <archive>
-                        <manifestEntries>
-                            <Rultor-Revision>${buildNumber}</Rultor-Revision>
-                            <Rultor-Version>${project.version}</Rultor-Version>
-                            <Rultor-Date>${maven.build.timestamp}</Rultor-Date>
-                            <Rultor-DynamoKey>${dynamo.key}</Rultor-DynamoKey>
-                            <Rultor-DynamoSecret>${dynamo.secret}</Rultor-DynamoSecret>
-                            <Rultor-DynamoPrefix>${dynamo.prefix}</Rultor-DynamoPrefix>
-                            <Rultor-FbId>${fb.id}</Rultor-FbId>
-                            <Rultor-FbSecret>${fb.secret}</Rultor-FbSecret>
-                            <Rultor-GoogleId>${google.id}</Rultor-GoogleId>
-                            <Rultor-GoogleSecret>${google.secret}</Rultor-GoogleSecret>
-                            <Rultor-GithubId>${github.id}</Rultor-GithubId>
-                            <Rultor-GithubSecret>${github.secret}</Rultor-GithubSecret>
-                            <Rultor-SecurityKey>${security.key}</Rultor-SecurityKey>
-                            <Rultor-SttcUrn>${sttc.urn}</Rultor-SttcUrn>
-                            <Rultor-SttcToken>${sttc.token}</Rultor-SttcToken>
-                            <Rultor-SshKey>${ssh.key}</Rultor-SshKey>
-                            <Rultor-GithubToken>${github.oauth}</Rultor-GithubToken>
-                        </manifestEntries>
-                    </archive>
                     <webResources combine.children="append">
                         <resource>
                             <directory>${project.build.directory}/minify</directory>
@@ -412,6 +404,8 @@
             </activation>
             <properties>
                 <tomcat.home>${project.build.directory}/webapp-test</tomcat.home>
+                <dynamo.key>AAAAABBBBBAAAAABBBBB</dynamo.key>
+                <github.token>test</github.token>
             </properties>
             <build>
                 <plugins>
@@ -431,35 +425,6 @@
                                             <directory>src/test/webapp</directory>
                                         </resource>
                                     </webResources>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>prepare-manifest-for-tests</id>
-                                <goals>
-                                    <goal>manifest</goal>
-                                </goals>
-                                <configuration>
-                                    <warSourceDirectory>${tomcat.home}</warSourceDirectory>
-                                    <archive>
-                                        <manifestEntries>
-                                            <Rultor-Revision>1234567</Rultor-Revision>
-                                            <Rultor-Version>1.0-LOCAL</Rultor-Version>
-                                            <Rultor-Date>${maven.build.timestamp}</Rultor-Date>
-                                            <Rultor-DynamoKey>AAAAABBBBBAAAAABBBBB</Rultor-DynamoKey>
-                                            <Rultor-DynamoSecret>ABCDABCDABCDABCDABCDABCDABCDABCDABCDABCD</Rultor-DynamoSecret>
-                                            <Rultor-DynamoPrefix>rt-</Rultor-DynamoPrefix>
-                                            <Rultor-FbId>test</Rultor-FbId>
-                                            <Rultor-FbSecret>test</Rultor-FbSecret>
-                                            <Rultor-GoogleId>test</Rultor-GoogleId>
-                                            <Rultor-GoogleSecret>test</Rultor-GoogleSecret>
-                                            <Rultor-GithubId>test</Rultor-GithubId>
-                                            <Rultor-GithubSecret>test</Rultor-GithubSecret>
-                                            <Rultor-GithubToken>test</Rultor-GithubToken>
-                                            <Rultor-SecurityKey>test</Rultor-SecurityKey>
-                                            <Rultor-SttcUrn>urn:test:1</Rultor-SttcUrn>
-                                            <Rultor-SttcToken>test</Rultor-SttcToken>
-                                        </manifestEntries>
-                                    </archive>
                                 </configuration>
                             </execution>
                         </executions>
@@ -500,12 +465,7 @@
                         <groupId>org.apache.tomcat.maven</groupId>
                         <artifactId>tomcat7-maven-plugin</artifactId>
                         <configuration>
-                            <port>9099</port>
-                            <path>/</path>
                             <warDirectory>${tomcat.home}</warDirectory>
-                            <systemProperties>
-                                <log4j.configuration>file:${basedir}/src/test/resources/log4j.properties</log4j.configuration>
-                            </systemProperties>
                         </configuration>
                         <executions>
                             <execution>

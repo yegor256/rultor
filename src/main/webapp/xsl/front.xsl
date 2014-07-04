@@ -46,7 +46,7 @@
             <xsl:text>To start, login using one of your accounts: </xsl:text>
         </p>
         <ul class="list-inline">
-            <xsl:if test="/page/links/link[@rel='auth-facebook']">
+            <xsl:if test="/page/links/link[@rel='rexsl:facebook']">
                 <li>
                     <a class="btn btn-default">
                         <xsl:attribute name="href">
@@ -57,7 +57,7 @@
                     </a>
                 </li>
             </xsl:if>
-            <xsl:if test="/page/links/link[@rel='auth-google']">
+            <xsl:if test="/page/links/link[@rel='rexsl:google']">
                 <li>
                     <a class="btn btn-default">
                         <xsl:attribute name="href">
@@ -68,7 +68,7 @@
                     </a>
                 </li>
             </xsl:if>
-            <xsl:if test="/page/links/link[@rel='auth-github']">
+            <xsl:if test="/page/links/link[@rel='rexsl:github']">
                 <li>
                     <a class="btn btn-default">
                         <xsl:attribute name="href">

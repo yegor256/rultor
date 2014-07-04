@@ -81,7 +81,7 @@ public class BaseRs extends BaseResource {
         @Override
         public Identity identity() {
             final Identity identity;
-            if ("1234567".equals(Manifests.read("Rultor-Revision"))) {
+            if (!Manifests.read("Rultor-DynamoKey").startsWith("AAAAA")) {
                 identity = new Identity.Simple(
                     BaseRs.TEST_URN,
                     "localhost",

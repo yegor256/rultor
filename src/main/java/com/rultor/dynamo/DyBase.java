@@ -36,6 +36,7 @@ import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.retry.ReRegion;
+import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.rultor.agents.Agent;
@@ -74,13 +75,14 @@ public final class DyBase implements Base {
             Manifests.read("Rultor-DynamoSecret")
         );
         if ("AAAAABBBBBAAAAABBBBB".equals(key)) {
-            creds = new Credentials.Direct(
-                creds, Integer.parseInt(System.getProperty("dynamo.port"))
+            final int port = Integer.parseInt(
+                System.getProperty("dynamo.port")
             );
+            creds = new Credentials.Direct(creds, port);
+            Logger.warn(Agents.class, "test DynamoDB at port #%d", port);
         }
         this.region = new Region.Prefixed(
-            new ReRegion(new Region.Simple(creds)),
-            Manifests.read("Rultor-DynamoPrefix")
+            new ReRegion(new Region.Simple(creds)), "rt-"
         );
     }
 

@@ -1,0 +1,15 @@
+Rultor-Revision: ${buildNumber}
+Rultor-Version: ${project.version}
+Rultor-Date: ${maven.build.timestamp}
+Rultor-DynamoKey: ${dynamo.key}
+Rultor-DynamoSecret: ${dynamo.secret}
+Rultor-FbId: ${fb.id}
+Rultor-FbSecret: ${fb.secret}
+Rultor-GoogleId: ${google.id}
+Rultor-GoogleSecret: ${google.secret}
+Rultor-GithubId: ${github.id}
+Rultor-GithubSecret: ${github.secret}
+Rultor-SecurityKey: ${security.key}
+Rultor-SttcUrn: ${sttc.urn}
+Rultor-SttcToken: ${sttc.token}
+Rultor-GithubToken: ${github.oauth}
