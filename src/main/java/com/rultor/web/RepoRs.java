@@ -78,7 +78,7 @@ public final class RepoRs extends BaseRs {
     public Response index() throws IOException {
         final Repo repo = this.user().repos().get(this.number);
         return new PageBuilder()
-            .stylesheet("/xsl/repos.xsl")
+            .stylesheet("/xsl/repo.xsl")
             .build(EmptyPage.class)
             .init(this)
             .append(new Breadcrumbs().with("self", "home").bundle())

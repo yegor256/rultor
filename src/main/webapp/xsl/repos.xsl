@@ -43,7 +43,8 @@
                     action="{/page/links/link[@rel='create']/@href}">
                     <fieldset>
                         <div class="input-group">
-                            <input name="name" type="text" class="form-control" placeholder="Unique name of a new rule"/>
+                            <input name="coords" type="text" class="form-control"
+                                placeholder="Github repository name, e.g yegor256/test"/>
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-primary">
                                     <xsl:text>Create</xsl:text>

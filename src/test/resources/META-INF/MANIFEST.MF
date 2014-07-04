@@ -11,3 +11,4 @@ Rultor-Date: 9-Dec-2012
 Rultor-DynamoKey: AAAAABBBBBAAAAABBBBB
 Rultor-DynamoSecret: AAAAABBBBBAAAAABBBBBAAAAABBBBBAAAAABBBBB
 Rultor-DynamoPrefix: rt-
+Rultor-GithubToken: test

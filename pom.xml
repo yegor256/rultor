@@ -282,6 +282,7 @@
                             <Rultor-SttcUrn>${sttc.urn}</Rultor-SttcUrn>
                             <Rultor-SttcToken>${sttc.token}</Rultor-SttcToken>
                             <Rultor-SshKey>${ssh.key}</Rultor-SshKey>
+                            <Rultor-GithubToken>${github.oauth}</Rultor-GithubToken>
                         </manifestEntries>
                     </archive>
                     <webResources combine.children="append">
@@ -453,6 +454,7 @@
                                             <Rultor-GoogleSecret>test</Rultor-GoogleSecret>
                                             <Rultor-GithubId>test</Rultor-GithubId>
                                             <Rultor-GithubSecret>test</Rultor-GithubSecret>
+                                            <Rultor-GithubToken>test</Rultor-GithubToken>
                                             <Rultor-SecurityKey>test</Rultor-SecurityKey>
                                             <Rultor-SttcUrn>urn:test:1</Rultor-SttcUrn>
                                             <Rultor-SttcToken>test</Rultor-SttcToken>

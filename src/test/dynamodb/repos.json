@@ -5,7 +5,7 @@
             "AttributeType": "S"
         },
         {
-            "AttributeName": "number",
+            "AttributeName": "id",
             "AttributeType": "N"
         }
     ],
@@ -15,7 +15,7 @@
             "KeyType": "HASH"
         },
         {
-            "AttributeName": "number",
+            "AttributeName": "id",
             "KeyType": "RANGE"
         }
     ],

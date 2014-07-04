@@ -37,7 +37,9 @@ import com.rexsl.page.inset.FlashInset;
 import com.rultor.spi.Repo;
 import java.io.IOException;
 import java.util.logging.Level;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
@@ -90,11 +92,13 @@ public final class ReposRs extends BaseRs {
      * @param coords Coordinates
      * @throws IOException If fails
      */
-    @GET
+    @POST
     @Path("/add")
-    public void add(@QueryParam("coords") final String coords)
+    public void add(@FormParam("coords") final String coords)
         throws IOException {
-        final long num = this.user().repos().add(new Coordinates.Simple(coords));
+        final long num = this.user().repos().add(
+            new Coordinates.Simple(coords)
+        );
         throw FlashInset.forward(
             this.uriInfo().getBaseUriBuilder()
                 .clone()
@@ -144,7 +148,6 @@ public final class ReposRs extends BaseRs {
                         .build(repo.number())
                 )
             )
-            .up()
             .link(
                 new Link(
                     "delete",
@@ -152,11 +155,10 @@ public final class ReposRs extends BaseRs {
                         .clone()
                         .path(ReposRs.class)
                         .path(ReposRs.class, "delete")
-                        .queryParam("n", "{n1}")
+                        .queryParam("num", "{n1}")
                         .build(repo.number())
                 )
-            )
-            .up();
+            );
     }
 
 }

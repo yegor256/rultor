@@ -144,6 +144,8 @@ public final class DyRepos implements Repos {
             new Attributes()
                 .with(DyRepos.HASH, this.name)
                 .with(DyRepos.RANGE, number)
+                .with(DyRepos.ATTR_COORDS, coords.toString())
+                .with(DyRepos.ATTR_STATE, "{}")
         );
         return number;
     }
