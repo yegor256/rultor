@@ -62,12 +62,6 @@ public interface Repo {
     Talks talks() throws IOException;
 
     /**
-     * Daemons running.
-     * @return Daemons
-     */
-    Daemons daemons();
-
-    /**
      * State of the repo.
      * @return State
      */

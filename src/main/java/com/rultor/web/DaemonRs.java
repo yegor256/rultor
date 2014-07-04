@@ -29,9 +29,7 @@
  */
 package com.rultor.web;
 
-import com.jcabi.aspects.Loggable;
 import com.rexsl.page.PageBuilder;
-import com.rultor.spi.Daemon;
 import com.rultor.spi.Repo;
 import java.io.InputStream;
 import javax.validation.constraints.NotNull;
@@ -109,8 +107,7 @@ public final class DaemonRs extends BaseRs {
     @Produces(MediaType.TEXT_PLAIN)
     public InputStream stream() {
         final Repo repo = this.user().repos().get(this.rnum);
-        final Daemon daemon = repo.daemons().get(this.dnum);
-        return daemon.read();
+        return null;
     }
 
 }

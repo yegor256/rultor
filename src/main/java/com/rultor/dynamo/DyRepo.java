@@ -33,7 +33,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.github.Coordinates;
-import com.rultor.spi.Daemons;
 import com.rultor.spi.Repo;
 import com.rultor.spi.State;
 import com.rultor.spi.Talks;
@@ -88,11 +87,6 @@ public final class DyRepo implements Repo {
     @Override
     public Talks talks() throws IOException {
         return new DyTalks(this.region, this.number());
-    }
-
-    @Override
-    public Daemons daemons() {
-        throw new UnsupportedOperationException("#daemons()");
     }
 
     @Override
