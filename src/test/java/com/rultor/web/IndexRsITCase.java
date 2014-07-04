@@ -98,12 +98,11 @@ public final class IndexRsITCase {
     @Test
     public void rendersValidPages() throws Exception {
         final String[] pages = {
-            "/",
+            "/r",
             "/robots.txt",
             "/xsl/layout.xsl",
-            "/xsl/index.xsl",
+            "/xsl/front.xsl",
             "/css/style.css",
-            "/stylesheets",
         };
         final Request request = new JdkRequest(IndexRsITCase.HOME);
         for (final String page : pages) {
@@ -122,6 +121,7 @@ public final class IndexRsITCase {
     @Test
     public void showsVersion() throws Exception {
         new JdkRequest(IndexRsITCase.HOME)
+            .uri().path("/r").back()
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
             .fetch()
             .as(RestResponse.class)

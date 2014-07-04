@@ -31,7 +31,6 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:include href="./layout.xsl"/>
-    <xsl:include href="./pulse.xsl"/>
     <xsl:template name="head">
         <title>
             <xsl:text>index</xsl:text>
@@ -81,6 +80,5 @@
                 </li>
             </xsl:if>
         </ul>
-        <xsl:apply-templates select="/page/pulses/pulse"/>
     </xsl:template>
 </xsl:stylesheet>

@@ -2,12 +2,12 @@
 [
     '/xml/front.xml',
     '/xml/index.xml',
-    '/xml/rule.xml',
+    '/xml/repos.xml',
     '/css/style.css',
     '/robots.txt',
     '/js/layout.js',
     '/xsl/layout.xsl',
-    '/'
+    '/r'
 ].forEach(
     function (page) {
         casper.test.begin(

@@ -80,7 +80,7 @@ public final class ReposRs extends BaseRs {
 
                 )
             )
-            .link(new Link("add", "./add"))
+            .link(new Link("create", "./add"))
             .render()
             .build();
     }

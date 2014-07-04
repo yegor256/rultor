@@ -30,9 +30,16 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.VerboseRunnable;
+import com.jcabi.log.VerboseThreads;
 import com.jcabi.manifests.Manifests;
+import com.rultor.dynamo.DyBase;
 import com.rultor.spi.Base;
 import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -47,6 +54,12 @@ import javax.servlet.ServletContextListener;
 @Loggable(Loggable.INFO)
 public final class Lifespan implements ServletContextListener {
 
+    /**
+     * Routine worker.
+     */
+    private final transient ScheduledExecutorService service =
+        Executors.newSingleThreadScheduledExecutor(new VerboseThreads());
+
     @Override
     public void contextInitialized(final ServletContextEvent event) {
         try {
@@ -55,12 +68,27 @@ public final class Lifespan implements ServletContextListener {
             throw new IllegalStateException(ex);
         }
         final ServletContext context = event.getServletContext();
-        context.setAttribute(Base.class.getName(), null);
+        final Base base = new DyBase();
+        context.setAttribute(Base.class.getName(), base);
+        this.service.schedule(
+            new VerboseRunnable(
+                new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        base.execute();
+                        return null;
+                    }
+                },
+                true
+            ),
+            1L,
+            TimeUnit.MINUTES
+        );
     }
 
     @Override
     public void contextDestroyed(final ServletContextEvent event) {
-        // nothing
+        this.service.shutdown();
     }
 
 }

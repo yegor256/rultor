@@ -168,7 +168,7 @@ public class BaseRs extends BaseResource {
                             "assets",
                             BaseRs.this.uriInfo().getBaseUriBuilder()
                                 .clone()
-                                .path(RepoRs.class)
+                                .path(ReposRs.class)
                                 .build()
                         )
                     );

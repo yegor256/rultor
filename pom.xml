@@ -95,12 +95,6 @@
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk</artifactId>
             <version>1.8.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-databind</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.jcabi.incubator</groupId>
@@ -452,7 +446,7 @@
                                             <Rultor-Date>${maven.build.timestamp}</Rultor-Date>
                                             <Rultor-DynamoKey>AAAAABBBBBAAAAABBBBB</Rultor-DynamoKey>
                                             <Rultor-DynamoSecret>ABCDABCDABCDABCDABCDABCDABCDABCDABCDABCD</Rultor-DynamoSecret>
-                                            <Rultor-DynamoPrefix>nb-</Rultor-DynamoPrefix>
+                                            <Rultor-DynamoPrefix>rt-</Rultor-DynamoPrefix>
                                             <Rultor-FbId>test</Rultor-FbId>
                                             <Rultor-FbSecret>test</Rultor-FbSecret>
                                             <Rultor-GoogleId>test</Rultor-GoogleId>

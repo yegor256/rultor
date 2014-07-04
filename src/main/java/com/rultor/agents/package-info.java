@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2014, rultor.com
  * All rights reserved.
  *
@@ -27,39 +26,13 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
-    <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="./layout.xsl"/>
-    <xsl:template name="head">
-        <title>
-            <xsl:text>login</xsl:text>
-        </title>
-    </xsl:template>
-    <xsl:template name="content">
-        <p>
-            <xsl:text>To start, login using one of your accounts at:</xsl:text>
-        </p>
-        <p>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='facebook-auth']/@href"/>
-                </xsl:attribute>
-                <img class="icon" src="http://img.rultor.com/icons/facebook.png" alt="facebook icon"/>
-            </a>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='google-auth']/@href"/>
-                </xsl:attribute>
-                <img class="icon" src="http://img.rultor.com/icons/google.png" alt="google icon"/>
-            </a>
-        </p>
-        <h1>
-            <xsl:text>Lightweight Integration Platform as a Service</xsl:text>
-        </h1>
-        <p>
-            <xsl:text>Rultor.com is a cloud platform that integrates software
-                development resources, artifacts, and people.</xsl:text>
-        </p>
-    </xsl:template>
-</xsl:stylesheet>
+ */
+
+/**
+ * Agents.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+package com.rultor.agents;
