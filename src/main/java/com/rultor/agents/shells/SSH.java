@@ -259,7 +259,13 @@ public final class SSH implements Shell {
             final JSch jsch = new JSch();
             final File file = File.createTempFile("rultor", ".key");
             FileUtils.forceDeleteOnExit(file);
-            FileUtils.write(file, this.key, CharEncoding.UTF_8);
+            FileUtils.write(
+                file,
+                this.key.replaceAll("\r", "")
+                    .replaceAll("\n\\s+|\n{2,}", "\n")
+                    .trim(),
+                CharEncoding.UTF_8
+            );
             jsch.setHostKeyRepository(SSH.REPO);
             jsch.addIdentity(file.getAbsolutePath());
             Logger.info(

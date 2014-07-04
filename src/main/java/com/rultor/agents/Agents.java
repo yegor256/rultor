@@ -50,6 +50,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
  * Agents.
@@ -79,7 +81,10 @@ public final class Agents {
                     new RegistersShell(
                         "b1.rultor.com", 22,
                         "rultor",
-                        Manifests.read("Rultor-SshKey")
+                        IOUtils.toString(
+                            this.getClass().getResourceAsStream("rultor.key"),
+                            CharEncoding.UTF_8
+                        )
                     )
                 ),
                 new TalkAgent.Wrap(
