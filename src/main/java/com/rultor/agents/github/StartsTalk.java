@@ -94,7 +94,7 @@ public final class StartsTalk implements Agent {
         final Talks talks = repo.talks();
         for (final Issue issue : issues) {
             final String name = String.format(
-                "Github Issue %s#%d", this.coords, issue.number()
+                "%s#%d", this.coords, issue.number()
             );
             if (!talks.exists(name)) {
                 talks.create(name);
@@ -103,7 +103,10 @@ public final class StartsTalk implements Agent {
                         .add("github-repo")
                         .set(this.coords.toString()).up()
                         .add("github-issue")
-                        .set(Integer.toString(issue.number()))
+                        .set(Integer.toString(issue.number())),
+                    String.format(
+                        "talk started at %s#%d", this.coords, issue.number()
+                    )
                 );
             }
         }

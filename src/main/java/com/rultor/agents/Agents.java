@@ -89,6 +89,7 @@ public final class Agents {
                 ),
                 new TalkAgent.Wrap(
                     new GetsMergeRequest(
+                        repo,
                         github,
                         Collections.singleton("yegor256")
                     )

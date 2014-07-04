@@ -99,7 +99,7 @@ public final class DyTalks implements Talks {
     public boolean exists(final String name) {
         return this.region.table(DyTalks.TBL)
             .frame()
-            .through(new QueryValve())
+            .through(new QueryValve().withLimit(1))
             .where(DyTalks.HASH, Conditions.equalTo(this.repo))
             .where(DyTalks.RANGE, name)
             .iterator().hasNext();
@@ -110,11 +110,7 @@ public final class DyTalks implements Talks {
         return new DyTalk(
             this.region.table(DyTalks.TBL)
                 .frame()
-                .through(
-                    new QueryValve()
-                        .withLimit(1)
-                        .withAttributesToGet(DyTalks.ATTR_XML)
-                )
+                .through(new QueryValve().withLimit(1))
                 .where(DyTalks.HASH, Conditions.equalTo(this.repo))
                 .where(DyTalks.RANGE, name)
                 .iterator().next()
@@ -136,11 +132,7 @@ public final class DyTalks implements Talks {
         return Iterables.transform(
             this.region.table(DyTalks.TBL)
                 .frame()
-                .through(
-                    new QueryValve()
-                        .withLimit(1)
-                        .withAttributesToGet(DyTalks.ATTR_XML)
-                )
+                .through(new QueryValve())
                 .where(DyTalks.HASH, Conditions.equalTo(this.repo)),
             new Function<Item, Talk>() {
                 @Override

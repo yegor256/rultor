@@ -134,12 +134,10 @@ public final class DyRepos implements Repos {
             this.region.table(DyRepos.TBL)
                 .frame()
                 .through(
-                    new QueryValve()
-                        .withLimit(1)
-                        .withAttributesToGet(
-                            DyRepos.ATTR_COORDS,
-                            DyRepos.ATTR_STATE
-                        )
+                    new QueryValve().withAttributesToGet(
+                        DyRepos.ATTR_COORDS,
+                        DyRepos.ATTR_STATE
+                    )
                 )
                 .where(DyRepos.HASH, Conditions.equalTo(this.name)),
             new Function<Item, Repo>() {

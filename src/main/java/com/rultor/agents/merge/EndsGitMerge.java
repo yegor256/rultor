@@ -54,7 +54,8 @@ public final class EndsGitMerge implements TalkAgent {
                 new Directives().xpath("/talk/merge-request-git")
                     .add("success")
                     .set(xml.xpath("/talk/daemon/success/text()").get(0))
-                    .xpath("/talk/daemon").remove()
+                    .xpath("/talk/daemon").remove(),
+                "git merge finished"
             );
         }
     }

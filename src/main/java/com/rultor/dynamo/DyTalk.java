@@ -33,6 +33,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.dynamo.Item;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Talk;
@@ -80,7 +81,8 @@ public final class DyTalk implements Talk {
     }
 
     @Override
-    public void modify(final Iterable<Directive> dirs) throws IOException {
+    public void modify(final Iterable<Directive> dirs, final String reason)
+        throws IOException {
         final Node node = this.read().node();
         try {
             new Xembler(dirs).apply(node);
@@ -93,6 +95,7 @@ public final class DyTalk implements Talk {
                 new AttributeValue().withS(new XMLDocument(node).toString())
             )
         );
+        Logger.info(this, "%s updated: %s", this.name(), reason);
     }
 
     @Override

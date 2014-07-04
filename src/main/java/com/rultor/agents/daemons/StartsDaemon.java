@@ -88,10 +88,12 @@ public final class StartsDaemon implements TalkAgent {
                 ),
                 baos, baos
             );
+            final String dir = baos.toString(CharEncoding.UTF_8);
             talk.modify(
                 new Directives().xpath("/talk/daemon").strict(1)
                     .add("started").set(new Date().toString()).up()
-                    .add("dir").set(baos.toString(CharEncoding.UTF_8))
+                    .add("dir").set(dir),
+                String.format("daemon started at %s", dir)
             );
         }
     }

@@ -77,7 +77,8 @@ public final class EndsDaemon implements TalkAgent {
                 talk.modify(
                     new Directives().xpath("/talk/daemon")
                         .attr("done", "yes")
-                        .add("success").set(Boolean.toString(success))
+                        .add("success").set(Boolean.toString(success)),
+                    String.format("daemon finished at %s", dir)
                 );
             }
         }

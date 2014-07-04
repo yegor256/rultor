@@ -94,7 +94,8 @@ public final class RegistersShell implements TalkAgent {
                     .add("host").set(this.addr).up()
                     .add("port").set(Integer.toString(this.port)).up()
                     .add("login").set(this.login).up()
-                    .add("key").set(this.key)
+                    .add("key").set(this.key),
+                String.format("shell registered as %s:%d", this.addr, this.port)
             );
             Logger.info(
                 this, "shell %s:%d registered at %s",

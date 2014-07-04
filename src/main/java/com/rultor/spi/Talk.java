@@ -59,8 +59,9 @@ public interface Talk {
     /**
      * Modify its content.
      * @param dirs Directives
+     * @param reason Why it's happening
      */
-    void modify(Iterable<Directive> dirs) throws IOException;
+    void modify(Iterable<Directive> dirs, String reason) throws IOException;
 
     /**
      * Archive it.

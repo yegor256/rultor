@@ -31,6 +31,8 @@ package com.rultor.web;
 
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Repo;
+import com.rultor.spi.Talk;
+import java.io.IOException;
 import java.io.InputStream;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -49,7 +51,7 @@ import javax.ws.rs.core.Response;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Path("/d/{repo:[0-9]+}/{number:[0-9]+}")
+@Path("/d/{repo:[0-9]+}/{name}/{hash:[0-9]+}")
 public final class DaemonRs extends BaseRs {
 
     /**
@@ -58,9 +60,14 @@ public final class DaemonRs extends BaseRs {
     private transient Long rnum;
 
     /**
-     * Daemon number.
+     * Talk name.
      */
-    private transient Integer dnum;
+    private transient String name;
+
+    /**
+     * Daemon hash ID.
+     */
+    private transient String hash;
 
     /**
      * Inject it from query.
@@ -74,21 +81,34 @@ public final class DaemonRs extends BaseRs {
 
     /**
      * Inject it from query.
-     * @param number Daemon number
+     * @param talk Talk name
      */
-    @PathParam("number")
-    public void setDnum(@NotNull(message = "daemon number is mandatory")
-    final Integer number) {
-        this.dnum = number;
+    @PathParam("name")
+    public void setName(@NotNull(message = "talk name is mandatory")
+        final String talk) {
+        this.name = talk;
     }
 
     /**
-     * Get stream.
+     * Inject it from query.
+     * @param dmn Daemon hash
+     */
+    @PathParam("hash")
+    public void setHash(@NotNull(message = "daemon hash is mandatory")
+        final String dmn) {
+        this.hash = dmn;
+    }
+
+    /**
+     * Get front page.
      * @return The JAX-RS response
+     * @throws IOException If fails
      */
     @GET
     @Path("/")
-    public Response index() {
+    public Response index() throws IOException {
+        final Talk talk = this.user().repos()
+            .get(this.rnum).talks().get(this.name);
         return new PageBuilder()
             .stylesheet("/xsl/daemon.xsl")
             .build(EmptyPage.class)

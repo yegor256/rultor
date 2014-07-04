@@ -84,7 +84,8 @@ public final class PostsMergeResult implements TalkAgent {
             issue.comments().post(msg);
             talk.modify(
                 new Directives().xpath("/talk/merge-request-git")
-                    .strict(1).remove()
+                    .strict(1).remove(),
+                String.format("merge request completed at #%d", issue.number())
             );
         }
     }

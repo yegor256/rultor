@@ -32,6 +32,7 @@ package com.rultor.agents.github;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
@@ -42,9 +43,14 @@ import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.TalkAgent;
+import com.rultor.spi.Repo;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.net.URLEncoder;
 import javax.json.JsonObject;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directives;
 
@@ -57,6 +63,11 @@ import org.xembly.Directives;
  */
 @Immutable
 public final class GetsMergeRequest implements TalkAgent {
+
+    /**
+     * Repo.
+     */
+    private final transient Repo repo;
 
     /**
      * Github.
@@ -73,7 +84,9 @@ public final class GetsMergeRequest implements TalkAgent {
      * @param ghub Github client
      * @param revs Reviewers
      */
-    public GetsMergeRequest(final Github ghub, final Iterable<String> revs) {
+    public GetsMergeRequest(final Repo rpo, final Github ghub,
+        final Iterable<String> revs) {
+        this.repo = rpo;
         this.github = ghub;
         this.reviewers = new Array<String>(revs);
     }
@@ -82,7 +95,7 @@ public final class GetsMergeRequest implements TalkAgent {
     public void execute(final Talk talk) throws IOException {
         final Issue.Smart issue = new TalkIssues(this.github).get(talk);
         final XML xml = talk.read();
-        int seen;
+        final int seen;
         if (xml.nodes("/talk/wire/github-seen").isEmpty()) {
             seen = 0;
         } else {
@@ -96,11 +109,13 @@ public final class GetsMergeRequest implements TalkAgent {
         final String prefix = String.format(
             "@%s ", this.github.users().self().login()
         );
+        int next = seen;
+        boolean found = false;
         for (final Comment.Smart comment : comments) {
             if (comment.number() <= seen) {
                 continue;
             }
-            seen = comment.number();
+            next = comment.number();
             if (!comment.body().startsWith(prefix)) {
                 Logger.info(
                     this,
@@ -117,59 +132,52 @@ public final class GetsMergeRequest implements TalkAgent {
                 );
                 continue;
             }
-            this.read(talk, comment);
+            if (found) {
+                Logger.info(
+                    this, "merge request already found, enough for one issue"
+                );
+                continue;
+            }
+            found = this.read(talk, comment);
         }
-        talk.modify(
-            new Directives().xpath("/talk/wire")
-                .addIf("github-seen").set(Integer.toString(seen))
-        );
+        if (next > seen) {
+            talk.modify(
+                new Directives().xpath("/talk/wire")
+                    .addIf("github-seen").set(Integer.toString(next)),
+                String.format("messages up to #%d seen", next)
+            );
+        }
     }
 
     /**
      * Process/read one comment.
      * @param talk Talk
      * @param comment The comment
+     * @return TRUE if request found
      * @throws IOException
      */
-    public void read(final Talk talk, final Comment.Smart comment)
+    private boolean read(final Talk talk, final Comment.Smart comment)
         throws IOException {
+        final boolean found;
         if (this.reviewers.contains(comment.author().login())) {
-            final Issue issue = comment.issue();
-            final JsonReadable pull = new Pull.Smart(
-                issue.repo().pulls().get(issue.number())
-            );
-            final JsonObject head = pull.json().getJsonObject("head");
-            final JsonObject base = pull.json().getJsonObject("base");
+            final String hash = DigestUtils.md5Hex(
+                RandomStringUtils.random(Tv.FIVE)
+            ).substring(0, Tv.EIGHT);
             talk.modify(
-                new Directives()
-                    .xpath("/talk[not(merge-request-git)]").strict(1)
-                    .add("merge-request-git")
-                    .add("base")
-                    .set(
-                        String.format(
-                            "git@github.com:%s",
-                            base.getJsonObject("repo").getString("full_name")
-                        )
-                    )
-                    .up()
-                    .add("base-branch").set(base.getString("ref")).up()
-                    .add("head")
-                    .set(
-                        String.format(
-                            "git@github.com:%s",
-                            head.getJsonObject("repo").getString("full_name")
-                        )
-                    )
-                    .up()
-                    .add("head-branch").set(head.getString("ref"))
+                GetsMergeRequest.dirs(comment.issue(), hash),
+                String.format("merge request in #%d", comment.issue().number())
             );
             comment.issue().comments().post(
                 String.format(
-                    "> %s\n\n@%s OK, I'm on it",
+                    "> %s\n\n@%s OK, I'm on it. You can track me [here](http://www.rultor.com/d/%d/%s/%s)",
                     comment.body().replace("\n", " "),
-                    comment.author().login()
+                    comment.author().login(),
+                    this.repo.number(),
+                    URLEncoder.encode(talk.name(), CharEncoding.UTF_8),
+                    hash
                 )
             );
+            found = true;
         } else {
             comment.issue().comments().post(
                 String.format(
@@ -190,7 +198,46 @@ public final class GetsMergeRequest implements TalkAgent {
                     )
                 )
             );
+            found = false;
         }
+        return found;
+    }
+
+    /**
+     * Make dirs from pull request.
+     * @param issue Issue with PR
+     * @param hash Hash code of the request
+     * @return Dirs
+     */
+    private static Directives dirs(final Issue issue, final String hash)
+        throws IOException {
+        final JsonReadable pull = new Pull.Smart(
+            issue.repo().pulls().get(issue.number())
+        );
+        final JsonObject head = pull.json().getJsonObject("head");
+        final JsonObject base = pull.json().getJsonObject("base");
+        return new Directives()
+            .xpath("/talk[not(merge-request-git)]").strict(1)
+            .add("merge-request-git")
+            .attr("id", hash)
+            .add("base")
+            .set(
+                String.format(
+                    "git@github.com:%s.git",
+                    base.getJsonObject("repo").getString("full_name")
+                )
+            )
+            .up()
+            .add("base-branch").set(base.getString("ref")).up()
+            .add("head")
+            .set(
+                String.format(
+                    "git@github.com:%s.git",
+                    head.getJsonObject("repo").getString("full_name")
+                )
+            )
+            .up()
+            .add("head-branch").set(head.getString("ref"));
     }
 
 }

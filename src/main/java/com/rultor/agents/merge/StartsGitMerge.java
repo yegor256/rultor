@@ -70,7 +70,8 @@ public final class StartsGitMerge implements TalkAgent {
             final String script = StringUtils.join(
                 Arrays.asList(
                     String.format(
-                        "git clone %s repo", req.xpath("base/text()").get(0)
+                        "git clone %s repo",
+                        req.xpath("base/text()").get(0)
                     ),
                     "cd repo",
                     String.format(
@@ -79,7 +80,7 @@ public final class StartsGitMerge implements TalkAgent {
                     ),
                     "git remote update",
                     String.format(
-                        "git checkout head/%s",
+                        "git checkout origin/%s",
                         req.xpath("base-branch/text()").get(0)
                     ),
                     String.format(
@@ -99,7 +100,10 @@ public final class StartsGitMerge implements TalkAgent {
             );
             talk.modify(
                 new Directives().xpath("/talk[not(daemon)]").strict(1)
-                    .add("daemon").add("script").set(script)
+                    .add("daemon")
+                    .attr("id", req.xpath("@id").get(0))
+                    .add("script").set(script),
+                "git merge started"
             );
         }
     }
