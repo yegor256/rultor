@@ -109,7 +109,14 @@ public final class DyRepos implements Repos {
     public Repo get(final long number) {
         final Iterator<Item> items = this.region.table(DyRepos.TBL)
             .frame()
-            .through(new QueryValve())
+            .through(
+                new QueryValve()
+                    .withLimit(1)
+                    .withAttributesToGet(
+                        DyRepos.ATTR_COORDS,
+                        DyRepos.ATTR_STATE
+                    )
+            )
             .where(DyRepos.HASH, Conditions.equalTo(this.name))
             .where(DyRepos.RANGE, Conditions.equalTo(number))
             .iterator();
@@ -126,7 +133,14 @@ public final class DyRepos implements Repos {
         return Iterables.transform(
             this.region.table(DyRepos.TBL)
                 .frame()
-                .through(new QueryValve())
+                .through(
+                    new QueryValve()
+                        .withLimit(1)
+                        .withAttributesToGet(
+                            DyRepos.ATTR_COORDS,
+                            DyRepos.ATTR_STATE
+                        )
+                )
                 .where(DyRepos.HASH, Conditions.equalTo(this.name)),
             new Function<Item, Repo>() {
                 @Override

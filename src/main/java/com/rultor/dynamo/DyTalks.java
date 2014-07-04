@@ -110,7 +110,11 @@ public final class DyTalks implements Talks {
         return new DyTalk(
             this.region.table(DyTalks.TBL)
                 .frame()
-                .through(new QueryValve())
+                .through(
+                    new QueryValve()
+                        .withLimit(1)
+                        .withAttributesToGet(DyTalks.ATTR_XML)
+                )
                 .where(DyTalks.HASH, Conditions.equalTo(this.repo))
                 .where(DyTalks.RANGE, name)
                 .iterator().next()
@@ -123,7 +127,7 @@ public final class DyTalks implements Talks {
             new Attributes()
                 .with(DyTalks.HASH, this.repo)
                 .with(DyTalks.RANGE, name)
-                .with(DyTalks.ATTR_XML, "<talks/>")
+                .with(DyTalks.ATTR_XML, "<talk/>")
         );
     }
 
@@ -132,7 +136,11 @@ public final class DyTalks implements Talks {
         return Iterables.transform(
             this.region.table(DyTalks.TBL)
                 .frame()
-                .through(new QueryValve())
+                .through(
+                    new QueryValve()
+                        .withLimit(1)
+                        .withAttributesToGet(DyTalks.ATTR_XML)
+                )
                 .where(DyTalks.HASH, Conditions.equalTo(this.repo)),
             new Function<Item, Talk>() {
                 @Override

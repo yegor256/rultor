@@ -100,7 +100,9 @@ public final class StartsTalk implements Agent {
                 talks.create(name);
                 talks.get(name).modify(
                     new Directives().xpath("/talk").add("wire")
-                        .add("github")
+                        .add("github-repo")
+                        .set(this.coords.toString()).up()
+                        .add("github-issue")
                         .set(Integer.toString(issue.number()))
                 );
             }

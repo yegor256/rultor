@@ -39,6 +39,7 @@ import com.rultor.spi.Talk;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.w3c.dom.Node;
 import org.xembly.Directive;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.Xembler;
@@ -52,7 +53,7 @@ import org.xembly.Xembler;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "item")
 public final class DyTalk implements Talk {
 
     /**
@@ -80,16 +81,18 @@ public final class DyTalk implements Talk {
 
     @Override
     public void modify(final Iterable<Directive> dirs) throws IOException {
+        final Node node = this.read().node();
         try {
-            this.item.put(
-                DyTalks.ATTR_XML,
-                new AttributeValueUpdate().withValue(
-                    new AttributeValue().withS(new Xembler(dirs).xml())
-                )
-            );
+            new Xembler(dirs).apply(node);
         } catch (final ImpossibleModificationException ex) {
             throw new IllegalStateException(ex);
         }
+        this.item.put(
+            DyTalks.ATTR_XML,
+            new AttributeValueUpdate().withValue(
+                new AttributeValue().withS(new XMLDocument(node).toString())
+            )
+        );
     }
 
     @Override

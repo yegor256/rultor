@@ -32,6 +32,7 @@ package com.rultor.agents.github;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.TalkAgent;
 import com.rultor.spi.Talk;
@@ -64,7 +65,11 @@ public final class PostsMergeResult implements TalkAgent {
     @Override
     public void execute(final Talk talk) throws IOException {
         final XML xml = talk.read();
-        if (!xml.xpath("/talk/merge-request-git[finished]").isEmpty()) {
+        if (xml.nodes("//merge-request-git").isEmpty()) {
+            Logger.info(this, "no merge requests here");
+        } else if (xml.nodes("//merge-request-git/finished").isEmpty()) {
+            Logger.info(this, "merge request is not finished yet");
+        } else {
             final XML req = xml.nodes("/talk/merge-request-git").get(0);
             final Issue.Smart issue = new TalkIssues(this.github).get(talk);
             final boolean success = Boolean.parseBoolean(

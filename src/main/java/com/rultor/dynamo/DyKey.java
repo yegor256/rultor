@@ -37,8 +37,10 @@ import com.rultor.spi.Key;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -88,21 +90,13 @@ public final class DyKey implements Key {
     @Override
     public void put(final String value) throws IOException {
         final JsonObject json = this.json();
+        final JsonObjectBuilder builder = Json.createObjectBuilder();
+        for (final Map.Entry<String, JsonValue> entry : json.entrySet()) {
+            builder.add(entry.getKey(), entry.getValue());
+        }
+        builder.add(this.name, value);
         final StringWriter writer = new StringWriter();
-        json.put(
-            this.name,
-            new JsonValue() {
-                @Override
-                public String toString() {
-                    return value;
-                }
-                @Override
-                public JsonValue.ValueType getValueType() {
-                    return JsonValue.ValueType.STRING;
-                }
-            }
-        );
-        Json.createWriter(writer).writeObject(json);
+        Json.createWriter(writer).writeObject(builder.build());
         this.item.put(
             DyRepos.ATTR_STATE,
             new AttributeValueUpdate().withValue(

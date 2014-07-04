@@ -41,16 +41,6 @@
                 <meta name="description" content="Programmable Enforcer of a Software Development Process"/>
                 <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
                 <meta name="author" content="rultor.com"/>
-                <xsl:variable name="proto">
-                    <xsl:choose>
-                        <xsl:when test="/page/@ssl = 'true'">
-                            <xsl:text>https</xsl:text>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:text>http</xsl:text>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:variable>
                 <!-- JavaScript exception/error logger to qbaka.com -->
                 <script type="text/javascript"><![CDATA[
                     window.qbaka || (function (a, c) {
@@ -89,35 +79,9 @@
                     ]]></script>
                 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
                 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"/>
-                <link rel="stylesheet" type="text/css" media="all">
-                    <xsl:attribute name="href">
-                        <xsl:value-of select="/page/links/link[@rel='root']/@href"/>
-                        <xsl:text>css/style.css</xsl:text>
-                        <xsl:if test="/page/@ip">
-                            <xsl:text>?</xsl:text>
-                            <xsl:value-of select="/page/version/revision"/>
-                        </xsl:if>
-                    </xsl:attribute>
-                </link>
-                <link rel="icon" type="image/gif">
-                    <xsl:attribute name="href">
-                        <xsl:text>//img.rultor.com/favicon.ico</xsl:text>
-                        <xsl:if test="/page/@ip">
-                            <xsl:text>?</xsl:text>
-                            <xsl:value-of select="/page/version/revision"/>
-                        </xsl:if>
-                    </xsl:attribute>
-                </link>
-                <script type="text/javascript">
-                    <xsl:attribute name="src">
-                        <xsl:value-of select="/page/links/link[@rel='root']/@href"/>
-                        <xsl:text>js/layout.js</xsl:text>
-                        <xsl:if test="/page/@ip">
-                            <xsl:text>?</xsl:text>
-                            <xsl:value-of select="/page/version/revision"/>
-                        </xsl:if>
-                    </xsl:attribute>
-                    <!-- this is for W3C compliance -->
+                <link rel="stylesheet" type="text/css" media="all" href="/css/style.css?{version/revision}"/>
+                <link rel="icon" type="image/gif" href="//img.rultor.com/favicon.ico?{version/revision}"/>
+                <script type="text/javascript" src="js/layout.js?{version/revision}">
                     <xsl:text> </xsl:text>
                 </script>
                 <script type="text/javascript"><![CDATA[
@@ -145,8 +109,7 @@
                         s.parentNode.insertBefore(p, s);
                     })();
                     ]]></script>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                <xsl:call-template name="head"/>
+                <xsl:apply-templates select="." mode="head"/>
             </head>
             <body>
                 <xsl:if test="/page/nav/item">
@@ -201,7 +164,7 @@
                 </xsl:if>
                 <xsl:apply-templates select="flash"/>
                 <article>
-                    <xsl:call-template name="content"/>
+                    <xsl:apply-templates select="." mode="body"/>
                 </article>
                 <xsl:apply-templates select="version"/>
             </body>

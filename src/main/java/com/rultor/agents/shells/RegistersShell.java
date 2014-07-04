@@ -30,6 +30,7 @@
 package com.rultor.agents.shells;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.TalkAgent;
 import com.rultor.spi.Talk;
@@ -86,7 +87,7 @@ public final class RegistersShell implements TalkAgent {
     @Override
     public void execute(final Talk talk) throws IOException {
         final XML xml = talk.read();
-        if (!xml.nodes("/talk[not(shell)]").isEmpty()) {
+        if (xml.nodes("/talk/shell").isEmpty()) {
             talk.modify(
                 new Directives()
                     .xpath("/talk[not(shell)]").strict(1).add("shell")
@@ -94,6 +95,15 @@ public final class RegistersShell implements TalkAgent {
                     .add("port").set(Integer.toString(this.port)).up()
                     .add("login").set(this.login).up()
                     .add("key").set(this.key)
+            );
+            Logger.info(
+                this, "shell %s:%d registered at %s",
+                this.addr, this.port, talk
+            );
+        } else {
+            Logger.info(
+                this, "shell already registered at %s: %s",
+                talk, xml.xpath("/talk/shell/host/text()").get(0)
             );
         }
     }

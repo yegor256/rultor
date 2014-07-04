@@ -70,25 +70,29 @@ public final class StartsGitMerge implements TalkAgent {
             final String script = StringUtils.join(
                 Arrays.asList(
                     String.format(
-                        "git clone %s repo", req.xpath("base").get(0)
+                        "git clone %s repo", req.xpath("base/text()").get(0)
                     ),
                     "cd repo",
                     String.format(
-                        "git remote add head %s", req.xpath("head").get(0)
+                        "git remote add head %s",
+                        req.xpath("head/text()").get(0)
                     ),
                     "git remote update",
                     String.format(
-                        "git checkout head/%s", req.xpath("base-branch").get(0)
+                        "git checkout head/%s",
+                        req.xpath("base-branch/text()").get(0)
                     ),
                     String.format(
-                        "git merge %s", req.xpath("head-branch").get(0)
+                        "git merge %s",
+                        req.xpath("head-branch/text()").get(0)
                     ),
                     String.format(
                         "sudo docker -i -t -rm -v .:/main -w=/main rultor %s",
                         this.cmd
                     ),
                     String.format(
-                        "git push origin %s", req.xpath("base-branch").get(0)
+                        "git push origin %s",
+                        req.xpath("base-branch/text()").get(0)
                     )
                 ),
                 "\n"

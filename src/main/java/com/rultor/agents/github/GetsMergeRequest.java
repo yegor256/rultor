@@ -39,6 +39,7 @@ import com.jcabi.github.JsonReadable;
 import com.jcabi.github.Pull;
 import com.jcabi.github.Smarts;
 import com.jcabi.immutable.Array;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.TalkAgent;
 import com.rultor.spi.Talk;
@@ -85,29 +86,42 @@ public final class GetsMergeRequest implements TalkAgent {
         if (xml.nodes("/talk/wire/github-seen").isEmpty()) {
             seen = 0;
         } else {
-            seen = Integer.parseInt(xml.xpath("/talk/wire/github-seen").get(0));
+            seen = Integer.parseInt(
+                xml.xpath("/talk/wire/github-seen/text()").get(0)
+            );
         }
         final Iterable<Comment.Smart> comments = new Smarts<Comment.Smart>(
             issue.comments().iterate()
         );
-        final String prefix = String.format("@%s ", this.github.users().self());
+        final String prefix = String.format(
+            "@%s ", this.github.users().self().login()
+        );
         for (final Comment.Smart comment : comments) {
             if (comment.number() <= seen) {
                 continue;
             }
             seen = comment.number();
             if (!comment.body().startsWith(prefix)) {
+                Logger.info(
+                    this,
+                    // @checkstyle LineLength (1 line)
+                    "comment #%d ignored, it is not addressed to me (doesn't start with \"%s\")",
+                    comment.number(), prefix
+                );
                 continue;
             }
             if (!comment.body().contains("good to merge")) {
+                Logger.info(
+                    this, "comment #%d is not about merging: %s",
+                    comment.number(), comment.body()
+                );
                 continue;
             }
             this.read(talk, comment);
         }
         talk.modify(
-            new Directives().xpath("/talk/wire/github-seen").set(
-                Integer.toString(seen)
-            )
+            new Directives().xpath("/talk/wire")
+                .addIf("github-seen").set(Integer.toString(seen))
         );
     }
 
@@ -120,8 +134,9 @@ public final class GetsMergeRequest implements TalkAgent {
     public void read(final Talk talk, final Comment.Smart comment)
         throws IOException {
         if (this.reviewers.contains(comment.author().login())) {
+            final Issue issue = comment.issue();
             final JsonReadable pull = new Pull.Smart(
-                comment.issue().repo().pulls().get(comment.number())
+                issue.repo().pulls().get(issue.number())
             );
             final JsonObject head = pull.json().getJsonObject("head");
             final JsonObject base = pull.json().getJsonObject("base");
@@ -133,7 +148,7 @@ public final class GetsMergeRequest implements TalkAgent {
                     .set(
                         String.format(
                             "git@github.com:%s",
-                            base.getJsonObject("repo").get("full_name")
+                            base.getJsonObject("repo").getString("full_name")
                         )
                     )
                     .up()
@@ -142,12 +157,18 @@ public final class GetsMergeRequest implements TalkAgent {
                     .set(
                         String.format(
                             "git@github.com:%s",
-                            head.getJsonObject("repo").get("full_name")
+                            head.getJsonObject("repo").getString("full_name")
                         )
                     )
                     .up()
-                    .add("head-branch").set(head.getString("ref")).up()
-                    .set("master").up()
+                    .add("head-branch").set(head.getString("ref"))
+            );
+            comment.issue().comments().post(
+                String.format(
+                    "> %s\n\n@%s OK, I'm on it",
+                    comment.body().replace("\n", " "),
+                    comment.author().login()
+                )
             );
         } else {
             comment.issue().comments().post(

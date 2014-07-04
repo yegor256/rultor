@@ -31,16 +31,16 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:include href="./layout.xsl"/>
-    <xsl:template name="head">
+    <xsl:template match="page" mode="head">
         <title>
             <xsl:text>repos</xsl:text>
         </title>
     </xsl:template>
-    <xsl:template name="content">
+    <xsl:template match="page" mode="body">
         <div class="row">
             <div class="col-12 col-sm-6 col-lg-4">
                 <form method="post" class="form-inline spacious"
-                    action="{/page/links/link[@rel='create']/@href}">
+                    action="{links/link[@rel='create']/@href}">
                     <fieldset>
                         <div class="input-group">
                             <input name="coords" type="text" class="form-control"
@@ -56,8 +56,8 @@
             </div>
         </div>
         <xsl:choose>
-            <xsl:when test="/page/repos/repo">
-                <xsl:apply-templates select="/page/repos/repo"/>
+            <xsl:when test="repos/repo">
+                <xsl:apply-templates select="repos/repo"/>
             </xsl:when>
             <xsl:otherwise>
                 <p>

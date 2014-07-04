@@ -69,13 +69,13 @@ public final class TalkIssues {
     public Issue.Smart get(final Talk talk) throws IOException {
         final XML xml = talk.read();
         final Coordinates coords = new Coordinates.Simple(
-            xml.xpath("/talk/wire/github-repo").get(0)
+            xml.xpath("/talk/wire/github-repo/text()").get(0)
         );
         final Repo repo = this.github.repos().get(coords);
         return new Issue.Smart(
             repo.issues().get(
                 Integer.parseInt(
-                    talk.read().xpath("/talk/wire/github-issue").get(0)
+                    talk.read().xpath("/talk/wire/github-issue/text()").get(0)
                 )
             )
         );

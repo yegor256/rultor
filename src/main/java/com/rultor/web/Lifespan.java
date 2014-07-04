@@ -70,7 +70,7 @@ public final class Lifespan implements ServletContextListener {
         final ServletContext context = event.getServletContext();
         final Base base = new DyBase();
         context.setAttribute(Base.class.getName(), base);
-        this.service.schedule(
+        this.service.scheduleWithFixedDelay(
             new VerboseRunnable(
                 new Callable<Object>() {
                     @Override
@@ -81,7 +81,7 @@ public final class Lifespan implements ServletContextListener {
                 },
                 true
             ),
-            1L,
+            1L, 1L,
             TimeUnit.MINUTES
         );
     }

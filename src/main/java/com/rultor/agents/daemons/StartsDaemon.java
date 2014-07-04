@@ -58,7 +58,7 @@ public final class StartsDaemon implements TalkAgent {
     public void execute(final Talk talk) throws IOException {
         final XML xml = talk.read();
         if (!xml.nodes("/talk/daemon[not(started)]").isEmpty()) {
-            final XML daemon = xml.nodes("/talk/daemon").get(0);
+            final XML daemon = xml.nodes("/talk/daemon/text()").get(0);
             final Shell shell = new TalkShells().get(talk);
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             shell.exec(

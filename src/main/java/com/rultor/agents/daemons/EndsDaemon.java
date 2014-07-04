@@ -55,7 +55,7 @@ public final class EndsDaemon implements TalkAgent {
         final XML xml = talk.read();
         if (!xml.nodes("/talk/daemon[not(@done)]").isEmpty()) {
             final Shell shell = new TalkShells().get(talk);
-            final String dir = xml.xpath("/talk/daemon/dir").get(0);
+            final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             shell.exec(
                 String.format("ps -p $(cat %s/pid)", dir),
