@@ -30,40 +30,22 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.xml.XML;
-import org.xembly.Directive;
 
 /**
- * Talk.
+ * State of a repo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Talk {
+public interface State {
 
     /**
-     * Its unique name.
-     * @return Its name
+     * Get key.
+     * @param name The name of the key to get
+     * @return Key
      */
-    String name();
-
-    /**
-     * Read its content.
-     * @return Content
-     */
-    XML read();
-
-    /**
-     * Modify its content.
-     * @param dirs Directives
-     */
-    void modify(Iterable<Directive> dirs);
-
-    /**
-     * Archive it.
-     */
-    void archive();
+    Key get(String name);
 
 }

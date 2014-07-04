@@ -27,43 +27,74 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.agents.shells;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
-import org.xembly.Directive;
+import com.rultor.agents.TalkAgent;
+import com.rultor.spi.Talk;
+import java.io.IOException;
+import org.xembly.Directives;
 
 /**
- * Talk.
+ * Registers shell.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Talk {
+public final class RegistersShell implements TalkAgent {
 
     /**
-     * Its unique name.
-     * @return Its name
+     * IP address of the server.
      */
-    String name();
+    private final transient String addr;
 
     /**
-     * Read its content.
-     * @return Content
+     * Port to use.
      */
-    XML read();
+    private final transient int port;
 
     /**
-     * Modify its content.
-     * @param dirs Directives
+     * User name.
      */
-    void modify(Iterable<Directive> dirs);
+    private final transient String login;
 
     /**
-     * Archive it.
+     * Private SSH key.
      */
-    void archive();
+    private final transient String key;
 
+    /**
+     * Constructor.
+     * @param adr IP address
+     * @param prt Port of server
+     * @param user Login
+     * @param priv Private SSH key
+     * @checkstyle ParameterNumberCheck (6 lines)
+     */
+    public RegistersShell(final String adr, final int prt,
+        final String user, final String priv) {
+        this.addr = adr;
+        this.login = user;
+        this.key = priv;
+        this.port = prt;
+    }
+
+
+    @Override
+    public void execute(final Talk talk) throws IOException {
+        final XML xml = talk.read();
+        if (!xml.nodes("/talk[not(shell)]").isEmpty()) {
+            talk.modify(
+                new Directives()
+                    .xpath("/talk[not(shell)]").strict(1).add("shell")
+                    .add("host").set(this.addr).up()
+                    .add("port").set(Integer.toString(this.port)).up()
+                    .add("login").set(this.login).up()
+                    .add("key").set(this.key)
+            );
+        }
+    }
 }

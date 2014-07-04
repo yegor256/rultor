@@ -27,43 +27,33 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.agents.shells;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.xml.XML;
-import org.xembly.Directive;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
- * Talk.
+ * Shell.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Talk {
+public interface Shell {
 
     /**
-     * Its unique name.
-     * @return Its name
+     * Execute and return exit code.
+     * @param command Command
+     * @param stdin Stdin
+     * @param stdout Stdout
+     * @param stderr Stderr
+     * @return Exit code
+     * @throws IOException If fails
      */
-    String name();
-
-    /**
-     * Read its content.
-     * @return Content
-     */
-    XML read();
-
-    /**
-     * Modify its content.
-     * @param dirs Directives
-     */
-    void modify(Iterable<Directive> dirs);
-
-    /**
-     * Archive it.
-     */
-    void archive();
+    int exec(String command, InputStream stdin,
+        OutputStream stdout, OutputStream stderr) throws IOException;
 
 }

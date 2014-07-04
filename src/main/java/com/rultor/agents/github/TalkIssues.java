@@ -27,43 +27,57 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.github.Coordinates;
+import com.jcabi.github.Github;
+import com.jcabi.github.Issue;
+import com.jcabi.github.Repo;
 import com.jcabi.xml.XML;
-import org.xembly.Directive;
+import com.rultor.spi.Talk;
+import java.io.IOException;
 
 /**
- * Talk.
+ * Issues referenced from Talks.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Talk {
+public final class TalkIssues {
 
     /**
-     * Its unique name.
-     * @return Its name
+     * Github.
      */
-    String name();
+    private final transient Github github;
 
     /**
-     * Read its content.
-     * @return Content
+     * Ctor.
+     * @param ghub Github client
      */
-    XML read();
+    public TalkIssues(final Github ghub) {
+        this.github = ghub;
+    }
 
     /**
-     * Modify its content.
-     * @param dirs Directives
+     * Find and get issue.
+     * @param talk Talk
+     * @return Issue
      */
-    void modify(Iterable<Directive> dirs);
-
-    /**
-     * Archive it.
-     */
-    void archive();
-
+    public Issue.Smart get(final Talk talk) throws IOException {
+        final XML xml = talk.read();
+        final Coordinates coords = new Coordinates.Simple(
+            xml.xpath("/talk/wire/github-repo").get(0)
+        );
+        final Repo repo = this.github.repos().get(coords);
+        return new Issue.Smart(
+            repo.issues().get(
+                Integer.parseInt(
+                    talk.read().xpath("/talk/wire/github-issue").get(0)
+                )
+            )
+        );
+    }
 }

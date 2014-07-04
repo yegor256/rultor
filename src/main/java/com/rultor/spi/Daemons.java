@@ -30,6 +30,7 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import java.net.URI;
 
 /**
  * Daemons.
@@ -40,6 +41,19 @@ import com.jcabi.aspects.Immutable;
  */
 @Immutable
 public interface Daemons {
+
+    /**
+     * Register new one.
+     * @param uri SSH uri, like "ssh://yegor:secret@my.example.com/dirA/dirB"
+     * @return Daemon
+     */
+    int register(URI uri);
+
+    /**
+     * Delete an existing one.
+     * @param number Its number
+     */
+    void delete(int number);
 
     /**
      * Get one daemon by number.

@@ -27,43 +27,43 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.xml.XML;
-import org.xembly.Directive;
+import com.jcabi.github.Github;
+import com.jcabi.github.Issue;
+import com.rultor.agents.TalkAgent;
+import com.rultor.spi.Talk;
+import java.io.IOException;
 
 /**
- * Talk.
+ * When Github issue is closed we stop the talk here.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Talk {
+public final class EndsTalk implements TalkAgent {
 
     /**
-     * Its unique name.
-     * @return Its name
+     * Github.
      */
-    String name();
+    private final transient Github github;
 
     /**
-     * Read its content.
-     * @return Content
+     * Ctor.
+     * @param ghub Github client
      */
-    XML read();
+    public EndsTalk(final Github ghub) {
+        this.github = ghub;
+    }
 
-    /**
-     * Modify its content.
-     * @param dirs Directives
-     */
-    void modify(Iterable<Directive> dirs);
-
-    /**
-     * Archive it.
-     */
-    void archive();
-
+    @Override
+    public void execute(final Talk talk) throws IOException {
+        final Issue.Smart issue = new TalkIssues(this.github).get(talk);
+        if (!issue.isOpen()) {
+            talk.archive();
+        }
+    }
 }

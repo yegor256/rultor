@@ -30,40 +30,80 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.xml.XML;
-import org.xembly.Directive;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Talk.
+ * Key in a State.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Talk {
+public interface Key {
 
     /**
-     * Its unique name.
-     * @return Its name
+     * Does it exist?
+     * @return TRUE if exists
      */
-    String name();
+    boolean exists();
 
     /**
-     * Read its content.
-     * @return Content
+     * Get value (runtime exception if absent, use {@link #exists()}.
+     * @return Data
      */
-    XML read();
+    String value();
 
     /**
-     * Modify its content.
-     * @param dirs Directives
+     * Put data.
+     * @param value Value
      */
-    void modify(Iterable<Directive> dirs);
+    void put(String value);
 
     /**
-     * Archive it.
+     * Get or default.
      */
-    void archive();
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = { "origin", "def" })
+    final class Default implements Key {
+        /**
+         * Encapsulated key.
+         */
+        private final transient Key origin;
+        /**
+         * Default.
+         */
+        private final transient String def;
+        /**
+         * Ctor.
+         * @param key Key
+         * @param dflt Default
+         */
+        public Default(final Key key, final String dflt) {
+            this.origin = key;
+            this.def = dflt;
+        }
+        @Override
+        public boolean exists() {
+            return this.origin.exists();
+        }
+        @Override
+        public String value() {
+            final String value;
+            if (this.origin.exists()) {
+                value = this.origin.value();
+            } else {
+                value = this.def;
+                this.put(value);
+            }
+            return value;
+        }
+        @Override
+        public void put(final String value) {
+            this.origin.put(value);
+        }
+    }
 
 }

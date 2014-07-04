@@ -27,43 +27,35 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.agents.shells;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
-import org.xembly.Directive;
+import com.rultor.spi.Talk;
+import java.net.UnknownHostException;
 
 /**
- * Talk.
+ * Shells referenced from Talks.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Talk {
+public final class TalkShells {
 
     /**
-     * Its unique name.
-     * @return Its name
+     * Find and get shell.
+     * @param talk Talk
+     * @return Issue
      */
-    String name();
-
-    /**
-     * Read its content.
-     * @return Content
-     */
-    XML read();
-
-    /**
-     * Modify its content.
-     * @param dirs Directives
-     */
-    void modify(Iterable<Directive> dirs);
-
-    /**
-     * Archive it.
-     */
-    void archive();
-
+    public Shell get(final Talk talk) throws UnknownHostException {
+        final XML xml = talk.read();
+        return new SSH(
+            xml.xpath("/talk/shell/host/text()").get(0),
+            Integer.parseInt(xml.xpath("/talk/shell/port/text()").get(0)),
+            xml.xpath("/talk/shell/login/text()").get(0),
+            xml.xpath("/talk/shell/key/text()").get(0)
+        );
+    }
 }

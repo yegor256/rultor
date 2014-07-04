@@ -27,43 +27,26 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.agents;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.xml.XML;
-import org.xembly.Directive;
+import com.rultor.spi.Repo;
+import java.io.IOException;
 
 /**
- * Talk.
+ * Agent.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Talk {
+public interface Agent {
 
     /**
-     * Its unique name.
-     * @return Its name
+     * Execute it.
+     * @param repo Repo
      */
-    String name();
-
-    /**
-     * Read its content.
-     * @return Content
-     */
-    XML read();
-
-    /**
-     * Modify its content.
-     * @param dirs Directives
-     */
-    void modify(Iterable<Directive> dirs);
-
-    /**
-     * Archive it.
-     */
-    void archive();
+    void execute(Repo repo) throws IOException;
 
 }

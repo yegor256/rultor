@@ -42,11 +42,24 @@ import com.jcabi.aspects.Immutable;
 public interface Talks {
 
     /**
-     * Create new or return existing by this name.
+     * Talk exists already?
+     * @param name The name
+     * @return TRUE if it exists
+     */
+    boolean exists(String name);
+
+    /**
+     * Get an existing talk (runtime exception if it's absent).
      * @param name The name
      * @return Talk
      */
     Talk get(String name);
+
+    /**
+     * Create a new one (runtime exception if it exists already).
+     * @param name The name
+     */
+    void create(String name);
 
     /**
      * Talks.

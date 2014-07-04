@@ -27,43 +27,51 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.agents;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.xml.XML;
-import org.xembly.Directive;
+import com.rultor.spi.Repo;
+import com.rultor.spi.Talk;
+import java.io.IOException;
 
 /**
- * Talk.
+ * Agent for a single talk.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Talk {
+public interface TalkAgent {
 
     /**
-     * Its unique name.
-     * @return Its name
+     * Execute it.
+     * @param talk Talk to work with
      */
-    String name();
+    void execute(Talk talk) throws IOException;
 
     /**
-     * Read its content.
-     * @return Content
+     * Wrap.
      */
-    XML read();
-
-    /**
-     * Modify its content.
-     * @param dirs Directives
-     */
-    void modify(Iterable<Directive> dirs);
-
-    /**
-     * Archive it.
-     */
-    void archive();
+    @Immutable
+    final class Wrap implements Agent {
+        /**
+         * Encapsulated agent.
+         */
+        private final transient TalkAgent origin;
+        /**
+         * Ctor.
+         * @param agent Original
+         */
+        public Wrap(final TalkAgent agent) {
+            this.origin = agent;
+        }
+        @Override
+        public void execute(final Repo repo) throws IOException {
+            for (final Talk talk : repo.talks().iterate()) {
+                this.origin.execute(talk);
+            }
+        }
+    }
 
 }

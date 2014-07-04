@@ -49,4 +49,9 @@ public interface Base {
      */
     User user(URN urn);
 
+    /**
+     * Execute all repos.
+     */
+    void execute();
+
 }

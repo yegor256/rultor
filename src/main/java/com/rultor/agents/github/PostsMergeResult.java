@@ -27,43 +27,61 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.github.Github;
+import com.jcabi.github.Issue;
 import com.jcabi.xml.XML;
-import org.xembly.Directive;
+import com.rultor.agents.TalkAgent;
+import com.rultor.spi.Talk;
+import java.io.IOException;
+import org.xembly.Directives;
 
 /**
- * Talk.
+ * Posts merge results to Github pull request.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Talk {
+public final class PostsMergeResult implements TalkAgent {
 
     /**
-     * Its unique name.
-     * @return Its name
+     * Github.
      */
-    String name();
+    private final transient Github github;
 
     /**
-     * Read its content.
-     * @return Content
+     * Ctor.
+     * @param ghub Github client
      */
-    XML read();
+    public PostsMergeResult(final Github ghub) {
+        this.github = ghub;
+    }
 
-    /**
-     * Modify its content.
-     * @param dirs Directives
-     */
-    void modify(Iterable<Directive> dirs);
-
-    /**
-     * Archive it.
-     */
-    void archive();
+    @Override
+    public void execute(final Talk talk) throws IOException {
+        final XML xml = talk.read();
+        if (!xml.xpath("/talk/merge-request-git[finished]").isEmpty()) {
+            final XML req = xml.nodes("/talk/merge-request-git").get(0);
+            final Issue.Smart issue = new TalkIssues(this.github).get(talk);
+            final boolean success = Boolean.parseBoolean(
+                req.xpath("success/text()").get(0)
+            );
+            final String msg;
+            if (success) {
+                msg = "done!";
+            } else {
+                msg = "oops";
+            }
+            issue.comments().post(msg);
+            talk.modify(
+                new Directives().xpath("/talk/merge-request-git")
+                    .strict(1).remove()
+            );
+        }
+    }
 
 }

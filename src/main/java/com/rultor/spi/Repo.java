@@ -67,8 +67,9 @@ public interface Repo {
     Daemons daemons();
 
     /**
-     * Execute.
+     * State of the repo.
+     * @return State
      */
-    void execute();
+    State state();
 
 }

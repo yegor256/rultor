@@ -27,43 +27,35 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.agents.merge;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
-import org.xembly.Directive;
+import com.rultor.agents.TalkAgent;
+import com.rultor.spi.Talk;
+import java.io.IOException;
+import org.xembly.Directives;
 
 /**
- * Talk.
+ * Finishes and reports merge results.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Talk {
+public final class EndsGitMerge implements TalkAgent {
 
-    /**
-     * Its unique name.
-     * @return Its name
-     */
-    String name();
-
-    /**
-     * Read its content.
-     * @return Content
-     */
-    XML read();
-
-    /**
-     * Modify its content.
-     * @param dirs Directives
-     */
-    void modify(Iterable<Directive> dirs);
-
-    /**
-     * Archive it.
-     */
-    void archive();
-
+    @Override
+    public void execute(final Talk talk) throws IOException {
+        final XML xml = talk.read();
+        if (!xml.nodes("/talk[merge-request-git and daemon/@done]").isEmpty()) {
+            talk.modify(
+                new Directives().xpath("/talk/merge-request-git")
+                    .add("success")
+                    .set(xml.xpath("/talk/daemon/success").get(0))
+                    .xpath("/talk/daemon").remove()
+            );
+        }
+    }
 }

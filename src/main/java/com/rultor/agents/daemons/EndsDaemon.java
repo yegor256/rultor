@@ -27,43 +27,59 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
-import org.xembly.Directive;
+import com.rultor.agents.TalkAgent;
+import com.rultor.agents.shells.Shell;
+import com.rultor.agents.shells.TalkShells;
+import com.rultor.spi.Talk;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import org.apache.commons.io.input.NullInputStream;
+import org.xembly.Directives;
 
 /**
- * Talk.
+ * Marks the daemon as done.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Talk {
+public final class EndsDaemon implements TalkAgent {
 
-    /**
-     * Its unique name.
-     * @return Its name
-     */
-    String name();
-
-    /**
-     * Read its content.
-     * @return Content
-     */
-    XML read();
-
-    /**
-     * Modify its content.
-     * @param dirs Directives
-     */
-    void modify(Iterable<Directive> dirs);
-
-    /**
-     * Archive it.
-     */
-    void archive();
-
+    @Override
+    public void execute(final Talk talk) throws IOException {
+        final XML xml = talk.read();
+        if (!xml.nodes("/talk/daemon[not(@done)]").isEmpty()) {
+            final Shell shell = new TalkShells().get(talk);
+            final String dir = xml.xpath("/talk/daemon/dir").get(0);
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            shell.exec(
+                String.format("ps -p $(cat %s/pid)", dir),
+                new NullInputStream(0L),
+                baos, baos
+            );
+            if (baos.size() == 0) {
+                baos.reset();
+                final boolean success = 0 == shell.exec(
+                    String.format("grep RULTOR-SUCCESS %s/stdout", dir),
+                    new NullInputStream(0L),
+                    new ByteArrayOutputStream(), new ByteArrayOutputStream()
+                );
+                shell.exec(
+                    String.format("rm -rf %s", dir),
+                    new NullInputStream(0L),
+                    baos, baos
+                );
+                talk.modify(
+                    new Directives().xpath("/talk/daemon")
+                        .attr("done", "yes")
+                        .add("success").set(Boolean.toString(success))
+                );
+            }
+        }
+    }
 }
