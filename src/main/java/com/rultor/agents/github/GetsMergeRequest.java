@@ -85,7 +85,7 @@ public final class GetsMergeRequest extends TalkAgent.Abstract {
      */
     public GetsMergeRequest(final Repo rpo, final Github ghub,
         final Iterable<String> revs) {
-        super();
+        super("/talk/wire/github-repo");
         this.repo = rpo;
         this.github = ghub;
         this.reviewers = new Array<String>(revs);
@@ -139,7 +139,7 @@ public final class GetsMergeRequest extends TalkAgent.Abstract {
             }
             if (!xml.xpath("/talk/merge-request-git").isEmpty()) {
                 new Answer(comment).post(
-                    "I'm busy with another merge request"
+                    "I'm busy with another merge request, come back again later"
                 );
                 continue;
             }

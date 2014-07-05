@@ -56,9 +56,7 @@ public final class EndsDaemon extends TalkAgent.Abstract {
      * Ctor.
      */
     public EndsDaemon() {
-        super(
-            "/talk/daemon[not(ended)]"
-        );
+        super("/talk/daemon[started and not(code) and not(ended)]");
     }
 
     @Override
@@ -74,7 +72,7 @@ public final class EndsDaemon extends TalkAgent.Abstract {
             )
         );
         if (exit == 0) {
-            Logger.info(this, "the daemon is running in %s", dir);
+            Logger.info(this, "the daemon is still running in %s", dir);
         } else {
             this.end(talk, shell, dir);
         }

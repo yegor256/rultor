@@ -76,9 +76,7 @@ public final class RegistersShell extends TalkAgent.Abstract {
      */
     public RegistersShell(final String adr, final int prt,
         final String user, final String priv) {
-        super(
-            "/talk[not(shell)]"
-        );
+        super("/talk[not(shell)]");
         this.addr = adr;
         this.login = user;
         this.key = priv;
@@ -89,7 +87,7 @@ public final class RegistersShell extends TalkAgent.Abstract {
     protected void process(final Talk talk, final XML xml) throws IOException {
         talk.modify(
             new Directives()
-                .xpath("/talk[not(shell)]").strict(1).add("shell")
+                .xpath("/talk").add("shell")
                 .add("host").set(this.addr).up()
                 .add("port").set(Integer.toString(this.port)).up()
                 .add("login").set(this.login).up()

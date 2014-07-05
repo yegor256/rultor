@@ -62,9 +62,7 @@ public final class StartsDaemon extends TalkAgent.Abstract {
      * Ctor.
      */
     public StartsDaemon() {
-        super(
-            "/talk/daemon[not(started)]"
-        );
+        super("/talk/daemon[script and not(started)]");
     }
 
     @Override

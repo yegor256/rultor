@@ -67,9 +67,7 @@ public final class PostsMergeResult extends TalkAgent.Abstract {
      * @param ghub Github client
      */
     public PostsMergeResult(final Repo rpo, final Github ghub) {
-        super(
-            "/talk/merge-request-git[success]"
-        );
+        super("/talk/merge-request-git[success]");
         this.repo = rpo;
         this.github = ghub;
     }

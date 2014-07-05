@@ -59,7 +59,7 @@ public final class StartsGitMerge extends TalkAgent.Abstract {
      */
     public StartsGitMerge(final String command) {
         super(
-            "/talk/merge-request-git",
+            "/talk/merge-request-git[not(success)]",
             "/talk[not(daemon)]"
         );
         this.cmd = command;
@@ -89,7 +89,7 @@ public final class StartsGitMerge extends TalkAgent.Abstract {
                     req.xpath("head-branch/text()").get(0)
                 ),
                 String.format(
-                    "sudo docker -i -t -rm -v .:/main -w=/main rultor %s",
+                    "sudo docker -rm -v .:/main -w=/main rultor %s",
                     this.cmd
                 ),
                 String.format(
@@ -99,12 +99,12 @@ public final class StartsGitMerge extends TalkAgent.Abstract {
             ),
             "\n"
         );
+        final String hash = req.xpath("@id").get(0);
         talk.modify(
-            new Directives().xpath("/talk[not(daemon)]").strict(1)
-                .add("daemon")
-                .attr("id", req.xpath("@id").get(0))
+            new Directives().xpath("/talk").add("daemon")
+                .attr("id", hash)
                 .add("script").set(script),
-            "git merge started"
+            String.format("git merge started: %s", hash)
         );
     }
 }

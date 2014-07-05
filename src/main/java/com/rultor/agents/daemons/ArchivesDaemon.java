@@ -71,9 +71,7 @@ public final class ArchivesDaemon extends TalkAgent.Abstract {
      * @param bkt Bucket
      */
     public ArchivesDaemon(final Bucket bkt) {
-        super(
-            "/talk/daemon/ended"
-        );
+        super("/talk/daemon[code and ended]");
         this.bucket = bkt;
     }
 
