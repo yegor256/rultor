@@ -30,6 +30,8 @@
 package com.rultor.agents;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.immutable.Array;
+import com.jcabi.xml.XML;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Talk;
 import java.io.IOException;
@@ -72,6 +74,45 @@ public interface TalkAgent {
                 this.origin.execute(talk);
             }
         }
+    }
+
+    /**
+     * Abstract.
+     */
+    @Immutable
+    abstract class Abstract implements TalkAgent {
+        /**
+         * Encapsulated XPaths.
+         */
+        private final transient Array<String> xpaths;
+        /**
+         * Ctor.
+         * @param args XPath expressions
+         */
+        public Abstract(final String... args) {
+            this.xpaths = new Array<String>(args);
+        }
+        @Override
+        public void execute(final Talk talk) throws IOException {
+            final XML xml = talk.read();
+            boolean good = true;
+            for (final String xpath : this.xpaths) {
+                if (xml.nodes(xpath).isEmpty()) {
+                    good = false;
+                    break;
+                }
+            }
+            if (good) {
+                this.process(talk, xml);
+            }
+        }
+        /**
+         * Process it.
+         * @param talk The talk
+         * @param xml Its xml
+         * @throws IOException If fails
+         */
+        protected abstract void process(Talk talk, XML xml) throws IOException;
     }
 
 }

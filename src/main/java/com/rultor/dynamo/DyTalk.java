@@ -100,7 +100,9 @@ public final class DyTalk implements Talk {
         try {
             new Xembler(dirs).apply(node);
         } catch (final ImpossibleModificationException ex) {
-            throw new IllegalStateException(ex);
+            throw new IllegalStateException(
+                dirs.toString(), ex
+            );
         }
         this.item.put(
             DyTalks.ATTR_XML,

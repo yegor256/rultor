@@ -27,72 +27,51 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.daemons;
+package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
-import com.jcabi.xml.XML;
-import com.rultor.agents.TalkAgent;
-import com.rultor.agents.shells.Shell;
-import com.rultor.agents.shells.TalkShells;
-import com.rultor.spi.Talk;
 import java.io.IOException;
-import java.util.Date;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.xembly.Directives;
 
 /**
- * Marks the daemon as done.
+ * Answer to post.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public final class EndsDaemon extends TalkAgent.Abstract {
+final class Answer {
+
+    /**
+     * Original comment.
+     */
+    private final transient Comment.Smart comment;
 
     /**
      * Ctor.
+     * @param cmt Comment
      */
-    public EndsDaemon() {
-        super(
-            "/talk/daemon[not(ended)]"
-        );
-    }
-
-    @Override
-    protected void process(final Talk talk, final XML xml) throws IOException {
-        final Shell shell = new TalkShells().get(talk);
-        final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
-        final int exit = new Shell.Empty(shell).exec(
-            String.format("ps -p $(cat %s/pid)", dir)
-        );
-        if (exit == 0) {
-            Logger.info(this, "the daemon is running in %s", dir);
-        } else {
-            this.end(talk, shell, dir);
-        }
+    Answer(final Comment.Smart cmt) {
+        this.comment = cmt;
     }
 
     /**
-     * End this daemon.
-     * @param talk The talk
-     * @param shell Shell
-     * @param dir The dir
+     * Post it..
+     * @param msg Message
+     * @param args Arguments
      * @throws IOException If fails
      */
-    private void end(final Talk talk, final Shell shell, final String dir)
+    public void post(final String msg, final Object... args)
         throws IOException {
-        final int exit = new Shell.Empty(shell).exec(
-            String.format("grep RULTOR-SUCCESS %s/stdout", dir)
-        );
-        talk.modify(
-            new Directives().xpath("/talk/daemon")
-                .add("ended")
-                .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))
-                .up()
-                .add("code").set(Integer.toString(exit)),
-            String.format("daemon finished at %s", dir)
+        this.comment.issue().comments().post(
+            String.format(
+                "> %s\n\n@%s %s",
+                this.comment.body().replace("\n", " "),
+                this.comment.author().login(),
+                Logger.format(msg, args)
+            )
         );
     }
 

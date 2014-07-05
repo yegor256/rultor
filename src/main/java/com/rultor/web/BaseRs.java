@@ -177,7 +177,7 @@ public class BaseRs extends BaseResource {
                             .with("home", "Home")
                             .with("repos", "Repositories")
                             .with("assets", "Assets")
-                            .with("auth-logout", "Log out")
+                            .with("rexsl:logout", "Log out")
                             .bundle()
                     );
                 }

@@ -13,3 +13,6 @@ Rultor-SecurityKey: ${security.key}
 Rultor-SttcUrn: ${sttc.urn}
 Rultor-SttcToken: ${sttc.token}
 Rultor-GithubToken: ${github.oauth}
+Rultor-S3Key: ${s3.key}
+Rultor-S3Secret: ${s3.secret}
+Rultor-S3Bucket: ${s3.bucket}

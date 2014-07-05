@@ -32,7 +32,6 @@ package com.rultor.agents.github;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
-import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.TalkAgent;
 import com.rultor.spi.Talk;
@@ -47,7 +46,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
-public final class PostsMergeResult implements TalkAgent {
+public final class PostsMergeResult extends TalkAgent.Abstract {
 
     /**
      * Github.
@@ -59,35 +58,31 @@ public final class PostsMergeResult implements TalkAgent {
      * @param ghub Github client
      */
     public PostsMergeResult(final Github ghub) {
+        super(
+            "/talk/merge-request-git[success]"
+        );
         this.github = ghub;
     }
 
     @Override
-    public void execute(final Talk talk) throws IOException {
-        final XML xml = talk.read();
-        if (xml.nodes("//merge-request-git").isEmpty()) {
-            Logger.info(this, "no merge requests here");
-        } else if (xml.nodes("//merge-request-git/finished").isEmpty()) {
-            Logger.info(this, "merge request is not finished yet");
+    protected void process(final Talk talk, final XML xml) throws IOException {
+        final XML req = xml.nodes("/talk/merge-request-git").get(0);
+        final Issue.Smart issue = new TalkIssues(this.github).get(talk);
+        final boolean success = Boolean.parseBoolean(
+            req.xpath("success/text()").get(0)
+        );
+        final String msg;
+        if (success) {
+            msg = "done!";
         } else {
-            final XML req = xml.nodes("/talk/merge-request-git").get(0);
-            final Issue.Smart issue = new TalkIssues(this.github).get(talk);
-            final boolean success = Boolean.parseBoolean(
-                req.xpath("success/text()").get(0)
-            );
-            final String msg;
-            if (success) {
-                msg = "done!";
-            } else {
-                msg = "oops";
-            }
-            issue.comments().post(msg);
-            talk.modify(
-                new Directives().xpath("/talk/merge-request-git")
-                    .strict(1).remove(),
-                String.format("merge request completed at #%d", issue.number())
-            );
+            msg = "oops";
         }
+        issue.comments().post(msg);
+        talk.modify(
+            new Directives().xpath("/talk/merge-request-git")
+                .strict(1).remove(),
+            String.format("merge request completed at #%d", issue.number())
+        );
     }
 
 }

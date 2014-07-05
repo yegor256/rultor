@@ -46,7 +46,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
-public final class StartsGitMerge implements TalkAgent {
+public final class StartsGitMerge extends TalkAgent.Abstract {
 
     /**
      * Command to run in order to validate.
@@ -58,53 +58,53 @@ public final class StartsGitMerge implements TalkAgent {
      * @param command Command to run
      */
     public StartsGitMerge(final String command) {
+        super(
+            "/talk/merge-request-git",
+            "/talk[not(daemon)]"
+        );
         this.cmd = command;
     }
 
     @Override
-    public void execute(final Talk talk) throws IOException {
-        final XML xml = talk.read();
-        if (!xml.nodes("/talk/merge-request-git").isEmpty()
-            && xml.nodes("/talk/daemon").isEmpty()) {
-            final XML req = xml.nodes("//merge-request-git").get(0);
-            final String script = StringUtils.join(
-                Arrays.asList(
-                    String.format(
-                        "git clone %s repo",
-                        req.xpath("base/text()").get(0)
-                    ),
-                    "cd repo",
-                    String.format(
-                        "git remote add head %s",
-                        req.xpath("head/text()").get(0)
-                    ),
-                    "git remote update",
-                    String.format(
-                        "git checkout origin/%s",
-                        req.xpath("base-branch/text()").get(0)
-                    ),
-                    String.format(
-                        "git merge %s",
-                        req.xpath("head-branch/text()").get(0)
-                    ),
-                    String.format(
-                        "sudo docker -i -t -rm -v .:/main -w=/main rultor %s",
-                        this.cmd
-                    ),
-                    String.format(
-                        "git push origin %s",
-                        req.xpath("base-branch/text()").get(0)
-                    )
+    protected void process(final Talk talk, final XML xml) throws IOException {
+        final XML req = xml.nodes("//merge-request-git").get(0);
+        final String script = StringUtils.join(
+            Arrays.asList(
+                String.format(
+                    "git clone %s repo",
+                    req.xpath("base/text()").get(0)
                 ),
-                "\n"
-            );
-            talk.modify(
-                new Directives().xpath("/talk[not(daemon)]").strict(1)
-                    .add("daemon")
-                    .attr("id", req.xpath("@id").get(0))
-                    .add("script").set(script),
-                "git merge started"
-            );
-        }
+                "cd repo",
+                String.format(
+                    "git remote add head %s",
+                    req.xpath("head/text()").get(0)
+                ),
+                "git remote update",
+                String.format(
+                    "git checkout origin/%s",
+                    req.xpath("base-branch/text()").get(0)
+                ),
+                String.format(
+                    "git merge %s",
+                    req.xpath("head-branch/text()").get(0)
+                ),
+                String.format(
+                    "sudo docker -i -t -rm -v .:/main -w=/main rultor %s",
+                    this.cmd
+                ),
+                String.format(
+                    "git push origin %s",
+                    req.xpath("base-branch/text()").get(0)
+                )
+            ),
+            "\n"
+        );
+        talk.modify(
+            new Directives().xpath("/talk[not(daemon)]").strict(1)
+                .add("daemon")
+                .attr("id", req.xpath("@id").get(0))
+                .add("script").set(script),
+            "git merge started"
+        );
     }
 }

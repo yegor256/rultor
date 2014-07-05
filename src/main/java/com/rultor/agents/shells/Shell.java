@@ -30,9 +30,11 @@
 package com.rultor.agents.shells;
 
 import com.jcabi.aspects.Immutable;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import org.apache.commons.io.input.NullInputStream;
 
 /**
  * Shell.
@@ -66,17 +68,11 @@ public interface Shell {
          */
         private final transient Shell origin;
         /**
-         * Error message.
-         */
-        private final transient String msg;
-        /**
          * Ctor.
          * @param shell Original shell
-         * @param message Error message
          */
-        public Safe(final Shell shell, final String message) {
+        public Safe(final Shell shell) {
             this.origin = shell;
-            this.msg = message;
         }
         @Override
         public int exec(final String command, final InputStream stdin,
@@ -84,10 +80,39 @@ public interface Shell {
             final int exit = this.origin.exec(command, stdin, stdout, stderr);
             if (exit != 0) {
                 throw new IllegalArgumentException(
-                    String.format("exit code #%d: %s", exit, this.msg)
+                    String.format("exit code #%d: %s", exit, command)
                 );
             }
             return exit;
+        }
+    }
+
+    /**
+     * Without input and output.
+     */
+    @Immutable
+    final class Empty {
+        /**
+         * Original.
+         */
+        private final transient Shell origin;
+        /**
+         * Ctor.
+         * @param shell Original shell
+         */
+        public Empty(final Shell shell) {
+            this.origin = shell;
+        }
+        /**
+         * Just exec.
+         * @param cmd Command
+         * @throws IOException If fails
+         */
+        public int exec(final String cmd) throws IOException {
+            return this.origin.exec(
+                cmd, new NullInputStream(0L),
+                new ByteArrayOutputStream(), new ByteArrayOutputStream()
+            );
         }
     }
 

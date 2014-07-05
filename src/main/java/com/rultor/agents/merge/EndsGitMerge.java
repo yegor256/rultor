@@ -30,7 +30,6 @@
 package com.rultor.agents.merge;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.TalkAgent;
 import com.rultor.spi.Talk;
@@ -45,29 +44,30 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
-public final class EndsGitMerge implements TalkAgent {
+public final class EndsGitMerge extends TalkAgent.Abstract {
+
+    /**
+     * Ctor.
+     */
+    public EndsGitMerge() {
+        super(
+            "/talk/merge-request-git[not(success)]",
+            "/talk/daemon[ended]"
+        );
+    }
 
     @Override
-    public void execute(final Talk talk) throws IOException {
-        final XML xml = talk.read();
-        if (xml.nodes("/talk/merge-request-git").isEmpty()) {
-            Logger.info(this, "there is not git merge request");
-        } else if (xml.nodes("/talk/merge-request-git/ended").isEmpty()) {
-            if (xml.nodes("/talk/daemon/ended").isEmpty()) {
-                Logger.info(this, "git merge daemon is still running");
-            } else {
-                final int code = Integer.parseInt(
-                    xml.xpath("/talk/daemon/code/text()").get(0)
-                );
-                final boolean success = code == 0;
-                talk.modify(
-                    new Directives().xpath("/talk/merge-request-git")
-                        .add("success")
-                        .set(Boolean.toString(success))
-                        .xpath("/talk/daemon").remove(),
-                    "git merge finished"
-                );
-            }
-        }
+    protected void process(final Talk talk, final XML xml) throws IOException {
+        final int code = Integer.parseInt(
+            xml.xpath("/talk/daemon/code/text()").get(0)
+        );
+        final boolean success = code == 0;
+        talk.modify(
+            new Directives().xpath("/talk/merge-request-git")
+                .add("success")
+                .set(Boolean.toString(success))
+                .xpath("/talk/daemon").remove(),
+            "git merge finished"
+        );
     }
 }

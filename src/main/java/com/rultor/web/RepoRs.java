@@ -81,7 +81,12 @@ public final class RepoRs extends BaseRs {
             .stylesheet("/xsl/repo.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(new Breadcrumbs().with("self", "home").bundle())
+            .append(
+                new Breadcrumbs()
+                    .with("home", "home")
+                    .with("repos", "repositories")
+                    .bundle()
+            )
             .append(
                 new JaxbBundle("talks").add(
                     new JaxbBundle.Group<Talk>(repo.talks().iterate()) {

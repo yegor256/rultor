@@ -35,6 +35,9 @@ import com.jcabi.github.RtGithub;
 import com.jcabi.http.wire.RetryWire;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
+import com.jcabi.s3.Region;
+import com.jcabi.s3.retry.ReRegion;
+import com.rultor.agents.daemons.ArchivesDaemon;
 import com.rultor.agents.daemons.EndsDaemon;
 import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.agents.github.EndsTalk;
@@ -103,6 +106,16 @@ public final class Agents {
                 new TalkAgent.Wrap(new EndsDaemon()),
                 new TalkAgent.Wrap(new EndsGitMerge()),
                 new TalkAgent.Wrap(new PostsMergeResult(github)),
+                new TalkAgent.Wrap(
+                    new ArchivesDaemon(
+                        new ReRegion(
+                            new Region.Simple(
+                                Manifests.read("Rultor-S3Key"),
+                                Manifests.read("Rultor-S3Secret")
+                            )
+                        ).bucket(Manifests.read("Rultor-S3Bucket"))
+                    )
+                ),
                 new TalkAgent.Wrap(new EndsTalk(github))
             )
         );

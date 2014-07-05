@@ -62,7 +62,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
-public final class GetsMergeRequest implements TalkAgent {
+public final class GetsMergeRequest extends TalkAgent.Abstract {
 
     /**
      * Repo.
@@ -86,15 +86,15 @@ public final class GetsMergeRequest implements TalkAgent {
      */
     public GetsMergeRequest(final Repo rpo, final Github ghub,
         final Iterable<String> revs) {
+        super();
         this.repo = rpo;
         this.github = ghub;
         this.reviewers = new Array<String>(revs);
     }
 
     @Override
-    public void execute(final Talk talk) throws IOException {
+    protected void process(final Talk talk, final XML xml) throws IOException {
         final Issue.Smart issue = new TalkIssues(this.github).get(talk);
-        final XML xml = talk.read();
         final int seen;
         if (xml.nodes("/talk/wire/github-seen").isEmpty()) {
             seen = 0;
@@ -138,6 +138,12 @@ public final class GetsMergeRequest implements TalkAgent {
                 );
                 continue;
             }
+            if (!xml.xpath("/talk/merge-request-git").isEmpty()) {
+                new Answer(comment).post(
+                    "I'm busy with another merge request"
+                );
+                continue;
+            }
             found = this.read(talk, comment);
         }
         if (next > seen) {
@@ -167,11 +173,10 @@ public final class GetsMergeRequest implements TalkAgent {
                 GetsMergeRequest.dirs(comment.issue(), hash),
                 String.format("merge request in #%d", comment.issue().number())
             );
-            comment.issue().comments().post(
+            new Answer(comment).post(
                 String.format(
-                    "> %s\n\n@%s OK, I'm on it. You can track me [here](http://www.rultor.com/d/%d/%s/%s)",
-                    comment.body().replace("\n", " "),
-                    comment.author().login(),
+                    // @checkstyle LineLength (1 line)
+                    "OK, I'm on it. You can track me [here](http://www.rultor.com/d/%d/%s/%s)",
                     this.repo.number(),
                     URLEncoder.encode(talk.name(), CharEncoding.UTF_8),
                     hash
@@ -179,11 +184,9 @@ public final class GetsMergeRequest implements TalkAgent {
             );
             found = true;
         } else {
-            comment.issue().comments().post(
+            new Answer(comment).post(
                 String.format(
-                    // @checkstyle LineLength (1 line)
-                    "> %s\n\nThanks, but I need a confirmation from one of them: %s",
-                    comment.body().replace("\n", " "),
+                    "Thanks, but I need a confirmation from one of them: %s",
                     StringUtils.join(
                         Iterables.transform(
                             this.reviewers,

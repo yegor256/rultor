@@ -53,51 +53,57 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
-public final class StartsDaemon implements TalkAgent {
+public final class StartsDaemon extends TalkAgent.Abstract {
+
+    /**
+     * Ctor.
+     */
+    public StartsDaemon() {
+        super(
+            "/talk/daemon[not(started)]"
+        );
+    }
 
     @Override
-    public void execute(final Talk talk) throws IOException {
-        final XML xml = talk.read();
-        if (!xml.nodes("/talk/daemon[not(started)]").isEmpty()) {
-            final XML daemon = xml.nodes("/talk/daemon").get(0);
-            final Shell shell = new TalkShells().get(talk);
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            new Shell.Safe(shell, "failed to start daemon").exec(
+    protected void process(final Talk talk, final XML xml) throws IOException {
+        final XML daemon = xml.nodes("/talk/daemon").get(0);
+        final Shell shell = new TalkShells().get(talk);
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        new Shell.Safe(shell).exec(
+            StringUtils.join(
+                Arrays.asList(
+                    "dir=$(mktemp -d -t rultor-XXXX)",
+                    "cat > ${dir}/run.sh",
+                    "chmod a+x ${dir}/run.sh",
+                    "echo ${dir}",
+                    "nohup ${dir}/run.sh > ${dir}/stdout 2>&1 &"
+                ),
+                " && "
+            ),
+            IOUtils.toInputStream(
                 StringUtils.join(
                     Arrays.asList(
-                        "dir=$(mktemp -d -t rultor-XXXX)",
-                        "cat > ${dir}/run.sh",
-                        "chmod a+x ${dir}/run.sh",
-                        "echo ${dir}",
-                        "nohup ${dir}/run.sh > ${dir}/stdout 2> ${dir}/stderr &"
+                        "#!/bin/bash",
+                        "set -x",
+                        "set -e",
+                        "echo $$ > ./pid",
+                        daemon.xpath("script/text()").get(0),
+                        "echo 'RULTOR-SUCCESS'"
                     ),
-                    " && "
+                    "\n"
                 ),
-                IOUtils.toInputStream(
-                    StringUtils.join(
-                        Arrays.asList(
-                            "#!/bin/bash",
-                            "set -x",
-                            "set -e",
-                            "echo $$ > ./pid",
-                            daemon.xpath("script/text()").get(0),
-                            "echo 'RULTOR-SUCCESS'"
-                        ),
-                        "\n"
-                    ),
-                    CharEncoding.UTF_8
-                ),
-                baos, baos
-            );
-            final String dir = baos.toString(CharEncoding.UTF_8).trim();
-            talk.modify(
-                new Directives().xpath("/talk/daemon").strict(1)
-                    .add("started")
-                    .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))
-                    .up()
-                    .add("dir").set(dir),
-                String.format("daemon started at %s", dir)
-            );
-        }
+                CharEncoding.UTF_8
+            ),
+            baos, baos
+        );
+        final String dir = baos.toString(CharEncoding.UTF_8).trim();
+        talk.modify(
+            new Directives().xpath("/talk/daemon").strict(1)
+                .add("started")
+                .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))
+                .up()
+                .add("dir").set(dir),
+            String.format("daemon started at %s", dir)
+        );
     }
 }
