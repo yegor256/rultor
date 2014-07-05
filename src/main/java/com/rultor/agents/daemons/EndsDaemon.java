@@ -38,6 +38,7 @@ import com.rultor.agents.shells.TalkShells;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.Date;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.xembly.Directives;
 
@@ -65,7 +66,12 @@ public final class EndsDaemon extends TalkAgent.Abstract {
         final Shell shell = new TalkShells().get(talk);
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         final int exit = new Shell.Empty(shell).exec(
-            String.format("ps -p $(cat %s/pid)", dir)
+            StringUtils.join(
+                String.format("dir=%s", dir),
+                " && if [ ! -e ${dir}/pid ]; then exit 1; fi",
+                " && pid=$(cat ${dir}/pid)",
+                " && ps -p $pid >/dev/null"
+            )
         );
         if (exit == 0) {
             Logger.info(this, "the daemon is running in %s", dir);

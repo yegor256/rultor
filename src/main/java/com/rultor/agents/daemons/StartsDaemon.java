@@ -30,6 +30,7 @@
 package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.TalkAgent;
 import com.rultor.agents.shells.Shell;
@@ -39,7 +40,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -70,22 +73,20 @@ public final class StartsDaemon extends TalkAgent.Abstract {
         final Shell shell = new TalkShells().get(talk);
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         new Shell.Safe(shell).exec(
-            StringUtils.join(
-                Arrays.asList(
-                    "dir=$(mktemp -d -t rultor-XXXX)",
-                    "cat > ${dir}/run.sh",
-                    "chmod a+x ${dir}/run.sh",
-                    "echo ${dir}",
-                    "nohup ${dir}/run.sh > ${dir}/stdout 2>&1 &"
-                ),
-                " && "
-            ),
+            "mktemp -d -t rultor-XXXX",
+            new NullInputStream(0L),
+            baos, baos
+        );
+        final String dir = baos.toString(CharEncoding.UTF_8).trim();
+        new Shell.Safe(shell).exec(
+            String.format("cat > %s/run.sh", dir),
             IOUtils.toInputStream(
                 StringUtils.join(
                     Arrays.asList(
                         "#!/bin/bash",
                         "set -x",
                         "set -e",
+                        "cd $(dirname $0)",
                         "echo $$ > ./pid",
                         daemon.xpath("script/text()").get(0),
                         "echo 'RULTOR-SUCCESS'"
@@ -94,9 +95,19 @@ public final class StartsDaemon extends TalkAgent.Abstract {
                 ),
                 CharEncoding.UTF_8
             ),
-            baos, baos
+            Logger.stream(Level.INFO, this),
+            Logger.stream(Level.WARNING, this)
         );
-        final String dir = baos.toString(CharEncoding.UTF_8).trim();
+        new Shell.Empty(new Shell.Safe(shell)).exec(
+            StringUtils.join(
+                Arrays.asList(
+                    String.format("dir=%s", dir),
+                    "chmod a+x ${dir}/run.sh",
+                    "nohup ${dir}/run.sh > ${dir}/stdout 2>&1 &"
+                ),
+                " && "
+            )
+        );
         talk.modify(
             new Directives().xpath("/talk/daemon").strict(1)
                 .add("started")

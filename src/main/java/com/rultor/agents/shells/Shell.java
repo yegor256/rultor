@@ -30,10 +30,11 @@
 package com.rultor.agents.shells;
 
 import com.jcabi.aspects.Immutable;
-import java.io.ByteArrayOutputStream;
+import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.logging.Level;
 import org.apache.commons.io.input.NullInputStream;
 
 /**
@@ -111,7 +112,8 @@ public interface Shell {
         public int exec(final String cmd) throws IOException {
             return this.origin.exec(
                 cmd, new NullInputStream(0L),
-                new ByteArrayOutputStream(), new ByteArrayOutputStream()
+                Logger.stream(Level.INFO, this),
+                Logger.stream(Level.WARNING, this)
             );
         }
     }

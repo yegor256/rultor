@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.shells;
 
-import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
@@ -61,7 +60,6 @@ import org.apache.commons.lang3.Validate;
  * @since 1.0
  */
 @EqualsAndHashCode(of = { "addr", "port", "login", "key" })
-@Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
 public final class SSH implements Shell {
 
@@ -168,10 +166,6 @@ public final class SSH implements Shell {
     }
 
     @Override
-    @Loggable(
-        value = Loggable.DEBUG, limit = 1, unit = TimeUnit.HOURS,
-        ignore = IOException.class
-    )
     public int exec(final String command, final InputStream stdin,
         final OutputStream stdout, final OutputStream stderr)
         throws IOException {

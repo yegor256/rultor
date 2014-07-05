@@ -31,19 +31,20 @@ package com.rultor.agents.daemons;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import com.jcabi.s3.Bucket;
 import com.jcabi.xml.XML;
 import com.rultor.agents.TalkAgent;
 import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
 import com.rultor.spi.Talk;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Date;
+import java.util.logging.Level;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.NullInputStream;
@@ -85,7 +86,7 @@ public final class ArchivesDaemon extends TalkAgent.Abstract {
             String.format("cat %s/stdout 2>&1", dir),
             new NullInputStream(0L),
             new FileOutputStream(file),
-            new ByteArrayOutputStream()
+            Logger.stream(Level.WARNING, this)
         );
         new Shell.Empty(new Shell.Safe(shell)).exec(
             String.format("rm -rf %s", dir)

@@ -76,16 +76,16 @@ public final class StartsGitMerge extends TalkAgent.Abstract {
                 ),
                 "cd repo",
                 String.format(
+                    "git checkout %s",
+                    req.xpath("base-branch/text()").get(0)
+                ),
+                String.format(
                     "git remote add head %s",
                     req.xpath("head/text()").get(0)
                 ),
                 "git remote update",
                 String.format(
-                    "git checkout origin/%s",
-                    req.xpath("base-branch/text()").get(0)
-                ),
-                String.format(
-                    "git merge %s",
+                    "git merge head/%s",
                     req.xpath("head-branch/text()").get(0)
                 ),
                 String.format(
