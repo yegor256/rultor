@@ -27,74 +27,67 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.shells;
+package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.xml.XML;
-import com.rultor.agents.TalkAgent;
+import com.rultor.spi.Repo;
 import com.rultor.spi.Talk;
 import java.io.IOException;
-import org.xembly.Directives;
+import java.net.URI;
+import java.net.URLEncoder;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
- * Registers shell.
+ * Home page of a daemon.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public final class RegistersShell extends TalkAgent.Abstract {
+public final class Home {
 
     /**
-     * IP address of the server.
+     * Repo.
      */
-    private final transient String addr;
+    private final transient Repo repo;
 
     /**
-     * Port to use.
+     * Talk.
      */
-    private final transient int port;
+    private final transient Talk talk;
 
     /**
-     * User name.
+     * Hash.
      */
-    private final transient String login;
+    private final transient String hash;
 
     /**
-     * Private SSH key.
+     * Ctor.
+     * @param rpo Repo
+     * @param tlk Talk
+     * @param hsh Hash
      */
-    private final transient String key;
-
-    /**
-     * Constructor.
-     * @param adr IP address
-     * @param prt Port of server
-     * @param user Login
-     * @param priv Private SSH key
-     * @checkstyle ParameterNumberCheck (6 lines)
-     */
-    public RegistersShell(final String adr, final int prt,
-        final String user, final String priv) {
-        super(
-            "/talk[not(shell)]"
-        );
-        this.addr = adr;
-        this.login = user;
-        this.key = priv;
-        this.port = prt;
+    public Home(final Repo rpo, final Talk tlk, final String hsh) {
+        this.repo = rpo;
+        this.talk = tlk;
+        this.hash = hsh;
     }
 
-    @Override
-    protected void process(final Talk talk, final XML xml) throws IOException {
-        talk.modify(
-            new Directives()
-                .xpath("/talk[not(shell)]").strict(1).add("shell")
-                .add("host").set(this.addr).up()
-                .add("port").set(Integer.toString(this.port)).up()
-                .add("login").set(this.login).up()
-                .add("key").set(this.key),
-            String.format("shell registered as %s:%d", this.addr, this.port)
+    /**
+     * Get its URI.
+     * @return URI
+     * @throws IOException If fails
+     */
+    public URI uri() throws IOException {
+        return URI.create(
+            String.format(
+                "http://www.rultor.com/d/%d/%s/%s",
+                this.repo.number(),
+                URLEncoder.encode(this.talk.name(), CharEncoding.UTF_8),
+                this.hash
+            )
         );
     }
+
 }

@@ -37,9 +37,7 @@ import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
-import com.rultor.agents.daemons.ArchivesDaemon;
-import com.rultor.agents.daemons.EndsDaemon;
-import com.rultor.agents.daemons.StartsDaemon;
+import com.rultor.agents.daemons.*;
 import com.rultor.agents.github.EndsTalk;
 import com.rultor.agents.github.GetsMergeRequest;
 import com.rultor.agents.github.PostsMergeResult;
@@ -105,7 +103,7 @@ public final class Agents {
                 new TalkAgent.Wrap(new StartsDaemon()),
                 new TalkAgent.Wrap(new EndsDaemon()),
                 new TalkAgent.Wrap(new EndsGitMerge()),
-                new TalkAgent.Wrap(new PostsMergeResult(github)),
+                new TalkAgent.Wrap(new PostsMergeResult(repo, github)),
                 new TalkAgent.Wrap(
                     new ArchivesDaemon(
                         new ReRegion(

@@ -34,8 +34,11 @@ import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.xml.XML;
 import com.rultor.agents.TalkAgent;
+import com.rultor.agents.daemons.Home;
+import com.rultor.spi.Repo;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.net.URI;
 import org.xembly.Directives;
 
 /**
@@ -49,18 +52,25 @@ import org.xembly.Directives;
 public final class PostsMergeResult extends TalkAgent.Abstract {
 
     /**
+     * Repo.
+     */
+    private final transient Repo repo;
+
+    /**
      * Github.
      */
     private final transient Github github;
 
     /**
      * Ctor.
+     * @param rpo Repo
      * @param ghub Github client
      */
-    public PostsMergeResult(final Github ghub) {
+    public PostsMergeResult(final Repo rpo, final Github ghub) {
         super(
             "/talk/merge-request-git[success]"
         );
+        this.repo = rpo;
         this.github = ghub;
     }
 
@@ -71,11 +81,17 @@ public final class PostsMergeResult extends TalkAgent.Abstract {
         final boolean success = Boolean.parseBoolean(
             req.xpath("success/text()").get(0)
         );
+        final URI home = new Home(
+            this.repo, talk, req.xpath("@id").get(0)
+        ).uri();
         final String msg;
         if (success) {
             msg = "done!";
         } else {
-            msg = "oops";
+            msg = String.format(
+                "Oops, I failed to merge. Full log is [here](%s)",
+                home
+            );
         }
         issue.comments().post(msg);
         talk.modify(

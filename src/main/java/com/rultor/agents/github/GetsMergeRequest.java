@@ -43,13 +43,12 @@ import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.TalkAgent;
+import com.rultor.agents.daemons.Home;
 import com.rultor.spi.Repo;
 import com.rultor.spi.Talk;
 import java.io.IOException;
-import java.net.URLEncoder;
 import javax.json.JsonObject;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directives;
@@ -176,10 +175,8 @@ public final class GetsMergeRequest extends TalkAgent.Abstract {
             new Answer(comment).post(
                 String.format(
                     // @checkstyle LineLength (1 line)
-                    "OK, I'm on it. You can track me [here](http://www.rultor.com/d/%d/%s/%s)",
-                    this.repo.number(),
-                    URLEncoder.encode(talk.name(), CharEncoding.UTF_8),
-                    hash
+                    "OK, I'm on it. You can track me [here](%s)",
+                    new Home(this.repo, talk, hash).uri()
                 )
             );
             found = true;

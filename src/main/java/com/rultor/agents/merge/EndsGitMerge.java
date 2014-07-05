@@ -65,8 +65,7 @@ public final class EndsGitMerge extends TalkAgent.Abstract {
         talk.modify(
             new Directives().xpath("/talk/merge-request-git")
                 .add("success")
-                .set(Boolean.toString(success))
-                .xpath("/talk/daemon").remove(),
+                .set(Boolean.toString(success)),
             "git merge finished"
         );
     }
