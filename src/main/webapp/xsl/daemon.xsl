@@ -34,48 +34,19 @@
     <xsl:include href="./layout.xsl"/>
     <xsl:template match="page" mode="head">
         <title>
-            <xsl:text>repos</xsl:text>
+            <xsl:value-of select="repo"/>
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <div class="row">
-            <div class="col-12 col-sm-6 col-lg-4">
-                <form method="post" class="form-inline spacious"
-                    action="{links/link[@rel='create']/@href}">
-                    <fieldset>
-                        <div class="input-group">
-                            <input name="coords" type="text" class="form-control"
-                                placeholder="Github repository name, e.g yegor256/test"/>
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn btn-primary">
-                                    <xsl:text>Create</xsl:text>
-                                </button>
-                            </span>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-        </div>
-        <xsl:apply-templates select="repos/repo"/>
-    </xsl:template>
-    <xsl:template match="repo">
-        <div class="spacious">
-            <ul class="list-inline">
-                <li>
-                    <a title="view it" href="{links/link[@rel='open']/@href}">
-                        <xsl:value-of select="coordinates"/>
-                    </a>
-                </li>
-                <li class="icon">
-                    <a onclick="return confirm('Are you sure?');"
-                        href="{links/link[@rel='delete']/@href}"
-                        title="delete this repo">
-                        <i class="icon-remove">
-                            <xsl:comment>remove</xsl:comment>
-                        </i>
-                    </a>
-                </li>
-            </ul>
-        </div>
+        <h1>
+            <xsl:value-of select="repo"/>
+            <xsl:text> / </xsl:text>
+            <xsl:value-of select="talk"/>
+            <xsl:text> / </xsl:text>
+            <xsl:value-of select="hash"/>
+        </h1>
+        <pre id='log'>
+            <xsl:text> </xsl:text>
+        </pre>
     </xsl:template>
 </xsl:stylesheet>

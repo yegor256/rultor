@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2014, rultor.com
  * All rights reserved.
  *
@@ -27,22 +26,14 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns="http://www.w3.org/1999/xhtml" version="2.0">
-    <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="./layout.xsl"/>
-    <xsl:template match="page" mode="head">
-        <title>
-            <xsl:text>page not found</xsl:text>
-        </title>
-    </xsl:template>
-    <xsl:template match="page" mode="body">
-        <h1>
-            <xsl:text>Page not found</xsl:text>
-        </h1>
-        <p>
-            <xsl:text>Invalid request or page not found.</xsl:text>
-        </p>
-    </xsl:template>
-</xsl:stylesheet>
+ */
+
+/*globals $: false, document: false */
+
+$('#log').onload(
+  function () {
+    "use strict";
+    var $pre = $(this);
+    $pre.add($pre.attr('data-href'));
+  }
+);

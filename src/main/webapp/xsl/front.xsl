@@ -28,7 +28,8 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns="http://www.w3.org/1999/xhtml" version="2.0">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:include href="./layout.xsl"/>
     <xsl:template match="page" mode="head">
@@ -43,39 +44,42 @@
             </xsl:text>
         </p>
         <p>
-            <xsl:text>To start, login using one of your accounts: </xsl:text>
+            <xsl:text>To start, login using one of your accounts:</xsl:text>
         </p>
         <ul class="list-inline">
             <xsl:if test="/page/links/link[@rel='rexsl:facebook']">
                 <li>
-                    <a class="btn btn-default">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
-                        </xsl:attribute>
-                        <i class="icon-facebook-sign login-icon"><xsl:comment>facebook sign</xsl:comment></i>
-                        <span class="hidden-xs hidden-sm"><xsl:text> Facebook</xsl:text></span>
+                    <a class="btn btn-default" href="{/page/links/link[@rel='rexsl:facebook']/@href}">
+                        <i class="icon-facebook-sign login-icon">
+                            <xsl:comment>facebook sign</xsl:comment>
+                        </i>
+                        <span class="hidden-xs hidden-sm">
+                            <xsl:text> Facebook</xsl:text>
+                        </span>
                     </a>
                 </li>
             </xsl:if>
             <xsl:if test="/page/links/link[@rel='rexsl:google']">
                 <li>
-                    <a class="btn btn-default">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
-                        </xsl:attribute>
-                        <i class="icon-google-plus-sign login-icon"><xsl:comment>google plus sign</xsl:comment></i>
-                        <span class="hidden-xs hidden-sm"><xsl:text> Google</xsl:text></span>
+                    <a class="btn btn-default" href="{/page/links/link[@rel='rexsl:google']/@href}">
+                        <i class="icon-google-plus-sign login-icon">
+                            <xsl:comment>google plus sign</xsl:comment>
+                        </i>
+                        <span class="hidden-xs hidden-sm">
+                            <xsl:text> Google</xsl:text>
+                        </span>
                     </a>
                 </li>
             </xsl:if>
             <xsl:if test="/page/links/link[@rel='rexsl:github']">
                 <li>
-                    <a class="btn btn-default">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="/page/links/link[@rel='auth-github']/@href"/>
-                        </xsl:attribute>
-                        <i class="icon-github-sign login-icon"><xsl:comment>github sign</xsl:comment></i>
-                        <span class="hidden-xs hidden-sm"><xsl:text> Github</xsl:text></span>
+                    <a class="btn btn-default" href="{/page/links/link[@rel='rexsl:github']/@href}">
+                        <i class="icon-github-sign login-icon">
+                            <xsl:comment>github sign</xsl:comment>
+                        </i>
+                        <span class="hidden-xs hidden-sm">
+                            <xsl:text> Github</xsl:text>
+                        </span>
                     </a>
                 </li>
             </xsl:if>

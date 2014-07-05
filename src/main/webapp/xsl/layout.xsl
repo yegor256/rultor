@@ -28,7 +28,8 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns="http://www.w3.org/1999/xhtml" version="2.0">
     <xsl:include href="./common.xsl"/>
     <xsl:template match="/">
         <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html&gt;</xsl:text>
@@ -38,81 +39,23 @@
         <html lang="en">
             <head>
                 <meta charset="UTF-8"/>
-                <meta name="description" content="Programmable Enforcer of a Software Development Process"/>
+                <meta name="description" content="Coding Team Assistant"/>
                 <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
                 <meta name="author" content="rultor.com"/>
-                <!-- JavaScript exception/error logger to qbaka.com -->
-                <script type="text/javascript"><![CDATA[
-                    window.qbaka || (function (a, c) {
-                        a.__qbaka_eh = a.onerror;
-                        a.__qbaka_reports = [];
-                        a.onerror = function () {
-                            a.__qbaka_reports.push(arguments);
-                            if (a.__qbaka_eh)try {
-                                a.__qbaka_eh.apply(a, arguments)
-                            } catch (b) {
-                            }
-                        };
-                        a.onerror.qbaka = 1;
-                        a.qbaka = {report: function () {
-                            a.__qbaka_reports.push([arguments, new Error()]);
-                        }, customParams: {}, set: function (a, b) {
-                            qbaka.customParams[a] = b
-                        }, exec: function (a) {
-                            try {
-                                a()
-                            } catch (b) {
-                                qbaka.reportException(b)
-                            }
-                        }, reportException: function () {
-                        }};
-                        var b = c.createElement("script"), e = c.getElementsByTagName("script")[0], d = function () {
-                            e.parentNode.insertBefore(b, e)
-                        };
-                        b.type = "text/javascript";
-                        b.async = !0;
-                        b.src = "//cdn.qbaka.net/reporting.js";
-                        "[object Opera]" == a.opera ? c.addEventListener("DOMContentLoaded", d) : d();
-                        qbaka.key = "e59595737b70f68465b6dc1971692095"
-                    })(window, document);
-                    qbaka.options = {autoStacktrace: 1, trackEvents: 1};
-                    ]]></script>
                 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
                 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"/>
                 <link rel="stylesheet" type="text/css" media="all" href="/css/style.css?{version/revision}"/>
                 <link rel="icon" type="image/gif" href="//img.rultor.com/favicon.ico?{version/revision}"/>
+                <script type="text/javascript" src="/js/misc.js?{version/revision}">
+                    <xsl:text> </xsl:text>
+                </script>
                 <script type="text/javascript" src="js/layout.js?{version/revision}">
                     <xsl:text> </xsl:text>
                 </script>
-                <script type="text/javascript"><![CDATA[
-                    var _gaq = _gaq || [];
-                    _gaq.push(['_setAccount', 'UA-1963507-28']);
-                    _gaq.push(['_trackPageview']);
-                    (function () {
-                        var ga = document.createElement('script');
-                        ga.type = 'text/javascript';
-                        ga.async = true;
-                        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                        var s = document.getElementsByTagName('script')[0];
-                        s.parentNode.insertBefore(ga, s);
-                    })();
-                    ]]></script>
-                <script type="text/javascript"><![CDATA[
-                    var _prum = [
-                        ['id', '51fcbb82abe53dcf27000000'],
-                        ['mark', 'firstbyte', (new Date()).getTime()]
-                    ];
-                    (function () {
-                        var s = document.getElementsByTagName('script')[0], p = document.createElement('script');
-                        p.async = 'async';
-                        p.src = '//rum-static.pingdom.net/prum.min.js';
-                        s.parentNode.insertBefore(p, s);
-                    })();
-                    ]]></script>
                 <xsl:apply-templates select="." mode="head"/>
             </head>
             <body>
-                <xsl:if test="/page/nav/item">
+                <xsl:if test="nav/item">
                     <div class="overlay" onclick="$('.menu').hide();">
                         <!-- this is for W3C compliance -->
                         <xsl:text> </xsl:text>
@@ -127,25 +70,12 @@
                 </aside>
                 <ul class="list-inline">
                     <li class="logo">
-                        <xsl:if test="/page/nav/item">
+                        <xsl:if test="nav/item">
                             <xsl:attribute name="onclick">
                                 <xsl:text>$('.menu').toggle();</xsl:text>
                             </xsl:attribute>
                         </xsl:if>
-                        <xsl:choose>
-                            <xsl:when test="contains(/page/version/name, 'SNAPSHOT')">
-                                <xsl:text>R</xsl:text>
-                                <!--
-                                Would be nice to show a different logo for a SNAPSHOT version,
-                                but now we deploy so often that all versions are snapshots. Let's
-                                enable this feature in the future
-                                -->
-                                <!-- <xsl:text>b</xsl:text> -->
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:text>R</xsl:text>
-                            </xsl:otherwise>
-                        </xsl:choose>
+                        <xsl:text>R</xsl:text>
                     </li>
                     <li>
                         <a href="//doc.rultor.com/">
