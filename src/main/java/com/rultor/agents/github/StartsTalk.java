@@ -78,7 +78,7 @@ public final class StartsTalk implements Agent {
     @Override
     public void execute(final Repo repo) throws IOException {
         final Key recent = new Key.Default(
-            repo.state().get(this.getClass().getName()),
+            repo.state().get("github-updated-since"),
             "1970-01-01"
         );
         final Iterable<Issue> issues = this.github.search().issues(

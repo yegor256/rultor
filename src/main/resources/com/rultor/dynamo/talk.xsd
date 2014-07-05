@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<!--
+ * Copyright (c) 2009-2014, rultor.com
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met: 1) Redistributions of source code must retain the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer. 2) Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3) Neither the name of the rultor.com nor
+ * the names of its contributors may be used to endorse or promote
+ * products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+ * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:simpleType name="hash">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9a-f]{8}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="daemon">
+        <xs:all>
+            <xs:element name="script" type="xs:string"/>
+            <xs:element name="started" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="dir" minOccurs="0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value="/tmp/[0-9a-zA-Z/\.-]+"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="ended" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="code" type="xs:integer" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="id" type="hash" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="shell">
+        <xs:all>
+            <xs:element name="host" type="xs:string"/>
+            <xs:element name="port" type="xs:integer"/>
+            <xs:element name="login" type="xs:string"/>
+            <xs:element name="key" type="xs:string"/>
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="merge-request-git">
+        <xs:all>
+            <xs:element name="base" type="xs:string"/>
+            <xs:element name="base-branch" type="xs:string"/>
+            <xs:element name="head" type="xs:string"/>
+            <xs:element name="head-branch" type="xs:string"/>
+            <xs:element name="success" type="xs:boolean" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="id" type="hash" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="wire">
+        <xs:all>
+            <xs:element name="github-repo" type="xs:string" minOccurs="0"/>
+            <xs:element name="github-issue" type="xs:integer" minOccurs="0"/>
+            <xs:element name="github-seen" type="xs:integer" minOccurs="0"/>
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="archive">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="log" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:anyURI">
+                            <xs:attribute name="id" type="hash" use="required"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="talk">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="daemon" type="daemon" minOccurs="0"/>
+                <xs:element name="wire" type="wire" minOccurs="0"/>
+                <xs:element name="shell" type="shell" minOccurs="0"/>
+                <xs:element name="merge-request-git" type="merge-request-git" minOccurs="0"/>
+                <xs:element name="archive" type="archive" minOccurs="0"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

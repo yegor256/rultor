@@ -34,8 +34,11 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.dynamo.Item;
 import com.jcabi.log.Logger;
+import com.jcabi.xml.StrictXML;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
+import com.jcabi.xml.XSD;
+import com.jcabi.xml.XSDDocument;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
@@ -58,6 +61,13 @@ import org.xembly.Xembler;
 public final class DyTalk implements Talk {
 
     /**
+     * Schema.
+     */
+    private static final XSD SCHEMA = XSDDocument.make(
+        DyTalk.class.getResourceAsStream("talk.xsd")
+    );
+
+    /**
      * Item.
      */
     private final transient Item item;
@@ -77,7 +87,10 @@ public final class DyTalk implements Talk {
 
     @Override
     public XML read() throws IOException {
-        return new XMLDocument(this.item.get(DyTalks.ATTR_XML).getS());
+        return new StrictXML(
+            new XMLDocument(this.item.get(DyTalks.ATTR_XML).getS()),
+            DyTalk.SCHEMA
+        );
     }
 
     @Override
@@ -92,15 +105,15 @@ public final class DyTalk implements Talk {
         this.item.put(
             DyTalks.ATTR_XML,
             new AttributeValueUpdate().withValue(
-                new AttributeValue().withS(new XMLDocument(node).toString())
+                new AttributeValue().withS(
+                    new StrictXML(
+                        new XMLDocument(node),
+                        DyTalk.SCHEMA
+                    ).toString()
+                )
             )
         );
         Logger.info(this, "%s updated: %s", this.name(), reason);
-    }
-
-    @Override
-    public void archive() {
-        throw new UnsupportedOperationException("#archive()");
     }
 
 }

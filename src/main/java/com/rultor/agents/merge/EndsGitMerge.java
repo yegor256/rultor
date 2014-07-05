@@ -30,6 +30,7 @@
 package com.rultor.agents.merge;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.TalkAgent;
 import com.rultor.spi.Talk;
@@ -49,14 +50,24 @@ public final class EndsGitMerge implements TalkAgent {
     @Override
     public void execute(final Talk talk) throws IOException {
         final XML xml = talk.read();
-        if (!xml.nodes("/talk[merge-request-git and daemon/@done]").isEmpty()) {
-            talk.modify(
-                new Directives().xpath("/talk/merge-request-git")
-                    .add("success")
-                    .set(xml.xpath("/talk/daemon/success/text()").get(0))
-                    .xpath("/talk/daemon").remove(),
-                "git merge finished"
-            );
+        if (xml.nodes("/talk/merge-request-git").isEmpty()) {
+            Logger.info(this, "there is not git merge request");
+        } else if (xml.nodes("/talk/merge-request-git/ended").isEmpty()) {
+            if (xml.nodes("/talk/daemon/ended").isEmpty()) {
+                Logger.info(this, "git merge daemon is still running");
+            } else {
+                final int code = Integer.parseInt(
+                    xml.xpath("/talk/daemon/code/text()").get(0)
+                );
+                final boolean success = code == 0;
+                talk.modify(
+                    new Directives().xpath("/talk/merge-request-git")
+                        .add("success")
+                        .set(Boolean.toString(success))
+                        .xpath("/talk/daemon").remove(),
+                    "git merge finished"
+                );
+            }
         }
     }
 }

@@ -63,7 +63,7 @@ public final class EndsTalk implements TalkAgent {
     public void execute(final Talk talk) throws IOException {
         final Issue.Smart issue = new TalkIssues(this.github).get(talk);
         if (!issue.isOpen()) {
-            talk.archive();
+            //talk.archive();
         }
     }
 }

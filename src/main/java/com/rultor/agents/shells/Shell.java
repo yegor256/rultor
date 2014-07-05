@@ -56,4 +56,39 @@ public interface Shell {
     int exec(String command, InputStream stdin,
         OutputStream stdout, OutputStream stderr) throws IOException;
 
+    /**
+     * Safe run (throws if exit code is not zero).
+     */
+    @Immutable
+    final class Safe implements Shell {
+        /**
+         * Original.
+         */
+        private final transient Shell origin;
+        /**
+         * Error message.
+         */
+        private final transient String msg;
+        /**
+         * Ctor.
+         * @param shell Original shell
+         * @param message Error message
+         */
+        public Safe(final Shell shell, final String message) {
+            this.origin = shell;
+            this.msg = message;
+        }
+        @Override
+        public int exec(final String command, final InputStream stdin,
+            final OutputStream stdout, final OutputStream stderr) throws IOException {
+            final int exit = this.origin.exec(command, stdin, stdout, stderr);
+            if (exit != 0) {
+                throw new IllegalArgumentException(
+                    String.format("exit code #%d: %s", exit, this.msg)
+                );
+            }
+            return exit;
+        }
+    }
+
 }

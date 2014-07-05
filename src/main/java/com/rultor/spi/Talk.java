@@ -63,9 +63,4 @@ public interface Talk {
      */
     void modify(Iterable<Directive> dirs, String reason) throws IOException;
 
-    /**
-     * Archive it.
-     */
-    void archive();
-
 }

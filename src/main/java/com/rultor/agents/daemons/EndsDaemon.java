@@ -30,6 +30,7 @@
 package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.TalkAgent;
 import com.rultor.agents.shells.Shell;
@@ -37,7 +38,9 @@ import com.rultor.agents.shells.TalkShells;
 import com.rultor.spi.Talk;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import org.apache.commons.io.input.NullInputStream;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.xembly.Directives;
 
 /**
@@ -53,34 +56,60 @@ public final class EndsDaemon implements TalkAgent {
     @Override
     public void execute(final Talk talk) throws IOException {
         final XML xml = talk.read();
-        if (!xml.nodes("/talk/daemon[not(@done)]").isEmpty()) {
+        if (xml.nodes("/talk/daemon").isEmpty()) {
+            Logger.info(this, "there is no daemon to end");
+        } else if (xml.nodes("/talk/daemon/ended").isEmpty()) {
             final Shell shell = new TalkShells().get(talk);
             final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            shell.exec(
+            final int exit = shell.exec(
                 String.format("ps -p $(cat %s/pid)", dir),
                 new NullInputStream(0L),
                 baos, baos
             );
-            if (baos.size() == 0) {
-                baos.reset();
-                final boolean success = 0 == shell.exec(
-                    String.format("grep RULTOR-SUCCESS %s/stdout", dir),
-                    new NullInputStream(0L),
-                    new ByteArrayOutputStream(), new ByteArrayOutputStream()
-                );
-                shell.exec(
-                    String.format("rm -rf %s", dir),
-                    new NullInputStream(0L),
-                    baos, baos
-                );
-                talk.modify(
-                    new Directives().xpath("/talk/daemon")
-                        .attr("done", "yes")
-                        .add("success").set(Boolean.toString(success)),
-                    String.format("daemon finished at %s", dir)
-                );
+            if (exit == 0) {
+                Logger.info(this, "the daemon is running in %s", dir);
+            } else {
+                this.end(talk, shell, dir);
             }
+        } else {
+            Logger.info(this, "the daemon is ended already");
         }
     }
+
+    /**
+     * End this daemon.
+     * @param talk The talk
+     * @param shell Shell
+     * @param dir The dir
+     * @throws IOException If fails
+     */
+    private void end(final Talk talk, final Shell shell, final String dir)
+        throws IOException {
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final int exit = shell.exec(
+            String.format("grep RULTOR-SUCCESS %s/stdout", dir),
+            new NullInputStream(0L),
+            new ByteArrayOutputStream(), new ByteArrayOutputStream()
+        );
+        new Shell.Safe(shell, "failed to delete dir").exec(
+            String.format("rm -rf %s", dir),
+            new NullInputStream(0L),
+            baos, baos
+        );
+        final XML xml = talk.read();
+        talk.modify(
+            new Directives().xpath("/talk/daemon")
+                .add("ended")
+                .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))
+                .up()
+                .add("code").set(Integer.toString(exit))
+                .xpath("/talk").addIf("archive")
+                .add("log")
+                .attr("hash", xml.xpath("/talk/daemon/@hash").get(0))
+                .set("s3://test"),
+            String.format("daemon finished at %s", dir)
+        );
+    }
+
 }

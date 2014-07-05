@@ -42,6 +42,7 @@ import java.util.Date;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.xembly.Directives;
 
 /**
@@ -58,19 +59,19 @@ public final class StartsDaemon implements TalkAgent {
     public void execute(final Talk talk) throws IOException {
         final XML xml = talk.read();
         if (!xml.nodes("/talk/daemon[not(started)]").isEmpty()) {
-            final XML daemon = xml.nodes("/talk/daemon/text()").get(0);
+            final XML daemon = xml.nodes("/talk/daemon").get(0);
             final Shell shell = new TalkShells().get(talk);
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            shell.exec(
+            new Shell.Safe(shell, "failed to start daemon").exec(
                 StringUtils.join(
                     Arrays.asList(
-                        "dir=$(mktemp -d -t rultor)",
+                        "dir=$(mktemp -d -t rultor-XXXX)",
                         "cat > ${dir}/run.sh",
                         "chmod a+x ${dir}/run.sh",
                         "echo ${dir}",
                         "nohup ${dir}/run.sh > ${dir}/stdout 2> ${dir}/stderr &"
                     ),
-                    "; "
+                    " && "
                 ),
                 IOUtils.toInputStream(
                     StringUtils.join(
@@ -88,10 +89,12 @@ public final class StartsDaemon implements TalkAgent {
                 ),
                 baos, baos
             );
-            final String dir = baos.toString(CharEncoding.UTF_8);
+            final String dir = baos.toString(CharEncoding.UTF_8).trim();
             talk.modify(
                 new Directives().xpath("/talk/daemon").strict(1)
-                    .add("started").set(new Date().toString()).up()
+                    .add("started")
+                    .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))
+                    .up()
                     .add("dir").set(dir),
                 String.format("daemon started at %s", dir)
             );
