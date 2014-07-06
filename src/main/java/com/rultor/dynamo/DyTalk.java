@@ -83,7 +83,7 @@ public final class DyTalk implements Talk {
 
     @Override
     public String name() throws IOException {
-        return this.item.get(DyTalks.RANGE).getS();
+        return this.item.get(DyTalks.HASH).getS();
     }
 
     @Override
@@ -120,7 +120,12 @@ public final class DyTalk implements Talk {
 
     @Override
     public void active(final boolean yes) throws IOException {
-        this.item.put(new AttributeUpdates().with(DyTalks.HASH, 1));
+        this.item.put(
+            new AttributeUpdates().with(
+                DyTalks.ATTR_ACTIVE,
+                Boolean.toString(yes)
+            )
+        );
     }
 
 }

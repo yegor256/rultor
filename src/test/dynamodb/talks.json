@@ -1,22 +1,14 @@
 {
     "AttributeDefinitions": [
         {
-            "AttributeName": "active",
-            "AttributeType": "N"
-        },
-        {
             "AttributeName": "name",
             "AttributeType": "S"
         }
     ],
     "KeySchema": [
         {
-            "AttributeName": "active",
-            "KeyType": "HASH"
-        },
-        {
             "AttributeName": "name",
-            "KeyType": "RANGE"
+            "KeyType": "HASH"
         }
     ],
     "ProvisionedThroughput": {

@@ -37,9 +37,7 @@ import com.rexsl.page.Inset;
 import com.rexsl.page.Link;
 import com.rexsl.page.Resource;
 import com.rexsl.page.auth.AuthInset;
-import com.rexsl.page.auth.Facebook;
 import com.rexsl.page.auth.Github;
-import com.rexsl.page.auth.Google;
 import com.rexsl.page.auth.Identity;
 import com.rexsl.page.auth.Provider;
 import com.rexsl.page.inset.FlashInset;
@@ -80,7 +78,7 @@ public class BaseRs extends BaseResource {
         @Override
         public Identity identity() {
             final Identity identity;
-            if (!Manifests.read("Rultor-DynamoKey").startsWith("AAAAA")) {
+            if (Manifests.read("Rultor-DynamoKey").startsWith("AAAAA")) {
                 identity = new Identity.Simple(
                     BaseRs.TEST_URN,
                     "localhost",
@@ -176,9 +174,7 @@ public class BaseRs extends BaseResource {
     public final AuthInset auth() {
         // @checkstyle LineLength (4 lines)
         return new AuthInset(this, Manifests.read("Rultor-SecurityKey"))
-            .with(new Facebook(this, Manifests.read("Rultor-FbId"), Manifests.read("Rultor-FbSecret")))
             .with(new Github(this, Manifests.read("Rultor-GithubId"), Manifests.read("Rultor-GithubSecret")))
-            .with(new Google(this, Manifests.read("Rultor-GoogleId"), Manifests.read("Rultor-GoogleSecret")))
             .with(BaseRs.TEST_PROVIDER);
     }
 

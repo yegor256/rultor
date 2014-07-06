@@ -33,7 +33,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.dynamo.Attributes;
-import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.QueryValve;
@@ -66,14 +65,14 @@ public final class DyTalks implements Talks {
     public static final String TBL = "talks";
 
     /**
-     * Is it active (1) or archived (0).
+     * Talk unique name.
      */
-    public static final String HASH = "active";
+    public static final String HASH = "name";
 
     /**
-     * Repository name.
+     * Is it active (1) or archived (0).
      */
-    public static final String RANGE = "name";
+    public static final String ATTR_ACTIVE = "active";
 
     /**
      * XML of the talk.
@@ -131,7 +130,7 @@ public final class DyTalks implements Talks {
         this.region.table(DyTalks.TBL).put(
             new Attributes()
                 .with(DyTalks.HASH, name)
-                .with(DyTalks.RANGE, 1)
+                .with(DyTalks.ATTR_ACTIVE, Boolean.toString(true))
                 .with(DyTalks.ATTR_XML, "<talk/>")
         );
     }
@@ -154,8 +153,7 @@ public final class DyTalks implements Talks {
         return Iterables.transform(
             this.region.table(DyTalks.TBL)
                 .frame()
-                .through(new QueryValve())
-                .where(DyTalks.HASH, Conditions.equalTo(1)),
+                .where(DyTalks.ATTR_ACTIVE, Boolean.toString(true)),
             new Function<Item, Talk>() {
                 @Override
                 public Talk apply(final Item input) {
