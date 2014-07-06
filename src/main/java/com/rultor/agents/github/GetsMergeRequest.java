@@ -33,6 +33,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.github.Bulk;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
@@ -46,6 +47,8 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
 import java.io.IOException;
 import javax.json.JsonObject;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -60,6 +63,8 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(callSuper = false, of = { "github", "reviewers" })
 public final class GetsMergeRequest extends AbstractAgent {
 
     /**
@@ -87,15 +92,15 @@ public final class GetsMergeRequest extends AbstractAgent {
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final int seen;
-        if (xml.nodes("/talk/wire/github-mr-seen").isEmpty()) {
+        if (xml.nodes("/talk/wire/github-seen").isEmpty()) {
             seen = 0;
         } else {
             seen = Integer.parseInt(
-                xml.xpath("/talk/wire/github--mr-seen/text()").get(0)
+                xml.xpath("/talk/wire/github-seen/text()").get(0)
             );
         }
         final Iterable<Comment.Smart> comments = new Smarts<Comment.Smart>(
-            issue.comments().iterate()
+            new Bulk<Comment>(issue.comments().iterate())
         );
         final String prefix = String.format(
             "@%s ", this.github.users().self().login()
@@ -139,7 +144,7 @@ public final class GetsMergeRequest extends AbstractAgent {
         }
         if (next > seen) {
             dirs.xpath("/talk/wire")
-                .addIf("github-mr-seen").set(Integer.toString(next));
+                .addIf("github-seen").set(Integer.toString(next));
             Logger.info(this, "messages up to #%d seen", next);
         }
         return dirs;
@@ -160,7 +165,10 @@ public final class GetsMergeRequest extends AbstractAgent {
                 RandomStringUtils.random(Tv.FIVE)
             ).substring(0, Tv.EIGHT);
             dirs.append(GetsMergeRequest.dirs(comment.issue(), hash));
-            Logger.info(this, "merge request in #%d", comment.issue().number());
+            Logger.info(
+                this, "merge request #%d in %s",
+                comment.issue().number(), xml.xpath("/talk/@name").get(0)
+            );
             new Answer(comment).post(
                 String.format(
                     // @checkstyle LineLength (1 line)

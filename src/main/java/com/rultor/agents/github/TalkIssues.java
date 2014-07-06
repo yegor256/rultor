@@ -35,6 +35,8 @@ import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.xml.XML;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Issues referenced from Talks.
@@ -44,6 +46,8 @@ import com.jcabi.xml.XML;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(of = { "github", "xml" })
 public final class TalkIssues {
 
     /**

@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.codec.binary.Hex;
 import org.xembly.Directives;
 
 /**
@@ -89,7 +90,6 @@ public final class StartsTalks implements SuperAgent {
             "updated",
             "asc"
         );
-        threshold.set(System.currentTimeMillis());
         final Counter cnt = this.counters.get("rt-latest");
         final int latest = (int) cnt.incrementAndGet(0L);
         for (final Issue issue : issues) {
@@ -98,16 +98,17 @@ public final class StartsTalks implements SuperAgent {
                 continue;
             }
             final String coords = issue.repo().coordinates().toString();
-            final String name = String.format("%s %d", coords, issue.number());
+            final String name = Hex.encodeHexString(
+                String.format("%s#%d", coords, issue.number()).getBytes()
+            );
             if (!talks.exists(name)) {
                 talks.create(name);
             }
             final Talk talk = talks.get(name);
             talk.active(true);
-            if (talk.read().xpath("/talk/wire").isEmpty()) {
+            if (talk.read().nodes("/talk/wire").isEmpty()) {
                 talks.get(name).modify(
                     new Directives().xpath("/talk")
-                        .attr("name", name)
                         .add("wire")
                         .add("github-repo").set(coords).up()
                         .add("github-issue")
@@ -115,11 +116,12 @@ public final class StartsTalks implements SuperAgent {
                 );
             }
             Logger.info(
-                this, "talk %s#%d activated",
-                coords, issue.number()
+                this, "talk %s#%d activated with message #%d",
+                coords, issue.number(), last
             );
         }
         cnt.set((long) latest);
+        threshold.set(System.currentTimeMillis());
     }
 
     /**

@@ -39,21 +39,10 @@
     </xsl:template>
     <xsl:template match="page" mode="body">
         <p>
-            <xsl:text>To start, login using one of your accounts:</xsl:text>
+            <xsl:text>Some features are available after </xsl:text>
+            <a href="{links/link[@rel='rexsl:github']/@href}">
+                <xsl:text>login</xsl:text>
+            </a>
         </p>
-        <ul class="list-inline">
-            <xsl:if test="/page/links/link[@rel='rexsl:github']">
-                <li>
-                    <a class="btn btn-default" href="{/page/links/link[@rel='rexsl:github']/@href}">
-                        <i class="icon-github-sign login-icon">
-                            <xsl:comment>github sign</xsl:comment>
-                        </i>
-                        <span class="hidden-xs hidden-sm">
-                            <xsl:text> Github</xsl:text>
-                        </span>
-                    </a>
-                </li>
-            </xsl:if>
-        </ul>
     </xsl:template>
 </xsl:stylesheet>

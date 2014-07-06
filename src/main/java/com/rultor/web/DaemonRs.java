@@ -50,7 +50,7 @@ import javax.ws.rs.core.Response;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Path("/t/{name:[0-9a-zA-Z_\\-\\.]+}/{hash:[0-9]+}")
+@Path("/t/{name:[0-9a-f]+}/{hash:[a-f0-9]+}")
 public final class DaemonRs extends BaseRs {
 
     /**

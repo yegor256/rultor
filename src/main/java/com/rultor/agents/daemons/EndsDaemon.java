@@ -91,7 +91,7 @@ public final class EndsDaemon extends AbstractAgent {
         final int exit = new Shell.Empty(shell).exec(
             String.format("grep RULTOR-SUCCESS %s/stdout", dir)
         );
-        Logger.info(this, "daemon finished at %s", dir);
+        Logger.info(this, "daemon finished at %s, exit: %d", dir, exit);
         return new Directives().xpath("/talk/daemon")
             .add("ended")
             .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))

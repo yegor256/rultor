@@ -131,7 +131,10 @@ public final class DyTalks implements Talks {
             new Attributes()
                 .with(DyTalks.HASH, name)
                 .with(DyTalks.ATTR_ACTIVE, Boolean.toString(true))
-                .with(DyTalks.ATTR_XML, "<talk/>")
+                .with(
+                    DyTalks.ATTR_XML,
+                    String.format("<talk name='%s'/>", name)
+                )
         );
     }
 

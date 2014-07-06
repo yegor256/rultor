@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2009-2014, rultor.com
  * All rights reserved.
  *
@@ -26,50 +27,25 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.rultor.web;
-
-import com.rexsl.page.PageBuilder;
-import com.rexsl.page.auth.Identity;
-import com.rexsl.page.inset.FlashInset;
-import java.util.logging.Level;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-
-/**
- * Index resource, front page of the website.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- */
-@Path("/")
-public final class LoginRs extends BaseRs {
-
-    /**
-     * Get entrance page JAX-RS response.
-     * @return The JAX-RS response
-     */
-    @GET
-    @Path("/")
-    public Response index() {
-        if (!this.auth().identity().equals(Identity.ANONYMOUS)) {
-            throw FlashInset.forward(
-                this.uriInfo().getBaseUriBuilder()
-                    .clone()
-                    .path(TalkRs.class)
-                    .build(),
-                "you are logged in already",
-                Level.INFO
-            );
-        }
-        return new PageBuilder()
-            .stylesheet("/xsl/login.xsl")
-            .build(EmptyPage.class)
-            .init(this)
-            .render()
-            .build();
-    }
-
-}
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns="http://www.w3.org/1999/xhtml" version="2.0">
+    <xsl:output method="xml" omit-xml-declaration="yes"/>
+    <xsl:include href="./layout.xsl"/>
+    <xsl:template match="page" mode="head">
+        <title>
+            <xsl:value-of select="talk/name"/>
+        </title>
+    </xsl:template>
+    <xsl:template match="page" mode="body">
+        <xsl:apply-templates select="talk"/>
+    </xsl:template>
+    <xsl:template match="talk">
+        <p>
+            <xsl:value-of select="name"/>
+        </p>
+        <pre>
+            <xsl:value-of select="content"/>
+        </pre>
+    </xsl:template>
+</xsl:stylesheet>

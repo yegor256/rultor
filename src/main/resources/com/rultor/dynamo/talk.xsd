@@ -97,6 +97,13 @@
                 <xs:element name="merge-request-git" type="merge-request-git" minOccurs="0"/>
                 <xs:element name="archive" type="archive" minOccurs="0"/>
             </xs:all>
+            <xs:attribute name="name" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value="[0-9a-f]+"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
         <xs:unique name="daemonID">
             <xs:selector xpath="daemon|archive/log" />

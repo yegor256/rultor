@@ -38,6 +38,8 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
 import java.io.IOException;
 import java.net.URI;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -49,6 +51,8 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(callSuper = false, of = "github")
 public final class PostsMergeResult extends AbstractAgent {
 
     /**

@@ -33,6 +33,8 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
 import java.io.IOException;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Answer to post.
@@ -42,6 +44,8 @@ import java.io.IOException;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(of = "comment")
 final class Answer {
 
     /**

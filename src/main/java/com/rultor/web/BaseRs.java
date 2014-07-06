@@ -156,7 +156,7 @@ public class BaseRs extends BaseResource {
                             "talks",
                             BaseRs.this.uriInfo().getBaseUriBuilder()
                                 .clone()
-                                .path(TalksRs.class)
+                                .path(TalkRs.class)
                                 .build()
                         )
                     );

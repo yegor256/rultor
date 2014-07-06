@@ -31,10 +31,7 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
-import java.io.IOException;
 import java.net.URI;
-import java.net.URLEncoder;
-import org.apache.commons.lang3.CharEncoding;
 
 /**
  * Home page of a daemon.
@@ -69,16 +66,12 @@ public final class Home {
     /**
      * Get its URI.
      * @return URI
-     * @throws IOException If fails
      */
-    public URI uri() throws IOException {
+    public URI uri() {
         return URI.create(
             String.format(
                 "http://www.rultor.com/t/%s/%s",
-                URLEncoder.encode(
-                    this.xml.xpath("@name").get(0),
-                    CharEncoding.UTF_8
-                ),
+                this.xml.xpath("/talk/@name").get(0),
                 this.hash
             )
         );

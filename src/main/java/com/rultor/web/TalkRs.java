@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2009-2014, rultor.com
  * All rights reserved.
  *
@@ -27,25 +26,69 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns="http://www.w3.org/1999/xhtml" version="2.0">
-    <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="./layout.xsl"/>
-    <xsl:template match="page" mode="head">
-        <title>
-            <xsl:text>talks</xsl:text>
-        </title>
-    </xsl:template>
-    <xsl:template match="page" mode="body">
-        <xsl:apply-templates select="talks/talk"/>
-    </xsl:template>
-    <xsl:template match="talk">
-        <p>
-            <xsl:value-of select="name"/>
-        </p>
-        <pre>
-            <xsl:value-of select="content"/>
-        </pre>
-    </xsl:template>
-</xsl:stylesheet>
+ */
+package com.rultor.web;
+
+import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.PageBuilder;
+import com.rultor.spi.Talk;
+import java.io.IOException;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response;
+
+/**
+ * Front page of a talk.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+@Path("/talk/{name:[0-9a-f]+}")
+public final class TalkRs extends BaseRs {
+
+    /**
+     * Talk unique name.
+     */
+    private transient String name;
+
+    /**
+     * Daemon hash ID.
+     */
+    private transient String hash;
+
+    /**
+     * Inject it from query.
+     * @param talk Talk name
+     */
+    @PathParam("name")
+    public void setName(@NotNull(message = "talk name is mandatory")
+    final String talk) {
+        this.name = talk;
+    }
+
+    /**
+     * Front page.
+     * @return The JAX-RS response
+     * @throws IOException If fails
+     */
+    @GET
+    @Path("/")
+    public Response index() throws IOException {
+        final Talk talk = this.talks().get(this.name);
+        return new PageBuilder()
+            .stylesheet("/xsl/talk.xsl")
+            .build(EmptyPage.class)
+            .init(this)
+            .append(
+                new JaxbBundle("talk")
+                    .add("name", talk.name()).up()
+                    .add("content", talk.read().toString())
+            )
+            .render()
+            .build();
+    }
+
+}
