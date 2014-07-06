@@ -29,13 +29,15 @@
  */
 package com.rultor.agents.github;
 
+import co.stateful.Counter;
+import co.stateful.Counters;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Coordinates;
+import com.jcabi.github.Comment;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
-import com.rultor.agents.Agent;
-import com.rultor.spi.Key;
-import com.rultor.spi.Repo;
+import com.jcabi.log.Logger;
+import com.rultor.spi.SuperAgent;
+import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.util.Date;
@@ -52,8 +54,8 @@ import org.xembly.Directives;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "github", "coords" })
-public final class StartsTalk implements Agent {
+@EqualsAndHashCode(of = { "github", "counters" })
+public final class StartsTalks implements SuperAgent {
 
     /**
      * Github.
@@ -61,56 +63,78 @@ public final class StartsTalk implements Agent {
     private final transient Github github;
 
     /**
-     * Github coordinates.
+     * Github.
      */
-    private final transient Coordinates coords;
+    private final transient Counters counters;
 
     /**
      * Ctor.
      * @param ghub Github client
-     * @param crds Coordinates
+     * @param ctrs Counters
      */
-    public StartsTalk(final Github ghub, final Coordinates crds) {
+    public StartsTalks(final Github ghub, final Counters ctrs) {
         this.github = ghub;
-        this.coords = crds;
+        this.counters = ctrs;
     }
 
     @Override
-    public void execute(final Repo repo) throws IOException {
-        final Key recent = new Key.Default(
-            repo.state().get("github-updated-since"),
-            "1970-01-01"
-        );
+    public void execute(final Talks talks) throws IOException {
+        final Counter threshold = this.counters.get("rt-threshold");
         final Iterable<Issue> issues = this.github.search().issues(
             String.format(
-                "repo:%s mentions:%s updated:>=%s",
-                this.coords,
+                "mentions:%s updated:>=%tF",
                 this.github.search().github().users().self().login(),
-                recent.value()
+                new Date(threshold.incrementAndGet(0L))
             ),
             "updated",
             "asc"
         );
-        final Talks talks = repo.talks();
+        threshold.set(System.currentTimeMillis());
+        final Counter cnt = this.counters.get("rt-latest");
+        final int latest = (int) cnt.incrementAndGet(0L);
         for (final Issue issue : issues) {
-            final String name = String.format(
-                "%s#%d", this.coords, issue.number()
-            );
+            final int last = StartsTalks.last(issue);
+            if (last <= latest) {
+                continue;
+            }
+            final String coords = issue.repo().coordinates().toString();
+            final String name = String.format("%s %d", coords, issue.number());
             if (!talks.exists(name)) {
                 talks.create(name);
+            }
+            final Talk talk = talks.get(name);
+            talk.active(true);
+            if (talk.read().xpath("/talk/wire").isEmpty()) {
                 talks.get(name).modify(
-                    new Directives().xpath("/talk").add("wire")
-                        .add("github-repo")
-                        .set(this.coords.toString()).up()
+                    new Directives().xpath("/talk")
+                        .attr("name", name)
+                        .add("wire")
+                        .add("github-repo").set(coords).up()
                         .add("github-issue")
-                        .set(Integer.toString(issue.number())),
-                    String.format(
-                        "talk started at %s#%d", this.coords, issue.number()
-                    )
+                        .set(Integer.toString(issue.number()))
                 );
             }
+            Logger.info(
+                this, "talk %s#%d activated",
+                coords, issue.number()
+            );
         }
-        recent.put(String.format("%tF", new Date()));
+        cnt.set((long) latest);
+    }
+
+    /**
+     * Latest message number in the issue.
+     * @param issue The issue
+     * @return Message number
+     */
+    private static int last(final Issue issue) {
+        int last = 0;
+        for (final Comment comment : issue.comments().iterate()) {
+            if (comment.number() > last) {
+                last = comment.number();
+            }
+        }
+        return last;
     }
 
 }

@@ -29,7 +29,6 @@
  */
 package com.rultor.web;
 
-import com.jcabi.aspects.Loggable;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.auth.Identity;
 import com.rexsl.page.inset.FlashInset;
@@ -46,7 +45,6 @@ import javax.ws.rs.core.Response;
  * @since 1.0
  */
 @Path("/")
-@Loggable(Loggable.DEBUG)
 public final class LoginRs extends BaseRs {
 
     /**
@@ -60,17 +58,16 @@ public final class LoginRs extends BaseRs {
             throw FlashInset.forward(
                 this.uriInfo().getBaseUriBuilder()
                     .clone()
-                    .path(ReposRs.class)
+                    .path(TalksRs.class)
                     .build(),
                 "you are logged in already",
                 Level.INFO
             );
         }
         return new PageBuilder()
-            .stylesheet("/xsl/front.xsl")
+            .stylesheet("/xsl/login.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(new Breadcrumbs().with("self", "home").bundle())
             .render()
             .build();
     }

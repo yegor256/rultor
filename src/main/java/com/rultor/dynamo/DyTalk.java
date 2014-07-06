@@ -32,8 +32,9 @@ package com.rultor.dynamo;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
+import com.jcabi.dynamo.AttributeUpdates;
 import com.jcabi.dynamo.Item;
-import com.jcabi.log.Logger;
 import com.jcabi.xml.StrictXML;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
@@ -94,8 +95,7 @@ public final class DyTalk implements Talk {
     }
 
     @Override
-    public void modify(final Iterable<Directive> dirs, final String reason)
-        throws IOException {
+    public void modify(final Iterable<Directive> dirs) throws IOException {
         final Node node = this.read().node();
         try {
             new Xembler(dirs).apply(node);
@@ -104,18 +104,23 @@ public final class DyTalk implements Talk {
                 dirs.toString(), ex
             );
         }
+        final String body = new StrictXML(
+            new XMLDocument(node), DyTalk.SCHEMA
+        ).toString();
+        if (body.length() > Tv.FIFTY * Tv.THOUSAND) {
+            throw new IllegalArgumentException("XML is too big");
+        }
         this.item.put(
             DyTalks.ATTR_XML,
             new AttributeValueUpdate().withValue(
-                new AttributeValue().withS(
-                    new StrictXML(
-                        new XMLDocument(node),
-                        DyTalk.SCHEMA
-                    ).toString()
-                )
+                new AttributeValue().withS(body)
             )
         );
-        Logger.info(this, "%s updated: %s", this.name(), reason);
+    }
+
+    @Override
+    public void active(final boolean yes) throws IOException {
+        this.item.put(new AttributeUpdates().with(DyTalks.HASH, 1));
     }
 
 }

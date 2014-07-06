@@ -33,8 +33,14 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
 import com.jcabi.manifests.Manifests;
-import com.rultor.dynamo.DyBase;
-import com.rultor.spi.Base;
+import com.rultor.agents.Agents;
+import com.rultor.dynamo.DyTalks;
+import com.rultor.profiles.Profiles;
+import com.rultor.spi.Agent;
+import com.rultor.spi.Profile;
+import com.rultor.spi.SuperAgent;
+import com.rultor.spi.Talk;
+import com.rultor.spi.Talks;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -68,14 +74,14 @@ public final class Lifespan implements ServletContextListener {
             throw new IllegalStateException(ex);
         }
         final ServletContext context = event.getServletContext();
-        final Base base = new DyBase();
-        context.setAttribute(Base.class.getName(), base);
+        final Talks talks = new DyTalks();
+        context.setAttribute(Talks.class.getName(), talks);
         this.service.scheduleWithFixedDelay(
             new VerboseRunnable(
                 new Callable<Object>() {
                     @Override
                     public Object call() throws Exception {
-                        base.execute();
+                        Lifespan.this.routine(talks);
                         return null;
                     }
                 },
@@ -89,6 +95,25 @@ public final class Lifespan implements ServletContextListener {
     @Override
     public void contextDestroyed(final ServletContextEvent event) {
         this.service.shutdown();
+    }
+
+    /**
+     * Routine every-minute proc.
+     * @param talks Talks
+     * @throws IOException If fails
+     */
+    private void routine(final Talks talks) throws IOException {
+        final Agents agents = new Agents();
+        for (final SuperAgent agent : agents.supers()) {
+            agent.execute(talks);
+        }
+        final Profiles profiles = new Profiles();
+        for (final Talk talk : talks.active()) {
+            final Profile profile = profiles.fetch(talk);
+            for (final Agent agent : agents.agents(profile)) {
+                agent.execute(talk);
+            }
+        }
     }
 
 }

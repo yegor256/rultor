@@ -27,62 +27,43 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.dynamo;
+package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.dynamo.Region;
-import com.jcabi.urn.URN;
-import com.rultor.spi.Assets;
-import com.rultor.spi.Repos;
-import com.rultor.spi.User;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import java.io.IOException;
 
 /**
- * Base in Dynamo.
+ * Profile.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@ToString
-@EqualsAndHashCode
-public final class DyUser implements User {
+public interface Profile {
 
     /**
-     * Region to work with.
+     * Does it exist?
+     * @param path Name of the item to get
+     * @return TRUE if exists
+     * @throws IOException If fails
      */
-    private final transient Region region;
+    boolean contains(String path) throws IOException;
 
     /**
-     * URN of the user.
+     * Get a single item, by a simple path, e.g. "aws.key".
+     * @param path Name of the item to get
+     * @return Value
+     * @throws IOException If fails
      */
-    private final transient URN name;
+    String get(String path) throws IOException;
 
     /**
-     * Ctor.
-     * @param reg Region
-     * @param urn Name of the user (URN)
+     * Iterate items, by a simple path, e.g. "assets".
+     * @param path Name of the item to get
+     * @return Names of items
+     * @throws IOException If fails
      */
-    DyUser(final Region reg, final URN urn) {
-        this.region = reg;
-        this.name = urn;
-    }
-
-    @Override
-    public URN urn() {
-        return this.name;
-    }
-
-    @Override
-    public Repos repos() {
-        return new DyRepos(this.region, this.name);
-    }
-
-    @Override
-    public Assets assets() {
-        throw new UnsupportedOperationException("#assets()");
-    }
+    Iterable<String> iterate(String path) throws IOException;
 
 }

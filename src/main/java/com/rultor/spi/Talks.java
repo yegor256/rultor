@@ -68,4 +68,10 @@ public interface Talks {
      */
     Iterable<Talk> iterate();
 
+    /**
+     * Get only active talks.
+     * @return Talks
+     */
+    Iterable<Talk> active();
+
 }

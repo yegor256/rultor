@@ -34,10 +34,9 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.s3.Bucket;
 import com.jcabi.xml.XML;
-import com.rultor.agents.TalkAgent;
+import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
-import com.rultor.spi.Talk;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -49,6 +48,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
+import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
@@ -59,7 +59,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
-public final class ArchivesDaemon extends TalkAgent.Abstract {
+public final class ArchivesDaemon extends AbstractAgent {
 
     /**
      * S3 bucket.
@@ -76,8 +76,8 @@ public final class ArchivesDaemon extends TalkAgent.Abstract {
     }
 
     @Override
-    protected void process(final Talk talk, final XML xml) throws IOException {
-        final Shell shell = new TalkShells().get(talk);
+    public Iterable<Directive> process(final XML xml) throws IOException {
+        final Shell shell = new TalkShells(xml).get();
         final File file = File.createTempFile("rultor", ".log");
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         new Shell.Safe(shell).exec(
@@ -91,13 +91,11 @@ public final class ArchivesDaemon extends TalkAgent.Abstract {
         );
         final String hash = xml.xpath("/talk/daemon/@id").get(0);
         final URI uri = this.upload(file, hash);
-        talk.modify(
-            new Directives().xpath("/talk/daemon").remove()
-                .xpath("/talk").addIf("archive")
-                .add("log").attr("id", hash)
-                .set(uri.toString()),
-            String.format("daemon archived into %s", uri)
-        );
+        Logger.info(this, "daemon archived into %s", uri);
+        return new Directives().xpath("/talk/daemon").remove()
+            .xpath("/talk").addIf("archive")
+            .add("log").attr("id", hash)
+            .set(uri.toString());
     }
 
     /**

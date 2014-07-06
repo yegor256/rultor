@@ -29,9 +29,7 @@
  */
 package com.rultor.web;
 
-import com.jcabi.aspects.Loggable;
 import com.rexsl.page.PageBuilder;
-import java.net.HttpURLConnection;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -58,9 +56,7 @@ public final class ErrorRs extends BaseRs {
             .stylesheet("/xsl/error.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(new Breadcrumbs().with("self", "error").bundle())
             .render()
-            .status(HttpURLConnection.HTTP_NOT_FOUND)
             .build();
     }
 

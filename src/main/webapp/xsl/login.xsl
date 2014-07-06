@@ -34,48 +34,26 @@
     <xsl:include href="./layout.xsl"/>
     <xsl:template match="page" mode="head">
         <title>
-            <xsl:text>repos</xsl:text>
+            <xsl:text>rultor</xsl:text>
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <div class="row">
-            <div class="col-12 col-sm-6 col-lg-4">
-                <form method="post" class="form-inline spacious"
-                    action="{links/link[@rel='create']/@href}">
-                    <fieldset>
-                        <div class="input-group">
-                            <input name="coords" type="text" class="form-control"
-                                placeholder="Github repository name, e.g yegor256/test"/>
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn btn-primary">
-                                    <xsl:text>Create</xsl:text>
-                                </button>
-                            </span>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-        </div>
-        <xsl:apply-templates select="repos/repo"/>
-    </xsl:template>
-    <xsl:template match="repo">
-        <div class="spacious">
-            <ul class="list-inline">
+        <p>
+            <xsl:text>To start, login using one of your accounts:</xsl:text>
+        </p>
+        <ul class="list-inline">
+            <xsl:if test="/page/links/link[@rel='rexsl:github']">
                 <li>
-                    <a title="view it" href="{links/link[@rel='open']/@href}">
-                        <xsl:value-of select="coordinates"/>
-                    </a>
-                </li>
-                <li class="icon">
-                    <a onclick="return confirm('Are you sure?');"
-                        href="{links/link[@rel='delete']/@href}"
-                        title="delete this repo">
-                        <i class="icon-remove">
-                            <xsl:comment>remove</xsl:comment>
+                    <a class="btn btn-default" href="{/page/links/link[@rel='rexsl:github']/@href}">
+                        <i class="icon-github-sign login-icon">
+                            <xsl:comment>github sign</xsl:comment>
                         </i>
+                        <span class="hidden-xs hidden-sm">
+                            <xsl:text> Github</xsl:text>
+                        </span>
                     </a>
                 </li>
-            </ul>
-        </div>
+            </xsl:if>
+        </ul>
     </xsl:template>
 </xsl:stylesheet>

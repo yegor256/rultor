@@ -27,42 +27,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.dynamo;
+package com.rultor.profiles;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.dynamo.Item;
-import com.rultor.spi.Key;
-import com.rultor.spi.State;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.rultor.spi.Profile;
+import java.io.IOException;
 
 /**
- * State in Dynamo.
+ * Github Profile.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@ToString
-@EqualsAndHashCode
-public final class DyState implements State {
+final class GithubProfile implements Profile {
 
-    /**
-     * Item.
-     */
-    private final transient Item item;
-
-    /**
-     * Ctor.
-     * @param itm Item
-     */
-    DyState(final Item itm) {
-        this.item = itm;
+    @Override
+    public boolean contains(final String path) throws IOException {
+        throw new UnsupportedOperationException("#contains()");
     }
 
     @Override
-    public Key get(final String name) {
-        return new DyKey(this.item, name);
+    public String get(final String path) throws IOException {
+        throw new UnsupportedOperationException("#get()");
+    }
+
+    @Override
+    public Iterable<String> iterate(final String path) throws IOException {
+        throw new UnsupportedOperationException("#iterate()");
     }
 }

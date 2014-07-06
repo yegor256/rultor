@@ -42,15 +42,14 @@ import com.jcabi.github.Smarts;
 import com.jcabi.immutable.Array;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
-import com.rultor.agents.TalkAgent;
+import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Talk;
 import java.io.IOException;
 import javax.json.JsonObject;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
@@ -61,12 +60,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
-public final class GetsMergeRequest extends TalkAgent.Abstract {
-
-    /**
-     * Repo.
-     */
-    private final transient Repo repo;
+public final class GetsMergeRequest extends AbstractAgent {
 
     /**
      * Github.
@@ -83,23 +77,21 @@ public final class GetsMergeRequest extends TalkAgent.Abstract {
      * @param ghub Github client
      * @param revs Reviewers
      */
-    public GetsMergeRequest(final Repo rpo, final Github ghub,
-        final Iterable<String> revs) {
-        super("/talk/wire/github-repo");
-        this.repo = rpo;
+    public GetsMergeRequest(final Github ghub, final Iterable<String> revs) {
+        super("/talk");
         this.github = ghub;
         this.reviewers = new Array<String>(revs);
     }
 
     @Override
-    protected void process(final Talk talk, final XML xml) throws IOException {
-        final Issue.Smart issue = new TalkIssues(this.github).get(talk);
+    public Iterable<Directive> process(final XML xml) throws IOException {
+        final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final int seen;
-        if (xml.nodes("/talk/wire/github-seen").isEmpty()) {
+        if (xml.nodes("/talk/wire/github-mr-seen").isEmpty()) {
             seen = 0;
         } else {
             seen = Integer.parseInt(
-                xml.xpath("/talk/wire/github-seen/text()").get(0)
+                xml.xpath("/talk/wire/github--mr-seen/text()").get(0)
             );
         }
         final Iterable<Comment.Smart> comments = new Smarts<Comment.Smart>(
@@ -109,7 +101,7 @@ public final class GetsMergeRequest extends TalkAgent.Abstract {
             "@%s ", this.github.users().self().login()
         );
         int next = seen;
-        boolean found = false;
+        final Directives dirs = new Directives();
         for (final Comment.Smart comment : comments) {
             if (comment.number() <= seen) {
                 continue;
@@ -131,7 +123,7 @@ public final class GetsMergeRequest extends TalkAgent.Abstract {
                 );
                 continue;
             }
-            if (found) {
+            if (dirs.iterator().hasNext()) {
                 Logger.info(
                     this, "merge request already found, enough for one issue"
                 );
@@ -143,43 +135,39 @@ public final class GetsMergeRequest extends TalkAgent.Abstract {
                 );
                 continue;
             }
-            found = this.read(talk, comment);
+            dirs.append(this.read(xml, comment));
         }
         if (next > seen) {
-            talk.modify(
-                new Directives().xpath("/talk/wire")
-                    .addIf("github-seen").set(Integer.toString(next)),
-                String.format("messages up to #%d seen", next)
-            );
+            dirs.xpath("/talk/wire")
+                .addIf("github-mr-seen").set(Integer.toString(next));
+            Logger.info(this, "messages up to #%d seen", next);
         }
+        return dirs;
     }
 
     /**
      * Process/read one comment.
-     * @param talk Talk
+     * @param xml Talk
      * @param comment The comment
      * @return TRUE if request found
      * @throws IOException
      */
-    private boolean read(final Talk talk, final Comment.Smart comment)
+    private Iterable<Directive> read(final XML xml, final Comment.Smart comment)
         throws IOException {
-        final boolean found;
+        final Directives dirs = new Directives();
         if (this.reviewers.contains(comment.author().login())) {
             final String hash = DigestUtils.md5Hex(
                 RandomStringUtils.random(Tv.FIVE)
             ).substring(0, Tv.EIGHT);
-            talk.modify(
-                GetsMergeRequest.dirs(comment.issue(), hash),
-                String.format("merge request in #%d", comment.issue().number())
-            );
+            dirs.append(GetsMergeRequest.dirs(comment.issue(), hash));
+            Logger.info(this, "merge request in #%d", comment.issue().number());
             new Answer(comment).post(
                 String.format(
                     // @checkstyle LineLength (1 line)
                     "OK, I'm on it. You can track me [here](%s)",
-                    new Home(this.repo, talk, hash).uri()
+                    new Home(xml, hash).uri()
                 )
             );
-            found = true;
         } else {
             new Answer(comment).post(
                 String.format(
@@ -198,9 +186,8 @@ public final class GetsMergeRequest extends TalkAgent.Abstract {
                     )
                 )
             );
-            found = false;
         }
-        return found;
+        return dirs;
     }
 
     /**

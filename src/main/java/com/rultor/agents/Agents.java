@@ -29,6 +29,11 @@
  */
 package com.rultor.agents;
 
+import co.stateful.Counters;
+import co.stateful.RtSttc;
+import co.stateful.cached.CdSttc;
+import co.stateful.retry.ReSttc;
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Github;
 import com.jcabi.github.RtGithub;
@@ -37,16 +42,19 @@ import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
+import com.jcabi.urn.URN;
 import com.rultor.agents.daemons.ArchivesDaemon;
 import com.rultor.agents.daemons.EndsDaemon;
 import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.agents.github.GetsMergeRequest;
 import com.rultor.agents.github.PostsMergeResult;
-import com.rultor.agents.github.StartsTalk;
+import com.rultor.agents.github.StartsTalks;
 import com.rultor.agents.merge.EndsGitMerge;
 import com.rultor.agents.merge.StartsGitMerge;
 import com.rultor.agents.shells.RegistersShell;
-import com.rultor.spi.Repo;
+import com.rultor.spi.Agent;
+import com.rultor.spi.Profile;
+import com.rultor.spi.SuperAgent;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -66,54 +74,53 @@ import org.apache.commons.lang3.CharEncoding;
 public final class Agents {
 
     /**
-     * Create them.
-     * @param repo Repo we're in
-     * @param config YAML config
+     * Create super agents.
+     * @return List of them
+     */
+    public Collection<SuperAgent> supers() {
+        return Collections.<SuperAgent>singletonList(
+            new StartsTalks(Agents.github(), Agents.counters())
+        );
+    }
+
+    /**
+     * Create them for a talk.
+     * @param profile Profile
      * @return List of them
      * @throws IOException If fails
      */
-    public Collection<Agent> make(final Repo repo, final String config)
+    public Collection<Agent> agents(final Profile profile)
         throws IOException {
         final Collection<Agent> agents = new LinkedList<Agent>();
         final Github github = Agents.github();
         agents.addAll(
             Arrays.asList(
-                new StartsTalk(github, repo.coordinates()),
-                new TalkAgent.Wrap(
-                    new RegistersShell(
-                        "b1.rultor.com", 22,
-                        "rultor",
-                        IOUtils.toString(
-                            this.getClass().getResourceAsStream("rultor.key"),
-                            CharEncoding.UTF_8
+                new RegistersShell(
+                    "b1.rultor.com", 22,
+                    "rultor",
+                    IOUtils.toString(
+                        this.getClass().getResourceAsStream("rultor.key"),
+                        CharEncoding.UTF_8
+                    )
+                ),
+                new GetsMergeRequest(
+                    github,
+                    Collections.singleton("yegor256")
+                ),
+                new StartsGitMerge(
+                    "mvn help:system clean install -Pqulice --batch-mode --update-snapshots --errors --strict-checksums"
+                ),
+                new StartsDaemon(),
+                new EndsDaemon(),
+                new EndsGitMerge(),
+                new PostsMergeResult(github),
+                new ArchivesDaemon(
+                    new ReRegion(
+                        new Region.Simple(
+                            Manifests.read("Rultor-S3Key"),
+                            Manifests.read("Rultor-S3Secret")
                         )
-                    )
-                ),
-                new TalkAgent.Wrap(
-                    new GetsMergeRequest(
-                        repo,
-                        github,
-                        Collections.singleton("yegor256")
-                    )
-                ),
-                new TalkAgent.Wrap(
-                    new StartsGitMerge(
-                        "mvn help:system clean install -Pqulice --batch-mode --update-snapshots --errors --strict-checksums"
-                    )
-                ),
-                new TalkAgent.Wrap(new StartsDaemon()),
-                new TalkAgent.Wrap(new EndsDaemon()),
-                new TalkAgent.Wrap(new EndsGitMerge()),
-                new TalkAgent.Wrap(new PostsMergeResult(repo, github)),
-                new TalkAgent.Wrap(
-                    new ArchivesDaemon(
-                        new ReRegion(
-                            new Region.Simple(
-                                Manifests.read("Rultor-S3Key"),
-                                Manifests.read("Rultor-S3Secret")
-                            )
-                        ).bucket(Manifests.read("Rultor-S3Bucket"))
-                    )
+                    ).bucket(Manifests.read("Rultor-S3Bucket"))
                 )
             )
         );
@@ -124,6 +131,7 @@ public final class Agents {
      * Make github.
      * @return Github
      */
+    @Cacheable(forever = true)
     private static Github github() {
         final String token = Manifests.read("Rultor-GithubToken");
         final Github github;
@@ -134,6 +142,26 @@ public final class Agents {
             github = new RtGithub(token);
         }
         return new RtGithub(github.entry().through(RetryWire.class));
+    }
+
+    /**
+     * Sttc counter.
+     * @return Counter
+     */
+    @Cacheable(forever = true)
+    private static Counters counters() {
+        try {
+            return new CdSttc(
+                new ReSttc(
+                    RtSttc.make(
+                        URN.create(Manifests.read("Rultor-SttcUrn")),
+                        Manifests.read("Rultor-SttcToken")
+                    )
+                )
+            ).counters();
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
 }

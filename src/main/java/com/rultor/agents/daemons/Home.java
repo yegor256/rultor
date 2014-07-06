@@ -30,8 +30,7 @@
 package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Talk;
+import com.jcabi.xml.XML;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -48,14 +47,9 @@ import org.apache.commons.lang3.CharEncoding;
 public final class Home {
 
     /**
-     * Repo.
-     */
-    private final transient Repo repo;
-
-    /**
      * Talk.
      */
-    private final transient Talk talk;
+    private final transient XML xml;
 
     /**
      * Hash.
@@ -64,13 +58,11 @@ public final class Home {
 
     /**
      * Ctor.
-     * @param rpo Repo
-     * @param tlk Talk
+     * @param talk Talk
      * @param hsh Hash
      */
-    public Home(final Repo rpo, final Talk tlk, final String hsh) {
-        this.repo = rpo;
-        this.talk = tlk;
+    public Home(final XML talk, final String hsh) {
+        this.xml = talk;
         this.hash = hsh;
     }
 
@@ -82,9 +74,11 @@ public final class Home {
     public URI uri() throws IOException {
         return URI.create(
             String.format(
-                "http://www.rultor.com/d/%d/%s/%s",
-                this.repo.number(),
-                URLEncoder.encode(this.talk.name(), CharEncoding.UTF_8),
+                "http://www.rultor.com/t/%s/%s",
+                URLEncoder.encode(
+                    this.xml.xpath("@name").get(0),
+                    CharEncoding.UTF_8
+                ),
                 this.hash
             )
         );

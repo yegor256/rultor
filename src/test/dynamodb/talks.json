@@ -1,21 +1,21 @@
 {
     "AttributeDefinitions": [
         {
-            "AttributeName": "repo",
+            "AttributeName": "active",
             "AttributeType": "N"
         },
         {
-            "AttributeName": "number",
-            "AttributeType": "N"
+            "AttributeName": "name",
+            "AttributeType": "S"
         }
     ],
     "KeySchema": [
         {
-            "AttributeName": "repo",
+            "AttributeName": "active",
             "KeyType": "HASH"
         },
         {
-            "AttributeName": "number",
+            "AttributeName": "name",
             "KeyType": "RANGE"
         }
     ],

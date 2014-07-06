@@ -27,52 +27,25 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor.spi;
 
-import com.jcabi.manifests.Manifests;
+import com.jcabi.aspects.Immutable;
 import java.io.IOException;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import org.apache.commons.io.IOUtils;
 
 /**
- * Miscellaneous.
+ * Super Agent.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Path("/misc")
-public final class MiscRs extends BaseRs {
+@Immutable
+public interface SuperAgent {
 
     /**
-     * Show entrance page.
-     * @return The JAX-RS response
+     * Execute it.
+     * @param talks All talks
      */
-    @GET
-    @Path("/version")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String version() {
-        return Manifests.read("Rultor-Revision");
-    }
-
-    /**
-     * Show license.
-     * @return The JAX-RS response
-     */
-    @GET
-    @Path("/LICENSE.txt")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String license() {
-        try {
-            return IOUtils.toString(
-                this.getClass().getResourceAsStream("LICENSE.txt")
-            );
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
+    void execute(Talks talks) throws IOException;
 
 }

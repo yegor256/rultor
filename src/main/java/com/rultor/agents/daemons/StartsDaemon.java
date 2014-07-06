@@ -32,10 +32,9 @@ package com.rultor.agents.daemons;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
-import com.rultor.agents.TalkAgent;
+import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
-import com.rultor.spi.Talk;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -46,6 +45,7 @@ import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
@@ -56,19 +56,22 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
-public final class StartsDaemon extends TalkAgent.Abstract {
+public final class StartsDaemon extends AbstractAgent {
 
     /**
      * Ctor.
      */
     public StartsDaemon() {
-        super("/talk/daemon[script and not(started)]");
+        super(
+            "/talk/shell",
+            "/talk/daemon[script and not(started)]"
+        );
     }
 
     @Override
-    protected void process(final Talk talk, final XML xml) throws IOException {
+    public Iterable<Directive> process(final XML xml) throws IOException {
         final XML daemon = xml.nodes("/talk/daemon").get(0);
-        final Shell shell = new TalkShells().get(talk);
+        final Shell shell = new TalkShells(xml).get();
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         new Shell.Safe(shell).exec(
             "mktemp -d -t rultor-XXXX",
@@ -106,13 +109,11 @@ public final class StartsDaemon extends TalkAgent.Abstract {
                 " && "
             )
         );
-        talk.modify(
-            new Directives().xpath("/talk/daemon").strict(1)
-                .add("started")
-                .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))
-                .up()
-                .add("dir").set(dir),
-            String.format("daemon started at %s", dir)
-        );
+        Logger.info(this, "daemon started at %s", dir);
+        return new Directives().xpath("/talk/daemon").strict(1)
+            .add("started")
+            .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))
+            .up()
+            .add("dir").set(dir);
     }
 }

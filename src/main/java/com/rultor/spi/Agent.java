@@ -27,10 +27,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents;
+package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
-import com.rultor.spi.Repo;
 import java.io.IOException;
 
 /**
@@ -45,8 +44,8 @@ public interface Agent {
 
     /**
      * Execute it.
-     * @param repo Repo
+     * @param talk Talk to work with
      */
-    void execute(Repo repo) throws IOException;
+    void execute(Talk talk) throws IOException;
 
 }

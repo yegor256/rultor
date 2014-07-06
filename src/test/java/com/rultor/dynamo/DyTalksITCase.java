@@ -27,42 +27,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.dynamo;
 
-import com.jcabi.aspects.Immutable;
+import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.spi.Talks;
+import org.hamcrest.MatcherAssert;
+import org.junit.Test;
 
 /**
- * Assets.
- *
+ * Integration case for {@link DyTalks}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Assets {
+public final class DyTalksITCase {
 
     /**
-     * Get by name.
-     * @param name Name of it
+     * DyRepos can add and remove repos.
+     * @throws Exception If some problem inside
      */
-    Asset get(String name);
-
-    /**
-     * All assets.
-     * @return Assets
-     */
-    Iterable<Asset> assets();
-
-    /**
-     * Add new one.
-     * @param name Name of it
-     */
-    void add(String name);
-
-    /**
-     * Delete existing.
-     * @param name Name of it
-     */
-    void delete(String name);
+    @Test
+    public void andsAndRemovesRepos() throws Exception {
+        final Talks talks = new DyTalks();
+        final String name = "hey/test 45";
+        talks.create(name);
+        MatcherAssert.assertThat(
+            talks.get(name).read(),
+            XhtmlMatchers.hasXPath("/talk")
+        );
+    }
 
 }

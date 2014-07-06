@@ -27,34 +27,57 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.dynamo;
+package com.rultor.agents;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.jcabi.dynamo.Item;
-import com.rultor.spi.Key;
-import org.junit.Test;
-import org.mockito.Mockito;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.immutable.Array;
+import com.jcabi.xml.XML;
+import com.rultor.spi.Agent;
+import com.rultor.spi.Talk;
+import java.io.IOException;
+import org.xembly.Directive;
 
 /**
- * Test case for {@link DyKey}.
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
+ * Abstract agent.
  */
-public final class DyKeyTest {
+@Immutable
+public abstract class AbstractAgent implements Agent {
 
     /**
-     * DyKey can add and remove items.
-     * @throws Exception If some problem inside
+     * Encapsulated XPaths.
      */
-    @Test
-    public void andsAndRemovesItems() throws Exception {
-        final Item item = Mockito.mock(Item.class);
-        Mockito.doReturn(
-            new AttributeValue().withS("{}")
-        ).when(item).get(Mockito.anyString());
-        final Key key = new DyKey(item, "hey");
-        key.put("hello, world!");
+    private final transient Array<String> xpaths;
+
+    /**
+     * Ctor.
+     * @param args XPath expressions
+     */
+    public AbstractAgent(final String... args) {
+        this.xpaths = new Array<String>(args);
     }
+
+    @Override
+    public final void execute(final Talk talk) throws IOException {
+        final XML xml = talk.read();
+        boolean good = true;
+        for (final String xpath : this.xpaths) {
+            if (xml.nodes(xpath).isEmpty()) {
+                good = false;
+                break;
+            }
+        }
+        if (good) {
+            talk.modify(this.process(xml));
+        }
+    }
+
+    /**
+     * Process it.
+     * @param xml Its xml
+     * @return Directives
+     * @throws java.io.IOException If fails
+     */
+    protected abstract Iterable<Directive> process(XML xml)
+        throws IOException;
 
 }

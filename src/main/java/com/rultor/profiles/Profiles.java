@@ -27,41 +27,31 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.web;
+package com.rultor.profiles;
 
-import com.rexsl.page.JaxbBundle;
+import com.jcabi.aspects.Immutable;
+import com.rultor.spi.Profile;
+import com.rultor.spi.Talk;
+import java.io.IOException;
 
 /**
- * Menu.
+ * Profiles.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-final class Menu {
+@Immutable
+public final class Profiles {
 
     /**
-     * Bundle to show.
+     * Fetch a profile from a talk.
+     * @param talk The talk
+     * @return Profile found
+     * @throws IOException If fails
      */
-    private transient JaxbBundle crumbs = new JaxbBundle("nav");
-
-    /**
-     * With this new crumb.
-     * @param rel Rel
-     * @param title Title
-     * @return This object
-     */
-    public Menu with(final String rel, final String title) {
-        this.crumbs = this.crumbs.add("item", title).attr("rel", rel).up();
-        return this;
-    }
-
-    /**
-     * Get its bundle.
-     * @return Bundle
-     */
-    public JaxbBundle bundle() {
-        return this.crumbs;
+    public Profile fetch(final Talk talk) throws IOException {
+        return new GithubProfile();
     }
 
 }

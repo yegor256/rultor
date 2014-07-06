@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2009-2014, rultor.com
  * All rights reserved.
  *
@@ -26,33 +27,25 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.rultor.spi;
-
-import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
-import java.io.IOException;
-
-/**
- * Base.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- */
-@Immutable
-public interface Base {
-
-    /**
-     * User by URN.
-     * @param urn His URN
-     * @return User
-     */
-    User user(URN urn);
-
-    /**
-     * Execute all repos.
-     */
-    void execute() throws IOException;
-
-}
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns="http://www.w3.org/1999/xhtml" version="2.0">
+    <xsl:output method="xml" omit-xml-declaration="yes"/>
+    <xsl:include href="./layout.xsl"/>
+    <xsl:template match="page" mode="head">
+        <title>
+            <xsl:text>talks</xsl:text>
+        </title>
+    </xsl:template>
+    <xsl:template match="page" mode="body">
+        <xsl:apply-templates select="talks/talk"/>
+    </xsl:template>
+    <xsl:template match="talk">
+        <p>
+            <xsl:value-of select="name"/>
+        </p>
+        <pre>
+            <xsl:value-of select="content"/>
+        </pre>
+    </xsl:template>
+</xsl:stylesheet>

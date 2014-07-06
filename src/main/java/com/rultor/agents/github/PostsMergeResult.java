@@ -32,13 +32,13 @@ package com.rultor.agents.github;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
-import com.rultor.agents.TalkAgent;
+import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
-import com.rultor.spi.Repo;
-import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.net.URI;
+import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
@@ -49,12 +49,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
-public final class PostsMergeResult extends TalkAgent.Abstract {
-
-    /**
-     * Repo.
-     */
-    private final transient Repo repo;
+public final class PostsMergeResult extends AbstractAgent {
 
     /**
      * Github.
@@ -63,25 +58,21 @@ public final class PostsMergeResult extends TalkAgent.Abstract {
 
     /**
      * Ctor.
-     * @param rpo Repo
      * @param ghub Github client
      */
-    public PostsMergeResult(final Repo rpo, final Github ghub) {
+    public PostsMergeResult(final Github ghub) {
         super("/talk/merge-request-git[success]");
-        this.repo = rpo;
         this.github = ghub;
     }
 
     @Override
-    protected void process(final Talk talk, final XML xml) throws IOException {
+    public Iterable<Directive> process(final XML xml) throws IOException {
         final XML req = xml.nodes("/talk/merge-request-git").get(0);
-        final Issue.Smart issue = new TalkIssues(this.github).get(talk);
+        final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final boolean success = Boolean.parseBoolean(
             req.xpath("success/text()").get(0)
         );
-        final URI home = new Home(
-            this.repo, talk, req.xpath("@id").get(0)
-        ).uri();
+        final URI home = new Home(xml, req.xpath("@id").get(0)).uri();
         final String msg;
         if (success) {
             msg = "done!";
@@ -92,11 +83,9 @@ public final class PostsMergeResult extends TalkAgent.Abstract {
             );
         }
         issue.comments().post(msg);
-        talk.modify(
-            new Directives().xpath("/talk/merge-request-git")
-                .strict(1).remove(),
-            String.format("merge request completed at #%d", issue.number())
-        );
+        Logger.info(this, "merge request completed at #%d", issue.number());
+        return new Directives().xpath("/talk/merge-request-git")
+            .strict(1).remove();
     }
 
 }

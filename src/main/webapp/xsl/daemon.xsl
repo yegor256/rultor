@@ -34,18 +34,11 @@
     <xsl:include href="./layout.xsl"/>
     <xsl:template match="page" mode="head">
         <title>
-            <xsl:value-of select="repo"/>
+            <xsl:text>...</xsl:text>
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <h1>
-            <xsl:value-of select="repo"/>
-            <xsl:text> / </xsl:text>
-            <xsl:value-of select="talk"/>
-            <xsl:text> / </xsl:text>
-            <xsl:value-of select="hash"/>
-        </h1>
-        <pre id='log'>
+        <pre id='log' data-href="{links/link[@rel='stream']/@href}">
             <xsl:text> </xsl:text>
         </pre>
     </xsl:template>

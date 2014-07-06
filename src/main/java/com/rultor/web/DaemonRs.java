@@ -29,8 +29,7 @@
  */
 package com.rultor.web;
 
-import com.rexsl.page.PageBuilder;
-import com.rultor.spi.Repo;
+import com.jcabi.xml.XML;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,16 +50,11 @@ import javax.ws.rs.core.Response;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Path("/d/{repo:[0-9]+}/{name}/{hash:[0-9]+}")
+@Path("/t/{name:[0-9a-zA-Z_\\-\\.]+}/{hash:[0-9]+}")
 public final class DaemonRs extends BaseRs {
 
     /**
-     * Repo number.
-     */
-    private transient Long rnum;
-
-    /**
-     * Talk name.
+     * Talk unique name.
      */
     private transient String name;
 
@@ -68,16 +62,6 @@ public final class DaemonRs extends BaseRs {
      * Daemon hash ID.
      */
     private transient String hash;
-
-    /**
-     * Inject it from query.
-     * @param number Repo number
-     */
-    @PathParam("repo")
-    public void setRnum(@NotNull(message = "repo number is mandatory")
-        final Long number) {
-        this.rnum = number;
-    }
 
     /**
      * Inject it from query.
@@ -100,33 +84,30 @@ public final class DaemonRs extends BaseRs {
     }
 
     /**
-     * Get front page.
+     * Get front.
      * @return The JAX-RS response
      * @throws IOException If fails
      */
     @GET
     @Path("/")
+    @Produces(MediaType.TEXT_HTML)
     public Response index() throws IOException {
-        final Talk talk = this.user().repos()
-            .get(this.rnum).talks().get(this.name);
-        return new PageBuilder()
-            .stylesheet("/xsl/daemon.xsl")
-            .build(EmptyPage.class)
-            .init(this)
-            .append(new Breadcrumbs().with("self", "home").bundle())
-            .render()
+        return Response.ok()
+            .entity(this.stream())
             .build();
     }
 
     /**
      * Get stream.
-     * @return The JAX-RS response
+     * @return The stream
+     * @throws IOException If fails
      */
-    @GET
-    @Path("/stream")
-    @Produces(MediaType.TEXT_PLAIN)
-    public InputStream stream() {
-        final Repo repo = this.user().repos().get(this.rnum);
+    private InputStream stream() throws IOException {
+        final Talk talk = this.talks().get(this.name);
+        final XML xml = talk.read();
+        if (xml.nodes("/talk/daemon[@id='%s']").isEmpty()) {
+            //
+        }
         return null;
     }
 

@@ -35,8 +35,6 @@ import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.xml.XML;
-import com.rultor.spi.Talk;
-import java.io.IOException;
 
 /**
  * Issues referenced from Talks.
@@ -54,28 +52,34 @@ public final class TalkIssues {
     private final transient Github github;
 
     /**
+     * XML.
+     */
+    private final transient XML xml;
+
+    /**
      * Ctor.
      * @param ghub Github client
+     * @param talk Talk XML
      */
-    public TalkIssues(final Github ghub) {
+    public TalkIssues(final Github ghub, final XML talk) {
         this.github = ghub;
+        this.xml = talk;
     }
 
     /**
      * Find and get issue.
-     * @param talk Talk
      * @return Issue
      */
-    public Issue.Smart get(final Talk talk) throws IOException {
-        final XML xml = talk.read();
+    public Issue.Smart get() {
+        final XML wire = this.xml.nodes("/talk/wire").get(0);
         final Coordinates coords = new Coordinates.Simple(
-            xml.xpath("/talk/wire/github-repo/text()").get(0)
+            wire.xpath("github-repo/text()").get(0)
         );
         final Repo repo = this.github.repos().get(coords);
         return new Issue.Smart(
             repo.issues().get(
                 Integer.parseInt(
-                    talk.read().xpath("/talk/wire/github-issue/text()").get(0)
+                    wire.xpath("github-issue/text()").get(0)
                 )
             )
         );

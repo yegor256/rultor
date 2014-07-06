@@ -28,15 +28,6 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@font-face {
-  font-family: 'Rultor-Logo';
-  src: url('//img.rultor.com/rultor.eot');
-  src: url('//img.rultor.com/rultor.eot?#iefix') format('embedded-opentype'),
-  url('//img.rultor.com/rultor.woff') format('woff'),
-  url('//img.rultor.com/rultor.ttf') format('truetype'),
-  url('//img.rultor.com/rultor.svg?#rultor') format('svg');
-}
-
 body {
   font-size: 16px;
   padding: .5em;
@@ -57,10 +48,6 @@ code {
   font-family: 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
 }
 
-textarea {
-  font-family: 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
-}
-
 .version {
   position: fixed;
   bottom: 0;
@@ -68,66 +55,7 @@ textarea {
   font-size: 80%;
 }
 
-.menu {
-  position: absolute;
-  display: none;
-  z-index: 1002;
-}
-
-.login-icon {
-  font-size: 1.6em;
-}
-
-.icon {
-  cursor: pointer;
-  text-decoration: none;
-  a {
-    text-decoration: none;
-  }
-}
-
-.logo {
-  font-family: 'Rultor-Logo';
-  font-size: 4em;
-  vertical-align: middle;
-  color: inherit;
-  cursor: pointer;
-}
-
-h2 {
-  padding-top: 1em;
-  padding-bottom: .5em;
-}
-
-p, .spacious {
+p {
   padding-top: 10px;
   padding-bottom: 10px;
-}
-
-.list-inline {
-  margin-bottom: 0;
-  li:first-child {
-    padding-left: 0;
-  }
-}
-
-.spacious-inline-list {
-  margin: 5px 0px;
-}
-
-.tag-detailed-list {
-  margin-left: 2em;
-}
-
-.step-item {
-  font-size: 90%;
-  position: relative;
-  color: #ccc;
-}
-
-.step-mark {
-  height: 3px;
-  background-color: #ccc;
-  position: absolute;
-  bottom: 0;
 }

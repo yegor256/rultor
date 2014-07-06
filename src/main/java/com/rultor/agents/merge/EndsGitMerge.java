@@ -30,10 +30,10 @@
 package com.rultor.agents.merge;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
-import com.rultor.agents.TalkAgent;
-import com.rultor.spi.Talk;
-import java.io.IOException;
+import com.rultor.agents.AbstractAgent;
+import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
@@ -44,7 +44,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
-public final class EndsGitMerge extends TalkAgent.Abstract {
+public final class EndsGitMerge extends AbstractAgent {
 
     /**
      * Ctor.
@@ -57,16 +57,14 @@ public final class EndsGitMerge extends TalkAgent.Abstract {
     }
 
     @Override
-    protected void process(final Talk talk, final XML xml) throws IOException {
+    public Iterable<Directive> process(final XML xml) {
         final int code = Integer.parseInt(
             xml.xpath("/talk/daemon/code/text()").get(0)
         );
         final boolean success = code == 0;
-        talk.modify(
-            new Directives().xpath("/talk/merge-request-git")
-                .add("success")
-                .set(Boolean.toString(success)),
-            String.format("git merge finished: %b", success)
-        );
+        Logger.info(this, "git merge finished: %b", success);
+        return new Directives().xpath("/talk/merge-request-git")
+            .add("success")
+            .set(Boolean.toString(success));
     }
 }

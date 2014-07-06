@@ -34,9 +34,14 @@ import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Conditions;
+import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.retry.ReRegion;
+import com.jcabi.log.Logger;
+import com.jcabi.manifests.Manifests;
+import com.rultor.agents.Agents;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
@@ -61,12 +66,12 @@ public final class DyTalks implements Talks {
     public static final String TBL = "talks";
 
     /**
-     * Repository number.
+     * Is it active (1) or archived (0).
      */
-    public static final String HASH = "repo";
+    public static final String HASH = "active";
 
     /**
-     * Talk ID.
+     * Repository name.
      */
     public static final String RANGE = "name";
 
@@ -76,23 +81,29 @@ public final class DyTalks implements Talks {
     public static final String ATTR_XML = "xml";
 
     /**
-     * Region to work with.
+     * Region we're in.
      */
     private final transient Region region;
 
     /**
-     * Repo number.
+     * Public ctor.
      */
-    private final transient long repo;
-
-    /**
-     * Ctor.
-     * @param reg Region
-     * @param rpo Repository number
-     */
-    DyTalks(final Region reg, final long rpo) {
-        this.region = reg;
-        this.repo = rpo;
+    public DyTalks() {
+        final String key = Manifests.read("Rultor-DynamoKey");
+        Credentials creds = new Credentials.Simple(
+            key,
+            Manifests.read("Rultor-DynamoSecret")
+        );
+        if ("AAAAABBBBBAAAAABBBBB".equals(key)) {
+            final int port = Integer.parseInt(
+                System.getProperty("dynamo.port")
+            );
+            creds = new Credentials.Direct(creds, port);
+            Logger.warn(Agents.class, "test DynamoDB at port #%d", port);
+        }
+        this.region = new Region.Prefixed(
+            new ReRegion(new Region.Simple(creds)), "rt-"
+        );
     }
 
     @Override
@@ -100,8 +111,7 @@ public final class DyTalks implements Talks {
         return this.region.table(DyTalks.TBL)
             .frame()
             .through(new QueryValve().withLimit(1))
-            .where(DyTalks.HASH, Conditions.equalTo(this.repo))
-            .where(DyTalks.RANGE, name)
+            .where(DyTalks.HASH, name)
             .iterator().hasNext();
     }
 
@@ -111,8 +121,7 @@ public final class DyTalks implements Talks {
             this.region.table(DyTalks.TBL)
                 .frame()
                 .through(new QueryValve().withLimit(1))
-                .where(DyTalks.HASH, Conditions.equalTo(this.repo))
-                .where(DyTalks.RANGE, name)
+                .where(DyTalks.HASH, name)
                 .iterator().next()
         );
     }
@@ -121,8 +130,8 @@ public final class DyTalks implements Talks {
     public void create(final String name) throws IOException {
         this.region.table(DyTalks.TBL).put(
             new Attributes()
-                .with(DyTalks.HASH, this.repo)
-                .with(DyTalks.RANGE, name)
+                .with(DyTalks.HASH, name)
+                .with(DyTalks.RANGE, 1)
                 .with(DyTalks.ATTR_XML, "<talk/>")
         );
     }
@@ -130,10 +139,23 @@ public final class DyTalks implements Talks {
     @Override
     public Iterable<Talk> iterate() {
         return Iterables.transform(
+            this.region.table(DyTalks.TBL).frame(),
+            new Function<Item, Talk>() {
+                @Override
+                public Talk apply(final Item input) {
+                    return new DyTalk(input);
+                }
+            }
+        );
+    }
+
+    @Override
+    public Iterable<Talk> active() {
+        return Iterables.transform(
             this.region.table(DyTalks.TBL)
                 .frame()
                 .through(new QueryValve())
-                .where(DyTalks.HASH, Conditions.equalTo(this.repo)),
+                .where(DyTalks.HASH, Conditions.equalTo(1)),
             new Function<Item, Talk>() {
                 @Override
                 public Talk apply(final Item input) {

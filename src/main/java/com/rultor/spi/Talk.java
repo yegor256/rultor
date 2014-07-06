@@ -59,8 +59,13 @@ public interface Talk {
     /**
      * Modify its content.
      * @param dirs Directives
-     * @param reason Why it's happening
      */
-    void modify(Iterable<Directive> dirs, String reason) throws IOException;
+    void modify(Iterable<Directive> dirs) throws IOException;
+
+    /**
+     * Make it active or passive.
+     * @param yes TRUE if it should be active
+     */
+    void active(boolean yes) throws IOException;
 
 }

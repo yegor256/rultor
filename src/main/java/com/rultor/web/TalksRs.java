@@ -29,56 +29,67 @@
  */
 package com.rultor.web;
 
-import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
-import com.rexsl.page.BaseResource;
-import com.rexsl.page.inset.FlashInset;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.logging.Level;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
+import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.PageBuilder;
+import com.rultor.spi.Talk;
+import java.io.IOException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
- * Maps constraint violations to JAX-RS responses.
+ * All talks.
  *
- * <p>The class is mutable and NOT thread-safe.
- *
- * @author Yegor Bugayenko (yegor@tpc.com)
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Provider
-public final class ConstraintsMapper extends BaseResource
-    implements ExceptionMapper<ConstraintViolationException> {
+@Path("/talks")
+public final class TalksRs extends BaseRs {
 
-    @Override
-    public Response toResponse(final ConstraintViolationException violation) {
-        String msg = violation.getMessage();
-        if (msg == null) {
-            msg = "undisclosed constraint violation (internal problem)";
-        }
-        final Collection<String> violations =
-            new ArrayList<String>(violation.getConstraintViolations().size());
-        for (final ConstraintViolation<?> vio
-            : violation.getConstraintViolations()) {
-            violations.add(vio.getMessage());
-        }
-        return Response.fromResponse(
-            FlashInset.forward(
-                this.uriInfo().getRequestUri(),
-                Logger.format(
-                    "%s: %[list]s",
-                    msg,
-                    violations
-                ),
-                Level.WARNING
-            ).getResponse()
-        ).entity(ExceptionUtils.getStackTrace(violation)).build();
+    /**
+     * List of them.
+     * @return The JAX-RS response
+     * @throws IOException If fails
+     */
+    @GET
+    @Path("/")
+    public Response index() throws IOException {
+        return new PageBuilder()
+            .stylesheet("/xsl/talks.xsl")
+            .build(EmptyPage.class)
+            .init(this)
+            .append(
+                new JaxbBundle("talks").add(
+                    new JaxbBundle.Group<Talk>(this.talks().iterate()) {
+                        @Override
+                        public JaxbBundle bundle(final Talk talk) {
+                            try {
+                                return TalksRs.this.bundle(talk);
+                            } catch (final IOException ex) {
+                                throw new IllegalStateException(ex);
+                            }
+                        }
+                    }
+
+                )
+            )
+            .render()
+            .build();
+    }
+
+    /**
+     * Convert talk to JaxbBundle.
+     * @param talk The talk
+     * @return Bundle
+     * @throws IOException If fails
+     */
+    private JaxbBundle bundle(final Talk talk) throws IOException {
+        return new JaxbBundle("talk")
+            .add("name", talk.name())
+            .up()
+            .add("content", talk.read().toString())
+            .up();
     }
 
 }

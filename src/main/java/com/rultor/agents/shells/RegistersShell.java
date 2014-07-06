@@ -30,10 +30,10 @@
 package com.rultor.agents.shells;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
-import com.rultor.agents.TalkAgent;
-import com.rultor.spi.Talk;
-import java.io.IOException;
+import com.rultor.agents.AbstractAgent;
+import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
@@ -44,7 +44,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
-public final class RegistersShell extends TalkAgent.Abstract {
+public final class RegistersShell extends AbstractAgent {
 
     /**
      * IP address of the server.
@@ -76,7 +76,7 @@ public final class RegistersShell extends TalkAgent.Abstract {
      */
     public RegistersShell(final String adr, final int prt,
         final String user, final String priv) {
-        super("/talk[not(shell)]");
+        super("/talk[daemon and not(shell)]");
         this.addr = adr;
         this.login = user;
         this.key = priv;
@@ -84,15 +84,13 @@ public final class RegistersShell extends TalkAgent.Abstract {
     }
 
     @Override
-    protected void process(final Talk talk, final XML xml) throws IOException {
-        talk.modify(
-            new Directives()
-                .xpath("/talk").add("shell")
-                .add("host").set(this.addr).up()
-                .add("port").set(Integer.toString(this.port)).up()
-                .add("login").set(this.login).up()
-                .add("key").set(this.key),
-            String.format("shell registered as %s:%d", this.addr, this.port)
-        );
+    protected Iterable<Directive> process(final XML xml) {
+        Logger.info(this, "shell registered as %s:%d", this.addr, this.port);
+        return new Directives()
+            .xpath("/talk").add("shell")
+            .add("host").set(this.addr).up()
+            .add("port").set(Integer.toString(this.port)).up()
+            .add("login").set(this.login).up()
+            .add("key").set(this.key);
     }
 }

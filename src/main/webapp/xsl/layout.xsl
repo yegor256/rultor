@@ -40,58 +40,16 @@
             <head>
                 <meta charset="UTF-8"/>
                 <meta name="description" content="Coding Team Assistant"/>
-                <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
+                <meta name="keywords" content="continuous integration, continuous delivery, revision control"/>
                 <meta name="author" content="rultor.com"/>
                 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
                 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"/>
                 <link rel="stylesheet" type="text/css" media="all" href="/css/style.css?{version/revision}"/>
                 <link rel="icon" type="image/gif" href="//img.rultor.com/favicon.ico?{version/revision}"/>
-                <script type="text/javascript" src="/js/misc.js?{version/revision}">
-                    <xsl:text> </xsl:text>
-                </script>
-                <script type="text/javascript" src="js/layout.js?{version/revision}">
-                    <xsl:text> </xsl:text>
-                </script>
                 <xsl:apply-templates select="." mode="head"/>
             </head>
             <body>
-                <xsl:if test="nav/item">
-                    <div class="overlay" onclick="$('.menu').hide();">
-                        <!-- this is for W3C compliance -->
-                        <xsl:text> </xsl:text>
-                    </div>
-                </xsl:if>
-                <aside>
-                    <a href="https://github.com/rultor/rultor" class="hidden-xs hidden-sm">
-                        <img style="position: absolute; top: 0; right: 0; border: 0; width: 100px; height: 100px;"
-                            src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
-                            alt="Fork me on GitHub"/>
-                    </a>
-                </aside>
-                <ul class="list-inline">
-                    <li class="logo">
-                        <xsl:if test="nav/item">
-                            <xsl:attribute name="onclick">
-                                <xsl:text>$('.menu').toggle();</xsl:text>
-                            </xsl:attribute>
-                        </xsl:if>
-                        <xsl:text>R</xsl:text>
-                    </li>
-                    <li>
-                        <a href="//doc.rultor.com/">
-                            <xsl:text>how it works?</xsl:text>
-                        </a>
-                    </li>
-                    <xsl:apply-templates select="breadcrumbs/crumb"/>
-                    <xsl:apply-templates select="identity"/>
-                </ul>
-                <xsl:if test="nav">
-                    <aside class="menu panel panel-default">
-                        <div class="panel-body">
-                            <xsl:apply-templates select="nav"/>
-                        </div>
-                    </aside>
-                </xsl:if>
+                <xsl:apply-templates select="identity"/>
                 <xsl:apply-templates select="flash"/>
                 <article>
                     <xsl:apply-templates select="." mode="body"/>
@@ -99,42 +57,6 @@
                 <xsl:apply-templates select="version"/>
             </body>
         </html>
-    </xsl:template>
-    <xsl:template match="crumb">
-        <li>
-            <xsl:variable name="title" select="concat('/',.)"/>
-            <xsl:variable name="rel" select="@rel"/>
-            <xsl:choose>
-                <xsl:when test="/page/links/link[@rel=$rel]">
-                    <a href="{/page/links/link[@rel=$rel]/@href}">
-                        <xsl:value-of select="$title"/>
-                    </a>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:value-of select="$title"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </li>
-    </xsl:template>
-    <xsl:template match="nav">
-        <ul class="nav nav-pills nav-stacked">
-            <xsl:apply-templates select="item"/>
-        </ul>
-    </xsl:template>
-    <xsl:template match="item">
-        <xsl:variable name="rel" select="@rel"/>
-        <xsl:if test="/page/links/link[@rel=$rel]">
-            <li>
-                <xsl:if test="/page/links/link[@rel=$rel]/@href = /page/links/link[@rel='self']/@href">
-                    <xsl:attribute name="class">
-                        <xsl:text>active</xsl:text>
-                    </xsl:attribute>
-                </xsl:if>
-                <a href="{/page/links/link[@rel=$rel]/@href}">
-                    <xsl:value-of select="."/>
-                </a>
-            </li>
-        </xsl:if>
     </xsl:template>
     <xsl:template match="version">
         <aside class="version hidden-xs hidden-sm" style="padding: 0.2em 0.5em;">
@@ -238,5 +160,25 @@
                 </i>
             </a>
         </li>
+    </xsl:template>
+    <xsl:template name="millis">
+        <xsl:param name="millis"/>
+        <xsl:choose>
+            <xsl:when test="not($millis)">
+                <xsl:text>?</xsl:text>
+            </xsl:when>
+            <xsl:when test="$millis &gt; 60000">
+                <xsl:value-of select="format-number($millis div 60000, '0')"/>
+                <xsl:text>min</xsl:text>
+            </xsl:when>
+            <xsl:when test="$millis &gt; 1000">
+                <xsl:value-of select="format-number($millis div 1000, '0.0')"/>
+                <xsl:text>s</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="format-number($millis, '#')"/>
+                <xsl:text>ms</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 </xsl:stylesheet>

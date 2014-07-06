@@ -32,14 +32,14 @@ package com.rultor.agents.daemons;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
-import com.rultor.agents.TalkAgent;
+import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
-import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
@@ -50,7 +50,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
-public final class EndsDaemon extends TalkAgent.Abstract {
+public final class EndsDaemon extends AbstractAgent {
 
     /**
      * Ctor.
@@ -60,8 +60,8 @@ public final class EndsDaemon extends TalkAgent.Abstract {
     }
 
     @Override
-    protected void process(final Talk talk, final XML xml) throws IOException {
-        final Shell shell = new TalkShells().get(talk);
+    public Iterable<Directive> process(final XML xml) throws IOException {
+        final Shell shell = new TalkShells(xml).get();
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         final int exit = new Shell.Empty(shell).exec(
             StringUtils.join(
@@ -71,33 +71,32 @@ public final class EndsDaemon extends TalkAgent.Abstract {
                 " && ps -p $pid >/dev/null"
             )
         );
+        final Directives dirs = new Directives();
         if (exit == 0) {
             Logger.info(this, "the daemon is still running in %s", dir);
         } else {
-            this.end(talk, shell, dir);
+            dirs.append(this.end(shell, dir));
         }
+        return dirs;
     }
 
     /**
      * End this daemon.
-     * @param talk The talk
      * @param shell Shell
      * @param dir The dir
      * @throws IOException If fails
      */
-    private void end(final Talk talk, final Shell shell, final String dir)
-        throws IOException {
+    private Iterable<Directive> end(final Shell shell,
+        final String dir) throws IOException {
         final int exit = new Shell.Empty(shell).exec(
             String.format("grep RULTOR-SUCCESS %s/stdout", dir)
         );
-        talk.modify(
-            new Directives().xpath("/talk/daemon")
-                .add("ended")
-                .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))
-                .up()
-                .add("code").set(Integer.toString(exit)),
-            String.format("daemon finished at %s", dir)
-        );
+        Logger.info(this, "daemon finished at %s", dir);
+        return new Directives().xpath("/talk/daemon")
+            .add("ended")
+            .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))
+            .up()
+            .add("code").set(Integer.toString(exit));
     }
 
 }

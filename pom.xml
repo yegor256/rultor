@@ -121,6 +121,11 @@
             <artifactId>xml-apis</artifactId>
         </dependency>
         <dependency>
+            <groupId>co.stateful</groupId>
+            <artifactId>java-sdk</artifactId>
+            <version>0.9</version>
+        </dependency>
+        <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>0.1.51</version>
@@ -322,20 +327,6 @@
                     <webappTargetDir>${project.build.directory}/minify</webappTargetDir>
                 </configuration>
                 <executions>
-                    <execution>
-                        <id>minify-js</id>
-                        <goals>
-                            <goal>minify</goal>
-                        </goals>
-                        <configuration>
-                            <jsSourceIncludes>
-                                <include>*.js</include>
-                            </jsSourceIncludes>
-                            <jsEngine>CLOSURE</jsEngine>
-                            <skipMerge>true</skipMerge>
-                            <skipMinify>false</skipMinify>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>minify-css</id>
                         <goals>
@@ -628,8 +619,6 @@
                                     <key>AAAAABBBBBAAAAABBBBB</key>
                                     <secret>ABCDABCDABCDABCDABCDABCDABCDABCDABCDABCD</secret>
                                     <tables>
-                                        <table>${basedir}/src/test/dynamodb/repos.json</table>
-                                        <table>${basedir}/src/test/dynamodb/assets.json</table>
                                         <table>${basedir}/src/test/dynamodb/talks.json</table>
                                     </tables>
                                 </configuration>

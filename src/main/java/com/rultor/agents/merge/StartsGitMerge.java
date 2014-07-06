@@ -30,12 +30,12 @@
 package com.rultor.agents.merge;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
-import com.rultor.agents.TalkAgent;
-import com.rultor.spi.Talk;
-import java.io.IOException;
+import com.rultor.agents.AbstractAgent;
 import java.util.Arrays;
 import org.apache.commons.lang3.StringUtils;
+import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
@@ -46,7 +46,7 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
-public final class StartsGitMerge extends TalkAgent.Abstract {
+public final class StartsGitMerge extends AbstractAgent {
 
     /**
      * Command to run in order to validate.
@@ -66,7 +66,7 @@ public final class StartsGitMerge extends TalkAgent.Abstract {
     }
 
     @Override
-    protected void process(final Talk talk, final XML xml) throws IOException {
+    public Iterable<Directive> process(final XML xml) {
         final XML req = xml.nodes("//merge-request-git").get(0);
         final String script = StringUtils.join(
             Arrays.asList(
@@ -89,7 +89,7 @@ public final class StartsGitMerge extends TalkAgent.Abstract {
                     req.xpath("head-branch/text()").get(0)
                 ),
                 String.format(
-                    "sudo docker -rm -v .:/main -w=/main rultor %s",
+                    "sudo docker -rm -v .:/main -w=/main yegor256/rultor %s",
                     this.cmd
                 ),
                 String.format(
@@ -100,11 +100,10 @@ public final class StartsGitMerge extends TalkAgent.Abstract {
             "\n"
         );
         final String hash = req.xpath("@id").get(0);
-        talk.modify(
-            new Directives().xpath("/talk").add("daemon")
-                .attr("id", hash)
-                .add("script").set(script),
-            String.format("git merge started: %s", hash)
-        );
+        Logger.info(this, "git merge started: %s", hash);
+        return new Directives().xpath("/talk")
+            .add("daemon")
+            .attr("id", hash)
+            .add("script").set(script);
     }
 }

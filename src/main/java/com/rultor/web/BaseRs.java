@@ -45,8 +45,7 @@ import com.rexsl.page.auth.Provider;
 import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
-import com.rultor.spi.Base;
-import com.rultor.spi.User;
+import com.rultor.spi.Talks;
 import java.net.URI;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -156,29 +155,12 @@ public class BaseRs extends BaseResource {
                 if (!BaseRs.this.auth().identity().equals(Identity.ANONYMOUS)) {
                     page.link(
                         new Link(
-                            "repos",
+                            "talks",
                             BaseRs.this.uriInfo().getBaseUriBuilder()
                                 .clone()
-                                .path(ReposRs.class)
+                                .path(TalksRs.class)
                                 .build()
                         )
-                    );
-                    page.link(
-                        new Link(
-                            "assets",
-                            BaseRs.this.uriInfo().getBaseUriBuilder()
-                                .clone()
-                                .path(ReposRs.class)
-                                .build()
-                        )
-                    );
-                    page.append(
-                        new Menu()
-                            .with("home", "Home")
-                            .with("repos", "Repositories")
-                            .with("assets", "Assets")
-                            .with("rexsl:logout", "Log out")
-                            .bundle()
                     );
                 }
             }
@@ -201,11 +183,11 @@ public class BaseRs extends BaseResource {
     }
 
     /**
-     * Get currently logged in user.
-     * @return The user
+     * Get all talks.
+     * @return The talks
      */
-    @NotNull(message = "User can't be NULL")
-    protected final User user() {
+    @NotNull(message = "Talks can't be NULL")
+    protected final Talks talks() {
         final Identity self = this.auth().identity();
         if (self.equals(Identity.ANONYMOUS)) {
             throw this.flash().redirect(
@@ -214,17 +196,8 @@ public class BaseRs extends BaseResource {
                 Level.WARNING
             );
         }
-        return this.base().user(self.urn());
-    }
-
-    /**
-     * Get base.
-     * @return The users
-     */
-    @NotNull(message = "BASE is not injected into servlet context")
-    protected final Base base() {
-        return Base.class.cast(
-            this.servletContext().getAttribute(Base.class.getName())
+        return Talks.class.cast(
+            this.servletContext().getAttribute(Talks.class.getName())
         );
     }
 
