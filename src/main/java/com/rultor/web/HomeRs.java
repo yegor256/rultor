@@ -30,9 +30,6 @@
 package com.rultor.web;
 
 import com.rexsl.page.PageBuilder;
-import com.rexsl.page.auth.Identity;
-import com.rexsl.page.inset.FlashInset;
-import java.util.logging.Level;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -45,7 +42,7 @@ import javax.ws.rs.core.Response;
  * @since 1.0
  */
 @Path("/")
-public final class LoginRs extends BaseRs {
+public final class HomeRs extends BaseRs {
 
     /**
      * Get entrance page JAX-RS response.
@@ -54,18 +51,8 @@ public final class LoginRs extends BaseRs {
     @GET
     @Path("/")
     public Response index() {
-        if (!this.auth().identity().equals(Identity.ANONYMOUS)) {
-            throw FlashInset.forward(
-                this.uriInfo().getBaseUriBuilder()
-                    .clone()
-                    .path(TalkRs.class)
-                    .build(),
-                "you are logged in already",
-                Level.INFO
-            );
-        }
         return new PageBuilder()
-            .stylesheet("/xsl/login.xsl")
+            .stylesheet("/xsl/home.xsl")
             .build(EmptyPage.class)
             .init(this)
             .render()

@@ -40,7 +40,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Integration case for {@link LoginRs}.
+ * Integration case for {@link HomeRs}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.5
@@ -101,7 +101,7 @@ public final class IndexRsITCase {
             "/talks",
             "/robots.txt",
             "/xsl/layout.xsl",
-            "/xsl/login.xsl",
+            "/xsl/home.xsl",
             "/css/style.css",
         };
         final Request request = new JdkRequest(IndexRsITCase.HOME);

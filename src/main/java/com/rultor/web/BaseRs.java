@@ -34,8 +34,8 @@ import com.jcabi.urn.URN;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
-import com.rexsl.page.Link;
 import com.rexsl.page.Resource;
+import com.rexsl.page.auth.AuthException;
 import com.rexsl.page.auth.AuthInset;
 import com.rexsl.page.auth.Github;
 import com.rexsl.page.auth.Identity;
@@ -127,40 +127,12 @@ public class BaseRs extends BaseResource {
             @Override
             public void render(final BasePage<?, ?> page,
                 final Response.ResponseBuilder builder) {
-                page.link(new Link("root", "/"));
                 builder.type(MediaType.TEXT_XML);
                 builder.header(HttpHeaders.VARY, "Cookie");
                 builder.header(
                     "X-Rultor-Revision",
                     Manifests.read("Rultor-Revision")
                 );
-            }
-        };
-    }
-
-    /**
-     * Nagivation links.
-     * @return The inset
-     */
-    @Inset.Runtime
-    @NotNull(message = "navigation inset can never be NULL")
-    public final Inset insetNavigation() {
-        // @checkstyle AnonInnerLength (50 lines)
-        return new Inset() {
-            @Override
-            public void render(final BasePage<?, ?> page,
-                final Response.ResponseBuilder builder) {
-                if (!BaseRs.this.auth().identity().equals(Identity.ANONYMOUS)) {
-                    page.link(
-                        new Link(
-                            "talks",
-                            BaseRs.this.uriInfo().getBaseUriBuilder()
-                                .clone()
-                                .path(TalkRs.class)
-                                .build()
-                        )
-                    );
-                }
             }
         };
     }
@@ -190,6 +162,14 @@ public class BaseRs extends BaseResource {
                 this.uriInfo().getBaseUri(),
                 "please login first",
                 Level.WARNING
+            );
+        }
+        if (!"urn:github:526301".equals(self.urn().toString())) {
+            throw new AuthException(
+                Response.seeOther(this.uriInfo().getBaseUri())
+                    .cookie(this.auth().logout())
+                    .build(),
+                "sorry, but this entrance is \"staff only\""
             );
         }
         return Talks.class.cast(

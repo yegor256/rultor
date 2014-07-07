@@ -4,7 +4,7 @@
   "/css/style.css",
   "/robots.txt",
   "/xsl/layout.xsl",
-  "/talks"
+  "/"
 ].forEach(
   function (page) {
     "use strict";

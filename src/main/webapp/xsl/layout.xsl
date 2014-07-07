@@ -113,9 +113,7 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:attribute>
-            <span class="markdown">
-                <xsl:value-of select="message"/>
-            </span>
+            <xsl:value-of select="message"/>
             <xsl:if test="msec &gt; 0">
                 <xsl:text> (in </xsl:text>
                 <xsl:call-template name="millis">
@@ -126,39 +124,14 @@
         </p>
     </xsl:template>
     <xsl:template match="identity">
-        <li>
-            <img style="width: 25px; height: 25px;" class="img-rounded"
-                src="{photo}" alt="{name}"/>
-        </li>
-        <li title="{urn}">
-            <xsl:value-of select="name"/>
-        </li>
-        <li>
-            <i title="{urn}">
-                <xsl:attribute name="class">
-                    <xsl:text>icon-</xsl:text>
-                    <xsl:choose>
-                        <xsl:when test="starts-with(urn, 'urn:facebook:')">
-                            <xsl:text>facebook-sign</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="starts-with(urn, 'urn:github:')">
-                            <xsl:text>github-sign</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="starts-with(urn, 'urn:google:')">
-                            <xsl:text>google-plus-sign</xsl:text>
-                        </xsl:when>
-                    </xsl:choose>
-                </xsl:attribute>
-                <xsl:comment>authenticated</xsl:comment>
+        <img style="width: 25px; height: 25px;" class="img-rounded"
+            src="{photo}" alt="{name}"/>
+        <xsl:value-of select="name"/>
+        <a title="log out" href="{/page/links/link[@rel='rexsl:logout']/@href}">
+            <i class="icon-signout">
+                <xsl:comment>signout icon</xsl:comment>
             </i>
-        </li>
-        <li class="icon">
-            <a title="log out" href="{/page/links/link[@rel='rexsl:logout']/@href}">
-                <i class="icon-signout">
-                    <xsl:comment>signout icon</xsl:comment>
-                </i>
-            </a>
-        </li>
+        </a>
     </xsl:template>
     <xsl:template name="millis">
         <xsl:param name="millis"/>
