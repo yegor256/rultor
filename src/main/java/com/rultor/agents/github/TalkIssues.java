@@ -75,6 +75,11 @@ public final class TalkIssues {
      * @return Issue
      */
     public Issue.Smart get() {
+        if (this.xml.nodes("/talk[wire]").isEmpty()) {
+            throw new IllegalArgumentException(
+                "wire not found in the talk"
+            );
+        }
         final XML wire = this.xml.nodes("/talk/wire").get(0);
         final Coordinates coords = new Coordinates.Simple(
             wire.xpath("github-repo/text()").get(0)

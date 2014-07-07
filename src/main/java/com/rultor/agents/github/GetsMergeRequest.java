@@ -83,7 +83,7 @@ public final class GetsMergeRequest extends AbstractAgent {
      * @param revs Reviewers
      */
     public GetsMergeRequest(final Github ghub, final Iterable<String> revs) {
-        super("/talk");
+        super("/talk[wire]");
         this.github = ghub;
         this.reviewers = new Array<String>(revs);
     }
