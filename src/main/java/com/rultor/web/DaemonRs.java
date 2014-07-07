@@ -175,7 +175,7 @@ public final class DaemonRs extends BaseRs {
         boolean found = false;
         if (!xml.nodes(xpath).isEmpty()) {
             final URI uri = URI.create(xml.xpath(xpath).get(0));
-            DaemonRs.bucket().ocket(uri.getPath()).read(
+            DaemonRs.bucket().ocket(uri.getPath().substring(1)).read(
                 new FileOutputStream(file)
             );
             found = true;
