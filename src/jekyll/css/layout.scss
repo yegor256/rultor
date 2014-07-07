@@ -94,13 +94,13 @@ a, a:visited {
 }
 h1 {
   margin-bottom: 2 * $em;
-  em: 2 * $em;
+  font-size: 2 * $em;
   line-height: 2 * $em;
 }
 h2 {
   line-height: 1.6 * $em;
   margin-top: 3 * $em;
-  em: 1.6 * $em;
+  font-size: 1.6 * $em;
 }
 code {
   background-color: lighten($black, 90);
