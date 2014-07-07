@@ -92,6 +92,23 @@
                 <xsl:with-param name="millis" select="/page/millis"/>
             </xsl:call-template>
         </span>
+        <span>
+            <xsl:attribute name="style">
+                <xsl:text>color:</xsl:text>
+                <xsl:choose>
+                    <xsl:when test="/page/@sla &gt; 6">
+                        <xsl:text>red</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="/page/@sla &gt; 3">
+                        <xsl:text>orange</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>inherit</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:attribute>
+            <xsl:value-of select="/page/@sla"/>
+        </span>
     </xsl:template>
     <xsl:template match="flash">
         <div>
