@@ -143,7 +143,9 @@ public final class DaemonRs extends BaseRs {
      * @throws IOException If fails
      */
     private boolean ssh(final XML xml, final File file) throws IOException {
-        final String xpath = String.format("/talk/daemon[@id='%s']", this.hash);
+        final String xpath = String.format(
+            "/talk/daemon[@id='%s']/dir", this.hash
+        );
         boolean found = false;
         if (!xml.nodes(xpath).isEmpty()) {
             final Shell shell = new TalkShells(xml).get();
