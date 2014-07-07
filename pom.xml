@@ -369,6 +369,9 @@
     <profiles>
         <profile>
             <id>jekyll</id>
+            <activation>
+                <file><exists>src/jekyll</exists></file>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
