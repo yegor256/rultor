@@ -45,6 +45,7 @@ import com.jcabi.urn.URN;
 import com.rultor.agents.daemons.ArchivesDaemon;
 import com.rultor.agents.daemons.EndsDaemon;
 import com.rultor.agents.daemons.StartsDaemon;
+import com.rultor.agents.daemons.UploadsAssets;
 import com.rultor.agents.github.GetsMergeRequest;
 import com.rultor.agents.github.PostsMergeResult;
 import com.rultor.agents.github.StartsTalks;
@@ -108,6 +109,7 @@ public final class Agents {
                 ),
                 new StartsGitMerge(profile),
                 new StartsDaemon(),
+                new UploadsAssets(profile),
                 new EndsDaemon(),
                 new EndsGitMerge(),
                 new PostsMergeResult(github),

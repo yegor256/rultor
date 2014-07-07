@@ -27,41 +27,62 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.profiles;
+package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
+import com.jcabi.xml.XML;
+import com.rultor.agents.AbstractAgent;
+import com.rultor.agents.shells.Shell;
+import com.rultor.agents.shells.TalkShells;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.logging.Level;
+import org.xembly.Directive;
+import org.xembly.Directives;
 
 /**
- * Github Profile.
+ * Uploads assets into the shell.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-final class GithubProfile implements Profile {
+public final class UploadsAssets extends AbstractAgent {
 
-    @Override
-    public boolean contains(final String path) throws IOException {
-        throw new UnsupportedOperationException("#contains()");
+    /**
+     * Profile to get assets from.
+     */
+    private final transient Profile profile;
+
+    /**
+     * Ctor.
+     */
+    public UploadsAssets(final Profile prof) {
+        super(
+            "/talk/shell",
+            "/talk/daemon[dir and started]"
+        );
+        this.profile = prof;
     }
 
     @Override
-    public String get(final String path) throws IOException {
-        throw new UnsupportedOperationException("#get()");
-    }
-
-    @Override
-    public Iterable<String> iterate(final String path) throws IOException {
-        throw new UnsupportedOperationException("#iterate()");
-    }
-
-    @Override
-    public Map<String, InputStream> assets() throws IOException {
-        throw new UnsupportedOperationException("#assets()");
+    public Iterable<Directive> process(final XML xml) throws IOException {
+        final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
+        final Shell shell = new Shell.Safe(new TalkShells(xml).get());
+        for (final Map.Entry<String, InputStream> asset
+            : this.profile.assets().entrySet()) {
+            shell.exec(
+                String.format("cat > \"%s/%s\"", dir, asset.getKey()),
+                asset.getValue(),
+                Logger.stream(Level.INFO, true),
+                Logger.stream(Level.WARNING, true)
+            );
+            Logger.info(this, "asset %s uploaded into %s", asset.getKey(), dir);
+        }
+        return new Directives();
     }
 }

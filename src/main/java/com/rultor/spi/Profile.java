@@ -31,6 +31,8 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 
 /**
  * Profile.
@@ -65,6 +67,13 @@ public interface Profile {
      * @throws IOException If fails
      */
     Iterable<String> iterate(String path) throws IOException;
+
+    /**
+     * Get assets.
+     * @return Map of assets
+     * @throws IOException If fails
+     */
+    Map<String, InputStream> assets() throws IOException;
 
     /**
      * Defaults.
