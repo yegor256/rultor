@@ -41,8 +41,7 @@
                 <meta name="description" content="Coding Team Assistant"/>
                 <meta name="keywords" content="continuous integration, continuous delivery, revision control"/>
                 <meta name="author" content="rultor.com"/>
-                <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
-                <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"/>
+                <link rel="stylesheet" type="text/css" media="all" href="//doc.rultor.com/css/layout.css?{version/revision}"/>
                 <link rel="stylesheet" type="text/css" media="all" href="/css/style.css?{version/revision}"/>
                 <link rel="icon" type="image/gif" href="//img.rultor.com/favicon.ico?{version/revision}"/>
                 <xsl:apply-templates select="." mode="head"/>

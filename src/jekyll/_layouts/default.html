@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="description" content="{{ page.description }}" />
+    <meta name="keywords" content="{{ page.keywords | join:', ' | escape }}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/png" href="//img.rultor.com/logo-128x128.png">
+    <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
+    <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
+    <link rel="stylesheet" href="/css/layout.css?{{ site.data['hash'] }}"/>
+    <link rel="canonical" href="//doc.rultor.com{{ page.url }}" />
+    <title>{{ page.title }}</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <a href="/">
+          <img src="/logo.png" class="logo" alt="logo"/>
+        </a>
+      </header>
+      <section class="main">
+        <h1>{{ page.title }}</h1>
+        <article>{{ content }}</article>
+      </section>
+      <footer class="footer">
+        &copy; <span itemprop="author">rultor.com</span>, 2013-2014
+      </footer>
+    </div>
+  </body>
+</html>
