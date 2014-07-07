@@ -166,6 +166,7 @@ public final class DyTalks implements Talks {
                 .through(
                     new QueryValve()
                         .withIndexName(DyTalks.INDEX)
+                        .withConsistentRead(false)
                         .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
                 )
                 .where(DyTalks.ATTR_ACTIVE, Boolean.toString(true)),

@@ -102,7 +102,7 @@ public final class DaemonRs extends BaseRs {
             new Tail(
                 this.talks().get(this.name).read(),
                 this.hash
-            )
+            ).read()
         ).build();
     }
 
