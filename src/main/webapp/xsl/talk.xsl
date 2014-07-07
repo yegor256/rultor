@@ -41,9 +41,6 @@
         <xsl:apply-templates select="talk"/>
     </xsl:template>
     <xsl:template match="talk">
-        <p>
-            <xsl:value-of select="name"/>
-        </p>
         <pre>
             <xsl:value-of select="content"/>
         </pre>

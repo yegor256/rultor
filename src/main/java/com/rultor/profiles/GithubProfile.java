@@ -34,6 +34,7 @@ import com.jcabi.github.Repo;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -65,7 +66,7 @@ final class GithubProfile implements Profile {
 
     @Override
     public boolean contains(final String path) throws IOException {
-        throw new UnsupportedOperationException("#contains()");
+        return false;
     }
 
     @Override
@@ -80,7 +81,7 @@ final class GithubProfile implements Profile {
 
     @Override
     public Map<String, InputStream> assets() throws IOException {
-        throw new UnsupportedOperationException("#assets()");
+        return new HashMap<String, InputStream>(0);
     }
 
     /**
