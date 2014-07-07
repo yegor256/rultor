@@ -93,7 +93,7 @@ public final class TalkRs extends BaseRs {
             .append(
                 new JaxbBundle("talk")
                     .add("name", talk.name()).up()
-                    .add("content", talk.read().toString())
+                    .add("content", talk.read().toString()).up()
             )
             .render()
             .build();
