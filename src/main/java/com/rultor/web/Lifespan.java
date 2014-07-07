@@ -49,6 +49,8 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Lifespan.
@@ -57,6 +59,8 @@ import javax.servlet.ServletContextListener;
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
+@ToString
+@EqualsAndHashCode
 @Loggable(Loggable.INFO)
 public final class Lifespan implements ServletContextListener {
 

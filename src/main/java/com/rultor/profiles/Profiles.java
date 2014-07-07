@@ -29,10 +29,18 @@
  */
 package com.rultor.profiles;
 
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.github.Coordinates;
+import com.jcabi.github.Github;
+import com.jcabi.github.RtGithub;
+import com.jcabi.http.wire.RetryWire;
+import com.jcabi.manifests.Manifests;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Profiles.
@@ -42,6 +50,8 @@ import java.io.IOException;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode
 public final class Profiles {
 
     /**
@@ -51,7 +61,26 @@ public final class Profiles {
      * @throws IOException If fails
      */
     public Profile fetch(final Talk talk) throws IOException {
-        return new GithubProfile();
+        return new GithubProfile(
+            Profiles.github().repos().get(
+                new Coordinates.Simple(
+                    talk.read().xpath("/talk/wire/github-repo/text()").get(0)
+                )
+            )
+        );
+    }
+
+    /**
+     * Make github.
+     * @return Github
+     */
+    @Cacheable(forever = true)
+    private static Github github() {
+        return new RtGithub(
+            new RtGithub(
+                Manifests.read("Rultor-GithubToken")
+            ).entry().through(RetryWire.class)
+        );
     }
 
 }

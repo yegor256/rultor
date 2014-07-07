@@ -40,6 +40,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.logging.Level;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -51,6 +53,8 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(callSuper = false, of = "profile")
 public final class UploadsAssets extends AbstractAgent {
 
     /**

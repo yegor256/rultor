@@ -60,6 +60,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 
@@ -71,6 +73,8 @@ import org.apache.commons.lang3.CharEncoding;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode
 public final class Agents {
 
     /**

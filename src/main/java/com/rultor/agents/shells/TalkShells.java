@@ -32,6 +32,8 @@ package com.rultor.agents.shells;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
 import java.net.UnknownHostException;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Shells referenced from Talks.
@@ -41,6 +43,8 @@ import java.net.UnknownHostException;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(of = "xml")
 public final class TalkShells {
 
     /**

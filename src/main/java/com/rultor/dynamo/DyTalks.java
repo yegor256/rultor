@@ -56,7 +56,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "region")
 public final class DyTalks implements Talks {
 
     /**

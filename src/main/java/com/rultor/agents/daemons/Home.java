@@ -32,6 +32,8 @@ package com.rultor.agents.daemons;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
 import java.net.URI;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Home page of a daemon.
@@ -41,6 +43,8 @@ import java.net.URI;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(callSuper = false, of = { "xml", "hash" })
 public final class Home {
 
     /**

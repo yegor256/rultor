@@ -33,6 +33,8 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -44,6 +46,8 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(callSuper = false, of = { "addr", "port", "login", "key" })
 public final class RegistersShell extends AbstractAgent {
 
     /**

@@ -48,6 +48,7 @@ import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.Validate;
@@ -59,6 +60,7 @@ import org.apache.commons.lang3.Validate;
  * @version $Id$
  * @since 1.0
  */
+@ToString
 @EqualsAndHashCode(of = { "addr", "port", "login", "key" })
 @SuppressWarnings("PMD.TooManyMethods")
 public final class SSH implements Shell {

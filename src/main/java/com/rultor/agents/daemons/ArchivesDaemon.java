@@ -45,6 +45,8 @@ import java.net.URI;
 import java.util.Date;
 import java.util.logging.Level;
 import javax.ws.rs.core.MediaType;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
@@ -59,6 +61,8 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(callSuper = false, of = "bucket")
 public final class ArchivesDaemon extends AbstractAgent {
 
     /**

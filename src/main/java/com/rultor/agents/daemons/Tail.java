@@ -46,6 +46,8 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Map;
 import java.util.logging.Level;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
 
@@ -57,6 +59,8 @@ import org.apache.commons.io.input.NullInputStream;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(callSuper = false, of = { "xml", "hash" })
 public final class Tail {
 
     /**

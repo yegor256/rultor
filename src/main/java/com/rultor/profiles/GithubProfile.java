@@ -30,10 +30,13 @@
 package com.rultor.profiles;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.github.Repo;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Github Profile.
@@ -43,7 +46,22 @@ import java.util.Map;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(of = "repo")
 final class GithubProfile implements Profile {
+
+    /**
+     * Repo.
+     */
+    private final transient Repo repo;
+
+    /**
+     * Ctor.
+     * @param rpo Repo
+     */
+    GithubProfile(final Repo rpo) {
+        this.repo = rpo;
+    }
 
     @Override
     public boolean contains(final String path) throws IOException {
@@ -64,4 +82,13 @@ final class GithubProfile implements Profile {
     public Map<String, InputStream> assets() throws IOException {
         throw new UnsupportedOperationException("#assets()");
     }
+
+    /**
+     * Get .rultor.yml file.
+     * @return Its content
+     */
+    private String yml() {
+        return "";
+    }
+
 }

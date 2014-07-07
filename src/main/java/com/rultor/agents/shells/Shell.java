@@ -35,6 +35,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Level;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.input.NullInputStream;
 
 /**
@@ -63,6 +65,8 @@ public interface Shell {
      * Safe run (throws if exit code is not zero).
      */
     @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "origin")
     final class Safe implements Shell {
         /**
          * Original.
@@ -92,6 +96,8 @@ public interface Shell {
      * Without input and output.
      */
     @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "origin")
     final class Empty {
         /**
          * Original.

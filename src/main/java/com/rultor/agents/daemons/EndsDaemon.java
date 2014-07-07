@@ -37,6 +37,8 @@ import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
 import java.io.IOException;
 import java.util.Date;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.xembly.Directive;
@@ -50,6 +52,8 @@ import org.xembly.Directives;
  * @since 1.0
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public final class EndsDaemon extends AbstractAgent {
 
     /**

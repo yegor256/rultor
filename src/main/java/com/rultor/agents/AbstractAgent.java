@@ -35,12 +35,16 @@ import com.jcabi.xml.XML;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.xembly.Directive;
 
 /**
  * Abstract agent.
  */
 @Immutable
+@ToString
+@EqualsAndHashCode(of = "xpaths")
 public abstract class AbstractAgent implements Agent {
 
     /**
