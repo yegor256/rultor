@@ -103,7 +103,7 @@ public final class DaemonRs extends BaseRs {
      */
     @GET
     @Path("/")
-    @Produces(MediaType.TEXT_HTML)
+    @Produces(MediaType.TEXT_PLAIN)
     public Response index() throws IOException {
         if (!this.talks().exists(this.name)) {
             throw this.flash().redirect(
