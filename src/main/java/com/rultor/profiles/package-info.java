@@ -27,49 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
-
-import com.jcabi.aspects.Immutable;
-import com.jcabi.xml.XML;
-import java.io.IOException;
-import org.xembly.Directive;
 
 /**
- * Talk.
+ * Profiles.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Talk {
-
-    /**
-     * Its unique name.
-     * @return Its name
-     * @throws IOException If fails
-     */
-    String name() throws IOException;
-
-    /**
-     * Read its content.
-     * @return Content
-     * @throws IOException If fails
-     */
-    XML read() throws IOException;
-
-    /**
-     * Modify its content.
-     * @param dirs Directives
-     * @throws IOException If fails
-     */
-    void modify(Iterable<Directive> dirs) throws IOException;
-
-    /**
-     * Make it active or passive.
-     * @param yes TRUE if it should be active
-     * @throws IOException If fails
-     */
-    void active(boolean yes) throws IOException;
-
-}
+package com.rultor.profiles;

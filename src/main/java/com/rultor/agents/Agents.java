@@ -100,6 +100,7 @@ public final class Agents {
         agents.addAll(
             Arrays.asList(
                 new RegistersShell(
+                    // @checkstyle MagicNumber (1 line)
                     "b1.rultor.com", 22,
                     "rultor",
                     IOUtils.toString(

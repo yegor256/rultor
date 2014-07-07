@@ -61,6 +61,8 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @ToString

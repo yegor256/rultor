@@ -59,6 +59,7 @@ public interface Talks {
     /**
      * Create a new one (runtime exception if it exists already).
      * @param name The name
+     * @throws IOException If fails
      */
     void create(String name) throws IOException;
 
