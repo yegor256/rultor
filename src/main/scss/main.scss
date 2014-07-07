@@ -29,13 +29,13 @@
  */
 
 .menu {
-  position: absolute;
-  top: 0;
-  margin-right: auto;
-  margin-left: auto;
-  width: 400px;
   font-size: 80%;
-  @media only screen and (min-width: 400px) {
+  text-align: center;
+  @media only screen and (max-width: 400px) {
     width: 100%;
+  }
+  span {
+    margin-left: .2em;
+    margin-right: .2em;
   }
 }

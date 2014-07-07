@@ -48,17 +48,15 @@
             </head>
             <body>
                 <div class="menu">
-                    <ul class="list-inline">
-                        <xsl:if test="not(identity)">
-                            <li>
-                                <a href="{links/link[@rel='rexsl:github']/@href}">
-                                    <xsl:text>login</xsl:text>
-                                </a>
-                            </li>
-                        </xsl:if>
-                        <xsl:apply-templates select="identity"/>
-                        <xsl:apply-templates select="version"/>
-                    </ul>
+                    <xsl:if test="not(identity)">
+                        <span>
+                            <a href="{links/link[@rel='rexsl:github']/@href}">
+                                <xsl:text>login</xsl:text>
+                            </a>
+                        </span>
+                    </xsl:if>
+                    <xsl:apply-templates select="identity"/>
+                    <xsl:apply-templates select="version"/>
                     <xsl:apply-templates select="flash"/>
                 </div>
                 <xsl:apply-templates select="." mode="body"/>
@@ -66,49 +64,51 @@
         </html>
     </xsl:template>
     <xsl:template match="version">
-        <li>
+        <span>
             <xsl:value-of select="name"/>
-        </li>
-        <li>
+        </span>
+        <span>
             <a href="https://github.com/rultor/rultor/commit/{revision}"
                 title="{revision}">
-                <i class="icon-github">
-                    <xsl:comment>github icon</xsl:comment>
-                </i>
+                <xsl:value-of select="substring(revision,1,3)"/>
             </a>
-        </li>
-        <li>
-            <xsl:attribute name="class">
+        </span>
+        <span>
+            <xsl:attribute name="style">
+                <xsl:text>color:</xsl:text>
                 <xsl:choose>
                     <xsl:when test="/page/millis &gt; 5000">
-                        <xsl:text> text-danger</xsl:text>
+                        <xsl:text>red</xsl:text>
                     </xsl:when>
                     <xsl:when test="/page/millis &gt; 1000">
-                        <xsl:text> text-warning</xsl:text>
+                        <xsl:text>orange</xsl:text>
                     </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>inherit</xsl:text>
+                    </xsl:otherwise>
                 </xsl:choose>
             </xsl:attribute>
             <xsl:call-template name="millis">
                 <xsl:with-param name="millis" select="/page/millis"/>
             </xsl:call-template>
-        </li>
+        </span>
     </xsl:template>
     <xsl:template match="flash">
         <div>
-            <xsl:attribute name="class">
-                <xsl:text>alert</xsl:text>
+            <xsl:attribute name="style">
+                <xsl:text>color:</xsl:text>
                 <xsl:choose>
                     <xsl:when test="level = 'INFO'">
-                        <xsl:text> alert-success</xsl:text>
+                        <xsl:text>green</xsl:text>
                     </xsl:when>
                     <xsl:when test="level = 'WARNING'">
-                        <xsl:text> alert-info</xsl:text>
+                        <xsl:text>orange</xsl:text>
                     </xsl:when>
                     <xsl:when test="level = 'SEVERE'">
-                        <xsl:text> alert-danger</xsl:text>
+                        <xsl:text>red</xsl:text>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:text> alert-default</xsl:text>
+                        <xsl:text>inherit</xsl:text>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:attribute>
@@ -123,16 +123,14 @@
         </div>
     </xsl:template>
     <xsl:template match="identity">
-        <li>
+        <span>
             <xsl:value-of select="name"/>
-        </li>
-        <li>
+        </span>
+        <span>
             <a title="log out" href="{/page/links/link[@rel='rexsl:logout']/@href}">
-                <i class="icon-signout">
-                    <xsl:comment>out</xsl:comment>
-                </i>
+                <xsl:text>logout</xsl:text>
             </a>
-        </li>
+        </span>
     </xsl:template>
     <xsl:template name="millis">
         <xsl:param name="millis"/>
