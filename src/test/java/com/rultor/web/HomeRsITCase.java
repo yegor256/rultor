@@ -45,7 +45,7 @@ import org.junit.Test;
  * @version $Id$
  * @since 0.5
  */
-public final class IndexRsITCase {
+public final class HomeRsITCase {
 
     /**
      * Home page of Tomcat.
@@ -58,7 +58,7 @@ public final class IndexRsITCase {
      */
     @Test
     public void rendersExceptionTrapPage() throws Exception {
-        new JdkRequest(IndexRsITCase.HOME).uri().path("/trap").back()
+        new JdkRequest(HomeRsITCase.HOME).uri().path("/trap").back()
             .method(Request.GET)
             .fetch()
             .as(RestResponse.class)
@@ -79,7 +79,7 @@ public final class IndexRsITCase {
             "/xsl/xsl-stylesheet-doesnt-exist.xsl",
             "/css/stylesheet-is-absent.css",
         };
-        final Request request = new JdkRequest(IndexRsITCase.HOME);
+        final Request request = new JdkRequest(HomeRsITCase.HOME);
         for (final String page : pages) {
             request.uri().path(page).back()
                 .method(Request.GET)
@@ -98,13 +98,13 @@ public final class IndexRsITCase {
     @Test
     public void rendersValidPages() throws Exception {
         final String[] pages = {
-            "/talks",
+            "/",
             "/robots.txt",
             "/xsl/layout.xsl",
             "/xsl/home.xsl",
             "/css/style.css",
         };
-        final Request request = new JdkRequest(IndexRsITCase.HOME);
+        final Request request = new JdkRequest(HomeRsITCase.HOME);
         for (final String page : pages) {
             request.uri().path(page).back()
                 .method(Request.GET)
@@ -120,8 +120,8 @@ public final class IndexRsITCase {
      */
     @Test
     public void showsVersion() throws Exception {
-        new JdkRequest(IndexRsITCase.HOME)
-            .uri().path("/talks").back()
+        new JdkRequest(HomeRsITCase.HOME)
+            .uri().path("/").back()
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
             .fetch()
             .as(RestResponse.class)
