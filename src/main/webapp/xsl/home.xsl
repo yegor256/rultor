@@ -39,10 +39,7 @@
     </xsl:template>
     <xsl:template match="page" mode="body">
         <p>
-            <xsl:text>Some features are available after </xsl:text>
-            <a href="{links/link[@rel='rexsl:github']/@href}">
-                <xsl:text>login</xsl:text>
-            </a>
+            <xsl:text>hello!</xsl:text>
         </p>
     </xsl:template>
 </xsl:stylesheet>

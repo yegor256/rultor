@@ -48,6 +48,11 @@
                 <xsl:apply-templates select="." mode="head"/>
             </head>
             <body>
+                <xsl:if test="not(identity)">
+                    <a href="{links/link[@rel='rexsl:github']/@href}">
+                        <xsl:text>login</xsl:text>
+                    </a>
+                </xsl:if>
                 <xsl:apply-templates select="identity"/>
                 <xsl:apply-templates select="flash"/>
                 <article>
