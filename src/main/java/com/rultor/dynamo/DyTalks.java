@@ -29,6 +29,7 @@
  */
 package com.rultor.dynamo;
 
+import com.amazonaws.services.dynamodbv2.model.Select;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
@@ -63,6 +64,11 @@ public final class DyTalks implements Talks {
      * Table name.
      */
     public static final String TBL = "talks";
+
+    /**
+     * Index name.
+     */
+    public static final String INDEX = "active";
 
     /**
      * Talk unique name.
@@ -156,6 +162,11 @@ public final class DyTalks implements Talks {
         return Iterables.transform(
             this.region.table(DyTalks.TBL)
                 .frame()
+                .through(
+                    new QueryValve()
+                        .withIndexName(DyTalks.INDEX)
+                        .withSelect(Select.ALL_PROJECTED_ATTRIBUTES)
+                )
                 .where(DyTalks.ATTR_ACTIVE, Boolean.toString(true)),
             new Function<Item, Talk>() {
                 @Override

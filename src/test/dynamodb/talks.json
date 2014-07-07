@@ -15,5 +15,23 @@
         "ReadCapacityUnits": "1",
         "WriteCapacityUnits": "1"
     },
-    "TableName": "rt-talks"
+    "TableName": "rt-talks",
+    "GlobalSecondaryIndexes": [
+        {
+            "IndexName": "active",
+            "KeySchema": [
+                {
+                    "AttributeName": "active",
+                    "KeyType": "HASH"
+                }
+            ],
+            "Projection": {
+                "ProjectionType": "KEYS_ONLY"
+            },
+            "ProvisionedThroughput": {
+                "ReadCapacityUnits": "1",
+                "WriteCapacityUnits": "1"
+            }
+        }
+    ]
 }
