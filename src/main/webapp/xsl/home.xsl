@@ -44,9 +44,13 @@
             position: absolute;
             top: 0; bottom: 0; left: 0; right: 0;
             margin: auto;">
-            <img src="//img.rultor.com/logo-512x512.png"
-                style="width:256px;height:256px;" alt="rultor logo"/>
-            <xsl:text>more details coming soon...</xsl:text>
+            <p>
+                <img src="//img.rultor.com/logo-512x512.png"
+                    style="width:192px;height:192px;" alt="rultor logo"/>
+            </p>
+            <p>
+                <xsl:text>more details coming soon...</xsl:text>
+            </p>
         </div>
     </xsl:template>
 </xsl:stylesheet>
