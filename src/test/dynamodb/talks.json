@@ -3,6 +3,10 @@
         {
             "AttributeName": "name",
             "AttributeType": "S"
+        },
+        {
+            "AttributeName": "active",
+            "AttributeType": "S"
         }
     ],
     "KeySchema": [

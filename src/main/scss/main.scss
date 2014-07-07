@@ -48,11 +48,16 @@ code {
   font-family: 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
 }
 
-.version {
-  position: fixed;
-  bottom: 0;
-  right: 0;
+.menu {
+  position: absolute;
+  top: 0;
+  margin-right: auto;
+  margin-left: auto;
+  width: 400px;
   font-size: 80%;
+  @media only screen and (min-width: 400px) {
+    width: 100%;
+  }
 }
 
 p {

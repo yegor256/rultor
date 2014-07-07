@@ -48,59 +48,54 @@
                 <xsl:apply-templates select="." mode="head"/>
             </head>
             <body>
-                <xsl:if test="not(identity)">
-                    <a href="{links/link[@rel='rexsl:github']/@href}">
-                        <xsl:text>login</xsl:text>
-                    </a>
-                </xsl:if>
-                <xsl:apply-templates select="identity"/>
-                <xsl:apply-templates select="flash"/>
-                <article>
-                    <xsl:apply-templates select="." mode="body"/>
-                </article>
-                <xsl:apply-templates select="version"/>
+                <div class="menu">
+                    <ul class="list-inline">
+                        <xsl:if test="not(identity)">
+                            <li>
+                                <a href="{links/link[@rel='rexsl:github']/@href}">
+                                    <xsl:text>login</xsl:text>
+                                </a>
+                            </li>
+                        </xsl:if>
+                        <xsl:apply-templates select="identity"/>
+                        <xsl:apply-templates select="version"/>
+                    </ul>
+                    <xsl:apply-templates select="flash"/>
+                </div>
+                <xsl:apply-templates select="." mode="body"/>
             </body>
         </html>
     </xsl:template>
     <xsl:template match="version">
-        <aside class="version hidden-xs hidden-sm" style="padding: 0.2em 0.5em;">
-            <ul class="list-inline">
-                <li>
-                    <xsl:attribute name="class">
-                        <xsl:if test="contains(name, 'SNAPSHOT')">
-                            <xsl:text> text-danger</xsl:text>
-                        </xsl:if>
-                    </xsl:attribute>
-                    <xsl:value-of select="name"/>
-                </li>
-                <li>
-                    <a href="https://github.com/rultor/rultor/commit/{revision}"
-                        title="{revision}">
-                        <i class="icon-github">
-                            <xsl:comment>github icon</xsl:comment>
-                        </i>
-                    </a>
-                </li>
-                <li>
-                    <xsl:attribute name="class">
-                        <xsl:choose>
-                            <xsl:when test="/page/millis &gt; 5000">
-                                <xsl:text> text-danger</xsl:text>
-                            </xsl:when>
-                            <xsl:when test="/page/millis &gt; 1000">
-                                <xsl:text> text-warning</xsl:text>
-                            </xsl:when>
-                        </xsl:choose>
-                    </xsl:attribute>
-                    <xsl:call-template name="millis">
-                        <xsl:with-param name="millis" select="/page/millis"/>
-                    </xsl:call-template>
-                </li>
-            </ul>
-        </aside>
+        <li>
+            <xsl:value-of select="name"/>
+        </li>
+        <li>
+            <a href="https://github.com/rultor/rultor/commit/{revision}"
+                title="{revision}">
+                <i class="icon-github">
+                    <xsl:comment>github icon</xsl:comment>
+                </i>
+            </a>
+        </li>
+        <li>
+            <xsl:attribute name="class">
+                <xsl:choose>
+                    <xsl:when test="/page/millis &gt; 5000">
+                        <xsl:text> text-danger</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="/page/millis &gt; 1000">
+                        <xsl:text> text-warning</xsl:text>
+                    </xsl:when>
+                </xsl:choose>
+            </xsl:attribute>
+            <xsl:call-template name="millis">
+                <xsl:with-param name="millis" select="/page/millis"/>
+            </xsl:call-template>
+        </li>
     </xsl:template>
     <xsl:template match="flash">
-        <p>
+        <div>
             <xsl:attribute name="class">
                 <xsl:text>alert</xsl:text>
                 <xsl:choose>
@@ -126,17 +121,19 @@
                 </xsl:call-template>
                 <xsl:text>)</xsl:text>
             </xsl:if>
-        </p>
+        </div>
     </xsl:template>
     <xsl:template match="identity">
-        <img style="width: 25px; height: 25px;" class="img-rounded"
-            src="{photo}" alt="{name}"/>
-        <xsl:value-of select="name"/>
-        <a title="log out" href="{/page/links/link[@rel='rexsl:logout']/@href}">
-            <i class="icon-signout">
-                <xsl:comment>signout icon</xsl:comment>
-            </i>
-        </a>
+        <li>
+            <xsl:value-of select="name"/>
+        </li>
+        <li>
+            <a title="log out" href="{/page/links/link[@rel='rexsl:logout']/@href}">
+                <i class="icon-signout">
+                    <xsl:comment>out</xsl:comment>
+                </i>
+            </a>
+        </li>
     </xsl:template>
     <xsl:template name="millis">
         <xsl:param name="millis"/>
