@@ -33,6 +33,7 @@ import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.PageBuilder;
 import com.rultor.spi.Talk;
 import java.io.IOException;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -77,6 +78,13 @@ public final class TalkRs extends BaseRs {
     @GET
     @Path("/")
     public Response index() throws IOException {
+        if (!this.talks().exists(this.name)) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                "there is no such page here",
+                Level.WARNING
+            );
+        }
         final Talk talk = this.talks().get(this.name);
         return new PageBuilder()
             .stylesheet("/xsl/talk.xsl")

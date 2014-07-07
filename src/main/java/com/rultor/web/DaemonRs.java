@@ -33,6 +33,7 @@ import com.jcabi.xml.XML;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -92,6 +93,13 @@ public final class DaemonRs extends BaseRs {
     @Path("/")
     @Produces(MediaType.TEXT_HTML)
     public Response index() throws IOException {
+        if (!this.talks().exists(this.name)) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                "there is no such page here",
+                Level.WARNING
+            );
+        }
         return Response.ok()
             .entity(this.stream())
             .build();
