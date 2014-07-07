@@ -66,4 +66,34 @@ public interface Profile {
      */
     Iterable<String> iterate(String path) throws IOException;
 
+    /**
+     * Defaults.
+     */
+    final class Defaults {
+        private final transient Profile origin;
+        /**
+         * Ctor.
+         * @param profile The profile
+         */
+        public Defaults(final Profile profile) {
+            this.origin = profile;
+        }
+        /**
+         * Get text item.
+         * @param path Path
+         * @param def Default, if it's absent
+         * @throws IOException If fails
+         */
+        public String text(final String path, final String def)
+            throws IOException {
+            final String text;
+            if (this.origin.contains(path)) {
+                text = this.origin.get(path);
+            } else {
+                text = def;
+            }
+            return text;
+        }
+    }
+
 }

@@ -1,0 +1,3 @@
+merge:
+  script: 
+    - "mvn help:system clean install -Pqulice --batch-mode --update-snapshots --errors --strict-checksums"

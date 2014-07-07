@@ -38,7 +38,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Github;
 import com.jcabi.github.RtGithub;
 import com.jcabi.http.wire.RetryWire;
-import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
@@ -107,9 +106,7 @@ public final class Agents {
                     github,
                     Collections.singleton("yegor256")
                 ),
-                new StartsGitMerge(
-                    "mvn help:system clean install -Pqulice --batch-mode --update-snapshots --errors --strict-checksums"
-                ),
+                new StartsGitMerge(profile),
                 new StartsDaemon(),
                 new EndsDaemon(),
                 new EndsGitMerge(),
@@ -133,15 +130,11 @@ public final class Agents {
      */
     @Cacheable(forever = true)
     private static Github github() {
-        final String token = Manifests.read("Rultor-GithubToken");
-        final Github github;
-        if ("test".equals(token)) {
-            Logger.warn(Agents.class, "unauthorized access to Github");
-            github = new RtGithub();
-        } else {
-            github = new RtGithub(token);
-        }
-        return new RtGithub(github.entry().through(RetryWire.class));
+        return new RtGithub(
+            new RtGithub(
+                Manifests.read("Rultor-GithubToken")
+            ).entry().through(RetryWire.class)
+        );
     }
 
     /**

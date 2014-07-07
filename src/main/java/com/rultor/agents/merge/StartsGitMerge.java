@@ -29,13 +29,21 @@
  */
 package com.rultor.agents.merge;
 
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
-import java.util.Arrays;
+import com.rultor.spi.Profile;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -49,56 +57,58 @@ import org.xembly.Directives;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(callSuper = false, of = "cmd")
+@EqualsAndHashCode(callSuper = false, of = "profile")
 public final class StartsGitMerge extends AbstractAgent {
 
     /**
-     * Command to run in order to validate.
+     * Profile.
      */
-    private final transient String cmd;
+    private final transient Profile profile;
 
     /**
      * Ctor.
-     * @param command Command to run
+     * @param prof Profile
      */
-    public StartsGitMerge(final String command) {
+    public StartsGitMerge(final Profile prof) {
         super(
             "/talk/merge-request-git[not(success)]",
             "/talk[not(daemon)]"
         );
-        this.cmd = command;
+        this.profile = prof;
     }
 
     @Override
-    public Iterable<Directive> process(final XML xml) {
+    public Iterable<Directive> process(final XML xml) throws IOException {
         final XML req = xml.nodes("//merge-request-git").get(0);
+        final ImmutableMap.Builder<String, String> vars =
+            new ImmutableMap.Builder<String, String>();
+        vars.put("BASE", req.xpath("base/text()").get(0));
+        vars.put("BASE-BRANCH", req.xpath("base-branch/text()").get(0));
+        vars.put("HEAD", req.xpath("head/text()").get(0));
+        vars.put("HEAD-BRANCH", req.xpath("head-branch/text()").get(0));
+        vars.put(
+            "SCRIPT",
+            new Profile.Defaults(this.profile).text("merge.script", "")
+        );
         final String script = StringUtils.join(
-            Arrays.asList(
-                String.format(
-                    "git clone %s repo",
-                    req.xpath("base/text()").get(0)
+            Iterables.concat(
+                Iterables.transform(
+                    vars.build().entrySet(),
+                    new Function<Map.Entry<String, String>, String>() {
+                        @Override
+                        public String apply(
+                            final Map.Entry<String, String> input) {
+                            return String.format(
+                                "%s=\"%s\"", input.getKey(), input.getValue()
+                            );
+                        }
+                    }
                 ),
-                "cd repo",
-                String.format(
-                    "git checkout %s",
-                    req.xpath("base-branch/text()").get(0)
-                ),
-                String.format(
-                    "git remote add head %s",
-                    req.xpath("head/text()").get(0)
-                ),
-                "git remote update",
-                String.format(
-                    "git merge head/%s",
-                    req.xpath("head-branch/text()").get(0)
-                ),
-                String.format(
-                    "sudo docker run -rm -v $(pwd):/main -w=/main yegor256/rultor %s",
-                    this.cmd
-                ),
-                String.format(
-                    "git push origin %s",
-                    req.xpath("base-branch/text()").get(0)
+                Collections.singleton(
+                    IOUtils.toString(
+                        this.getClass().getResourceAsStream("merge.sh"),
+                        CharEncoding.UTF_8
+                    )
                 )
             ),
             "\n"
