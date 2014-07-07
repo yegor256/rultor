@@ -38,8 +38,15 @@
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <p>
-            <xsl:text>hello!</xsl:text>
-        </p>
+        <div style="text-align: center;
+            width: 20em;
+            height: 13em;
+            position: absolute;
+            top: 0; bottom: 0; left: 0; right: 0;
+            margin: auto;">
+            <img src="//img.rultor.com/logo-512x512.png"
+                style="width:256px;height:256px;" alt="rultor logo"/>
+            <xsl:text>more details coming soon...</xsl:text>
+        </div>
     </xsl:template>
 </xsl:stylesheet>
