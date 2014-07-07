@@ -88,6 +88,7 @@ public final class RegistersShell extends AbstractAgent {
         Logger.info(this, "shell registered as %s:%d", this.addr, this.port);
         return new Directives()
             .xpath("/talk").add("shell")
+            .attr("id", xml.xpath("/talk/daemon/@id").get(0))
             .add("host").set(this.addr).up()
             .add("port").set(Integer.toString(this.port)).up()
             .add("login").set(this.login).up()

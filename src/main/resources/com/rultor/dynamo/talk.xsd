@@ -57,6 +57,7 @@
             <xs:element name="login" type="xs:string"/>
             <xs:element name="key" type="xs:string"/>
         </xs:all>
+        <xs:attribute name="id" type="hash" use="required"/>
     </xs:complexType>
     <xs:complexType name="merge-request-git">
         <xs:all>
