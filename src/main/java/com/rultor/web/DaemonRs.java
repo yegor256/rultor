@@ -29,21 +29,8 @@
  */
 package com.rultor.web;
 
-import com.jcabi.log.Logger;
-import com.jcabi.manifests.Manifests;
-import com.jcabi.s3.Bucket;
-import com.jcabi.s3.Region;
-import com.jcabi.s3.retry.ReRegion;
-import com.jcabi.xml.XML;
-import com.rultor.agents.shells.Shell;
-import com.rultor.agents.shells.TalkShells;
-import com.rultor.spi.Talk;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import com.rultor.agents.daemons.Tail;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -52,7 +39,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.apache.commons.io.input.NullInputStream;
 
 /**
  * Single daemon.
@@ -112,90 +98,12 @@ public final class DaemonRs extends BaseRs {
                 Level.WARNING
             );
         }
-        return Response.ok().entity(this.stream()).build();
-    }
-
-    /**
-     * Get stream.
-     * @return The stream
-     * @throws IOException If fails
-     */
-    private InputStream stream() throws IOException {
-        final Talk talk = this.talks().get(this.name);
-        final XML xml = talk.read();
-        final File file = File.createTempFile("rultor", ".txt");
-        file.deleteOnExit();
-        if (!this.ssh(xml, file) && !this.archive(xml, file)) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                "there is no such log here",
-                Level.WARNING
-            );
-        }
-        return new FileInputStream(file);
-    }
-
-    /**
-     * Read shell if exists.
-     * @param xml XML to read
-     * @param file File to write
-     * @return TRUE if exists
-     * @throws IOException If fails
-     */
-    private boolean ssh(final XML xml, final File file) throws IOException {
-        final String xpath = String.format(
-            "/talk/daemon[@id='%s']/dir", this.hash
-        );
-        boolean found = false;
-        if (!xml.nodes(xpath).isEmpty()) {
-            final Shell shell = new TalkShells(xml).get();
-            shell.exec(
-                String.format(
-                    "cat %s/stdout",
-                    xml.xpath("/talk/daemon/dir/text()").get(0)
-                ),
-                new NullInputStream(0L),
-                new FileOutputStream(file),
-                Logger.stream(Level.SEVERE, true)
-            );
-            found = true;
-        }
-        return found;
-    }
-
-    /**
-     * Read archive if exists.
-     * @param xml XML to read
-     * @param file File to write
-     * @return TRUE if exists
-     * @throws IOException If fails
-     */
-    private boolean archive(final XML xml, final File file) throws IOException {
-        final String xpath = String.format(
-            "/talk/archive/log[@id='%s']/text()", this.hash
-        );
-        boolean found = false;
-        if (!xml.nodes(xpath).isEmpty()) {
-            final URI uri = URI.create(xml.xpath(xpath).get(0));
-            DaemonRs.bucket().ocket(uri.getPath().substring(1)).read(
-                new FileOutputStream(file)
-            );
-            found = true;
-        }
-        return found;
-    }
-
-    /**
-     * S3 bucket.
-     * @return Bucket
-     */
-    private static Bucket bucket() {
-        return new ReRegion(
-            new Region.Simple(
-                Manifests.read("Rultor-S3Key"),
-                Manifests.read("Rultor-S3Secret")
+        return Response.ok().entity(
+            new Tail(
+                this.talks().get(this.name).read(),
+                this.hash
             )
-        ).bucket(Manifests.read("Rultor-S3Bucket"));
+        ).build();
     }
 
 }
