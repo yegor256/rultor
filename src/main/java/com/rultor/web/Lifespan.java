@@ -106,6 +106,7 @@ public final class Lifespan implements ServletContextListener {
      * @param talks Talks
      * @throws IOException If fails
      */
+    @Loggable(Loggable.INFO)
     private void routine(final Talks talks) throws IOException {
         final Agents agents = new Agents();
         for (final SuperAgent agent : agents.supers()) {
