@@ -49,7 +49,7 @@ public final class DyTalksITCase {
     @Test
     public void andsAndRemovesRepos() throws Exception {
         final Talks talks = new DyTalks();
-        final String name = "hey/test 45";
+        final String name = "a5fe445";
         talks.create(name);
         MatcherAssert.assertThat(
             talks.get(name).read(),
