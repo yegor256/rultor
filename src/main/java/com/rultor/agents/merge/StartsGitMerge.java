@@ -83,9 +83,9 @@ public final class StartsGitMerge extends AbstractAgent {
         final ImmutableMap.Builder<String, String> vars =
             new ImmutableMap.Builder<String, String>();
         vars.put("BASE", req.xpath("base/text()").get(0));
-        vars.put("BASE-BRANCH", req.xpath("base-branch/text()").get(0));
+        vars.put("BASE_BRANCH", req.xpath("base-branch/text()").get(0));
         vars.put("HEAD", req.xpath("head/text()").get(0));
-        vars.put("HEAD-BRANCH", req.xpath("head-branch/text()").get(0));
+        vars.put("HEAD_BRANCH", req.xpath("head-branch/text()").get(0));
         vars.put(
             "SCRIPT",
             new Profile.Defaults(this.profile).text("merge.script", "")

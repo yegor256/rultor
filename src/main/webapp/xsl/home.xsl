@@ -46,7 +46,7 @@
             margin: auto;">
             <p>
                 <img src="//img.rultor.com/logo-512x512.png"
-                    style="width:192px;height:192px;" alt="rultor logo"/>
+                    style="width:128px;height:128px;" alt="rultor logo"/>
             </p>
             <p>
                 <xsl:text>more details coming soon...</xsl:text>
