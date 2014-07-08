@@ -30,17 +30,21 @@
 package com.rultor.profiles;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Content;
+import com.jcabi.github.Coordinates;
 import com.jcabi.github.Repo;
 import com.jcabi.xml.XML;
 import com.rultor.spi.Profile;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.codec.binary.Base64;
@@ -64,6 +68,13 @@ final class GithubProfile implements Profile {
     private static final String FILE = ".rultor.yml";
 
     /**
+     * Path patttern.
+     */
+    private static final Pattern PATH = Pattern.compile(
+        "([a-zA-Z0-9\\.\\-]+/[a-zA-Z0-9\\.\\-]+)#(.+)"
+    );
+
+    /**
      * Repo.
      */
     private final transient Repo repo;
@@ -83,7 +94,41 @@ final class GithubProfile implements Profile {
 
     @Override
     public Map<String, InputStream> assets() throws IOException {
-        return new HashMap<String, InputStream>(0);
+        final ImmutableMap.Builder<String, InputStream> assets =
+            new ImmutableMap.Builder<String, InputStream>();
+        final XML xml = this.read();
+        for (final XML asset : xml.nodes("/p/assets/*")) {
+            assets.put(
+                asset.xpath("name()").get(0),
+                this.asset(asset.xpath("text()").get(0))
+            );
+        }
+        return assets.build();
+    }
+
+    /**
+     * Convert address to input stream.
+     * @param path Path of the asset, e.g. "yegor/rultor#pom.xml"
+     * @return Stream with content
+     * @throws IOException If fails
+     */
+    private InputStream asset(final String path) throws IOException {
+        final Matcher matcher = GithubProfile.PATH.matcher(path);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException(
+                String.format("invalid path of asset: %s", path)
+            );
+        }
+        final Repo rpo = this.repo.github().repos().get(
+            new Coordinates.Simple(matcher.group(1))
+        );
+        return new ByteArrayInputStream(
+            Base64.decodeBase64(
+                new Content.Smart(
+                    rpo.contents().get(matcher.group(2))
+                ).content()
+            )
+        );
     }
 
     /**
@@ -94,7 +139,7 @@ final class GithubProfile implements Profile {
     @Cacheable
     private String yml() throws IOException {
         final boolean exists = Iterables.any(
-            this.repo.contents().iterate("", ""),
+            this.repo.contents().iterate("", "master"),
             new Predicate<Content>() {
                 @Override
                 public boolean apply(final Content input) {

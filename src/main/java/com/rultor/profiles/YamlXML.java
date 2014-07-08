@@ -64,7 +64,7 @@ final class YamlXML {
      * @param yml YAML
      */
     YamlXML(final String yml) {
-        this.yaml = yml;
+        this.yaml = yml.trim();
     }
 
     /**
@@ -73,9 +73,10 @@ final class YamlXML {
      */
     public XML get() {
         final Yaml parser = new Yaml();
-        final Directives dirs = new Directives().add("p").append(
-            YamlXML.dirs(parser.load(this.yaml))
-        );
+        final Directives dirs = new Directives().add("p");
+        if (!this.yaml.isEmpty()) {
+            dirs.append(YamlXML.dirs(parser.load(this.yaml)));
+        }
         try {
             return new XMLDocument(new Xembler(dirs).xml());
         } catch (final ImpossibleModificationException ex) {
