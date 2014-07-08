@@ -99,6 +99,11 @@ public final class Agents {
         final Github github = Agents.github();
         agents.addAll(
             Arrays.asList(
+                new GetsMergeRequest(
+                    github,
+                    Collections.singleton("yegor256")
+                ),
+                new StartsGitMerge(profile),
                 new RegistersShell(
                     // @checkstyle MagicNumber (1 line)
                     "b1.rultor.com", 22,
@@ -108,11 +113,6 @@ public final class Agents {
                         CharEncoding.UTF_8
                     )
                 ),
-                new GetsMergeRequest(
-                    github,
-                    Collections.singleton("yegor256")
-                ),
-                new StartsGitMerge(profile),
                 new StartsDaemon(),
                 new UploadsAssets(profile),
                 new EndsDaemon(),
