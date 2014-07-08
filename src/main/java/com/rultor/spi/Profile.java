@@ -78,7 +78,11 @@ public interface Profile {
     /**
      * Defaults.
      */
+    @Immutable
     final class Defaults {
+        /**
+         * Original profile.
+         */
         private final transient Profile origin;
         /**
          * Ctor.
@@ -91,6 +95,7 @@ public interface Profile {
          * Get text item.
          * @param path Path
          * @param def Default, if it's absent
+         * @return Value
          * @throws IOException If fails
          */
         public String text(final String path, final String def)

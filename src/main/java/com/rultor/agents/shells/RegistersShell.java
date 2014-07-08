@@ -88,7 +88,7 @@ public final class RegistersShell extends AbstractAgent {
     }
 
     @Override
-    protected Iterable<Directive> process(final XML xml) {
+    public Iterable<Directive> process(final XML xml) {
         Logger.info(
             this, "shell registered as %s:%d in %s",
             this.addr, this.port, xml.xpath("/talk/@name").get(0)

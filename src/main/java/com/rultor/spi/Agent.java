@@ -45,6 +45,7 @@ public interface Agent {
     /**
      * Execute it.
      * @param talk Talk to work with
+     * @throws IOException If fails
      */
     void execute(Talk talk) throws IOException;
 

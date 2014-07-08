@@ -64,6 +64,7 @@ public final class UploadsAssets extends AbstractAgent {
 
     /**
      * Ctor.
+     * @param prof Profile
      */
     public UploadsAssets(final Profile prof) {
         super(

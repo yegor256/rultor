@@ -98,7 +98,6 @@ public final class HomeRsITCase {
     @Test
     public void rendersValidPages() throws Exception {
         final String[] pages = {
-            "/",
             "/robots.txt",
             "/xsl/layout.xsl",
             "/xsl/home.xsl",

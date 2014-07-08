@@ -68,6 +68,7 @@ public final class DyTalks implements Talks {
 
     /**
      * Index name.
+     * @checkstyle MultipleStringLiteralsCheck (3 lines)
      */
     public static final String INDEX = "active";
 

@@ -88,6 +88,7 @@ public final class EndsDaemon extends AbstractAgent {
      * End this daemon.
      * @param shell Shell
      * @param dir The dir
+     * @return Directives
      * @throws IOException If fails
      */
     private Iterable<Directive> end(final Shell shell,

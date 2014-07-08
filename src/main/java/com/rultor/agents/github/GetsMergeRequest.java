@@ -157,7 +157,7 @@ public final class GetsMergeRequest extends AbstractAgent {
      * @param xml Talk
      * @param comment The comment
      * @return TRUE if request found
-     * @throws IOException
+     * @throws IOException If fails
      */
     private Iterable<Directive> read(final XML xml, final Comment.Smart comment)
         throws IOException {
@@ -205,6 +205,7 @@ public final class GetsMergeRequest extends AbstractAgent {
      * @param issue Issue with PR
      * @param hash Hash code of the request
      * @return Dirs
+     * @throws IOException If fails
      */
     private static Directives dirs(final Issue issue, final String hash)
         throws IOException {
@@ -214,7 +215,8 @@ public final class GetsMergeRequest extends AbstractAgent {
         final JsonObject head = pull.json().getJsonObject("head");
         final JsonObject base = pull.json().getJsonObject("base");
         return new Directives()
-            .xpath("/talk[not(merge-request-git)]").strict(1)
+            .xpath("/talk[not(merge-request-git)]")
+            .strict(1)
             .add("merge-request-git")
             .attr("id", hash)
             .add("base")

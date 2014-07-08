@@ -66,7 +66,7 @@ public final class TalkRs extends BaseRs {
      */
     @PathParam("name")
     public void setName(@NotNull(message = "talk name is mandatory")
-    final String talk) {
+        final String talk) {
         this.name = talk;
     }
 

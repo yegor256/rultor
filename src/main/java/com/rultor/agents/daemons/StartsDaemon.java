@@ -122,7 +122,7 @@ public final class StartsDaemon extends AbstractAgent {
             )
         );
         Logger.info(this, "daemon started at %s", dir);
-        return new Directives().xpath("/talk/daemon").strict(1)
+        return new Directives().xpath("/talk/daemon[not(started)]").strict(1)
             .add("started")
             .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))
             .up()

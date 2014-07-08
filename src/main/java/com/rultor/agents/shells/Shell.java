@@ -57,6 +57,7 @@ public interface Shell {
      * @param stderr Stderr
      * @return Exit code
      * @throws IOException If fails
+     * @checkstyle ParameterNumberCheck (5 line)
      */
     int exec(String command, InputStream stdin,
         OutputStream stdout, OutputStream stderr) throws IOException;
@@ -79,9 +80,11 @@ public interface Shell {
         public Safe(final Shell shell) {
             this.origin = shell;
         }
+        // @checkstyle ParameterNumberCheck (5 line)
         @Override
         public int exec(final String command, final InputStream stdin,
-            final OutputStream stdout, final OutputStream stderr) throws IOException {
+            final OutputStream stdout, final OutputStream stderr)
+            throws IOException {
             final int exit = this.origin.exec(command, stdin, stdout, stderr);
             if (exit != 0) {
                 throw new IllegalArgumentException(
@@ -113,6 +116,7 @@ public interface Shell {
         /**
          * Just exec.
          * @param cmd Command
+         * @return Exit code
          * @throws IOException If fails
          */
         public int exec(final String cmd) throws IOException {

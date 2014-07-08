@@ -65,7 +65,7 @@ public final class PostsMergeResult extends AbstractAgent {
      * @param ghub Github client
      */
     public PostsMergeResult(final Github ghub) {
-        super("/talk/merge-request-git[success]");
+        super("/talk/merge-request-git[@id and success]");
         this.github = ghub;
     }
 
@@ -91,7 +91,7 @@ public final class PostsMergeResult extends AbstractAgent {
         }
         issue.comments().post(msg);
         Logger.info(this, "merge request completed at #%d", issue.number());
-        return new Directives().xpath("/talk/merge-request-git")
+        return new Directives().xpath("/talk/merge-request-git[success]")
             .strict(1).remove();
     }
 

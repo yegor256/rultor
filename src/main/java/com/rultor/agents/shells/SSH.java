@@ -150,6 +150,7 @@ public final class SSH implements Shell {
      * @param prt Port of server
      * @param user Login
      * @param priv Private SSH key
+     * @throws UnknownHostException If fails
      * @checkstyle ParameterNumberCheck (6 lines)
      */
     public SSH(final String adr, final int prt,
@@ -167,6 +168,7 @@ public final class SSH implements Shell {
         this.port = prt;
     }
 
+    // @checkstyle ParameterNumberCheck (5 lines)
     @Override
     public int exec(final String command, final InputStream stdin,
         final OutputStream stdout, final OutputStream stderr)

@@ -45,6 +45,7 @@ public interface SuperAgent {
     /**
      * Execute it.
      * @param talks All talks
+     * @throws IOException If fails
      */
     void execute(Talks talks) throws IOException;
 
