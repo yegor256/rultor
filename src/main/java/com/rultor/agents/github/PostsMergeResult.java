@@ -79,11 +79,14 @@ public final class PostsMergeResult extends AbstractAgent {
         final URI home = new Home(xml, req.xpath("@id").get(0)).uri();
         final String msg;
         if (success) {
-            msg = "done!";
+            msg = String.format(
+                "Done! FYI, full log is [here](%s)",
+                home.toASCIIString()
+            );
         } else {
             msg = String.format(
                 "Oops, I failed to merge. Full log is [here](%s)",
-                home
+                home.toASCIIString()
             );
         }
         issue.comments().post(msg);
