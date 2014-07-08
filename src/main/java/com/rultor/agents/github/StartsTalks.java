@@ -92,7 +92,7 @@ public final class StartsTalks implements SuperAgent {
         );
         final Counter cnt = this.counters.get("rt-latest");
         final int latest = (int) cnt.incrementAndGet(0L);
-        int max = 0;
+        int max = latest;
         for (final Issue issue : issues) {
             final int last = StartsTalks.last(issue);
             if (last <= latest) {
@@ -124,7 +124,10 @@ public final class StartsTalks implements SuperAgent {
                 max = last;
             }
         }
-        cnt.set((long) max);
+        if (max != latest) {
+            cnt.set((long) max);
+            Logger.info(this, "max message number set to %d", max);
+        }
         threshold.set(System.currentTimeMillis());
     }
 
