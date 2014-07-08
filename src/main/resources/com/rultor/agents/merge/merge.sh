@@ -23,9 +23,8 @@ if [ -z "${SCRIPT}" ]; then
   fi
 fi
 
-sudo docker run --rm -v $(pwd):/main \
+sudo docker run --rm -v $(pwd):/main ${DOCKER_ENVS} \
   -w=/main yegor256/rultor \
-  ${DOCKER_ENVS} \
   ${SCRIPT}
 
 git push origin "${BASE_BRANCH}"
