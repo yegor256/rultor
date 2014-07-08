@@ -35,7 +35,6 @@ import com.rultor.spi.Talk;
 import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.hamcrest.MatcherAssert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.xembly.Directives;
 
@@ -53,7 +52,6 @@ public final class KillsDaemonTest {
      * @throws Exception In case of error.
      */
     @Test
-    @Ignore
     public void ignoresFreshDaemon() throws Exception {
         final Talk talk = new Talk.InFile();
         talk.modify(
