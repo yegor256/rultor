@@ -96,12 +96,17 @@ public final class DyTalk implements Talk {
     @Override
     public void modify(final Iterable<Directive> dirs) throws IOException {
         if (!Iterables.isEmpty(dirs)) {
-            final Node node = this.read().node();
+            final XML xml = this.read();
+            final Node node = xml.node();
             try {
                 new Xembler(dirs).apply(node);
             } catch (final ImpossibleModificationException ex) {
                 throw new IllegalStateException(
-                    dirs.toString(), ex
+                    String.format(
+                        "failed to apply %s to %s",
+                        dirs.toString(), xml
+                    ),
+                    ex
                 );
             }
             final String body = new StrictXML(
