@@ -29,36 +29,33 @@
  */
 package com.rultor.profiles;
 
-import com.jcabi.github.Coordinates;
-import com.jcabi.github.RtGithub;
 import com.jcabi.matchers.XhtmlMatchers;
-import com.rultor.spi.Profile;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
 /**
- * Tests for ${@link GithubProfile}.
+ * Tests for ${@link YamlXML}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-public final class GithubProfileITCase {
+public final class YamlXMLTest {
 
     /**
-     * GithubProfile can fetch a YAML config.
+     * YamlXML can parse.
      * @throws Exception In case of error.
      */
     @Test
-    public void fetchesYamlConfig() throws Exception {
-        final Profile profile = new GithubProfile(
-            new RtGithub().repos().get(
-                new Coordinates.Simple("yegor256/rultor")
-            )
-        );
+    public void parsesYamlConfig() throws Exception {
         MatcherAssert.assertThat(
-            profile.read(),
-            XhtmlMatchers.hasXPath("/p/merge/script")
+            new YamlXML("a: test\nb: 'hello'\nc:\n  - one\nd:\n  f: e").get(),
+            XhtmlMatchers.hasXPaths(
+                "/p/a[.='test']",
+                "/p/b[.='hello']",
+                "/p/c/item[@idx=0 and .='one']",
+                "/p/d/f[.='e']"
+            )
         );
     }
 }

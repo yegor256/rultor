@@ -35,6 +35,7 @@ import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Content;
 import com.jcabi.github.Repo;
+import com.jcabi.xml.XML;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,19 +77,8 @@ final class GithubProfile implements Profile {
     }
 
     @Override
-    public boolean contains(final String path) throws IOException {
-        System.out.println(this.yml());
-        return false;
-    }
-
-    @Override
-    public String get(final String path) throws IOException {
-        throw new UnsupportedOperationException("#get()");
-    }
-
-    @Override
-    public Iterable<String> iterate(final String path) throws IOException {
-        throw new UnsupportedOperationException("#iterate()");
+    public XML read() throws IOException {
+        return new YamlXML(this.yml()).get();
     }
 
     @Override

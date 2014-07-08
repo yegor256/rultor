@@ -88,7 +88,7 @@ public final class StartsGitMerge extends AbstractAgent {
         vars.put("HEAD_BRANCH", req.xpath("head-branch/text()").get(0));
         vars.put(
             "SCRIPT",
-            new Profile.Defaults(this.profile).text("merge.script", "")
+            new Profile.Defaults(this.profile).text("/p/merge/script", "")
         );
         final String script = StringUtils.join(
             Iterables.concat(

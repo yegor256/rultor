@@ -27,72 +27,88 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.spi;
+package com.rultor.profiles;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
-import java.io.IOException;
-import java.io.InputStream;
+import com.jcabi.xml.XMLDocument;
+import java.util.List;
 import java.util.Map;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.xembly.Directive;
+import org.xembly.Directives;
+import org.xembly.ImpossibleModificationException;
+import org.xembly.Xembler;
+import org.yaml.snakeyaml.Yaml;
 
 /**
- * Profile.
+ * YAML into XML.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Profile {
+@ToString
+@EqualsAndHashCode(of = "yaml")
+final class YamlXML {
 
     /**
-     * Get it in XML format.
+     * Yaml.
+     */
+    private final transient String yaml;
+
+    /**
+     * Ctor.
+     * @param yml YAML
+     */
+    YamlXML(final String yml) {
+        this.yaml = yml;
+    }
+
+    /**
+     * Get XML.
      * @return XML
-     * @throws IOException If fails
      */
-    XML read() throws IOException;
-
-    /**
-     * Get assets.
-     * @return Map of assets
-     * @throws IOException If fails
-     */
-    Map<String, InputStream> assets() throws IOException;
-
-    /**
-     * Defaults.
-     */
-    @Immutable
-    final class Defaults {
-        /**
-         * Original profile.
-         */
-        private final transient Profile origin;
-        /**
-         * Ctor.
-         * @param profile The profile
-         */
-        public Defaults(final Profile profile) {
-            this.origin = profile;
+    public XML get() {
+        final Yaml parser = new Yaml();
+        final Directives dirs = new Directives().add("p").append(
+            YamlXML.dirs(parser.load(this.yaml))
+        );
+        try {
+            return new XMLDocument(new Xembler(dirs).xml());
+        } catch (final ImpossibleModificationException ex) {
+            throw new IllegalStateException(ex);
         }
-        /**
-         * Get text item.
-         * @param xpath Path
-         * @param def Default, if it's absent
-         * @return Value
-         * @throws IOException If fails
-         */
-        public String text(final String xpath, final String def)
-            throws IOException {
-            final XML xml = this.origin.read();
-            final String text;
-            if (xml.nodes(xpath).isEmpty()) {
-                text = def;
-            } else {
-                text = xml.xpath(String.format("%s/text()", xpath)).get(0);
+    }
+
+    /**
+     * Convert something to dirs.
+     * @param obj Object
+     * @return Dirs
+     */
+    private static Iterable<Directive> dirs(final Object obj) {
+        final Directives dirs = new Directives();
+        if (obj instanceof Map) {
+            for (final Map.Entry<String, Object> ent
+                : ((Map<String, Object>) obj).entrySet()) {
+                dirs.add(ent.getKey())
+                    .append(YamlXML.dirs(ent.getValue()))
+                    .up();
             }
-            return text;
+        } else if (obj instanceof List) {
+            int idx = 0;
+            for (final Object item : (List<Object>) obj) {
+                dirs.add("item")
+                    .attr("idx", Integer.toString(idx))
+                    .append(YamlXML.dirs(item))
+                    .up();
+            }
+        } else {
+            dirs.set(obj.toString());
         }
+        return dirs;
     }
 
 }
