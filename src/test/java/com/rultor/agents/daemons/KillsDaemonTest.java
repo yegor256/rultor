@@ -29,56 +29,43 @@
  */
 package com.rultor.agents.daemons;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.log.Logger;
-import com.jcabi.xml.XML;
-import com.rultor.agents.AbstractAgent;
-import com.rultor.agents.shells.Shell;
-import com.rultor.agents.shells.TalkShells;
-import java.io.IOException;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
-import org.xembly.Directive;
+import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.spi.Agent;
+import com.rultor.spi.Talk;
+import java.util.Date;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.hamcrest.MatcherAssert;
+import org.junit.Test;
 import org.xembly.Directives;
 
 /**
- * Kills daemon if too old.
+ * Tests for ${@link KillsDaemon}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-@ToString
-@EqualsAndHashCode(callSuper = false)
-public final class KillsDaemon extends AbstractAgent {
+public final class KillsDaemonTest {
 
     /**
-     * Ctor.
+     * KillsDaemon can ignore a daemon.
+     * @throws Exception In case of error.
      */
-    public KillsDaemon() {
-        super(
-            "/talk/daemon[started and not(code) and not(ended)]",
-            // @checkstyle LineLength (1 line)
-            "/talk[(current-dateTime() - xs:dateTime(daemon/started)) div xs:dayTimeDuration('PT1M') > 30]"
+    @Test
+    public void ignoresFreshDaemon() throws Exception {
+        final Talk talk = new Talk.InFile();
+        talk.modify(
+            new Directives().xpath("/talk").add("daemon")
+                .attr("id", "abcd")
+                .add("started")
+                .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))
         );
-    }
-
-    @Override
-    public Iterable<Directive> process(final XML xml) throws IOException {
-        final Shell shell = new TalkShells(xml).get();
-        final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
-        new Shell.Empty(new Shell.Safe(shell)).exec(
-            StringUtils.join(
-                String.format("dir=%s", dir),
-                " && if [ ! -e ${dir}/pid ]; then exit 1; fi",
-                " && pid=$(cat ${dir}/pid)",
-                " && kill -9 $pid >/dev/null"
-            )
+        final Agent agent = new KillsDaemon();
+        agent.execute(talk);
+        MatcherAssert.assertThat(
+            talk.read(),
+            XhtmlMatchers.hasXPath("/talk")
         );
-        Logger.info(this, "daemon killed because of delay in %s", dir);
-        return new Directives();
     }
 
 }
