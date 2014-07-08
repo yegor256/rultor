@@ -121,10 +121,6 @@ public final class DyTalk implements Talk {
                     new AttributeValue().withS(body)
                 )
             );
-            Logger.info(
-                this, "talk %s updated with %d directive(s): %d chars",
-                this.name(), Iterables.size(dirs), body.length()
-            );
         }
     }
 

@@ -55,22 +55,22 @@ public final class DockerRunTest {
             new XMLDocument(
                 StringUtils.join(
                     "<p><a><env><item>A=5</item><item>B=f e</item></env></a>",
-                    "<b><env>HELLO=1</env></b>",
+                    "<b><env>HELLO='1'</env></b>",
                     "<c><env><MVN>works</MVN></env></c></p>"
                 )
             )
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/a").envs(),
-            Matchers.equalTo("-e 'A=5' -e 'B=f e'")
+            Matchers.equalTo("( '--env=A=5' '--env=B=f e' )")
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/b").envs(),
-            Matchers.equalTo("-e 'HELLO=1'")
+            Matchers.equalTo("( '--env=HELLO='\\''1'\\''' )")
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/c").envs(),
-            Matchers.equalTo("-e 'MVN=works'")
+            Matchers.equalTo("( '--env=MVN=works' )")
         );
     }
 
@@ -90,11 +90,11 @@ public final class DockerRunTest {
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/x").script(),
-            Matchers.equalTo("mvn clean")
+            Matchers.equalTo("( 'mvn clean' )")
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/y").script(),
-            Matchers.equalTo("pw; ls")
+            Matchers.equalTo("( 'pw' ';' 'ls' ';' )")
         );
     }
 

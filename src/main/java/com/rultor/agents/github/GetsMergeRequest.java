@@ -138,7 +138,7 @@ public final class GetsMergeRequest extends AbstractAgent {
                 );
                 continue;
             }
-            if (!xml.xpath("/talk/merge-request-git").isEmpty()) {
+            if (!xml.nodes("/talk/merge-request-git").isEmpty()) {
                 new Answer(comment).post(
                     "I'm busy with another merge request, come back again later"
                 );

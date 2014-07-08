@@ -98,8 +98,8 @@ public final class StartsGitMerge extends AbstractAgent {
                         public String apply(
                             final Map.Entry<String, String> input) {
                             return String.format(
-                                "%s='%s'", input.getKey(),
-                                input.getValue().replace("'", "\\'")
+                                "%s=%s", input.getKey(),
+                                input.getValue()
                             );
                         }
                     }

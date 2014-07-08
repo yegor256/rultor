@@ -30,6 +30,8 @@
 package com.rultor.agents.merge;
 
 import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
@@ -40,7 +42,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Docker run command.
@@ -81,17 +82,19 @@ final class DockerRun {
      */
     public String script() throws IOException {
         final XML xml = this.profile.read().nodes(this.node).get(0);
-        final String script;
-        if (xml.nodes("script").isEmpty()) {
-            script = "";
-        } else if (xml.nodes("script/item").isEmpty()) {
-            script = xml.xpath("script/text()").get(0);
-        } else {
-            script = StringUtils.join(
-                xml.xpath("script/item/text()"), "; "
-            );
+        final Collection<String> scripts = new LinkedList<String>();
+        if (!xml.nodes("script").isEmpty()) {
+            if (xml.nodes("script/item").isEmpty()) {
+                scripts.add(xml.xpath("script/text()").get(0));
+            } else {
+                boolean first = true;
+                for (final String cmd : xml.xpath("script/item/text()")) {
+                    scripts.add(cmd);
+                    scripts.add(";");
+                }
+            }
         }
-        return script;
+        return this.enlist(scripts);
     }
 
     /**
@@ -101,10 +104,8 @@ final class DockerRun {
      */
     public String envs() throws IOException {
         final XML xml = this.profile.read().nodes(this.node).get(0);
-        final String envs;
-        if (xml.nodes("env").isEmpty()) {
-            envs = "";
-        } else {
+        final Collection<String> envs = new LinkedList<String>();
+        if (!xml.nodes("env").isEmpty()) {
             final Collection<String> parts;
             if (xml.nodes("env/item").iterator().hasNext()) {
                 parts = xml.xpath("env/item/text()");
@@ -121,20 +122,43 @@ final class DockerRun {
             } else {
                 parts = Collections.singleton(xml.xpath("env/text()").get(0));
             }
-            envs = StringUtils.join(
-                Iterables.transform(
+            envs.addAll(
+                Collections2.transform(
                     parts,
                     new Function<String, String>() {
                         @Override
                         public String apply(final String input) {
-                            return String.format("-e '%s'", input);
+                            return String.format("--env=%s", input);
                         }
                     }
-                ),
-                " "
+                )
             );
         }
-        return envs;
+        return this.enlist(envs);
+    }
+
+    /**
+     * Make a list for bash.
+     * @param items Items
+     */
+    private String enlist(final Iterable<String> items) {
+        return String.format(
+            "( %s )",
+            Joiner.on(' ').join(
+                Iterables.transform(
+                    items,
+                    new Function<String, String>() {
+                        @Override
+                        public String apply(final String input) {
+                            return String.format(
+                                "'%s'",
+                                input.trim().replace("'", "'\\''")
+                            );
+                        }
+                    }
+                )
+            )
+        );
     }
 
 }
