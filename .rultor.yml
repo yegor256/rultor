@@ -1,6 +1,7 @@
 assets:
   settings.xml: yegor256/home#assets/rultor/settings.xml 
 merge:
+  env:
+    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script: 
-    - "export MAVEN_OPTS='-XX:MaxPermSize=256m -Xmx1g'"
     - "mvn help:system clean install -Pqulice --settings settings.xml"

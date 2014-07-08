@@ -95,4 +95,29 @@ public interface Profile {
         }
     }
 
+    /**
+     * Fixed.
+     */
+    @Immutable
+    final class Fixed implements Profile {
+        /**
+         * XML document.
+         */
+        private final transient XML xml;
+        /**
+         * Ctor.
+         * @param doc Document
+         */
+        public Fixed(final XML doc) {
+            this.xml = doc;
+        }
+        @Override
+        public XML read() throws IOException {
+            return this.xml;
+        }
+        @Override
+        public Map<String, InputStream> assets() {
+            throw new UnsupportedOperationException("#assets()");
+        }
+    }
 }

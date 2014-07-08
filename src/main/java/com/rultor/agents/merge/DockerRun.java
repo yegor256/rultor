@@ -30,26 +30,20 @@
 package com.rultor.agents.merge;
 
 import com.google.common.base.Function;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
-import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
+import java.util.LinkedList;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
-import org.xembly.Directive;
-import org.xembly.Directives;
 
 /**
- * Merges.
+ * Docker run command.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -57,8 +51,8 @@ import org.xembly.Directives;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(callSuper = false, of = "profile")
-public final class StartsGitMerge extends AbstractAgent {
+@EqualsAndHashCode(of = { "profile", "node" })
+final class DockerRun {
 
     /**
      * Profile.
@@ -66,61 +60,81 @@ public final class StartsGitMerge extends AbstractAgent {
     private final transient Profile profile;
 
     /**
+     * Node name.
+     */
+    private final transient String node;
+
+    /**
      * Ctor.
      * @param prof Profile
+     * @param name Node name in profile XML
      */
-    public StartsGitMerge(final Profile prof) {
-        super(
-            "/talk/merge-request-git[not(success)]",
-            "/talk[not(daemon)]"
-        );
+    DockerRun(final Profile prof, final String name) {
         this.profile = prof;
+        this.node = name;
     }
 
-    @Override
-    public Iterable<Directive> process(final XML xml) throws IOException {
-        final XML req = xml.nodes("//merge-request-git").get(0);
-        final ImmutableMap.Builder<String, String> vars =
-            new ImmutableMap.Builder<String, String>();
-        vars.put("BASE", req.xpath("base/text()").get(0));
-        vars.put("BASE_BRANCH", req.xpath("base-branch/text()").get(0));
-        vars.put("HEAD", req.xpath("head/text()").get(0));
-        vars.put("HEAD_BRANCH", req.xpath("head-branch/text()").get(0));
-        final DockerRun docker = new DockerRun(this.profile, "/p/merge");
-        vars.put("SCRIPT", docker.script());
-        vars.put("DOCKER_ENVS", docker.envs());
-        final String script = StringUtils.join(
-            Iterables.concat(
+    /**
+     * Make a script to run.
+     * @return Script
+     * @throws IOException If fails
+     */
+    public String script() throws IOException {
+        final XML xml = this.profile.read().nodes(this.node).get(0);
+        final String script;
+        if (xml.nodes("script").isEmpty()) {
+            script = "";
+        } else if (xml.nodes("script/item").isEmpty()) {
+            script = xml.xpath("script/text()").get(0);
+        } else {
+            script = StringUtils.join(
+                xml.xpath("script/item/text()"), "; "
+            );
+        }
+        return script;
+    }
+
+    /**
+     * Make a list of env vars for docker.
+     * @return Envs
+     * @throws IOException If fails
+     */
+    public String envs() throws IOException {
+        final XML xml = this.profile.read().nodes(this.node).get(0);
+        final String envs;
+        if (xml.nodes("env").isEmpty()) {
+            envs = "";
+        } else {
+            final Collection<String> parts;
+            if (xml.nodes("env/item").iterator().hasNext()) {
+                parts = xml.xpath("env/item/text()");
+            } else if (xml.nodes("env/*/text()").iterator().hasNext()) {
+                parts = new LinkedList<String>();
+                for (final XML env : xml.nodes("env/*")) {
+                    parts.add(
+                        String.format(
+                            "%s=%s", env.xpath("name()").get(0),
+                            env.xpath("text()").get(0)
+                        )
+                    );
+                }
+            } else {
+                parts = Collections.singleton(xml.xpath("env/text()").get(0));
+            }
+            envs = StringUtils.join(
                 Iterables.transform(
-                    vars.build().entrySet(),
-                    new Function<Map.Entry<String, String>, String>() {
+                    parts,
+                    new Function<String, String>() {
                         @Override
-                        public String apply(
-                            final Map.Entry<String, String> input) {
-                            return String.format(
-                                "%s=\"%s\"", input.getKey(), input.getValue()
-                            );
+                        public String apply(final String input) {
+                            return String.format("--env '%s'", input);
                         }
                     }
                 ),
-                Collections.singleton(
-                    IOUtils.toString(
-                        this.getClass().getResourceAsStream("merge.sh"),
-                        CharEncoding.UTF_8
-                    )
-                )
-            ),
-            "\n"
-        );
-        final String hash = req.xpath("@id").get(0);
-        Logger.info(
-            this, "git merge %s started in %s",
-            hash, xml.xpath("/talk/@name").get(0)
-        );
-        return new Directives().xpath("/talk")
-            .add("daemon")
-            .attr("id", hash)
-            .add("script").set(script);
+                " "
+            );
+        }
+        return envs;
     }
 
 }

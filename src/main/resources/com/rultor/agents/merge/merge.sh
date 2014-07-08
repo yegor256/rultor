@@ -9,7 +9,7 @@ git merge "head/${HEAD_BRANCH}"
 
 if [ -z "${SCRIPT}" ]; then
   if [ -e pom.xml ]; then
-    SCRIPT="mvn help:system clean install --batch-mode --update-snapshots --errors --strict-checksums"
+    SCRIPT="mvn help:system clean install --batch-mode --errors"
   fi
   if [ -e build.xml ]; then
     SCRIPT="ant"
@@ -23,6 +23,9 @@ if [ -z "${SCRIPT}" ]; then
   fi
 fi
 
-sudo docker run --rm -v $(pwd):/main -w=/main yegor256/rultor ${SCRIPT}
+sudo docker run --rm -v $(pwd):/main \
+  -w=/main yegor256/rultor \
+  ${DOCKER_ENVS} \
+  ${SCRIPT}
 
 git push origin "${BASE_BRANCH}"
