@@ -35,7 +35,6 @@ import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
 import com.rexsl.page.Resource;
-import com.rexsl.page.auth.AuthException;
 import com.rexsl.page.auth.AuthInset;
 import com.rexsl.page.auth.Github;
 import com.rexsl.page.auth.Identity;
@@ -165,11 +164,10 @@ public class BaseRs extends BaseResource {
             );
         }
         if (!"urn:github:526301".equals(self.urn().toString())) {
-            throw new AuthException(
-                Response.seeOther(this.uriInfo().getBaseUri())
-                    .cookie(this.auth().logout())
-                    .build(),
-                "sorry, but this entrance is \"staff only\""
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                "sorry, but this entrance is \"staff only\"",
+                Level.WARNING
             );
         }
         return Talks.class.cast(
