@@ -100,7 +100,7 @@ public final class Tail {
                 )
                 .put(
                     String.format(
-                        "/talk[shell[@id='%s'] and daemon[@id='%1$s']/dir]",
+                        "/talk[shell and daemon[@id='%s']/dir]",
                         this.hash
                     ),
                     new Tail.SSHConnect(this.xml)

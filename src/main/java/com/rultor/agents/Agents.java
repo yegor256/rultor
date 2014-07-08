@@ -113,8 +113,8 @@ public final class Agents {
                         CharEncoding.UTF_8
                     )
                 ),
-                new StartsDaemon(),
                 new UploadsAssets(profile),
+                new StartsDaemon(),
                 new EndsDaemon(),
                 new EndsGitMerge(),
                 new PostsMergeResult(github),
