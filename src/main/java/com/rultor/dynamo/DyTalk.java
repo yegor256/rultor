@@ -95,30 +95,32 @@ public final class DyTalk implements Talk {
 
     @Override
     public void modify(final Iterable<Directive> dirs) throws IOException {
-        final Node node = this.read().node();
-        try {
-            new Xembler(dirs).apply(node);
-        } catch (final ImpossibleModificationException ex) {
-            throw new IllegalStateException(
-                dirs.toString(), ex
+        if (!Iterables.isEmpty(dirs)) {
+            final Node node = this.read().node();
+            try {
+                new Xembler(dirs).apply(node);
+            } catch (final ImpossibleModificationException ex) {
+                throw new IllegalStateException(
+                    dirs.toString(), ex
+                );
+            }
+            final String body = new StrictXML(
+                new XMLDocument(node), DyTalk.SCHEMA
+            ).toString();
+            if (body.length() > Tv.FIFTY * Tv.THOUSAND) {
+                throw new IllegalArgumentException("XML is too big");
+            }
+            this.item.put(
+                DyTalks.ATTR_XML,
+                new AttributeValueUpdate().withValue(
+                    new AttributeValue().withS(body)
+                )
+            );
+            Logger.info(
+                this, "talk %s updated with %d directive(s): %d chars",
+                this.name(), Iterables.size(dirs), body.length()
             );
         }
-        final String body = new StrictXML(
-            new XMLDocument(node), DyTalk.SCHEMA
-        ).toString();
-        if (body.length() > Tv.FIFTY * Tv.THOUSAND) {
-            throw new IllegalArgumentException("XML is too big");
-        }
-        this.item.put(
-            DyTalks.ATTR_XML,
-            new AttributeValueUpdate().withValue(
-                new AttributeValue().withS(body)
-            )
-        );
-        Logger.info(
-            this, "talk %s updated with %d directive(s): %d chars",
-            this.name(), Iterables.size(dirs), body.length()
-        );
     }
 
     @Override
