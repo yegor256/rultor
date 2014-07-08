@@ -88,6 +88,7 @@ final class YamlXML {
      * @param obj Object
      * @return Dirs
      */
+    @SuppressWarnings("unchecked")
     private static Iterable<Directive> dirs(final Object obj) {
         final Directives dirs = new Directives();
         if (obj instanceof Map) {
@@ -99,11 +100,12 @@ final class YamlXML {
             }
         } else if (obj instanceof List) {
             int idx = 0;
-            for (final Object item : (List<Object>) obj) {
+            for (final Object item : (Iterable<Object>) obj) {
                 dirs.add("item")
                     .attr("idx", Integer.toString(idx))
                     .append(YamlXML.dirs(item))
                     .up();
+                ++idx;
             }
         } else {
             dirs.set(obj.toString());
