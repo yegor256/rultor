@@ -57,11 +57,34 @@
                     </xsl:if>
                     <xsl:apply-templates select="identity"/>
                     <xsl:apply-templates select="version"/>
+                    <xsl:apply-templates select="toggles"/>
                     <xsl:apply-templates select="flash"/>
                 </div>
                 <xsl:apply-templates select="." mode="body"/>
             </body>
         </html>
+    </xsl:template>
+    <xsl:template match="toggles">
+        <xsl:variable name="label">
+            <xsl:choose>
+                <xsl:when test="read-only='true'">
+                    <xsl:text>r</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:text>rw</xsl:text>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="links/link[@rel='sw:read-only']">
+                <a href="{links/link[@rel='sw:read-only']/@href}">
+                    <xsl:copy-of select="$label"/>
+                </a>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:copy-of select="$label"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template match="version">
         <span>

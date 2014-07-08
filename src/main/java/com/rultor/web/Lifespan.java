@@ -30,9 +30,11 @@
 package com.rultor.web;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
 import com.jcabi.manifests.Manifests;
+import com.rultor.Toggles;
 import com.rultor.agents.Agents;
 import com.rultor.dynamo.DyTalks;
 import com.rultor.profiles.Profiles;
@@ -108,6 +110,10 @@ public final class Lifespan implements ServletContextListener {
      */
     @Loggable(Loggable.INFO)
     private void routine(final Talks talks) throws IOException {
+        if (new Toggles().readOnly()) {
+            Logger.info(this, "read-only mode");
+            return;
+        }
         final Agents agents = new Agents();
         for (final SuperAgent agent : agents.supers()) {
             agent.execute(talks);

@@ -43,6 +43,7 @@ import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
 import com.rultor.spi.Talks;
+import java.io.IOException;
 import java.net.URI;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
@@ -118,10 +119,11 @@ public class BaseRs extends BaseResource {
     /**
      * Supplementary inset.
      * @return The inset
+     * @throws IOException If fails
      */
     @Inset.Runtime
     @NotNull(message = "supplementary inset can never be NULL")
-    public final Inset insetSupplementary() {
+    public final Inset insetSupplementary() throws IOException {
         return new Inset() {
             @Override
             public void render(final BasePage<?, ?> page,
@@ -134,6 +136,17 @@ public class BaseRs extends BaseResource {
                 );
             }
         };
+    }
+
+    /**
+     * Toggles inset.
+     * @return The inset
+     * @throws IOException If fails
+     */
+    @Inset.Runtime
+    @NotNull(message = "toggles inset can never be NULL")
+    public final Inset toggles() throws IOException {
+        return new TogglesInset(this);
     }
 
     /**
