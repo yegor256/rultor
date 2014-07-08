@@ -95,10 +95,9 @@ public final class StartsDaemon extends AbstractAgent {
                         "cd $(dirname $0)",
                         "echo $$ > ./pid",
                         String.format(
-                            "echo 'rultor.com %s/%s/%s'",
+                            "echo 'rultor.com %s/%s'",
                             Manifests.read("Rultor-Version"),
-                            Manifests.read("Rultor-Revision"),
-                            Manifests.read("Rultor-Date")
+                            Manifests.read("Rultor-Revision")
                         ),
                         "date",
                         daemon.xpath("script/text()").get(0),
