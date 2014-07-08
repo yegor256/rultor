@@ -3,6 +3,8 @@ cd repo
 git checkout "${BASE_BRANCH}"
 git remote add head "${HEAD}"
 git remote update
+git config user.email "me@rultor.com"
+git config user.name "rultor"
 git merge "head/${HEAD_BRANCH}"
 
 if [ -z "${SCRIPT}" ]; then
@@ -22,4 +24,5 @@ if [ -z "${SCRIPT}" ]; then
 fi
 
 sudo docker run --rm -v $(pwd):/main -w=/main yegor256/rultor ${SCRIPT}
+
 git push origin "${BASE_BRANCH}"
