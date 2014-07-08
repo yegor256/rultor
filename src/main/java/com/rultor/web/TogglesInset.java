@@ -72,7 +72,14 @@ final class TogglesInset implements Inset {
             bundle.add("read-only", Boolean.toString(toggles.readOnly())).up();
             if (!this.base.auth().identity().equals(Identity.ANONYMOUS)) {
                 bundle.link(
-                    new Link("sw:read-only", "/toggle/read-only")
+                    new Link(
+                        "sw:read-only",
+                        this.base.uriInfo().getBaseUriBuilder()
+                            .clone()
+                            .path(TogglesRs.class)
+                            .path(TogglesRs.class, "readOnly")
+                            .build()
+                    )
                 );
             }
         } catch (final IOException ex) {
