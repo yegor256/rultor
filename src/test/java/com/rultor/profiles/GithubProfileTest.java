@@ -72,7 +72,7 @@ public final class GithubProfileTest {
         );
         final String yaml = StringUtils.join(
             "assets:\n",
-            "  test: jeff/test1#test.xml\n",
+            "  test.xml: jeff/test1#test.xml\n",
             "  beta: jeff/test1#test.xml\n",
             "merge:\n",
             "  script: hello!\n"
@@ -89,13 +89,13 @@ public final class GithubProfileTest {
             profile.read(),
             XhtmlMatchers.hasXPaths(
                 "/p/merge/script",
-                "/p/assets[test and beta]"
+                "/p/assets[test.xml and beta]"
             )
         );
         MatcherAssert.assertThat(
             profile.assets(),
             Matchers.hasEntry(
-                Matchers.equalTo("test"),
+                Matchers.equalTo("test.xml"),
                 Matchers.notNullValue()
             )
         );
