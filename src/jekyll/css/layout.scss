@@ -112,7 +112,7 @@ code {
 }
 pre {
   overflow-x: auto;
-  background-color: lighten($black, 90);
+  color: lighten($black, 15);
   padding: $em;
   width: auto;
   @media all and (max-width: $width) {
