@@ -86,10 +86,7 @@ public final class StartsGitMerge extends AbstractAgent {
         vars.put("BASE_BRANCH", req.xpath("base-branch/text()").get(0));
         vars.put("HEAD", req.xpath("head/text()").get(0));
         vars.put("HEAD_BRANCH", req.xpath("head-branch/text()").get(0));
-        vars.put(
-            "SCRIPT",
-            new Profile.Defaults(this.profile).text("/p/merge/script", "")
-        );
+        vars.put("SCRIPT", this.script());
         final String script = StringUtils.join(
             Iterables.concat(
                 Iterables.transform(
@@ -123,4 +120,25 @@ public final class StartsGitMerge extends AbstractAgent {
             .attr("id", hash)
             .add("script").set(script);
     }
+
+    /**
+     * Make a script to run.
+     * @return Script
+     * @throws IOException If fails
+     */
+    private String script() throws IOException {
+        final XML xml = this.profile.read();
+        final String script;
+        if (xml.nodes("/p/merge/script").isEmpty()) {
+            script = "";
+        } else if (xml.nodes("/p/merge/script/item").isEmpty()) {
+            script = xml.xpath("/p/merge/script/text()").get(0);
+        } else {
+            script = StringUtils.join(
+                xml.xpath("/p/merge/script/item/text()"), "; "
+            );
+        }
+        return script;
+    }
+
 }
