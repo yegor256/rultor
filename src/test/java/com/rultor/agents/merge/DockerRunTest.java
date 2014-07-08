@@ -62,15 +62,15 @@ public final class DockerRunTest {
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/a").envs(),
-            Matchers.equalTo("--env 'A=5' --env 'B=f e'")
+            Matchers.equalTo("-e 'A=5' -e 'B=f e'")
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/b").envs(),
-            Matchers.equalTo("--env 'HELLO=1'")
+            Matchers.equalTo("-e 'HELLO=1'")
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/c").envs(),
-            Matchers.equalTo("--env 'MVN=works'")
+            Matchers.equalTo("-e 'MVN=works'")
         );
     }
 

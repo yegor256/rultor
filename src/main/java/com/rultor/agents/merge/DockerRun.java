@@ -127,7 +127,7 @@ final class DockerRun {
                     new Function<String, String>() {
                         @Override
                         public String apply(final String input) {
-                            return String.format("--env '%s'", input);
+                            return String.format("-e '%s'", input);
                         }
                     }
                 ),
