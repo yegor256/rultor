@@ -439,8 +439,7 @@
             </activation>
             <properties>
                 <tomcat.home>${project.build.directory}/webapp-test</tomcat.home>
-                <dynamo.key>AAAAABBBBBAAAAABBBBB</dynamo.key>
-                <github.token>test</github.token>
+                <failsafe.dynamo.key>AAAAABBBBBAAAAABBBBB</failsafe.dynamo.key>
             </properties>
             <build>
                 <plugins>

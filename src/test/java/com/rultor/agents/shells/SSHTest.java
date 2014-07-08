@@ -42,6 +42,7 @@ import java.security.PublicKey;
 import java.util.Collections;
 import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.NullInputStream;
 import org.apache.sshd.SshServer;
 import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.server.Command;
@@ -62,6 +63,7 @@ import org.mockito.Mockito;
  * Tests for ${@link SSH}.
  *
  * @author Krzysztof Krason (Krzysztof.Krason@gmail.com)
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
@@ -78,7 +80,7 @@ public final class SSHTest {
         final SshServer sshd = this.sshServer(port);
         sshd.setCommandFactory(new SSHTest.EchoCommandCreator());
         sshd.start();
-        final String cmd = "ls";
+        final String cmd = "some test command";
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         final int exit = new SSH(
             InetAddress.getLocalHost().getCanonicalHostName(),
@@ -87,7 +89,7 @@ public final class SSHTest {
             IOUtils.toString(this.getClass().getResourceAsStream("private.key"))
         ).exec(
             cmd,
-            IOUtils.toInputStream(""),
+            new NullInputStream(0L),
             output,
             Logger.stream(Level.WARNING, true)
         );

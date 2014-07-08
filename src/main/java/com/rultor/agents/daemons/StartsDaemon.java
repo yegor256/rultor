@@ -69,7 +69,7 @@ public final class StartsDaemon extends AbstractAgent {
     public StartsDaemon() {
         super(
             "/talk/shell",
-            "/talk/daemon[script and not(started)]"
+            "/talk/daemon[script and not(started) and not(ended)]"
         );
     }
 

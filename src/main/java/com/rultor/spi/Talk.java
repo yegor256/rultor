@@ -94,7 +94,10 @@ public interface Talk {
          */
         public InFile() throws IOException {
             this(File.createTempFile("rultor", ".talk"));
-            FileUtils.write(new File(this.path), "<talk/>");
+            FileUtils.write(
+                new File(this.path),
+                String.format("<talk name='%s'/>", this.name())
+            );
         }
         /**
          * Ctor.
