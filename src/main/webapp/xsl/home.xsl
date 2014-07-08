@@ -39,13 +39,12 @@
     </xsl:template>
     <xsl:template match="page" mode="body">
         <div style="text-align: center;
-            width: 20em;
-            height: 13em;
+            width: 20em; height: 13em;
             position: absolute;
             top: 0; bottom: 0; left: 0; right: 0;
             margin: auto;">
             <p>
-                <img src="//img.rultor.com/logo-512x512.png"
+                <img src="//img.rultor.com/logo.svg"
                     style="width:128px;height:128px;" alt="rultor logo"/>
             </p>
             <p>
