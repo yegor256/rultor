@@ -103,7 +103,7 @@ public final class Tail {
                 ),
                 new AbstractMap.SimpleEntry<String, Tail.Connect>(
                     String.format(
-                        "/talk[shell and daemon[@id='%s']/dir]",
+                        "/talk[shell and daemon[@id='%s'] and daemon/dir]",
                         this.hash
                     ),
                     new Tail.SSHConnect(this.xml)

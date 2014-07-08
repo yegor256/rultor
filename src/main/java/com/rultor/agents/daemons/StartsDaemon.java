@@ -36,10 +36,13 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
+import com.rultor.spi.Profile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -64,13 +67,20 @@ import org.xembly.Directives;
 public final class StartsDaemon extends AbstractAgent {
 
     /**
-     * Ctor.
+     * Profile to get assets from.
      */
-    public StartsDaemon() {
+    private final transient Profile profile;
+
+    /**
+     * Ctor.
+     * @param prof Profile
+     */
+    public StartsDaemon(final Profile prof) {
         super(
             "/talk/shell",
             "/talk/daemon[script and not(started) and not(ended)]"
         );
+        this.profile = prof;
     }
 
     @Override
@@ -110,6 +120,7 @@ public final class StartsDaemon extends AbstractAgent {
             Logger.stream(Level.INFO, this),
             Logger.stream(Level.WARNING, this)
         );
+        this.upload(shell, dir);
         new Shell.Empty(new Shell.Safe(shell)).exec(
             StringUtils.join(
                 Arrays.asList(
@@ -128,4 +139,24 @@ public final class StartsDaemon extends AbstractAgent {
             .up()
             .add("dir").set(dir);
     }
+
+    /**
+     * Upload assets.
+     * @param dir Directory
+     * @throws IOException
+     */
+    private void upload(final Shell shell, final String dir)
+        throws IOException {
+        for (final Map.Entry<String, InputStream> asset
+            : this.profile.assets().entrySet()) {
+            shell.exec(
+                String.format("cat > \"%s/%s\"", dir, asset.getKey()),
+                asset.getValue(),
+                Logger.stream(Level.INFO, true),
+                Logger.stream(Level.WARNING, true)
+            );
+            Logger.info(this, "asset %s uploaded into %s", asset.getKey(), dir);
+        }
+    }
+
 }
