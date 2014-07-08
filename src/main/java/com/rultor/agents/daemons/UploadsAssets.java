@@ -87,6 +87,7 @@ public final class UploadsAssets extends AbstractAgent {
             );
             Logger.info(this, "asset %s uploaded into %s", asset.getKey(), dir);
         }
+        Logger.info(this, "assets uploaded into %s", dir);
         return new Directives();
     }
 }

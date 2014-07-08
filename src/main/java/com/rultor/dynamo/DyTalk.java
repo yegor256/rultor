@@ -31,10 +31,12 @@ package com.rultor.dynamo;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.AttributeUpdates;
 import com.jcabi.dynamo.Item;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.StrictXML;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
@@ -88,10 +90,7 @@ public final class DyTalk implements Talk {
 
     @Override
     public XML read() throws IOException {
-        return new StrictXML(
-            new XMLDocument(this.item.get(DyTalks.ATTR_XML).getS()),
-            DyTalk.SCHEMA
-        );
+        return new XMLDocument(this.item.get(DyTalks.ATTR_XML).getS());
     }
 
     @Override
@@ -115,6 +114,10 @@ public final class DyTalk implements Talk {
             new AttributeValueUpdate().withValue(
                 new AttributeValue().withS(body)
             )
+        );
+        Logger.info(
+            this, "talk %s updated with %d directive(s): %d chars",
+            this.name(), Iterables.size(dirs), body.length()
         );
     }
 
