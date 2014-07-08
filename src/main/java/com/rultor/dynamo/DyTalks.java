@@ -100,7 +100,7 @@ public final class DyTalks implements Talks {
             key,
             Manifests.read("Rultor-DynamoSecret")
         );
-        if ("AAAAABBBBBAAAAABBBBB".equals(key)) {
+        if (key.startsWith("AAAAA")) {
             final int port = Integer.parseInt(
                 System.getProperty("dynamo.port")
             );

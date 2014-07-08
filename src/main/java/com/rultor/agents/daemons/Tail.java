@@ -29,7 +29,6 @@
  */
 package com.rultor.agents.daemons;
 
-import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
@@ -44,6 +43,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.AbstractMap;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
@@ -88,24 +90,25 @@ public final class Tail {
      * @return Stream with log
      * @throws IOException If fails
      */
+    @SuppressWarnings("unchecked")
     public InputStream read() throws IOException {
-        final ImmutableMap<String, Tail.Connect> connects =
-            new ImmutableMap.Builder<String, Tail.Connect>()
-                .put(
+        final Collection<Map.Entry<String, Tail.Connect>> connects =
+            Arrays.<Map.Entry<String, Tail.Connect>>asList(
+                new AbstractMap.SimpleEntry<String, Tail.Connect>(
                     String.format(
                         "/talk/archive/log[@id='%s' and starts-with(.,'s3:')]",
                         this.hash
                     ),
                     new Tail.S3Connect(this.xml, this.hash)
-                )
-                .put(
+                ),
+                new AbstractMap.SimpleEntry<String, Tail.Connect>(
                     String.format(
                         "/talk[shell and daemon[@id='%s']/dir]",
                         this.hash
                     ),
                     new Tail.SSHConnect(this.xml)
-                )
-                .put(
+                ),
+                new AbstractMap.SimpleEntry<String, Tail.Connect>(
                     "/talk",
                     new Tail.Connect() {
                         @Override
@@ -116,9 +119,9 @@ public final class Tail {
                         }
                     }
                 )
-                .build();
+            );
         InputStream stream = null;
-        for (final Map.Entry<String, Tail.Connect> ent : connects.entrySet()) {
+        for (final Map.Entry<String, Tail.Connect> ent : connects) {
             if (!this.xml.nodes(ent.getKey()).isEmpty()) {
                 stream = ent.getValue().read();
                 break;

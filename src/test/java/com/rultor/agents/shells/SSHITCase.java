@@ -29,8 +29,11 @@
  */
 package com.rultor.agents.shells;
 
+import com.jcabi.aspects.Tv;
 import com.rultor.agents.Agents;
 import org.apache.commons.io.IOUtils;
+import org.hamcrest.Matchers;
+import org.junit.Assume;
 import org.junit.Test;
 
 /**
@@ -49,11 +52,12 @@ public final class SSHITCase {
      */
     @Test
     public void executeCommandOnServer() throws Exception {
+        final String key = IOUtils.toString(
+            Agents.class.getResourceAsStream("rultor.key")
+        );
+        Assume.assumeThat(key.length(), Matchers.greaterThan(Tv.HUNDRED));
         final Shell shell = new Shell.Safe(
-            new SSH(
-                "b1.rultor.com", 22, "rultor",
-                IOUtils.toString(Agents.class.getResourceAsStream("rultor.key"))
-            )
+            new SSH("b1.rultor.com", 22, "rultor", key)
         );
         new Shell.Empty(shell).exec("echo one");
     }

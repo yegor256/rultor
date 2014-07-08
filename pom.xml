@@ -232,6 +232,7 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-manifests</artifactId>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
@@ -439,7 +440,6 @@
             </activation>
             <properties>
                 <tomcat.home>${project.build.directory}/webapp-test</tomcat.home>
-                <failsafe.dynamo.key>AAAAABBBBBAAAAABBBBB</failsafe.dynamo.key>
             </properties>
             <build>
                 <plugins>
@@ -592,6 +592,10 @@
             <activation>
                 <property><name>!skipTests</name></property>
             </activation>
+            <properties>
+                <failsafe.dynamo.key>AAAAABBBBBAAAAABBBBB</failsafe.dynamo.key>
+                <failsafe.dynamo.secret>ABCDABCDABCDABCDABCDABCDABCDABCDABCDABCD</failsafe.dynamo.secret>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -649,8 +653,8 @@
                                 <configuration>
                                     <port>${dynamodblocal.port}</port>
                                     <dist>${project.build.directory}/dynamodb-dist</dist>
-                                    <key>AAAAABBBBBAAAAABBBBB</key>
-                                    <secret>ABCDABCDABCDABCDABCDABCDABCDABCDABCDABCD</secret>
+                                    <key>${failsafe.dynamo.key}</key>
+                                    <secret>${failsafe.dynamo.secret}</secret>
                                     <tables>
                                         <table>${basedir}/src/test/dynamodb/talks.json</table>
                                     </tables>
