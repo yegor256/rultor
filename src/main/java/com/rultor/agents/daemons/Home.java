@@ -74,7 +74,7 @@ public final class Home {
     public URI uri() {
         return URI.create(
             String.format(
-                "http://www.rultor.com/t/%s/%s",
+                "http://www.rultor.com/t/%s-%s",
                 this.xml.xpath("/talk/@name").get(0),
                 this.hash
             )
