@@ -116,7 +116,7 @@ public final class StartsDaemon extends AbstractAgent {
                 Arrays.asList(
                     String.format("dir=%s", dir),
                     "chmod a+x ${dir}/run.sh",
-                    "nohup ${dir}/run.sh > ${dir}/stdout 2>&1 &"
+                    "nohup ${dir}/run.sh </dev/null >${dir}/stdout 2>&1 &"
                 ),
                 " && "
             )

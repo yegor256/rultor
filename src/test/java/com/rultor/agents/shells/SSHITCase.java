@@ -55,7 +55,7 @@ public final class SSHITCase {
                 IOUtils.toString(Agents.class.getResourceAsStream("rultor.key"))
             )
         );
-        new Shell.Empty(shell).exec("sleep 60 &");
+        new Shell.Empty(shell).exec("echo one");
     }
 
 }
