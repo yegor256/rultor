@@ -30,13 +30,14 @@
 
 .menu {
   font-family: 'Courier New', Courier, monospace;
-  font-size: 80%;
+  font-size: 85%;
+  padding: .3em;
   text-align: center;
   @media only screen and (max-width: 400px) {
     width: 100%;
   }
   span {
-    margin-left: .2em;
-    margin-right: .2em;
+    margin-left: .3em;
+    margin-right: .3em;
   }
 }
