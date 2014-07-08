@@ -31,6 +31,7 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
+import com.jcabi.manifests.Manifests;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.Shell;
@@ -93,6 +94,13 @@ public final class StartsDaemon extends AbstractAgent {
                         "set -e",
                         "cd $(dirname $0)",
                         "echo $$ > ./pid",
+                        String.format(
+                            "echo \"rultor.com %s/%s/%s\"",
+                            Manifests.read("Rultor-Version"),
+                            Manifests.read("Rultor-Revision"),
+                            Manifests.read("Rultor-Date")
+                        ),
+                        "date",
                         daemon.xpath("script/text()").get(0),
                         "echo 'RULTOR-SUCCESS'"
                     ),
