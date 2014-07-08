@@ -98,28 +98,7 @@ public final class StartsTalks implements SuperAgent {
             if (last <= latest) {
                 continue;
             }
-            final String coords = issue.repo().coordinates().toString();
-            final String name = Hex.encodeHexString(
-                String.format("%s#%d", coords, issue.number()).getBytes()
-            );
-            if (!talks.exists(name)) {
-                talks.create(name);
-            }
-            final Talk talk = talks.get(name);
-            talk.active(true);
-            if (talk.read().nodes("/talk/wire").isEmpty()) {
-                talks.get(name).modify(
-                    new Directives().xpath("/talk")
-                        .add("wire")
-                        .add("github-repo").set(coords).up()
-                        .add("github-issue")
-                        .set(Integer.toString(issue.number()))
-                );
-            }
-            Logger.info(
-                this, "talk %s#%d activated with message #%d",
-                coords, issue.number(), last
-            );
+            this.activate(talks, issue);
             if (last > max) {
                 max = last;
             }
@@ -129,6 +108,38 @@ public final class StartsTalks implements SuperAgent {
             Logger.info(this, "max message number set to %d", max);
         }
         threshold.set(System.currentTimeMillis());
+    }
+
+    /**
+     * Activate talk.
+     * @param talks Talks
+     * @param issue Issue
+     * @throws IOException If fails
+     */
+    private void activate(final Talks talks, final Issue issue)
+        throws IOException {
+        final String coords = issue.repo().coordinates().toString();
+        final String name = Hex.encodeHexString(
+            String.format("%s#%d", coords, issue.number()).getBytes()
+        );
+        if (!talks.exists(name)) {
+            talks.create(name);
+        }
+        final Talk talk = talks.get(name);
+        talk.active(true);
+        if (talk.read().nodes("/talk/wire").isEmpty()) {
+            talks.get(name).modify(
+                new Directives().xpath("/talk")
+                    .add("wire")
+                    .add("github-repo").set(coords).up()
+                    .add("github-issue")
+                    .set(Integer.toString(issue.number()))
+            );
+        }
+        Logger.info(
+            this, "talk %s#%d activated",
+            coords, issue.number()
+        );
     }
 
     /**

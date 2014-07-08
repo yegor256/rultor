@@ -196,10 +196,20 @@
             <groupId>com.rexsl</groupId>
             <artifactId>rexsl</artifactId>
             <version>1.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jsr173_api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-matchers</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-xml</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>

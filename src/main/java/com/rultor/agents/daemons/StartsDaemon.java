@@ -142,8 +142,9 @@ public final class StartsDaemon extends AbstractAgent {
 
     /**
      * Upload assets.
+     * @param shell Shell
      * @param dir Directory
-     * @throws IOException
+     * @throws IOException If fails
      */
     private void upload(final Shell shell, final String dir)
         throws IOException {

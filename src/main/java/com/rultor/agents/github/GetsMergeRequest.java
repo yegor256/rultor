@@ -90,7 +90,9 @@ public final class GetsMergeRequest extends AbstractAgent {
         this.reviewers = new Array<String>(revs);
     }
 
+    // @checkstyle ExecutableStatementCountCheck (200 lines)
     @Override
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final int seen;

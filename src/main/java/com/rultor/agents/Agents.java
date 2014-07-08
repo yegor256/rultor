@@ -76,6 +76,7 @@ import org.apache.commons.lang3.CharEncoding;
 @Immutable
 @ToString
 @EqualsAndHashCode
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class Agents {
 
     /**

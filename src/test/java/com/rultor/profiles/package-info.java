@@ -27,47 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.daemons;
-
-import com.jcabi.matchers.XhtmlMatchers;
-import com.rultor.spi.Agent;
-import com.rultor.spi.Talk;
-import java.util.Date;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.hamcrest.MatcherAssert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.xembly.Directives;
 
 /**
- * Tests for ${@link KillsDaemon}.
+ * Profiles, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-public final class KillsDaemonTest {
-
-    /**
-     * KillsDaemon can ignore a daemon.
-     * @throws Exception In case of error.
-     */
-    @Test
-    @Ignore
-    public void ignoresFreshDaemon() throws Exception {
-        final Talk talk = new Talk.InFile();
-        talk.modify(
-            new Directives().xpath("/talk").add("daemon")
-                .attr("id", "abcd")
-                .add("started")
-                .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))
-        );
-        final Agent agent = new KillsDaemon();
-        agent.execute(talk);
-        MatcherAssert.assertThat(
-            talk.read(),
-            XhtmlMatchers.hasXPath("/talk/daemon")
-        );
-    }
-
-}
+package com.rultor.profiles;

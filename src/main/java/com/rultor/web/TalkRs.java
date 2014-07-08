@@ -56,11 +56,6 @@ public final class TalkRs extends BaseRs {
     private transient String name;
 
     /**
-     * Daemon hash ID.
-     */
-    private transient String hash;
-
-    /**
      * Inject it from query.
      * @param talk Talk name
      */

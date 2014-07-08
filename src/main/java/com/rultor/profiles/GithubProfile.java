@@ -89,6 +89,7 @@ final class GithubProfile implements Profile {
     /**
      * Get .rultor.yml file.
      * @return Its content
+     * @throws IOException If fails
      */
     @Cacheable
     private String yml() throws IOException {
