@@ -87,7 +87,6 @@ final class DockerRun {
             if (xml.nodes("script/item").isEmpty()) {
                 scripts.add(xml.xpath("script/text()").get(0));
             } else {
-                boolean first = true;
                 for (final String cmd : xml.xpath("script/item/text()")) {
                     scripts.add(cmd);
                     scripts.add(";");
@@ -140,6 +139,7 @@ final class DockerRun {
     /**
      * Make a list for bash.
      * @param items Items
+     * @return Text for bash
      */
     private String enlist(final Iterable<String> items) {
         return String.format(
