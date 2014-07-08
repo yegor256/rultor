@@ -47,7 +47,7 @@ import javax.ws.rs.core.Response;
  * @version $Id$
  * @since 1.0
  */
-@Path("/talk/{name:[0-9a-f]+}")
+@Path("/t/{name:[0-9a-f]+}")
 public final class TalkRs extends BaseRs {
 
     /**
