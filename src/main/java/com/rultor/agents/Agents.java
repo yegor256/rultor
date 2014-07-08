@@ -44,6 +44,7 @@ import com.jcabi.s3.retry.ReRegion;
 import com.jcabi.urn.URN;
 import com.rultor.agents.daemons.ArchivesDaemon;
 import com.rultor.agents.daemons.EndsDaemon;
+import com.rultor.agents.daemons.KillsDaemon;
 import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.agents.github.GetsMergeRequest;
 import com.rultor.agents.github.PostsMergeResult;
@@ -114,6 +115,7 @@ public final class Agents {
                     )
                 ),
                 new StartsDaemon(profile),
+                new KillsDaemon(),
                 new EndsDaemon(),
                 new EndsGitMerge(),
                 new PostsMergeResult(github),
