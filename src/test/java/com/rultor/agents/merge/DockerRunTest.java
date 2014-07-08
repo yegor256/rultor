@@ -74,4 +74,28 @@ public final class DockerRunTest {
         );
     }
 
+    /**
+     * DockerRun can fetch script.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void fetchesScript() throws Exception {
+        final Profile profile = new Profile.Fixed(
+            new XMLDocument(
+                StringUtils.join(
+                    "<p><x><script>mvn clean</script></x>",
+                    "<y><script><item>pw</item><item>ls</item></script></y></p>"
+                )
+            )
+        );
+        MatcherAssert.assertThat(
+            new DockerRun(profile, "/p/x").script(),
+            Matchers.equalTo("mvn clean")
+        );
+        MatcherAssert.assertThat(
+            new DockerRun(profile, "/p/y").script(),
+            Matchers.equalTo("pw; ls")
+        );
+    }
+
 }
