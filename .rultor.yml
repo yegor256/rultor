@@ -1,5 +1,6 @@
 assets:
-  settings.xml: yegor256/home#assets/rultor/setting.xml 
+  settings.xml: yegor256/home#assets/rultor/settings.xml 
 merge:
   script: 
-    - "mvn help:system clean install -Pqulice --batch-mode --update-snapshots --errors --strict-checksums"
+    - "export MAVEN_OPTS='-XX:MaxPermSize=256m -Xmx1g'"
+    - "mvn help:system clean install -Pqulice --settings settings.xml"
