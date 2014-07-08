@@ -73,6 +73,7 @@ public final class TalkRs extends BaseRs {
     @GET
     @Path("/")
     public Response index() throws IOException {
+        this.adminOnly();
         if (!this.talks().exists(this.name)) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),

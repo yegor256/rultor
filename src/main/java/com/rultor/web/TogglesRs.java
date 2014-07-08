@@ -51,8 +51,8 @@ public final class TogglesRs extends BaseRs {
      */
     @GET
     @Path("/read-only")
-    public void readOnly()
-        throws IOException {
+    public void readOnly() throws IOException {
+        this.adminOnly();
         final Toggles toggles = new Toggles();
         toggles.readOnly(!toggles.readOnly());
         throw this.flash().redirect(

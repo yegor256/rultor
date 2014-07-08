@@ -163,6 +163,20 @@ public class BaseRs extends BaseResource {
     }
 
     /**
+     * If admin permissions required.
+     */
+    protected final void adminOnly() {
+        final String self = this.auth().identity().urn().toString();
+        if (!"urn:github:526301".equals(self)) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                "sorry, but this entrance is \"staff only\"",
+                Level.WARNING
+            );
+        }
+    }
+
+    /**
      * Get all talks.
      * @return The talks
      */
@@ -173,13 +187,6 @@ public class BaseRs extends BaseResource {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 "please login first",
-                Level.WARNING
-            );
-        }
-        if (!"urn:github:526301".equals(self.urn().toString())) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                "sorry, but this entrance is \"staff only\"",
                 Level.WARNING
             );
         }
