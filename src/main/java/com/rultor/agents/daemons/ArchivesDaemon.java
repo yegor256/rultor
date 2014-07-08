@@ -50,6 +50,7 @@ import lombok.ToString;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang3.StringUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -86,7 +87,12 @@ public final class ArchivesDaemon extends AbstractAgent {
         final File file = File.createTempFile("rultor", ".log");
         final String dir = xml.xpath("/talk/daemon/dir/text()").get(0);
         new Shell.Safe(shell).exec(
-            String.format("cat %s/stdout 2>&1", dir),
+            StringUtils.join(
+                String.format("dir=\"%s\";", dir),
+                "if [ -e \"${dir}/stdout\" ]; then ",
+                "cat \"${dir}/stdout\" 2>&1;",
+                "else echo 'stdout not found, some internal error'; fi"
+            ),
             new NullInputStream(0L),
             new FileOutputStream(file),
             Logger.stream(Level.WARNING, this)
