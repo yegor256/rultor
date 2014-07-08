@@ -47,6 +47,7 @@ import org.junit.Test;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 public final class GithubProfileTest {
 
@@ -65,7 +66,7 @@ public final class GithubProfileTest {
                     .add("message", "just test msg")
                     .add("content", Base64.encodeBase64String("hey".getBytes()))
                     .build()
-        );
+            );
         final Repo repo = github.repos().create(
             Json.createObjectBuilder().add("name", "test2").build()
         );
