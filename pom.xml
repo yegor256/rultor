@@ -28,7 +28,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.jcabi</groupId>
@@ -40,7 +42,7 @@
     <version>1.0.6</version>
     <packaging>war</packaging>
     <name>rultor</name>
-    <description>Rultor.com, Lightweight Integration Platform (as a Service)</description>
+    <description>Rultor.com, Coding Team Assistant</description>
     <url>http://www.rultor.com</url>
     <inceptionYear>2009</inceptionYear>
     <organization>
@@ -78,8 +80,8 @@
         <url>https://github.com/yegor256/rultor</url>
     </scm>
     <ciManagement>
-        <system>rultor</system>
-        <url>http://www.rultor.com/s/rultor</url>
+        <system>travis-ci</system>
+        <url>https://travis-ci.org/yegor256/rultor</url>
     </ciManagement>
     <distributionManagement>
         <site>
