@@ -29,7 +29,11 @@
  */
 package com.rultor.profiles;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.github.Content;
 import com.jcabi.github.Repo;
 import com.rultor.spi.Profile;
 import java.io.IOException;
@@ -38,6 +42,8 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.CharEncoding;
 
 /**
  * Github Profile.
@@ -50,6 +56,11 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "repo")
 final class GithubProfile implements Profile {
+
+    /**
+     * File name.
+     */
+    private static final String FILE = ".rultor.yml";
 
     /**
      * Repo.
@@ -66,6 +77,7 @@ final class GithubProfile implements Profile {
 
     @Override
     public boolean contains(final String path) throws IOException {
+        System.out.println(this.yml());
         return false;
     }
 
@@ -88,8 +100,31 @@ final class GithubProfile implements Profile {
      * Get .rultor.yml file.
      * @return Its content
      */
-    private String yml() {
-        return "";
+    @Cacheable
+    private String yml() throws IOException {
+        final boolean exists = Iterables.any(
+            this.repo.contents().iterate("", ""),
+            new Predicate<Content>() {
+                @Override
+                public boolean apply(final Content input) {
+                    return input.path().equals(GithubProfile.FILE);
+                }
+            }
+        );
+        final String yml;
+        if (exists) {
+            yml = new String(
+                Base64.decodeBase64(
+                    new Content.Smart(
+                        this.repo.contents().get(GithubProfile.FILE)
+                    ).content()
+                ),
+                CharEncoding.UTF_8
+            );
+        } else {
+            yml = "";
+        }
+        return yml;
     }
 
 }
