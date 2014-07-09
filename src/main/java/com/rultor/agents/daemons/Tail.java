@@ -52,6 +52,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Tail daemon output.
@@ -114,7 +115,14 @@ public final class Tail {
                         @Override
                         public InputStream read() {
                             return IOUtils.toInputStream(
-                                "nothing to read, try again in a few seconds"
+                                StringUtils.join(
+                                    String.format(
+                                        "rultor.com %s/%s\n",
+                                        Manifests.read("Rultor-Version"),
+                                        Manifests.read("Rultor-Revision")
+                                    ),
+                                    "nothing yet, try again in 15 seconds"
+                                )
                             );
                         }
                     }
