@@ -105,13 +105,14 @@ public final class DockerRunTest {
     @Test
     public void fetchesFromEmptyProfile() throws Exception {
         final Profile profile = new Profile.Fixed(new XMLDocument("<p/>"));
+        final String empty = "(  )";
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/absent").envs(),
-            Matchers.equalTo("( )")
+            Matchers.equalTo(empty)
         );
         MatcherAssert.assertThat(
             new DockerRun(profile, "/p/doesnt-exist").script(),
-            Matchers.equalTo("( )")
+            Matchers.equalTo(empty)
         );
     }
 

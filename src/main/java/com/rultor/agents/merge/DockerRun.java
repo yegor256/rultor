@@ -35,6 +35,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
+import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.util.Collection;
@@ -52,7 +53,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "profile", "node" })
+@EqualsAndHashCode(of = { "profile", "xpath" })
 final class DockerRun {
 
     /**
@@ -63,16 +64,16 @@ final class DockerRun {
     /**
      * Node name.
      */
-    private final transient String node;
+    private final transient String xpath;
 
     /**
      * Ctor.
      * @param prof Profile
-     * @param name Node name in profile XML
+     * @param path Node name in profile XML, XPath
      */
-    DockerRun(final Profile prof, final String name) {
+    DockerRun(final Profile prof, final String path) {
         this.profile = prof;
-        this.node = name;
+        this.xpath = path;
     }
 
     /**
@@ -81,7 +82,7 @@ final class DockerRun {
      * @throws IOException If fails
      */
     public String script() throws IOException {
-        final XML xml = this.profile.read().nodes(this.node).get(0);
+        final XML xml = this.node();
         final Collection<String> scripts = new LinkedList<String>();
         if (!xml.nodes("script").isEmpty()) {
             if (xml.nodes("script/item").isEmpty()) {
@@ -102,7 +103,7 @@ final class DockerRun {
      * @throws IOException If fails
      */
     public String envs() throws IOException {
-        final XML xml = this.profile.read().nodes(this.node).get(0);
+        final XML xml = this.node();
         final Collection<String> envs = new LinkedList<String>();
         if (!xml.nodes("env").isEmpty()) {
             final Collection<String> parts;
@@ -134,6 +135,22 @@ final class DockerRun {
             );
         }
         return this.enlist(envs);
+    }
+
+    /**
+     * Get xpath.
+     * @return XML
+     * @throws IOException If fails
+     */
+    private XML node() throws IOException {
+        final XML node;
+        final Collection<XML> nodes = this.profile.read().nodes(this.xpath);
+        if (nodes.isEmpty()) {
+            node = new XMLDocument("<x/>");
+        } else {
+            node = nodes.iterator().next();
+        }
+        return node;
     }
 
     /**
