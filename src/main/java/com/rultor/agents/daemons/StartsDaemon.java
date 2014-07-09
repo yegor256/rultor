@@ -102,6 +102,7 @@ public final class StartsDaemon extends AbstractAgent {
                         "#!/bin/bash",
                         "set -x",
                         "set -e",
+                        "set -o pipefail",
                         "cd $(dirname $0)",
                         "echo $$ > ./pid",
                         String.format(
