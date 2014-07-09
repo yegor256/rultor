@@ -4,4 +4,4 @@ merge:
   env:
     MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script: 
-    - "mvn help:system clean install -Pqulice --settings settings.xml"
+    - "mvn help:system clean install -Pqulice --settings ../settings.xml"
