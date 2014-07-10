@@ -46,7 +46,7 @@ import com.rultor.agents.daemons.ArchivesDaemon;
 import com.rultor.agents.daemons.EndsDaemon;
 import com.rultor.agents.daemons.KillsDaemon;
 import com.rultor.agents.daemons.StartsDaemon;
-import com.rultor.agents.github.PostsMergeResult;
+import com.rultor.agents.github.Reports;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.StartsTalks;
 import com.rultor.agents.github.Understands;
@@ -139,7 +139,7 @@ public final class Agents {
                 new KillsDaemon(),
                 new EndsDaemon(),
                 new EndsRequest(),
-                new PostsMergeResult(github),
+                new Reports(github),
                 new RemovesShell(),
                 new ArchivesDaemon(
                     new ReRegion(

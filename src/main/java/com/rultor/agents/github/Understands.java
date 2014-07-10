@@ -30,7 +30,6 @@
 package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.github.Bulk;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Github;
@@ -40,10 +39,8 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
 import java.io.IOException;
-import java.net.URI;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -92,23 +89,22 @@ public final class Understands extends AbstractAgent {
         final int seen = Understands.seen(xml);
         int next = seen;
         Req req = Req.EMPTY;
-        final String hash = DigestUtils.md5Hex(
-            Long.toString(System.currentTimeMillis())
-        ).substring(0, Tv.EIGHT);
-        final URI home = new Home(xml, hash).uri();
         for (final Comment.Smart comment : comments) {
             if (comment.number() <= seen) {
                 continue;
             }
             next = comment.number();
-            req = this.question.understand(comment, home);
+            req = this.question.understand(
+                comment, new Home(xml, Integer.toString(next)).uri()
+            );
             if (!req.equals(Req.EMPTY)) {
                 break;
             }
         }
         final Directives dirs = new Directives();
         if (!req.equals(Req.EMPTY)) {
-            dirs.xpath("/talk").add("request").attr("id", hash)
+            dirs.xpath("/talk").add("request")
+                .attr("id", Integer.toString(next))
                 .append(req.dirs());
         }
         if (next > seen) {

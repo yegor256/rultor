@@ -33,63 +33,46 @@ import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
-import com.rultor.agents.github.qtn.QnDeploy;
-import com.rultor.agents.github.qtn.QnFirstOf;
-import com.rultor.agents.github.qtn.QnHello;
-import com.rultor.agents.github.qtn.QnIfContains;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Talk;
-import java.util.Arrays;
 import javax.json.Json;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.xembly.Directives;
 
 /**
- * Tests for ${@link Understands}.
+ * Tests for ${@link Reports}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.3
  */
-public final class UnderstandsTest {
+public final class ReportsTest {
 
     /**
-     * Understands can understand a message.
+     * Reports can report a result of a request.
      * @throws Exception In case of error.
      */
     @Test
-    public void understandsMessage() throws Exception {
+    public void reportsRequestResult() throws Exception {
         final Repo repo = new MkGithub("jeff").repos().create(
             Json.createObjectBuilder().add("name", "test").build()
         );
         final Issue issue = repo.issues().create("", "");
-        issue.comments().post("@jeff hello");
-        issue.comments().post("@jeff deploy");
-        final Agent agent = new Understands(
-            repo.github(),
-            new QnFirstOf(
-                Arrays.<Question>asList(
-                    new QnIfContains("hello", new QnHello()),
-                    new QnIfContains("deploy", new QnDeploy())
-                )
-            )
-        );
+        issue.comments().post("hey, do it");
+        final Agent agent = new Reports(repo.github());
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk").add("wire")
                 .add("github-repo").set(repo.coordinates().toString()).up()
                 .add("github-issue").set(Integer.toString(issue.number())).up()
+                .up()
+                .add("request").attr("id", "1").add("success").set("true")
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
             talk.read(),
-            XhtmlMatchers.hasXPaths(
-                "/talk/wire[github-seen='2']",
-                "/talk/request[@id='2']",
-                "/talk/request[type='deploy' and args]",
-                "/talk/request/args/arg[@name='branch' and .='master']"
-            )
+            XhtmlMatchers.hasXPath("/talk[not(request)]")
         );
     }
 

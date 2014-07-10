@@ -30,9 +30,9 @@
 package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.github.Comment;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
-import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
@@ -53,7 +53,7 @@ import org.xembly.Directives;
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "github")
-public final class PostsMergeResult extends AbstractAgent {
+public final class Reports extends AbstractAgent {
 
     /**
      * Github.
@@ -64,14 +64,14 @@ public final class PostsMergeResult extends AbstractAgent {
      * Ctor.
      * @param ghub Github client
      */
-    public PostsMergeResult(final Github ghub) {
-        super("/talk/merge-request-git[@id and success]");
+    public Reports(final Github ghub) {
+        super("/talk/request[@id and success]");
         this.github = ghub;
     }
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final XML req = xml.nodes("/talk/merge-request-git").get(0);
+        final XML req = xml.nodes("/talk/request").get(0);
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final boolean success = Boolean.parseBoolean(
             req.xpath("success/text()").get(0)
@@ -89,9 +89,15 @@ public final class PostsMergeResult extends AbstractAgent {
                 home.toASCIIString()
             );
         }
-        issue.comments().post(msg);
-        Logger.info(this, "merge request completed at #%d", issue.number());
-        return new Directives().xpath("/talk/merge-request-git[success]")
+        new Answer(
+            new Comment.Smart(
+                issue.comments().get(
+                    Integer.parseInt(req.xpath("@id").get(0))
+                )
+            )
+        ).post(msg);
+        return new Directives()
+            .xpath("/talk/request[success]")
             .strict(1).remove();
     }
 

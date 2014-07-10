@@ -68,9 +68,8 @@ public final class QnMerge implements Question {
         final JsonObject base = pull.json().getJsonObject("base");
         new Answer(comment).post(
             String.format(
-                // @checkstyle LineLength (1 line)
                 "OK, I'm on it. You can track me [here](%s)",
-                home
+                home.toASCIIString()
             )
         );
         return new Req.Simple(

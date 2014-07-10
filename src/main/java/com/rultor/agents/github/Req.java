@@ -31,7 +31,6 @@ package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.immutable.ArrayMap;
-import java.util.Collections;
 import java.util.Map;
 import org.xembly.Directive;
 import org.xembly.Directives;
