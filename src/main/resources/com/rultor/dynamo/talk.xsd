@@ -59,15 +59,36 @@
         </xs:all>
         <xs:attribute name="id" type="hash" use="required"/>
     </xs:complexType>
-    <xs:complexType name="merge-request-git">
+    <xs:complexType name="request">
         <xs:all>
-            <xs:element name="base" type="xs:string"/>
-            <xs:element name="base-branch" type="xs:string"/>
-            <xs:element name="head" type="xs:string"/>
-            <xs:element name="head-branch" type="xs:string"/>
-            <xs:element name="success" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="args">
+                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                    <xs:element name="arg" minOccurs="0" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                    <xs:attribute name="name" use="required">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:pattern value="[a-zA-Z_]+"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:element>
         </xs:all>
         <xs:attribute name="id" type="hash" use="required"/>
+        <xs:attribute name="type" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="[a-z]+"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:complexType>
     <xs:complexType name="wire">
         <xs:all>

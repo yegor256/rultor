@@ -31,6 +31,7 @@ package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.xml.XML;
+import com.jcabi.xml.XMLDocument;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -104,6 +105,12 @@ public interface Profile {
          * XML document.
          */
         private final transient XML xml;
+        /**
+         * Ctor.
+         */
+        public Fixed() {
+            this(new XMLDocument("<p/>"));
+        }
         /**
          * Ctor.
          * @param doc Document

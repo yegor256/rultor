@@ -50,7 +50,7 @@ import com.rultor.agents.github.GetsMergeRequest;
 import com.rultor.agents.github.PostsMergeResult;
 import com.rultor.agents.github.StartsTalks;
 import com.rultor.agents.req.EndsRequest;
-import com.rultor.agents.req.StartsGitMerge;
+import com.rultor.agents.req.StartsRequest;
 import com.rultor.agents.shells.RegistersShell;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
@@ -105,7 +105,7 @@ public final class Agents {
                     github,
                     Collections.singleton("yegor256")
                 ),
-                new StartsGitMerge(profile),
+                new StartsRequest(profile),
                 new RegistersShell(
                     // @checkstyle MagicNumber (1 line)
                     "b1.rultor.com", 22,

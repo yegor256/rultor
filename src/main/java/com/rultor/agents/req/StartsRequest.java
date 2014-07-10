@@ -58,7 +58,7 @@ import org.xembly.Directives;
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "profile")
-public final class StartsGitMerge extends AbstractAgent {
+public final class StartsRequest extends AbstractAgent {
 
     /**
      * Profile.
@@ -69,9 +69,9 @@ public final class StartsGitMerge extends AbstractAgent {
      * Ctor.
      * @param prof Profile
      */
-    public StartsGitMerge(final Profile prof) {
+    public StartsRequest(final Profile prof) {
         super(
-            "/talk/merge-request-git[not(success)]",
+            "/talk/request[not(success)]",
             "/talk[not(daemon)]"
         );
         this.profile = prof;
@@ -79,14 +79,16 @@ public final class StartsGitMerge extends AbstractAgent {
 
     @Override
     public Iterable<Directive> process(final XML xml) throws IOException {
-        final XML req = xml.nodes("//merge-request-git").get(0);
+        final XML req = xml.nodes("//request").get(0);
         final ImmutableMap.Builder<String, String> vars =
             new ImmutableMap.Builder<String, String>();
-        vars.put("BASE", req.xpath("base/text()").get(0));
-        vars.put("BASE_BRANCH", req.xpath("base-branch/text()").get(0));
-        vars.put("HEAD", req.xpath("head/text()").get(0));
-        vars.put("HEAD_BRANCH", req.xpath("head-branch/text()").get(0));
-        final DockerRun docker = new DockerRun(this.profile, "/p/merge");
+        for (final XML arg : req.nodes("args/arg")) {
+            vars.put(arg.xpath("@name").get(0), arg.xpath("text()").get(0));
+        }
+        final String type = req.xpath("@type").get(0);
+        final DockerRun docker = new DockerRun(
+            this.profile, String.format("/p/%s", type)
+        );
         vars.put("SCRIPT", docker.script());
         vars.put("DOCKER_ENVS", docker.envs());
         final String script = StringUtils.join(
@@ -106,7 +108,9 @@ public final class StartsGitMerge extends AbstractAgent {
                 ),
                 Collections.singleton(
                     IOUtils.toString(
-                        this.getClass().getResourceAsStream("merge.sh"),
+                        this.getClass().getResourceAsStream(
+                            String.format("%s.sh", type)
+                        ),
                         CharEncoding.UTF_8
                     )
                 )
@@ -115,8 +119,8 @@ public final class StartsGitMerge extends AbstractAgent {
         );
         final String hash = req.xpath("@id").get(0);
         Logger.info(
-            this, "git merge %s started in %s",
-            hash, xml.xpath("/talk/@name").get(0)
+            this, "request %s/%s started in %s",
+            type, hash, xml.xpath("/talk/@name").get(0)
         );
         return new Directives().xpath("/talk")
             .add("daemon")
