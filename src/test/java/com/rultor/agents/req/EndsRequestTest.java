@@ -55,6 +55,7 @@ public final class EndsRequestTest {
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk")
+                // @checkstyle MultipleStringLiteralsCheck (1 line)
                 .add("daemon").attr("id", "abcd")
                 .add("script").set("test").up()
                 .add("code").set("13").up()

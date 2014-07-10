@@ -69,7 +69,7 @@ public final class ReportsTest {
                 .up()
                 .add("request").attr("id", "1")
                 .add("success").set("true").up()
-                .add("type").set("test").up()
+                .add("type").set("something").up()
                 .add("args")
         );
         agent.execute(talk);
