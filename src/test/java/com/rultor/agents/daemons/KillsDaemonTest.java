@@ -57,6 +57,7 @@ public final class KillsDaemonTest {
         talk.modify(
             new Directives().xpath("/talk").add("daemon")
                 .attr("id", "abcd")
+                .add("script").set("empty").up()
                 .add("started")
                 .set(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))
         );

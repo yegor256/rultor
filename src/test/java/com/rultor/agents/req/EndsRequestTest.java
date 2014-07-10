@@ -56,9 +56,12 @@ public final class EndsRequestTest {
         talk.modify(
             new Directives().xpath("/talk")
                 .add("daemon").attr("id", "abcd")
+                .add("script").set("test").up()
                 .add("code").set("13").up()
-                .add("ended").set("today").up().up()
-                .add("request")
+                .add("ended").set("2013-01-01T12:35:09Z").up().up()
+                .add("request").attr("id", "1")
+                .add("type").set("something").up()
+                .add("args")
         );
         agent.execute(talk);
         MatcherAssert.assertThat(

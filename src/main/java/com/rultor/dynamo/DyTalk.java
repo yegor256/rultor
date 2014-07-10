@@ -39,8 +39,6 @@ import com.jcabi.dynamo.Item;
 import com.jcabi.xml.StrictXML;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
-import com.jcabi.xml.XSD;
-import com.jcabi.xml.XSDDocument;
 import com.rultor.spi.Talk;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
@@ -61,13 +59,6 @@ import org.xembly.Xembler;
 @ToString
 @EqualsAndHashCode(of = "item")
 public final class DyTalk implements Talk {
-
-    /**
-     * Schema.
-     */
-    private static final XSD SCHEMA = XSDDocument.make(
-        DyTalk.class.getResourceAsStream("talk.xsd")
-    );
 
     /**
      * Item.
@@ -109,7 +100,7 @@ public final class DyTalk implements Talk {
                 );
             }
             final String body = new StrictXML(
-                new XMLDocument(node), DyTalk.SCHEMA
+                new XMLDocument(node), Talk.SCHEMA
             ).toString();
             if (body.length() > Tv.FIFTY * Tv.THOUSAND) {
                 throw new IllegalArgumentException("XML is too big");

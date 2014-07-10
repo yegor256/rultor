@@ -56,7 +56,9 @@ public final class RegistersShellTest {
         );
         final Talk talk = new Talk.InFile();
         talk.modify(
-            new Directives().xpath("/talk").add("daemon").attr("id", "abcd")
+            new Directives().xpath("/talk")
+                .add("daemon").attr("id", "abcd")
+                .add("script").set("test")
         );
         agent.execute(talk);
         MatcherAssert.assertThat(

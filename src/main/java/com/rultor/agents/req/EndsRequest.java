@@ -55,7 +55,7 @@ public final class EndsRequest extends AbstractAgent {
      */
     public EndsRequest() {
         super(
-            "/talk/request[not(success)]",
+            "/talk/request[type and not(success)]",
             "/talk/daemon[ended and code]"
         );
     }

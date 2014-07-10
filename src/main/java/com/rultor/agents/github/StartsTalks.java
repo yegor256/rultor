@@ -105,7 +105,6 @@ public final class StartsTalks implements SuperAgent {
         }
         if (max != latest) {
             cnt.set((long) max);
-            Logger.info(this, "max message number set to %d", max);
         }
         threshold.set(System.currentTimeMillis());
     }
@@ -137,8 +136,8 @@ public final class StartsTalks implements SuperAgent {
             );
         }
         Logger.info(
-            this, "talk %s#%d activated",
-            coords, issue.number()
+            this, "talk %s#%d activated as %s",
+            coords, issue.number(), name
         );
     }
 

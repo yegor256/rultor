@@ -32,8 +32,10 @@ package com.rultor.agents.github.qtn;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
+import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
+import java.io.IOException;
 import java.net.URI;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -53,7 +55,13 @@ public final class QnDeploy implements Question {
 
     @Override
     public Req understand(final Comment.Smart comment,
-        final URI home) {
+        final URI home) throws IOException {
+        new Answer(comment).post(
+            String.format(
+                "OK, I'll do it now. You can track the progress [here](%s)",
+                home.toASCIIString()
+            )
+        );
         return new Req.Simple(
             "deploy",
             new ImmutableMap.Builder<String, String>()

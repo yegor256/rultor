@@ -67,7 +67,10 @@ public final class ReportsTest {
                 .add("github-repo").set(repo.coordinates().toString()).up()
                 .add("github-issue").set(Integer.toString(issue.number())).up()
                 .up()
-                .add("request").attr("id", "1").add("success").set("true")
+                .add("request").attr("id", "1")
+                .add("success").set("true").up()
+                .add("type").set("test").up()
+                .add("args")
         );
         agent.execute(talk);
         MatcherAssert.assertThat(

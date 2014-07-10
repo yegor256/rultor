@@ -30,8 +30,11 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.xml.StrictXML;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
+import com.jcabi.xml.XSD;
+import com.jcabi.xml.XSDDocument;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
@@ -50,6 +53,11 @@ import org.xembly.Xembler;
  */
 @Immutable
 public interface Talk {
+
+    /**
+     * Schema.
+     */
+    XSD SCHEMA = XSDDocument.make(Talk.class.getResourceAsStream("talk.xsd"));
 
     /**
      * Its unique name.
@@ -128,7 +136,7 @@ public interface Talk {
             }
             FileUtils.write(
                 new File(this.path),
-                new XMLDocument(node).toString(),
+                new StrictXML(new XMLDocument(node), Talk.SCHEMA).toString(),
                 CharEncoding.UTF_8
             );
         }
