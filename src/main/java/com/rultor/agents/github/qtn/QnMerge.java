@@ -61,19 +61,39 @@ public final class QnMerge implements Question {
     @Override
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
-        final Issue issue = comment.issue();
-        final JsonReadable pull = new Pull.Smart(
-            issue.repo().pulls().get(issue.number())
-        );
+        final Issue.Smart issue = new Issue.Smart(comment.issue());
+        final Req req;
+        if (issue.isPull()) {
+            new Answer(comment).post(
+                String.format(
+                    "OK, I'm on it. You can track me [here](%s)",
+                    home.toASCIIString()
+                )
+            );
+            Logger.info(this, "merge request found in #%d", issue.number());
+            req = QnMerge.pack(
+                new Pull.Smart(
+                    issue.repo().pulls().get(issue.number())
+                )
+            );
+        } else {
+            new Answer(comment).post(
+                "it's not a pull request, I can't merge it"
+            );
+            req = Req.EMPTY;
+        }
+        return req;
+    }
+
+    /**
+     * Pack a pull request.
+     * @param pull Pull
+     * @return Req
+     * @throws IOException If fails
+     */
+    private static Req pack(final JsonReadable pull) throws IOException {
         final JsonObject head = pull.json().getJsonObject("head");
         final JsonObject base = pull.json().getJsonObject("base");
-        new Answer(comment).post(
-            String.format(
-                "OK, I'm on it. You can track me [here](%s)",
-                home.toASCIIString()
-            )
-        );
-        Logger.info(this, "merge request found in #%d", issue.number());
         return new Req.Simple(
             "merge",
             new ImmutableMap.Builder<String, String>()
