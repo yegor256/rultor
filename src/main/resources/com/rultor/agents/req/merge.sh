@@ -1,11 +1,11 @@
-git clone "${BASE}" repo
+git clone "${base}" repo
 cd repo
-git checkout "${BASE_BRANCH}"
-git remote add head "${HEAD}"
+git checkout "${base_branch}"
+git remote add head "${head}"
 git remote update
 git config user.email "me@rultor.com"
 git config user.name "rultor"
-git merge "head/${HEAD_BRANCH}"
+git merge "head/${head_branch}"
 cd ..
 
 if [ -z "${SCRIPT}" ]; then
@@ -36,4 +36,4 @@ chmod a+x ${BIN}
 sudo docker run --rm -v $(pwd):/main "${DOCKER_ENVS[@]}" -w=/main yegor256/rultor /main/${BIN}
 
 cd repo
-git push origin "${BASE_BRANCH}"
+git push origin "${base_branch}"
