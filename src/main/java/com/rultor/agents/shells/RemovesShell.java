@@ -55,7 +55,7 @@ public final class RemovesShell extends AbstractAgent {
     public RemovesShell() {
         super(
             "/talk/shell[@id]",
-            "/talk/daemon[ended and code]"
+            "/talk[not(daemon)]"
         );
     }
 
