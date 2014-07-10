@@ -50,6 +50,7 @@ public interface Question {
      * @param comment The comment
      * @param home Home URI of the daemon
      * @return Request (or Req.EMPTY is nothing found)
+     * @throws IOException If fails
      */
     Req understand(Comment.Smart comment, URI home) throws IOException;
 

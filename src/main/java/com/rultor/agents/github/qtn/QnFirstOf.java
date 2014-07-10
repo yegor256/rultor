@@ -48,7 +48,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "questions")
 public final class QnFirstOf implements Question {
 
     /**

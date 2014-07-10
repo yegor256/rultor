@@ -47,7 +47,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = { "pattern", "origin" })
 public final class QnIfContains implements Question {
 
     /**

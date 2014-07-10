@@ -76,7 +76,8 @@ public final class Reports extends AbstractAgent {
         final boolean success = Boolean.parseBoolean(
             req.xpath("success/text()").get(0)
         );
-        final URI home = new Home(xml, req.xpath("@id").get(0)).uri();
+        final String hash = req.xpath("@id").get(0);
+        final URI home = new Home(xml, hash).uri();
         final String msg;
         if (success) {
             msg = String.format(
@@ -91,9 +92,7 @@ public final class Reports extends AbstractAgent {
         }
         new Answer(
             new Comment.Smart(
-                issue.comments().get(
-                    Integer.parseInt(req.xpath("@id").get(0))
-                )
+                issue.comments().get(Integer.parseInt(hash))
             )
         ).post(msg);
         return new Directives()

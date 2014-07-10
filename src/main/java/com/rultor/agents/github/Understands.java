@@ -81,6 +81,7 @@ public final class Understands extends AbstractAgent {
     }
 
     @Override
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Iterable<Directive> process(final XML xml) throws IOException {
         final Issue.Smart issue = new TalkIssues(this.github, xml).get();
         final Iterable<Comment.Smart> comments = new Smarts<Comment.Smart>(

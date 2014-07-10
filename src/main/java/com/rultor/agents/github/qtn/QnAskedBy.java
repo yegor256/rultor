@@ -52,7 +52,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = { "logins", "origin" })
 public final class QnAskedBy implements Question {
 
     /**

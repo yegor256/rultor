@@ -54,7 +54,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "github")
+@EqualsAndHashCode
 public final class QnMerge implements Question {
 
     @Override

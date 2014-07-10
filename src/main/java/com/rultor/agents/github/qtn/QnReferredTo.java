@@ -48,7 +48,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = { "login", "origin" })
 public final class QnReferredTo implements Question {
 
     /**

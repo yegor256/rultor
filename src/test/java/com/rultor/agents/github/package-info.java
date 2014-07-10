@@ -27,40 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.shells;
-
-import com.jcabi.aspects.Immutable;
-import com.jcabi.xml.XML;
-import com.rultor.agents.AbstractAgent;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.xembly.Directive;
-import org.xembly.Directives;
 
 /**
- * Removes shell.
+ * Github, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.3
+ * @since 1.0
  */
-@Immutable
-@ToString
-@EqualsAndHashCode(callSuper = false)
-public final class RemovesShell extends AbstractAgent {
-
-    /**
-     * Ctor.
-     */
-    public RemovesShell() {
-        super(
-            "/talk/shell[@id]",
-            "/talk/daemon[ended and code]"
-        );
-    }
-
-    @Override
-    public Iterable<Directive> process(final XML xml) {
-        return new Directives().xpath("/talk/shell").strict(1).remove();
-    }
-}
+package com.rultor.agents.github;
