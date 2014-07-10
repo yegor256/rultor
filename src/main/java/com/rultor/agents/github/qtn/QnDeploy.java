@@ -32,6 +32,7 @@ package com.rultor.agents.github.qtn;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
+import com.jcabi.log.Logger;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
@@ -61,6 +62,10 @@ public final class QnDeploy implements Question {
                 "OK, I'll do it now. You can track the progress [here](%s)",
                 home.toASCIIString()
             )
+        );
+        Logger.info(
+            this, "deploy request found in #%d",
+            comment.issue().number()
         );
         return new Req.Simple(
             "deploy",

@@ -35,6 +35,7 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Smarts;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
@@ -103,7 +104,9 @@ public final class Understands extends AbstractAgent {
             }
         }
         final Directives dirs = new Directives();
-        if (!req.equals(Req.EMPTY)) {
+        if (req.equals(Req.EMPTY)) {
+            Logger.info(this, "nothing new in #%d", issue.number());
+        } else {
             dirs.xpath("/talk").add("request")
                 .attr("id", Integer.toString(next))
                 .append(req.dirs());

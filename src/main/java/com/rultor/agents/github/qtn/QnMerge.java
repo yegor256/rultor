@@ -35,6 +35,7 @@ import com.jcabi.github.Comment;
 import com.jcabi.github.Issue;
 import com.jcabi.github.JsonReadable;
 import com.jcabi.github.Pull;
+import com.jcabi.log.Logger;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
@@ -72,6 +73,7 @@ public final class QnMerge implements Question {
                 home.toASCIIString()
             )
         );
+        Logger.info(this, "merge request found in #%d", issue.number());
         return new Req.Simple(
             "merge",
             new ImmutableMap.Builder<String, String>()

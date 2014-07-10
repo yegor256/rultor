@@ -31,6 +31,7 @@ package com.rultor.agents.github.qtn;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
+import com.jcabi.log.Logger;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
@@ -63,6 +64,7 @@ public final class QnHello implements Question {
                 " explains them briefly. Have fun :)"
             )
         );
+        Logger.info(this, "hello found in #%d", comment.issue().number());
         return Req.EMPTY;
     }
 
