@@ -56,7 +56,8 @@ public final class StartsRequestTest {
         final Talk talk = new Talk.InFile();
         talk.modify(
             new Directives().xpath("/talk")
-                .add("request").attr("id", "abcd").attr("type", "merge")
+                .add("request").attr("id", "abcd")
+                .add("type").set("merge").up()
                 .add("args").add("arg").attr("name", "hey").set("hello!")
         );
         agent.execute(talk);

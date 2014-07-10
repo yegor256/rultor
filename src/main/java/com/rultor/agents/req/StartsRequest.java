@@ -71,7 +71,7 @@ public final class StartsRequest extends AbstractAgent {
      */
     public StartsRequest(final Profile prof) {
         super(
-            "/talk/request[not(success)]",
+            "/talk/request[type and not(success)]",
             "/talk[not(daemon)]"
         );
         this.profile = prof;
@@ -85,7 +85,7 @@ public final class StartsRequest extends AbstractAgent {
         for (final XML arg : req.nodes("args/arg")) {
             vars.put(arg.xpath("@name").get(0), arg.xpath("text()").get(0));
         }
-        final String type = req.xpath("@type").get(0);
+        final String type = req.xpath("type/text()").get(0);
         final DockerRun docker = new DockerRun(
             this.profile, String.format("/p/%s", type)
         );
