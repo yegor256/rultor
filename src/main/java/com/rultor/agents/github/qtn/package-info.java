@@ -27,56 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.github;
-
-import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Comment;
-import com.jcabi.log.Logger;
-import java.io.IOException;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * Answer to post.
+ * Questions.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
+ * @since 1.3
  */
-@Immutable
-@ToString
-@EqualsAndHashCode(of = "comment")
-public final class Answer {
-
-    /**
-     * Original comment.
-     */
-    private final transient Comment.Smart comment;
-
-    /**
-     * Ctor.
-     * @param cmt Comment
-     */
-    public Answer(final Comment.Smart cmt) {
-        this.comment = cmt;
-    }
-
-    /**
-     * Post it..
-     * @param msg Message
-     * @param args Arguments
-     * @throws IOException If fails
-     */
-    public void post(final String msg, final Object... args)
-        throws IOException {
-        this.comment.issue().comments().post(
-            String.format(
-                "> %s\n\n@%s %s",
-                this.comment.body().replace("\n", " "),
-                this.comment.author().login(),
-                Logger.format(msg, args)
-            )
-        );
-    }
-
-}
+package com.rultor.agents.github.qtn;

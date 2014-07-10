@@ -27,55 +27,72 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.github;
+package com.rultor.agents.github.qtn;
 
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
-import com.jcabi.log.Logger;
+import com.jcabi.github.Issue;
+import com.jcabi.github.JsonReadable;
+import com.jcabi.github.Pull;
+import com.rultor.agents.github.Answer;
+import com.rultor.agents.github.Question;
+import com.rultor.agents.github.Req;
 import java.io.IOException;
+import java.net.URI;
+import javax.json.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Answer to post.
+ * Merge request.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
+ * @since 1.3
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "comment")
-public final class Answer {
+@EqualsAndHashCode(of = "github")
+public final class QnMerge implements Question {
 
-    /**
-     * Original comment.
-     */
-    private final transient Comment.Smart comment;
-
-    /**
-     * Ctor.
-     * @param cmt Comment
-     */
-    public Answer(final Comment.Smart cmt) {
-        this.comment = cmt;
-    }
-
-    /**
-     * Post it..
-     * @param msg Message
-     * @param args Arguments
-     * @throws IOException If fails
-     */
-    public void post(final String msg, final Object... args)
-        throws IOException {
-        this.comment.issue().comments().post(
+    @Override
+    public Req understand(final Comment.Smart comment,
+        final URI home) throws IOException {
+        final Issue issue = comment.issue();
+        final JsonReadable pull = new Pull.Smart(
+            issue.repo().pulls().get(issue.number())
+        );
+        final JsonObject head = pull.json().getJsonObject("head");
+        final JsonObject base = pull.json().getJsonObject("base");
+        new Answer(comment).post(
             String.format(
-                "> %s\n\n@%s %s",
-                this.comment.body().replace("\n", " "),
-                this.comment.author().login(),
-                Logger.format(msg, args)
+                // @checkstyle LineLength (1 line)
+                "OK, I'm on it. You can track me [here](%s)",
+                home
             )
+        );
+        return new Req.Simple(
+            "merge",
+            new ImmutableMap.Builder<String, String>()
+                .put("head-branch", head.getString("ref"))
+                .put("base-branch", base.getString("ref"))
+                .put(
+                    "base",
+                    String.format(
+                        "git@github.com:%s.git",
+                        base.getJsonObject("repo").getString("full_name")
+                    )
+                )
+                .put(
+                    "head",
+                    String.format(
+                        "git@github.com:%s.git",
+                        head.getJsonObject("repo").getString("full_name")
+                    )
+                )
+                .build()
         );
     }
 

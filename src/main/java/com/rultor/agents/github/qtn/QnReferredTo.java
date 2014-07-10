@@ -27,56 +27,67 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.github;
+package com.rultor.agents.github.qtn;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
 import com.jcabi.log.Logger;
+import com.rultor.agents.github.Question;
+import com.rultor.agents.github.Req;
 import java.io.IOException;
+import java.net.URI;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Answer to post.
+ * Question.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
+ * @since 1.3
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "comment")
-public final class Answer {
+@EqualsAndHashCode
+public final class QnReferredTo implements Question {
 
     /**
-     * Original comment.
+     * My login.
      */
-    private final transient Comment.Smart comment;
+    private final transient String login;
+
+    /**
+     * Original question.
+     */
+    private final transient Question origin;
 
     /**
      * Ctor.
-     * @param cmt Comment
+     * @param self Self login
+     * @param qtn Original question
      */
-    public Answer(final Comment.Smart cmt) {
-        this.comment = cmt;
+    public QnReferredTo(final String self, final Question qtn) {
+        this.login = self;
+        this.origin = qtn;
     }
 
-    /**
-     * Post it..
-     * @param msg Message
-     * @param args Arguments
-     * @throws IOException If fails
-     */
-    public void post(final String msg, final Object... args)
-        throws IOException {
-        this.comment.issue().comments().post(
-            String.format(
-                "> %s\n\n@%s %s",
-                this.comment.body().replace("\n", " "),
-                this.comment.author().login(),
-                Logger.format(msg, args)
-            )
-        );
+    @Override
+    public Req understand(final Comment.Smart comment,
+        final URI home) throws IOException {
+        final String prefix = String.format("@%s ", this.login);
+        final Req req;
+        if (comment.body().startsWith(prefix)) {
+            req = this.origin.understand(comment, home);
+        } else {
+            Logger.info(
+                this,
+                // @checkstyle LineLength (1 line)
+                "comment #%d ignored, it is not addressed to me (doesn't start with \"%s\")",
+                comment.number(), prefix
+            );
+            req = Req.EMPTY;
+        }
+        return req;
     }
 
 }

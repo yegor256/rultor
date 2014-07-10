@@ -31,52 +31,56 @@ package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
-import com.jcabi.log.Logger;
+import com.jcabi.immutable.Array;
 import java.io.IOException;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import java.net.URI;
 
 /**
- * Answer to post.
+ * Question.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
+ * @since 1.3
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = "comment")
-public final class Answer {
+public interface Question {
 
     /**
-     * Original comment.
+     * Understand it and return the request.
+     * @param comment The comment
+     * @param home Home URI of the daemon
+     * @return Request (or Req.EMPTY is nothing found)
      */
-    private final transient Comment.Smart comment;
+    Req understand(Comment.Smart comment, URI home) throws IOException;
 
     /**
-     * Ctor.
-     * @param cmt Comment
+     * The first that matches.
      */
-    public Answer(final Comment.Smart cmt) {
-        this.comment = cmt;
-    }
-
-    /**
-     * Post it..
-     * @param msg Message
-     * @param args Arguments
-     * @throws IOException If fails
-     */
-    public void post(final String msg, final Object... args)
-        throws IOException {
-        this.comment.issue().comments().post(
-            String.format(
-                "> %s\n\n@%s %s",
-                this.comment.body().replace("\n", " "),
-                this.comment.author().login(),
-                Logger.format(msg, args)
-            )
-        );
+    @Immutable
+    final class FirstOf implements Question {
+        /**
+         * Original questions.
+         */
+        private final transient Array<Question> questions;
+        /**
+         * Ctor.
+         * @param qtns Original questions
+         */
+        public FirstOf(final Iterable<Question> qtns) {
+            this.questions = new Array<Question>(qtns);
+        }
+        @Override
+        public Req understand(final Comment.Smart comment,
+            final URI home) throws IOException {
+            Req req = Req.EMPTY;
+            for (final Question qtn : this.questions) {
+                req = qtn.understand(comment, home);
+                if (!req.equals(Req.EMPTY)) {
+                    break;
+                }
+            }
+            return req;
+        }
     }
 
 }

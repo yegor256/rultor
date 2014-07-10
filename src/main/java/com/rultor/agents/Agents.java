@@ -46,12 +46,20 @@ import com.rultor.agents.daemons.ArchivesDaemon;
 import com.rultor.agents.daemons.EndsDaemon;
 import com.rultor.agents.daemons.KillsDaemon;
 import com.rultor.agents.daemons.StartsDaemon;
-import com.rultor.agents.github.GetsMergeRequest;
 import com.rultor.agents.github.PostsMergeResult;
+import com.rultor.agents.github.Question;
 import com.rultor.agents.github.StartsTalks;
+import com.rultor.agents.github.Understands;
+import com.rultor.agents.github.qtn.QnAskedBy;
+import com.rultor.agents.github.qtn.QnDeploy;
+import com.rultor.agents.github.qtn.QnHello;
+import com.rultor.agents.github.qtn.QnIfContains;
+import com.rultor.agents.github.qtn.QnMerge;
+import com.rultor.agents.github.qtn.QnReferredTo;
 import com.rultor.agents.req.EndsRequest;
 import com.rultor.agents.req.StartsRequest;
 import com.rultor.agents.shells.RegistersShell;
+import com.rultor.agents.shells.RemovesShell;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.SuperAgent;
@@ -101,9 +109,21 @@ public final class Agents {
         final Github github = Agents.github();
         agents.addAll(
             Arrays.asList(
-                new GetsMergeRequest(
+                new Understands(
                     github,
-                    Collections.singleton("yegor256")
+                    new QnReferredTo(
+                        github.users().self().login(),
+                        new QnAskedBy(
+                            Collections.singleton("yegor256"),
+                            new Question.FirstOf(
+                                Arrays.<Question>asList(
+                                    new QnIfContains("hello", new QnHello()),
+                                    new QnIfContains("merge", new QnMerge()),
+                                    new QnIfContains("deploy", new QnDeploy())
+                                )
+                            )
+                        )
+                    )
                 ),
                 new StartsRequest(profile),
                 new RegistersShell(
@@ -120,6 +140,7 @@ public final class Agents {
                 new EndsDaemon(),
                 new EndsRequest(),
                 new PostsMergeResult(github),
+                new RemovesShell(),
                 new ArchivesDaemon(
                     new ReRegion(
                         new Region.Simple(

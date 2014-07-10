@@ -30,53 +30,72 @@
 package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.github.Comment;
-import com.jcabi.log.Logger;
-import java.io.IOException;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.jcabi.immutable.ArrayMap;
+import java.util.Collections;
+import java.util.Map;
+import org.xembly.Directive;
+import org.xembly.Directives;
 
 /**
- * Answer to post.
+ * Request.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
+ * @since 1.3
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = "comment")
-public final class Answer {
+public interface Req {
 
     /**
-     * Original comment.
+     * Empty, nothing found.
      */
-    private final transient Comment.Smart comment;
+    Req EMPTY = new Req() {
+        @Override
+        public Iterable<Directive> dirs() {
+            throw new UnsupportedOperationException("#dirs()");
+        }
+    };
 
     /**
-     * Ctor.
-     * @param cmt Comment
+     * Directives.
+     * @return Dirs
      */
-    public Answer(final Comment.Smart cmt) {
-        this.comment = cmt;
-    }
+    Iterable<Directive> dirs();
 
     /**
-     * Post it..
-     * @param msg Message
-     * @param args Arguments
-     * @throws IOException If fails
+     * Simple impl.
      */
-    public void post(final String msg, final Object... args)
-        throws IOException {
-        this.comment.issue().comments().post(
-            String.format(
-                "> %s\n\n@%s %s",
-                this.comment.body().replace("\n", " "),
-                this.comment.author().login(),
-                Logger.format(msg, args)
-            )
-        );
+    @Immutable
+    final class Simple implements Req {
+        /**
+         * Type.
+         */
+        private final transient String type;
+        /**
+         * Map of args.
+         */
+        private final transient ArrayMap<String, String> map;
+        /**
+         * Ctor.
+         * @param tpe Type
+         * @param args Args
+         */
+        public Simple(final String tpe, final Map<String, String> args) {
+            this.type = tpe;
+            this.map = new ArrayMap<String, String>(args);
+        }
+        @Override
+        public Iterable<Directive> dirs() {
+            final Directives dirs = new Directives()
+                .add("type").set(this.type).up().add("args");
+            for (final Map.Entry<String, String> ent : this.map.entrySet()) {
+                dirs.add("arg")
+                    .attr("name", ent.getKey())
+                    .set(ent.getValue())
+                    .up();
+            }
+            return dirs.up();
+        }
     }
 
 }

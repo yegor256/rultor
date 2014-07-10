@@ -27,56 +27,53 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.github;
+package com.rultor.agents.github.qtn;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
-import com.jcabi.log.Logger;
+import com.jcabi.immutable.Array;
+import com.rultor.agents.github.Question;
+import com.rultor.agents.github.Req;
 import java.io.IOException;
+import java.net.URI;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Answer to post.
+ * First of.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
+ * @since 1.3
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "comment")
-public final class Answer {
+@EqualsAndHashCode
+public final class QnFirstOf implements Question {
 
     /**
-     * Original comment.
+     * Original questions.
      */
-    private final transient Comment.Smart comment;
+    private final transient Array<Question> questions;
 
     /**
      * Ctor.
-     * @param cmt Comment
+     * @param qtns Original questions
      */
-    public Answer(final Comment.Smart cmt) {
-        this.comment = cmt;
+    public QnFirstOf(final Iterable<Question> qtns) {
+        this.questions = new Array<Question>(qtns);
     }
 
-    /**
-     * Post it..
-     * @param msg Message
-     * @param args Arguments
-     * @throws IOException If fails
-     */
-    public void post(final String msg, final Object... args)
-        throws IOException {
-        this.comment.issue().comments().post(
-            String.format(
-                "> %s\n\n@%s %s",
-                this.comment.body().replace("\n", " "),
-                this.comment.author().login(),
-                Logger.format(msg, args)
-            )
-        );
+    @Override
+    public Req understand(final Comment.Smart comment,
+        final URI home) throws IOException {
+        Req req = Req.EMPTY;
+        for (final Question qtn : this.questions) {
+            req = qtn.understand(comment, home);
+            if (!req.equals(Req.EMPTY)) {
+                break;
+            }
+        }
+        return req;
     }
-
 }

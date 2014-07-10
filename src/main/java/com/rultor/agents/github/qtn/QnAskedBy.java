@@ -27,56 +27,81 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.github;
+package com.rultor.agents.github.qtn;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
-import com.jcabi.log.Logger;
+import com.jcabi.immutable.Array;
+import com.rultor.agents.github.Answer;
+import com.rultor.agents.github.Question;
+import com.rultor.agents.github.Req;
 import java.io.IOException;
+import java.net.URI;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
- * Answer to post.
+ * Question asked by one of them.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.0
+ * @since 1.3
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "comment")
-public final class Answer {
+@EqualsAndHashCode
+public final class QnAskedBy implements Question {
 
     /**
-     * Original comment.
+     * List of logins.
      */
-    private final transient Comment.Smart comment;
+    private final transient Array<String> logins;
+
+    /**
+     * Original question.
+     */
+    private final transient Question origin;
 
     /**
      * Ctor.
-     * @param cmt Comment
+     * @param names Names
+     * @param qtn Original question
      */
-    public Answer(final Comment.Smart cmt) {
-        this.comment = cmt;
+    public QnAskedBy(final Iterable<String> names, final Question qtn) {
+        this.logins = new Array<String>(names);
+        this.origin = qtn;
     }
 
-    /**
-     * Post it..
-     * @param msg Message
-     * @param args Arguments
-     * @throws IOException If fails
-     */
-    public void post(final String msg, final Object... args)
-        throws IOException {
-        this.comment.issue().comments().post(
-            String.format(
-                "> %s\n\n@%s %s",
-                this.comment.body().replace("\n", " "),
-                this.comment.author().login(),
-                Logger.format(msg, args)
-            )
-        );
+    @Override
+    public Req understand(final Comment.Smart comment,
+        final URI home) throws IOException {
+        final Req req;
+        if (this.logins.contains(comment.author().login())) {
+            req = this.origin.understand(comment, home);
+        } else {
+            new Answer(comment).post(
+                String.format(
+                    "Thanks, but I need a confirmation from one of them: %s",
+                    StringUtils.join(
+                        Iterables.transform(
+                            this.logins,
+                            new Function<String, Object>() {
+                                @Override
+                                public Object apply(final String input) {
+                                    return String.format("@%s", input);
+                                }
+                            }
+                        ),
+                        ", "
+                    )
+                )
+            );
+            req = Req.EMPTY;
+        }
+        return req;
     }
 
 }
