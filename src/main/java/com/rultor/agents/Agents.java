@@ -49,7 +49,7 @@ import com.rultor.agents.daemons.StartsDaemon;
 import com.rultor.agents.github.GetsMergeRequest;
 import com.rultor.agents.github.PostsMergeResult;
 import com.rultor.agents.github.StartsTalks;
-import com.rultor.agents.req.EndsGitMerge;
+import com.rultor.agents.req.EndsRequest;
 import com.rultor.agents.req.StartsGitMerge;
 import com.rultor.agents.shells.RegistersShell;
 import com.rultor.spi.Agent;
@@ -118,7 +118,7 @@ public final class Agents {
                 new StartsDaemon(profile),
                 new KillsDaemon(),
                 new EndsDaemon(),
-                new EndsGitMerge(),
+                new EndsRequest(),
                 new PostsMergeResult(github),
                 new ArchivesDaemon(
                     new ReRegion(

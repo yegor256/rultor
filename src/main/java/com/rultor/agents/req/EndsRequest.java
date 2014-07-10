@@ -48,14 +48,14 @@ import org.xembly.Directives;
 @Immutable
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public final class EndsGitMerge extends AbstractAgent {
+public final class EndsRequest extends AbstractAgent {
 
     /**
      * Ctor.
      */
-    public EndsGitMerge() {
+    public EndsRequest() {
         super(
-            "/talk/merge-request-git[not(success)]",
+            "/talk/request[not(success)]",
             "/talk/daemon[ended and code]"
         );
     }
@@ -66,8 +66,8 @@ public final class EndsGitMerge extends AbstractAgent {
             xml.xpath("/talk/daemon/code/text()").get(0)
         );
         final boolean success = code == 0;
-        Logger.info(this, "git merge finished: %b", success);
-        return new Directives().xpath("/talk/merge-request-git")
+        Logger.info(this, "request finished: %b", success);
+        return new Directives().xpath("/talk/request")
             .add("success")
             .set(Boolean.toString(success));
     }
