@@ -35,4 +35,4 @@
  * @version $Id$
  * @since 1.0
  */
-package com.rultor.agents.merge;
+package com.rultor.agents.req;

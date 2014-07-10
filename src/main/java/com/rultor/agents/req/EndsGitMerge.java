@@ -27,12 +27,48 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.rultor.agents.req;
+
+import com.jcabi.aspects.Immutable;
+import com.jcabi.log.Logger;
+import com.jcabi.xml.XML;
+import com.rultor.agents.AbstractAgent;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.xembly.Directive;
+import org.xembly.Directives;
 
 /**
- * Merges.
+ * Finishes and reports merge results.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-package com.rultor.agents.merge;
+@Immutable
+@ToString
+@EqualsAndHashCode(callSuper = false)
+public final class EndsGitMerge extends AbstractAgent {
+
+    /**
+     * Ctor.
+     */
+    public EndsGitMerge() {
+        super(
+            "/talk/merge-request-git[not(success)]",
+            "/talk/daemon[ended and code]"
+        );
+    }
+
+    @Override
+    public Iterable<Directive> process(final XML xml) {
+        final int code = Integer.parseInt(
+            xml.xpath("/talk/daemon/code/text()").get(0)
+        );
+        final boolean success = code == 0;
+        Logger.info(this, "git merge finished: %b", success);
+        return new Directives().xpath("/talk/merge-request-git")
+            .add("success")
+            .set(Boolean.toString(success));
+    }
+}

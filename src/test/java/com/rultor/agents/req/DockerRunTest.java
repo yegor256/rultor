@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.merge;
+package com.rultor.agents.req;
 
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
