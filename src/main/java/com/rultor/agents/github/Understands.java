@@ -105,7 +105,10 @@ public final class Understands extends AbstractAgent {
         }
         final Directives dirs = new Directives();
         if (req.equals(Req.EMPTY)) {
-            Logger.info(this, "nothing new in #%d", issue.number());
+            Logger.info(
+                this, "nothing new in %s#%d",
+                issue.repo().coordinates(), issue.number()
+            );
         } else {
             dirs.xpath("/talk").add("request")
                 .attr("id", Integer.toString(next))
