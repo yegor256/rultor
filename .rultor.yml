@@ -5,6 +5,7 @@ deploy:
     MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script:
     - "mvn clean deploy -Prultor -DskipTests --settings ../settings.xml"
+    - "mvn clean site-deploy -Psite -Prempl -DskipTests --settings ../settings.xml"
 merge:
   env:
     MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
