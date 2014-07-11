@@ -1,6 +1,7 @@
 git clone "${head}" repo
 cd repo
 git checkout "${branch}"
+cd ..
 
 if [ -z "${SCRIPT}" ]; then
   echo "deploy.script is not defined in .rultor.yml"
