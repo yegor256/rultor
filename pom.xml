@@ -439,6 +439,12 @@
             <activation>
                 <property><name>bees.appId</name></property>
             </activation>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>cloudbees-public-release</id>
+                    <url>http://repository-cloudbees.forge.cloudbees.com/public-release</url>
+                </pluginRepository>
+            </pluginRepositories>
             <build>
                 <plugins>
                     <plugin>
