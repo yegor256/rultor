@@ -29,19 +29,12 @@
  */
 package com.rultor.agents;
 
-import co.stateful.RtSttc;
 import co.stateful.Sttc;
-import co.stateful.cached.CdSttc;
-import co.stateful.retry.ReSttc;
-import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Github;
-import com.jcabi.github.RtGithub;
-import com.jcabi.http.wire.RetryWire;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.s3.Region;
 import com.jcabi.s3.retry.ReRegion;
-import com.jcabi.urn.URN;
 import com.rultor.agents.daemons.ArchivesDaemon;
 import com.rultor.agents.daemons.EndsDaemon;
 import com.rultor.agents.daemons.KillsDaemon;
@@ -86,9 +79,29 @@ import org.apache.commons.lang3.CharEncoding;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = { "github", "sttc" })
 @SuppressWarnings("PMD.ExcessiveImports")
 public final class Agents {
+
+    /**
+     * Github client.
+     */
+    private final transient Github github;
+
+    /**
+     * Sttc client.
+     */
+    private final transient Sttc sttc;
+
+    /**
+     * Ctor.
+     * @param ghub Github client
+     * @param stc Sttc client
+     */
+    public Agents(final Github ghub, final Sttc stc) {
+        this.github = ghub;
+        this.sttc = stc;
+    }
 
     /**
      * Create super agents, starters.
@@ -97,7 +110,7 @@ public final class Agents {
      */
     public Collection<SuperAgent> starters() throws IOException {
         return Arrays.<SuperAgent>asList(
-            new StartsTalks(Agents.github(), Agents.sttc().counters())
+            new StartsTalks(this.github, this.sttc.counters())
         );
     }
 
@@ -120,27 +133,26 @@ public final class Agents {
     public Collection<Agent> agents(final Profile profile)
         throws IOException {
         final Collection<Agent> agents = new LinkedList<Agent>();
-        final Github github = Agents.github();
         agents.addAll(
             Arrays.asList(
                 new Understands(
-                    github,
+                    this.github,
                     new QnReferredTo(
-                        github.users().self().login(),
+                        this.github.users().self().login(),
                         new Question.FirstOf(
                             Arrays.asList(
                                 new QnIfContains("hello", new QnHello()),
                                 new QnAskedBy(
                                     Collections.singleton("yegor256"),
                                     new QnAlone(
-                                        Agents.sttc().locks(),
+                                        this.sttc.locks(),
                                         new QnIfContains(
                                             "merge", new QnMerge()
                                         )
                                     )
                                 ),
                                 new QnAlone(
-                                    Agents.sttc().locks(),
+                                    this.sttc.locks(),
                                     new QnIfContains(
                                         "deploy", new QnDeploy()
                                     )
@@ -163,7 +175,7 @@ public final class Agents {
                 new KillsDaemon(),
                 new EndsDaemon(),
                 new EndsRequest(),
-                new Reports(github),
+                new Reports(this.github),
                 new RemovesShell(),
                 new ArchivesDaemon(
                     new ReRegion(
@@ -173,39 +185,10 @@ public final class Agents {
                         )
                     ).bucket(Manifests.read("Rultor-S3Bucket"))
                 ),
-                new UnlocksRepo(github, Agents.sttc().locks())
+                new UnlocksRepo(this.github, this.sttc.locks())
             )
         );
         return agents;
-    }
-
-    /**
-     * Make github.
-     * @return Github
-     */
-    @Cacheable(forever = true)
-    private static Github github() {
-        return new RtGithub(
-            new RtGithub(
-                Manifests.read("Rultor-GithubToken")
-            ).entry().through(RetryWire.class)
-        );
-    }
-
-    /**
-     * Sttc.
-     * @return Sttc
-     */
-    @Cacheable(forever = true)
-    private static Sttc sttc() {
-        return new CdSttc(
-            new ReSttc(
-                RtSttc.make(
-                    URN.create(Manifests.read("Rultor-SttcUrn")),
-                    Manifests.read("Rultor-SttcToken")
-                )
-            )
-        );
     }
 
 }

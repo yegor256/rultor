@@ -7,6 +7,10 @@
         {
             "AttributeName": "active",
             "AttributeType": "S"
+        },
+        {
+            "AttributeName": "number",
+            "AttributeType": "N"
         }
     ],
     "KeySchema": [
@@ -26,6 +30,22 @@
             "KeySchema": [
                 {
                     "AttributeName": "active",
+                    "KeyType": "HASH"
+                }
+            ],
+            "Projection": {
+                "ProjectionType": "KEYS_ONLY"
+            },
+            "ProvisionedThroughput": {
+                "ReadCapacityUnits": "1",
+                "WriteCapacityUnits": "1"
+            }
+        },
+        {
+            "IndexName": "numbers",
+            "KeySchema": [
+                {
+                    "AttributeName": "number",
                     "KeyType": "HASH"
                 }
             ],

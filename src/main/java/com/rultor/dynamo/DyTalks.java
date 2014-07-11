@@ -29,19 +29,17 @@
  */
 package com.rultor.dynamo;
 
+import co.stateful.Counter;
 import com.amazonaws.services.dynamodbv2.model.Select;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.dynamo.Attributes;
-import com.jcabi.dynamo.Credentials;
+import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
-import com.jcabi.dynamo.retry.ReRegion;
-import com.jcabi.log.Logger;
-import com.jcabi.manifests.Manifests;
-import com.rultor.agents.Agents;
+import com.jcabi.dynamo.ScanValve;
 import com.rultor.spi.Talk;
 import com.rultor.spi.Talks;
 import java.io.IOException;
@@ -70,12 +68,24 @@ public final class DyTalks implements Talks {
      * Index name.
      * @checkstyle MultipleStringLiteralsCheck (3 lines)
      */
-    public static final String INDEX = "active";
+    public static final String IDX_ACTIVE = "active";
+
+    /**
+     * Index name.
+     * @since 1.3
+     */
+    public static final String IDX_NUMBERS = "numbers";
 
     /**
      * Talk unique name.
      */
     public static final String HASH = "name";
+
+    /**
+     * Its number.
+     * @since 1.3
+     */
+    public static final String ATTR_NUMBER = "number";
 
     /**
      * Is it active (1) or archived (0).
@@ -93,23 +103,49 @@ public final class DyTalks implements Talks {
     private final transient Region region;
 
     /**
-     * Public ctor.
+     * Counter of talks.
      */
-    public DyTalks() {
-        final String key = Manifests.read("Rultor-DynamoKey");
-        Credentials creds = new Credentials.Simple(
-            key,
-            Manifests.read("Rultor-DynamoSecret")
-        );
-        if (key.startsWith("AAAAA")) {
-            final int port = Integer.parseInt(
-                System.getProperty("dynamo.port")
-            );
-            creds = new Credentials.Direct(creds, port);
-            Logger.warn(Agents.class, "test DynamoDB at port #%d", port);
-        }
-        this.region = new Region.Prefixed(
-            new ReRegion(new Region.Simple(creds)), "rt-"
+    private final transient Counter counter;
+
+    /**
+     * Public ctor.
+     * @param reg Region
+     * @param cnt Counter of talks
+     */
+    public DyTalks(final Region reg, final Counter cnt) {
+        this.region = reg;
+        this.counter = cnt;
+    }
+
+    @Override
+    public boolean exists(final long number) {
+        return this.region.table(DyTalks.TBL)
+            .frame()
+            .through(
+                new QueryValve()
+                    .withLimit(1)
+                    .withIndexName(DyTalks.IDX_NUMBERS)
+                    .withConsistentRead(false)
+            )
+            .where(DyTalks.ATTR_NUMBER, Conditions.equalTo(number))
+            .iterator().hasNext();
+    }
+
+    @Override
+    public Talk get(final long number) {
+        return new DyTalk(
+            this.region.table(DyTalks.TBL)
+                .frame()
+                .through(
+                    new QueryValve()
+                        .withLimit(1)
+                        .withIndexName(DyTalks.IDX_NUMBERS)
+                        .withConsistentRead(false)
+                        .withSelect(Select.SPECIFIC_ATTRIBUTES)
+                        .withAttributesToGet(DyTalks.HASH, DyTalks.ATTR_NUMBER)
+                )
+                .where(DyTalks.ATTR_NUMBER, Conditions.equalTo(number))
+                .iterator().next()
         );
     }
 
@@ -127,7 +163,11 @@ public final class DyTalks implements Talks {
         return new DyTalk(
             this.region.table(DyTalks.TBL)
                 .frame()
-                .through(new QueryValve().withLimit(1))
+                .through(
+                    new QueryValve()
+                        .withLimit(1)
+                        .withAttributesToGet(DyTalks.ATTR_NUMBER)
+                )
                 .where(DyTalks.HASH, name)
                 .iterator().next()
         );
@@ -139,6 +179,7 @@ public final class DyTalks implements Talks {
             new Attributes()
                 .with(DyTalks.HASH, name)
                 .with(DyTalks.ATTR_ACTIVE, Boolean.toString(true))
+                .with(DyTalks.ATTR_NUMBER, this.counter.incrementAndGet(1L))
                 .with(
                     DyTalks.ATTR_XML,
                     String.format("<talk name='%s'/>", name)
@@ -149,7 +190,12 @@ public final class DyTalks implements Talks {
     @Override
     public Iterable<Talk> iterate() {
         return Iterables.transform(
-            this.region.table(DyTalks.TBL).frame(),
+            this.region.table(DyTalks.TBL)
+                .frame()
+                .through(
+                    new ScanValve()
+                        .withAttributeToGet(DyTalks.ATTR_NUMBER)
+                ),
             new Function<Item, Talk>() {
                 @Override
                 public Talk apply(final Item input) {
@@ -166,10 +212,10 @@ public final class DyTalks implements Talks {
                 .frame()
                 .through(
                     new QueryValve()
-                        .withIndexName(DyTalks.INDEX)
+                        .withIndexName(DyTalks.IDX_ACTIVE)
                         .withConsistentRead(false)
                         .withSelect(Select.SPECIFIC_ATTRIBUTES)
-                        .withAttributesToGet(DyTalks.HASH)
+                        .withAttributesToGet(DyTalks.HASH, DyTalks.ATTR_NUMBER)
                 )
                 .where(DyTalks.ATTR_ACTIVE, Boolean.toString(true)),
             new Function<Item, Talk>() {

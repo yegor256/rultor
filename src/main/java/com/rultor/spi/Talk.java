@@ -60,6 +60,14 @@ public interface Talk {
     XSD SCHEMA = XSDDocument.make(Talk.class.getResourceAsStream("talk.xsd"));
 
     /**
+     * Its unique number.
+     * @return Its number
+     * @throws IOException If fails
+     * @since 1.3
+     */
+    Long number() throws IOException;
+
+    /**
      * Its unique name.
      * @return Its name
      * @throws IOException If fails
@@ -113,6 +121,10 @@ public interface Talk {
          */
         public InFile(final File file) {
             this.path = file.getAbsolutePath();
+        }
+        @Override
+        public Long number() {
+            return 1L;
         }
         @Override
         public String name() {

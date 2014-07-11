@@ -74,6 +74,11 @@ public final class DyTalk implements Talk {
     }
 
     @Override
+    public Long number() throws IOException {
+        return Long.parseLong(this.item.get(DyTalks.ATTR_NUMBER).getN());
+    }
+
+    @Override
     public String name() throws IOException {
         return this.item.get(DyTalks.HASH).getS();
     }

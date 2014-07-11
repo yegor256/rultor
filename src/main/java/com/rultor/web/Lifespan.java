@@ -29,11 +29,23 @@
  */
 package com.rultor.web;
 
+import co.stateful.RtSttc;
+import co.stateful.Sttc;
+import co.stateful.cached.CdSttc;
+import co.stateful.retry.ReSttc;
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Credentials;
+import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.retry.ReRegion;
+import com.jcabi.github.Github;
+import com.jcabi.github.RtGithub;
+import com.jcabi.http.wire.RetryWire;
 import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
 import com.jcabi.manifests.Manifests;
+import com.jcabi.urn.URN;
 import com.rultor.Toggles;
 import com.rultor.agents.Agents;
 import com.rultor.dynamo.DyTalks;
@@ -48,7 +60,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import lombok.EqualsAndHashCode;
@@ -64,6 +75,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Loggable(Loggable.INFO)
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class Lifespan implements ServletContextListener {
 
     /**
@@ -74,14 +86,16 @@ public final class Lifespan implements ServletContextListener {
 
     @Override
     public void contextInitialized(final ServletContextEvent event) {
+        final Talks talks;
         try {
             Manifests.append(event.getServletContext());
+            talks = new DyTalks(
+                this.dynamo(), this.sttc().counters().get("rt-talk")
+            );
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
-        final ServletContext context = event.getServletContext();
-        final Talks talks = new DyTalks();
-        context.setAttribute(Talks.class.getName(), talks);
+        event.getServletContext().setAttribute(Talks.class.getName(), talks);
         this.service.scheduleWithFixedDelay(
             new VerboseRunnable(
                 new Callable<Object>() {
@@ -114,7 +128,7 @@ public final class Lifespan implements ServletContextListener {
             return;
         }
         final long start = System.currentTimeMillis();
-        final Agents agents = new Agents();
+        final Agents agents = new Agents(this.github(), this.sttc());
         for (final SuperAgent agent : agents.starters()) {
             agent.execute(talks);
         }
@@ -133,6 +147,60 @@ public final class Lifespan implements ServletContextListener {
         Logger.info(
             this, "%d active talk(s) processed in %[ms]s",
             total, System.currentTimeMillis() - start
+        );
+    }
+
+    /**
+     * Dynamo DB region.
+     * @return Region
+     */
+    @Cacheable(forever = true)
+    private Region dynamo() {
+        final String key = Manifests.read("Rultor-DynamoKey");
+        Credentials creds = new Credentials.Simple(
+            key,
+            Manifests.read("Rultor-DynamoSecret")
+        );
+        if (key.startsWith("AAAAA")) {
+            final int port = Integer.parseInt(
+                System.getProperty("dynamo.port")
+            );
+            creds = new Credentials.Direct(creds, port);
+            Logger.warn(this, "test DynamoDB at port #%d", port);
+        }
+        return new Region.Prefixed(
+            new ReRegion(new Region.Simple(creds)), "rt-"
+        );
+    }
+
+    /**
+     * Make github.
+     * @return Github
+     */
+    @Cacheable(forever = true)
+    private Github github() {
+        Logger.warn(this, "Github connected");
+        return new RtGithub(
+            new RtGithub(
+                Manifests.read("Rultor-GithubToken")
+            ).entry().through(RetryWire.class)
+        );
+    }
+
+    /**
+     * Sttc.
+     * @return Sttc
+     */
+    @Cacheable(forever = true)
+    private Sttc sttc() {
+        Logger.warn(this, "Sttc connected");
+        return new CdSttc(
+            new ReSttc(
+                RtSttc.make(
+                    URN.create(Manifests.read("Rultor-SttcUrn")),
+                    Manifests.read("Rultor-SttcToken")
+                )
+            )
         );
     }
 

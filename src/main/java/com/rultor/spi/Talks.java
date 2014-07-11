@@ -44,6 +44,22 @@ public interface Talks {
 
     /**
      * Talk exists already?
+     * @param number The number
+     * @return TRUE if it exists
+     * @since 1.3
+     */
+    boolean exists(long number);
+
+    /**
+     * Get an existing talk (runtime exception if it's absent).
+     * @param number The number
+     * @return Talk
+     * @since 1.3
+     */
+    Talk get(long number);
+
+    /**
+     * Talk exists already?
      * @param name The name
      * @return TRUE if it exists
      */

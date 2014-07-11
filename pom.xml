@@ -470,6 +470,7 @@
                 <property><name>!skipTests</name></property>
             </activation>
             <properties>
+                <failsafe.sttc.urn>urn:test:1</failsafe.sttc.urn>
                 <tomcat.home>${project.build.directory}/webapp-test</tomcat.home>
             </properties>
             <build>
@@ -486,6 +487,11 @@
                                     <warSourceExcludes>nothing/**</warSourceExcludes>
                                     <webappDirectory>${tomcat.home}</webappDirectory>
                                     <webResources combine.children="append">
+                                        <resource>
+                                            <directory>src/test/resources</directory>
+                                            <filtering>true</filtering>
+                                            <targetPath>WEB-INF/classes</targetPath>
+                                        </resource>
                                         <resource>
                                             <directory>src/test/webapp</directory>
                                         </resource>

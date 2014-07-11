@@ -29,6 +29,11 @@
  */
 package com.rultor.dynamo;
 
+import co.stateful.mock.MkSttc;
+import com.jcabi.dynamo.Credentials;
+import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.retry.ReRegion;
+import com.jcabi.manifests.Manifests;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.spi.Talks;
 import org.hamcrest.MatcherAssert;
@@ -48,12 +53,35 @@ public final class DyTalksITCase {
      */
     @Test
     public void andsAndRemovesRepos() throws Exception {
-        final Talks talks = new DyTalks();
+        final Talks talks = new DyTalks(
+            this.dynamo(), new MkSttc().counters().get("")
+        );
         final String name = "a5fe445";
         talks.create(name);
         MatcherAssert.assertThat(
             talks.get(name).read(),
             XhtmlMatchers.hasXPath("/talk")
+        );
+    }
+
+    /**
+     * DynamoDB region for tests.
+     * @return Region
+     */
+    private Region dynamo() {
+        return new Region.Prefixed(
+            new ReRegion(
+                new Region.Simple(
+                    new Credentials.Direct(
+                        new Credentials.Simple(
+                            Manifests.read("Rultor-DynamoKey"),
+                            Manifests.read("Rultor-DynamoSecret")
+                        ),
+                        Integer.parseInt(System.getProperty("dynamo.port"))
+                    )
+                )
+            ),
+            "rt-"
         );
     }
 

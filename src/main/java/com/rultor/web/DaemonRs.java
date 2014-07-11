@@ -49,13 +49,13 @@ import javax.ws.rs.core.Response;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@Path("/t/{name:[0-9a-f]+}-{hash:[a-f0-9]+}")
+@Path("/t/{number:[0-9]+}-{hash:[a-f0-9]+}")
 public final class DaemonRs extends BaseRs {
 
     /**
-     * Talk unique name.
+     * Talk unique number.
      */
-    private transient String name;
+    private transient Long number;
 
     /**
      * Daemon hash ID.
@@ -66,10 +66,10 @@ public final class DaemonRs extends BaseRs {
      * Inject it from query.
      * @param talk Talk name
      */
-    @PathParam("name")
-    public void setName(@NotNull(message = "talk name is mandatory")
-        final String talk) {
-        this.name = talk;
+    @PathParam("number")
+    public void setNumber(@NotNull(message = "talk number is mandatory")
+        final Long talk) {
+        this.number = talk;
     }
 
     /**
@@ -91,7 +91,7 @@ public final class DaemonRs extends BaseRs {
     @Path("/")
     @Produces(MediaType.TEXT_PLAIN)
     public Response index() throws IOException {
-        if (!this.talks().exists(this.name)) {
+        if (!this.talks().exists(this.number)) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 "there is no such page here",
@@ -100,7 +100,7 @@ public final class DaemonRs extends BaseRs {
         }
         return Response.ok().entity(
             new Tail(
-                this.talks().get(this.name).read(),
+                this.talks().get(this.number).read(),
                 this.hash
             ).read()
         ).build();

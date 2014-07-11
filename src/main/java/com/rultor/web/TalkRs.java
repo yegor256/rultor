@@ -47,22 +47,22 @@ import javax.ws.rs.core.Response;
  * @version $Id$
  * @since 1.0
  */
-@Path("/t/{name:[0-9a-f]+}")
+@Path("/t/{number:[0-9]+}")
 public final class TalkRs extends BaseRs {
 
     /**
-     * Talk unique name.
+     * Talk unique number.
      */
-    private transient String name;
+    private transient Long number;
 
     /**
      * Inject it from query.
      * @param talk Talk name
      */
-    @PathParam("name")
-    public void setName(@NotNull(message = "talk name is mandatory")
-        final String talk) {
-        this.name = talk;
+    @PathParam("number")
+    public void setName(@NotNull(message = "talk number is mandatory")
+        final Long talk) {
+        this.number = talk;
     }
 
     /**
@@ -74,20 +74,21 @@ public final class TalkRs extends BaseRs {
     @Path("/")
     public Response index() throws IOException {
         this.adminOnly();
-        if (!this.talks().exists(this.name)) {
+        if (!this.talks().exists(this.number)) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUri(),
                 "there is no such page here",
                 Level.WARNING
             );
         }
-        final Talk talk = this.talks().get(this.name);
+        final Talk talk = this.talks().get(this.number);
         return new PageBuilder()
             .stylesheet("/xsl/talk.xsl")
             .build(EmptyPage.class)
             .init(this)
             .append(
                 new JaxbBundle("talk")
+                    .add("number", Long.toString(talk.number())).up()
                     .add("name", talk.name()).up()
                     .add("content", talk.read().toString()).up()
             )
