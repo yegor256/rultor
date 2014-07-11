@@ -91,7 +91,7 @@
             <xsl:value-of select="name"/>
         </span>
         <span>
-            <a href="https://github.com/rultor/rultor/commit/{revision}"
+            <a href="https://github.com/yegor256/rultor/commit/{revision}"
                 title="{revision}">
                 <xsl:value-of select="substring(revision,1,3)"/>
             </a>
