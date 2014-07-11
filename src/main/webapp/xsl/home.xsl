@@ -52,6 +52,13 @@
                 <code>@rultor hello</code>
                 <xsl:text> in a Github issue</xsl:text>
             </p>
+            <p style="margin-top:2em;">
+                <xsl:text>made by</xsl:text>
+                <br/>
+                <a href="http://www.teamed.io">
+                    <img src="http://img.teamed.io/logo.svg" style="width:96px"/>
+                </a>
+            </p>
         </div>
     </xsl:template>
 </xsl:stylesheet>
