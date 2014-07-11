@@ -90,11 +90,15 @@ public final class Understands extends AbstractAgent {
         );
         final int seen = Understands.seen(xml);
         int next = seen;
+        int fresh = 0;
+        int total = 0;
         Req req = Req.EMPTY;
         for (final Comment.Smart comment : comments) {
+            ++total;
             if (comment.number() <= seen) {
                 continue;
             }
+            ++fresh;
             next = comment.number();
             req = this.question.understand(
                 comment, new Home(xml, Integer.toString(next)).uri()
@@ -106,8 +110,8 @@ public final class Understands extends AbstractAgent {
         final Directives dirs = new Directives();
         if (req.equals(Req.EMPTY)) {
             Logger.info(
-                this, "nothing new in %s#%d",
-                issue.repo().coordinates(), issue.number()
+                this, "nothing new in %s#%d, fresh/total: %d/%d",
+                issue.repo().coordinates(), issue.number(), fresh, total
             );
         } else {
             dirs.xpath("/talk").add("request")

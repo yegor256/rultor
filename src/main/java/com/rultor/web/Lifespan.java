@@ -108,18 +108,20 @@ public final class Lifespan implements ServletContextListener {
      * @param talks Talks
      * @throws IOException If fails
      */
-    @Loggable(Loggable.INFO)
     private void routine(final Talks talks) throws IOException {
         if (new Toggles().readOnly()) {
             Logger.info(this, "read-only mode");
             return;
         }
+        final long start = System.currentTimeMillis();
         final Agents agents = new Agents();
         for (final SuperAgent agent : agents.starters()) {
             agent.execute(talks);
         }
         final Profiles profiles = new Profiles();
+        int total = 0;
         for (final Talk talk : talks.active()) {
+            ++total;
             final Profile profile = profiles.fetch(talk);
             for (final Agent agent : agents.agents(profile)) {
                 agent.execute(talk);
@@ -128,6 +130,10 @@ public final class Lifespan implements ServletContextListener {
         for (final SuperAgent agent : agents.closers()) {
             agent.execute(talks);
         }
+        Logger.info(
+            this, "%d active talk(s) processed in %[ms]s",
+            total, System.currentTimeMillis() - start
+        );
     }
 
 }

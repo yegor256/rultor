@@ -44,6 +44,7 @@ import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.time.DateUtils;
 import org.xembly.Directives;
 
 /**
@@ -85,7 +86,7 @@ public final class StartsTalks implements SuperAgent {
             String.format(
                 "mentions:%s updated:>=%tF",
                 this.github.search().github().users().self().login(),
-                new Date(threshold.incrementAndGet(0L))
+                DateUtils.addDays(new Date(threshold.incrementAndGet(0L)), -1)
             ),
             "updated",
             "asc"
@@ -93,12 +94,16 @@ public final class StartsTalks implements SuperAgent {
         final Counter cnt = this.counters.get("rt-latest");
         final int latest = (int) cnt.incrementAndGet(0L);
         int max = latest;
+        int total = 0;
+        int activated = 0;
         for (final Issue issue : issues) {
+            ++total;
             final int last = StartsTalks.last(issue);
             if (last <= latest) {
                 continue;
             }
             this.activate(talks, issue);
+            ++activated;
             if (last > max) {
                 max = last;
             }
@@ -107,6 +112,10 @@ public final class StartsTalks implements SuperAgent {
             cnt.set((long) max);
         }
         threshold.set(System.currentTimeMillis());
+        Logger.info(
+            this, "%d issues checked, %d activated, max=%d",
+            total, activated, max
+        );
     }
 
     /**
@@ -125,16 +134,14 @@ public final class StartsTalks implements SuperAgent {
             talks.create(name);
         }
         final Talk talk = talks.get(name);
+        talk.modify(
+            new Directives().xpath("/talk[not(wire)]")
+                .add("wire")
+                .add("github-repo").set(coords).up()
+                .add("github-issue")
+                .set(Integer.toString(issue.number()))
+        );
         talk.active(true);
-        if (talk.read().nodes("/talk/wire").isEmpty()) {
-            talks.get(name).modify(
-                new Directives().xpath("/talk")
-                    .add("wire")
-                    .add("github-repo").set(coords).up()
-                    .add("github-issue")
-                    .set(Integer.toString(issue.number()))
-            );
-        }
         Logger.info(
             this, "talk %s#%d activated as %s",
             coords, issue.number(), name
