@@ -70,9 +70,8 @@ public interface Req {
     /**
      * Directives.
      * @return Dirs
-     * @throws IOException If fails
      */
-    Iterable<Directive> dirs() throws IOException;
+    Iterable<Directive> dirs();
 
     /**
      * Simple impl.

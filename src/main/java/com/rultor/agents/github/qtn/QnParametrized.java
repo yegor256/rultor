@@ -81,25 +81,28 @@ public final class QnParametrized implements Question {
     public Req understand(final Comment.Smart comment, final URI home)
         throws IOException {
         final Map<String, String> map = QnParametrized.params(comment);
-        return new Req() {
-            @Override
-            public Iterable<Directive> dirs() throws IOException {
-                final Directives dirs = new Directives().append(
-                    QnParametrized.this.origin.understand(comment, home).dirs()
-                );
-                if (!map.isEmpty()) {
-                    dirs.addIf("args");
-                    for (final Map.Entry<String, String> ent : map.entrySet()) {
-                        dirs.add("arg")
-                            .attr("name", ent.getKey())
-                            .set(ent.getValue())
-                            .up();
+        Req req = this.origin.understand(comment, home);
+        if (!req.equals(Req.EMPTY)) {
+            final Directives dirs = new Directives().append(req.dirs());
+            req = new Req() {
+                @Override
+                public Iterable<Directive> dirs() {
+                    if (!map.isEmpty()) {
+                        dirs.addIf("args");
+                        for (final Map.Entry<String, String> ent
+                            : map.entrySet()) {
+                            dirs.add("arg")
+                                .attr("name", ent.getKey())
+                                .set(ent.getValue())
+                                .up();
+                        }
+                        dirs.up();
                     }
-                    dirs.up();
+                    return dirs;
                 }
-                return dirs;
-            }
-        };
+            };
+        }
+        return req;
     }
 
     /**

@@ -35,6 +35,7 @@ import com.jcabi.github.Repo;
 import com.jcabi.github.mock.MkGithub;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rultor.agents.github.Question;
+import com.rultor.agents.github.Req;
 import java.net.URI;
 import javax.json.Json;
 import org.hamcrest.MatcherAssert;
@@ -93,6 +94,25 @@ public final class QnParametrizedTest {
                 new Comment.Smart(issue.comments().get(1)), new URI("#1")
             ).dirs(),
             Matchers.emptyIterable()
+        );
+    }
+
+    /**
+     * QnParametrized can ignore empty request.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void ignoresEmptyReq() throws Exception {
+        final Repo repo = new MkGithub().repos().create(
+            Json.createObjectBuilder().add("name", "test3").build()
+        );
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("hey you");
+        MatcherAssert.assertThat(
+            new QnParametrized(Question.EMPTY).understand(
+                new Comment.Smart(issue.comments().get(1)), new URI("#2")
+            ),
+            Matchers.is(Req.EMPTY)
         );
     }
 
