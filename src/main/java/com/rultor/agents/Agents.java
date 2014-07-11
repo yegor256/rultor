@@ -62,7 +62,6 @@ import com.rultor.spi.SuperAgent;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -143,7 +142,8 @@ public final class Agents {
                         new Question.FirstOf(
                             Arrays.asList(
                                 new QnAskedBy(
-                                    Collections.singleton("yegor256"),
+                                    profile,
+                                    "/p/merge/commanders/item/text()",
                                     new QnAlone(
                                         this.sttc.locks(),
                                         new QnIfContains(
@@ -151,10 +151,14 @@ public final class Agents {
                                         )
                                     )
                                 ),
-                                new QnAlone(
-                                    this.sttc.locks(),
-                                    new QnIfContains(
-                                        "deploy", new QnDeploy()
+                                new QnAskedBy(
+                                    profile,
+                                    "/p/deploy/commanders/item/text()",
+                                    new QnAlone(
+                                        this.sttc.locks(),
+                                        new QnIfContains(
+                                            "deploy", new QnDeploy()
+                                        )
                                     )
                                 ),
                                 new QnIfContains("version", new QnVersion()),

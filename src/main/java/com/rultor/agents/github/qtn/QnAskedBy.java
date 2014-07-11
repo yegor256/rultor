@@ -33,12 +33,15 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
-import com.jcabi.immutable.Array;
+import com.jcabi.xml.XML;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Req;
+import com.rultor.spi.Profile;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
+import java.util.LinkedList;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
@@ -52,13 +55,18 @@ import org.apache.commons.lang3.StringUtils;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "logins", "origin" })
+@EqualsAndHashCode(of = { "profile", "xpath", "origin" })
 public final class QnAskedBy implements Question {
 
     /**
-     * List of logins.
+     * Profile.
      */
-    private final transient Array<String> logins;
+    private final transient Profile profile;
+
+    /**
+     * XPath.
+     */
+    private final transient String xpath;
 
     /**
      * Original question.
@@ -67,11 +75,14 @@ public final class QnAskedBy implements Question {
 
     /**
      * Ctor.
-     * @param names Names
+     * @param prof Profile
+     * @param path XPath in profile with a list of logins
      * @param qtn Original question
      */
-    public QnAskedBy(final Iterable<String> names, final Question qtn) {
-        this.logins = new Array<String>(names);
+    public QnAskedBy(final Profile prof, final String path,
+        final Question qtn) {
+        this.profile = prof;
+        this.xpath = path;
         this.origin = qtn;
     }
 
@@ -79,7 +90,8 @@ public final class QnAskedBy implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final Req req;
-        if (this.logins.contains(comment.author().login())) {
+        final Collection<String> logins = this.commanders();
+        if (logins.isEmpty() || logins.contains(comment.author().login())) {
             req = this.origin.understand(comment, home);
         } else {
             new Answer(comment).post(
@@ -87,7 +99,7 @@ public final class QnAskedBy implements Question {
                     "Thanks, but I need a confirmation from one of them: %s",
                     StringUtils.join(
                         Iterables.transform(
-                            this.logins,
+                            logins,
                             new Function<String, Object>() {
                                 @Override
                                 public Object apply(final String input) {
@@ -102,6 +114,20 @@ public final class QnAskedBy implements Question {
             req = Req.EMPTY;
         }
         return req;
+    }
+
+    /**
+     * Get list of commanders.
+     * @return Their logins
+     * @throws IOException If fails
+     */
+    private Collection<String> commanders() throws IOException {
+        final Collection<String> logins = new LinkedList<String>();
+        final XML xml = this.profile.read();
+        if (!xml.nodes(this.xpath).isEmpty()) {
+            logins.addAll(xml.xpath(this.xpath));
+        }
+        return logins;
     }
 
 }
