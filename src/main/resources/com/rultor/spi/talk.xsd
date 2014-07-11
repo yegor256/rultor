@@ -122,13 +122,8 @@
                 <xs:element name="request" type="request" minOccurs="0"/>
                 <xs:element name="archive" type="archive" minOccurs="0"/>
             </xs:all>
-            <xs:attribute name="name" use="required">
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:pattern value="[0-9a-f]+"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="name" use="required" type="xs:string"/>
+            <xs:attribute name="number" use="required" type="xs:integer"/>
         </xs:complexType>
         <xs:unique name="daemonID">
             <xs:selector xpath="daemon|archive/log" />

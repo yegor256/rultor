@@ -175,14 +175,15 @@ public final class DyTalks implements Talks {
 
     @Override
     public void create(final String name) throws IOException {
+        final long number = this.counter.incrementAndGet(1L);
         this.region.table(DyTalks.TBL).put(
             new Attributes()
                 .with(DyTalks.HASH, name)
                 .with(DyTalks.ATTR_ACTIVE, Boolean.toString(true))
-                .with(DyTalks.ATTR_NUMBER, this.counter.incrementAndGet(1L))
+                .with(DyTalks.ATTR_NUMBER, number)
                 .with(
                     DyTalks.ATTR_XML,
-                    String.format("<talk name='%s'/>", name)
+                    String.format("<talk name='%s' id='%d'/>", name, number)
                 )
         );
     }

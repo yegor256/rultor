@@ -112,7 +112,7 @@ public interface Talk {
             this(File.createTempFile("rultor", ".talk"));
             FileUtils.write(
                 new File(this.path),
-                String.format("<talk name='%s'/>", this.name())
+                String.format("<talk name='%s' number='1'/>", this.name())
             );
         }
         /**
