@@ -183,7 +183,7 @@ public final class DyTalks implements Talks {
                 .with(DyTalks.ATTR_NUMBER, number)
                 .with(
                     DyTalks.ATTR_XML,
-                    String.format("<talk name='%s' id='%d'/>", name, number)
+                    String.format("<talk name='%s' number='%d'/>", name, number)
                 )
         );
     }
