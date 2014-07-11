@@ -62,6 +62,8 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.3.8
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 public final class StartsDaemonITCase {
 
@@ -137,6 +139,7 @@ public final class StartsDaemonITCase {
      * @return Port number
      * @throws IOException If fails
      */
+    @SuppressWarnings("PMD.DoNotUseThreads")
     private int sshd() throws IOException {
         final ServerSocket socket = new ServerSocket(0);
         final int port = socket.getLocalPort();
