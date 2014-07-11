@@ -89,7 +89,7 @@ public final class Reports extends AbstractAgent {
             );
         } else {
             msg = String.format(
-                "Oops, I failed to merge. Full log is [here](%s)",
+                "Oops, I failed. Full log is [here](%s)",
                 home.toASCIIString()
             );
         }
