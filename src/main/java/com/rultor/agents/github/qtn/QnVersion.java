@@ -59,7 +59,7 @@ public final class QnVersion implements Question {
         new Answer(comment).post(
             String.format(
                 // @checkstyle LineLength (1 line)
-                "my version is %s, Git revision is [`%s`](https://github.com/yegor256/rultor/commit/%1$s)",
+                "my current version is %s, Git revision is [`%s`](https://github.com/yegor256/rultor/commit/%1$s)",
                 Manifests.read("Rultor-Version"),
                 Manifests.read("Rultor-Revision")
             )
