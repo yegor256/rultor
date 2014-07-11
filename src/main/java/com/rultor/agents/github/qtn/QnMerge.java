@@ -63,7 +63,7 @@ public final class QnMerge implements Question {
         final URI home) throws IOException {
         final Issue.Smart issue = new Issue.Smart(comment.issue());
         final Req req;
-        if (issue.isPull()) {
+        if (issue.isPull() && issue.isOpen()) {
             new Answer(comment).post(
                 String.format(
                     "OK, I'm on it. You can track me [here](%s)",
@@ -76,9 +76,14 @@ public final class QnMerge implements Question {
                     issue.repo().pulls().get(issue.number())
                 )
             );
-        } else {
+        } else if (issue.isOpen()) {
             new Answer(comment).post(
                 "it's not a pull request, I can't merge it"
+            );
+            req = Req.EMPTY;
+        } else {
+            new Answer(comment).post(
+                "pull request is closed already, I can't merge it"
             );
             req = Req.EMPTY;
         }

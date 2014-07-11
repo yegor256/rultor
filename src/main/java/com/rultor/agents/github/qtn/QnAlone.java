@@ -97,7 +97,11 @@ public final class QnAlone implements Question {
      */
     public static Lock lock(final Locks lcks, final Repo repo)
         throws IOException {
-        return lcks.get(String.format("rt-alone:%s", repo.coordinates()));
+        return lcks.get(
+            String.format("rt-alone-%s", repo.coordinates()).replace(
+                "[^a-zA-Z0-9\\-]", "-"
+            )
+        );
     }
 
 }

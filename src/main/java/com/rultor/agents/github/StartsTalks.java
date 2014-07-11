@@ -32,6 +32,7 @@ package com.rultor.agents.github;
 import co.stateful.Counter;
 import co.stateful.Counters;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.github.Bulk;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
@@ -155,7 +156,10 @@ public final class StartsTalks implements SuperAgent {
      */
     private static int last(final Issue issue) {
         int last = 0;
-        for (final Comment comment : issue.comments().iterate()) {
+        final Iterable<Comment> comments = new Bulk<Comment>(
+            issue.comments().iterate()
+        );
+        for (final Comment comment : comments) {
             if (comment.number() > last) {
                 last = comment.number();
             }

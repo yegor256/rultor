@@ -266,7 +266,7 @@ public final class SSH implements Shell {
             );
             jsch.setHostKeyRepository(SSH.REPO);
             jsch.addIdentity(file.getAbsolutePath());
-            Logger.info(
+            Logger.debug(
                 this,
                 "Opening SSH session to %s@%s:%s (%d bytes in RSA key)...",
                 this.login, this.addr, this.port,
