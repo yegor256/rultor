@@ -41,6 +41,8 @@ import javax.json.Json;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.xembly.Directive;
+import org.xembly.Directives;
 import org.xembly.Xembler;
 
 /**
@@ -64,16 +66,30 @@ public final class QnParametrizedTest {
         );
         final Issue issue = repo.issues().create("", "");
         issue.comments().post("hey, tag=`1.9` and server is `p5`");
+        final Question origin = new Question() {
+            @Override
+            public Req understand(final Comment.Smart comment, final URI home) {
+                return new Req() {
+                    @Override
+                    public Iterable<Directive> dirs() {
+                        return new Directives().add("type").set("xxx").up();
+                    }
+                };
+            }
+        };
         MatcherAssert.assertThat(
             new Xembler(
-                new QnParametrized(Question.EMPTY).understand(
-                    new Comment.Smart(issue.comments().get(1)), new URI("#")
-                ).dirs()
+                new Directives().add("request").append(
+                    new QnParametrized(origin).understand(
+                        new Comment.Smart(issue.comments().get(1)), new URI("#")
+                    ).dirs()
+                )
             ).xml(),
             XhtmlMatchers.hasXPaths(
-                "/args[count(arg) = 2]",
-                "/args/arg[@name='tag' and .='1.9']",
-                "/args/arg[@name='server' and .='p5']"
+                "/request[type='xxx']",
+                "/request/args[count(arg) = 2]",
+                "/request/args/arg[@name='tag' and .='1.9']",
+                "/request/args/arg[@name='server' and .='p5']"
             )
         );
     }
