@@ -48,6 +48,7 @@ import org.xembly.Xembler;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.3.6
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 public final class QnParametrizedTest {
 
