@@ -8,6 +8,7 @@ deploy:
     MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script:
     - "sudo bundle"
+    - "sudo apt-get install openssh-server"
     - "mvn clean deploy -Prultor --settings ../settings.xml"
     - "mvn clean site-deploy -Psite -Prempl --settings ../settings.xml"
 
@@ -15,4 +16,5 @@ merge:
   env:
     MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script:
+    - "sudo apt-get install openssh-server"
     - "mvn help:system clean install -Pqulice --settings ../settings.xml"
