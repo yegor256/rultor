@@ -33,6 +33,8 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
+import com.jcabi.github.Repo;
+import com.jcabi.github.User;
 import com.jcabi.xml.XML;
 import com.rultor.agents.github.Answer;
 import com.rultor.agents.github.Question;
@@ -90,7 +92,9 @@ public final class QnAskedBy implements Question {
     public Req understand(final Comment.Smart comment,
         final URI home) throws IOException {
         final Req req;
-        final Collection<String> logins = this.commanders();
+        final Collection<String> logins = this.commanders(
+            comment.issue().repo()
+        );
         if (logins.isEmpty() || logins.contains(comment.author().login())) {
             req = this.origin.understand(comment, home);
         } else {
@@ -118,13 +122,18 @@ public final class QnAskedBy implements Question {
 
     /**
      * Get list of commanders.
+     * @param repo Repo
      * @return Their logins
      * @throws IOException If fails
      */
-    private Collection<String> commanders() throws IOException {
+    private Collection<String> commanders(final Repo repo) throws IOException {
         final Collection<String> logins = new LinkedList<String>();
         final XML xml = this.profile.read();
-        if (!xml.nodes(this.xpath).isEmpty()) {
+        if (xml.nodes(this.xpath).isEmpty()) {
+            for (final User user : repo.collaborators().iterate()) {
+                logins.add(user.login());
+            }
+        } else {
             logins.addAll(xml.xpath(this.xpath));
         }
         return logins;
