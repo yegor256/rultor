@@ -51,6 +51,7 @@ import com.rultor.agents.github.qtn.QnHello;
 import com.rultor.agents.github.qtn.QnIfContains;
 import com.rultor.agents.github.qtn.QnMerge;
 import com.rultor.agents.github.qtn.QnReferredTo;
+import com.rultor.agents.github.qtn.QnVersion;
 import com.rultor.agents.req.EndsRequest;
 import com.rultor.agents.req.StartsRequest;
 import com.rultor.agents.shells.RegistersShell;
@@ -141,7 +142,6 @@ public final class Agents {
                         this.github.users().self().login(),
                         new Question.FirstOf(
                             Arrays.asList(
-                                new QnIfContains("hello", new QnHello()),
                                 new QnAskedBy(
                                     Collections.singleton("yegor256"),
                                     new QnAlone(
@@ -156,7 +156,9 @@ public final class Agents {
                                     new QnIfContains(
                                         "deploy", new QnDeploy()
                                     )
-                                )
+                                ),
+                                new QnIfContains("version", new QnVersion()),
+                                new QnIfContains("hello", new QnHello())
                             )
                         )
                     )
