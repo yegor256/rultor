@@ -27,84 +27,77 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.github;
+package com.rultor.agents.github.qtn;
 
+import co.stateful.Lock;
+import co.stateful.Locks;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.immutable.ArrayMap;
-import java.util.Map;
-import org.xembly.Directive;
-import org.xembly.Directives;
+import com.jcabi.github.Comment;
+import com.jcabi.github.Repo;
+import com.jcabi.log.Logger;
+import com.rultor.agents.github.Question;
+import com.rultor.agents.github.Req;
+import java.io.IOException;
+import java.net.URI;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Request.
+ * Passes through only if it is alone in this repo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.3
  */
 @Immutable
-public interface Req {
+@ToString
+@EqualsAndHashCode(of = { "locks", "origin" })
+public final class QnAlone implements Question {
 
     /**
-     * Empty, nothing found.
+     * Locks to use.
      */
-    Req EMPTY = new Req() {
-        @Override
-        public Iterable<Directive> dirs() {
-            throw new UnsupportedOperationException("#dirs(): empty");
-        }
-    };
+    private final transient Locks locks;
 
     /**
-     * Come back later to the same question.
+     * Original question.
      */
-    Req LATER = new Req() {
-        @Override
-        public Iterable<Directive> dirs() {
-            throw new UnsupportedOperationException("#dirs(): later");
-        }
-    };
+    private final transient Question origin;
 
     /**
-     * Directives.
-     * @return Dirs
+     * Ctor.
+     * @param lcks Locks
+     * @param qtn Original question
      */
-    Iterable<Directive> dirs();
+    public QnAlone(final Locks lcks, final Question qtn) {
+        this.locks = lcks;
+        this.origin = qtn;
+    }
+
+    @Override
+    public Req understand(final Comment.Smart comment,
+        final URI home) throws IOException {
+        final Repo repo = comment.issue().repo();
+        final Req req;
+        if (QnAlone.lock(this.locks, repo).lock()) {
+            Logger.info(this, "repo %s locked", repo.coordinates());
+            req = this.origin.understand(comment, home);
+        } else {
+            req = Req.LATER;
+        }
+        return req;
+    }
 
     /**
-     * Simple impl.
+     * Get lock by repo.
+     * @param lcks Locks
+     * @param repo Github repo
+     * @return Lock
+     * @throws IOException If fails
      */
-    @Immutable
-    final class Simple implements Req {
-        /**
-         * Type.
-         */
-        private final transient String type;
-        /**
-         * Map of args.
-         */
-        private final transient ArrayMap<String, String> map;
-        /**
-         * Ctor.
-         * @param tpe Type
-         * @param args Args
-         */
-        public Simple(final String tpe, final Map<String, String> args) {
-            this.type = tpe;
-            this.map = new ArrayMap<String, String>(args);
-        }
-        @Override
-        public Iterable<Directive> dirs() {
-            final Directives dirs = new Directives()
-                .add("type").set(this.type).up().add("args");
-            for (final Map.Entry<String, String> ent : this.map.entrySet()) {
-                dirs.add("arg")
-                    .attr("name", ent.getKey())
-                    .set(ent.getValue())
-                    .up();
-            }
-            return dirs.up();
-        }
+    public static Lock lock(final Locks lcks, final Repo repo)
+        throws IOException {
+        return lcks.get(String.format("rt-alone:%s", repo.coordinates()));
     }
 
 }

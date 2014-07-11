@@ -29,82 +29,62 @@
  */
 package com.rultor.agents.github;
 
+import co.stateful.Locks;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.immutable.ArrayMap;
-import java.util.Map;
+import com.jcabi.github.Github;
+import com.jcabi.github.Repo;
+import com.jcabi.log.Logger;
+import com.jcabi.xml.XML;
+import com.rultor.agents.AbstractAgent;
+import com.rultor.agents.github.qtn.QnAlone;
+import java.io.IOException;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
 /**
- * Request.
+ * Unlocks repo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.3
  */
 @Immutable
-public interface Req {
+@ToString
+@EqualsAndHashCode(callSuper = false, of = { "github", "locks" })
+public final class UnlocksRepo extends AbstractAgent {
 
     /**
-     * Empty, nothing found.
+     * Github.
      */
-    Req EMPTY = new Req() {
-        @Override
-        public Iterable<Directive> dirs() {
-            throw new UnsupportedOperationException("#dirs(): empty");
-        }
-    };
+    private final transient Github github;
 
     /**
-     * Come back later to the same question.
+     * Locks.
      */
-    Req LATER = new Req() {
-        @Override
-        public Iterable<Directive> dirs() {
-            throw new UnsupportedOperationException("#dirs(): later");
-        }
-    };
+    private final transient Locks locks;
 
     /**
-     * Directives.
-     * @return Dirs
+     * Ctor.
+     * @param ghub Github client
+     * @param lcks Locks
      */
-    Iterable<Directive> dirs();
+    public UnlocksRepo(final Github ghub, final Locks lcks) {
+        super(
+            "/talk/wire[github-repo and github-issue]",
+            "/talk[not(request) and not(daemon) and not(shell)]"
+        );
+        this.github = ghub;
+        this.locks = lcks;
+    }
 
-    /**
-     * Simple impl.
-     */
-    @Immutable
-    final class Simple implements Req {
-        /**
-         * Type.
-         */
-        private final transient String type;
-        /**
-         * Map of args.
-         */
-        private final transient ArrayMap<String, String> map;
-        /**
-         * Ctor.
-         * @param tpe Type
-         * @param args Args
-         */
-        public Simple(final String tpe, final Map<String, String> args) {
-            this.type = tpe;
-            this.map = new ArrayMap<String, String>(args);
-        }
-        @Override
-        public Iterable<Directive> dirs() {
-            final Directives dirs = new Directives()
-                .add("type").set(this.type).up().add("args");
-            for (final Map.Entry<String, String> ent : this.map.entrySet()) {
-                dirs.add("arg")
-                    .attr("name", ent.getKey())
-                    .set(ent.getValue())
-                    .up();
-            }
-            return dirs.up();
-        }
+    @Override
+    public Iterable<Directive> process(final XML xml) throws IOException {
+        final Repo repo = new TalkIssues(this.github, xml).get().repo();
+        QnAlone.lock(this.locks, repo).unlock();
+        Logger.info(this, "repo %s unlocked", repo.coordinates());
+        return new Directives();
     }
 
 }

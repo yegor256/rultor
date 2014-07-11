@@ -29,8 +29,8 @@
  */
 package com.rultor.agents;
 
-import co.stateful.Counters;
 import co.stateful.RtSttc;
+import co.stateful.Sttc;
 import co.stateful.cached.CdSttc;
 import co.stateful.retry.ReSttc;
 import com.jcabi.aspects.Cacheable;
@@ -50,6 +50,8 @@ import com.rultor.agents.github.Question;
 import com.rultor.agents.github.Reports;
 import com.rultor.agents.github.StartsTalks;
 import com.rultor.agents.github.Understands;
+import com.rultor.agents.github.UnlocksRepo;
+import com.rultor.agents.github.qtn.QnAlone;
 import com.rultor.agents.github.qtn.QnAskedBy;
 import com.rultor.agents.github.qtn.QnDeploy;
 import com.rultor.agents.github.qtn.QnHello;
@@ -80,6 +82,7 @@ import org.apache.commons.lang3.CharEncoding;
  * @version $Id$
  * @since 1.0
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ * @checkstyle ClassFanOutComplexityCheck (500 lines)
  */
 @Immutable
 @ToString
@@ -90,10 +93,11 @@ public final class Agents {
     /**
      * Create super agents, starters.
      * @return List of them
+     * @throws IOException If fails
      */
-    public Collection<SuperAgent> starters() {
+    public Collection<SuperAgent> starters() throws IOException {
         return Arrays.<SuperAgent>asList(
-            new StartsTalks(Agents.github(), Agents.counters())
+            new StartsTalks(Agents.github(), Agents.sttc().counters())
         );
     }
 
@@ -123,13 +127,23 @@ public final class Agents {
                     github,
                     new QnReferredTo(
                         github.users().self().login(),
-                        new QnAskedBy(
-                            Collections.singleton("yegor256"),
-                            new Question.FirstOf(
-                                Arrays.<Question>asList(
-                                    new QnIfContains("hello", new QnHello()),
-                                    new QnIfContains("merge", new QnMerge()),
-                                    new QnIfContains("deploy", new QnDeploy())
+                        new Question.FirstOf(
+                            Arrays.asList(
+                                new QnIfContains("hello", new QnHello()),
+                                new QnAskedBy(
+                                    Collections.singleton("yegor256"),
+                                    new QnAlone(
+                                        Agents.sttc().locks(),
+                                        new QnIfContains(
+                                            "merge", new QnMerge()
+                                        )
+                                    )
+                                ),
+                                new QnAlone(
+                                    Agents.sttc().locks(),
+                                    new QnIfContains(
+                                        "deploy", new QnDeploy()
+                                    )
                                 )
                             )
                         )
@@ -158,7 +172,8 @@ public final class Agents {
                             Manifests.read("Rultor-S3Secret")
                         )
                     ).bucket(Manifests.read("Rultor-S3Bucket"))
-                )
+                ),
+                new UnlocksRepo(github, Agents.sttc().locks())
             )
         );
         return agents;
@@ -178,23 +193,19 @@ public final class Agents {
     }
 
     /**
-     * Sttc counter.
-     * @return Counter
+     * Sttc.
+     * @return Sttc
      */
     @Cacheable(forever = true)
-    private static Counters counters() {
-        try {
-            return new CdSttc(
-                new ReSttc(
-                    RtSttc.make(
-                        URN.create(Manifests.read("Rultor-SttcUrn")),
-                        Manifests.read("Rultor-SttcToken")
-                    )
+    private static Sttc sttc() {
+        return new CdSttc(
+            new ReSttc(
+                RtSttc.make(
+                    URN.create(Manifests.read("Rultor-SttcUrn")),
+                    Manifests.read("Rultor-SttcToken")
                 )
-            ).counters();
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+            )
+        );
     }
 
 }

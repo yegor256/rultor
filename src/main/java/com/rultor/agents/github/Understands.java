@@ -81,6 +81,7 @@ public final class Understands extends AbstractAgent {
         this.question = qtn;
     }
 
+    // @checkstyle ExecutableStatementCountCheck (50 lines)
     @Override
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Iterable<Directive> process(final XML xml) throws IOException {
@@ -99,10 +100,13 @@ public final class Understands extends AbstractAgent {
                 continue;
             }
             ++fresh;
-            next = comment.number();
             req = this.question.understand(
                 comment, new Home(xml, Integer.toString(next)).uri()
             );
+            if (req.equals(Req.LATER)) {
+                break;
+            }
+            next = comment.number();
             if (!req.equals(Req.EMPTY)) {
                 break;
             }

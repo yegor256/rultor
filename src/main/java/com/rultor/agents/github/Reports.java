@@ -65,7 +65,10 @@ public final class Reports extends AbstractAgent {
      * @param ghub Github client
      */
     public Reports(final Github ghub) {
-        super("/talk/request[@id and success]");
+        super(
+            "/talk/wire[github-repo and github-issue]",
+            "/talk/request[@id and success]"
+        );
         this.github = ghub;
     }
 
