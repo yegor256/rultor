@@ -84,12 +84,12 @@ public final class Reports extends AbstractAgent {
         final String msg;
         if (success) {
             msg = String.format(
-                "Done! FYI, full log is [here](%s)",
+                "done! FYI, full log is [here](%s)",
                 home.toASCIIString()
             );
         } else {
             msg = String.format(
-                "Oops, I failed. Full log is [here](%s)",
+                "oops, I failed. Full log is [here](%s)",
                 home.toASCIIString()
             );
         }
