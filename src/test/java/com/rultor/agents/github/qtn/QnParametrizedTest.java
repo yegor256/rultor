@@ -38,6 +38,7 @@ import com.rultor.agents.github.Question;
 import java.net.URI;
 import javax.json.Json;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.xembly.Xembler;
 
@@ -72,6 +73,25 @@ public final class QnParametrizedTest {
                 "/args/arg[@name='tag' and .='1.9']",
                 "/args/arg[@name='server' and .='p5']"
             )
+        );
+    }
+
+    /**
+     * QnParametrized can ignore if there are no params.
+     * @throws Exception In case of error.
+     */
+    @Test
+    public void ignoresEmptyParams() throws Exception {
+        final Repo repo = new MkGithub().repos().create(
+            Json.createObjectBuilder().add("name", "test2").build()
+        );
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("hey");
+        MatcherAssert.assertThat(
+            new QnParametrized(Question.EMPTY).understand(
+                new Comment.Smart(issue.comments().get(1)), new URI("#1")
+            ).dirs(),
+            Matchers.emptyIterable()
         );
     }
 
