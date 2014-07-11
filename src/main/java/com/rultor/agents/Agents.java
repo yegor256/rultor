@@ -51,6 +51,7 @@ import com.rultor.agents.github.qtn.QnHello;
 import com.rultor.agents.github.qtn.QnIfContains;
 import com.rultor.agents.github.qtn.QnMerge;
 import com.rultor.agents.github.qtn.QnReferredTo;
+import com.rultor.agents.github.qtn.QnRelease;
 import com.rultor.agents.github.qtn.QnVersion;
 import com.rultor.agents.req.EndsRequest;
 import com.rultor.agents.req.StartsRequest;
@@ -158,6 +159,16 @@ public final class Agents {
                                         this.sttc.locks(),
                                         new QnIfContains(
                                             "deploy", new QnDeploy()
+                                        )
+                                    )
+                                ),
+                                new QnAskedBy(
+                                    profile,
+                                    "/p/release/commanders/item/text()",
+                                    new QnAlone(
+                                        this.sttc.locks(),
+                                        new QnIfContains(
+                                            "release", new QnRelease()
                                         )
                                     )
                                 ),

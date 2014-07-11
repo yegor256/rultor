@@ -1,13 +1,3 @@
-git clone "${base}" repo
-cd repo
-git checkout "${base_branch}"
-git remote add head "${head}"
-git remote update
-git config user.email "me@rultor.com"
-git config user.name "rultor"
-git merge "head/${head_branch}"
-cd ..
-
 if [ -z "${SCRIPT}" ]; then
   if [ -e pom.xml ]; then
     SCRIPT="mvn help:system clean install --batch-mode --errors"
@@ -23,6 +13,16 @@ if [ -z "${SCRIPT}" ]; then
     exit -1
   fi
 fi
+
+git clone "${base}" repo
+cd repo
+git config user.email "me@rultor.com"
+git config user.name "rultor"
+git checkout "${base_branch}"
+git remote add head "${head}"
+git remote update
+git merge "head/${head_branch}"
+cd ..
 
 BIN=merge.sh
 echo "#!/bin/bash" > ${BIN}
