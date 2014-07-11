@@ -92,8 +92,9 @@ public final class Agents {
      * @return List of them
      */
     public Collection<SuperAgent> supers() {
-        return Collections.<SuperAgent>singletonList(
-            new StartsTalks(Agents.github(), Agents.counters())
+        return Arrays.asList(
+            new StartsTalks(Agents.github(), Agents.counters()),
+            new DeactivatesTalks()
         );
     }
 

@@ -68,7 +68,7 @@
         <xsl:variable name="label">
             <xsl:choose>
                 <xsl:when test="read-only='true'">
-                    <span style="color:red"><xsl:text>r</xsl:text></span>
+                    <span style="color:red"><xsl:text>ro</xsl:text></span>
                 </xsl:when>
                 <xsl:otherwise>
                     <span style="color:green"><xsl:text>rw</xsl:text></span>
