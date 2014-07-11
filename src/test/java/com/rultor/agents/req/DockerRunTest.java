@@ -29,6 +29,7 @@
  */
 package com.rultor.agents.req;
 
+import com.jcabi.immutable.ArrayMap;
 import com.jcabi.xml.XMLDocument;
 import com.rultor.spi.Profile;
 import org.apache.commons.lang3.StringUtils;
@@ -61,16 +62,18 @@ public final class DockerRunTest {
             )
         );
         MatcherAssert.assertThat(
-            new DockerRun(profile, "/p/a").envs(),
+            new DockerRun(profile, "/p/a").envs(new ArrayMap<String, String>()),
             Matchers.equalTo("( '--env=A=5' '--env=B=f e' )")
         );
         MatcherAssert.assertThat(
-            new DockerRun(profile, "/p/b").envs(),
+            new DockerRun(profile, "/p/b").envs(new ArrayMap<String, String>()),
             Matchers.equalTo("( '--env=HELLO='\\''1'\\''' )")
         );
         MatcherAssert.assertThat(
-            new DockerRun(profile, "/p/c").envs(),
-            Matchers.equalTo("( '--env=MVN=works' )")
+            new DockerRun(profile, "/p/c").envs(
+                new ArrayMap<String, String>().with("X", "a\"'b")
+            ),
+            Matchers.equalTo("( '--env=MVN=works' '--env=X=a\"'\\''b' )")
         );
     }
 
@@ -107,7 +110,9 @@ public final class DockerRunTest {
         final Profile profile = new Profile.Fixed(new XMLDocument("<p/>"));
         final String empty = "(  )";
         MatcherAssert.assertThat(
-            new DockerRun(profile, "/p/absent").envs(),
+            new DockerRun(profile, "/p/absent").envs(
+                new ArrayMap<String, String>()
+            ),
             Matchers.equalTo(empty)
         );
         MatcherAssert.assertThat(

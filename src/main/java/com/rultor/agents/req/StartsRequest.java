@@ -89,8 +89,9 @@ public final class StartsRequest extends AbstractAgent {
         final DockerRun docker = new DockerRun(
             this.profile, String.format("/p/%s", type)
         );
-        vars.put("SCRIPT", docker.script());
-        vars.put("DOCKER_ENVS", docker.envs());
+        vars.put("vars", docker.envs(vars.build()));
+        vars.put("image", "yegor256/rultor");
+        vars.put("scripts", docker.script());
         final String script = StringUtils.join(
             Iterables.concat(
                 Iterables.transform(

@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -99,10 +100,11 @@ final class DockerRun {
 
     /**
      * Make a list of env vars for docker.
+     * @param extra Extra vars
      * @return Envs
      * @throws IOException If fails
      */
-    public String envs() throws IOException {
+    public String envs(final Map<String, String> extra) throws IOException {
         final XML xml = this.node();
         final Collection<String> envs = new LinkedList<String>();
         if (!xml.nodes("env").isEmpty()) {
@@ -134,6 +136,19 @@ final class DockerRun {
                 )
             );
         }
+        envs.addAll(
+            Collections2.transform(
+                extra.entrySet(),
+                new Function<Map.Entry<String, String>, String>() {
+                    @Override
+                    public String apply(final Map.Entry<String, String> ent) {
+                        return String.format(
+                            "--env=%s=%s", ent.getKey(), ent.getValue()
+                        );
+                    }
+                }
+            )
+        );
         return this.enlist(envs);
     }
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-if [ -z "${SCRIPT}" ]; then
+if [ -z "${scripts}" ]; then
   echo "release.script is not defined in .rultor.yml"
   exit -1
 fi
@@ -15,7 +15,7 @@ git config user.email "me@rultor.com"
 git config user.name "rultor"
 git checkout "${branch}"
 
-sudo docker run --rm -v $(pwd):/main "${DOCKER_ENVS[@]}" -w=/main yegor256/rultor /main/${BIN}
+sudo docker run --rm -v $(pwd):/main "${vars[@]}" -w=/main ${image} /main/${bin}
 
 git commit --allow-empty -am "${tag}"
 git tag "${tag}"

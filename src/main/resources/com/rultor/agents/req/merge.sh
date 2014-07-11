@@ -1,18 +1,7 @@
 #!/bin/sh
-if [ -z "${SCRIPT}" ]; then
-  if [ -e pom.xml ]; then
-    SCRIPT="mvn help:system clean install --batch-mode --errors"
-  fi
-  if [ -e build.xml ]; then
-    SCRIPT="ant"
-  fi
-  if [ -e Gemfile ]; then
-    SCRIPT="bundle test"
-  fi
-  if [ -z "${SCRIPT}" ]; then
-    echo "merge.script is not defined in .rultor.yml and project root directory doesn't explain what this project is built with"
-    exit -1
-  fi
+if [ -z "${scripts}" ]; then
+  echo "merge.script is not defined in .rultor.yml and project root directory doesn't explain what this project is built with"
+  exit -1
 fi
 
 git clone "${base}" repo
@@ -25,7 +14,7 @@ git remote update
 git merge "head/${head_branch}"
 cd ..
 
-sudo docker run --rm -v $(pwd):/main "${DOCKER_ENVS[@]}" -w=/main yegor256/rultor /main/${BIN}
+sudo docker run --rm -v $(pwd):/main "${vars[@]}" -w=/main ${image} /main/${bin}
 
 cd repo
 git push origin "${base_branch}"

@@ -58,12 +58,16 @@ public final class StartsRequestTest {
             new Directives().xpath("/talk")
                 .add("request").attr("id", "abcd")
                 .add("type").set("merge").up()
-                .add("args").add("arg").attr("name", "hey").set("hello!")
+                .add("args")
+                .add("arg").attr("name", "hey").set("hello!")
         );
         agent.execute(talk);
         MatcherAssert.assertThat(
             talk.read(),
-            XhtmlMatchers.hasXPath("/talk/daemon[@id='abcd' and script]")
+            XhtmlMatchers.hasXPaths(
+                "/talk/daemon[@id='abcd' and script]",
+                "//script[contains(.,'hey=hello!')]"
+            )
         );
     }
 

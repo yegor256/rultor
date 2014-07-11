@@ -1,5 +1,5 @@
 #!/bin/sh
-if [ -z "${SCRIPT}" ]; then
+if [ -z "${scripts}" ]; then
   echo "deploy.script is not defined in .rultor.yml"
   exit -1
 fi
@@ -9,6 +9,6 @@ cd repo
 git checkout "${branch}"
 cd ..
 
-sudo docker run --rm -v $(pwd):/main "${DOCKER_ENVS[@]}" -w=/main yegor256/rultor /main/${BIN}
+sudo docker run --rm -v $(pwd):/main "${vars[@]}" -w=/main ${image} /main/${bin}
 
 cd repo
