@@ -37,7 +37,6 @@ import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
 import com.rultor.spi.Profile;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,7 +46,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
@@ -156,14 +154,10 @@ public final class StartsDaemon extends AbstractAgent {
             : this.profile.assets().entrySet()) {
             shell.exec(
                 String.format(
-                    "base64 --decode > \"%s/%s\"",
+                    "cat > \"%s/%s\"",
                     dir, asset.getKey()
                 ),
-                new ByteArrayInputStream(
-                    Base64.encodeBase64(
-                        IOUtils.toByteArray(asset.getValue())
-                    )
-                ),
+                asset.getValue(),
                 Logger.stream(Level.INFO, true),
                 Logger.stream(Level.WARNING, true)
             );

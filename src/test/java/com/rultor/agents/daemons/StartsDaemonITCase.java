@@ -29,17 +29,21 @@
  */
 package com.rultor.agents.daemons;
 
+import com.jcabi.immutable.ArrayMap;
 import com.jcabi.log.VerboseProcess;
 import com.jcabi.matchers.XhtmlMatchers;
+import com.jcabi.xml.XMLDocument;
 import com.rultor.agents.shells.Shell;
 import com.rultor.agents.shells.TalkShells;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
@@ -49,6 +53,7 @@ import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.Mockito;
 import org.xembly.Directives;
 
 /**
@@ -89,9 +94,20 @@ public final class StartsDaemonITCase {
                 .add("login").set(whoami).up()
                 .add("key").set(key).up().up()
                 .add("daemon").attr("id", "fedcba")
-                .add("script").set("ls -al")
+                .add("script").set("ls -al; md5 file.bin")
         );
-        final Agent agent = new StartsDaemon(new Profile.Fixed());
+        final Profile profile = Mockito.mock(Profile.class);
+        Mockito.doReturn(new XMLDocument("<p/>")).when(profile).read();
+        Mockito.doReturn(
+            new ArrayMap<String, InputStream>().with(
+                "file.bin",
+                new ByteArrayInputStream(
+                    // @checkstyle MagicNumber (1 line)
+                    new byte[] {0, 1, 7, 8, 9, 10, 13, 20}
+                )
+            )
+        ).when(profile).assets();
+        final Agent agent = new StartsDaemon(profile);
         agent.execute(talk);
         MatcherAssert.assertThat(
             talk.read(),
@@ -110,6 +126,7 @@ public final class StartsDaemonITCase {
                 Matchers.containsString("+ set -o pipefail"),
                 Matchers.containsString("+ date --iso-8601=seconds --utc"),
                 Matchers.containsString("+ ls -al"),
+                Matchers.containsString("182f61268e6e6e6cd1a547be31fd8583"),
                 Matchers.containsString("RULTOR-SUCCESS")
             )
         );
