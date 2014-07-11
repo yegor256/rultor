@@ -38,7 +38,7 @@ import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.spi.Profile;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -106,7 +106,11 @@ public final class StartsRequest extends AbstractAgent {
                         }
                     }
                 ),
-                Collections.singleton(
+                Arrays.asList(
+                    IOUtils.toString(
+                        this.getClass().getResourceAsStream("_head.sh"),
+                        CharEncoding.UTF_8
+                    ),
                     IOUtils.toString(
                         this.getClass().getResourceAsStream(
                             String.format("%s.sh", type)
