@@ -48,7 +48,9 @@
                     style="width:128px;height:128px;" alt="rultor logo"/>
             </p>
             <p>
-                <xsl:text>more details coming soon...</xsl:text>
+                <xsl:text>say </xsl:text>
+                <code>@rultor hello</code>
+                <xsl:text> in a Github issue</xsl:text>
             </p>
         </div>
     </xsl:template>
