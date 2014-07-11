@@ -1,11 +1,14 @@
 assets:
   settings.xml: "yegor256/home#assets/rultor/settings.xml"
+
 deploy:
   env:
     MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script:
+    - "sudo bundle"
     - "mvn clean deploy -Prultor -DskipTests --settings ../settings.xml"
     - "mvn clean site-deploy -Psite -Prempl -DskipTests --settings ../settings.xml"
+
 merge:
   env:
     MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
