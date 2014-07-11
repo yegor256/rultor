@@ -1,13 +1,15 @@
 assets:
   settings.xml: "yegor256/home#assets/rultor/settings.xml"
+  pubring.gpg: "yegor256/home#assets/pubring.gpg"
+  secring.gpg: "yegor256/home#assets/secring.gpg"
 
 deploy:
   env:
     MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script:
     - "sudo bundle"
-    - "mvn clean deploy -Prultor -DskipTests --settings ../settings.xml"
-    - "mvn clean site-deploy -Psite -Prempl -DskipTests --settings ../settings.xml"
+    - "mvn clean deploy -Prultor --settings ../settings.xml"
+    - "mvn clean site-deploy -Psite -Prempl --settings ../settings.xml"
 
 merge:
   env:
