@@ -88,12 +88,21 @@ import org.apache.commons.lang3.CharEncoding;
 public final class Agents {
 
     /**
-     * Create super agents.
+     * Create super agents, starters.
      * @return List of them
      */
-    public Collection<SuperAgent> supers() {
-        return Arrays.asList(
-            new StartsTalks(Agents.github(), Agents.counters()),
+    public Collection<SuperAgent> starters() {
+        return Arrays.<SuperAgent>asList(
+            new StartsTalks(Agents.github(), Agents.counters())
+        );
+    }
+
+    /**
+     * Create super agents, closers.
+     * @return List of them
+     */
+    public Collection<SuperAgent> closers() {
+        return Arrays.<SuperAgent>asList(
             new DeactivatesTalks()
         );
     }

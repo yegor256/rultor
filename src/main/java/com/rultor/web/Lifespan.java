@@ -115,7 +115,7 @@ public final class Lifespan implements ServletContextListener {
             return;
         }
         final Agents agents = new Agents();
-        for (final SuperAgent agent : agents.supers()) {
+        for (final SuperAgent agent : agents.starters()) {
             agent.execute(talks);
         }
         final Profiles profiles = new Profiles();
@@ -124,6 +124,9 @@ public final class Lifespan implements ServletContextListener {
             for (final Agent agent : agents.agents(profile)) {
                 agent.execute(talk);
             }
+        }
+        for (final SuperAgent agent : agents.closers()) {
+            agent.execute(talks);
         }
     }
 

@@ -58,10 +58,12 @@ public final class QnHello implements Question {
         final URI home) throws IOException {
         new Answer(comment).post(
             StringUtils.join(
-                "hi there! I understand a few simple commands:\n",
-                "\"merge\", \"deploy\", etc. ",
+                "hi there! I understand a few simple commands:",
+                " \"merge\", \"deploy\", etc. ",
                 "[This page](http://doc.rultor.com/basics.html)",
-                " explains them briefly. Have fun :)"
+                " explains them briefly. Any questions or bug reports",
+                " are [welcome](https://github.com/yegor256/rultor/issues).",
+                " Have fun :)"
             )
         );
         Logger.info(this, "hello found in #%d", comment.issue().number());
