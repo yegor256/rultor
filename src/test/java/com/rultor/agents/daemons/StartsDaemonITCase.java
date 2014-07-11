@@ -106,7 +106,12 @@ public final class StartsDaemonITCase {
         );
         MatcherAssert.assertThat(
             baos.toString(CharEncoding.UTF_8),
-            Matchers.containsString("rrr")
+            Matchers.allOf(
+                Matchers.containsString("+ set -o pipefail"),
+                Matchers.containsString("+ date --iso-8601=seconds --utc"),
+                Matchers.containsString("+ ls -al"),
+                Matchers.containsString("RULTOR-SUCCESS")
+            )
         );
     }
 
