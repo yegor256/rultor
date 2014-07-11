@@ -30,6 +30,7 @@
 package com.rultor.spi;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.immutable.ArrayMap;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 import java.io.IOException;
@@ -124,7 +125,7 @@ public interface Profile {
         }
         @Override
         public Map<String, InputStream> assets() {
-            throw new UnsupportedOperationException("#assets()");
+            return new ArrayMap<String, InputStream>();
         }
     }
 }
