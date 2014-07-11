@@ -31,15 +31,21 @@ package com.rultor.agents.daemons;
 
 import com.jcabi.log.VerboseProcess;
 import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.agents.shells.Shell;
+import com.rultor.agents.shells.TalkShells;
 import com.rultor.spi.Agent;
 import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.NullInputStream;
+import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -90,6 +96,17 @@ public final class StartsDaemonITCase {
         MatcherAssert.assertThat(
             talk.read(),
             XhtmlMatchers.hasXPath("/talk/daemon[started and dir]")
+        );
+        final String dir = talk.read().xpath("/talk/daemon/dir/text()").get(0);
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        new Shell.Safe(new TalkShells(talk.read()).get()).exec(
+            String.format("cat %s/stdout", dir),
+            new NullInputStream(0L),
+            baos, baos
+        );
+        MatcherAssert.assertThat(
+            baos.toString(CharEncoding.UTF_8),
+            Matchers.containsString("rrr")
         );
     }
 
