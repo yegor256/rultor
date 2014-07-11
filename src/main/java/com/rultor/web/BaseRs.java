@@ -182,14 +182,6 @@ public class BaseRs extends BaseResource {
      */
     @NotNull(message = "Talks can't be NULL")
     protected final Talks talks() {
-        final Identity self = this.auth().identity();
-        if (self.equals(Identity.ANONYMOUS)) {
-            throw this.flash().redirect(
-                this.uriInfo().getBaseUri(),
-                "please login first",
-                Level.WARNING
-            );
-        }
         return Talks.class.cast(
             this.servletContext().getAttribute(Talks.class.getName())
         );
