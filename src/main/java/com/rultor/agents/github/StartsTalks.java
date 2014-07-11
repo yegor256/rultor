@@ -44,7 +44,6 @@ import java.io.IOException;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.time.DateUtils;
 import org.xembly.Directives;
 
@@ -128,9 +127,7 @@ public final class StartsTalks implements SuperAgent {
     private void activate(final Talks talks, final Issue issue)
         throws IOException {
         final String coords = issue.repo().coordinates().toString();
-        final String name = Hex.encodeHexString(
-            String.format("%s#%d", coords, issue.number()).getBytes()
-        );
+        final String name = String.format("%s#%d", coords, issue.number());
         if (!talks.exists(name)) {
             talks.create(name);
         }
