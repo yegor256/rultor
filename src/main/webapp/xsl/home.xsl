@@ -44,8 +44,15 @@
             top: 0; bottom: 0; left: 0; right: 0;
             margin: auto;">
             <p>
-                <img src="//img.rultor.com/logo.svg"
-                    style="width:128px;height:128px;" alt="rultor logo"/>
+                <img style="width:128px;height:128px;" alt="rultor logo">
+                    <xsl:attribute name="src">
+                        <xsl:text>//img.rultor.com/logo</xsl:text>
+                        <xsl:if test="toggles/read-only='true'">
+                            <xsl:text>-stripes</xsl:text>
+                        </xsl:if>
+                        <xsl:text>.svg</xsl:text>
+                    </xsl:attribute>
+                </img>
             </p>
             <p>
                 <xsl:text>say </xsl:text>
