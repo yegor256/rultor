@@ -59,6 +59,7 @@ public final class EndsRequestTest {
                 .add("daemon").attr("id", "abcd")
                 .add("script").set("test").up()
                 .add("code").set("13").up()
+                .add("started").set("2013-01-01T11:35:09Z").up()
                 .add("ended").set("2013-01-01T12:35:09Z").up().up()
                 .add("request").attr("id", "1")
                 .add("type").set("something").up()

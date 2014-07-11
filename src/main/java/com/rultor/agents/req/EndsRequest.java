@@ -33,8 +33,10 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
+import java.text.ParseException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.xembly.Directive;
 import org.xembly.Directives;
 
@@ -56,19 +58,33 @@ public final class EndsRequest extends AbstractAgent {
     public EndsRequest() {
         super(
             "/talk/request[type and not(success)]",
-            "/talk/daemon[ended and code]"
+            "/talk/daemon[started and ended and code]"
         );
     }
 
     @Override
     public Iterable<Directive> process(final XML xml) {
-        final int code = Integer.parseInt(
-            xml.xpath("/talk/daemon/code/text()").get(0)
-        );
+        final XML daemon = xml.nodes("/talk/daemon").get(0);
+        final int code = Integer.parseInt(daemon.xpath("code/text()").get(0));
+        final long msec = EndsRequest.iso(daemon.xpath("ended/text()").get(0))
+            - EndsRequest.iso(daemon.xpath("started/text()").get(0));
         final boolean success = code == 0;
         Logger.info(this, "request finished: %b", success);
         return new Directives().xpath("/talk/request")
-            .add("success")
-            .set(Boolean.toString(success));
+            .add("msec").set(Long.toString(msec)).up()
+            .add("success").set(Boolean.toString(success));
+    }
+
+    /**
+     * Parse ISO date into msec.
+     * @param iso ISO date
+     * @return Msec
+     */
+    private static long iso(final String iso) {
+        try {
+            return DateFormatUtils.ISO_DATETIME_FORMAT.parse(iso).getTime();
+        } catch (final ParseException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 }

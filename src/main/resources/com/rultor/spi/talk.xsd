@@ -62,6 +62,7 @@
     <xs:complexType name="request">
         <xs:all>
             <xs:element name="success" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="msec" type="xs:integer" minOccurs="0"/>
             <xs:element name="type">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">

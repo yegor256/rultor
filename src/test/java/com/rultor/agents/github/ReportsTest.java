@@ -68,6 +68,7 @@ public final class ReportsTest {
                 .add("github-issue").set(Integer.toString(issue.number())).up()
                 .up()
                 .add("request").attr("id", "1")
+                .add("msec").set("1234567").up()
                 .add("success").set("true").up()
                 .add("type").set("something").up()
                 .add("args")

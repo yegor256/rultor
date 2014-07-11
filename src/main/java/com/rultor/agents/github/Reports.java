@@ -30,9 +30,11 @@
 package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.github.Comment;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
+import com.jcabi.log.Logger;
 import com.jcabi.xml.XML;
 import com.rultor.agents.AbstractAgent;
 import com.rultor.agents.daemons.Home;
@@ -81,23 +83,24 @@ public final class Reports extends AbstractAgent {
         );
         final String hash = req.xpath("@id").get(0);
         final URI home = new Home(xml, hash).uri();
-        final String msg;
+        final StringBuilder msg = new StringBuilder(Tv.HUNDRED);
         if (success) {
-            msg = String.format(
-                "done! FYI, full log is [here](%s)",
-                home.toASCIIString()
-            );
+            msg.append("done!");
         } else {
-            msg = String.format(
-                "oops, I failed. Full log is [here](%s)",
-                home.toASCIIString()
-            );
+            msg.append("oops, I failed.");
         }
+        msg.append(
+            Logger.format(
+                " FYI, full log is [here](%s) (took me %[ms]s)",
+                home.toASCIIString(),
+                Long.parseLong(req.xpath("msec/text()").get(0))
+            )
+        );
         new Answer(
             new Comment.Smart(
                 issue.comments().get(Integer.parseInt(hash))
             )
-        ).post(msg);
+        ).post(msg.toString());
         return new Directives()
             .xpath("/talk/request[success]")
             .strict(1).remove();
