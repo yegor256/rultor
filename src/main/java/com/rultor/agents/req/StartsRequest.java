@@ -90,7 +90,12 @@ public final class StartsRequest extends AbstractAgent {
             this.profile, String.format("/p/%s", type)
         );
         vars.put("vars", docker.envs(vars.build()));
-        vars.put("image", "yegor256/rultor");
+        vars.put(
+            "image",
+            new Profile.Defaults(this.profile).text(
+                "/p/docker/image/text()", "yegor256/rultor"
+            )
+        );
         vars.put("scripts", docker.script());
         final String script = StringUtils.join(
             Iterables.concat(
