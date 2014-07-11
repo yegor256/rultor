@@ -27,71 +27,52 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.rultor.agents.github;
+package com.rultor.agents.github.qtn;
 
-import com.jcabi.aspects.Immutable;
 import com.jcabi.github.Comment;
-import com.jcabi.immutable.Array;
-import java.io.IOException;
+import com.jcabi.github.Issue;
+import com.jcabi.github.Repo;
+import com.jcabi.github.mock.MkGithub;
+import com.jcabi.matchers.XhtmlMatchers;
+import com.rultor.agents.github.Question;
 import java.net.URI;
+import javax.json.Json;
+import org.hamcrest.MatcherAssert;
+import org.junit.Test;
+import org.xembly.Xembler;
 
 /**
- * Question.
+ * Tests for ${@link QnParametrized}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.3
+ * @since 1.3.6
  */
-@Immutable
-public interface Question {
+public final class QnParametrizedTest {
 
     /**
-     * Empty always.
+     * QnParametrized can fetch params.
+     * @throws Exception In case of error.
      */
-    Question EMPTY = new Question() {
-        @Override
-        public Req understand(final Comment.Smart comment, final URI home) {
-            return Req.EMPTY;
-        }
-    };
-
-    /**
-     * Understand it and return the request.
-     * @param comment The comment
-     * @param home Home URI of the daemon
-     * @return Request (or Req.EMPTY is nothing found)
-     * @throws IOException If fails
-     */
-    Req understand(Comment.Smart comment, URI home) throws IOException;
-
-    /**
-     * The first that matches.
-     */
-    @Immutable
-    final class FirstOf implements Question {
-        /**
-         * Original questions.
-         */
-        private final transient Array<Question> questions;
-        /**
-         * Ctor.
-         * @param qtns Original questions
-         */
-        public FirstOf(final Iterable<Question> qtns) {
-            this.questions = new Array<Question>(qtns);
-        }
-        @Override
-        public Req understand(final Comment.Smart comment,
-            final URI home) throws IOException {
-            Req req = Req.EMPTY;
-            for (final Question qtn : this.questions) {
-                req = qtn.understand(comment, home);
-                if (!req.equals(Req.EMPTY)) {
-                    break;
-                }
-            }
-            return req;
-        }
+    @Test
+    public void fetchesParams() throws Exception {
+        final Repo repo = new MkGithub("jeff").repos().create(
+            Json.createObjectBuilder().add("name", "test").build()
+        );
+        final Issue issue = repo.issues().create("", "");
+        issue.comments().post("hey, tag=`1.9` and server is `p5`");
+        MatcherAssert.assertThat(
+            new Xembler(
+                new QnParametrized(Question.EMPTY).understand(
+                    new Comment.Smart(issue.comments().get(1)), new URI("#")
+                ).dirs()
+            ).xml(),
+            XhtmlMatchers.hasXPaths(
+                "/args[count(arg) = 2]",
+                "/args/arg[@name='tag' and .='1.9']",
+                "/args/arg[@name='server' and .='p5']"
+            )
+        );
     }
 
 }

@@ -50,6 +50,7 @@ import com.rultor.agents.github.qtn.QnDeploy;
 import com.rultor.agents.github.qtn.QnHello;
 import com.rultor.agents.github.qtn.QnIfContains;
 import com.rultor.agents.github.qtn.QnMerge;
+import com.rultor.agents.github.qtn.QnParametrized;
 import com.rultor.agents.github.qtn.QnReferredTo;
 import com.rultor.agents.github.qtn.QnRelease;
 import com.rultor.agents.github.qtn.QnVersion;
@@ -130,6 +131,7 @@ public final class Agents {
      * @param profile Profile
      * @return List of them
      * @throws IOException If fails
+     * @checkstyle LineLength (100 lines)
      */
     public Collection<Agent> agents(final Profile profile)
         throws IOException {
@@ -140,40 +142,36 @@ public final class Agents {
                     this.github,
                     new QnReferredTo(
                         this.github.users().self().login(),
-                        new Question.FirstOf(
-                            Arrays.asList(
-                                new QnAskedBy(
-                                    profile,
-                                    "/p/merge/commanders/item/text()",
-                                    new QnAlone(
-                                        this.sttc.locks(),
-                                        new QnIfContains(
-                                            "merge", new QnMerge()
+                        new QnParametrized(
+                            new Question.FirstOf(
+                                Arrays.asList(
+                                    new QnAskedBy(
+                                        profile,
+                                        "/p/merge/commanders/item/text()",
+                                        new QnAlone(
+                                            this.sttc.locks(),
+                                            new QnIfContains("merge", new QnMerge())
                                         )
-                                    )
-                                ),
-                                new QnAskedBy(
-                                    profile,
-                                    "/p/deploy/commanders/item/text()",
-                                    new QnAlone(
-                                        this.sttc.locks(),
-                                        new QnIfContains(
-                                            "deploy", new QnDeploy()
+                                    ),
+                                    new QnAskedBy(
+                                        profile,
+                                        "/p/deploy/commanders/item/text()",
+                                        new QnAlone(
+                                            this.sttc.locks(),
+                                            new QnIfContains("deploy", new QnDeploy())
                                         )
-                                    )
-                                ),
-                                new QnAskedBy(
-                                    profile,
-                                    "/p/release/commanders/item/text()",
-                                    new QnAlone(
-                                        this.sttc.locks(),
-                                        new QnIfContains(
-                                            "release", new QnRelease()
+                                    ),
+                                    new QnAskedBy(
+                                        profile,
+                                        "/p/release/commanders/item/text()",
+                                        new QnAlone(
+                                            this.sttc.locks(),
+                                            new QnIfContains("release", new QnRelease())
                                         )
-                                    )
-                                ),
-                                new QnIfContains("version", new QnVersion()),
-                                new QnIfContains("hello", new QnHello())
+                                    ),
+                                    new QnIfContains("version", new QnVersion()),
+                                    new QnIfContains("hello", new QnHello())
+                                )
                             )
                         )
                     )

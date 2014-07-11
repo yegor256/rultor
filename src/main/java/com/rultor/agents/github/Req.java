@@ -31,6 +31,8 @@ package com.rultor.agents.github;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.immutable.ArrayMap;
+import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 import org.xembly.Directive;
 import org.xembly.Directives;
@@ -51,7 +53,7 @@ public interface Req {
     Req EMPTY = new Req() {
         @Override
         public Iterable<Directive> dirs() {
-            throw new UnsupportedOperationException("#dirs(): empty");
+            return Collections.emptyList();
         }
     };
 
@@ -61,15 +63,16 @@ public interface Req {
     Req LATER = new Req() {
         @Override
         public Iterable<Directive> dirs() {
-            throw new UnsupportedOperationException("#dirs(): later");
+            return Collections.emptyList();
         }
     };
 
     /**
      * Directives.
      * @return Dirs
+     * @throws IOException If fails
      */
-    Iterable<Directive> dirs();
+    Iterable<Directive> dirs() throws IOException;
 
     /**
      * Simple impl.
@@ -96,7 +99,7 @@ public interface Req {
         @Override
         public Iterable<Directive> dirs() {
             final Directives dirs = new Directives()
-                .add("type").set(this.type).up().add("args");
+                .addIf("type").set(this.type).up().addIf("args");
             for (final Map.Entry<String, String> ent : this.map.entrySet()) {
                 dirs.add("arg")
                     .attr("name", ent.getKey())
