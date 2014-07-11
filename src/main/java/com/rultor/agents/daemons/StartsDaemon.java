@@ -110,7 +110,7 @@ public final class StartsDaemon extends AbstractAgent {
                             Manifests.read("Rultor-Version"),
                             Manifests.read("Rultor-Revision")
                         ),
-                        "date",
+                        "date --iso-8601=seconds --utc",
                         "uptime",
                         daemon.xpath("script/text()").get(0),
                         "echo 'RULTOR-SUCCESS'"

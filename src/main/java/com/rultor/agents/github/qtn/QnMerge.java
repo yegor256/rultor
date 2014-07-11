@@ -97,8 +97,8 @@ public final class QnMerge implements Question {
         return new Req.Simple(
             "merge",
             new ImmutableMap.Builder<String, String>()
-                .put("head-branch", head.getString("ref"))
-                .put("base-branch", base.getString("ref"))
+                .put("head_branch", head.getString("ref"))
+                .put("base_branch", base.getString("ref"))
                 .put(
                     "base",
                     String.format(
