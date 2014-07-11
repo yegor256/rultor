@@ -100,7 +100,7 @@ public final class QnAskedBy implements Question {
         } else {
             new Answer(comment).post(
                 String.format(
-                    "Thanks, but I need a confirmation from one of them: %s",
+                    "sorry, I accept such requests only from one of them: %s",
                     StringUtils.join(
                         Iterables.transform(
                             logins,
