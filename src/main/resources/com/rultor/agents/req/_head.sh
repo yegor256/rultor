@@ -31,3 +31,6 @@ echo "cd repo" >> ${bin}
 echo "${scripts[@]}" >> ${bin}
 chmod a+x ${bin}
 
+if [ -z "${docker}" ]; then
+  docker="sudo docker"
+fi

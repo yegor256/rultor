@@ -8,7 +8,7 @@ fi
 git checkout -b __rultor-tmp
 
 cd ..
-sudo docker run --rm -v $(pwd):/main "${vars[@]}" -w=/main ${image} /main/${bin}
+${docker} run --rm -v $(pwd):/main "${vars[@]}" -w=/main ${image} /main/${bin}
 cd repo
 
 git commit --allow-empty -am "${tag}"

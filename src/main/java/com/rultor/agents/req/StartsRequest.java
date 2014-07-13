@@ -71,7 +71,7 @@ public final class StartsRequest extends AbstractAgent {
      */
     public StartsRequest(final Profile prof) {
         super(
-            "/talk/request[type and not(success)]",
+            "/talk/request[@id and type and not(success)]",
             "/talk[not(daemon)]"
         );
         this.profile = prof;

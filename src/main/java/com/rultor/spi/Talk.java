@@ -140,17 +140,21 @@ public interface Talk {
         }
         @Override
         public void modify(final Iterable<Directive> dirs) throws IOException {
-            final Node node = this.read().node();
-            try {
-                new Xembler(dirs).apply(node);
-            } catch (final ImpossibleModificationException ex) {
-                throw new IllegalStateException(ex);
+            if (dirs.iterator().hasNext()) {
+                final Node node = this.read().node();
+                try {
+                    new Xembler(dirs).apply(node);
+                } catch (final ImpossibleModificationException ex) {
+                    throw new IllegalStateException(ex);
+                }
+                FileUtils.write(
+                    new File(this.path),
+                    new StrictXML(
+                        new XMLDocument(node), Talk.SCHEMA
+                    ).toString(),
+                    CharEncoding.UTF_8
+                );
             }
-            FileUtils.write(
-                new File(this.path),
-                new StrictXML(new XMLDocument(node), Talk.SCHEMA).toString(),
-                CharEncoding.UTF_8
-            );
         }
         @Override
         public void active(final boolean yes) {
