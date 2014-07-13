@@ -70,7 +70,7 @@ public final class QnRelease implements Question {
         return new Req.Simple(
             "release",
             new ImmutableMap.Builder<String, String>()
-                .put("branch", "master")
+                .put("head_branch", "master")
                 .put(
                     "head",
                     String.format(

@@ -74,7 +74,7 @@ public final class QnDeploy implements Question {
         return new Req.Simple(
             "deploy",
             new ImmutableMap.Builder<String, String>()
-                .put("branch", "master")
+                .put("head_branch", "master")
                 .put(
                     "head",
                     String.format(
