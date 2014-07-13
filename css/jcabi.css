@@ -1,5 +1,7 @@
+@import url(http://fonts.googleapis.com/css?family=Maven+Pro:400,500,700);
+@import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono);
 /**
- * Copyright (c) 2012-2013, JCabi.com
+ * Copyright (c) 2012-2014, jcabi.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,112 +29,229 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 body {
-    padding: 2em;
-    font-family: 'Helvetica Neue', Arial, serif;
-    font-size: 13px;
-    background-color: #EEE;
+  margin: 0;
+  padding: 1em;
+  font-family: "Maven Pro", sans-serif;
+  font-size: 1.4em;
+  line-height: 1.4em;
+  background-color: lightgrey;
+  color: #111111;
 }
-
-#breadcrumbs {
-    list-style: none;
-    padding-left: 0;
-}
-
-    #breadcrumbs li {
-        display: inline;
-    }
-
-    #breadcrumbs li:before {
-        content: ">";
-    }
-
-    #breadcrumbs li:first-child:before {
-        content: none;
-    }
-
-#menu {
-    float: left;
-    width: 15em;
-    margin-top: 3em;
-    padding-left: 0;
-    list-style: none;
-}
-
-    #menu > li {
-        margin-top: 1em;
-    }
-
-    #menu ul {
-        padding-left: 1em;
-        list-style: none;
-    }
-
-    #menu a {
-        text-decoration: none;
-    }
-
-#content {
-    position: relative;
-    max-width: 55em;
-    min-height: 40em;
-    margin-left: 17em;
+@media all and (max-width: 1200px) {
+  body {
+    font-size: 1.2em;
+    line-height: 1.4em;
     background-color: white;
-    padding: 3em 8em 3em 3em;
-    -webkit-border-radius: 7px;
-    border-radius: 7px;
-    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .25);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, .25);
-}
-
-h1, h2, h3 {
-    font-weight: normal;
+    padding: 0;
+  }
 }
 
 a {
-    color: #2276A4;
+  color: inherit;
+  border-bottom: 1px dashed;
+  text-decoration: none;
 }
 
-    a tt {
-        text-decoration: none;
-        /* see http://stackoverflow.com/questions/13442609 */
-        display: inline-block;
-    }
+code, tt {
+  background-color: #eeeeee;
+  padding: 0 .5em;
+  font-family: "Ubuntu Mono", monospace;
+}
+
+h1 {
+  font-size: 1.5em;
+}
+
+h2 {
+  font-size: 1.3em;
+}
+
+h3 {
+  font-size: 1.1em;
+}
 
 pre {
-    background-color: #3f464c;
-    color: #f8f8f8;
-    padding: 0.5em 1em;
-    font-family: 'Monaco', monospace;
-    font-size: 11px;
-    width: 80%;
-    overflow-x: auto;
+  border-left: 2px solid gray;
+  margin-left: 1em;
+  color: gray;
+  padding: 1em;
+  font-family: "Ubuntu Mono", monospace;
+  font-size: 0.9em;
+  overflow-x: auto;
+  line-height: 1.3em;
 }
-
-tt {
-    background-color: #eee;
-    padding: 0 0.3em;
-    font-family: 'Monaco', monospace;
-    font-size: 11px;
-    border: 1px solid #ccc;
+@media all and (max-width: 1200px) {
+  pre {
+    border-left: 0;
+    margin-left: 0;
+    padding-left: 0;
+  }
 }
 
 table {
-    background-color: white;
+  background-color: white;
+  border: 0;
+  border-collapse: collapse;
+}
+table tr .a {
+  background-color: #fcfcfc;
+}
+table tr .b {
+  background-color: #fafafa;
+}
+table th {
+  background-color: #f2f2f2;
+  color: #585858;
+  padding-left: .7em;
+  padding-top: .7em;
+  padding-bottom: .7em;
+  font-weight: normal;
+  font-size: 1.2em;
+  text-align: left;
+  border-bottom: 1px solid #fff;
+}
+table td {
+  vertical-align: top;
+  padding: .7em;
+}
+table td:nth-child(1) {
+  width: 30%;
 }
 
-    table tr.a {
-        background-color: #ddd;
-    }
+.page {
+  margin-left: auto;
+  margin-right: auto;
+  white-space: nowrap;
+  width: 90%;
+}
+@media all and (max-width: 1200px) {
+  .page {
+    width: 100%;
+  }
+}
 
-    table tr.b {
-        background-color: #eee;
-    }
+.menu-section {
+  vertical-align: top;
+  display: inline-block;
+  width: 30%;
+}
+@media all and (max-width: 1200px) {
+  .menu-section {
+    display: none;
+  }
+}
 
-    table th {
-        background-color: #2276A4;
-        color: white;
-        font-weight: normal;
-        text-align: left;
-    }
+.date {
+  color: gray;
+}
+
+.legal-notes {
+  margin-top: 1em;
+  color: gray;
+  font-size: 0.8em;
+  line-height: 1em;
+  text-align: center;
+}
+@media all and (max-width: 1200px) {
+  .legal-notes {
+    display: none;
+  }
+}
+
+.content {
+  background-color: white;
+  position: relative;
+  padding: 3em;
+}
+@media all and (max-width: 1200px) {
+  .content {
+    padding: 1em;
+  }
+}
+
+.right-side {
+  white-space: normal;
+  display: inline-block;
+  width: 70%;
+}
+@media all and (max-width: 1200px) {
+  .right-side {
+    width: 100%;
+  }
+}
+
+.menu-button {
+  float: right;
+  font-size: 2em;
+  display: none;
+}
+@media all and (max-width: 1200px) {
+  .menu-button {
+    display: block;
+  }
+}
+
+.mobile-menu {
+  display: none;
+}
+@media all and (max-width: 1200px) {
+  .mobile-menu {
+    display: block;
+  }
+}
+
+.menu {
+  background-color: white;
+  padding: 2em 1em 1em;
+  margin-right: 1em;
+  font-size: 1em;
+  line-height: 1.3em;
+}
+@media all and (max-width: 1200px) {
+  .menu {
+    text-align: center;
+  }
+}
+.menu > li > ul {
+  margin-bottom: 1em;
+  border-top: 1px solid lightgrey;
+}
+.menu li {
+  font-weight: 700;
+  color: gray;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.menu li.active {
+  font-weight: bold;
+}
+.menu li ul {
+  list-style: none;
+  padding-left: .5em;
+}
+.menu li ul li {
+  color: #111111;
+  font-weight: 400;
+}
+.menu li a {
+  border-bottom: 0;
+}
+.menu li a:hover {
+  border-bottom: 1px dashed;
+}
+
+.logo a {
+  border: 0;
+}
+
+.maven-logo {
+  float: right;
+  margin-top: -40px;
+  width: 60px;
+}
+@media all and (max-width: 1200px) {
+  .maven-logo {
+    display: none;
+  }
+}

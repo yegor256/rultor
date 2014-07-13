@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="description" content="Rultor is configured by .rultor.yml, YAML configuration file in root directory of your Github repository" />
+    <meta name="keywords" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/png" href="//img.rultor.com/logo-128x128.png">
+    <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
+    <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
+    <link rel="stylesheet" href="/css/layout.css?"/>
+    <link rel="canonical" href="//doc.rultor.com/reference.html" />
+    <title>.rultor.yml Reference</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <a href="/">
+          <img src="//img.rultor.com/logo.svg" class="logo" alt="logo"/>
+        </a>
+      </header>
+      <section class="main">
+        <h1>.rultor.yml Reference</h1>
+        <article><p>Rultor is configured solely through YAML <code>.rultor.yml</code> file
+stored in the root directory of your Github repository. You don&#39;t have
+any management panel. Everything you want to say to Rultor,
+you say in your <code>.rultor.yml</code> file.</p>
+
+<p>This page contains a complete reference of it (in alphabetic order).</p>
+
+<p>BTW, a real-life configuration you can see in <a href="https://github.com/jcabi/jcabi">jcabi</a> project:
+<a href="https://github.com/jcabi/jcabi/blob/master/.rultor.yml"><code>rultor.yml</code></a>.</p>
+
+<h2 id="assets">Assets</h2>
+
+<p>Very often you want to add some secret files to the directory of
+your build, right before it starts. For example, a file with database
+credentials, that should be deployed to production. You don&#39;t want
+to keep this file in the main repository, since it contains sensitive
+information not intended to be accessable by all programmers.</p>
+
+<p>Put it into another <em>private</em> Github repository and inform Rultor that
+he has to fetch it from there:</p>
+
+<div class="highlight"><pre><code class="yaml"><span class="l-Scalar-Plain">assets</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">secret.xml</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yegor256/secret-repo#assets/settings.xml</span></code></pre></div>
+
+<p>This configuration tells Rultor that is has to fetch <code>assets/settings.xml</code>
+from <code>yegor256/secret-repo</code> and place it into <code>secret.xml</code> file
+right before starting a build.</p>
+
+<p>Keep in mind that every builds starts in <code>repo</code> directory, while
+assets are placed one folder up. This is how directory layout will looks:</p>
+
+<div class="highlight"><pre><code class="text">.
+..
+run.sh
+pid
+status
+stdout
+secret.xml
+repo/
+  .rultor.yml
+  pom.xml
+  ...your other files...</code></pre></div>
+
+<p>Don&#39;t forget to add <a href="https://github.com/rultor">@rultor</a> to the
+list of collaborators in your private repository. Otherwise Rultor won&#39;t
+be able to fetch anything from it.</p>
+
+<h2 id="docker-image">Docker Image</h2>
+
+<p>Default Docker image used for all commands is
+<a href="https://registry.hub.docker.com/u/yegor256/rultor/"><code>yegor256/rultor</code></a>.
+You can change it to, say, <code>ubuntu:12.10</code>:</p>
+
+<div class="highlight"><pre><code class="yaml"><span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">image</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ubuntu:12.10</span></code></pre></div>
+
+<h2 id="merge,-deploy,-release">Merge, Deploy, Release</h2>
+
+<p>Three commands <code>merge</code>, <code>deploy</code> and <code>release</code> are configured similarly in
+<code>.rultor.yml</code>, for example:</p>
+
+<div class="highlight"><pre><code class="yaml"><span class="l-Scalar-Plain">merge</span><span class="p-Indicator">:</span> <span class="c1"># or &quot;deploy&quot; or &quot;release&quot;</span>
+  <span class="l-Scalar-Plain">commanders</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">jeff</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">walter</span>
+  <span class="l-Scalar-Plain">env</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">MAVEN_OPTS</span><span class="p-Indicator">:</span> <span class="s">&quot;-XX:MaxPermSize=256m</span><span class="nv"> </span><span class="s">-Xmx512m&quot;</span>
+  <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="s">&quot;sudo</span><span class="nv"> </span><span class="s">apt-get</span><span class="nv"> </span><span class="s">install</span><span class="nv"> </span><span class="s">graphviz&quot;</span>
+    <span class="p-Indicator">-</span> <span class="s">&quot;mvn</span><span class="nv"> </span><span class="s">clean</span><span class="nv"> </span><span class="s">install&quot;</span></code></pre></div>
+
+<p>Environment variables have to be configured as an associative array
+with names of variables as keys, in <code>env</code> property.</p>
+
+<p>Executable script is configured as a list of texts. They will be
+executed one by one. If any of them fails, execution will stop.</p>
+
+<p>List of Github accounts who can give commands to Rultor is specified
+in <code>commanders</code>. By default, only Github repository collaborators
+can give commands. Commanders configured don&#39;t replace collaborators. In other
+words, Github collaborators <em>and</em> accounts mentioned here are allowed
+to give commands.</p>
+</article>
+      </section>
+      <footer class="footer">
+        <p>
+          &copy; <a href="http://www.rultor.com"><span itemprop="author">rultor.com</span></a>, 2013-2014
+          &nbsp;&nbsp;&nbsp;
+          <a href="/contents.html">contents</a>
+          &middot;
+          <a href="/reference.html">.rultor.yml</a>
+          &middot;
+          <a href="/terms.html">terms</a>
+          &middot;
+          <a href="/privacy.html">privacy</a>
+        </p>
+        <div class="badges">
+          <div>
+            <xsl:text>made by</xsl:text>
+            <a href="http://www.teamed.io">
+              <img src="http://img.teamed.io/logo-light.svg" style="width:96px" alt="teamed.io logo"/>
+            </a>
+          </div>
+          <div>
+            <xsl:text>powered by</xsl:text>
+            <a href="http://www.docker.io">
+              <img src="http://img.rultor.com/docker-logo.png" style="width:96px" alt="docker logo"/>
+            </a>
+          </div>
+          <div>
+            <xsl:text>operates at</xsl:text>
+            <a href="http://www.github.com">
+              <img src="http://img.rultor.com/github-logo.png" style="width:96px" alt="github logo"/>
+            </a>
+          </div>
+          <div>
+            <xsl:text>hosted by</xsl:text>
+            <a href="http://www.cloudbees.net">
+              <img src="http://img.rultor.com/cloudbees-logo.png" style="width:96px" alt="cloudbees logo"/>
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

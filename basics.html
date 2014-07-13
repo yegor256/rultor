@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="description" content="There are three basic commands in Rultor that automate merging, deploying and releasing" />
+    <meta name="keywords" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/png" href="//img.rultor.com/logo-128x128.png">
+    <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
+    <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
+    <link rel="stylesheet" href="/css/layout.css?"/>
+    <link rel="canonical" href="//doc.rultor.com/basics.html" />
+    <title>Basic Commands</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <a href="/">
+          <img src="//img.rultor.com/logo.svg" class="logo" alt="logo"/>
+        </a>
+      </header>
+      <section class="main">
+        <h1>Basic Commands</h1>
+        <article><p>There are three main operations you can do with Rultor: merge, deploy
+and release. Every call to Rultor is posted in a Github issue, as a comment
+(yes, any Github issue, in any Github project!)
+It has to start with <code>@rultor</code> followed by a text, which includes a command.</p>
+
+<p>For example, in a pull request that is ready to be merged you post
+a new comment saying, literally:</p>
+
+<div class="highlight"><pre><code class="text">@rultor please check and merge this pull request</code></pre></div>
+
+<p>It is important to start a command with <code>@rultor</code> and mention <code>merge</code>
+somewhere in the text. All the rest is ignored. You can achieve
+exactly the same by just posting:</p>
+
+<div class="highlight"><pre><code class="text">@rultor merge</code></pre></div>
+
+<p>BTW, by default, only Github project collaborators can talk to Rultor,
+although it is <a href="/reference.html">configurable</a>.</p>
+
+<h2 id="merge">Merge</h2>
+
+<p>It is a very good practice, to run your automated build after merging
+a pull request into <code>master</code> branch and right before pushing changes.
+This practices is also called a <strong>pre-flight build</strong>.</p>
+
+<p>When your pull request is ready, ask Rultor to merge it. Rultor will
+checkout your <code>master</code> branch, merge changes into it, run automated build,
+and push new version of <code>master</code> to your repo.</p>
+
+<p>Don&#39;t forget to create <a href="/reference.html"><code>.rultor.yml</code></a>
+in the root directory of your repository,
+and configure build automation script there, for example:</p>
+
+<div class="highlight"><pre><code class="yaml"><span class="l-Scalar-Plain">merge</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mvn clean install</span></code></pre></div>
+
+<p>If you don&#39;t configure it, Rultor will try to guess
+what is your build automation tool and call it accordingly.
+If you have <code>pom.xml</code> in your root directory &mdash; it is <a href="http://maven.apache.org/">Maven</a>; if you
+have <code>Gemfile</code> &mdash; it is <a href="http://www.bundler.io">Bundler</a>, etc.</p>
+
+<p>We strongly recommend to configure your script in
+<a href="/reference.html"><code>.rultor.yml</code></a>.</p>
+
+<h2 id="deploy">Deploy</h2>
+
+<p>Deployment is when you place a packaged artifact into your production (or test)
+environment in order to make it available for end-users (or testers).
+Different systems deploy themselves differently &mdash; Rultor makes it
+possible to automate any possible scenario.</p>
+
+<p>All you need to do is to define your deployment scenario as a bash script,
+and configure it in <a href="/reference.html"><code>.rultor.yml</code></a>.
+For example, this is how we deploy Rultor itself (see our
+<a href="https://github.com/yegor256/rultor/blob/master/.rultor.yml"><code>.rultor.yml</code></a> file):</p>
+
+<div class="highlight"><pre><code class="yaml"><span class="l-Scalar-Plain">deploy</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">env</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">MAVEN_OPTS</span><span class="p-Indicator">:</span> <span class="s">&quot;-XX:MaxPermSize=256m</span><span class="nv"> </span><span class="s">-Xmx1g&quot;</span>
+  <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="s">&quot;sudo</span><span class="nv"> </span><span class="s">bundle&quot;</span>
+    <span class="p-Indicator">-</span> <span class="s">&quot;mvn</span><span class="nv"> </span><span class="s">clean</span><span class="nv"> </span><span class="s">deploy</span><span class="nv"> </span><span class="s">-Prultor</span><span class="nv"> </span><span class="s">--settings</span><span class="nv"> </span><span class="s">../settings.xml&quot;</span>
+    <span class="p-Indicator">-</span> <span class="s">&quot;mvn</span><span class="nv"> </span><span class="s">clean</span><span class="nv"> </span><span class="s">site-deploy</span><span class="nv"> </span><span class="s">-Psite</span><span class="nv"> </span><span class="s">-Prempl</span><span class="nv"> </span><span class="s">--settings</span><span class="nv"> </span><span class="s">../settings.xml&quot;</span></code></pre></div>
+
+<p>First, we install all Ruby gems, required for Jekyll (this is how
+this website is built). Then, we deploy the system to CloudBees. And then,
+we deploy the site to Github Pages.</p>
+
+<h2 id="release">Release</h2>
+
+<p>Release is when you package a stable version of your product and make
+it available for everybody in an artifact repository, for example
+<a href="http://search.maven.org/">Maven Central</a> or <a href="http://www.rubygems.org">RubyGems</a>.</p>
+
+<p>Release command automates this for you. The command requires
+one mandatory argument, through. You should call it like this:</p>
+
+<div class="highlight"><pre><code class="text">@rultor release, tag=`1.7`</code></pre></div>
+
+<p>Then, in your script you get <code>$tag</code> environment variable, which will
+be set to <code>1.7</code>. Your script should change the version of the product to
+1.7 and build it.</p>
+
+<p>This is how we do it in jcabi
+<a href="https://github.com/jcabi/jcabi/blob/master/.rultor.yml"><code>rultor.yml</code></a>,
+for example:</p>
+
+<div class="highlight"><pre><code class="yaml"><span class="l-Scalar-Plain">release</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="s">&quot;mvn</span><span class="nv"> </span><span class="s">versions:set</span><span class="nv"> </span><span class="s">\&quot;-DnewVersion=${tag}\&quot;&quot;</span>
+    <span class="p-Indicator">-</span> <span class="s">&quot;git</span><span class="nv"> </span><span class="s">commit</span><span class="nv"> </span><span class="s">-am</span><span class="nv"> </span><span class="s">\&quot;${tag}\&quot;&quot;</span>
+    <span class="p-Indicator">-</span> <span class="s">&quot;mvn</span><span class="nv"> </span><span class="s">clean</span><span class="nv"> </span><span class="s">deploy</span><span class="nv"> </span><span class="s">-Pqulice</span><span class="nv"> </span><span class="s">-Psonatype</span><span class="nv"> </span><span class="s">-Pjcabi&quot;</span>
+    <span class="p-Indicator">-</span> <span class="s">&quot;mvn</span><span class="nv"> </span><span class="s">clean</span><span class="nv"> </span><span class="s">site-deploy</span><span class="nv"> </span><span class="s">-Psite</span><span class="nv"> </span><span class="s">-Prempl</span><span class="nv"> </span><span class="s">--settings</span><span class="nv"> </span><span class="s">../settings.xml&quot;</span></code></pre></div>
+
+<p>We change the version of the product to the one provided in <code>$tag</code>,
+then we commit the changes, build and deploy to Sonatype. Then,
+we build project site and deploy it to Github Pages.</p>
+
+<p>All the rest will be done by Rultor. Basically, this is what will be done:</p>
+
+<ol>
+<li>Checkout your repository</li>
+<li>Run the script configured in <code>.rultor.yml</code></li>
+<li>Tag latest commit as <code>$tag</code></li>
+<li>Push this new tag to the repository</li>
+</ol>
+
+<p>Of course, if any of these steps fails, the entire command fails
+and you get a full log in Github issue.</p>
+</article>
+      </section>
+      <footer class="footer">
+        <p>
+          &copy; <a href="http://www.rultor.com"><span itemprop="author">rultor.com</span></a>, 2013-2014
+          &nbsp;&nbsp;&nbsp;
+          <a href="/contents.html">contents</a>
+          &middot;
+          <a href="/reference.html">.rultor.yml</a>
+          &middot;
+          <a href="/terms.html">terms</a>
+          &middot;
+          <a href="/privacy.html">privacy</a>
+        </p>
+        <div class="badges">
+          <div>
+            <xsl:text>made by</xsl:text>
+            <a href="http://www.teamed.io">
+              <img src="http://img.teamed.io/logo-light.svg" style="width:96px" alt="teamed.io logo"/>
+            </a>
+          </div>
+          <div>
+            <xsl:text>powered by</xsl:text>
+            <a href="http://www.docker.io">
+              <img src="http://img.rultor.com/docker-logo.png" style="width:96px" alt="docker logo"/>
+            </a>
+          </div>
+          <div>
+            <xsl:text>operates at</xsl:text>
+            <a href="http://www.github.com">
+              <img src="http://img.rultor.com/github-logo.png" style="width:96px" alt="github logo"/>
+            </a>
+          </div>
+          <div>
+            <xsl:text>hosted by</xsl:text>
+            <a href="http://www.cloudbees.net">
+              <img src="http://img.rultor.com/cloudbees-logo.png" style="width:96px" alt="cloudbees logo"/>
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,60 +1,127 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="Programmable Enforcer of a Software Development Process"/>
-        <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
-        <meta name="author" content="rultor.com"/>
         <title>rultor - Generated Reports</title>
-        <link rel="shortcut icon" type="image/gif" href="//img.rultor.com/favicon.ico" />
-        <style>
-            body {
-                background-image: url('//img.rultor.com/background.png');
-            }
-            .main {
-                text-align: justify;
-            }
-            h1,
-            h2 {
-                text-align: center;
-            }
-        </style>
-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="//www.rultor.com/css/main.css" rel="stylesheet" />
-        <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+        <link media="all" rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"/>
+        <link media="all" rel="stylesheet" type="text/css" href="./css/jcabi.css"/>
+                            <script>
+                var _gaq = _gaq || [];
+                _gaq.push(['_setAccount', 'UA-1963507-28']);
+                _gaq.push(['_trackPageview']);
+                (function() {
+                    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                })();
+            </script>
+                                                                                                                
+<link rel="shortcut icon" href="http://img.rultor.com/favicon.gif"/>
+                                                                                                                
+<link rel="author" href="https://plus.google.com/u/0/114792568016408327418?rel=author"/>
+                                            <script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
         <script>
             $(document).ready(
                 function() {
-                    $('tt').replaceWith(
+                    $(".menu-button").click(
                         function() {
-                            return '<code>' + $(this).text() + '</code>';
+                            if ($("#here-goes-menu").attr("class") == "menu-off") {
+                                $("#menu").clone().attr("class", "mobile-menu").appendTo("#here-goes-menu");
+                                $("#here-goes-menu").attr("class", "menu-on");
+                            } else {
+                                $(".mobile-menu").hide();
+                                $("#here-goes-menu").attr("class", "menu-off");
+                            }
                         }
-                    )
+                    );
                 }
             );
         </script>
-        <script>
-            var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', 'UA-1963507-10']);
-            _gaq.push(['_trackPageview']);
-            (function() {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-            })();
-        </script>
     </head>
     <body>
-        <div class="container-fluid">
-            <header>
-                <p class="text-center">
-                    <a class="logo" href="/index.html">R</a>
-                </p>
-            </header>
-            <div class="row">
-                <article class="main col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-8 col-sm-12 col-xs-12">
-                    <div class="section">
+                <section class="page" itemscope="" itemtype="http://schema.org/BlogPosting">
+            <nav class="menu-section" role="navigation">
+                <ul class="menu" id="menu">
+                                                                                    <li>
+                            Overview
+                                                            <ul>
+                                                                                                    <li >
+                            <span>                        <a href="index.html" title="Introduction">Introduction</a>
+        </span>
+                                                                                                                                                                <ul>
+                                                                    </ul>
+                                                    </li>
+                                                                                                                        <li >
+                            <span>                        <a href="apidocs-1.4/index.html" title="JavaDoc 1.4">JavaDoc 1.4</a>
+        </span>
+                                                                                                                                                                <ul>
+                                                                    </ul>
+                                                    </li>
+                                                                                                                        <li >
+                            <span>                        <a href="cobertura/index.html" title="Test Coverage">Test Coverage</a>
+        </span>
+                                                                                                                                                                <ul>
+                                                                    </ul>
+                                                    </li>
+                                                                                                                        <li >
+                            <span>                        <a href="https://github.com/yegor256/rultors/releases" title="Release History">Release History</a>
+        </span>
+                                                                                                                                                                <ul>
+                                                                    </ul>
+                                                    </li>
+                                                                                        </ul>
+                                                    </li>
+                                            <li>
+                            Project Documentation
+                                                            <ul>
+                                                                                                    <li >
+                            <span>                        <a href="project-info.html" title="Project Information">Project Information</a>
+        </span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </li>
+                                                                                                                        <li >
+                            <span>                        <a href="project-reports.html" title="Project Reports">Project Reports</a>
+        </span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </li>
+                                                                                        </ul>
+                                                    </li>
+                                    </ul>
+            </nav>
+            <div class="right-side">
+                <main role="main">
+                    <div class="content">
+                        <header>
+                            <i class="menu-button fa fa-align-justify"></i>
+                            <div class="logo">
+                                <a href="http://doc.rultor.com/"
+                                    title=" rultor.com ">
+                                    <img src="http://img.rultor.com/logo.svg"
+                                        alt="rultor"
+                                                                                    width="200"
+                                                                                                                            height="45"
+                                                                                itemprop="image"
+                                    />
+                                </a>
+                            </div>
+                            <div class="date">
+                                <div class="date-numbers">
+                                    <strong itemprop="version">1.4</strong>
+                                    
+                                    <time itemprop="datePublished" datetime="2014-07-13T06:19:06Z">
+                                        
+                                        13-Jul-2014
+                                    </time>
+                                </div>
+                                                                                                    <div>
+                                        <iframe src="http://ghbtns.com/github-btn.html?user=yegor256&amp;repo=rultor&amp;type=watch&amp;count=true&amp;size=large"
+                                            style="border-width:0px;overflow:hidden;width:170px;height:30px;">
+                                        </iframe>
+                                    </div>
+                                                            </div>
+                            <div id="here-goes-menu" class="menu-off"></div>
+                        </header>
+                        <article role="article" itemprop="articleBody">
+                            <div class="section">
 <h2>Generated Reports<a name="Generated_Reports"></a></h2>
 <p>This document provides an overview of the various reports that are automatically generated by <a class="externalLink" href="http://maven.apache.org">Maven</a> . Each report is briefly described below.</p>
 <div class="section">
@@ -76,38 +143,30 @@
 <td><a href="surefire-report.html">Surefire Report</a></td>
 <td>Report on the test results of the project.</td></tr>
 <tr class="b">
-<td><a href="changelog.html">Change Log</a></td>
-<td>Generated change log report from SCM.</td></tr>
-<tr class="a">
-<td><a href="dev-activity.html">Developer Activity</a></td>
-<td>Generated developer activity report from SCM.</td></tr>
-<tr class="b">
-<td><a href="file-activity.html">File Activity</a></td>
-<td>Generated file activity report from SCM.</td></tr>
-<tr class="a">
 <td><a href="dependency-updates-report.html">Dependency Updates Report</a></td>
 <td>Provides details of the dependencies which have updated versions available.</td></tr>
-<tr class="b">
+<tr class="a">
 <td><a href="plugin-updates-report.html">Plugin Updates Report</a></td>
 <td>Provides details of the plugins used by this project which have newer versions available.</td></tr>
+<tr class="b">
+<td><a href="apidocs-1.4/index.html">JavaDocs</a></td>
+<td>JavaDoc API documentation.</td></tr>
 <tr class="a">
-<td><a href="github-report.html">GitHub Report</a></td>
-<td>Report on Issues from GitHub.</td></tr></table></div></div>
-                </article>
+<td><a href="cobertura/index.html">Cobertura Test Coverage</a></td>
+<td>Cobertura Test Coverage Report.</td></tr></table></div></div>
+                            <img class="maven-logo" src="//img.jcabi.com/built-by-maven.png" alt="built by maven"/>
+                        </article>
+                    </div>
+                </main>
+                <footer class="legal-notes">
+                    <div>
+                        Copyright &#169;
+                                                                            2009-2014
+                                            </div>
+                    <div>Rultor Inc., All Rights Reserved.</div>
+                    <div><a href="http://maven.apache.org/privacy-policy.html">Privacy Policy</a>.</div>
+                </footer>
             </div>
-            <footer class="text-muted">
-                <ul class="list-inline text-center">
-                    <li>
-                        <small>1.0-SNAPSHOT</small>
-                    </li>
-                    <li>
-                        <small>
-                            
-                            04-May-2014
-                        </small>
-                    </li>
-                </ul>
-            </footer>
-        </div>
+        </section>
     </body>
 </html>

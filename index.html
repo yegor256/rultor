@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
   <head>
     <meta charset="utf-8"/>
-    <meta name="description" content="Rultor is a coding team assistant" />
+    <meta name="description" content="Rultor is a coding team assistant, automating your merge, deploy, and release operations" />
     <meta name="keywords" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="icon" type="image/png" href="//img.rultor.com/logo-128x128.png">
@@ -11,7 +11,7 @@
     <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
     <link rel="stylesheet" href="/css/layout.css?"/>
     <link rel="canonical" href="//doc.rultor.com/index.html" />
-    <title>Say Hi to Rultor!</title>
+    <title>Coding Team Assistant</title>
   </head>
   <body>
     <div class="wrapper">
@@ -21,28 +21,74 @@
         </a>
       </header>
       <section class="main">
-        <h1>Say Hi to Rultor!</h1>
-        <article><p>In any Github issue just post a new comment saying <code>@rultor hello</code>. You
-will get a response from me almost immediately. The rest is supposed to be
-intuitive. Sometimes it&#39;s not, that&#39;s why this documentation.</p>
+        <h1>Coding Team Assistant</h1>
+        <article><p><a href="http://www.rultor.com">Rultor</a>
+is a coding team assistant. It is helping your programming team
+to automate <a href="/basics.html">routine operations</a>,
+in an easy way:</p>
 
-<p>I&#39;m a coding team assistant. I&#39;m helping you in team programming,
-automating routine operations, in an easy way.</p>
+<ul>
+<li><p><strong>Merging</strong> of pull requests (ensuring build remains clean)</p></li>
+<li><p><strong>Deploying</strong> to production and stage environments</p></li>
+<li><p><strong>Releasing</strong> and tagging</p></li>
+</ul>
 
-<p>Say, you&#39;re getting pull requests from your contributors. Every branch
-they send you needs to be merged into <code>master</code> and verified that
-it doesn&#39;t break the build. Basically, when a pull request
-looks correct for you, post a comment into it:</p>
+<p>All you need to do, in order to start working with Rultor,
+is to give him commands in one of your Github tickets.
+Try a simple <code>@rultor hello</code> and see how it works.</p>
 
-<div class="highlight"><pre><code class="language-text" data-lang="text">@rultor good to merge</code></pre></div>
+<p>Rultor is not a replacement but a powerful addition
+to your existing continuous integration solution, like
+<a href="http://jenkins-ci.org/">Jenkins</a>,
+<a href="http://www.thoughtworks.com/products/go-continuous-delivery">Go</a>, or
+<a href="http://www.travis-ci.org">Travis</a>.</p>
 
-<p>I&#39;ll do the rest.</p>
+<p>Rultor is absolutely free, both for open source and commercial projects.
+It is sponsored by <a href="http://www.teamed.io">teamed.io</a>.</p>
 
-<p>I&#39;m free both for open source and commercial projects.</p>
+<p>Yeah, BTW, every build runs in its own
+<a href="/docker.html">Docker</a>
+container! :)</p>
 </article>
       </section>
       <footer class="footer">
-        &copy; <span itemprop="author">rultor.com</span>, 2013-2014
+        <p>
+          &copy; <a href="http://www.rultor.com"><span itemprop="author">rultor.com</span></a>, 2013-2014
+          &nbsp;&nbsp;&nbsp;
+          <a href="/contents.html">contents</a>
+          &middot;
+          <a href="/reference.html">.rultor.yml</a>
+          &middot;
+          <a href="/terms.html">terms</a>
+          &middot;
+          <a href="/privacy.html">privacy</a>
+        </p>
+        <div class="badges">
+          <div>
+            <xsl:text>made by</xsl:text>
+            <a href="http://www.teamed.io">
+              <img src="http://img.teamed.io/logo-light.svg" style="width:96px" alt="teamed.io logo"/>
+            </a>
+          </div>
+          <div>
+            <xsl:text>powered by</xsl:text>
+            <a href="http://www.docker.io">
+              <img src="http://img.rultor.com/docker-logo.png" style="width:96px" alt="docker logo"/>
+            </a>
+          </div>
+          <div>
+            <xsl:text>operates at</xsl:text>
+            <a href="http://www.github.com">
+              <img src="http://img.rultor.com/github-logo.png" style="width:96px" alt="github logo"/>
+            </a>
+          </div>
+          <div>
+            <xsl:text>hosted by</xsl:text>
+            <a href="http://www.cloudbees.net">
+              <img src="http://img.rultor.com/cloudbees-logo.png" style="width:96px" alt="cloudbees logo"/>
+            </a>
+          </div>
+        </div>
       </footer>
     </div>
   </body>

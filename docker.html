@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="description" content="Rultor runs all builds in their own Docker containers, completely isolating them and making fully configurable" />
+    <meta name="keywords" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/png" href="//img.rultor.com/logo-128x128.png">
+    <link rel="shortcut icon" href="//img.rultor.com/logo-128x128.png" />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://doc.thindeck.com/rss.xml"/>
+    <link rel="author" href="//plus.google.com/u/0/114792568016408327418?rel=author" />
+    <link rel="stylesheet" href="/css/layout.css?"/>
+    <link rel="canonical" href="//doc.rultor.com/docker.html" />
+    <title>Docker Containers</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <a href="/">
+          <img src="//img.rultor.com/logo.svg" class="logo" alt="logo"/>
+        </a>
+      </header>
+      <section class="main">
+        <h1>Docker Containers</h1>
+        <article><p>Rultor runs every build in its own <a href="http://www.docker.io">Docker</a> container.
+This approach has multiple benefits.</p>
+
+<p>First of all, you can easily reproduce errors Rultor is reporting,
+in your own machine. Just install Docker, start a container from
+<code>yegor256/rultor</code> image, and run your build inside it. You will get
+exactly the same output as you see in Rultor logs.</p>
+
+<p>This is how you start a container, BTW:</p>
+
+<div class="highlight"><pre><code class="bash"><span class="nv">$ </span>sudo docker run -i -t yegor256/rultor /bin/bash</code></pre></div>
+
+<p>Second, usage of Docker containers make possible to make
+complex builds much faster. When your build requires a lot of
+heavy weight prerequisites (for example apt-get packages or Maven
+dependencies), you don&#39;t have to wait for them on every build.</p>
+
+<p>Instead, create your own Docker image, install everything in it,
+and publish it to <a href="https://hub.docker.com/">Docker Hub</a>.</p>
+
+<p>Then, configure your <a href="/reference.html"><code>.rultor.yml</code></a>
+to use your own Docker image, and enjoy fast builds.</p>
+</article>
+      </section>
+      <footer class="footer">
+        <p>
+          &copy; <a href="http://www.rultor.com"><span itemprop="author">rultor.com</span></a>, 2013-2014
+          &nbsp;&nbsp;&nbsp;
+          <a href="/contents.html">contents</a>
+          &middot;
+          <a href="/reference.html">.rultor.yml</a>
+          &middot;
+          <a href="/terms.html">terms</a>
+          &middot;
+          <a href="/privacy.html">privacy</a>
+        </p>
+        <div class="badges">
+          <div>
+            <xsl:text>made by</xsl:text>
+            <a href="http://www.teamed.io">
+              <img src="http://img.teamed.io/logo-light.svg" style="width:96px" alt="teamed.io logo"/>
+            </a>
+          </div>
+          <div>
+            <xsl:text>powered by</xsl:text>
+            <a href="http://www.docker.io">
+              <img src="http://img.rultor.com/docker-logo.png" style="width:96px" alt="docker logo"/>
+            </a>
+          </div>
+          <div>
+            <xsl:text>operates at</xsl:text>
+            <a href="http://www.github.com">
+              <img src="http://img.rultor.com/github-logo.png" style="width:96px" alt="github logo"/>
+            </a>
+          </div>
+          <div>
+            <xsl:text>hosted by</xsl:text>
+            <a href="http://www.cloudbees.net">
+              <img src="http://img.rultor.com/cloudbees-logo.png" style="width:96px" alt="cloudbees logo"/>
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

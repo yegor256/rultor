@@ -1,60 +1,177 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="Programmable Enforcer of a Software Development Process"/>
-        <meta name="keywords" content="continuous integration, continuous delivery, software development process, revision control"/>
-        <meta name="author" content="rultor.com"/>
         <title>rultor - Surefire Report</title>
-        <link rel="shortcut icon" type="image/gif" href="//img.rultor.com/favicon.ico" />
-        <style>
-            body {
-                background-image: url('//img.rultor.com/background.png');
-            }
-            .main {
-                text-align: justify;
-            }
-            h1,
-            h2 {
-                text-align: center;
-            }
-        </style>
-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="//www.rultor.com/css/main.css" rel="stylesheet" />
-        <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+        <link media="all" rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"/>
+        <link media="all" rel="stylesheet" type="text/css" href="./css/jcabi.css"/>
+                            <script>
+                var _gaq = _gaq || [];
+                _gaq.push(['_setAccount', 'UA-1963507-28']);
+                _gaq.push(['_trackPageview']);
+                (function() {
+                    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                })();
+            </script>
+                                                                                                                
+<link rel="shortcut icon" href="http://img.rultor.com/favicon.gif"/>
+                                                                                                                
+<link rel="author" href="https://plus.google.com/u/0/114792568016408327418?rel=author"/>
+                                            <script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
         <script>
             $(document).ready(
                 function() {
-                    $('tt').replaceWith(
+                    $(".menu-button").click(
                         function() {
-                            return '<code>' + $(this).text() + '</code>';
+                            if ($("#here-goes-menu").attr("class") == "menu-off") {
+                                $("#menu").clone().attr("class", "mobile-menu").appendTo("#here-goes-menu");
+                                $("#here-goes-menu").attr("class", "menu-on");
+                            } else {
+                                $(".mobile-menu").hide();
+                                $("#here-goes-menu").attr("class", "menu-off");
+                            }
                         }
-                    )
+                    );
                 }
             );
         </script>
-        <script>
-            var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', 'UA-1963507-10']);
-            _gaq.push(['_trackPageview']);
-            (function() {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-            })();
-        </script>
     </head>
     <body>
-        <div class="container-fluid">
-            <header>
-                <p class="text-center">
-                    <a class="logo" href="/index.html">R</a>
-                </p>
-            </header>
-            <div class="row">
-                <article class="main col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-8 col-sm-12 col-xs-12">
-                    <script type="text/javascript">
+                <section class="page" itemscope="" itemtype="http://schema.org/BlogPosting">
+            <nav class="menu-section" role="navigation">
+                <ul class="menu" id="menu">
+                                                                                    <li>
+                            Overview
+                                                            <ul>
+                                                                                                    <li >
+                            <span>                        <a href="index.html" title="Introduction">Introduction</a>
+        </span>
+                                                                                                                                                                <ul>
+                                                                    </ul>
+                                                    </li>
+                                                                                                                        <li >
+                            <span>                        <a href="apidocs-1.4/index.html" title="JavaDoc 1.4">JavaDoc 1.4</a>
+        </span>
+                                                                                                                                                                <ul>
+                                                                    </ul>
+                                                    </li>
+                                                                                                                        <li >
+                            <span>                        <a href="cobertura/index.html" title="Test Coverage">Test Coverage</a>
+        </span>
+                                                                                                                                                                <ul>
+                                                                    </ul>
+                                                    </li>
+                                                                                                                        <li >
+                            <span>                        <a href="https://github.com/yegor256/rultors/releases" title="Release History">Release History</a>
+        </span>
+                                                                                                                                                                <ul>
+                                                                    </ul>
+                                                    </li>
+                                                                                        </ul>
+                                                    </li>
+                                            <li>
+                            Project Documentation
+                                                            <ul>
+                                                                                                    <li >
+                            <span>                        <a href="project-info.html" title="Project Information">Project Information</a>
+        </span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </li>
+                                                                                                                        <li >
+                            <span>                        <a href="project-reports.html" title="Project Reports">Project Reports</a>
+        </span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <ul>
+                                                                                                    <li >
+                            <span>                        <a href="rempl.html" title="REMPL">REMPL</a>
+        </span>
+                                                                                                                                                                <ul>
+                                                                    </ul>
+                                                    </li>
+                                                                                                                        <li >
+                            <span>                        <a href="xref-test/index.html" title="Test Source Xref">Test Source Xref</a>
+        </span>
+                                                                                                                                                                <ul>
+                                                                    </ul>
+                                                    </li>
+                                                                                                                        <li >
+                            <span>                        <a href="xref/index.html" title="Source Xref">Source Xref</a>
+        </span>
+                                                                                                                                                                <ul>
+                                                                    </ul>
+                                                    </li>
+                                                                                                                        <li  class='active' >
+                            <span>                        <a href="surefire-report.html" title="Surefire Report">Surefire Report</a>
+        </span>
+                                                                                                                                                                <ul>
+                                                                    </ul>
+                                                    </li>
+                                                                                                                        <li >
+                            <span>                        <a href="dependency-updates-report.html" title="Dependency Updates Report">Dependency Updates Report</a>
+        </span>
+                                                                                                                                                                <ul>
+                                                                    </ul>
+                                                    </li>
+                                                                                                                        <li >
+                            <span>                        <a href="plugin-updates-report.html" title="Plugin Updates Report">Plugin Updates Report</a>
+        </span>
+                                                                                                                                                                <ul>
+                                                                    </ul>
+                                                    </li>
+                                                                                                                        <li >
+                            <span>                        <a href="apidocs-1.4/index.html" title="JavaDocs">JavaDocs</a>
+        </span>
+                                                                                                                                                                <ul>
+                                                                    </ul>
+                                                    </li>
+                                                                                                                        <li >
+                            <span>                        <a href="cobertura/index.html" title="Cobertura Test Coverage">Cobertura Test Coverage</a>
+        </span>
+                                                                                                                                                                <ul>
+                                                                    </ul>
+                                                    </li>
+                                                                                        </ul>
+                                                    </li>
+                                                                                        </ul>
+                                                    </li>
+                                    </ul>
+            </nav>
+            <div class="right-side">
+                <main role="main">
+                    <div class="content">
+                        <header>
+                            <i class="menu-button fa fa-align-justify"></i>
+                            <div class="logo">
+                                <a href="http://doc.rultor.com/"
+                                    title=" rultor.com ">
+                                    <img src="http://img.rultor.com/logo.svg"
+                                        alt="rultor"
+                                                                                    width="200"
+                                                                                                                            height="45"
+                                                                                itemprop="image"
+                                    />
+                                </a>
+                            </div>
+                            <div class="date">
+                                <div class="date-numbers">
+                                    <strong itemprop="version">1.4</strong>
+                                    
+                                    <time itemprop="datePublished" datetime="2014-07-13T06:18:10Z">
+                                        
+                                        13-Jul-2014
+                                    </time>
+                                </div>
+                                                                                                    <div>
+                                        <iframe src="http://ghbtns.com/github-btn.html?user=yegor256&amp;repo=rultor&amp;type=watch&amp;count=true&amp;size=large"
+                                            style="border-width:0px;overflow:hidden;width:170px;height:30px;">
+                                        </iframe>
+                                    </div>
+                                                            </div>
+                            <div id="here-goes-menu" class="menu-off"></div>
+                        </header>
+                        <article role="article" itemprop="articleBody">
+                            <script type="text/javascript">
 //<![CDATA[
 function toggleDisplay(elementId) {
  var elm = document.getElementById(elementId + 'error');
@@ -74,7 +191,8 @@ function toggleDisplay(elementId) {
 <div class="section">
 <h2>Surefire Report<a name="Surefire_Report"></a></h2></div>
 <div class="section">
-<h2>Summary<a name="Summary"></a></h2><a name="Summary"></a><br />
+<h2>Summary<a name="Summary"></a></h2><a name="Summary"></a>
+<p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br />
 <table border="1" class="bodyTable">
 <tr class="a">
 <th>Tests</th>
@@ -84,28 +202,390 @@ function toggleDisplay(elementId) {
 <th>Success Rate</th>
 <th>Time</th></tr>
 <tr class="b">
+<td>16</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
-<td>0</td>
-<td>0%</td>
-<td>0</td></tr></table><br />
+<td>100%</td>
+<td>13.815</td></tr></table><br />
 <p>Note: failures are anticipated and checked for with assertions while errors are unanticipated.</p><br /></div>
-                </article>
+<div class="section">
+<h2>Package List<a name="Package_List"></a></h2><a name="Package_List"></a>
+<p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br />
+<table border="1" class="bodyTable">
+<tr class="a">
+<th>Package</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.github">com.rultor.agents.github</a></td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>2.634</td></tr>
+<tr class="a">
+<td><a href="#com.rultor.agents.daemons">com.rultor.agents.daemons</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.784</td></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents">com.rultor.agents</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.595</td></tr>
+<tr class="a">
+<td><a href="#com.rultor.profiles">com.rultor.profiles</a></td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.32</td></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.req">com.rultor.agents.req</a></td>
+<td>5</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>3.542</td></tr>
+<tr class="a">
+<td><a href="#com.rultor.agents.github.qtn">com.rultor.agents.github.qtn</a></td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>2.928</td></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.shells">com.rultor.agents.shells</a></td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>2.012</td></tr></table><br />
+<p>Note: package statistics are not computed recursively, they only sum up all of its testsuites numbers.</p>
+<div class="section">
+<h3>com.rultor.agents.github<a name="com.rultor.agents.github"></a></h3><a name="com.rultor.agents.github"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.githubReportsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.githubReportsTest">ReportsTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.18</td></tr>
+<tr class="a">
+<td><a href="#com.rultor.agents.githubUnderstandsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.githubUnderstandsTest">UnderstandsTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.454</td></tr></table></div>
+<div class="section">
+<h3>com.rultor.agents.daemons<a name="com.rultor.agents.daemons"></a></h3><a name="com.rultor.agents.daemons"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.daemonsKillsDaemonTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.daemonsKillsDaemonTest">KillsDaemonTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.784</td></tr></table></div>
+<div class="section">
+<h3>com.rultor.agents<a name="com.rultor.agents"></a></h3><a name="com.rultor.agents"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#com.rultor.agentsDeactivatesTalksTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agentsDeactivatesTalksTest">DeactivatesTalksTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.595</td></tr></table></div>
+<div class="section">
+<h3>com.rultor.profiles<a name="com.rultor.profiles"></a></h3><a name="com.rultor.profiles"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#com.rultor.profilesGithubProfileTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.profilesGithubProfileTest">GithubProfileTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.655</td></tr>
+<tr class="a">
+<td><a href="#com.rultor.profilesYamlXMLTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.profilesYamlXMLTest">YamlXMLTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.665</td></tr></table></div>
+<div class="section">
+<h3>com.rultor.agents.req<a name="com.rultor.agents.req"></a></h3><a name="com.rultor.agents.req"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.reqDockerRunTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.reqDockerRunTest">DockerRunTest</a></td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.935</td></tr>
+<tr class="a">
+<td><a href="#com.rultor.agents.reqEndsRequestTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.reqEndsRequestTest">EndsRequestTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.698</td></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.reqStartsRequestTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.reqStartsRequestTest">StartsRequestTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.909</td></tr></table></div>
+<div class="section">
+<h3>com.rultor.agents.github.qtn<a name="com.rultor.agents.github.qtn"></a></h3><a name="com.rultor.agents.github.qtn"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.github.qtnQnParametrizedTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.github.qtnQnParametrizedTest">QnParametrizedTest</a></td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>2.928</td></tr></table></div>
+<div class="section">
+<h3>com.rultor.agents.shells<a name="com.rultor.agents.shells"></a></h3><a name="com.rultor.agents.shells"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#com.rultor.agents.shellsRegistersShellTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.shellsRegistersShellTest">RegistersShellTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.095</td></tr>
+<tr class="a">
+<td><a href="#com.rultor.agents.shellsSSHTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#com.rultor.agents.shellsSSHTest">SSHTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.917</td></tr></table></div><br /></div>
+<div class="section">
+<h2>Test Cases<a name="Test_Cases"></a></h2><a name="Test_Cases"></a>
+<p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p>
+<div class="section">
+<h3>DeactivatesTalksTest<a name="DeactivatesTalksTest"></a></h3><a name="com.rultor.agentsDeactivatesTalksTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>deactivatesTalk</td>
+<td>0.595</td></tr></table></div>
+<div class="section">
+<h3>KillsDaemonTest<a name="KillsDaemonTest"></a></h3><a name="com.rultor.agents.daemonsKillsDaemonTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>ignoresFreshDaemon</td>
+<td>0.784</td></tr></table></div>
+<div class="section">
+<h3>ReportsTest<a name="ReportsTest"></a></h3><a name="com.rultor.agents.githubReportsTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>reportsRequestResult</td>
+<td>1.18</td></tr></table></div>
+<div class="section">
+<h3>UnderstandsTest<a name="UnderstandsTest"></a></h3><a name="com.rultor.agents.githubUnderstandsTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>understandsMessage</td>
+<td>1.454</td></tr></table></div>
+<div class="section">
+<h3>QnParametrizedTest<a name="QnParametrizedTest"></a></h3><a name="com.rultor.agents.github.qtnQnParametrizedTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>fetchesParams</td>
+<td>1.02</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>ignoresEmptyParams</td>
+<td>0.961</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>ignoresEmptyReq</td>
+<td>0.947</td></tr></table></div>
+<div class="section">
+<h3>DockerRunTest<a name="DockerRunTest"></a></h3><a name="com.rultor.agents.reqDockerRunTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>fetchesFromEmptyProfile</td>
+<td>0.622</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>fetchesScript</td>
+<td>0.638</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>fetchesEnvVars</td>
+<td>0.675</td></tr></table></div>
+<div class="section">
+<h3>EndsRequestTest<a name="EndsRequestTest"></a></h3><a name="com.rultor.agents.reqEndsRequestTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>endsRequest</td>
+<td>0.698</td></tr></table></div>
+<div class="section">
+<h3>StartsRequestTest<a name="StartsRequestTest"></a></h3><a name="com.rultor.agents.reqStartsRequestTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>startsRequest</td>
+<td>0.909</td></tr></table></div>
+<div class="section">
+<h3>RegistersShellTest<a name="RegistersShellTest"></a></h3><a name="com.rultor.agents.shellsRegistersShellTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>registersShell</td>
+<td>0.095</td></tr></table></div>
+<div class="section">
+<h3>SSHTest<a name="SSHTest"></a></h3><a name="com.rultor.agents.shellsSSHTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>executeCommandOnServer</td>
+<td>1.917</td></tr></table></div>
+<div class="section">
+<h3>GithubProfileTest<a name="GithubProfileTest"></a></h3><a name="com.rultor.profilesGithubProfileTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>fetchesYamlConfig</td>
+<td>0.655</td></tr></table></div>
+<div class="section">
+<h3>YamlXMLTest<a name="YamlXMLTest"></a></h3><a name="com.rultor.profilesYamlXMLTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>parsesYamlConfig</td>
+<td>0.665</td></tr></table></div><br /></div>
+                            <img class="maven-logo" src="//img.jcabi.com/built-by-maven.png" alt="built by maven"/>
+                        </article>
+                    </div>
+                </main>
+                <footer class="legal-notes">
+                    <div>
+                        Copyright &#169;
+                                                                            2009-2014
+                                            </div>
+                    <div>Rultor Inc., All Rights Reserved.</div>
+                    <div><a href="http://maven.apache.org/privacy-policy.html">Privacy Policy</a>.</div>
+                </footer>
             </div>
-            <footer class="text-muted">
-                <ul class="list-inline text-center">
-                    <li>
-                        <small>1.0-SNAPSHOT</small>
-                    </li>
-                    <li>
-                        <small>
-                            
-                            04-May-2014
-                        </small>
-                    </li>
-                </ul>
-            </footer>
-        </div>
+        </section>
     </body>
 </html>
