@@ -72,7 +72,7 @@ public final class KillsDaemon extends AbstractAgent {
         new Shell.Empty(new Shell.Safe(shell)).exec(
             StringUtils.join(
                 String.format("dir=%s", dir),
-                " && if [ ! -e ${dir}/pid ]; then exit 1; fi",
+                " && if [ ! -e ${dir}/pid ]; then exit 0; fi",
                 " && pid=$(cat ${dir}/pid)",
                 " && if [ -n \"$(ps -p $pid -opid=)\" ]; then kill -9 $pid; fi",
                 " && rm -f ${dir}/pid"
