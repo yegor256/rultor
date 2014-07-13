@@ -40,6 +40,7 @@ import com.rultor.spi.Profile;
 import com.rultor.spi.Talk;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.commons.lang3.CharEncoding;
@@ -120,6 +121,9 @@ public final class StartsDaemonITCase {
                 Matchers.containsString("+ ls -al"),
                 Matchers.containsString("182f61268e6e6e6cd1a547be31fd8583")
             )
+        );
+        MatcherAssert.assertThat(
+            new File(dir, "status").exists(), Matchers.is(false)
         );
     }
 
