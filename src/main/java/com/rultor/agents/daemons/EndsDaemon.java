@@ -96,7 +96,7 @@ public final class EndsDaemon extends AbstractAgent {
         final int exit = Integer.parseInt(
             new Shell.Plain(new Shell.Safe(shell)).exec(
                 String.format("cat %s/status", dir)
-            )
+            ).trim()
         );
         Logger.info(this, "daemon finished at %s, exit: %d", dir, exit);
         return new Directives().xpath("/talk/daemon")
