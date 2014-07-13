@@ -188,22 +188,25 @@
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>                 <span class="jxr_string">"/bin/bash"</span>,
 <a class="jxr_linenumber" name="L181" href="#L181">181</a>                 <span class="jxr_string">"-c"</span>,
 <a class="jxr_linenumber" name="L182" href="#L182">182</a>                 StringUtils.join(
-<a class="jxr_linenumber" name="L183" href="#L183">183</a>                     <span class="jxr_string">"git init .;"</span>,
-<a class="jxr_linenumber" name="L184" href="#L184">184</a>                     <span class="jxr_string">"echo 'hello, world!' &gt; hello.txt;"</span>,
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>                     <span class="jxr_string">"git add .;"</span>,
-<a class="jxr_linenumber" name="L186" href="#L186">186</a>                     <span class="jxr_string">"git commit -am 'first file';"</span>,
-<a class="jxr_linenumber" name="L187" href="#L187">187</a>                     <span class="jxr_string">"git checkout -b frk;"</span>,
-<a class="jxr_linenumber" name="L188" href="#L188">188</a>                     <span class="jxr_string">"echo 'good bye!' &gt; hello.txt;"</span>,
-<a class="jxr_linenumber" name="L189" href="#L189">189</a>                     <span class="jxr_string">"git commit -am 'modified file';"</span>,
-<a class="jxr_linenumber" name="L190" href="#L190">190</a>                     <span class="jxr_string">"git checkout master;"</span>,
-<a class="jxr_linenumber" name="L191" href="#L191">191</a>                     <span class="jxr_string">"git config receive.denyCurrentBranch ignore"</span>
-<a class="jxr_linenumber" name="L192" href="#L192">192</a>                 )
-<a class="jxr_linenumber" name="L193" href="#L193">193</a>             ).directory(repo)
-<a class="jxr_linenumber" name="L194" href="#L194">194</a>         ).stdout();
-<a class="jxr_linenumber" name="L195" href="#L195">195</a>         <strong class="jxr_keyword">return</strong> repo;
-<a class="jxr_linenumber" name="L196" href="#L196">196</a>     }
-<a class="jxr_linenumber" name="L197" href="#L197">197</a> 
-<a class="jxr_linenumber" name="L198" href="#L198">198</a> }
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>                     <span class="jxr_string">"set -x; set -e; set -o pipefail;"</span>,
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>                     <span class="jxr_string">"git init .;"</span>,
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>                     <span class="jxr_string">"git config user.email test@rultor.com;"</span>,
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>                     <span class="jxr_string">"git config user.name test;"</span>,
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>                     <span class="jxr_string">"echo 'hello, world!' &gt; hello.txt;"</span>,
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>                     <span class="jxr_string">"git add .;"</span>,
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>                     <span class="jxr_string">"git commit -am 'first file';"</span>,
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>                     <span class="jxr_string">"git checkout -b frk;"</span>,
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>                     <span class="jxr_string">"echo 'good bye!' &gt; hello.txt;"</span>,
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>                     <span class="jxr_string">"git commit -am 'modified file';"</span>,
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>                     <span class="jxr_string">"git checkout master;"</span>,
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>                     <span class="jxr_string">"git config receive.denyCurrentBranch ignore"</span>
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>                 )
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>             ).directory(repo)
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>         ).stdout();
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>         <strong class="jxr_keyword">return</strong> repo;
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>     }
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> 
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2014 <a href="http://www.rultor.com">Rultor Inc.</a>. All rights reserved.</div>

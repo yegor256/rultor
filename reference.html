@@ -43,7 +43,7 @@ information not intended to be accessable by all programmers.</p>
 <p>Put it into another <em>private</em> Github repository and inform Rultor that
 he has to fetch it from there:</p>
 
-<div class="highlight"><pre><code class="yaml"><span class="l-Scalar-Plain">assets</span><span class="p-Indicator">:</span>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">assets</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">secret.xml</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yegor256/secret-repo#assets/settings.xml</span></code></pre></div>
 
 <p>This configuration tells Rultor that is has to fetch <code>assets/settings.xml</code>
@@ -53,7 +53,7 @@ right before starting a build.</p>
 <p>Keep in mind that every builds starts in <code>repo</code> directory, while
 assets are placed one folder up. This is how directory layout will looks:</p>
 
-<div class="highlight"><pre><code class="text">.
+<div class="highlight"><pre><code class="language-text" data-lang="text">.
 ..
 run.sh
 pid
@@ -75,7 +75,7 @@ be able to fetch anything from it.</p>
 <a href="https://registry.hub.docker.com/u/yegor256/rultor/"><code>yegor256/rultor</code></a>.
 You can change it to, say, <code>ubuntu:12.10</code>:</p>
 
-<div class="highlight"><pre><code class="yaml"><span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">image</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ubuntu:12.10</span></code></pre></div>
 
 <h2 id="merge,-deploy,-release">Merge, Deploy, Release</h2>
@@ -83,7 +83,7 @@ You can change it to, say, <code>ubuntu:12.10</code>:</p>
 <p>Three commands <code>merge</code>, <code>deploy</code> and <code>release</code> are configured similarly in
 <code>.rultor.yml</code>, for example:</p>
 
-<div class="highlight"><pre><code class="yaml"><span class="l-Scalar-Plain">merge</span><span class="p-Indicator">:</span> <span class="c1"># or &quot;deploy&quot; or &quot;release&quot;</span>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">merge</span><span class="p-Indicator">:</span> <span class="c1"># or &quot;deploy&quot; or &quot;release&quot;</span>
   <span class="l-Scalar-Plain">commanders</span><span class="p-Indicator">:</span>
     <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">jeff</span>
     <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">walter</span>

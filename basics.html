@@ -30,13 +30,13 @@ It has to start with <code>@rultor</code> followed by a text, which includes a c
 <p>For example, in a pull request that is ready to be merged you post
 a new comment saying, literally:</p>
 
-<div class="highlight"><pre><code class="text">@rultor please check and merge this pull request</code></pre></div>
+<div class="highlight"><pre><code class="language-text" data-lang="text">@rultor please check and merge this pull request</code></pre></div>
 
 <p>It is important to start a command with <code>@rultor</code> and mention <code>merge</code>
 somewhere in the text. All the rest is ignored. You can achieve
 exactly the same by just posting:</p>
 
-<div class="highlight"><pre><code class="text">@rultor merge</code></pre></div>
+<div class="highlight"><pre><code class="language-text" data-lang="text">@rultor merge</code></pre></div>
 
 <p>BTW, by default, only Github project collaborators can talk to Rultor,
 although it is <a href="/reference.html">configurable</a>.</p>
@@ -55,7 +55,7 @@ and push new version of <code>master</code> to your repo.</p>
 in the root directory of your repository,
 and configure build automation script there, for example:</p>
 
-<div class="highlight"><pre><code class="yaml"><span class="l-Scalar-Plain">merge</span><span class="p-Indicator">:</span>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">merge</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mvn clean install</span></code></pre></div>
 
 <p>If you don&#39;t configure it, Rultor will try to guess
@@ -78,7 +78,7 @@ and configure it in <a href="/reference.html"><code>.rultor.yml</code></a>.
 For example, this is how we deploy Rultor itself (see our
 <a href="https://github.com/yegor256/rultor/blob/master/.rultor.yml"><code>.rultor.yml</code></a> file):</p>
 
-<div class="highlight"><pre><code class="yaml"><span class="l-Scalar-Plain">deploy</span><span class="p-Indicator">:</span>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">deploy</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">env</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">MAVEN_OPTS</span><span class="p-Indicator">:</span> <span class="s">&quot;-XX:MaxPermSize=256m</span><span class="nv"> </span><span class="s">-Xmx1g&quot;</span>
   <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
@@ -99,7 +99,7 @@ it available for everybody in an artifact repository, for example
 <p>Release command automates this for you. The command requires
 one mandatory argument, through. You should call it like this:</p>
 
-<div class="highlight"><pre><code class="text">@rultor release, tag=`1.7`</code></pre></div>
+<div class="highlight"><pre><code class="language-text" data-lang="text">@rultor release, tag=`1.7`</code></pre></div>
 
 <p>Then, in your script you get <code>$tag</code> environment variable, which will
 be set to <code>1.7</code>. Your script should change the version of the product to
@@ -109,7 +109,7 @@ be set to <code>1.7</code>. Your script should change the version of the product
 <a href="https://github.com/jcabi/jcabi/blob/master/.rultor.yml"><code>rultor.yml</code></a>,
 for example:</p>
 
-<div class="highlight"><pre><code class="yaml"><span class="l-Scalar-Plain">release</span><span class="p-Indicator">:</span>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">release</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
     <span class="p-Indicator">-</span> <span class="s">&quot;mvn</span><span class="nv"> </span><span class="s">versions:set</span><span class="nv"> </span><span class="s">\&quot;-DnewVersion=${tag}\&quot;&quot;</span>
     <span class="p-Indicator">-</span> <span class="s">&quot;git</span><span class="nv"> </span><span class="s">commit</span><span class="nv"> </span><span class="s">-am</span><span class="nv"> </span><span class="s">\&quot;${tag}\&quot;&quot;</span>
